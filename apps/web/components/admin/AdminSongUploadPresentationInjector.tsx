@@ -413,28 +413,50 @@ export default function AdminSongUploadPresentationInjector() {
 
       fileList.classList.add("admin-song-upload-stem-list");
 
-      const renderedItems = Array.from(fileList.children).filter(
-        (child): child is HTMLElement => child instanceof HTMLElement,
-      );
-      const needsFullList =
-        renderedItems.length !== accumulatedStemFiles.length ||
-        renderedItems.some((item) => item.textContent?.trim().startsWith("+"));
+      const isSummaryItem = (item: HTMLElement) =>
+        /^\+\s+\d+\s+more$/i.test(item.textContent?.trim() || "");
+      const signature = accumulatedStemFiles.map(fileKey).join("|");
 
-      if (needsFullList) {
-        const fragment = document.createDocumentFragment();
+      if (fileList.dataset.adminStemSignature !== signature) {
+        fileList
+          .querySelectorAll<HTMLElement>(
+            ":scope > .admin-song-stem-extra-file-item",
+          )
+          .forEach((item) => item.remove());
 
-        accumulatedStemFiles.forEach((file) => {
+        const nativeItems = Array.from(fileList.children).filter(
+          (child): child is HTMLElement => child instanceof HTMLElement,
+        );
+        const summaryItem = nativeItems.find(isSummaryItem);
+        if (summaryItem) summaryItem.hidden = true;
+
+        const visibleNativeItems = nativeItems.filter(
+          (item) =>
+            !isSummaryItem(item) &&
+            !item.classList.contains("admin-song-stem-extra-file-item"),
+        );
+
+        for (
+          let index = visibleNativeItems.length;
+          index < accumulatedStemFiles.length;
+          index++
+        ) {
+          const file = accumulatedStemFiles[index];
+          if (!file) continue;
+
           const item = document.createElement("div");
-          item.className = "admin-song-stem-file-item truncate";
+          item.className =
+            "admin-song-stem-file-item admin-song-stem-extra-file-item truncate";
           item.textContent = file.name;
-          fragment.appendChild(item);
-        });
+          fileList.appendChild(item);
+        }
 
-        fileList.replaceChildren(fragment);
+        fileList.dataset.adminStemSignature = signature;
       }
 
       const visibleItems = Array.from(fileList.children).filter(
-        (child): child is HTMLElement => child instanceof HTMLElement,
+        (child): child is HTMLElement =>
+          child instanceof HTMLElement && !isSummaryItem(child),
       );
 
       for (let index = 0; index < accumulatedStemFiles.length; index++) {
