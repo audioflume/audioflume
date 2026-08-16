@@ -114,7 +114,7 @@ export default function AdminPlaylistShelfPickerModal({
         />
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] bg-[var(--bg-primary)] py-3">
+      <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px] p-3">
         {displayedPlaylists.length === 0 ? (
           <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
             {resolvedEmptyMessage}
