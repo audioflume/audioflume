@@ -23,6 +23,7 @@ import { CSS } from "@dnd-kit/utilities";
 import Toast from "@/components/Toast";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import TrashIcon from "@/components/icons/TrashIcon";
+import AdminBrowseFilterSubcategoryGroup from "@/components/admin/AdminBrowseFilterSubcategoryGroup";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
 import type {
@@ -517,41 +518,36 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 </div>
               </section>
 
-              {(browseTaxonomy?.filters ?? [])
-                .filter((filter) => browseTags.includes(filter.value))
-                .map((filter) => (
-                  <section
-                    key={`${filter.value}-subcategories`}
-                    className="admin-playlist-section-card admin-playlist-shelf-card"
-                  >
-                    <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
-                      {filter.label} shelves
-                    </h2>
-                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
-                      {filter.subcategories.map((subcategory) => (
-                        <label
-                          key={subcategory.id}
-                          className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
-                        >
-                          <input
-                            type="checkbox"
-                            checked={(
-                              browseAssignments[filter.value] ?? []
-                            ).includes(subcategory.id)}
-                            onChange={() =>
-                              toggleBrowseSubcategory(
-                                filter.value,
-                                subcategory.id,
-                              )
-                            }
-                            className="h-3.5 w-3.5 accent-[var(--text-primary)]"
-                          />
-                          <span>{subcategory.label}</span>
-                        </label>
-                      ))}
-                    </div>
-                  </section>
-                ))}
+              {browseTaxonomy &&
+                browseTaxonomy.filters
+                  .filter((filter) => browseTags.includes(filter.value))
+                  .map((filter) => (
+                    <AdminBrowseFilterSubcategoryGroup
+                      key={`${filter.value}-subcategories`}
+                      filter={filter}
+                      taxonomy={browseTaxonomy}
+                      selectedIds={browseAssignments[filter.value] ?? []}
+                      onToggleAssignment={(subcategoryId) =>
+                        toggleBrowseSubcategory(filter.value, subcategoryId)
+                      }
+                      onTaxonomyChange={setBrowseTaxonomy}
+                      onDeletedSubcategories={(subcategoryIds) => {
+                        const deletedIds = new Set(subcategoryIds);
+                        setBrowseAssignments((current) => {
+                          const next = { ...current };
+                          for (const browseFilter of CURATED_BROWSE_FILTERS) {
+                            const selected = next[browseFilter.value];
+                            if (!selected) continue;
+                            next[browseFilter.value] = selected.filter(
+                              (subcategoryId) => !deletedIds.has(subcategoryId),
+                            );
+                          }
+                          return next;
+                        });
+                      }}
+                      onToast={setToastMessage}
+                    />
+                  ))}
 
               <div className="admin-playlist-actions flex flex-wrap gap-3 pt-2">
                 <button
