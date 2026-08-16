@@ -211,6 +211,8 @@ export default function CuePointManager({
           border-radius: 7px !important;
           padding-left: 12px !important;
           padding-right: 12px !important;
+          font-size: 12.5px;
+          font-weight: 400;
         }
 
         .admin-cue-point-standalone

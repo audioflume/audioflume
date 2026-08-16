@@ -218,8 +218,8 @@ export default function AdminSongEditPresentationInjector() {
         padding: 0 20px;
         color: var(--text-secondary);
         font-family: inherit;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 12.5px;
+        font-weight: 400;
         line-height: 1;
         transition: color 150ms ease, background 150ms ease;
       }

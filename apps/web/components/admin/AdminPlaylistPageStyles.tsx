@@ -214,8 +214,8 @@ export default function AdminPlaylistPageStyles() {
         border-radius: 7px;
         padding-right: 18px;
         padding-left: 18px;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 12.5px;
+        font-weight: 400;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)

@@ -231,7 +231,7 @@ export default function AdminEditPointsPage() {
           type="button"
           onClick={analyzeMissingEditPoints}
           disabled={isAnalyzing}
-          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-sm font-medium text-[var(--bg-primary)] transition disabled:cursor-default disabled:opacity-50"
+          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12.5px] font-normal text-[var(--bg-primary)] transition disabled:cursor-default disabled:opacity-50"
         >
           {isAnalyzing && (
             <LoadingSpinner size={13} stroke={11} color="currentColor" />
@@ -241,7 +241,7 @@ export default function AdminEditPointsPage() {
 
         <Link
           href="/admin/music-library?issue=editPoints"
-          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-sm font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12.5px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           View Missing
         </Link>
@@ -350,7 +350,7 @@ export default function AdminEditPointsPage() {
 
                       <Link
                         href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                        className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[12.5px] font-normal text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                       >
                         Review
                       </Link>

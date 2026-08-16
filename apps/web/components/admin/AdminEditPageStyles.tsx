@@ -432,8 +432,8 @@ export default function AdminEditPageStyles() {
         > button {
         height: 40px;
         border-radius: 7px;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 12.5px;
+        font-weight: 400;
       }
 
       @media (min-width: 1280px) {
@@ -696,8 +696,8 @@ export default function AdminEditPageStyles() {
         border-radius: 7px;
         padding-right: 18px;
         padding-left: 18px;
-        font-size: 14px;
-        font-weight: 500;
+        font-size: 12.5px;
+        font-weight: 400;
       }
 
       .admin-playlist-edit-content-page form > aside > div > .grid > .flex:first-child > span {
