@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import DropdownShell from "@/components/DropdownShell";
+import MoreIcon from "@/components/icons/MoreIcon";
+import {
+  iconButtonActiveClass,
+  smallIconButtonClass,
+} from "@/components/uiClasses";
 import type {
   CuratedBrowseSubcategoryRecord,
   CuratedBrowseTaxonomy,
@@ -29,22 +35,6 @@ function getSubcategoryFilters(
       filter.subcategories.some((subcategory) => subcategory.id === subcategoryId),
     )
     .map((filter) => filter.value);
-}
-
-function MoreIcon() {
-  return (
-    <svg
-      width="18"
-      height="4"
-      viewBox="0 0 18 4"
-      fill="currentColor"
-      aria-hidden="true"
-    >
-      <circle cx="2" cy="2" r="1.5" />
-      <circle cx="9" cy="2" r="1.5" />
-      <circle cx="16" cy="2" r="1.5" />
-    </svg>
-  );
 }
 
 function ChevronDownIcon() {
@@ -87,20 +77,6 @@ export default function AdminBrowseFilterSubcategoryGroup({
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
-    if (!menuOpen) return;
-
-    function handlePointerDown(event: MouseEvent) {
-      const target = event.target;
-      if (!(target instanceof Element)) return;
-      if (target.closest(`[data-browse-group-menu="${filter.value}"]`)) return;
-      setMenuOpen(false);
-    }
-
-    document.addEventListener("mousedown", handlePointerDown);
-    return () => document.removeEventListener("mousedown", handlePointerDown);
-  }, [filter.value, menuOpen]);
-
-  useEffect(() => {
     if (mode !== "edit") return;
 
     const nextDrafts: Record<number, string> = {};
@@ -110,16 +86,19 @@ export default function AdminBrowseFilterSubcategoryGroup({
     setLabelDrafts(nextDrafts);
   }, [filter.subcategories, mode]);
 
+  const currentSubcategoryIds = useMemo(
+    () => new Set(filter.subcategories.map((subcategory) => subcategory.id)),
+    [filter.subcategories],
+  );
+
   const availableExisting = useMemo(() => {
-    const currentIds = new Set(filter.subcategories.map((subcategory) => subcategory.id));
     const query = newValue.trim().toLowerCase();
 
     return taxonomy.subcategories.filter(
       (subcategory) =>
-        !currentIds.has(subcategory.id) &&
-        (!query || subcategory.label.toLowerCase().includes(query)),
+        !query || subcategory.label.toLowerCase().includes(query),
     );
-  }, [filter.subcategories, newValue, taxonomy.subcategories]);
+  }, [newValue, taxonomy.subcategories]);
 
   function resetEditState() {
     setLabelDrafts({});
@@ -289,6 +268,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
   }
 
   function selectExisting(subcategory: CuratedBrowseSubcategoryRecord) {
+    if (currentSubcategoryIds.has(subcategory.id)) return;
     setNewValue(subcategory.label);
     setSelectedExistingId(subcategory.id);
     setNewDropdownOpen(false);
@@ -301,10 +281,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
           {filter.label} shelves
         </h2>
 
-        <div
-          className="relative flex shrink-0 items-center gap-3"
-          data-browse-group-menu={filter.value}
-        >
+        <div className="flex shrink-0 items-center gap-3">
           {mode === "edit" && (
             <>
               <button
@@ -340,38 +317,38 @@ export default function AdminBrowseFilterSubcategoryGroup({
             </button>
           )}
 
-          <button
-            type="button"
-            onClick={() => setMenuOpen((current) => !current)}
-            className={`flex h-8 w-8 items-center justify-center text-[var(--text-muted)] transition hover:text-[var(--text-primary)] ${
-              mode || menuOpen
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100 focus:opacity-100"
-            }`}
-            aria-label={`More options for ${filter.label} shelves`}
-            aria-expanded={menuOpen}
+          <DropdownShell
+            open={menuOpen}
+            onOpenChange={setMenuOpen}
+            placement="bottom-end"
+            trigger={({ open }) => (
+              <button
+                type="button"
+                className={`${smallIconButtonClass} ${
+                  open ? iconButtonActiveClass : ""
+                } ${
+                  mode || open
+                    ? "opacity-100"
+                    : "opacity-0 group-hover:opacity-100 focus:opacity-100"
+                }`}
+                aria-label={`More options for ${filter.label} shelves`}
+                disabled={saving}
+              >
+                <MoreIcon size={14} />
+              </button>
+            )}
           >
-            <MoreIcon />
-          </button>
-
-          {menuOpen && (
-            <div className="absolute right-0 top-full z-20 mt-1 min-w-[120px] overflow-hidden rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
-              <button
-                type="button"
-                onClick={enterEditMode}
-                className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-              >
-                Edit
-              </button>
-              <button
-                type="button"
-                onClick={enterDeleteMode}
-                className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-              >
-                Delete
-              </button>
-            </div>
-          )}
+            <button type="button" onClick={enterEditMode}>
+              Edit
+            </button>
+            <button
+              type="button"
+              className="danger-hover"
+              onClick={enterDeleteMode}
+            >
+              Delete
+            </button>
+          </DropdownShell>
         </div>
       </div>
 
@@ -474,17 +451,22 @@ export default function AdminBrowseFilterSubcategoryGroup({
 
             {newDropdownOpen && availableExisting.length > 0 && (
               <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
-                {availableExisting.map((subcategory) => (
-                  <button
-                    key={subcategory.id}
-                    type="button"
-                    onMouseDown={(event) => event.preventDefault()}
-                    onClick={() => selectExisting(subcategory)}
-                    className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                  >
-                    {subcategory.label}
-                  </button>
-                ))}
+                {availableExisting.map((subcategory) => {
+                  const alreadyAdded = currentSubcategoryIds.has(subcategory.id);
+
+                  return (
+                    <button
+                      key={subcategory.id}
+                      type="button"
+                      disabled={alreadyAdded}
+                      onMouseDown={(event) => event.preventDefault()}
+                      onClick={() => selectExisting(subcategory)}
+                      className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-[var(--text-secondary)]"
+                    >
+                      {subcategory.label}
+                    </button>
+                  );
+                })}
               </div>
             )}
           </div>
