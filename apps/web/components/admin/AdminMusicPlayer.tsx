@@ -50,10 +50,7 @@ function buildWaveformBars(peaks: number[], width: number) {
   const samplesPerBar = normalizedPeaks.length / barCount;
   return Array.from({ length: barCount }, (_, index) => {
     const start = Math.floor(index * samplesPerBar);
-    const end = Math.min(
-      normalizedPeaks.length,
-      Math.floor((index + 1) * samplesPerBar),
-    );
+    const end = Math.min(normalizedPeaks.length, Math.floor((index + 1) * samplesPerBar));
     let barPeak = 0;
     for (let i = start; i < end; i++) {
       if (normalizedPeaks[i] > barPeak) barPeak = normalizedPeaks[i];
@@ -197,10 +194,7 @@ export default function AdminMusicPlayer() {
     if (isWaveformCompact) return;
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
-    const nextProgress = Math.max(
-      0,
-      Math.min(1, (e.clientX - rect.left) / rect.width),
-    );
+    const nextProgress = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
 
     // Update canvas immediately for instant visual feedback before the seek resolves
     waveformProgressRef.current = nextProgress;
@@ -290,9 +284,7 @@ export default function AdminMusicPlayer() {
 
             {/* Waveform + timestamps (wide screens) */}
             <div className="hidden min-w-0 flex-1 items-center gap-4 min-[791px]:flex">
-              <span
-                className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]`}
-              >
+              <span className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]`}>
                 {formatTime(currentTime)}
               </span>
 
@@ -317,9 +309,7 @@ export default function AdminMusicPlayer() {
                 )}
               </div>
 
-              <span
-                className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-xs text-[var(--icon-color)]`}
-              >
+              <span className={`${isWaveformCompact ? "invisible" : ""} w-10 flex-shrink-0 text-xs text-[var(--icon-color)]`}>
                 {formatTime(duration)}
               </span>
             </div>
