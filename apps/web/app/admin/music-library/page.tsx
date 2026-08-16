@@ -581,7 +581,7 @@ export default function AdminMusicLibraryPage() {
             </div>
           </div>
 
-          {filtersOpen && !selectionMode && (
+          {filtersOpen && (
             <div className="mx-5 mb-4 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex items-center gap-3">
