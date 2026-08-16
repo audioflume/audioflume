@@ -538,7 +538,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={handleBatchDelete}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-[12px] font-normal text-[var(--danger-contrast)] transition hover:brightness-90 disabled:opacity-50"
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-[12px] font-normal text-[var(--danger-contrast)] transition hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] disabled:opacity-50"
                   >
                     <TrashIcon />
                     {isBatchDeleting
