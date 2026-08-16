@@ -118,12 +118,24 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
   }
 
   const actionDefinitions = [
-    { label: "Choose Audio", rowIndex: 0 },
-    { label: "Choose Cover Art", rowIndex: 1 },
-    { label: "Choose Stems", rowIndex: 2 },
+    {
+      label: "Choose Audio",
+      rowIndex: 0,
+      icon: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 18.5C9 19.8807 7.65685 21 6 21C4.34315 21 3 19.8807 3 18.5C3 17.1193 4.34315 16 6 16C7.65685 16 9 17.1193 9 18.5Z" stroke="currentColor" stroke-width="1.9"/><path d="M21 16.5C21 17.8807 19.6569 19 18 19C16.3431 19 15 17.8807 15 16.5C15 15.1193 16.3431 14 18 14C19.6569 14 21 15.1193 21 16.5Z" stroke="currentColor" stroke-width="1.9"/><path d="M9 18.5V5.5L21 3.5V16.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M9 9L21 7" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>`,
+    },
+    {
+      label: "Choose Cover Art",
+      rowIndex: 1,
+      icon: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3.5" y="4.5" width="17" height="15" rx="2" stroke="currentColor" stroke-width="1.9"/><circle cx="9" cy="10" r="1.5" stroke="currentColor" stroke-width="1.9"/><path d="M5.5 17L10 12.5L13 15.5L15 13.5L18.5 17" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>`,
+    },
+    {
+      label: "Choose Stems",
+      rowIndex: 2,
+      icon: `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 6H20M4 12H20M4 18H20" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><circle cx="8" cy="6" r="2" fill="var(--bg-secondary)" stroke="currentColor" stroke-width="1.9"/><circle cx="15" cy="12" r="2" fill="var(--bg-secondary)" stroke="currentColor" stroke-width="1.9"/><circle cx="11" cy="18" r="2" fill="var(--bg-secondary)" stroke="currentColor" stroke-width="1.9"/></svg>`,
+    },
   ];
 
-  actionDefinitions.forEach(({ label, rowIndex }) => {
+  actionDefinitions.forEach(({ label, rowIndex, icon }) => {
     let action = actions?.querySelector<HTMLButtonElement>(
       `[data-admin-song-file-action="${rowIndex}"]`,
     );
@@ -133,7 +145,7 @@ function syncFileBinPresentation(filesSection: HTMLElement, page: Element) {
       action.type = "button";
       action.dataset.adminSongFileAction = String(rowIndex);
       action.className = "admin-song-upload-file-action";
-      action.innerHTML = `<svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 16V4" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path d="M7.5 8.5L12 4L16.5 8.5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 20H19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>${label}</span>`;
+      action.innerHTML = `${icon}<span>${label}</span>`;
       actions?.appendChild(action);
     }
 
