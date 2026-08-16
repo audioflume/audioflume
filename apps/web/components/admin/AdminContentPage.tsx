@@ -169,6 +169,119 @@ export default function AdminContentPage({
           margin: 0;
           border-radius: var(--admin-top-control-radius) !important;
         }
+
+        /* Files use contained fields instead of full-width divider rows. */
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin) {
+          display: grid !important;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 8px !important;
+          padding: 20px !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          > .admin-song-form-card-header {
+          grid-column: 1 / -1;
+          min-height: 0 !important;
+          margin: 0 0 4px !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          padding: 0 !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row {
+          display: grid !important;
+          min-width: 0;
+          min-height: 68px;
+          grid-template-columns: minmax(0, 1fr) auto !important;
+          grid-template-rows: auto auto;
+          align-content: center !important;
+          align-items: center !important;
+          gap: 5px 8px !important;
+          border: 1px solid var(--border) !important;
+          border-radius: 7px !important;
+          background: var(--bg-secondary);
+          padding: 12px !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row
+          > div:first-child {
+          grid-column: 1 !important;
+          grid-row: 1 !important;
+          align-self: center !important;
+          padding: 0 !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row
+          > div:nth-child(2) {
+          grid-column: 1 / -1 !important;
+          grid-row: 2 !important;
+          min-width: 0;
+          margin: 0 !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row:has(> div:last-child > button)
+          > div:nth-child(2),
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row:has(> div:last-child img)
+          > div:nth-child(2) {
+          grid-column: 1 !important;
+        }
+
+        main.filmwave-admin-content-page:is(
+            .admin-song-upload-content-page,
+            .admin-song-edit-content-page
+          )
+          :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin)
+          .admin-song-file-row
+          > div:last-child:not(:nth-child(2)) {
+          grid-column: 2 !important;
+          grid-row: 1 / span 2 !important;
+          align-self: center !important;
+          justify-self: end !important;
+          margin: 0 !important;
+        }
+
+        @media (max-width: 900px) {
+          main.filmwave-admin-content-page:is(
+              .admin-song-upload-content-page,
+              .admin-song-edit-content-page
+            )
+            :is(.admin-song-upload-files-bin, .admin-song-edit-files-bin) {
+            grid-template-columns: 1fr;
+          }
+        }
       `}</style>
 
       <section
