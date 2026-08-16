@@ -1,162 +1,295 @@
 import type { Song } from "@/lib/types";
 
+export const CURATED_BROWSE_SUBCATEGORIES = {
+  "brand-commercial": { value: "brand-commercial", label: "Brand & Commercial" },
+  "youtube-creator": { value: "youtube-creator", label: "YouTube & Creator" },
+  "educational-explainer": {
+    value: "educational-explainer",
+    label: "Educational & Explainer",
+  },
+  travel: { value: "travel", label: "Travel" },
+  documentary: { value: "documentary", label: "Documentary" },
+  "product-tech": { value: "product-tech", label: "Product & Tech" },
+  "film-story": { value: "film-story", label: "Film & Story" },
+  lifestyle: { value: "lifestyle", label: "Lifestyle" },
+  uplifting: { value: "uplifting", label: "Uplifting" },
+  emotional: { value: "emotional", label: "Emotional" },
+  reflective: { value: "reflective", label: "Reflective" },
+  energetic: { value: "energetic", label: "Energetic" },
+  playful: { value: "playful", label: "Playful" },
+  calm: { value: "calm", label: "Calm" },
+  tense: { value: "tense", label: "Tense" },
+  dark: { value: "dark", label: "Dark" },
+  cinematic: { value: "cinematic", label: "Cinematic" },
+  corporate: { value: "corporate", label: "Corporate" },
+  world: { value: "world", label: "World" },
+  background: { value: "background", label: "Background" },
+  "tech-innovation": { value: "tech-innovation", label: "Tech & Innovation" },
+  advertising: { value: "advertising", label: "Advertising" },
+  "brand-lifestyle": { value: "brand-lifestyle", label: "Brand & Lifestyle" },
+  "food-hospitality": { value: "food-hospitality", label: "Food & Hospitality" },
+  luxury: { value: "luxury", label: "Luxury" },
+  "sports-fitness": { value: "sports-fitness", label: "Sports & Fitness" },
+  product: { value: "product", label: "Product" },
+  adventure: { value: "adventure", label: "Adventure" },
+  "road-trip": { value: "road-trip", label: "Road Trip" },
+  coastal: { value: "coastal", label: "Coastal" },
+  desert: { value: "desert", label: "Desert" },
+  mountain: { value: "mountain", label: "Mountain" },
+  city: { value: "city", label: "City" },
+  "slow-travel": { value: "slow-travel", label: "Slow Travel" },
+  "human-stories": { value: "human-stories", label: "Human Stories" },
+  educational: { value: "educational", label: "Educational" },
+  nature: { value: "nature", label: "Nature" },
+  history: { value: "history", label: "History" },
+  "science-technology": {
+    value: "science-technology",
+    label: "Science & Technology",
+  },
+  "culture-travel": { value: "culture-travel", label: "Culture & Travel" },
+  "social-impact": { value: "social-impact", label: "Social Impact" },
+  sports: { value: "sports", label: "Sports" },
+  "epic-trailer": { value: "epic-trailer", label: "Epic & Trailer" },
+  "emotional-storytelling": {
+    value: "emotional-storytelling",
+    label: "Emotional Storytelling",
+  },
+  intimate: { value: "intimate", label: "Intimate" },
+  atmospheric: { value: "atmospheric", label: "Atmospheric" },
+  action: { value: "action", label: "Action" },
+  suspense: { value: "suspense", label: "Suspense" },
+  "wonder-discovery": { value: "wonder-discovery", label: "Wonder & Discovery" },
+  "minimal-cinematic": { value: "minimal-cinematic", label: "Minimal Cinematic" },
+  brooding: { value: "brooding", label: "Brooding" },
+  mystery: { value: "mystery", label: "Mystery" },
+  uneasy: { value: "uneasy", label: "Uneasy" },
+  gritty: { value: "gritty", label: "Gritty" },
+  noir: { value: "noir", label: "Noir" },
+  industrial: { value: "industrial", label: "Industrial" },
+  "slow-burn": { value: "slow-burn", label: "Slow Burn" },
+} as const;
+
+export type CuratedBrowseSubcategory = keyof typeof CURATED_BROWSE_SUBCATEGORIES;
+
+function browseSubcategory(value: CuratedBrowseSubcategory) {
+  return CURATED_BROWSE_SUBCATEGORIES[value];
+}
+
 export const CURATED_BROWSE_FILTERS = [
   {
     value: "editors",
     label: "For Editors",
     subcategories: [
-      { value: "editors:brand-commercial", label: "Brand & Commercial" },
-      { value: "editors:youtube-creator", label: "YouTube & Creator" },
-      {
-        value: "editors:educational-explainer",
-        label: "Educational & Explainer",
-      },
-      { value: "editors:travel", label: "Travel" },
-      { value: "editors:documentary", label: "Documentary" },
-      { value: "editors:product-tech", label: "Product & Tech" },
-      {
-        value: "editors:social-short-form",
-        label: "Film & Story",
-      },
-      { value: "editors:lifestyle", label: "Lifestyle" },
+      browseSubcategory("brand-commercial"),
+      browseSubcategory("youtube-creator"),
+      browseSubcategory("educational-explainer"),
+      browseSubcategory("travel"),
+      browseSubcategory("documentary"),
+      browseSubcategory("product-tech"),
+      browseSubcategory("film-story"),
+      browseSubcategory("lifestyle"),
     ],
   },
   {
     value: "mood",
     label: "By Mood",
     subcategories: [
-      { value: "mood:uplifting", label: "Uplifting" },
-      { value: "mood:emotional", label: "Emotional" },
-      { value: "mood:reflective", label: "Reflective" },
-      { value: "mood:energetic", label: "Energetic" },
-      { value: "mood:playful", label: "Playful" },
-      { value: "mood:calm", label: "Calm" },
-      { value: "mood:tense", label: "Tense" },
-      { value: "mood:dark", label: "Dark" },
+      browseSubcategory("uplifting"),
+      browseSubcategory("emotional"),
+      browseSubcategory("reflective"),
+      browseSubcategory("energetic"),
+      browseSubcategory("playful"),
+      browseSubcategory("calm"),
+      browseSubcategory("tense"),
+      browseSubcategory("dark"),
     ],
   },
   {
     value: "genre",
     label: "By Genre",
     subcategories: [
-      { value: "genre:cinematic", label: "Cinematic" },
-      { value: "genre:corporate", label: "Corporate" },
-      { value: "genre:documentary", label: "Documentary" },
-      { value: "genre:youtube-creator", label: "YouTube & Creator" },
-      { value: "genre:world", label: "World" },
-      { value: "genre:background", label: "Background" },
-      { value: "genre:tech-innovation", label: "Tech & Innovation" },
-      { value: "genre:advertising", label: "Advertising" },
-      { value: "genre:brand-lifestyle", label: "Brand & Lifestyle" },
+      browseSubcategory("cinematic"),
+      browseSubcategory("corporate"),
+      browseSubcategory("documentary"),
+      browseSubcategory("youtube-creator"),
+      browseSubcategory("world"),
+      browseSubcategory("background"),
+      browseSubcategory("tech-innovation"),
+      browseSubcategory("advertising"),
+      browseSubcategory("brand-lifestyle"),
     ],
   },
   {
     value: "brands",
     label: "For Brands",
     subcategories: [
-      { value: "brands:lifestyle", label: "Lifestyle" },
-      { value: "brands:corporate", label: "Corporate" },
-      { value: "brands:tech-innovation", label: "Tech & Innovation" },
-      {
-        value: "brands:food-hospitality",
-        label: "Food & Hospitality",
-      },
-      { value: "brands:luxury", label: "Luxury" },
-      { value: "brands:sports-fitness", label: "Sports & Fitness" },
-      { value: "brands:product", label: "Product" },
+      browseSubcategory("lifestyle"),
+      browseSubcategory("corporate"),
+      browseSubcategory("tech-innovation"),
+      browseSubcategory("food-hospitality"),
+      browseSubcategory("luxury"),
+      browseSubcategory("sports-fitness"),
+      browseSubcategory("product"),
     ],
   },
   {
     value: "travel",
     label: "Travel",
     subcategories: [
-      { value: "travel:adventure", label: "Adventure" },
-      { value: "travel:road-trip", label: "Road Trip" },
-      { value: "travel:world", label: "World" },
-      { value: "travel:coastal", label: "Coastal" },
-      { value: "travel:desert", label: "Desert" },
-      { value: "travel:mountain", label: "Mountain" },
-      { value: "travel:city", label: "City" },
-      { value: "travel:slow-travel", label: "Slow Travel" },
+      browseSubcategory("adventure"),
+      browseSubcategory("road-trip"),
+      browseSubcategory("world"),
+      browseSubcategory("coastal"),
+      browseSubcategory("desert"),
+      browseSubcategory("mountain"),
+      browseSubcategory("city"),
+      browseSubcategory("slow-travel"),
     ],
   },
   {
     value: "documentary",
     label: "Documentary",
     subcategories: [
-      { value: "documentary:human-stories", label: "Human Stories" },
-      { value: "documentary:educational", label: "Educational" },
-      { value: "documentary:nature", label: "Nature" },
-      { value: "documentary:history", label: "History" },
-      {
-        value: "documentary:science-technology",
-        label: "Science & Technology",
-      },
-      { value: "documentary:culture-travel", label: "Culture & Travel" },
-      { value: "documentary:social-impact", label: "Social Impact" },
-      { value: "documentary:sports", label: "Sports" },
+      browseSubcategory("human-stories"),
+      browseSubcategory("educational"),
+      browseSubcategory("nature"),
+      browseSubcategory("history"),
+      browseSubcategory("science-technology"),
+      browseSubcategory("culture-travel"),
+      browseSubcategory("social-impact"),
+      browseSubcategory("sports"),
     ],
   },
   {
     value: "cinematic",
     label: "Cinematic",
     subcategories: [
-      { value: "cinematic:epic-trailer", label: "Epic & Trailer" },
-      {
-        value: "cinematic:emotional-storytelling",
-        label: "Emotional Storytelling",
-      },
-      { value: "cinematic:intimate", label: "Intimate" },
-      { value: "cinematic:atmospheric", label: "Atmospheric" },
-      { value: "cinematic:action", label: "Action" },
-      { value: "cinematic:suspense", label: "Suspense" },
-      {
-        value: "cinematic:wonder-discovery",
-        label: "Wonder & Discovery",
-      },
-      { value: "cinematic:minimal-cinematic", label: "Minimal Cinematic" },
+      browseSubcategory("epic-trailer"),
+      browseSubcategory("emotional-storytelling"),
+      browseSubcategory("intimate"),
+      browseSubcategory("atmospheric"),
+      browseSubcategory("action"),
+      browseSubcategory("suspense"),
+      browseSubcategory("wonder-discovery"),
+      browseSubcategory("minimal-cinematic"),
     ],
   },
   {
     value: "dark-moody",
     label: "Dark & Moody",
     subcategories: [
-      { value: "dark-moody:brooding", label: "Brooding" },
-      { value: "dark-moody:mystery", label: "Mystery" },
-      { value: "dark-moody:suspense", label: "Suspense" },
-      { value: "dark-moody:uneasy", label: "Uneasy" },
-      { value: "dark-moody:gritty", label: "Gritty" },
-      { value: "dark-moody:noir", label: "Noir" },
-      { value: "dark-moody:industrial", label: "Industrial" },
-      { value: "dark-moody:slow-burn", label: "Slow Burn" },
+      browseSubcategory("brooding"),
+      browseSubcategory("mystery"),
+      browseSubcategory("suspense"),
+      browseSubcategory("uneasy"),
+      browseSubcategory("gritty"),
+      browseSubcategory("noir"),
+      browseSubcategory("industrial"),
+      browseSubcategory("slow-burn"),
     ],
   },
 ] as const;
 
 export type CuratedBrowseTag = (typeof CURATED_BROWSE_FILTERS)[number]["value"];
-export type CuratedBrowseSubcategory =
-  (typeof CURATED_BROWSE_FILTERS)[number]["subcategories"][number]["value"];
 
 const CURATED_BROWSE_TAG_VALUES = new Set<CuratedBrowseTag>(
   CURATED_BROWSE_FILTERS.map((filter) => filter.value),
 );
 
 const CURATED_BROWSE_SUBCATEGORY_VALUES = new Set<CuratedBrowseSubcategory>(
-  CURATED_BROWSE_FILTERS.flatMap((filter) =>
-    filter.subcategories.map((subcategory) => subcategory.value),
-  ),
+  Object.keys(CURATED_BROWSE_SUBCATEGORIES) as CuratedBrowseSubcategory[],
 );
+
+const LEGACY_CURATED_BROWSE_SUBCATEGORY_ALIASES: Record<
+  string,
+  CuratedBrowseSubcategory
+> = {
+  "editors:brand-commercial": "brand-commercial",
+  "editors:youtube-creator": "youtube-creator",
+  "editors:educational-explainer": "educational-explainer",
+  "editors:travel": "travel",
+  "editors:documentary": "documentary",
+  "editors:product-tech": "product-tech",
+  "editors:social-short-form": "film-story",
+  "editors:lifestyle": "lifestyle",
+  "mood:uplifting": "uplifting",
+  "mood:emotional": "emotional",
+  "mood:reflective": "reflective",
+  "mood:energetic": "energetic",
+  "mood:playful": "playful",
+  "mood:calm": "calm",
+  "mood:tense": "tense",
+  "mood:dark": "dark",
+  "genre:cinematic": "cinematic",
+  "genre:corporate": "corporate",
+  "genre:documentary": "documentary",
+  "genre:youtube-creator": "youtube-creator",
+  "genre:world": "world",
+  "genre:background": "background",
+  "genre:tech-innovation": "tech-innovation",
+  "genre:advertising": "advertising",
+  "genre:brand-lifestyle": "brand-lifestyle",
+  "brands:lifestyle": "lifestyle",
+  "brands:corporate": "corporate",
+  "brands:tech-innovation": "tech-innovation",
+  "brands:food-hospitality": "food-hospitality",
+  "brands:luxury": "luxury",
+  "brands:sports-fitness": "sports-fitness",
+  "brands:product": "product",
+  "travel:adventure": "adventure",
+  "travel:road-trip": "road-trip",
+  "travel:world": "world",
+  "travel:coastal": "coastal",
+  "travel:desert": "desert",
+  "travel:mountain": "mountain",
+  "travel:city": "city",
+  "travel:slow-travel": "slow-travel",
+  "documentary:human-stories": "human-stories",
+  "documentary:educational": "educational",
+  "documentary:nature": "nature",
+  "documentary:history": "history",
+  "documentary:science-technology": "science-technology",
+  "documentary:culture-travel": "culture-travel",
+  "documentary:social-impact": "social-impact",
+  "documentary:sports": "sports",
+  "cinematic:epic-trailer": "epic-trailer",
+  "cinematic:emotional-storytelling": "emotional-storytelling",
+  "cinematic:intimate": "intimate",
+  "cinematic:atmospheric": "atmospheric",
+  "cinematic:action": "action",
+  "cinematic:suspense": "suspense",
+  "cinematic:wonder-discovery": "wonder-discovery",
+  "cinematic:minimal-cinematic": "minimal-cinematic",
+  "dark-moody:brooding": "brooding",
+  "dark-moody:mystery": "mystery",
+  "dark-moody:suspense": "suspense",
+  "dark-moody:uneasy": "uneasy",
+  "dark-moody:gritty": "gritty",
+  "dark-moody:noir": "noir",
+  "dark-moody:industrial": "industrial",
+  "dark-moody:slow-burn": "slow-burn",
+};
 
 const CURATED_BROWSE_SUBCATEGORY_PARENTS = new Map<
   CuratedBrowseSubcategory,
-  CuratedBrowseTag
->(
-  CURATED_BROWSE_FILTERS.flatMap((filter) =>
-    filter.subcategories.map(
-      (subcategory) => [subcategory.value, filter.value] as const,
-    ),
-  ),
-);
+  Set<CuratedBrowseTag>
+>();
+
+CURATED_BROWSE_FILTERS.forEach((filter) => {
+  filter.subcategories.forEach((subcategory) => {
+    const parents = CURATED_BROWSE_SUBCATEGORY_PARENTS.get(subcategory.value);
+
+    if (parents) {
+      parents.add(filter.value);
+      return;
+    }
+
+    CURATED_BROWSE_SUBCATEGORY_PARENTS.set(
+      subcategory.value,
+      new Set<CuratedBrowseTag>([filter.value]),
+    );
+  });
+});
 
 export function normalizeCuratedBrowseTags(value: unknown): CuratedBrowseTag[] {
   if (!Array.isArray(value)) return [];
@@ -181,7 +314,10 @@ export function normalizeCuratedBrowseSubcategories(
   const normalized = [
     ...new Set(
       value
-        .map((subcategory) => String(subcategory || "").trim())
+        .map((subcategory) => {
+          const rawValue = String(subcategory || "").trim();
+          return LEGACY_CURATED_BROWSE_SUBCATEGORY_ALIASES[rawValue] ?? rawValue;
+        })
         .filter((subcategory): subcategory is CuratedBrowseSubcategory =>
           CURATED_BROWSE_SUBCATEGORY_VALUES.has(
             subcategory as CuratedBrowseSubcategory,
@@ -193,8 +329,10 @@ export function normalizeCuratedBrowseSubcategories(
   if (!browseTags) return normalized;
 
   return normalized.filter((subcategory) => {
-    const parent = CURATED_BROWSE_SUBCATEGORY_PARENTS.get(subcategory);
-    return parent ? browseTags.includes(parent) : false;
+    const parents = CURATED_BROWSE_SUBCATEGORY_PARENTS.get(subcategory);
+    return parents
+      ? [...parents].some((parent) => browseTags.includes(parent))
+      : false;
   });
 }
 
