@@ -200,14 +200,14 @@ function AdminHero({
 
   return (
     <section className="mb-4">
-      <div className="group relative min-h-[255px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="group relative min-h-[355px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
         <img
           src={ADMIN_HERO_IMAGE}
           alt=""
           className="absolute inset-0 h-full w-full object-cover"
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
-        <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
+        <div className="relative z-10 flex min-h-[355px] flex-col justify-between p-5 md:p-6">
           <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
             <span className="truncate">Audioflume admin</span>
           </div>
