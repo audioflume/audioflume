@@ -2,7 +2,6 @@
 
 import { useMemo, useState } from "react";
 import EditIcon from "@/components/icons/EditIcon";
-import { smallIconButtonClass } from "@/components/uiClasses";
 import type {
   CuratedBrowseSubcategoryRecord,
   CuratedBrowseTaxonomy,
@@ -69,6 +68,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
   const [selectedExistingId, setSelectedExistingId] = useState<number | null>(null);
   const [newDropdownOpen, setNewDropdownOpen] = useState(false);
   const [deleteIds, setDeleteIds] = useState<number[]>([]);
+  const [editTouched, setEditTouched] = useState(false);
   const [saving, setSaving] = useState(false);
 
   const currentSubcategoryIds = useMemo(
@@ -93,6 +93,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
     setSelectedExistingId(null);
     setNewDropdownOpen(false);
     setDeleteIds([]);
+    setEditTouched(false);
   }
 
   function enterEditMode() {
@@ -102,7 +103,18 @@ export default function AdminBrowseFilterSubcategoryGroup({
     }
     setLabelDrafts(nextDrafts);
     setDeleteIds([]);
+    setEditTouched(false);
     setMode("edit");
+  }
+
+  function toggleEditMode() {
+    if (mode === "edit") {
+      resetEditState();
+      setMode(null);
+      return;
+    }
+
+    enterEditMode();
   }
 
   async function refreshTaxonomy() {
@@ -117,31 +129,71 @@ export default function AdminBrowseFilterSubcategoryGroup({
   }
 
   async function saveEdits() {
-    if (saving) return;
+    if (saving || !editTouched) return;
+
+    const changedSubcategories = filter.subcategories.filter((subcategory) => {
+      const nextLabel = (labelDrafts[subcategory.id] ?? subcategory.label).trim();
+      return nextLabel && nextLabel !== subcategory.label;
+    });
+
+    const mergeTargets = new Map<number, CuratedBrowseSubcategoryRecord>();
+
+    for (const subcategory of changedSubcategories) {
+      const nextLabel = (labelDrafts[subcategory.id] ?? subcategory.label).trim();
+      const existing = taxonomy.subcategories.find(
+        (candidate) =>
+          candidate.id !== subcategory.id &&
+          candidate.label.toLowerCase() === nextLabel.toLowerCase(),
+      );
+
+      if (!existing) continue;
+
+      const confirmed = window.confirm(
+        `A category named "${existing.label}" already exists. Merge "${subcategory.label}" into "${existing.label}" globally? This will combine their browse-filter and playlist assignments.`,
+      );
+
+      if (!confirmed) return;
+      mergeTargets.set(subcategory.id, existing);
+    }
 
     try {
       setSaving(true);
-
-      const changedSubcategories = filter.subcategories.filter((subcategory) => {
-        const nextLabel = (labelDrafts[subcategory.id] ?? subcategory.label).trim();
-        return nextLabel && nextLabel !== subcategory.label;
-      });
+      let didMerge = false;
 
       for (const subcategory of changedSubcategories) {
         const nextLabel = (labelDrafts[subcategory.id] ?? subcategory.label).trim();
+        const mergeTarget = mergeTargets.get(subcategory.id);
         const res = await fetch("/api/admin/curated-browse-taxonomy", {
           method: "PATCH",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            id: subcategory.id,
-            label: nextLabel,
-            browse_filters: getSubcategoryFilters(taxonomy, subcategory.id),
-          }),
+          body: JSON.stringify(
+            mergeTarget
+              ? {
+                  id: subcategory.id,
+                  label: mergeTarget.label,
+                  merge_into_id: mergeTarget.id,
+                }
+              : {
+                  id: subcategory.id,
+                  label: nextLabel,
+                  browse_filters: getSubcategoryFilters(
+                    taxonomy,
+                    subcategory.id,
+                  ),
+                },
+          ),
         });
         const data = await res.json();
         if (!res.ok) {
-          throw new Error(data?.error || "Failed to rename browse subcategory");
+          throw new Error(
+            data?.error ||
+              (mergeTarget
+                ? "Failed to merge browse subcategories"
+                : "Failed to rename browse subcategory"),
+          );
         }
+
+        if (mergeTarget) didMerge = true;
       }
 
       const nextName = newValue.trim();
@@ -188,6 +240,12 @@ export default function AdminBrowseFilterSubcategoryGroup({
       }
 
       await refreshTaxonomy();
+
+      if (didMerge) {
+        window.location.reload();
+        return;
+      }
+
       resetEditState();
       setMode(null);
       onToast("Browse subcategories updated");
@@ -254,6 +312,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
     setNewValue(subcategory.label);
     setSelectedExistingId(subcategory.id);
     setNewDropdownOpen(false);
+    setEditTouched(true);
   }
 
   return (
@@ -264,7 +323,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
         </h2>
 
         <div className="flex shrink-0 items-center gap-3">
-          {mode === "edit" && (
+          {mode === "edit" && editTouched && (
             <>
               <button
                 type="button"
@@ -285,30 +344,29 @@ export default function AdminBrowseFilterSubcategoryGroup({
               >
                 Cancel
               </button>
-              {deleteIds.length > 0 && (
-                <button
-                  type="button"
-                  onClick={() => void deleteSelected()}
-                  disabled={saving}
-                  className="text-[11px] font-medium text-[var(--danger)] transition disabled:opacity-40"
-                >
-                  {saving ? "Deleting..." : "Delete"}
-                </button>
-              )}
             </>
+          )}
+
+          {mode === "edit" && deleteIds.length > 0 && (
+            <button
+              type="button"
+              onClick={() => void deleteSelected()}
+              disabled={saving}
+              className="text-[11px] font-medium text-[var(--danger)] transition disabled:opacity-40"
+            >
+              {saving ? "Deleting..." : "Delete"}
+            </button>
           )}
 
           <button
             type="button"
-            onClick={() => {
-              if (mode !== "edit") enterEditMode();
-            }}
-            className={`${smallIconButtonClass} ${
+            onClick={toggleEditMode}
+            className={`flex h-8 w-8 items-center justify-center bg-transparent transition ${
               mode === "edit"
-                ? "opacity-100"
-                : "opacity-0 group-hover:opacity-100 focus:opacity-100"
+                ? "text-[var(--text-primary)]"
+                : "text-[var(--text-muted)] opacity-0 group-hover:opacity-100 focus:opacity-100"
             }`}
-            aria-label={`Edit ${filter.label} shelves`}
+            aria-label={`${mode === "edit" ? "Close" : "Edit"} ${filter.label} shelves`}
             aria-pressed={mode === "edit"}
             disabled={saving}
           >
@@ -343,12 +401,13 @@ export default function AdminBrowseFilterSubcategoryGroup({
               {mode === "edit" ? (
                 <input
                   value={labelDrafts[subcategory.id] ?? subcategory.label}
-                  onChange={(event) =>
+                  onChange={(event) => {
                     setLabelDrafts((current) => ({
                       ...current,
                       [subcategory.id]: event.target.value,
-                    }))
-                  }
+                    }));
+                    setEditTouched(true);
+                  }}
                   onKeyDown={(event) => {
                     if (event.key === "Enter") event.preventDefault();
                   }}
@@ -390,6 +449,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                   setNewValue(event.target.value);
                   setSelectedExistingId(null);
                   setNewDropdownOpen(true);
+                  setEditTouched(true);
                 }}
                 onFocus={() => setNewDropdownOpen(true)}
                 onKeyDown={(event) => {
