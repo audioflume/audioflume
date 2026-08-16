@@ -96,6 +96,7 @@ export default function AdminPlaylistPageStyles() {
         min-height: 40px;
         padding-top: 0;
         padding-bottom: 0;
+        font-size: 12px;
       }
 
       /* Keep playlist name and kicker labels accessible but visually hidden. */
