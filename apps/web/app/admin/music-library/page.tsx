@@ -6,12 +6,12 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Footer from "@/components/Footer";
 import AdminContentPage from "@/components/admin/AdminContentPage";
+import AdminSearchBar from "@/components/admin/AdminSearchBar";
 import AlertIcon from "@/components/icons/AlertIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
 import FailedIcon from "@/components/icons/FailedIcon";
 import TrashIcon from "@/components/icons/TrashIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
-import XIcon from "@/components/icons/XIcon";
 import AdminSongRow from "@/components/admin/AdminSongRow";
 import Toast from "@/components/Toast";
 import { primaryPillButtonClass } from "@/components/uiClasses";
@@ -504,26 +504,12 @@ export default function AdminMusicLibraryPage() {
         }}
       >
         <div className="mb-4 flex items-center justify-between gap-4">
-          <div className="relative w-full max-w-[500px]">
-            <input
-              type="text"
-              role="searchbox"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search"
-              className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
-            />
-            {search && (
-              <button
-                type="button"
-                onClick={() => setSearch("")}
-                className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center bg-transparent text-[var(--text-primary)]"
-                aria-label="Clear search"
-              >
-                <XIcon size={12} />
-              </button>
-            )}
-          </div>
+          <AdminSearchBar
+            value={search}
+            onChange={setSearch}
+            placeholder="Search"
+            className="w-full max-w-[500px]"
+          />
 
           <Link
             href="/admin/songs/new"
