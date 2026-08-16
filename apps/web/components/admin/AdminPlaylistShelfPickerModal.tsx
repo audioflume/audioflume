@@ -114,65 +114,67 @@ export default function AdminPlaylistShelfPickerModal({
         />
       </div>
 
-      <div className="min-h-0 flex-1 overflow-y-auto rounded-[10px]">
-        {displayedPlaylists.length === 0 ? (
-          <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
-            {resolvedEmptyMessage}
-          </div>
-        ) : (
-          <div className="grid gap-1">
-            {displayedPlaylists.map((playlist) => {
-              const alreadyAdded = existingIdSet.has(playlist.id);
-              const selected = selectedIds.has(playlist.id);
+      <div className="-mx-5 flex min-h-0 flex-1 flex-col">
+        <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          {displayedPlaylists.length === 0 ? (
+            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+              {resolvedEmptyMessage}
+            </div>
+          ) : (
+            <div className="grid gap-1">
+              {displayedPlaylists.map((playlist) => {
+                const alreadyAdded = existingIdSet.has(playlist.id);
+                const selected = selectedIds.has(playlist.id);
 
-              return (
-                <button
-                  key={playlist.id}
-                  type="button"
-                  onClick={() => togglePlaylist(playlist.id)}
-                  disabled={alreadyAdded || saving}
-                  className={`admin-cover-hover group flex min-h-[60px] w-full items-center gap-3 p-2 text-left transition-colors ${
-                    alreadyAdded || selected
-                      ? "bg-[var(--bg-primary)]"
-                      : "cursor-pointer hover:bg-[var(--bg-hover)]"
-                  } disabled:cursor-default`}
-                >
-                  <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-primary)] text-[var(--text-muted)]">
-                    {playlist.cover_image_url ? (
-                      <Image
-                        src={playlist.cover_image_url}
-                        alt={playlist.name}
-                        fill
-                        sizes="36px"
-                        className="object-cover"
-                        unoptimized
-                      />
-                    ) : (
-                      <PlaylistIcon size={14} />
+                return (
+                  <button
+                    key={playlist.id}
+                    type="button"
+                    onClick={() => togglePlaylist(playlist.id)}
+                    disabled={alreadyAdded || saving}
+                    className={`group flex min-h-[52px] w-full items-center gap-3 rounded-none p-2 text-left transition-colors ${
+                      alreadyAdded || selected
+                        ? "bg-[var(--bg-primary)]"
+                        : "cursor-pointer hover:bg-[var(--bg-hover)]"
+                    } disabled:cursor-default`}
+                  >
+                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+                      {playlist.cover_image_url ? (
+                        <Image
+                          src={playlist.cover_image_url}
+                          alt={playlist.name}
+                          fill
+                          sizes="36px"
+                          className="object-cover"
+                          unoptimized
+                        />
+                      ) : (
+                        <PlaylistIcon size={13} />
+                      )}
+                    </span>
+
+                    <span className="min-w-0 flex-1">
+                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                        {playlist.name}
+                      </span>
+                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                        {alreadyAdded
+                          ? "Already added"
+                          : `${playlist.song_count || 0} songs`}
+                      </span>
+                    </span>
+
+                    {(alreadyAdded || selected) && (
+                      <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
+                        <CheckIcon size={16} />
+                      </span>
                     )}
-                  </span>
-
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-                      {playlist.name}
-                    </span>
-                    <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                      {alreadyAdded
-                        ? "Already added"
-                        : `${playlist.song_count || 0} songs`}
-                    </span>
-                  </span>
-
-                  {(alreadyAdded || selected) && (
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
-                      <CheckIcon size={16} />
-                    </span>
-                  )}
-                </button>
-              );
-            })}
-          </div>
-        )}
+                  </button>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
     </AdminModalShell>
   );
