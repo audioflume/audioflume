@@ -140,7 +140,7 @@ export default function AdminContentPage({
         }
 
         .filmwave-admin-content-page [role="searchbox"],
-        .filmwave-admin-content-page a[href="/admin/songs/new"],
+        .filmwave-admin-content-page > section a[href="/admin/songs/new"],
         .filmwave-admin-content-page a[href="/admin/playlist-manager/new"],
         .filmwave-admin-content-page
           div:has(> a[href="/admin/playlist-manager/new"])
