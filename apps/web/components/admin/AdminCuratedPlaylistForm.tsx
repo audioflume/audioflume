@@ -31,7 +31,10 @@ import type {
   CuratedPlaylist,
   CuratedPlaylistSong,
 } from "@/lib/curatedPlaylists";
-import { CURATED_BROWSE_FILTERS } from "@/lib/curatedPlaylists";
+import {
+  CURATED_BROWSE_FILTERS,
+  normalizeCuratedBrowseSubcategories,
+} from "@/lib/curatedPlaylists";
 import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
@@ -177,7 +180,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           fetch(`/api/curated-playlists/${playlistId}`),
           fetch(`/api/admin/curated-playlists/${playlistId}/songs`),
         ]);
-
         const playlistData = (await playlistRes.json()) as CuratedPlaylist;
         const songsData = await songsRes.json();
 
@@ -227,17 +229,11 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
     const isSelected = browseTags.includes(tag);
 
     if (isSelected) {
-      setBrowseTags((current) => current.filter((value) => value !== tag));
-
-      const filter = CURATED_BROWSE_FILTERS.find((item) => item.value === tag);
-      if (filter) {
-        const childValues = new Set<CuratedBrowseSubcategory>(
-          filter.subcategories.map((subcategory) => subcategory.value),
-        );
-        setBrowseSubcategories((current) =>
-          current.filter((value) => !childValues.has(value)),
-        );
-      }
+      const nextBrowseTags = browseTags.filter((value) => value !== tag);
+      setBrowseTags(nextBrowseTags);
+      setBrowseSubcategories((current) =>
+        normalizeCuratedBrowseSubcategories(current, nextBrowseTags),
+      );
       return;
     }
 
