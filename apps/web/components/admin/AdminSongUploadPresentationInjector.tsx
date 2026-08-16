@@ -642,6 +642,13 @@ export default function AdminSongUploadPresentationInjector() {
 
         .admin-song-upload-content-page
           .admin-song-upload-files-bin
+          .admin-song-file-row.has-file:not(.admin-song-upload-cover-source) {
+          padding-top: 16px !important;
+          padding-bottom: 16px !important;
+        }
+
+        .admin-song-upload-content-page
+          .admin-song-upload-files-bin
           .admin-song-upload-audio-row {
           border-top: 0 !important;
         }
@@ -950,6 +957,13 @@ export default function AdminSongUploadPresentationInjector() {
             grid-template-columns: 72px minmax(0, 1fr) auto !important;
             gap: 10px !important;
             padding: 10px 14px !important;
+          }
+
+          .admin-song-upload-content-page
+            .admin-song-upload-files-bin
+            .admin-song-file-row.has-file:not(.admin-song-upload-cover-source) {
+            padding-top: 16px !important;
+            padding-bottom: 16px !important;
           }
 
           .admin-song-upload-content-page .admin-song-upload-cover-selected {
