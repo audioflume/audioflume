@@ -782,7 +782,7 @@ export default function MusicPlayer() {
                 type="button"
                 aria-label="Song options"
                 aria-expanded={open}
-                className={`relative -left-[6px] inline-flex h-7 w-6 min-w-6 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors ${
+                className={`relative inline-flex h-7 w-7 min-w-7 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors ${
                   open
                     ? "text-[var(--text-primary)]"
                     : "text-[var(--icon-color)] hover:text-[var(--text-primary)]"
@@ -847,7 +847,7 @@ export default function MusicPlayer() {
               href={currentSong.audioUrl}
               download
               aria-label="License song"
-              className="inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-black px-3 text-[11px] font-medium leading-none text-white transition-colors hover:bg-neutral-800"
+              className="inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-[var(--text-primary)] px-3 text-[11px] font-medium leading-none text-[var(--bg-primary)] transition hover:opacity-80"
             >
               <span>License</span>
               <DownloadIcon size={13} />
