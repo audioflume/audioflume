@@ -66,10 +66,15 @@ function syncExistingAudioStatus(audioRow: HTMLElement | undefined) {
     ':scope > div:nth-child(2) > div[class~="h-9"] > span',
   );
   const text = status?.textContent?.trim() || "";
+  const existingAudioLink = audioRow.querySelector<HTMLAnchorElement>(
+    ':scope > div:nth-child(2) > a[href]',
+  );
 
   if (status) {
     status.hidden = text === "Current audio file will be kept";
   }
+
+  existingAudioLink?.classList.remove("mt-2");
 }
 
 function syncExistingCover(page: Element, coverRow: HTMLElement | undefined) {
