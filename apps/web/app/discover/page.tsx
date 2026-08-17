@@ -314,7 +314,7 @@ export default function DiscoverPage() {
         <ArtistShelf
           title="Artists We're Watching"
           items={ARTISTS_WATCHING}
-          footerCopy="1500 artists trending online"
+          footerCopy="1500+ artists trending online"
         />
 
         <section className="discover-artist-editorial-grid">
@@ -344,7 +344,7 @@ export default function DiscoverPage() {
         <ArtistShelf
           title="Support New Artists"
           items={SUPPORT_NEW_ARTISTS}
-          footerCopy="1500 artists trending online"
+          footerCopy="1500+ artists trending online"
         />
 
         <div

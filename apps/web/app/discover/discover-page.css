@@ -329,14 +329,18 @@
   line-height: 0.98;
 }
 
-.discover-artist-feature-overlay p {
-  margin: 4px 0 0;
+.discover-artist-feature-overlay p,
+.discover-artist-editorial-copy > span {
   color: rgba(255, 255, 255, 0.74);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: -0.01em;
   text-transform: uppercase;
+}
+
+.discover-artist-feature-overlay p {
+  margin: 4px 0 0;
 }
 
 .discover-artist-feature-overlay .discover-artist-play-badge {
@@ -512,7 +516,7 @@
 
 .discover-artist-card-meta span {
   margin-top: 2px;
-  color: var(--text-muted);
+  color: var(--filmwave-black);
   font-size: 10px;
   font-weight: 300;
   line-height: 15px;
@@ -571,18 +575,11 @@
   color: #fff;
 }
 
-.discover-artist-editorial-copy span {
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: uppercase;
-}
-
 .discover-artist-editorial-copy h2 {
   max-width: 88%;
-  margin: 0;
-  font-size: clamp(24px, 1.85vw, 31px);
+  margin: 0 0 clamp(28px, 2.6vw, 42px)
+    calc(clamp(18px, 1.7vw, 28px) * -1);
+  font-size: clamp(28px, 2.1vw, 36px);
   font-weight: 300;
   letter-spacing: -0.045em;
   line-height: 1.03;
@@ -606,7 +603,7 @@
 }
 
 .discover-artist-editorial-meta span:nth-child(2) {
-  color: var(--text-muted);
+  color: var(--filmwave-black);
   font-size: 10px;
   font-weight: 300;
   letter-spacing: 0;
