@@ -109,7 +109,7 @@
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.96;
-  transform: translateX(-4px);
+  transform: translateX(-7px);
 }
 
 .discover-artist-hero-identity p {
@@ -221,7 +221,7 @@
 
 .discover-artist-hero-slider-marks span:first-child {
   height: 2px;
-  background: rgba(255, 255, 255, 0.95);
+  background: #fff;
 }
 
 .discover-artist-content {
