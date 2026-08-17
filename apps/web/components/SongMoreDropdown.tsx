@@ -2,7 +2,7 @@
 
 import DropdownShell from "@/components/DropdownShell";
 import MoreIcon from "@/components/icons/MoreIcon";
-import { iconButtonActiveClass, iconButtonClass } from "@/components/uiClasses";
+import { iconButtonClass } from "@/components/uiClasses";
 import type { Padding, Strategy } from "@floating-ui/react";
 
 type SongMoreDropdownProps = {
@@ -56,7 +56,8 @@ export default function SongMoreDropdown({
         trigger={({ open }) => (
           <button
             type="button"
-            className={`filmwave-song-action-button ${iconButtonClass} ${open ? iconButtonActiveClass : ""}`}
+            className={`filmwave-song-action-button ${iconButtonClass} ${open ? "text-[var(--text-primary)]" : ""}`}
+            style={{ marginInline: "-1px", background: "transparent" }}
             aria-label="Song options"
             aria-expanded={open}
           >
