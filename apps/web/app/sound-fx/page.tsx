@@ -28,7 +28,6 @@ export default function SoundFxPage() {
       <style>{`
         .sound-fx-discover-top .sound-fx-discover-content {
           min-height: 100vh;
-          margin-left: var(--sidebar-width);
           padding-top: calc(
             var(--filmwave-header-height, 75px) + clamp(38px, 3.7vw, 60px)
           );
