@@ -781,7 +781,7 @@ export default function Header() {
                           style={{
                             backgroundColor:
                               avatarImage && !avatarImageFailed
-                                ? undefined
+                                ? "transparent"
                                 : "#808080",
                           }}
                         >
