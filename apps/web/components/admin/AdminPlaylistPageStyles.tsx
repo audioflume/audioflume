@@ -139,68 +139,6 @@ export default function AdminPlaylistPageStyles() {
         border-color: var(--border);
       }
 
-      /* Match the Music Library checkbox treatment in browse and shelf cards. */
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
-        label
-        > input[type="checkbox"] {
-        position: relative;
-        display: grid;
-        width: 16px;
-        height: 16px;
-        flex: 0 0 16px;
-        appearance: none;
-        place-content: center;
-        opacity: 1;
-        pointer-events: auto;
-        cursor: pointer;
-        border: 1.5px solid var(--border);
-        border-radius: 4px;
-        background: var(--bg-secondary);
-        color: var(--bg-primary);
-        transition:
-          border-color 150ms ease,
-          background 150ms ease,
-          color 150ms ease;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
-        label:hover
-        > input[type="checkbox"] {
-        border-color: var(--text-secondary);
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
-        label
-        > input[type="checkbox"]::after {
-        content: "";
-        width: 11px;
-        height: 11px;
-        opacity: 0;
-        background: var(--bg-primary);
-        -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5L9.5 17L19 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M5 12.5L9.5 17L19 7' fill='none' stroke='black' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center / contain no-repeat;
-        transition: opacity 150ms ease;
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
-        label
-        > input[type="checkbox"]:checked {
-        border-color: var(--text-primary);
-        background: var(--text-primary);
-        color: var(--bg-primary);
-      }
-
-      :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
-        :is(.admin-playlist-browse-card, .admin-playlist-shelf-card)
-        label
-        > input[type="checkbox"]:checked::after {
-        opacity: 1;
-      }
-
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         .admin-playlist-actions {
         gap: 8px;
