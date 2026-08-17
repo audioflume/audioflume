@@ -19,8 +19,8 @@ body:has(.desktop-app-sidebar)
   height: 12px;
 }
 
-/* Keep header Playlists hidden while Discover lives in the sidebar. */
-.filmwave-header-nav-link[href="/curated-playlists"] {
+/* Keep header Playlists hidden while Discover lives in the desktop sidebar. */
+.desktop-app-shell .filmwave-header-nav-link[href="/curated-playlists"] {
   display: none;
 }
 
