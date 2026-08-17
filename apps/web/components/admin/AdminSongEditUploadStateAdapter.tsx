@@ -59,6 +59,19 @@ function getFileList(row: HTMLElement) {
   );
 }
 
+function syncExistingAudioStatus(audioRow: HTMLElement | undefined) {
+  if (!audioRow) return;
+
+  const status = audioRow.querySelector<HTMLElement>(
+    ':scope > div:nth-child(2) > div[class~="h-9"] > span',
+  );
+  const text = status?.textContent?.trim() || "";
+
+  if (status) {
+    status.hidden = text === "Current audio file will be kept";
+  }
+}
+
 function syncExistingCover(page: Element, coverRow: HTMLElement | undefined) {
   if (!coverRow) return;
 
@@ -232,6 +245,7 @@ export default function AdminSongEditUploadStateAdapter() {
         action?.classList.toggle("has-file", hasFile);
       });
 
+      syncExistingAudioStatus(rows[0]);
       syncExistingCover(page, rows[1]);
       syncExistingStemRemoval(rows[2]);
     };
