@@ -87,7 +87,7 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(300px, 0.78fr);
   align-items: baseline;
-  gap: clamp(56px, 8vw, 140px);
+  gap: 110px;
 }
 
 .discover-artist-hero-copy h1,
