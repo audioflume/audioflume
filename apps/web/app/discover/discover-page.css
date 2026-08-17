@@ -93,6 +93,7 @@
   grid-column: 1;
   grid-row: 1;
   margin-bottom: 22px;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 18px;
   font-weight: 300;
   letter-spacing: 0;
