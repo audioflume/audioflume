@@ -1,6 +1,6 @@
 "use client";
 
-import { type ReactNode, useRef } from "react";
+import { type CSSProperties, type ReactNode, useRef } from "react";
 
 import Footer from "@/components/Footer";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
@@ -67,9 +67,9 @@ const EDITORIAL_FEATURES = [
 const MOCKUP_LOREM =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.";
 
-function PlayBadge() {
+function PlayBadge({ style }: { style?: CSSProperties }) {
   return (
-    <span className="discover-artist-play-badge" aria-hidden="true">
+    <span className="discover-artist-play-badge" aria-hidden="true" style={style}>
       <span />
     </span>
   );
@@ -215,7 +215,12 @@ export default function DiscoverPage() {
               <p>{FEATURED_ARTIST.description}</p>
               <div className="discover-artist-hero-actions">
                 <span className="discover-artist-hero-listen">
-                  <PlayBadge />
+                  <PlayBadge
+                    style={{
+                      transform:
+                        "translateY(clamp(-21px, calc(-7.8077px - 1.34615vw), -17.5px))",
+                    }}
+                  />
                   <span>Listen now</span>
                 </span>
                 <span>View license catalogue</span>
@@ -267,7 +272,7 @@ export default function DiscoverPage() {
                   <div className="discover-artist-feature-overlay">
                     <div>
                       <h3>{artist.name}</h3>
-                      <p style={{ marginTop: "10px" }}>{artist.note}</p>
+                      <p style={{ marginTop: "15px" }}>{artist.note}</p>
                     </div>
                     <PlayBadge />
                   </div>
