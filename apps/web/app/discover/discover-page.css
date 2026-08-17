@@ -25,6 +25,7 @@
   overflow: hidden;
   margin-top: calc(var(--filmwave-header-height, 75px) * -1);
   background:
+    linear-gradient(rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.12)),
     linear-gradient(
       180deg,
       rgba(0, 0, 0, 0.23) 0%,
@@ -72,9 +73,9 @@
   right: 8%;
   left: 8%;
   display: grid;
-  grid-template-columns: minmax(0, 0.68fr) minmax(420px, 1fr);
+  grid-template-columns: max-content minmax(420px, 1fr);
   align-items: start;
-  gap: clamp(40px, 3vw, 60px);
+  gap: 70px;
 }
 
 .discover-artist-hero-identity,
@@ -110,7 +111,7 @@
 }
 
 .discover-artist-hero-detail {
-  padding-top: clamp(70px, 4.6vw, 88px);
+  padding-top: calc(clamp(70px, 4.6vw, 88px) + 6px);
 }
 
 .discover-artist-hero-detail > p {
@@ -129,7 +130,7 @@
   margin-top: clamp(28px, 2.2vw, 38px);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: 0.01em;
   line-height: 1;
   text-transform: uppercase;
