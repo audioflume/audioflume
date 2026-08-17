@@ -15,6 +15,7 @@ const execFileAsync = promisify(execFile);
 const TARGET_INTEGRATED_LUFS = -14;
 const TARGET_TRUE_PEAK_DBTP = -1;
 const TARGET_LOUDNESS_RANGE = 11;
+const MAX_OUTPUT_LUFS_DEVIATION = 0.5;
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -30,6 +31,7 @@ const limitArg = process.argv.find((arg) => arg.startsWith("--limit="));
 const onlyIdArg = process.argv.find((arg) => arg.startsWith("--id="));
 const limit = limitArg ? Number(limitArg.replace("--limit=", "")) : 25;
 const onlyId = onlyIdArg ? onlyIdArg.replace("--id=", "").trim() : "";
+const streamingVersion = `normalized-${Date.now()}`;
 
 if (!supabaseUrl) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
 if (!supabaseServiceRoleKey) throw new Error("Missing SUPABASE_SERVICE_ROLE_KEY");
@@ -148,6 +150,19 @@ async function getLoudnessNormalization(inputPath) {
   return { measurement, filter };
 }
 
+async function verifyNormalizedPreview(previewPath) {
+  const { measurement } = await getLoudnessNormalization(previewPath);
+  const deviation = Math.abs(measurement.inputI - TARGET_INTEGRATED_LUFS);
+
+  console.log(`normalized preview ${measurement.inputI.toFixed(2)} LUFS`);
+
+  if (deviation > MAX_OUTPUT_LUFS_DEVIATION) {
+    throw new Error(
+      `Normalized preview missed target by ${deviation.toFixed(2)} LU (measured ${measurement.inputI.toFixed(2)} LUFS).`,
+    );
+  }
+}
+
 async function uploadBufferToR2({ key, buffer, contentType }) {
   if (dryRun) {
     console.log(`dry-run upload ${key}`);
@@ -180,6 +195,7 @@ async function downloadAudio(audioUrl, inputPath) {
 
 async function processSong(song) {
   const baseKey = getBaseKeyFromAudioUrl(song.audio_url);
+  const streamingBaseKey = `${baseKey}/streaming/${streamingVersion}`;
   const tempDir = await mkdtemp(path.join(tmpdir(), "filmwave-streaming-backfill-"));
 
   try {
@@ -215,6 +231,8 @@ async function processSong(song) {
         previewPath,
       ]);
 
+      await verifyNormalizedPreview(previewPath);
+
       await runFfmpeg([
         "-y",
         "-i",
@@ -242,8 +260,8 @@ async function processSong(song) {
       ]);
     }
 
-    const playbackKey = `${baseKey}/playback/preview.mp3`;
-    const hlsBaseKey = `${baseKey}/hls`;
+    const playbackKey = `${streamingBaseKey}/playback/preview.mp3`;
+    const hlsBaseKey = `${streamingBaseKey}/hls`;
     const hlsKey = `${hlsBaseKey}/index.m3u8`;
 
     const playbackUrl = await uploadBufferToR2({
@@ -317,6 +335,7 @@ const { data: songs, error } = await query;
 if (error) throw error;
 
 console.log(`Found ${songs?.length || 0} song${songs?.length === 1 ? "" : "s"} to ${force ? "regenerate" : "backfill"}.`);
+console.log(`Streaming version: ${streamingVersion}`);
 
 let failed = 0;
 

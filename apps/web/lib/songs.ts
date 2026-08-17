@@ -125,8 +125,8 @@ export function normalizeSongRow(row: any): Song {
     artist: String(row.artist || ""),
     audioUrl,
     playbackUrl:
-      inferredStreamingUrls.playbackUrl || storedPlaybackUrl || audioUrl,
-    hlsUrl: inferredStreamingUrls.hlsUrl || storedHlsUrl,
+      storedPlaybackUrl || inferredStreamingUrls.playbackUrl || audioUrl,
+    hlsUrl: storedHlsUrl || inferredStreamingUrls.hlsUrl,
     coverArt: row.cover_url ? String(row.cover_url) : null,
     stems: parseStems(row.stems),
     waveformPeaks: String(row.waveform_peaks || "[]"),
