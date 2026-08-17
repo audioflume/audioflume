@@ -23,10 +23,14 @@ const FEATURED_ARTISTS = [
   {
     name: "Isaac Haines",
     note: "Authentic, evocative music for real stories",
+    image:
+      "https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg",
   },
   {
     name: "No Data",
     note: "Authentic, evocative music for real stories",
+    image:
+      "https://images.filmwave.io/images/discover/egor-komarov-SwezL05iMjI-unsplash%20(1).jpg",
   },
 ];
 
@@ -74,16 +78,33 @@ function PlayBadge() {
 function PlaceholderMedia({
   index,
   className = "",
+  imageSrc,
   children,
 }: {
   index: number;
   className?: string;
+  imageSrc?: string;
   children?: ReactNode;
 }) {
   return (
     <div
       className={`discover-artist-placeholder is-tone-${index % 6} ${className}`.trim()}
     >
+      {imageSrc ? (
+        <img
+          src={imageSrc}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          style={{
+            position: "absolute",
+            inset: 0,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+          }}
+        />
+      ) : null}
       {children}
     </div>
   );
@@ -224,12 +245,13 @@ export default function DiscoverPage() {
               <article key={artist.name} className="discover-artist-feature-card">
                 <PlaceholderMedia
                   index={index}
+                  imageSrc={artist.image}
                   className="discover-artist-feature-media"
                 >
                   <div className="discover-artist-feature-overlay">
                     <div>
                       <h3>{artist.name}</h3>
-                      <p>{artist.note}</p>
+                      <p style={{ marginTop: "20px" }}>{artist.note}</p>
                     </div>
                     <PlayBadge />
                   </div>
