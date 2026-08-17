@@ -182,7 +182,9 @@ export default function DiscoverPage() {
 
           <div className="discover-artist-hero-copy">
             <h1>
-              <span>Real music</span> made by <span>real artists.</span>
+              <span className="discover-artist-hero-regular">Real music</span>
+              <span className="discover-artist-hero-thin"> made by </span>
+              <span className="discover-artist-hero-regular">real artists.</span>
             </h1>
             <p>Support real-world artists and composers.</p>
           </div>
