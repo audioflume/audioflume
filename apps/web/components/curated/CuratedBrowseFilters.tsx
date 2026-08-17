@@ -1,6 +1,5 @@
 "use client";
 
-import type { CSSProperties } from "react";
 import Link from "next/link";
 
 import {
@@ -123,7 +122,6 @@ type CuratedBrowseFiltersProps = {
   hrefForFilter?: (filter: CuratedBrowseTag) => string;
   ariaLabel?: string;
   className?: string;
-  pillStyle?: CSSProperties;
 };
 
 export default function CuratedBrowseFilters({
@@ -132,7 +130,6 @@ export default function CuratedBrowseFilters({
   hrefForFilter,
   ariaLabel = "Filter curated playlists",
   className = "",
-  pillStyle,
 }: CuratedBrowseFiltersProps) {
   return (
     <nav
@@ -147,22 +144,15 @@ export default function CuratedBrowseFilters({
             <span>{filter.label}</span>
           </>
         );
-        const activeStyle: CSSProperties | undefined = isActive
-          ? {
-              borderColor: "var(--text-primary)",
-              background: "var(--text-primary)",
-              color: "var(--bg-primary)",
-            }
-          : undefined;
         const sharedProps = {
           className: `curated-feature-filter-pill${isActive ? " is-active" : ""}`,
-          style:
-            pillStyle || activeStyle
-              ? {
-                  ...pillStyle,
-                  ...activeStyle,
-                }
-              : undefined,
+          style: isActive
+            ? {
+                borderColor: "var(--text-primary)",
+                background: "var(--text-primary)",
+                color: "var(--bg-primary)",
+              }
+            : undefined,
         };
 
         if (hrefForFilter) {

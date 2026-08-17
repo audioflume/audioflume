@@ -17,17 +17,22 @@
   margin-top: 0;
 }
 
+.curated-page-browse-filters {
+  --curated-filter-pill-height: 65px;
+  --curated-filter-pill-radius: 0px;
+}
+
 .curated-feature-filter-pill {
   display: inline-flex;
   min-width: 0;
-  height: 30px;
+  height: var(--curated-filter-pill-height, 30px);
   align-items: center;
   justify-content: center;
   gap: 6px;
   overflow: hidden;
   cursor: pointer;
   border: 1px solid var(--filmwave-browse-filter-border-color);
-  border-radius: 999px;
+  border-radius: var(--curated-filter-pill-radius, 999px);
   background: transparent;
   color: var(--text-primary);
   padding: 0 10px;
@@ -39,11 +44,6 @@
   transition:
     border-color 150ms ease,
     background-color 150ms ease;
-}
-
-.curated-page-browse-filters .curated-feature-filter-pill {
-  height: 65px;
-  border-radius: 7px;
 }
 
 .curated-feature-filter-pill:hover,
