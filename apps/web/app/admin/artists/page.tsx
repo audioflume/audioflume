@@ -98,7 +98,7 @@ function statusStyle(status: ArtistStatus) {
 function StatusBadge({ status }: { status: ArtistStatus }) {
   return (
     <span
-      className="inline-flex h-6 items-center px-2.5 text-[10px] font-medium uppercase tracking-[0.05em]"
+      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-medium uppercase tracking-[0.05em]"
       style={statusStyle(status)}
     >
       {formatStatus(status)}
@@ -122,7 +122,7 @@ function ActionButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-8 cursor-pointer items-center justify-center border px-3 text-[11px] font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${
+      className={`inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border px-3 text-[11px] font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${
         primary
           ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"
           : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -264,6 +264,8 @@ export default function AdminArtistsPage() {
       label="Artists"
       title="Artists"
       description="Review artist applications and manage artist access status."
+      compactHeader
+      hideIntro
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
     >
       <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
@@ -298,8 +300,8 @@ export default function AdminArtistsPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="hidden min-w-[940px] grid-cols-[minmax(190px,1.35fr)_minmax(170px,1fr)_minmax(130px,0.8fr)_120px_130px_minmax(190px,auto)] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)] md:grid">
+      <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+        <div className="grid min-w-[940px] grid-cols-[minmax(190px,1.35fr)_minmax(170px,1fr)_minmax(130px,0.8fr)_120px_130px_minmax(190px,auto)] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
           <span>Artist</span>
           <span>Owner</span>
           <span>Location</span>
@@ -309,26 +311,26 @@ export default function AdminArtistsPage() {
         </div>
 
         {loading ? (
-          <div className="flex min-h-[180px] items-center justify-center text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[180px] min-w-[940px] items-center justify-center text-xs text-[var(--text-muted)]">
             Loading artists...
           </div>
         ) : error ? (
-          <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
+          <div className="flex min-h-[180px] min-w-[940px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
             <span>{error}</span>
             <button
               type="button"
               onClick={() => void loadArtists()}
-              className="inline-flex h-8 cursor-pointer items-center justify-center border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-primary)]"
+              className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-primary)]"
             >
               Try again
             </button>
           </div>
         ) : visibleArtists.length === 0 ? (
-          <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[180px] min-w-[940px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
             No artists match this view.
           </div>
         ) : (
-          <div>
+          <div className="min-w-[940px]">
             {visibleArtists.map((artist) => {
               const updating = updatingArtistId === artist.id;
               const ownerLabel =
@@ -337,7 +339,7 @@ export default function AdminArtistsPage() {
               return (
                 <div
                   key={artist.id}
-                  className="grid gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0 md:min-w-[940px] md:grid-cols-[minmax(190px,1.35fr)_minmax(170px,1fr)_minmax(130px,0.8fr)_120px_130px_minmax(190px,auto)] md:items-center"
+                  className="grid grid-cols-[minmax(190px,1.35fr)_minmax(170px,1fr)_minmax(130px,0.8fr)_120px_130px_minmax(190px,auto)] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0"
                 >
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium text-[var(--text-primary)]">
@@ -392,7 +394,7 @@ export default function AdminArtistsPage() {
                     <StatusBadge status={artist.status} />
                   </div>
 
-                  <div className="flex flex-wrap gap-2 md:justify-end">
+                  <div className="flex flex-wrap justify-end gap-2">
                     {artist.status === "pending" ? (
                       <>
                         <ActionButton

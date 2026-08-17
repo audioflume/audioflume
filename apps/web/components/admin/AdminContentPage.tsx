@@ -12,6 +12,7 @@ type AdminContentPageProps = {
   headerAction?: ReactNode;
   titleAction?: ReactNode;
   compactHeader?: boolean;
+  hideIntro?: boolean;
   children: ReactNode;
   contentClassName?: string;
   contentAreaClassName?: string;
@@ -43,6 +44,7 @@ export default function AdminContentPage({
   headerAction,
   titleAction,
   compactHeader = false,
+  hideIntro = false,
   children,
   contentClassName = "",
   contentAreaClassName = "",
@@ -62,6 +64,7 @@ export default function AdminContentPage({
   const isPlaylistCreate = resolvedLabel === "Create Playlist";
   const isPlaylistEdit = resolvedLabel === "Edit Playlist";
   const hidePageIntro =
+    hideIntro ||
     isDashboard ||
     isCuePoints ||
     resolvedLabel === "Playlist Manager" ||
