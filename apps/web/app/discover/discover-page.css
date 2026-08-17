@@ -73,12 +73,13 @@
   right: auto;
   left: 50%;
   display: grid;
-  width: max-content;
-  max-width: calc(100% - (var(--discover-artist-gutter) * 2));
-  grid-template-columns: max-content minmax(420px, 560px);
+  width: 100%;
+  max-width: 100%;
+  grid-template-columns: max-content minmax(360px, 560px);
   grid-template-rows: auto auto auto;
   align-items: start;
-  column-gap: 70px;
+  justify-content: center;
+  column-gap: clamp(32px, 5vw, 70px);
   row-gap: 0;
   transform: translateX(-50%);
 }
@@ -106,7 +107,7 @@
   grid-row: 2;
   align-self: last baseline;
   margin: 0;
-  font-size: 98px;
+  font-size: clamp(66px, 7.8vw, 98px);
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.96;
