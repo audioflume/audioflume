@@ -230,9 +230,25 @@ export default function DiscoverPage() {
               featured artists
             </span>
             <p>{MOCKUP_LOREM}</p>
-            <div className="discover-artist-hero-slider-marks" aria-hidden="true">
-              <span />
-              <span />
+            <div className="flex w-[178px] justify-self-end flex-col items-end max-[720px]:hidden">
+              <div
+                className="mb-[10px] inline-flex h-[22px] items-center gap-[7px] text-[rgba(255,255,255,0.82)]"
+                aria-hidden="true"
+              >
+                <span className="inline-flex h-[22px] w-[18px] items-center justify-center">
+                  <ChevronLeftIcon size={14} />
+                </span>
+                <span className="inline-flex h-[22px] w-[18px] items-center justify-center">
+                  <ChevronRightIcon size={14} />
+                </span>
+                <span className="ml-[5px] text-[10px] font-medium leading-none [font-variant-numeric:tabular-nums]">
+                  1/3
+                </span>
+              </div>
+              <div className="discover-artist-hero-slider-marks" aria-hidden="true">
+                <span />
+                <span />
+              </div>
             </div>
           </div>
         </div>
