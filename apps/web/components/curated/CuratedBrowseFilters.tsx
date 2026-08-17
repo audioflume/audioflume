@@ -17,6 +17,8 @@ type FilterIconName =
   | "clapper"
   | "moon";
 
+type CuratedBrowseFiltersVariant = "pill" | "curated-page";
+
 const FILTER_ICONS: Record<CuratedBrowseTag, FilterIconName> = {
   editors: "scissors",
   mood: "waveform",
@@ -28,13 +30,7 @@ const FILTER_ICONS: Record<CuratedBrowseTag, FilterIconName> = {
   "dark-moody": "moon",
 };
 
-function FilterIcon({
-  icon,
-  active = false,
-}: {
-  icon: FilterIconName;
-  active?: boolean;
-}) {
+function FilterIcon({ icon }: { icon: FilterIconName }) {
   const commonProps = {
     width: 13,
     height: 13,
@@ -44,7 +40,6 @@ function FilterIcon({
     strokeWidth: 1.45,
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
-    style: active ? { color: "inherit" } : undefined,
     "aria-hidden": true,
   };
 
@@ -122,6 +117,7 @@ type CuratedBrowseFiltersProps = {
   hrefForFilter?: (filter: CuratedBrowseTag) => string;
   ariaLabel?: string;
   className?: string;
+  variant?: CuratedBrowseFiltersVariant;
 };
 
 export default function CuratedBrowseFilters({
@@ -130,6 +126,7 @@ export default function CuratedBrowseFilters({
   hrefForFilter,
   ariaLabel = "Filter curated playlists",
   className = "",
+  variant = "pill",
 }: CuratedBrowseFiltersProps) {
   return (
     <nav
@@ -140,19 +137,12 @@ export default function CuratedBrowseFilters({
         const isActive = activeFilter === filter.value;
         const content = (
           <>
-            <FilterIcon icon={FILTER_ICONS[filter.value]} active={isActive} />
+            <FilterIcon icon={FILTER_ICONS[filter.value]} />
             <span>{filter.label}</span>
           </>
         );
         const sharedProps = {
-          className: `curated-feature-filter-pill${isActive ? " is-active" : ""}`,
-          style: isActive
-            ? {
-                borderColor: "var(--text-primary)",
-                background: "var(--text-primary)",
-                color: "var(--bg-primary)",
-              }
-            : undefined,
+          className: `curated-feature-filter-pill curated-feature-filter-pill--${variant}${isActive ? " is-active" : ""}`,
         };
 
         if (hrefForFilter) {

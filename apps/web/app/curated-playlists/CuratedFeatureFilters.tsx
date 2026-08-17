@@ -52,7 +52,7 @@ export default function CuratedFeatureFilters({
       <CuratedBrowseFilters
         activeFilter={activeFilter}
         onFilterChange={onFilterChange}
-        className="curated-page-browse-filters"
+        variant="curated-page"
       />
     </div>
   );
