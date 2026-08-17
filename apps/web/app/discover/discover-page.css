@@ -68,11 +68,11 @@
 
 .discover-artist-hero-word {
   position: absolute;
-  top: calc(var(--filmwave-header-height, 75px) + clamp(150px, 9vw, 175px));
-  left: calc(var(--discover-artist-gutter) * -1);
+  top: calc(var(--filmwave-header-height, 75px) + clamp(100px, 9vw, 125px));
+  left: calc((var(--discover-artist-gutter) * -1) - 25px);
   color: rgba(255, 255, 255, 0.062);
   font-size: clamp(145px, 17vw, 280px);
-  font-weight: 500;
+  font-weight: 400;
   letter-spacing: -0.075em;
   line-height: 0.8;
   white-space: nowrap;
@@ -98,7 +98,7 @@
 
 .discover-artist-hero-copy h1 {
   color: rgba(255, 255, 255, 0.5);
-  font-size: clamp(31px, 2.55vw, 44px);
+  font-size: clamp(33px, 2.7vw, 46px);
   font-weight: 400;
   line-height: 1.04;
 }
@@ -115,8 +115,8 @@
 
 .discover-artist-hero-copy p {
   color: rgba(255, 255, 255, 0.9);
-  font-size: clamp(21px, 1.7vw, 29px);
-  font-weight: 300;
+  font-size: clamp(23px, 1.85vw, 31px);
+  font-weight: 200;
   line-height: 1.16;
 }
 
@@ -145,8 +145,8 @@
 
 .discover-artist-featured-intro h2 {
   margin: 0;
-  font-size: clamp(32px, 2.35vw, 40px);
-  font-weight: 300;
+  font-size: clamp(30px, 2.2vw, 38px);
+  font-weight: 200;
   letter-spacing: -0.045em;
   line-height: 1.01;
 }
@@ -155,7 +155,7 @@
   margin: 0;
   padding-left: 10px;
   font-size: clamp(15px, 1.05vw, 18px);
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 1.15;
   text-transform: uppercase;
@@ -165,8 +165,8 @@
   margin: 0;
   padding-left: clamp(24px, 2vw, 40px);
   color: rgba(255, 255, 255, 0.82);
-  font-size: clamp(14px, 0.95vw, 17px);
-  font-weight: 400;
+  font-size: clamp(16px, 1.08vw, 19px);
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
 }
@@ -175,6 +175,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 10px;
+  margin-top: -57px;
 }
 
 .discover-artist-feature-card {
@@ -552,7 +553,7 @@
   }
 
   .discover-artist-hero-word {
-    top: calc(var(--filmwave-header-height, 75px) + 135px);
+    top: calc(var(--filmwave-header-height, 75px) + 85px);
     font-size: clamp(132px, 23vw, 210px);
   }
 
@@ -565,11 +566,11 @@
   }
 
   .discover-artist-hero-copy h1 {
-    font-size: clamp(30px, 4vw, 38px);
+    font-size: clamp(32px, 4.2vw, 40px);
   }
 
   .discover-artist-hero-copy p {
-    font-size: clamp(19px, 2.6vw, 24px);
+    font-size: clamp(21px, 2.8vw, 26px);
   }
 
   .discover-artist-content {
@@ -582,7 +583,7 @@
   }
 
   .discover-artist-featured-intro h2 {
-    font-size: clamp(30px, 4vw, 36px);
+    font-size: clamp(28px, 3.8vw, 34px);
   }
 
   .discover-artist-editorial-grid {
@@ -605,8 +606,8 @@
   }
 
   .discover-artist-hero-word {
-    top: calc(var(--filmwave-header-height, 75px) + 120px);
-    left: -10px;
+    top: calc(var(--filmwave-header-height, 75px) + 70px);
+    left: -35px;
     font-size: clamp(100px, 31vw, 160px);
   }
 
@@ -620,12 +621,12 @@
 
   .discover-artist-hero-copy h1 {
     max-width: 520px;
-    font-size: clamp(30px, 8vw, 40px);
+    font-size: clamp(32px, 8.5vw, 42px);
   }
 
   .discover-artist-hero-copy p {
     max-width: 430px;
-    font-size: 18px;
+    font-size: 20px;
   }
 
   .discover-artist-content {
@@ -639,7 +640,7 @@
   }
 
   .discover-artist-featured-intro h2 {
-    font-size: 30px;
+    font-size: 28px;
   }
 
   .discover-artist-featured-kicker {
@@ -649,7 +650,7 @@
   .discover-artist-featured-intro p {
     max-width: 420px;
     padding-left: 0;
-    font-size: 14px;
+    font-size: 16px;
   }
 
   .discover-artist-featured-grid {
