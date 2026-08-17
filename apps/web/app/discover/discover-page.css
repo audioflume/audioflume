@@ -253,7 +253,7 @@
 }
 
 .discover-artist-feature-overlay {
-  padding: clamp(18px, 1.55vw, 26px);
+  padding: 45px;
 }
 
 .discover-artist-feature-overlay h3 {
@@ -268,8 +268,8 @@
   margin: 7px 0 0;
   color: rgba(255, 255, 255, 0.74);
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: clamp(10px, 0.7vw, 12px);
-  font-weight: 400;
+  font-size: 9.5px;
+  font-weight: 300;
   letter-spacing: -0.01em;
   text-transform: uppercase;
 }
