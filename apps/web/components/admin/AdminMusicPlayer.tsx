@@ -25,7 +25,6 @@ import MoreIcon from "@/components/icons/MoreIcon";
 import VolumeIcon from "@/components/icons/VolumeIcon";
 import Toast from "@/components/Toast";
 import AdminAddToPlaylistModal from "@/components/admin/AdminAddToPlaylistModal";
-import { iconButtonClass } from "@/components/uiClasses";
 
 const BAR_WIDTH = 2;
 const BAR_GAP = 1;
@@ -458,7 +457,11 @@ export default function AdminMusicPlayer() {
                 type="button"
                 aria-label="Volume"
                 aria-expanded={open}
-                className={`${iconButtonClass} filmwave-player-volume-button ${open ? "is-open" : ""}`}
+                className={`filmwave-player-volume-button inline-flex h-7 w-7 min-w-7 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors [&>svg]:h-[14px] [&>svg]:w-[14px] ${
+                  open
+                    ? "text-[var(--text-primary)]"
+                    : "text-[var(--icon-color)] hover:text-[var(--text-primary)]"
+                }`}
               >
                 <VolumeIcon muted={volume === 0} />
               </button>
@@ -492,10 +495,10 @@ export default function AdminMusicPlayer() {
                 type="button"
                 aria-label="Song options"
                 aria-expanded={open}
-                className={`${iconButtonClass} ${
+                className={`inline-flex h-7 w-7 min-w-7 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors [&>svg]:h-[14px] [&>svg]:w-[14px] ${
                   open
-                    ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]"
-                    : ""
+                    ? "text-[var(--text-primary)]"
+                    : "text-[var(--icon-color)] hover:text-[var(--text-primary)]"
                 }`}
               >
                 <MoreIcon />
