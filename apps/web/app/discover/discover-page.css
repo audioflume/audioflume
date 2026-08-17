@@ -1,5 +1,5 @@
 .discover-page-root {
-  --discover-artist-gutter: clamp(24px, 2.05vw, 36px);
+  --discover-artist-gutter: var(--filmwave-page-gutter);
   --discover-artist-max-width: 1640px;
   --discover-artist-content-inset: max(
     var(--discover-artist-gutter),
@@ -265,7 +265,7 @@
 }
 
 .discover-artist-feature-overlay p {
-  margin: 7px 0 0;
+  margin: 4px 0 0;
   color: rgba(255, 255, 255, 0.74);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 9.5px;
@@ -598,7 +598,7 @@
 
 @media (max-width: 720px) {
   .discover-page-root {
-    --discover-artist-gutter: 20px;
+    --discover-artist-gutter: var(--filmwave-page-gutter);
   }
 
   .discover-artist-hero {
