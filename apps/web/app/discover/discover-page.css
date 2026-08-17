@@ -432,8 +432,8 @@
 }
 
 .discover-artist-shelf-card {
-  min-width: clamp(170px, 15.2vw, 240px);
-  flex: 0 0 clamp(170px, 15.2vw, 240px);
+  min-width: clamp(270px, 15.2vw, 340px);
+  flex: 0 0 clamp(270px, 15.2vw, 340px);
   scroll-snap-align: start;
 }
 
