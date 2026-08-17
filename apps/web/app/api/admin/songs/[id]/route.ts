@@ -115,6 +115,34 @@ function getStemUrls(value: string | null): string[] {
     .filter(Boolean);
 }
 
+function inferStreamingUrls(audioUrl: string) {
+  try {
+    const url = new URL(audioUrl);
+    const pathParts = url.pathname.split("/").filter(Boolean);
+    const audioIndex = pathParts.indexOf("audio");
+
+    if (audioIndex <= 1) {
+      return {
+        playbackUrl: "",
+        hlsUrl: "",
+      };
+    }
+
+    const basePath = pathParts.slice(0, audioIndex).join("/");
+    const origin = `${url.origin}/`;
+
+    return {
+      playbackUrl: `${origin}${basePath}/playback/preview.mp3`,
+      hlsUrl: `${origin}${basePath}/hls/index.m3u8`,
+    };
+  } catch {
+    return {
+      playbackUrl: "",
+      hlsUrl: "",
+    };
+  }
+}
+
 function emptyEditPointsJson() {
   return '{"markers":[],"ranges":[]}';
 }
@@ -321,6 +349,10 @@ export async function PATCH(req: Request, context: RouteContext) {
     const nextStemKeys = (payload.stemUrls || [])
       .map(getR2KeyFromUrl)
       .filter((key): key is string => Boolean(key));
+    const audioChanged = payload.audioUrl.trim() !== String(current.audio_url || "").trim();
+    const replacementStreamingUrls = audioChanged
+      ? inferStreamingUrls(payload.audioUrl)
+      : null;
 
     const keysToDelete = [
       previousAudioKey && previousAudioKey !== nextAudioKey
@@ -338,6 +370,12 @@ export async function PATCH(req: Request, context: RouteContext) {
         title: payload.title.trim(),
         artist: payload.artist.trim(),
         audio_url: payload.audioUrl.trim(),
+        ...(replacementStreamingUrls
+          ? {
+              playback_url: replacementStreamingUrls.playbackUrl || null,
+              hls_url: replacementStreamingUrls.hlsUrl || null,
+            }
+          : {}),
         cover_url: payload.coverUrl || null,
         stems: payload.stemUrls?.length ? payload.stemUrls.join("\n") : null,
         waveform_peaks: payload.waveformPeaks || "[]",
