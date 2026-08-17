@@ -1,154 +1,111 @@
 "use client";
 
-import Image from "next/image";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  type FormEvent,
-  type KeyboardEvent,
-  type MouseEvent,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { type ReactNode, useRef } from "react";
 
 import Footer from "@/components/Footer";
-import SectionTitle from "@/components/SectionTitle";
-import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
-import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
-import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
-import PauseIcon from "@/components/icons/PauseIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import SearchIcon from "@/components/icons/SearchIcon";
-import WaveformIcon from "@/components/icons/WaveformIcon";
 import { usePlayer } from "@/context/PlayerContext";
-import { useSongs } from "@/hooks/useSongs";
-import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
-import type { DiscoverSectionShelfState } from "@/lib/discoverSections";
-import type { Song } from "@/lib/types";
-import CuratedJumpBackIn from "../curated-playlists/CuratedJumpBackIn";
 
-import "../music/music-library-redesign.css";
+type ShelfItem = {
+  title: string;
+  subtitle: string;
+};
 
-const READY_TO_CUT_SONG_COUNT = 12;
-const HERO_BACKGROUND_IMAGE =
-  "https://images.filmwave.io/images/discover/b7cb4a48-bd82-44d1-b02e-c104dac45339-gigapixel-low%20resolution%20v2-2x.jpeg";
+const FEATURED_ARTISTS = [
+  {
+    name: "Isaac Haines",
+    note: "Authentic, emotive music for real stories",
+  },
+  {
+    name: "No Data",
+    note: "Cinematic texture, fractured rhythm, modern tension",
+  },
+];
 
-function getFallbackGradient(index: number) {
-  const gradients = [
-    "linear-gradient(135deg, #372f4f 0%, #111111 48%, #75649a 100%)",
-    "linear-gradient(135deg, #1f3d3a 0%, #111111 52%, #4d8c7b 100%)",
-    "linear-gradient(135deg, #4f3529 0%, #111111 50%, #b66c45 100%)",
-    "linear-gradient(135deg, #25364f 0%, #111111 52%, #6287c4 100%)",
-    "linear-gradient(135deg, #45233d 0%, #111111 52%, #b75d91 100%)",
-  ];
+const ARTISTS_WATCHING: ShelfItem[] = [
+  { title: "Mara Vela", subtitle: "Alternative / Cinematic" },
+  { title: "Northline", subtitle: "Indie / Electronic" },
+  { title: "Elena Vale", subtitle: "Soul / Alternative" },
+  { title: "Sundown Club", subtitle: "Ambient / Organic" },
+  { title: "Orbit Glass", subtitle: "Experimental / Electronic" },
+  { title: "Quiet Hours", subtitle: "Minimal / Intimate" },
+  { title: "Soft Static", subtitle: "Indie / Textural" },
+];
 
-  return gradients[index % gradients.length];
-}
+const TOP_ALBUMS: ShelfItem[] = [
+  { title: "Peripheral Light", subtitle: "Mara Vela" },
+  { title: "Human Signal", subtitle: "Northline" },
+  { title: "Be Voyager", subtitle: "Elena Vale" },
+  { title: "Room Tone", subtitle: "Sundown Club" },
+  { title: "Loose Ends", subtitle: "Orbit Glass" },
+  { title: "After Image", subtitle: "Quiet Hours" },
+  { title: "Open Field", subtitle: "Soft Static" },
+];
 
-function stopPlaybackKeyEvent(event: KeyboardEvent<HTMLElement>) {
-  event.preventDefault();
-  event.stopPropagation();
-  event.nativeEvent.stopImmediatePropagation();
-}
+const SUPPORT_NEW_ARTISTS: ShelfItem[] = [
+  { title: "Ari Sol", subtitle: "New this week" },
+  { title: "Tape Garden", subtitle: "New this week" },
+  { title: "Nia March", subtitle: "New this week" },
+  { title: "Mono Lake", subtitle: "New this week" },
+  { title: "Glass House", subtitle: "New this week" },
+  { title: "Fallow", subtitle: "New this week" },
+  { title: "Low Season", subtitle: "New this week" },
+];
 
-function stopPlaybackMouseEvent(event: MouseEvent<HTMLElement>) {
-  event.preventDefault();
-  event.stopPropagation();
-  event.nativeEvent.stopImmediatePropagation();
-}
+const EDITORIAL_FEATURES = [
+  {
+    eyebrow: "Trending music for brands",
+    title: "In demand artists and composers.",
+  },
+  {
+    eyebrow: "Music for real stories",
+    title: "In demand artists and composers.",
+  },
+  {
+    eyebrow: "Cinematic masterpieces",
+    title: "In demand artists and composers.",
+  },
+];
 
-function DiscoverHero() {
-  const router = useRouter();
-  const [search, setSearch] = useState("");
-
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const cleanSearch = search.trim();
-    router.push(
-      cleanSearch
-        ? `/music?search=${encodeURIComponent(cleanSearch)}`
-        : "/music",
-    );
-  }
-
+function PlayBadge() {
   return (
-    <section className="discover-hero" aria-label="Discover music">
-      <Image
-        src={HERO_BACKGROUND_IMAGE}
-        alt=""
-        fill
-        priority
-        unoptimized
-        sizes="100vw"
-        className="discover-hero-image"
-      />
-
-      <div className="discover-hero-overlay" aria-hidden="true" />
-
-      <div className="discover-hero-inner">
-        <div className="discover-hero-content max-w-[780px]">
-          <h1>Find the cue that fits the scene</h1>
-
-          <form className="discover-hero-search" onSubmit={handleSubmit}>
-            <span className="discover-hero-search-icon" aria-hidden="true">
-              <SearchIcon size={14} />
-            </span>
-            <input
-              type="search"
-              value={search}
-              onChange={(event) => setSearch(event.target.value)}
-              placeholder="Search music library"
-              aria-label="Search music library"
-            />
-            <button type="submit">Search</button>
-          </form>
-
-          <div className="discover-hero-values">
-            <div>
-              <strong>Human curated music library</strong>
-              <span>
-                Human-picked tracks, thoughtful moods, and music chosen for real
-                edits.
-              </span>
-            </div>
-            <div>
-              <strong>Thousands of sound effects</strong>
-              <span>
-                Thousands of sound effects, textures, and details for richer
-                edits.
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
+    <span className="discover-artist-play-badge" aria-hidden="true">
+      <span />
+    </span>
   );
 }
 
-function DiscoverMoodShelf({
-  playlists,
-  loading,
+function PlaceholderMedia({
+  index,
+  className = "",
+  children,
 }: {
-  playlists: CuratedPlaylist[];
-  loading: boolean;
+  index: number;
+  className?: string;
+  children?: ReactNode;
+}) {
+  return (
+    <div
+      className={`discover-artist-placeholder is-tone-${index % 6} ${className}`.trim()}
+    >
+      {children}
+    </div>
+  );
+}
+
+function ArtistShelf({
+  title,
+  items,
+  square = false,
+  footerCopy,
+}: {
+  title: string;
+  items: ShelfItem[];
+  square?: boolean;
+  footerCopy?: string;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-
-  function updateScrollState() {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
-    setCanScrollPrev(scroller.scrollLeft > 4);
-    setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
-  }
 
   function scroll(direction: "prev" | "next") {
     const scroller = scrollerRef.current;
@@ -157,670 +114,174 @@ function DiscoverMoodShelf({
     scroller.scrollBy({
       left:
         direction === "next"
-          ? Math.max(scroller.clientWidth * 0.82, 360)
-          : -Math.max(scroller.clientWidth * 0.82, 360),
+          ? Math.max(scroller.clientWidth * 0.78, 360)
+          : -Math.max(scroller.clientWidth * 0.78, 360),
       behavior: "smooth",
     });
   }
 
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    updateScrollState();
-    scroller.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
-
-    return () => {
-      scroller.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-    };
-  }, [playlists.length, loading]);
-
-  if (!loading && playlists.length === 0) return null;
-
   return (
-    <section className="discover-section discover-mood-section">
-      <style>{`
-        .discover-mood-section .curated-playlist-shelf-viewport {
-          margin-left: calc(var(--discover-page-gutter) * -1);
-          margin-right: calc(var(--discover-page-gutter) * -1);
-          overflow: hidden;
-        }
+    <section className="discover-artist-shelf-section">
+      <div className="discover-artist-shelf-heading">
+        <h2>{title}</h2>
 
-        .discover-mood-section .curated-playlist-shelf-scroller {
-          padding-left: var(--discover-page-gutter);
-          padding-right: var(--discover-page-gutter);
-        }
-
-        .discover-mood-section .curated-playlist-shelf-prev-floating {
-          left: 2rem;
-        }
-
-        .discover-mood-section .discover-mood-shelf-floating {
-          top: calc((min(43vw, 560px) / 1.72) / 2);
-        }
-
-        .discover-mood-section .playlist-gallery-card {
-          position: relative;
-          min-width: 0;
-          cursor: pointer;
-        }
-
-        .discover-playlist-card-media-link,
-        .discover-playlist-card-copy-link {
-          display: block;
-          min-width: 0;
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .discover-playlist-card-details {
-          display: grid;
-          grid-template-columns: minmax(0, 1fr) 18px;
-          align-items: start;
-          gap: 6px;
-          margin-top: 10px;
-        }
-
-        .discover-playlist-card-details h3 {
-          margin: 0;
-        }
-
-        .discover-playlist-card-details p {
-          margin-top: 4px;
-        }
-
-        .discover-playlist-card-play-button {
-          margin-top: 1px;
-        }
-
-        .discover-mood-section
-          .playlist-gallery-card:hover
-          .curated-playlist-play-button,
-        .discover-mood-section
-          .playlist-gallery-card:focus-within
-          .curated-playlist-play-button,
-        .discover-production-section
-          .playlist-gallery-card:hover
-          .curated-playlist-play-button,
-        .discover-production-section
-          .playlist-gallery-card:focus-within
-          .curated-playlist-play-button {
-          opacity: 1;
-        }
-
-        .discover-mood-section .playlist-gallery-top-row,
-        .discover-production-section .playlist-gallery-top-row {
-          position: relative;
-          z-index: 4;
-          display: flex;
-          justify-content: flex-end;
-          padding: 16px;
-        }
-
-        .discover-mood-section .playlist-gallery-arrow,
-        .discover-production-section .playlist-gallery-arrow {
-          display: flex;
-          width: 32px;
-          height: 32px;
-          flex-shrink: 0;
-          align-items: center;
-          justify-content: center;
-          border-radius: 999px;
-          background: rgba(255, 255, 255, 0.12);
-          color: white;
-          backdrop-filter: blur(12px);
-          transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
-        }
-
-        .discover-mood-section .playlist-gallery-card:hover .playlist-gallery-arrow,
-        .discover-mood-section .playlist-gallery-card.is-menu-open .playlist-gallery-arrow,
-        .discover-production-section .playlist-gallery-card:hover .playlist-gallery-arrow,
-        .discover-production-section .playlist-gallery-card.is-menu-open .playlist-gallery-arrow {
-          background: white;
-          color: black;
-        }
-
-        @media (max-width: 980px) {
-          .discover-mood-section .discover-mood-shelf-floating {
-            top: calc((min(68vw, 500px) / 1.72) / 2);
-          }
-        }
-
-        @media (max-width: 720px) {
-          .discover-mood-section .discover-mood-shelf-floating {
-            top: calc((82vw / 1.72) / 2);
-          }
-        }
-      `}</style>
-
-      <div className="discover-section-header">
-        <SectionTitle>Explore These Moods</SectionTitle>
-
-        <div className="hidden items-center gap-2 sm:flex">
+        <div className="discover-artist-shelf-controls">
           <button
             type="button"
             onClick={() => scroll("prev")}
-            disabled={!canScrollPrev}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-            aria-label="Scroll Explore these moods left"
+            aria-label={`Scroll ${title} left`}
           >
-            <ChevronLeftIcon size={16} />
+            <ChevronLeftIcon size={13} />
           </button>
-
           <button
             type="button"
             onClick={() => scroll("next")}
-            disabled={!canScrollNext}
-            className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-            aria-label="Scroll Explore these moods right"
+            aria-label={`Scroll ${title} right`}
           >
-            <ChevronRightIcon size={16} />
+            <ChevronRightIcon size={13} />
           </button>
         </div>
       </div>
 
-      <div className="group/playlist-shelf curated-playlist-shelf-viewport relative">
-        <button
-          type="button"
-          onClick={() => scroll("prev")}
-          disabled={!canScrollPrev}
-          className="discover-mood-shelf-floating curated-playlist-shelf-prev-floating absolute top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-          aria-label="Scroll Explore these moods left"
-        >
-          <ChevronLeftIcon size={18} />
-        </button>
+      <div ref={scrollerRef} className="discover-artist-shelf-scroller">
+        {items.map((item, index) => (
+          <article
+            key={`${title}-${item.title}`}
+            className={`discover-artist-shelf-card${square ? " is-square" : ""}`}
+          >
+            <PlaceholderMedia
+              index={index + (square ? 2 : 0)}
+              className="discover-artist-shelf-media"
+            >
+              <div className="discover-artist-card-overlay">
+                <div>
+                  <strong>{item.title}</strong>
+                  <span>{item.subtitle}</span>
+                </div>
+                <PlayBadge />
+              </div>
+            </PlaceholderMedia>
 
-        <button
-          type="button"
-          onClick={() => scroll("next")}
-          disabled={!canScrollNext}
-          className="discover-mood-shelf-floating absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
-          aria-label="Scroll Explore these moods right"
-        >
-          <ChevronRightIcon size={18} />
-        </button>
-
-        <div
-          ref={scrollerRef}
-          className="curated-playlist-shelf-scroller flex overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {loading
-            ? Array.from({ length: 4 }).map((_, index) => (
-                <div
-                  key={index}
-                  className="discover-mood-card discover-card-skeleton"
-                  aria-hidden="true"
-                />
-              ))
-            : playlists.map((playlist) => (
-                <article
-                  key={playlist.id}
-                  className="discover-mood-card playlist-gallery-card"
-                >
-                  <Link
-                    href={`/curated-playlists/${playlist.id}`}
-                    className="discover-playlist-card-media-link"
-                  >
-                    <div className="discover-mood-image">
-                      {playlist.cover_image_url ? (
-                        <Image
-                          src={playlist.cover_image_url}
-                          alt={playlist.name}
-                          fill
-                          unoptimized
-                          sizes="(min-width: 1280px) 34vw, (min-width: 768px) 55vw, 84vw"
-                          className="object-cover"
-                        />
-                      ) : (
-                        <div className="discover-media-fallback" />
-                      )}
-
-                      <div className="playlist-gallery-top-row">
-                        <div className="playlist-gallery-arrow">
-                          <ArrowUpRightIcon />
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-
-                  <div className="discover-playlist-card-details">
-                    <Link
-                      href={`/curated-playlists/${playlist.id}`}
-                      className="discover-playlist-card-copy-link"
-                    >
-                      <h3>{playlist.name}</h3>
-                      {playlist.description && <p>{playlist.description}</p>}
-                    </Link>
-
-                    <CuratedPlaylistPlayButton
-                      playlistId={playlist.id}
-                      playlistName={playlist.name}
-                      className="discover-playlist-card-play-button"
-                    />
-                  </div>
-                </article>
-              ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-function DiscoverPlaylistShelf({
-  playlists,
-  loading,
-}: {
-  playlists: CuratedPlaylist[];
-  loading: boolean;
-}) {
-  if (!loading && playlists.length === 0) return null;
-
-  if (loading) {
-    return (
-      <section className="discover-section discover-curated-playlist-section">
-        <div className="discover-section-header">
-          <SectionTitle>Curated Playlists</SectionTitle>
-        </div>
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
-          {Array.from({ length: 3 }).map((_, index) => (
-            <div
-              key={index}
-              className="discover-card-skeleton aspect-video rounded-[12px]"
-              aria-hidden="true"
-            />
-          ))}
-        </div>
-      </section>
-    );
-  }
-
-  return (
-    <div className="discover-section discover-curated-playlist-section">
-      <CuratedPlaylistShelf
-        title="Curated Playlists"
-        playlists={playlists}
-        viewAllHref="/curated-playlists"
-        viewAllLabel="Explore Curated Playlists"
-        className=""
-      />
-    </div>
-  );
-}
-
-function DiscoverProductionStyleCard({
-  playlist,
-}: {
-  playlist: CuratedPlaylist;
-}) {
-  const supportingText = playlist.description || playlist.kicker;
-
-  return (
-    <article className="discover-playlist-card playlist-gallery-card group">
-      <Link
-        href={`/curated-playlists/${playlist.id}`}
-        className="discover-playlist-card-media-link"
-      >
-        <div className="relative aspect-[4/5] w-full overflow-hidden bg-[var(--bg-secondary)]">
-          {playlist.cover_image_url ? (
-            <Image
-              src={playlist.cover_image_url}
-              alt={playlist.name}
-              fill
-              unoptimized
-              sizes="(min-width: 1280px) 23vw, (min-width: 640px) 46vw, 100vw"
-              className="object-cover transition duration-500 group-hover:scale-[1.025]"
-            />
-          ) : (
-            <div className="discover-media-fallback" />
-          )}
-
-          <div className="playlist-gallery-top-row">
-            <div className="playlist-gallery-arrow">
-              <ArrowUpRightIcon />
+            <div className="discover-artist-card-meta">
+              <strong>{item.title}</strong>
+              <span>{item.subtitle}</span>
             </div>
-          </div>
-        </div>
-      </Link>
-
-      <div className="discover-playlist-card-details">
-        <Link
-          href={`/curated-playlists/${playlist.id}`}
-          className="discover-playlist-card-copy-link"
-        >
-          <h3>{playlist.name}</h3>
-          {supportingText && <p>{supportingText}</p>}
-        </Link>
-
-        <CuratedPlaylistPlayButton
-          playlistId={playlist.id}
-          playlistName={playlist.name}
-          className="discover-playlist-card-play-button"
-        />
-      </div>
-    </article>
-  );
-}
-
-function DiscoverProductionStyles({
-  playlists,
-  loading,
-}: {
-  playlists: CuratedPlaylist[];
-  loading: boolean;
-}) {
-  if (!loading && playlists.length === 0) return null;
-
-  return (
-    <section className="discover-section discover-production-section">
-      <div className="discover-section-header">
-        <SectionTitle>Browse by Production Style</SectionTitle>
+          </article>
+        ))}
       </div>
 
-      <div className="grid gap-[clamp(10px,1.25vw,18px)] sm:grid-cols-2 xl:grid-cols-4">
-        {loading
-          ? Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={index}
-                className="discover-card-skeleton aspect-[4/5] w-full"
-                aria-hidden="true"
-              />
-            ))
-          : playlists.map((playlist) => (
-              <DiscoverProductionStyleCard
-                key={playlist.id}
-                playlist={playlist}
-              />
-            ))}
-      </div>
-    </section>
-  );
-}
-
-function ReadyToCutCoverImage({ song, index }: { song: Song; index: number }) {
-  return (
-    <div
-      className="relative h-9 w-9 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
-      style={{
-        background: song.coverArt ? undefined : getFallbackGradient(index),
-      }}
-    >
-      {song.coverArt ? (
-        <Image
-          src={song.coverArt}
-          alt={`${song.title} cover art`}
-          fill
-          sizes="36px"
-          className="object-cover"
-          unoptimized
-        />
-      ) : (
-        <div className="absolute inset-0 flex items-center justify-center text-[var(--text-muted)]">
-          <WaveformIcon size={20} />
+      {footerCopy && (
+        <div className="discover-artist-shelf-footer">
+          <p>
+            Independent voices, new releases, and artists building the next wave
+            of music for film.
+          </p>
+          <span>{footerCopy}</span>
         </div>
       )}
-
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-    </div>
-  );
-}
-
-function ReadyToCutPlayButton({ song }: { song: Song }) {
-  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
-  const active = currentSong?.id === song.id;
-  const playing = active && isPlaying;
-
-  return (
-    <button
-      type="button"
-      onClick={(event) => {
-        stopPlaybackMouseEvent(event);
-        togglePlayPause(song);
-      }}
-      onKeyDown={(event) => {
-        if (event.key !== "Enter" && event.key !== " ") return;
-
-        stopPlaybackKeyEvent(event);
-
-        if (!event.repeat) togglePlayPause(song);
-      }}
-      onKeyUp={(event) => {
-        if (event.key !== "Enter" && event.key !== " ") return;
-
-        stopPlaybackKeyEvent(event);
-      }}
-      className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(0,0,0,0.22)] transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
-      disabled={!song.audioUrl}
-      aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-    >
-      {playing ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
-    </button>
-  );
-}
-
-function useReadyToCutPlayableCard(song: Song) {
-  const { togglePlayPause } = usePlayer();
-
-  function playCard() {
-    if (!song.audioUrl) return;
-
-    togglePlayPause(song);
-  }
-
-  return {
-    role: "button",
-    tabIndex: song.audioUrl ? 0 : -1,
-    onClick: (event: MouseEvent<HTMLElement>) => {
-      stopPlaybackMouseEvent(event);
-      playCard();
-    },
-    onKeyDown: (event: KeyboardEvent<HTMLElement>) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-
-      stopPlaybackKeyEvent(event);
-
-      if (!event.repeat) playCard();
-    },
-    onKeyUp: (event: KeyboardEvent<HTMLElement>) => {
-      if (event.key !== "Enter" && event.key !== " ") return;
-
-      stopPlaybackKeyEvent(event);
-    },
-  };
-}
-
-function ReadyToCutSongCard({ song, index }: { song: Song; index: number }) {
-  const cardPlayProps = useReadyToCutPlayableCard(song);
-
-  return (
-    <article
-      {...cardPlayProps}
-      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[var(--filmwave-neutral-surface)] px-2 transition hover:bg-[var(--filmwave-neutral-surface)] focus:outline-none focus-visible:bg-[var(--filmwave-neutral-surface)]"
-      aria-label={`Play ${song.title} by ${song.artist}`}
-    >
-      <ReadyToCutCoverImage song={song} index={index} />
-
-      <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
-          {song.title}
-        </h3>
-
-        <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
-          <span className="truncate">{song.artist}</span>
-          <span>•</span>
-          <span>{song.key || "—"}</span>
-          <span>•</span>
-          <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
-        </div>
-      </div>
-
-      <ReadyToCutPlayButton song={song} />
-    </article>
-  );
-}
-
-function ReadyToCutTracks({
-  songs,
-  loading,
-}: {
-  songs: Song[];
-  loading: boolean;
-}) {
-  if (!loading && songs.length === 0) return null;
-
-  return (
-    <section className="discover-section discover-ready-to-cut-section">
-      <div className="discover-section-header">
-        <SectionTitle>Ready-to-Cut Tracks</SectionTitle>
-
-        <Link
-          href="/music"
-          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-        >
-          Explore more tracks
-        </Link>
-      </div>
-
-      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {loading
-          ? Array.from({ length: READY_TO_CUT_SONG_COUNT }).map((_, index) => (
-              <div
-                key={index}
-                className="h-[54px] bg-[var(--bg-secondary)]"
-                aria-hidden="true"
-              />
-            ))
-          : songs.map((song, index) => (
-              <ReadyToCutSongCard
-                key={song.id}
-                song={song}
-                index={index + 30}
-              />
-            ))}
-      </div>
     </section>
   );
 }
 
 export default function DiscoverPage() {
-  const { songs, loading: songsLoading } = useSongs();
-  const { currentSong, setQueue } = usePlayer();
-  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
-  const [discoverSections, setDiscoverSections] =
-    useState<DiscoverSectionShelfState>({
-      discover_moods: [],
-      discover_curated: [],
-      discover_production: [],
-    });
-  const [playlistsLoading, setPlaylistsLoading] = useState(true);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    async function loadDiscover() {
-      try {
-        const [playlistRes, sectionRes] = await Promise.all([
-          fetch("/api/curated-playlists"),
-          fetch("/api/discover-sections"),
-        ]);
-        const playlistData = await playlistRes.json();
-        const sectionData = await sectionRes.json();
-
-        if (!playlistRes.ok || !Array.isArray(playlistData)) {
-          throw new Error("Failed to load playlists");
-        }
-        if (!sectionRes.ok) {
-          throw new Error("Failed to load Discover sections");
-        }
-
-        if (!cancelled) {
-          setPlaylists(playlistData as CuratedPlaylist[]);
-          setDiscoverSections(sectionData as DiscoverSectionShelfState);
-        }
-      } catch {
-        if (!cancelled) {
-          setPlaylists([]);
-          setDiscoverSections({
-            discover_moods: [],
-            discover_curated: [],
-            discover_production: [],
-          });
-        }
-      } finally {
-        if (!cancelled) setPlaylistsLoading(false);
-      }
-    }
-
-    void loadDiscover();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  const playlistById = useMemo(
-    () => new Map(playlists.map((playlist) => [playlist.id, playlist] as const)),
-    [playlists],
-  );
-
-  const discoverBlocks = useMemo(
-    () =>
-      discoverSections.discover_moods
-        .map((item) => playlistById.get(item.playlist_id))
-        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
-    [discoverSections.discover_moods, playlistById],
-  );
-
-  const curatedPlaylists = useMemo(
-    () =>
-      discoverSections.discover_curated
-        .map((item) => playlistById.get(item.playlist_id))
-        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
-    [discoverSections.discover_curated, playlistById],
-  );
-
-  const productionBlocks = useMemo(
-    () =>
-      discoverSections.discover_production
-        .map((item) => playlistById.get(item.playlist_id))
-        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
-    [discoverSections.discover_production, playlistById],
-  );
-
-  const playableSongs = useMemo(
-    () => songs.filter((song) => Boolean(song.audioUrl)),
-    [songs],
-  );
-  const readyToCutSongs = playableSongs.slice(0, READY_TO_CUT_SONG_COUNT);
+  const { currentSong } = usePlayer();
   const playerVisible = Boolean(currentSong);
 
-  useEffect(() => {
-    if (!songsLoading) setQueue(playableSongs);
-  }, [playableSongs, setQueue, songsLoading]);
-
   return (
-    <main className="discover-page-root" style={{ marginLeft: 0 }}>
-      <DiscoverHero />
+    <main className="discover-page-root">
+      <section className="discover-artist-hero" aria-label="Discover artists">
+        <div className="discover-artist-hero-inner">
+          <div className="discover-artist-hero-word" aria-hidden="true">
+            Discover
+          </div>
 
-      <div className="discover-content">
-        <CuratedJumpBackIn inline />
-        <DiscoverMoodShelf
-          playlists={discoverBlocks}
-          loading={playlistsLoading}
+          <div className="discover-artist-hero-copy">
+            <h1>
+              <span>Real music</span> made by <span>real artists.</span>
+            </h1>
+            <p>Support real-world artists and composers.</p>
+          </div>
+        </div>
+      </section>
+
+      <div className="discover-artist-content">
+        <section className="discover-artist-featured">
+          <div className="discover-artist-featured-intro">
+            <h2>
+              In demand artists
+              <br />
+              and composers.
+            </h2>
+
+            <span className="discover-artist-featured-kicker">
+              This week&apos;s
+              <br />
+              featured artists
+            </span>
+
+            <p>
+              Independent artists, distinctive voices, and music with enough
+              personality to carry a story.
+            </p>
+          </div>
+
+          <div className="discover-artist-featured-grid">
+            {FEATURED_ARTISTS.map((artist, index) => (
+              <article key={artist.name} className="discover-artist-feature-card">
+                <PlaceholderMedia
+                  index={index}
+                  className="discover-artist-feature-media"
+                >
+                  <div className="discover-artist-feature-overlay">
+                    <div>
+                      <h3>{artist.name}</h3>
+                      <p>{artist.note}</p>
+                    </div>
+                    <PlayBadge />
+                  </div>
+                </PlaceholderMedia>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <ArtistShelf
+          title="Artists We're Watching"
+          items={ARTISTS_WATCHING}
+          footerCopy="1500 artists trending online"
         />
-        <DiscoverPlaylistShelf
-          playlists={curatedPlaylists}
-          loading={playlistsLoading}
+
+        <section className="discover-artist-editorial-grid">
+          {EDITORIAL_FEATURES.map((feature, index) => (
+            <article key={feature.eyebrow} className="discover-artist-editorial-card">
+              <PlaceholderMedia
+                index={index + 3}
+                className="discover-artist-editorial-media"
+              >
+                <div className="discover-artist-editorial-copy">
+                  <span>{feature.eyebrow}</span>
+                  <h2>{feature.title}</h2>
+                </div>
+              </PlaceholderMedia>
+
+              <div className="discover-artist-editorial-meta">
+                <span>Audioflume editorial</span>
+                <span>Explore more ↗</span>
+              </div>
+            </article>
+          ))}
+        </section>
+
+        <ArtistShelf title="Top Albums" items={TOP_ALBUMS} square />
+
+        <ArtistShelf
+          title="Support New Artists"
+          items={SUPPORT_NEW_ARTISTS}
+          footerCopy="1500 artists trending online"
         />
-        <DiscoverProductionStyles
-          playlists={productionBlocks}
-          loading={playlistsLoading}
-        />
-        <ReadyToCutTracks songs={readyToCutSongs} loading={songsLoading} />
 
         <div
-          className="discover-footer-wrap"
+          className="discover-artist-footer"
           style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
         >
           <Footer />
