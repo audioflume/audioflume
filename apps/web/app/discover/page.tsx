@@ -33,13 +33,13 @@ const FEATURED_ARTISTS = [
     name: "Isaac Haines",
     note: "Authentic, evocative music for real stories",
     image:
-      "https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg",
+      "https://images.unsplash.com/photo-1751446561891-8c3bb0f16606?auto=format&fit=crop&w=1800&q=80",
   },
   {
     name: "No Data",
     note: "Authentic, evocative music for real stories",
     image:
-      "https://images.filmwave.io/images/discover/egor-komarov-SwezL05iMjI-unsplash%20(1).jpg",
+      "https://images.unsplash.com/photo-1675859427928-fe41277572b4?auto=format&fit=crop&w=1800&q=80",
   },
 ];
 
@@ -62,14 +62,17 @@ const EDITORIAL_FEATURES = [
   {
     eyebrow: "Trending music for brands",
     title: "In demand artists and composers.",
+    image: "https://unsplash.com/photos/eQt1stmvdvg/download?force=true",
   },
   {
     eyebrow: "Music for real stories",
     title: "In demand artists and composers.",
+    image: "https://unsplash.com/photos/zZPeoLxLRyM/download?force=true",
   },
   {
     eyebrow: "Cinematic masterpieces",
     title: "In demand artists and composers.",
+    image: "https://unsplash.com/photos/RzykwoNjoLw/download?force=true",
   },
 ];
 
@@ -322,6 +325,7 @@ export default function DiscoverPage() {
             <article key={feature.eyebrow} className="discover-artist-editorial-card">
               <PlaceholderMedia
                 index={index + 3}
+                imageSrc={feature.image}
                 className="discover-artist-editorial-media"
               >
                 <div className="discover-artist-editorial-copy">
