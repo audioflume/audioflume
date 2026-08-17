@@ -132,7 +132,7 @@
   font-size: clamp(18px, 1.3vw, 24px);
   font-weight: 300;
   letter-spacing: -0.025em;
-  line-height: 1.18;
+  line-height: 1.25;
 }
 
 .discover-artist-hero-actions {
@@ -182,21 +182,21 @@
 }
 
 .discover-artist-hero-featured-intro > span {
-  font-size: clamp(13px, 0.85vw, 15px);
-  font-weight: 400;
+  font-size: clamp(15px, 1.05vw, 18px);
+  font-weight: 300;
   letter-spacing: 0;
-  line-height: 1.08;
+  line-height: 1.15;
   text-transform: uppercase;
 }
 
 .discover-artist-hero-featured-intro p {
   max-width: 430px;
   margin: 0;
-  color: rgba(255, 255, 255, 0.86);
-  font-size: clamp(13px, 0.85vw, 15px);
+  color: rgba(255, 255, 255, 0.82);
+  font-size: clamp(15px, 1vw, 18px);
   font-weight: 300;
   letter-spacing: 0;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .discover-artist-hero-slider-marks {
