@@ -16,12 +16,16 @@ export default function IconButton({
     label === "Remove song from favorites" || label === "Favorite song";
   const activeMode: SongActionButtonActiveMode =
     isCueMarkerToggle || isFavoriteToggle ? "plain-icon" : "background";
+  const style = isFavoriteToggle
+    ? ({ "--filmwave-song-card-action-hover-bg": "transparent" } as React.CSSProperties)
+    : undefined;
 
   return (
     <SongActionButton
       label={label}
       active={active}
       activeMode={activeMode}
+      style={style}
       onClick={onClick}
     >
       {children}
