@@ -68,11 +68,11 @@
 
 .discover-artist-hero-word {
   position: absolute;
-  top: calc(var(--filmwave-header-height, 75px) + clamp(92px, 7vw, 118px));
+  top: calc(var(--filmwave-header-height, 75px) + clamp(150px, 9vw, 175px));
   left: calc(var(--discover-artist-gutter) * -1);
   color: rgba(255, 255, 255, 0.062);
   font-size: clamp(145px, 17vw, 280px);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -0.075em;
   line-height: 0.8;
   white-space: nowrap;
@@ -544,7 +544,7 @@
   }
 
   .discover-artist-hero-word {
-    top: calc(var(--filmwave-header-height, 75px) + 82px);
+    top: calc(var(--filmwave-header-height, 75px) + 135px);
     font-size: clamp(132px, 23vw, 210px);
   }
 
@@ -597,7 +597,7 @@
   }
 
   .discover-artist-hero-word {
-    top: calc(var(--filmwave-header-height, 75px) + 70px);
+    top: calc(var(--filmwave-header-height, 75px) + 120px);
     left: -10px;
     font-size: clamp(100px, 31vw, 160px);
   }
