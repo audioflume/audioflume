@@ -468,16 +468,16 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: -0.02em;
-  line-height: 10px;
+  line-height: 18px;
 }
 
 .discover-artist-card-overlay span {
   margin-top: 3px;
   color: #fff;
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 300;
   letter-spacing: 0;
-  line-height: 10px;
+  line-height: 18px;
   text-transform: none;
 }
 
