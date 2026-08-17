@@ -116,7 +116,7 @@
   grid-column: 1;
   grid-row: 3;
   align-self: baseline;
-  margin: clamp(28px, 2vw, 36px) 0 0;
+  margin: calc(clamp(28px, 2vw, 36px) + 8px) 0 0;
   font-size: clamp(18px, 1.25vw, 24px);
   font-weight: 300;
   letter-spacing: -0.02em;
@@ -142,7 +142,7 @@
   align-self: baseline;
   align-items: baseline;
   gap: clamp(42px, 4vw, 72px);
-  margin-top: clamp(28px, 2.2vw, 38px);
+  margin-top: calc(clamp(28px, 2.2vw, 38px) + 8px);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
   font-weight: 400;
@@ -337,6 +337,12 @@
   font-weight: 300;
   letter-spacing: -0.01em;
   text-transform: uppercase;
+}
+
+.discover-artist-feature-overlay .discover-artist-play-badge {
+  width: 52px;
+  height: 52px;
+  flex-basis: 52px;
 }
 
 .discover-artist-play-badge {
