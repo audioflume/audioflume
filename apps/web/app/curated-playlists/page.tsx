@@ -485,7 +485,7 @@ export default function CuratedPlaylistsPage() {
                     title={name}
                     description={description ?? undefined}
                     playlists={groupPlaylists}
-                    className="mt-10"
+                    className="mt-[calc(clamp(34px,3vw,48px)+20px)]"
                   />
                 </div>
               ),
