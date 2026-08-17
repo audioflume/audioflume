@@ -74,17 +74,21 @@
   left: 8%;
   display: grid;
   grid-template-columns: max-content minmax(420px, 1fr);
+  grid-template-rows: auto auto auto;
   align-items: start;
-  gap: 70px;
+  column-gap: 70px;
+  row-gap: 0;
 }
 
 .discover-artist-hero-identity,
 .discover-artist-hero-detail {
-  min-width: 0;
+  display: contents;
 }
 
 .discover-artist-hero-eyebrow {
   display: block;
+  grid-column: 1;
+  grid-row: 1;
   margin-bottom: 22px;
   font-size: clamp(13px, 0.9vw, 16px);
   font-weight: 400;
@@ -94,6 +98,9 @@
 }
 
 .discover-artist-hero-identity h1 {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: last baseline;
   margin: 0;
   font-size: clamp(58px, 4.5vw, 86px);
   font-weight: 400;
@@ -103,6 +110,8 @@
 }
 
 .discover-artist-hero-identity p {
+  grid-column: 1;
+  grid-row: 3;
   margin: clamp(28px, 2vw, 36px) 0 0;
   font-size: clamp(18px, 1.25vw, 24px);
   font-weight: 300;
@@ -110,12 +119,11 @@
   line-height: 1.1;
 }
 
-.discover-artist-hero-detail {
-  padding-top: calc(clamp(70px, 4.6vw, 88px) + 6px);
-}
-
 .discover-artist-hero-detail > p {
-  max-width: 650px;
+  grid-column: 2;
+  grid-row: 2;
+  align-self: last baseline;
+  max-width: 560px;
   margin: 0;
   font-size: clamp(18px, 1.3vw, 24px);
   font-weight: 300;
@@ -125,6 +133,8 @@
 
 .discover-artist-hero-actions {
   display: flex;
+  grid-column: 2;
+  grid-row: 3;
   align-items: center;
   gap: clamp(42px, 4vw, 72px);
   margin-top: clamp(28px, 2.2vw, 38px);
@@ -189,7 +199,7 @@
 .discover-artist-hero-slider-marks::after {
   display: block;
   width: 54px;
-  height: 2px;
+  height: 1px;
   background: rgba(255, 255, 255, 0.32);
 }
 
@@ -198,6 +208,7 @@
 }
 
 .discover-artist-hero-slider-marks span:first-child {
+  height: 2px;
   background: rgba(255, 255, 255, 0.95);
 }
 
@@ -600,7 +611,7 @@
     right: 4.5%;
     left: 4.5%;
     grid-template-columns: minmax(0, 0.72fr) minmax(330px, 1fr);
-    gap: 32px;
+    column-gap: 32px;
   }
 
   .discover-artist-hero-identity h1 {
@@ -645,7 +656,13 @@
     right: 0;
     left: 0;
     grid-template-columns: 1fr;
+    grid-template-rows: none;
     gap: 28px;
+  }
+
+  .discover-artist-hero-identity,
+  .discover-artist-hero-detail {
+    display: block;
   }
 
   .discover-artist-hero-eyebrow {
@@ -660,10 +677,6 @@
   .discover-artist-hero-identity p {
     margin-top: 20px;
     font-size: 18px;
-  }
-
-  .discover-artist-hero-detail {
-    padding-top: 0;
   }
 
   .discover-artist-hero-detail > p {
