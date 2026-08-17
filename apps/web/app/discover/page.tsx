@@ -48,37 +48,37 @@ const ARTISTS_WATCHING: ShelfItem[] = [
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/ZB2jlIb6-s4/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/YO2hf7iM5YM/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/dY0QJlfe054/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/NN3T_uliZm4/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/3DJfakd6VoU/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/YhMFYJZgMA0/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/gnYfMrL0rck/download?force=true",
+    image: "",
   },
 ];
 
@@ -86,37 +86,37 @@ const TOP_ALBUMS: ShelfItem[] = [
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/-MCrF6hnojU/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/zMl9PjGFPWg/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/e5LdlAMpkEw/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/nAsdr5DC2Ss/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/EFRD6Cr7skc/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/Ay_HG60pHHw/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/f49XhYbpiA0/download?force=true",
+    image: "",
   },
 ];
 
@@ -124,37 +124,37 @@ const SUPPORT_NEW_ARTISTS: ShelfItem[] = [
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/fxuhp8Ep33I/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/TpdyCbvJHFU/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/y25q0U4uCLw/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/n25kFUt7oX4/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/RFV805gn5C8/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/oYFv-_JKsVk/download?force=true",
+    image: "",
   },
   {
     title: "Loremipsum Dolorit",
     subtitle: "Eiusmod Tempor",
-    image: "https://unsplash.com/photos/3TLl_97HNJo/download?force=true",
+    image: "",
   },
 ];
 
@@ -162,17 +162,17 @@ const EDITORIAL_FEATURES = [
   {
     eyebrow: "Trending music for brands",
     title: "In demand artists and composers.",
-    image: "https://unsplash.com/photos/eQt1stmvdvg/download?force=true",
+    image: "",
   },
   {
     eyebrow: "Music for real stories",
     title: "In demand artists and composers.",
-    image: "https://unsplash.com/photos/zZPeoLxLRyM/download?force=true",
+    image: "",
   },
   {
     eyebrow: "Cinematic masterpieces",
     title: "In demand artists and composers.",
-    image: "https://unsplash.com/photos/0fN7Fxv1eWA/download?force=true",
+    image: "",
   },
 ];
 
@@ -201,6 +201,7 @@ function PlaceholderMedia({
   return (
     <div
       className={`discover-artist-placeholder is-tone-${index % 6} ${className}`.trim()}
+      style={!imageSrc ? { background: "var(--bg-secondary)" } : undefined}
     >
       {imageSrc ? (
         <img
