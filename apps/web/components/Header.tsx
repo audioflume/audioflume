@@ -26,14 +26,14 @@ const TOP_NAV_LINKS = [
 
 const PLAYLIST_PAGE_LINKS = [
   {
-    href: "/playlists",
-    label: "My Playlists",
-    detail: "Your saved collections",
-  },
-  {
     href: "/curated-playlists",
     label: "Curated Collections",
     detail: "Filmwave editor picks",
+  },
+  {
+    href: "/playlists",
+    label: "My Playlists",
+    detail: "Your saved collections",
   },
   {
     href: "/playlists?tab=community-playlists",
@@ -621,7 +621,7 @@ export default function Header() {
                       }}
                     >
                       <Link
-                        href={link.href}
+                        href="/curated-playlists"
                         className={`filmwave-header-nav-link${isActive ? " is-active" : ""}`}
                         aria-current={isActive ? "page" : undefined}
                         aria-haspopup="menu"
