@@ -72,9 +72,9 @@
   right: 8%;
   left: 8%;
   display: grid;
-  grid-template-columns: minmax(0, 0.8fr) minmax(420px, 1fr);
-  align-items: center;
-  gap: clamp(70px, 6vw, 115px);
+  grid-template-columns: minmax(0, 0.68fr) minmax(420px, 1fr);
+  align-items: start;
+  gap: clamp(40px, 3vw, 60px);
 }
 
 .discover-artist-hero-identity,
@@ -95,9 +95,10 @@
 .discover-artist-hero-identity h1 {
   margin: 0;
   font-size: clamp(58px, 4.5vw, 86px);
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.96;
+  transform: translateX(-4px);
 }
 
 .discover-artist-hero-identity p {
@@ -106,6 +107,10 @@
   font-weight: 300;
   letter-spacing: -0.02em;
   line-height: 1.1;
+}
+
+.discover-artist-hero-detail {
+  padding-top: clamp(70px, 4.6vw, 88px);
 }
 
 .discover-artist-hero-detail > p {
@@ -176,14 +181,19 @@
   align-items: center;
   justify-self: end;
   gap: 8px;
-  width: 116px;
+  width: 178px;
 }
 
-.discover-artist-hero-slider-marks span {
+.discover-artist-hero-slider-marks span,
+.discover-artist-hero-slider-marks::after {
   display: block;
   width: 54px;
-  height: 1px;
+  height: 2px;
   background: rgba(255, 255, 255, 0.32);
+}
+
+.discover-artist-hero-slider-marks::after {
+  content: "";
 }
 
 .discover-artist-hero-slider-marks span:first-child {
@@ -588,8 +598,8 @@
     top: calc(var(--filmwave-header-height, 75px) + 240px);
     right: 4.5%;
     left: 4.5%;
-    grid-template-columns: minmax(0, 0.85fr) minmax(330px, 1fr);
-    gap: 48px;
+    grid-template-columns: minmax(0, 0.72fr) minmax(330px, 1fr);
+    gap: 32px;
   }
 
   .discover-artist-hero-identity h1 {
@@ -649,6 +659,10 @@
   .discover-artist-hero-identity p {
     margin-top: 20px;
     font-size: 18px;
+  }
+
+  .discover-artist-hero-detail {
+    padding-top: 0;
   }
 
   .discover-artist-hero-detail > p {
