@@ -266,7 +266,7 @@ export default function DiscoverPage() {
             <p>{MOCKUP_LOREM}</p>
             <div className="flex w-[178px] justify-self-end flex-col items-end max-[720px]:hidden">
               <div
-                className="mb-[10px] inline-flex h-[22px] items-center gap-[4px] text-[rgba(255,255,255,0.82)]"
+                className="mb-[10px] inline-flex h-[22px] items-center gap-0 text-[rgba(255,255,255,0.82)]"
                 aria-hidden="true"
               >
                 <span className="inline-flex h-[22px] w-[18px] items-center justify-center">

@@ -358,7 +358,7 @@
 }
 
 .discover-artist-shelf-section {
-  margin-top: clamp(34px, 3vw, 48px);
+  margin-top: calc(clamp(34px, 3vw, 48px) + 20px);
 }
 .discover-artist-shelf-heading {
   display: flex;
@@ -459,7 +459,7 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: -0.02em;
-  line-height: 18px;
+  line-height: 15px;
 }
 
 .discover-artist-card-overlay span {
@@ -468,7 +468,7 @@
   font-size: 10px;
   font-weight: 300;
   letter-spacing: 0;
-  line-height: 18px;
+  line-height: 15px;
   text-transform: none;
 }
 
@@ -507,7 +507,7 @@
   font-size: 12px;
   font-weight: 400;
   letter-spacing: -0.015em;
-  line-height: 18px;
+  line-height: 15px;
 }
 
 .discover-artist-card-meta span {
@@ -515,7 +515,7 @@
   color: var(--text-muted);
   font-size: 10px;
   font-weight: 300;
-  line-height: 18px;
+  line-height: 15px;
 }
 
 .discover-artist-shelf-footer {
@@ -523,7 +523,7 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 32px;
-  margin-top: 15px;
+  margin-top: 30px;
 }
 
 .discover-artist-shelf-footer p,
@@ -553,7 +553,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: clamp(16px, 1.4vw, 22px);
-  margin-top: clamp(46px, 3.6vw, 60px);
+  margin-top: calc(clamp(46px, 3.6vw, 60px) + 20px);
 }
 
 .discover-artist-editorial-media {
@@ -594,19 +594,33 @@
   align-items: center;
   gap: 14px;
   padding-top: 7px;
-  font-size: clamp(7px, 0.46vw, 8px);
-  font-weight: 400;
-  letter-spacing: 0;
   text-transform: none;
 }
 
+.discover-artist-editorial-meta span:first-child {
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  line-height: 15px;
+  white-space: nowrap;
+}
+
 .discover-artist-editorial-meta span:nth-child(2) {
-  color: var(--text-secondary);
+  color: var(--text-muted);
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 15px;
+  white-space: nowrap;
 }
 
 .discover-artist-editorial-meta span:last-child {
   justify-self: end;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 15px;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .discover-artist-footer {
