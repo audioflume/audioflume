@@ -12,6 +12,9 @@ dotenv.config({ path: ".env.local" });
 dotenv.config();
 
 const execFileAsync = promisify(execFile);
+const TARGET_INTEGRATED_LUFS = -14;
+const TARGET_TRUE_PEAK_DBTP = -1;
+const TARGET_LOUDNESS_RANGE = 11;
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -22,6 +25,7 @@ const bucketName = process.env.CLOUDFLARE_R2_BUCKET_NAME;
 const publicUrl = process.env.CLOUDFLARE_R2_PUBLIC_URL;
 
 const dryRun = process.argv.includes("--dry-run");
+const force = process.argv.includes("--force");
 const limitArg = process.argv.find((arg) => arg.startsWith("--limit="));
 const onlyIdArg = process.argv.find((arg) => arg.startsWith("--id="));
 const limit = limitArg ? Number(limitArg.replace("--limit=", "")) : 25;
@@ -87,9 +91,61 @@ function getBaseKeyFromAudioUrl(audioUrl) {
 }
 
 async function runFfmpeg(args) {
-  await execFileAsync(ffmpegPath, args, {
+  return execFileAsync(ffmpegPath, args, {
     maxBuffer: 1024 * 1024 * 20,
   });
+}
+
+function parseLoudnessMeasurement(stderr) {
+  const jsonMatch = stderr.match(/\{\s*"input_i"[\s\S]*?\}/);
+
+  if (!jsonMatch) {
+    throw new Error("FFmpeg did not return loudness analysis data.");
+  }
+
+  const parsed = JSON.parse(jsonMatch[0]);
+  const measurement = {
+    inputI: Number(parsed.input_i),
+    inputTp: Number(parsed.input_tp),
+    inputLra: Number(parsed.input_lra),
+    inputThresh: Number(parsed.input_thresh),
+    targetOffset: Number(parsed.target_offset),
+  };
+
+  if (Object.values(measurement).some((value) => !Number.isFinite(value))) {
+    throw new Error("FFmpeg could not measure the source audio loudness.");
+  }
+
+  return measurement;
+}
+
+async function getLoudnessNormalization(inputPath) {
+  const { stderr } = await runFfmpeg([
+    "-hide_banner",
+    "-i",
+    inputPath,
+    "-vn",
+    "-af",
+    `loudnorm=I=${TARGET_INTEGRATED_LUFS}:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=${TARGET_LOUDNESS_RANGE}:print_format=json`,
+    "-f",
+    "null",
+    "-",
+  ]);
+
+  const measurement = parseLoudnessMeasurement(stderr);
+  const filter = [
+    `loudnorm=I=${TARGET_INTEGRATED_LUFS}`,
+    `TP=${TARGET_TRUE_PEAK_DBTP}`,
+    `LRA=${TARGET_LOUDNESS_RANGE}`,
+    `measured_I=${measurement.inputI}`,
+    `measured_TP=${measurement.inputTp}`,
+    `measured_LRA=${measurement.inputLra}`,
+    `measured_thresh=${measurement.inputThresh}`,
+    `offset=${measurement.targetOffset}`,
+    "linear=true",
+  ].join(":");
+
+  return { measurement, filter };
 }
 
 async function uploadBufferToR2({ key, buffer, contentType }) {
@@ -138,11 +194,18 @@ async function processSong(song) {
     if (!dryRun) {
       await downloadAudio(song.audio_url, inputPath);
 
+      const { measurement, filter } = await getLoudnessNormalization(inputPath);
+      console.log(`measured ${measurement.inputI.toFixed(2)} LUFS; target ${TARGET_INTEGRATED_LUFS} LUFS`);
+
       await runFfmpeg([
         "-y",
         "-i",
         inputPath,
         "-vn",
+        "-af",
+        filter,
+        "-ar",
+        "48000",
         "-codec:a",
         "libmp3lame",
         "-b:a",
@@ -157,6 +220,10 @@ async function processSong(song) {
         "-i",
         inputPath,
         "-vn",
+        "-af",
+        filter,
+        "-ar",
+        "48000",
         "-codec:a",
         "aac",
         "-b:a",
@@ -233,8 +300,11 @@ let query = supabase
   .from("songs")
   .select("id,title,audio_url,playback_url,hls_url")
   .not("audio_url", "is", null)
-  .or("playback_url.is.null,hls_url.is.null")
   .order("created_at", { ascending: false });
+
+if (!force) {
+  query = query.or("playback_url.is.null,hls_url.is.null");
+}
 
 if (onlyId) {
   query = query.eq("id", onlyId);
@@ -246,7 +316,7 @@ const { data: songs, error } = await query;
 
 if (error) throw error;
 
-console.log(`Found ${songs?.length || 0} song${songs?.length === 1 ? "" : "s"} to backfill.`);
+console.log(`Found ${songs?.length || 0} song${songs?.length === 1 ? "" : "s"} to ${force ? "regenerate" : "backfill"}.`);
 
 let failed = 0;
 

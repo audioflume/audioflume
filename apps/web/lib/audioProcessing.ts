@@ -8,6 +8,9 @@ import { uploadFileToR2 } from "@/lib/r2";
 
 const execFileAsync = promisify(execFile);
 const FFMPEG_EXECUTABLE_NAME = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
+const TARGET_INTEGRATED_LUFS = -14;
+const TARGET_TRUE_PEAK_DBTP = -1;
+const TARGET_LOUDNESS_RANGE = 11;
 
 let resolvedFfmpegPath: string | null = null;
 
@@ -19,6 +22,14 @@ type ProcessAudioForStreamingArgs = {
 type HlsAsset = {
   key: string;
   url: string;
+};
+
+type LoudnessMeasurement = {
+  inputI: number;
+  inputTp: number;
+  inputLra: number;
+  inputThresh: number;
+  targetOffset: number;
 };
 
 export type ProcessedAudioAssets = {
@@ -86,7 +97,7 @@ async function runFfmpeg(args: string[]) {
   const ffmpegCommand = await resolveFfmpegPath();
 
   try {
-    await execFileAsync(ffmpegCommand, args, {
+    return await execFileAsync(ffmpegCommand, args, {
       maxBuffer: 1024 * 1024 * 20,
     });
   } catch (error) {
@@ -98,6 +109,57 @@ async function runFfmpeg(args: string[]) {
 
     throw error;
   }
+}
+
+function parseLoudnessMeasurement(stderr: string): LoudnessMeasurement {
+  const jsonMatch = stderr.match(/\{\s*"input_i"[\s\S]*?\}/);
+
+  if (!jsonMatch) {
+    throw new Error("FFmpeg did not return loudness analysis data.");
+  }
+
+  const parsed = JSON.parse(jsonMatch[0]) as Record<string, string>;
+  const measurement: LoudnessMeasurement = {
+    inputI: Number(parsed.input_i),
+    inputTp: Number(parsed.input_tp),
+    inputLra: Number(parsed.input_lra),
+    inputThresh: Number(parsed.input_thresh),
+    targetOffset: Number(parsed.target_offset),
+  };
+
+  if (Object.values(measurement).some((value) => !Number.isFinite(value))) {
+    throw new Error("FFmpeg could not measure the uploaded audio loudness.");
+  }
+
+  return measurement;
+}
+
+async function getLoudnessNormalizationFilter(inputPath: string) {
+  const { stderr } = await runFfmpeg([
+    "-hide_banner",
+    "-i",
+    inputPath,
+    "-vn",
+    "-af",
+    `loudnorm=I=${TARGET_INTEGRATED_LUFS}:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=${TARGET_LOUDNESS_RANGE}:print_format=json`,
+    "-f",
+    "null",
+    "-",
+  ]);
+
+  const measurement = parseLoudnessMeasurement(stderr);
+
+  return [
+    `loudnorm=I=${TARGET_INTEGRATED_LUFS}`,
+    `TP=${TARGET_TRUE_PEAK_DBTP}`,
+    `LRA=${TARGET_LOUDNESS_RANGE}`,
+    `measured_I=${measurement.inputI}`,
+    `measured_TP=${measurement.inputTp}`,
+    `measured_LRA=${measurement.inputLra}`,
+    `measured_thresh=${measurement.inputThresh}`,
+    `offset=${measurement.targetOffset}`,
+    "linear=true",
+  ].join(":");
 }
 
 export async function processAudioForStreaming({
@@ -117,11 +179,17 @@ export async function processAudioForStreaming({
     await rm(hlsDir, { force: true, recursive: true });
     await import("node:fs/promises").then(({ mkdir }) => mkdir(hlsDir, { recursive: true }));
 
+    const loudnessNormalizationFilter = await getLoudnessNormalizationFilter(inputPath);
+
     await runFfmpeg([
       "-y",
       "-i",
       inputPath,
       "-vn",
+      "-af",
+      loudnessNormalizationFilter,
+      "-ar",
+      "48000",
       "-codec:a",
       "libmp3lame",
       "-b:a",
@@ -136,6 +204,10 @@ export async function processAudioForStreaming({
       "-i",
       inputPath,
       "-vn",
+      "-af",
+      loudnessNormalizationFilter,
+      "-ar",
+      "48000",
       "-codec:a",
       "aac",
       "-b:a",
