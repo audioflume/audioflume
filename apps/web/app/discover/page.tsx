@@ -15,43 +15,28 @@ type ShelfItem = {
 const FEATURED_ARTISTS = [
   {
     name: "Isaac Haines",
-    note: "Authentic, emotive music for real stories",
+    note: "Authentic, evocative music for real stories",
   },
   {
     name: "No Data",
-    note: "Cinematic texture, fractured rhythm, modern tension",
+    note: "Authentic, evocative music for real stories",
   },
 ];
 
-const ARTISTS_WATCHING: ShelfItem[] = [
-  { title: "Mara Vela", subtitle: "Alternative / Cinematic" },
-  { title: "Northline", subtitle: "Indie / Electronic" },
-  { title: "Elena Vale", subtitle: "Soul / Alternative" },
-  { title: "Sundown Club", subtitle: "Ambient / Organic" },
-  { title: "Orbit Glass", subtitle: "Experimental / Electronic" },
-  { title: "Quiet Hours", subtitle: "Minimal / Intimate" },
-  { title: "Soft Static", subtitle: "Indie / Textural" },
-];
+const ARTISTS_WATCHING: ShelfItem[] = Array.from({ length: 7 }, () => ({
+  title: "Loremipsum Dolorit",
+  subtitle: "Eiusmod Tempor",
+}));
 
-const TOP_ALBUMS: ShelfItem[] = [
-  { title: "Peripheral Light", subtitle: "Mara Vela" },
-  { title: "Human Signal", subtitle: "Northline" },
-  { title: "Be Voyager", subtitle: "Elena Vale" },
-  { title: "Room Tone", subtitle: "Sundown Club" },
-  { title: "Loose Ends", subtitle: "Orbit Glass" },
-  { title: "After Image", subtitle: "Quiet Hours" },
-  { title: "Open Field", subtitle: "Soft Static" },
-];
+const TOP_ALBUMS: ShelfItem[] = Array.from({ length: 7 }, () => ({
+  title: "Loremipsum Dolorit",
+  subtitle: "Eiusmod Tempor",
+}));
 
-const SUPPORT_NEW_ARTISTS: ShelfItem[] = [
-  { title: "Ari Sol", subtitle: "New this week" },
-  { title: "Tape Garden", subtitle: "New this week" },
-  { title: "Nia March", subtitle: "New this week" },
-  { title: "Mono Lake", subtitle: "New this week" },
-  { title: "Glass House", subtitle: "New this week" },
-  { title: "Fallow", subtitle: "New this week" },
-  { title: "Low Season", subtitle: "New this week" },
-];
+const SUPPORT_NEW_ARTISTS: ShelfItem[] = Array.from({ length: 7 }, () => ({
+  title: "Loremipsum Dolorit",
+  subtitle: "Eiusmod Tempor",
+}));
 
 const EDITORIAL_FEATURES = [
   {
@@ -67,6 +52,9 @@ const EDITORIAL_FEATURES = [
     title: "In demand artists and composers.",
   },
 ];
+
+const MOCKUP_LOREM =
+  "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.";
 
 function PlayBadge() {
   return (
@@ -146,7 +134,7 @@ function ArtistShelf({
       <div ref={scrollerRef} className="discover-artist-shelf-scroller">
         {items.map((item, index) => (
           <article
-            key={`${title}-${item.title}`}
+            key={`${title}-${index}`}
             className={`discover-artist-shelf-card${square ? " is-square" : ""}`}
           >
             <PlaceholderMedia
@@ -172,10 +160,7 @@ function ArtistShelf({
 
       {footerCopy && (
         <div className="discover-artist-shelf-footer">
-          <p>
-            Independent voices, new releases, and artists building the next wave
-            of music for film.
-          </p>
+          <p>{MOCKUP_LOREM}</p>
           <span>{footerCopy}</span>
         </div>
       )}
@@ -219,10 +204,7 @@ export default function DiscoverPage() {
               featured artists
             </span>
 
-            <p>
-              Independent artists, distinctive voices, and music with enough
-              personality to carry a story.
-            </p>
+            <p>{MOCKUP_LOREM}</p>
           </div>
 
           <div className="discover-artist-featured-grid">
@@ -265,7 +247,8 @@ export default function DiscoverPage() {
               </PlaceholderMedia>
 
               <div className="discover-artist-editorial-meta">
-                <span>Audioflume editorial</span>
+                <span>Loremipsum Dolorit</span>
+                <span>Eiusmod Tempor</span>
                 <span>Explore more ↗</span>
               </div>
             </article>
