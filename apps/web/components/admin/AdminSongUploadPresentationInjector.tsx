@@ -986,6 +986,7 @@ export default function AdminSongUploadPresentationInjector() {
         }
 
         .admin-song-upload-content-page .admin-song-upload-cover-controls > button:last-child:hover {
+          background: var(--danger-hover);
           color: var(--danger);
         }
 
