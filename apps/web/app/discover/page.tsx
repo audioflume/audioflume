@@ -1,8 +1,16 @@
 "use client";
 
-import { type CSSProperties, type ReactNode, useRef } from "react";
+import {
+  type CSSProperties,
+  type ReactNode,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import Footer from "@/components/Footer";
+import SectionTitle from "@/components/SectionTitle";
+import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
@@ -122,6 +130,18 @@ function ArtistShelf({
   footerCopy?: string;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
+
+  function updateScrollState() {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+
+    setCanScrollPrev(scroller.scrollLeft > 4);
+    setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
+  }
 
   function scroll(direction: "prev" | "next") {
     const scroller = scrollerRef.current;
@@ -136,27 +156,35 @@ function ArtistShelf({
     });
   }
 
+  useEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    updateScrollState();
+
+    scroller.addEventListener("scroll", updateScrollState, { passive: true });
+    window.addEventListener("resize", updateScrollState);
+
+    return () => {
+      scroller.removeEventListener("scroll", updateScrollState);
+      window.removeEventListener("resize", updateScrollState);
+    };
+  }, [items.length]);
+
   return (
     <section className="discover-artist-shelf-section">
-      <div className="discover-artist-shelf-heading">
-        <h2>{title}</h2>
-
-        <div className="discover-artist-shelf-controls">
-          <button
-            type="button"
-            onClick={() => scroll("prev")}
-            aria-label={`Scroll ${title} left`}
-          >
-            <ChevronLeftIcon size={13} />
-          </button>
-          <button
-            type="button"
-            onClick={() => scroll("next")}
-            aria-label={`Scroll ${title} right`}
-          >
-            <ChevronRightIcon size={13} />
-          </button>
+      <div className="mb-[12px] flex min-h-[28px] items-center justify-between gap-[20px]">
+        <div className="min-w-0">
+          <SectionTitle>{title}</SectionTitle>
         </div>
+
+        <ShelfNavigationControls
+          label={title}
+          onPrev={() => scroll("prev")}
+          onNext={() => scroll("next")}
+          canScrollPrev={canScrollPrev}
+          canScrollNext={canScrollNext}
+        />
       </div>
 
       <div ref={scrollerRef} className="discover-artist-shelf-scroller">
@@ -237,7 +265,7 @@ export default function DiscoverPage() {
             <p>{MOCKUP_LOREM}</p>
             <div className="flex w-[178px] justify-self-end flex-col items-end max-[720px]:hidden">
               <div
-                className="mb-[10px] inline-flex h-[22px] items-center gap-[7px] text-[rgba(255,255,255,0.82)]"
+                className="mb-[10px] inline-flex h-[22px] items-center gap-[4px] text-[rgba(255,255,255,0.82)]"
                 aria-hidden="true"
               >
                 <span className="inline-flex h-[22px] w-[18px] items-center justify-center">
@@ -246,7 +274,7 @@ export default function DiscoverPage() {
                 <span className="inline-flex h-[22px] w-[18px] items-center justify-center">
                   <ChevronRightIcon size={14} />
                 </span>
-                <span className="ml-[5px] text-[10px] font-medium leading-none [font-variant-numeric:tabular-nums]">
+                <span className="ml-[8px] text-[10px] font-medium leading-none [font-variant-numeric:tabular-nums]">
                   1/3
                 </span>
               </div>

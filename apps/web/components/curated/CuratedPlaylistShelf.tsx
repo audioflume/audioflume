@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
+import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -183,27 +184,13 @@ export default function CuratedPlaylistShelf({
             <SectionTitle>{title}</SectionTitle>
           </div>
 
-          <div className="hidden items-center gap-2 sm:flex">
-            <button
-              type="button"
-              onClick={() => scrollPlaylists("prev")}
-              disabled={!canScrollPrev}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-              aria-label={`Scroll ${title} left`}
-            >
-              <ChevronLeftIcon size={16} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollPlaylists("next")}
-              disabled={!canScrollNext}
-              className="flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:pointer-events-none disabled:opacity-30"
-              aria-label={`Scroll ${title} right`}
-            >
-              <ChevronRightIcon size={16} />
-            </button>
-          </div>
+          <ShelfNavigationControls
+            label={title}
+            onPrev={() => scrollPlaylists("prev")}
+            onNext={() => scrollPlaylists("next")}
+            canScrollPrev={canScrollPrev}
+            canScrollNext={canScrollNext}
+          />
         </div>
 
         <div
