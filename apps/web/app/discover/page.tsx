@@ -19,6 +19,7 @@ import { usePlayer } from "@/context/PlayerContext";
 type ShelfItem = {
   title: string;
   subtitle: string;
+  image: string;
 };
 
 const FEATURED_ARTIST = {
@@ -33,30 +34,129 @@ const FEATURED_ARTISTS = [
     name: "Isaac Haines",
     note: "Authentic, evocative music for real stories",
     image:
-      "https://images.unsplash.com/photo-1751446561891-8c3bb0f16606?auto=format&fit=crop&w=1800&q=80",
+      "https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg",
   },
   {
     name: "No Data",
     note: "Authentic, evocative music for real stories",
     image:
-      "https://images.unsplash.com/photo-1675859427928-fe41277572b4?auto=format&fit=crop&w=1800&q=80",
+      "https://images.filmwave.io/images/discover/egor-komarov-SwezL05iMjI-unsplash%20(1).jpg",
   },
 ];
 
-const ARTISTS_WATCHING: ShelfItem[] = Array.from({ length: 7 }, () => ({
-  title: "Loremipsum Dolorit",
-  subtitle: "Eiusmod Tempor",
-}));
+const ARTISTS_WATCHING: ShelfItem[] = [
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/ZB2jlIb6-s4/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/YO2hf7iM5YM/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/dY0QJlfe054/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/NN3T_uliZm4/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/3DJfakd6VoU/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/YhMFYJZgMA0/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/gnYfMrL0rck/download?force=true",
+  },
+];
 
-const TOP_ALBUMS: ShelfItem[] = Array.from({ length: 7 }, () => ({
-  title: "Loremipsum Dolorit",
-  subtitle: "Eiusmod Tempor",
-}));
+const TOP_ALBUMS: ShelfItem[] = [
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/-MCrF6hnojU/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/zMl9PjGFPWg/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/e5LdlAMpkEw/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/nAsdr5DC2Ss/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/EFRD6Cr7skc/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/Ay_HG60pHHw/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/f49XhYbpiA0/download?force=true",
+  },
+];
 
-const SUPPORT_NEW_ARTISTS: ShelfItem[] = Array.from({ length: 7 }, () => ({
-  title: "Loremipsum Dolorit",
-  subtitle: "Eiusmod Tempor",
-}));
+const SUPPORT_NEW_ARTISTS: ShelfItem[] = [
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/fxuhp8Ep33I/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/TpdyCbvJHFU/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/y25q0U4uCLw/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/n25kFUt7oX4/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/RFV805gn5C8/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/oYFv-_JKsVk/download?force=true",
+  },
+  {
+    title: "Loremipsum Dolorit",
+    subtitle: "Eiusmod Tempor",
+    image: "https://unsplash.com/photos/3TLl_97HNJo/download?force=true",
+  },
+];
 
 const EDITORIAL_FEATURES = [
   {
@@ -72,7 +172,7 @@ const EDITORIAL_FEATURES = [
   {
     eyebrow: "Cinematic masterpieces",
     title: "In demand artists and composers.",
-    image: "https://unsplash.com/photos/RzykwoNjoLw/download?force=true",
+    image: "https://unsplash.com/photos/0fN7Fxv1eWA/download?force=true",
   },
 ];
 
@@ -199,6 +299,7 @@ function ArtistShelf({
           >
             <PlaceholderMedia
               index={index + (square ? 2 : 0)}
+              imageSrc={item.image}
               className="discover-artist-shelf-media"
             >
               <div className="discover-artist-card-overlay">
