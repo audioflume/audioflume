@@ -85,7 +85,6 @@ export default function Header() {
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
   const headerClassName = [
     "filmwave-web-header",
-    pathname === "/discover" ? "is-discover-route" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
   ]
