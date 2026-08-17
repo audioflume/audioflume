@@ -141,7 +141,7 @@
   gap: 0;
   margin-bottom: 16px;
   color: #fff;
-  transform: translateY(-57px);
+  transform: translateY(-64px);
 }
 
 .discover-artist-featured-intro h2 {
@@ -156,7 +156,7 @@
   margin: 0;
   padding-left: 10px;
   font-size: clamp(15px, 1.05vw, 18px);
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 1.15;
   text-transform: uppercase;
@@ -166,8 +166,8 @@
   margin: 0;
   padding-left: clamp(24px, 2vw, 40px);
   color: rgba(255, 255, 255, 0.82);
-  font-size: clamp(16px, 1.08vw, 19px);
-  font-weight: 400;
+  font-size: clamp(15px, 1vw, 18px);
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
 }
@@ -651,7 +651,7 @@
   .discover-artist-featured-intro p {
     max-width: 420px;
     padding-left: 0;
-    font-size: 16px;
+    font-size: 15px;
   }
 
   .discover-artist-featured-grid {
