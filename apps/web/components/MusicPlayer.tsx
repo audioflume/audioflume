@@ -17,7 +17,6 @@ import DownloadIcon from "@/components/icons/DownloadIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import VolumeIcon from "@/components/icons/VolumeIcon";
-import { iconButtonClass } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
@@ -734,7 +733,11 @@ export default function MusicPlayer() {
                 type="button"
                 aria-label="Volume"
                 aria-expanded={open}
-                className={`${iconButtonClass} filmwave-player-volume-button ${open ? "is-open" : ""}`}
+                className={`filmwave-player-volume-button inline-flex h-7 w-7 min-w-7 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors ${
+                  open
+                    ? "text-[var(--text-primary)]"
+                    : "text-[var(--icon-color)] hover:text-[var(--text-primary)]"
+                }`}
               >
                 <VolumeIcon
                   muted={volume === 0}
@@ -779,8 +782,11 @@ export default function MusicPlayer() {
                 type="button"
                 aria-label="Song options"
                 aria-expanded={open}
-                className={`${iconButtonClass} ${open ? "text-[var(--text-primary)]" : ""}`}
-                style={{ marginInline: "-1px", background: "transparent" }}
+                className={`inline-flex h-7 w-6 min-w-6 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors ${
+                  open
+                    ? "text-[var(--text-primary)]"
+                    : "text-[var(--icon-color)] hover:text-[var(--text-primary)]"
+                }`}
               >
                 <MoreIcon />
               </button>
