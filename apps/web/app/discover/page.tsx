@@ -12,6 +12,13 @@ type ShelfItem = {
   subtitle: string;
 };
 
+const FEATURED_ARTIST = {
+  name: "Isaac Haines",
+  role: "Musician / Composer",
+  description:
+    "Musician and composer from Grand Prairie, Alberta. Creating heartfelt sounds that evoke emotion and introspection.",
+};
+
 const FEATURED_ARTISTS = [
   {
     name: "Isaac Haines",
@@ -174,41 +181,44 @@ export default function DiscoverPage() {
 
   return (
     <main className="discover-page-root">
-      <section className="discover-artist-hero" aria-label="Discover artists">
+      <section className="discover-artist-hero" aria-label="Featured artist">
         <div className="discover-artist-hero-inner">
-          <div className="discover-artist-hero-word" aria-hidden="true">
-            Discover
+          <div className="discover-artist-hero-feature">
+            <div className="discover-artist-hero-identity">
+              <span className="discover-artist-hero-eyebrow">Featured Artist</span>
+              <h1>{FEATURED_ARTIST.name}</h1>
+              <p>{FEATURED_ARTIST.role}</p>
+            </div>
+
+            <div className="discover-artist-hero-detail">
+              <p>{FEATURED_ARTIST.description}</p>
+              <div className="discover-artist-hero-actions">
+                <span className="discover-artist-hero-listen">
+                  <PlayBadge />
+                  <span>Listen now</span>
+                </span>
+                <span>View license catalogue</span>
+              </div>
+            </div>
           </div>
 
-          <div className="discover-artist-hero-copy">
-            <h1>
-              <span className="discover-artist-hero-regular">Real music</span>
-              <span className="discover-artist-hero-thin"> made by </span>
-              <span className="discover-artist-hero-regular">real artists.</span>
-            </h1>
-            <p>Support real-world artists and composers.</p>
+          <div className="discover-artist-hero-featured-intro">
+            <span>
+              This month&apos;s
+              <br />
+              featured artists
+            </span>
+            <p>{MOCKUP_LOREM}</p>
+            <div className="discover-artist-hero-slider-marks" aria-hidden="true">
+              <span />
+              <span />
+            </div>
           </div>
         </div>
       </section>
 
       <div className="discover-artist-content">
         <section className="discover-artist-featured">
-          <div className="discover-artist-featured-intro">
-            <h2>
-              In demand artists
-              <br />
-              and composers.
-            </h2>
-
-            <span className="discover-artist-featured-kicker">
-              This week&apos;s
-              <br />
-              featured artists
-            </span>
-
-            <p>{MOCKUP_LOREM}</p>
-          </div>
-
           <div className="discover-artist-featured-grid">
             {FEATURED_ARTISTS.map((artist, index) => (
               <article key={artist.name} className="discover-artist-feature-card">
