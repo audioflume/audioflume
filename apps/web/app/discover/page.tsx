@@ -200,8 +200,14 @@ function PlaceholderMedia({
 }) {
   return (
     <div
-      className={`discover-artist-placeholder is-tone-${index % 6} ${className}`.trim()}
-      style={!imageSrc ? { background: "var(--bg-secondary)" } : undefined}
+      className={`discover-artist-placeholder ${
+        imageSrc ? `is-tone-${index % 6}` : "before:hidden"
+      } ${className}`.trim()}
+      style={
+        !imageSrc
+          ? { background: "var(--filmwave-neutral-surface)" }
+          : undefined
+      }
     >
       {imageSrc ? (
         <img
