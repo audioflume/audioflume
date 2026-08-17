@@ -782,7 +782,7 @@ export default function MusicPlayer() {
                 type="button"
                 aria-label="Song options"
                 aria-expanded={open}
-                className={`inline-flex h-7 w-6 min-w-6 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors ${
+                className={`relative -left-[6px] inline-flex h-7 w-6 min-w-6 flex-shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 transition-colors ${
                   open
                     ? "text-[var(--text-primary)]"
                     : "text-[var(--icon-color)] hover:text-[var(--text-primary)]"
