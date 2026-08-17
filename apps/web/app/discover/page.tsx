@@ -272,7 +272,7 @@ export default function DiscoverPage() {
                   <div className="discover-artist-feature-overlay">
                     <div>
                       <h3>{artist.name}</h3>
-                      <p style={{ marginTop: "15px" }}>{artist.note}</p>
+                      <p style={{ marginTop: "13px" }}>{artist.note}</p>
                     </div>
                     <PlayBadge />
                   </div>
