@@ -25,7 +25,7 @@
   overflow: hidden;
   margin-top: calc(var(--filmwave-header-height, 75px) * -1);
   background:
-    linear-gradient(rgba(13, 13, 13, 0.46), rgba(13, 13, 13, 0.46)),
+    linear-gradient(rgba(13, 13, 13, 0.4), rgba(13, 13, 13, 0.4)),
     linear-gradient(
       180deg,
       rgba(0, 0, 0, 0.23) 0%,
@@ -141,7 +141,7 @@
   grid-row: 3;
   align-self: baseline;
   align-items: baseline;
-  gap: 18px;
+  gap: clamp(42px, 4vw, 72px);
   margin-top: clamp(28px, 2.2vw, 38px);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
@@ -152,7 +152,10 @@
 }
 
 .discover-artist-hero-listen {
-  display: contents;
+  display: inline-grid;
+  grid-template-columns: 52px auto;
+  align-items: center;
+  column-gap: 18px;
 }
 
 .discover-artist-hero-listen .discover-artist-play-badge {
@@ -163,13 +166,13 @@
 }
 
 .discover-artist-hero-listen > span:last-child {
-  margin-right: calc(clamp(42px, 4vw, 72px) - 18px);
+  align-self: baseline;
 }
 
 .discover-artist-hero-featured-intro {
   position: absolute;
   right: 0;
-  bottom: clamp(245px, 14.2vw, 275px);
+  bottom: calc(clamp(190px, 13vw, 250px) + 30px);
   left: 0;
   display: grid;
   grid-template-columns: 18% minmax(300px, 40%) 1fr;
@@ -634,7 +637,7 @@
   }
 
   .discover-artist-hero-featured-intro {
-    bottom: 230px;
+    bottom: 240px;
     grid-template-columns: 24% minmax(300px, 48%) 1fr;
     gap: 28px;
   }
@@ -721,7 +724,7 @@
   }
 
   .discover-artist-hero-featured-intro {
-    bottom: 205px;
+    bottom: 210px;
     grid-template-columns: minmax(110px, 0.55fr) 1fr;
     gap: 18px;
   }
