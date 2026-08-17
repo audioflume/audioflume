@@ -736,7 +736,10 @@ export default function MusicPlayer() {
                 aria-expanded={open}
                 className={`${iconButtonClass} filmwave-player-volume-button ${open ? "is-open" : ""}`}
               >
-                <VolumeIcon muted={volume === 0} />
+                <VolumeIcon
+                  muted={volume === 0}
+                  className="[--filmwave-player-action-icon-color:currentColor]"
+                />
               </button>
             )}
           >
@@ -776,7 +779,8 @@ export default function MusicPlayer() {
                 type="button"
                 aria-label="Song options"
                 aria-expanded={open}
-                className={`${iconButtonClass} ${open ? "bg-[var(--icon-button-hover)] text-[var(--text-primary)]" : ""}`}
+                className={`${iconButtonClass} ${open ? "text-[var(--text-primary)]" : ""}`}
+                style={{ marginInline: "-1px", background: "transparent" }}
               >
                 <MoreIcon />
               </button>
@@ -837,7 +841,7 @@ export default function MusicPlayer() {
               href={currentSong.audioUrl}
               download
               aria-label="License song"
-              className="ml-2 inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-black px-3 text-[11px] font-medium leading-none text-white transition-colors hover:bg-neutral-800"
+              className="inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-black px-3 text-[11px] font-medium leading-none text-white transition-colors hover:bg-neutral-800"
             >
               <span>License</span>
               <DownloadIcon size={13} />
