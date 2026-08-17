@@ -205,7 +205,10 @@ function PlaceholderMedia({
       } ${className}`.trim()}
       style={
         !imageSrc
-          ? { background: "var(--filmwave-neutral-surface)" }
+          ? {
+              background:
+                "color-mix(in srgb, var(--filmwave-neutral-surface) 95%, var(--filmwave-black))",
+            }
           : undefined
       }
     >
@@ -309,7 +312,10 @@ function ArtistShelf({
               imageSrc={item.image}
               className="discover-artist-shelf-media"
             >
-              <div className="discover-artist-card-overlay">
+              <div
+                className="discover-artist-card-overlay"
+                style={!item.image ? { background: "transparent" } : undefined}
+              >
                 <div>
                   <strong>{item.title}</strong>
                   <span>{item.subtitle}</span>
