@@ -13,6 +13,7 @@ import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import { usePlayer } from "@/context/PlayerContext";
 
 type ShelfItem = {
@@ -78,7 +79,7 @@ const MOCKUP_LOREM =
 function PlayBadge({ style }: { style?: CSSProperties }) {
   return (
     <span className="discover-artist-play-badge" aria-hidden="true" style={style}>
-      <span />
+      <PlayIconSmall size={18} />
     </span>
   );
 }
