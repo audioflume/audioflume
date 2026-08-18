@@ -362,7 +362,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         </div>
       </aside>
 
-      <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-20 pt-[88px] md:px-8 xl:px-10">
+      <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[var(--filmwave-backend-content-max-width)]">
           <div className="mb-5 md:hidden">
             {dashboardProfiles.length > 1 ? (

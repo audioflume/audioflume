@@ -13,6 +13,8 @@ type ArtistSongSummary = {
   title: string;
   status: string;
   duration: number;
+  bpm: number | null;
+  key: string | null;
   created_at: string;
 };
 
@@ -232,7 +234,7 @@ export default function ArtistMusicUploader({
         ) : null}
 
         <div className="overflow-x-auto overflow-y-hidden">
-          <div className="min-w-[900px]">
+          <div className="min-w-[860px]">
             {loadState === "loading" ? (
               <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 Loading music...
@@ -261,7 +263,7 @@ export default function ArtistMusicUploader({
             ) : null}
 
             {songs.length > 0 ? (
-              <div className="border-t border-[var(--border-subtle)]">
+              <div>
                 {songs.map((song, index) => {
                   const editable =
                     song.status === "draft" || song.status === "changes_requested";
@@ -270,7 +272,7 @@ export default function ArtistMusicUploader({
                   return (
                     <div
                       key={song.id}
-                      className="grid min-h-[72px] grid-cols-[60px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(132px,160px)_64px_96px_minmax(210px,auto)] items-center gap-4 px-5 text-xs"
+                      className="grid min-h-[72px] grid-cols-[60px_minmax(180px,1.5fr)_70px_70px_70px_minmax(210px,auto)_120px] items-center gap-4 px-5 text-xs"
                       style={{
                         borderBottom:
                           index === songs.length - 1
@@ -284,20 +286,13 @@ export default function ArtistMusicUploader({
                         </div>
                       </div>
 
-                      <div className="min-w-0 truncate font-medium leading-tight text-[var(--text-primary)]">
-                        {song.title}
-                      </div>
-
-                      <div className="min-w-0 truncate text-[var(--text-subtle)]">
-                        {artist.name}
-                      </div>
-
-                      <div>
-                        <span
-                          className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
-                        >
-                          {formatStatus(song.status)}
-                        </span>
+                      <div className="min-w-0">
+                        <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
+                          {song.title}
+                        </div>
+                        <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+                          Uploaded {formatDate(song.created_at)}
+                        </div>
                       </div>
 
                       <div className="text-[var(--text-secondary)]">
@@ -305,7 +300,11 @@ export default function ArtistMusicUploader({
                       </div>
 
                       <div className="text-[var(--text-secondary)]">
-                        {formatDate(song.created_at)}
+                        {song.key || "—"}
+                      </div>
+
+                      <div className="text-[var(--text-secondary)]">
+                        {song.bpm == null ? "—" : song.bpm}
                       </div>
 
                       <div className="flex flex-wrap justify-end gap-2">
@@ -333,6 +332,14 @@ export default function ArtistMusicUploader({
                                 : "Submit for review"}
                           </button>
                         ) : null}
+                      </div>
+
+                      <div className="flex justify-end">
+                        <span
+                          className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
+                        >
+                          {formatStatus(song.status)}
+                        </span>
                       </div>
                     </div>
                   );

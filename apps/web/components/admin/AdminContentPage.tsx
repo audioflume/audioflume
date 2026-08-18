@@ -63,6 +63,7 @@ export default function AdminContentPage({
   const isSongEdit = resolvedLabel === "Edit Song";
   const isPlaylistCreate = resolvedLabel === "Create Playlist";
   const isPlaylistEdit = resolvedLabel === "Edit Playlist";
+  const isMusicReview = resolvedLabel === "Music Review";
   const hidePageIntro =
     hideIntro ||
     isDashboard ||
@@ -82,7 +83,7 @@ export default function AdminContentPage({
     isSongEdit ||
     isPlaylistCreate ||
     isPlaylistEdit;
-  const showStandardFooter = isSongUpload || isSongEdit;
+  const showStandardFooter = isSongUpload || isSongEdit || isMusicReview;
   const resolvedContentAreaBottomPadding =
     contentAreaBottomPadding && !showStandardFooter;
   const resolvedContentAreaClassName = usesAdminCanvas

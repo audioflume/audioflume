@@ -21,6 +21,8 @@ type ArtistSongSummary = {
   title: string;
   status: string;
   duration: number;
+  bpm: number | null;
+  key: string | null;
   created_at: string;
 };
 
@@ -104,7 +106,7 @@ export async function GET(_request: Request, context: RouteContext) {
 
     const { data: songs, error: songsError } = await supabaseServer
       .from("songs")
-      .select("id, title, status, duration, created_at")
+      .select("id, title, status, duration, bpm, key, created_at")
       .in("id", songIds)
       .order("created_at", { ascending: false });
 
@@ -210,7 +212,7 @@ export async function POST(request: Request, context: RouteContext) {
         size_bytes: file.size,
         status: "draft",
       })
-      .select("id, title, status, duration, created_at")
+      .select("id, title, status, duration, bpm, key, created_at")
       .single();
 
     if (songError) {
