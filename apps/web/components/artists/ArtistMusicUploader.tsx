@@ -108,11 +108,17 @@ export default function ArtistMusicUploader({
   const canUpload =
     artist.status === "approved" &&
     artist.permissions.includes("catalog:upload");
+  const canSubmit =
+    artist.status === "approved" &&
+    artist.permissions.includes("catalog:submit");
   const [title, setTitle] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
   const [editingSongId, setEditingSongId] = useState("");
+  const [submittingSongId, setSubmittingSongId] = useState("");
+  const [catalogMessage, setCatalogMessage] = useState("");
+  const [catalogError, setCatalogError] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
@@ -126,6 +132,9 @@ export default function ArtistMusicUploader({
     let cancelled = false;
     setSongs([]);
     setEditingSongId("");
+    setSubmittingSongId("");
+    setCatalogMessage("");
+    setCatalogError("");
     setLoadState("loading");
     setMessage("");
     setError("");
@@ -230,6 +239,43 @@ export default function ArtistMusicUploader({
         song.id === savedSong.id ? { ...song, title: savedSong.title } : song,
       ),
     );
+  }
+
+  async function handleSubmitForReview(songId: string) {
+    if (!canSubmit || submittingSongId) return;
+
+    try {
+      setCatalogError("");
+      setCatalogMessage("");
+      setSubmittingSongId(songId);
+
+      const response = await fetch(`/api/artists/${artist.id}/songs/${songId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "submit" }),
+      });
+      const body = (await response.json().catch(() => ({}))) as ArtistSongsResponse;
+
+      if (!response.ok || !body.song) {
+        throw new Error(body.error || "Failed to submit track");
+      }
+
+      const submittedSong = body.song as ArtistSongSummary;
+      setSongs((current) =>
+        current.map((song) =>
+          song.id === submittedSong.id ? { ...song, ...submittedSong } : song,
+        ),
+      );
+      setCatalogMessage("Track submitted for review.");
+    } catch (submitError) {
+      setCatalogError(
+        submitError instanceof Error
+          ? submitError.message
+          : "Failed to submit track",
+      );
+    } finally {
+      setSubmittingSongId("");
+    }
   }
 
   const busy = stage !== "idle";
@@ -345,8 +391,17 @@ export default function ArtistMusicUploader({
             Recent uploads
           </h2>
           <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Open a draft track to manage its metadata, credits, and ownership information.
+            Drafts can be edited and submitted for review. Tracks with requested changes can be updated and resubmitted.
           </p>
+          {catalogError ? (
+            <div className="mt-2 text-xs text-[var(--status-error)]">
+              {catalogError}
+            </div>
+          ) : catalogMessage ? (
+            <div className="mt-2 text-xs text-[var(--status-success)]">
+              {catalogMessage}
+            </div>
+          ) : null}
         </div>
 
         <div className="divide-y divide-[var(--border)]">
@@ -368,39 +423,64 @@ export default function ArtistMusicUploader({
             </div>
           ) : null}
 
-          {songs.map((song) => (
-            <div
-              key={song.id}
-              className="grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_90px_120px_90px_auto] sm:items-center"
-            >
-              <div className="min-w-0">
-                <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                  {song.title}
+          {songs.map((song) => {
+            const editable =
+              song.status === "draft" || song.status === "changes_requested";
+            const submitting = submittingSongId === song.id;
+
+            return (
+              <div
+                key={song.id}
+                className="grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_90px_120px_110px_auto] sm:items-center"
+              >
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                    {song.title}
+                  </div>
+                  <div className="mt-1 text-[11px] text-[var(--text-muted)] sm:hidden">
+                    {formatDate(song.created_at)}
+                  </div>
                 </div>
-                <div className="mt-1 text-[11px] text-[var(--text-muted)] sm:hidden">
+                <div className="text-xs text-[var(--text-muted)]">
+                  {formatDuration(Number(song.duration))}
+                </div>
+                <div className="hidden text-xs text-[var(--text-muted)] sm:block">
                   {formatDate(song.created_at)}
                 </div>
+                <div>
+                  <span className="inline-flex h-7 items-center rounded-full bg-[var(--bg-tertiary)] px-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-secondary)]">
+                    {formatStatus(song.status)}
+                  </span>
+                </div>
+                <div className="flex flex-wrap justify-end gap-2">
+                  {editable ? (
+                    <button
+                      type="button"
+                      disabled={Boolean(submittingSongId)}
+                      onClick={() => setEditingSongId(song.id)}
+                      className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Edit details
+                    </button>
+                  ) : null}
+                  {editable && canSubmit ? (
+                    <button
+                      type="button"
+                      disabled={Boolean(submittingSongId)}
+                      onClick={() => void handleSubmitForReview(song.id)}
+                      className="inline-flex h-8 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-3 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {submitting
+                        ? "Submitting..."
+                        : song.status === "changes_requested"
+                          ? "Resubmit"
+                          : "Submit for review"}
+                    </button>
+                  ) : null}
+                </div>
               </div>
-              <div className="text-xs text-[var(--text-muted)]">
-                {formatDuration(Number(song.duration))}
-              </div>
-              <div className="hidden text-xs text-[var(--text-muted)] sm:block">
-                {formatDate(song.created_at)}
-              </div>
-              <div>
-                <span className="inline-flex h-7 items-center rounded-full bg-[var(--bg-tertiary)] px-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-secondary)]">
-                  {formatStatus(song.status)}
-                </span>
-              </div>
-              <button
-                type="button"
-                onClick={() => setEditingSongId(song.id)}
-                className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-              >
-                Edit details
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>
