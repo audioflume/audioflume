@@ -232,6 +232,7 @@ export default function PublicArtistPageView({
         .artist-public-identity {
           margin-top: auto;
           padding-top: clamp(28px, 3vw, 44px);
+          transform: translateY(8px);
         }
 
         .artist-public-name {
@@ -502,13 +503,16 @@ export default function PublicArtistPageView({
           .artist-public-identity {
             grid-column: 1;
             grid-row: 1;
+            width: 100%;
             margin-top: 0;
             padding-top: 0;
+            transform: none;
           }
 
           .artist-public-name {
+            width: 100%;
             margin: 0;
-            font-size: clamp(48px, 10vw, 72px);
+            font-size: clamp(52px, 12vw, 96px);
           }
 
           .artist-public-summary-row {
@@ -523,15 +527,15 @@ export default function PublicArtistPageView({
             aspect-ratio: 1.75 / 1;
           }
 
-          .artist-public-profile-meta {
-            grid-column: 1;
-            grid-row: 3;
-          }
-
           .artist-public-profile-panel {
             grid-column: 1;
-            grid-row: 4;
+            grid-row: 3;
             padding-top: 8px;
+          }
+
+          .artist-public-profile-meta {
+            grid-column: 1;
+            grid-row: 4;
           }
         }
 
