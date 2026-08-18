@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import Footer from "@/components/Footer";
@@ -20,6 +20,9 @@ type ArtistDashboardShellProps = {
   profiles: ArtistDashboardProfile[];
 };
 
+const ARTIST_DASHBOARD_SECTION_STORAGE_KEY =
+  "audioflume:artist-dashboard-section";
+
 const NAV_ITEMS: { section: ArtistDashboardSection; label: string }[] = [
   { section: "overview", label: "Overview" },
   { section: "profile", label: "Profile" },
@@ -29,6 +32,12 @@ const NAV_ITEMS: { section: ArtistDashboardSection; label: string }[] = [
   { section: "analytics", label: "Analytics" },
   { section: "team", label: "Team" },
 ];
+
+function isArtistDashboardSection(
+  value: string | null,
+): value is ArtistDashboardSection {
+  return NAV_ITEMS.some((item) => item.section === value);
+}
 
 function formatStatus(status: ArtistDashboardProfile["status"]) {
   if (status === "approved") return "Approved";
@@ -158,12 +167,27 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   const [activeSection, setActiveSection] =
     useState<ArtistDashboardSection>("overview");
 
+  useEffect(() => {
+    const storedSection = window.localStorage.getItem(
+      ARTIST_DASHBOARD_SECTION_STORAGE_KEY,
+    );
+
+    if (isArtistDashboardSection(storedSection)) {
+      setActiveSection(storedSection);
+    }
+  }, []);
+
   const activeArtist = useMemo(
     () =>
       dashboardProfiles.find((profile) => profile.id === activeArtistId) ??
       dashboardProfiles[0],
     [activeArtistId, dashboardProfiles],
   );
+
+  function handleSectionChange(section: ArtistDashboardSection) {
+    setActiveSection(section);
+    window.localStorage.setItem(ARTIST_DASHBOARD_SECTION_STORAGE_KEY, section);
+  }
 
   function handleProfileSaved(
     updatedArtist: Partial<ArtistDashboardProfile> & { id: string },
@@ -243,7 +267,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                 <button
                   key={item.section}
                   type="button"
-                  onClick={() => setActiveSection(item.section)}
+                  onClick={() => handleSectionChange(item.section)}
                   className={`flex h-10 cursor-pointer items-center rounded-[7px] px-3 text-left text-xs transition ${
                     active
                       ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
