@@ -56,7 +56,7 @@ export default function ApprovedSongPublishButton({
       type="button"
       disabled={disabled || publishing}
       onClick={() => void handlePublish()}
-      className="order-first inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-3 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-primary order-first"
     >
       {publishing ? "Publishing..." : "Publish"}
     </button>
