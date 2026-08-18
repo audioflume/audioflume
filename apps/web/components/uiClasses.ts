@@ -13,6 +13,8 @@ export const smallIconButtonClass =
 export const flatIconButtonClass =
   "filmwave-icon-button filmwave-icon-button-flat";
 
+// Public/frontend pill controls only. Admin + artist backend UI must use the
+// canonical filmwave-backend-* classes from components/backend/BackendUI.css.
 export const pillButtonClass =
   "inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-full px-4 text-xs font-semibold transition";
 
