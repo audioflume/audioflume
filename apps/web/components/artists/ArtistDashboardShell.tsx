@@ -3,9 +3,11 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
+import DashboardIcon from "@/components/icons/DashboardIcon";
 import Footer from "@/components/Footer";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -22,6 +24,11 @@ type ArtistDashboardShellProps = {
   profiles: ArtistDashboardProfile[];
 };
 
+type ArtistNavGroup = {
+  title: string;
+  items: { section: ArtistDashboardSection; label: string }[];
+};
+
 const ARTIST_DASHBOARD_SECTION_STORAGE_KEY =
   "audioflume:artist-dashboard-section";
 
@@ -34,6 +41,35 @@ const NAV_ITEMS: { section: ArtistDashboardSection; label: string }[] = [
   { section: "analytics", label: "Analytics" },
   { section: "team", label: "Team" },
 ];
+
+const NAV_GROUPS: ArtistNavGroup[] = [
+  {
+    title: "Manage",
+    items: [
+      { section: "profile", label: "Profile" },
+      { section: "music", label: "Music" },
+      { section: "releases", label: "Releases" },
+      { section: "playlists", label: "Playlists" },
+    ],
+  },
+  {
+    title: "Workspace",
+    items: [
+      { section: "analytics", label: "Analytics" },
+      { section: "team", label: "Team" },
+    ],
+  },
+];
+
+const SECTION_DESCRIPTIONS: Record<ArtistDashboardSection, string> = {
+  overview: "A snapshot of your Audioflume artist workspace.",
+  profile: "Manage your artist information, imagery, links, and public profile details.",
+  music: "Upload, organize, edit, and submit tracks from your catalogue.",
+  releases: "Build singles, EPs, and albums from your artist catalogue.",
+  playlists: "Create and manage artist-curated playlists.",
+  analytics: "Review performance and catalogue activity.",
+  team: "Manage the people who have access to this artist workspace.",
+};
 
 function isArtistDashboardSection(
   value: string | null,
@@ -71,6 +107,40 @@ function StatusBadge({ status }: { status: ArtistDashboardProfile["status"] }) {
   );
 }
 
+function ArtistSectionHeading({ children }: { children: string }) {
+  return (
+    <div className="mb-[17px] px-3 font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
+      {children}
+    </div>
+  );
+}
+
+function ArtistNavButton({
+  section,
+  label,
+  active,
+  onClick,
+}: {
+  section: ArtistDashboardSection;
+  label: string;
+  active: boolean;
+  onClick: (section: ArtistDashboardSection) => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={() => onClick(section)}
+      className={`flex h-[38px] w-full cursor-pointer items-center justify-between gap-3 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
+        active
+          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+      }`}
+    >
+      <span className="truncate">{label}</span>
+    </button>
+  );
+}
+
 function Overview({ artist }: { artist: ArtistDashboardProfile }) {
   const stats = [
     { label: "Tracks", value: artist.stats.tracks },
@@ -79,34 +149,32 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
   ];
 
   return (
-    <div className="grid gap-5">
-      <section className="grid gap-3 sm:grid-cols-3">
+    <div className="grid gap-4">
+      <section className="grid gap-2 sm:grid-cols-3">
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5"
+            className="flex min-h-[72px] flex-col justify-between rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3"
           >
-            <div className="text-[11px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              {stat.label}
-            </div>
-            <div className="mt-5 text-[34px] font-medium leading-none tracking-[-0.05em] text-[var(--text-primary)]">
+            <span className="text-xs text-[var(--text-secondary)]">{stat.label}</span>
+            <span className="mt-3 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
               {stat.value}
-            </div>
+            </span>
           </div>
         ))}
       </section>
 
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="border-b border-[var(--border)] px-5 py-4">
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="px-5 pb-3 pt-5">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Artist workspace
           </h2>
           <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Your profile, catalogue, releases, playlists, analytics, and team will all be managed from here.
+            Your profile, catalogue, releases, playlists, analytics, and team are managed from here.
           </p>
         </div>
 
-        <div className="grid divide-y divide-[var(--border)]">
+        <div className="border-t border-[var(--border-subtle)]">
           <div className="flex items-center justify-between gap-4 px-5 py-4">
             <div>
               <div className="text-sm font-medium text-[var(--text-primary)]">Profile</div>
@@ -118,7 +186,7 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
               Ready
             </span>
           </div>
-          <div className="flex items-center justify-between gap-4 px-5 py-4">
+          <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
             <div>
               <div className="text-sm font-medium text-[var(--text-primary)]">Music</div>
               <div className="mt-1 text-xs text-[var(--text-muted)]">
@@ -129,7 +197,7 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
               Ready
             </span>
           </div>
-          <div className="flex items-center justify-between gap-4 px-5 py-4">
+          <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
             <div>
               <div className="text-sm font-medium text-[var(--text-primary)]">Releases + playlists</div>
               <div className="mt-1 text-xs text-[var(--text-muted)]">
@@ -150,13 +218,13 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
   const label = NAV_ITEMS.find((item) => item.section === section)?.label ?? "Artist";
 
   return (
-    <div className="flex min-h-[280px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-6 text-center">
+    <div className="flex min-h-[280px] items-center justify-center rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-6 text-center">
       <div>
-        <div className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
           {label}
         </div>
         <p className="mt-2 max-w-[420px] text-xs leading-5 text-[var(--text-muted)]">
-          This section is part of the artist workspace shell and will be built as we move through the artist setup checklist.
+          This section is part of the artist workspace and will be built as we move through the artist setup checklist.
         </p>
       </div>
     </div>
@@ -189,6 +257,9 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
       dashboardProfiles[0],
     [activeArtistId, dashboardProfiles],
   );
+
+  const activeSectionLabel =
+    NAV_ITEMS.find((item) => item.section === activeSection)?.label ?? "Artist";
 
   function handleSectionChange(section: ArtistDashboardSection) {
     if (section === "music") {
@@ -251,14 +322,16 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     return (
       <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[900px]">
-          <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-6 py-10 text-center">
-            <h1 className="text-2xl font-medium tracking-[-0.04em]">No artist profile yet</h1>
+          <div className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-6 py-10 text-center">
+            <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.04em]">
+              No artist profile yet
+            </h1>
             <p className="mx-auto mt-2 max-w-[460px] text-sm leading-6 text-[var(--text-secondary)]">
               Create an artist application first. Once the profile exists, this dashboard becomes its central workspace.
             </p>
             <Link
               href="/artists/apply"
-              className="mt-5 inline-flex h-9 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80"
+              className="mt-5 inline-flex h-9 items-center justify-center rounded-full bg-[var(--text-primary)] px-4 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
             >
               Apply as an artist
             </Link>
@@ -270,36 +343,101 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
   return (
     <main
-      className={`min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${
+      className={`min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
         sectionReady ? "" : "invisible"
       }`}
     >
-      <div className="grid min-h-screen lg:grid-cols-[250px_1fr]">
-        <aside className="border-r border-[var(--border)] bg-[var(--bg-primary)] px-5 pb-8 pt-[112px] lg:sticky lg:top-0 lg:h-screen">
-          <div className="mb-7">
-            <div className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--text-muted)]">
-              Artist dashboard
-            </div>
-            <div className="mt-2 truncate text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-              {activeArtist.name}
-            </div>
-            <div className="mt-3 flex items-center gap-2">
-              <StatusBadge status={activeArtist.status} />
-              <span className="text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                {formatRole(activeArtist.role)}
+      <aside className="fixed bottom-0 left-0 top-[56px] z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col">
+        <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
+          <div className="border-b border-[var(--border)] pb-8">
+            <ArtistSectionHeading>Artist</ArtistSectionHeading>
+            <button
+              type="button"
+              onClick={() => handleSectionChange("overview")}
+              className={`group flex h-[38px] w-full cursor-pointer items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
+                sectionReady && activeSection === "overview"
+                  ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                  : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+              }`}
+            >
+              <span
+                className={`flex h-4 w-4 items-center justify-center transition-colors ${
+                  sectionReady && activeSection === "overview"
+                    ? "text-[var(--text-primary)]"
+                    : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                }`}
+              >
+                <DashboardIcon size={14} />
               </span>
-            </div>
+              <span className="truncate">Overview</span>
+            </button>
           </div>
 
-          {dashboardProfiles.length > 1 ? (
-            <label className="mb-7 block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Artist
-              </span>
+          <div className="mt-8 grid gap-8">
+            {NAV_GROUPS.map((group) => (
+              <div key={group.title} className="shrink-0">
+                <ArtistSectionHeading>{group.title}</ArtistSectionHeading>
+                <div className="flex flex-col gap-px">
+                  {group.items.map((item) => (
+                    <ArtistNavButton
+                      key={item.section}
+                      section={item.section}
+                      label={item.label}
+                      active={sectionReady && activeSection === item.section}
+                      onClick={handleSectionChange}
+                    />
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-auto pt-8">
+            <div className="border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5">
+              <div className="mb-2 font-mono text-[8px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                Active artist
+              </div>
+              <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+                {activeArtist.name}
+              </div>
+              <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-[var(--text-muted)]">
+                <span>{formatStatus(activeArtist.status)}</span>
+                <span>{formatRole(activeArtist.role)}</span>
+              </div>
+
+              {dashboardProfiles.length > 1 ? (
+                <select
+                  value={activeArtist.id}
+                  onChange={(event) => setActiveArtistId(event.target.value)}
+                  className="mt-3 h-8 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-primary)] outline-none"
+                >
+                  {dashboardProfiles.map((profile) => (
+                    <option key={profile.id} value={profile.id}>
+                      {profile.name}
+                    </option>
+                  ))}
+                </select>
+              ) : null}
+            </div>
+
+            <Link
+              href="/music"
+              className="mt-2 flex h-[38px] items-center px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+            >
+              Back to Audioflume
+            </Link>
+          </div>
+        </div>
+      </aside>
+
+      <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-20 pt-[88px] md:px-8 xl:px-10">
+        <div className="mx-auto max-w-[1180px]">
+          <div className="mb-5 md:hidden">
+            {dashboardProfiles.length > 1 ? (
               <select
                 value={activeArtist.id}
                 onChange={(event) => setActiveArtistId(event.target.value)}
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-primary)] outline-none"
+                className="mb-3 h-9 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none"
               >
                 {dashboardProfiles.map((profile) => (
                   <option key={profile.id} value={profile.id}>
@@ -307,86 +445,70 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                   </option>
                 ))}
               </select>
-            </label>
-          ) : null}
+            ) : null}
 
-          <nav className="grid gap-1" aria-label="Artist dashboard sections">
-            {NAV_ITEMS.map((item) => {
-              const active = sectionReady && activeSection === item.section;
-              return (
+            <nav
+              className="flex overflow-x-auto border border-[var(--border)] bg-[var(--bg-primary)]"
+              aria-label="Artist dashboard sections"
+            >
+              {NAV_ITEMS.map((item) => (
                 <button
                   key={item.section}
                   type="button"
                   onClick={() => handleSectionChange(item.section)}
-                  className={`flex h-10 cursor-pointer items-center rounded-[7px] px-3 text-left text-xs transition ${
-                    active
+                  className={`h-[38px] shrink-0 px-3 text-xs transition-colors ${
+                    sectionReady && activeSection === item.section
                       ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)]"
                   }`}
                 >
                   {item.label}
                 </button>
-              );
-            })}
-          </nav>
-
-          <Link
-            href="/music"
-            className="mt-8 inline-flex h-9 w-full items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] text-xs text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
-          >
-            Back to Audioflume
-          </Link>
-        </aside>
-
-        <section className="min-w-0 px-5 pb-16 pt-[100px] md:px-8 xl:px-10">
-          <div className="mx-auto max-w-[1100px]">
-            <div className="mb-7 flex flex-wrap items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
-              <div className="text-xs text-[var(--text-muted)]">
-                Artists / <span className="text-[var(--text-primary)]">{NAV_ITEMS.find((item) => item.section === activeSection)?.label}</span>
-              </div>
-              <div className="text-xs text-[var(--text-muted)]">/{activeArtist.slug}</div>
-            </div>
-
-            <div className="mb-7 flex flex-wrap items-end justify-between gap-4">
-              <div>
-                <div className="text-[10px] font-medium uppercase tracking-[0.06em] text-[var(--text-muted)]">
-                  {formatStatus(activeArtist.status)}
-                </div>
-                <h1 className="mt-2 text-[clamp(34px,5vw,56px)] font-medium leading-none tracking-[-0.055em] text-[var(--text-primary)]">
-                  {activeArtist.name}
-                </h1>
-              </div>
-              <StatusBadge status={activeArtist.status} />
-            </div>
-
-            {activeSection === "overview" ? (
-              <Overview artist={activeArtist} />
-            ) : activeSection === "profile" ? (
-              <ArtistProfileEditor
-                artist={activeArtist}
-                onSaved={handleProfileSaved}
-              />
-            ) : activeSection === "music" ? (
-              <ArtistMusicUploader
-                key={musicViewVersion}
-                artist={activeArtist}
-                onUploaded={handleSongUploaded}
-              />
-            ) : activeSection === "releases" ? (
-              <ArtistReleaseManager
-                artist={activeArtist}
-                onReleaseCreated={handleReleaseCreated}
-              />
-            ) : (
-              <PlaceholderSection section={activeSection} />
-            )}
-
-            <div className="mt-16 border-t border-[var(--border)] pt-8">
-              <Footer className="!px-0" />
-            </div>
+              ))}
+            </nav>
           </div>
-        </section>
-      </div>
+
+          <AdminPageHeader section="Artist" label={activeSectionLabel} compact />
+
+          <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+                {activeSectionLabel}
+              </h1>
+              <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
+                {activeArtist.name} · {SECTION_DESCRIPTIONS[activeSection]}
+              </p>
+            </div>
+            <StatusBadge status={activeArtist.status} />
+          </div>
+
+          {activeSection === "overview" ? (
+            <Overview artist={activeArtist} />
+          ) : activeSection === "profile" ? (
+            <ArtistProfileEditor
+              artist={activeArtist}
+              onSaved={handleProfileSaved}
+            />
+          ) : activeSection === "music" ? (
+            <ArtistMusicUploader
+              key={musicViewVersion}
+              artist={activeArtist}
+              onUploaded={handleSongUploaded}
+            />
+          ) : activeSection === "releases" ? (
+            <ArtistReleaseManager
+              artist={activeArtist}
+              onReleaseCreated={handleReleaseCreated}
+            />
+          ) : (
+            <PlaceholderSection section={activeSection} />
+          )}
+
+          <div className="mt-16">
+            <Footer className="!px-0" />
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

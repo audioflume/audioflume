@@ -194,10 +194,10 @@ export default function ArtistMusicUploader({
   }
 
   return (
-    <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--border)] px-5 py-4">
+    <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+      <div className="flex flex-wrap items-start justify-between gap-4 px-5 pb-3 pt-5">
         <div>
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Recent uploads
           </h2>
           <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
@@ -226,14 +226,14 @@ export default function ArtistMusicUploader({
       </div>
 
       {!canUpload ? (
-        <div className="border-b border-[var(--border)] px-5 py-3 text-xs text-[var(--text-muted)]">
+        <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-xs text-[var(--text-muted)]">
           {artist.status !== "approved"
             ? "Your artist profile must be approved before music can be uploaded."
             : "Your artist role does not include music upload access."}
         </div>
       ) : null}
 
-      <div className="divide-y divide-[var(--border)]">
+      <div className="divide-y divide-[var(--border-subtle)] border-t border-[var(--border-subtle)]">
         {loadState === "loading" ? (
           <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
             Loading music...
@@ -248,7 +248,7 @@ export default function ArtistMusicUploader({
             <button
               type="button"
               onClick={() => setLoadRequestKey((current) => current + 1)}
-              className="inline-flex h-8 shrink-0 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              className="inline-flex h-8 shrink-0 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
             >
               Try again
             </button>
@@ -269,7 +269,7 @@ export default function ArtistMusicUploader({
           return (
             <div
               key={song.id}
-              className="grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_90px_120px_110px_auto] sm:items-center"
+              className="grid min-h-[72px] gap-3 px-5 py-3 sm:grid-cols-[minmax(0,1fr)_90px_120px_110px_auto] sm:items-center"
             >
               <div className="min-w-0">
                 <div className="truncate text-sm font-medium text-[var(--text-primary)]">
@@ -298,7 +298,7 @@ export default function ArtistMusicUploader({
                     type="button"
                     disabled={Boolean(submittingSongId)}
                     onClick={() => setEditingSongId(song.id)}
-                    className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Edit details
                   </button>
@@ -308,7 +308,7 @@ export default function ArtistMusicUploader({
                     type="button"
                     disabled={Boolean(submittingSongId)}
                     onClick={() => void handleSubmitForReview(song.id)}
-                    className="inline-flex h-8 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-3 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="inline-flex h-8 items-center justify-center rounded-full bg-[var(--text-primary)] px-3 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     {submitting
                       ? "Submitting..."

@@ -22,11 +22,11 @@ type ArtistImageResponse = {
 };
 
 const inputClassName =
-  "h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-60";
+  "h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60";
 
 function FieldLabel({ children }: { children: string }) {
   return (
-    <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+    <span className="mb-2 block text-[11px] font-medium text-[var(--text-secondary)]">
       {children}
     </span>
   );
@@ -157,10 +157,10 @@ export default function ArtistProfileEditor({
   return (
     <form
       onSubmit={handleSubmit}
-      className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]"
+      className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]"
     >
-      <div className="border-b border-[var(--border)] px-5 py-4">
-        <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+      <div className="px-5 pb-3 pt-5">
+        <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
           Artist profile
         </h2>
         <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
@@ -168,12 +168,12 @@ export default function ArtistProfileEditor({
         </p>
       </div>
 
-      <div className="grid gap-5 p-5">
+      <div className="grid gap-5 border-t border-[var(--border-subtle)] p-5">
         <section className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
           <div>
             <FieldLabel>Profile image</FieldLabel>
             <div
-              className="aspect-square w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] bg-cover bg-center"
+              className="aspect-square w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
               style={
                 artist.profile_image_url
                   ? { backgroundImage: `url(${artist.profile_image_url})` }
@@ -181,7 +181,7 @@ export default function ArtistProfileEditor({
               }
             />
             {canEdit ? (
-              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]">
+              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-semibold text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
                 {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
                 <input
                   type="file"
@@ -201,7 +201,7 @@ export default function ArtistProfileEditor({
           <div>
             <FieldLabel>Hero image</FieldLabel>
             <div
-              className="aspect-[16/7] w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] bg-cover bg-center"
+              className="aspect-[16/7] w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
               style={
                 artist.hero_image_url
                   ? { backgroundImage: `url(${artist.hero_image_url})` }
@@ -209,7 +209,7 @@ export default function ArtistProfileEditor({
               }
             />
             {canEdit ? (
-              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]">
+              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-semibold text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
                 {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
                 <input
                   type="file"
@@ -287,7 +287,7 @@ export default function ArtistProfileEditor({
             maxLength={1200}
             disabled={!canEdit || saving}
             rows={6}
-            className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5 text-sm leading-6 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full resize-y rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
           />
         </label>
 
@@ -342,7 +342,7 @@ export default function ArtistProfileEditor({
         </div>
       </div>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] px-5 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] px-5 py-4">
         <div className="min-h-5 text-xs">
           {error ? (
             <span className="text-[var(--status-error)]">{error}</span>
@@ -359,7 +359,7 @@ export default function ArtistProfileEditor({
           <button
             type="submit"
             disabled={saving || !name.trim() || !displayedSlug}
-            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-full bg-[var(--text-primary)] px-4 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {saving ? "Saving..." : "Save profile"}
           </button>
