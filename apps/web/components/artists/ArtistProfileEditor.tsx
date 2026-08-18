@@ -22,7 +22,7 @@ type ArtistImageResponse = {
 };
 
 const inputClassName =
-  "h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60";
+  "h-9 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60";
 
 function FieldLabel({ children }: { children: string }) {
   return (
@@ -159,16 +159,13 @@ export default function ArtistProfileEditor({
       onSubmit={handleSubmit}
       className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]"
     >
-      <div className="px-5 pb-3 pt-5">
+      <div className="border-b border-[var(--border-subtle)] px-5 py-4">
         <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
           Artist profile
         </h2>
-        <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-          Manage the information that will appear on your public artist profile.
-        </p>
       </div>
 
-      <div className="grid gap-5 border-t border-[var(--border-subtle)] p-5">
+      <div className="grid gap-5 p-5">
         <section className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
           <div>
             <FieldLabel>Profile image</FieldLabel>
@@ -181,7 +178,7 @@ export default function ArtistProfileEditor({
               }
             />
             {canEdit ? (
-              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-semibold text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
+              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
                 {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
                 <input
                   type="file"
@@ -209,7 +206,7 @@ export default function ArtistProfileEditor({
               }
             />
             {canEdit ? (
-              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-semibold text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
+              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
                 {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
                 <input
                   type="file"
@@ -226,10 +223,6 @@ export default function ArtistProfileEditor({
             ) : null}
           </div>
         </section>
-
-        <div className="text-[11px] leading-5 text-[var(--text-muted)]">
-          Images are optimized to WebP when uploaded. Maximum file size: 20 MB.
-        </div>
 
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
@@ -287,7 +280,7 @@ export default function ArtistProfileEditor({
             maxLength={1200}
             disabled={!canEdit || saving}
             rows={6}
-            className="w-full resize-y rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
           />
         </label>
 
@@ -359,7 +352,7 @@ export default function ArtistProfileEditor({
           <button
             type="submit"
             disabled={saving || !name.trim() || !displayedSlug}
-            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-full bg-[var(--text-primary)] px-4 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {saving ? "Saving..." : "Save profile"}
           </button>

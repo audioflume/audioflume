@@ -61,16 +61,6 @@ const NAV_GROUPS: ArtistNavGroup[] = [
   },
 ];
 
-const SECTION_DESCRIPTIONS: Record<ArtistDashboardSection, string> = {
-  overview: "A snapshot of your Audioflume artist workspace.",
-  profile: "Manage your artist information, imagery, links, and public profile details.",
-  music: "Upload, organize, edit, and submit tracks from your catalogue.",
-  releases: "Build singles, EPs, and albums from your artist catalogue.",
-  playlists: "Create and manage artist-curated playlists.",
-  analytics: "Review performance and catalogue activity.",
-  team: "Manage the people who have access to this artist workspace.",
-};
-
 function isArtistDashboardSection(
   value: string | null,
 ): value is ArtistDashboardSection {
@@ -86,25 +76,6 @@ function formatStatus(status: ArtistDashboardProfile["status"]) {
 
 function formatRole(role: ArtistDashboardProfile["role"]) {
   return role.charAt(0).toUpperCase() + role.slice(1);
-}
-
-function StatusBadge({ status }: { status: ArtistDashboardProfile["status"] }) {
-  const styles =
-    status === "approved"
-      ? "bg-[var(--status-success-soft)] text-[var(--status-success)]"
-      : status === "pending"
-        ? "bg-[var(--status-warning-soft)] text-[var(--status-warning)]"
-        : status === "rejected"
-          ? "bg-[var(--status-error-soft)] text-[var(--status-error)]"
-          : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]";
-
-  return (
-    <span
-      className={`inline-flex h-7 items-center rounded-full px-3 text-[10px] font-medium uppercase tracking-[0.05em] ${styles}`}
-    >
-      {formatStatus(status)}
-    </span>
-  );
 }
 
 function ArtistSectionHeading({ children }: { children: string }) {
@@ -165,45 +136,33 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
       </section>
 
       <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="px-5 pb-3 pt-5">
+        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
           <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Artist workspace
           </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Your profile, catalogue, releases, playlists, analytics, and team are managed from here.
-          </p>
         </div>
 
-        <div className="border-t border-[var(--border-subtle)]">
+        <div>
           <div className="flex items-center justify-between gap-4 px-5 py-4">
-            <div>
-              <div className="text-sm font-medium text-[var(--text-primary)]">Profile</div>
-              <div className="mt-1 text-xs text-[var(--text-muted)]">
-                Artist information, imagery, links, and public profile details.
-              </div>
-            </div>
+            <div className="text-sm font-medium text-[var(--text-primary)]">Profile</div>
             <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
               Ready
             </span>
           </div>
           <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
-            <div>
-              <div className="text-sm font-medium text-[var(--text-primary)]">Music</div>
-              <div className="mt-1 text-xs text-[var(--text-muted)]">
-                Upload, organize, submit, and manage your Audioflume catalogue.
-              </div>
-            </div>
+            <div className="text-sm font-medium text-[var(--text-primary)]">Music</div>
             <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
               Ready
             </span>
           </div>
           <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
-            <div>
-              <div className="text-sm font-medium text-[var(--text-primary)]">Releases + playlists</div>
-              <div className="mt-1 text-xs text-[var(--text-muted)]">
-                Build releases and organize artist-curated collections.
-              </div>
-            </div>
+            <div className="text-sm font-medium text-[var(--text-primary)]">Releases</div>
+            <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
+              Ready
+            </span>
+          </div>
+          <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
+            <div className="text-sm font-medium text-[var(--text-primary)]">Playlists</div>
             <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
               Upcoming
             </span>
@@ -219,13 +178,8 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
 
   return (
     <div className="flex min-h-[280px] items-center justify-center rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-6 text-center">
-      <div>
-        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-          {label}
-        </div>
-        <p className="mt-2 max-w-[420px] text-xs leading-5 text-[var(--text-muted)]">
-          This section is part of the artist workspace and will be built as we move through the artist setup checklist.
-        </p>
+      <div className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+        {label}
       </div>
     </div>
   );
@@ -331,7 +285,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             </p>
             <Link
               href="/artists/apply"
-              className="mt-5 inline-flex h-9 items-center justify-center rounded-full bg-[var(--text-primary)] px-4 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
+              className="mt-5 inline-flex h-9 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80"
             >
               Apply as an artist
             </Link>
@@ -470,18 +424,6 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
           <AdminPageHeader section="Artist" label={activeSectionLabel} compact />
 
-          <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
-            <div className="min-w-0">
-              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
-                {activeSectionLabel}
-              </h1>
-              <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
-                {activeArtist.name} · {SECTION_DESCRIPTIONS[activeSection]}
-              </p>
-            </div>
-            <StatusBadge status={activeArtist.status} />
-          </div>
-
           {activeSection === "overview" ? (
             <Overview artist={activeArtist} />
           ) : activeSection === "profile" ? (
@@ -505,7 +447,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
           )}
 
           <div className="mt-16">
-            <Footer className="!px-0" />
+            <Footer
+              className="!px-0"
+              playerPadding={false}
+              showTopBorder={false}
+            />
           </div>
         </div>
       </section>

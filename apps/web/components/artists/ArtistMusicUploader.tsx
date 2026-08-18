@@ -194,23 +194,13 @@ export default function ArtistMusicUploader({
   }
 
   return (
-    <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-      <div className="flex flex-wrap items-start justify-between gap-4 px-5 pb-3 pt-5">
-        <div>
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Recent uploads
-          </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Manage drafts, review statuses, and published tracks from one place.
-          </p>
+    <div className="grid gap-4">
+      <div className="flex min-h-10 flex-wrap items-center justify-between gap-3">
+        <div className="min-h-5 text-xs">
           {catalogError ? (
-            <div className="mt-2 text-xs text-[var(--status-error,#dc584f)]">
-              {catalogError}
-            </div>
+            <span className="text-[var(--status-error,#dc584f)]">{catalogError}</span>
           ) : catalogMessage ? (
-            <div className="mt-2 text-xs text-[var(--status-success,#48b571)]">
-              {catalogMessage}
-            </div>
+            <span className="text-[var(--status-success,#48b571)]">{catalogMessage}</span>
           ) : null}
         </div>
 
@@ -218,110 +208,118 @@ export default function ArtistMusicUploader({
           <button
             type="button"
             onClick={() => setCreatingSong(true)}
-            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-full bg-[var(--text-primary)] px-4 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
+            className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80"
           >
             Upload Song
           </button>
         ) : null}
       </div>
 
-      {!canUpload ? (
-        <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-xs text-[var(--text-muted)]">
-          {artist.status !== "approved"
-            ? "Your artist profile must be approved before music can be uploaded."
-            : "Your artist role does not include music upload access."}
+      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+            Recent uploads
+          </h2>
         </div>
-      ) : null}
 
-      <div className="divide-y divide-[var(--border-subtle)] border-t border-[var(--border-subtle)]">
-        {loadState === "loading" ? (
-          <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-            Loading music...
+        {!canUpload ? (
+          <div className="border-b border-[var(--border-subtle)] px-5 py-3 text-xs text-[var(--text-muted)]">
+            {artist.status !== "approved"
+              ? "Your artist profile must be approved before music can be uploaded."
+              : "Your artist role does not include music upload access."}
           </div>
         ) : null}
 
-        {loadState === "error" && songs.length === 0 ? (
-          <div className="flex items-center justify-between gap-3 px-5 py-5 text-xs">
-            <span className="text-[var(--text-muted)]">
-              {loadError || "Music could not be loaded."}
-            </span>
-            <button
-              type="button"
-              onClick={() => setLoadRequestKey((current) => current + 1)}
-              className="inline-flex h-8 shrink-0 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-            >
-              Try again
-            </button>
-          </div>
-        ) : null}
+        <div className="divide-y divide-[var(--border-subtle)]">
+          {loadState === "loading" ? (
+            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+              Loading music...
+            </div>
+          ) : null}
 
-        {loadState === "ready" && songs.length === 0 ? (
-          <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-            No tracks uploaded yet.
-          </div>
-        ) : null}
+          {loadState === "error" && songs.length === 0 ? (
+            <div className="flex items-center justify-between gap-3 px-5 py-5 text-xs">
+              <span className="text-[var(--text-muted)]">
+                {loadError || "Music could not be loaded."}
+              </span>
+              <button
+                type="button"
+                onClick={() => setLoadRequestKey((current) => current + 1)}
+                className="inline-flex h-8 shrink-0 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+              >
+                Try again
+              </button>
+            </div>
+          ) : null}
 
-        {songs.map((song) => {
-          const editable =
-            song.status === "draft" || song.status === "changes_requested";
-          const submitting = submittingSongId === song.id;
+          {loadState === "ready" && songs.length === 0 ? (
+            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+              No tracks uploaded yet.
+            </div>
+          ) : null}
 
-          return (
-            <div
-              key={song.id}
-              className="grid min-h-[72px] gap-3 px-5 py-3 sm:grid-cols-[minmax(0,1fr)_90px_120px_110px_auto] sm:items-center"
-            >
-              <div className="min-w-0">
-                <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                  {song.title}
+          {songs.map((song) => {
+            const editable =
+              song.status === "draft" || song.status === "changes_requested";
+            const submitting = submittingSongId === song.id;
+
+            return (
+              <div
+                key={song.id}
+                className="grid min-h-[72px] gap-3 px-5 py-3 sm:grid-cols-[minmax(0,1fr)_90px_120px_110px_auto] sm:items-center"
+              >
+                <div className="min-w-0">
+                  <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                    {song.title}
+                  </div>
+                  <div className="mt-1 text-[11px] text-[var(--text-muted)] sm:hidden">
+                    {formatDate(song.created_at)}
+                  </div>
                 </div>
-                <div className="mt-1 text-[11px] text-[var(--text-muted)] sm:hidden">
+                <div className="text-xs text-[var(--text-muted)]">
+                  {formatDuration(Number(song.duration))}
+                </div>
+                <div className="hidden text-xs text-[var(--text-muted)] sm:block">
                   {formatDate(song.created_at)}
                 </div>
-              </div>
-              <div className="text-xs text-[var(--text-muted)]">
-                {formatDuration(Number(song.duration))}
-              </div>
-              <div className="hidden text-xs text-[var(--text-muted)] sm:block">
-                {formatDate(song.created_at)}
-              </div>
-              <div>
-                <span
-                  className={`inline-flex h-7 items-center rounded-full px-3 text-[10px] font-medium uppercase tracking-[0.05em] ${statusClassName(song.status)}`}
-                >
-                  {formatStatus(song.status)}
-                </span>
-              </div>
-              <div className="flex flex-wrap justify-end gap-2">
-                {editable ? (
-                  <button
-                    type="button"
-                    disabled={Boolean(submittingSongId)}
-                    onClick={() => setEditingSongId(song.id)}
-                    className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+                <div>
+                  <span
+                    className={`inline-flex h-7 items-center rounded-full px-3 text-[10px] font-medium uppercase tracking-[0.05em] ${statusClassName(song.status)}`}
                   >
-                    Edit details
-                  </button>
-                ) : null}
-                {editable && canSubmit ? (
-                  <button
-                    type="button"
-                    disabled={Boolean(submittingSongId)}
-                    onClick={() => void handleSubmitForReview(song.id)}
-                    className="inline-flex h-8 items-center justify-center rounded-full bg-[var(--text-primary)] px-3 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                  >
-                    {submitting
-                      ? "Submitting..."
-                      : song.status === "changes_requested"
-                        ? "Resubmit"
-                        : "Submit for review"}
-                  </button>
-                ) : null}
+                    {formatStatus(song.status)}
+                  </span>
+                </div>
+                <div className="flex flex-wrap justify-end gap-2">
+                  {editable ? (
+                    <button
+                      type="button"
+                      disabled={Boolean(submittingSongId)}
+                      onClick={() => setEditingSongId(song.id)}
+                      className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Edit details
+                    </button>
+                  ) : null}
+                  {editable && canSubmit ? (
+                    <button
+                      type="button"
+                      disabled={Boolean(submittingSongId)}
+                      onClick={() => void handleSubmitForReview(song.id)}
+                      className="inline-flex h-8 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-3 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {submitting
+                        ? "Submitting..."
+                        : song.status === "changes_requested"
+                          ? "Resubmit"
+                          : "Submit for review"}
+                    </button>
+                  ) : null}
+                </div>
               </div>
-            </div>
-          );
-        })}
-      </div>
-    </section>
+            );
+          })}
+        </div>
+      </section>
+    </div>
   );
 }

@@ -209,15 +209,12 @@ export default function ArtistReleaseManager({
   }
 
   return (
-    <div className="grid gap-5">
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="border-b border-[var(--border)] px-5 py-4">
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+    <div className="grid gap-4">
+      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Create release
           </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Group tracks into a single, EP, or album. Artwork and track order can be added after the release is created.
-          </p>
         </div>
 
         <form onSubmit={handleCreate}>
@@ -269,7 +266,7 @@ export default function ArtistReleaseManager({
             </label>
           </div>
 
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border)] px-5 py-4">
+          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] px-5 py-4">
             <div className="min-h-5 text-xs">
               {createError ? (
                 <span className="text-[var(--danger)]">{createError}</span>
@@ -295,17 +292,14 @@ export default function ArtistReleaseManager({
         </form>
       </section>
 
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="border-b border-[var(--border)] px-5 py-4">
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Releases
           </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Manage release details, artwork, dates, and track order.
-          </p>
         </div>
 
-        <div className="divide-y divide-[var(--border)]">
+        <div className="divide-y divide-[var(--border-subtle)]">
           {loadState === "loading" ? (
             <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
               Loading releases...
@@ -356,7 +350,7 @@ export default function ArtistReleaseManager({
                 <button
                   type="button"
                   onClick={() => setSelectedReleaseId(release.id)}
-                  className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+                  className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                 >
                   {canManage ? "Edit" : "View"}
                 </button>
@@ -524,27 +518,24 @@ function ReleaseEditor({
   }
 
   return (
-    <form onSubmit={saveRelease} className="grid gap-5">
+    <form onSubmit={saveRelease} className="grid gap-4">
       <div className="flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={onBack}
           disabled={saving || uploadingArtwork}
-          className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+          className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
         >
           Back to Releases
         </button>
         <ReleaseStatusBadge status={release.status} />
       </div>
 
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="border-b border-[var(--border)] px-5 py-4">
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Release details
           </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Set the release title, format, date, and square artwork.
-          </p>
         </div>
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
@@ -574,7 +565,7 @@ function ReleaseEditor({
                   type="button"
                   onClick={() => void uploadArtwork()}
                   disabled={!artworkFile || uploadingArtwork}
-                  className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
                 >
                   {uploadingArtwork ? "Uploading..." : "Upload artwork"}
                 </button>
@@ -631,18 +622,15 @@ function ReleaseEditor({
         </div>
       </section>
 
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="border-b border-[var(--border)] px-5 py-4">
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Track order
           </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Add tracks from this artist catalogue and arrange their release order.
-          </p>
         </div>
 
         {canManage ? (
-          <div className="flex flex-wrap gap-2 border-b border-[var(--border)] p-5">
+          <div className="flex flex-wrap gap-2 border-b border-[var(--border-subtle)] p-5">
             <select
               value={songToAdd}
               onChange={(event) => setSongToAdd(event.target.value)}
@@ -663,14 +651,14 @@ function ReleaseEditor({
               type="button"
               onClick={addTrack}
               disabled={!songToAdd}
-              className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-40"
             >
               Add track
             </button>
           </div>
         ) : null}
 
-        <div className="divide-y divide-[var(--border)]">
+        <div className="divide-y divide-[var(--border-subtle)]">
           {orderedTracks.length === 0 ? (
             <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
               No tracks added yet.
@@ -701,7 +689,7 @@ function ReleaseEditor({
                       type="button"
                       onClick={() => moveTrack(index, -1)}
                       disabled={index === 0}
-                      className="inline-flex h-8 min-w-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-2 text-xs text-[var(--text-secondary)] disabled:opacity-30"
+                      className="inline-flex h-8 min-w-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-xs text-[var(--text-secondary)] disabled:opacity-30"
                     >
                       ↑
                     </button>
@@ -709,14 +697,14 @@ function ReleaseEditor({
                       type="button"
                       onClick={() => moveTrack(index, 1)}
                       disabled={index === orderedTracks.length - 1}
-                      className="inline-flex h-8 min-w-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-2 text-xs text-[var(--text-secondary)] disabled:opacity-30"
+                      className="inline-flex h-8 min-w-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-xs text-[var(--text-secondary)] disabled:opacity-30"
                     >
                       ↓
                     </button>
                     <button
                       type="button"
                       onClick={() => removeTrack(song.id)}
-                      className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--danger)]"
+                      className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]"
                     >
                       Remove
                     </button>
@@ -728,7 +716,7 @@ function ReleaseEditor({
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-4">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-5 py-4">
         <div className="min-h-5 text-xs">
           {error ? (
             <span className="text-[var(--danger)]">{error}</span>
@@ -741,7 +729,7 @@ function ReleaseEditor({
             type="button"
             onClick={onBack}
             disabled={saving || uploadingArtwork}
-            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
           >
             Back to Releases
           </button>

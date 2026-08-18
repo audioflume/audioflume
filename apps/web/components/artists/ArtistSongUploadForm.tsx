@@ -5,10 +5,6 @@ import { FormEvent, useMemo, useRef, useState } from "react";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import WarningIcon from "@/components/icons/WarningIcon";
-import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-} from "@/components/uiClasses";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 import {
   BUILD_OPTIONS,
@@ -83,7 +79,13 @@ const KEY_OPTIONS = [
 ] as const;
 
 const inputClassName =
-  "h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60";
+  "h-9 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60";
+
+const secondaryActionButtonClass =
+  "inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
+
+const primaryActionButtonClass =
+  "inline-flex h-9 cursor-pointer items-center justify-center gap-2 rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80";
 
 function titleFromFileName(fileName: string) {
   return fileName
@@ -191,7 +193,7 @@ function CheckboxInput({
 }) {
   return (
     <label
-      className={`group flex h-9 items-center gap-2.5 self-end rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition ${
+      className={`group flex h-9 items-center gap-2.5 self-end rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition ${
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
       } ${checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
     >
@@ -241,7 +243,7 @@ function MultiSelectPills({
                   : [...selected, option],
               )
             }
-            className={`h-7 rounded-full border px-2.5 text-[11px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
+            className={`h-7 rounded-[7px] border px-2.5 text-[11px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
               active
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -565,50 +567,23 @@ export default function ArtistSongUploadForm({
 
   return (
     <div>
-      <div className="mb-5 flex flex-wrap items-start justify-between gap-4">
-        <div>
-          <div className="text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-            Song Editor
-          </div>
-          <h2 className="mt-2 text-[28px] font-medium tracking-[-0.045em] text-[var(--text-primary)]">
-            Upload Song
-          </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-secondary)]">
-            Upload audio, add metadata, credits, and ownership information in one place.
-          </p>
-        </div>
-
-        <div className="flex flex-wrap items-center gap-2">
-          {uploadWarnings.length > 0 && !uploadComplete ? (
-            <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-error-soft,rgba(220,88,79,0.12))] px-3 text-xs font-medium text-[var(--status-error,#dc584f)]">
-              <WarningIcon />
-              <span>
-                {uploadWarnings.length} warning{uploadWarnings.length === 1 ? "" : "s"}
-              </span>
-            </div>
-          ) : (
-            <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-success-soft,rgba(72,181,113,0.12))] px-3 text-xs font-medium text-[var(--status-success,#48b571)]">
-              <span className="h-2 w-2 rounded-full bg-[var(--status-success,#48b571)]" />
-              <span>Ready</span>
-            </div>
-          )}
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={busy}
-            className={`${secondaryPillButtonClass} disabled:cursor-not-allowed disabled:opacity-50`}
-          >
-            Back to Music
-          </button>
-        </div>
+      <div className="mb-4 flex min-h-10 items-center justify-end">
+        <button
+          type="button"
+          onClick={onClose}
+          disabled={busy}
+          className={`${secondaryActionButtonClass} disabled:cursor-not-allowed disabled:opacity-50`}
+        >
+          Back to Music
+        </button>
       </div>
 
       <style>{`
         .artist-song-upload-card {
           overflow: hidden;
-          border-radius: 0.75rem;
+          border-radius: 10px;
           border: 1px solid var(--border);
-          background: var(--bg-secondary);
+          background: var(--bg-primary);
         }
 
         .artist-song-upload-card-header {
@@ -656,13 +631,8 @@ export default function ArtistSongUploadForm({
             </div>
 
             <div className="artist-song-upload-file-row">
-              <div>
-                <div className="text-xs font-medium text-[var(--text-primary)]">
-                  Audio File
-                </div>
-                <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
-                  Main track source
-                </div>
+              <div className="text-xs font-medium text-[var(--text-primary)]">
+                Audio File
               </div>
 
               <div className="min-w-0">
@@ -676,12 +646,12 @@ export default function ArtistSongUploadForm({
                   }
                   className="hidden"
                 />
-                <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
+                <div className="flex h-9 min-w-0 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3">
                   <button
                     type="button"
                     disabled={!canUpload || busy || uploadComplete}
                     onClick={() => audioInputRef.current?.click()}
-                    className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="h-6 cursor-pointer whitespace-nowrap rounded-[7px] bg-[var(--text-primary)] px-3 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
                   >
                     Choose
                   </button>
@@ -856,7 +826,7 @@ export default function ArtistSongUploadForm({
                         current.filter((_, itemIndex) => itemIndex !== index),
                       )
                     }
-                    className="h-9 rounded-lg border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] disabled:opacity-50"
+                    className="h-9 rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] disabled:opacity-50"
                   >
                     Remove
                   </button>
@@ -867,7 +837,7 @@ export default function ArtistSongUploadForm({
                   type="button"
                   disabled={busy}
                   onClick={() => setCredits((current) => [...current, emptyCredit()])}
-                  className="mt-1 h-8 w-fit rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                  className="mt-1 h-8 w-fit rounded-[7px] border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
                 >
                   Add credit
                 </button>
@@ -881,7 +851,7 @@ export default function ArtistSongUploadForm({
             </div>
             <div className="grid gap-5 p-4">
               {!canEditRights ? (
-                <div className="rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]">
+                <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]">
                   Your role cannot edit ownership. You can upload the draft, and a manager or owner can complete rights before submission.
                 </div>
               ) : null}
@@ -928,7 +898,7 @@ export default function ArtistSongUploadForm({
                       onClick={() =>
                         setRightsHolders((current) => [...current, emptyHolder()])
                       }
-                      className="h-8 rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                      className="h-8 rounded-[7px] border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
                     >
                       Add rights holder
                     </button>
@@ -942,7 +912,7 @@ export default function ArtistSongUploadForm({
                     </div>
                   ) : null}
                   {rightsHolders.map((holder, index) => (
-                    <div key={index} className="rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+                    <div key={index} className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3">
                       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
                         <input value={holder.holder_name} onChange={(event) => updateHolder(index, { holder_name: event.target.value })} placeholder="Rights holder" disabled={!canEditRights || busy || uploadComplete} className={inputClassName} />
                         <SelectInput value={holder.rights_type} onChange={(value) => updateHolder(index, { rights_type: value as RightsHolder["rights_type"] })} disabled={!canEditRights || busy || uploadComplete}>
@@ -953,7 +923,7 @@ export default function ArtistSongUploadForm({
                         <input type="number" min={0} max={100} step="0.01" value={holder.ownership_percent} onChange={(event) => updateHolder(index, { ownership_percent: event.target.value })} placeholder="%" disabled={!canEditRights || busy || uploadComplete} className={inputClassName} />
                         <input value={holder.pro_affiliation} onChange={(event) => updateHolder(index, { pro_affiliation: event.target.value })} placeholder="PRO" disabled={!canEditRights || busy || uploadComplete} className={inputClassName} />
                         <input value={holder.ipi_cae_number} onChange={(event) => updateHolder(index, { ipi_cae_number: event.target.value })} placeholder="IPI / CAE" disabled={!canEditRights || busy || uploadComplete} className={inputClassName} />
-                        <button type="button" disabled={!canEditRights || busy || uploadComplete} onClick={() => setRightsHolders((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="h-9 rounded-lg border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] disabled:opacity-50">
+                        <button type="button" disabled={!canEditRights || busy || uploadComplete} onClick={() => setRightsHolders((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="h-9 rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] disabled:opacity-50">
                           Remove
                         </button>
                       </div>
@@ -970,7 +940,7 @@ export default function ArtistSongUploadForm({
                   rows={4}
                   maxLength={2000}
                   disabled={!canEditRights || busy || uploadComplete}
-                  className="w-full resize-y rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+                  className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
                 />
               </div>
             </div>
@@ -985,7 +955,7 @@ export default function ArtistSongUploadForm({
             <div className="grid gap-2 p-4">
               {uploadWarnings.length > 0 && !uploadComplete ? (
                 <>
-                  <div className="rounded-lg bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
                     <div className="flex items-center gap-2 font-medium">
                       <WarningIcon />
                       <span>
@@ -1007,7 +977,7 @@ export default function ArtistSongUploadForm({
                     ) : null}
                   </div>
                   {warningsOpen && uploadWarnings.length > 1 ? (
-                    <ul className="grid gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <ul className="grid gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
                       {uploadWarnings.map((warning) => (
                         <li key={warning}>{warning}</li>
                       ))}
@@ -1015,7 +985,7 @@ export default function ArtistSongUploadForm({
                   ) : null}
                 </>
               ) : (
-                <div className="rounded-lg bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs font-medium text-[var(--status-success,#48b571)]">
+                <div className="rounded-[7px] bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs font-medium text-[var(--status-success,#48b571)]">
                   Ready to save
                 </div>
               )}
@@ -1029,12 +999,12 @@ export default function ArtistSongUploadForm({
               </div>
               <div className="grid gap-3 p-4">
                 {error ? (
-                  <div className="rounded-lg bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
                     {error}
                   </div>
                 ) : null}
                 {saveStatus ? (
-                  <div className="rounded-lg bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
+                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
                     {saveStatus}
                   </div>
                 ) : null}
@@ -1051,14 +1021,14 @@ export default function ArtistSongUploadForm({
                 type="button"
                 onClick={onClose}
                 disabled={busy}
-                className={`w-full ${secondaryPillButtonClass} disabled:cursor-not-allowed disabled:opacity-50`}
+                className={`w-full ${secondaryActionButtonClass} disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 Back to Music
               </button>
               <button
                 type="submit"
                 disabled={!canUpload || !canEditMetadata || busy}
-                className={`w-full ${primaryPillButtonClass} disabled:cursor-not-allowed disabled:opacity-50`}
+                className={`w-full ${primaryActionButtonClass} disabled:cursor-not-allowed disabled:opacity-50`}
               >
                 {!busy ? <UploadIcon size={15} /> : null}
                 <span>
