@@ -208,18 +208,16 @@ export default function ArtistMusicUploader({
           <button
             type="button"
             onClick={() => setCreatingSong(true)}
-            className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80"
+            className="filmwave-backend-button filmwave-backend-button-primary"
           >
             Upload Song
           </button>
         ) : null}
       </div>
 
-      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Recent uploads
-          </h2>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Recent uploads</h2>
         </div>
 
         {!canUpload ? (
@@ -245,7 +243,7 @@ export default function ArtistMusicUploader({
               <button
                 type="button"
                 onClick={() => setLoadRequestKey((current) => current + 1)}
-                className="inline-flex h-8 shrink-0 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0"
               >
                 Try again
               </button>
@@ -284,7 +282,7 @@ export default function ArtistMusicUploader({
                 </div>
                 <div>
                   <span
-                    className={`inline-flex h-7 items-center rounded-full px-3 text-[10px] font-medium uppercase tracking-[0.05em] ${statusClassName(song.status)}`}
+                    className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
                   >
                     {formatStatus(song.status)}
                   </span>
@@ -295,7 +293,7 @@ export default function ArtistMusicUploader({
                       type="button"
                       disabled={Boolean(submittingSongId)}
                       onClick={() => setEditingSongId(song.id)}
-                      className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                     >
                       Edit details
                     </button>
@@ -305,7 +303,7 @@ export default function ArtistMusicUploader({
                       type="button"
                       disabled={Boolean(submittingSongId)}
                       onClick={() => void handleSubmitForReview(song.id)}
-                      className="inline-flex h-8 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-3 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-primary"
                     >
                       {submitting
                         ? "Submitting..."
