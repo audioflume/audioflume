@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 
 type ArtistAnalyticsTotals = {
   downloads: number;
@@ -61,6 +61,12 @@ function formatDate(value: string) {
   });
 }
 
+function formatStatus(status: string) {
+  return status
+    .replace(/_/g, " ")
+    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 function MetricCard({
   label,
   value,
@@ -71,15 +77,15 @@ function MetricCard({
   note: string;
 }) {
   return (
-    <div className="filmwave-backend-section flex min-h-[118px] flex-col justify-between p-4">
-      <div className="text-xs text-[var(--text-secondary)]">{label}</div>
+    <div className="filmwave-backend-section flex min-h-[104px] flex-col justify-between p-4">
+      <div className="text-[11px] font-medium text-[var(--text-secondary)]">
+        {label}
+      </div>
       <div>
-        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-medium leading-none tracking-[-0.05em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
           {formatNumber(value)}
         </div>
-        <div className="mt-2 font-mono text-[9px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-          {note}
-        </div>
+        <div className="mt-2 text-[10px] text-[var(--text-muted)]">{note}</div>
       </div>
     </div>
   );
@@ -100,14 +106,14 @@ function ActivityChart({ timeline }: { timeline: ArtistAnalyticsTimelinePoint[] 
 
   if (!hasActivity) {
     return (
-      <div className="flex h-[220px] items-center justify-center border-t border-[var(--border)] text-xs text-[var(--text-muted)]">
+      <div className="flex h-[220px] items-center justify-center border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
         No engagement activity in this period yet.
       </div>
     );
   }
 
   return (
-    <div className="border-t border-[var(--border)] px-4 pb-3 pt-4">
+    <div className="border-t border-[var(--border-subtle)] px-5 pb-4 pt-5">
       <div className="h-[200px] w-full text-[var(--text-primary)]">
         <svg
           viewBox="0 0 1000 210"
@@ -152,7 +158,7 @@ function ActivityChart({ timeline }: { timeline: ArtistAnalyticsTimelinePoint[] 
           })}
         </svg>
       </div>
-      <div className="mt-1 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.04em] text-[var(--text-muted)]">
+      <div className="mt-1 flex items-center justify-between text-[10px] text-[var(--text-muted)]">
         <span>{timeline[0] ? formatDate(timeline[0].date) : ""}</span>
         <span>
           {timeline[timeline.length - 1]
@@ -225,15 +231,11 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
   };
   const timeline = Array.isArray(data?.timeline) ? data.timeline : [];
   const tracks = Array.isArray(data?.tracks) ? data.tracks : [];
-
-  const periodMetrics = useMemo(
-    () => [
-      { label: "Saves", value: period.saves },
-      { label: "Playlist adds", value: period.playlist_adds },
-      { label: "Project adds", value: period.project_adds },
-    ],
-    [period],
-  );
+  const periodMetrics = [
+    { label: "Saves", value: period.saves },
+    { label: "Playlist adds", value: period.playlist_adds },
+    { label: "Project adds", value: period.project_adds },
+  ];
 
   if (loading && !data) {
     return (
@@ -254,7 +256,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
   return (
     <div className="grid gap-4">
       {error ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--text-primary)]">
+        <div className="filmwave-backend-section px-5 py-3 text-xs text-[var(--text-primary)]">
           {error}
         </div>
       ) : null}
@@ -274,50 +276,46 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
         />
       </section>
 
-      <section className="filmwave-backend-section overflow-hidden">
-        <div className="flex min-h-[64px] flex-wrap items-center justify-between gap-4 px-4 py-3">
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered flex-wrap">
           <div>
-            <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[13px] font-medium text-[var(--text-primary)]">
-              Engagement activity
-            </div>
-            <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              {formatNumber(period.total)} interactions · last {rangeDays} days
+            <h2 className="filmwave-backend-section-title">Engagement activity</h2>
+            <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+              {formatNumber(period.total)} interactions in the last {rangeDays} days
             </div>
           </div>
 
-          <div className="flex border border-[var(--border)] bg-[var(--bg-primary)]">
+          <div className="flex items-center gap-2">
             {RANGE_OPTIONS.map((days) => (
               <button
                 key={days}
                 type="button"
                 onClick={() => setRangeDays(days)}
                 disabled={loading && rangeDays === days}
-                className={`h-8 min-w-[46px] px-2 text-[10px] transition-colors ${
-                  rangeDays === days
-                    ? "bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                className={`filmwave-backend-choice-button ${
+                  rangeDays === days ? "is-active" : ""
                 }`}
               >
-                {days}D
+                {days} days
               </button>
             ))}
           </div>
         </div>
 
-        <div className="grid border-t border-[var(--border)] sm:grid-cols-3">
+        <div className="grid sm:grid-cols-3">
           {periodMetrics.map((metric, index) => (
             <div
               key={metric.label}
-              className={`px-4 py-3 ${
+              className={`px-5 py-4 ${
                 index < periodMetrics.length - 1
-                  ? "border-b border-[var(--border)] sm:border-b-0 sm:border-r"
+                  ? "border-b border-[var(--border-subtle)] sm:border-b-0 sm:border-r"
                   : ""
               }`}
             >
-              <div className="text-[10px] text-[var(--text-muted)]">
+              <div className="text-[11px] font-medium text-[var(--text-secondary)]">
                 {metric.label}
               </div>
-              <div className="mt-1 font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.04em] text-[var(--text-primary)]">
+              <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                 {formatNumber(metric.value)}
               </div>
             </div>
@@ -326,53 +324,46 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
 
         <ActivityChart timeline={timeline} />
 
-        <div className="border-t border-[var(--border)] px-4 py-3 text-[10px] leading-5 text-[var(--text-muted)]">
+        <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
           Downloads are currently reported as all-time totals. The activity chart
           uses timestamped saves, playlist adds, and project adds.
         </div>
       </section>
 
-      <section className="filmwave-backend-section overflow-hidden">
-        <div className="flex min-h-[58px] items-center justify-between gap-4 border-b border-[var(--border)] px-4 py-3">
-          <div>
-            <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[13px] font-medium text-[var(--text-primary)]">
-              Track performance
-            </div>
-            <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              All time
-            </div>
-          </div>
-          <div className="text-[10px] text-[var(--text-muted)]">
-            {tracks.length} {tracks.length === 1 ? "track" : "tracks"}
-          </div>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Track performance</h2>
+          <span className="text-[11px] text-[var(--text-muted)]">
+            {tracks.length} {tracks.length === 1 ? "track" : "tracks"} · All time
+          </span>
         </div>
 
         {tracks.length === 0 ? (
-          <div className="px-4 py-10 text-center text-xs text-[var(--text-muted)]">
+          <div className="px-5 py-10 text-center text-xs text-[var(--text-muted)]">
             No tracks to report yet.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <div className="min-w-[720px]">
-              <div className="grid grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center border-b border-[var(--border)] px-4 py-2 font-mono text-[8px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
+              <div className="grid grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center border-b border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
                 <span>Track</span>
                 <span className="text-right">Downloads</span>
                 <span className="text-right">Saves</span>
-                <span className="text-right">Playlist Adds</span>
-                <span className="text-right">Project Adds</span>
+                <span className="text-right">Playlist adds</span>
+                <span className="text-right">Project adds</span>
               </div>
 
               {tracks.map((track, index) => (
                 <div
                   key={track.id}
-                  className={`grid min-h-[62px] grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center px-4 py-2 ${
+                  className={`grid min-h-[68px] grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center px-5 py-2 ${
                     index < tracks.length - 1
-                      ? "border-b border-[var(--border)]"
+                      ? "border-b border-[var(--border-subtle)]"
                       : ""
                   }`}
                 >
                   <div className="flex min-w-0 items-center gap-3 pr-4">
-                    <div className="flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-muted)]">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-[var(--border)] bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-muted)]">
                       {track.cover_url ? (
                         <img
                           src={track.cover_url}
@@ -387,8 +378,8 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
                       <div className="truncate text-xs font-medium text-[var(--text-primary)]">
                         {track.title}
                       </div>
-                      <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.04em] text-[var(--text-muted)]">
-                        {track.status || "Track"}
+                      <div className="mt-1 text-[10px] text-[var(--text-muted)]">
+                        {formatStatus(track.status || "track")}
                       </div>
                     </div>
                   </div>
