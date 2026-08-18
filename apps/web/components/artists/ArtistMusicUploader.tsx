@@ -122,6 +122,7 @@ export default function ArtistMusicUploader({
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
+  const [loadRequestKey, setLoadRequestKey] = useState(0);
   const [stage, setStage] = useState<"idle" | "analyzing" | "uploading">(
     "idle",
   );
@@ -174,7 +175,7 @@ export default function ArtistMusicUploader({
     return () => {
       cancelled = true;
     };
-  }, [artist.id]);
+  }, [artist.id, loadRequestKey]);
 
   function handleFileChange(selectedFile: File | null) {
     setFile(selectedFile);
@@ -412,8 +413,17 @@ export default function ArtistMusicUploader({
           ) : null}
 
           {loadState === "error" && songs.length === 0 ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              Music could not be loaded.
+            <div className="flex items-center justify-between gap-3 px-5 py-5 text-xs">
+              <span className="text-[var(--text-muted)]">
+                {error || "Music could not be loaded."}
+              </span>
+              <button
+                type="button"
+                onClick={() => setLoadRequestKey((current) => current + 1)}
+                className="inline-flex h-8 shrink-0 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              >
+                Try again
+              </button>
             </div>
           ) : null}
 
