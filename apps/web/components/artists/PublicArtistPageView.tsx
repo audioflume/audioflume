@@ -175,9 +175,9 @@ export default function PublicArtistPageView({
         .artist-public-feature-media {
           position: relative;
           width: 100%;
-          min-height: 0;
-          align-self: start;
-          aspect-ratio: 1.86 / 1;
+          min-height: clamp(340px, 24vw, 460px);
+          align-self: stretch;
+          aspect-ratio: auto;
           overflow: hidden;
           background: var(--bg-secondary);
         }
@@ -326,7 +326,6 @@ export default function PublicArtistPageView({
           font-weight: 300;
           letter-spacing: -0.012em;
           line-height: 1.6;
-          transform: translateY(8px);
         }
 
         .artist-public-section {
@@ -470,6 +469,8 @@ export default function PublicArtistPageView({
           .artist-public-feature-media {
             grid-column: 1;
             grid-row: 2;
+            min-height: 0;
+            align-self: start;
             aspect-ratio: 1.75 / 1;
           }
 
