@@ -268,7 +268,7 @@ export default function AdminArtistsPage() {
       hideIntro
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
     >
-      <div className="mb-4 flex flex-col gap-3">
+      <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
         <AdminSearchBar
           value={search}
           onChange={setSearch}
@@ -276,7 +276,7 @@ export default function AdminArtistsPage() {
           className="w-full max-w-[500px]"
         />
 
-        <div className="flex max-w-full gap-2 overflow-x-auto">
+        <div className="flex shrink-0 flex-nowrap gap-2">
           {FILTERS.map((filter) => {
             const active = statusFilter === filter.value;
             return (
@@ -298,7 +298,7 @@ export default function AdminArtistsPage() {
             );
           })}
         </div>
-      </div>
+      </section>
 
       <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
         <div className="grid min-w-[940px] grid-cols-[minmax(190px,1.35fr)_minmax(170px,1fr)_minmax(130px,0.8fr)_120px_130px_minmax(190px,auto)] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
