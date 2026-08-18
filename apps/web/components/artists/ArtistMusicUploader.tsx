@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useState } from "react";
 
+import ArtistSongEditor from "@/components/artists/ArtistSongEditor";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ArtistSongSummary = {
@@ -111,6 +112,7 @@ export default function ArtistMusicUploader({
   const [file, setFile] = useState<File | null>(null);
   const [fileInputKey, setFileInputKey] = useState(0);
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
+  const [editingSongId, setEditingSongId] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
@@ -123,6 +125,7 @@ export default function ArtistMusicUploader({
   useEffect(() => {
     let cancelled = false;
     setSongs([]);
+    setEditingSongId("");
     setLoadState("loading");
     setMessage("");
     setError("");
@@ -202,11 +205,13 @@ export default function ArtistMusicUploader({
         throw new Error(body.error || "Failed to upload track");
       }
 
-      setSongs((current) => [body.song as ArtistSongSummary, ...current]);
+      const uploadedSong = body.song as ArtistSongSummary;
+      setSongs((current) => [uploadedSong, ...current]);
       setTitle("");
       setFile(null);
       setFileInputKey((current) => current + 1);
-      setMessage("Track uploaded to your catalogue as a draft.");
+      setMessage("");
+      setEditingSongId(uploadedSong.id);
       onUploaded();
     } catch (uploadError) {
       setError(
@@ -219,7 +224,26 @@ export default function ArtistMusicUploader({
     }
   }
 
+  function handleSongSaved(savedSong: { id: string; title: string }) {
+    setSongs((current) =>
+      current.map((song) =>
+        song.id === savedSong.id ? { ...song, title: savedSong.title } : song,
+      ),
+    );
+  }
+
   const busy = stage !== "idle";
+
+  if (editingSongId) {
+    return (
+      <ArtistSongEditor
+        artist={artist}
+        songId={editingSongId}
+        onClose={() => setEditingSongId("")}
+        onSaved={handleSongSaved}
+      />
+    );
+  }
 
   return (
     <div className="grid gap-5">
@@ -229,7 +253,7 @@ export default function ArtistMusicUploader({
             Upload music
           </h2>
           <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Upload a master track to start building your Audioflume catalogue. Detailed metadata and rights information come next.
+            Upload a master track to start building your Audioflume catalogue. After processing, you can add metadata, credits, and rights information.
           </p>
         </div>
 
@@ -321,7 +345,7 @@ export default function ArtistMusicUploader({
             Recent uploads
           </h2>
           <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Tracks connected to this artist profile. Full catalogue editing will be added later in the artist workflow.
+            Open a draft track to manage its metadata, credits, and ownership information.
           </p>
         </div>
 
@@ -347,7 +371,7 @@ export default function ArtistMusicUploader({
           {songs.map((song) => (
             <div
               key={song.id}
-              className="grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_90px_120px_90px] sm:items-center"
+              className="grid gap-3 px-5 py-4 sm:grid-cols-[minmax(0,1fr)_90px_120px_90px_auto] sm:items-center"
             >
               <div className="min-w-0">
                 <div className="truncate text-sm font-medium text-[var(--text-primary)]">
@@ -368,6 +392,13 @@ export default function ArtistMusicUploader({
                   {formatStatus(song.status)}
                 </span>
               </div>
+              <button
+                type="button"
+                onClick={() => setEditingSongId(song.id)}
+                className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              >
+                Edit details
+              </button>
             </div>
           ))}
         </div>
