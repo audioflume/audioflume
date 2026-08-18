@@ -334,7 +334,46 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         style={{ top: "var(--filmwave-header-height)", bottom: "0px" }}
       >
         <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
-          <div>
+          <div className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3">
+            <div className="flex items-center gap-3">
+              <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[14px] font-medium text-[var(--text-secondary)]">
+                {activeArtist.profile_image_url ? (
+                  <img
+                    src={activeArtist.profile_image_url}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : (
+                  <span>{activeArtist.name.slice(0, 1).toUpperCase()}</span>
+                )}
+              </div>
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+                  {activeArtist.name}
+                </div>
+                <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-[var(--text-muted)]">
+                  <span>{formatStatus(activeArtist.status)}</span>
+                  <span>{formatRole(activeArtist.role)}</span>
+                </div>
+              </div>
+            </div>
+
+            {dashboardProfiles.length > 1 ? (
+              <select
+                value={activeArtist.id}
+                onChange={(event) => setActiveArtistId(event.target.value)}
+                className="mt-3 h-8 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-primary)] outline-none"
+              >
+                {dashboardProfiles.map((profile) => (
+                  <option key={profile.id} value={profile.id}>
+                    {profile.name}
+                  </option>
+                ))}
+              </select>
+            ) : null}
+          </div>
+
+          <div className="mt-8">
             <ArtistSectionHeading>Artist</ArtistSectionHeading>
             <div className="flex flex-col gap-px">
               <ArtistNavButton
@@ -372,35 +411,6 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                 </div>
               </div>
             ))}
-          </div>
-
-          <div className="mt-auto pt-8">
-            <div className="border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5">
-              <div className="mb-2 font-mono text-[8px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                Active artist
-              </div>
-              <div className="truncate text-xs font-medium text-[var(--text-primary)]">
-                {activeArtist.name}
-              </div>
-              <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-[var(--text-muted)]">
-                <span>{formatStatus(activeArtist.status)}</span>
-                <span>{formatRole(activeArtist.role)}</span>
-              </div>
-
-              {dashboardProfiles.length > 1 ? (
-                <select
-                  value={activeArtist.id}
-                  onChange={(event) => setActiveArtistId(event.target.value)}
-                  className="mt-3 h-8 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-primary)] outline-none"
-                >
-                  {dashboardProfiles.map((profile) => (
-                    <option key={profile.id} value={profile.id}>
-                      {profile.name}
-                    </option>
-                  ))}
-                </select>
-              ) : null}
-            </div>
           </div>
         </div>
       </aside>
