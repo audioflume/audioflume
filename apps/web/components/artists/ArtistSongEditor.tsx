@@ -83,9 +83,6 @@ type ArtistSongEditorProps = {
   onSaved: (song: { id: string; title: string }) => void;
 };
 
-const inputClassName =
-  "h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-60";
-
 const KEY_OPTIONS = [
   "Cmaj",
   "Cmin",
@@ -156,11 +153,7 @@ function MultiSelect({
                     : [...selected, option],
                 )
               }
-              className={`h-7 rounded-full border px-2.5 text-[11px] font-medium transition disabled:cursor-not-allowed disabled:opacity-50 ${
-                active
-                  ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                  : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-              }`}
+              className={`filmwave-backend-choice-button ${active ? "is-active" : ""}`}
             >
               {option}
             </button>
@@ -412,7 +405,7 @@ export default function ArtistSongEditor({
 
   if (loadState === "loading") {
     return (
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-6 text-xs text-[var(--text-muted)]">
+      <section className="filmwave-backend-section px-5 py-6 text-xs text-[var(--text-muted)]">
         Loading track details...
       </section>
     );
@@ -420,12 +413,12 @@ export default function ArtistSongEditor({
 
   if (loadState === "error") {
     return (
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+      <section className="filmwave-backend-section p-5">
         <div className="text-xs text-[var(--status-error)]">{error}</div>
         <button
           type="button"
           onClick={onClose}
-          className="mt-4 inline-flex h-9 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-primary)]"
+          className="filmwave-backend-button filmwave-backend-button-secondary mt-4"
         >
           Back to Music
         </button>
@@ -446,20 +439,13 @@ export default function ArtistSongEditor({
         </section>
       ) : null}
 
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] px-5 py-4">
-          <div>
-            <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-              Track details
-            </h2>
-            <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-              Add the metadata used to organize and describe this track.
-            </p>
-          </div>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Track details</h2>
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
           >
             Back to Music
           </button>
@@ -474,7 +460,7 @@ export default function ArtistSongEditor({
                 onChange={(event) => setTitle(event.target.value)}
                 maxLength={160}
                 disabled={!canEditMetadata || saving}
-                className={inputClassName}
+                className="filmwave-backend-input"
               />
             </label>
             <label>
@@ -486,7 +472,7 @@ export default function ArtistSongEditor({
                 value={bpm}
                 onChange={(event) => setBpm(event.target.value)}
                 disabled={!canEditMetadata || saving}
-                className={inputClassName}
+                className="filmwave-backend-input"
               />
             </label>
             <label>
@@ -495,7 +481,7 @@ export default function ArtistSongEditor({
                 value={keyValue}
                 onChange={(event) => setKeyValue(event.target.value)}
                 disabled={!canEditMetadata || saving}
-                className={inputClassName}
+                className="filmwave-backend-select"
               >
                 <option value="">Not set</option>
                 {KEY_OPTIONS.map((option) => (
@@ -508,7 +494,7 @@ export default function ArtistSongEditor({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="flex min-h-11 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)]">
+            <label className="flex h-10 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)]">
               <input
                 type="checkbox"
                 checked={instrumental}
@@ -517,7 +503,7 @@ export default function ArtistSongEditor({
               />
               Instrumental
             </label>
-            <label className="flex min-h-11 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)]">
+            <label className="flex h-10 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)]">
               <input
                 type="checkbox"
                 checked={explicit}
@@ -537,16 +523,11 @@ export default function ArtistSongEditor({
         </div>
       </section>
 
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="border-b border-[var(--border)] px-5 py-4">
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Credits
-          </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            List the people who contributed to this recording and what they did.
-          </p>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header">
+          <h2 className="filmwave-backend-section-title">Credits</h2>
         </div>
-        <div className="grid gap-3 p-5">
+        <div className="grid gap-3 px-5 pb-5">
           {credits.length === 0 ? (
             <div className="text-xs text-[var(--text-muted)]">No credits added yet.</div>
           ) : null}
@@ -557,20 +538,20 @@ export default function ArtistSongEditor({
                 onChange={(event) => updateCredit(index, { credit_name: event.target.value })}
                 placeholder="Name"
                 disabled={!canEditMetadata || saving}
-                className={inputClassName}
+                className="filmwave-backend-input"
               />
               <input
                 value={credit.credit_role}
                 onChange={(event) => updateCredit(index, { credit_role: event.target.value })}
                 placeholder="Role — composer, producer, performer..."
                 disabled={!canEditMetadata || saving}
-                className={inputClassName}
+                className="filmwave-backend-input"
               />
               <button
                 type="button"
                 disabled={!canEditMetadata || saving}
                 onClick={() => setCredits((current) => current.filter((_, itemIndex) => itemIndex !== index))}
-                className="h-10 rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)]"
+                className="filmwave-backend-button filmwave-backend-button-secondary"
               >
                 Remove
               </button>
@@ -581,7 +562,7 @@ export default function ArtistSongEditor({
               type="button"
               disabled={saving}
               onClick={() => setCredits((current) => [...current, emptyCredit()])}
-              className="mt-1 inline-flex h-9 w-fit items-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-primary)]"
+              className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-1 w-fit"
             >
               Add credit
             </button>
@@ -589,17 +570,12 @@ export default function ArtistSongEditor({
         </div>
       </section>
 
-      <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="border-b border-[var(--border)] px-5 py-4">
-          <h2 className="text-lg font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Rights + ownership
-          </h2>
-          <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-            Record who controls the master and publishing rights before submission.
-          </p>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header">
+          <h2 className="filmwave-backend-section-title">Rights + ownership</h2>
         </div>
 
-        <div className="grid gap-5 p-5">
+        <div className="grid gap-5 px-5 pb-5">
           {!canEditRights ? (
             <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]">
               Your artist role can view rights information but cannot edit ownership details.
@@ -609,27 +585,27 @@ export default function ArtistSongEditor({
           <div className="grid gap-4 md:grid-cols-2">
             <label>
               <FieldLabel>Master owner</FieldLabel>
-              <input value={masterOwner} onChange={(event) => setMasterOwner(event.target.value)} disabled={!canEditRights || saving} className={inputClassName} />
+              <input value={masterOwner} onChange={(event) => setMasterOwner(event.target.value)} disabled={!canEditRights || saving} className="filmwave-backend-input" />
             </label>
             <label>
               <FieldLabel>Publishing owner</FieldLabel>
-              <input value={publishingOwner} onChange={(event) => setPublishingOwner(event.target.value)} disabled={!canEditRights || saving} className={inputClassName} />
+              <input value={publishingOwner} onChange={(event) => setPublishingOwner(event.target.value)} disabled={!canEditRights || saving} className="filmwave-backend-input" />
             </label>
             <label>
               <FieldLabel>PRO affiliation</FieldLabel>
-              <input value={proAffiliation} onChange={(event) => setProAffiliation(event.target.value)} disabled={!canEditRights || saving} placeholder="SOCAN, ASCAP, BMI..." className={inputClassName} />
+              <input value={proAffiliation} onChange={(event) => setProAffiliation(event.target.value)} disabled={!canEditRights || saving} placeholder="SOCAN, ASCAP, BMI..." className="filmwave-backend-input" />
             </label>
             <label>
               <FieldLabel>Copyright year</FieldLabel>
-              <input type="number" min={1900} max={2200} value={copyrightYear} onChange={(event) => setCopyrightYear(event.target.value)} disabled={!canEditRights || saving} className={inputClassName} />
+              <input type="number" min={1900} max={2200} value={copyrightYear} onChange={(event) => setCopyrightYear(event.target.value)} disabled={!canEditRights || saving} className="filmwave-backend-input" />
             </label>
             <label>
               <FieldLabel>ISRC</FieldLabel>
-              <input value={isrc} onChange={(event) => setIsrc(event.target.value)} disabled={!canEditRights || saving} className={inputClassName} />
+              <input value={isrc} onChange={(event) => setIsrc(event.target.value)} disabled={!canEditRights || saving} className="filmwave-backend-input" />
             </label>
             <label>
               <FieldLabel>ISWC</FieldLabel>
-              <input value={iswc} onChange={(event) => setIswc(event.target.value)} disabled={!canEditRights || saving} className={inputClassName} />
+              <input value={iswc} onChange={(event) => setIswc(event.target.value)} disabled={!canEditRights || saving} className="filmwave-backend-input" />
             </label>
           </div>
 
@@ -646,7 +622,7 @@ export default function ArtistSongEditor({
                   type="button"
                   disabled={saving}
                   onClick={() => setRightsHolders((current) => [...current, emptyHolder()])}
-                  className="inline-flex h-9 items-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-primary)]"
+                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                 >
                   Add rights holder
                 </button>
@@ -660,16 +636,16 @@ export default function ArtistSongEditor({
               {rightsHolders.map((holder, index) => (
                 <div key={index} className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3">
                   <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_130px_1fr_1fr_auto]">
-                    <input value={holder.holder_name} onChange={(event) => updateHolder(index, { holder_name: event.target.value })} disabled={!canEditRights || saving} placeholder="Rights holder" className={inputClassName} />
-                    <select value={holder.rights_type} onChange={(event) => updateHolder(index, { rights_type: event.target.value as RightsHolder["rights_type"] })} disabled={!canEditRights || saving} className={inputClassName}>
+                    <input value={holder.holder_name} onChange={(event) => updateHolder(index, { holder_name: event.target.value })} disabled={!canEditRights || saving} placeholder="Rights holder" className="filmwave-backend-input" />
+                    <select value={holder.rights_type} onChange={(event) => updateHolder(index, { rights_type: event.target.value as RightsHolder["rights_type"] })} disabled={!canEditRights || saving} className="filmwave-backend-select">
                       <option value="both">Master + publishing</option>
                       <option value="master">Master</option>
                       <option value="publishing">Publishing</option>
                     </select>
-                    <input type="number" min={0} max={100} step="0.01" value={holder.ownership_percent} onChange={(event) => updateHolder(index, { ownership_percent: event.target.value })} disabled={!canEditRights || saving} placeholder="%" className={inputClassName} />
-                    <input value={holder.pro_affiliation} onChange={(event) => updateHolder(index, { pro_affiliation: event.target.value })} disabled={!canEditRights || saving} placeholder="PRO" className={inputClassName} />
-                    <input value={holder.ipi_cae_number} onChange={(event) => updateHolder(index, { ipi_cae_number: event.target.value })} disabled={!canEditRights || saving} placeholder="IPI / CAE" className={inputClassName} />
-                    <button type="button" disabled={!canEditRights || saving} onClick={() => setRightsHolders((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="h-10 rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)]">
+                    <input type="number" min={0} max={100} step="0.01" value={holder.ownership_percent} onChange={(event) => updateHolder(index, { ownership_percent: event.target.value })} disabled={!canEditRights || saving} placeholder="%" className="filmwave-backend-input" />
+                    <input value={holder.pro_affiliation} onChange={(event) => updateHolder(index, { pro_affiliation: event.target.value })} disabled={!canEditRights || saving} placeholder="PRO" className="filmwave-backend-input" />
+                    <input value={holder.ipi_cae_number} onChange={(event) => updateHolder(index, { ipi_cae_number: event.target.value })} disabled={!canEditRights || saving} placeholder="IPI / CAE" className="filmwave-backend-input" />
+                    <button type="button" disabled={!canEditRights || saving} onClick={() => setRightsHolders((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="filmwave-backend-button filmwave-backend-button-secondary">
                       Remove
                     </button>
                   </div>
@@ -680,12 +656,12 @@ export default function ArtistSongEditor({
 
           <label>
             <FieldLabel>Rights notes</FieldLabel>
-            <textarea value={rightsNotes} onChange={(event) => setRightsNotes(event.target.value)} rows={4} maxLength={2000} disabled={!canEditRights || saving} className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5 text-sm leading-6 text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-60" />
+            <textarea value={rightsNotes} onChange={(event) => setRightsNotes(event.target.value)} rows={4} maxLength={2000} disabled={!canEditRights || saving} className="filmwave-backend-textarea" />
           </label>
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-4">
+      <div className="filmwave-backend-section flex flex-wrap items-center justify-between gap-3 px-5 py-4">
         <div className="min-h-5 text-xs">
           {error ? (
             <span className="text-[var(--status-error)]">{error}</span>
@@ -699,12 +675,12 @@ export default function ArtistSongEditor({
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-9 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+            className="filmwave-backend-button filmwave-backend-button-secondary"
           >
             Back to Music
           </button>
           {canEditMetadata ? (
-            <button type="submit" disabled={saving || !title.trim()} className="inline-flex h-9 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40">
+            <button type="submit" disabled={saving || !title.trim()} className="filmwave-backend-button filmwave-backend-button-primary">
               {saving ? "Saving..." : "Save track details"}
             </button>
           ) : null}
