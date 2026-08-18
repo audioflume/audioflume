@@ -157,11 +157,10 @@ export default function PublicArtistPageView({
         .artist-public-type {
           margin-bottom: clamp(16px, 1.4vw, 22px);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(15px, 1.05vw, 18px);
-          font-weight: 300;
-          letter-spacing: 0;
-          line-height: 1.15;
-          text-transform: uppercase;
+          font-size: clamp(17px, 1.35vw, 22px);
+          font-weight: 400;
+          letter-spacing: -0.035em;
+          line-height: 1;
         }
 
         .artist-public-feature-grid {
@@ -216,7 +215,7 @@ export default function PublicArtistPageView({
 
         .artist-public-summary-row {
           display: grid;
-          grid-template-columns: minmax(112px, 150px) minmax(0, 1fr);
+          grid-template-columns: minmax(150px, 190px) minmax(0, 1fr);
           gap: clamp(26px, 3vw, 48px);
           align-items: start;
           margin-top: clamp(24px, 2.5vw, 34px);
@@ -226,10 +225,10 @@ export default function PublicArtistPageView({
           display: grid;
           gap: 2px;
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: 11px;
-          font-weight: 400;
+          font-size: clamp(15px, 1.05vw, 18px);
+          font-weight: 300;
           letter-spacing: 0;
-          line-height: 1.18;
+          line-height: 1.15;
           text-transform: uppercase;
         }
 
