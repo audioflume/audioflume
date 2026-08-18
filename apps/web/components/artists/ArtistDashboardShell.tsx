@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
+import ArtistPlaylistManager from "@/components/artists/ArtistPlaylistManager";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
 import DashboardIcon from "@/components/icons/DashboardIcon";
@@ -247,6 +248,24 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     );
   }
 
+  function handlePlaylistCreated() {
+    if (!activeArtist) return;
+
+    setDashboardProfiles((current) =>
+      current.map((profile) =>
+        profile.id === activeArtist.id
+          ? {
+              ...profile,
+              stats: {
+                ...profile.stats,
+                playlists: profile.stats.playlists + 1,
+              },
+            }
+          : profile,
+      ),
+    );
+  }
+
   if (!activeArtist) {
     return (
       <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-8 xl:px-10">
@@ -419,6 +438,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             <ArtistReleaseManager
               artist={activeArtist}
               onReleaseCreated={handleReleaseCreated}
+            />
+          ) : activeSection === "playlists" ? (
+            <ArtistPlaylistManager
+              artist={activeArtist}
+              onPlaylistCreated={handlePlaylistCreated}
             />
           ) : (
             <PlaceholderSection section={activeSection} />
