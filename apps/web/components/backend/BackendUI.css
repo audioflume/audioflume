@@ -1,0 +1,211 @@
+/*
+ * Canonical Audioflume web-backend UI.
+ *
+ * The current admin backend is the visual source of truth for these values.
+ * Admin and artist workspace UI should use these classes instead of public-site
+ * pill helpers or page-specific radius/button overrides.
+ */
+
+:root {
+  --filmwave-backend-control-height: 40px;
+  --filmwave-backend-compact-control-height: 32px;
+  --filmwave-backend-control-radius: 7px;
+  --filmwave-backend-section-radius: 10px;
+  --filmwave-backend-content-max-width: 1180px;
+}
+
+.filmwave-backend-section {
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--filmwave-backend-section-radius);
+  background: var(--bg-primary);
+}
+
+.filmwave-backend-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 20px 20px 12px;
+}
+
+.filmwave-backend-section-header-bordered {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  border-bottom: 1px solid var(--border-subtle);
+  padding: 16px 20px;
+}
+
+.filmwave-backend-section-title {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 24px;
+  letter-spacing: -0.03em;
+}
+
+.filmwave-backend-button {
+  box-sizing: border-box;
+  display: inline-flex;
+  height: var(--filmwave-backend-control-height);
+  min-height: var(--filmwave-backend-control-height);
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border-radius: var(--filmwave-backend-control-radius);
+  padding: 0 16px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  transition: border-color 150ms ease, background-color 150ms ease,
+    color 150ms ease, opacity 150ms ease;
+}
+
+.filmwave-backend-button-primary {
+  border: 1px solid var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.filmwave-backend-button-primary:hover {
+  opacity: 0.8;
+}
+
+.filmwave-backend-button-secondary {
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+.filmwave-backend-button-secondary:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filmwave-backend-button-danger {
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
+}
+
+.filmwave-backend-button-danger:hover {
+  background: var(--danger-hover);
+}
+
+.filmwave-backend-button-compact {
+  height: var(--filmwave-backend-compact-control-height);
+  min-height: var(--filmwave-backend-compact-control-height);
+  padding-right: 12px;
+  padding-left: 12px;
+  font-size: 11px;
+}
+
+.filmwave-backend-button:disabled,
+.filmwave-backend-button[aria-disabled="true"] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.filmwave-backend-input,
+.filmwave-backend-select {
+  box-sizing: border-box;
+  width: 100%;
+  height: var(--filmwave-backend-control-height);
+  border: 1px solid var(--border);
+  border-radius: var(--filmwave-backend-control-radius);
+  background: var(--bg-primary);
+  padding: 0 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  transition: border-color 150ms ease, opacity 150ms ease;
+}
+
+.filmwave-backend-input::placeholder,
+.filmwave-backend-textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.filmwave-backend-input:focus,
+.filmwave-backend-select:focus,
+.filmwave-backend-textarea:focus {
+  border-color: var(--text-muted);
+}
+
+.filmwave-backend-input:disabled,
+.filmwave-backend-select:disabled,
+.filmwave-backend-textarea:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.filmwave-backend-textarea {
+  box-sizing: border-box;
+  width: 100%;
+  resize: vertical;
+  border: 1px solid var(--border);
+  border-radius: var(--filmwave-backend-control-radius);
+  background: var(--bg-primary);
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  line-height: 20px;
+  outline: none;
+  transition: border-color 150ms ease, opacity 150ms ease;
+}
+
+.filmwave-backend-choice-button {
+  display: inline-flex;
+  height: 28px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  border-radius: var(--filmwave-backend-control-radius);
+  background: transparent;
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-size: 11px;
+  font-weight: 500;
+  transition: border-color 150ms ease, background-color 150ms ease,
+    color 150ms ease, opacity 150ms ease;
+}
+
+.filmwave-backend-choice-button:hover {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+}
+
+.filmwave-backend-choice-button.is-active {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.filmwave-backend-choice-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+/* Status is intentionally pill-shaped; ordinary backend buttons are not. */
+.filmwave-backend-status-badge {
+  display: inline-flex;
+  height: 28px;
+  align-items: center;
+  border-radius: 999px;
+  padding: 0 12px;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 1;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
