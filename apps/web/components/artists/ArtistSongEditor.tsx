@@ -54,6 +54,12 @@ type RightsDetails = {
   notes: string | null;
 };
 
+type ReviewFeedback = {
+  action: "changes_requested" | "rejected";
+  notes: string | null;
+  created_at: string;
+};
+
 type DetailResponse = {
   song?: SongDetails;
   credits?: Array<Credit & { id?: string; position?: number }>;
@@ -66,6 +72,7 @@ type DetailResponse = {
     pro_affiliation: string | null;
     ipi_cae_number: string | null;
   }>;
+  review_feedback?: ReviewFeedback | null;
   error?: string;
 };
 
@@ -192,6 +199,9 @@ export default function ArtistSongEditor({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [reviewFeedback, setReviewFeedback] = useState<ReviewFeedback | null>(
+    null,
+  );
   const [title, setTitle] = useState("");
   const [bpm, setBpm] = useState("");
   const [keyValue, setKeyValue] = useState("");
@@ -218,6 +228,7 @@ export default function ArtistSongEditor({
     setLoadState("loading");
     setError("");
     setMessage("");
+    setReviewFeedback(null);
 
     async function loadDetails() {
       try {
@@ -233,6 +244,7 @@ export default function ArtistSongEditor({
 
         if (cancelled) return;
 
+        setReviewFeedback(body.review_feedback ?? null);
         setTitle(body.song.title);
         setBpm(body.song.bpm == null ? "" : String(body.song.bpm));
         setKeyValue(body.song.key ?? "");
@@ -423,6 +435,17 @@ export default function ArtistSongEditor({
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-5">
+      {reviewFeedback?.notes ? (
+        <section className="rounded-[7px] border border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
+          <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--status-warning,var(--text-primary))]">
+            Review feedback
+          </div>
+          <p className="mt-2 text-xs leading-5 text-[var(--text-primary)]">
+            {reviewFeedback.notes}
+          </p>
+        </section>
+      ) : null}
+
       <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
         <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] px-5 py-4">
           <div>
