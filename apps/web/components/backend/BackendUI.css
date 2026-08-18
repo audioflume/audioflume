@@ -88,6 +88,17 @@
   color: var(--text-primary);
 }
 
+.filmwave-backend-button-secondary-danger {
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-secondary);
+}
+
+.filmwave-backend-button-secondary-danger:hover {
+  background: var(--danger-hover);
+  color: var(--danger);
+}
+
 .filmwave-backend-button-danger {
   border: 1px solid var(--danger);
   background: transparent;
