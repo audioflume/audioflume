@@ -58,6 +58,7 @@ async function requireReleaseOwnership(artistId: string, releaseId: string) {
     .select("release_id")
     .eq("release_id", releaseId)
     .eq("artist_id", artistId)
+    .eq("role", "primary")
     .maybeSingle();
 
   if (error) throw error;
@@ -131,6 +132,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         .from("song_artists")
         .select("song_id")
         .eq("artist_id", id)
+        .eq("role", "primary")
         .in("song_id", songIds);
 
       if (songLinksError) throw songLinksError;

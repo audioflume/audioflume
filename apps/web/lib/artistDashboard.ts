@@ -57,11 +57,16 @@ export async function getArtistDashboardProfiles(
           "id, name, slug, status, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url",
         )
         .in("id", artistIds),
-      supabaseServer.from("song_artists").select("artist_id").in("artist_id", artistIds),
+      supabaseServer
+        .from("song_artists")
+        .select("artist_id")
+        .in("artist_id", artistIds)
+        .eq("role", "primary"),
       supabaseServer
         .from("artist_release_artists")
         .select("artist_id")
-        .in("artist_id", artistIds),
+        .in("artist_id", artistIds)
+        .eq("role", "primary"),
       supabaseServer
         .from("artist_playlists")
         .select("artist_id")

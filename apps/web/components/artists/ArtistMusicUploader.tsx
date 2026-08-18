@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 
-import ArtistSongEditor from "@/components/artists/ArtistSongEditor";
+import ArtistSongEditorWithCollaborators from "@/components/artists/ArtistSongEditorWithCollaborators";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
 import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
@@ -188,7 +188,7 @@ export default function ArtistMusicUploader({
 
   if (editingSongId) {
     return (
-      <ArtistSongEditor
+      <ArtistSongEditorWithCollaborators
         artist={artist}
         songId={editingSongId}
         onClose={() => setEditingSongId("")}
