@@ -143,7 +143,7 @@ function formatDuration(value: number) {
 
 function FieldLabel({ children }: { children: string }) {
   return (
-    <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+    <label className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
       {children}
     </label>
   );
