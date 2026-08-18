@@ -10,6 +10,7 @@ import ArtistNotifications from "@/components/artists/ArtistNotifications";
 import ArtistPlaylistManager from "@/components/artists/ArtistPlaylistManager";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
+import ArtistTeamManager from "@/components/artists/ArtistTeamManager";
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import Footer from "@/components/Footer";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
@@ -484,6 +485,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             <ArtistNotifications
               key={`${activeArtist.id}-notifications-${sectionViewVersion}`}
               artistId={activeArtist.id}
+            />
+          ) : activeSection === "team" ? (
+            <ArtistTeamManager
+              key={`${activeArtist.id}-team-${sectionViewVersion}`}
+              artist={activeArtist}
             />
           ) : (
             <PlaceholderSection
