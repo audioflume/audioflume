@@ -288,7 +288,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
           <nav className="grid gap-1" aria-label="Artist dashboard sections">
             {NAV_ITEMS.map((item) => {
-              const active = activeSection === item.section;
+              const active = sectionReady && activeSection === item.section;
               return (
                 <button
                   key={item.section}
