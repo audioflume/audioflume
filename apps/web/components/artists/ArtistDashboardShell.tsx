@@ -12,7 +12,6 @@ import ArtistPlaylistManager from "@/components/artists/ArtistPlaylistManager";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
 import ArtistTeamManager from "@/components/artists/ArtistTeamManager";
-import DashboardIcon from "@/components/icons/DashboardIcon";
 import Footer from "@/components/Footer";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -322,53 +321,36 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     );
   }
 
+  const isMyPage = activeSection === "my-page";
+
   return (
     <main
-      className={`min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
-        sectionReady ? "" : "invisible"
-      }`}
+      className={`min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
+        isMyPage ? "pt-[var(--filmwave-header-height)]" : "pt-14"
+      } ${sectionReady ? "" : "invisible"}`}
     >
       <aside
         className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col"
         style={{ top: "var(--filmwave-header-height)", bottom: "0px" }}
       >
         <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
-          <div className="border-b border-[var(--border)] pb-8">
+          <div>
             <ArtistSectionHeading>Artist</ArtistSectionHeading>
             <div className="flex flex-col gap-px">
-              <Link
-                href={getArtistDashboardHref("overview", activeArtist.id)}
-                onClick={() => handleSectionChange("overview")}
-                className={`group flex h-[38px] w-full cursor-pointer items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
-                  sectionReady && activeSection === "overview"
-                    ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                <span
-                  className={`flex h-4 w-4 items-center justify-center transition-colors ${
-                    sectionReady && activeSection === "overview"
-                      ? "text-[var(--text-primary)]"
-                      : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
-                  }`}
-                >
-                  <DashboardIcon size={14} />
-                </span>
-                <span className="truncate">Overview</span>
-              </Link>
-
-              <Link
-                href={getArtistDashboardHref("my-page", activeArtist.id)}
-                onClick={() => handleSectionChange("my-page")}
-                className={`group flex h-[38px] w-full cursor-pointer items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
-                  sectionReady && activeSection === "my-page"
-                    ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                <span className="h-4 w-4 shrink-0" aria-hidden="true" />
-                <span className="truncate">My Page</span>
-              </Link>
+              <ArtistNavButton
+                section="overview"
+                label="Overview"
+                artistId={activeArtist.id}
+                active={sectionReady && activeSection === "overview"}
+                onClick={handleSectionChange}
+              />
+              <ArtistNavButton
+                section="my-page"
+                label="My Page"
+                artistId={activeArtist.id}
+                active={sectionReady && activeSection === "my-page"}
+                onClick={handleSectionChange}
+              />
             </div>
           </div>
 
@@ -419,20 +401,25 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                 </select>
               ) : null}
             </div>
-
-            <Link
-              href="/music"
-              className="mt-2 flex h-[38px] items-center px-3 text-[12.5px] text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-            >
-              Back to Audioflume
-            </Link>
           </div>
         </div>
       </aside>
 
-      <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-8 xl:px-10">
-        <div className="mx-auto max-w-[var(--filmwave-backend-content-max-width)]">
-          <div className="mb-5 md:hidden">
+      <section
+        className={
+          isMyPage
+            ? "min-h-screen bg-[var(--bg-primary)] p-0"
+            : "min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-8 xl:px-10"
+        }
+      >
+        <div
+          className={
+            isMyPage
+              ? "w-full"
+              : "mx-auto max-w-[var(--filmwave-backend-content-max-width)]"
+          }
+        >
+          <div className={`mb-5 md:hidden ${isMyPage ? "px-5 pt-5" : ""}`}>
             {dashboardProfiles.length > 1 ? (
               <select
                 value={activeArtist.id}
@@ -468,7 +455,9 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             </nav>
           </div>
 
-          <AdminPageHeader section="Artist" label={activeSectionLabel} compact />
+          {!isMyPage ? (
+            <AdminPageHeader section="Artist" label={activeSectionLabel} compact />
+          ) : null}
 
           {activeSection === "overview" ? (
             <Overview
@@ -521,7 +510,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             />
           )}
 
-          {activeSection !== "my-page" ? (
+          {!isMyPage ? (
             <div className="mt-16">
               <Footer
                 playerPadding={false}
