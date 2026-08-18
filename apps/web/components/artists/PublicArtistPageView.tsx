@@ -152,10 +152,12 @@ export default function PublicArtistPageView({
 
         .artist-public-top {
           padding: clamp(34px, 3vw, 50px) 0 clamp(44px, 4vw, 60px);
+          color: var(--text-primary);
         }
 
         .artist-public-type {
           margin-bottom: clamp(16px, 1.4vw, 22px);
+          color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(17px, 1.35vw, 22px);
           font-weight: 400;
@@ -167,13 +169,14 @@ export default function PublicArtistPageView({
           display: grid;
           grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
           gap: clamp(34px, 4vw, 72px);
-          align-items: start;
+          align-items: stretch;
         }
 
         .artist-public-feature-media {
           position: relative;
           width: 100%;
           min-height: 0;
+          align-self: start;
           aspect-ratio: 1.86 / 1;
           overflow: hidden;
           background: var(--bg-secondary);
@@ -201,16 +204,19 @@ export default function PublicArtistPageView({
         .artist-public-feature-copy {
           display: flex;
           min-width: 0;
+          height: 100%;
           flex-direction: column;
         }
 
         .artist-public-name {
           margin: -0.08em 0 0;
+          color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(66px, 7.8vw, 98px);
+          font-size: clamp(56px, 5.8vw, 96px);
           font-weight: 400;
           letter-spacing: -0.035em;
           line-height: 0.96;
+          text-wrap: balance;
         }
 
         .artist-public-summary-row {
@@ -224,6 +230,7 @@ export default function PublicArtistPageView({
         .artist-public-stats {
           display: grid;
           gap: 2px;
+          color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(15px, 1.05vw, 18px);
           font-weight: 300;
@@ -237,14 +244,15 @@ export default function PublicArtistPageView({
           margin: 0;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(18px, 1.3vw, 24px);
+          font-size: 16px;
           font-weight: 300;
           letter-spacing: 0;
           line-height: 1.35;
         }
 
         .artist-public-profile-panel {
-          margin-top: clamp(34px, 3.5vw, 52px);
+          margin-top: auto;
+          padding-top: clamp(24px, 2.5vw, 36px);
         }
 
         .artist-public-profile-heading {
@@ -257,7 +265,7 @@ export default function PublicArtistPageView({
         .artist-public-profile-label {
           color: var(--text-primary);
           font-family: var(--font-roboto-mono-filmwave), monospace;
-          font-size: 18px;
+          font-size: 14px;
           font-weight: 300;
           letter-spacing: 0;
           line-height: 1;
@@ -271,9 +279,17 @@ export default function PublicArtistPageView({
           align-items: center;
           justify-content: flex-end;
           gap: 8px 18px;
-          color: var(--text-muted);
-          font-size: 9px;
+          color: var(--text-primary);
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: 11px;
+          font-weight: 300;
+          letter-spacing: 0;
           line-height: 1.2;
+        }
+
+        .artist-public-location {
+          color: var(--text-primary);
+          font-weight: 300;
         }
 
         .artist-public-links {
@@ -288,12 +304,13 @@ export default function PublicArtistPageView({
           display: inline-flex;
           align-items: center;
           gap: 4px;
-          color: var(--text-muted);
-          transition: color 150ms ease;
+          color: var(--text-primary);
+          font-weight: 300;
+          transition: opacity 150ms ease;
         }
 
         .artist-public-links a:hover {
-          color: var(--text-primary);
+          opacity: 0.62;
         }
 
         .artist-public-links svg {
@@ -303,12 +320,12 @@ export default function PublicArtistPageView({
 
         .artist-public-bio {
           margin: 14px 0 0;
-          color: var(--text-secondary);
+          color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(12px, 0.82vw, 14px);
+          font-size: 14px;
           font-weight: 300;
           letter-spacing: -0.012em;
-          line-height: 1.65;
+          line-height: 1.6;
         }
 
         .artist-public-section {
@@ -429,7 +446,7 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-name {
-            font-size: clamp(58px, 7.5vw, 82px);
+            font-size: clamp(52px, 5.8vw, 72px);
           }
         }
 
@@ -446,23 +463,37 @@ export default function PublicArtistPageView({
 
           .artist-public-feature-grid {
             grid-template-columns: 1fr;
-            gap: 28px;
+            gap: 22px;
           }
 
           .artist-public-feature-media {
+            grid-column: 1;
+            grid-row: 2;
             aspect-ratio: 1.75 / 1;
           }
 
           .artist-public-feature-copy {
-            display: block;
+            display: contents;
           }
 
           .artist-public-name {
-            font-size: clamp(52px, 12vw, 78px);
+            grid-column: 1;
+            grid-row: 1;
+            margin: 0;
+            font-size: clamp(48px, 10vw, 72px);
+          }
+
+          .artist-public-summary-row {
+            grid-column: 1;
+            grid-row: 3;
+            margin-top: 0;
           }
 
           .artist-public-profile-panel {
-            margin-top: 38px;
+            grid-column: 1;
+            grid-row: 4;
+            margin-top: 0;
+            padding-top: 10px;
           }
         }
 
@@ -491,7 +522,7 @@ export default function PublicArtistPageView({
 
         @media (max-width: 480px) {
           .artist-public-name {
-            font-size: clamp(46px, 15vw, 64px);
+            font-size: clamp(44px, 12vw, 60px);
           }
 
           .artist-public-grid {
@@ -552,7 +583,11 @@ export default function PublicArtistPageView({
 
                       {(artist.location || externalLinks.length > 0) ? (
                         <div className="artist-public-profile-meta">
-                          {artist.location ? <span>{artist.location}</span> : null}
+                          {artist.location ? (
+                            <span className="artist-public-location">
+                              {artist.location}
+                            </span>
+                          ) : null}
                           {externalLinks.length > 0 ? (
                             <div className="artist-public-links">
                               {externalLinks.map(([label, href]) => (
