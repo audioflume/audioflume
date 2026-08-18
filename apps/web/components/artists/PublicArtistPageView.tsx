@@ -160,7 +160,7 @@ export default function PublicArtistPageView({
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(17px, 1.35vw, 22px);
-          font-weight: 400;
+          font-weight: 300;
           letter-spacing: -0.035em;
           line-height: 1;
         }
@@ -326,6 +326,7 @@ export default function PublicArtistPageView({
           font-weight: 300;
           letter-spacing: -0.012em;
           line-height: 1.6;
+          transform: translateY(8px);
         }
 
         .artist-public-section {
@@ -494,6 +495,10 @@ export default function PublicArtistPageView({
             grid-row: 4;
             margin-top: 0;
             padding-top: 10px;
+          }
+
+          .artist-public-bio {
+            transform: none;
           }
         }
 
