@@ -168,6 +168,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   const [activeSection, setActiveSection] =
     useState<ArtistDashboardSection>("overview");
   const [sectionReady, setSectionReady] = useState(false);
+  const [musicViewVersion, setMusicViewVersion] = useState(0);
 
   useEffect(() => {
     const storedSection = window.localStorage.getItem(
@@ -189,6 +190,10 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   );
 
   function handleSectionChange(section: ArtistDashboardSection) {
+    if (section === "music") {
+      setMusicViewVersion((current) => current + 1);
+    }
+
     setActiveSection(section);
     window.localStorage.setItem(ARTIST_DASHBOARD_SECTION_STORAGE_KEY, section);
   }
@@ -344,6 +349,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               />
             ) : activeSection === "music" ? (
               <ArtistMusicUploader
+                key={musicViewVersion}
                 artist={activeArtist}
                 onUploaded={handleSongUploaded}
               />

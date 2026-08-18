@@ -210,7 +210,6 @@ export default function ArtistSongEditor({
   const [isrc, setIsrc] = useState("");
   const [iswc, setIswc] = useState("");
   const [copyrightYear, setCopyrightYear] = useState("");
-  const [rightsConfirmed, setRightsConfirmed] = useState(false);
   const [rightsNotes, setRightsNotes] = useState("");
   const [rightsHolders, setRightsHolders] = useState<RightsHolder[]>([]);
 
@@ -261,7 +260,6 @@ export default function ArtistSongEditor({
         setCopyrightYear(
           rights?.copyright_year == null ? "" : String(rights.copyright_year),
         );
-        setRightsConfirmed(Boolean(rights?.rights_confirmed));
         setRightsNotes(rights?.notes ?? "");
         setRightsHolders(
           (body.rights_holders ?? []).map((holder) => ({
@@ -367,7 +365,6 @@ export default function ArtistSongEditor({
           isrc,
           iswc,
           copyright_year: copyrightYear,
-          rights_confirmed: rightsConfirmed,
           notes: rightsNotes,
         };
         body.rights_holders = rightsHolders;
@@ -418,7 +415,7 @@ export default function ArtistSongEditor({
           onClick={onClose}
           className="mt-4 inline-flex h-9 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-primary)]"
         >
-          Back to music
+          Back to Music
         </button>
       </section>
     );
@@ -441,7 +438,7 @@ export default function ArtistSongEditor({
             onClick={onClose}
             className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
           >
-            Back to uploads
+            Back to Music
           </button>
         </div>
 
@@ -661,13 +658,6 @@ export default function ArtistSongEditor({
           <label>
             <FieldLabel>Rights notes</FieldLabel>
             <textarea value={rightsNotes} onChange={(event) => setRightsNotes(event.target.value)} rows={4} maxLength={2000} disabled={!canEditRights || saving} className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5 text-sm leading-6 text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-60" />
-          </label>
-
-          <label className="flex items-start gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs leading-5 text-[var(--text-secondary)]">
-            <input type="checkbox" className="mt-1" checked={rightsConfirmed} onChange={(event) => setRightsConfirmed(event.target.checked)} disabled={!canEditRights || saving} />
-            <span>
-              I confirm that the ownership information above is accurate and that the listed rights holders control 100% of both the master and publishing rights. Confirmation requires both split totals to equal 100%.
-            </span>
           </label>
         </div>
       </section>

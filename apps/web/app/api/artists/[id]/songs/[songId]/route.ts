@@ -274,7 +274,10 @@ export async function PATCH(request: Request, context: RouteContext) {
       }
       if (!rightsResult.data?.rights_confirmed) {
         return NextResponse.json(
-          { error: "Confirm rights and ownership before submitting this track for review" },
+          {
+            error:
+              "Complete master and publishing ownership splits before submitting this track for review",
+          },
           { status: 400 },
         );
       }
@@ -350,6 +353,8 @@ export async function PATCH(request: Request, context: RouteContext) {
     }
 
     let copyrightYear: number | null = null;
+    let rightsConfirmed = false;
+
     if (rights) {
       await requireArtistPermission(id, "rights:edit");
       copyrightYear = cleanInteger(rights.copyright_year, 1900, 2200);
@@ -365,10 +370,7 @@ export async function PATCH(request: Request, context: RouteContext) {
           { status: 400 },
         );
       }
-    }
 
-    const rightsConfirmed = Boolean(rights?.rights_confirmed);
-    if (rightsConfirmed) {
       const totals = getOwnershipTotals(rightsHolders);
       if (
         rightsHolders.length === 0 ||
@@ -378,11 +380,13 @@ export async function PATCH(request: Request, context: RouteContext) {
         return NextResponse.json(
           {
             error:
-              "Master and publishing ownership splits must each total 100% before rights can be confirmed",
+              "Master and publishing ownership splits must each total 100% before saving",
           },
           { status: 400 },
         );
       }
+
+      rightsConfirmed = true;
     }
 
     const { data: song, error: songError } = await supabaseServer
