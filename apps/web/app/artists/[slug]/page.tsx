@@ -113,7 +113,6 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
     <>
       <style>{`
         .artist-public-page {
-          margin-left: var(--sidebar-width);
           margin-top: var(--filmwave-header-height);
           min-height: calc(100vh - var(--filmwave-header-height));
           overflow-x: clip;
