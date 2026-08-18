@@ -56,7 +56,7 @@ export default function ApprovedSongPublishButton({
       type="button"
       disabled={disabled || publishing}
       onClick={() => void handlePublish()}
-      className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-3 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+      className="order-first inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-3 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
     >
       {publishing ? "Publishing..." : "Publish"}
     </button>
