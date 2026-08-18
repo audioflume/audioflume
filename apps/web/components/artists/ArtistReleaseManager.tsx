@@ -696,7 +696,7 @@ function ReleaseEditor({
                     <button
                       type="button"
                       onClick={() => removeTrack(song.id)}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary hover:!bg-[var(--danger-hover)] hover:!text-[var(--danger)]"
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
                     >
                       Remove
                     </button>
