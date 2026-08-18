@@ -385,6 +385,7 @@ function ReleaseEditor({
   const [artworkInputKey, setArtworkInputKey] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
+  const [statusChanging, setStatusChanging] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -430,7 +431,7 @@ function ReleaseEditor({
 
   async function saveRelease(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!canManage || saving || !title.trim()) return;
+    if (!canManage || saving || statusChanging || !title.trim()) return;
 
     if (releaseType === "single" && trackIds.length > 1) {
       setError("A single can contain only one track.");
@@ -471,8 +472,64 @@ function ReleaseEditor({
     }
   }
 
+  async function changeReleaseStatus(action: "publish" | "unpublish") {
+    if (!canManage || saving || statusChanging || !title.trim()) return;
+
+    if (releaseType === "single" && trackIds.length > 1) {
+      setError("A single can contain only one track.");
+      return;
+    }
+
+    try {
+      setStatusChanging(true);
+      setError("");
+      setMessage("");
+
+      const response = await fetch(
+        `/api/artists/${artist.id}/releases/${release.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: title.trim(),
+            release_type: releaseType,
+            release_date: releaseDate || null,
+            song_ids: trackIds,
+            action,
+          }),
+        },
+      );
+      const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
+
+      if (!response.ok || !body.release) {
+        throw new Error(
+          body.error ||
+            (action === "publish"
+              ? "Failed to publish release"
+              : "Failed to unpublish release"),
+        );
+      }
+
+      const updatedRelease = body.release as ArtistRelease;
+      onUpdated(updatedRelease);
+      setMessage(
+        action === "publish" ? "Release published." : "Release unpublished.",
+      );
+    } catch (error) {
+      setError(
+        error instanceof Error
+          ? error.message
+          : action === "publish"
+            ? "Failed to publish release"
+            : "Failed to unpublish release",
+      );
+    } finally {
+      setStatusChanging(false);
+    }
+  }
+
   async function uploadArtwork() {
-    if (!canManage || !artworkFile || uploadingArtwork) return;
+    if (!canManage || !artworkFile || uploadingArtwork || statusChanging) return;
 
     try {
       setUploadingArtwork(true);
@@ -519,7 +576,7 @@ function ReleaseEditor({
         <button
           type="button"
           onClick={onBack}
-          disabled={saving || uploadingArtwork}
+          disabled={saving || uploadingArtwork || statusChanging}
           className="filmwave-backend-button filmwave-backend-button-secondary"
         >
           Back to Releases
@@ -549,7 +606,7 @@ function ReleaseEditor({
                   key={artworkInputKey}
                   type="file"
                   accept="image/*"
-                  disabled={uploadingArtwork}
+                  disabled={uploadingArtwork || statusChanging}
                   onChange={(event) =>
                     setArtworkFile(event.target.files?.[0] ?? null)
                   }
@@ -558,7 +615,7 @@ function ReleaseEditor({
                 <button
                   type="button"
                   onClick={() => void uploadArtwork()}
-                  disabled={!artworkFile || uploadingArtwork}
+                  disabled={!artworkFile || uploadingArtwork || statusChanging}
                   className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                 >
                   {uploadingArtwork ? "Uploading..." : "Upload artwork"}
@@ -577,7 +634,7 @@ function ReleaseEditor({
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 maxLength={180}
-                disabled={!canManage || saving}
+                disabled={!canManage || saving || statusChanging}
                 className="filmwave-backend-input"
               />
             </label>
@@ -589,7 +646,7 @@ function ReleaseEditor({
               <select
                 value={releaseType}
                 onChange={(event) => setReleaseType(event.target.value as ReleaseType)}
-                disabled={!canManage || saving}
+                disabled={!canManage || saving || statusChanging}
                 className="filmwave-backend-select"
               >
                 {RELEASE_TYPES.map((type) => (
@@ -608,7 +665,7 @@ function ReleaseEditor({
                 type="date"
                 value={releaseDate}
                 onChange={(event) => setReleaseDate(event.target.value)}
-                disabled={!canManage || saving}
+                disabled={!canManage || saving || statusChanging}
                 className="filmwave-backend-input"
               />
             </label>
@@ -627,6 +684,7 @@ function ReleaseEditor({
               value={songToAdd}
               onChange={(event) => setSongToAdd(event.target.value)}
               disabled={
+                statusChanging ||
                 availableSongs.length === 0 ||
                 (releaseType === "single" && trackIds.length >= 1)
               }
@@ -642,7 +700,7 @@ function ReleaseEditor({
             <button
               type="button"
               onClick={addTrack}
-              disabled={!songToAdd}
+              disabled={!songToAdd || statusChanging}
               className="filmwave-backend-button filmwave-backend-button-secondary"
             >
               Add track
@@ -680,7 +738,7 @@ function ReleaseEditor({
                     <button
                       type="button"
                       onClick={() => moveTrack(index, -1)}
-                      disabled={index === 0}
+                      disabled={statusChanging || index === 0}
                       className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
                     >
                       ↑
@@ -688,7 +746,7 @@ function ReleaseEditor({
                     <button
                       type="button"
                       onClick={() => moveTrack(index, 1)}
-                      disabled={index === orderedTracks.length - 1}
+                      disabled={statusChanging || index === orderedTracks.length - 1}
                       className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
                     >
                       ↓
@@ -696,6 +754,7 @@ function ReleaseEditor({
                     <button
                       type="button"
                       onClick={() => removeTrack(song.id)}
+                      disabled={statusChanging}
                       className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
                     >
                       Remove
@@ -720,15 +779,37 @@ function ReleaseEditor({
           <button
             type="button"
             onClick={onBack}
-            disabled={saving || uploadingArtwork}
+            disabled={saving || uploadingArtwork || statusChanging}
             className="filmwave-backend-button filmwave-backend-button-secondary"
           >
             Back to Releases
           </button>
+          {canManage && release.status === "published" ? (
+            <button
+              type="button"
+              onClick={() => void changeReleaseStatus("unpublish")}
+              disabled={saving || uploadingArtwork || statusChanging}
+              className="filmwave-backend-button filmwave-backend-button-secondary"
+            >
+              {statusChanging ? "Unpublishing..." : "Unpublish"}
+            </button>
+          ) : null}
+          {canManage && release.status === "draft" ? (
+            <button
+              type="button"
+              onClick={() => void changeReleaseStatus("publish")}
+              disabled={
+                saving || uploadingArtwork || statusChanging || !title.trim()
+              }
+              className="filmwave-backend-button filmwave-backend-button-secondary"
+            >
+              {statusChanging ? "Publishing..." : "Publish release"}
+            </button>
+          ) : null}
           {canManage ? (
             <button
               type="submit"
-              disabled={saving || !title.trim()}
+              disabled={saving || statusChanging || !title.trim()}
               className="filmwave-backend-button filmwave-backend-button-primary"
             >
               {saving ? "Saving..." : "Save release"}
