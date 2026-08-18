@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
 import ArtistNotifications from "@/components/artists/ArtistNotifications";
+import ArtistPagePreview from "@/components/artists/ArtistPagePreview";
 import ArtistPlaylistManager from "@/components/artists/ArtistPlaylistManager";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
@@ -17,6 +18,7 @@ import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ArtistDashboardSection =
   | "overview"
+  | "my-page"
   | "profile"
   | "music"
   | "releases"
@@ -39,6 +41,7 @@ const ARTIST_DASHBOARD_SECTION_STORAGE_KEY =
 
 const NAV_ITEMS: { section: ArtistDashboardSection; label: string }[] = [
   { section: "overview", label: "Overview" },
+  { section: "my-page", label: "My Page" },
   { section: "profile", label: "Profile" },
   { section: "music", label: "Music" },
   { section: "releases", label: "Releases" },
@@ -332,26 +335,41 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
           <div className="border-b border-[var(--border)] pb-8">
             <ArtistSectionHeading>Artist</ArtistSectionHeading>
-            <Link
-              href={getArtistDashboardHref("overview", activeArtist.id)}
-              onClick={() => handleSectionChange("overview")}
-              className={`group flex h-[38px] w-full cursor-pointer items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
-                sectionReady && activeSection === "overview"
-                  ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-                  : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-              }`}
-            >
-              <span
-                className={`flex h-4 w-4 items-center justify-center transition-colors ${
+            <div className="flex flex-col gap-px">
+              <Link
+                href={getArtistDashboardHref("overview", activeArtist.id)}
+                onClick={() => handleSectionChange("overview")}
+                className={`group flex h-[38px] w-full cursor-pointer items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
                   sectionReady && activeSection === "overview"
-                    ? "text-[var(--text-primary)]"
-                    : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                    ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                 }`}
               >
-                <DashboardIcon size={14} />
-              </span>
-              <span className="truncate">Overview</span>
-            </Link>
+                <span
+                  className={`flex h-4 w-4 items-center justify-center transition-colors ${
+                    sectionReady && activeSection === "overview"
+                      ? "text-[var(--text-primary)]"
+                      : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)]"
+                  }`}
+                >
+                  <DashboardIcon size={14} />
+                </span>
+                <span className="truncate">Overview</span>
+              </Link>
+
+              <Link
+                href={getArtistDashboardHref("my-page", activeArtist.id)}
+                onClick={() => handleSectionChange("my-page")}
+                className={`group flex h-[38px] w-full cursor-pointer items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
+                  sectionReady && activeSection === "my-page"
+                    ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                }`}
+              >
+                <span className="h-4 w-4 shrink-0" aria-hidden="true" />
+                <span className="truncate">My Page</span>
+              </Link>
+            </div>
           </div>
 
           <div className="mt-8 grid gap-8">
@@ -457,6 +475,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               key={`${activeArtist.id}-overview-${sectionViewVersion}`}
               artist={activeArtist}
             />
+          ) : activeSection === "my-page" ? (
+            <ArtistPagePreview
+              key={`${activeArtist.id}-my-page-${sectionViewVersion}`}
+              artist={activeArtist}
+            />
           ) : activeSection === "profile" ? (
             <ArtistProfileEditor
               key={`${activeArtist.id}-profile-${sectionViewVersion}`}
@@ -498,13 +521,15 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             />
           )}
 
-          <div className="mt-16">
-            <Footer
-              playerPadding={false}
-              showTopBorder={false}
-              pageGutter={false}
-            />
-          </div>
+          {activeSection !== "my-page" ? (
+            <div className="mt-16">
+              <Footer
+                playerPadding={false}
+                showTopBorder={false}
+                pageGutter={false}
+              />
+            </div>
+          ) : null}
         </div>
       </section>
     </main>
