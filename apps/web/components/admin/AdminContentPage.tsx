@@ -115,7 +115,7 @@ export default function AdminContentPage({
 
         /* Missing-content messages use the small Playlist Manager section treatment. */
         .filmwave-admin-content-page
-          [class~="min-h-[180px]"][class~="items-center"][class~="justify-center"][class~="border"],
+          [class~="min-h-[180px]"][class~="items-center"][class~="justify-center"],
         .filmwave-admin-content-page
           [class~="min-h-[120px]"][class~="items-center"][class~="justify-center"][class~="border-dashed"],
         .filmwave-admin-content-page

@@ -3,6 +3,8 @@
 import { FormEvent, useMemo, useRef, useState } from "react";
 
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import WarningIcon from "@/components/icons/WarningIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
@@ -140,9 +142,9 @@ function formatDuration(value: number) {
 
 function FieldLabel({ children }: { children: string }) {
   return (
-    <div className="mb-2 text-[11px] font-medium text-[var(--text-secondary)]">
+    <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
       {children}
-    </div>
+    </label>
   );
 }
 
@@ -158,16 +160,70 @@ function SelectInput({
   disabled?: boolean;
 }) {
   return (
-    <select
-      value={value}
-      onChange={(event) => onChange(event.target.value)}
-      disabled={disabled}
-      className={`filmwave-backend-select appearance-none ${
-        value ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"
-      }`}
-    >
-      {children}
-    </select>
+    <div className="relative">
+      <select
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        disabled={disabled}
+        className={`filmwave-backend-select filmwave-backend-select-end-control appearance-none ${
+          value ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"
+        }`}
+      >
+        {children}
+      </select>
+      <ChevronDownIcon
+        size={16}
+        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
+      />
+    </div>
+  );
+}
+
+function NumericInput({
+  value,
+  onChange,
+  placeholder,
+  disabled = false,
+}: {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder?: string;
+  disabled?: boolean;
+}) {
+  const currentValue = Number(value || 0);
+
+  return (
+    <div className="relative">
+      <input
+        type="text"
+        inputMode="numeric"
+        value={value}
+        onChange={(event) => onChange(event.target.value)}
+        placeholder={placeholder}
+        disabled={disabled}
+        className="filmwave-backend-input filmwave-backend-input-end-control"
+      />
+      <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col">
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => onChange(String(Math.min(400, currentValue + 1)))}
+          className="flex h-3.5 w-5 items-center justify-center text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Increase value"
+        >
+          <ChevronUpIcon />
+        </button>
+        <button
+          type="button"
+          disabled={disabled}
+          onClick={() => onChange(String(Math.max(1, currentValue - 1)))}
+          className="-mt-0.5 flex h-3.5 w-5 items-center justify-center text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label="Decrease value"
+        >
+          <ChevronDownIcon />
+        </button>
+      </div>
+    </div>
   );
 }
 
@@ -184,7 +240,7 @@ function CheckboxInput({
 }) {
   return (
     <label
-      className={`group flex h-10 items-center gap-2.5 self-end rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm transition ${
+      className={`group flex h-10 items-center gap-2.5 self-end rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition hover:text-[var(--text-primary)] ${
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
       } ${checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
     >
@@ -195,7 +251,7 @@ function CheckboxInput({
         onChange={(event) => onChange(event.target.checked)}
         className="peer sr-only"
       />
-      <span className="flex h-4 w-4 items-center justify-center rounded-[4px] border border-[var(--border)] bg-[var(--bg-secondary)] transition peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
+      <span className="flex h-4 w-4 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
         <CheckMarkIcon
           size={10}
           strokeWidth={3}
@@ -627,36 +683,34 @@ export default function ArtistSongUploadForm({
               <h2 className="filmwave-backend-section-title">Song Info</h2>
             </div>
 
-            <div className="grid gap-4 px-5 pb-5 md:grid-cols-2 xl:grid-cols-3">
+            <div className="grid gap-2 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
               <div>
-                <FieldLabel>Song Title</FieldLabel>
                 <input
+                  aria-label="Song Title"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
-                  placeholder="Example: Ember Drift"
+                  placeholder="Song Title"
                   disabled={!canEditMetadata || busy || uploadComplete}
                   className="filmwave-backend-input"
                 />
               </div>
               <div>
-                <FieldLabel>Artist</FieldLabel>
-                <input value={artist.name} readOnly className="filmwave-backend-input" />
+                <input
+                  aria-label="Artist"
+                  value={artist.name}
+                  readOnly
+                  className="filmwave-backend-input"
+                />
               </div>
               <div>
-                <FieldLabel>BPM</FieldLabel>
-                <input
-                  type="number"
-                  min={1}
-                  max={400}
+                <NumericInput
                   value={bpm}
-                  onChange={(event) => setBpm(event.target.value)}
+                  onChange={setBpm}
                   placeholder="110"
                   disabled={!canEditMetadata || busy || uploadComplete}
-                  className="filmwave-backend-input"
                 />
               </div>
               <div>
-                <FieldLabel>Key</FieldLabel>
                 <SelectInput
                   value={songKey}
                   onChange={setSongKey}
@@ -671,21 +725,23 @@ export default function ArtistSongUploadForm({
                 </SelectInput>
               </div>
               <div>
-                <FieldLabel>Duration</FieldLabel>
                 <input
+                  aria-label="Duration"
                   value={formatDuration(duration)}
                   readOnly
                   placeholder="Auto-detected"
                   className="filmwave-backend-input"
                 />
               </div>
-              <div className="grid gap-2 sm:grid-cols-2 xl:grid-cols-1">
+              <div>
                 <CheckboxInput
                   checked={instrumental}
                   onChange={setInstrumental}
                   label="Instrumental"
                   disabled={!canEditMetadata || busy || uploadComplete}
                 />
+              </div>
+              <div>
                 <CheckboxInput
                   checked={explicit}
                   onChange={setExplicit}

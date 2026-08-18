@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import ArtistSongEditor from "@/components/artists/ArtistSongEditor";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
+import UploadIcon from "@/components/icons/UploadIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ArtistSongSummary = {
@@ -210,6 +211,7 @@ export default function ArtistMusicUploader({
             onClick={() => setCreatingSong(true)}
             className="filmwave-backend-button filmwave-backend-button-primary"
           >
+            <UploadIcon size={15} />
             Upload Song
           </button>
         ) : null}

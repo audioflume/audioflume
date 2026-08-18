@@ -36,7 +36,7 @@ export default function AdminSearchBar({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className={`filmwave-backend-input pl-[35px] pr-10${
+        className={`filmwave-backend-input filmwave-backend-search-input${
           modalVariant ? " focus:border-[var(--text-muted)]" : ""
         }`}
       />
