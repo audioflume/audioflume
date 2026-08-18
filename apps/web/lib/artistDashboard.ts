@@ -11,6 +11,12 @@ export type ArtistDashboardProfile = {
   name: string;
   slug: string;
   status: "pending" | "approved" | "rejected" | "suspended";
+  bio: string | null;
+  location: string | null;
+  website_url: string | null;
+  instagram_url: string | null;
+  spotify_url: string | null;
+  youtube_url: string | null;
   profile_image_url: string | null;
   hero_image_url: string | null;
   role: ArtistMembershipRole;
@@ -47,7 +53,9 @@ export async function getArtistDashboardProfiles(
     await Promise.all([
       supabaseServer
         .from("artists")
-        .select("id, name, slug, status, profile_image_url, hero_image_url")
+        .select(
+          "id, name, slug, status, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url",
+        )
         .in("id", artistIds),
       supabaseServer.from("song_artists").select("artist_id").in("artist_id", artistIds),
       supabaseServer
@@ -92,6 +100,12 @@ export async function getArtistDashboardProfiles(
         name: artist.name,
         slug: artist.slug,
         status,
+        bio: artist.bio,
+        location: artist.location,
+        website_url: artist.website_url,
+        instagram_url: artist.instagram_url,
+        spotify_url: artist.spotify_url,
+        youtube_url: artist.youtube_url,
         profile_image_url: artist.profile_image_url,
         hero_image_url: artist.hero_image_url,
         role: membership.role,

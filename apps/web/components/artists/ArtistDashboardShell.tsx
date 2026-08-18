@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 
+import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import Footer from "@/components/Footer";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -103,7 +104,7 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
               </div>
             </div>
             <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              Next
+              Ready
             </span>
           </div>
           <div className="flex items-center justify-between gap-4 px-5 py-4">
@@ -152,14 +153,29 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
 }
 
 export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellProps) {
+  const [dashboardProfiles, setDashboardProfiles] = useState(profiles);
   const [activeArtistId, setActiveArtistId] = useState(profiles[0]?.id ?? "");
   const [activeSection, setActiveSection] =
     useState<ArtistDashboardSection>("overview");
 
   const activeArtist = useMemo(
-    () => profiles.find((profile) => profile.id === activeArtistId) ?? profiles[0],
-    [activeArtistId, profiles],
+    () =>
+      dashboardProfiles.find((profile) => profile.id === activeArtistId) ??
+      dashboardProfiles[0],
+    [activeArtistId, dashboardProfiles],
   );
+
+  function handleProfileSaved(
+    updatedArtist: Partial<ArtistDashboardProfile> & { id: string },
+  ) {
+    setDashboardProfiles((current) =>
+      current.map((profile) =>
+        profile.id === updatedArtist.id
+          ? { ...profile, ...updatedArtist }
+          : profile,
+      ),
+    );
+  }
 
   if (!activeArtist) {
     return (
@@ -201,7 +217,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             </div>
           </div>
 
-          {profiles.length > 1 ? (
+          {dashboardProfiles.length > 1 ? (
             <label className="mb-7 block">
               <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                 Artist
@@ -211,7 +227,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                 onChange={(event) => setActiveArtistId(event.target.value)}
                 className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-primary)] outline-none"
               >
-                {profiles.map((profile) => (
+                {dashboardProfiles.map((profile) => (
                   <option key={profile.id} value={profile.id}>
                     {profile.name}
                   </option>
@@ -271,6 +287,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
             {activeSection === "overview" ? (
               <Overview artist={activeArtist} />
+            ) : activeSection === "profile" ? (
+              <ArtistProfileEditor
+                artist={activeArtist}
+                onSaved={handleProfileSaved}
+              />
             ) : (
               <PlaceholderSection section={activeSection} />
             )}
