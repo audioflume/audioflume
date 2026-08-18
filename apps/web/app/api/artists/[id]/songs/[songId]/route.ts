@@ -149,40 +149,54 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
 
-    const [songResult, creditsResult, rightsResult, holdersResult] =
-      await Promise.all([
-        supabaseServer
-          .from("songs")
-          .select(
-            "id, title, status, duration, bpm, key, genres, moods, regions, instruments, builds, vocals, instrumental, explicit, created_at",
-          )
-          .eq("id", songId)
-          .maybeSingle(),
-        supabaseServer
-          .from("song_credits")
-          .select("id, credit_name, credit_role, position")
-          .eq("song_id", songId)
-          .order("position", { ascending: true }),
-        supabaseServer
-          .from("song_rights")
-          .select(
-            "master_owner, publishing_owner, pro_affiliation, isrc, iswc, copyright_year, rights_confirmed, notes",
-          )
-          .eq("song_id", songId)
-          .maybeSingle(),
-        supabaseServer
-          .from("song_rights_holders")
-          .select(
-            "id, holder_name, rights_type, ownership_percent, pro_affiliation, ipi_cae_number, created_at",
-          )
-          .eq("song_id", songId)
-          .order("created_at", { ascending: true }),
-      ]);
+    const [
+      songResult,
+      creditsResult,
+      rightsResult,
+      holdersResult,
+      reviewResult,
+    ] = await Promise.all([
+      supabaseServer
+        .from("songs")
+        .select(
+          "id, title, status, duration, bpm, key, genres, moods, regions, instruments, builds, vocals, instrumental, explicit, created_at",
+        )
+        .eq("id", songId)
+        .maybeSingle(),
+      supabaseServer
+        .from("song_credits")
+        .select("id, credit_name, credit_role, position")
+        .eq("song_id", songId)
+        .order("position", { ascending: true }),
+      supabaseServer
+        .from("song_rights")
+        .select(
+          "master_owner, publishing_owner, pro_affiliation, isrc, iswc, copyright_year, rights_confirmed, notes",
+        )
+        .eq("song_id", songId)
+        .maybeSingle(),
+      supabaseServer
+        .from("song_rights_holders")
+        .select(
+          "id, holder_name, rights_type, ownership_percent, pro_affiliation, ipi_cae_number, created_at",
+        )
+        .eq("song_id", songId)
+        .order("created_at", { ascending: true }),
+      supabaseServer
+        .from("song_review_events")
+        .select("action, notes, created_at")
+        .eq("song_id", songId)
+        .in("action", ["changes_requested", "rejected"])
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+    ]);
 
     if (songResult.error) throw songResult.error;
     if (creditsResult.error) throw creditsResult.error;
     if (rightsResult.error) throw rightsResult.error;
     if (holdersResult.error) throw holdersResult.error;
+    if (reviewResult.error) throw reviewResult.error;
     if (!songResult.data) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
@@ -201,6 +215,7 @@ export async function GET(_request: Request, context: RouteContext) {
         notes: null,
       },
       rights_holders: holdersResult.data ?? [],
+      review_feedback: reviewResult.data ?? null,
     });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
