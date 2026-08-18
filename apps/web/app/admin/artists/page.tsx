@@ -268,7 +268,7 @@ export default function AdminArtistsPage() {
       hideIntro
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
     >
-      <div className="mb-4 flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
+      <div className="mb-4 flex flex-col gap-3">
         <AdminSearchBar
           value={search}
           onChange={setSearch}
@@ -276,7 +276,7 @@ export default function AdminArtistsPage() {
           className="w-full max-w-[500px]"
         />
 
-        <div className="flex flex-wrap gap-2">
+        <div className="flex max-w-full gap-2 overflow-x-auto">
           {FILTERS.map((filter) => {
             const active = statusFilter === filter.value;
             return (
@@ -284,7 +284,7 @@ export default function AdminArtistsPage() {
                 key={filter.value}
                 type="button"
                 onClick={() => setStatusFilter(filter.value)}
-                className={`inline-flex h-10 cursor-pointer items-center gap-2 rounded-[7px] border px-3 text-[11px] font-medium transition ${
+                className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border px-3 text-[11px] font-medium transition ${
                   active
                     ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                     : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
