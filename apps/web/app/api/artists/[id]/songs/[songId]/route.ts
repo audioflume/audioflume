@@ -128,12 +128,13 @@ function getOwnershipTotals(holders: RightsHolderInput[]) {
   };
 }
 
-async function requireLinkedSong(artistId: string, songId: string) {
+async function requirePrimarySong(artistId: string, songId: string) {
   const { data: link, error: linkError } = await supabaseServer
     .from("song_artists")
     .select("song_id")
     .eq("artist_id", artistId)
     .eq("song_id", songId)
+    .eq("role", "primary")
     .maybeSingle();
 
   if (linkError) throw linkError;
@@ -145,7 +146,7 @@ export async function GET(_request: Request, context: RouteContext) {
     const { id, songId } = await context.params;
     await requireArtistPermission(id, "catalog:view");
 
-    if (!(await requireLinkedSong(id, songId))) {
+    if (!(await requirePrimarySong(id, songId))) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
 
@@ -244,7 +245,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (payload.action === "submit") {
       await requireArtistPermission(id, "catalog:submit");
 
-      if (!(await requireLinkedSong(id, songId))) {
+      if (!(await requirePrimarySong(id, songId))) {
         return NextResponse.json({ error: "Track not found" }, { status: 404 });
       }
 
@@ -311,7 +312,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     await requireArtistPermission(id, "catalog:edit");
 
-    if (!(await requireLinkedSong(id, songId))) {
+    if (!(await requirePrimarySong(id, songId))) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
 
