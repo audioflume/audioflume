@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
 import ApprovedSongPublishButton from "@/components/admin/ApprovedSongPublishButton";
+import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import Toast from "@/components/Toast";
 
 type ReviewStatus =
@@ -195,6 +196,14 @@ function DetailValue({ label, value }: { label: string; value: string }) {
         {label}
       </div>
       <div className="mt-1.5 text-xs text-[var(--text-primary)]">{value || "—"}</div>
+    </div>
+  );
+}
+
+function ReviewCoverPlaceholder() {
+  return (
+    <div className="flex h-[52px] w-[52px] items-center justify-center bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+      <AudioFileIcon size={16} />
     </div>
   );
 }
@@ -409,24 +418,24 @@ export default function AdminMusicReviewPage() {
             type="button"
             onClick={closeReview}
             disabled={Boolean(actionLoading)}
-            className="inline-flex h-9 w-fit cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="filmwave-backend-button filmwave-backend-button-secondary w-fit"
           >
             Back to Queue
           </button>
 
           {detailsLoading ? (
-            <div className="flex min-h-[320px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] text-xs text-[var(--text-muted)]">
+            <div className="filmwave-backend-section flex min-h-[320px] items-center justify-center text-xs text-[var(--text-muted)]">
               Loading submission...
             </div>
           ) : song ? (
             <>
-              <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--border)] px-5 py-4">
+              <section className="filmwave-backend-section">
+                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-5 py-4">
                   <div>
                     <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       {artist?.name || song.artist}
                     </div>
-                    <h2 className="mt-1 text-xl font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                    <h2 className="filmwave-backend-section-title mt-1">
                       {song.title}
                     </h2>
                   </div>
@@ -463,9 +472,9 @@ export default function AdminMusicReviewPage() {
                 </div>
               </section>
 
-              <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-                <div className="border-b border-[var(--border)] px-5 py-4">
-                  <h3 className="text-base font-medium text-[var(--text-primary)]">Credits</h3>
+              <section className="filmwave-backend-section">
+                <div className="filmwave-backend-section-header-bordered">
+                  <h3 className="filmwave-backend-section-title">Credits</h3>
                 </div>
                 <div className="p-5">
                   {credits.length === 0 ? (
@@ -475,7 +484,7 @@ export default function AdminMusicReviewPage() {
                       {credits.map((credit) => (
                         <div
                           key={credit.id}
-                          className="flex items-center justify-between gap-4 border-b border-[var(--border)] py-2.5 last:border-b-0"
+                          className="flex items-center justify-between gap-4 border-b border-[var(--border-subtle)] py-2.5 last:border-b-0"
                         >
                           <span className="text-xs text-[var(--text-primary)]">
                             {credit.credit_name}
@@ -490,9 +499,9 @@ export default function AdminMusicReviewPage() {
                 </div>
               </section>
 
-              <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[var(--border)] px-5 py-4">
-                  <h3 className="text-base font-medium text-[var(--text-primary)]">
+              <section className="filmwave-backend-section">
+                <div className="filmwave-backend-section-header-bordered">
+                  <h3 className="filmwave-backend-section-title">
                     Rights + ownership
                   </h3>
                   <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
@@ -514,7 +523,7 @@ export default function AdminMusicReviewPage() {
                   </div>
 
                   <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)]">
-                    <div className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                    <div className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       <span>Rights holder</span>
                       <span>Rights</span>
                       <span>Share</span>
@@ -529,7 +538,7 @@ export default function AdminMusicReviewPage() {
                       rightsHolders.map((holder) => (
                         <div
                           key={holder.id}
-                          className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border)] px-4 py-3 text-xs last:border-b-0"
+                          className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
                         >
                           <span className="text-[var(--text-primary)]">{holder.holder_name}</span>
                           <span className="text-[var(--text-secondary)]">
@@ -552,7 +561,7 @@ export default function AdminMusicReviewPage() {
                   </div>
 
                   {rights?.notes ? (
-                    <div className="rounded-[7px] bg-[var(--bg-primary)] px-4 py-3 text-xs leading-5 text-[var(--text-secondary)]">
+                    <div className="rounded-[7px] bg-[var(--bg-secondary)] px-4 py-3 text-xs leading-5 text-[var(--text-secondary)]">
                       {rights.notes}
                     </div>
                   ) : null}
@@ -560,13 +569,13 @@ export default function AdminMusicReviewPage() {
               </section>
 
               {reviews.length > 0 ? (
-                <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-                  <div className="border-b border-[var(--border)] px-5 py-4">
-                    <h3 className="text-base font-medium text-[var(--text-primary)]">
+                <section className="filmwave-backend-section">
+                  <div className="filmwave-backend-section-header-bordered">
+                    <h3 className="filmwave-backend-section-title">
                       Review history
                     </h3>
                   </div>
-                  <div className="divide-y divide-[var(--border)]">
+                  <div className="divide-y divide-[var(--border-subtle)]">
                     {reviews.map((review) => (
                       <div key={review.id} className="px-5 py-4">
                         <div className="flex flex-wrap items-center justify-between gap-3">
@@ -589,7 +598,7 @@ export default function AdminMusicReviewPage() {
               ) : null}
 
               {song.status === "submitted" || song.status === "approved" ? (
-                <section className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+                <section className="filmwave-backend-section p-5">
                   <label className="block">
                     <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       {song.status === "submitted" ? "Review feedback" : "Publish note (optional)"}
@@ -605,7 +614,7 @@ export default function AdminMusicReviewPage() {
                           ? "Required when requesting changes. Optional when rejecting a track."
                           : "Optional internal note for this publish action."
                       }
-                      className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm leading-6 text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:opacity-60"
+                      className="filmwave-backend-textarea"
                     />
                   </label>
 
@@ -616,7 +625,7 @@ export default function AdminMusicReviewPage() {
                           type="button"
                           disabled={Boolean(actionLoading)}
                           onClick={() => void runAction("request_changes")}
-                          className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="filmwave-backend-button filmwave-backend-button-secondary"
                         >
                           {actionLoading === "request_changes" ? "Saving..." : "Request Changes"}
                         </button>
@@ -624,7 +633,7 @@ export default function AdminMusicReviewPage() {
                           type="button"
                           disabled={Boolean(actionLoading)}
                           onClick={() => void runAction("reject")}
-                          className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--status-error,#dc584f)] px-4 text-xs text-[var(--status-error,#dc584f)] disabled:cursor-not-allowed disabled:opacity-50"
+                          className="filmwave-backend-button filmwave-backend-button-danger"
                         >
                           {actionLoading === "reject" ? "Saving..." : "Reject"}
                         </button>
@@ -632,7 +641,7 @@ export default function AdminMusicReviewPage() {
                           type="button"
                           disabled={Boolean(actionLoading) || !rights?.rights_confirmed}
                           onClick={() => void runAction("approve")}
-                          className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+                          className="filmwave-backend-button filmwave-backend-button-primary"
                         >
                           {actionLoading === "approve" ? "Saving..." : "Approve"}
                         </button>
@@ -642,7 +651,7 @@ export default function AdminMusicReviewPage() {
                         type="button"
                         disabled={Boolean(actionLoading) || !rights?.rights_confirmed}
                         onClick={() => void runAction("publish")}
-                        className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+                        className="filmwave-backend-button filmwave-backend-button-primary"
                       >
                         {actionLoading === "publish" ? "Publishing..." : "Publish"}
                       </button>
@@ -687,89 +696,111 @@ export default function AdminMusicReviewPage() {
             </div>
           </section>
 
-          <div className="overflow-x-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-            <div className="grid min-w-[900px] grid-cols-[minmax(220px,1.4fr)_minmax(160px,1fr)_100px_130px_170px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              <span>Track</span>
-              <span>Artist</span>
-              <span>Length</span>
-              <span>Status</span>
-              <span className="text-right">Action</span>
+          <section className="filmwave-backend-section">
+            <div className="flex items-center justify-between gap-4 px-5 py-5">
+              <div>
+                <div className="text-base font-medium text-[var(--text-primary)]">
+                  Review Queue
+                </div>
+                <div className="mt-1 text-xs text-[var(--text-secondary)]">
+                  {visibleSongs.length} submission{visibleSongs.length === 1 ? "" : "s"}
+                </div>
+              </div>
             </div>
 
-            {loading ? (
-              <div className="flex min-h-[180px] min-w-[900px] items-center justify-center text-xs text-[var(--text-muted)]">
-                Loading submissions...
-              </div>
-            ) : error ? (
-              <div className="flex min-h-[180px] min-w-[900px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
-                <span>{error}</span>
-                <button
-                  type="button"
-                  onClick={() => void loadQueue()}
-                  className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-primary)]"
-                >
-                  Try again
-                </button>
-              </div>
-            ) : visibleSongs.length === 0 ? (
-              <div className="flex min-h-[180px] min-w-[900px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
-                No submissions match this view.
-              </div>
-            ) : (
-              <div className="min-w-[900px]">
-                {visibleSongs.map((item) => (
-                  <div
-                    key={item.id}
-                    className="grid grid-cols-[minmax(220px,1.4fr)_minmax(160px,1fr)_100px_130px_170px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0"
-                  >
-                    <div className="min-w-0">
-                      <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                        {item.title}
-                      </div>
-                      <div className="mt-1 text-[11px] text-[var(--text-muted)]">
-                        Uploaded {formatDate(item.created_at)}
-                      </div>
-                    </div>
-                    <div className="truncate text-xs text-[var(--text-secondary)]">
-                      {item.artist_profile?.name || item.artist}
-                    </div>
-                    <div className="text-xs text-[var(--text-secondary)]">
-                      {formatDuration(Number(item.duration))}
-                    </div>
-                    <div>
-                      <StatusBadge status={item.status} />
-                    </div>
-                    <div className="flex justify-end gap-2">
-                      <button
-                        type="button"
-                        onClick={() => void openReview(item.id)}
-                        className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-                      >
-                        Review
-                      </button>
-                      {item.status === "approved" ? (
-                        <ApprovedSongPublishButton
-                          songId={item.id}
-                          songTitle={item.title}
-                          onPublished={(songId) => {
-                            setSongs((current) =>
-                              current.map((song) =>
-                                song.id === songId
-                                  ? { ...song, status: "published" }
-                                  : song,
-                              ),
-                            );
-                            showToast(`${item.title}: Published`);
-                          }}
-                          onError={showToast}
-                        />
-                      ) : null}
-                    </div>
+            <div className="overflow-x-auto overflow-y-hidden border-t border-[var(--border-subtle)]">
+              <div className="min-w-[980px]">
+                {loading ? (
+                  <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                    Loading submissions...
                   </div>
-                ))}
+                ) : error ? (
+                  <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
+                    <span>{error}</span>
+                    <button
+                      type="button"
+                      onClick={() => void loadQueue()}
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                    >
+                      Try again
+                    </button>
+                  </div>
+                ) : visibleSongs.length === 0 ? (
+                  <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                    No submissions match this view.
+                  </div>
+                ) : (
+                  <div>
+                    {visibleSongs.map((item, index) => (
+                      <div
+                        key={item.id}
+                        className="grid min-h-[72px] grid-cols-[60px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(124px,1fr)_76px_96px_170px] items-center gap-4 px-5 text-xs transition hover:bg-[var(--bg-hover)]"
+                        style={{
+                          borderBottom:
+                            index === visibleSongs.length - 1
+                              ? "none"
+                              : "1px solid var(--border-subtle)",
+                        }}
+                      >
+                        <div className="flex items-center">
+                          <ReviewCoverPlaceholder />
+                        </div>
+
+                        <div className="min-w-0">
+                          <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
+                            {item.title}
+                          </div>
+                        </div>
+
+                        <div className="min-w-0 truncate text-[var(--text-subtle)]">
+                          {item.artist_profile?.name || item.artist}
+                        </div>
+
+                        <div className="flex min-w-0 items-center">
+                          <StatusBadge status={item.status} />
+                        </div>
+
+                        <div className="text-[var(--text-secondary)]">
+                          {formatDuration(Number(item.duration))}
+                        </div>
+
+                        <div className="text-[var(--text-secondary)]">
+                          {formatDate(item.created_at)}
+                        </div>
+
+                        <div className="flex items-center justify-end gap-2">
+                          {item.status === "approved" ? (
+                            <ApprovedSongPublishButton
+                              songId={item.id}
+                              songTitle={item.title}
+                              onPublished={(songId) => {
+                                setSongs((current) =>
+                                  current.map((song) =>
+                                    song.id === songId
+                                      ? { ...song, status: "published" }
+                                      : song,
+                                  ),
+                                );
+                                showToast(`${item.title}: Published`);
+                              }}
+                              onError={showToast}
+                            />
+                          ) : null}
+                          <button
+                            type="button"
+                            onClick={() => void openReview(item.id)}
+                            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                          >
+                            Review
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-            )}
-          </div>
+            </div>
+          </section>
         </>
       )}
 
