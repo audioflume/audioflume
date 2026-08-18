@@ -36,6 +36,13 @@ type ArtistNavGroup = {
   items: { section: ArtistDashboardSection; label: string }[];
 };
 
+type OverviewAnalyticsTotals = {
+  downloads: number;
+  saves: number;
+  playlist_adds: number;
+  project_adds: number;
+};
+
 const ARTIST_DASHBOARD_SECTION_STORAGE_KEY =
   "audioflume:artist-dashboard-section";
 
@@ -134,11 +141,54 @@ function ArtistNavButton({
 }
 
 function Overview({ artist }: { artist: ArtistDashboardProfile }) {
+  const [analyticsTotals, setAnalyticsTotals] =
+    useState<OverviewAnalyticsTotals | null>(null);
+  const canViewAnalytics = artist.permissions.includes("analytics:view");
   const stats = [
     { label: "Approved Tracks", value: artist.stats.tracks },
     { label: "Releases", value: artist.stats.releases },
     { label: "Playlists", value: artist.stats.playlists },
   ];
+  const analyticsStats = [
+    { label: "Downloads", value: analyticsTotals?.downloads },
+    { label: "Saves", value: analyticsTotals?.saves },
+    { label: "Playlist Adds", value: analyticsTotals?.playlist_adds },
+    { label: "Project Adds", value: analyticsTotals?.project_adds },
+  ];
+
+  useEffect(() => {
+    if (!canViewAnalytics) {
+      setAnalyticsTotals(null);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadAnalyticsTotals() {
+      setAnalyticsTotals(null);
+
+      try {
+        const response = await fetch(
+          `/api/artists/${artist.id}/analytics?days=30`,
+          { cache: "no-store" },
+        );
+        const body = (await response.json().catch(() => null)) as
+          | { totals?: OverviewAnalyticsTotals }
+          | null;
+
+        if (!response.ok || !body?.totals) return;
+        if (!cancelled) setAnalyticsTotals(body.totals);
+      } catch {
+        if (!cancelled) setAnalyticsTotals(null);
+      }
+    }
+
+    void loadAnalyticsTotals();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [artist.id, canViewAnalytics]);
 
   return (
     <div className="grid gap-4">
@@ -165,6 +215,24 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
           </div>
         ))}
       </section>
+
+      {canViewAnalytics ? (
+        <section className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          {analyticsStats.map((stat) => (
+            <div
+              key={stat.label}
+              className="filmwave-backend-section flex min-h-[72px] flex-col justify-between p-3"
+            >
+              <span className="text-xs text-[var(--text-secondary)]">{stat.label}</span>
+              <span className="mt-3 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+                {stat.value == null
+                  ? "—"
+                  : new Intl.NumberFormat().format(stat.value)}
+              </span>
+            </div>
+          ))}
+        </section>
+      ) : null}
     </div>
   );
 }
