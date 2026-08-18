@@ -25,12 +25,23 @@ function FieldLabel({ children }: { children: string }) {
   );
 }
 
+function normalizeSlugInput(value: string) {
+  return value
+    .normalize("NFKD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+/g, "")
+    .slice(0, 80);
+}
+
 export default function ArtistProfileEditor({
   artist,
   onSaved,
 }: ArtistProfileEditorProps) {
   const canEdit = artist.permissions.includes("artist:edit_profile");
   const [name, setName] = useState(artist.name);
+  const [slug, setSlug] = useState(artist.slug);
   const [bio, setBio] = useState(artist.bio ?? "");
   const [location, setLocation] = useState(artist.location ?? "");
   const [websiteUrl, setWebsiteUrl] = useState(artist.website_url ?? "");
@@ -43,6 +54,7 @@ export default function ArtistProfileEditor({
 
   useEffect(() => {
     setName(artist.name);
+    setSlug(artist.slug);
     setBio(artist.bio ?? "");
     setLocation(artist.location ?? "");
     setWebsiteUrl(artist.website_url ?? "");
@@ -67,6 +79,7 @@ export default function ArtistProfileEditor({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           name,
+          slug,
           bio,
           location,
           website_url: websiteUrl,
@@ -93,6 +106,9 @@ export default function ArtistProfileEditor({
       setSaving(false);
     }
   }
+
+  const slugChanged = slug.replace(/-+$/g, "") !== artist.slug;
+  const displayedSlug = slug.replace(/-+$/g, "");
 
   return (
     <form
@@ -135,6 +151,27 @@ export default function ArtistProfileEditor({
             />
           </label>
         </div>
+
+        <label className="block">
+          <FieldLabel>Artist URL</FieldLabel>
+          <input
+            type="text"
+            value={slug}
+            onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
+            onBlur={() => setSlug((current) => current.replace(/-+$/g, ""))}
+            maxLength={80}
+            disabled={!canEdit || saving}
+            className={inputClassName}
+          />
+          <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
+            /artists/{displayedSlug || "artist"}
+          </div>
+          {slugChanged ? (
+            <div className="mt-1 text-[11px] leading-5 text-[var(--status-warning)]">
+              Changing this will change your public artist URL. The previous URL will be kept so old links can redirect when public artist pages launch.
+            </div>
+          ) : null}
+        </label>
 
         <label className="block">
           <FieldLabel>Bio</FieldLabel>
@@ -215,7 +252,7 @@ export default function ArtistProfileEditor({
         {canEdit ? (
           <button
             type="submit"
-            disabled={saving || !name.trim()}
+            disabled={saving || !name.trim() || !displayedSlug}
             className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
           >
             {saving ? "Saving..." : "Save profile"}
