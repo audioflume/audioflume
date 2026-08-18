@@ -1,0 +1,257 @@
+import { NextResponse } from "next/server";
+
+import { cleanOptionalString } from "@/lib/account";
+import {
+  ArtistAccessError,
+  requireArtistPermission,
+} from "@/lib/artistPermissions";
+import { processAudioForStreaming } from "@/lib/audioProcessing";
+import { deleteFilesFromR2, uploadFileToR2 } from "@/lib/r2";
+import { supabaseServer } from "@/lib/supabaseServer";
+
+export const runtime = "nodejs";
+export const maxDuration = 300;
+
+type RouteContext = {
+  params: Promise<{ id: string }> | { id: string };
+};
+
+type ArtistSongSummary = {
+  id: string;
+  title: string;
+  status: string;
+  duration: number;
+  created_at: string;
+};
+
+function slugify(value: string) {
+  const cleanValue = value
+    .toLowerCase()
+    .trim()
+    .replace(/&/g, "and")
+    .replace(/['"]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/[^a-z0-9._-]/g, "")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+
+  return cleanValue || "untitled";
+}
+
+function safeFileName(name: string) {
+  const extension = name.includes(".") ? name.split(".").pop() : "";
+  const baseName = name.replace(/\.[^/.]+$/, "");
+  const cleanBaseName = slugify(baseName);
+
+  return extension
+    ? `${cleanBaseName}.${extension.toLowerCase()}`
+    : cleanBaseName;
+}
+
+function cleanDuration(value: FormDataEntryValue | null) {
+  if (typeof value !== "string") return 0;
+  const duration = Number(value);
+  if (!Number.isFinite(duration) || duration < 0) return 0;
+  return duration;
+}
+
+function cleanWaveformPeaks(value: FormDataEntryValue | null) {
+  if (typeof value !== "string" || !value.trim()) return "[]";
+
+  try {
+    const parsed = JSON.parse(value);
+    if (!Array.isArray(parsed)) return "[]";
+
+    const peaks = parsed
+      .slice(0, 3000)
+      .map((peak) => Number(peak))
+      .filter((peak) => Number.isFinite(peak))
+      .map((peak) => Math.max(-1, Math.min(1, peak)));
+
+    return JSON.stringify(peaks);
+  } catch {
+    return "[]";
+  }
+}
+
+async function cleanupUploadedFiles(keys: string[]) {
+  try {
+    await deleteFilesFromR2([...new Set(keys.filter(Boolean))]);
+  } catch (error) {
+    console.error("Failed to clean up artist song upload files:", error);
+  }
+}
+
+export async function GET(_request: Request, context: RouteContext) {
+  try {
+    const { id } = await context.params;
+    await requireArtistPermission(id, "catalog:view");
+
+    const { data: links, error: linksError } = await supabaseServer
+      .from("song_artists")
+      .select("song_id")
+      .eq("artist_id", id);
+
+    if (linksError) throw linksError;
+
+    const songIds = (links ?? [])
+      .map((link) => link.song_id)
+      .filter((songId): songId is string => typeof songId === "string");
+
+    if (songIds.length === 0) {
+      return NextResponse.json({ songs: [] });
+    }
+
+    const { data: songs, error: songsError } = await supabaseServer
+      .from("songs")
+      .select("id, title, status, duration, created_at")
+      .in("id", songIds)
+      .order("created_at", { ascending: false });
+
+    if (songsError) throw songsError;
+
+    return NextResponse.json({
+      songs: (songs ?? []) as ArtistSongSummary[],
+    });
+  } catch (error) {
+    if (error instanceof ArtistAccessError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    }
+
+    console.error("Failed to load artist songs:", error);
+    return NextResponse.json(
+      { error: "Failed to load artist songs" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function POST(request: Request, context: RouteContext) {
+  let uploadedKeys: string[] = [];
+
+  try {
+    const { id } = await context.params;
+    await requireArtistPermission(id, "catalog:upload");
+
+    const { data: artist, error: artistError } = await supabaseServer
+      .from("artists")
+      .select("id, name, status")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (artistError) throw artistError;
+    if (!artist) {
+      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
+    }
+
+    if (artist.status !== "approved") {
+      return NextResponse.json(
+        { error: "Artist profile must be approved before uploading music" },
+        { status: 403 },
+      );
+    }
+
+    const formData = await request.formData();
+    const file = formData.get("file");
+    const title = cleanOptionalString(formData.get("title"), 160);
+    const waveformPeaks = cleanWaveformPeaks(formData.get("waveformPeaks"));
+    const duration = cleanDuration(formData.get("duration"));
+
+    if (!(file instanceof File)) {
+      return NextResponse.json({ error: "Missing audio file" }, { status: 400 });
+    }
+
+    if (!title) {
+      return NextResponse.json({ error: "Track title is required" }, { status: 400 });
+    }
+
+    if (!file.type.startsWith("audio/")) {
+      return NextResponse.json(
+        { error: "File must be an audio file" },
+        { status: 400 },
+      );
+    }
+
+    const artistSlug = slugify(artist.name);
+    const titleSlug = slugify(title);
+    const timestamp = Date.now();
+    const fileName = safeFileName(file.name);
+    const versionedBaseKey = `${artistSlug}/${titleSlug}/${timestamp}`;
+    const masterKey = `${versionedBaseKey}/audio/${fileName}`;
+
+    const audioUrl = await uploadFileToR2({
+      file,
+      key: masterKey,
+    });
+    uploadedKeys = [masterKey];
+
+    const streamingAssets = await processAudioForStreaming({
+      file,
+      baseKey: versionedBaseKey,
+    });
+    uploadedKeys.push(
+      streamingAssets.playbackKey,
+      ...streamingAssets.hlsAssetKeys,
+    );
+
+    const { data: song, error: songError } = await supabaseServer
+      .from("songs")
+      .insert({
+        title,
+        artist: artist.name,
+        audio_url: audioUrl,
+        playback_url: streamingAssets.playbackUrl,
+        hls_url: streamingAssets.hlsUrl,
+        waveform_peaks: waveformPeaks,
+        duration,
+        size_bytes: file.size,
+        status: "draft",
+      })
+      .select("id, title, status, duration, created_at")
+      .single();
+
+    if (songError) {
+      await cleanupUploadedFiles(uploadedKeys);
+      throw songError;
+    }
+
+    const { error: linkError } = await supabaseServer
+      .from("song_artists")
+      .insert({
+        song_id: song.id,
+        artist_id: id,
+        role: "primary",
+        position: 0,
+      });
+
+    if (linkError) {
+      await supabaseServer.from("songs").delete().eq("id", song.id);
+      await cleanupUploadedFiles(uploadedKeys);
+      throw linkError;
+    }
+
+    return NextResponse.json(
+      { song: song as ArtistSongSummary },
+      { status: 201 },
+    );
+  } catch (error) {
+    if (error instanceof ArtistAccessError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    }
+
+    console.error("Artist song upload failed:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to upload artist song",
+      },
+      { status: 500 },
+    );
+  }
+}

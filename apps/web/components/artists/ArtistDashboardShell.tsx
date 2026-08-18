@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import Footer from "@/components/Footer";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
@@ -124,7 +125,7 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
               </div>
             </div>
             <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              Upcoming
+              Ready
             </span>
           </div>
           <div className="flex items-center justify-between gap-4 px-5 py-4">
@@ -199,6 +200,24 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
       current.map((profile) =>
         profile.id === updatedArtist.id
           ? { ...profile, ...updatedArtist }
+          : profile,
+      ),
+    );
+  }
+
+  function handleSongUploaded() {
+    if (!activeArtist) return;
+
+    setDashboardProfiles((current) =>
+      current.map((profile) =>
+        profile.id === activeArtist.id
+          ? {
+              ...profile,
+              stats: {
+                ...profile.stats,
+                tracks: profile.stats.tracks + 1,
+              },
+            }
           : profile,
       ),
     );
@@ -322,6 +341,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               <ArtistProfileEditor
                 artist={activeArtist}
                 onSaved={handleProfileSaved}
+              />
+            ) : activeSection === "music" ? (
+              <ArtistMusicUploader
+                artist={activeArtist}
+                onUploaded={handleSongUploaded}
               />
             ) : (
               <PlaceholderSection section={activeSection} />
