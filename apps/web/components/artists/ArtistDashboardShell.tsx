@@ -166,6 +166,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   const [activeArtistId, setActiveArtistId] = useState(profiles[0]?.id ?? "");
   const [activeSection, setActiveSection] =
     useState<ArtistDashboardSection>("overview");
+  const [sectionReady, setSectionReady] = useState(false);
 
   useEffect(() => {
     const storedSection = window.localStorage.getItem(
@@ -175,6 +176,8 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     if (isArtistDashboardSection(storedSection)) {
       setActiveSection(storedSection);
     }
+
+    setSectionReady(true);
   }, []);
 
   const activeArtist = useMemo(
@@ -223,7 +226,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   }
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main
+      className={`min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] ${
+        sectionReady ? "" : "invisible"
+      }`}
+    >
       <div className="grid min-h-screen lg:grid-cols-[250px_1fr]">
         <aside className="border-r border-[var(--border)] bg-[var(--bg-primary)] px-5 pb-8 pt-[112px] lg:sticky lg:top-0 lg:h-screen">
           <div className="mb-7">
