@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import ArtistAnalytics from "@/components/artists/ArtistAnalytics";
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
 import ArtistNotifications from "@/components/artists/ArtistNotifications";
 import ArtistPagePreview from "@/components/artists/ArtistPagePreview";
@@ -506,6 +507,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
           ) : activeSection === "notifications" ? (
             <ArtistNotifications
               key={`${activeArtist.id}-notifications-${sectionViewVersion}`}
+              artistId={activeArtist.id}
+            />
+          ) : activeSection === "analytics" ? (
+            <ArtistAnalytics
+              key={`${activeArtist.id}-analytics-${sectionViewVersion}`}
               artistId={activeArtist.id}
             />
           ) : activeSection === "team" ? (
