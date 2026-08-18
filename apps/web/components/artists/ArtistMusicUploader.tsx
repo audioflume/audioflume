@@ -461,8 +461,10 @@ export default function ArtistMusicUploader({
                   <span
                     className={`inline-flex h-7 items-center rounded-full px-3 text-[10px] font-medium uppercase tracking-[0.05em] ${
                       song.status === "rejected"
-                        ? "bg-[var(--status-error-soft)] text-[var(--status-error)]"
-                        : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
+                        ? "bg-[var(--danger-hover)] text-[var(--danger)]"
+                        : song.status === "approved"
+                          ? "bg-[color-mix(in_srgb,var(--success)_12%,transparent)] text-[var(--success)]"
+                          : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
                     }`}
                   >
                     {formatStatus(song.status)}
