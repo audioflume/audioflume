@@ -232,16 +232,22 @@
   text-transform: uppercase;
 }
 
-/* Backend footers stay at the viewport bottom when page content is short. */
-main:has(> aside[class*="admin-sidebar-width"]) > section:has(footer) {
-  box-sizing: border-box;
+/* Backend pages with footers fill the viewport without subtracting shell offsets twice. */
+main:has(> aside[class*="admin-sidebar-width"]):has(footer) {
   display: flex;
-  min-height: calc(100vh - var(--filmwave-header-height, 56px));
+  min-height: 100vh;
   flex-direction: column;
 }
 
-main:has(> aside[class*="admin-sidebar-width"])
-  > section:has(footer)
+main:has(> aside[class*="admin-sidebar-width"]):has(footer) > section {
+  display: flex;
+  min-height: 0;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+main:has(> aside[class*="admin-sidebar-width"]):has(footer)
+  > section
   > div {
   display: flex;
   width: 100%;
@@ -249,15 +255,15 @@ main:has(> aside[class*="admin-sidebar-width"])
   flex-direction: column;
 }
 
-main:has(> aside[class*="admin-sidebar-width"])
-  > section:has(footer)
+main:has(> aside[class*="admin-sidebar-width"]):has(footer)
+  > section
   > div
   > footer {
   margin-top: auto;
 }
 
-main:has(> aside[class*="admin-sidebar-width"])
-  > section:has(footer)
+main:has(> aside[class*="admin-sidebar-width"]):has(footer)
+  > section
   > div
   > div:has(> footer) {
   margin-top: auto;
