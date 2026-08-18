@@ -125,7 +125,7 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
         {stats.map((stat) => (
           <div
             key={stat.label}
-            className="flex min-h-[72px] flex-col justify-between rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3"
+            className="filmwave-backend-section flex min-h-[72px] flex-col justify-between p-3"
           >
             <span className="text-xs text-[var(--text-secondary)]">{stat.label}</span>
             <span className="mt-3 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
@@ -135,11 +135,9 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
         ))}
       </section>
 
-      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Artist workspace
-          </h2>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Artist workspace</h2>
         </div>
 
         <div>
@@ -177,7 +175,7 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
   const label = NAV_ITEMS.find((item) => item.section === section)?.label ?? "Artist";
 
   return (
-    <div className="flex min-h-[280px] items-center justify-center rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-6 text-center">
+    <div className="filmwave-backend-section flex min-h-[280px] items-center justify-center px-6 text-center">
       <div className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
         {label}
       </div>
@@ -276,7 +274,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     return (
       <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[900px]">
-          <div className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-6 py-10 text-center">
+          <div className="filmwave-backend-section px-6 py-10 text-center">
             <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.04em]">
               No artist profile yet
             </h1>
@@ -285,7 +283,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             </p>
             <Link
               href="/artists/apply"
-              className="mt-5 inline-flex h-9 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80"
+              className="filmwave-backend-button filmwave-backend-button-primary mt-5"
             >
               Apply as an artist
             </Link>
@@ -385,13 +383,13 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
       </aside>
 
       <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-20 pt-[88px] md:px-8 xl:px-10">
-        <div className="mx-auto max-w-[1180px]">
+        <div className="mx-auto max-w-[var(--filmwave-backend-content-max-width)]">
           <div className="mb-5 md:hidden">
             {dashboardProfiles.length > 1 ? (
               <select
                 value={activeArtist.id}
                 onChange={(event) => setActiveArtistId(event.target.value)}
-                className="mb-3 h-9 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none"
+                className="filmwave-backend-select mb-3"
               >
                 {dashboardProfiles.map((profile) => (
                   <option key={profile.id} value={profile.id}>
@@ -448,9 +446,9 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
           <div className="mt-16">
             <Footer
-              className="!px-0"
               playerPadding={false}
               showTopBorder={false}
+              pageGutter={false}
             />
           </div>
         </div>
