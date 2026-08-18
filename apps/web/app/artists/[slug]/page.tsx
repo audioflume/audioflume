@@ -122,13 +122,13 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
         }
 
         .artist-public-shell {
-          padding: 0 28px;
+          padding: 0 var(--filmwave-page-gutter);
         }
 
         .artist-public-hero {
           position: relative;
           min-height: 330px;
-          margin: 0 -28px;
+          margin: 0 calc(var(--filmwave-page-gutter) * -1);
           overflow: hidden;
           background: var(--bg-secondary);
         }
@@ -168,7 +168,7 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
           min-height: 330px;
           align-items: flex-end;
           gap: 22px;
-          padding: 48px 28px 28px;
+          padding: 48px var(--filmwave-page-gutter) 28px;
         }
 
         .artist-public-avatar {
@@ -179,7 +179,7 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
           align-items: center;
           justify-content: center;
           overflow: hidden;
-          border: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
+          border: 0;
           border-radius: 0;
           background: var(--bg-secondary);
           color: var(--text-secondary);
@@ -277,7 +277,7 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
         }
 
         .artist-public-music {
-          margin: 0 -28px;
+          margin: 0 calc(var(--filmwave-page-gutter) * -1);
         }
 
         .artist-public-grid {
@@ -368,16 +368,6 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
         }
 
         @media (max-width: 760px) {
-          .artist-public-shell {
-            padding: 0 18px;
-          }
-
-          .artist-public-hero,
-          .artist-public-music {
-            margin-right: -18px;
-            margin-left: -18px;
-          }
-
           .artist-public-hero,
           .artist-public-hero-content {
             min-height: 290px;
@@ -385,7 +375,7 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
 
           .artist-public-hero-content {
             gap: 16px;
-            padding: 42px 18px 24px;
+            padding: 42px var(--filmwave-page-gutter) 24px;
           }
 
           .artist-public-avatar {
