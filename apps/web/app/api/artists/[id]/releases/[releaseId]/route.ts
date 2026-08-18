@@ -17,11 +17,16 @@ type RouteContext = {
 
 const RELEASE_TYPES = ["single", "ep", "album"] as const;
 type ReleaseType = (typeof RELEASE_TYPES)[number];
+type ReleaseAction = "publish" | "unpublish";
 
 function normalizeReleaseType(value: unknown): ReleaseType | null {
   return RELEASE_TYPES.includes(value as ReleaseType)
     ? (value as ReleaseType)
     : null;
+}
+
+function normalizeReleaseAction(value: unknown): ReleaseAction | null {
+  return value === "publish" || value === "unpublish" ? value : null;
 }
 
 function normalizeReleaseDate(value: unknown) {
@@ -91,7 +96,11 @@ export async function PATCH(request: Request, context: RouteContext) {
     const releaseType = normalizeReleaseType(body.release_type);
     const releaseDate = normalizeReleaseDate(body.release_date);
     const songIds = normalizeSongIds(body.song_ids);
+    const action = normalizeReleaseAction(body.action);
 
+    if (body.action !== undefined && !action) {
+      return NextResponse.json({ error: "Invalid release action" }, { status: 400 });
+    }
     if (!title) {
       return NextResponse.json({ error: "Release title is required" }, { status: 400 });
     }
@@ -107,6 +116,12 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (releaseType === "single" && songIds.length > 1) {
       return NextResponse.json(
         { error: "A single can contain only one track" },
+        { status: 400 },
+      );
+    }
+    if (action === "publish" && songIds.length === 0) {
+      return NextResponse.json(
+        { error: "Add at least one published track before publishing this release" },
         { status: 400 },
       );
     }
@@ -145,15 +160,35 @@ export async function PATCH(request: Request, context: RouteContext) {
           { status: 400 },
         );
       }
+      if (
+        action === "publish" &&
+        ((songs ?? []).length !== songIds.length ||
+          (songs ?? []).some((song) => song.status !== "published"))
+      ) {
+        return NextResponse.json(
+          { error: "Every track must be published before the release can be published" },
+          { status: 400 },
+        );
+      }
     }
+
+    const releaseUpdate: {
+      title: string;
+      release_type: ReleaseType;
+      release_date: string | null;
+      status?: "draft" | "published";
+    } = {
+      title,
+      release_type: releaseType,
+      release_date: releaseDate,
+    };
+
+    if (action === "publish") releaseUpdate.status = "published";
+    if (action === "unpublish") releaseUpdate.status = "draft";
 
     const { data: release, error: updateError } = await supabaseServer
       .from("artist_releases")
-      .update({
-        title,
-        release_type: releaseType,
-        release_date: releaseDate,
-      })
+      .update(releaseUpdate)
       .eq("id", releaseId)
       .select(
         "id, title, release_type, cover_image_url, release_date, status, created_at, updated_at",
