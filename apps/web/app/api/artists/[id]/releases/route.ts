@@ -40,11 +40,13 @@ export async function GET(_request: Request, context: RouteContext) {
         .from("artist_release_artists")
         .select("release_id")
         .eq("artist_id", id)
+        .eq("role", "primary")
         .order("position", { ascending: true }),
       supabaseServer
         .from("song_artists")
         .select("song_id")
-        .eq("artist_id", id),
+        .eq("artist_id", id)
+        .eq("role", "primary"),
     ]);
 
     if (releaseLinksResult.error) throw releaseLinksResult.error;
