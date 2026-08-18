@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
@@ -68,6 +69,15 @@ function isArtistDashboardSection(
   return NAV_ITEMS.some((item) => item.section === value);
 }
 
+function getArtistDashboardHref(
+  section: ArtistDashboardSection,
+  artistId: string,
+) {
+  const params = new URLSearchParams({ section });
+  if (artistId) params.set("artist", artistId);
+  return `/artists/dashboard?${params.toString()}`;
+}
+
 function formatStatus(status: ArtistDashboardProfile["status"]) {
   if (status === "approved") return "Approved";
   if (status === "rejected") return "Changes needed";
@@ -90,17 +100,19 @@ function ArtistSectionHeading({ children }: { children: string }) {
 function ArtistNavButton({
   section,
   label,
+  artistId,
   active,
   onClick,
 }: {
   section: ArtistDashboardSection;
   label: string;
+  artistId: string;
   active: boolean;
   onClick: (section: ArtistDashboardSection) => void;
 }) {
   return (
-    <button
-      type="button"
+    <Link
+      href={getArtistDashboardHref(section, artistId)}
       onClick={() => onClick(section)}
       className={`flex h-[38px] w-full cursor-pointer items-center justify-between gap-3 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
         active
@@ -109,7 +121,7 @@ function ArtistNavButton({
       }`}
     >
       <span className="truncate">{label}</span>
-    </button>
+    </Link>
   );
 }
 
@@ -162,24 +174,40 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
 }
 
 export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellProps) {
+  const searchParams = useSearchParams();
+  const requestedSection = searchParams.get("section");
+  const requestedArtistId = searchParams.get("artist");
   const [dashboardProfiles, setDashboardProfiles] = useState(profiles);
   const [activeArtistId, setActiveArtistId] = useState(profiles[0]?.id ?? "");
   const [activeSection, setActiveSection] =
     useState<ArtistDashboardSection>("overview");
   const [sectionReady, setSectionReady] = useState(false);
-  const [musicViewVersion, setMusicViewVersion] = useState(0);
+  const [sectionViewVersion, setSectionViewVersion] = useState(0);
 
   useEffect(() => {
+    if (
+      requestedArtistId &&
+      profiles.some((profile) => profile.id === requestedArtistId)
+    ) {
+      setActiveArtistId(requestedArtistId);
+    }
+
     const storedSection = window.localStorage.getItem(
       ARTIST_DASHBOARD_SECTION_STORAGE_KEY,
     );
+    const nextSection = isArtistDashboardSection(requestedSection)
+      ? requestedSection
+      : isArtistDashboardSection(storedSection)
+        ? storedSection
+        : "overview";
 
-    if (isArtistDashboardSection(storedSection)) {
-      setActiveSection(storedSection);
-    }
-
+    setActiveSection(nextSection);
+    window.localStorage.setItem(
+      ARTIST_DASHBOARD_SECTION_STORAGE_KEY,
+      nextSection,
+    );
     setSectionReady(true);
-  }, []);
+  }, [profiles, requestedArtistId, requestedSection]);
 
   const activeArtist = useMemo(
     () =>
@@ -192,10 +220,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     NAV_ITEMS.find((item) => item.section === activeSection)?.label ?? "Artist";
 
   function handleSectionChange(section: ArtistDashboardSection) {
-    if (section === "music") {
-      setMusicViewVersion((current) => current + 1);
-    }
-
+    setSectionViewVersion((current) => current + 1);
     setActiveSection(section);
     window.localStorage.setItem(ARTIST_DASHBOARD_SECTION_STORAGE_KEY, section);
   }
@@ -302,8 +327,8 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
           <div className="border-b border-[var(--border)] pb-8">
             <ArtistSectionHeading>Artist</ArtistSectionHeading>
-            <button
-              type="button"
+            <Link
+              href={getArtistDashboardHref("overview", activeArtist.id)}
               onClick={() => handleSectionChange("overview")}
               className={`group flex h-[38px] w-full cursor-pointer items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
                 sectionReady && activeSection === "overview"
@@ -321,7 +346,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                 <DashboardIcon size={14} />
               </span>
               <span className="truncate">Overview</span>
-            </button>
+            </Link>
           </div>
 
           <div className="mt-8 grid gap-8">
@@ -334,6 +359,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                       key={item.section}
                       section={item.section}
                       label={item.label}
+                      artistId={activeArtist.id}
                       active={sectionReady && activeSection === item.section}
                       onClick={handleSectionChange}
                     />
@@ -403,18 +429,18 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               aria-label="Artist dashboard sections"
             >
               {NAV_ITEMS.map((item) => (
-                <button
+                <Link
                   key={item.section}
-                  type="button"
+                  href={getArtistDashboardHref(item.section, activeArtist.id)}
                   onClick={() => handleSectionChange(item.section)}
-                  className={`h-[38px] shrink-0 px-3 text-xs transition-colors ${
+                  className={`flex h-[38px] shrink-0 items-center px-3 text-xs transition-colors ${
                     sectionReady && activeSection === item.section
                       ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
                       : "text-[var(--text-secondary)]"
                   }`}
                 >
                   {item.label}
-                </button>
+                </Link>
               ))}
             </nav>
           </div>
@@ -422,30 +448,39 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
           <AdminPageHeader section="Artist" label={activeSectionLabel} compact />
 
           {activeSection === "overview" ? (
-            <Overview artist={activeArtist} />
+            <Overview
+              key={`${activeArtist.id}-overview-${sectionViewVersion}`}
+              artist={activeArtist}
+            />
           ) : activeSection === "profile" ? (
             <ArtistProfileEditor
+              key={`${activeArtist.id}-profile-${sectionViewVersion}`}
               artist={activeArtist}
               onSaved={handleProfileSaved}
             />
           ) : activeSection === "music" ? (
             <ArtistMusicUploader
-              key={musicViewVersion}
+              key={`${activeArtist.id}-music-${sectionViewVersion}`}
               artist={activeArtist}
               onUploaded={handleSongUploaded}
             />
           ) : activeSection === "releases" ? (
             <ArtistReleaseManager
+              key={`${activeArtist.id}-releases-${sectionViewVersion}`}
               artist={activeArtist}
               onReleaseCreated={handleReleaseCreated}
             />
           ) : activeSection === "playlists" ? (
             <ArtistPlaylistManager
+              key={`${activeArtist.id}-playlists-${sectionViewVersion}`}
               artist={activeArtist}
               onPlaylistCreated={handlePlaylistCreated}
             />
           ) : (
-            <PlaceholderSection section={activeSection} />
+            <PlaceholderSection
+              key={`${activeArtist.id}-${activeSection}-${sectionViewVersion}`}
+              section={activeSection}
+            />
           )}
 
           <div className="mt-16">
