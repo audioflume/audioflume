@@ -199,7 +199,7 @@ export default function ArtistProfileEditor({
               }
             />
             <div className="min-w-0 flex-1 text-xs font-medium text-[var(--text-primary)]">
-              Hero image
+              Feature image
             </div>
             {canEdit ? (
               <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0">
