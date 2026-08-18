@@ -14,6 +14,13 @@ type ProfileResponse = {
   error?: string;
 };
 
+type ArtistImageKind = "profile" | "hero";
+
+type ArtistImageResponse = {
+  artist?: Partial<ArtistDashboardProfile> & { id: string };
+  error?: string;
+};
+
 const inputClassName =
   "h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-60";
 
@@ -49,6 +56,9 @@ export default function ArtistProfileEditor({
   const [spotifyUrl, setSpotifyUrl] = useState(artist.spotify_url ?? "");
   const [youtubeUrl, setYoutubeUrl] = useState(artist.youtube_url ?? "");
   const [saving, setSaving] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState<ArtistImageKind | null>(
+    null,
+  );
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -107,6 +117,40 @@ export default function ArtistProfileEditor({
     }
   }
 
+  async function uploadArtistImage(kind: ArtistImageKind, file: File) {
+    if (!canEdit || uploadingImage) return;
+
+    try {
+      setUploadingImage(kind);
+      setMessage("");
+      setError("");
+
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("kind", kind);
+
+      const response = await fetch(`/api/artists/${artist.id}/images`, {
+        method: "POST",
+        body: formData,
+      });
+      const body = (await response.json().catch(() => ({}))) as ArtistImageResponse;
+
+      if (!response.ok || !body.artist) {
+        throw new Error(body.error || "Failed to upload artist image");
+      }
+
+      onSaved(body.artist);
+    } catch (uploadError) {
+      setError(
+        uploadError instanceof Error
+          ? uploadError.message
+          : "Failed to upload artist image",
+      );
+    } finally {
+      setUploadingImage(null);
+    }
+  }
+
   const slugChanged = slug.replace(/-+$/g, "") !== artist.slug;
   const displayedSlug = slug.replace(/-+$/g, "");
 
@@ -125,6 +169,68 @@ export default function ArtistProfileEditor({
       </div>
 
       <div className="grid gap-5 p-5">
+        <section className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
+          <div>
+            <FieldLabel>Profile image</FieldLabel>
+            <div
+              className="aspect-square w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] bg-cover bg-center"
+              style={
+                artist.profile_image_url
+                  ? { backgroundImage: `url(${artist.profile_image_url})` }
+                  : undefined
+              }
+            />
+            {canEdit ? (
+              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]">
+                {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={Boolean(uploadingImage)}
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = "";
+                    if (file) void uploadArtistImage("profile", file);
+                  }}
+                />
+              </label>
+            ) : null}
+          </div>
+
+          <div>
+            <FieldLabel>Hero image</FieldLabel>
+            <div
+              className="aspect-[16/7] w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--filmwave-neutral-surface)] bg-cover bg-center"
+              style={
+                artist.hero_image_url
+                  ? { backgroundImage: `url(${artist.hero_image_url})` }
+                  : undefined
+              }
+            />
+            {canEdit ? (
+              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]">
+                {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={Boolean(uploadingImage)}
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = "";
+                    if (file) void uploadArtistImage("hero", file);
+                  }}
+                />
+              </label>
+            ) : null}
+          </div>
+        </section>
+
+        <div className="text-[11px] leading-5 text-[var(--text-muted)]">
+          Images are optimized to WebP when uploaded. Maximum file size: 20 MB.
+        </div>
+
         <div className="grid gap-4 md:grid-cols-2">
           <label className="block">
             <FieldLabel>Artist name</FieldLabel>
