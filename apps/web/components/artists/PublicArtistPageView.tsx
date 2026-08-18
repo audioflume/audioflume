@@ -45,6 +45,21 @@ function formatTrackCount(count: number) {
   return `${count} track${count === 1 ? "" : "s"}`;
 }
 
+function splitArtistBio(value: string | null) {
+  const bio = value?.trim() || "";
+  if (!bio) return { intro: null, profile: null };
+
+  const sentenceMatch = bio.match(/^(.+?[.!?])(?:\s+|$)([\s\S]*)$/);
+  if (!sentenceMatch?.[2]?.trim()) {
+    return { intro: null, profile: bio };
+  }
+
+  return {
+    intro: sentenceMatch[1].trim(),
+    profile: sentenceMatch[2].trim(),
+  };
+}
+
 function ReleaseCard({ release }: { release: PublicArtistRelease }) {
   const releaseDate = formatReleaseDate(release.release_date);
 
@@ -94,12 +109,16 @@ export default function PublicArtistPageView({
   embedded = false,
 }: PublicArtistPageViewProps) {
   const { artist, songs, releases, playlists } = data;
+  const { intro: bioIntro, profile: profileBio } = splitArtistBio(artist.bio);
   const externalLinks = [
     ["Website", normalizeExternalUrl(artist.website_url)],
     ["Instagram", normalizeExternalUrl(artist.instagram_url)],
     ["Spotify", normalizeExternalUrl(artist.spotify_url)],
     ["YouTube", normalizeExternalUrl(artist.youtube_url)],
   ].filter((item): item is [string, string] => Boolean(item[1]));
+  const showProfilePanel = Boolean(
+    profileBio || artist.location || externalLinks.length > 0,
+  );
   const RootElement = embedded ? "div" : "main";
 
   return (
@@ -123,129 +142,156 @@ export default function PublicArtistPageView({
           padding: 0 var(--filmwave-page-gutter);
         }
 
-        .artist-public-hero {
+        .artist-public-top {
+          padding: clamp(34px, 3vw, 50px) 0 clamp(52px, 5vw, 72px);
+        }
+
+        .artist-public-type {
+          margin-bottom: clamp(16px, 1.4vw, 22px);
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: clamp(17px, 1.35vw, 22px);
+          font-weight: 400;
+          letter-spacing: -0.035em;
+          line-height: 1;
+        }
+
+        .artist-public-feature-grid {
+          display: grid;
+          grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
+          gap: clamp(34px, 4vw, 72px);
+          align-items: stretch;
+        }
+
+        .artist-public-feature-media {
           position: relative;
-          min-height: 330px;
-          margin: 0 calc(var(--filmwave-page-gutter) * -1);
+          min-height: clamp(340px, 30vw, 470px);
           overflow: hidden;
           background: var(--bg-secondary);
         }
 
-        .artist-public-hero-image,
-        .artist-public-hero-fallback {
+        .artist-public-feature-image,
+        .artist-public-feature-fallback {
           position: absolute;
           inset: 0;
           width: 100%;
           height: 100%;
         }
 
-        .artist-public-hero-image {
+        .artist-public-feature-image {
+          display: block;
           object-fit: cover;
         }
 
-        .artist-public-hero-fallback {
+        .artist-public-feature-fallback {
           background:
-            radial-gradient(circle at 72% 20%, rgba(255,255,255,0.08), transparent 34%),
+            radial-gradient(circle at 68% 24%, rgba(255,255,255,0.08), transparent 28%),
             linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
         }
 
-        .artist-public-hero::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background:
-            linear-gradient(to top, var(--bg-primary) 0%, color-mix(in srgb, var(--bg-primary) 78%, transparent) 24%, transparent 68%),
-            linear-gradient(to right, color-mix(in srgb, var(--bg-primary) 54%, transparent), transparent 62%);
-          pointer-events: none;
-        }
-
-        .artist-public-hero-content {
-          position: relative;
-          z-index: 1;
+        .artist-public-feature-copy {
           display: flex;
-          min-height: 330px;
-          align-items: flex-end;
-          gap: 22px;
-          padding: 48px var(--filmwave-page-gutter) 28px;
-        }
-
-        .artist-public-avatar {
-          display: flex;
-          width: 112px;
-          height: 112px;
-          flex: 0 0 112px;
-          align-items: center;
-          justify-content: center;
-          overflow: hidden;
-          border: 0;
-          border-radius: 0;
-          background: var(--bg-secondary);
-          color: var(--text-secondary);
-          font-family: var(--font-aktiv-grotesk);
-          font-size: 36px;
-          font-weight: 500;
-        }
-
-        .artist-public-avatar img {
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .artist-public-kicker {
-          margin-bottom: 6px;
-          color: var(--text-muted);
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
+          min-width: 0;
+          flex-direction: column;
         }
 
         .artist-public-name {
-          margin: 0;
-          font-family: var(--font-aktiv-grotesk);
-          font-size: clamp(38px, 5vw, 62px);
-          font-weight: 500;
-          line-height: 0.94;
-          letter-spacing: -0.055em;
+          margin: -0.08em 0 0;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: clamp(66px, 7.8vw, 98px);
+          font-weight: 400;
+          letter-spacing: -0.035em;
+          line-height: 0.96;
         }
 
-        .artist-public-location {
-          margin-top: 10px;
-          color: var(--text-secondary);
-          font-size: 12px;
-        }
-
-        .artist-public-profile {
+        .artist-public-summary-row {
           display: grid;
-          grid-template-columns: minmax(0, 720px) auto;
-          gap: 28px;
+          grid-template-columns: minmax(112px, 150px) minmax(0, 1fr);
+          gap: clamp(26px, 3vw, 48px);
           align-items: start;
-          padding: 28px 0 40px;
+          margin-top: clamp(24px, 2.5vw, 34px);
         }
 
-        .artist-public-bio {
+        .artist-public-stats {
+          display: grid;
+          gap: 2px;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0;
+          line-height: 1.18;
+          text-transform: uppercase;
+        }
+
+        .artist-public-intro {
+          max-width: 520px;
           margin: 0;
           color: var(--text-secondary);
-          font-size: 13px;
-          line-height: 1.7;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: clamp(12px, 0.82vw, 14px);
+          font-weight: 300;
+          letter-spacing: -0.012em;
+          line-height: 1.45;
+        }
+
+        .artist-public-profile-panel {
+          margin-top: auto;
+          padding-top: clamp(44px, 4.5vw, 72px);
+        }
+
+        .artist-public-profile-heading {
+          display: flex;
+          align-items: baseline;
+          justify-content: space-between;
+          gap: 18px;
+        }
+
+        .artist-public-profile-label {
+          color: var(--text-secondary);
+          font-family: var(--font-roboto-mono-filmwave), monospace;
+          font-size: 9px;
+          font-weight: 400;
+          letter-spacing: 0.02em;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .artist-public-profile-meta {
+          display: flex;
+          min-width: 0;
+          flex-wrap: wrap;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 8px 18px;
+          color: var(--text-muted);
+          font-size: 9px;
+          line-height: 1.2;
         }
 
         .artist-public-links {
           display: flex;
           flex-wrap: wrap;
+          align-items: center;
           justify-content: flex-end;
-          gap: 14px;
+          gap: 8px 14px;
         }
 
         .artist-public-links a {
-          color: var(--text-secondary);
-          font-size: 12px;
+          color: var(--text-muted);
           transition: color 150ms ease;
         }
 
         .artist-public-links a:hover {
           color: var(--text-primary);
+        }
+
+        .artist-public-bio {
+          margin: 14px 0 0;
+          color: var(--text-secondary);
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: clamp(12px, 0.82vw, 14px);
+          font-weight: 300;
+          letter-spacing: -0.012em;
+          line-height: 1.65;
         }
 
         .artist-public-section {
@@ -359,37 +405,65 @@ export default function PublicArtistPageView({
           padding-top: 10px;
         }
 
+        @media (max-width: 1080px) {
+          .artist-public-feature-grid {
+            grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
+            gap: 30px;
+          }
+
+          .artist-public-name {
+            font-size: clamp(58px, 7.5vw, 82px);
+          }
+        }
+
         @media (max-width: 980px) {
           .artist-public-grid {
             grid-template-columns: repeat(3, minmax(0, 1fr));
           }
         }
 
+        @media (max-width: 820px) {
+          .artist-public-top {
+            padding-top: 28px;
+          }
+
+          .artist-public-feature-grid {
+            grid-template-columns: 1fr;
+            gap: 28px;
+          }
+
+          .artist-public-feature-media {
+            min-height: 0;
+            aspect-ratio: 1.7 / 1;
+          }
+
+          .artist-public-feature-copy {
+            display: block;
+          }
+
+          .artist-public-name {
+            font-size: clamp(52px, 12vw, 78px);
+          }
+
+          .artist-public-profile-panel {
+            margin-top: 0;
+            padding-top: 38px;
+          }
+        }
+
         @media (max-width: 760px) {
-          .artist-public-hero,
-          .artist-public-hero-content {
-            min-height: 290px;
-          }
-
-          .artist-public-hero-content {
-            gap: 16px;
-            padding: 42px var(--filmwave-page-gutter) 24px;
-          }
-
-          .artist-public-avatar {
-            width: 86px;
-            height: 86px;
-            flex-basis: 86px;
-            border-radius: 0;
-            font-size: 28px;
-          }
-
-          .artist-public-profile {
+          .artist-public-summary-row {
             grid-template-columns: 1fr;
             gap: 18px;
-            padding-bottom: 34px;
           }
 
+          .artist-public-profile-heading {
+            align-items: flex-start;
+            flex-direction: column;
+            gap: 12px;
+          }
+
+          .artist-public-profile-meta,
           .artist-public-links {
             justify-content: flex-start;
           }
@@ -401,14 +475,12 @@ export default function PublicArtistPageView({
         }
 
         @media (max-width: 480px) {
-          .artist-public-hero-content {
-            align-items: flex-end;
+          .artist-public-type {
+            font-size: 16px;
           }
 
-          .artist-public-avatar {
-            width: 72px;
-            height: 72px;
-            flex-basis: 72px;
+          .artist-public-name {
+            font-size: clamp(46px, 15vw, 64px);
           }
 
           .artist-public-grid {
@@ -421,51 +493,79 @@ export default function PublicArtistPageView({
         className={`artist-public-page${embedded ? " artist-public-page-embedded" : ""}`}
       >
         <div className="artist-public-shell">
-          <section className="artist-public-hero">
-            {artist.hero_image_url ? (
-              <img
-                src={artist.hero_image_url}
-                alt=""
-                className="artist-public-hero-image"
-              />
-            ) : (
-              <div className="artist-public-hero-fallback" aria-hidden="true" />
-            )}
+          <section className="artist-public-top">
+            <div className="artist-public-type">Musician / Composer</div>
 
-            <div className="artist-public-hero-content">
-              <div className="artist-public-avatar">
-                {artist.profile_image_url ? (
-                  <img src={artist.profile_image_url} alt="" />
+            <div className="artist-public-feature-grid">
+              <div className="artist-public-feature-media">
+                {artist.hero_image_url ? (
+                  <img
+                    src={artist.hero_image_url}
+                    alt=""
+                    className="artist-public-feature-image"
+                  />
                 ) : (
-                  <span>{artist.name.slice(0, 1).toUpperCase()}</span>
+                  <div
+                    className="artist-public-feature-fallback"
+                    aria-hidden="true"
+                  />
                 )}
               </div>
-              <div className="min-w-0">
-                <div className="artist-public-kicker">Artist</div>
+
+              <div className="artist-public-feature-copy">
                 <h1 className="artist-public-name">{artist.name}</h1>
-                {artist.location ? (
-                  <div className="artist-public-location">{artist.location}</div>
+
+                <div className="artist-public-summary-row">
+                  <div className="artist-public-stats">
+                    <span>
+                      {songs.length} {songs.length === 1 ? "song" : "songs"}
+                    </span>
+                    <span>
+                      {releases.length} albums / releases
+                    </span>
+                  </div>
+
+                  {bioIntro ? (
+                    <p className="artist-public-intro">{bioIntro}</p>
+                  ) : null}
+                </div>
+
+                {showProfilePanel ? (
+                  <div className="artist-public-profile-panel">
+                    <div className="artist-public-profile-heading">
+                      <span className="artist-public-profile-label">
+                        Artist Profile
+                      </span>
+
+                      {(artist.location || externalLinks.length > 0) ? (
+                        <div className="artist-public-profile-meta">
+                          {artist.location ? <span>{artist.location}</span> : null}
+                          {externalLinks.length > 0 ? (
+                            <div className="artist-public-links">
+                              {externalLinks.map(([label, href]) => (
+                                <a
+                                  key={label}
+                                  href={href}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                >
+                                  {label}
+                                </a>
+                              ))}
+                            </div>
+                          ) : null}
+                        </div>
+                      ) : null}
+                    </div>
+
+                    {profileBio ? (
+                      <p className="artist-public-bio">{profileBio}</p>
+                    ) : null}
+                  </div>
                 ) : null}
               </div>
             </div>
           </section>
-
-          {(artist.bio || externalLinks.length > 0) && (
-            <section className="artist-public-profile">
-              <div>
-                {artist.bio ? <p className="artist-public-bio">{artist.bio}</p> : null}
-              </div>
-              {externalLinks.length > 0 ? (
-                <div className="artist-public-links">
-                  {externalLinks.map(([label, href]) => (
-                    <a key={label} href={href} target="_blank" rel="noreferrer">
-                      {label}
-                    </a>
-                  ))}
-                </div>
-              ) : null}
-            </section>
-          )}
 
           <section className="artist-public-section">
             <div className="artist-public-section-header">
