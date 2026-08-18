@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import ApprovedSongPublishButton from "@/components/admin/ApprovedSongPublishButton";
 import Toast from "@/components/Toast";
 
 type ReviewStatus =
@@ -687,7 +688,7 @@ export default function AdminMusicReviewPage() {
           </section>
 
           <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-            <div className="grid min-w-[850px] grid-cols-[minmax(220px,1.4fr)_minmax(160px,1fr)_100px_130px_120px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+            <div className="grid min-w-[900px] grid-cols-[minmax(220px,1.4fr)_minmax(160px,1fr)_100px_130px_170px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
               <span>Track</span>
               <span>Artist</span>
               <span>Length</span>
@@ -696,11 +697,11 @@ export default function AdminMusicReviewPage() {
             </div>
 
             {loading ? (
-              <div className="flex min-h-[180px] min-w-[850px] items-center justify-center text-xs text-[var(--text-muted)]">
+              <div className="flex min-h-[180px] min-w-[900px] items-center justify-center text-xs text-[var(--text-muted)]">
                 Loading submissions...
               </div>
             ) : error ? (
-              <div className="flex min-h-[180px] min-w-[850px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
+              <div className="flex min-h-[180px] min-w-[900px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
                 <span>{error}</span>
                 <button
                   type="button"
@@ -711,15 +712,15 @@ export default function AdminMusicReviewPage() {
                 </button>
               </div>
             ) : visibleSongs.length === 0 ? (
-              <div className="flex min-h-[180px] min-w-[850px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+              <div className="flex min-h-[180px] min-w-[900px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 No submissions match this view.
               </div>
             ) : (
-              <div className="min-w-[850px]">
+              <div className="min-w-[900px]">
                 {visibleSongs.map((item) => (
                   <div
                     key={item.id}
-                    className="grid grid-cols-[minmax(220px,1.4fr)_minmax(160px,1fr)_100px_130px_120px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0"
+                    className="grid grid-cols-[minmax(220px,1.4fr)_minmax(160px,1fr)_100px_130px_170px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0"
                   >
                     <div className="min-w-0">
                       <div className="truncate text-sm font-medium text-[var(--text-primary)]">
@@ -738,7 +739,7 @@ export default function AdminMusicReviewPage() {
                     <div>
                       <StatusBadge status={item.status} />
                     </div>
-                    <div className="flex justify-end">
+                    <div className="flex justify-end gap-2">
                       <button
                         type="button"
                         onClick={() => void openReview(item.id)}
@@ -746,6 +747,23 @@ export default function AdminMusicReviewPage() {
                       >
                         Review
                       </button>
+                      {item.status === "approved" ? (
+                        <ApprovedSongPublishButton
+                          songId={item.id}
+                          songTitle={item.title}
+                          onPublished={(songId) => {
+                            setSongs((current) =>
+                              current.map((song) =>
+                                song.id === songId
+                                  ? { ...song, status: "published" }
+                                  : song,
+                              ),
+                            );
+                            showToast(`${item.title}: Published`);
+                          }}
+                          onError={showToast}
+                        />
+                      ) : null}
                     </div>
                   </div>
                 ))}
