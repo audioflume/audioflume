@@ -1,5 +1,6 @@
 import Footer from "@/components/Footer";
 import PublicArtistMusic from "@/components/artists/PublicArtistMusic";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import type {
   PublicArtistPageData,
   PublicArtistPlaylist,
@@ -124,9 +125,8 @@ export default function PublicArtistPageView({
     ["Spotify", normalizeExternalUrl(artist.spotify_url)],
     ["YouTube", normalizeExternalUrl(artist.youtube_url)],
   ].filter((item): item is [string, string] => Boolean(item[1]));
-  const showProfilePanel = Boolean(
-    artist.bio || artist.location || externalLinks.length > 0,
-  );
+  const showProfilePanel = Boolean(artist.bio);
+  const showProfileMeta = Boolean(artist.location || externalLinks.length > 0);
   const RootElement = embedded ? "div" : "main";
 
   return (
@@ -168,12 +168,16 @@ export default function PublicArtistPageView({
         .artist-public-feature-grid {
           display: grid;
           grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
-          gap: clamp(34px, 4vw, 72px);
+          grid-template-rows: auto auto;
+          column-gap: clamp(34px, 4vw, 72px);
+          row-gap: 12px;
           align-items: stretch;
         }
 
         .artist-public-feature-media {
           position: relative;
+          grid-column: 1;
+          grid-row: 1;
           width: 100%;
           min-height: clamp(340px, 24vw, 460px);
           align-self: stretch;
@@ -201,11 +205,33 @@ export default function PublicArtistPageView({
             linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
         }
 
+        .artist-public-feature-play-badge {
+          position: absolute;
+          right: 28px;
+          bottom: 28px;
+          z-index: 2;
+          display: inline-flex;
+          width: 52px;
+          height: 52px;
+          align-items: center;
+          justify-content: center;
+          border-radius: 999px;
+          background: #fff;
+          color: #111;
+        }
+
         .artist-public-feature-copy {
           display: flex;
+          grid-column: 2;
+          grid-row: 1;
           min-width: 0;
           height: 100%;
           flex-direction: column;
+        }
+
+        .artist-public-identity {
+          margin-top: auto;
+          padding-top: clamp(28px, 3vw, 44px);
         }
 
         .artist-public-name {
@@ -251,8 +277,8 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-profile-panel {
-          margin-top: auto;
-          padding-top: clamp(24px, 2.5vw, 36px);
+          margin: 0;
+          padding: 0;
         }
 
         .artist-public-profile-heading {
@@ -274,10 +300,12 @@ export default function PublicArtistPageView({
 
         .artist-public-profile-meta {
           display: flex;
+          grid-column: 1;
+          grid-row: 2;
           min-width: 0;
           flex-wrap: wrap;
           align-items: center;
-          justify-content: flex-end;
+          justify-content: flex-start;
           gap: 8px 18px;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -296,7 +324,7 @@ export default function PublicArtistPageView({
           display: flex;
           flex-wrap: wrap;
           align-items: center;
-          justify-content: flex-end;
+          justify-content: flex-start;
           gap: 8px 14px;
         }
 
@@ -442,7 +470,7 @@ export default function PublicArtistPageView({
         @media (max-width: 1080px) {
           .artist-public-feature-grid {
             grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.05fr);
-            gap: 30px;
+            column-gap: 30px;
           }
 
           .artist-public-name {
@@ -463,7 +491,28 @@ export default function PublicArtistPageView({
 
           .artist-public-feature-grid {
             grid-template-columns: 1fr;
+            grid-template-rows: auto;
             gap: 22px;
+          }
+
+          .artist-public-feature-copy {
+            display: contents;
+          }
+
+          .artist-public-identity {
+            grid-column: 1;
+            grid-row: 1;
+            margin-top: 0;
+            padding-top: 0;
+          }
+
+          .artist-public-name {
+            margin: 0;
+            font-size: clamp(48px, 10vw, 72px);
+          }
+
+          .artist-public-summary-row {
+            margin-top: 20px;
           }
 
           .artist-public-feature-media {
@@ -474,50 +523,23 @@ export default function PublicArtistPageView({
             aspect-ratio: 1.75 / 1;
           }
 
-          .artist-public-feature-copy {
-            display: contents;
-          }
-
-          .artist-public-name {
-            grid-column: 1;
-            grid-row: 1;
-            margin: 0;
-            font-size: clamp(48px, 10vw, 72px);
-          }
-
-          .artist-public-summary-row {
+          .artist-public-profile-meta {
             grid-column: 1;
             grid-row: 3;
-            margin-top: 0;
           }
 
           .artist-public-profile-panel {
             grid-column: 1;
             grid-row: 4;
-            margin-top: 0;
-            padding-top: 10px;
-          }
-
-          .artist-public-bio {
-            transform: none;
+            padding-top: 8px;
           }
         }
 
         @media (max-width: 760px) {
-          .artist-public-summary-row {
-            grid-template-columns: 1fr;
-            gap: 18px;
-          }
-
           .artist-public-profile-heading {
             align-items: flex-start;
             flex-direction: column;
             gap: 12px;
-          }
-
-          .artist-public-profile-meta,
-          .artist-public-links {
-            justify-content: flex-start;
           }
 
           .artist-public-grid {
@@ -526,9 +548,21 @@ export default function PublicArtistPageView({
           }
         }
 
+        @media (max-width: 560px) {
+          .artist-public-summary-row {
+            grid-template-columns: 1fr;
+            gap: 18px;
+          }
+        }
+
         @media (max-width: 480px) {
           .artist-public-name {
             font-size: clamp(44px, 12vw, 60px);
+          }
+
+          .artist-public-feature-play-badge {
+            right: 18px;
+            bottom: 18px;
           }
 
           .artist-public-grid {
@@ -560,57 +594,18 @@ export default function PublicArtistPageView({
                     aria-hidden="true"
                   />
                 )}
+                <span className="artist-public-feature-play-badge" aria-hidden="true">
+                  <PlayIconSmall size={18} />
+                </span>
               </div>
 
               <div className="artist-public-feature-copy">
-                <h1 className="artist-public-name">{artist.name}</h1>
-
-                <div className="artist-public-summary-row">
-                  <div className="artist-public-stats">
-                    <span>
-                      {songs.length} {songs.length === 1 ? "song" : "songs"}
-                    </span>
-                    <span>
-                      {releases.length} albums / releases
-                    </span>
-                  </div>
-
-                  {artist.intro_text ? (
-                    <p className="artist-public-intro">{artist.intro_text}</p>
-                  ) : null}
-                </div>
-
                 {showProfilePanel ? (
                   <div className="artist-public-profile-panel">
                     <div className="artist-public-profile-heading">
                       <span className="artist-public-profile-label">
                         Artist Profile
                       </span>
-
-                      {(artist.location || externalLinks.length > 0) ? (
-                        <div className="artist-public-profile-meta">
-                          {artist.location ? (
-                            <span className="artist-public-location">
-                              {artist.location}
-                            </span>
-                          ) : null}
-                          {externalLinks.length > 0 ? (
-                            <div className="artist-public-links">
-                              {externalLinks.map(([label, href]) => (
-                                <a
-                                  key={label}
-                                  href={href}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {label === "Instagram" ? <InstagramIcon /> : null}
-                                  <span>{label}</span>
-                                </a>
-                              ))}
-                            </div>
-                          ) : null}
-                        </div>
-                      ) : null}
                     </div>
 
                     {artist.bio ? (
@@ -618,7 +613,51 @@ export default function PublicArtistPageView({
                     ) : null}
                   </div>
                 ) : null}
+
+                <div className="artist-public-identity">
+                  <h1 className="artist-public-name">{artist.name}</h1>
+
+                  <div className="artist-public-summary-row">
+                    <div className="artist-public-stats">
+                      <span>
+                        {songs.length} {songs.length === 1 ? "song" : "songs"}
+                      </span>
+                      <span>
+                        {releases.length} albums / releases
+                      </span>
+                    </div>
+
+                    {artist.intro_text ? (
+                      <p className="artist-public-intro">{artist.intro_text}</p>
+                    ) : null}
+                  </div>
+                </div>
               </div>
+
+              {showProfileMeta ? (
+                <div className="artist-public-profile-meta">
+                  {artist.location ? (
+                    <span className="artist-public-location">
+                      {artist.location}
+                    </span>
+                  ) : null}
+                  {externalLinks.length > 0 ? (
+                    <div className="artist-public-links">
+                      {externalLinks.map(([label, href]) => (
+                        <a
+                          key={label}
+                          href={href}
+                          target="_blank"
+                          rel="noreferrer"
+                        >
+                          {label === "Instagram" ? <InstagramIcon /> : null}
+                          <span>{label}</span>
+                        </a>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+              ) : null}
             </div>
           </section>
 
