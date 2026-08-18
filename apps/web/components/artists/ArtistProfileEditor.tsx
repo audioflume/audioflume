@@ -152,182 +152,8 @@ export default function ArtistProfileEditor({
   const displayedSlug = slug.replace(/-+$/g, "");
 
   return (
-    <form onSubmit={handleSubmit} className="filmwave-backend-section">
-      <div className="filmwave-backend-section-header">
-        <h2 className="filmwave-backend-section-title">Artist profile</h2>
-      </div>
-
-      <div className="grid gap-5 px-5 pb-5">
-        <section className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
-          <div>
-            <FieldLabel>Profile image</FieldLabel>
-            <div
-              className="aspect-square w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
-              style={
-                artist.profile_image_url
-                  ? { backgroundImage: `url(${artist.profile_image_url})` }
-                  : undefined
-              }
-            />
-            {canEdit ? (
-              <label className="filmwave-backend-button filmwave-backend-button-secondary mt-2 w-fit">
-                {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled={Boolean(uploadingImage)}
-                  className="hidden"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    event.target.value = "";
-                    if (file) void uploadArtistImage("profile", file);
-                  }}
-                />
-              </label>
-            ) : null}
-          </div>
-
-          <div>
-            <FieldLabel>Hero image</FieldLabel>
-            <div
-              className="aspect-[16/7] w-full overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
-              style={
-                artist.hero_image_url
-                  ? { backgroundImage: `url(${artist.hero_image_url})` }
-                  : undefined
-              }
-            />
-            {canEdit ? (
-              <label className="filmwave-backend-button filmwave-backend-button-secondary mt-2 w-fit">
-                {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled={Boolean(uploadingImage)}
-                  className="hidden"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    event.target.value = "";
-                    if (file) void uploadArtistImage("hero", file);
-                  }}
-                />
-              </label>
-            ) : null}
-          </div>
-        </section>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="block">
-            <FieldLabel>Artist name</FieldLabel>
-            <input
-              type="text"
-              value={name}
-              onChange={(event) => setName(event.target.value)}
-              maxLength={160}
-              disabled={!canEdit || saving}
-              className="filmwave-backend-input"
-            />
-          </label>
-
-          <label className="block">
-            <FieldLabel>Location</FieldLabel>
-            <input
-              type="text"
-              value={location}
-              onChange={(event) => setLocation(event.target.value)}
-              maxLength={160}
-              disabled={!canEdit || saving}
-              placeholder="City, Province / State"
-              className="filmwave-backend-input"
-            />
-          </label>
-        </div>
-
-        <label className="block">
-          <FieldLabel>Artist URL</FieldLabel>
-          <input
-            type="text"
-            value={slug}
-            onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
-            onBlur={() => setSlug((current) => current.replace(/-+$/g, ""))}
-            maxLength={80}
-            disabled={!canEdit || saving}
-            className="filmwave-backend-input"
-          />
-          <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
-            /artists/{displayedSlug || "artist"}
-          </div>
-          {slugChanged ? (
-            <div className="mt-1 text-[11px] leading-5 text-[var(--status-warning)]">
-              Changing this will change your public artist URL. The previous URL will be kept so old links can redirect when public artist pages launch.
-            </div>
-          ) : null}
-        </label>
-
-        <label className="block">
-          <FieldLabel>Bio</FieldLabel>
-          <textarea
-            value={bio}
-            onChange={(event) => setBio(event.target.value)}
-            maxLength={1200}
-            disabled={!canEdit || saving}
-            rows={6}
-            className="filmwave-backend-textarea"
-          />
-        </label>
-
-        <div className="grid gap-4 md:grid-cols-2">
-          <label className="block">
-            <FieldLabel>Website</FieldLabel>
-            <input
-              type="url"
-              value={websiteUrl}
-              onChange={(event) => setWebsiteUrl(event.target.value)}
-              disabled={!canEdit || saving}
-              placeholder="https://"
-              className="filmwave-backend-input"
-            />
-          </label>
-
-          <label className="block">
-            <FieldLabel>Instagram</FieldLabel>
-            <input
-              type="url"
-              value={instagramUrl}
-              onChange={(event) => setInstagramUrl(event.target.value)}
-              disabled={!canEdit || saving}
-              placeholder="https://"
-              className="filmwave-backend-input"
-            />
-          </label>
-
-          <label className="block">
-            <FieldLabel>Spotify</FieldLabel>
-            <input
-              type="url"
-              value={spotifyUrl}
-              onChange={(event) => setSpotifyUrl(event.target.value)}
-              disabled={!canEdit || saving}
-              placeholder="https://"
-              className="filmwave-backend-input"
-            />
-          </label>
-
-          <label className="block">
-            <FieldLabel>YouTube</FieldLabel>
-            <input
-              type="url"
-              value={youtubeUrl}
-              onChange={(event) => setYoutubeUrl(event.target.value)}
-              disabled={!canEdit || saving}
-              placeholder="https://"
-              className="filmwave-backend-input"
-            />
-          </label>
-        </div>
-      </div>
-
-      <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] px-5 py-4">
+    <form onSubmit={handleSubmit} className="grid gap-4">
+      <div className="flex min-h-10 flex-wrap items-center justify-between gap-3">
         <div className="min-h-5 text-xs">
           {error ? (
             <span className="text-[var(--status-error)]">{error}</span>
@@ -350,6 +176,192 @@ export default function ArtistProfileEditor({
           </button>
         ) : null}
       </div>
+
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Images</h2>
+        </div>
+
+        <div className="divide-y divide-[var(--border-subtle)]">
+          <div className="flex min-h-[88px] flex-wrap items-center gap-4 px-5 py-4">
+            <div
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+              style={
+                artist.profile_image_url
+                  ? { backgroundImage: `url(${artist.profile_image_url})` }
+                  : undefined
+              }
+            />
+            <div className="min-w-0 flex-1 text-xs font-medium text-[var(--text-primary)]">
+              Profile image
+            </div>
+            {canEdit ? (
+              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0">
+                {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={Boolean(uploadingImage)}
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = "";
+                    if (file) void uploadArtistImage("profile", file);
+                  }}
+                />
+              </label>
+            ) : null}
+          </div>
+
+          <div className="flex min-h-[88px] flex-wrap items-center gap-4 px-5 py-4">
+            <div
+              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+              style={
+                artist.hero_image_url
+                  ? { backgroundImage: `url(${artist.hero_image_url})` }
+                  : undefined
+              }
+            />
+            <div className="min-w-0 flex-1 text-xs font-medium text-[var(--text-primary)]">
+              Hero image
+            </div>
+            {canEdit ? (
+              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0">
+                {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={Boolean(uploadingImage)}
+                  className="hidden"
+                  onChange={(event) => {
+                    const file = event.target.files?.[0];
+                    event.target.value = "";
+                    if (file) void uploadArtistImage("hero", file);
+                  }}
+                />
+              </label>
+            ) : null}
+          </div>
+        </div>
+      </section>
+
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Artist profile</h2>
+        </div>
+
+        <div className="grid gap-5 px-5 pb-5">
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block">
+              <FieldLabel>Artist name</FieldLabel>
+              <input
+                type="text"
+                value={name}
+                onChange={(event) => setName(event.target.value)}
+                maxLength={160}
+                disabled={!canEdit || saving}
+                className="filmwave-backend-input"
+              />
+            </label>
+
+            <label className="block">
+              <FieldLabel>Location</FieldLabel>
+              <input
+                type="text"
+                value={location}
+                onChange={(event) => setLocation(event.target.value)}
+                maxLength={160}
+                disabled={!canEdit || saving}
+                placeholder="City, Province / State"
+                className="filmwave-backend-input"
+              />
+            </label>
+          </div>
+
+          <label className="block">
+            <FieldLabel>Artist URL</FieldLabel>
+            <input
+              type="text"
+              value={slug}
+              onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
+              onBlur={() => setSlug((current) => current.replace(/-+$/g, ""))}
+              maxLength={80}
+              disabled={!canEdit || saving}
+              className="filmwave-backend-input"
+            />
+            <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
+              /artists/{displayedSlug || "artist"}
+            </div>
+            {slugChanged ? (
+              <div className="mt-1 text-[11px] leading-5 text-[var(--status-warning)]">
+                Changing this will change your public artist URL. The previous URL will be kept so old links can redirect when public artist pages launch.
+              </div>
+            ) : null}
+          </label>
+
+          <label className="block">
+            <FieldLabel>Bio</FieldLabel>
+            <textarea
+              value={bio}
+              onChange={(event) => setBio(event.target.value)}
+              maxLength={1200}
+              disabled={!canEdit || saving}
+              rows={6}
+              className="filmwave-backend-textarea"
+            />
+          </label>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block">
+              <FieldLabel>Website</FieldLabel>
+              <input
+                type="url"
+                value={websiteUrl}
+                onChange={(event) => setWebsiteUrl(event.target.value)}
+                disabled={!canEdit || saving}
+                placeholder="https://"
+                className="filmwave-backend-input"
+              />
+            </label>
+
+            <label className="block">
+              <FieldLabel>Instagram</FieldLabel>
+              <input
+                type="url"
+                value={instagramUrl}
+                onChange={(event) => setInstagramUrl(event.target.value)}
+                disabled={!canEdit || saving}
+                placeholder="https://"
+                className="filmwave-backend-input"
+              />
+            </label>
+
+            <label className="block">
+              <FieldLabel>Spotify</FieldLabel>
+              <input
+                type="url"
+                value={spotifyUrl}
+                onChange={(event) => setSpotifyUrl(event.target.value)}
+                disabled={!canEdit || saving}
+                placeholder="https://"
+                className="filmwave-backend-input"
+              />
+            </label>
+
+            <label className="block">
+              <FieldLabel>YouTube</FieldLabel>
+              <input
+                type="url"
+                value={youtubeUrl}
+                onChange={(event) => setYoutubeUrl(event.target.value)}
+                disabled={!canEdit || saving}
+                placeholder="https://"
+                className="filmwave-backend-input"
+              />
+            </label>
+          </div>
+        </div>
+      </section>
     </form>
   );
 }

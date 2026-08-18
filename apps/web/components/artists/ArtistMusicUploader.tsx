@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 
 import ArtistSongEditor from "@/components/artists/ArtistSongEditor";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
+import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -230,94 +231,115 @@ export default function ArtistMusicUploader({
           </div>
         ) : null}
 
-        <div className="divide-y divide-[var(--border-subtle)]">
-          {loadState === "loading" ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              Loading music...
-            </div>
-          ) : null}
-
-          {loadState === "error" && songs.length === 0 ? (
-            <div className="flex items-center justify-between gap-3 px-5 py-5 text-xs">
-              <span className="text-[var(--text-muted)]">
-                {loadError || "Music could not be loaded."}
-              </span>
-              <button
-                type="button"
-                onClick={() => setLoadRequestKey((current) => current + 1)}
-                className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0"
-              >
-                Try again
-              </button>
-            </div>
-          ) : null}
-
-          {loadState === "ready" && songs.length === 0 ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              No tracks uploaded yet.
-            </div>
-          ) : null}
-
-          {songs.map((song) => {
-            const editable =
-              song.status === "draft" || song.status === "changes_requested";
-            const submitting = submittingSongId === song.id;
-
-            return (
-              <div
-                key={song.id}
-                className="grid min-h-[72px] gap-3 px-5 py-3 sm:grid-cols-[minmax(0,1fr)_90px_120px_110px_auto] sm:items-center"
-              >
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                    {song.title}
-                  </div>
-                  <div className="mt-1 text-[11px] text-[var(--text-muted)] sm:hidden">
-                    {formatDate(song.created_at)}
-                  </div>
-                </div>
-                <div className="text-xs text-[var(--text-muted)]">
-                  {formatDuration(Number(song.duration))}
-                </div>
-                <div className="hidden text-xs text-[var(--text-muted)] sm:block">
-                  {formatDate(song.created_at)}
-                </div>
-                <div>
-                  <span
-                    className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
-                  >
-                    {formatStatus(song.status)}
-                  </span>
-                </div>
-                <div className="flex flex-wrap justify-end gap-2">
-                  {editable ? (
-                    <button
-                      type="button"
-                      disabled={Boolean(submittingSongId)}
-                      onClick={() => setEditingSongId(song.id)}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                    >
-                      Edit details
-                    </button>
-                  ) : null}
-                  {editable && canSubmit ? (
-                    <button
-                      type="button"
-                      disabled={Boolean(submittingSongId)}
-                      onClick={() => void handleSubmitForReview(song.id)}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-primary"
-                    >
-                      {submitting
-                        ? "Submitting..."
-                        : song.status === "changes_requested"
-                          ? "Resubmit"
-                          : "Submit for review"}
-                    </button>
-                  ) : null}
-                </div>
+        <div className="overflow-x-auto overflow-y-hidden">
+          <div className="min-w-[900px]">
+            {loadState === "loading" ? (
+              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                Loading music...
               </div>
-            );
-          })}
+            ) : null}
+
+            {loadState === "error" && songs.length === 0 ? (
+              <div className="flex min-h-[180px] items-center justify-center gap-3 px-5 text-xs">
+                <span className="text-[var(--text-muted)]">
+                  {loadError || "Music could not be loaded."}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setLoadRequestKey((current) => current + 1)}
+                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0"
+                >
+                  Try again
+                </button>
+              </div>
+            ) : null}
+
+            {loadState === "ready" && songs.length === 0 ? (
+              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                No tracks uploaded yet.
+              </div>
+            ) : null}
+
+            {songs.length > 0 ? (
+              <div className="border-t border-[var(--border-subtle)]">
+                {songs.map((song, index) => {
+                  const editable =
+                    song.status === "draft" || song.status === "changes_requested";
+                  const submitting = submittingSongId === song.id;
+
+                  return (
+                    <div
+                      key={song.id}
+                      className="grid min-h-[72px] grid-cols-[60px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(132px,160px)_64px_96px_minmax(210px,auto)] items-center gap-4 px-5 text-xs"
+                      style={{
+                        borderBottom:
+                          index === songs.length - 1
+                            ? "none"
+                            : "1px solid var(--border-subtle)",
+                      }}
+                    >
+                      <div className="flex items-center">
+                        <div className="flex h-[52px] w-[52px] items-center justify-center bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+                          <AudioFileIcon size={16} />
+                        </div>
+                      </div>
+
+                      <div className="min-w-0 truncate font-medium leading-tight text-[var(--text-primary)]">
+                        {song.title}
+                      </div>
+
+                      <div className="min-w-0 truncate text-[var(--text-subtle)]">
+                        {artist.name}
+                      </div>
+
+                      <div>
+                        <span
+                          className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
+                        >
+                          {formatStatus(song.status)}
+                        </span>
+                      </div>
+
+                      <div className="text-[var(--text-secondary)]">
+                        {formatDuration(Number(song.duration))}
+                      </div>
+
+                      <div className="text-[var(--text-secondary)]">
+                        {formatDate(song.created_at)}
+                      </div>
+
+                      <div className="flex flex-wrap justify-end gap-2">
+                        {editable ? (
+                          <button
+                            type="button"
+                            disabled={Boolean(submittingSongId)}
+                            onClick={() => setEditingSongId(song.id)}
+                            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                          >
+                            Edit details
+                          </button>
+                        ) : null}
+                        {editable && canSubmit ? (
+                          <button
+                            type="button"
+                            disabled={Boolean(submittingSongId)}
+                            onClick={() => void handleSubmitForReview(song.id)}
+                            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-primary"
+                          >
+                            {submitting
+                              ? "Submitting..."
+                              : song.status === "changes_requested"
+                                ? "Resubmit"
+                                : "Submit for review"}
+                          </button>
+                        ) : null}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            ) : null}
+          </div>
         </div>
       </section>
     </div>

@@ -121,6 +121,16 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
 
   return (
     <div className="grid gap-4">
+      {artist.hero_image_url ? (
+        <div className="h-[210px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
+          <img
+            src={artist.hero_image_url}
+            alt={`${artist.name} hero`}
+            className="h-full w-full object-cover"
+          />
+        </div>
+      ) : null}
+
       <section className="grid gap-2 sm:grid-cols-3">
         {stats.map((stat) => (
           <div
@@ -133,39 +143,6 @@ function Overview({ artist }: { artist: ArtistDashboardProfile }) {
             </span>
           </div>
         ))}
-      </section>
-
-      <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header-bordered">
-          <h2 className="filmwave-backend-section-title">Artist workspace</h2>
-        </div>
-
-        <div>
-          <div className="flex items-center justify-between gap-4 px-5 py-4">
-            <div className="text-sm font-medium text-[var(--text-primary)]">Profile</div>
-            <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              Ready
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
-            <div className="text-sm font-medium text-[var(--text-primary)]">Music</div>
-            <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              Ready
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
-            <div className="text-sm font-medium text-[var(--text-primary)]">Releases</div>
-            <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              Ready
-            </span>
-          </div>
-          <div className="flex items-center justify-between gap-4 border-t border-[var(--border-subtle)] px-5 py-4">
-            <div className="text-sm font-medium text-[var(--text-primary)]">Playlists</div>
-            <span className="shrink-0 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-              Upcoming
-            </span>
-          </div>
-        </div>
       </section>
     </div>
   );
@@ -299,7 +276,10 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         sectionReady ? "" : "invisible"
       }`}
     >
-      <aside className="fixed bottom-0 left-0 top-[56px] z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col">
+      <aside
+        className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col"
+        style={{ top: "var(--filmwave-header-height)", bottom: "0px" }}
+      >
         <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
           <div className="border-b border-[var(--border)] pb-8">
             <ArtistSectionHeading>Artist</ArtistSectionHeading>
