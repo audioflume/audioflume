@@ -21,9 +21,6 @@ type ArtistImageResponse = {
   error?: string;
 };
 
-const inputClassName =
-  "h-9 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60";
-
 function FieldLabel({ children }: { children: string }) {
   return (
     <span className="mb-2 block text-[11px] font-medium text-[var(--text-secondary)]">
@@ -155,17 +152,12 @@ export default function ArtistProfileEditor({
   const displayedSlug = slug.replace(/-+$/g, "");
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]"
-    >
-      <div className="border-b border-[var(--border-subtle)] px-5 py-4">
-        <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-          Artist profile
-        </h2>
+    <form onSubmit={handleSubmit} className="filmwave-backend-section">
+      <div className="filmwave-backend-section-header">
+        <h2 className="filmwave-backend-section-title">Artist profile</h2>
       </div>
 
-      <div className="grid gap-5 p-5">
+      <div className="grid gap-5 px-5 pb-5">
         <section className="grid gap-4 md:grid-cols-[220px_minmax(0,1fr)]">
           <div>
             <FieldLabel>Profile image</FieldLabel>
@@ -178,7 +170,7 @@ export default function ArtistProfileEditor({
               }
             />
             {canEdit ? (
-              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
+              <label className="filmwave-backend-button filmwave-backend-button-secondary mt-2 w-fit">
                 {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
                 <input
                   type="file"
@@ -206,7 +198,7 @@ export default function ArtistProfileEditor({
               }
             />
             {canEdit ? (
-              <label className="mt-2 inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]">
+              <label className="filmwave-backend-button filmwave-backend-button-secondary mt-2 w-fit">
                 {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
                 <input
                   type="file"
@@ -233,7 +225,7 @@ export default function ArtistProfileEditor({
               onChange={(event) => setName(event.target.value)}
               maxLength={160}
               disabled={!canEdit || saving}
-              className={inputClassName}
+              className="filmwave-backend-input"
             />
           </label>
 
@@ -246,7 +238,7 @@ export default function ArtistProfileEditor({
               maxLength={160}
               disabled={!canEdit || saving}
               placeholder="City, Province / State"
-              className={inputClassName}
+              className="filmwave-backend-input"
             />
           </label>
         </div>
@@ -260,7 +252,7 @@ export default function ArtistProfileEditor({
             onBlur={() => setSlug((current) => current.replace(/-+$/g, ""))}
             maxLength={80}
             disabled={!canEdit || saving}
-            className={inputClassName}
+            className="filmwave-backend-input"
           />
           <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
             /artists/{displayedSlug || "artist"}
@@ -280,7 +272,7 @@ export default function ArtistProfileEditor({
             maxLength={1200}
             disabled={!canEdit || saving}
             rows={6}
-            className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="filmwave-backend-textarea"
           />
         </label>
 
@@ -293,7 +285,7 @@ export default function ArtistProfileEditor({
               onChange={(event) => setWebsiteUrl(event.target.value)}
               disabled={!canEdit || saving}
               placeholder="https://"
-              className={inputClassName}
+              className="filmwave-backend-input"
             />
           </label>
 
@@ -305,7 +297,7 @@ export default function ArtistProfileEditor({
               onChange={(event) => setInstagramUrl(event.target.value)}
               disabled={!canEdit || saving}
               placeholder="https://"
-              className={inputClassName}
+              className="filmwave-backend-input"
             />
           </label>
 
@@ -317,7 +309,7 @@ export default function ArtistProfileEditor({
               onChange={(event) => setSpotifyUrl(event.target.value)}
               disabled={!canEdit || saving}
               placeholder="https://"
-              className={inputClassName}
+              className="filmwave-backend-input"
             />
           </label>
 
@@ -329,7 +321,7 @@ export default function ArtistProfileEditor({
               onChange={(event) => setYoutubeUrl(event.target.value)}
               disabled={!canEdit || saving}
               placeholder="https://"
-              className={inputClassName}
+              className="filmwave-backend-input"
             />
           </label>
         </div>
@@ -352,7 +344,7 @@ export default function ArtistProfileEditor({
           <button
             type="submit"
             disabled={saving || !name.trim() || !displayedSlug}
-            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+            className="filmwave-backend-button filmwave-backend-button-primary"
           >
             {saving ? "Saving..." : "Save profile"}
           </button>
