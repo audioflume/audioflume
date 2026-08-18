@@ -75,7 +75,7 @@ function formatDuration(value: number) {
 
 function ReleaseStatusBadge({ status }: { status: string }) {
   return (
-    <span className="inline-flex h-7 items-center rounded-full bg-[var(--bg-tertiary)] px-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-secondary)]">
+    <span className="filmwave-backend-status-badge bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
       {formatStatus(status)}
     </span>
   );
@@ -210,11 +210,9 @@ export default function ArtistReleaseManager({
 
   return (
     <div className="grid gap-4">
-      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Create release
-          </h2>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Create release</h2>
         </div>
 
         <form onSubmit={handleCreate}>
@@ -230,7 +228,7 @@ export default function ArtistReleaseManager({
                 maxLength={180}
                 disabled={!canManage || creating}
                 placeholder="Release title"
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:opacity-60"
+                className="filmwave-backend-input"
               />
             </label>
 
@@ -242,7 +240,7 @@ export default function ArtistReleaseManager({
                 value={createType}
                 onChange={(event) => setCreateType(event.target.value as ReleaseType)}
                 disabled={!canManage || creating}
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none disabled:opacity-60"
+                className="filmwave-backend-select"
               >
                 {RELEASE_TYPES.map((type) => (
                   <option key={type.value} value={type.value}>
@@ -261,7 +259,7 @@ export default function ArtistReleaseManager({
                 value={createDate}
                 onChange={(event) => setCreateDate(event.target.value)}
                 disabled={!canManage || creating}
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none disabled:opacity-60"
+                className="filmwave-backend-input"
               />
             </label>
           </div>
@@ -283,7 +281,7 @@ export default function ArtistReleaseManager({
               <button
                 type="submit"
                 disabled={creating || !createTitle.trim()}
-                className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+                className="filmwave-backend-button filmwave-backend-button-primary"
               >
                 {creating ? "Creating..." : "Create release"}
               </button>
@@ -292,11 +290,9 @@ export default function ArtistReleaseManager({
         </form>
       </section>
 
-      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Releases
-          </h2>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Releases</h2>
         </div>
 
         <div className="divide-y divide-[var(--border-subtle)]">
@@ -350,7 +346,7 @@ export default function ArtistReleaseManager({
                 <button
                   type="button"
                   onClick={() => setSelectedReleaseId(release.id)}
-                  className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                 >
                   {canManage ? "Edit" : "View"}
                 </button>
@@ -524,18 +520,16 @@ function ReleaseEditor({
           type="button"
           onClick={onBack}
           disabled={saving || uploadingArtwork}
-          className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
+          className="filmwave-backend-button filmwave-backend-button-secondary"
         >
           Back to Releases
         </button>
         <ReleaseStatusBadge status={release.status} />
       </div>
 
-      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Release details
-          </h2>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Release details</h2>
         </div>
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
@@ -565,7 +559,7 @@ function ReleaseEditor({
                   type="button"
                   onClick={() => void uploadArtwork()}
                   disabled={!artworkFile || uploadingArtwork}
-                  className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
+                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                 >
                   {uploadingArtwork ? "Uploading..." : "Upload artwork"}
                 </button>
@@ -584,7 +578,7 @@ function ReleaseEditor({
                 onChange={(event) => setTitle(event.target.value)}
                 maxLength={180}
                 disabled={!canManage || saving}
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)] disabled:opacity-60"
+                className="filmwave-backend-input"
               />
             </label>
 
@@ -596,7 +590,7 @@ function ReleaseEditor({
                 value={releaseType}
                 onChange={(event) => setReleaseType(event.target.value as ReleaseType)}
                 disabled={!canManage || saving}
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none disabled:opacity-60"
+                className="filmwave-backend-select"
               >
                 {RELEASE_TYPES.map((type) => (
                   <option key={type.value} value={type.value}>
@@ -615,18 +609,16 @@ function ReleaseEditor({
                 value={releaseDate}
                 onChange={(event) => setReleaseDate(event.target.value)}
                 disabled={!canManage || saving}
-                className="h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none disabled:opacity-60"
+                className="filmwave-backend-input"
               />
             </label>
           </div>
         </div>
       </section>
 
-      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="border-b border-[var(--border-subtle)] px-5 py-4">
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-            Track order
-          </h2>
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header-bordered">
+          <h2 className="filmwave-backend-section-title">Track order</h2>
         </div>
 
         {canManage ? (
@@ -638,7 +630,7 @@ function ReleaseEditor({
                 availableSongs.length === 0 ||
                 (releaseType === "single" && trackIds.length >= 1)
               }
-              className="h-9 min-w-[240px] flex-1 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none disabled:opacity-50"
+              className="filmwave-backend-select min-w-[240px] flex-1"
             >
               <option value="">Select a track</option>
               {availableSongs.map((song) => (
@@ -651,7 +643,7 @@ function ReleaseEditor({
               type="button"
               onClick={addTrack}
               disabled={!songToAdd}
-              className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-40"
+              className="filmwave-backend-button filmwave-backend-button-secondary"
             >
               Add track
             </button>
@@ -689,7 +681,7 @@ function ReleaseEditor({
                       type="button"
                       onClick={() => moveTrack(index, -1)}
                       disabled={index === 0}
-                      className="inline-flex h-8 min-w-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-xs text-[var(--text-secondary)] disabled:opacity-30"
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
                     >
                       ↑
                     </button>
@@ -697,14 +689,14 @@ function ReleaseEditor({
                       type="button"
                       onClick={() => moveTrack(index, 1)}
                       disabled={index === orderedTracks.length - 1}
-                      className="inline-flex h-8 min-w-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-xs text-[var(--text-secondary)] disabled:opacity-30"
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
                     >
                       ↓
                     </button>
                     <button
                       type="button"
                       onClick={() => removeTrack(song.id)}
-                      className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]"
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary hover:!bg-[var(--danger-hover)] hover:!text-[var(--danger)]"
                     >
                       Remove
                     </button>
@@ -716,7 +708,7 @@ function ReleaseEditor({
         </div>
       </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-5 py-4">
+      <div className="filmwave-backend-section flex flex-wrap items-center justify-between gap-3 px-5 py-4">
         <div className="min-h-5 text-xs">
           {error ? (
             <span className="text-[var(--danger)]">{error}</span>
@@ -729,7 +721,7 @@ function ReleaseEditor({
             type="button"
             onClick={onBack}
             disabled={saving || uploadingArtwork}
-            className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
+            className="filmwave-backend-button filmwave-backend-button-secondary"
           >
             Back to Releases
           </button>
@@ -737,7 +729,7 @@ function ReleaseEditor({
             <button
               type="submit"
               disabled={saving || !title.trim()}
-              className="inline-flex h-9 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40"
+              className="filmwave-backend-button filmwave-backend-button-primary"
             >
               {saving ? "Saving..." : "Save release"}
             </button>
