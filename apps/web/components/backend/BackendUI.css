@@ -231,3 +231,35 @@
   letter-spacing: 0.05em;
   text-transform: uppercase;
 }
+
+/* Backend footers stay at the viewport bottom when page content is short. */
+main:has(> aside[class*="admin-sidebar-width"]) > section:has(footer) {
+  box-sizing: border-box;
+  display: flex;
+  min-height: calc(100vh - var(--filmwave-header-height, 56px));
+  flex-direction: column;
+}
+
+main:has(> aside[class*="admin-sidebar-width"])
+  > section:has(footer)
+  > div {
+  display: flex;
+  width: 100%;
+  flex: 1 1 auto;
+  flex-direction: column;
+}
+
+main:has(> aside[class*="admin-sidebar-width"])
+  > section:has(footer)
+  > div
+  > footer {
+  margin-top: auto;
+}
+
+main:has(> aside[class*="admin-sidebar-width"])
+  > section:has(footer)
+  > div
+  > div:has(> footer) {
+  margin-top: auto;
+  padding-top: 64px;
+}
