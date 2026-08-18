@@ -180,7 +180,7 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
           justify-content: center;
           overflow: hidden;
           border: 1px solid color-mix(in srgb, var(--text-primary) 14%, transparent);
-          border-radius: 14px;
+          border-radius: 0;
           background: var(--bg-secondary);
           color: var(--text-secondary);
           font-family: var(--font-aktiv-grotesk);
@@ -294,7 +294,7 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
           position: relative;
           aspect-ratio: 1;
           overflow: hidden;
-          border-radius: 14px;
+          border-radius: 0;
           background: var(--bg-secondary);
         }
 
@@ -392,7 +392,7 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
             width: 86px;
             height: 86px;
             flex-basis: 86px;
-            border-radius: 12px;
+            border-radius: 0;
             font-size: 28px;
           }
 
