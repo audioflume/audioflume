@@ -39,6 +39,7 @@ type FooterProps = {
   className?: string;
   playerPadding?: boolean;
   showTopBorder?: boolean;
+  pageGutter?: boolean;
 };
 
 function InstagramIcon() {
@@ -68,6 +69,7 @@ export default function Footer({
   className = "",
   playerPadding = true,
   showTopBorder = true,
+  pageGutter = true,
 }: FooterProps) {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
@@ -81,7 +83,7 @@ export default function Footer({
   const isPlaylistDetailPage = /^\/playlists\/[^/]+/.test(pathname);
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const removePageGutter =
-    isMusicPage || isProjectDetailPage || isCommunityPlaylistsPage;
+    !pageGutter || isMusicPage || isProjectDetailPage || isCommunityPlaylistsPage;
 
   useEffect(() => {
     if (!isMusicPage) {
