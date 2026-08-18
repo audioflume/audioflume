@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
+import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
 import Footer from "@/components/Footer";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -228,6 +229,24 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     );
   }
 
+  function handleReleaseCreated() {
+    if (!activeArtist) return;
+
+    setDashboardProfiles((current) =>
+      current.map((profile) =>
+        profile.id === activeArtist.id
+          ? {
+              ...profile,
+              stats: {
+                ...profile.stats,
+                releases: profile.stats.releases + 1,
+              },
+            }
+          : profile,
+      ),
+    );
+  }
+
   if (!activeArtist) {
     return (
       <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-8 xl:px-10">
@@ -352,6 +371,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                 key={musicViewVersion}
                 artist={activeArtist}
                 onUploaded={handleSongUploaded}
+              />
+            ) : activeSection === "releases" ? (
+              <ArtistReleaseManager
+                artist={activeArtist}
+                onReleaseCreated={handleReleaseCreated}
               />
             ) : (
               <PlaceholderSection section={activeSection} />
