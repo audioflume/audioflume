@@ -687,7 +687,7 @@ export default function AdminMusicReviewPage() {
             </div>
           </section>
 
-          <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+          <div className="overflow-x-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
             <div className="grid min-w-[900px] grid-cols-[minmax(220px,1.4fr)_minmax(160px,1fr)_100px_130px_170px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
               <span>Track</span>
               <span>Artist</span>
