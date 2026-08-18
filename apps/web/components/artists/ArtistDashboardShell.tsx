@@ -135,7 +135,7 @@ function ArtistNavButton({
 
 function Overview({ artist }: { artist: ArtistDashboardProfile }) {
   const stats = [
-    { label: "Tracks", value: artist.stats.tracks },
+    { label: "Approved Tracks", value: artist.stats.tracks },
     { label: "Releases", value: artist.stats.releases },
     { label: "Playlists", value: artist.stats.playlists },
   ];
@@ -246,21 +246,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   }
 
   function handleSongUploaded() {
-    if (!activeArtist) return;
-
-    setDashboardProfiles((current) =>
-      current.map((profile) =>
-        profile.id === activeArtist.id
-          ? {
-              ...profile,
-              stats: {
-                ...profile.stats,
-                tracks: profile.stats.tracks + 1,
-              },
-            }
-          : profile,
-      ),
-    );
+    // New uploads are not approved yet, so the approved-track stat does not change here.
   }
 
   function handleReleaseCreated() {

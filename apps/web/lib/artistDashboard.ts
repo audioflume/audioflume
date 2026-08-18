@@ -59,7 +59,7 @@ export async function getArtistDashboardProfiles(
         .in("id", artistIds),
       supabaseServer
         .from("song_artists")
-        .select("artist_id")
+        .select("artist_id, song_id")
         .in("artist_id", artistIds)
         .eq("role", "primary"),
       supabaseServer
@@ -78,10 +78,54 @@ export async function getArtistDashboardProfiles(
   if (releasesResult.error) throw releasesResult.error;
   if (playlistsResult.error) throw playlistsResult.error;
 
+  const primaryTrackRows = tracksResult.data ?? [];
+  const primaryTrackSongIds = Array.from(
+    new Set(
+      primaryTrackRows
+        .map((row) => row.song_id)
+        .filter((songId): songId is string => typeof songId === "string"),
+    ),
+  );
+
+  const approvedSongIds = new Set<string>();
+
+  if (primaryTrackSongIds.length > 0) {
+    const { data: approvedSongs, error: approvedSongsError } =
+      await supabaseServer
+        .from("songs")
+        .select("id")
+        .in("id", primaryTrackSongIds)
+        .in("status", ["approved", "published"]);
+
+    if (approvedSongsError) throw approvedSongsError;
+
+    for (const song of approvedSongs ?? []) {
+      if (typeof song.id === "string") approvedSongIds.add(song.id);
+    }
+  }
+
+  const approvedTrackCounts = new Map<string, number>();
+  for (const row of primaryTrackRows) {
+    if (!row || typeof row !== "object") continue;
+    const artistId = row.artist_id;
+    const songId = row.song_id;
+    if (
+      typeof artistId !== "string" ||
+      typeof songId !== "string" ||
+      !approvedSongIds.has(songId)
+    ) {
+      continue;
+    }
+
+    approvedTrackCounts.set(
+      artistId,
+      (approvedTrackCounts.get(artistId) ?? 0) + 1,
+    );
+  }
+
   const artistById = new Map(
     (artistsResult.data ?? []).map((artist) => [artist.id, artist]),
   );
-  const trackCounts = countByArtist(tracksResult.data ?? [], "artist_id");
   const releaseCounts = countByArtist(releasesResult.data ?? [], "artist_id");
   const playlistCounts = countByArtist(playlistsResult.data ?? [], "artist_id");
 
@@ -116,7 +160,7 @@ export async function getArtistDashboardProfiles(
         role: membership.role,
         permissions: getArtistPermissions(membership.role),
         stats: {
-          tracks: trackCounts.get(artist.id) ?? 0,
+          tracks: approvedTrackCounts.get(artist.id) ?? 0,
           releases: releaseCounts.get(artist.id) ?? 0,
           playlists: playlistCounts.get(artist.id) ?? 0,
         },
