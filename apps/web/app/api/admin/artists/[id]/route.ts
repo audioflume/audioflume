@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
+import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
@@ -20,6 +21,39 @@ function normalizeArtistStatus(value: unknown): ArtistStatus | null {
   return ARTIST_STATUSES.includes(value as ArtistStatus)
     ? (value as ArtistStatus)
     : null;
+}
+
+function getArtistStatusNotification(status: ArtistStatus, artistName: string) {
+  if (status === "approved") {
+    return {
+      kind: "artist_approved",
+      title: `${artistName} was approved`,
+      message:
+        "Your artist profile is approved. You can now manage and submit catalogue music.",
+    };
+  }
+
+  if (status === "rejected") {
+    return {
+      kind: "artist_rejected",
+      title: `${artistName} needs changes`,
+      message: "Your artist profile needs changes before it can be approved.",
+    };
+  }
+
+  if (status === "suspended") {
+    return {
+      kind: "artist_suspended",
+      title: `${artistName} was suspended`,
+      message: "Your artist profile has been suspended.",
+    };
+  }
+
+  return {
+    kind: "artist_pending",
+    title: `${artistName} is pending review`,
+    message: "Your artist profile has been returned to pending review.",
+  };
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
@@ -42,7 +76,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     const { id } = await context.params;
     const { data: existingArtist, error: existingError } = await supabaseServer
       .from("artists")
-      .select("id, approved_at, approved_by_clerk_user_id")
+      .select("id, name, status, approved_at, approved_by_clerk_user_id")
       .eq("id", id)
       .maybeSingle();
 
@@ -76,6 +110,20 @@ export async function PATCH(request: Request, context: RouteContext) {
       .single();
 
     if (updateError) throw updateError;
+
+    if (existingArtist.status !== status) {
+      const notification = getArtistStatusNotification(status, artist.name);
+
+      try {
+        await createArtistNotificationForMembers({
+          artistId: id,
+          ...notification,
+          actionUrl: `/artists/dashboard?section=overview&artist=${id}`,
+        });
+      } catch (notificationError) {
+        console.error("Failed to create artist status notification:", notificationError);
+      }
+    }
 
     return NextResponse.json({ artist });
   } catch (error) {

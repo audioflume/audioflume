@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
+import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -58,6 +59,42 @@ function isReviewAction(value: unknown): value is ReviewAction {
     value === "approve" ||
     value === "publish"
   );
+}
+
+function getTrackReviewNotification(
+  action: ReviewAction,
+  trackTitle: string,
+  notes: string,
+) {
+  if (action === "request_changes") {
+    return {
+      kind: "track_changes_requested",
+      title: `Changes requested: ${trackTitle}`,
+      message: notes,
+    };
+  }
+
+  if (action === "reject") {
+    return {
+      kind: "track_rejected",
+      title: `Track rejected: ${trackTitle}`,
+      message: notes || "This track was not approved. Review it before submitting again.",
+    };
+  }
+
+  if (action === "approve") {
+    return {
+      kind: "track_approved",
+      title: `Track approved: ${trackTitle}`,
+      message: "This track has been approved and is ready to publish.",
+    };
+  }
+
+  return {
+    kind: "track_published",
+    title: `Track published: ${trackTitle}`,
+    message: "This track is now live in the Audioflume music library.",
+  };
 }
 
 async function getPrimaryArtist(songId: string) {
@@ -270,6 +307,22 @@ export async function PATCH(request: Request, context: RouteContext) {
         .eq("id", songId)
         .eq("status", config.to);
       throw reviewError;
+    }
+
+    const notification = getTrackReviewNotification(
+      action,
+      updatedSong.title,
+      notes,
+    );
+
+    try {
+      await createArtistNotificationForMembers({
+        artistId: artist.id,
+        ...notification,
+        actionUrl: `/artists/dashboard?section=music&artist=${artist.id}`,
+      });
+    } catch (notificationError) {
+      console.error("Failed to create track review notification:", notificationError);
     }
 
     return NextResponse.json({

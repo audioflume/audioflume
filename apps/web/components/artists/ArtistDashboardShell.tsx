@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
+import ArtistNotifications from "@/components/artists/ArtistNotifications";
 import ArtistPlaylistManager from "@/components/artists/ArtistPlaylistManager";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
@@ -19,6 +20,7 @@ type ArtistDashboardSection =
   | "music"
   | "releases"
   | "playlists"
+  | "notifications"
   | "analytics"
   | "team";
 
@@ -40,6 +42,7 @@ const NAV_ITEMS: { section: ArtistDashboardSection; label: string }[] = [
   { section: "music", label: "Music" },
   { section: "releases", label: "Releases" },
   { section: "playlists", label: "Playlists" },
+  { section: "notifications", label: "Notifications" },
   { section: "analytics", label: "Analytics" },
   { section: "team", label: "Team" },
 ];
@@ -57,6 +60,7 @@ const NAV_GROUPS: ArtistNavGroup[] = [
   {
     title: "Workspace",
     items: [
+      { section: "notifications", label: "Notifications" },
       { section: "analytics", label: "Analytics" },
       { section: "team", label: "Team" },
     ],
@@ -475,6 +479,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               key={`${activeArtist.id}-playlists-${sectionViewVersion}`}
               artist={activeArtist}
               onPlaylistCreated={handlePlaylistCreated}
+            />
+          ) : activeSection === "notifications" ? (
+            <ArtistNotifications
+              key={`${activeArtist.id}-notifications-${sectionViewVersion}`}
+              artistId={activeArtist.id}
             />
           ) : (
             <PlaceholderSection
