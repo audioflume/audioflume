@@ -2,6 +2,7 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
+import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ReleaseType = "single" | "ep" | "album";
@@ -191,20 +192,28 @@ export default function ArtistReleaseManager({
 
   if (selectedRelease) {
     return (
-      <ReleaseEditor
-        artist={artist}
-        canManage={canManage}
-        release={selectedRelease}
-        songs={songs}
-        onBack={() => setSelectedReleaseId("")}
-        onUpdated={(updatedRelease) =>
-          setReleases((current) =>
-            current.map((release) =>
-              release.id === updatedRelease.id ? updatedRelease : release,
-            ),
-          )
-        }
-      />
+      <div className="grid gap-4">
+        <ReleaseEditor
+          artist={artist}
+          canManage={canManage}
+          release={selectedRelease}
+          songs={songs}
+          onBack={() => setSelectedReleaseId("")}
+          onUpdated={(updatedRelease) =>
+            setReleases((current) =>
+              current.map((release) =>
+                release.id === updatedRelease.id ? updatedRelease : release,
+              ),
+            )
+          }
+        />
+        <ArtistCollaboratorsEditor
+          artistId={artist.id}
+          resourceType="release"
+          resourceId={selectedRelease.id}
+          canEdit={canManage}
+        />
+      </div>
     );
   }
 
