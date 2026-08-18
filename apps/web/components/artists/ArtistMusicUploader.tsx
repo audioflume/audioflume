@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 
+import ArtistSongAudioReplacement from "@/components/artists/ArtistSongAudioReplacement";
 import ArtistSongEditorWithCollaborators from "@/components/artists/ArtistSongEditorWithCollaborators";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
 import AudioFileIcon from "@/components/icons/AudioFileIcon";
@@ -70,13 +71,18 @@ export default function ArtistMusicUploader({
   const canUpload =
     artist.status === "approved" &&
     artist.permissions.includes("catalog:upload");
+  const canEdit =
+    artist.status === "approved" &&
+    artist.permissions.includes("catalog:edit");
   const canSubmit =
     artist.status === "approved" &&
     artist.permissions.includes("catalog:submit");
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
   const [creatingSong, setCreatingSong] = useState(false);
   const [editingSongId, setEditingSongId] = useState("");
+  const [replacingSongId, setReplacingSongId] = useState("");
   const [submittingSongId, setSubmittingSongId] = useState("");
+  const [catalogActionSongId, setCatalogActionSongId] = useState("");
   const [catalogMessage, setCatalogMessage] = useState("");
   const [catalogError, setCatalogError] = useState("");
   const [loadError, setLoadError] = useState("");
@@ -90,7 +96,9 @@ export default function ArtistMusicUploader({
     setSongs([]);
     setCreatingSong(false);
     setEditingSongId("");
+    setReplacingSongId("");
     setSubmittingSongId("");
+    setCatalogActionSongId("");
     setCatalogMessage("");
     setCatalogError("");
     setLoadError("");
@@ -141,8 +149,26 @@ export default function ArtistMusicUploader({
     );
   }
 
+  function handleAudioReplaced(
+    replacedSong: ArtistSongSummary,
+    resetForReview: boolean,
+  ) {
+    setSongs((current) =>
+      current.map((song) =>
+        song.id === replacedSong.id ? { ...song, ...replacedSong } : song,
+      ),
+    );
+    setReplacingSongId("");
+    setCatalogError("");
+    setCatalogMessage(
+      resetForReview
+        ? "Audio replaced. Track returned to Draft for review."
+        : "Audio replaced.",
+    );
+  }
+
   async function handleSubmitForReview(songId: string) {
-    if (!canSubmit || submittingSongId) return;
+    if (!canSubmit || submittingSongId || catalogActionSongId) return;
 
     try {
       setCatalogError("");
@@ -176,6 +202,57 @@ export default function ArtistMusicUploader({
     }
   }
 
+  async function handleCatalogueAction(
+    songId: string,
+    action: "archive" | "restore",
+  ) {
+    if (!canEdit || submittingSongId || catalogActionSongId) return;
+
+    try {
+      setCatalogError("");
+      setCatalogMessage("");
+      setCatalogActionSongId(songId);
+
+      const response = await fetch(
+        `/api/artists/${artist.id}/songs/${songId}/catalog`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action }),
+        },
+      );
+      const body = (await response.json().catch(() => ({}))) as ArtistSongsResponse;
+
+      if (!response.ok || !body.song) {
+        throw new Error(
+          body.error ||
+            (action === "archive"
+              ? "Failed to archive track"
+              : "Failed to restore track"),
+        );
+      }
+
+      setSongs((current) =>
+        current.map((song) =>
+          song.id === body.song?.id ? { ...song, ...body.song } : song,
+        ),
+      );
+      setCatalogMessage(
+        action === "archive" ? "Track archived." : "Track restored.",
+      );
+    } catch (error) {
+      setCatalogError(
+        error instanceof Error
+          ? error.message
+          : action === "archive"
+            ? "Failed to archive track"
+            : "Failed to restore track",
+      );
+    } finally {
+      setCatalogActionSongId("");
+    }
+  }
+
   if (creatingSong) {
     return (
       <ArtistSongUploadForm
@@ -193,6 +270,18 @@ export default function ArtistMusicUploader({
         songId={editingSongId}
         onClose={() => setEditingSongId("")}
         onSaved={handleSongSaved}
+      />
+    );
+  }
+
+  const replacementSong = songs.find((song) => song.id === replacingSongId);
+  if (replacementSong) {
+    return (
+      <ArtistSongAudioReplacement
+        artist={artist}
+        song={replacementSong}
+        onClose={() => setReplacingSongId("")}
+        onReplaced={handleAudioReplaced}
       />
     );
   }
@@ -234,7 +323,7 @@ export default function ArtistMusicUploader({
         ) : null}
 
         <div className="overflow-x-auto overflow-y-hidden">
-          <div className="min-w-[860px]">
+          <div className="min-w-[1040px]">
             {loadState === "loading" ? (
               <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 Loading music...
@@ -267,12 +356,26 @@ export default function ArtistMusicUploader({
                 {songs.map((song, index) => {
                   const editable =
                     song.status === "draft" || song.status === "changes_requested";
+                  const replaceable =
+                    canEdit &&
+                    song.status !== "processing" &&
+                    song.status !== "submitted" &&
+                    song.status !== "archived";
+                  const archivable =
+                    canEdit &&
+                    song.status !== "processing" &&
+                    song.status !== "archived";
+                  const restorable = canEdit && song.status === "archived";
                   const submitting = submittingSongId === song.id;
+                  const changingCatalogue = catalogActionSongId === song.id;
+                  const actionsBusy = Boolean(
+                    submittingSongId || catalogActionSongId,
+                  );
 
                   return (
                     <div
                       key={song.id}
-                      className="grid min-h-[72px] grid-cols-[60px_minmax(180px,1.5fr)_70px_70px_70px_minmax(210px,auto)_120px] items-center gap-4 px-5 text-xs"
+                      className="grid min-h-[72px] grid-cols-[60px_minmax(180px,1.5fr)_70px_70px_70px_minmax(360px,auto)_120px] items-center gap-4 px-5 text-xs"
                       style={{
                         borderBottom:
                           index === songs.length - 1
@@ -311,17 +414,27 @@ export default function ArtistMusicUploader({
                         {editable ? (
                           <button
                             type="button"
-                            disabled={Boolean(submittingSongId)}
+                            disabled={actionsBusy}
                             onClick={() => setEditingSongId(song.id)}
                             className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                           >
                             Edit details
                           </button>
                         ) : null}
+                        {replaceable ? (
+                          <button
+                            type="button"
+                            disabled={actionsBusy}
+                            onClick={() => setReplacingSongId(song.id)}
+                            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                          >
+                            Replace audio
+                          </button>
+                        ) : null}
                         {editable && canSubmit ? (
                           <button
                             type="button"
-                            disabled={Boolean(submittingSongId)}
+                            disabled={actionsBusy}
                             onClick={() => void handleSubmitForReview(song.id)}
                             className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-primary"
                           >
@@ -330,6 +443,30 @@ export default function ArtistMusicUploader({
                               : song.status === "changes_requested"
                                 ? "Resubmit"
                                 : "Submit for review"}
+                          </button>
+                        ) : null}
+                        {archivable ? (
+                          <button
+                            type="button"
+                            disabled={actionsBusy}
+                            onClick={() =>
+                              void handleCatalogueAction(song.id, "archive")
+                            }
+                            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                          >
+                            {changingCatalogue ? "Archiving..." : "Archive"}
+                          </button>
+                        ) : null}
+                        {restorable ? (
+                          <button
+                            type="button"
+                            disabled={actionsBusy}
+                            onClick={() =>
+                              void handleCatalogueAction(song.id, "restore")
+                            }
+                            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                          >
+                            {changingCatalogue ? "Restoring..." : "Restore"}
                           </button>
                         ) : null}
                       </div>
