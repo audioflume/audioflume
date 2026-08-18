@@ -92,7 +92,8 @@ export async function GET(_request: Request, context: RouteContext) {
     const { data: links, error: linksError } = await supabaseServer
       .from("song_artists")
       .select("song_id")
-      .eq("artist_id", id);
+      .eq("artist_id", id)
+      .eq("role", "primary");
 
     if (linksError) throw linksError;
 
