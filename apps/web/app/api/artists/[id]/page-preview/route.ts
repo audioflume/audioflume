@@ -18,7 +18,7 @@ type RouteContext = {
 };
 
 const ARTIST_SELECT =
-  "id, name, slug, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url";
+  "id, name, slug, designation, intro_text, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url";
 
 export async function GET(_request: Request, context: RouteContext) {
   try {

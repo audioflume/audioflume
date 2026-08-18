@@ -6,6 +6,8 @@ export type PublicArtistProfile = {
   id: string;
   name: string;
   slug: string;
+  designation: string | null;
+  intro_text: string | null;
   bio: string | null;
   location: string | null;
   website_url: string | null;
@@ -47,7 +49,7 @@ type PublicArtistLookup = {
 };
 
 const ARTIST_SELECT =
-  "id, name, slug, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url";
+  "id, name, slug, designation, intro_text, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url";
 
 function isValidSlug(value: string) {
   return /^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(value);

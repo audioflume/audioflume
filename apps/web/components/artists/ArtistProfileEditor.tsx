@@ -46,6 +46,8 @@ export default function ArtistProfileEditor({
   const canEdit = artist.permissions.includes("artist:edit_profile");
   const [name, setName] = useState(artist.name);
   const [slug, setSlug] = useState(artist.slug);
+  const [designation, setDesignation] = useState(artist.designation ?? "");
+  const [introText, setIntroText] = useState(artist.intro_text ?? "");
   const [bio, setBio] = useState(artist.bio ?? "");
   const [location, setLocation] = useState(artist.location ?? "");
   const [websiteUrl, setWebsiteUrl] = useState(artist.website_url ?? "");
@@ -62,6 +64,8 @@ export default function ArtistProfileEditor({
   useEffect(() => {
     setName(artist.name);
     setSlug(artist.slug);
+    setDesignation(artist.designation ?? "");
+    setIntroText(artist.intro_text ?? "");
     setBio(artist.bio ?? "");
     setLocation(artist.location ?? "");
     setWebsiteUrl(artist.website_url ?? "");
@@ -87,6 +91,8 @@ export default function ArtistProfileEditor({
         body: JSON.stringify({
           name,
           slug,
+          designation,
+          intro_text: introText,
           bio,
           location,
           website_url: websiteUrl,
@@ -241,6 +247,42 @@ export default function ArtistProfileEditor({
             </label>
 
             <label className="block">
+              <FieldLabel>Artist designation</FieldLabel>
+              <input
+                type="text"
+                value={designation}
+                onChange={(event) => setDesignation(event.target.value)}
+                maxLength={160}
+                disabled={!canEdit || saving}
+                placeholder="Musician / Composer"
+                className="filmwave-backend-input"
+              />
+            </label>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <label className="block">
+              <FieldLabel>Artist URL</FieldLabel>
+              <input
+                type="text"
+                value={slug}
+                onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
+                onBlur={() => setSlug((current) => current.replace(/-+$/g, ""))}
+                maxLength={80}
+                disabled={!canEdit || saving}
+                className="filmwave-backend-input"
+              />
+              <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
+                /artists/{displayedSlug || "artist"}
+              </div>
+              {slugChanged ? (
+                <div className="mt-1 text-[11px] leading-5 text-[var(--status-warning)]">
+                  Changing this will change your public artist URL. The previous URL will be kept so old links can redirect when public artist pages launch.
+                </div>
+              ) : null}
+            </label>
+
+            <label className="block">
               <FieldLabel>Location</FieldLabel>
               <input
                 type="text"
@@ -255,24 +297,15 @@ export default function ArtistProfileEditor({
           </div>
 
           <label className="block">
-            <FieldLabel>Artist URL</FieldLabel>
-            <input
-              type="text"
-              value={slug}
-              onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
-              onBlur={() => setSlug((current) => current.replace(/-+$/g, ""))}
-              maxLength={80}
+            <FieldLabel>Intro text</FieldLabel>
+            <textarea
+              value={introText}
+              onChange={(event) => setIntroText(event.target.value)}
+              maxLength={600}
               disabled={!canEdit || saving}
-              className="filmwave-backend-input"
+              rows={3}
+              className="filmwave-backend-textarea"
             />
-            <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
-              /artists/{displayedSlug || "artist"}
-            </div>
-            {slugChanged ? (
-              <div className="mt-1 text-[11px] leading-5 text-[var(--status-warning)]">
-                Changing this will change your public artist URL. The previous URL will be kept so old links can redirect when public artist pages launch.
-              </div>
-            ) : null}
           </label>
 
           <label className="block">

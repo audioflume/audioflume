@@ -11,6 +11,8 @@ export type ArtistDashboardProfile = {
   name: string;
   slug: string;
   status: "pending" | "approved" | "rejected" | "suspended";
+  designation: string | null;
+  intro_text: string | null;
   bio: string | null;
   location: string | null;
   website_url: string | null;
@@ -54,7 +56,7 @@ export async function getArtistDashboardProfiles(
       supabaseServer
         .from("artists")
         .select(
-          "id, name, slug, status, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url",
+          "id, name, slug, status, designation, intro_text, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url",
         )
         .in("id", artistIds),
       supabaseServer
@@ -149,6 +151,8 @@ export async function getArtistDashboardProfiles(
         name: artist.name,
         slug: artist.slug,
         status,
+        designation: artist.designation,
+        intro_text: artist.intro_text,
         bio: artist.bio,
         location: artist.location,
         website_url: artist.website_url,

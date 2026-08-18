@@ -49,6 +49,8 @@ export async function PATCH(request: Request, context: RouteContext) {
   const payload = body as Record<string, unknown>;
   const name = cleanOptionalString(payload.name, 160);
   const slug = normalizeArtistSlug(payload.slug);
+  const designation = cleanOptionalString(payload.designation, 160);
+  const introText = cleanOptionalString(payload.intro_text, 600);
   const bio = cleanOptionalString(payload.bio, 1200);
   const location = cleanOptionalString(payload.location, 160);
   const website = cleanOptionalHttpUrl(payload.website_url);
@@ -160,6 +162,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       .update({
         name,
         slug,
+        designation,
+        intro_text: introText,
         bio,
         location,
         website_url: website.value,
@@ -170,7 +174,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       })
       .eq("id", id)
       .select(
-        "id, name, slug, status, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url, updated_at",
+        "id, name, slug, status, designation, intro_text, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url, updated_at",
       )
       .maybeSingle();
 

@@ -45,19 +45,28 @@ function formatTrackCount(count: number) {
   return `${count} track${count === 1 ? "" : "s"}`;
 }
 
-function splitArtistBio(value: string | null) {
-  const bio = value?.trim() || "";
-  if (!bio) return { intro: null, profile: null };
-
-  const sentenceMatch = bio.match(/^(.+?[.!?])(?:\s+|$)([\s\S]*)$/);
-  if (!sentenceMatch?.[2]?.trim()) {
-    return { intro: null, profile: bio };
-  }
-
-  return {
-    intro: sentenceMatch[1].trim(),
-    profile: sentenceMatch[2].trim(),
-  };
+function InstagramIcon() {
+  return (
+    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="4.2"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+      <circle cx="17.4" cy="6.7" r="1" fill="currentColor" />
+    </svg>
+  );
 }
 
 function ReleaseCard({ release }: { release: PublicArtistRelease }) {
@@ -109,7 +118,6 @@ export default function PublicArtistPageView({
   embedded = false,
 }: PublicArtistPageViewProps) {
   const { artist, songs, releases, playlists } = data;
-  const { intro: bioIntro, profile: profileBio } = splitArtistBio(artist.bio);
   const externalLinks = [
     ["Website", normalizeExternalUrl(artist.website_url)],
     ["Instagram", normalizeExternalUrl(artist.instagram_url)],
@@ -117,7 +125,7 @@ export default function PublicArtistPageView({
     ["YouTube", normalizeExternalUrl(artist.youtube_url)],
   ].filter((item): item is [string, string] => Boolean(item[1]));
   const showProfilePanel = Boolean(
-    profileBio || artist.location || externalLinks.length > 0,
+    artist.bio || artist.location || externalLinks.length > 0,
   );
   const RootElement = embedded ? "div" : "main";
 
@@ -143,28 +151,31 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-top {
-          padding: clamp(34px, 3vw, 50px) 0 clamp(52px, 5vw, 72px);
+          padding: clamp(34px, 3vw, 50px) 0 clamp(44px, 4vw, 60px);
         }
 
         .artist-public-type {
           margin-bottom: clamp(16px, 1.4vw, 22px);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(17px, 1.35vw, 22px);
-          font-weight: 400;
-          letter-spacing: -0.035em;
-          line-height: 1;
+          font-size: clamp(15px, 1.05vw, 18px);
+          font-weight: 300;
+          letter-spacing: 0;
+          line-height: 1.15;
+          text-transform: uppercase;
         }
 
         .artist-public-feature-grid {
           display: grid;
           grid-template-columns: minmax(0, 1fr) minmax(0, 0.98fr);
           gap: clamp(34px, 4vw, 72px);
-          align-items: stretch;
+          align-items: start;
         }
 
         .artist-public-feature-media {
           position: relative;
-          min-height: clamp(340px, 30vw, 470px);
+          width: 100%;
+          min-height: 0;
+          aspect-ratio: 1.86 / 1;
           overflow: hidden;
           background: var(--bg-secondary);
         }
@@ -223,19 +234,18 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-intro {
-          max-width: 520px;
+          max-width: 560px;
           margin: 0;
-          color: var(--text-secondary);
+          color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(12px, 0.82vw, 14px);
+          font-size: clamp(18px, 1.3vw, 24px);
           font-weight: 300;
-          letter-spacing: -0.012em;
-          line-height: 1.45;
+          letter-spacing: 0;
+          line-height: 1.35;
         }
 
         .artist-public-profile-panel {
-          margin-top: auto;
-          padding-top: clamp(44px, 4.5vw, 72px);
+          margin-top: clamp(34px, 3.5vw, 52px);
         }
 
         .artist-public-profile-heading {
@@ -246,11 +256,11 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-profile-label {
-          color: var(--text-secondary);
+          color: var(--text-primary);
           font-family: var(--font-roboto-mono-filmwave), monospace;
-          font-size: 9px;
-          font-weight: 400;
-          letter-spacing: 0.02em;
+          font-size: 18px;
+          font-weight: 300;
+          letter-spacing: 0;
           line-height: 1;
           text-transform: uppercase;
         }
@@ -276,12 +286,20 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-links a {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
           color: var(--text-muted);
           transition: color 150ms ease;
         }
 
         .artist-public-links a:hover {
           color: var(--text-primary);
+        }
+
+        .artist-public-links svg {
+          display: block;
+          flex: 0 0 auto;
         }
 
         .artist-public-bio {
@@ -433,8 +451,7 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-feature-media {
-            min-height: 0;
-            aspect-ratio: 1.7 / 1;
+            aspect-ratio: 1.75 / 1;
           }
 
           .artist-public-feature-copy {
@@ -446,8 +463,7 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-profile-panel {
-            margin-top: 0;
-            padding-top: 38px;
+            margin-top: 38px;
           }
         }
 
@@ -475,10 +491,6 @@ export default function PublicArtistPageView({
         }
 
         @media (max-width: 480px) {
-          .artist-public-type {
-            font-size: 16px;
-          }
-
           .artist-public-name {
             font-size: clamp(46px, 15vw, 64px);
           }
@@ -494,7 +506,9 @@ export default function PublicArtistPageView({
       >
         <div className="artist-public-shell">
           <section className="artist-public-top">
-            <div className="artist-public-type">Musician / Composer</div>
+            {artist.designation ? (
+              <div className="artist-public-type">{artist.designation}</div>
+            ) : null}
 
             <div className="artist-public-feature-grid">
               <div className="artist-public-feature-media">
@@ -525,8 +539,8 @@ export default function PublicArtistPageView({
                     </span>
                   </div>
 
-                  {bioIntro ? (
-                    <p className="artist-public-intro">{bioIntro}</p>
+                  {artist.intro_text ? (
+                    <p className="artist-public-intro">{artist.intro_text}</p>
                   ) : null}
                 </div>
 
@@ -549,7 +563,8 @@ export default function PublicArtistPageView({
                                   target="_blank"
                                   rel="noreferrer"
                                 >
-                                  {label}
+                                  {label === "Instagram" ? <InstagramIcon /> : null}
+                                  <span>{label}</span>
                                 </a>
                               ))}
                             </div>
@@ -558,8 +573,8 @@ export default function PublicArtistPageView({
                       ) : null}
                     </div>
 
-                    {profileBio ? (
-                      <p className="artist-public-bio">{profileBio}</p>
+                    {artist.bio ? (
+                      <p className="artist-public-bio">{artist.bio}</p>
                     ) : null}
                   </div>
                 ) : null}
