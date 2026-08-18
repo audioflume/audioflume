@@ -448,7 +448,13 @@ export default function ArtistMusicUploader({
                   {formatDate(song.created_at)}
                 </div>
                 <div>
-                  <span className="inline-flex h-7 items-center rounded-full bg-[var(--bg-tertiary)] px-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-secondary)]">
+                  <span
+                    className={`inline-flex h-7 items-center rounded-full px-3 text-[10px] font-medium uppercase tracking-[0.05em] ${
+                      song.status === "rejected"
+                        ? "bg-[var(--status-error-soft)] text-[var(--status-error)]"
+                        : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
+                    }`}
+                  >
                     {formatStatus(song.status)}
                   </span>
                 </div>

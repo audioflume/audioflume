@@ -310,7 +310,7 @@ export default function AdminMusicReviewPage() {
     const song = details?.song;
     if (!song || actionLoading) return;
 
-    if ((action === "request_changes" || action === "reject") && !feedback.trim()) {
+    if (action === "request_changes" && !feedback.trim()) {
       showToast("Add review feedback first");
       return;
     }
@@ -339,6 +339,7 @@ export default function AdminMusicReviewPage() {
       });
       const body = (await response.json().catch(() => ({}))) as {
         song?: SubmissionSummary;
+        review?: ReviewEvent;
         error?: string;
       };
 
@@ -353,6 +354,23 @@ export default function AdminMusicReviewPage() {
       );
 
       showToast(`${song.title}: ${formatStatus(body.song.status)}`);
+
+      if (action === "approve") {
+        setDetails((current) => {
+          if (!current?.song) return current;
+
+          return {
+            ...current,
+            song: { ...current.song, status: body.song!.status },
+            reviews: body.review
+              ? [body.review, ...(current.reviews ?? [])]
+              : current.reviews,
+          };
+        });
+        setFeedback("");
+        return;
+      }
+
       setSelectedSongId("");
       setDetails(null);
       setFeedback("");
@@ -583,7 +601,7 @@ export default function AdminMusicReviewPage() {
                       disabled={Boolean(actionLoading)}
                       placeholder={
                         song.status === "submitted"
-                          ? "Required when requesting changes or rejecting a track."
+                          ? "Required when requesting changes. Optional when rejecting a track."
                           : "Optional internal note for this publish action."
                       }
                       className="w-full resize-y rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm leading-6 text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:opacity-60"

@@ -30,7 +30,7 @@ const ACTION_CONFIG: Record<
     from: ["submitted"],
     to: "rejected",
     eventAction: "rejected",
-    requiresNotes: true,
+    requiresNotes: false,
   },
   approve: {
     from: ["submitted"],
