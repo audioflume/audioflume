@@ -672,11 +672,20 @@ export default function ArtistSongEditor({
             <span className="text-[var(--text-muted)]">Your artist role has read-only catalogue access.</span>
           ) : null}
         </div>
-        {canEditMetadata ? (
-          <button type="submit" disabled={saving || !title.trim()} className="inline-flex h-9 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40">
-            {saving ? "Saving..." : "Save track details"}
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={onClose}
+            className="inline-flex h-9 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          >
+            Back to Music
           </button>
-        ) : null}
+          {canEditMetadata ? (
+            <button type="submit" disabled={saving || !title.trim()} className="inline-flex h-9 items-center justify-center rounded-[7px] bg-[var(--text-primary)] px-4 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-40">
+              {saving ? "Saving..." : "Save track details"}
+            </button>
+          ) : null}
+        </div>
       </div>
     </form>
   );
