@@ -224,6 +224,73 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Invalid request" }, { status: 400 });
     }
 
+    const payload = body as Record<string, unknown>;
+
+    if (payload.action === "submit") {
+      await requireArtistPermission(id, "catalog:submit");
+
+      if (!(await requireLinkedSong(id, songId))) {
+        return NextResponse.json({ error: "Track not found" }, { status: 404 });
+      }
+
+      const [songResult, artistResult, rightsResult] = await Promise.all([
+        supabaseServer
+          .from("songs")
+          .select("id, title, status, duration, created_at")
+          .eq("id", songId)
+          .maybeSingle(),
+        supabaseServer
+          .from("artists")
+          .select("id, status")
+          .eq("id", id)
+          .maybeSingle(),
+        supabaseServer
+          .from("song_rights")
+          .select("rights_confirmed")
+          .eq("song_id", songId)
+          .maybeSingle(),
+      ]);
+
+      if (songResult.error) throw songResult.error;
+      if (artistResult.error) throw artistResult.error;
+      if (rightsResult.error) throw rightsResult.error;
+      if (!songResult.data) {
+        return NextResponse.json({ error: "Track not found" }, { status: 404 });
+      }
+      if (!artistResult.data || artistResult.data.status !== "approved") {
+        return NextResponse.json(
+          { error: "Artist profile must be approved before submitting music" },
+          { status: 403 },
+        );
+      }
+      if (
+        songResult.data.status !== "draft" &&
+        songResult.data.status !== "changes_requested"
+      ) {
+        return NextResponse.json(
+          { error: "This track cannot be submitted from its current status" },
+          { status: 409 },
+        );
+      }
+      if (!rightsResult.data?.rights_confirmed) {
+        return NextResponse.json(
+          { error: "Confirm rights and ownership before submitting this track for review" },
+          { status: 400 },
+        );
+      }
+
+      const { data: submittedSong, error: submitError } = await supabaseServer
+        .from("songs")
+        .update({ status: "submitted" })
+        .eq("id", songId)
+        .select("id, title, status, duration, created_at")
+        .single();
+
+      if (submitError) throw submitError;
+
+      return NextResponse.json({ song: submittedSong });
+    }
+
     await requireArtistPermission(id, "catalog:edit");
 
     if (!(await requireLinkedSong(id, songId))) {
@@ -240,14 +307,16 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (!existingSong) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
-    if (existingSong.status !== "draft") {
+    if (
+      existingSong.status !== "draft" &&
+      existingSong.status !== "changes_requested"
+    ) {
       return NextResponse.json(
-        { error: "Only draft tracks can be edited right now" },
+        { error: "Only draft tracks or tracks with requested changes can be edited" },
         { status: 409 },
       );
     }
 
-    const payload = body as Record<string, unknown>;
     const metadata =
       payload.metadata && typeof payload.metadata === "object"
         ? (payload.metadata as Record<string, unknown>)
