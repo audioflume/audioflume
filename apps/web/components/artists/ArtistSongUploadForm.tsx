@@ -2,6 +2,7 @@
 
 import { FormEvent, useMemo, useRef, useState } from "react";
 
+import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
@@ -628,7 +629,8 @@ export default function ArtistSongUploadForm({
           onClick={() => audioInputRef.current?.click()}
           className="filmwave-backend-button filmwave-backend-button-secondary"
         >
-          Choose Audio
+          <AudioFileIcon />
+          <span>Choose Audio</span>
         </button>
 
         <button
