@@ -440,7 +440,7 @@ export default function ArtistSongEditor({
       ) : null}
 
       <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header-bordered">
+        <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Track details</h2>
           <button
             type="button"

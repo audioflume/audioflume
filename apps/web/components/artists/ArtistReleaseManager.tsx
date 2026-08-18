@@ -211,7 +211,7 @@ export default function ArtistReleaseManager({
   return (
     <div className="grid gap-4">
       <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header-bordered">
+        <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Create release</h2>
         </div>
 
@@ -291,7 +291,7 @@ export default function ArtistReleaseManager({
       </section>
 
       <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header-bordered">
+        <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Releases</h2>
         </div>
 
@@ -528,7 +528,7 @@ function ReleaseEditor({
       </div>
 
       <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header-bordered">
+        <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Release details</h2>
         </div>
 
@@ -617,7 +617,7 @@ function ReleaseEditor({
       </section>
 
       <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header-bordered">
+        <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Track order</h2>
         </div>
 

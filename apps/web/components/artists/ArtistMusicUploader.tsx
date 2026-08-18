@@ -13,8 +13,8 @@ type ArtistSongSummary = {
   title: string;
   status: string;
   duration: number;
-  bpm: number | null;
-  key: string | null;
+  bpm?: number | null;
+  key?: string | null;
   created_at: string;
 };
 
