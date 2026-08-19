@@ -335,7 +335,7 @@ export default function PublicArtistPageView({
 
         .artist-public-name {
           position: absolute;
-          top: calc(clamp(110px, 7.2vw, 138px) + 20px);
+          top: calc(clamp(110px, 7.2vw, 138px) + 60px);
           left: 0;
           z-index: 3;
           width: 73%;
