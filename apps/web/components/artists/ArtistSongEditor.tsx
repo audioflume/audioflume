@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import { BackendCheckbox } from "@/components/backend/BackendControls";
 
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 import {
@@ -494,24 +495,22 @@ export default function ArtistSongEditor({
           </div>
 
           <div className="grid gap-3 sm:grid-cols-2">
-            <label className="flex h-10 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)]">
-              <input
-                type="checkbox"
-                checked={instrumental}
-                onChange={(event) => setInstrumental(event.target.checked)}
-                disabled={!canEditMetadata || saving}
-              />
-              Instrumental
-            </label>
-            <label className="flex h-10 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-secondary)]">
-              <input
-                type="checkbox"
-                checked={explicit}
-                onChange={(event) => setExplicit(event.target.checked)}
-                disabled={!canEditMetadata || saving}
-              />
-              Contains explicit content
-            </label>
+            <BackendCheckbox
+              checked={instrumental}
+              onChange={setInstrumental}
+              disabled={!canEditMetadata || saving}
+              size="sm"
+              label="Instrumental"
+              className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3"
+            />
+            <BackendCheckbox
+              checked={explicit}
+              onChange={setExplicit}
+              disabled={!canEditMetadata || saving}
+              size="sm"
+              label="Contains explicit content"
+              className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3"
+            />
           </div>
 
           <MultiSelect label="Genres" options={GENRE_OPTIONS} selected={genres} onChange={setGenres} disabled={!canEditMetadata || saving} />
