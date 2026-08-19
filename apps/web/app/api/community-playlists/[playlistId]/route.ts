@@ -1,5 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { attachPrimaryArtistProfiles } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 import {
   isCommunityPlaylistCategory,
@@ -221,11 +222,12 @@ export async function GET(_request: Request, context: RouteContext) {
 
       if (songsError) throw songsError;
 
+      const normalizedSongs = await attachPrimaryArtistProfiles(
+        ((songRows ?? []) as SupabaseSongRow[]).map(normalizeSongRow),
+      );
+
       const songsById = new Map(
-        ((songRows ?? []) as SupabaseSongRow[]).map((song) => [
-          String(song.id),
-          normalizeSongRow(song),
-        ]),
+        normalizedSongs.map((song) => [String(song.id), song]),
       );
 
       songs = playlistSongRows
