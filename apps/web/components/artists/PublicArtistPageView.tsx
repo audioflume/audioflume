@@ -255,7 +255,7 @@ export default function PublicArtistPageView({
           bottom: 28px;
           left: 59%;
           z-index: 5;
-          width: 30%;
+          width: 32%;
           max-width: 560px;
           margin: 0;
           color: #fff;
@@ -356,7 +356,7 @@ export default function PublicArtistPageView({
           left: 0;
           z-index: 4;
           display: flex;
-          width: 35%;
+          width: 33.5%;
           flex-direction: column;
           gap: 55px;
         }
@@ -523,7 +523,7 @@ export default function PublicArtistPageView({
         }
 
         textarea.artist-public-intro.artist-public-edit-control {
-          width: 30%;
+          width: 32%;
           min-height: 2.7em;
         }
 
