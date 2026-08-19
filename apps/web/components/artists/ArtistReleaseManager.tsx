@@ -187,6 +187,88 @@ function SortableReleaseRow({
   );
 }
 
+function SortableTrackRow({
+  song,
+  index,
+  canManage,
+  disabled,
+  onRemove,
+}: {
+  song: ReleaseSong;
+  index: number;
+  canManage: boolean;
+  disabled: boolean;
+  onRemove: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: song.id, disabled: !canManage || disabled });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.45 : 1,
+        zIndex: isDragging ? 2 : "auto",
+      }}
+      className={`grid gap-3 px-5 py-4 sm:items-center ${
+        canManage
+          ? "sm:grid-cols-[28px_42px_minmax(0,1fr)_80px_110px_auto]"
+          : "sm:grid-cols-[42px_minmax(0,1fr)_80px_110px]"
+      }`}
+    >
+      {canManage ? (
+        <button
+          type="button"
+          disabled={disabled}
+          className="flex h-8 w-7 cursor-grab items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label={`Drag ${song.title} to reorder`}
+          {...attributes}
+          {...listeners}
+        >
+          <span className="inline-flex scale-x-[1.45]">
+            <DragIconSmall />
+          </span>
+        </button>
+      ) : null}
+
+      <div className="text-xs font-medium text-[var(--text-muted)]">
+        {index + 1}
+      </div>
+      <div className="min-w-0">
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+          {song.title}
+        </div>
+      </div>
+      <div className="text-xs text-[var(--text-muted)]">
+        {formatDuration(Number(song.duration))}
+      </div>
+      <div className="text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
+        {formatStatus(song.status)}
+      </div>
+      {canManage ? (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={onRemove}
+            disabled={disabled}
+            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
+          >
+            Remove
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function ArtistReleaseManager({
   artist,
   onReleaseCreated,
@@ -530,6 +612,9 @@ function ReleaseEditor({
   onUpdated,
   onDeleted,
 }: ReleaseEditorProps) {
+  const trackSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
   const [title, setTitle] = useState(release.title);
   const [releaseType, setReleaseType] = useState<ReleaseType>(release.release_type);
   const [releaseDate, setReleaseDate] = useState(release.release_date ?? "");
@@ -570,15 +655,17 @@ function ReleaseEditor({
     setError("");
   }
 
-  function moveTrack(index: number, direction: -1 | 1) {
-    const nextIndex = index + direction;
-    if (nextIndex < 0 || nextIndex >= trackIds.length) return;
+  function handleTrackDragEnd(event: DragEndEvent) {
+    if (!canManage || saving || uploadingArtwork || statusChanging || deleting) return;
 
-    setTrackIds((current) => {
-      const next = [...current];
-      [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
-      return next;
-    });
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = trackIds.findIndex((songId) => songId === active.id);
+    const newIndex = trackIds.findIndex((songId) => songId === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    setTrackIds((current) => arrayMove(current, oldIndex, newIndex));
     setMessage("");
     setError("");
   }
@@ -793,6 +880,9 @@ function ReleaseEditor({
     }
   }
 
+  const trackOrderDisabled =
+    saving || uploadingArtwork || statusChanging || deleting;
+
   return (
     <form onSubmit={saveRelease} className="grid gap-4">
       <div className="flex items-center justify-between gap-3">
@@ -899,7 +989,7 @@ function ReleaseEditor({
               artistId={artist.id}
               releaseType={releaseType}
               existingTrackIds={trackIds}
-              disabled={saving || uploadingArtwork || statusChanging || deleting}
+              disabled={trackOrderDisabled}
               onAdd={(songIds) => {
                 setTrackIds((current) => [
                   ...current,
@@ -912,63 +1002,35 @@ function ReleaseEditor({
           </div>
         ) : null}
 
-        <div className="divide-y divide-[var(--border-subtle)]">
-          {orderedTracks.length === 0 ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              No tracks added yet.
+        <DndContext
+          sensors={trackSensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleTrackDragEnd}
+        >
+          <SortableContext
+            items={orderedTracks.map((song) => song.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="divide-y divide-[var(--border-subtle)]">
+              {orderedTracks.length === 0 ? (
+                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                  No tracks added yet.
+                </div>
+              ) : (
+                orderedTracks.map((song, index) => (
+                  <SortableTrackRow
+                    key={song.id}
+                    song={song}
+                    index={index}
+                    canManage={canManage}
+                    disabled={trackOrderDisabled}
+                    onRemove={() => removeTrack(song.id)}
+                  />
+                ))
+              )}
             </div>
-          ) : (
-            orderedTracks.map((song, index) => (
-              <div
-                key={song.id}
-                className="grid gap-3 px-5 py-4 sm:grid-cols-[42px_minmax(0,1fr)_80px_110px_auto] sm:items-center"
-              >
-                <div className="text-xs font-medium text-[var(--text-muted)]">
-                  {index + 1}
-                </div>
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                    {song.title}
-                  </div>
-                </div>
-                <div className="text-xs text-[var(--text-muted)]">
-                  {formatDuration(Number(song.duration))}
-                </div>
-                <div className="text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                  {formatStatus(song.status)}
-                </div>
-                {canManage ? (
-                  <div className="flex justify-end gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => moveTrack(index, -1)}
-                      disabled={statusChanging || index === 0}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
-                    >
-                      ↑
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveTrack(index, 1)}
-                      disabled={statusChanging || index === orderedTracks.length - 1}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
-                    >
-                      ↓
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeTrack(song.id)}
-                      disabled={statusChanging}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ) : null}
-              </div>
-            ))
-          )}
-        </div>
+          </SortableContext>
+        </DndContext>
       </section>
 
       <div className="filmwave-backend-section flex flex-wrap items-center justify-between gap-3 px-5 py-4">
