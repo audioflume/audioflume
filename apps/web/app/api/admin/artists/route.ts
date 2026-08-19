@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
+import {
+  ArtistClaimError,
+  createArtistClaimInvitation,
+  expireArtistClaimInvitations,
+  isValidArtistClaimEmail,
+  normalizeArtistClaimEmail,
+} from "@/lib/artistClaims";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type ArtistOwnerProfile = {
@@ -14,6 +21,32 @@ type ArtistOwnerMembership = {
   clerk_user_id: string;
 };
 
+type ArtistClaimInvitationRow = {
+  id: string;
+  artist_id: string;
+  email: string;
+  status: "pending" | "claimed" | "revoked" | "expired";
+  expires_at: string;
+  claimed_at: string | null;
+  revoked_at: string | null;
+  created_at: string;
+};
+
+function normalizeArtistName(value: unknown) {
+  if (typeof value !== "string") return "";
+  return value.trim().slice(0, 160);
+}
+
+function normalizeArtistSlug(value: unknown) {
+  if (typeof value !== "string") return "";
+  return value
+    .trim()
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 80);
+}
+
 export async function GET() {
   const admin = await requireAdmin();
   if (!admin.isAdmin) {
@@ -21,6 +54,8 @@ export async function GET() {
   }
 
   try {
+    await expireArtistClaimInvitations();
+
     const { data: artists, error: artistsError } = await supabaseServer
       .from("artists")
       .select(
@@ -35,15 +70,33 @@ export async function GET() {
       .filter((artistId): artistId is string => typeof artistId === "string");
 
     const ownerMemberships: ArtistOwnerMembership[] = [];
-    if (artistIds.length > 0) {
-      const { data, error } = await supabaseServer
-        .from("artist_memberships")
-        .select("artist_id, clerk_user_id")
-        .eq("role", "owner")
-        .in("artist_id", artistIds);
+    const claimInvitations: ArtistClaimInvitationRow[] = [];
 
-      if (error) throw error;
-      ownerMemberships.push(...((data ?? []) as ArtistOwnerMembership[]));
+    if (artistIds.length > 0) {
+      const [ownersResult, claimsResult] = await Promise.all([
+        supabaseServer
+          .from("artist_memberships")
+          .select("artist_id, clerk_user_id")
+          .eq("role", "owner")
+          .in("artist_id", artistIds),
+        supabaseServer
+          .from("artist_claim_invitations")
+          .select(
+            "id, artist_id, email, status, expires_at, claimed_at, revoked_at, created_at",
+          )
+          .in("artist_id", artistIds)
+          .order("created_at", { ascending: false }),
+      ]);
+
+      if (ownersResult.error) throw ownersResult.error;
+      if (claimsResult.error) throw claimsResult.error;
+
+      ownerMemberships.push(
+        ...((ownersResult.data ?? []) as ArtistOwnerMembership[]),
+      );
+      claimInvitations.push(
+        ...((claimsResult.data ?? []) as ArtistClaimInvitationRow[]),
+      );
     }
 
     const ownerUserIds = Array.from(
@@ -71,6 +124,13 @@ export async function GET() {
       }
     }
 
+    const latestClaimByArtist = new Map<string, ArtistClaimInvitationRow>();
+    for (const invitation of claimInvitations) {
+      if (!latestClaimByArtist.has(invitation.artist_id)) {
+        latestClaimByArtist.set(invitation.artist_id, invitation);
+      }
+    }
+
     return NextResponse.json({
       artists: (artists ?? []).map((artist) => {
         const ownerMembership = ownerByArtist.get(artist.id);
@@ -87,6 +147,7 @@ export async function GET() {
                 company_name: ownerProfile?.company_name ?? null,
               }
             : null,
+          claim_invitation: latestClaimByArtist.get(artist.id) ?? null,
         };
       }),
     });
@@ -94,6 +155,102 @@ export async function GET() {
     console.error("Failed to load admin artists:", error);
     return NextResponse.json(
       { error: "Failed to load artists" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function POST(request: Request) {
+  const admin = await requireAdmin();
+  if (!admin.isAdmin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  const body = (await request.json().catch(() => null)) as
+    | Record<string, unknown>
+    | null;
+  const name = normalizeArtistName(body?.name);
+  const slug = normalizeArtistSlug(body?.slug || body?.name);
+  const email = normalizeArtistClaimEmail(body?.email);
+
+  if (!name) {
+    return NextResponse.json({ error: "Artist name is required" }, { status: 400 });
+  }
+  if (!slug) {
+    return NextResponse.json({ error: "Artist URL is required" }, { status: 400 });
+  }
+  if (!email || !isValidArtistClaimEmail(email)) {
+    return NextResponse.json({ error: "Enter a valid email address" }, { status: 400 });
+  }
+
+  let createdArtistId: string | null = null;
+
+  try {
+    const { data: artist, error: artistError } = await supabaseServer
+      .from("artists")
+      .insert({
+        name,
+        slug,
+        status: "pending",
+        created_by_clerk_user_id: admin.user?.id ?? null,
+      })
+      .select(
+        "id, name, slug, bio, location, website_url, instagram_url, profile_image_url, hero_image_url, status, created_by_clerk_user_id, approved_at, approved_by_clerk_user_id, created_at, updated_at",
+      )
+      .single();
+
+    if (artistError) throw artistError;
+    createdArtistId = artist.id;
+
+    const invitation = await createArtistClaimInvitation({
+      artistId: artist.id,
+      email,
+      invitedByClerkUserId: admin.user?.id ?? null,
+      origin: new URL(request.url).origin,
+    });
+
+    return NextResponse.json(
+      {
+        artist: {
+          ...artist,
+          owner: null,
+          claim_invitation: invitation,
+        },
+      },
+      { status: 201 },
+    );
+  } catch (error) {
+    if (createdArtistId) {
+      const { error: cleanupError } = await supabaseServer
+        .from("artists")
+        .delete()
+        .eq("id", createdArtistId);
+
+      if (cleanupError) {
+        console.error("Failed to clean up uninvited artist profile:", cleanupError);
+      }
+    }
+
+    if (error instanceof ArtistClaimError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+
+    const databaseError = error as { code?: string; message?: string };
+    if (databaseError?.code === "23505") {
+      return NextResponse.json(
+        { error: "That artist URL is already in use" },
+        { status: 409 },
+      );
+    }
+
+    console.error("Failed to create artist invitation:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Failed to create artist invitation",
+      },
       { status: 500 },
     );
   }
