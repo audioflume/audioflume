@@ -386,11 +386,12 @@ export default function AdminBrowseFilterSubcategoryGroup({
           return (
             <div
               key={subcategory.id}
-              className="flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
+              className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
             >
               <BackendCheckbox
                 checked={checked}
                 compact
+                className="group-hover/browse-subcategory:[&>span]:border-[var(--text-secondary)]"
                 ariaLabel={
                   mode === "edit"
                     ? `Select ${subcategory.label} for deletion`
