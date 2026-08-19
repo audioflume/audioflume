@@ -5,10 +5,9 @@ import {
   useMemo,
   useRef,
   type ChangeEvent,
-  type DragEvent,
   type ReactNode,
 } from "react";
-import UploadIcon from "@/components/icons/UploadIcon";
+import BackendArtworkUpload from "@/components/backend/BackendArtworkUpload";
 
 function fileKey(file: File) {
   return `${file.name}:${file.size}:${file.lastModified}`;
@@ -84,7 +83,7 @@ export default function BackendSongFileUpload({
   disabled = false,
 }: BackendSongFileUploadProps) {
   const audioInputRef = useRef<HTMLInputElement | null>(null);
-  const artworkInputRef = useRef<HTMLInputElement | null>(null);
+  const artworkActionInputRef = useRef<HTMLInputElement | null>(null);
   const stemsInputRef = useRef<HTMLInputElement | null>(null);
 
   const hasAudio = Boolean(audioFile || audioExistingLabel);
@@ -101,7 +100,9 @@ export default function BackendSongFileUpload({
   }, [audioFile]);
 
   useEffect(() => {
-    if (!artworkFile && artworkInputRef.current) artworkInputRef.current.value = "";
+    if (!artworkFile && artworkActionInputRef.current) {
+      artworkActionInputRef.current.value = "";
+    }
   }, [artworkFile]);
 
   useEffect(() => {
@@ -131,17 +132,17 @@ export default function BackendSongFileUpload({
     onStemFilesChange(stemFiles.filter((_, fileIndex) => fileIndex !== index));
   }
 
-  function handleArtworkDrop(event: DragEvent<HTMLButtonElement>) {
-    event.preventDefault();
-    if (disabled) return;
-    const file = Array.from(event.dataTransfer.files).find((item) =>
-      item.type.startsWith("image/"),
-    );
-    if (file) onArtworkFileChange(file);
-  }
-
   return (
     <div className="grid gap-4">
+      <input
+        ref={artworkActionInputRef}
+        type="file"
+        accept="image/*"
+        disabled={disabled}
+        className="hidden"
+        onChange={(event) => onArtworkFileChange(event.target.files?.[0] ?? null)}
+      />
+
       <div className="flex flex-wrap items-center gap-2">
         <button
           type="button"
@@ -155,7 +156,7 @@ export default function BackendSongFileUpload({
         <button
           type="button"
           disabled={disabled}
-          onClick={() => artworkInputRef.current?.click()}
+          onClick={() => artworkActionInputRef.current?.click()}
           className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <ArtworkActionIcon />
@@ -275,90 +276,16 @@ export default function BackendSongFileUpload({
         </div>
       </section>
 
-      <section className="w-full rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
-        <h2 className="mb-3 font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
-          Cover image
-        </h2>
-
-        <input
-          ref={artworkInputRef}
-          type="file"
-          accept="image/*"
-          disabled={disabled}
-          className="hidden"
-          onChange={(event) => onArtworkFileChange(event.target.files?.[0] ?? null)}
-        />
-
-        {artworkPreviewUrl ? (
-          <div className="flex items-start gap-[18px] max-[720px]:flex-col">
-            <button
-              type="button"
-              disabled={disabled}
-              onClick={() => artworkInputRef.current?.click()}
-              className="group relative h-[180px] w-[180px] shrink-0 cursor-pointer overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed"
-              aria-label="Change cover image"
-            >
-              <img src={artworkPreviewUrl} alt="Cover preview" className="h-full w-full object-cover" />
-              <span className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)] text-[10px] font-medium text-[var(--media-overlay-contrast)] opacity-0 transition group-hover:opacity-100">
-                Change image
-              </span>
-            </button>
-
-            <div className="flex min-h-[180px] min-w-0 flex-1 flex-col justify-between gap-5 py-1 max-[720px]:min-h-0 max-[720px]:w-full">
-              <div>
-                <div className="truncate text-xs font-medium text-[var(--text-primary)]">
-                  {artworkFile?.name || "Current cover image"}
-                </div>
-                <div className="mt-[5px] text-[11px] leading-4 text-[var(--text-secondary)]">
-                  {artworkHelp}
-                </div>
-              </div>
-
-              <div className="flex flex-wrap gap-2">
-                <button
-                  type="button"
-                  disabled={disabled}
-                  onClick={() => artworkInputRef.current?.click()}
-                  className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
-                >
-                  Change image
-                </button>
-                <button
-                  type="button"
-                  disabled={disabled}
-                  onClick={onRemoveArtwork}
-                  className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:opacity-50"
-                >
-                  Remove image
-                </button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          <button
-            type="button"
-            disabled={disabled}
-            onClick={() => artworkInputRef.current?.click()}
-            onDrop={handleArtworkDrop}
-            onDragOver={(event) => event.preventDefault()}
-            className="flex min-h-[180px] w-full cursor-pointer items-center justify-center gap-4 rounded-[10px] border border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-5 text-left transition hover:border-[var(--text-secondary)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[var(--bg-tertiary)] text-[var(--text-muted)]" aria-hidden="true">
-              <UploadIcon size={18} />
-            </span>
-            <span>
-              <span className="block text-xs font-medium text-[var(--text-primary)]">
-                Drop image here
-              </span>
-              <span className="mt-1 block text-[11px] leading-4 text-[var(--text-secondary)]">
-                Click to upload a song cover.
-              </span>
-            </span>
-          </button>
-        )}
-
-        {artworkFooter ? <div className="mt-4">{artworkFooter}</div> : null}
-      </section>
+      <BackendArtworkUpload
+        file={artworkFile}
+        previewUrl={artworkPreviewUrl}
+        onFileChange={onArtworkFileChange}
+        onRemove={onRemoveArtwork}
+        disabled={disabled}
+        title="Cover image"
+        help={artworkHelp}
+        footer={artworkFooter}
+      />
     </div>
   );
 }
