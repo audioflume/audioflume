@@ -1033,23 +1033,24 @@ function ReleaseEditor({
         </DndContext>
       </section>
 
-      <div className="filmwave-backend-section flex flex-wrap items-center justify-between gap-3 px-5 py-4">
-        <div className="min-h-5 text-xs">
-          {error ? (
-            <span className="text-[var(--danger)]">{error}</span>
-          ) : message ? (
-            <span className="text-[var(--success)]">{message}</span>
-          ) : null}
-        </div>
-        <div className="flex gap-2">
-          <button
-            type="button"
-            onClick={onBack}
-            disabled={saving || uploadingArtwork || statusChanging || deleting}
-            className="filmwave-backend-button filmwave-backend-button-secondary"
-          >
-            Back to Releases
-          </button>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={onBack}
+          disabled={saving || uploadingArtwork || statusChanging || deleting}
+          className="filmwave-backend-button filmwave-backend-button-secondary"
+        >
+          Back to Releases
+        </button>
+
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="mr-1 min-h-5 text-xs">
+            {error ? (
+              <span className="text-[var(--danger)]">{error}</span>
+            ) : message ? (
+              <span className="text-[var(--success)]">{message}</span>
+            ) : null}
+          </div>
           {canManage ? (
             <button
               type="button"
