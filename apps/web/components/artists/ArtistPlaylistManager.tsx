@@ -159,6 +159,89 @@ function SortablePlaylistRow({
   );
 }
 
+function SortablePlaylistTrackRow({
+  song,
+  canManage,
+  disabled,
+  onRemove,
+}: {
+  song: PlaylistSong;
+  canManage: boolean;
+  disabled: boolean;
+  onRemove: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: song.id, disabled: !canManage || disabled });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.45 : 1,
+        zIndex: isDragging ? 2 : "auto",
+      }}
+      className={`grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
+        canManage
+          ? "sm:grid-cols-[28px_44px_minmax(0,1fr)_70px_70px_70px_auto]"
+          : "sm:grid-cols-[44px_minmax(0,1fr)_70px_70px_70px]"
+      }`}
+    >
+      {canManage ? (
+        <BackendDragHandle
+          disabled={disabled}
+          aria-label={`Drag ${song.title} to reorder`}
+          {...attributes}
+          {...listeners}
+        />
+      ) : null}
+
+      <div className="h-10 w-10 overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)]">
+        {song.cover_url ? (
+          <img
+            src={song.cover_url}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        ) : null}
+      </div>
+      <div className="min-w-0">
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+          {song.title}
+        </div>
+      </div>
+      <div className="text-xs text-[var(--text-muted)]">
+        {formatDuration(Number(song.duration))}
+      </div>
+      <div className="text-xs text-[var(--text-muted)]">
+        {song.key || "—"}
+      </div>
+      <div className="text-xs text-[var(--text-muted)]">
+        {song.bpm ? `${song.bpm} BPM` : "—"}
+      </div>
+      {canManage ? (
+        <div className="flex justify-end">
+          <button
+            type="button"
+            onClick={onRemove}
+            disabled={disabled}
+            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
+          >
+            Remove
+          </button>
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 export default function ArtistPlaylistManager({
   artist,
   onPlaylistCreated,
@@ -514,17 +597,20 @@ function PlaylistEditor({
   onBack,
   onUpdated,
 }: PlaylistEditorProps) {
+  const trackSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
   const [name, setName] = useState(playlist.name);
   const [description, setDescription] = useState(playlist.description ?? "");
   const [isPublic, setIsPublic] = useState(playlist.is_public);
   const [songIds, setSongIds] = useState<string[]>(playlist.song_ids);
   const [songToAdd, setSongToAdd] = useState("");
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
+  const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
   const [artworkInputKey, setArtworkInputKey] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
   const [message, setMessage] = useState("");
-  const [playlistSavedVisible, setPlaylistSavedVisible] = useState(false);
   const [error, setError] = useState("");
 
   const songsById = useMemo(
@@ -535,49 +621,45 @@ function PlaylistEditor({
     .map((songId) => songsById.get(songId))
     .filter((song): song is PlaylistSong => Boolean(song));
   const availableSongs = songs.filter((song) => !songIds.includes(song.id));
+  const trackOrderDisabled = saving || uploadingArtwork;
 
   useEffect(() => {
-    if (message !== "Playlist saved.") return;
+    if (!artworkFile) {
+      setArtworkPreviewUrl(null);
+      return;
+    }
 
-    const fadeTimer = window.setTimeout(() => {
-      setPlaylistSavedVisible(false);
-    }, 2500);
-    const clearTimer = window.setTimeout(() => {
-      setMessage("");
-    }, 3000);
+    const objectUrl = URL.createObjectURL(artworkFile);
+    setArtworkPreviewUrl(objectUrl);
 
-    return () => {
-      window.clearTimeout(fadeTimer);
-      window.clearTimeout(clearTimer);
-    };
-  }, [message]);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [artworkFile]);
 
   function addTrack() {
     if (!songToAdd || !canManage) return;
     setSongIds((current) => [...current, songToAdd]);
     setSongToAdd("");
-    setPlaylistSavedVisible(false);
     setMessage("");
     setError("");
   }
 
   function removeTrack(songId: string) {
     setSongIds((current) => current.filter((id) => id !== songId));
-    setPlaylistSavedVisible(false);
     setMessage("");
     setError("");
   }
 
-  function moveTrack(index: number, direction: -1 | 1) {
-    const nextIndex = index + direction;
-    if (nextIndex < 0 || nextIndex >= songIds.length) return;
+  function handleTrackDragEnd(event: DragEndEvent) {
+    if (!canManage || trackOrderDisabled) return;
 
-    setSongIds((current) => {
-      const next = [...current];
-      [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
-      return next;
-    });
-    setPlaylistSavedVisible(false);
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = songIds.findIndex((songId) => songId === active.id);
+    const newIndex = songIds.findIndex((songId) => songId === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    setSongIds((current) => arrayMove(current, oldIndex, newIndex));
     setMessage("");
     setError("");
   }
@@ -589,7 +671,6 @@ function PlaylistEditor({
     try {
       setSaving(true);
       setError("");
-      setPlaylistSavedVisible(false);
       setMessage("");
 
       const response = await fetch(
@@ -612,7 +693,6 @@ function PlaylistEditor({
       }
 
       onUpdated(body.playlist as ArtistPlaylist);
-      setPlaylistSavedVisible(true);
       setMessage("Playlist saved.");
     } catch (saveError) {
       setError(
@@ -629,7 +709,6 @@ function PlaylistEditor({
     try {
       setUploadingArtwork(true);
       setError("");
-      setPlaylistSavedVisible(false);
       setMessage("");
 
       const formData = new FormData();
@@ -687,12 +766,12 @@ function PlaylistEditor({
           <h2 className="filmwave-backend-section-title">Playlist details</h2>
         </div>
 
-        <div className="grid gap-5 p-5 md:grid-cols-[160px_minmax(0,1fr)]">
+        <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
           <div>
             <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-              {playlist.cover_image_url ? (
+              {artworkPreviewUrl || playlist.cover_image_url ? (
                 <img
-                  src={playlist.cover_image_url}
+                  src={artworkPreviewUrl ?? playlist.cover_image_url ?? ""}
                   alt=""
                   className="h-full w-full object-cover"
                 />
@@ -705,7 +784,7 @@ function PlaylistEditor({
                   key={artworkInputKey}
                   type="file"
                   accept="image/*"
-                  disabled={uploadingArtwork}
+                  disabled={saving || uploadingArtwork}
                   onChange={(event) =>
                     setArtworkFile(event.target.files?.[0] ?? null)
                   }
@@ -714,7 +793,7 @@ function PlaylistEditor({
                 <button
                   type="button"
                   onClick={() => void uploadArtwork()}
-                  disabled={!artworkFile || uploadingArtwork}
+                  disabled={!artworkFile || uploadingArtwork || saving}
                   className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                 >
                   {uploadingArtwork ? "Uploading..." : "Upload artwork"}
@@ -725,7 +804,7 @@ function PlaylistEditor({
 
           <div className="grid content-start gap-4">
             <label className="block">
-              <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)]">
+              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                 Playlist name
               </span>
               <input
@@ -739,7 +818,7 @@ function PlaylistEditor({
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)]">
+              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                 Description
               </span>
               <textarea
@@ -771,11 +850,11 @@ function PlaylistEditor({
         </div>
 
         {canManage ? (
-          <div className="flex flex-wrap gap-2 px-5 pb-5">
+          <div className="flex flex-wrap gap-2 border-b border-[var(--border-subtle)] p-5">
             <select
               value={songToAdd}
               onChange={(event) => setSongToAdd(event.target.value)}
-              disabled={availableSongs.length === 0}
+              disabled={availableSongs.length === 0 || trackOrderDisabled}
               className="filmwave-backend-select min-w-[240px] flex-1"
             >
               <option value="">Select a track</option>
@@ -788,7 +867,7 @@ function PlaylistEditor({
             <button
               type="button"
               onClick={addTrack}
-              disabled={!songToAdd}
+              disabled={!songToAdd || trackOrderDisabled}
               className="filmwave-backend-button filmwave-backend-button-secondary"
             >
               Add Track
@@ -796,105 +875,66 @@ function PlaylistEditor({
           </div>
         ) : null}
 
-        <div
-          className={
-            orderedSongs.length === 0 ? "" : "grid gap-2 px-5 pb-5"
-          }
+        <DndContext
+          sensors={trackSensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleTrackDragEnd}
         >
-          {orderedSongs.length === 0 ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              No tracks added yet.
+          <SortableContext
+            items={orderedSongs.map((song) => song.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div
+              className={orderedSongs.length === 0 ? "" : "grid gap-2 p-5"}
+            >
+              {orderedSongs.length === 0 ? (
+                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                  No tracks added yet.
+                </div>
+              ) : (
+                orderedSongs.map((song) => (
+                  <SortablePlaylistTrackRow
+                    key={song.id}
+                    song={song}
+                    canManage={canManage}
+                    disabled={trackOrderDisabled}
+                    onRemove={() => removeTrack(song.id)}
+                  />
+                ))
+              )}
             </div>
-          ) : (
-            orderedSongs.map((song, index) => (
-              <div
-                key={song.id}
-                className="grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:grid-cols-[44px_minmax(0,1fr)_70px_70px_70px_auto] sm:items-center"
-              >
-                <div className="h-10 w-10 overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)]">
-                  {song.cover_url ? (
-                    <img
-                      src={song.cover_url}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  ) : null}
-                </div>
-                <div className="min-w-0">
-                  <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                    {song.title}
-                  </div>
-                </div>
-                <div className="text-xs text-[var(--text-muted)]">
-                  {formatDuration(Number(song.duration))}
-                </div>
-                <div className="text-xs text-[var(--text-muted)]">
-                  {song.key || "—"}
-                </div>
-                <div className="text-xs text-[var(--text-muted)]">
-                  {song.bpm ? `${song.bpm} BPM` : "—"}
-                </div>
-                {canManage ? (
-                  <div className="flex justify-end gap-1.5">
-                    <button
-                      type="button"
-                      onClick={() => moveTrack(index, -1)}
-                      disabled={index === 0}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
-                      aria-label={`Move ${song.title} up`}
-                    >
-                      ↑
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => moveTrack(index, 1)}
-                      disabled={index === orderedSongs.length - 1}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
-                      aria-label={`Move ${song.title} down`}
-                    >
-                      ↓
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => removeTrack(song.id)}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
-                    >
-                      Remove
-                    </button>
-                  </div>
-                ) : null}
-              </div>
-            ))
-          )}
-        </div>
+          </SortableContext>
+        </DndContext>
       </section>
 
-      <div className="flex items-center justify-between gap-3">
-        <div className="min-h-5 text-xs">
-          {error ? (
-            <span className="text-[var(--danger)]">{error}</span>
-          ) : message === "Playlist saved." ? (
-            <span
-              className={`transition-opacity duration-500 ${
-                playlistSavedVisible ? "opacity-100" : "opacity-0"
-              }`}
-              style={{ color: "var(--status-success, #48b571)" }}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={onBack}
+          disabled={saving || uploadingArtwork}
+          className="filmwave-backend-button filmwave-backend-button-secondary"
+        >
+          Back to Playlists
+        </button>
+
+        <div className="flex flex-wrap items-center justify-end gap-2">
+          <div className="mr-1 min-h-5 text-xs">
+            {error ? (
+              <span className="text-[var(--danger)]">{error}</span>
+            ) : message ? (
+              <span className="text-[var(--success)]">{message}</span>
+            ) : null}
+          </div>
+          {canManage ? (
+            <button
+              type="submit"
+              disabled={saving || uploadingArtwork || !name.trim()}
+              className="filmwave-backend-button filmwave-backend-button-primary"
             >
-              {message}
-            </span>
-          ) : message ? (
-            <span className="text-[var(--text-muted)]">{message}</span>
+              {saving ? "Saving..." : "Save Playlist"}
+            </button>
           ) : null}
         </div>
-        {canManage ? (
-          <button
-            type="submit"
-            disabled={saving || uploadingArtwork || !name.trim()}
-            className="filmwave-backend-button filmwave-backend-button-primary"
-          >
-            {saving ? "Saving..." : "Save Playlist"}
-          </button>
-        ) : null}
       </div>
     </form>
   );
