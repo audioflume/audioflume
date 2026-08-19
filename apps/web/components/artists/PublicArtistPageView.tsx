@@ -1,3 +1,5 @@
+import type { CSSProperties } from "react";
+
 import Footer from "@/components/Footer";
 import ArtistFeaturePlayControl from "@/components/artists/ArtistFeaturePlayControl";
 import PublicArtistMusic from "@/components/artists/PublicArtistMusic";
@@ -44,6 +46,19 @@ function formatReleaseDate(value: string | null) {
 
 function formatTrackCount(count: number) {
   return `${count} track${count === 1 ? "" : "s"}`;
+}
+
+function getArtistNameFitSize(value: string) {
+  const widthUnits = Array.from(value.trim()).reduce((total, character) => {
+    if (character === " ") return total + 0.25;
+    if (/[MW]/.test(character)) return total + 0.9;
+    if (/[mw]/.test(character)) return total + 0.78;
+    if (/[Iil1]/.test(character)) return total + 0.28;
+    return total + 0.52;
+  }, 0);
+  const containerWidthPercent = 98 / Math.max(widthUnits, 1);
+  const fittedSize = Math.min(17, Math.max(5.5, containerWidthPercent));
+  return `${fittedSize.toFixed(3)}cqw`;
 }
 
 function InstagramIcon() {
@@ -96,7 +111,7 @@ function ReleaseCard({ release }: { release: PublicArtistRelease }) {
 function PlaylistCard({ playlist }: { playlist: PublicArtistPlaylist }) {
   return (
     <article className="artist-public-card">
-      <div className="artist-public-card-art">
+      <div className="artist-public-card-art artist-public-playlist-card-art">
         {playlist.cover_image_url ? (
           <img src={playlist.cover_image_url} alt="" />
         ) : (
@@ -128,6 +143,9 @@ export default function PublicArtistPageView({
   const showProfilePanel = Boolean(artist.bio);
   const showProfileMeta = Boolean(artist.location || externalLinks.length > 0);
   const RootElement = embedded ? "div" : "main";
+  const artistNameStyle = {
+    "--artist-name-fit-size": getArtistNameFitSize(artist.name),
+  } as CSSProperties;
 
   return (
     <>
@@ -172,6 +190,7 @@ export default function PublicArtistPageView({
           column-gap: clamp(34px, 4vw, 72px);
           row-gap: 12px;
           align-items: stretch;
+          container-type: inline-size;
         }
 
         .artist-public-feature-media {
@@ -309,6 +328,7 @@ export default function PublicArtistPageView({
         .artist-public-profile-panel {
           margin-top: auto;
           padding-top: clamp(24px, 2.5vw, 36px);
+          transform: translateY(8px);
         }
 
         .artist-public-profile-heading {
@@ -434,6 +454,10 @@ export default function PublicArtistPageView({
           background: var(--bg-secondary);
         }
 
+        .artist-public-playlist-card-art {
+          aspect-ratio: 16 / 9;
+        }
+
         .artist-public-card-art img,
         .artist-public-card-placeholder {
           width: 100%;
@@ -541,7 +565,9 @@ export default function PublicArtistPageView({
           .artist-public-name {
             width: 100%;
             margin: 0;
-            font-size: clamp(56px, 16.5vw, 116px);
+            font-size: clamp(44px, var(--artist-name-fit-size), 112px);
+            white-space: nowrap;
+            text-wrap: nowrap;
           }
 
           .artist-public-summary-row {
@@ -561,6 +587,7 @@ export default function PublicArtistPageView({
             grid-row: 3;
             margin-top: 0;
             padding-top: 8px;
+            transform: none;
           }
 
           .artist-public-profile-meta {
@@ -630,7 +657,9 @@ export default function PublicArtistPageView({
 
               <div className="artist-public-feature-copy">
                 <div className="artist-public-identity">
-                  <h1 className="artist-public-name">{artist.name}</h1>
+                  <h1 className="artist-public-name" style={artistNameStyle}>
+                    {artist.name}
+                  </h1>
 
                   <div className="artist-public-summary-row">
                     <div className="artist-public-stats">
