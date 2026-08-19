@@ -15,6 +15,7 @@ type PreviewLayout = {
   virtualWidth: number;
   scale: number;
   height: number;
+  topInset: number;
 };
 
 export default function ArtistPagePreview({
@@ -29,6 +30,7 @@ export default function ArtistPagePreview({
     virtualWidth: 0,
     scale: 1,
     height: 0,
+    topInset: 0,
   });
   const previewFrameRef = useRef<HTMLDivElement>(null);
   const previewContentRef = useRef<HTMLDivElement>(null);
@@ -89,17 +91,25 @@ export default function ArtistPagePreview({
         const availableWidth = Math.max(frame.clientWidth, 1);
         const scale = Math.min(1, availableWidth / virtualWidth);
         const height = content.scrollHeight * scale;
+        const rootStyles = getComputedStyle(document.documentElement);
+        const headerHeight =
+          Number.parseFloat(
+            rootStyles.getPropertyValue("--filmwave-header-height"),
+          ) || 0;
+        const frameDocumentTop = frame.getBoundingClientRect().top + window.scrollY;
+        const topInset = Math.max(0, headerHeight - frameDocumentTop);
 
         setLayout((current) => {
           if (
             Math.abs(current.virtualWidth - virtualWidth) < 0.5 &&
             Math.abs(current.scale - scale) < 0.0005 &&
-            Math.abs(current.height - height) < 0.5
+            Math.abs(current.height - height) < 0.5 &&
+            Math.abs(current.topInset - topInset) < 0.5
           ) {
             return current;
           }
 
-          return { virtualWidth, scale, height };
+          return { virtualWidth, scale, height, topInset };
         });
       });
     }
@@ -138,7 +148,14 @@ export default function ArtistPagePreview({
     <div
       ref={previewFrameRef}
       className="relative w-full overflow-hidden bg-[var(--bg-primary)]"
-      style={layout.height > 0 ? { height: `${layout.height}px` } : undefined}
+      style={{
+        boxSizing: "border-box",
+        height:
+          layout.height > 0
+            ? `${layout.height + layout.topInset}px`
+            : undefined,
+        paddingTop: layout.topInset > 0 ? `${layout.topInset}px` : undefined,
+      }}
     >
       <div
         ref={previewContentRef}
