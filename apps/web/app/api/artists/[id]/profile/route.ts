@@ -12,6 +12,7 @@ type RouteContext = {
 };
 
 const ARTIST_INTRO_TEXT_MAX_LENGTH = 114;
+const ARTIST_BIO_MAX_LENGTH = 383;
 
 function cleanOptionalHttpUrl(value: unknown) {
   const cleaned = cleanOptionalString(value, 500);
@@ -62,6 +63,18 @@ export async function PATCH(request: Request, context: RouteContext) {
     );
   }
 
+  if (
+    typeof payload.bio === "string" &&
+    payload.bio.length > ARTIST_BIO_MAX_LENGTH
+  ) {
+    return NextResponse.json(
+      {
+        error: `Bio must be ${ARTIST_BIO_MAX_LENGTH} characters or fewer`,
+      },
+      { status: 400 },
+    );
+  }
+
   const name = cleanOptionalString(payload.name, 160);
   const slug = normalizeArtistSlug(payload.slug);
   const designation = cleanOptionalString(payload.designation, 160);
@@ -69,7 +82,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     payload.intro_text,
     ARTIST_INTRO_TEXT_MAX_LENGTH,
   );
-  const bio = cleanOptionalString(payload.bio, 1200);
+  const bio = cleanOptionalString(payload.bio, ARTIST_BIO_MAX_LENGTH);
   const location = cleanOptionalString(payload.location, 160);
   const website = cleanOptionalHttpUrl(payload.website_url);
   const instagram = cleanOptionalHttpUrl(payload.instagram_url);
