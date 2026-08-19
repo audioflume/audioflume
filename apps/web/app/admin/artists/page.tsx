@@ -432,7 +432,7 @@ export default function AdminArtistsPage() {
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
     >
       {showCreateArtist ? (
-        <section className="mb-4 border border-[var(--border)] bg-[var(--bg-primary)] p-5">
+        <section className="mb-4 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
           <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end">
             <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
               <span>Name (Required)</span>
