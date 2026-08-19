@@ -30,6 +30,22 @@ function normalizeReleaseDate(value: unknown) {
   return value;
 }
 
+function normalizeReleaseIds(value: unknown) {
+  if (!Array.isArray(value)) return null;
+
+  const releaseIds = value.filter(
+    (releaseId): releaseId is string =>
+      typeof releaseId === "string" && releaseId.length > 0,
+  );
+  const uniqueReleaseIds = [...new Set(releaseIds)];
+
+  if (uniqueReleaseIds.length !== value.length || uniqueReleaseIds.length > 200) {
+    return null;
+  }
+
+  return uniqueReleaseIds;
+}
+
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const { id } = await context.params;
@@ -38,10 +54,11 @@ export async function GET(_request: Request, context: RouteContext) {
     const [releaseLinksResult, songLinksResult] = await Promise.all([
       supabaseServer
         .from("artist_release_artists")
-        .select("release_id")
+        .select("release_id, position, created_at")
         .eq("artist_id", id)
         .eq("role", "primary")
-        .order("position", { ascending: true }),
+        .order("position", { ascending: true })
+        .order("created_at", { ascending: false }),
       supabaseServer
         .from("song_artists")
         .select("song_id")
@@ -67,7 +84,6 @@ export async function GET(_request: Request, context: RouteContext) {
               "id, title, release_type, cover_image_url, release_date, status, created_at, updated_at",
             )
             .in("id", releaseIds)
-            .order("updated_at", { ascending: false })
         : Promise.resolve({ data: [], error: null }),
       releaseIds.length > 0
         ? supabaseServer
@@ -101,11 +117,21 @@ export async function GET(_request: Request, context: RouteContext) {
       tracksByRelease.set(track.release_id, current);
     }
 
+    const releaseById = new Map(
+      (releasesResult.data ?? []).map((release) => [release.id, release]),
+    );
+
     return NextResponse.json({
-      releases: (releasesResult.data ?? []).map((release) => ({
-        ...release,
-        track_ids: tracksByRelease.get(release.id) ?? [],
-      })),
+      releases: releaseIds.flatMap((releaseId) => {
+        const release = releaseById.get(releaseId);
+        if (!release) return [];
+        return [
+          {
+            ...release,
+            track_ids: tracksByRelease.get(release.id) ?? [],
+          },
+        ];
+      }),
       songs: songsResult.data ?? [],
     });
   } catch (error) {
@@ -119,6 +145,96 @@ export async function GET(_request: Request, context: RouteContext) {
     console.error("Failed to load artist releases:", error);
     return NextResponse.json(
       { error: "Failed to load artist releases" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function PATCH(request: Request, context: RouteContext) {
+  try {
+    const { id } = await context.params;
+    await requireArtistPermission(id, "release:manage");
+
+    const { data: artist, error: artistError } = await supabaseServer
+      .from("artists")
+      .select("id, status")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (artistError) throw artistError;
+    if (!artist) {
+      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
+    }
+    if (artist.status !== "approved") {
+      return NextResponse.json(
+        { error: "Artist profile must be approved before reordering releases" },
+        { status: 403 },
+      );
+    }
+
+    const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
+    const releaseIds = normalizeReleaseIds(body.release_ids);
+
+    if (!releaseIds) {
+      return NextResponse.json(
+        { error: "Invalid release order" },
+        { status: 400 },
+      );
+    }
+
+    const { data: links, error: linksError } = await supabaseServer
+      .from("artist_release_artists")
+      .select("release_id")
+      .eq("artist_id", id)
+      .eq("role", "primary");
+
+    if (linksError) throw linksError;
+
+    const ownedReleaseIds = new Set(
+      (links ?? [])
+        .map((link) => link.release_id)
+        .filter((releaseId): releaseId is string => typeof releaseId === "string"),
+    );
+
+    if (
+      releaseIds.length !== ownedReleaseIds.size ||
+      releaseIds.some((releaseId) => !ownedReleaseIds.has(releaseId))
+    ) {
+      return NextResponse.json(
+        { error: "Release order must include every release exactly once" },
+        { status: 400 },
+      );
+    }
+
+    const updates = await Promise.all(
+      releaseIds.map((releaseId, position) =>
+        supabaseServer
+          .from("artist_release_artists")
+          .update({ position })
+          .eq("artist_id", id)
+          .eq("release_id", releaseId)
+          .eq("role", "primary"),
+      ),
+    );
+
+    const updateError = updates.find((result) => result.error)?.error;
+    if (updateError) throw updateError;
+
+    return NextResponse.json({ release_ids: releaseIds });
+  } catch (error) {
+    if (error instanceof ArtistAccessError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    }
+
+    console.error("Failed to reorder artist releases:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to reorder artist releases",
+      },
       { status: 500 },
     );
   }
@@ -176,6 +292,36 @@ export async function POST(request: Request, context: RouteContext) {
       .single();
 
     if (releaseError) throw releaseError;
+
+    const { data: existingLinks, error: existingLinksError } = await supabaseServer
+      .from("artist_release_artists")
+      .select("release_id, position, created_at")
+      .eq("artist_id", id)
+      .eq("role", "primary")
+      .order("position", { ascending: true })
+      .order("created_at", { ascending: false });
+
+    if (existingLinksError) {
+      await supabaseServer.from("artist_releases").delete().eq("id", release.id);
+      throw existingLinksError;
+    }
+
+    const positionUpdates = await Promise.all(
+      (existingLinks ?? []).map((link, index) =>
+        supabaseServer
+          .from("artist_release_artists")
+          .update({ position: index + 1 })
+          .eq("artist_id", id)
+          .eq("release_id", link.release_id)
+          .eq("role", "primary"),
+      ),
+    );
+
+    const positionError = positionUpdates.find((result) => result.error)?.error;
+    if (positionError) {
+      await supabaseServer.from("artist_releases").delete().eq("id", release.id);
+      throw positionError;
+    }
 
     const { error: linkError } = await supabaseServer
       .from("artist_release_artists")
