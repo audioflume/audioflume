@@ -21,6 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Toast from "@/components/Toast";
+import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import TrashIcon from "@/components/icons/TrashIcon";
 import AdminBrowseFilterSubcategoryGroup from "@/components/admin/AdminBrowseFilterSubcategoryGroup";
@@ -81,15 +82,11 @@ function SortableSongRow({
       }}
       className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
     >
-      <button
-        type="button"
-        className="flex h-10 w-7 shrink-0 cursor-grab items-center justify-center text-[var(--text-muted)] opacity-40 active:cursor-grabbing"
+      <BackendDragHandle
         aria-label={`Drag to reorder ${song.title}`}
         {...attributes}
         {...listeners}
-      >
-        <DragIconSmall />
-      </button>
+      />
       <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
         {song.coverArt && (
           <Image
