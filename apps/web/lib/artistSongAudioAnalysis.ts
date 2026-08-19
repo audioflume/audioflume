@@ -9,6 +9,88 @@ type OnsetAnalysis = {
   hopSize: number;
 };
 
+type BeatAnalyzerResponse = {
+  enabled?: boolean;
+  bpm?: number | null;
+  confidence?: number | null;
+  beats?: number[];
+  downbeats?: number[];
+  source?: string;
+  error?: string;
+};
+
+function writeAscii(view: DataView, offset: number, text: string) {
+  for (let i = 0; i < text.length; i++) {
+    view.setUint8(offset + i, text.charCodeAt(i));
+  }
+}
+
+function audioBufferToWavFile(audioBuffer: AudioBuffer) {
+  const channelCount = audioBuffer.numberOfChannels;
+  const sampleRate = audioBuffer.sampleRate;
+  const sampleCount = audioBuffer.length;
+  const bytesPerSample = 2;
+  const blockAlign = channelCount * bytesPerSample;
+  const dataByteLength = sampleCount * blockAlign;
+  const buffer = new ArrayBuffer(44 + dataByteLength);
+  const view = new DataView(buffer);
+
+  writeAscii(view, 0, "RIFF");
+  view.setUint32(4, 36 + dataByteLength, true);
+  writeAscii(view, 8, "WAVE");
+  writeAscii(view, 12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true);
+  view.setUint16(22, channelCount, true);
+  view.setUint32(24, sampleRate, true);
+  view.setUint32(28, sampleRate * blockAlign, true);
+  view.setUint16(32, blockAlign, true);
+  view.setUint16(34, bytesPerSample * 8, true);
+  writeAscii(view, 36, "data");
+  view.setUint32(40, dataByteLength, true);
+
+  let offset = 44;
+
+  for (let sampleIndex = 0; sampleIndex < sampleCount; sampleIndex++) {
+    for (let channelIndex = 0; channelIndex < channelCount; channelIndex++) {
+      const channelData = audioBuffer.getChannelData(channelIndex);
+      const sample = Math.max(-1, Math.min(1, channelData[sampleIndex] || 0));
+      const pcmSample = sample < 0 ? sample * 0x8000 : sample * 0x7fff;
+
+      view.setInt16(offset, pcmSample, true);
+      offset += bytesPerSample;
+    }
+  }
+
+  return new File([buffer], "beat-this-analysis.wav", {
+    type: "audio/wav",
+  });
+}
+
+async function estimateArtistBpm(audioBuffer: AudioBuffer, artistId: string) {
+  try {
+    const formData = new FormData();
+    formData.append("file", audioBufferToWavFile(audioBuffer));
+
+    const response = await fetch(`/api/artists/${artistId}/analyze-beats`, {
+      method: "POST",
+      body: formData,
+      credentials: "include",
+    });
+
+    const data = (await response.json().catch(() => null)) as BeatAnalyzerResponse | null;
+    const bpm = Number(data?.bpm);
+
+    if (response.ok && data?.enabled && Number.isFinite(bpm) && bpm > 0) {
+      return Math.round(bpm);
+    }
+  } catch (error) {
+    console.warn("[Artist BPM] Beat analyzer request failed.", error);
+  }
+
+  return estimateBpmWithEssentia(audioBuffer);
+}
+
 function downsamplePeaks(peaks: number[], targetLength = 300) {
   if (peaks.length <= targetLength) {
     return peaks;
@@ -335,6 +417,7 @@ function chooseSuggestedBpm({
 
 export async function analyzeArtistSongAudioFile(
   file: File,
+  artistId: string,
   targetLength = 1500,
 ) {
   const arrayBuffer = await file.arrayBuffer();
@@ -345,7 +428,7 @@ export async function analyzeArtistSongAudioFile(
   const fullPeaks = Array.from(channelData);
   const optimizedPeaks = downsamplePeaks(fullPeaks, targetLength);
 
-  const essentiaBpm = await estimateBpmWithEssentia(audioBuffer);
+  const essentiaBpm = await estimateArtistBpm(audioBuffer, artistId);
   const keyResult = await estimateKeyWithEssentia(audioBuffer);
   const normalizedEssentiaBpm = normalizeObviousDoubleTimeBpm(essentiaBpm);
   const onsetBpm = estimateBpmFromOnsets(audioBuffer);
