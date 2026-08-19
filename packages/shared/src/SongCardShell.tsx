@@ -23,6 +23,7 @@ type SongCardShellProps = {
   expandedContent?: ReactNode;
   onCoverClick?: () => void;
   onInfoClick?: () => void;
+  showDivider?: boolean;
 };
 
 export function SongCardShell({
@@ -46,11 +47,13 @@ export function SongCardShell({
   expandedContent,
   onCoverClick,
   onInfoClick,
+  showDivider = true,
 }: SongCardShellProps) {
   const rootClassName = `filmwave-song-card${expandedContent ? " has-expanded-content" : ""}${className ? ` ${className}` : ""}`;
   const baseStyle = {
     "--filmwave-song-card-cover-size": "62px",
     "--filmwave-song-card-min-height": "86px",
+    ...(showDivider ? {} : { borderBottom: 0 }),
   } as CSSProperties;
   const expandedStyle: CSSProperties | undefined = expandedContent
     ? {
