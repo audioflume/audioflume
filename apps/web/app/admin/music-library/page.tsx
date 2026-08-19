@@ -452,44 +452,6 @@ export default function AdminMusicLibraryPage() {
           transition: opacity 0.15s ease;
         }
 
-        .admin-song-select-input {
-          position: absolute;
-          opacity: 0;
-          pointer-events: none;
-        }
-
-        .admin-song-select-box {
-          width: 16px;
-          height: 16px;
-          border-radius: 4px;
-          border: 1.5px solid var(--border);
-          background: var(--bg-secondary);
-          color: var(--bg-primary);
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          transition: border 0.15s ease, background 0.15s ease, color 0.15s ease;
-        }
-
-        .admin-song-select-box svg {
-          opacity: 0;
-          transition: opacity 0.15s ease;
-        }
-
-        .admin-song-select-wrap:hover .admin-song-select-box {
-          border-color: var(--text-secondary);
-        }
-
-        .admin-song-select-input:checked + .admin-song-select-box {
-          border-color: var(--text-primary);
-          background: var(--text-primary);
-          color: var(--bg-primary);
-        }
-
-        .admin-song-select-input:checked + .admin-song-select-box svg {
-          opacity: 1;
-        }
-
         .admin-music-library-song-list .admin-song-row {
           grid-template-columns: 22px 60px minmax(120px, 1fr) minmax(120px, 1fr) minmax(120px, 1fr) 64px 76px 96px 40px;
           column-gap: 16px;
