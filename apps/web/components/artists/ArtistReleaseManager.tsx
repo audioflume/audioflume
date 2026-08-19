@@ -391,6 +391,7 @@ function ReleaseEditor({
   const [trackIds, setTrackIds] = useState<string[]>(release.track_ids);
   const [songToAdd, setSongToAdd] = useState("");
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
+  const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
   const [artworkInputKey, setArtworkInputKey] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
@@ -406,6 +407,18 @@ function ReleaseEditor({
     .map((songId) => songsById.get(songId))
     .filter((song): song is ReleaseSong => Boolean(song));
   const availableSongs = songs.filter((song) => !trackIds.includes(song.id));
+
+  useEffect(() => {
+    if (!artworkFile) {
+      setArtworkPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(artworkFile);
+    setArtworkPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [artworkFile]);
 
   function addTrack() {
     if (!songToAdd || !canManage) return;
@@ -471,12 +484,38 @@ function ReleaseEditor({
         throw new Error(body.error || "Failed to save release");
       }
 
-      const updatedRelease = body.release as ArtistRelease;
+      let updatedRelease = body.release as ArtistRelease;
+
+      if (artworkFile) {
+        setUploadingArtwork(true);
+        const formData = new FormData();
+        formData.append("file", artworkFile);
+
+        const artworkResponse = await fetch(
+          `/api/artists/${artist.id}/releases/${release.id}/artwork`,
+          { method: "POST", body: formData },
+        );
+        const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ReleasesResponse;
+
+        if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
+          throw new Error(artworkBody.error || "Failed to upload release artwork");
+        }
+
+        updatedRelease = {
+          ...updatedRelease,
+          cover_image_url: artworkBody.release.cover_image_url,
+          updated_at: artworkBody.release.updated_at ?? updatedRelease.updated_at,
+        };
+        setArtworkFile(null);
+        setArtworkInputKey((current) => current + 1);
+      }
+
       onUpdated(updatedRelease);
       setMessage("Release saved.");
     } catch (error) {
       setError(error instanceof Error ? error.message : "Failed to save release");
     } finally {
+      setUploadingArtwork(false);
       setSaving(false);
     }
   }
@@ -537,48 +576,6 @@ function ReleaseEditor({
     }
   }
 
-  async function uploadArtwork() {
-    if (!canManage || !artworkFile || uploadingArtwork || statusChanging) return;
-
-    try {
-      setUploadingArtwork(true);
-      setError("");
-      setMessage("");
-
-      const formData = new FormData();
-      formData.append("file", artworkFile);
-
-      const response = await fetch(
-        `/api/artists/${artist.id}/releases/${release.id}/artwork`,
-        { method: "POST", body: formData },
-      );
-      const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
-
-      if (!response.ok || !body.release?.cover_image_url) {
-        throw new Error(body.error || "Failed to upload release artwork");
-      }
-
-      onUpdated({
-        ...release,
-        title,
-        release_type: releaseType,
-        release_date: releaseDate || null,
-        track_ids: trackIds,
-        cover_image_url: body.release.cover_image_url,
-        updated_at: body.release.updated_at ?? release.updated_at,
-      });
-      setArtworkFile(null);
-      setArtworkInputKey((current) => current + 1);
-      setMessage("Artwork updated.");
-    } catch (error) {
-      setError(
-        error instanceof Error ? error.message : "Failed to upload release artwork",
-      );
-    } finally {
-      setUploadingArtwork(false);
-    }
-  }
-
   return (
     <form onSubmit={saveRelease} className="grid gap-4">
       <div className="flex items-center justify-between gap-3">
@@ -601,9 +598,9 @@ function ReleaseEditor({
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
           <div>
             <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-              {release.cover_image_url ? (
+              {artworkPreviewUrl || release.cover_image_url ? (
                 <img
-                  src={release.cover_image_url}
+                  src={artworkPreviewUrl ?? release.cover_image_url ?? ""}
                   alt=""
                   className="h-full w-full object-cover"
                 />
@@ -615,20 +612,12 @@ function ReleaseEditor({
                   key={artworkInputKey}
                   type="file"
                   accept="image/*"
-                  disabled={uploadingArtwork || statusChanging}
+                  disabled={saving || uploadingArtwork || statusChanging}
                   onChange={(event) =>
                     setArtworkFile(event.target.files?.[0] ?? null)
                   }
                   className="block w-full text-[11px] text-[var(--text-muted)] file:mr-2 file:rounded-[7px] file:border file:border-[var(--border)] file:bg-[var(--bg-primary)] file:px-2.5 file:py-1.5 file:text-[11px] file:text-[var(--text-primary)]"
                 />
-                <button
-                  type="button"
-                  onClick={() => void uploadArtwork()}
-                  disabled={!artworkFile || uploadingArtwork || statusChanging}
-                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                >
-                  {uploadingArtwork ? "Uploading..." : "Upload artwork"}
-                </button>
               </div>
             ) : null}
           </div>
