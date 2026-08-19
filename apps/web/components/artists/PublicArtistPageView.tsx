@@ -186,9 +186,9 @@ export default function PublicArtistPageView({
     ),
     "--artist-name-full-fit-size": getArtistNameFitSize(
       displayArtist.name,
-      100,
+      150,
       3.2,
-      17,
+      25,
     ),
   } as CSSProperties;
 
@@ -796,7 +796,7 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-intro {
-            order: 2;
+            order: 7;
             width: 100%;
             max-width: 720px;
             color: var(--text-primary);
@@ -850,7 +850,7 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-profile-panel {
-            order: 7;
+            order: 8;
             position: relative;
             inset: auto;
             display: flex;
@@ -862,19 +862,16 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-profile-heading {
-            order: 2;
             width: 100%;
-            margin-top: 12px;
           }
 
           .artist-public-bio {
-            order: 1;
             width: 100%;
-            margin-top: 0;
+            margin-top: 9px;
           }
 
           .artist-public-profile-meta {
-            order: 8;
+            order: 9;
             width: 100%;
             justify-content: flex-end;
             margin-top: -10px;
