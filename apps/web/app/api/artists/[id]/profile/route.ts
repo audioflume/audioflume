@@ -93,6 +93,14 @@ export async function PATCH(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Artist name is required" }, { status: 400 });
   }
 
+  if (!introText) {
+    return NextResponse.json({ error: "Intro text is required" }, { status: 400 });
+  }
+
+  if (!bio) {
+    return NextResponse.json({ error: "Bio is required" }, { status: 400 });
+  }
+
   if (!slug) {
     return NextResponse.json({ error: "Artist URL is required" }, { status: 400 });
   }
