@@ -186,7 +186,7 @@ export default function PublicArtistPageView({
     ),
     "--artist-name-full-fit-size": getArtistNameFitSize(
       displayArtist.name,
-      150,
+      100,
       3.2,
       25,
     ),
