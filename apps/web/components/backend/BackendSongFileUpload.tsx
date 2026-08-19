@@ -173,12 +173,10 @@ export default function BackendSongFileUpload({
         </button>
       </div>
 
-      <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
-        <div className="border-b border-[var(--border-subtle)] px-5 pb-3.5 pt-[18px]">
-          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
-            Files
-          </h2>
-        </div>
+      <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
+        <h2 className="mb-3 font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
+          Files
+        </h2>
 
         <input
           ref={audioInputRef}
@@ -198,81 +196,83 @@ export default function BackendSongFileUpload({
           onChange={handleStemInput}
         />
 
-        <div className={`grid min-h-[58px] grid-cols-[92px_minmax(0,1fr)_auto] items-center gap-4 px-5 py-2.5 ${audioStatusBusy ? "py-4" : ""}`}>
-          <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
-            Audio
-          </div>
-          <div className="min-w-0">
-            <div className={`truncate text-xs leading-[18px] ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
-              {audioFile?.name || audioExistingLabel || "No file chosen"}
+        <div className="grid gap-2">
+          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${audioStatusBusy || (audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus)) ? "py-2" : ""}`}>
+            <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
+              Audio
             </div>
-            {audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus) ? (
-              <div className="mt-2 flex items-start gap-2 text-[11px] leading-5 text-[var(--text-secondary)]">
-                {audioStatusBusy ? (
-                  <span className="mt-0.5 h-3.5 w-3.5 shrink-0 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
-                ) : null}
-                <span>{audioStatus}</span>
+            <div className="min-w-0">
+              <div className={`truncate text-xs leading-[18px] ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
+                {audioFile?.name || audioExistingLabel || "No file chosen"}
               </div>
+              {audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus) ? (
+                <div className="mt-1 flex items-start gap-2 text-[11px] leading-4 text-[var(--text-secondary)]">
+                  {audioStatusBusy ? (
+                    <span className="mt-px h-3.5 w-3.5 shrink-0 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
+                  ) : null}
+                  <span>{audioStatus}</span>
+                </div>
+              ) : null}
+            </div>
+            {audioFile ? (
+              <button
+                type="button"
+                disabled={disabled || audioStatusBusy}
+                onClick={() => onAudioFileChange(null)}
+                className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                Remove
+              </button>
             ) : null}
           </div>
-          {audioFile ? (
-            <button
-              type="button"
-              disabled={disabled || audioStatusBusy}
-              onClick={() => onAudioFileChange(null)}
-              className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:cursor-not-allowed disabled:opacity-50"
-            >
-              Remove
-            </button>
-          ) : null}
-        </div>
 
-        <div className={`grid min-h-[58px] grid-cols-[92px_minmax(0,1fr)_auto] items-center gap-4 border-t border-[var(--border-subtle)] px-5 py-2.5 ${hasStems ? "py-4" : ""}`}>
-          <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
-            Stems
-          </div>
-          <div className="min-w-0">
-            <div className={`truncate text-xs leading-[18px] ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
-              {stemFiles.length > 0
-                ? `${stemFiles.length} file${stemFiles.length === 1 ? "" : "s"} chosen`
-                : existingStemLabels.length > 0
-                  ? `${existingStemLabels.length} current stem${existingStemLabels.length === 1 ? "" : "s"} will be kept`
-                  : "No file chosen"}
+          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${visibleStemLabels.length > 0 ? "py-2" : ""}`}>
+            <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
+              Stems
             </div>
-            {visibleStemLabels.length > 0 ? (
-              <div className="mt-2 overflow-hidden rounded-[7px] border border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
-                {visibleStemLabels.map((label, index) => (
-                  <div
-                    key={`${label}-${index}`}
-                    className={`flex min-h-[34px] items-center justify-between gap-3 px-2.5 py-2 text-[11px] text-[var(--text-primary)] ${index > 0 ? "border-t border-[var(--border-subtle)]" : ""}`}
-                  >
-                    <span className="min-w-0 flex-1 truncate">{label}</span>
-                    {stemFiles.length > 0 ? (
-                      <button
-                        type="button"
-                        disabled={disabled}
-                        onClick={() => removeStem(index)}
-                        aria-label={`Remove ${label}`}
-                        className="shrink-0 text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50"
-                      >
-                        Remove
-                      </button>
-                    ) : null}
-                  </div>
-                ))}
+            <div className="min-w-0">
+              <div className={`truncate text-xs leading-[18px] ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
+                {stemFiles.length > 0
+                  ? `${stemFiles.length} file${stemFiles.length === 1 ? "" : "s"} chosen`
+                  : existingStemLabels.length > 0
+                    ? `${existingStemLabels.length} current stem${existingStemLabels.length === 1 ? "" : "s"} will be kept`
+                    : "No file chosen"}
               </div>
+              {visibleStemLabels.length > 0 ? (
+                <div className="mt-1 grid gap-1">
+                  {visibleStemLabels.map((label, index) => (
+                    <div
+                      key={`${label}-${index}`}
+                      className="flex min-w-0 items-center justify-between gap-3 text-[11px] leading-4 text-[var(--text-secondary)]"
+                    >
+                      <span className="min-w-0 flex-1 truncate">{label}</span>
+                      {stemFiles.length > 0 ? (
+                        <button
+                          type="button"
+                          disabled={disabled}
+                          onClick={() => removeStem(index)}
+                          aria-label={`Remove ${label}`}
+                          className="shrink-0 font-medium transition hover:text-[var(--danger)] disabled:opacity-50"
+                        >
+                          Remove
+                        </button>
+                      ) : null}
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+            {stemFiles.length === 0 && existingStemLabels.length > 0 && onClearExistingStems ? (
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={onClearExistingStems}
+                className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50"
+              >
+                Remove
+              </button>
             ) : null}
           </div>
-          {stemFiles.length === 0 && existingStemLabels.length > 0 && onClearExistingStems ? (
-            <button
-              type="button"
-              disabled={disabled}
-              onClick={onClearExistingStems}
-              className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50"
-            >
-              Remove
-            </button>
-          ) : null}
         </div>
       </section>
 
