@@ -376,7 +376,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
         </div>
       </div>
 
-      <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid auto-rows-[40px] gap-2 sm:grid-cols-2 lg:grid-cols-4">
         {filter.subcategories.map((subcategory) => {
           const checked =
             mode === "edit"
@@ -386,7 +386,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
           return (
             <div
               key={subcategory.id}
-              className="flex items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--text-secondary)]"
+              className="flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
             >
               <BackendCheckbox
                 checked={checked}
@@ -416,7 +416,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                   onKeyDown={(event) => {
                     if (event.key === "Enter") event.preventDefault();
                   }}
-                  className="min-w-0 flex-1 bg-transparent text-sm text-[var(--text-secondary)] outline-none"
+                  className="min-w-0 flex-1 bg-transparent text-xs text-[var(--text-secondary)] outline-none"
                   aria-label={`Rename ${subcategory.label}`}
                 />
               ) : (
@@ -439,15 +439,15 @@ export default function AdminBrowseFilterSubcategoryGroup({
               setNewFieldOpen(true);
               setNewDropdownOpen(true);
             }}
-            className="flex items-center rounded-lg border border-dashed border-[var(--border)] px-3 py-2 text-left text-sm text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
+            className="flex h-10 items-center rounded-lg border border-dashed border-[var(--border)] px-3 py-0 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
           >
             New
           </button>
         )}
 
         {mode === "edit" && newFieldOpen && (
-          <div ref={newCategoryRef} className="relative min-w-[140px]">
-            <div className="flex min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
+          <div ref={newCategoryRef} className="relative h-10 min-w-[140px]">
+            <div className="flex h-10 min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
               <input
                 value={newValue}
                 onChange={(event) => {
@@ -460,7 +460,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 onKeyDown={(event) => {
                   if (event.key === "Enter") event.preventDefault();
                 }}
-                className="w-full min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
+                className="h-full w-full min-w-0 flex-1 bg-transparent px-3 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
                 placeholder="Category Name"
                 aria-label={`New category for ${filter.label}`}
                 autoFocus
@@ -468,7 +468,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               <button
                 type="button"
                 onClick={() => setNewDropdownOpen((current) => !current)}
-                className="flex w-7 shrink-0 items-center justify-center self-stretch text-[var(--text-muted)]"
+                className="flex h-full w-7 shrink-0 items-center justify-center text-[var(--text-muted)]"
                 aria-label="Show existing categories"
               >
                 <ChevronDownIcon size={14} />
@@ -483,7 +483,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                     type="button"
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => selectExisting(subcategory)}
-                    className="block w-full px-3 py-2 text-left text-sm text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
                     {subcategory.label}
                   </button>
