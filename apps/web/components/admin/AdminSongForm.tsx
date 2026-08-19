@@ -5,6 +5,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import AdminContentPage from "@/components/admin/AdminContentPage";
+import AdminSongEditPointsSection from "@/components/admin/AdminSongEditPointsSection";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
@@ -27,6 +28,7 @@ import {
 import {
   MOOD_OPTIONS,
   GENRE_OPTIONS,
+  REGION_OPTIONS,
   INSTRUMENT_OPTIONS,
   BUILD_OPTIONS,
   VOCALS_OPTIONS,
@@ -108,10 +110,12 @@ type SaveSongPayload = {
   waveformPeaks: string;
   genres: string[];
   moods: string[];
+  regions: string[];
   instruments: string[];
   builds: string[];
   vocals: string[];
   instrumental: boolean;
+  aiGenerated: boolean;
   editPoints: string;
 };
 
@@ -133,10 +137,12 @@ type AdminSongRecord = {
   waveformPeaks: string;
   genres: string[];
   moods: string[];
+  regions: string[];
   instruments: string[];
   builds: string[];
   vocals: string[];
   instrumental: boolean;
+  aiGenerated: boolean;
   editPoints: string;
 };
 
@@ -938,10 +944,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
   const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
   const [selectedGenres, setSelectedGenres] = useState<string[]>([]);
+  const [selectedRegions, setSelectedRegions] = useState<string[]>([]);
   const [selectedInstruments, setSelectedInstruments] = useState<string[]>([]);
   const [selectedBuilds, setSelectedBuilds] = useState<string[]>([]);
   const [selectedVocals, setSelectedVocals] = useState<string[]>([]);
   const [instrumental, setInstrumental] = useState(false);
+  const [aiGenerated, setAiGenerated] = useState(false);
   const [waveformPeaks, setWaveformPeaks] = useState("");
   const [originalWaveformPeaks, setOriginalWaveformPeaks] = useState("");
   const [peakStatus, setPeakStatus] = useState("");
@@ -996,7 +1004,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     if (!duration.trim()) warnings.push("Duration missing");
     if (!waveformPeaks.trim()) warnings.push("Waveform peaks missing");
     if (selectedGenres.length === 0) warnings.push("Genre tags empty");
-    if (selectedMoods.length === 0) warnings.push("Mood tags empty");
+    if (selectedMoods.length === 0) warnings.push("Scene tags empty");
     if (selectedInstruments.length === 0)
       warnings.push("Instrument tags empty");
     if (selectedBuilds.length === 0) warnings.push("Build tags empty");
@@ -1065,10 +1073,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         setOriginalWaveformPeaks(song.waveformPeaks || "");
         setSelectedGenres(song.genres || []);
         setSelectedMoods(song.moods || []);
+        setSelectedRegions(song.regions || []);
         setSelectedInstruments(song.instruments || []);
         setSelectedBuilds(song.builds || []);
         setSelectedVocals(song.vocals || []);
         setInstrumental(Boolean(song.instrumental));
+        setAiGenerated(Boolean(song.aiGenerated));
         setEditPointsJson(
           song.editPoints ||
             `{
@@ -1166,10 +1176,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     setExistingStemUrls([]);
     setSelectedMoods([]);
     setSelectedGenres([]);
+    setSelectedRegions([]);
     setSelectedInstruments([]);
     setSelectedBuilds([]);
     setSelectedVocals([]);
     setInstrumental(false);
+    setAiGenerated(false);
     setWaveformPeaks("");
     setOriginalWaveformPeaks("");
     setPeakStatus("");
@@ -1475,10 +1487,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         waveformPeaks,
         genres: selectedGenres,
         moods: selectedMoods,
+        regions: selectedRegions,
         instruments: selectedInstruments,
         builds: selectedBuilds,
         vocals: selectedVocals,
         instrumental,
+        aiGenerated,
         editPoints: editPointsJson,
       };
 
@@ -1781,6 +1795,15 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     label="Instrumental"
                   />
                 </div>
+
+                <div className="admin-song-ai-field">
+                  <FieldLabel>AI</FieldLabel>
+                  <CheckboxInput
+                    checked={aiGenerated}
+                    onChange={setAiGenerated}
+                    label="Made with AI"
+                  />
+                </div>
               </div>
             </section>
 
@@ -1856,7 +1879,21 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
-                    <FieldLabel>Mood</FieldLabel>
+                    <FieldLabel>Region</FieldLabel>
+                    <span className="text-[11px] text-[var(--text-muted)]">
+                      {selectedRegions.length} selected
+                    </span>
+                  </div>
+                  <MultiSelectPills
+                    options={REGION_OPTIONS}
+                    selected={selectedRegions}
+                    onChange={setSelectedRegions}
+                  />
+                </div>
+
+                <div>
+                  <div className="mb-2 flex items-center justify-between gap-4">
+                    <FieldLabel>Scene</FieldLabel>
                     <span className="text-[11px] text-[var(--text-muted)]">
                       {selectedMoods.length} selected
                     </span>
@@ -1916,20 +1953,17 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
             <section className="admin-song-form-card">
               <div className="admin-song-form-card-header">
-                <div className="admin-song-form-kicker">Edit Points</div>
+                <div className="admin-song-form-kicker">Cue Points</div>
               </div>
 
               <div className="p-4">
-                <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
-                  Temporary manual JSON field. Later this can be generated by AI
-                  and reviewed here.
-                </p>
-
-                <TextArea
-                  value={editPointsJson}
-                  onChange={setEditPointsJson}
-                  rows={8}
-                  placeholder='{"markers":[],"ranges":[]}'
+                <AdminSongEditPointsSection
+                  songId={songId}
+                  audioUrl={existingAudioUrl}
+                  waveformPeaks={waveformPeaks}
+                  duration={duration}
+                  showSaveButton={false}
+                  onEditPointsJsonChange={setEditPointsJson}
                 />
               </div>
             </section>
