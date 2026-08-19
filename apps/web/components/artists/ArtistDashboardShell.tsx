@@ -7,6 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ArtistAgreements from "@/components/artists/ArtistAgreements";
 import ArtistAnalytics from "@/components/artists/ArtistAnalytics";
+import ArtistEarnings from "@/components/artists/ArtistEarnings";
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
 import ArtistNotifications from "@/components/artists/ArtistNotifications";
 import ArtistPagePreview from "@/components/artists/ArtistPagePreview";
@@ -27,6 +28,7 @@ type ArtistDashboardSection =
   | "notifications"
   | "agreements"
   | "analytics"
+  | "earnings"
   | "team";
 
 type ArtistDashboardShellProps = {
@@ -51,6 +53,7 @@ const NAV_ITEMS: { section: ArtistDashboardSection; label: string }[] = [
   { section: "notifications", label: "Notifications" },
   { section: "agreements", label: "Agreements" },
   { section: "analytics", label: "Analytics" },
+  { section: "earnings", label: "Earnings" },
   { section: "team", label: "Team" },
 ];
 
@@ -70,6 +73,7 @@ const NAV_GROUPS: ArtistNavGroup[] = [
       { section: "notifications", label: "Notifications" },
       { section: "agreements", label: "Agreements" },
       { section: "analytics", label: "Analytics" },
+      { section: "earnings", label: "Earnings" },
       { section: "team", label: "Team" },
     ],
   },
@@ -79,6 +83,10 @@ function isArtistDashboardSection(
   value: string | null,
 ): value is ArtistDashboardSection {
   return NAV_ITEMS.some((item) => item.section === value);
+}
+
+function canViewEarnings(role: ArtistDashboardProfile["role"]) {
+  return role === "owner" || role === "manager";
 }
 
 function getArtistDashboardHref(
@@ -313,6 +321,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   }
 
   const isMyPage = activeSection === "my-page";
+  const earningsVisible = canViewEarnings(activeArtist.role);
 
   return (
     <main
@@ -389,16 +398,20 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               <div key={group.title} className="shrink-0">
                 <ArtistSectionHeading>{group.title}</ArtistSectionHeading>
                 <div className="flex flex-col gap-px">
-                  {group.items.map((item) => (
-                    <ArtistNavButton
-                      key={item.section}
-                      section={item.section}
-                      label={item.label}
-                      artistId={activeArtist.id}
-                      active={sectionReady && activeSection === item.section}
-                      onClick={handleSectionChange}
-                    />
-                  ))}
+                  {group.items
+                    .filter(
+                      (item) => item.section !== "earnings" || earningsVisible,
+                    )
+                    .map((item) => (
+                      <ArtistNavButton
+                        key={item.section}
+                        section={item.section}
+                        label={item.label}
+                        artistId={activeArtist.id}
+                        active={sectionReady && activeSection === item.section}
+                        onClick={handleSectionChange}
+                      />
+                    ))}
                 </div>
               </div>
             ))}
@@ -439,7 +452,9 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               className="flex overflow-x-auto border border-[var(--border)] bg-[var(--bg-primary)]"
               aria-label="Artist dashboard sections"
             >
-              {NAV_ITEMS.map((item) => (
+              {NAV_ITEMS.filter(
+                (item) => item.section !== "earnings" || earningsVisible,
+              ).map((item) => (
                 <Link
                   key={item.section}
                   href={getArtistDashboardHref(item.section, activeArtist.id)}
@@ -507,6 +522,11 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
           ) : activeSection === "analytics" ? (
             <ArtistAnalytics
               key={`${activeArtist.id}-analytics-${sectionViewVersion}`}
+              artistId={activeArtist.id}
+            />
+          ) : activeSection === "earnings" && earningsVisible ? (
+            <ArtistEarnings
+              key={`${activeArtist.id}-earnings-${sectionViewVersion}`}
               artistId={activeArtist.id}
             />
           ) : activeSection === "team" ? (
