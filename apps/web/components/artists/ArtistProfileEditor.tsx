@@ -313,7 +313,7 @@ export default function ArtistProfileEditor({
             <textarea
               value={bio}
               onChange={(event) => setBio(event.target.value)}
-              maxLength={1200}
+              maxLength={383}
               disabled={!canEdit || saving}
               rows={6}
               className="filmwave-backend-textarea"
