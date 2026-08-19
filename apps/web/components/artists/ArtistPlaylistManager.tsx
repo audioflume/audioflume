@@ -17,7 +17,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import DragIconSmall from "@/components/icons/DragIconSmall";
+import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -115,18 +115,12 @@ function SortablePlaylistRow({
       }`}
     >
       {canManage ? (
-        <button
-          type="button"
+        <BackendDragHandle
           disabled={disabled}
-          className="flex h-8 w-7 cursor-grab items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-50"
           aria-label={`Drag ${playlist.name} to reorder`}
           {...attributes}
           {...listeners}
-        >
-          <span className="inline-flex scale-x-[1.45]">
-            <DragIconSmall />
-          </span>
-        </button>
+        />
       ) : null}
 
       <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
@@ -802,7 +796,11 @@ function PlaylistEditor({
           </div>
         ) : null}
 
-        <div className="divide-y divide-[var(--border-subtle)]">
+        <div
+          className={
+            orderedSongs.length === 0 ? "" : "grid gap-2 px-5 pb-5"
+          }
+        >
           {orderedSongs.length === 0 ? (
             <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
               No tracks added yet.
@@ -811,7 +809,7 @@ function PlaylistEditor({
             orderedSongs.map((song, index) => (
               <div
                 key={song.id}
-                className="grid gap-3 px-5 py-3 sm:grid-cols-[44px_minmax(0,1fr)_70px_70px_70px_auto] sm:items-center"
+                className="grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:grid-cols-[44px_minmax(0,1fr)_70px_70px_70px_auto] sm:items-center"
               >
                 <div className="h-10 w-10 overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)]">
                   {song.cover_url ? (
