@@ -168,7 +168,11 @@ export default function ArtistCollaboratorsEditor({
   }
 
   return (
-    <section className="filmwave-backend-section">
+    <section
+      className={`filmwave-backend-section ${
+        resourceType === "release" ? "mt-1 md:mt-4 xl:mt-6" : ""
+      }`}
+    >
       <div className="filmwave-backend-section-header">
         <h2 className="filmwave-backend-section-title">Artist credits</h2>
       </div>
