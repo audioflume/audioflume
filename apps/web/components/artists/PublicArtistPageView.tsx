@@ -520,11 +520,13 @@ export default function PublicArtistPageView({
         input.artist-public-type.artist-public-edit-control {
           width: 15%;
           min-width: 160px;
+          color: #fff;
         }
 
         textarea.artist-public-intro.artist-public-edit-control {
           width: 32%;
           min-height: 2.7em;
+          color: #fff;
         }
 
         input.artist-public-name.artist-public-edit-control {
@@ -541,28 +543,6 @@ export default function PublicArtistPageView({
         textarea.artist-public-bio.artist-public-edit-control {
           width: 100%;
           min-height: 6.4em;
-        }
-
-        .artist-public-edit-url-row {
-          position: absolute;
-          top: 0;
-          right: 0;
-          z-index: 7;
-          display: inline-flex;
-          max-width: 360px;
-          align-items: center;
-          gap: 2px;
-          color: var(--text-primary);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: 10px;
-          font-weight: 400;
-          line-height: 1.2;
-        }
-
-        .artist-public-edit-url-row input {
-          min-width: 150px;
-          padding: 2px 3px;
-          font: inherit;
         }
 
         .artist-public-feature-edit-overlay {
@@ -780,8 +760,7 @@ export default function PublicArtistPageView({
           .artist-public-intro,
           .artist-public-name,
           .artist-public-feature-media,
-          .artist-public-profile-meta,
-          .artist-public-edit-url-row {
+          .artist-public-profile-meta {
             position: relative;
             top: auto;
             right: auto;
@@ -802,11 +781,6 @@ export default function PublicArtistPageView({
             color: var(--text-primary);
           }
 
-          .artist-public-edit-url-row {
-            order: 3;
-            align-self: flex-start;
-          }
-
           .artist-public-name {
             order: 4;
             width: 100%;
@@ -825,6 +799,7 @@ export default function PublicArtistPageView({
           textarea.artist-public-intro.artist-public-edit-control {
             width: 100%;
             min-width: 0;
+            color: var(--text-primary);
           }
 
           .artist-public-left-stack {
@@ -949,20 +924,6 @@ export default function PublicArtistPageView({
                 />
               ) : displayArtist.intro_text ? (
                 <p className="artist-public-intro">{displayArtist.intro_text}</p>
-              ) : null}
-
-              {editMode ? (
-                <div className="artist-public-edit-url-row">
-                  <span>/artists/</span>
-                  <input
-                    type="text"
-                    aria-label="Artist URL"
-                    className="artist-public-edit-control"
-                    value={displayArtist.slug}
-                    maxLength={80}
-                    onChange={(event) => updateField("slug", event.target.value)}
-                  />
-                </div>
               ) : null}
 
               <div className="artist-public-feature-media">
