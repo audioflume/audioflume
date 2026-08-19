@@ -1,6 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
 import Footer from "@/components/Footer";
-import AdminCheckboxStyles from "@/components/admin/AdminCheckboxStyles";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import BackendPageHeader from "@/components/backend/BackendPageHeader";
 
@@ -105,7 +104,6 @@ export default function AdminContentPage({
       }`}
     >
       <AdminSidebar />
-      <AdminCheckboxStyles />
 
       <style>{`
         .filmwave-admin-content-page {
