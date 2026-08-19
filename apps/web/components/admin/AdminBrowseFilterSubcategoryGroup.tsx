@@ -386,7 +386,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
           return (
             <div
               key={subcategory.id}
-              className="flex min-h-10 items-center gap-2 rounded-[7px] border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
+              className="flex items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--text-secondary)]"
             >
               <BackendCheckbox
                 checked={checked}
@@ -416,7 +416,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                   onKeyDown={(event) => {
                     if (event.key === "Enter") event.preventDefault();
                   }}
-                  className="min-w-0 flex-1 bg-transparent text-xs text-[var(--text-secondary)] outline-none"
+                  className="min-w-0 flex-1 bg-transparent text-sm text-[var(--text-secondary)] outline-none"
                   aria-label={`Rename ${subcategory.label}`}
                 />
               ) : (
@@ -439,15 +439,15 @@ export default function AdminBrowseFilterSubcategoryGroup({
               setNewFieldOpen(true);
               setNewDropdownOpen(true);
             }}
-            className="flex h-10 items-center rounded-[7px] border border-dashed border-[var(--border)] px-3 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
+            className="flex items-center rounded-lg border border-dashed border-[var(--border)] px-3 py-2 text-left text-sm text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
           >
             New
           </button>
         )}
 
         {mode === "edit" && newFieldOpen && (
-          <div ref={newCategoryRef} className="relative h-10 min-w-[140px]">
-            <div className="flex h-10 min-w-0 items-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)]">
+          <div ref={newCategoryRef} className="relative min-w-[140px]">
+            <div className="flex min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
               <input
                 value={newValue}
                 onChange={(event) => {
@@ -460,7 +460,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 onKeyDown={(event) => {
                   if (event.key === "Enter") event.preventDefault();
                 }}
-                className="h-full w-full min-w-0 flex-1 bg-transparent px-2.5 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
+                className="w-full min-w-0 flex-1 bg-transparent px-3 py-2 text-sm text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
                 placeholder="Category Name"
                 aria-label={`New category for ${filter.label}`}
                 autoFocus
@@ -468,7 +468,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               <button
                 type="button"
                 onClick={() => setNewDropdownOpen((current) => !current)}
-                className="flex h-full w-7 shrink-0 items-center justify-center text-[var(--text-muted)]"
+                className="flex w-7 shrink-0 items-center justify-center self-stretch text-[var(--text-muted)]"
                 aria-label="Show existing categories"
               >
                 <ChevronDownIcon size={14} />
@@ -476,14 +476,14 @@ export default function AdminBrowseFilterSubcategoryGroup({
             </div>
 
             {newDropdownOpen && availableExisting.length > 0 && (
-              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
+              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
                 {availableExisting.map((subcategory) => (
                   <button
                     key={subcategory.id}
                     type="button"
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => selectExisting(subcategory)}
-                    className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="block w-full px-3 py-2 text-left text-sm text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
                     {subcategory.label}
                   </button>
