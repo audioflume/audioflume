@@ -246,7 +246,7 @@ export default function PublicArtistPageView({
 
         .artist-public-feature-listen:hover .artist-public-feature-play-badge,
         .artist-public-feature-listen:focus-visible .artist-public-feature-play-badge {
-          transform: scale(1.06);
+          transform: scale(1.03);
         }
 
         .artist-public-feature-copy {
@@ -259,9 +259,9 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-identity {
-          margin-top: auto;
-          padding-top: clamp(28px, 3vw, 44px);
-          transform: translateY(8px);
+          margin: 0;
+          padding: 0;
+          transform: none;
         }
 
         .artist-public-name {
@@ -307,8 +307,8 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-profile-panel {
-          margin: 0;
-          padding: 0;
+          margin-top: auto;
+          padding-top: clamp(24px, 2.5vw, 36px);
         }
 
         .artist-public-profile-heading {
@@ -541,7 +541,7 @@ export default function PublicArtistPageView({
           .artist-public-name {
             width: 100%;
             margin: 0;
-            font-size: clamp(52px, 12vw, 96px);
+            font-size: clamp(56px, 16.5vw, 116px);
           }
 
           .artist-public-summary-row {
@@ -559,6 +559,7 @@ export default function PublicArtistPageView({
           .artist-public-profile-panel {
             grid-column: 1;
             grid-row: 3;
+            margin-top: 0;
             padding-top: 8px;
           }
 
@@ -589,10 +590,6 @@ export default function PublicArtistPageView({
         }
 
         @media (max-width: 480px) {
-          .artist-public-name {
-            font-size: clamp(44px, 12vw, 60px);
-          }
-
           .artist-public-feature-listen {
             right: 18px;
             bottom: 18px;
@@ -632,20 +629,6 @@ export default function PublicArtistPageView({
               </div>
 
               <div className="artist-public-feature-copy">
-                {showProfilePanel ? (
-                  <div className="artist-public-profile-panel">
-                    <div className="artist-public-profile-heading">
-                      <span className="artist-public-profile-label">
-                        Artist Profile
-                      </span>
-                    </div>
-
-                    {artist.bio ? (
-                      <p className="artist-public-bio">{artist.bio}</p>
-                    ) : null}
-                  </div>
-                ) : null}
-
                 <div className="artist-public-identity">
                   <h1 className="artist-public-name">{artist.name}</h1>
 
@@ -664,6 +647,20 @@ export default function PublicArtistPageView({
                     ) : null}
                   </div>
                 </div>
+
+                {showProfilePanel ? (
+                  <div className="artist-public-profile-panel">
+                    <div className="artist-public-profile-heading">
+                      <span className="artist-public-profile-label">
+                        Artist Profile
+                      </span>
+                    </div>
+
+                    {artist.bio ? (
+                      <p className="artist-public-bio">{artist.bio}</p>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
 
               {showProfileMeta ? (
