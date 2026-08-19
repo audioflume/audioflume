@@ -12,6 +12,10 @@
   --filmwave-backend-control-radius: 7px;
   --filmwave-backend-section-radius: 10px;
   --filmwave-backend-content-max-width: 1180px;
+  --status-success: var(--success);
+  --status-success-soft: color-mix(in srgb, var(--success) 12%, transparent);
+  --status-error: var(--danger);
+  --status-error-soft: color-mix(in srgb, var(--danger) 12%, transparent);
 }
 
 .filmwave-backend-section {
@@ -138,6 +142,16 @@
   line-height: 20px;
   outline: none;
   transition: border-color 150ms ease, opacity 150ms ease;
+}
+
+.filmwave-backend-select {
+  -webkit-appearance: none;
+  appearance: none;
+  padding-right: 40px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M2.5 4.25 6 7.75l3.5-3.5' stroke='%23808080' stroke-width='1.25' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 12px 12px;
 }
 
 .filmwave-backend-search-input {
