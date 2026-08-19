@@ -12,8 +12,8 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import ModalShell from "@/components/ModalShell";
 import Waveform from "@/components/Waveform";
 import {
-  modalCancelButtonClass,
-  modalPrimaryButtonClass,
+  backendModalCancelButtonClass,
+  backendModalPrimaryButtonClass,
 } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
@@ -55,11 +55,7 @@ function ReleasePickerSongRow({
   const visibleGenres = song.genres.slice(0, 3);
 
   return (
-    <div
-      className={`flex min-w-0 items-center px-5 transition-colors hover:bg-[var(--bg-hover)] ${
-        selected ? "bg-[var(--bg-hover)]" : ""
-      }`}
-    >
+    <div className="flex min-w-0 items-center px-5 transition-colors hover:bg-[var(--bg-hover)]">
       <label
         className="admin-song-select-wrap is-visible flex h-[86px] w-12 shrink-0 cursor-pointer items-center justify-center"
         aria-label={`Select ${song.title}`}
@@ -246,7 +242,7 @@ export default function ArtistReleaseTrackPicker({
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className={modalCancelButtonClass}
+              className={backendModalCancelButtonClass}
             >
               Cancel
             </button>
@@ -254,7 +250,7 @@ export default function ArtistReleaseTrackPicker({
               type="button"
               onClick={addSelectedTracks}
               disabled={selectedCount === 0}
-              className={modalPrimaryButtonClass}
+              className={backendModalPrimaryButtonClass}
             >
               {selectedCount <= 1 ? "Add Track" : `Add ${selectedCount} Tracks`}
             </button>
