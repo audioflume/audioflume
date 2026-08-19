@@ -19,7 +19,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
-import DragIconSmall from "@/components/icons/DragIconSmall";
+import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ReleaseType = "single" | "ep" | "album";
@@ -136,18 +136,12 @@ function SortableReleaseRow({
       }`}
     >
       {canManage ? (
-        <button
-          type="button"
+        <BackendDragHandle
           disabled={disabled}
-          className="flex h-8 w-7 cursor-grab items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-50"
           aria-label={`Drag ${release.title} to reorder`}
           {...attributes}
           {...listeners}
-        >
-          <span className="inline-flex scale-x-[1.45]">
-            <DragIconSmall />
-          </span>
-        </button>
+        />
       ) : null}
 
       <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
@@ -218,25 +212,19 @@ function SortableTrackRow({
         opacity: isDragging ? 0.45 : 1,
         zIndex: isDragging ? 2 : "auto",
       }}
-      className={`grid gap-3 px-5 py-4 sm:items-center ${
+      className={`grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
         canManage
           ? "sm:grid-cols-[28px_42px_minmax(0,1fr)_80px_110px_auto]"
           : "sm:grid-cols-[42px_minmax(0,1fr)_80px_110px]"
       }`}
     >
       {canManage ? (
-        <button
-          type="button"
+        <BackendDragHandle
           disabled={disabled}
-          className="flex h-8 w-7 cursor-grab items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-50"
           aria-label={`Drag ${song.title} to reorder`}
           {...attributes}
           {...listeners}
-        >
-          <span className="inline-flex scale-x-[1.45]">
-            <DragIconSmall />
-          </span>
-        </button>
+        />
       ) : null}
 
       <div className="text-xs font-medium text-[var(--text-muted)]">
@@ -1011,7 +999,11 @@ function ReleaseEditor({
             items={orderedTracks.map((song) => song.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div className="divide-y divide-[var(--border-subtle)]">
+            <div
+              className={
+                orderedTracks.length === 0 ? "" : "grid gap-2 p-5"
+              }
+            >
               {orderedTracks.length === 0 ? (
                 <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
                   No tracks added yet.
