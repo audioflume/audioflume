@@ -1,6 +1,6 @@
 import Footer from "@/components/Footer";
+import ArtistFeaturePlayControl from "@/components/artists/ArtistFeaturePlayControl";
 import PublicArtistMusic from "@/components/artists/PublicArtistMusic";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import type {
   PublicArtistPageData,
   PublicArtistPlaylist,
@@ -205,11 +205,33 @@ export default function PublicArtistPageView({
             linear-gradient(145deg, var(--bg-secondary), var(--bg-tertiary));
         }
 
-        .artist-public-feature-play-badge {
+        .artist-public-feature-listen {
           position: absolute;
           right: 28px;
           bottom: 28px;
           z-index: 2;
+          display: inline-grid;
+          grid-template-columns: auto 52px;
+          align-items: center;
+          column-gap: 18px;
+          padding: 0;
+          border: 0;
+          background: transparent;
+          color: #fff;
+          cursor: pointer;
+          font-family: var(--font-roboto-mono-filmwave), monospace;
+          font-size: 11.5px;
+          font-weight: 300;
+          letter-spacing: 0.01em;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .artist-public-feature-listen-label {
+          white-space: nowrap;
+        }
+
+        .artist-public-feature-play-badge {
           display: inline-flex;
           width: 52px;
           height: 52px;
@@ -218,6 +240,13 @@ export default function PublicArtistPageView({
           border-radius: 999px;
           background: #fff;
           color: #111;
+          transition: transform 160ms ease;
+          transform-origin: center;
+        }
+
+        .artist-public-feature-listen:hover .artist-public-feature-play-badge,
+        .artist-public-feature-listen:focus-visible .artist-public-feature-play-badge {
+          transform: scale(1.06);
         }
 
         .artist-public-feature-copy {
@@ -564,9 +593,10 @@ export default function PublicArtistPageView({
             font-size: clamp(44px, 12vw, 60px);
           }
 
-          .artist-public-feature-play-badge {
+          .artist-public-feature-listen {
             right: 18px;
             bottom: 18px;
+            column-gap: 14px;
           }
 
           .artist-public-grid {
@@ -598,9 +628,7 @@ export default function PublicArtistPageView({
                     aria-hidden="true"
                   />
                 )}
-                <span className="artist-public-feature-play-badge" aria-hidden="true">
-                  <PlayIconSmall size={18} />
-                </span>
+                <ArtistFeaturePlayControl songs={songs} />
               </div>
 
               <div className="artist-public-feature-copy">
