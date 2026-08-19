@@ -2,13 +2,14 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
+import AdminModalShell from "@/components/admin/AdminModalShell";
 import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import WarningIcon from "@/components/icons/WarningIcon";
-import ModalShell from "@/components/ModalShell";
+import { analyzeArtistSongAudioFile } from "@/lib/artistSongAudioAnalysis";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 import {
   BUILD_OPTIONS,
@@ -90,6 +91,8 @@ const KEY_OPTIONS = [
   "Dbmin",
   "Dmaj",
   "Dmin",
+  "D#maj",
+  "D#min",
   "Ebmaj",
   "Ebmin",
   "Emaj",
@@ -102,15 +105,19 @@ const KEY_OPTIONS = [
   "Gbmin",
   "Gmaj",
   "Gmin",
+  "G#maj",
+  "G#min",
   "Abmaj",
   "Abmin",
   "Amaj",
   "Amin",
+  "A#maj",
+  "A#min",
   "Bbmaj",
   "Bbmin",
   "Bmaj",
   "Bmin",
-] as const;
+];
 
 const RELEASE_TYPE_OPTIONS: { value: ReleaseType; label: string }[] = [
   { value: "single", label: "Single" },
@@ -126,49 +133,6 @@ function titleFromFileName(fileName: string) {
     .trim()
     .toLowerCase()
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
-function downsamplePeaks(peaks: Float32Array, targetLength = 1500) {
-  if (peaks.length <= targetLength) {
-    return Array.from(peaks).map((peak) => Number(peak.toFixed(6)));
-  }
-
-  const output: number[] = [];
-  const blockSize = Math.max(1, Math.floor(peaks.length / targetLength));
-
-  for (let index = 0; index < targetLength; index += 1) {
-    const start = index * blockSize;
-    const end = Math.min(peaks.length, start + blockSize);
-    let strongestPeak = 0;
-
-    for (let sampleIndex = start; sampleIndex < end; sampleIndex += 1) {
-      const sample = peaks[sampleIndex];
-      if (Math.abs(sample) > Math.abs(strongestPeak)) {
-        strongestPeak = sample;
-      }
-    }
-
-    output.push(Number(strongestPeak.toFixed(6)));
-  }
-
-  return output;
-}
-
-async function analyzeAudioFile(file: File) {
-  const arrayBuffer = await file.arrayBuffer();
-  const audioContext = new AudioContext();
-
-  try {
-    const audioBuffer = await audioContext.decodeAudioData(arrayBuffer.slice(0));
-    const peaks = downsamplePeaks(audioBuffer.getChannelData(0));
-
-    return {
-      waveformPeaks: JSON.stringify(peaks),
-      duration: audioBuffer.duration,
-    };
-  } finally {
-    await audioContext.close();
-  }
 }
 
 function formatDuration(value: number) {
@@ -198,22 +162,16 @@ function SelectInput({
   disabled?: boolean;
 }) {
   return (
-    <div className="relative">
-      <select
-        value={value}
-        onChange={(event) => onChange(event.target.value)}
-        disabled={disabled}
-        className={`filmwave-backend-select filmwave-backend-select-end-control appearance-none ${
-          value ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"
-        }`}
-      >
-        {children}
-      </select>
-      <ChevronDownIcon
-        size={16}
-        className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 text-[var(--text-secondary)]"
-      />
-    </div>
+    <select
+      value={value}
+      onChange={(event) => onChange(event.target.value)}
+      disabled={disabled}
+      className={`filmwave-backend-select filmwave-backend-select-end-control ${
+        value ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"
+      }`}
+    >
+      {children}
+    </select>
   );
 }
 
@@ -365,10 +323,13 @@ export default function ArtistSongUploadForm({
     artist.status === "approved" && artist.permissions.includes("release:manage");
   const audioInputRef = useRef<HTMLInputElement | null>(null);
   const artworkInputRef = useRef<HTMLInputElement | null>(null);
+  const stemsInputRef = useRef<HTMLInputElement | null>(null);
+  const createReleaseArtworkInputRef = useRef<HTMLInputElement | null>(null);
 
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
   const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
+  const [stemFiles, setStemFiles] = useState<File[]>([]);
   const [waveformPeaks, setWaveformPeaks] = useState("");
   const [duration, setDuration] = useState(0);
   const [title, setTitle] = useState("");
@@ -562,6 +523,8 @@ export default function ArtistSongUploadForm({
     setAudioFile(file);
     setWaveformPeaks("");
     setDuration(0);
+    setBpm("");
+    setSongKey("");
     setSaveStatus("");
     setError("");
     setUploadComplete(false);
@@ -574,16 +537,29 @@ export default function ArtistSongUploadForm({
 
     try {
       setStage("analyzing");
-      setSaveStatus("Generating waveform and reading duration...");
-      const analysis = await analyzeAudioFile(file);
-      setWaveformPeaks(analysis.waveformPeaks);
+      setSaveStatus("Generating waveform peaks and estimating BPM/key...");
+      const analysis = await analyzeArtistSongAudioFile(file, 1500);
+      setWaveformPeaks(analysis.peaksJson);
       setDuration(analysis.duration);
-      setSaveStatus("Audio ready.");
+
+      if (analysis.bpm) {
+        setBpm(String(analysis.bpm));
+      }
+
+      if (analysis.detectedKey && KEY_OPTIONS.includes(analysis.detectedKey)) {
+        setSongKey(analysis.detectedKey);
+      }
+
+      setSaveStatus(
+        `Generated ${analysis.peakCount.toLocaleString()} peaks${
+          analysis.bpm ? ` and suggested ${analysis.bpm} BPM` : ""
+        } — key ${analysis.detectedKey ?? "n/a"}, duration ${formatDuration(analysis.duration)}.`,
+      );
     } catch (analysisError) {
       setError(
         analysisError instanceof Error
-          ? `Audio analysis failed: ${analysisError.message}`
-          : "Audio analysis failed.",
+          ? `Failed to generate peaks/BPM/key: ${analysisError.message}`
+          : "Failed to generate peaks/BPM/key.",
       );
     } finally {
       setStage("idle");
@@ -597,12 +573,30 @@ export default function ArtistSongUploadForm({
     setSaveStatus("");
   }
 
+  function handleStemFilesChange(files: FileList | null) {
+    setStemFiles(files ? Array.from(files) : []);
+    setError("");
+    setSaveStatus("");
+    setUploadComplete(false);
+  }
+
+  function clearStemFiles() {
+    setStemFiles([]);
+    setError("");
+    setSaveStatus("");
+    setUploadComplete(false);
+    if (stemsInputRef.current) stemsInputRef.current.value = "";
+  }
+
   function resetCreateReleaseForm() {
     setCreateReleaseTitle("");
     setCreateReleaseType("single");
     setCreateReleaseDate("");
     setCreateReleaseArtworkFile(null);
     setCreateReleaseError("");
+    if (createReleaseArtworkInputRef.current) {
+      createReleaseArtworkInputRef.current.value = "";
+    }
   }
 
   function closeCreateReleaseModal() {
@@ -612,7 +606,14 @@ export default function ArtistSongUploadForm({
   }
 
   async function handleCreateRelease() {
-    if (!canManageReleases || creatingRelease || !createReleaseTitle.trim()) return;
+    if (
+      !canManageReleases ||
+      creatingRelease ||
+      !createReleaseTitle.trim() ||
+      !createReleaseArtworkFile
+    ) {
+      return;
+    }
 
     try {
       setCreatingRelease(true);
@@ -634,33 +635,30 @@ export default function ArtistSongUploadForm({
       }
 
       let release = body.release;
-      let artworkUploadError = "";
 
-      if (createReleaseArtworkFile) {
-        try {
-          const artworkFormData = new FormData();
-          artworkFormData.append("file", createReleaseArtworkFile);
+      try {
+        const artworkFormData = new FormData();
+        artworkFormData.append("file", createReleaseArtworkFile);
 
-          const artworkResponse = await fetch(
-            `/api/artists/${artist.id}/releases/${release.id}/artwork`,
-            { method: "POST", body: artworkFormData },
-          );
-          const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ArtistArtworkResponse;
+        const artworkResponse = await fetch(
+          `/api/artists/${artist.id}/releases/${release.id}/artwork`,
+          { method: "POST", body: artworkFormData },
+        );
+        const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ArtistArtworkResponse;
 
-          if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
-            throw new Error(artworkBody.error || "Failed to upload release artwork");
-          }
-
-          release = {
-            ...release,
-            cover_image_url: artworkBody.release.cover_image_url,
-          };
-        } catch (artworkError) {
-          artworkUploadError =
-            artworkError instanceof Error
-              ? `Release created, but artwork could not be uploaded: ${artworkError.message}`
-              : "Release created, but artwork could not be uploaded.";
+        if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
+          throw new Error(artworkBody.error || "Failed to upload release artwork");
         }
+
+        release = {
+          ...release,
+          cover_image_url: artworkBody.release.cover_image_url,
+        };
+      } catch (artworkError) {
+        await fetch(`/api/artists/${artist.id}/releases/${release.id}`, {
+          method: "DELETE",
+        }).catch(() => undefined);
+        throw artworkError;
       }
 
       setReleases((current) => [
@@ -668,13 +666,9 @@ export default function ArtistSongUploadForm({
         ...current.filter((item) => item.id !== release.id),
       ]);
       setSelectedReleaseId(release.id);
-      setUseReleaseArtwork(Boolean(release.cover_image_url) && !artworkFile);
+      setUseReleaseArtwork(!artworkFile);
       setCreateReleaseOpen(false);
       resetCreateReleaseForm();
-
-      if (artworkUploadError) {
-        setError(artworkUploadError);
-      }
     } catch (createError) {
       setCreateReleaseError(
         createError instanceof Error
@@ -689,6 +683,7 @@ export default function ArtistSongUploadForm({
   function resetPage() {
     setAudioFile(null);
     setArtworkFile(null);
+    setStemFiles([]);
     setWaveformPeaks("");
     setDuration(0);
     setTitle("");
@@ -719,6 +714,7 @@ export default function ArtistSongUploadForm({
     setUploadComplete(false);
     if (audioInputRef.current) audioInputRef.current.value = "";
     if (artworkInputRef.current) artworkInputRef.current.value = "";
+    if (stemsInputRef.current) stemsInputRef.current.value = "";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -756,6 +752,7 @@ export default function ArtistSongUploadForm({
 
       const formData = new FormData();
       formData.append("file", audioFile);
+      stemFiles.forEach((stemFile) => formData.append("stems", stemFile));
       formData.append("title", title.trim());
       formData.append("waveformPeaks", waveformPeaks);
       formData.append("duration", String(duration));
@@ -858,28 +855,54 @@ export default function ArtistSongUploadForm({
 
   return (
     <div>
-      <div className="mb-4 flex min-h-10 flex-wrap items-center justify-between gap-3">
-        <input
-          ref={audioInputRef}
-          type="file"
-          accept="audio/*"
-          disabled={!canUpload || busy || uploadComplete}
-          onChange={(event) =>
-            void handleAudioFileChange(event.target.files?.[0] ?? null)
-          }
-          className="hidden"
-        />
-        <input
-          ref={artworkInputRef}
-          type="file"
-          accept="image/*"
-          disabled={!canEditMetadata || busy || uploadComplete}
-          onChange={(event) =>
-            handleArtworkFileChange(event.target.files?.[0] ?? null)
-          }
-          className="hidden"
-        />
+      <style>{`
+        .admin-song-form-card {
+          overflow: hidden;
+          border-radius: 0.75rem;
+          border: 1px solid var(--border);
+          background: var(--bg-secondary);
+        }
 
+        .admin-song-form-card-header {
+          display: flex;
+          min-height: 40px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 1rem;
+          border-bottom: 1px solid var(--border);
+          padding: 0 1rem;
+        }
+
+        .admin-song-form-kicker {
+          font-size: 11px;
+          font-weight: 500;
+          letter-spacing: 0.08em;
+          text-transform: uppercase;
+          color: var(--text-muted);
+        }
+
+        .admin-song-file-row {
+          display: grid;
+          grid-template-columns: 150px minmax(0, 1fr) auto;
+          align-items: center;
+          gap: 0.75rem;
+          border-top: 1px solid var(--border-subtle);
+          padding: 0.75rem 1rem;
+        }
+
+        .admin-song-file-row:first-child {
+          border-top: 0;
+        }
+
+        @media (max-width: 900px) {
+          .admin-song-file-row {
+            grid-template-columns: 1fr;
+            align-items: start;
+          }
+        }
+      `}</style>
+
+      <div className="mb-4 flex min-h-10 flex-wrap items-center justify-between gap-3">
         <button
           type="button"
           disabled={!canUpload || busy || uploadComplete}
@@ -905,63 +928,118 @@ export default function ArtistSongUploadForm({
         onSubmit={handleSubmit}
       >
         <div className="grid min-w-0 gap-4">
-          <section className="filmwave-backend-section">
-            <div className="filmwave-backend-section-header">
-              <h2 className="filmwave-backend-section-title">Files</h2>
+          <section className="admin-song-form-card">
+            <div className="admin-song-form-card-header">
+              <div className="admin-song-form-kicker">Files</div>
             </div>
 
-            <div className="px-5 pb-5">
-              <div className="grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                <div className="text-xs font-medium text-[var(--text-primary)]">
-                  Audio
+            <div>
+              <div className="admin-song-file-row">
+                <div>
+                  <div className="text-xs font-medium text-[var(--text-primary)]">
+                    Audio File
+                  </div>
+                  <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
+                    Main track source
+                  </div>
                 </div>
-                <span className="truncate text-xs text-[var(--text-secondary)]">
-                  {audioFile ? audioFile.name : "No file chosen"}
-                </span>
-                {audioFile && !uploadComplete ? (
-                  <button
-                    type="button"
-                    disabled={busy}
-                    onClick={() => void handleAudioFileChange(null)}
-                    className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50"
-                  >
-                    Remove
-                  </button>
-                ) : null}
-              </div>
-              {stage === "analyzing" ? (
-                <p className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)]">
-                  Generating waveform and reading duration...
-                </p>
-              ) : null}
 
-              <div className="mt-2 grid min-h-[64px] grid-cols-[72px_44px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2">
-                <div className="text-xs font-medium text-[var(--text-primary)]">
-                  Artwork
-                </div>
-                <div className="h-11 w-11 overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)]">
-                  {displayedArtworkUrl ? (
-                    <img
-                      src={displayedArtworkUrl}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
+                <div className="min-w-0">
+                  <input
+                    ref={audioInputRef}
+                    type="file"
+                    accept="audio/*"
+                    disabled={!canUpload || busy || uploadComplete}
+                    onChange={(event) =>
+                      void handleAudioFileChange(event.target.files?.[0] ?? null)
+                    }
+                    className="hidden"
+                  />
+
+                  <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
+                    <button
+                      type="button"
+                      disabled={!canUpload || busy || uploadComplete}
+                      onClick={() => audioInputRef.current?.click()}
+                      className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Choose
+                    </button>
+                    <span className="truncate text-xs text-[var(--text-secondary)]">
+                      {audioFile ? audioFile.name : "No file chosen"}
+                    </span>
+                  </div>
+
+                  {stage === "analyzing" ? (
+                    <div className="mt-2 flex items-start gap-2">
+                      <div className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
+                      <p className="text-[11px] leading-5 text-[var(--text-secondary)]">
+                        Generating waveform peaks and estimating BPM/key...
+                      </p>
+                    </div>
                   ) : null}
                 </div>
-                <div className="min-w-0">
-                  <div className="truncate text-xs text-[var(--text-secondary)]">
-                    {useReleaseArtwork && selectedRelease
-                      ? `${selectedRelease.title} artwork`
-                      : artworkFile
-                        ? artworkFile.name
-                        : "No image chosen"}
+
+                <div className="flex justify-end">
+                  {audioFile && !uploadComplete ? (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => void handleAudioFileChange(null)}
+                      className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-50"
+                    >
+                      Remove
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="admin-song-file-row">
+                <div>
+                  <div className="text-xs font-medium text-[var(--text-primary)]">
+                    Cover Image
                   </div>
+                  <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
+                    Artwork preview
+                  </div>
+                </div>
+
+                <div className="min-w-0">
+                  <input
+                    ref={artworkInputRef}
+                    type="file"
+                    accept="image/*"
+                    disabled={!canEditMetadata || busy || uploadComplete}
+                    onChange={(event) =>
+                      handleArtworkFileChange(event.target.files?.[0] ?? null)
+                    }
+                    className="hidden"
+                  />
+
+                  <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
+                    <button
+                      type="button"
+                      disabled={!canEditMetadata || busy || uploadComplete}
+                      onClick={() => artworkInputRef.current?.click()}
+                      className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Choose
+                    </button>
+                    <span className="truncate text-xs text-[var(--text-secondary)]">
+                      {useReleaseArtwork && selectedRelease
+                        ? `${selectedRelease.title} artwork`
+                        : artworkFile
+                          ? artworkFile.name
+                          : "No file chosen"}
+                    </span>
+                  </div>
+
                   {selectedRelease?.cover_image_url && !uploadComplete ? (
                     <button
                       type="button"
                       disabled={busy}
                       onClick={() => setUseReleaseArtwork((current) => !current)}
-                      className={`mt-1 text-[11px] font-medium transition hover:text-[var(--text-primary)] disabled:opacity-50 ${
+                      className={`mt-2 text-[11px] font-medium transition hover:text-[var(--text-primary)] disabled:opacity-50 ${
                         useReleaseArtwork
                           ? "text-[var(--text-primary)]"
                           : "text-[var(--text-secondary)]"
@@ -973,16 +1051,98 @@ export default function ArtistSongUploadForm({
                     </button>
                   ) : null}
                 </div>
-                {!uploadComplete ? (
-                  <button
-                    type="button"
-                    disabled={!canEditMetadata || busy}
-                    onClick={() => artworkInputRef.current?.click()}
-                    className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                  >
-                    {artworkFile ? "Change" : "Choose Image"}
-                  </button>
-                ) : null}
+
+                <div className="flex items-center justify-end gap-3">
+                  {displayedArtworkUrl ? (
+                    <div className="h-9 w-9 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-primary)]">
+                      <img
+                        src={displayedArtworkUrl}
+                        alt="Cover preview"
+                        className="h-full w-full object-cover"
+                      />
+                    </div>
+                  ) : null}
+
+                  {(artworkFile || useReleaseArtwork) && !uploadComplete ? (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={() => {
+                        setArtworkFile(null);
+                        setUseReleaseArtwork(false);
+                        if (artworkInputRef.current) artworkInputRef.current.value = "";
+                      }}
+                      className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                    >
+                      Remove
+                    </button>
+                  ) : null}
+                </div>
+              </div>
+
+              <div className="admin-song-file-row">
+                <div>
+                  <div className="text-xs font-medium text-[var(--text-primary)]">
+                    Stems
+                  </div>
+                  <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
+                    Alt mixes / instrumentals
+                  </div>
+                </div>
+
+                <div className="min-w-0">
+                  <input
+                    ref={stemsInputRef}
+                    type="file"
+                    accept="audio/*"
+                    multiple
+                    disabled={!canUpload || busy || uploadComplete}
+                    onChange={(event) => handleStemFilesChange(event.target.files)}
+                    className="hidden"
+                  />
+
+                  <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
+                    <button
+                      type="button"
+                      disabled={!canUpload || busy || uploadComplete}
+                      onClick={() => stemsInputRef.current?.click()}
+                      className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      Choose
+                    </button>
+                    <span className="truncate text-xs text-[var(--text-secondary)]">
+                      {stemFiles.length > 0
+                        ? `${stemFiles.length} file${stemFiles.length === 1 ? "" : "s"} chosen`
+                        : "No file chosen"}
+                    </span>
+                  </div>
+
+                  {stemFiles.length > 0 ? (
+                    <div className="mt-2 grid gap-1 text-[11px] text-[var(--text-muted)]">
+                      {stemFiles.slice(0, 3).map((file) => (
+                        <div key={`${file.name}-${file.size}`} className="truncate">
+                          {file.name}
+                        </div>
+                      ))}
+                      {stemFiles.length > 3 ? (
+                        <div>+ {stemFiles.length - 3} more</div>
+                      ) : null}
+                    </div>
+                  ) : null}
+                </div>
+
+                <div className="flex justify-end">
+                  {stemFiles.length > 0 && !uploadComplete ? (
+                    <button
+                      type="button"
+                      disabled={busy}
+                      onClick={clearStemFiles}
+                      className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                    >
+                      Remove
+                    </button>
+                  ) : null}
+                </div>
               </div>
             </div>
           </section>
@@ -1381,16 +1541,11 @@ export default function ArtistSongUploadForm({
         </aside>
       </form>
 
-      <ModalShell
+      <AdminModalShell
         isOpen={createReleaseOpen}
         title="Create release"
         onClose={closeCreateReleaseModal}
         closeLabel="Close create release"
-        maxWidth="max-w-[520px]"
-        maxHeight="620px"
-        inputCorners="rounded"
-        background="var(--bg-primary)"
-        contentClassName="!rounded-[10px]"
         footer={
           <>
             <button
@@ -1404,7 +1559,11 @@ export default function ArtistSongUploadForm({
             <button
               type="button"
               onClick={() => void handleCreateRelease()}
-              disabled={creatingRelease || !createReleaseTitle.trim()}
+              disabled={
+                creatingRelease ||
+                !createReleaseTitle.trim() ||
+                !createReleaseArtworkFile
+              }
               className="filmwave-backend-button filmwave-backend-button-primary"
             >
               {creatingRelease ? "Creating..." : "Create Release"}
@@ -1460,28 +1619,43 @@ export default function ArtistSongUploadForm({
           </div>
 
           <div>
-            <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
-              Cover artwork (optional)
-            </span>
-            <div className="flex items-center gap-3">
-              <div className="h-20 w-20 shrink-0 overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-                {createReleaseArtworkPreviewUrl ? (
+            <div className="mb-1.5 flex items-center justify-between gap-3 text-[11px] font-medium text-[var(--text-secondary)]">
+              <span>Cover artwork</span>
+              <span className="text-[var(--text-muted)]">Required</span>
+            </div>
+            <input
+              ref={createReleaseArtworkInputRef}
+              type="file"
+              accept="image/*"
+              disabled={creatingRelease}
+              onChange={(event) =>
+                setCreateReleaseArtworkFile(event.target.files?.[0] ?? null)
+              }
+              className="hidden"
+            />
+            <div className="flex h-10 min-w-0 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3">
+              <button
+                type="button"
+                disabled={creatingRelease}
+                onClick={() => createReleaseArtworkInputRef.current?.click()}
+                className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:opacity-50"
+              >
+                Choose
+              </button>
+              <span className="min-w-0 flex-1 truncate text-xs text-[var(--text-secondary)]">
+                {createReleaseArtworkFile
+                  ? createReleaseArtworkFile.name
+                  : "No file chosen"}
+              </span>
+              {createReleaseArtworkPreviewUrl ? (
+                <div className="h-7 w-7 overflow-hidden rounded-[5px] border border-[var(--border)]">
                   <img
                     src={createReleaseArtworkPreviewUrl}
-                    alt=""
+                    alt="Release artwork preview"
                     className="h-full w-full object-cover"
                   />
-                ) : null}
-              </div>
-              <input
-                type="file"
-                accept="image/*"
-                disabled={creatingRelease}
-                onChange={(event) =>
-                  setCreateReleaseArtworkFile(event.target.files?.[0] ?? null)
-                }
-                className="block min-w-0 flex-1 text-[11px] text-[var(--text-muted)] file:mr-2 file:rounded-[7px] file:border file:border-[var(--border)] file:bg-[var(--bg-primary)] file:px-2.5 file:py-1.5 file:text-[11px] file:text-[var(--text-primary)]"
-              />
+                </div>
+              ) : null}
             </div>
           </div>
 
@@ -1491,7 +1665,7 @@ export default function ArtistSongUploadForm({
             </div>
           ) : null}
         </div>
-      </ModalShell>
+      </AdminModalShell>
     </div>
   );
 }
