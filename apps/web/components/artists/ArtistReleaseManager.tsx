@@ -18,6 +18,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
+import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -533,7 +534,6 @@ function ReleaseEditor({
   const [releaseType, setReleaseType] = useState<ReleaseType>(release.release_type);
   const [releaseDate, setReleaseDate] = useState(release.release_date ?? "");
   const [trackIds, setTrackIds] = useState<string[]>(release.track_ids);
-  const [songToAdd, setSongToAdd] = useState("");
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
   const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
   const [artworkInputKey, setArtworkInputKey] = useState(0);
@@ -551,7 +551,6 @@ function ReleaseEditor({
   const orderedTracks = trackIds
     .map((songId) => songsById.get(songId))
     .filter((song): song is ReleaseSong => Boolean(song));
-  const availableSongs = songs.filter((song) => !trackIds.includes(song.id));
 
   useEffect(() => {
     if (!artworkFile) {
@@ -564,18 +563,6 @@ function ReleaseEditor({
 
     return () => URL.revokeObjectURL(objectUrl);
   }, [artworkFile]);
-
-  function addTrack() {
-    if (!songToAdd || !canManage) return;
-    if (releaseType === "single" && trackIds.length >= 1) {
-      setError("A single can contain only one track.");
-      return;
-    }
-    setTrackIds((current) => [...current, songToAdd]);
-    setSongToAdd("");
-    setMessage("");
-    setError("");
-  }
 
   function removeTrack(songId: string) {
     setTrackIds((current) => current.filter((id) => id !== songId));
@@ -907,32 +894,21 @@ function ReleaseEditor({
         </div>
 
         {canManage ? (
-          <div className="flex flex-wrap gap-2 border-b border-[var(--border-subtle)] p-5">
-            <select
-              value={songToAdd}
-              onChange={(event) => setSongToAdd(event.target.value)}
-              disabled={
-                statusChanging ||
-                availableSongs.length === 0 ||
-                (releaseType === "single" && trackIds.length >= 1)
-              }
-              className="filmwave-backend-select min-w-[240px] flex-1"
-            >
-              <option value="">Select a track</option>
-              {availableSongs.map((song) => (
-                <option key={song.id} value={song.id}>
-                  {song.title} · {formatStatus(song.status)}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={addTrack}
-              disabled={!songToAdd || statusChanging}
-              className="filmwave-backend-button filmwave-backend-button-secondary"
-            >
-              Add track
-            </button>
+          <div className="flex border-b border-[var(--border-subtle)] p-5">
+            <ArtistReleaseTrackPicker
+              artistId={artist.id}
+              releaseType={releaseType}
+              existingTrackIds={trackIds}
+              disabled={saving || uploadingArtwork || statusChanging || deleting}
+              onAdd={(songIds) => {
+                setTrackIds((current) => [
+                  ...current,
+                  ...songIds.filter((songId) => !current.includes(songId)),
+                ]);
+                setMessage("");
+                setError("");
+              }}
+            />
           </div>
         ) : null}
 
