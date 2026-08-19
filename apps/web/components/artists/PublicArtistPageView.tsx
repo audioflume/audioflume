@@ -218,8 +218,12 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-top {
-          padding: clamp(36px, 3vw, 50px) 0 clamp(64px, 5vw, 82px);
+          padding: clamp(36px, 3vw, 50px) 0 clamp(86px, 6vw, 104px);
           color: var(--text-primary);
+        }
+
+        .artist-public-page-editing .artist-public-top {
+          padding-bottom: 170px;
         }
 
         .artist-public-feature-grid {
@@ -346,11 +350,18 @@ export default function PublicArtistPageView({
           mix-blend-mode: difference;
         }
 
-        .artist-public-stats {
+        .artist-public-left-stack {
           position: absolute;
-          top: 48%;
+          bottom: 0;
           left: 0;
           z-index: 4;
+          display: flex;
+          width: 38%;
+          flex-direction: column;
+          gap: 65px;
+        }
+
+        .artist-public-stats {
           display: grid;
           gap: 6px;
           color: var(--text-primary);
@@ -384,19 +395,13 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-profile-panel {
-          position: absolute;
-          inset: 0;
-          z-index: 4;
-          display: flex;
           width: 100%;
-          flex-direction: column;
-          justify-content: flex-end;
           pointer-events: none;
         }
 
         .artist-public-profile-heading {
           display: flex;
-          width: 32%;
+          width: 100%;
           align-items: baseline;
           justify-content: space-between;
           gap: 18px;
@@ -405,7 +410,7 @@ export default function PublicArtistPageView({
         .artist-public-profile-label {
           color: var(--text-primary);
           font-family: var(--font-roboto-mono-filmwave), monospace;
-          font-size: 12px;
+          font-size: 13px;
           font-weight: 300;
           letter-spacing: 0;
           line-height: 1;
@@ -414,8 +419,9 @@ export default function PublicArtistPageView({
 
         .artist-public-profile-meta {
           position: absolute;
-          top: clamp(48px, 4.2vw, 72px);
+          top: calc(100% + 12px);
           right: 0;
+          z-index: 5;
           display: flex;
           width: 58%;
           min-width: 0;
@@ -466,14 +472,14 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-bio {
-          width: 32%;
-          margin: 10px 0 0;
+          width: 100%;
+          margin: 9px 0 0;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: 12px;
+          font-size: 11px;
           font-weight: 300;
-          letter-spacing: -0.01em;
-          line-height: 1.55;
+          letter-spacing: -0.008em;
+          line-height: 1.5;
           pointer-events: auto;
         }
 
@@ -533,7 +539,7 @@ export default function PublicArtistPageView({
         }
 
         textarea.artist-public-bio.artist-public-edit-control {
-          width: 32%;
+          width: 100%;
           min-height: 6.4em;
         }
 
@@ -756,8 +762,10 @@ export default function PublicArtistPageView({
         }
 
         @media (max-width: 900px) {
-          .artist-public-top {
+          .artist-public-top,
+          .artist-public-page-editing .artist-public-top {
             padding-top: 28px;
+            padding-bottom: clamp(64px, 5vw, 82px);
           }
 
           .artist-public-feature-grid {
@@ -771,9 +779,8 @@ export default function PublicArtistPageView({
           .artist-public-type,
           .artist-public-intro,
           .artist-public-name,
-          .artist-public-stats,
           .artist-public-feature-media,
-          .artist-public-profile-panel,
+          .artist-public-profile-meta,
           .artist-public-edit-url-row {
             position: relative;
             top: auto;
@@ -818,6 +825,10 @@ export default function PublicArtistPageView({
             min-width: 0;
           }
 
+          .artist-public-left-stack {
+            display: contents;
+          }
+
           .artist-public-stats {
             order: 5;
           }
@@ -836,8 +847,15 @@ export default function PublicArtistPageView({
             aspect-ratio: 1.75 / 1;
           }
 
-          .artist-public-profile-panel {
+          .artist-public-profile-meta {
             order: 7;
+            width: 100%;
+            justify-content: flex-end;
+            margin-top: -10px;
+          }
+
+          .artist-public-profile-panel {
+            order: 8;
             position: relative;
             inset: auto;
             display: flex;
@@ -849,28 +867,16 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-profile-heading {
-            order: 1;
             width: 100%;
           }
 
           .artist-public-bio {
-            order: 2;
             width: 100%;
-            margin-top: 10px;
+            margin-top: 9px;
           }
 
           textarea.artist-public-bio.artist-public-edit-control {
             width: 100%;
-          }
-
-          .artist-public-profile-meta {
-            position: relative;
-            top: auto;
-            right: auto;
-            order: 3;
-            width: 100%;
-            justify-content: flex-start;
-            margin-top: 12px;
           }
         }
 
@@ -1004,135 +1010,137 @@ export default function PublicArtistPageView({
                 </h1>
               )}
 
-              <div className="artist-public-stats">
-                <span className="artist-public-stat-row">
-                  <span className="artist-public-stat-count">{songs.length}</span>
-                  <span>{songs.length === 1 ? "Song" : "Songs"}</span>
-                </span>
-                <span className="artist-public-stat-row">
-                  <span className="artist-public-stat-count">{releases.length}</span>
-                  <span>Albums / Releases</span>
-                </span>
-                <span className="artist-public-stat-row">
-                  <span className="artist-public-stat-count">{playlists.length}</span>
-                  <span>{playlists.length === 1 ? "Playlist" : "Playlists"}</span>
-                </span>
+              <div className="artist-public-left-stack">
+                <div className="artist-public-stats">
+                  <span className="artist-public-stat-row">
+                    <span className="artist-public-stat-count">{songs.length}</span>
+                    <span>{songs.length === 1 ? "Song" : "Songs"}</span>
+                  </span>
+                  <span className="artist-public-stat-row">
+                    <span className="artist-public-stat-count">{releases.length}</span>
+                    <span>Albums / Releases</span>
+                  </span>
+                  <span className="artist-public-stat-row">
+                    <span className="artist-public-stat-count">{playlists.length}</span>
+                    <span>{playlists.length === 1 ? "Playlist" : "Playlists"}</span>
+                  </span>
+                </div>
+
+                {showProfilePanel ? (
+                  <div className="artist-public-profile-panel">
+                    <div className="artist-public-profile-heading">
+                      <span className="artist-public-profile-label">
+                        Artist Profile
+                      </span>
+                    </div>
+
+                    {editMode ? (
+                      <textarea
+                        aria-label="Artist bio"
+                        className="artist-public-bio artist-public-edit-control"
+                        value={displayArtist.bio ?? ""}
+                        maxLength={383}
+                        rows={5}
+                        placeholder="Artist bio"
+                        onChange={(event) => updateField("bio", event.target.value)}
+                      />
+                    ) : displayArtist.bio ? (
+                      <p className="artist-public-bio">{displayArtist.bio}</p>
+                    ) : null}
+                  </div>
+                ) : null}
               </div>
 
-              {showProfilePanel ? (
-                <div className="artist-public-profile-panel">
-                  <div className="artist-public-profile-heading">
-                    <span className="artist-public-profile-label">
-                      Artist Profile
-                    </span>
-                  </div>
-
-                  {showProfileMeta ? (
-                    <div className="artist-public-profile-meta">
-                      {editMode ? (
-                        <div className="artist-public-edit-meta-grid">
-                          <label className="artist-public-edit-meta-field">
-                            <span>Location</span>
-                            <input
-                              type="text"
-                              className="artist-public-edit-control"
-                              value={displayArtist.location ?? ""}
-                              maxLength={160}
-                              placeholder="City, Province / State"
-                              onChange={(event) =>
-                                updateField("location", event.target.value)
-                              }
-                            />
-                          </label>
-                          <label className="artist-public-edit-meta-field">
-                            <span>Website</span>
-                            <input
-                              type="url"
-                              className="artist-public-edit-control"
-                              value={displayArtist.website_url ?? ""}
-                              placeholder="https://"
-                              onChange={(event) =>
-                                updateField("website_url", event.target.value)
-                              }
-                            />
-                          </label>
-                          <label className="artist-public-edit-meta-field">
-                            <span>Instagram</span>
-                            <input
-                              type="url"
-                              className="artist-public-edit-control"
-                              value={displayArtist.instagram_url ?? ""}
-                              placeholder="https://"
-                              onChange={(event) =>
-                                updateField("instagram_url", event.target.value)
-                              }
-                            />
-                          </label>
-                          <label className="artist-public-edit-meta-field">
-                            <span>Spotify</span>
-                            <input
-                              type="url"
-                              className="artist-public-edit-control"
-                              value={displayArtist.spotify_url ?? ""}
-                              placeholder="https://"
-                              onChange={(event) =>
-                                updateField("spotify_url", event.target.value)
-                              }
-                            />
-                          </label>
-                          <label className="artist-public-edit-meta-field">
-                            <span>YouTube</span>
-                            <input
-                              type="url"
-                              className="artist-public-edit-control"
-                              value={displayArtist.youtube_url ?? ""}
-                              placeholder="https://"
-                              onChange={(event) =>
-                                updateField("youtube_url", event.target.value)
-                              }
-                            />
-                          </label>
-                        </div>
-                      ) : (
-                        <>
-                          {displayArtist.location ? (
-                            <span className="artist-public-location">
-                              {displayArtist.location}
-                            </span>
-                          ) : null}
-                          {externalLinks.length > 0 ? (
-                            <div className="artist-public-links">
-                              {externalLinks.map(([label, href]) => (
-                                <a
-                                  key={label}
-                                  href={href}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                >
-                                  {label === "Instagram" ? <InstagramIcon /> : null}
-                                  <span>{label}</span>
-                                </a>
-                              ))}
-                            </div>
-                          ) : null}
-                        </>
-                      )}
-                    </div>
-                  ) : null}
-
+              {showProfileMeta ? (
+                <div className="artist-public-profile-meta">
                   {editMode ? (
-                    <textarea
-                      aria-label="Artist bio"
-                      className="artist-public-bio artist-public-edit-control"
-                      value={displayArtist.bio ?? ""}
-                      maxLength={383}
-                      rows={5}
-                      placeholder="Artist bio"
-                      onChange={(event) => updateField("bio", event.target.value)}
-                    />
-                  ) : displayArtist.bio ? (
-                    <p className="artist-public-bio">{displayArtist.bio}</p>
-                  ) : null}
+                    <div className="artist-public-edit-meta-grid">
+                      <label className="artist-public-edit-meta-field">
+                        <span>Location</span>
+                        <input
+                          type="text"
+                          className="artist-public-edit-control"
+                          value={displayArtist.location ?? ""}
+                          maxLength={160}
+                          placeholder="City, Province / State"
+                          onChange={(event) =>
+                            updateField("location", event.target.value)
+                          }
+                        />
+                      </label>
+                      <label className="artist-public-edit-meta-field">
+                        <span>Website</span>
+                        <input
+                          type="url"
+                          className="artist-public-edit-control"
+                          value={displayArtist.website_url ?? ""}
+                          placeholder="https://"
+                          onChange={(event) =>
+                            updateField("website_url", event.target.value)
+                          }
+                        />
+                      </label>
+                      <label className="artist-public-edit-meta-field">
+                        <span>Instagram</span>
+                        <input
+                          type="url"
+                          className="artist-public-edit-control"
+                          value={displayArtist.instagram_url ?? ""}
+                          placeholder="https://"
+                          onChange={(event) =>
+                            updateField("instagram_url", event.target.value)
+                          }
+                        />
+                      </label>
+                      <label className="artist-public-edit-meta-field">
+                        <span>Spotify</span>
+                        <input
+                          type="url"
+                          className="artist-public-edit-control"
+                          value={displayArtist.spotify_url ?? ""}
+                          placeholder="https://"
+                          onChange={(event) =>
+                            updateField("spotify_url", event.target.value)
+                          }
+                        />
+                      </label>
+                      <label className="artist-public-edit-meta-field">
+                        <span>YouTube</span>
+                        <input
+                          type="url"
+                          className="artist-public-edit-control"
+                          value={displayArtist.youtube_url ?? ""}
+                          placeholder="https://"
+                          onChange={(event) =>
+                            updateField("youtube_url", event.target.value)
+                          }
+                        />
+                      </label>
+                    </div>
+                  ) : (
+                    <>
+                      {displayArtist.location ? (
+                        <span className="artist-public-location">
+                          {displayArtist.location}
+                        </span>
+                      ) : null}
+                      {externalLinks.length > 0 ? (
+                        <div className="artist-public-links">
+                          {externalLinks.map(([label, href]) => (
+                            <a
+                              key={label}
+                              href={href}
+                              target="_blank"
+                              rel="noreferrer"
+                            >
+                              {label === "Instagram" ? <InstagramIcon /> : null}
+                              <span>{label}</span>
+                            </a>
+                          ))}
+                        </div>
+                      ) : null}
+                    </>
+                  )}
                 </div>
               ) : null}
             </div>
