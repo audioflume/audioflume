@@ -227,6 +227,7 @@ export default function PublicArtistPageView({
           min-height: clamp(560px, 34vw, 660px);
           isolation: isolate;
           container-type: inline-size;
+          background: var(--bg-primary);
         }
 
         .artist-public-type {
@@ -347,51 +348,55 @@ export default function PublicArtistPageView({
 
         .artist-public-stats {
           position: absolute;
-          top: 55%;
+          top: 48%;
           left: 0;
           z-index: 4;
           display: grid;
-          gap: 5px;
+          gap: 6px;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-weight: 300;
-          letter-spacing: -0.025em;
+          letter-spacing: -0.02em;
           line-height: 1;
           text-transform: uppercase;
         }
 
         .artist-public-stat-row {
           display: grid;
-          grid-template-columns: 52px auto;
+          grid-template-columns: 42px auto;
           align-items: center;
-          gap: 14px;
-          font-size: clamp(18px, 1.55vw, 26px);
+          gap: 12px;
+          font-size: clamp(17px, 1.35vw, 22px);
           white-space: nowrap;
         }
 
         .artist-public-stat-count {
           display: inline-flex;
-          width: 52px;
-          min-height: 28px;
+          width: 42px;
+          min-height: 24px;
           align-items: center;
           justify-content: center;
           border-radius: 999px;
-          background: var(--bg-secondary);
-          font-size: 16px;
+          background: var(--bg-tertiary);
+          font-size: 14px;
           letter-spacing: 0;
           line-height: 1;
         }
 
         .artist-public-profile-panel {
           position: absolute;
-          bottom: 0;
-          left: 0;
+          inset: 0;
           z-index: 4;
-          width: 34%;
+          display: flex;
+          width: 100%;
+          flex-direction: column;
+          justify-content: flex-end;
+          pointer-events: none;
         }
 
         .artist-public-profile-heading {
           display: flex;
+          width: 32%;
           align-items: baseline;
           justify-content: space-between;
           gap: 18px;
@@ -400,7 +405,7 @@ export default function PublicArtistPageView({
         .artist-public-profile-label {
           color: var(--text-primary);
           font-family: var(--font-roboto-mono-filmwave), monospace;
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 300;
           letter-spacing: 0;
           line-height: 1;
@@ -408,19 +413,24 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-profile-meta {
+          position: absolute;
+          top: clamp(48px, 4.2vw, 72px);
+          right: 0;
           display: flex;
+          width: 58%;
           min-width: 0;
           flex-wrap: wrap;
           align-items: center;
-          justify-content: flex-start;
+          justify-content: flex-end;
           gap: 8px 18px;
-          margin-top: 12px;
+          margin: 0;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 11px;
           font-weight: 300;
           letter-spacing: 0;
           line-height: 1.2;
+          pointer-events: auto;
         }
 
         .artist-public-location {
@@ -434,6 +444,7 @@ export default function PublicArtistPageView({
           align-items: center;
           justify-content: flex-start;
           gap: 8px 14px;
+          pointer-events: auto;
         }
 
         .artist-public-links a {
@@ -455,13 +466,15 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-bio {
-          margin: 14px 0 0;
+          width: 32%;
+          margin: 10px 0 0;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: 14px;
+          font-size: 12px;
           font-weight: 300;
-          letter-spacing: -0.012em;
-          line-height: 1.6;
+          letter-spacing: -0.01em;
+          line-height: 1.55;
+          pointer-events: auto;
         }
 
         .artist-public-edit-control {
@@ -473,6 +486,7 @@ export default function PublicArtistPageView({
           outline: 1px dashed color-mix(in srgb, currentColor 32%, transparent);
           outline-offset: 4px;
           transition: background 140ms ease, outline-color 140ms ease;
+          pointer-events: auto;
         }
 
         .artist-public-edit-control:hover,
@@ -519,7 +533,7 @@ export default function PublicArtistPageView({
         }
 
         textarea.artist-public-bio.artist-public-edit-control {
-          width: 100%;
+          width: 32%;
           min-height: 6.4em;
         }
 
@@ -591,6 +605,7 @@ export default function PublicArtistPageView({
           width: 100%;
           grid-template-columns: repeat(2, minmax(0, 1fr));
           gap: 10px 14px;
+          pointer-events: auto;
         }
 
         .artist-public-edit-meta-field {
@@ -808,11 +823,11 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-stat-row {
-            grid-template-columns: 48px auto;
+            grid-template-columns: 42px auto;
           }
 
           .artist-public-stat-count {
-            width: 48px;
+            width: 42px;
           }
 
           .artist-public-feature-media {
@@ -823,8 +838,39 @@ export default function PublicArtistPageView({
 
           .artist-public-profile-panel {
             order: 7;
+            position: relative;
+            inset: auto;
+            display: flex;
             width: 100%;
+            flex-direction: column;
+            justify-content: flex-start;
             padding-top: 8px;
+            pointer-events: auto;
+          }
+
+          .artist-public-profile-heading {
+            order: 1;
+            width: 100%;
+          }
+
+          .artist-public-bio {
+            order: 2;
+            width: 100%;
+            margin-top: 10px;
+          }
+
+          textarea.artist-public-bio.artist-public-edit-control {
+            width: 100%;
+          }
+
+          .artist-public-profile-meta {
+            position: relative;
+            top: auto;
+            right: auto;
+            order: 3;
+            width: 100%;
+            justify-content: flex-start;
+            margin-top: 12px;
           }
         }
 
