@@ -17,6 +17,8 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import AdminImageUpload from "@/components/admin/AdminImageUpload";
+import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
@@ -63,12 +65,6 @@ function formatDuration(value: number) {
   const minutes = Math.floor(value / 60);
   const seconds = Math.round(value % 60);
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
-}
-
-function formatStatus(status: string) {
-  return status
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
 function VisibilityBadge({ isPublic }: { isPublic: boolean }) {
@@ -602,12 +598,7 @@ function PlaylistEditor({
   );
   const [name, setName] = useState(playlist.name);
   const [description, setDescription] = useState(playlist.description ?? "");
-  const [isPublic, setIsPublic] = useState(playlist.is_public);
   const [songIds, setSongIds] = useState<string[]>(playlist.song_ids);
-  const [songToAdd, setSongToAdd] = useState("");
-  const [artworkFile, setArtworkFile] = useState<File | null>(null);
-  const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
-  const [artworkInputKey, setArtworkInputKey] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
   const [message, setMessage] = useState("");
@@ -620,28 +611,7 @@ function PlaylistEditor({
   const orderedSongs = songIds
     .map((songId) => songsById.get(songId))
     .filter((song): song is PlaylistSong => Boolean(song));
-  const availableSongs = songs.filter((song) => !songIds.includes(song.id));
   const trackOrderDisabled = saving || uploadingArtwork;
-
-  useEffect(() => {
-    if (!artworkFile) {
-      setArtworkPreviewUrl(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(artworkFile);
-    setArtworkPreviewUrl(objectUrl);
-
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [artworkFile]);
-
-  function addTrack() {
-    if (!songToAdd || !canManage) return;
-    setSongIds((current) => [...current, songToAdd]);
-    setSongToAdd("");
-    setMessage("");
-    setError("");
-  }
 
   function removeTrack(songId: string) {
     setSongIds((current) => current.filter((id) => id !== songId));
@@ -681,7 +651,7 @@ function PlaylistEditor({
           body: JSON.stringify({
             name: name.trim(),
             description: description.trim() || null,
-            is_public: isPublic,
+            is_public: playlist.is_public,
             song_ids: songIds,
           }),
         },
@@ -703,8 +673,10 @@ function PlaylistEditor({
     }
   }
 
-  async function uploadArtwork() {
-    if (!canManage || !artworkFile || uploadingArtwork) return;
+  async function uploadPlaylistArtwork(file: File) {
+    if (!canManage || uploadingArtwork) {
+      throw new Error("Playlist artwork cannot be uploaded right now.");
+    }
 
     try {
       setUploadingArtwork(true);
@@ -712,7 +684,7 @@ function PlaylistEditor({
       setMessage("");
 
       const formData = new FormData();
-      formData.append("file", artworkFile);
+      formData.append("file", file);
 
       const response = await fetch(
         `/api/artists/${artist.id}/playlists/${playlist.id}/artwork`,
@@ -724,24 +696,7 @@ function PlaylistEditor({
         throw new Error(body.error || "Failed to upload playlist artwork");
       }
 
-      onUpdated({
-        ...playlist,
-        name,
-        description: description.trim() || null,
-        is_public: isPublic,
-        song_ids: songIds,
-        cover_image_url: body.playlist.cover_image_url,
-        updated_at: body.playlist.updated_at ?? playlist.updated_at,
-      });
-      setArtworkFile(null);
-      setArtworkInputKey((current) => current + 1);
-      setMessage("Artwork updated.");
-    } catch (uploadError) {
-      setError(
-        uploadError instanceof Error
-          ? uploadError.message
-          : "Failed to upload playlist artwork",
-      );
+      return body.playlist.cover_image_url;
     } finally {
       setUploadingArtwork(false);
     }
@@ -758,7 +713,7 @@ function PlaylistEditor({
         >
           Back to Playlists
         </button>
-        <VisibilityBadge isPublic={isPublic} />
+        <VisibilityBadge isPublic={playlist.is_public} />
       </div>
 
       <section className="filmwave-backend-section">
@@ -768,38 +723,38 @@ function PlaylistEditor({
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
           <div>
-            <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-              {artworkPreviewUrl || playlist.cover_image_url ? (
-                <img
-                  src={artworkPreviewUrl ?? playlist.cover_image_url ?? ""}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              ) : null}
-            </div>
-
             {canManage ? (
-              <div className="mt-3 grid gap-2">
-                <input
-                  key={artworkInputKey}
-                  type="file"
-                  accept="image/*"
-                  disabled={saving || uploadingArtwork}
-                  onChange={(event) =>
-                    setArtworkFile(event.target.files?.[0] ?? null)
-                  }
-                  className="block w-full text-[11px] text-[var(--text-muted)] file:mr-2 file:rounded-[7px] file:border file:border-[var(--border)] file:bg-[var(--bg-primary)] file:px-2.5 file:py-1.5 file:text-[11px] file:text-[var(--text-primary)]"
-                />
-                <button
-                  type="button"
-                  onClick={() => void uploadArtwork()}
-                  disabled={!artworkFile || uploadingArtwork || saving}
-                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                >
-                  {uploadingArtwork ? "Uploading..." : "Upload artwork"}
-                </button>
+              <AdminImageUpload
+                currentUrl={playlist.cover_image_url ?? ""}
+                onUploaded={(url) => {
+                  onUpdated({
+                    ...playlist,
+                    name,
+                    description: description.trim() || null,
+                    is_public: playlist.is_public,
+                    song_ids: songIds,
+                    cover_image_url: url,
+                  });
+                  setMessage("Artwork updated.");
+                }}
+                target="playlist"
+                slug={playlist.id}
+                variant="card"
+                uploadFile={uploadPlaylistArtwork}
+                allowRemove={false}
+                showUrlInput={false}
+              />
+            ) : (
+              <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
+                {playlist.cover_image_url ? (
+                  <img
+                    src={playlist.cover_image_url}
+                    alt=""
+                    className="h-full w-full object-cover"
+                  />
+                ) : null}
               </div>
-            ) : null}
+            )}
           </div>
 
           <div className="grid content-start gap-4">
@@ -830,16 +785,6 @@ function PlaylistEditor({
                 className="filmwave-backend-textarea"
               />
             </label>
-
-            <label className="flex h-10 items-center gap-2 rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)]">
-              <input
-                type="checkbox"
-                checked={isPublic}
-                onChange={(event) => setIsPublic(event.target.checked)}
-                disabled={!canManage || saving}
-              />
-              Public
-            </label>
           </div>
         </div>
       </section>
@@ -850,28 +795,21 @@ function PlaylistEditor({
         </div>
 
         {canManage ? (
-          <div className="flex flex-wrap gap-2 border-b border-[var(--border-subtle)] p-5">
-            <select
-              value={songToAdd}
-              onChange={(event) => setSongToAdd(event.target.value)}
-              disabled={availableSongs.length === 0 || trackOrderDisabled}
-              className="filmwave-backend-select min-w-[240px] flex-1"
-            >
-              <option value="">Select a track</option>
-              {availableSongs.map((song) => (
-                <option key={song.id} value={song.id}>
-                  {song.title} · {formatStatus(song.status)}
-                </option>
-              ))}
-            </select>
-            <button
-              type="button"
-              onClick={addTrack}
-              disabled={!songToAdd || trackOrderDisabled}
-              className="filmwave-backend-button filmwave-backend-button-secondary"
-            >
-              Add Track
-            </button>
+          <div className="flex border-b border-[var(--border-subtle)] p-5">
+            <ArtistReleaseTrackPicker
+              artistId={artist.id}
+              releaseType="playlist"
+              existingTrackIds={songIds}
+              disabled={trackOrderDisabled}
+              onAdd={(addedSongIds) => {
+                setSongIds((current) => [
+                  ...current,
+                  ...addedSongIds.filter((songId) => !current.includes(songId)),
+                ]);
+                setMessage("");
+                setError("");
+              }}
+            />
           </div>
         ) : null}
 

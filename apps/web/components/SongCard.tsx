@@ -243,7 +243,7 @@ export default function SongCard({
           song.artistSlug ? (
             <Link
               href={`/artists/${song.artistSlug}`}
-              className="cursor-pointer text-inherit no-underline underline-offset-2 transition-colors hover:text-[var(--text-primary)] hover:underline"
+              className="cursor-pointer text-inherit no-underline underline-offset-2 transition-colors hover:text-[var(--text-primary)]"
             >
               {song.artist}
             </Link>

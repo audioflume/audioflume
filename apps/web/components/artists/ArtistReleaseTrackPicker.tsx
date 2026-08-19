@@ -18,7 +18,7 @@ import {
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
-type ReleaseType = "single" | "ep" | "album";
+type ReleaseType = "single" | "ep" | "album" | "playlist";
 
 type PickerResponse = {
   songs?: Song[];
@@ -140,7 +140,9 @@ export default function ArtistReleaseTrackPicker({
     async function loadSongs() {
       try {
         const response = await fetch(
-          `/api/artists/${artistId}/release-track-picker`,
+          releaseType === "playlist"
+            ? `/api/artists/${artistId}/playlist-track-picker`
+            : `/api/artists/${artistId}/release-track-picker`,
           { cache: "no-store" },
         );
         const body = (await response.json().catch(() => ({}))) as PickerResponse;
@@ -168,7 +170,7 @@ export default function ArtistReleaseTrackPicker({
     return () => {
       cancelled = true;
     };
-  }, [artistId, isOpen]);
+  }, [artistId, isOpen, releaseType]);
 
   const displayedSongs = useMemo(() => {
     const query = search.trim().toLowerCase();

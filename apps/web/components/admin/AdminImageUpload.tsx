@@ -11,6 +11,9 @@ type Props = {
   target: "playlist" | "discover";
   slug: string;
   variant?: "card" | "hero" | "thumb";
+  uploadFile?: (file: File) => Promise<string>;
+  allowRemove?: boolean;
+  showUrlInput?: boolean;
 };
 
 function extractImageKey(url: string): string | null {
@@ -30,6 +33,9 @@ export default function AdminImageUpload({
   target,
   slug,
   variant = "card",
+  uploadFile,
+  allowRemove = true,
+  showUrlInput = true,
 }: Props) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -49,23 +55,31 @@ export default function AdminImageUpload({
     setPreview(localUrl);
 
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("target", target);
-      formData.append("slug", slug || "untitled");
-      formData.append("variant", variant);
+      let imageUrl: string;
 
-      const res = await fetch("/api/admin/images/upload", {
-        method: "POST",
-        body: formData,
-      });
+      if (uploadFile) {
+        imageUrl = await uploadFile(file);
+      } else {
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("target", target);
+        formData.append("slug", slug || "untitled");
+        formData.append("variant", variant);
 
-      const data = await res.json();
+        const res = await fetch("/api/admin/images/upload", {
+          method: "POST",
+          body: formData,
+        });
 
-      if (!res.ok) throw new Error(data?.error || "Upload failed");
+        const data = await res.json();
 
-      setPreview(data.imageUrl);
-      onUploaded(data.imageUrl);
+        if (!res.ok) throw new Error(data?.error || "Upload failed");
+
+        imageUrl = data.imageUrl;
+      }
+
+      setPreview(imageUrl);
+      onUploaded(imageUrl);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
       setPreview(currentUrl);
@@ -136,7 +150,7 @@ export default function AdminImageUpload({
           Cover image
         </span>
 
-        {preview && (
+        {preview && allowRemove && (
           <button
             type="button"
             onClick={handleDelete}
@@ -158,18 +172,20 @@ export default function AdminImageUpload({
 
       {preview ? (
         <div className="group relative mt-1 h-[112px] w-[112px] overflow-visible">
-          <button
-            type="button"
-            disabled={deleting || uploading}
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDelete();
-            }}
-            className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
-            aria-label="Remove cover image"
-          >
-            ×
-          </button>
+          {allowRemove && (
+            <button
+              type="button"
+              disabled={deleting || uploading}
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDelete();
+              }}
+              className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
+              aria-label="Remove cover image"
+            >
+              ×
+            </button>
+          )}
 
           <div
             onClick={() => {
@@ -228,19 +244,21 @@ export default function AdminImageUpload({
 
       {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
 
-      <label className="grid gap-1.5 text-xs font-medium text-[var(--text-muted)]">
-        Or paste image URL
-        <input
-          type="url"
-          value={preview}
-          onChange={(e) => {
-            setPreview(e.target.value);
-            onUploaded(e.target.value);
-          }}
-          placeholder="https://…"
-          className="h-9 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-        />
-      </label>
+      {showUrlInput && (
+        <label className="grid gap-1.5 text-xs font-medium text-[var(--text-muted)]">
+          Or paste image URL
+          <input
+            type="url"
+            value={preview}
+            onChange={(e) => {
+              setPreview(e.target.value);
+              onUploaded(e.target.value);
+            }}
+            placeholder="https://…"
+            className="h-9 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+          />
+        </label>
+      )}
     </div>
   );
 }

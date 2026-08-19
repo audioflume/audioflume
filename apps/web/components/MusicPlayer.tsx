@@ -550,7 +550,7 @@ export default function MusicPlayer() {
               ) : currentSong.artistSlug ? (
                 <Link
                   href={`/artists/${currentSong.artistSlug}`}
-                  className="cursor-pointer truncate underline-offset-2 transition-colors hover:text-[var(--text-primary)] hover:underline"
+                  className="cursor-pointer truncate underline-offset-2 transition-colors hover:text-[var(--text-primary)]"
                 >
                   {currentSong.artist}
                 </Link>
