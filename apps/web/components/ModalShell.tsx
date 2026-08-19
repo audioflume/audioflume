@@ -22,6 +22,7 @@ type ModalShellProps = {
   footerClassName?: string;
   headerContent?: ReactNode;
   inputCorners?: "square" | "rounded";
+  contentCorners?: "square" | "rounded";
   background?: string;
 };
 
@@ -41,6 +42,7 @@ export default function ModalShell({
   footerClassName = "",
   headerContent,
   inputCorners = "square",
+  contentCorners = "square",
   background = "var(--filmwave-menu-bg)",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
@@ -62,6 +64,8 @@ export default function ModalShell({
     inputCorners === "rounded"
       ? "[&_input:not([type=file])]:rounded-[7px]"
       : "[&_input:not([type=file])]:rounded-none";
+  const contentCornerClassName =
+    contentCorners === "rounded" ? "rounded-[10px]" : "rounded-none";
 
   const modal = (
     <div
@@ -74,7 +78,7 @@ export default function ModalShell({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden rounded-none border-0 ${contentClassName}`}
+        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden ${contentCornerClassName} border-0 ${contentClassName}`}
         style={{
           maxHeight: modalMaxHeight,
           background,
