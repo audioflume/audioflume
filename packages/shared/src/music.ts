@@ -28,6 +28,8 @@ export type FilmwaveSong = {
   id: string;
   title: string;
   artist: string;
+  artistId?: string;
+  artistSlug?: string;
   audioUrl: string;
   playbackUrl: string;
   hlsUrl: string;
