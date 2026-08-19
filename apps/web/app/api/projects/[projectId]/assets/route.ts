@@ -1,6 +1,10 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { normalizeSongRow, attachEditPoints } from "@/lib/songs";
+import {
+  attachEditPoints,
+  attachPrimaryArtistProfiles,
+  normalizeSongRow,
+} from "@/lib/songs";
 import { normalizeProjectAsset } from "@/lib/projectFolders";
 import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -117,8 +121,8 @@ export async function GET(req: Request, context: RouteContext) {
 
     const songRows = await getProjectSongRows(songIds);
 
-    const normalizedSongs = await attachEditPoints(
-      (songRows ?? []).map(normalizeSongRow),
+    const normalizedSongs = await attachPrimaryArtistProfiles(
+      await attachEditPoints((songRows ?? []).map(normalizeSongRow)),
     );
 
     const songsById = new Map(normalizedSongs.map((song) => [String(song.id), song]));
