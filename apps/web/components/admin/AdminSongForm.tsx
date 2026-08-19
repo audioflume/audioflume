@@ -1743,7 +1743,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <TextInput
                     value={title}
                     onChange={setTitle}
-                    placeholder="Example: Ember Drift"
+                    placeholder="Song Title"
                   />
                 </div>
 
@@ -1752,7 +1752,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <TextInput
                     value={artist}
                     onChange={setArtist}
-                    placeholder="Example: Lumen Fade"
+                    placeholder="Artist"
                   />
                 </div>
 
@@ -1761,7 +1761,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <TextInput
                     value={bpm}
                     onChange={setBpm}
-                    placeholder="110"
+                    placeholder="BPM"
                     type="number"
                   />
                 </div>
@@ -1769,7 +1769,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <FieldLabel>Key</FieldLabel>
                   <SelectInput value={songKey} onChange={setSongKey}>
-                    <option value="">Select key</option>
+                    <option value="">Key</option>
                     {keyOptions.map((keyOption) => (
                       <option key={keyOption} value={keyOption}>
                         {keyOption}
@@ -1783,7 +1783,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <TextInput
                     value={duration}
                     onChange={setDuration}
-                    placeholder="2:11"
+                    placeholder="Duration"
                   />
                 </div>
 
