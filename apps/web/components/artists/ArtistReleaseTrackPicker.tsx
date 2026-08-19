@@ -76,7 +76,7 @@ function ReleasePickerSongRow({
       } ${unavailable ? "opacity-60" : ""}`}
     >
       <label
-        className={`flex h-[86px] w-10 shrink-0 items-center justify-center ${
+        className={`admin-song-select-wrap is-visible flex h-[86px] w-10 shrink-0 items-center justify-center ${
           unavailable ? "cursor-default" : "cursor-pointer"
         }`}
         aria-label={
