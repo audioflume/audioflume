@@ -124,6 +124,7 @@ type BackendCheckboxProps = {
   onChange: (checked: boolean) => void;
   label?: ReactNode;
   disabled?: boolean;
+  compact?: boolean;
   className?: string;
   ariaLabel?: string;
 };
@@ -133,13 +134,15 @@ export function BackendCheckbox({
   onChange,
   label,
   disabled = false,
+  compact = false,
   className = "",
   ariaLabel,
 }: BackendCheckboxProps) {
   return (
     <label
       className={joinClasses(
-        "group inline-flex min-h-10 items-center gap-2.5 text-xs",
+        "group inline-flex items-center text-xs",
+        compact ? "min-h-0 gap-0" : "min-h-10 gap-2.5",
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
         checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]",
         className,
