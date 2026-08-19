@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import Footer from "@/components/Footer";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import { BackendButton } from "@/components/backend/BackendControls";
 import AlertIcon from "@/components/icons/AlertIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
 import FailedIcon from "@/components/icons/FailedIcon";
@@ -14,7 +15,6 @@ import TrashIcon from "@/components/icons/TrashIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import AdminSongRow from "@/components/admin/AdminSongRow";
 import Toast from "@/components/Toast";
-import { primaryPillButtonClass } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import { songHasIssue } from "@/lib/songHealth";
 
@@ -650,13 +650,9 @@ export default function AdminMusicLibraryPage() {
                       {songsError}
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={fetchSongs}
-                      className={primaryPillButtonClass}
-                    >
+                    <BackendButton type="button" onClick={fetchSongs} variant="primary">
                       Try Again
-                    </button>
+                    </BackendButton>
                   </div>
                 )}
 
