@@ -1,7 +1,23 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
+import DragIconSmall from "@/components/icons/DragIconSmall";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -63,12 +79,101 @@ function VisibilityBadge({ isPublic }: { isPublic: boolean }) {
   );
 }
 
+function SortablePlaylistRow({
+  playlist,
+  canManage,
+  disabled,
+  onEdit,
+}: {
+  playlist: ArtistPlaylist;
+  canManage: boolean;
+  disabled: boolean;
+  onEdit: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: playlist.id, disabled: !canManage || disabled });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.45 : 1,
+        zIndex: isDragging ? 2 : "auto",
+      }}
+      className={`grid gap-4 px-5 py-3 sm:items-center ${
+        canManage
+          ? "sm:grid-cols-[28px_52px_minmax(0,1fr)_100px_auto]"
+          : "sm:grid-cols-[52px_minmax(0,1fr)_100px_auto]"
+      }`}
+    >
+      {canManage ? (
+        <button
+          type="button"
+          disabled={disabled}
+          className="flex h-8 w-7 cursor-grab items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label={`Drag ${playlist.name} to reorder`}
+          {...attributes}
+          {...listeners}
+        >
+          <span className="inline-flex scale-x-[1.45]">
+            <DragIconSmall />
+          </span>
+        </button>
+      ) : null}
+
+      <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
+        {playlist.cover_image_url ? (
+          <img
+            src={playlist.cover_image_url}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        ) : null}
+      </div>
+
+      <div className="min-w-0">
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+          {playlist.name}
+        </div>
+        <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+          {playlist.song_ids.length} {playlist.song_ids.length === 1 ? "track" : "tracks"}
+        </div>
+      </div>
+
+      <div>
+        <VisibilityBadge isPublic={playlist.is_public} />
+      </div>
+
+      <div className="flex items-center justify-end">
+        <button
+          type="button"
+          onClick={onEdit}
+          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+        >
+          {canManage ? "Edit" : "View"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ArtistPlaylistManager({
   artist,
   onPlaylistCreated,
 }: ArtistPlaylistManagerProps) {
   const canManage =
     artist.status === "approved" && artist.permissions.includes("playlist:manage");
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
   const [playlists, setPlaylists] = useState<ArtistPlaylist[]>([]);
   const [songs, setSongs] = useState<PlaylistSong[]>([]);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
@@ -128,15 +233,21 @@ export default function ArtistPlaylistManager({
     (playlist) => playlist.id === selectedPlaylistId,
   );
 
-  async function movePlaylist(index: number, direction: -1 | 1) {
+  async function handlePlaylistDragEnd(event: DragEndEvent) {
     if (!canManage || reordering) return;
-    const nextIndex = index + direction;
-    if (nextIndex < 0 || nextIndex >= playlists.length) return;
+
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = playlists.findIndex((playlist) => playlist.id === active.id);
+    const newIndex = playlists.findIndex((playlist) => playlist.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
 
     const previous = playlists;
-    const next = [...playlists];
-    [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
-    setPlaylists(next.map((playlist, position) => ({ ...playlist, position })));
+    const reordered = arrayMove(playlists, oldIndex, newIndex).map(
+      (playlist, position) => ({ ...playlist, position }),
+    );
+    setPlaylists(reordered);
     setListError("");
 
     try {
@@ -144,7 +255,9 @@ export default function ArtistPlaylistManager({
       const response = await fetch(`/api/artists/${artist.id}/playlists`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ playlist_ids: next.map((playlist) => playlist.id) }),
+        body: JSON.stringify({
+          playlist_ids: reordered.map((playlist) => playlist.id),
+        }),
       });
       const body = (await response.json().catch(() => ({}))) as PlaylistsResponse;
 
@@ -220,87 +333,46 @@ export default function ArtistPlaylistManager({
           <div className="px-5 pb-3 text-xs text-[var(--danger)]">{listError}</div>
         ) : null}
 
-        <div className="divide-y divide-[var(--border-subtle)]">
-          {loadState === "loading" ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              Loading playlists...
-            </div>
-          ) : null}
-
-          {loadState === "error" ? (
-            <div className="px-5 py-5 text-xs text-[var(--danger)]">
-              {loadError || "Playlists could not be loaded."}
-            </div>
-          ) : null}
-
-          {loadState === "ready" && playlists.length === 0 ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              No playlists created yet.
-            </div>
-          ) : null}
-
-          {playlists.map((playlist, index) => (
-            <div
-              key={playlist.id}
-              className="grid gap-4 px-5 py-3 sm:grid-cols-[52px_minmax(0,1fr)_100px_auto] sm:items-center"
-            >
-              <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-                {playlist.cover_image_url ? (
-                  <img
-                    src={playlist.cover_image_url}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : null}
-              </div>
-
-              <div className="min-w-0">
-                <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                  {playlist.name}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(event) => void handlePlaylistDragEnd(event)}
+        >
+          <SortableContext
+            items={playlists.map((playlist) => playlist.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="divide-y divide-[var(--border-subtle)]">
+              {loadState === "loading" ? (
+                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                  Loading playlists...
                 </div>
-                <div className="mt-1 text-[11px] text-[var(--text-muted)]">
-                  {playlist.song_ids.length} {playlist.song_ids.length === 1 ? "track" : "tracks"}
+              ) : null}
+
+              {loadState === "error" ? (
+                <div className="px-5 py-5 text-xs text-[var(--danger)]">
+                  {loadError || "Playlists could not be loaded."}
                 </div>
-              </div>
+              ) : null}
 
-              <div>
-                <VisibilityBadge isPublic={playlist.is_public} />
-              </div>
+              {loadState === "ready" && playlists.length === 0 ? (
+                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                  No playlists created yet.
+                </div>
+              ) : null}
 
-              <div className="flex items-center justify-end gap-1.5">
-                {canManage ? (
-                  <>
-                    <button
-                      type="button"
-                      onClick={() => void movePlaylist(index, -1)}
-                      disabled={reordering || index === 0}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
-                      aria-label={`Move ${playlist.name} up`}
-                    >
-                      ↑
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => void movePlaylist(index, 1)}
-                      disabled={reordering || index === playlists.length - 1}
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary min-w-8 px-2"
-                      aria-label={`Move ${playlist.name} down`}
-                    >
-                      ↓
-                    </button>
-                  </>
-                ) : null}
-                <button
-                  type="button"
-                  onClick={() => setSelectedPlaylistId(playlist.id)}
-                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                >
-                  {canManage ? "Edit" : "View"}
-                </button>
-              </div>
+              {playlists.map((playlist) => (
+                <SortablePlaylistRow
+                  key={playlist.id}
+                  playlist={playlist}
+                  canManage={canManage}
+                  disabled={reordering}
+                  onEdit={() => setSelectedPlaylistId(playlist.id)}
+                />
+              ))}
             </div>
-          ))}
-        </div>
+          </SortableContext>
+        </DndContext>
       </section>
     </div>
   );
