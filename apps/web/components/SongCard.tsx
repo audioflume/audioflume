@@ -17,6 +17,7 @@ import {
 } from "@filmwave/shared";
 import Waveform from "./Waveform";
 import Image from "next/image";
+import Link from "next/link";
 import type { Song } from "@/lib/types";
 import SongMoreDropdown from "@/components/SongMoreDropdown";
 import AddToPlaylistModal from "@/components/AddToPlaylistModal";
@@ -211,7 +212,7 @@ export default function SongCard({
     <>
       <SongCardShell
         cardRef={cardRef}
-        className={`group w-full scroll-mt-48 scroll-mb-40 cursor-pointer transition-colors${
+        className={`group w-full scroll-mt-48 scroll-mb-40 transition-colors${
           isCurrentSong ? " is-current" : ""
         }`}
         coverLabel={actuallyPlaying ? "Pause song" : "Play song"}
@@ -238,7 +239,16 @@ export default function SongCard({
         }
         title={song.title}
         artist={song.artist}
-        artistHref={song.artistSlug ? `/artists/${song.artistSlug}` : undefined}
+        artistLink={
+          song.artistSlug ? (
+            <Link
+              href={`/artists/${song.artistSlug}`}
+              className="cursor-pointer text-inherit no-underline underline-offset-2 transition-colors hover:text-[var(--text-primary)] hover:underline"
+            >
+              {song.artist}
+            </Link>
+          ) : undefined
+        }
         stems={
           <SongCardStemsSlot
             stems={stems}
