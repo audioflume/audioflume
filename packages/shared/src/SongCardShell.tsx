@@ -13,7 +13,7 @@ type SongCardShellProps = {
   vocalIndicator?: ReactNode;
   title: ReactNode;
   artist: ReactNode;
-  artistHref?: string;
+  artistLink?: ReactNode;
   stems?: ReactNode;
   waveform?: ReactNode;
   duration?: ReactNode;
@@ -38,7 +38,7 @@ export function SongCardShell({
   vocalIndicator,
   title,
   artist,
-  artistHref,
+  artistLink,
   stems,
   waveform,
   duration,
@@ -114,16 +114,10 @@ export function SongCardShell({
         {vocalIndicator}
       </span>
 
-      {artistHref ? (
-        <div className="filmwave-song-info">
+      {artistLink ? (
+        <div className="filmwave-song-info" style={{ cursor: "default" }}>
           <span className="filmwave-song-title">{title}</span>
-          <a
-            href={artistHref}
-            className="filmwave-song-artist"
-            style={{ textDecoration: "none" }}
-          >
-            {artist}
-          </a>
+          <span className="filmwave-song-artist">{artistLink}</span>
         </div>
       ) : (
         <button
