@@ -1,20 +1,16 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import { SongCardShell } from "@filmwave/shared";
 
-import AdminCheckboxStyles from "@/components/admin/AdminCheckboxStyles";
-import AdminSearchBar from "@/components/admin/AdminSearchBar";
-import CheckIcon from "@/components/icons/CheckIcon";
+import {
+  BackendButton,
+  BackendCheckbox,
+} from "@/components/backend/BackendControls";
+import BackendModalShell from "@/components/backend/BackendModalShell";
+import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/BackendRow";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import ModalShell from "@/components/ModalShell";
-import Waveform from "@/components/Waveform";
-import {
-  backendModalCancelButtonClass,
-  backendModalPrimaryButtonClass,
-} from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
@@ -52,57 +48,50 @@ function ReleasePickerSongRow({
   const { currentSong, isPlaying, togglePlayPause } = usePlayer();
   const isCurrentSong = currentSong?.id === song.id;
   const actuallyPlaying = isCurrentSong && isPlaying;
-  const visibleGenres = song.genres.slice(0, 3);
 
   return (
-    <div className="flex min-w-0 items-center px-5 transition-colors hover:bg-[var(--bg-hover)]">
-      <label
-        className="admin-song-select-wrap is-visible flex h-[86px] w-12 shrink-0 cursor-pointer items-center justify-center"
-        aria-label={`Select ${song.title}`}
-      >
-        <input
-          type="checkbox"
-          checked={selected}
-          onChange={onToggle}
-          className="admin-song-select-input sr-only"
-        />
-        <span className="admin-song-select-box flex items-center justify-center">
-          <CheckIcon size={11} strokeWidth={3} />
-        </span>
-      </label>
+    <div className="grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs transition-colors last:border-b-0 hover:bg-[var(--bg-hover)]">
+      <BackendCheckbox
+        checked={selected}
+        onChange={() => onToggle()}
+        ariaLabel={`Select ${song.title}`}
+        className="min-h-0 justify-center"
+      />
 
-      <div className="min-w-0 flex-1">
-        <SongCardShell
-          className={isCurrentSong ? "is-current" : ""}
-          coverLabel={actuallyPlaying ? "Pause song" : "Play song"}
-          onCoverClick={() => togglePlayPause(song)}
-          onInfoClick={onToggle}
-          showDivider={false}
-          cover={
-            song.coverArt ? (
-              <Image
-                src={song.coverArt}
-                alt={song.title}
-                fill
-                sizes="62px"
-                className="object-cover"
-              />
-            ) : (
-              <div className="h-[62px] w-[62px] bg-[var(--bg-hover)]" />
-            )
-          }
-          playOverlay={
-            actuallyPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />
-          }
-          title={song.title}
-          artist={song.artist}
-          waveform={<Waveform song={song} showEditPointMarkers={false} />}
-          duration={formatDuration(song.duration)}
-          genre={visibleGenres.length > 0 ? visibleGenres.join(", ") : null}
-          keyMeta={song.key || "—"}
-          bpmMeta={song.bpm ? `${song.bpm} BPM` : "—"}
-          actions={null}
+      <button
+        type="button"
+        onClick={() => togglePlayPause(song)}
+        className="group relative h-[52px] w-[52px] overflow-hidden bg-[var(--bg-tertiary)]"
+        aria-label={actuallyPlaying ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        <BackendMediaThumbnail
+          src={song.coverArt}
+          size={52}
+          className="h-full w-full"
         />
+        <span
+          className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition-opacity ${
+            isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          }`}
+        >
+          {actuallyPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        onClick={onToggle}
+        className="min-w-0 text-left"
+      >
+        <BackendRowTitle secondary={song.artist}>{song.title}</BackendRowTitle>
+      </button>
+
+      <div className="text-[var(--text-secondary)]">
+        {formatDuration(song.duration)}
+      </div>
+      <div className="text-[var(--text-secondary)]">{song.key || "—"}</div>
+      <div className="text-[var(--text-secondary)]">
+        {song.bpm ? `${song.bpm} BPM` : "—"}
       </div>
     </div>
   );
@@ -217,52 +206,41 @@ export default function ArtistReleaseTrackPicker({
 
   return (
     <>
-      <button
+      <BackendButton
         type="button"
         onClick={() => setIsOpen(true)}
         disabled={disabled || singleHasTrack}
-        className="filmwave-backend-button filmwave-backend-button-secondary"
       >
         Add track
-      </button>
+      </BackendButton>
 
-      <ModalShell
+      <BackendModalShell
         isOpen={isOpen}
         title={title}
         onClose={() => setIsOpen(false)}
         closeLabel="Close track picker"
         maxWidth="max-w-[1120px]"
         maxHeight="780px"
-        centerTitle
-        inputCorners="rounded"
-        background="var(--bg-primary)"
-        bodyClassName="filmwave-admin-content-page flex min-h-0 flex-1 flex-col px-5 pb-0"
-        contentClassName="h-[780px] max-h-[calc(100vh-64px)] !rounded-[10px] [&>div:first-of-type>h2]:!text-base [&>div:first-of-type>h2]:!font-medium [&>div:first-of-type>h2]:!tracking-[-0.03em]"
-        footerClassName="justify-end"
+        heightClassName="h-[780px]"
+        bodyClassName="filmwave-admin-content-page"
         footer={
           <>
-            <button
-              type="button"
-              onClick={() => setIsOpen(false)}
-              className={backendModalCancelButtonClass}
-            >
+            <BackendButton type="button" onClick={() => setIsOpen(false)}>
               Cancel
-            </button>
-            <button
+            </BackendButton>
+            <BackendButton
               type="button"
+              variant="primary"
               onClick={addSelectedTracks}
               disabled={selectedCount === 0}
-              className={backendModalPrimaryButtonClass}
             >
               {selectedCount <= 1 ? "Add Track" : `Add ${selectedCount} Tracks`}
-            </button>
+            </BackendButton>
           </>
         }
       >
-        <AdminCheckboxStyles />
-
         <div className="mx-auto w-full max-w-[760px] pb-4">
-          <AdminSearchBar
+          <BackendSearchBar
             value={search}
             onChange={setSearch}
             placeholder="Search tracks"
@@ -270,31 +248,33 @@ export default function ArtistReleaseTrackPicker({
           />
         </div>
 
-        <div className="-mx-5 min-h-0 flex-1 overflow-y-auto border-t border-[var(--border-subtle)]">
-          {loading ? (
-            <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)]">
-              Loading tracks...
-            </div>
-          ) : loadError ? (
-            <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
-              {loadError}
-            </div>
-          ) : displayedSongs.length === 0 ? (
-            <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
-              {search.trim() ? "No tracks match your search." : "No tracks are available."}
-            </div>
-          ) : (
-            displayedSongs.map((song) => (
-              <ReleasePickerSongRow
-                key={song.id}
-                song={song}
-                selected={selectedIds.has(song.id)}
-                onToggle={() => toggleSong(song.id)}
-              />
-            ))
-          )}
+        <div className="-mx-5 min-h-0 flex-1 overflow-x-auto overflow-y-auto border-t border-[var(--border-subtle)]">
+          <div className="min-w-[620px]">
+            {loading ? (
+              <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)]">
+                Loading tracks...
+              </div>
+            ) : loadError ? (
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
+                {loadError}
+              </div>
+            ) : displayedSongs.length === 0 ? (
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
+                {search.trim() ? "No tracks match your search." : "No tracks are available."}
+              </div>
+            ) : (
+              displayedSongs.map((song) => (
+                <ReleasePickerSongRow
+                  key={song.id}
+                  song={song}
+                  selected={selectedIds.has(song.id)}
+                  onToggle={() => toggleSong(song.id)}
+                />
+              ))
+            )}
+          </div>
         </div>
-      </ModalShell>
+      </BackendModalShell>
     </>
   );
 }
