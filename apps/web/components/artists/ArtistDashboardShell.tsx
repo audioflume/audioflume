@@ -374,9 +374,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               aria-haspopup={canSwitchArtists ? "menu" : undefined}
               aria-expanded={canSwitchArtists ? artistSwitcherOpen : undefined}
               className={`relative w-full rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3 text-left transition-colors ${
-                canSwitchArtists
-                  ? "cursor-pointer hover:bg-[var(--bg-hover)]"
-                  : "cursor-default"
+                canSwitchArtists ? "cursor-pointer" : "cursor-default"
               }`}
             >
               <div className="flex items-center gap-3">
@@ -407,7 +405,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                   viewBox="0 0 12 12"
                   fill="none"
                   aria-hidden="true"
-                  className={`absolute right-3 top-3.5 h-3 w-3 text-[var(--text-secondary)] transition-transform ${
+                  className={`absolute right-3 top-3.5 h-3 w-3 text-[var(--text-primary)] transition-transform ${
                     artistSwitcherOpen ? "rotate-180" : ""
                   }`}
                 >
