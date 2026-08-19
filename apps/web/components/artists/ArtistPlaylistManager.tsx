@@ -18,7 +18,15 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
+import BackendArtworkUpload from "@/components/backend/BackendArtworkUpload";
+import {
+  BackendCheckbox,
+  BackendInput,
+  BackendStatusBadge,
+  BackendTextarea,
+} from "@/components/backend/BackendControls";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
+import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/BackendRow";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -67,11 +75,7 @@ function formatDuration(value: number) {
 }
 
 function VisibilityBadge({ isPublic }: { isPublic: boolean }) {
-  return (
-    <span className="filmwave-backend-status-badge bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
-      {isPublic ? "Public" : "Private"}
-    </span>
-  );
+  return <BackendStatusBadge>{isPublic ? "Public" : "Private"}</BackendStatusBadge>;
 }
 
 function SortablePlaylistRow({
@@ -118,24 +122,16 @@ function SortablePlaylistRow({
         />
       ) : null}
 
-      <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-        {playlist.cover_image_url ? (
-          <img
-            src={playlist.cover_image_url}
-            alt=""
-            className="h-full w-full object-cover"
-          />
-        ) : null}
-      </div>
-
-      <div className="min-w-0">
-        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-          {playlist.name}
-        </div>
-        <div className="mt-1 text-[11px] text-[var(--text-muted)]">
-          {playlist.song_ids.length} {playlist.song_ids.length === 1 ? "track" : "tracks"}
-        </div>
-      </div>
+      <BackendMediaThumbnail
+        src={playlist.cover_image_url}
+        size={52}
+        className="rounded-[7px]"
+      />
+      <BackendRowTitle
+        secondary={`${playlist.song_ids.length} ${playlist.song_ids.length === 1 ? "track" : "tracks"}`}
+      >
+        {playlist.name}
+      </BackendRowTitle>
 
       <div>
         <VisibilityBadge isPublic={playlist.is_public} />
@@ -183,7 +179,7 @@ function SortablePlaylistTrackRow({
         opacity: isDragging ? 0.45 : 1,
         zIndex: isDragging ? 2 : "auto",
       }}
-      className={`grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
+      className={`grid gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
         canManage
           ? "sm:grid-cols-[28px_44px_minmax(0,1fr)_70px_70px_70px_auto]"
           : "sm:grid-cols-[44px_minmax(0,1fr)_70px_70px_70px]"
@@ -198,26 +194,12 @@ function SortablePlaylistTrackRow({
         />
       ) : null}
 
-      <div className="h-10 w-10 overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)]">
-        {song.cover_url ? (
-          <img
-            src={song.cover_url}
-            alt=""
-            className="h-full w-full object-cover"
-          />
-        ) : null}
-      </div>
-      <div className="min-w-0">
-        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-          {song.title}
-        </div>
-      </div>
+      <BackendMediaThumbnail src={song.cover_url} size={40} className="rounded-[6px]" />
+      <BackendRowTitle>{song.title}</BackendRowTitle>
       <div className="text-xs text-[var(--text-muted)]">
         {formatDuration(Number(song.duration))}
       </div>
-      <div className="text-xs text-[var(--text-muted)]">
-        {song.key || "—"}
-      </div>
+      <div className="text-xs text-[var(--text-muted)]">{song.key || "—"}</div>
       <div className="text-xs text-[var(--text-muted)]">
         {song.bpm ? `${song.bpm} BPM` : "—"}
       </div>
@@ -275,9 +257,7 @@ export default function ArtistPlaylistManager({
         });
         const body = (await response.json().catch(() => ({}))) as PlaylistsResponse;
 
-        if (!response.ok) {
-          throw new Error(body.error || "Failed to load playlists");
-        }
+        if (!response.ok) throw new Error(body.error || "Failed to load playlists");
 
         if (!cancelled) {
           setPlaylists(Array.isArray(body.playlists) ? body.playlists : []);
@@ -295,7 +275,6 @@ export default function ArtistPlaylistManager({
     }
 
     void loadPlaylists();
-
     return () => {
       cancelled = true;
     };
@@ -333,9 +312,7 @@ export default function ArtistPlaylistManager({
       });
       const body = (await response.json().catch(() => ({}))) as PlaylistsResponse;
 
-      if (!response.ok) {
-        throw new Error(body.error || "Failed to reorder playlists");
-      }
+      if (!response.ok) throw new Error(body.error || "Failed to reorder playlists");
     } catch (error) {
       setPlaylists(previous);
       setListError(
@@ -420,19 +397,16 @@ export default function ArtistPlaylistManager({
                   Loading playlists...
                 </div>
               ) : null}
-
               {loadState === "error" ? (
                 <div className="px-5 py-5 text-xs text-[var(--danger)]">
                   {loadError || "Playlists could not be loaded."}
                 </div>
               ) : null}
-
               {loadState === "ready" && playlists.length === 0 ? (
                 <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
                   No playlists created yet.
                 </div>
               ) : null}
-
               {playlists.map((playlist) => (
                 <SortablePlaylistRow
                   key={playlist.id}
@@ -526,42 +500,34 @@ function CreatePlaylist({
 
         <div className="grid gap-4 p-5">
           <label className="block">
-            <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)]">
-              Playlist name
-            </span>
-            <input
+            <span>Playlist name</span>
+            <BackendInput
               type="text"
               value={name}
               onChange={(event) => setName(event.target.value)}
               maxLength={180}
               disabled={!canManage || saving}
-              className="filmwave-backend-input"
             />
           </label>
 
           <label className="block">
-            <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)]">
-              Description
-            </span>
-            <textarea
+            <span>Description</span>
+            <BackendTextarea
               value={description}
               onChange={(event) => setDescription(event.target.value)}
               maxLength={1000}
               rows={4}
               disabled={!canManage || saving}
-              className="filmwave-backend-textarea"
             />
           </label>
 
-          <label className="flex h-10 items-center gap-2 rounded-[7px] border border-[var(--border)] px-3 text-xs text-[var(--text-secondary)]">
-            <input
-              type="checkbox"
-              checked={isPublic}
-              onChange={(event) => setIsPublic(event.target.checked)}
-              disabled={!canManage || saving}
-            />
-            Public
-          </label>
+          <BackendCheckbox
+            checked={isPublic}
+            onChange={setIsPublic}
+            disabled={!canManage || saving}
+            label="Public"
+            className="h-10 w-full rounded-[7px] border border-[var(--border)] px-3"
+          />
         </div>
       </section>
 
@@ -604,7 +570,6 @@ function PlaylistEditor({
   const [songIds, setSongIds] = useState<string[]>(playlist.song_ids);
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
   const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
-  const [artworkInputKey, setArtworkInputKey] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
   const [message, setMessage] = useState("");
@@ -627,7 +592,6 @@ function PlaylistEditor({
 
     const objectUrl = URL.createObjectURL(artworkFile);
     setArtworkPreviewUrl(objectUrl);
-
     return () => URL.revokeObjectURL(objectUrl);
   }, [artworkFile]);
 
@@ -639,7 +603,6 @@ function PlaylistEditor({
 
   function handleTrackDragEnd(event: DragEndEvent) {
     if (!canManage || trackOrderDisabled) return;
-
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -703,7 +666,6 @@ function PlaylistEditor({
           updated_at: artworkBody.playlist.updated_at ?? updatedPlaylist.updated_at,
         };
         setArtworkFile(null);
-        setArtworkInputKey((current) => current + 1);
       }
 
       onUpdated(updatedPlaylist);
@@ -724,7 +686,7 @@ function PlaylistEditor({
         <button
           type="button"
           onClick={onBack}
-          disabled={saving || uploadingArtwork}
+          disabled={trackOrderDisabled}
           className="filmwave-backend-button filmwave-backend-button-secondary"
         >
           Back to Playlists
@@ -738,62 +700,40 @@ function PlaylistEditor({
         </div>
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
-          <div>
-            <div className="mb-1.5 flex items-center justify-between gap-2 text-[11px] text-[var(--text-secondary)]">
-              <span>Cover artwork</span>
-              <span className="text-[var(--text-muted)]">Required</span>
-            </div>
-            <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-              {artworkPreviewUrl || playlist.cover_image_url ? (
-                <img
-                  src={artworkPreviewUrl ?? playlist.cover_image_url ?? ""}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              ) : null}
-            </div>
-            {canManage ? (
-              <div className="mt-3 grid gap-2">
-                <input
-                  key={artworkInputKey}
-                  type="file"
-                  accept="image/*"
-                  disabled={saving || uploadingArtwork}
-                  onChange={(event) =>
-                    setArtworkFile(event.target.files?.[0] ?? null)
-                  }
-                  className="block w-full text-[11px] text-[var(--text-muted)] file:mr-2 file:rounded-[7px] file:border file:border-[var(--border)] file:bg-[var(--bg-primary)] file:px-2.5 file:py-1.5 file:text-[11px] file:text-[var(--text-primary)]"
-                />
-              </div>
-            ) : null}
-          </div>
+          <BackendArtworkUpload
+            file={artworkFile}
+            previewUrl={artworkPreviewUrl ?? playlist.cover_image_url}
+            onFileChange={setArtworkFile}
+            onRemove={() => setArtworkFile(null)}
+            disabled={!canManage || trackOrderDisabled}
+            required
+            title="Cover artwork"
+            dropDescription="Click to upload playlist artwork."
+            variant="compact"
+            compactSize={180}
+            allowRemove={Boolean(artworkFile)}
+          />
 
           <div className="grid content-start gap-4">
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Playlist name
-              </span>
-              <input
+              <span>Playlist name</span>
+              <BackendInput
                 type="text"
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 maxLength={180}
                 disabled={!canManage || saving}
-                className="filmwave-backend-input"
               />
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Description
-              </span>
-              <textarea
+              <span>Description</span>
+              <BackendTextarea
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
                 maxLength={1000}
                 rows={4}
                 disabled={!canManage || saving}
-                className="filmwave-backend-textarea"
               />
             </label>
           </div>
@@ -833,9 +773,7 @@ function PlaylistEditor({
             items={orderedSongs.map((song) => song.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div
-              className={orderedSongs.length === 0 ? "" : "grid gap-2 p-5"}
-            >
+            <div className={orderedSongs.length === 0 ? "" : "grid gap-2 p-5"}>
               {orderedSongs.length === 0 ? (
                 <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
                   No tracks added yet.
@@ -860,7 +798,7 @@ function PlaylistEditor({
         <button
           type="button"
           onClick={onBack}
-          disabled={saving || uploadingArtwork}
+          disabled={trackOrderDisabled}
           className="filmwave-backend-button filmwave-backend-button-secondary"
         >
           Back to Playlists
@@ -877,7 +815,7 @@ function PlaylistEditor({
           {canManage ? (
             <button
               type="submit"
-              disabled={saving || uploadingArtwork || !name.trim()}
+              disabled={trackOrderDisabled || !name.trim()}
               className="filmwave-backend-button filmwave-backend-button-primary"
             >
               {saving ? "Saving..." : "Save Playlist"}
