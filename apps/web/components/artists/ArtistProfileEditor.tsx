@@ -29,6 +29,20 @@ function FieldLabel({ children }: { children: string }) {
   );
 }
 
+function CharacterCount({
+  value,
+  maxLength,
+}: {
+  value: string;
+  maxLength: number;
+}) {
+  return (
+    <div className="mt-1.5 text-right text-[10px] leading-none text-[var(--text-muted)]">
+      {value.length} / {maxLength}
+    </div>
+  );
+}
+
 function normalizeSlugInput(value: string) {
   return value
     .normalize("NFKD")
@@ -241,9 +255,11 @@ export default function ArtistProfileEditor({
                 value={name}
                 onChange={(event) => setName(event.target.value)}
                 maxLength={160}
+                required
                 disabled={!canEdit || saving}
                 className="filmwave-backend-input"
               />
+              <CharacterCount value={name} maxLength={160} />
             </label>
 
             <label className="block">
@@ -257,6 +273,7 @@ export default function ArtistProfileEditor({
                 placeholder="Musician / Composer"
                 className="filmwave-backend-input"
               />
+              <CharacterCount value={designation} maxLength={160} />
             </label>
           </div>
 
@@ -275,6 +292,7 @@ export default function ArtistProfileEditor({
               <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
                 /artists/{displayedSlug || "artist"}
               </div>
+              <CharacterCount value={displayedSlug} maxLength={80} />
               {slugChanged ? (
                 <div className="mt-1 text-[11px] leading-5 text-[var(--status-warning)]">
                   Changing this will change your public artist URL. The previous URL will be kept so old links can redirect when public artist pages launch.
@@ -293,6 +311,7 @@ export default function ArtistProfileEditor({
                 placeholder="City, Province / State"
                 className="filmwave-backend-input"
               />
+              <CharacterCount value={location} maxLength={160} />
             </label>
           </div>
 
@@ -302,10 +321,12 @@ export default function ArtistProfileEditor({
               value={introText}
               onChange={(event) => setIntroText(event.target.value)}
               maxLength={114}
+              required
               disabled={!canEdit || saving}
               rows={3}
               className="filmwave-backend-textarea"
             />
+            <CharacterCount value={introText} maxLength={114} />
           </label>
 
           <label className="block">
@@ -314,10 +335,12 @@ export default function ArtistProfileEditor({
               value={bio}
               onChange={(event) => setBio(event.target.value)}
               maxLength={383}
+              required
               disabled={!canEdit || saving}
               rows={6}
               className="filmwave-backend-textarea"
             />
+            <CharacterCount value={bio} maxLength={383} />
           </label>
 
           <div className="grid gap-4 md:grid-cols-2">
@@ -388,7 +411,13 @@ export default function ArtistProfileEditor({
         {canEdit ? (
           <button
             type="submit"
-            disabled={saving || !name.trim() || !displayedSlug}
+            disabled={
+              saving ||
+              !name.trim() ||
+              !displayedSlug ||
+              !introText.trim() ||
+              !bio.trim()
+            }
             className="filmwave-backend-button filmwave-backend-button-primary"
           >
             {saving ? "Saving..." : "Save profile"}
