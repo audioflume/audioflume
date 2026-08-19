@@ -19,6 +19,12 @@ type BeatAnalyzerResponse = {
   error?: string;
 };
 
+type BeatForcedAudioBuffer = AudioBuffer & {
+  __filmwaveOriginalGetChannelData__?: AudioBuffer["getChannelData"];
+  __filmwaveBeatSyntheticCache__?: Map<number, Float32Array>;
+  __filmwaveForcedBpm__?: number;
+};
+
 function writeAscii(view: DataView, offset: number, text: string) {
   for (let i = 0; i < text.length; i++) {
     view.setUint8(offset + i, text.charCodeAt(i));
@@ -67,6 +73,60 @@ function audioBufferToWavFile(audioBuffer: AudioBuffer) {
   });
 }
 
+function buildSyntheticBeatChannel(audioBuffer: AudioBuffer, bpm: number) {
+  const synthetic = new Float32Array(audioBuffer.length);
+  const sampleRate = audioBuffer.sampleRate;
+  const beatIntervalSamples = Math.max(1, Math.round((60 / bpm) * sampleRate));
+  const clickLength = Math.max(64, Math.round(sampleRate * 0.012));
+  const startSample = Math.round(sampleRate * 0.1);
+
+  for (
+    let beatStart = startSample;
+    beatStart < synthetic.length;
+    beatStart += beatIntervalSamples
+  ) {
+    for (let i = 0; i < clickLength && beatStart + i < synthetic.length; i++) {
+      synthetic[beatStart + i] = 1 - i / clickLength;
+    }
+  }
+
+  return synthetic;
+}
+
+function forceLegacyBpmVotingToBeatThis(audioBuffer: AudioBuffer, bpm: number) {
+  try {
+    const targetBuffer = audioBuffer as BeatForcedAudioBuffer;
+
+    if (targetBuffer.__filmwaveForcedBpm__ === bpm) {
+      return;
+    }
+
+    const originalGetChannelData =
+      targetBuffer.__filmwaveOriginalGetChannelData__ ||
+      targetBuffer.getChannelData.bind(targetBuffer);
+
+    targetBuffer.__filmwaveOriginalGetChannelData__ = originalGetChannelData;
+    targetBuffer.__filmwaveBeatSyntheticCache__ = new Map<number, Float32Array>();
+    targetBuffer.__filmwaveForcedBpm__ = bpm;
+
+    targetBuffer.getChannelData = (channel: number) => {
+      const cache = targetBuffer.__filmwaveBeatSyntheticCache__;
+      const cachedChannel = cache?.get(channel);
+
+      if (cachedChannel) {
+        return cachedChannel;
+      }
+
+      const syntheticChannel = buildSyntheticBeatChannel(audioBuffer, bpm);
+      cache?.set(channel, syntheticChannel);
+
+      return syntheticChannel;
+    };
+  } catch (error) {
+    console.warn("[Artist BPM] Could not force legacy BPM voting.", error);
+  }
+}
+
 async function estimateArtistBpm(audioBuffer: AudioBuffer, artistId: string) {
   try {
     const formData = new FormData();
@@ -82,7 +142,9 @@ async function estimateArtistBpm(audioBuffer: AudioBuffer, artistId: string) {
     const bpm = Number(data?.bpm);
 
     if (response.ok && data?.enabled && Number.isFinite(bpm) && bpm > 0) {
-      return Math.round(bpm);
+      const roundedBpm = Math.round(bpm);
+      forceLegacyBpmVotingToBeatThis(audioBuffer, roundedBpm);
+      return roundedBpm;
     }
   } catch (error) {
     console.warn("[Artist BPM] Beat analyzer request failed.", error);
