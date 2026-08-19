@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { BackendCheckbox } from "@/components/backend/BackendControls";
 
 type ArtistAgreementDocument = {
   id: string;
@@ -281,24 +282,19 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
                     </div>
 
                     {!document.accepted && canAccept && document.document_url ? (
-                      <label className="mt-4 flex max-w-[720px] cursor-pointer items-start gap-2 text-[11px] leading-5 text-[var(--text-secondary)]">
-                        <input
-                          type="checkbox"
-                          checked={Boolean(confirmed[document.id])}
-                          disabled={isBusy}
-                          onChange={(event) =>
-                            setConfirmed((current) => ({
-                              ...current,
-                              [document.id]: event.target.checked,
-                            }))
-                          }
-                          className="mt-[3px]"
-                        />
-                        <span>
-                          I have reviewed this document and agree on behalf of the
-                          artist.
-                        </span>
-                      </label>
+                      <BackendCheckbox
+                        checked={Boolean(confirmed[document.id])}
+                        onChange={(checked) =>
+                          setConfirmed((current) => ({
+                            ...current,
+                            [document.id]: checked,
+                          }))
+                        }
+                        disabled={isBusy}
+                        size="sm"
+                        className="mt-4 max-w-[720px] items-start gap-2 text-[11px] leading-5"
+                        label="I have reviewed this document and agree on behalf of the artist."
+                      />
                     ) : null}
 
                     {!document.accepted && !canAccept ? (
