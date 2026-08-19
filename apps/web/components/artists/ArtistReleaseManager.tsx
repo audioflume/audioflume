@@ -265,8 +265,6 @@ export default function ArtistReleaseManager({
   const [createTitle, setCreateTitle] = useState("");
   const [createType, setCreateType] = useState<ReleaseType>("single");
   const [createDate, setCreateDate] = useState("");
-  const [createArtworkFile, setCreateArtworkFile] = useState<File | null>(null);
-  const [createArtworkPreviewUrl, setCreateArtworkPreviewUrl] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
   const [reordering, setReordering] = useState(false);
@@ -283,7 +281,6 @@ export default function ArtistReleaseManager({
     setCreateTitle("");
     setCreateType("single");
     setCreateDate("");
-    setCreateArtworkFile(null);
     setCreateError("");
     setReorderError("");
 
@@ -317,20 +314,9 @@ export default function ArtistReleaseManager({
     };
   }, [artist.id]);
 
-  useEffect(() => {
-    if (!createArtworkFile) {
-      setCreateArtworkPreviewUrl(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(createArtworkFile);
-    setCreateArtworkPreviewUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [createArtworkFile]);
-
   async function handleCreate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!canManage || creating || !createTitle.trim() || !createArtworkFile) return;
+    if (!canManage || creating || !createTitle.trim()) return;
 
     try {
       setCreating(true);
@@ -351,38 +337,11 @@ export default function ArtistReleaseManager({
         throw new Error(body.error || "Failed to create release");
       }
 
-      let release = body.release as ArtistRelease;
-
-      try {
-        const artworkFormData = new FormData();
-        artworkFormData.append("file", createArtworkFile);
-        const artworkResponse = await fetch(
-          `/api/artists/${artist.id}/releases/${release.id}/artwork`,
-          { method: "POST", body: artworkFormData },
-        );
-        const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ReleasesResponse;
-
-        if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
-          throw new Error(artworkBody.error || "Failed to upload release artwork");
-        }
-
-        release = {
-          ...release,
-          cover_image_url: artworkBody.release.cover_image_url,
-          updated_at: artworkBody.release.updated_at ?? release.updated_at,
-        };
-      } catch (artworkError) {
-        await fetch(`/api/artists/${artist.id}/releases/${release.id}`, {
-          method: "DELETE",
-        }).catch(() => undefined);
-        throw artworkError;
-      }
-
+      const release = body.release as ArtistRelease;
       setReleases((current) => [release, ...current]);
       setCreateTitle("");
       setCreateType("single");
       setCreateDate("");
-      setCreateArtworkFile(null);
       setSelectedReleaseId(release.id);
       onReleaseCreated();
     } catch (error) {
@@ -513,20 +472,6 @@ export default function ArtistReleaseManager({
                 disabled={!canManage || creating}
               />
             </label>
-
-            <div className="md:col-span-3">
-              <BackendArtworkUpload
-                file={createArtworkFile}
-                previewUrl={createArtworkPreviewUrl}
-                onFileChange={setCreateArtworkFile}
-                onRemove={() => setCreateArtworkFile(null)}
-                disabled={!canManage || creating}
-                required
-                title="Cover artwork"
-                dropDescription="Click to upload release artwork."
-                variant="compact"
-              />
-            </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] px-5 py-4">
@@ -545,7 +490,7 @@ export default function ArtistReleaseManager({
             {canManage ? (
               <button
                 type="submit"
-                disabled={creating || !createTitle.trim() || !createArtworkFile}
+                disabled={creating || !createTitle.trim()}
                 className="filmwave-backend-button filmwave-backend-button-primary"
               >
                 {creating ? "Creating..." : "Create release"}
@@ -901,6 +846,7 @@ function ReleaseEditor({
             dropDescription="Click to upload release artwork."
             variant="compact"
             compactSize={180}
+            compactChooseButton
             allowRemove={Boolean(artworkFile)}
           />
 
