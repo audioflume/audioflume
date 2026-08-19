@@ -141,7 +141,7 @@ export function BackendCheckbox({
   return (
     <label
       className={joinClasses(
-        "group inline-flex items-center text-xs",
+        "group/backend-checkbox inline-flex items-center text-xs",
         compact ? "min-h-0 gap-0" : "min-h-10 gap-2.5",
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
         checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]",
@@ -156,7 +156,7 @@ export function BackendCheckbox({
         onChange={(event) => onChange(event.target.checked)}
         className="peer sr-only"
       />
-      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
+      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover/backend-checkbox:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
         <CheckMarkIcon
           size={10}
           strokeWidth={3}
