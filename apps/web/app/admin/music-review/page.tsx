@@ -556,7 +556,7 @@ export default function AdminMusicReviewPage() {
                             {holder.ipi_cae_number || "—"}
                           </span>
                         </div>
-                      ))}
+                      ))
                     )}
                   </div>
 
