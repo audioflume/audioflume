@@ -17,7 +17,6 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
-import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import PlusIcon from "@/components/icons/PlusIcon";
@@ -599,6 +598,9 @@ function PlaylistEditor({
   const [name, setName] = useState(playlist.name);
   const [description, setDescription] = useState(playlist.description ?? "");
   const [songIds, setSongIds] = useState<string[]>(playlist.song_ids);
+  const [artworkFile, setArtworkFile] = useState<File | null>(null);
+  const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
+  const [artworkInputKey, setArtworkInputKey] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
   const [message, setMessage] = useState("");
@@ -612,6 +614,18 @@ function PlaylistEditor({
     .map((songId) => songsById.get(songId))
     .filter((song): song is PlaylistSong => Boolean(song));
   const trackOrderDisabled = saving || uploadingArtwork;
+
+  useEffect(() => {
+    if (!artworkFile) {
+      setArtworkPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(artworkFile);
+    setArtworkPreviewUrl(objectUrl);
+
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [artworkFile]);
 
   function removeTrack(songId: string) {
     setSongIds((current) => current.filter((id) => id !== songId));
@@ -662,43 +676,41 @@ function PlaylistEditor({
         throw new Error(body.error || "Failed to save playlist");
       }
 
-      onUpdated(body.playlist as ArtistPlaylist);
+      let updatedPlaylist = body.playlist as ArtistPlaylist;
+
+      if (artworkFile) {
+        setUploadingArtwork(true);
+        const formData = new FormData();
+        formData.append("file", artworkFile);
+
+        const artworkResponse = await fetch(
+          `/api/artists/${artist.id}/playlists/${playlist.id}/artwork`,
+          { method: "POST", body: formData },
+        );
+        const artworkBody = (await artworkResponse.json().catch(() => ({}))) as PlaylistsResponse;
+
+        if (!artworkResponse.ok || !artworkBody.playlist?.cover_image_url) {
+          throw new Error(artworkBody.error || "Failed to upload playlist artwork");
+        }
+
+        updatedPlaylist = {
+          ...updatedPlaylist,
+          cover_image_url: artworkBody.playlist.cover_image_url,
+          updated_at: artworkBody.playlist.updated_at ?? updatedPlaylist.updated_at,
+        };
+        setArtworkFile(null);
+        setArtworkInputKey((current) => current + 1);
+      }
+
+      onUpdated(updatedPlaylist);
       setMessage("Playlist saved.");
     } catch (saveError) {
       setError(
         saveError instanceof Error ? saveError.message : "Failed to save playlist",
       );
     } finally {
-      setSaving(false);
-    }
-  }
-
-  async function uploadPlaylistArtwork(file: File) {
-    if (!canManage || uploadingArtwork) {
-      throw new Error("Playlist artwork cannot be uploaded right now.");
-    }
-
-    try {
-      setUploadingArtwork(true);
-      setError("");
-      setMessage("");
-
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const response = await fetch(
-        `/api/artists/${artist.id}/playlists/${playlist.id}/artwork`,
-        { method: "POST", body: formData },
-      );
-      const body = (await response.json().catch(() => ({}))) as PlaylistsResponse;
-
-      if (!response.ok || !body.playlist?.cover_image_url) {
-        throw new Error(body.error || "Failed to upload playlist artwork");
-      }
-
-      return body.playlist.cover_image_url;
-    } finally {
       setUploadingArtwork(false);
+      setSaving(false);
     }
   }
 
@@ -723,38 +735,29 @@ function PlaylistEditor({
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
           <div>
+            <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
+              {artworkPreviewUrl || playlist.cover_image_url ? (
+                <img
+                  src={artworkPreviewUrl ?? playlist.cover_image_url ?? ""}
+                  alt=""
+                  className="h-full w-full object-cover"
+                />
+              ) : null}
+            </div>
             {canManage ? (
-              <AdminImageUpload
-                currentUrl={playlist.cover_image_url ?? ""}
-                onUploaded={(url) => {
-                  onUpdated({
-                    ...playlist,
-                    name,
-                    description: description.trim() || null,
-                    is_public: playlist.is_public,
-                    song_ids: songIds,
-                    cover_image_url: url,
-                  });
-                  setMessage("Artwork updated.");
-                }}
-                target="playlist"
-                slug={playlist.id}
-                variant="card"
-                uploadFile={uploadPlaylistArtwork}
-                allowRemove={false}
-                showUrlInput={false}
-              />
-            ) : (
-              <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-                {playlist.cover_image_url ? (
-                  <img
-                    src={playlist.cover_image_url}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : null}
+              <div className="mt-3 grid gap-2">
+                <input
+                  key={artworkInputKey}
+                  type="file"
+                  accept="image/*"
+                  disabled={saving || uploadingArtwork}
+                  onChange={(event) =>
+                    setArtworkFile(event.target.files?.[0] ?? null)
+                  }
+                  className="block w-full text-[11px] text-[var(--text-muted)] file:mr-2 file:rounded-[7px] file:border file:border-[var(--border)] file:bg-[var(--bg-primary)] file:px-2.5 file:py-1.5 file:text-[11px] file:text-[var(--text-primary)]"
+                />
               </div>
-            )}
+            ) : null}
           </div>
 
           <div className="grid content-start gap-4">
