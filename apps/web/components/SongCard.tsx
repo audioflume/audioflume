@@ -238,6 +238,7 @@ export default function SongCard({
         }
         title={song.title}
         artist={song.artist}
+        artistHref={song.artistSlug ? `/artists/${song.artistSlug}` : undefined}
         stems={
           <SongCardStemsSlot
             stems={stems}
