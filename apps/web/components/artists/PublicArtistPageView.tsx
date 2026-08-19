@@ -358,12 +358,12 @@ export default function PublicArtistPageView({
           display: flex;
           width: 33.5%;
           flex-direction: column;
-          gap: 55px;
+          gap: 47px;
         }
 
         .artist-public-stats {
           display: grid;
-          gap: 6px;
+          gap: 4px;
           color: var(--text-primary);
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-weight: 300;
@@ -377,7 +377,7 @@ export default function PublicArtistPageView({
           grid-template-columns: 42px auto;
           align-items: center;
           gap: 12px;
-          font-size: clamp(17px, 1.35vw, 22px);
+          font-size: clamp(16px, 1.2vw, 20px);
           white-space: nowrap;
         }
 
@@ -389,7 +389,7 @@ export default function PublicArtistPageView({
           justify-content: center;
           border-radius: 999px;
           background: var(--bg-tertiary);
-          font-size: 14px;
+          font-size: 13px;
           letter-spacing: 0;
           line-height: 1;
         }
