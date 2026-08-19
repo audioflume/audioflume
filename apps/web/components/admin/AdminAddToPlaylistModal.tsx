@@ -4,11 +4,11 @@ import type { Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Toast from "@/components/Toast";
-import AdminModalShell from "@/components/admin/AdminModalShell";
-import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import { BackendButton } from "@/components/backend/BackendControls";
+import BackendModalShell from "@/components/backend/BackendModalShell";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import { modalPrimaryButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 const RECENT_ADMIN_PLAYLIST_IDS_KEY = "filmwaveRecentAdminPlaylistIds";
@@ -19,15 +19,6 @@ type AdminAddToPlaylistModalProps = {
   song: Song | null;
   onClose: () => void;
 };
-
-function PlusIcon() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 5V19" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" />
-      <path d="M5 12H19" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" />
-    </svg>
-  );
-}
 
 function formatPlaylistNames(names: string[]) {
   return names.map((name) => `"${name}"`).join(", ");
@@ -90,12 +81,10 @@ export default function AdminAddToPlaylistModal({
 
   useEffect(() => {
     if (!isOpen) return;
-
     setSearch("");
     const timeout = window.setTimeout(() => {
       refetchPlaylists();
     }, 0);
-
     return () => window.clearTimeout(timeout);
   }, [isOpen]);
 
@@ -122,7 +111,9 @@ export default function AdminAddToPlaylistModal({
         const data = await res.json();
 
         if (!res.ok) throw new Error(data?.error || "Failed to load playlist selections");
-        if (!Array.isArray(data?.selected_playlist_ids)) throw new Error("Invalid playlist selections response");
+        if (!Array.isArray(data?.selected_playlist_ids)) {
+          throw new Error("Invalid playlist selections response");
+        }
 
         if (!cancelled) {
           const selected = new Set<number>(
@@ -143,7 +134,6 @@ export default function AdminAddToPlaylistModal({
     }
 
     loadSelectedPlaylists();
-
     return () => {
       cancelled = true;
     };
@@ -177,7 +167,6 @@ export default function AdminAddToPlaylistModal({
 
   function togglePlaylist(playlistId: number) {
     if (selectedLoading) return;
-
     setSelectedIds((prev) => {
       const next = new Set(prev);
       if (next.has(playlistId)) next.delete(playlistId);
@@ -263,26 +252,28 @@ export default function AdminAddToPlaylistModal({
 
   return (
     <>
-      <AdminModalShell
+      <BackendModalShell
         isOpen={isOpen}
         title="Add to Curated Playlist"
         onClose={onClose}
         closeLabel="Close add to curated playlist modal"
         footer={
-          <button
+          <BackendButton
             type="button"
+            variant="primary"
             onClick={handleSave}
-            className={modalPrimaryButtonClass}
             disabled={saving || loading || selectedLoading || !hasChanges}
           >
             {saving ? "Saving..." : "Save"}
-          </button>
+          </BackendButton>
         }
       >
         <div className="flex flex-shrink-0 items-center justify-center pb-4 text-center">
           <div className="flex min-w-0 items-center justify-center gap-2">
             <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
-              {song.coverArt && <Image src={song.coverArt} alt={song.title} fill sizes="24px" className="object-cover" />}
+              {song.coverArt ? (
+                <Image src={song.coverArt} alt={song.title} fill sizes="24px" className="object-cover" />
+              ) : null}
             </span>
             <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
               {song.title} by {song.artist}
@@ -291,7 +282,7 @@ export default function AdminAddToPlaylistModal({
         </div>
 
         <div className="pb-4">
-          <AdminSearchBar
+          <BackendSearchBar
             value={search}
             onChange={setSearch}
             placeholder="Search playlists"
@@ -301,7 +292,7 @@ export default function AdminAddToPlaylistModal({
 
         <div className="-mx-5 flex min-h-0 flex-1 flex-col">
           <div className="min-h-0 flex-1 overflow-y-auto p-3">
-            {(loading || selectedLoading) && (
+            {(loading || selectedLoading) ? (
               <div className="grid gap-1">
                 {Array.from({ length: playlists.length || 6 }).map((_, index) => (
                   <div key={index} className="flex min-h-[52px] items-center justify-between gap-3 p-2">
@@ -313,28 +304,28 @@ export default function AdminAddToPlaylistModal({
                   </div>
                 ))}
               </div>
-            )}
+            ) : null}
 
-            {!loading && !selectedLoading && displayedError && (
+            {!loading && !selectedLoading && displayedError ? (
               <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
                 <div className="text-xs font-medium text-[var(--danger)]">{displayedError}</div>
-                {playlistsError && (
-                  <button type="button" onClick={refetchPlaylists} className="h-8 rounded-none bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80">
+                {playlistsError ? (
+                  <BackendButton type="button" compact onClick={refetchPlaylists}>
                     Try Again
-                  </button>
-                )}
+                  </BackendButton>
+                ) : null}
               </div>
-            )}
+            ) : null}
 
-            {!loading && !selectedLoading && !displayedError && displayedPlaylists.length === 0 && (
+            {!loading && !selectedLoading && !displayedError && displayedPlaylists.length === 0 ? (
               <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
                 {search.trim()
                   ? "No curated playlists match your search."
                   : "No curated playlists yet. Create one in Playlist Manager."}
               </div>
-            )}
+            ) : null}
 
-            {!loading && !selectedLoading && !displayedError && (
+            {!loading && !selectedLoading && !displayedError ? (
               <div className="grid gap-1">
                 {displayedPlaylists.map((playlist) => {
                   const isSelected = selectedIds.has(playlist.id);
@@ -344,13 +335,13 @@ export default function AdminAddToPlaylistModal({
                       type="button"
                       onClick={() => togglePlaylist(playlist.id)}
                       disabled={selectedLoading}
-                      className={`group flex min-h-[52px] w-full items-center gap-3 rounded-none p-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
+                      className={`group flex min-h-[52px] w-full items-center gap-3 rounded-[7px] p-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
                         isSelected
                           ? "bg-[var(--bg-primary)]"
                           : "cursor-pointer hover:bg-[var(--bg-hover)]"
                       }`}
                     >
-                      <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+                      <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
                         {playlist.cover_image_url ? (
                           <Image
                             src={playlist.cover_image_url}
@@ -372,19 +363,19 @@ export default function AdminAddToPlaylistModal({
                           {isSelected ? "Added" : "Click to add"}
                         </span>
                       </span>
-                      {isSelected && (
+                      {isSelected ? (
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center text-[var(--text-primary)]">
                           <CheckIcon size={16} />
                         </span>
-                      )}
+                      ) : null}
                     </button>
                   );
                 })}
               </div>
-            )}
+            ) : null}
           </div>
         </div>
-      </AdminModalShell>
+      </BackendModalShell>
 
       <Toast message={toastMessage} bottomOffset="96px" />
     </>
