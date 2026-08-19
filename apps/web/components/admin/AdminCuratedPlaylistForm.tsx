@@ -469,26 +469,22 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
               <div className="h-28 animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
             ) : (
               <div className="admin-playlist-fields grid gap-4">
-                <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                  Playlist name
-                  <input
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                    placeholder="Playlist Name"
-                    required
-                  />
-                </label>
+                <input
+                  aria-label="Playlist name"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  placeholder="Playlist Name"
+                  required
+                />
 
-                <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
-                  Kicker text
-                  <input
-                    value={kicker}
-                    onChange={(e) => setKicker(e.target.value)}
-                    className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
-                    placeholder="Kicker Text"
-                  />
-                </label>
+                <input
+                  aria-label="Kicker text"
+                  value={kicker}
+                  onChange={(e) => setKicker(e.target.value)}
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  placeholder="Kicker Text"
+                />
               </div>
             )}
           </section>
