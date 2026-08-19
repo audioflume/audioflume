@@ -355,6 +355,12 @@ export default function ArtistReleaseManager({
               ),
             )
           }
+          onDeleted={() => {
+            setReleases((current) =>
+              current.filter((release) => release.id !== selectedRelease.id),
+            );
+            setSelectedReleaseId("");
+          }}
         />
         <ArtistCollaboratorsEditor
           artistId={artist.id}
@@ -511,6 +517,7 @@ type ReleaseEditorProps = {
   songs: ReleaseSong[];
   onBack: () => void;
   onUpdated: (release: ArtistRelease) => void;
+  onDeleted: () => void;
 };
 
 function ReleaseEditor({
@@ -520,6 +527,7 @@ function ReleaseEditor({
   songs,
   onBack,
   onUpdated,
+  onDeleted,
 }: ReleaseEditorProps) {
   const [title, setTitle] = useState(release.title);
   const [releaseType, setReleaseType] = useState<ReleaseType>(release.release_type);
@@ -532,6 +540,7 @@ function ReleaseEditor({
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
   const [statusChanging, setStatusChanging] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -762,13 +771,48 @@ function ReleaseEditor({
     }
   }
 
+  async function deleteRelease() {
+    if (!canManage || saving || uploadingArtwork || statusChanging || deleting) {
+      return;
+    }
+
+    const confirmed = window.confirm(
+      `Delete "${release.title}"? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      setError("");
+      setMessage("");
+
+      const response = await fetch(
+        `/api/artists/${artist.id}/releases/${release.id}`,
+        { method: "DELETE" },
+      );
+      const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
+
+      if (!response.ok) {
+        throw new Error(body.error || "Failed to delete release");
+      }
+
+      onDeleted();
+    } catch (error) {
+      setError(
+        error instanceof Error ? error.message : "Failed to delete release",
+      );
+    } finally {
+      setDeleting(false);
+    }
+  }
+
   return (
     <form onSubmit={saveRelease} className="grid gap-4">
       <div className="flex items-center justify-between gap-3">
         <button
           type="button"
           onClick={onBack}
-          disabled={saving || uploadingArtwork || statusChanging}
+          disabled={saving || uploadingArtwork || statusChanging || deleting}
           className="filmwave-backend-button filmwave-backend-button-secondary"
         >
           Back to Releases
@@ -963,16 +1007,26 @@ function ReleaseEditor({
           <button
             type="button"
             onClick={onBack}
-            disabled={saving || uploadingArtwork || statusChanging}
+            disabled={saving || uploadingArtwork || statusChanging || deleting}
             className="filmwave-backend-button filmwave-backend-button-secondary"
           >
             Back to Releases
           </button>
+          {canManage ? (
+            <button
+              type="button"
+              onClick={() => void deleteRelease()}
+              disabled={saving || uploadingArtwork || statusChanging || deleting}
+              className="filmwave-backend-button filmwave-backend-button-secondary-danger"
+            >
+              {deleting ? "Deleting..." : "Delete release"}
+            </button>
+          ) : null}
           {canManage && release.status === "published" ? (
             <button
               type="button"
               onClick={() => void changeReleaseStatus("unpublish")}
-              disabled={saving || uploadingArtwork || statusChanging}
+              disabled={saving || uploadingArtwork || statusChanging || deleting}
               className="filmwave-backend-button filmwave-backend-button-secondary"
             >
               {statusChanging ? "Unpublishing..." : "Unpublish"}
@@ -983,7 +1037,11 @@ function ReleaseEditor({
               type="button"
               onClick={() => void changeReleaseStatus("publish")}
               disabled={
-                saving || uploadingArtwork || statusChanging || !title.trim()
+                saving ||
+                uploadingArtwork ||
+                statusChanging ||
+                deleting ||
+                !title.trim()
               }
               className="filmwave-backend-button filmwave-backend-button-secondary"
             >
@@ -993,7 +1051,7 @@ function ReleaseEditor({
           {canManage ? (
             <button
               type="submit"
-              disabled={saving || statusChanging || !title.trim()}
+              disabled={saving || statusChanging || deleting || !title.trim()}
               className="filmwave-backend-button filmwave-backend-button-primary"
             >
               {saving ? "Saving..." : "Save release"}
