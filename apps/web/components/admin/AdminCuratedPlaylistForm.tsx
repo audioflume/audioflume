@@ -21,6 +21,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Toast from "@/components/Toast";
+import { BackendCheckbox } from "@/components/backend/BackendControls";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import AdminBrowseFilterSubcategoryGroup from "@/components/admin/AdminBrowseFilterSubcategoryGroup";
@@ -493,18 +494,14 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
 
                 <div className="admin-playlist-browse-grid grid gap-2 sm:grid-cols-2">
                   {CURATED_BROWSE_FILTERS.map((filter) => (
-                    <label
+                    <BackendCheckbox
                       key={filter.value}
-                      className="flex cursor-pointer items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-sm text-[var(--text-secondary)]"
-                    >
-                      <input
-                        type="checkbox"
-                        checked={browseTags.includes(filter.value)}
-                        onChange={() => toggleBrowseTag(filter.value)}
-                        className="h-4 w-4 accent-[var(--text-primary)]"
-                      />
-                      <span>{filter.label}</span>
-                    </label>
+                      checked={browseTags.includes(filter.value)}
+                      onChange={() => toggleBrowseTag(filter.value)}
+                      label={filter.label}
+                      size="sm"
+                      className="w-full rounded-lg border border-[var(--border)] px-3 text-[var(--text-secondary)]"
+                    />
                   ))}
                 </div>
               </section>
