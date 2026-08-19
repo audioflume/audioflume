@@ -484,6 +484,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             <ArtistPagePreview
               key={`${activeArtist.id}-my-page-${sectionViewVersion}`}
               artist={activeArtist}
+              onSaved={handleProfileSaved}
             />
           ) : activeSection === "profile" ? (
             <ArtistProfileEditor
