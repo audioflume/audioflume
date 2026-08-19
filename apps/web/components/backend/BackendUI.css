@@ -301,7 +301,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   border-radius: 999px;
   padding: 0 12px;
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1;
   letter-spacing: 0;
   text-transform: capitalize;
@@ -309,6 +309,7 @@ main:has(> aside[class*="admin-sidebar-width"])
 
 /* Legacy backend status chips use the same title-case, regular-spacing treatment. */
 main:has(> aside[class*="admin-sidebar-width"]) span.rounded-full.uppercase {
+  font-weight: 400;
   letter-spacing: 0;
   text-transform: capitalize;
 }
