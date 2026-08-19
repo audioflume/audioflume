@@ -1,4 +1,8 @@
-import { attachEditPoints, normalizeSongRow } from "@/lib/songs";
+import {
+  attachEditPoints,
+  attachPrimaryArtistProfiles,
+  normalizeSongRow,
+} from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 import type { Song } from "@/lib/types";
 
@@ -185,8 +189,10 @@ export async function getPublicArtistPageData(
   if (releaseTracksResult.error) throw releaseTracksResult.error;
   if (playlistTracksResult.error) throw playlistTracksResult.error;
 
-  const songs = await attachEditPoints(
-    (songsResult.data ?? []).map((row) => normalizeSongRow(row)),
+  const songs = await attachPrimaryArtistProfiles(
+    await attachEditPoints(
+      (songsResult.data ?? []).map((row) => normalizeSongRow(row)),
+    ),
   );
   const publishedSongIds = new Set(songs.map((song) => song.id));
 
