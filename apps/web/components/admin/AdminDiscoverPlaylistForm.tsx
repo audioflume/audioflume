@@ -4,6 +4,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
+import { BackendCheckbox } from "@/components/backend/BackendControls";
 import TrashIcon from "@/components/icons/TrashIcon";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import type {
@@ -274,22 +275,22 @@ export default function AdminDiscoverPlaylistForm({
                 />
               </label>
 
-              <label className="flex cursor-pointer items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]">
-                <input
-                  type="checkbox"
-                  checked={buttonEnabled}
-                  onChange={(e) => setButtonEnabled(e.target.checked)}
-                  className="mt-0.5 h-4 w-4 accent-[var(--text-primary)]"
-                />
-                <span>
-                  <span className="block font-medium text-[var(--text-primary)]">
-                    Show white pill button
+              <BackendCheckbox
+                checked={buttonEnabled}
+                onChange={setButtonEnabled}
+                size="sm"
+                className="items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]"
+                label={
+                  <span>
+                    <span className="block font-medium text-[var(--text-primary)]">
+                      Show white pill button
+                    </span>
+                    <span className="mt-1 block text-xs text-[var(--text-muted)]">
+                      Controls the hero-style CTA button for this Discover content.
+                    </span>
                   </span>
-                  <span className="mt-1 block text-xs text-[var(--text-muted)]">
-                    Controls the hero-style CTA button for this Discover content.
-                  </span>
-                </span>
-              </label>
+                }
+              />
 
               <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
                 Button text
