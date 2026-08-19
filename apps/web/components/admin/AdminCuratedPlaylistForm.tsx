@@ -23,7 +23,6 @@ import { CSS } from "@dnd-kit/utilities";
 import Toast from "@/components/Toast";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import DragIconSmall from "@/components/icons/DragIconSmall";
-import TrashIcon from "@/components/icons/TrashIcon";
 import AdminBrowseFilterSubcategoryGroup from "@/components/admin/AdminBrowseFilterSubcategoryGroup";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
@@ -40,7 +39,6 @@ import type {
 import {
   primaryPillButtonClass,
   secondaryPillButtonClass,
-  smallIconButtonClass,
 } from "@/components/uiClasses";
 
 type Props = {
@@ -106,11 +104,11 @@ function SortableSongRow({
       </div>
       <button
         type="button"
-        className={smallIconButtonClass}
         onClick={() => onRemove(song.id)}
+        className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
         aria-label={`Remove ${song.title}`}
       >
-        <TrashIcon size={14} />
+        Remove
       </button>
     </div>
   );
