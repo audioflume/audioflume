@@ -208,7 +208,7 @@ export async function POST(request: Request, context: RouteContext) {
 
       const { data: release, error: releaseError } = await supabaseServer
         .from("artist_releases")
-        .select("id, cover_image_url")
+        .select("id, cover_image_url, release_type")
         .eq("id", releaseId)
         .maybeSingle();
 
@@ -236,6 +236,12 @@ export async function POST(request: Request, context: RouteContext) {
         .maybeSingle();
 
       if (lastTrackError) throw lastTrackError;
+      if (release.release_type === "single" && lastTrack) {
+        return NextResponse.json(
+          { error: "The selected single already has a track" },
+          { status: 409 },
+        );
+      }
       releaseTrackNumber = Number(lastTrack?.track_number ?? 0) + 1;
     }
 
