@@ -37,25 +37,17 @@ export async function GET(_request: Request, context: RouteContext) {
     const { data: rows, error: songsError } = await supabaseServer
       .from("songs")
       .select(
-        "id, title, artist, status, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, edit_points, download_count, size_bytes, created_at",
+        "id, title, artist, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, edit_points, download_count, size_bytes, created_at",
       )
       .in("id", songIds)
-      .neq("status", "rejected")
+      .eq("status", "published")
       .order("created_at", { ascending: false });
 
     if (songsError) throw songsError;
 
-    const statusById = new Map(
-      (rows ?? []).map((row) => [String(row.id), String(row.status || "draft")]),
-    );
     const songs = await attachEditPoints((rows ?? []).map(normalizeSongRow));
 
-    return NextResponse.json({
-      songs: songs.map((song) => ({
-        ...song,
-        status: statusById.get(song.id) ?? "draft",
-      })),
-    });
+    return NextResponse.json({ songs });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
       return NextResponse.json(
