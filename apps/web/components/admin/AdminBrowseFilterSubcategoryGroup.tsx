@@ -391,6 +391,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               <BackendCheckbox
                 checked={checked}
                 compact
+                size="sm"
                 className="group-hover/browse-subcategory:[&>span]:border-[var(--text-secondary)]"
                 ariaLabel={
                   mode === "edit"
