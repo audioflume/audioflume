@@ -180,13 +180,17 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   > .admin-song-form-card-header
   + div
   > div:nth-child(-n + 6)
   > label:first-child,
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   [data-ai-generated-field-embedded]
   > div
   > label:first-child {
@@ -195,14 +199,18 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 /* Temporary compatibility for the two live Song Info checkbox structures. */
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   > .admin-song-form-card-header
   + div
   > div:nth-child(6)
   > label:last-child
   > span,
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   [data-ai-generated-field-embedded]
   > div
   > label:last-child
@@ -218,14 +226,18 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   > .admin-song-form-card-header
   + div
   > div:nth-child(6)
   > label:last-child:hover
   > span,
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   [data-ai-generated-field-embedded]
   > div
   > label:last-child:hover
@@ -234,7 +246,9 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   > .admin-song-form-card-header
   + div
   > div:nth-child(6)
@@ -242,7 +256,9 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > input:checked
   + span,
 .admin-song-upload-content-page
-  .admin-song-upload-song-info
+  form
+  > div:first-child
+  > section:first-of-type
   [data-ai-generated-field-embedded]
   > div
   > label:last-child
@@ -255,32 +271,43 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 @media (min-width: 1280px) {
   .admin-song-upload-content-page
-    .admin-song-upload-song-info
+    form
+    > div:first-child
+    > section:first-of-type
     > .admin-song-form-card-header
     + div {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
-.admin-song-upload-content-page .admin-song-upload-tags-card {
+.admin-song-upload-content-page
+  form
+  > div:first-child
+  > section:nth-of-type(3) {
   display: contents;
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   > .admin-song-form-card-header {
   display: none;
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   > .admin-song-form-card-header
   + div {
   display: contents;
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   > .admin-song-form-card-header
   + div
   > div[class*="md:grid-cols-2"] {
@@ -288,12 +315,16 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   > .admin-song-form-card-header
   + div
   > div:not([class*="md:grid-cols-2"]),
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   > .admin-song-form-card-header
   + div
   > div[class*="md:grid-cols-2"]
@@ -305,20 +336,26 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   > .admin-song-form-card-header
   + div
   > div:not([class*="md:grid-cols-2"]):not([data-region-field-embedded])
   > div:first-child,
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   > .admin-song-form-card-header
   + div
   > div[class*="md:grid-cols-2"]
   > div
   > div:first-child,
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   [data-region-field-embedded]
   > div
   > div:first-child {
@@ -326,7 +363,9 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page
-  .admin-song-upload-tags-card
+  form
+  > div:first-child
+  > section:nth-of-type(3)
   label[class*="uppercase"] {
   margin-bottom: 0;
   color: var(--text-primary);
