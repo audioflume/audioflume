@@ -1,8 +1,24 @@
 "use client";
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
+import {
+  DndContext,
+  PointerSensor,
+  closestCenter,
+  useSensor,
+  useSensors,
+  type DragEndEvent,
+} from "@dnd-kit/core";
+import {
+  SortableContext,
+  arrayMove,
+  useSortable,
+  verticalListSortingStrategy,
+} from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
 import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
+import DragIconSmall from "@/components/icons/DragIconSmall";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ReleaseType = "single" | "ep" | "album";
@@ -30,6 +46,7 @@ type ReleaseSong = {
 type ReleasesResponse = {
   releases?: ArtistRelease[];
   release?: ArtistRelease | (Partial<ArtistRelease> & { id: string });
+  release_ids?: string[];
   songs?: ReleaseSong[];
   error?: string;
 };
@@ -82,12 +99,102 @@ function ReleaseStatusBadge({ status }: { status: string }) {
   );
 }
 
+function SortableReleaseRow({
+  release,
+  canManage,
+  disabled,
+  onEdit,
+}: {
+  release: ArtistRelease;
+  canManage: boolean;
+  disabled: boolean;
+  onEdit: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: release.id, disabled: !canManage || disabled });
+
+  return (
+    <div
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.45 : 1,
+        zIndex: isDragging ? 2 : "auto",
+      }}
+      className={`grid gap-4 px-5 py-4 sm:items-center ${
+        canManage
+          ? "sm:grid-cols-[28px_52px_minmax(0,1fr)_130px_110px_auto]"
+          : "sm:grid-cols-[52px_minmax(0,1fr)_130px_110px_auto]"
+      }`}
+    >
+      {canManage ? (
+        <button
+          type="button"
+          disabled={disabled}
+          className="flex h-8 w-7 cursor-grab items-center justify-center text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-50"
+          aria-label={`Drag ${release.title} to reorder`}
+          {...attributes}
+          {...listeners}
+        >
+          <span className="inline-flex scale-x-[1.45]">
+            <DragIconSmall />
+          </span>
+        </button>
+      ) : null}
+
+      <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
+        {release.cover_image_url ? (
+          <img
+            src={release.cover_image_url}
+            alt=""
+            className="h-full w-full object-cover"
+          />
+        ) : null}
+      </div>
+      <div className="min-w-0">
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+          {release.title}
+        </div>
+        <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+          {formatReleaseType(release.release_type)} · {release.track_ids.length}{" "}
+          {release.track_ids.length === 1 ? "track" : "tracks"}
+        </div>
+      </div>
+      <div className="text-xs text-[var(--text-muted)]">
+        {formatDate(release.release_date)}
+      </div>
+      <div>
+        <ReleaseStatusBadge status={release.status} />
+      </div>
+      <div className="flex justify-end">
+        <button
+          type="button"
+          onClick={onEdit}
+          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+        >
+          {canManage ? "Edit" : "View"}
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default function ArtistReleaseManager({
   artist,
   onReleaseCreated,
 }: ArtistReleaseManagerProps) {
   const canManage =
     artist.status === "approved" && artist.permissions.includes("release:manage");
+  const sensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
   const [releases, setReleases] = useState<ArtistRelease[]>([]);
   const [songs, setSongs] = useState<ReleaseSong[]>([]);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
@@ -100,6 +207,8 @@ export default function ArtistReleaseManager({
   const [createDate, setCreateDate] = useState("");
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
+  const [reordering, setReordering] = useState(false);
+  const [reorderError, setReorderError] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -113,6 +222,7 @@ export default function ArtistReleaseManager({
     setCreateType("single");
     setCreateDate("");
     setCreateError("");
+    setReorderError("");
 
     async function loadReleases() {
       try {
@@ -183,6 +293,45 @@ export default function ArtistReleaseManager({
       );
     } finally {
       setCreating(false);
+    }
+  }
+
+  async function handleReleaseDragEnd(event: DragEndEvent) {
+    if (!canManage || reordering) return;
+
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = releases.findIndex((release) => release.id === active.id);
+    const newIndex = releases.findIndex((release) => release.id === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    const previous = releases;
+    const reordered = arrayMove(releases, oldIndex, newIndex);
+    setReleases(reordered);
+    setReorderError("");
+
+    try {
+      setReordering(true);
+      const response = await fetch(`/api/artists/${artist.id}/releases`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          release_ids: reordered.map((release) => release.id),
+        }),
+      });
+      const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
+
+      if (!response.ok) {
+        throw new Error(body.error || "Failed to reorder releases");
+      }
+    } catch (error) {
+      setReleases(previous);
+      setReorderError(
+        error instanceof Error ? error.message : "Failed to reorder releases",
+      );
+    } finally {
+      setReordering(false);
     }
   }
 
@@ -304,65 +453,52 @@ export default function ArtistReleaseManager({
           <h2 className="filmwave-backend-section-title">Releases</h2>
         </div>
 
-        <div className="divide-y divide-[var(--border-subtle)]">
-          {loadState === "loading" ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              Loading releases...
-            </div>
-          ) : null}
+        {reorderError ? (
+          <div className="px-5 pb-3 text-xs text-[var(--danger)]">
+            {reorderError}
+          </div>
+        ) : null}
 
-          {loadState === "error" ? (
-            <div className="px-5 py-5 text-xs text-[var(--danger)]">
-              {loadError || "Releases could not be loaded."}
-            </div>
-          ) : null}
-
-          {loadState === "ready" && releases.length === 0 ? (
-            <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
-              No releases created yet.
-            </div>
-          ) : null}
-
-          {releases.map((release) => (
-            <div
-              key={release.id}
-              className="grid gap-4 px-5 py-4 sm:grid-cols-[52px_minmax(0,1fr)_130px_110px_auto] sm:items-center"
-            >
-              <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-                {release.cover_image_url ? (
-                  <img
-                    src={release.cover_image_url}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : null}
-              </div>
-              <div className="min-w-0">
-                <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                  {release.title}
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={(event) => void handleReleaseDragEnd(event)}
+        >
+          <SortableContext
+            items={releases.map((release) => release.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className="divide-y divide-[var(--border-subtle)]">
+              {loadState === "loading" ? (
+                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                  Loading releases...
                 </div>
-                <div className="mt-1 text-[11px] text-[var(--text-muted)]">
-                  {formatReleaseType(release.release_type)} · {release.track_ids.length} {release.track_ids.length === 1 ? "track" : "tracks"}
+              ) : null}
+
+              {loadState === "error" ? (
+                <div className="px-5 py-5 text-xs text-[var(--danger)]">
+                  {loadError || "Releases could not be loaded."}
                 </div>
-              </div>
-              <div className="text-xs text-[var(--text-muted)]">
-                {formatDate(release.release_date)}
-              </div>
-              <div>
-                <ReleaseStatusBadge status={release.status} />
-              </div>
-              <div className="flex justify-end">
-                <button
-                  type="button"
-                  onClick={() => setSelectedReleaseId(release.id)}
-                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                >
-                  {canManage ? "Edit" : "View"}
-                </button>
-              </div>
+              ) : null}
+
+              {loadState === "ready" && releases.length === 0 ? (
+                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                  No releases created yet.
+                </div>
+              ) : null}
+
+              {releases.map((release) => (
+                <SortableReleaseRow
+                  key={release.id}
+                  release={release}
+                  canManage={canManage}
+                  disabled={reordering}
+                  onEdit={() => setSelectedReleaseId(release.id)}
+                />
+              ))}
             </div>
-          ))}
-        </div>
+          </SortableContext>
+        </DndContext>
       </section>
     </div>
   );
@@ -533,6 +669,55 @@ function ReleaseEditor({
       setError("");
       setMessage("");
 
+      if (action === "publish") {
+        const saveResponse = await fetch(
+          `/api/artists/${artist.id}/releases/${release.id}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: title.trim(),
+              release_type: releaseType,
+              release_date: releaseDate || null,
+              song_ids: trackIds,
+            }),
+          },
+        );
+        const saveBody = (await saveResponse.json().catch(() => ({}))) as ReleasesResponse;
+
+        if (!saveResponse.ok || !saveBody.release) {
+          throw new Error(saveBody.error || "Failed to save release before publishing");
+        }
+
+        let savedRelease = saveBody.release as ArtistRelease;
+        onUpdated(savedRelease);
+
+        if (artworkFile) {
+          setUploadingArtwork(true);
+          const formData = new FormData();
+          formData.append("file", artworkFile);
+
+          const artworkResponse = await fetch(
+            `/api/artists/${artist.id}/releases/${release.id}/artwork`,
+            { method: "POST", body: formData },
+          );
+          const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ReleasesResponse;
+
+          if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
+            throw new Error(artworkBody.error || "Failed to upload release artwork");
+          }
+
+          savedRelease = {
+            ...savedRelease,
+            cover_image_url: artworkBody.release.cover_image_url,
+            updated_at: artworkBody.release.updated_at ?? savedRelease.updated_at,
+          };
+          onUpdated(savedRelease);
+          setArtworkFile(null);
+          setArtworkInputKey((current) => current + 1);
+        }
+      }
+
       const response = await fetch(
         `/api/artists/${artist.id}/releases/${release.id}`,
         {
@@ -572,6 +757,7 @@ function ReleaseEditor({
             : "Failed to unpublish release",
       );
     } finally {
+      setUploadingArtwork(false);
       setStatusChanging(false);
     }
   }
