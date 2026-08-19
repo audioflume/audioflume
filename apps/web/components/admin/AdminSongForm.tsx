@@ -5,6 +5,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import AdminContentPage from "@/components/admin/AdminContentPage";
+import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
@@ -933,9 +934,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const [isLoadingSong, setIsLoadingSong] = useState(false);
   const [loadError, setLoadError] = useState("");
 
-  const audioInputRef = useRef<HTMLInputElement | null>(null);
-  const coverInputRef = useRef<HTMLInputElement | null>(null);
-  const stemsInputRef = useRef<HTMLInputElement | null>(null);
   const uploadAbortControllerRef = useRef<AbortController | null>(null);
 
   const [selectedMoods, setSelectedMoods] = useState<string[]>([]);
@@ -1146,10 +1144,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
       cover: uploadedFiles.cover,
       stems: uploadedFiles.stems,
     });
-
-    if (audioInputRef.current) {
-      audioInputRef.current.value = "";
-    }
   };
 
   const resetPage = () => {
@@ -1194,18 +1188,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   "markers": [],
   "ranges": []
 }`);
-
-    if (audioInputRef.current) {
-      audioInputRef.current.value = "";
-    }
-
-    if (coverInputRef.current) {
-      coverInputRef.current.value = "";
-    }
-
-    if (stemsInputRef.current) {
-      stemsInputRef.current.value = "";
-    }
   };
 
   const cancelUpload = () => {
@@ -1275,28 +1257,14 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     }
   };
 
-  const handleStemFilesChange = (files: FileList | null) => {
-    setStemFiles(files ? Array.from(files) : []);
+  const handleStemFilesChange = (files: File[]) => {
+    setStemFiles(files);
     setSavedRecordId("");
     setUploadedFiles({
       audio: uploadedFiles.audio,
       cover: uploadedFiles.cover,
       stems: [],
     });
-  };
-
-  const clearStemFiles = () => {
-    setStemFiles([]);
-    setSavedRecordId("");
-    setUploadedFiles({
-      audio: uploadedFiles.audio,
-      cover: uploadedFiles.cover,
-      stems: [],
-    });
-
-    if (stemsInputRef.current) {
-      stemsInputRef.current.value = "";
-    }
   };
 
   const copyWaveformPeaks = async () => {
@@ -1675,26 +1643,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           background: var(--icon-button-hover);
           color: var(--text-primary);
         }
-
-        .admin-song-file-row {
-          display: grid;
-          grid-template-columns: 150px minmax(0, 1fr) auto;
-          align-items: center;
-          gap: 0.75rem;
-          border-top: 1px solid var(--border-subtle);
-          padding: 0.75rem 1rem;
-        }
-
-        .admin-song-file-row:first-child {
-          border-top: 0;
-        }
-
-        @media (max-width: 900px) {
-          .admin-song-file-row {
-            grid-template-columns: 1fr;
-            align-items: start;
-          }
-        }
       `}</style>
 
       <div
@@ -1716,278 +1664,59 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           }}
         >
           <div className="grid min-w-0 gap-4">
-            <section className="admin-song-form-card">
-              <div className="admin-song-form-card-header">
-                <div>
-                  <div className="admin-song-form-kicker">Files</div>
-                </div>
-              </div>
-
-              <div>
-                <div className="admin-song-file-row">
-                  <div>
-                    <div className="text-xs font-medium text-[var(--text-primary)]">
-                      {isEditMode ? "Replace Audio" : "Audio File"}
-                    </div>
-                    <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
-                      Main track source
-                    </div>
-                  </div>
-
-                  <div className="min-w-0">
-                    <input
-                      ref={audioInputRef}
-                      type="file"
-                      accept="audio/*"
-                      onChange={(e) =>
-                        handleAudioFileChange(e.target.files?.[0] ?? null)
-                      }
-                      className="hidden"
-                    />
-
-                    <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                      <button
-                        type="button"
-                        onClick={() => audioInputRef.current?.click()}
-                        className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
-                      >
-                        Choose
-                      </button>
-
-                      <span className="truncate text-xs text-[var(--text-secondary)]">
-                        {audioFile
-                          ? audioFile.name
-                          : isEditMode && existingAudioUrl
-                            ? "Current audio file will be kept"
-                            : "No file chosen"}
-                      </span>
-                    </div>
-
-                    {isEditMode && existingAudioUrl && !audioFile && (
-                      <a
-                        href={existingAudioUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-2 block truncate text-[11px] text-[var(--text-muted)] transition hover:text-[var(--text-primary)]"
-                      >
-                        {existingAudioUrl}
-                      </a>
-                    )}
-
-                    {peakStatus && (
-                      <div className="mt-2 flex items-start gap-2">
-                        {isGeneratingPeaks && (
-                          <div className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
-                        )}
-
-                        <p className="text-[11px] leading-5 text-[var(--text-secondary)]">
-                          {peakStatus}
-                        </p>
-                      </div>
-                    )}
-                  </div>
-
-                  <div className="flex justify-end">
-                    {audioFile && (
-                      <button
-                        type="button"
-                        onClick={clearAudioFile}
-                        disabled={isGeneratingPeaks || isSaving}
-                        className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-50"
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <div className="admin-song-file-row">
-                  <div>
-                    <div className="text-xs font-medium text-[var(--text-primary)]">
-                      {isEditMode ? "Replace Cover" : "Cover Image"}
-                    </div>
-                    <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
-                      Artwork preview
-                    </div>
-                  </div>
-
-                  <div className="min-w-0">
-                    <input
-                      ref={coverInputRef}
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        setCoverFile(e.target.files?.[0] ?? null);
-                        setSavedRecordId("");
-                        setUploadedFiles({
-                          audio: uploadedFiles.audio,
-                          cover: null,
-                          stems: uploadedFiles.stems,
-                        });
-                      }}
-                      className="hidden"
-                    />
-
-                    <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                      <button
-                        type="button"
-                        onClick={() => coverInputRef.current?.click()}
-                        className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
-                      >
-                        Choose
-                      </button>
-
-                      <span className="truncate text-xs text-[var(--text-secondary)]">
-                        {coverFile
-                          ? coverFile.name
-                          : isEditMode && existingCoverUrl
-                            ? "Current cover image will be kept"
-                            : "No file chosen"}
-                      </span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-end gap-3">
-                    {coverPreview && (
-                      <div className="h-9 w-9 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-primary)]">
-                        <img
-                          src={coverPreview}
-                          alt="Cover preview"
-                          className="h-full w-full object-cover"
-                        />
-                      </div>
-                    )}
-
-                    {(coverFile || coverPreview) && (
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setCoverFile(null);
-                          setExistingCoverUrl("");
-                          setCoverPreview(null);
-                          setSavedRecordId("");
-                          setUploadedFiles({
-                            audio: uploadedFiles.audio,
-                            cover: null,
-                            stems: uploadedFiles.stems,
-                          });
-
-                          if (coverInputRef.current) {
-                            coverInputRef.current.value = "";
-                          }
-                        }}
-                        className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-                      >
-                        Remove
-                      </button>
-                    )}
-                  </div>
-                </div>
-
-                <div className="admin-song-file-row">
-                  <div>
-                    <div className="text-xs font-medium text-[var(--text-primary)]">
-                      {isEditMode ? "Replace Stems" : "Stems"}
-                    </div>
-                    <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
-                      Alt mixes / instrumentals
-                    </div>
-                  </div>
-
-                  <div className="min-w-0">
-                    <input
-                      ref={stemsInputRef}
-                      type="file"
-                      accept="audio/*"
-                      multiple
-                      onChange={(e) => handleStemFilesChange(e.target.files)}
-                      className="hidden"
-                    />
-
-                    <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                      <button
-                        type="button"
-                        onClick={() => stemsInputRef.current?.click()}
-                        className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
-                      >
-                        Choose
-                      </button>
-
-                      <span className="truncate text-xs text-[var(--text-secondary)]">
-                        {stemFiles.length > 0
-                          ? `${stemFiles.length} file${stemFiles.length === 1 ? "" : "s"} chosen`
-                          : isEditMode && existingStemUrls.length > 0
-                            ? `${existingStemUrls.length} current stem${existingStemUrls.length === 1 ? "" : "s"} will be kept`
-                            : "No file chosen"}
-                      </span>
-                    </div>
-
-                    {stemFiles.length > 0 && (
-                      <div className="mt-2 grid gap-1 text-[11px] text-[var(--text-muted)]">
-                        {stemFiles.slice(0, 3).map((file) => (
-                          <div
-                            key={`${file.name}-${file.size}`}
-                            className="truncate"
-                          >
-                            {file.name}
-                          </div>
-                        ))}
-                        {stemFiles.length > 3 && (
-                          <div>+ {stemFiles.length - 3} more</div>
-                        )}
-                      </div>
-                    )}
-
-                    {isEditMode &&
-                      existingStemUrls.length > 0 &&
-                      stemFiles.length === 0 && (
-                        <div className="mt-2 grid gap-1 text-[11px] text-[var(--text-muted)]">
-                          {existingStemUrls.slice(0, 3).map((url) => (
-                            <a
-                              key={url}
-                              href={url}
-                              target="_blank"
-                              rel="noreferrer"
-                              className="truncate transition hover:text-[var(--text-primary)]"
-                            >
-                              {url}
-                            </a>
-                          ))}
-                          {existingStemUrls.length > 3 && (
-                            <div>+ {existingStemUrls.length - 3} more</div>
-                          )}
-                        </div>
-                      )}
-                  </div>
-
-                  <div className="flex justify-end">
-                    {stemFiles.length > 0 ? (
-                      <button
-                        type="button"
-                        onClick={clearStemFiles}
-                        className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-                      >
-                        Remove
-                      </button>
-                    ) : (
-                      isEditMode &&
-                      existingStemUrls.length > 0 && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setExistingStemUrls([]);
-                            setSavedRecordId("");
-                          }}
-                          className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-                        >
-                          Remove
-                        </button>
-                      )
-                    )}
-                  </div>
-                </div>
-              </div>
-            </section>
+            <BackendSongFileUpload
+              audioFile={audioFile}
+              onAudioFileChange={(file) => {
+                if (file) {
+                  void handleAudioFileChange(file);
+                } else {
+                  clearAudioFile();
+                }
+              }}
+              audioExistingLabel={
+                isEditMode && existingAudioUrl
+                  ? "Current audio file will be kept"
+                  : ""
+              }
+              audioStatus={peakStatus}
+              audioStatusBusy={isGeneratingPeaks}
+              stemFiles={stemFiles}
+              onStemFilesChange={handleStemFilesChange}
+              existingStemLabels={
+                isEditMode && existingStemUrls.length > 0 ? ["Existing stems"] : []
+              }
+              onClearExistingStems={
+                isEditMode && existingStemUrls.length > 0
+                  ? () => {
+                      setExistingStemUrls([]);
+                      setSavedRecordId("");
+                    }
+                  : undefined
+              }
+              artworkFile={coverFile}
+              artworkPreviewUrl={coverPreview}
+              onArtworkFileChange={(file) => {
+                setCoverFile(file);
+                setSavedRecordId("");
+                setUploadedFiles({
+                  audio: uploadedFiles.audio,
+                  cover: null,
+                  stems: uploadedFiles.stems,
+                });
+              }}
+              onRemoveArtwork={() => {
+                setCoverFile(null);
+                setExistingCoverUrl("");
+                setCoverPreview(null);
+                setSavedRecordId("");
+                setUploadedFiles({
+                  audio: uploadedFiles.audio,
+                  cover: null,
+                  stems: uploadedFiles.stems,
+                });
+              }}
+              disabled={isSaving}
+            />
 
             <section className="admin-song-form-card">
               <div className="admin-song-form-card-header">
@@ -2206,7 +1935,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
             </section>
           </div>
 
-          <aside className="grid h-fit gap-4 xl:sticky xl:top-[88px]">
+          <aside className="grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
             <section className="admin-song-form-card">
               <div className="admin-song-form-card-header">
                 <div className="admin-song-form-kicker">Checklist</div>
