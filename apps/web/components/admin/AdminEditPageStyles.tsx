@@ -9,7 +9,10 @@ export default function AdminEditPageStyles() {
         --admin-song-content-gap: 12px;
       }
 
-      .admin-song-edit-content-page .admin-song-edit-song-info {
+      .admin-song-edit-content-page
+        form
+        > div:first-child
+        > section:first-of-type {
         --admin-song-content-gap: 8px;
       }
 
@@ -100,13 +103,17 @@ export default function AdminEditPageStyles() {
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         > .admin-song-form-card-header
         + div
         > div:nth-child(-n + 6)
         > label:first-child,
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         [data-ai-generated-field-embedded]
         > div
         > label:first-child {
@@ -115,14 +122,18 @@ export default function AdminEditPageStyles() {
 
       /* Temporary compatibility for the two live Song Info checkbox structures. */
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         > .admin-song-form-card-header
         + div
         > div:nth-child(6)
         > label:last-child
         > span,
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         [data-ai-generated-field-embedded]
         > div
         > label:last-child
@@ -138,14 +149,18 @@ export default function AdminEditPageStyles() {
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         > .admin-song-form-card-header
         + div
         > div:nth-child(6)
         > label:last-child:hover
         > span,
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         [data-ai-generated-field-embedded]
         > div
         > label:last-child:hover
@@ -154,7 +169,9 @@ export default function AdminEditPageStyles() {
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         > .admin-song-form-card-header
         + div
         > div:nth-child(6)
@@ -162,7 +179,9 @@ export default function AdminEditPageStyles() {
         > input:checked
         + span,
       .admin-song-edit-content-page
-        .admin-song-edit-song-info
+        form
+        > div:first-child
+        > section:first-of-type
         [data-ai-generated-field-embedded]
         > div
         > label:last-child
@@ -173,25 +192,34 @@ export default function AdminEditPageStyles() {
         color: var(--bg-primary);
       }
 
-      .admin-song-edit-content-page .admin-song-edit-tags-card {
+      .admin-song-edit-content-page
+        form
+        > div:first-child
+        > section:nth-of-type(3) {
         display: contents;
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         > .admin-song-form-card-header {
         display: none;
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         > .admin-song-form-card-header
         + div {
         display: contents;
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         > .admin-song-form-card-header
         + div
         > div[class*="md:grid-cols-2"] {
@@ -199,12 +227,16 @@ export default function AdminEditPageStyles() {
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         > .admin-song-form-card-header
         + div
         > div:not([class*="md:grid-cols-2"]),
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         > .admin-song-form-card-header
         + div
         > div[class*="md:grid-cols-2"]
@@ -216,20 +248,26 @@ export default function AdminEditPageStyles() {
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         > .admin-song-form-card-header
         + div
         > div:not([class*="md:grid-cols-2"]):not([data-region-field-embedded])
         > div:first-child,
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         > .admin-song-form-card-header
         + div
         > div[class*="md:grid-cols-2"]
         > div
         > div:first-child,
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         [data-region-field-embedded]
         > div
         > div:first-child {
@@ -237,7 +275,9 @@ export default function AdminEditPageStyles() {
       }
 
       .admin-song-edit-content-page
-        .admin-song-edit-tags-card
+        form
+        > div:first-child
+        > section:nth-of-type(3)
         label[class*="uppercase"] {
         margin-bottom: 0;
         color: var(--text-primary);
@@ -263,7 +303,9 @@ export default function AdminEditPageStyles() {
 
       @media (min-width: 1280px) {
         .admin-song-edit-content-page
-          .admin-song-edit-song-info
+          form
+          > div:first-child
+          > section:first-of-type
           > .admin-song-form-card-header
           + div {
           grid-template-columns: repeat(4, minmax(0, 1fr));
