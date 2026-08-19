@@ -159,6 +159,11 @@ export async function POST(request: Request, context: RouteContext) {
 
     const formData = await request.formData();
     const file = formData.get("file");
+    const stemFiles = formData
+      .getAll("stems")
+      .filter(
+        (entry): entry is File => entry instanceof File && entry.size > 0,
+      );
     const title = cleanOptionalString(formData.get("title"), 160);
     const waveformPeaks = cleanWaveformPeaks(formData.get("waveformPeaks"));
     const duration = cleanDuration(formData.get("duration"));
@@ -176,6 +181,13 @@ export async function POST(request: Request, context: RouteContext) {
     if (!file.type.startsWith("audio/")) {
       return NextResponse.json(
         { error: "File must be an audio file" },
+        { status: 400 },
+      );
+    }
+
+    if (stemFiles.some((stemFile) => !stemFile.type.startsWith("audio/"))) {
+      return NextResponse.json(
+        { error: "Stem files must be audio files" },
         { status: 400 },
       );
     }
@@ -267,6 +279,17 @@ export async function POST(request: Request, context: RouteContext) {
       ...streamingAssets.hlsAssetKeys,
     );
 
+    const stemUrls: string[] = [];
+    for (const stemFile of stemFiles) {
+      const stemKey = `${artistSlug}/${titleSlug}/stems/${Date.now()}-${safeFileName(stemFile.name)}`;
+      const stemUrl = await uploadFileToR2({
+        file: stemFile,
+        key: stemKey,
+      });
+      uploadedKeys.push(stemKey);
+      stemUrls.push(stemUrl);
+    }
+
     const { data: song, error: songError } = await supabaseServer
       .from("songs")
       .insert({
@@ -276,6 +299,7 @@ export async function POST(request: Request, context: RouteContext) {
         playback_url: streamingAssets.playbackUrl,
         hls_url: streamingAssets.hlsUrl,
         cover_url: releaseCoverUrl,
+        stems: stemUrls.length > 0 ? stemUrls.join("\n") : null,
         waveform_peaks: waveformPeaks,
         duration,
         size_bytes: file.size,
@@ -326,6 +350,10 @@ export async function POST(request: Request, context: RouteContext) {
       { status: 201 },
     );
   } catch (error) {
+    if (uploadedKeys.length > 0) {
+      await cleanupUploadedFiles(uploadedKeys);
+    }
+
     if (error instanceof ArtistAccessError) {
       return NextResponse.json(
         { error: error.message },
