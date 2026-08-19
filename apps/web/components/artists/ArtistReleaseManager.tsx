@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 import {
   DndContext,
   PointerSensor,
@@ -266,6 +266,7 @@ export default function ArtistReleaseManager({
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
+  const createArtworkInputRef = useRef<HTMLInputElement | null>(null);
   const [releases, setReleases] = useState<ArtistRelease[]>([]);
   const [songs, setSongs] = useState<ReleaseSong[]>([]);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
@@ -276,6 +277,8 @@ export default function ArtistReleaseManager({
   const [createTitle, setCreateTitle] = useState("");
   const [createType, setCreateType] = useState<ReleaseType>("single");
   const [createDate, setCreateDate] = useState("");
+  const [createArtworkFile, setCreateArtworkFile] = useState<File | null>(null);
+  const [createArtworkPreviewUrl, setCreateArtworkPreviewUrl] = useState<string | null>(null);
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState("");
   const [reordering, setReordering] = useState(false);
@@ -292,6 +295,7 @@ export default function ArtistReleaseManager({
     setCreateTitle("");
     setCreateType("single");
     setCreateDate("");
+    setCreateArtworkFile(null);
     setCreateError("");
     setReorderError("");
 
@@ -328,9 +332,20 @@ export default function ArtistReleaseManager({
     };
   }, [artist.id]);
 
+  useEffect(() => {
+    if (!createArtworkFile) {
+      setCreateArtworkPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(createArtworkFile);
+    setCreateArtworkPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [createArtworkFile]);
+
   async function handleCreate(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!canManage || creating || !createTitle.trim()) return;
+    if (!canManage || creating || !createTitle.trim() || !createArtworkFile) return;
 
     try {
       setCreating(true);
@@ -351,11 +366,39 @@ export default function ArtistReleaseManager({
         throw new Error(body.error || "Failed to create release");
       }
 
-      const release = body.release as ArtistRelease;
+      let release = body.release as ArtistRelease;
+
+      try {
+        const artworkFormData = new FormData();
+        artworkFormData.append("file", createArtworkFile);
+        const artworkResponse = await fetch(
+          `/api/artists/${artist.id}/releases/${release.id}/artwork`,
+          { method: "POST", body: artworkFormData },
+        );
+        const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ReleasesResponse;
+
+        if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
+          throw new Error(artworkBody.error || "Failed to upload release artwork");
+        }
+
+        release = {
+          ...release,
+          cover_image_url: artworkBody.release.cover_image_url,
+          updated_at: artworkBody.release.updated_at ?? release.updated_at,
+        };
+      } catch (artworkError) {
+        await fetch(`/api/artists/${artist.id}/releases/${release.id}`, {
+          method: "DELETE",
+        }).catch(() => undefined);
+        throw artworkError;
+      }
+
       setReleases((current) => [release, ...current]);
       setCreateTitle("");
       setCreateType("single");
       setCreateDate("");
+      setCreateArtworkFile(null);
+      if (createArtworkInputRef.current) createArtworkInputRef.current.value = "";
       setSelectedReleaseId(release.id);
       onReleaseCreated();
     } catch (error) {
@@ -497,6 +540,45 @@ export default function ArtistReleaseManager({
                 className="filmwave-backend-input"
               />
             </label>
+
+            <div className="md:col-span-3">
+              <div className="mb-1.5 flex items-center justify-between gap-3 text-[11px] text-[var(--text-secondary)]">
+                <span>Cover artwork</span>
+                <span className="text-[var(--text-muted)]">Required</span>
+              </div>
+              <input
+                ref={createArtworkInputRef}
+                type="file"
+                accept="image/*"
+                disabled={!canManage || creating}
+                onChange={(event) =>
+                  setCreateArtworkFile(event.target.files?.[0] ?? null)
+                }
+                className="hidden"
+              />
+              <div className="flex h-10 min-w-0 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3">
+                <button
+                  type="button"
+                  disabled={!canManage || creating}
+                  onClick={() => createArtworkInputRef.current?.click()}
+                  className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:opacity-50"
+                >
+                  Choose
+                </button>
+                <span className="min-w-0 flex-1 truncate text-xs text-[var(--text-secondary)]">
+                  {createArtworkFile ? createArtworkFile.name : "No file chosen"}
+                </span>
+                {createArtworkPreviewUrl ? (
+                  <div className="h-7 w-7 overflow-hidden rounded-[5px] border border-[var(--border)]">
+                    <img
+                      src={createArtworkPreviewUrl}
+                      alt="Release artwork preview"
+                      className="h-full w-full object-cover"
+                    />
+                  </div>
+                ) : null}
+              </div>
+            </div>
           </div>
 
           <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] px-5 py-4">
@@ -515,7 +597,7 @@ export default function ArtistReleaseManager({
             {canManage ? (
               <button
                 type="submit"
-                disabled={creating || !createTitle.trim()}
+                disabled={creating || !createTitle.trim() || !createArtworkFile}
                 className="filmwave-backend-button filmwave-backend-button-primary"
               >
                 {creating ? "Creating..." : "Create release"}
@@ -735,6 +817,11 @@ function ReleaseEditor({
       return;
     }
 
+    if (action === "publish" && !release.cover_image_url && !artworkFile) {
+      setError("Cover artwork is required before publishing a release.");
+      return;
+    }
+
     try {
       setStatusChanging(true);
       setError("");
@@ -892,6 +979,10 @@ function ReleaseEditor({
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
           <div>
+            <div className="mb-1.5 flex items-center justify-between gap-2 text-[11px] text-[var(--text-secondary)]">
+              <span>Cover artwork</span>
+              <span className="text-[var(--text-muted)]">Required</span>
+            </div>
             <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
               {artworkPreviewUrl || release.cover_image_url ? (
                 <img
