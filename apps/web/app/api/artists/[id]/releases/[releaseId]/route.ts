@@ -65,27 +65,6 @@ async function requireReleaseOwnership(artistId: string, releaseId: string) {
   return Boolean(data);
 }
 
-async function requireApprovedArtist(artistId: string) {
-  const { data: artist, error: artistError } = await supabaseServer
-    .from("artists")
-    .select("id, status")
-    .eq("id", artistId)
-    .maybeSingle();
-
-  if (artistError) throw artistError;
-  if (!artist) {
-    return NextResponse.json({ error: "Artist not found" }, { status: 404 });
-  }
-  if (artist.status !== "approved") {
-    return NextResponse.json(
-      { error: "Artist profile must be approved before managing releases" },
-      { status: 403 },
-    );
-  }
-
-  return null;
-}
-
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const { id, releaseId } = await context.params;
@@ -96,8 +75,22 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Release not found" }, { status: 404 });
     }
 
-    const artistResponse = await requireApprovedArtist(id);
-    if (artistResponse) return artistResponse;
+    const { data: artist, error: artistError } = await supabaseServer
+      .from("artists")
+      .select("id, status")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (artistError) throw artistError;
+    if (!artist) {
+      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
+    }
+    if (artist.status !== "approved") {
+      return NextResponse.json(
+        { error: "Artist profile must be approved before managing releases" },
+        { status: 403 },
+      );
+    }
 
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
     const title = cleanOptionalString(body.title, 180);
@@ -266,8 +259,22 @@ export async function DELETE(_request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Release not found" }, { status: 404 });
     }
 
-    const artistResponse = await requireApprovedArtist(id);
-    if (artistResponse) return artistResponse;
+    const { data: artist, error: artistError } = await supabaseServer
+      .from("artists")
+      .select("id, status")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (artistError) throw artistError;
+    if (!artist) {
+      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
+    }
+    if (artist.status !== "approved") {
+      return NextResponse.json(
+        { error: "Artist profile must be approved before managing releases" },
+        { status: 403 },
+      );
+    }
 
     const { data: deletedRelease, error: deleteError } = await supabaseServer
       .from("artist_releases")
