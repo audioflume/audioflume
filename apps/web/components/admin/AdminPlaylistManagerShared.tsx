@@ -6,7 +6,7 @@ import type { ReactNode } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import DropdownShell from "@/components/DropdownShell";
-import DragIconSmall from "@/components/icons/DragIconSmall";
+import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -168,17 +168,13 @@ export function PlaylistManagerSortableCard({
           <PlaylistManagerArtwork playlist={playlist} />
         </Link>
 
-        <button
-          type="button"
-          className="absolute left-2 top-2 z-10 flex h-8 w-8 cursor-grab items-center justify-center bg-transparent text-white opacity-0 transition group-hover:opacity-100 active:cursor-grabbing"
+        <BackendDragHandle
+          variant="overlay"
+          className="absolute left-2 top-2 z-10 opacity-0 group-hover:opacity-100"
           aria-label={`Drag ${playlist.name} to reorder`}
           {...attributes}
           {...listeners}
-        >
-          <span className="inline-flex scale-x-[1.45]">
-            <DragIconSmall />
-          </span>
-        </button>
+        />
 
         <button
           type="button"
