@@ -16,6 +16,22 @@ type SongEditPointRow = {
   source: string | null;
 };
 
+type SongArtistLinkRow = {
+  song_id: string;
+  artist_id: string;
+  position: number;
+};
+
+type SongArtistProfileRow = {
+  id: string;
+  name: string;
+  slug: string;
+  status: string;
+};
+
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
 function getStemNameFromUrl(url: string, index: number) {
   const decodedUrl = decodeURIComponent(url);
   const filename =
@@ -148,6 +164,56 @@ export function normalizeSongRow(row: any): Song {
   };
 }
 
+export async function attachPrimaryArtistProfiles<T extends Song>(songs: T[]) {
+  const songIds = [...new Set(songs.map((song) => song.id).filter((id) => UUID_PATTERN.test(id)))];
+
+  if (songIds.length === 0) return songs;
+
+  const { data: links, error: linksError } = await supabaseServer
+    .from("song_artists")
+    .select("song_id, artist_id, position")
+    .in("song_id", songIds)
+    .eq("role", "primary")
+    .order("position", { ascending: true });
+
+  if (linksError || !links?.length) return songs;
+
+  const primaryArtistIdBySongId = new Map<string, string>();
+  for (const link of links as SongArtistLinkRow[]) {
+    if (!primaryArtistIdBySongId.has(link.song_id)) {
+      primaryArtistIdBySongId.set(link.song_id, link.artist_id);
+    }
+  }
+
+  const artistIds = [...new Set(primaryArtistIdBySongId.values())];
+  if (artistIds.length === 0) return songs;
+
+  const { data: artists, error: artistsError } = await supabaseServer
+    .from("artists")
+    .select("id, name, slug, status")
+    .in("id", artistIds);
+
+  if (artistsError || !artists?.length) return songs;
+
+  const artistsById = new Map(
+    (artists as SongArtistProfileRow[]).map((artist) => [artist.id, artist]),
+  );
+
+  return songs.map((song) => {
+    const artistId = primaryArtistIdBySongId.get(song.id);
+    const artist = artistId ? artistsById.get(artistId) : undefined;
+
+    if (!artistId || !artist) return song;
+
+    return {
+      ...song,
+      artist: artist.name,
+      artistId,
+      artistSlug: artist.status === "approved" ? artist.slug : undefined,
+    };
+  });
+}
+
 export async function attachEditPoints(songs: Song[]) {
   const songIds = songs.map((song) => song.id);
 
@@ -192,7 +258,8 @@ export async function getSongs(): Promise<Song[]> {
     throw new Error(error.message);
   }
 
-  return attachEditPoints((data ?? []).map(normalizeSongRow));
+  const songs = await attachEditPoints((data ?? []).map(normalizeSongRow));
+  return attachPrimaryArtistProfiles(songs);
 }
 
 export async function getSongById(id: string): Promise<Song | null> {
@@ -205,6 +272,7 @@ export async function getSongById(id: string): Promise<Song | null> {
   if (error || !data) return null;
 
   const [song] = await attachEditPoints([normalizeSongRow(data)]);
+  const [songWithArtist] = await attachPrimaryArtistProfiles([song]);
 
-  return song;
+  return songWithArtist;
 }
