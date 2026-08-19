@@ -213,7 +213,7 @@ export default function AdminMusicReviewPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<ReviewFilter>("submitted");
+  const [statusFilter, setStatusFilter] = useState<ReviewFilter>("all");
   const [selectedSongId, setSelectedSongId] = useState("");
   const [details, setDetails] = useState<DetailsResponse | null>(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
@@ -556,7 +556,7 @@ export default function AdminMusicReviewPage() {
                             {holder.ipi_cae_number || "—"}
                           </span>
                         </div>
-                      ))
+                      ))}
                     )}
                   </div>
 
