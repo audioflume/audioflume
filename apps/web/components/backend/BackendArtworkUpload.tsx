@@ -1,6 +1,10 @@
 "use client";
 
 import { useEffect, useRef, type DragEvent, type ReactNode } from "react";
+import {
+  MediaImageChangeOverlay,
+  MediaImageRemoveButton,
+} from "@/components/MediaImageOverlayControls";
 import UploadIcon from "@/components/icons/UploadIcon";
 
 type BackendArtworkUploadProps = {
@@ -94,15 +98,11 @@ export default function BackendArtworkUpload({
             ) : null}
 
             {allowRemove && onRemove && previewUrl ? (
-              <button
-                type="button"
+              <MediaImageRemoveButton
                 disabled={disabled}
                 onClick={onRemove}
-                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
-                aria-label={`Remove ${title.toLowerCase()}`}
-              >
-                ×
-              </button>
+                ariaLabel={`Remove ${title.toLowerCase()}`}
+              />
             ) : null}
           </div>
 
@@ -140,18 +140,11 @@ export default function BackendArtworkUpload({
             style={{ width: compactSize, height: compactSize }}
           >
             {allowRemove && onRemove ? (
-              <button
-                type="button"
+              <MediaImageRemoveButton
                 disabled={disabled}
-                onClick={(event) => {
-                  event.stopPropagation();
-                  onRemove();
-                }}
-                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
-                aria-label={`Remove ${title.toLowerCase()}`}
-              >
-                ×
-              </button>
+                onClick={onRemove}
+                ariaLabel={`Remove ${title.toLowerCase()}`}
+              />
             ) : null}
 
             <button
@@ -167,11 +160,7 @@ export default function BackendArtworkUpload({
                 alt={`${title} preview`}
                 className="h-full w-full object-cover"
               />
-              <span className="absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
-                <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)]">
-                  Change image
-                </span>
-              </span>
+              <MediaImageChangeOverlay />
             </button>
           </div>
         ) : (
