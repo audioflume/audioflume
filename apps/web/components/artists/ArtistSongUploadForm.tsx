@@ -538,7 +538,7 @@ export default function ArtistSongUploadForm({
     try {
       setStage("analyzing");
       setSaveStatus("Generating waveform peaks and estimating BPM/key...");
-      const analysis = await analyzeArtistSongAudioFile(file, 1500);
+      const analysis = await analyzeArtistSongAudioFile(file, artist.id, 1500);
       setWaveformPeaks(analysis.peaksJson);
       setDuration(analysis.duration);
 
