@@ -179,7 +179,7 @@ export default function ArtistProfileEditor({
         </div>
 
         <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
-          <div className="flex min-h-[72px] min-w-0 flex-wrap items-center gap-4 py-2">
+          <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
               className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
               style={
@@ -188,28 +188,30 @@ export default function ArtistProfileEditor({
                   : undefined
               }
             />
-            <div className="min-w-0 flex-1 text-xs font-medium text-[var(--text-primary)]">
-              Profile image
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium text-[var(--text-primary)]">
+                Profile image
+              </div>
+              {canEdit ? (
+                <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                  {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={Boolean(uploadingImage)}
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      event.target.value = "";
+                      if (file) void uploadArtistImage("profile", file);
+                    }}
+                  />
+                </label>
+              ) : null}
             </div>
-            {canEdit ? (
-              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0">
-                {uploadingImage === "profile" ? "Uploading..." : "Choose image"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled={Boolean(uploadingImage)}
-                  className="hidden"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    event.target.value = "";
-                    if (file) void uploadArtistImage("profile", file);
-                  }}
-                />
-              </label>
-            ) : null}
           </div>
 
-          <div className="flex min-h-[72px] min-w-0 flex-wrap items-center gap-4 py-2">
+          <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
               className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
               style={
@@ -218,25 +220,27 @@ export default function ArtistProfileEditor({
                   : undefined
               }
             />
-            <div className="min-w-0 flex-1 text-xs font-medium text-[var(--text-primary)]">
-              Feature image
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium text-[var(--text-primary)]">
+                Feature image
+              </div>
+              {canEdit ? (
+                <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                  {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={Boolean(uploadingImage)}
+                    className="hidden"
+                    onChange={(event) => {
+                      const file = event.target.files?.[0];
+                      event.target.value = "";
+                      if (file) void uploadArtistImage("hero", file);
+                    }}
+                  />
+                </label>
+              ) : null}
             </div>
-            {canEdit ? (
-              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0">
-                {uploadingImage === "hero" ? "Uploading..." : "Choose image"}
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled={Boolean(uploadingImage)}
-                  className="hidden"
-                  onChange={(event) => {
-                    const file = event.target.files?.[0];
-                    event.target.value = "";
-                    if (file) void uploadArtistImage("hero", file);
-                  }}
-                />
-              </label>
-            ) : null}
           </div>
         </div>
       </section>
