@@ -634,11 +634,11 @@ export default function PublicArtistPageView({
 
         .artist-public-section-title {
           margin: 0;
-          font-family: var(--font-aktiv-grotesk);
-          font-size: 22px;
-          font-weight: 500;
-          line-height: 1;
-          letter-spacing: -0.04em;
+          font-family: var(--filmwave-section-title-font-family);
+          font-size: var(--filmwave-section-title-font-size);
+          font-weight: var(--filmwave-section-title-font-weight);
+          line-height: var(--filmwave-section-title-line-height);
+          letter-spacing: var(--filmwave-section-title-letter-spacing);
         }
 
         .artist-public-section-count {
