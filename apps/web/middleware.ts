@@ -5,6 +5,7 @@ const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/artists/claim(.*)",
 ]);
 
 const DESKTOP_API_ALLOWED_ORIGINS = new Set([
