@@ -13,6 +13,7 @@ type SongCardShellProps = {
   vocalIndicator?: ReactNode;
   title: ReactNode;
   artist: ReactNode;
+  artistHref?: string;
   stems?: ReactNode;
   waveform?: ReactNode;
   duration?: ReactNode;
@@ -37,6 +38,7 @@ export function SongCardShell({
   vocalIndicator,
   title,
   artist,
+  artistHref,
   stems,
   waveform,
   duration,
@@ -112,14 +114,27 @@ export function SongCardShell({
         {vocalIndicator}
       </span>
 
-      <button
-        type="button"
-        className="filmwave-song-info"
-        onClick={onInfoClick}
-      >
-        <span className="filmwave-song-title">{title}</span>
-        <span className="filmwave-song-artist">{artist}</span>
-      </button>
+      {artistHref ? (
+        <div className="filmwave-song-info">
+          <span className="filmwave-song-title">{title}</span>
+          <a
+            href={artistHref}
+            className="filmwave-song-artist"
+            style={{ textDecoration: "none" }}
+          >
+            {artist}
+          </a>
+        </div>
+      ) : (
+        <button
+          type="button"
+          className="filmwave-song-info"
+          onClick={onInfoClick}
+        >
+          <span className="filmwave-song-title">{title}</span>
+          <span className="filmwave-song-artist">{artist}</span>
+        </button>
+      )}
 
       {waveform && (
         <div className="filmwave-song-wave-wrap">
