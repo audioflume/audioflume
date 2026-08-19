@@ -178,8 +178,8 @@ export default function ArtistProfileEditor({
           <h2 className="filmwave-backend-section-title">Images</h2>
         </div>
 
-        <div className="grid gap-2 px-5 pb-5">
-          <div className="flex min-h-[72px] flex-wrap items-center gap-4 py-2">
+        <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
+          <div className="flex min-h-[72px] min-w-0 flex-wrap items-center gap-4 py-2">
             <div
               className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
               style={
@@ -209,7 +209,7 @@ export default function ArtistProfileEditor({
             ) : null}
           </div>
 
-          <div className="flex min-h-[72px] flex-wrap items-center gap-4 py-2">
+          <div className="flex min-h-[72px] min-w-0 flex-wrap items-center gap-4 py-2">
             <div
               className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
               style={
@@ -249,7 +249,7 @@ export default function ArtistProfileEditor({
         <div className="grid gap-5 px-5 pb-5">
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
-              <FieldLabel>Artist name</FieldLabel>
+              <FieldLabel>Name (Required)</FieldLabel>
               <input
                 type="text"
                 value={name}
@@ -279,13 +279,14 @@ export default function ArtistProfileEditor({
 
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
-              <FieldLabel>Artist URL</FieldLabel>
+              <FieldLabel>Artist URL (Required)</FieldLabel>
               <input
                 type="text"
                 value={slug}
                 onChange={(event) => setSlug(normalizeSlugInput(event.target.value))}
                 onBlur={() => setSlug((current) => current.replace(/-+$/g, ""))}
                 maxLength={80}
+                required
                 disabled={!canEdit || saving}
                 className="filmwave-backend-input"
               />
@@ -316,7 +317,7 @@ export default function ArtistProfileEditor({
           </div>
 
           <label className="block">
-            <FieldLabel>Intro text</FieldLabel>
+            <FieldLabel>Intro text (Required)</FieldLabel>
             <textarea
               value={introText}
               onChange={(event) => setIntroText(event.target.value)}
@@ -330,7 +331,7 @@ export default function ArtistProfileEditor({
           </label>
 
           <label className="block">
-            <FieldLabel>Bio</FieldLabel>
+            <FieldLabel>Bio (Required)</FieldLabel>
             <textarea
               value={bio}
               onChange={(event) => setBio(event.target.value)}
