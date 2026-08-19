@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import { normalizeSongRow } from "@/lib/songs";
+import {
+  attachPrimaryArtistProfiles,
+  normalizeSongRow,
+} from "@/lib/songs";
 import type { CuratedPlaylistSong } from "@/lib/curatedPlaylists";
 
 type RouteContext = {
@@ -40,8 +43,12 @@ export async function GET(_req: Request, context: RouteContext) {
 
     if (songsError) throw songsError;
 
+    const normalizedSongs = await attachPrimaryArtistProfiles(
+      (songs ?? []).map((song) => normalizeSongRow(song)),
+    );
+
     const songsById = new Map(
-      (songs ?? []).map((song) => [String(song.id), normalizeSongRow(song)]),
+      normalizedSongs.map((song) => [String(song.id), song]),
     );
 
     const results = rows
