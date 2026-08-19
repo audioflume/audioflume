@@ -17,6 +17,7 @@ type BackendArtworkUploadProps = {
   footer?: ReactNode;
   variant?: "song" | "compact";
   compactSize?: number;
+  compactChooseButton?: boolean;
   allowRemove?: boolean;
 };
 
@@ -34,6 +35,7 @@ export default function BackendArtworkUpload({
   footer,
   variant = "song",
   compactSize = 112,
+  compactChooseButton = false,
   allowRemove = true,
 }: BackendArtworkUploadProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -63,6 +65,62 @@ export default function BackendArtworkUpload({
   );
 
   if (variant === "compact") {
+    if (compactChooseButton) {
+      return (
+        <div className="grid gap-2">
+          <div className="flex items-center justify-between gap-3">
+            <span className="text-xs font-medium text-[var(--text-secondary)]">
+              {title}
+            </span>
+            {required ? (
+              <span className="text-[11px] text-[var(--text-muted)]">Required</span>
+            ) : null}
+          </div>
+
+          {input}
+
+          <div
+            className="relative mt-1 overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]"
+            style={{ width: compactSize, height: compactSize }}
+            onDrop={handleDrop}
+            onDragOver={(event) => event.preventDefault()}
+          >
+            {previewUrl ? (
+              <img
+                src={previewUrl}
+                alt={`${title} preview`}
+                className="h-full w-full object-cover"
+              />
+            ) : null}
+
+            {allowRemove && onRemove && previewUrl ? (
+              <button
+                type="button"
+                disabled={disabled}
+                onClick={onRemove}
+                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-[7px] bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
+                aria-label={`Remove ${title.toLowerCase()}`}
+              >
+                ×
+              </button>
+            ) : null}
+          </div>
+
+          <button
+            type="button"
+            disabled={disabled}
+            onClick={() => inputRef.current?.click()}
+            className="mt-1 h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+            style={{ width: compactSize }}
+          >
+            Choose image
+          </button>
+
+          {footer}
+        </div>
+      );
+    }
+
     return (
       <div className="grid gap-2">
         <div className="flex items-center justify-between gap-3">
@@ -90,7 +148,7 @@ export default function BackendArtworkUpload({
                   onRemove();
                 }}
                 className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
-                aria-label={`Remove ${title.toLowerCase()}`}
+                aria-label={`Remove ${title.toLowerCase()}`
               >
                 ×
               </button>
