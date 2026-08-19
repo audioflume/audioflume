@@ -114,13 +114,12 @@ export default function AdminEditPageStyles() {
         form
         > div:first-child
         > section:first-of-type
-        [data-ai-generated-field-embedded]
-        > div
+        .admin-song-ai-field
         > label:first-child {
         display: none;
       }
 
-      /* Temporary compatibility for the two live Song Info checkbox structures. */
+      /* Song Info checkbox geometry. */
       .admin-song-edit-content-page
         form
         > div:first-child
@@ -134,8 +133,7 @@ export default function AdminEditPageStyles() {
         form
         > div:first-child
         > section:first-of-type
-        [data-ai-generated-field-embedded]
-        > div
+        .admin-song-ai-field
         > label:last-child
         > span {
         width: 16px;
@@ -161,8 +159,7 @@ export default function AdminEditPageStyles() {
         form
         > div:first-child
         > section:first-of-type
-        [data-ai-generated-field-embedded]
-        > div
+        .admin-song-ai-field
         > label:last-child:hover
         > span {
         border-color: var(--text-secondary);
@@ -182,8 +179,7 @@ export default function AdminEditPageStyles() {
         form
         > div:first-child
         > section:first-of-type
-        [data-ai-generated-field-embedded]
-        > div
+        .admin-song-ai-field
         > label:last-child
         > input:checked
         + span {
@@ -253,7 +249,7 @@ export default function AdminEditPageStyles() {
         > section:nth-of-type(3)
         > .admin-song-form-card-header
         + div
-        > div:not([class*="md:grid-cols-2"]):not([data-region-field-embedded])
+        > div:not([class*="md:grid-cols-2"])
         > div:first-child,
       .admin-song-edit-content-page
         form
@@ -262,13 +258,6 @@ export default function AdminEditPageStyles() {
         > .admin-song-form-card-header
         + div
         > div[class*="md:grid-cols-2"]
-        > div
-        > div:first-child,
-      .admin-song-edit-content-page
-        form
-        > div:first-child
-        > section:nth-of-type(3)
-        [data-region-field-embedded]
         > div
         > div:first-child {
         margin-bottom: var(--admin-song-title-gap);
