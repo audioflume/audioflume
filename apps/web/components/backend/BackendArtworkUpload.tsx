@@ -148,7 +148,7 @@ export default function BackendArtworkUpload({
                   onRemove();
                 }}
                 className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
-                aria-label={`Remove ${title.toLowerCase()}`
+                aria-label={`Remove ${title.toLowerCase()}`}
               >
                 ×
               </button>
