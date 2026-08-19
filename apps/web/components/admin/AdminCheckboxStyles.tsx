@@ -14,7 +14,7 @@ export default function AdminCheckboxStyles() {
         opacity: 1;
         pointer-events: auto;
         cursor: pointer;
-        border: 1px solid var(--border);
+        border: 1.5px solid var(--border);
         border-radius: 4px;
         background: var(--bg-secondary);
         color: var(--bg-primary);
@@ -58,7 +58,7 @@ export default function AdminCheckboxStyles() {
         width: 14px;
         height: 14px;
         flex: 0 0 14px;
-        border-width: 1px;
+        border-width: 1.5px;
         border-radius: 4px;
       }
 
@@ -67,7 +67,7 @@ export default function AdminCheckboxStyles() {
         position: relative;
         width: 14px;
         height: 14px;
-        border: 1px solid var(--border);
+        border: 1.5px solid var(--border);
         border-radius: 4px;
         background: var(--bg-secondary);
         color: var(--bg-primary);
