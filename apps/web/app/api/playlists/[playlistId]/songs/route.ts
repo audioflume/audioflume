@@ -1,5 +1,6 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
+import { attachPrimaryArtistProfiles } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 import type { Song } from "@/lib/types";
 
@@ -208,11 +209,12 @@ export async function GET(_req: Request, context: RouteContext) {
 
     if (songsError) throw songsError;
 
+    const normalizedSongs = await attachPrimaryArtistProfiles(
+      ((songs ?? []) as SupabaseSongRow[]).map(normalizeSongRow),
+    );
+
     const songsById = new Map(
-      ((songs ?? []) as SupabaseSongRow[]).map((song) => [
-        String(song.id),
-        normalizeSongRow(song),
-      ]),
+      normalizedSongs.map((song) => [String(song.id), song]),
     );
 
     const playlistSongResults = rows
