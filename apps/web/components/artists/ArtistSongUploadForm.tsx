@@ -903,7 +903,12 @@ export default function ArtistSongUploadForm({
                 />
               </div>
               <div>
-                <BackendInput aria-label="Artist" value={artist.name} readOnly />
+                <BackendInput
+                  aria-label="Artist"
+                  value={artist.name}
+                  placeholder="Artist"
+                  readOnly
+                />
               </div>
               {canManageReleases ? (
                 <div>
@@ -940,7 +945,7 @@ export default function ArtistSongUploadForm({
                 <NumericInput
                   value={bpm}
                   onChange={setBpm}
-                  placeholder="110"
+                  placeholder="BPM"
                   disabled={!canEditMetadata || busy || uploadComplete}
                 />
               </div>
@@ -950,7 +955,7 @@ export default function ArtistSongUploadForm({
                   onChange={setSongKey}
                   disabled={!canEditMetadata || busy || uploadComplete}
                 >
-                  <option value="">Select key</option>
+                  <option value="">Key</option>
                   {KEY_OPTIONS.map((option) => (
                     <option key={option} value={option}>
                       {option}
@@ -963,7 +968,7 @@ export default function ArtistSongUploadForm({
                   aria-label="Duration"
                   value={formatDuration(duration)}
                   readOnly
-                  placeholder="Auto-detected"
+                  placeholder="Duration"
                 />
               </div>
               <div>
