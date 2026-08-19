@@ -186,7 +186,7 @@ export default function PublicArtistPageView({
     ),
     "--artist-name-full-fit-size": getArtistNameFitSize(
       displayArtist.name,
-      98,
+      100,
       3.2,
       17,
     ),
@@ -812,7 +812,7 @@ export default function PublicArtistPageView({
             width: 100%;
             margin: 4px 0 0;
             color: var(--text-primary);
-            font-size: clamp(44px, var(--artist-name-full-fit-size), 112px);
+            font-size: var(--artist-name-full-fit-size);
             white-space: nowrap;
             mix-blend-mode: normal;
           }
@@ -849,15 +849,8 @@ export default function PublicArtistPageView({
             aspect-ratio: 1.75 / 1;
           }
 
-          .artist-public-profile-meta {
-            order: 7;
-            width: 100%;
-            justify-content: flex-end;
-            margin-top: -10px;
-          }
-
           .artist-public-profile-panel {
-            order: 8;
+            order: 7;
             position: relative;
             inset: auto;
             display: flex;
@@ -869,12 +862,22 @@ export default function PublicArtistPageView({
           }
 
           .artist-public-profile-heading {
+            order: 2;
             width: 100%;
+            margin-top: 12px;
           }
 
           .artist-public-bio {
+            order: 1;
             width: 100%;
-            margin-top: 9px;
+            margin-top: 0;
+          }
+
+          .artist-public-profile-meta {
+            order: 8;
+            width: 100%;
+            justify-content: flex-end;
+            margin-top: -10px;
           }
 
           textarea.artist-public-bio.artist-public-edit-control {
