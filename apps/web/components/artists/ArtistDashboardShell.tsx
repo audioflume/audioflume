@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import AdminPageHeader from "@/components/admin/AdminPageHeader";
 import ArtistAgreements from "@/components/artists/ArtistAgreements";
@@ -197,8 +197,10 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   const searchParams = useSearchParams();
   const requestedSection = searchParams.get("section");
   const requestedArtistId = searchParams.get("artist");
+  const artistSwitcherRef = useRef<HTMLDivElement>(null);
   const [dashboardProfiles, setDashboardProfiles] = useState(profiles);
   const [activeArtistId, setActiveArtistId] = useState(profiles[0]?.id ?? "");
+  const [artistSwitcherOpen, setArtistSwitcherOpen] = useState(false);
   const [activeSection, setActiveSection] =
     useState<ArtistDashboardSection>("overview");
   const [sectionReady, setSectionReady] = useState(false);
@@ -228,6 +230,32 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     );
     setSectionReady(true);
   }, [profiles, requestedArtistId, requestedSection]);
+
+  useEffect(() => {
+    if (!artistSwitcherOpen) return;
+
+    function handlePointerDown(event: PointerEvent) {
+      if (
+        artistSwitcherRef.current &&
+        event.target instanceof Node &&
+        !artistSwitcherRef.current.contains(event.target)
+      ) {
+        setArtistSwitcherOpen(false);
+      }
+    }
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") setArtistSwitcherOpen(false);
+    }
+
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [artistSwitcherOpen]);
 
   const activeArtist = useMemo(
     () =>
@@ -322,6 +350,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
   const isMyPage = activeSection === "my-page";
   const earningsVisible = canViewEarnings(activeArtist.role);
+  const canSwitchArtists = dashboardProfiles.length > 1;
 
   return (
     <main
@@ -334,42 +363,127 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         style={{ top: "var(--filmwave-header-height)", bottom: "0px" }}
       >
         <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
-          <div className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3">
-            <div className="flex items-center gap-3">
-              <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[14px] font-medium text-[var(--text-secondary)]">
-                {activeArtist.profile_image_url ? (
-                  <img
-                    src={activeArtist.profile_image_url}
-                    alt=""
-                    className="h-full w-full object-cover"
-                  />
-                ) : (
-                  <span>{activeArtist.name.slice(0, 1).toUpperCase()}</span>
-                )}
-              </div>
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-xs font-medium text-[var(--text-primary)]">
-                  {activeArtist.name}
+          <div ref={artistSwitcherRef} className="relative">
+            <button
+              type="button"
+              onClick={() => {
+                if (canSwitchArtists) {
+                  setArtistSwitcherOpen((open) => !open);
+                }
+              }}
+              aria-haspopup={canSwitchArtists ? "menu" : undefined}
+              aria-expanded={canSwitchArtists ? artistSwitcherOpen : undefined}
+              className={`relative w-full rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3 text-left transition-colors ${
+                canSwitchArtists
+                  ? "cursor-pointer hover:bg-[var(--bg-hover)]"
+                  : "cursor-default"
+              }`}
+            >
+              <div className="flex items-center gap-3">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[14px] font-medium text-[var(--text-secondary)]">
+                  {activeArtist.profile_image_url ? (
+                    <img
+                      src={activeArtist.profile_image_url}
+                      alt=""
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    <span>{activeArtist.name.slice(0, 1).toUpperCase()}</span>
+                  )}
                 </div>
-                <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-[var(--text-muted)]">
-                  <span>{formatStatus(activeArtist.status)}</span>
-                  <span>{formatRole(activeArtist.role)}</span>
+                <div className={`min-w-0 flex-1 ${canSwitchArtists ? "pr-5" : ""}`}>
+                  <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+                    {activeArtist.name}
+                  </div>
+                  <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-[var(--text-muted)]">
+                    <span>{formatStatus(activeArtist.status)}</span>
+                    <span>{formatRole(activeArtist.role)}</span>
+                  </div>
                 </div>
               </div>
-            </div>
 
-            {dashboardProfiles.length > 1 ? (
-              <select
-                value={activeArtist.id}
-                onChange={(event) => setActiveArtistId(event.target.value)}
-                className="mt-3 h-8 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-2 text-[11px] text-[var(--text-primary)] outline-none"
+              {canSwitchArtists ? (
+                <svg
+                  viewBox="0 0 12 12"
+                  fill="none"
+                  aria-hidden="true"
+                  className={`absolute right-3 top-3.5 h-3 w-3 text-[var(--text-secondary)] transition-transform ${
+                    artistSwitcherOpen ? "rotate-180" : ""
+                  }`}
+                >
+                  <path
+                    d="M2.25 4.25L6 8L9.75 4.25"
+                    stroke="currentColor"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                </svg>
+              ) : null}
+            </button>
+
+            {canSwitchArtists && artistSwitcherOpen ? (
+              <div
+                role="menu"
+                className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 max-h-64 overflow-y-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.14)]"
               >
-                {dashboardProfiles.map((profile) => (
-                  <option key={profile.id} value={profile.id}>
-                    {profile.name}
-                  </option>
-                ))}
-              </select>
+                {dashboardProfiles.map((profile) => {
+                  const selected = profile.id === activeArtist.id;
+
+                  return (
+                    <button
+                      key={profile.id}
+                      type="button"
+                      role="menuitem"
+                      onClick={() => {
+                        setArtistSwitcherOpen(false);
+                        setActiveArtistId(profile.id);
+                      }}
+                      className={`flex w-full items-center gap-2.5 rounded-[7px] px-2.5 py-2 text-left transition-colors ${
+                        selected
+                          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
+                          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                      }`}
+                    >
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-[5px] bg-[var(--bg-tertiary)] text-[11px] font-medium text-[var(--text-secondary)]">
+                        {profile.profile_image_url ? (
+                          <img
+                            src={profile.profile_image_url}
+                            alt=""
+                            className="h-full w-full object-cover"
+                          />
+                        ) : (
+                          <span>{profile.name.slice(0, 1).toUpperCase()}</span>
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <div className="truncate text-[11px] font-medium text-[var(--text-primary)]">
+                          {profile.name}
+                        </div>
+                        <div className="mt-0.5 truncate text-[9px] text-[var(--text-muted)]">
+                          {formatStatus(profile.status)}
+                        </div>
+                      </div>
+                      {selected ? (
+                        <svg
+                          viewBox="0 0 12 12"
+                          fill="none"
+                          aria-hidden="true"
+                          className="h-3.5 w-3.5 shrink-0 text-[var(--text-primary)]"
+                        >
+                          <path
+                            d="M2 6.25L4.55 8.75L10 3.25"
+                            stroke="currentColor"
+                            strokeWidth="1.6"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                          />
+                        </svg>
+                      ) : null}
+                    </button>
+                  );
+                })}
+              </div>
             ) : null}
           </div>
 
