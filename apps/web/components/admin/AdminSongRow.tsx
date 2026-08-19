@@ -4,16 +4,15 @@ import type { Song } from "@/lib/types";
 import Link from "next/link";
 import { MouseEvent, useEffect, useMemo, useState } from "react";
 import AdminSongActionsDropdown from "@/components/admin/AdminSongActionsDropdown";
-import CheckIcon from "@/components/icons/CheckIcon";
+import {
+  BackendIconButton,
+  BackendStatusBadge,
+} from "@/components/backend/BackendControls";
 import EditIcon from "@/components/icons/EditIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import {
-  iconButtonActiveClass,
-  smallIconButtonClass,
-} from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 import {
   getSongHealthStatus,
@@ -40,10 +39,7 @@ function StatusDot({ health }: { health: SongHealthStatus }) {
   return (
     <span
       className="block h-2 w-2 rounded-full"
-      style={{
-        backgroundColor: color,
-        boxShadow: `0 0 0 3px ${ring}`,
-      }}
+      style={{ backgroundColor: color, boxShadow: `0 0 0 3px ${ring}` }}
       aria-hidden="true"
     />
   );
@@ -65,38 +61,19 @@ function AutoEditPointChip() {
 }
 
 function StatusChip({ issues }: { issues: string[] }) {
-  if (issues.length === 0) {
-    return (
-      <span className="inline-flex h-6 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] font-medium text-[var(--text-primary)]">
-        Complete
-      </span>
-    );
-  }
-
   return (
-    <span className="inline-flex h-6 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] font-medium text-[var(--text-secondary)]">
-      {issues[0]}
-    </span>
+    <BackendStatusBadge>
+      {issues.length === 0 ? "Complete" : issues[0]}
+    </BackendStatusBadge>
   );
 }
 
 function PublishedStatusChip() {
-  return (
-    <span
-      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-medium uppercase tracking-[0.04em]"
-      style={{
-        backgroundColor: "var(--status-success-soft, rgba(72, 181, 113, 0.12))",
-        color: "var(--status-success, #48b571)",
-      }}
-    >
-      Published
-    </span>
-  );
+  return <BackendStatusBadge tone="success">Published</BackendStatusBadge>;
 }
 
 function formatAddedDate(value?: string) {
   if (!value) return "—";
-
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "—";
 
@@ -121,6 +98,9 @@ function createGeneratedEditPoints(saved: number) {
     ranges: [],
   });
 }
+
+const backendIconLinkClass =
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 
 export default function AdminSongRow({
   song,
@@ -153,10 +133,7 @@ export default function AdminSongRow({
   const { currentSong, isPlaying, togglePlayPause, seekTo } = usePlayer();
 
   const rowSong = useMemo(
-    () => ({
-      ...song,
-      editPoints: localEditPoints,
-    }),
+    () => ({ ...song, editPoints: localEditPoints }),
     [song, localEditPoints],
   );
 
@@ -168,9 +145,6 @@ export default function AdminSongRow({
   const onlyAutoEditPoints = songHasOnlyAutoEditPoints(rowSong);
   const showPublishedStatus = statusDisplay === "published";
   const largeRow = size === "large";
-  const actionButtonClass = `${smallIconButtonClass}${
-    colorOnlyActions ? " filmwave-icon-button-color-only" : ""
-  }`;
 
   useEffect(() => {
     setLocalEditPoints(song.editPoints);
@@ -182,9 +156,7 @@ export default function AdminSongRow({
         songId?: string;
         analyzing?: boolean;
       }>;
-
       if (customEvent.detail?.songId !== song.id) return;
-
       setIsAnalyzingEditPoints(Boolean(customEvent.detail.analyzing));
     };
 
@@ -193,30 +165,16 @@ export default function AdminSongRow({
         songId?: string;
         saved?: number;
       }>;
-
       if (customEvent.detail?.songId !== song.id) return;
-
       setLocalEditPoints(createGeneratedEditPoints(customEvent.detail.saved ?? 0));
     };
 
-    window.addEventListener(
-      "admin-song-edit-point-analyzing",
-      onAnalyzingChange,
-    );
-    window.addEventListener(
-      "admin-song-edit-points-updated",
-      onEditPointsUpdated,
-    );
+    window.addEventListener("admin-song-edit-point-analyzing", onAnalyzingChange);
+    window.addEventListener("admin-song-edit-points-updated", onEditPointsUpdated);
 
     return () => {
-      window.removeEventListener(
-        "admin-song-edit-point-analyzing",
-        onAnalyzingChange,
-      );
-      window.removeEventListener(
-        "admin-song-edit-points-updated",
-        onEditPointsUpdated,
-      );
+      window.removeEventListener("admin-song-edit-point-analyzing", onAnalyzingChange);
+      window.removeEventListener("admin-song-edit-points-updated", onEditPointsUpdated);
     };
   }, [song.id]);
 
@@ -246,25 +204,21 @@ export default function AdminSongRow({
 
   const handlePlayClick = () => {
     if (!song.audioUrl || isAnalyzingEditPoints) return;
-
     if (isCurrentSong) {
       togglePlayPause(song);
       return;
     }
-
     seekTo(song, 0, currentSong ? isPlaying : true);
   };
 
   const handleRowClick = (e: MouseEvent<HTMLDivElement>) => {
     const target = e.target as HTMLElement;
-
     if (
       target.closest("[data-admin-song-menu]") ||
       target.closest("[data-admin-song-checkbox]")
     ) {
       return;
     }
-
     handlePlayClick();
   };
 
@@ -283,11 +237,9 @@ export default function AdminSongRow({
             ? "bg-[var(--bg-hover)]"
             : ""
       }`}
-      style={{
-        borderBottom: isLast ? "none" : "1px solid var(--border-subtle)",
-      }}
+      style={{ borderBottom: isLast ? "none" : "1px solid var(--border-subtle)" }}
     >
-      {showSelectionColumn && (
+      {showSelectionColumn ? (
         <div className="flex items-center" data-admin-song-checkbox>
           <label
             className={`admin-song-select-wrap${
@@ -301,13 +253,12 @@ export default function AdminSongRow({
               onChange={(e) => onSelectedChange(song.id, e.target.checked)}
               className="admin-song-select-input"
             />
-
             <span className="admin-song-select-box">
-              <CheckIcon size={11} strokeWidth={3} />
+              <CheckMarkIconCompat />
             </span>
           </label>
         </div>
-      )}
+      ) : null}
 
       <div className="flex items-center">
         <button
@@ -320,13 +271,9 @@ export default function AdminSongRow({
           className={`relative ${largeRow ? "h-[52px] w-[52px]" : "h-8 w-8"} cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default`}
           aria-label={rowIsPlaying ? "Pause song" : "Play song"}
         >
-          {song.coverArt && (
-            <img
-              src={song.coverArt}
-              alt={song.title}
-              className="h-full w-full object-cover"
-            />
-          )}
+          {song.coverArt ? (
+            <img src={song.coverArt} alt={song.title} className="h-full w-full object-cover" />
+          ) : null}
 
           {isAnalyzingEditPoints ? (
             <span className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)]">
@@ -360,45 +307,40 @@ export default function AdminSongRow({
         </div>
       </button>
 
-      <div className="min-w-0 truncate text-[var(--text-subtle)]">
-        {song.artist}
-      </div>
+      <div className="min-w-0 truncate text-[var(--text-subtle)]">{song.artist}</div>
 
-      {!showPublishedStatus && (
+      {!showPublishedStatus ? (
         <div className="flex items-center">
           <StatusDot health={rowHealth} />
         </div>
-      )}
+      ) : null}
 
       <div className="flex min-w-0 items-center gap-1.5">
         {isAnalyzingEditPoints ? (
-          <span className="inline-flex h-6 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] font-medium text-[var(--text-secondary)]">
-            Analyzing
-          </span>
+          <BackendStatusBadge>Analyzing</BackendStatusBadge>
         ) : showPublishedStatus ? (
           <PublishedStatusChip />
         ) : (
           <StatusChip issues={issues} />
         )}
-        {onlyAutoEditPoints && !isAnalyzingEditPoints && <AutoEditPointChip />}
+        {onlyAutoEditPoints && !isAnalyzingEditPoints ? <AutoEditPointChip /> : null}
       </div>
 
       <div className="text-[var(--text-secondary)]">{song.key || "—"}</div>
-
       <div className="text-[var(--text-secondary)]">
         {song.bpm ? `${song.bpm} BPM` : "—"}
       </div>
 
-      {showAddedDate && (
-        <div className="text-[var(--text-secondary)]">
-          {formatAddedDate(song.createdAt)}
-        </div>
-      )}
+      {showAddedDate ? (
+        <div className="text-[var(--text-secondary)]">{formatAddedDate(song.createdAt)}</div>
+      ) : null}
 
-      <div className="flex items-center justify-end gap-1 pointer-events-auto" data-admin-song-menu>
+      <div className="pointer-events-auto flex items-center justify-end gap-1" data-admin-song-menu>
         <Link
           href={`/admin/songs/${song.id}/edit`}
-          className={`admin-song-edit-btn ${actionButtonClass}`}
+          className={`admin-song-edit-btn ${backendIconLinkClass}${
+            colorOnlyActions ? "" : " hover:bg-[var(--bg-hover)] focus-visible:bg-[var(--bg-hover)]"
+          }`}
           aria-label={`Edit ${song.title}`}
           onClick={(e) => e.stopPropagation()}
         >
@@ -424,20 +366,34 @@ export default function AdminSongRow({
             left: 16,
           }}
           trigger={({ open }) => (
-            <button
+            <BackendIconButton
               type="button"
-              className={`admin-song-menu-btn ${actionButtonClass} ${
-                open ? `is-open ${iconButtonActiveClass}` : ""
-              }`}
+              active={open}
+              colorOnly={colorOnlyActions}
+              className="admin-song-menu-btn song-more-dropdown"
               aria-label="Song options"
               aria-expanded={open}
               disabled={isAnalyzingEditPoints}
             >
               <MoreIcon />
-            </button>
+            </BackendIconButton>
           )}
         />
       </div>
     </div>
+  );
+}
+
+function CheckMarkIconCompat() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M5 12.5L9.5 17L19 7.5"
+        stroke="currentColor"
+        strokeWidth="3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
   );
 }
