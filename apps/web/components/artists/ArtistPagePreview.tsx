@@ -89,6 +89,7 @@ export default function ArtistPagePreview({
   const [saving, setSaving] = useState(false);
   const [editError, setEditError] = useState("");
   const [message, setMessage] = useState("");
+  const [layoutReady, setLayoutReady] = useState(false);
   const [layout, setLayout] = useState<PreviewLayout>({
     virtualWidth: 0,
     scale: 1,
@@ -124,6 +125,13 @@ export default function ArtistPagePreview({
     setFeatureImagePreviewUrl(null);
     setEditError("");
     setMessage("");
+    setLayoutReady(false);
+    setLayout({
+      virtualWidth: 0,
+      scale: 1,
+      height: 0,
+      topInset: 0,
+    });
 
     void fetchPreviewData()
       .then((nextData) => {
@@ -189,6 +197,7 @@ export default function ArtistPagePreview({
 
           return { virtualWidth, scale, height, topInset };
         });
+        setLayoutReady(true);
       });
     }
 
@@ -378,13 +387,20 @@ export default function ArtistPagePreview({
       style={{
         boxSizing: "border-box",
         height:
-          layout.height > 0
+          layoutReady && layout.height > 0
             ? `${layout.height + layout.topInset}px`
-            : undefined,
-        paddingTop: layout.topInset > 0 ? `${layout.topInset}px` : undefined,
+            : "320px",
+        paddingTop:
+          layoutReady && layout.topInset > 0 ? `${layout.topInset}px` : undefined,
       }}
     >
-      {canEdit ? (
+      {!layoutReady ? (
+        <div className="absolute inset-0 flex items-center justify-center text-xs text-[var(--text-muted)]">
+          Loading page preview...
+        </div>
+      ) : null}
+
+      {canEdit && layoutReady ? (
         <div
           className="absolute right-5 z-50 flex max-w-[calc(100%-40px)] items-center gap-2"
           style={{ top: `${layout.topInset + 18}px` }}
@@ -433,6 +449,7 @@ export default function ArtistPagePreview({
         ref={previewContentRef}
         style={{
           width: layout.virtualWidth > 0 ? `${layout.virtualWidth}px` : "100%",
+          visibility: layoutReady ? "visible" : "hidden",
           transform: `scale(${layout.scale})`,
           transformOrigin: "top left",
         }}
