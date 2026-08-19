@@ -56,7 +56,7 @@ function ReleasePickerSongRow({
 
   return (
     <div
-      className={`flex min-w-0 items-center transition-colors hover:bg-[var(--bg-hover)] ${
+      className={`flex min-w-0 items-center px-5 transition-colors hover:bg-[var(--bg-hover)] ${
         selected ? "bg-[var(--bg-hover)]" : ""
       }`}
     >
@@ -81,6 +81,7 @@ function ReleasePickerSongRow({
           coverLabel={actuallyPlaying ? "Pause song" : "Play song"}
           onCoverClick={() => togglePlayPause(song)}
           onInfoClick={onToggle}
+          showDivider={false}
           cover={
             song.coverArt ? (
               <Image
@@ -262,7 +263,7 @@ export default function ArtistReleaseTrackPicker({
       >
         <AdminCheckboxStyles />
 
-        <div className="pb-4">
+        <div className="mx-auto w-full max-w-[760px] pb-4">
           <AdminSearchBar
             value={search}
             onChange={setSearch}
@@ -271,7 +272,7 @@ export default function ArtistReleaseTrackPicker({
           />
         </div>
 
-        <div className="-mx-5 min-h-0 flex-1 overflow-y-auto border-t border-[var(--border-subtle)] px-5">
+        <div className="-mx-5 min-h-0 flex-1 overflow-y-auto border-t border-[var(--border-subtle)]">
           {loading ? (
             <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)]">
               Loading tracks...
