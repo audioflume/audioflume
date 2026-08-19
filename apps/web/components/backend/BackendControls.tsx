@@ -160,7 +160,7 @@ export function BackendCheckbox({
       />
       <span
         className={joinClasses(
-          "flex shrink-0 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover/backend-checkbox:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100",
+          "filmwave-backend-checkbox-box flex shrink-0 items-center justify-center border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover/backend-checkbox:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100",
           size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4",
         )}
       >
