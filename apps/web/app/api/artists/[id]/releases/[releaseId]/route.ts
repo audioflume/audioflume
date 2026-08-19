@@ -65,6 +65,27 @@ async function requireReleaseOwnership(artistId: string, releaseId: string) {
   return Boolean(data);
 }
 
+async function requireApprovedArtist(artistId: string) {
+  const { data: artist, error: artistError } = await supabaseServer
+    .from("artists")
+    .select("id, status")
+    .eq("id", artistId)
+    .maybeSingle();
+
+  if (artistError) throw artistError;
+  if (!artist) {
+    return NextResponse.json({ error: "Artist not found" }, { status: 404 });
+  }
+  if (artist.status !== "approved") {
+    return NextResponse.json(
+      { error: "Artist profile must be approved before managing releases" },
+      { status: 403 },
+    );
+  }
+
+  return null;
+}
+
 export async function PATCH(request: Request, context: RouteContext) {
   try {
     const { id, releaseId } = await context.params;
@@ -75,22 +96,8 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Release not found" }, { status: 404 });
     }
 
-    const { data: artist, error: artistError } = await supabaseServer
-      .from("artists")
-      .select("id, status")
-      .eq("id", id)
-      .maybeSingle();
-
-    if (artistError) throw artistError;
-    if (!artist) {
-      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
-    }
-    if (artist.status !== "approved") {
-      return NextResponse.json(
-        { error: "Artist profile must be approved before managing releases" },
-        { status: 403 },
-      );
-    }
+    const artistResponse = await requireApprovedArtist(id);
+    if (artistResponse) return artistResponse;
 
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
     const title = cleanOptionalString(body.title, 180);
@@ -243,6 +250,51 @@ export async function PATCH(request: Request, context: RouteContext) {
       {
         error:
           error instanceof Error ? error.message : "Failed to update artist release",
+      },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  try {
+    const { id, releaseId } = await context.params;
+    await requireArtistPermission(id, "release:manage");
+
+    const ownsRelease = await requireReleaseOwnership(id, releaseId);
+    if (!ownsRelease) {
+      return NextResponse.json({ error: "Release not found" }, { status: 404 });
+    }
+
+    const artistResponse = await requireApprovedArtist(id);
+    if (artistResponse) return artistResponse;
+
+    const { data: deletedRelease, error: deleteError } = await supabaseServer
+      .from("artist_releases")
+      .delete()
+      .eq("id", releaseId)
+      .select("id")
+      .maybeSingle();
+
+    if (deleteError) throw deleteError;
+    if (!deletedRelease) {
+      return NextResponse.json({ error: "Release not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ deleted_release_id: releaseId });
+  } catch (error) {
+    if (error instanceof ArtistAccessError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    }
+
+    console.error("Failed to delete artist release:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to delete artist release",
       },
       { status: 500 },
     );
