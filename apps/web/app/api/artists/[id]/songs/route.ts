@@ -162,6 +162,8 @@ export async function POST(request: Request, context: RouteContext) {
     const title = cleanOptionalString(formData.get("title"), 160);
     const waveformPeaks = cleanWaveformPeaks(formData.get("waveformPeaks"));
     const duration = cleanDuration(formData.get("duration"));
+    const releaseId = cleanOptionalString(formData.get("releaseId"), 80);
+    const useReleaseArtwork = formData.get("useReleaseArtwork") === "true";
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Missing audio file" }, { status: 400 });
@@ -176,6 +178,65 @@ export async function POST(request: Request, context: RouteContext) {
         { error: "File must be an audio file" },
         { status: 400 },
       );
+    }
+
+    if (useReleaseArtwork && !releaseId) {
+      return NextResponse.json(
+        { error: "Choose a release before using release artwork" },
+        { status: 400 },
+      );
+    }
+
+    let releaseCoverUrl: string | null = null;
+    let releaseTrackNumber: number | null = null;
+
+    if (releaseId) {
+      await requireArtistPermission(id, "release:manage");
+
+      const { data: releaseLink, error: releaseLinkError } = await supabaseServer
+        .from("artist_release_artists")
+        .select("release_id")
+        .eq("release_id", releaseId)
+        .eq("artist_id", id)
+        .eq("role", "primary")
+        .maybeSingle();
+
+      if (releaseLinkError) throw releaseLinkError;
+      if (!releaseLink) {
+        return NextResponse.json({ error: "Release not found" }, { status: 404 });
+      }
+
+      const { data: release, error: releaseError } = await supabaseServer
+        .from("artist_releases")
+        .select("id, cover_image_url")
+        .eq("id", releaseId)
+        .maybeSingle();
+
+      if (releaseError) throw releaseError;
+      if (!release) {
+        return NextResponse.json({ error: "Release not found" }, { status: 404 });
+      }
+
+      if (useReleaseArtwork && !release.cover_image_url) {
+        return NextResponse.json(
+          { error: "The selected release does not have artwork" },
+          { status: 400 },
+        );
+      }
+
+      releaseCoverUrl = useReleaseArtwork ? release.cover_image_url : null;
+
+      const { data: lastTrack, error: lastTrackError } = await supabaseServer
+        .from("artist_release_songs")
+        .select("track_number")
+        .eq("release_id", releaseId)
+        .eq("disc_number", 1)
+        .order("track_number", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      if (lastTrackError) throw lastTrackError;
+      releaseTrackNumber = Number(lastTrack?.track_number ?? 0) + 1;
     }
 
     const artistSlug = slugify(artist.name);
@@ -208,6 +269,7 @@ export async function POST(request: Request, context: RouteContext) {
         audio_url: audioUrl,
         playback_url: streamingAssets.playbackUrl,
         hls_url: streamingAssets.hlsUrl,
+        cover_url: releaseCoverUrl,
         waveform_peaks: waveformPeaks,
         duration,
         size_bytes: file.size,
@@ -234,6 +296,23 @@ export async function POST(request: Request, context: RouteContext) {
       await supabaseServer.from("songs").delete().eq("id", song.id);
       await cleanupUploadedFiles(uploadedKeys);
       throw linkError;
+    }
+
+    if (releaseId && releaseTrackNumber) {
+      const { error: releaseSongError } = await supabaseServer
+        .from("artist_release_songs")
+        .insert({
+          release_id: releaseId,
+          song_id: song.id,
+          disc_number: 1,
+          track_number: releaseTrackNumber,
+        });
+
+      if (releaseSongError) {
+        await supabaseServer.from("songs").delete().eq("id", song.id);
+        await cleanupUploadedFiles(uploadedKeys);
+        throw releaseSongError;
+      }
     }
 
     return NextResponse.json(
