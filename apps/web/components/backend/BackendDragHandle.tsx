@@ -15,6 +15,14 @@ const rowClassName =
 const overlayClassName =
   "flex h-8 w-8 shrink-0 cursor-grab items-center justify-center bg-transparent text-white transition active:cursor-grabbing disabled:cursor-not-allowed disabled:opacity-50";
 
+export function BackendDragHandleGlyph() {
+  return (
+    <span className="inline-flex scale-x-[1.45]">
+      <DragIconSmall />
+    </span>
+  );
+}
+
 export default function BackendDragHandle({
   variant = "row",
   className = "",
@@ -26,9 +34,7 @@ export default function BackendDragHandle({
       className={`${variant === "overlay" ? overlayClassName : rowClassName} ${className}`.trim()}
       {...props}
     >
-      <span className="inline-flex scale-x-[1.45]">
-        <DragIconSmall />
-      </span>
+      <BackendDragHandleGlyph />
     </button>
   );
 }
