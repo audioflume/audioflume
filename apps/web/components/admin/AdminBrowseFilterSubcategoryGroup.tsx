@@ -1,6 +1,8 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { BackendCheckbox } from "@/components/backend/BackendControls";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import EditIcon from "@/components/icons/EditIcon";
 import type {
   CuratedBrowseSubcategoryRecord,
@@ -30,26 +32,6 @@ function getSubcategoryFilters(
       filter.subcategories.some((subcategory) => subcategory.id === subcategoryId),
     )
     .map((filter) => filter.value);
-}
-
-function ChevronDownIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 14 14"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="m3.5 5.25 3.5 3.5 3.5-3.5"
-        stroke="currentColor"
-        strokeWidth="1.4"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
 }
 
 export default function AdminBrowseFilterSubcategoryGroup({
@@ -404,17 +386,21 @@ export default function AdminBrowseFilterSubcategoryGroup({
           return (
             <div
               key={subcategory.id}
-              className="flex min-h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
+              className="flex min-h-10 items-center gap-2 rounded-[7px] border border-[var(--border)] px-3 py-2 text-xs text-[var(--text-secondary)]"
             >
-              <input
-                type="checkbox"
+              <BackendCheckbox
                 checked={checked}
+                compact
+                ariaLabel={
+                  mode === "edit"
+                    ? `Select ${subcategory.label} for deletion`
+                    : `Toggle ${subcategory.label}`
+                }
                 onChange={() =>
                   mode === "edit"
                     ? toggleDeleteId(subcategory.id)
                     : onToggleAssignment(subcategory.id)
                 }
-                className="h-3.5 w-3.5 shrink-0 accent-[var(--text-primary)]"
               />
 
               {mode === "edit" ? (
@@ -453,7 +439,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               setNewFieldOpen(true);
               setNewDropdownOpen(true);
             }}
-            className="flex h-10 items-center rounded-lg border border-dashed border-[var(--border)] px-3 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
+            className="flex h-10 items-center rounded-[7px] border border-dashed border-[var(--border)] px-3 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
           >
             New
           </button>
@@ -461,7 +447,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
 
         {mode === "edit" && newFieldOpen && (
           <div ref={newCategoryRef} className="relative h-10 min-w-[140px]">
-            <div className="flex h-10 min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
+            <div className="flex h-10 min-w-0 items-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)]">
               <input
                 value={newValue}
                 onChange={(event) => {
@@ -485,12 +471,12 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 className="flex h-full w-7 shrink-0 items-center justify-center text-[var(--text-muted)]"
                 aria-label="Show existing categories"
               >
-                <ChevronDownIcon />
+                <ChevronDownIcon size={14} />
               </button>
             </div>
 
             {newDropdownOpen && availableExisting.length > 0 && (
-              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
+              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
                 {availableExisting.map((subcategory) => (
                   <button
                     key={subcategory.id}
