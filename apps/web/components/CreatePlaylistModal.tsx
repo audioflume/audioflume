@@ -3,6 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import ModalShell from "@/components/ModalShell";
 import {
+  MediaImageChangeOverlay,
+  MediaImageRemoveButton,
+} from "@/components/MediaImageOverlayControls";
+import {
   modalFieldLabelClass,
   modalInputClass,
   modalPrimaryButtonClass,
@@ -208,18 +212,11 @@ export default function CreatePlaylistModal({
 
           {visibleCoverPreview ? (
             <div className="group relative mt-2 h-[112px] w-[112px] overflow-visible">
-              <button
-                type="button"
+              <MediaImageRemoveButton
                 disabled={busy}
-                onClick={(e) => {
-                  e.stopPropagation();
-                  removeCoverImage();
-                }}
-                className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-none bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
-                aria-label="Remove cover image"
-              >
-                ×
-              </button>
+                onClick={removeCoverImage}
+                ariaLabel="Remove cover image"
+              />
 
               <div
                 onClick={() => {
@@ -233,11 +230,7 @@ export default function CreatePlaylistModal({
                   className="h-full w-full object-cover"
                 />
 
-                <div className="absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
-                  <span className="whitespace-nowrap rounded-none bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)]">
-                    Change image
-                  </span>
-                </div>
+                <MediaImageChangeOverlay />
 
                 {isUploadingCover && (
                   <div className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)]">
