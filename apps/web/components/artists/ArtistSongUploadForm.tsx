@@ -2,9 +2,14 @@
 
 import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
 
-import AdminModalShell from "@/components/admin/AdminModalShell";
-import AudioFileIcon from "@/components/icons/AudioFileIcon";
-import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
+import {
+  BackendCheckbox,
+  BackendChoiceButton,
+  BackendInput,
+  BackendSelect,
+} from "@/components/backend/BackendControls";
+import BackendModalShell from "@/components/backend/BackendModalShell";
+import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
@@ -162,16 +167,16 @@ function SelectInput({
   disabled?: boolean;
 }) {
   return (
-    <select
+    <BackendSelect
       value={value}
       onChange={(event) => onChange(event.target.value)}
       disabled={disabled}
-      className={`filmwave-backend-select filmwave-backend-select-end-control ${
+      className={`filmwave-backend-select-end-control ${
         value ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"
       }`}
     >
       {children}
-    </select>
+    </BackendSelect>
   );
 }
 
@@ -190,14 +195,14 @@ function NumericInput({
 
   return (
     <div className="relative">
-      <input
+      <BackendInput
         type="text"
         inputMode="numeric"
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
         disabled={disabled}
-        className="filmwave-backend-input filmwave-backend-input-end-control"
+        className="filmwave-backend-input-end-control"
       />
       <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col">
         <button
@@ -235,27 +240,13 @@ function CheckboxInput({
   disabled: boolean;
 }) {
   return (
-    <label
-      className={`group flex h-10 items-center gap-2.5 self-end rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition hover:text-[var(--text-primary)] ${
-        disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer"
-      } ${checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
-    >
-      <input
-        type="checkbox"
-        checked={checked}
-        disabled={disabled}
-        onChange={(event) => onChange(event.target.checked)}
-        className="peer sr-only"
-      />
-      <span className="flex h-4 w-4 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
-        <CheckMarkIcon
-          size={10}
-          strokeWidth={3}
-          className="opacity-0 text-[var(--bg-primary)] transition"
-        />
-      </span>
-      {label}
-    </label>
+    <BackendCheckbox
+      checked={checked}
+      onChange={onChange}
+      label={label}
+      disabled={disabled}
+      className="h-10 w-full self-end rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3"
+    />
   );
 }
 
@@ -275,10 +266,11 @@ function MultiSelectPills({
       {options.map((option) => {
         const active = selected.includes(option);
         return (
-          <button
+          <BackendChoiceButton
             key={option}
             type="button"
             disabled={disabled}
+            active={active}
             onClick={() =>
               onChange(
                 active
@@ -286,10 +278,9 @@ function MultiSelectPills({
                   : [...selected, option],
               )
             }
-            className={`filmwave-backend-choice-button ${active ? "is-active" : ""}`}
           >
             {option}
-          </button>
+          </BackendChoiceButton>
         );
       })}
     </div>
@@ -321,9 +312,6 @@ export default function ArtistSongUploadForm({
   const canEditRights = artist.permissions.includes("rights:edit");
   const canManageReleases =
     artist.status === "approved" && artist.permissions.includes("release:manage");
-  const audioInputRef = useRef<HTMLInputElement | null>(null);
-  const artworkInputRef = useRef<HTMLInputElement | null>(null);
-  const stemsInputRef = useRef<HTMLInputElement | null>(null);
   const createReleaseArtworkInputRef = useRef<HTMLInputElement | null>(null);
 
   const [audioFile, setAudioFile] = useState<File | null>(null);
@@ -573,19 +561,11 @@ export default function ArtistSongUploadForm({
     setSaveStatus("");
   }
 
-  function handleStemFilesChange(files: FileList | null) {
-    setStemFiles(files ? Array.from(files) : []);
+  function handleStemFilesChange(files: File[]) {
+    setStemFiles(files);
     setError("");
     setSaveStatus("");
     setUploadComplete(false);
-  }
-
-  function clearStemFiles() {
-    setStemFiles([]);
-    setError("");
-    setSaveStatus("");
-    setUploadComplete(false);
-    if (stemsInputRef.current) stemsInputRef.current.value = "";
   }
 
   function resetCreateReleaseForm() {
@@ -712,9 +692,6 @@ export default function ArtistSongUploadForm({
     setError("");
     setWarningsOpen(false);
     setUploadComplete(false);
-    if (audioInputRef.current) audioInputRef.current.value = "";
-    if (artworkInputRef.current) artworkInputRef.current.value = "";
-    if (stemsInputRef.current) stemsInputRef.current.value = "";
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -855,64 +832,7 @@ export default function ArtistSongUploadForm({
 
   return (
     <div>
-      <style>{`
-        .admin-song-form-card {
-          overflow: hidden;
-          border-radius: 0.75rem;
-          border: 1px solid var(--border);
-          background: var(--bg-secondary);
-        }
-
-        .admin-song-form-card-header {
-          display: flex;
-          min-height: 40px;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1rem;
-          border-bottom: 1px solid var(--border);
-          padding: 0 1rem;
-        }
-
-        .admin-song-form-kicker {
-          font-size: 11px;
-          font-weight: 500;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: var(--text-muted);
-        }
-
-        .admin-song-file-row {
-          display: grid;
-          grid-template-columns: 150px minmax(0, 1fr) auto;
-          align-items: center;
-          gap: 0.75rem;
-          border-top: 1px solid var(--border-subtle);
-          padding: 0.75rem 1rem;
-        }
-
-        .admin-song-file-row:first-child {
-          border-top: 0;
-        }
-
-        @media (max-width: 900px) {
-          .admin-song-file-row {
-            grid-template-columns: 1fr;
-            align-items: start;
-          }
-        }
-      `}</style>
-
-      <div className="mb-4 flex min-h-10 flex-wrap items-center justify-between gap-3">
-        <button
-          type="button"
-          disabled={!canUpload || busy || uploadComplete}
-          onClick={() => audioInputRef.current?.click()}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
-        >
-          <AudioFileIcon />
-          <span>Choose Audio</span>
-        </button>
-
+      <div className="mb-4 flex min-h-10 flex-wrap items-center justify-end gap-3">
         <button
           type="button"
           onClick={onClose}
@@ -928,224 +848,44 @@ export default function ArtistSongUploadForm({
         onSubmit={handleSubmit}
       >
         <div className="grid min-w-0 gap-4">
-          <section className="admin-song-form-card">
-            <div className="admin-song-form-card-header">
-              <div className="admin-song-form-kicker">Files</div>
-            </div>
-
-            <div>
-              <div className="admin-song-file-row">
-                <div>
-                  <div className="text-xs font-medium text-[var(--text-primary)]">
-                    Audio File
-                  </div>
-                  <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
-                    Main track source
-                  </div>
-                </div>
-
-                <div className="min-w-0">
-                  <input
-                    ref={audioInputRef}
-                    type="file"
-                    accept="audio/*"
-                    disabled={!canUpload || busy || uploadComplete}
-                    onChange={(event) =>
-                      void handleAudioFileChange(event.target.files?.[0] ?? null)
-                    }
-                    className="hidden"
-                  />
-
-                  <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                    <button
-                      type="button"
-                      disabled={!canUpload || busy || uploadComplete}
-                      onClick={() => audioInputRef.current?.click()}
-                      className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      Choose
-                    </button>
-                    <span className="truncate text-xs text-[var(--text-secondary)]">
-                      {audioFile ? audioFile.name : "No file chosen"}
-                    </span>
-                  </div>
-
-                  {stage === "analyzing" ? (
-                    <div className="mt-2 flex items-start gap-2">
-                      <div className="mt-0.5 h-3.5 w-3.5 flex-shrink-0 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
-                      <p className="text-[11px] leading-5 text-[var(--text-secondary)]">
-                        Generating waveform peaks and estimating BPM/key...
-                      </p>
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className="flex justify-end">
-                  {audioFile && !uploadComplete ? (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => void handleAudioFileChange(null)}
-                      className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-50"
-                    >
-                      Remove
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="admin-song-file-row">
-                <div>
-                  <div className="text-xs font-medium text-[var(--text-primary)]">
-                    Cover Image
-                  </div>
-                  <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
-                    Artwork preview
-                  </div>
-                </div>
-
-                <div className="min-w-0">
-                  <input
-                    ref={artworkInputRef}
-                    type="file"
-                    accept="image/*"
-                    disabled={!canEditMetadata || busy || uploadComplete}
-                    onChange={(event) =>
-                      handleArtworkFileChange(event.target.files?.[0] ?? null)
-                    }
-                    className="hidden"
-                  />
-
-                  <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                    <button
-                      type="button"
-                      disabled={!canEditMetadata || busy || uploadComplete}
-                      onClick={() => artworkInputRef.current?.click()}
-                      className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      Choose
-                    </button>
-                    <span className="truncate text-xs text-[var(--text-secondary)]">
-                      {useReleaseArtwork && selectedRelease
-                        ? `${selectedRelease.title} artwork`
-                        : artworkFile
-                          ? artworkFile.name
-                          : "No file chosen"}
-                    </span>
-                  </div>
-
-                  {selectedRelease?.cover_image_url && !uploadComplete ? (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => setUseReleaseArtwork((current) => !current)}
-                      className={`mt-2 text-[11px] font-medium transition hover:text-[var(--text-primary)] disabled:opacity-50 ${
-                        useReleaseArtwork
-                          ? "text-[var(--text-primary)]"
-                          : "text-[var(--text-secondary)]"
-                      }`}
-                    >
-                      {useReleaseArtwork
-                        ? "Using release artwork"
-                        : `Use ${selectedRelease.title} artwork`}
-                    </button>
-                  ) : null}
-                </div>
-
-                <div className="flex items-center justify-end gap-3">
-                  {displayedArtworkUrl ? (
-                    <div className="h-9 w-9 overflow-hidden rounded-md border border-[var(--border)] bg-[var(--bg-primary)]">
-                      <img
-                        src={displayedArtworkUrl}
-                        alt="Cover preview"
-                        className="h-full w-full object-cover"
-                      />
-                    </div>
-                  ) : null}
-
-                  {(artworkFile || useReleaseArtwork) && !uploadComplete ? (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() => {
-                        setArtworkFile(null);
-                        setUseReleaseArtwork(false);
-                        if (artworkInputRef.current) artworkInputRef.current.value = "";
-                      }}
-                      className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
-                    >
-                      Remove
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-
-              <div className="admin-song-file-row">
-                <div>
-                  <div className="text-xs font-medium text-[var(--text-primary)]">
-                    Stems
-                  </div>
-                  <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
-                    Alt mixes / instrumentals
-                  </div>
-                </div>
-
-                <div className="min-w-0">
-                  <input
-                    ref={stemsInputRef}
-                    type="file"
-                    accept="audio/*"
-                    multiple
-                    disabled={!canUpload || busy || uploadComplete}
-                    onChange={(event) => handleStemFilesChange(event.target.files)}
-                    className="hidden"
-                  />
-
-                  <div className="flex h-9 min-w-0 items-center gap-3 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                    <button
-                      type="button"
-                      disabled={!canUpload || busy || uploadComplete}
-                      onClick={() => stemsInputRef.current?.click()}
-                      className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-50"
-                    >
-                      Choose
-                    </button>
-                    <span className="truncate text-xs text-[var(--text-secondary)]">
-                      {stemFiles.length > 0
-                        ? `${stemFiles.length} file${stemFiles.length === 1 ? "" : "s"} chosen`
-                        : "No file chosen"}
-                    </span>
-                  </div>
-
-                  {stemFiles.length > 0 ? (
-                    <div className="mt-2 grid gap-1 text-[11px] text-[var(--text-muted)]">
-                      {stemFiles.slice(0, 3).map((file) => (
-                        <div key={`${file.name}-${file.size}`} className="truncate">
-                          {file.name}
-                        </div>
-                      ))}
-                      {stemFiles.length > 3 ? (
-                        <div>+ {stemFiles.length - 3} more</div>
-                      ) : null}
-                    </div>
-                  ) : null}
-                </div>
-
-                <div className="flex justify-end">
-                  {stemFiles.length > 0 && !uploadComplete ? (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={clearStemFiles}
-                      className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
-                    >
-                      Remove
-                    </button>
-                  ) : null}
-                </div>
-              </div>
-            </div>
-          </section>
+          <BackendSongFileUpload
+            audioFile={audioFile}
+            onAudioFileChange={(file) => void handleAudioFileChange(file)}
+            audioStatus={
+              stage === "analyzing"
+                ? "Generating waveform peaks and estimating BPM/key..."
+                : ""
+            }
+            audioStatusBusy={stage === "analyzing"}
+            stemFiles={stemFiles}
+            onStemFilesChange={handleStemFilesChange}
+            artworkFile={artworkFile}
+            artworkPreviewUrl={displayedArtworkUrl}
+            onArtworkFileChange={handleArtworkFileChange}
+            onRemoveArtwork={() => {
+              setArtworkFile(null);
+              setUseReleaseArtwork(false);
+            }}
+            artworkFooter={
+              selectedRelease?.cover_image_url && !uploadComplete ? (
+                <button
+                  type="button"
+                  disabled={busy}
+                  onClick={() => setUseReleaseArtwork((current) => !current)}
+                  className={`text-[11px] font-medium transition hover:text-[var(--text-primary)] disabled:opacity-50 ${
+                    useReleaseArtwork
+                      ? "text-[var(--text-primary)]"
+                      : "text-[var(--text-secondary)]"
+                  }`}
+                >
+                  {useReleaseArtwork
+                    ? "Using release artwork"
+                    : `Use ${selectedRelease.title} artwork`}
+                </button>
+              ) : null
+            }
+            disabled={!canUpload || !canEditMetadata || busy || uploadComplete}
+          />
 
           <section className="filmwave-backend-section">
             <div className="filmwave-backend-section-header">
@@ -1154,22 +894,16 @@ export default function ArtistSongUploadForm({
 
             <div className="grid gap-2 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
               <div>
-                <input
+                <BackendInput
                   aria-label="Song Title"
                   value={title}
                   onChange={(event) => setTitle(event.target.value)}
                   placeholder="Song Title"
                   disabled={!canEditMetadata || busy || uploadComplete}
-                  className="filmwave-backend-input"
                 />
               </div>
               <div>
-                <input
-                  aria-label="Artist"
-                  value={artist.name}
-                  readOnly
-                  className="filmwave-backend-input"
-                />
+                <BackendInput aria-label="Artist" value={artist.name} readOnly />
               </div>
               {canManageReleases ? (
                 <div>
@@ -1225,12 +959,11 @@ export default function ArtistSongUploadForm({
                 </SelectInput>
               </div>
               <div>
-                <input
+                <BackendInput
                   aria-label="Duration"
                   value={formatDuration(duration)}
                   readOnly
                   placeholder="Auto-detected"
-                  className="filmwave-backend-input"
                 />
               </div>
               <div>
@@ -1293,23 +1026,21 @@ export default function ArtistSongUploadForm({
               ) : null}
               {credits.map((credit, index) => (
                 <div key={index} className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-                  <input
+                  <BackendInput
                     value={credit.credit_name}
                     onChange={(event) =>
                       updateCredit(index, { credit_name: event.target.value })
                     }
                     placeholder="Name"
                     disabled={!canEditMetadata || busy || uploadComplete}
-                    className="filmwave-backend-input"
                   />
-                  <input
+                  <BackendInput
                     value={credit.credit_role}
                     onChange={(event) =>
                       updateCredit(index, { credit_role: event.target.value })
                     }
                     placeholder="Role — composer, producer, performer..."
                     disabled={!canEditMetadata || busy || uploadComplete}
-                    className="filmwave-backend-input"
                   />
                   <button
                     type="button"
@@ -1352,27 +1083,27 @@ export default function ArtistSongUploadForm({
               <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
                 <div>
                   <FieldLabel>Master Owner</FieldLabel>
-                  <input value={masterOwner} onChange={(event) => setMasterOwner(event.target.value)} disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                  <BackendInput value={masterOwner} onChange={(event) => setMasterOwner(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
                 </div>
                 <div>
                   <FieldLabel>Publishing Owner</FieldLabel>
-                  <input value={publishingOwner} onChange={(event) => setPublishingOwner(event.target.value)} disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                  <BackendInput value={publishingOwner} onChange={(event) => setPublishingOwner(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
                 </div>
                 <div>
                   <FieldLabel>PRO Affiliation</FieldLabel>
-                  <input value={proAffiliation} onChange={(event) => setProAffiliation(event.target.value)} placeholder="SOCAN, ASCAP, BMI..." disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                  <BackendInput value={proAffiliation} onChange={(event) => setProAffiliation(event.target.value)} placeholder="SOCAN, ASCAP, BMI..." disabled={!canEditRights || busy || uploadComplete} />
                 </div>
                 <div>
                   <FieldLabel>Copyright Year</FieldLabel>
-                  <input type="number" min={1900} max={2200} value={copyrightYear} onChange={(event) => setCopyrightYear(event.target.value)} disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                  <BackendInput type="number" min={1900} max={2200} value={copyrightYear} onChange={(event) => setCopyrightYear(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
                 </div>
                 <div>
                   <FieldLabel>ISRC</FieldLabel>
-                  <input value={isrc} onChange={(event) => setIsrc(event.target.value)} disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                  <BackendInput value={isrc} onChange={(event) => setIsrc(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
                 </div>
                 <div>
                   <FieldLabel>ISWC</FieldLabel>
-                  <input value={iswc} onChange={(event) => setIswc(event.target.value)} disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                  <BackendInput value={iswc} onChange={(event) => setIswc(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
                 </div>
               </div>
 
@@ -1407,15 +1138,15 @@ export default function ArtistSongUploadForm({
                   {rightsHolders.map((holder, index) => (
                     <div key={index} className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3">
                       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
-                        <input value={holder.holder_name} onChange={(event) => updateHolder(index, { holder_name: event.target.value })} placeholder="Rights holder" disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                        <BackendInput value={holder.holder_name} onChange={(event) => updateHolder(index, { holder_name: event.target.value })} placeholder="Rights holder" disabled={!canEditRights || busy || uploadComplete} />
                         <SelectInput value={holder.rights_type} onChange={(value) => updateHolder(index, { rights_type: value as RightsHolder["rights_type"] })} disabled={!canEditRights || busy || uploadComplete}>
                           <option value="both">Master + publishing</option>
                           <option value="master">Master</option>
                           <option value="publishing">Publishing</option>
                         </SelectInput>
-                        <input type="number" min={0} max={100} step="0.01" value={holder.ownership_percent} onChange={(event) => updateHolder(index, { ownership_percent: event.target.value })} placeholder="%" disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
-                        <input value={holder.pro_affiliation} onChange={(event) => updateHolder(index, { pro_affiliation: event.target.value })} placeholder="PRO" disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
-                        <input value={holder.ipi_cae_number} onChange={(event) => updateHolder(index, { ipi_cae_number: event.target.value })} placeholder="IPI / CAE" disabled={!canEditRights || busy || uploadComplete} className="filmwave-backend-input" />
+                        <BackendInput type="number" min={0} max={100} step="0.01" value={holder.ownership_percent} onChange={(event) => updateHolder(index, { ownership_percent: event.target.value })} placeholder="%" disabled={!canEditRights || busy || uploadComplete} />
+                        <BackendInput value={holder.pro_affiliation} onChange={(event) => updateHolder(index, { pro_affiliation: event.target.value })} placeholder="PRO" disabled={!canEditRights || busy || uploadComplete} />
+                        <BackendInput value={holder.ipi_cae_number} onChange={(event) => updateHolder(index, { ipi_cae_number: event.target.value })} placeholder="IPI / CAE" disabled={!canEditRights || busy || uploadComplete} />
                         <button type="button" disabled={!canEditRights || busy || uploadComplete} onClick={() => setRightsHolders((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="filmwave-backend-button filmwave-backend-button-secondary">
                           Remove
                         </button>
@@ -1440,7 +1171,7 @@ export default function ArtistSongUploadForm({
           </section>
         </div>
 
-        <aside className="grid h-fit gap-4 xl:sticky xl:top-[24px]">
+        <aside className="grid h-fit gap-4 xl:sticky xl:top-[24px] xl:mt-14">
           <section className="filmwave-backend-section">
             <div className="filmwave-backend-section-header">
               <h2 className="filmwave-backend-section-title">Checklist</h2>
@@ -1541,7 +1272,7 @@ export default function ArtistSongUploadForm({
         </aside>
       </form>
 
-      <AdminModalShell
+      <BackendModalShell
         isOpen={createReleaseOpen}
         title="Create release"
         onClose={closeCreateReleaseModal}
@@ -1576,13 +1307,12 @@ export default function ArtistSongUploadForm({
             <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
               Release title
             </span>
-            <input
+            <BackendInput
               type="text"
               value={createReleaseTitle}
               onChange={(event) => setCreateReleaseTitle(event.target.value)}
               maxLength={180}
               disabled={creatingRelease}
-              className="filmwave-backend-input"
             />
           </label>
 
@@ -1608,12 +1338,11 @@ export default function ArtistSongUploadForm({
               <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
                 Release date
               </span>
-              <input
+              <BackendInput
                 type="date"
                 value={createReleaseDate}
                 onChange={(event) => setCreateReleaseDate(event.target.value)}
                 disabled={creatingRelease}
-                className="filmwave-backend-input"
               />
             </label>
           </div>
@@ -1638,9 +1367,9 @@ export default function ArtistSongUploadForm({
                 type="button"
                 disabled={creatingRelease}
                 onClick={() => createReleaseArtworkInputRef.current?.click()}
-                className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:opacity-50"
+                className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0"
               >
-                Choose
+                Choose image
               </button>
               <span className="min-w-0 flex-1 truncate text-xs text-[var(--text-secondary)]">
                 {createReleaseArtworkFile
@@ -1665,7 +1394,7 @@ export default function ArtistSongUploadForm({
             </div>
           ) : null}
         </div>
-      </AdminModalShell>
+      </BackendModalShell>
     </div>
   );
 }
