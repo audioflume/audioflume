@@ -1,7 +1,7 @@
 export default function AdminEditPageStyles() {
   return (
     <style>{`
-      /* Edit Song — follows the Song Upload design language without changing form behavior. */
+      /* Edit Song — follows the canonical backend Song Upload design. */
       .admin-song-edit-content-page {
         --admin-song-card-x: 20px;
         --admin-song-card-bottom: 20px;
@@ -65,182 +65,6 @@ export default function AdminEditPageStyles() {
         color: var(--text-primary);
       }
 
-      .admin-song-edit-content-page .admin-song-file-row {
-        position: relative;
-        grid-template-columns: 145px minmax(0, 1fr);
-        align-items: start;
-        border-top: 0;
-        padding: 2px var(--admin-song-card-x);
-      }
-
-      .admin-song-edit-content-page .admin-song-file-row > div:first-child {
-        grid-column: 1;
-        grid-row: 1;
-        align-self: start;
-        padding-top: 11px;
-      }
-
-      .admin-song-edit-content-page .admin-song-file-row > div:nth-child(2) {
-        grid-column: 2;
-        grid-row: 1;
-        min-width: 0;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row
-        > div:first-child
-        > div:nth-child(2) {
-        display: none;
-      }
-
-      .admin-song-edit-content-page .admin-song-file-row:first-child {
-        padding-top: var(--admin-song-title-gap);
-      }
-
-      .admin-song-edit-content-page .admin-song-file-row:last-child {
-        padding-bottom: var(--admin-song-card-bottom);
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row
-        > div:nth-child(2)
-        > div[class~="h-9"] {
-        height: 40px;
-        padding-left: 6px;
-        border-radius: 7px;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row
-        button[class~="rounded-full"] {
-        height: 28px;
-        border-radius: 7px;
-        font-weight: 500;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:first-child
-        > div:last-child,
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(3)
-        > div:last-child {
-        grid-column: 2;
-        grid-row: 1;
-        z-index: 2;
-        height: 40px;
-        align-items: center;
-        align-self: start;
-        justify-self: end;
-        margin-right: 12px;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:first-child
-        > div:last-child:not(:has(button)),
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(3)
-        > div:last-child:not(:has(button)) {
-        display: none;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:first-child:has(> div:last-child > button)
-        > div:nth-child(2)
-        > div[class~="h-9"],
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(3):has(> div:last-child > button)
-        > div:nth-child(2)
-        > div[class~="h-9"] {
-        padding-right: 72px;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:first-child
-        > div:last-child
-        > button:hover,
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(3)
-        > div:last-child
-        > button:hover {
-        color: var(--danger);
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(2):not(:has(img))
-        > div:last-child {
-        display: none;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(2):has(img)
-        > div:nth-child(2) {
-        margin-right: 44px;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(2)
-        > div:last-child {
-        grid-column: 2;
-        grid-row: 1;
-        position: relative;
-        width: 40px;
-        height: 40px;
-        align-items: center;
-        align-self: start;
-        justify-self: end;
-        margin: 0;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(2)
-        > div:last-child
-        > div {
-        width: 40px;
-        height: 40px;
-        border-radius: 7px;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(2)
-        > div:last-child
-        > button {
-        position: absolute;
-        top: -6px;
-        right: -6px;
-        z-index: 10;
-        display: flex;
-        width: 20px;
-        height: 20px;
-        cursor: pointer;
-        align-items: center;
-        justify-content: center;
-        border: 1px solid var(--border);
-        border-radius: 999px;
-        background: var(--bg-primary);
-        color: var(--text-secondary);
-        font-size: 0;
-        line-height: 1;
-        transition: border-color 0.15s ease, background 0.15s ease, color 0.15s ease;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(2)
-        > div:last-child
-        > button::before {
-        content: "×";
-        font-size: 14px;
-        font-weight: 300;
-        line-height: 1;
-      }
-
-      .admin-song-edit-content-page
-        .admin-song-file-row:nth-child(2)
-        > div:last-child
-        > button:hover {
-        background: color-mix(in srgb, var(--bg-primary) 90%, var(--danger) 10%);
-        color: var(--danger);
-      }
-
       .admin-song-edit-content-page
         .admin-song-form-card
         > [class~="p-4"] {
@@ -289,6 +113,7 @@ export default function AdminEditPageStyles() {
         display: none;
       }
 
+      /* Temporary compatibility for the two live Song Info checkbox structures. */
       .admin-song-edit-content-page
         .admin-song-edit-song-info
         > .admin-song-form-card-header
@@ -442,34 +267,6 @@ export default function AdminEditPageStyles() {
           > .admin-song-form-card-header
           + div {
           grid-template-columns: repeat(4, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 900px) {
-        .admin-song-edit-content-page .admin-song-file-row {
-          grid-template-columns: 1fr;
-        }
-
-        .admin-song-edit-content-page
-          .admin-song-file-row
-          > div:first-child {
-          grid-column: 1;
-          grid-row: 1;
-          padding-top: 0;
-        }
-
-        .admin-song-edit-content-page
-          .admin-song-file-row
-          > div:nth-child(2) {
-          grid-column: 1;
-          grid-row: 2;
-        }
-
-        .admin-song-edit-content-page
-          .admin-song-file-row
-          > div:last-child {
-          grid-column: 1;
-          grid-row: 2;
         }
       }
 
