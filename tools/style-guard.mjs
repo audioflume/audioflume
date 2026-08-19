@@ -43,6 +43,7 @@ const migratedBackendFiles = new Set([
   "apps/web/components/admin/AdminContentPage.tsx",
   "apps/web/components/admin/AdminImageUpload.tsx",
   "apps/web/components/admin/AdminSidebar.tsx",
+  "apps/web/components/admin/AdminSongRow.tsx",
   "apps/web/components/artists/ArtistDashboardShell.tsx",
   "apps/web/components/artists/ArtistPlaylistManager.tsx",
   "apps/web/components/artists/ArtistReleaseManager.tsx",
