@@ -20,12 +20,8 @@ import type { Song } from "@/lib/types";
 
 type ReleaseType = "single" | "ep" | "album";
 
-type ReleasePickerSong = Song & {
-  status: string;
-};
-
 type PickerResponse = {
-  songs?: ReleasePickerSong[];
+  songs?: Song[];
   error?: string;
 };
 
@@ -37,12 +33,6 @@ type ArtistReleaseTrackPickerProps = {
   onAdd: (songIds: string[]) => void;
 };
 
-function formatStatus(status: string) {
-  return status
-    .replace(/_/g, " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
-}
-
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
   const minutes = Math.floor(seconds / 60);
@@ -53,42 +43,30 @@ function formatDuration(seconds: number) {
 function ReleasePickerSongRow({
   song,
   selected,
-  alreadyAdded,
-  singleLocked,
   onToggle,
 }: {
-  song: ReleasePickerSong;
+  song: Song;
   selected: boolean;
-  alreadyAdded: boolean;
-  singleLocked: boolean;
   onToggle: () => void;
 }) {
   const { currentSong, isPlaying, togglePlayPause } = usePlayer();
   const isCurrentSong = currentSong?.id === song.id;
   const actuallyPlaying = isCurrentSong && isPlaying;
-  const unavailable = alreadyAdded || singleLocked;
   const visibleGenres = song.genres.slice(0, 3);
 
   return (
     <div
-      className={`flex min-w-0 items-center border-b border-[var(--border-subtle)] transition-colors ${
+      className={`flex min-w-0 items-center transition-colors hover:bg-[var(--bg-hover)] ${
         selected ? "bg-[var(--bg-hover)]" : ""
-      } ${unavailable ? "opacity-60" : ""}`}
+      }`}
     >
       <label
-        className={`admin-song-select-wrap is-visible flex h-[86px] w-10 shrink-0 items-center justify-center ${
-          unavailable ? "cursor-default" : "cursor-pointer"
-        }`}
-        aria-label={
-          alreadyAdded
-            ? `${song.title} is already in this release`
-            : `Select ${song.title}`
-        }
+        className="admin-song-select-wrap is-visible flex h-[86px] w-12 shrink-0 cursor-pointer items-center justify-center"
+        aria-label={`Select ${song.title}`}
       >
         <input
           type="checkbox"
-          checked={alreadyAdded || selected}
-          disabled={unavailable}
+          checked={selected}
           onChange={onToggle}
           className="admin-song-select-input sr-only"
         />
@@ -102,7 +80,7 @@ function ReleasePickerSongRow({
           className={isCurrentSong ? "is-current" : ""}
           coverLabel={actuallyPlaying ? "Pause song" : "Play song"}
           onCoverClick={() => togglePlayPause(song)}
-          onInfoClick={unavailable ? undefined : onToggle}
+          onInfoClick={onToggle}
           cover={
             song.coverArt ? (
               <Image
@@ -126,11 +104,7 @@ function ReleasePickerSongRow({
           genre={visibleGenres.length > 0 ? visibleGenres.join(", ") : null}
           keyMeta={song.key || "—"}
           bpmMeta={song.bpm ? `${song.bpm} BPM` : "—"}
-          actions={
-            <span className="whitespace-nowrap text-[10px] uppercase tracking-[0.04em] text-[var(--text-muted)]">
-              {alreadyAdded ? "Already added" : formatStatus(song.status)}
-            </span>
-          }
+          actions={null}
         />
       </div>
     </div>
@@ -145,7 +119,7 @@ export default function ArtistReleaseTrackPicker({
   onAdd,
 }: ArtistReleaseTrackPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
-  const [songs, setSongs] = useState<ReleasePickerSong[]>([]);
+  const [songs, setSongs] = useState<Song[]>([]);
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
@@ -201,15 +175,17 @@ export default function ArtistReleaseTrackPicker({
 
   const displayedSongs = useMemo(() => {
     const query = search.trim().toLowerCase();
-    if (!query) return songs;
 
-    return songs.filter((song) =>
-      [song.title, song.artist, song.status, ...song.genres]
+    return songs.filter((song) => {
+      if (existingIdSet.has(song.id)) return false;
+      if (!query) return true;
+
+      return [song.title, song.artist, ...song.genres]
         .join(" ")
         .toLowerCase()
-        .includes(query),
-    );
-  }, [search, songs]);
+        .includes(query);
+    });
+  }, [existingIdSet, search, songs]);
 
   function toggleSong(songId: string) {
     if (existingIdSet.has(songId) || singleHasTrack) return;
@@ -314,8 +290,6 @@ export default function ArtistReleaseTrackPicker({
                 key={song.id}
                 song={song}
                 selected={selectedIds.has(song.id)}
-                alreadyAdded={existingIdSet.has(song.id)}
-                singleLocked={singleHasTrack && !existingIdSet.has(song.id)}
                 onToggle={() => toggleSong(song.id)}
               />
             ))
