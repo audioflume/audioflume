@@ -188,6 +188,10 @@ main:has(> aside[class*="admin-sidebar-width"])
   opacity: 0.5;
 }
 
+.filmwave-backend-checkbox-box {
+  border-radius: 4px;
+}
+
 .filmwave-backend-input,
 .filmwave-backend-select {
   box-sizing: border-box;
