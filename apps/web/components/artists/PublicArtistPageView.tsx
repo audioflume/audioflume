@@ -236,12 +236,12 @@ export default function PublicArtistPageView({
 
         .artist-public-type {
           position: absolute;
-          top: 0;
-          left: 0;
-          z-index: 4;
-          width: 18%;
+          bottom: 28px;
+          left: 45%;
+          z-index: 5;
+          width: 16%;
           margin: 0;
-          color: var(--text-primary);
+          color: #fff;
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(15px, 1.05vw, 18px);
           font-weight: 300;
@@ -252,13 +252,13 @@ export default function PublicArtistPageView({
 
         .artist-public-intro {
           position: absolute;
-          top: 0;
-          left: 19%;
-          z-index: 4;
-          width: 31%;
+          bottom: 28px;
+          left: 64%;
+          z-index: 5;
+          width: 25%;
           max-width: 560px;
           margin: 0;
-          color: var(--text-primary);
+          color: #fff;
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 16px;
           font-weight: 300;
@@ -335,7 +335,7 @@ export default function PublicArtistPageView({
 
         .artist-public-name {
           position: absolute;
-          top: clamp(110px, 7.2vw, 138px);
+          top: calc(clamp(110px, 7.2vw, 138px) + 20px);
           left: 0;
           z-index: 3;
           width: 73%;
@@ -356,9 +356,9 @@ export default function PublicArtistPageView({
           left: 0;
           z-index: 4;
           display: flex;
-          width: 38%;
+          width: 35%;
           flex-direction: column;
-          gap: 65px;
+          gap: 55px;
         }
 
         .artist-public-stats {
@@ -518,12 +518,12 @@ export default function PublicArtistPageView({
         }
 
         input.artist-public-type.artist-public-edit-control {
-          width: 18%;
-          min-width: 180px;
+          width: 16%;
+          min-width: 160px;
         }
 
         textarea.artist-public-intro.artist-public-edit-control {
-          width: 31%;
+          width: 25%;
           min-height: 2.7em;
         }
 
@@ -792,12 +792,14 @@ export default function PublicArtistPageView({
           .artist-public-type {
             order: 1;
             width: 100%;
+            color: var(--text-primary);
           }
 
           .artist-public-intro {
             order: 2;
             width: 100%;
             max-width: 720px;
+            color: var(--text-primary);
           }
 
           .artist-public-edit-url-row {
