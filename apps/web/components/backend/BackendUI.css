@@ -12,10 +12,24 @@
   --filmwave-backend-control-radius: 7px;
   --filmwave-backend-section-radius: 10px;
   --filmwave-backend-content-max-width: 1180px;
-  --status-success: var(--success);
-  --status-success-soft: color-mix(in srgb, var(--success) 12%, transparent);
-  --status-error: var(--danger);
-  --status-error-soft: color-mix(in srgb, var(--danger) 12%, transparent);
+  --status-success: #48b571;
+  --status-success-soft: color-mix(
+    in srgb,
+    var(--status-success) 12%,
+    transparent
+  );
+  --status-error: #dc584f;
+  --status-error-soft: color-mix(
+    in srgb,
+    var(--status-error) 12%,
+    transparent
+  );
+}
+
+main:has(> aside[class*="admin-sidebar-width"]) {
+  --success: var(--status-success);
+  --danger: var(--status-error);
+  --danger-hover: var(--status-error-soft);
 }
 
 .filmwave-backend-section {
