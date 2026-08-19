@@ -5,6 +5,7 @@ import Link from "next/link";
 import { MouseEvent, useEffect, useMemo, useState } from "react";
 import AdminSongActionsDropdown from "@/components/admin/AdminSongActionsDropdown";
 import {
+  BackendCheckbox,
   BackendIconButton,
   BackendStatusBadge,
 } from "@/components/backend/BackendControls";
@@ -241,22 +242,16 @@ export default function AdminSongRow({
     >
       {showSelectionColumn ? (
         <div className="flex items-center" data-admin-song-checkbox>
-          <label
+          <BackendCheckbox
+            checked={selected}
+            onChange={(checked) => onSelectedChange(song.id, checked)}
+            ariaLabel={`Select ${song.title}`}
+            compact
+            size="sm"
             className={`admin-song-select-wrap${
               selectionMode || selected ? " is-visible" : ""
             }`}
-            aria-label={`Select ${song.title}`}
-          >
-            <input
-              type="checkbox"
-              checked={selected}
-              onChange={(e) => onSelectedChange(song.id, e.target.checked)}
-              className="admin-song-select-input"
-            />
-            <span className="admin-song-select-box">
-              <CheckMarkIconCompat />
-            </span>
-          </label>
+          />
         </div>
       ) : null}
 
@@ -381,19 +376,5 @@ export default function AdminSongRow({
         />
       </div>
     </div>
-  );
-}
-
-function CheckMarkIconCompat() {
-  return (
-    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M5 12.5L9.5 17L19 7.5"
-        stroke="currentColor"
-        strokeWidth="3"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
   );
 }
