@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import {
   DndContext,
   PointerSensor,
@@ -19,7 +19,14 @@ import { CSS } from "@dnd-kit/utilities";
 
 import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
+import BackendArtworkUpload from "@/components/backend/BackendArtworkUpload";
+import {
+  BackendInput,
+  BackendSelect,
+  BackendStatusBadge,
+} from "@/components/backend/BackendControls";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
+import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/BackendRow";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ReleaseType = "single" | "ep" | "album";
@@ -93,11 +100,7 @@ function formatDuration(value: number) {
 }
 
 function ReleaseStatusBadge({ status }: { status: string }) {
-  return (
-    <span className="filmwave-backend-status-badge bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
-      {formatStatus(status)}
-    </span>
-  );
+  return <BackendStatusBadge>{formatStatus(status)}</BackendStatusBadge>;
 }
 
 function SortableReleaseRow({
@@ -144,24 +147,16 @@ function SortableReleaseRow({
         />
       ) : null}
 
-      <div className="h-[52px] w-[52px] overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-        {release.cover_image_url ? (
-          <img
-            src={release.cover_image_url}
-            alt=""
-            className="h-full w-full object-cover"
-          />
-        ) : null}
-      </div>
-      <div className="min-w-0">
-        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-          {release.title}
-        </div>
-        <div className="mt-1 text-[11px] text-[var(--text-muted)]">
-          {formatReleaseType(release.release_type)} · {release.track_ids.length}{" "}
-          {release.track_ids.length === 1 ? "track" : "tracks"}
-        </div>
-      </div>
+      <BackendMediaThumbnail
+        src={release.cover_image_url}
+        size={52}
+        className="rounded-[7px]"
+      />
+      <BackendRowTitle
+        secondary={`${formatReleaseType(release.release_type)} · ${release.track_ids.length} ${release.track_ids.length === 1 ? "track" : "tracks"}`}
+      >
+        {release.title}
+      </BackendRowTitle>
       <div className="text-xs text-[var(--text-muted)]">
         {formatDate(release.release_date)}
       </div>
@@ -212,7 +207,7 @@ function SortableTrackRow({
         opacity: isDragging ? 0.45 : 1,
         zIndex: isDragging ? 2 : "auto",
       }}
-      className={`grid gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
+      className={`grid gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
         canManage
           ? "sm:grid-cols-[28px_42px_minmax(0,1fr)_80px_110px_auto]"
           : "sm:grid-cols-[42px_minmax(0,1fr)_80px_110px]"
@@ -227,14 +222,8 @@ function SortableTrackRow({
         />
       ) : null}
 
-      <div className="text-xs font-medium text-[var(--text-muted)]">
-        {index + 1}
-      </div>
-      <div className="min-w-0">
-        <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-          {song.title}
-        </div>
-      </div>
+      <div className="text-xs font-medium text-[var(--text-muted)]">{index + 1}</div>
+      <BackendRowTitle>{song.title}</BackendRowTitle>
       <div className="text-xs text-[var(--text-muted)]">
         {formatDuration(Number(song.duration))}
       </div>
@@ -266,7 +255,6 @@ export default function ArtistReleaseManager({
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
-  const createArtworkInputRef = useRef<HTMLInputElement | null>(null);
   const [releases, setReleases] = useState<ArtistRelease[]>([]);
   const [songs, setSongs] = useState<ReleaseSong[]>([]);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
@@ -306,9 +294,7 @@ export default function ArtistReleaseManager({
         });
         const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
 
-        if (!response.ok) {
-          throw new Error(body.error || "Failed to load releases");
-        }
+        if (!response.ok) throw new Error(body.error || "Failed to load releases");
 
         if (!cancelled) {
           setReleases(Array.isArray(body.releases) ? body.releases : []);
@@ -326,7 +312,6 @@ export default function ArtistReleaseManager({
     }
 
     void loadReleases();
-
     return () => {
       cancelled = true;
     };
@@ -398,7 +383,6 @@ export default function ArtistReleaseManager({
       setCreateType("single");
       setCreateDate("");
       setCreateArtworkFile(null);
-      if (createArtworkInputRef.current) createArtworkInputRef.current.value = "";
       setSelectedReleaseId(release.id);
       onReleaseCreated();
     } catch (error) {
@@ -436,9 +420,7 @@ export default function ArtistReleaseManager({
       });
       const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
 
-      if (!response.ok) {
-        throw new Error(body.error || "Failed to reorder releases");
-      }
+      if (!response.ok) throw new Error(body.error || "Failed to reorder releases");
     } catch (error) {
       setReleases(previous);
       setReorderError(
@@ -496,88 +478,54 @@ export default function ArtistReleaseManager({
         <form onSubmit={handleCreate}>
           <div className="grid gap-4 p-5 md:grid-cols-[minmax(0,1fr)_180px_190px]">
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Release title
-              </span>
-              <input
+              <span>Release title</span>
+              <BackendInput
                 type="text"
                 value={createTitle}
                 onChange={(event) => setCreateTitle(event.target.value)}
                 maxLength={180}
                 disabled={!canManage || creating}
                 placeholder="Release title"
-                className="filmwave-backend-input"
               />
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Type
-              </span>
-              <select
+              <span>Type</span>
+              <BackendSelect
                 value={createType}
                 onChange={(event) => setCreateType(event.target.value as ReleaseType)}
                 disabled={!canManage || creating}
-                className="filmwave-backend-select"
               >
                 {RELEASE_TYPES.map((type) => (
                   <option key={type.value} value={type.value}>
                     {type.label}
                   </option>
                 ))}
-              </select>
+              </BackendSelect>
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Release date
-              </span>
-              <input
+              <span>Release date</span>
+              <BackendInput
                 type="date"
                 value={createDate}
                 onChange={(event) => setCreateDate(event.target.value)}
                 disabled={!canManage || creating}
-                className="filmwave-backend-input"
               />
             </label>
 
             <div className="md:col-span-3">
-              <div className="mb-1.5 flex items-center justify-between gap-3 text-[11px] text-[var(--text-secondary)]">
-                <span>Cover artwork</span>
-                <span className="text-[var(--text-muted)]">Required</span>
-              </div>
-              <input
-                ref={createArtworkInputRef}
-                type="file"
-                accept="image/*"
+              <BackendArtworkUpload
+                file={createArtworkFile}
+                previewUrl={createArtworkPreviewUrl}
+                onFileChange={setCreateArtworkFile}
+                onRemove={() => setCreateArtworkFile(null)}
                 disabled={!canManage || creating}
-                onChange={(event) =>
-                  setCreateArtworkFile(event.target.files?.[0] ?? null)
-                }
-                className="hidden"
+                required
+                title="Cover artwork"
+                dropDescription="Click to upload release artwork."
+                variant="compact"
               />
-              <div className="flex h-10 min-w-0 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-                <button
-                  type="button"
-                  disabled={!canManage || creating}
-                  onClick={() => createArtworkInputRef.current?.click()}
-                  className="h-6 cursor-pointer whitespace-nowrap rounded-full bg-[var(--text-primary)] px-3 text-[11px] font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:opacity-50"
-                >
-                  Choose
-                </button>
-                <span className="min-w-0 flex-1 truncate text-xs text-[var(--text-secondary)]">
-                  {createArtworkFile ? createArtworkFile.name : "No file chosen"}
-                </span>
-                {createArtworkPreviewUrl ? (
-                  <div className="h-7 w-7 overflow-hidden rounded-[5px] border border-[var(--border)]">
-                    <img
-                      src={createArtworkPreviewUrl}
-                      alt="Release artwork preview"
-                      className="h-full w-full object-cover"
-                    />
-                  </div>
-                ) : null}
-              </div>
             </div>
           </div>
 
@@ -613,9 +561,7 @@ export default function ArtistReleaseManager({
         </div>
 
         {reorderError ? (
-          <div className="px-5 pb-3 text-xs text-[var(--danger)]">
-            {reorderError}
-          </div>
+          <div className="px-5 pb-3 text-xs text-[var(--danger)]">{reorderError}</div>
         ) : null}
 
         <DndContext
@@ -633,19 +579,16 @@ export default function ArtistReleaseManager({
                   Loading releases...
                 </div>
               ) : null}
-
               {loadState === "error" ? (
                 <div className="px-5 py-5 text-xs text-[var(--danger)]">
                   {loadError || "Releases could not be loaded."}
                 </div>
               ) : null}
-
               {loadState === "ready" && releases.length === 0 ? (
                 <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
                   No releases created yet.
                 </div>
               ) : null}
-
               {releases.map((release) => (
                 <SortableReleaseRow
                   key={release.id}
@@ -691,7 +634,6 @@ function ReleaseEditor({
   const [trackIds, setTrackIds] = useState<string[]>(release.track_ids);
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
   const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
-  const [artworkInputKey, setArtworkInputKey] = useState(0);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
   const [statusChanging, setStatusChanging] = useState(false);
@@ -715,7 +657,6 @@ function ReleaseEditor({
 
     const objectUrl = URL.createObjectURL(artworkFile);
     setArtworkPreviewUrl(objectUrl);
-
     return () => URL.revokeObjectURL(objectUrl);
   }, [artworkFile]);
 
@@ -727,7 +668,6 @@ function ReleaseEditor({
 
   function handleTrackDragEnd(event: DragEndEvent) {
     if (!canManage || saving || uploadingArtwork || statusChanging || deleting) return;
-
     const { active, over } = event;
     if (!over || active.id === over.id) return;
 
@@ -738,6 +678,31 @@ function ReleaseEditor({
     setTrackIds((current) => arrayMove(current, oldIndex, newIndex));
     setMessage("");
     setError("");
+  }
+
+  async function uploadArtworkIfNeeded(updatedRelease: ArtistRelease) {
+    if (!artworkFile) return updatedRelease;
+
+    setUploadingArtwork(true);
+    const formData = new FormData();
+    formData.append("file", artworkFile);
+    const artworkResponse = await fetch(
+      `/api/artists/${artist.id}/releases/${release.id}/artwork`,
+      { method: "POST", body: formData },
+    );
+    const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ReleasesResponse;
+
+    if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
+      throw new Error(artworkBody.error || "Failed to upload release artwork");
+    }
+
+    const nextRelease = {
+      ...updatedRelease,
+      cover_image_url: artworkBody.release.cover_image_url,
+      updated_at: artworkBody.release.updated_at ?? updatedRelease.updated_at,
+    };
+    setArtworkFile(null);
+    return nextRelease;
   }
 
   async function saveRelease(event: FormEvent<HTMLFormElement>) {
@@ -773,36 +738,13 @@ function ReleaseEditor({
         throw new Error(body.error || "Failed to save release");
       }
 
-      let updatedRelease = body.release as ArtistRelease;
-
-      if (artworkFile) {
-        setUploadingArtwork(true);
-        const formData = new FormData();
-        formData.append("file", artworkFile);
-
-        const artworkResponse = await fetch(
-          `/api/artists/${artist.id}/releases/${release.id}/artwork`,
-          { method: "POST", body: formData },
-        );
-        const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ReleasesResponse;
-
-        if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
-          throw new Error(artworkBody.error || "Failed to upload release artwork");
-        }
-
-        updatedRelease = {
-          ...updatedRelease,
-          cover_image_url: artworkBody.release.cover_image_url,
-          updated_at: artworkBody.release.updated_at ?? updatedRelease.updated_at,
-        };
-        setArtworkFile(null);
-        setArtworkInputKey((current) => current + 1);
-      }
-
+      const updatedRelease = await uploadArtworkIfNeeded(body.release as ArtistRelease);
       onUpdated(updatedRelease);
       setMessage("Release saved.");
-    } catch (error) {
-      setError(error instanceof Error ? error.message : "Failed to save release");
+    } catch (saveError) {
+      setError(
+        saveError instanceof Error ? saveError.message : "Failed to save release",
+      );
     } finally {
       setUploadingArtwork(false);
       setSaving(false);
@@ -842,38 +784,12 @@ function ReleaseEditor({
           },
         );
         const saveBody = (await saveResponse.json().catch(() => ({}))) as ReleasesResponse;
-
         if (!saveResponse.ok || !saveBody.release) {
           throw new Error(saveBody.error || "Failed to save release before publishing");
         }
 
-        let savedRelease = saveBody.release as ArtistRelease;
+        const savedRelease = await uploadArtworkIfNeeded(saveBody.release as ArtistRelease);
         onUpdated(savedRelease);
-
-        if (artworkFile) {
-          setUploadingArtwork(true);
-          const formData = new FormData();
-          formData.append("file", artworkFile);
-
-          const artworkResponse = await fetch(
-            `/api/artists/${artist.id}/releases/${release.id}/artwork`,
-            { method: "POST", body: formData },
-          );
-          const artworkBody = (await artworkResponse.json().catch(() => ({}))) as ReleasesResponse;
-
-          if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
-            throw new Error(artworkBody.error || "Failed to upload release artwork");
-          }
-
-          savedRelease = {
-            ...savedRelease,
-            cover_image_url: artworkBody.release.cover_image_url,
-            updated_at: artworkBody.release.updated_at ?? savedRelease.updated_at,
-          };
-          onUpdated(savedRelease);
-          setArtworkFile(null);
-          setArtworkInputKey((current) => current + 1);
-        }
       }
 
       const response = await fetch(
@@ -901,15 +817,14 @@ function ReleaseEditor({
         );
       }
 
-      const updatedRelease = body.release as ArtistRelease;
-      onUpdated(updatedRelease);
+      onUpdated(body.release as ArtistRelease);
       setMessage(
         action === "publish" ? "Release published." : "Release unpublished.",
       );
-    } catch (error) {
+    } catch (statusError) {
       setError(
-        error instanceof Error
-          ? error.message
+        statusError instanceof Error
+          ? statusError.message
           : action === "publish"
             ? "Failed to publish release"
             : "Failed to unpublish release",
@@ -941,14 +856,11 @@ function ReleaseEditor({
       );
       const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
 
-      if (!response.ok) {
-        throw new Error(body.error || "Failed to delete release");
-      }
-
+      if (!response.ok) throw new Error(body.error || "Failed to delete release");
       onDeleted();
-    } catch (error) {
+    } catch (deleteError) {
       setError(
-        error instanceof Error ? error.message : "Failed to delete release",
+        deleteError instanceof Error ? deleteError.message : "Failed to delete release",
       );
     } finally {
       setDeleting(false);
@@ -964,7 +876,7 @@ function ReleaseEditor({
         <button
           type="button"
           onClick={onBack}
-          disabled={saving || uploadingArtwork || statusChanging || deleting}
+          disabled={trackOrderDisabled}
           className="filmwave-backend-button filmwave-backend-button-secondary"
         >
           Back to Releases
@@ -978,79 +890,54 @@ function ReleaseEditor({
         </div>
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
-          <div>
-            <div className="mb-1.5 flex items-center justify-between gap-2 text-[11px] text-[var(--text-secondary)]">
-              <span>Cover artwork</span>
-              <span className="text-[var(--text-muted)]">Required</span>
-            </div>
-            <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
-              {artworkPreviewUrl || release.cover_image_url ? (
-                <img
-                  src={artworkPreviewUrl ?? release.cover_image_url ?? ""}
-                  alt=""
-                  className="h-full w-full object-cover"
-                />
-              ) : null}
-            </div>
-            {canManage ? (
-              <div className="mt-3 grid gap-2">
-                <input
-                  key={artworkInputKey}
-                  type="file"
-                  accept="image/*"
-                  disabled={saving || uploadingArtwork || statusChanging}
-                  onChange={(event) =>
-                    setArtworkFile(event.target.files?.[0] ?? null)
-                  }
-                  className="block w-full text-[11px] text-[var(--text-muted)] file:mr-2 file:rounded-[7px] file:border file:border-[var(--border)] file:bg-[var(--bg-primary)] file:px-2.5 file:py-1.5 file:text-[11px] file:text-[var(--text-primary)]"
-                />
-              </div>
-            ) : null}
-          </div>
+          <BackendArtworkUpload
+            file={artworkFile}
+            previewUrl={artworkPreviewUrl ?? release.cover_image_url}
+            onFileChange={setArtworkFile}
+            onRemove={() => setArtworkFile(null)}
+            disabled={!canManage || saving || uploadingArtwork || statusChanging}
+            required
+            title="Cover artwork"
+            dropDescription="Click to upload release artwork."
+            variant="compact"
+            compactSize={180}
+            allowRemove={Boolean(artworkFile)}
+          />
 
           <div className="grid content-start gap-4 sm:grid-cols-2">
             <label className="block sm:col-span-2">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Release title
-              </span>
-              <input
+              <span>Release title</span>
+              <BackendInput
                 type="text"
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
                 maxLength={180}
                 disabled={!canManage || saving || statusChanging}
-                className="filmwave-backend-input"
               />
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Type
-              </span>
-              <select
+              <span>Type</span>
+              <BackendSelect
                 value={releaseType}
                 onChange={(event) => setReleaseType(event.target.value as ReleaseType)}
                 disabled={!canManage || saving || statusChanging}
-                className="filmwave-backend-select"
               >
                 {RELEASE_TYPES.map((type) => (
                   <option key={type.value} value={type.value}>
                     {type.label}
                   </option>
                 ))}
-              </select>
+              </BackendSelect>
             </label>
 
             <label className="block">
-              <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-                Release date
-              </span>
-              <input
+              <span>Release date</span>
+              <BackendInput
                 type="date"
                 value={releaseDate}
                 onChange={(event) => setReleaseDate(event.target.value)}
                 disabled={!canManage || saving || statusChanging}
-                className="filmwave-backend-input"
               />
             </label>
           </div>
@@ -1090,11 +977,7 @@ function ReleaseEditor({
             items={orderedTracks.map((song) => song.id)}
             strategy={verticalListSortingStrategy}
           >
-            <div
-              className={
-                orderedTracks.length === 0 ? "" : "grid gap-2 p-5"
-              }
-            >
+            <div className={orderedTracks.length === 0 ? "" : "grid gap-2 p-5"}>
               {orderedTracks.length === 0 ? (
                 <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
                   No tracks added yet.
@@ -1120,7 +1003,7 @@ function ReleaseEditor({
         <button
           type="button"
           onClick={onBack}
-          disabled={saving || uploadingArtwork || statusChanging || deleting}
+          disabled={trackOrderDisabled}
           className="filmwave-backend-button filmwave-backend-button-secondary"
         >
           Back to Releases
@@ -1138,7 +1021,7 @@ function ReleaseEditor({
             <button
               type="button"
               onClick={() => void deleteRelease()}
-              disabled={saving || uploadingArtwork || statusChanging || deleting}
+              disabled={trackOrderDisabled}
               className="filmwave-backend-button filmwave-backend-button-secondary-danger"
             >
               {deleting ? "Deleting..." : "Delete release"}
@@ -1148,7 +1031,7 @@ function ReleaseEditor({
             <button
               type="button"
               onClick={() => void changeReleaseStatus("unpublish")}
-              disabled={saving || uploadingArtwork || statusChanging || deleting}
+              disabled={trackOrderDisabled}
               className="filmwave-backend-button filmwave-backend-button-secondary"
             >
               {statusChanging ? "Unpublishing..." : "Unpublish"}
@@ -1158,13 +1041,7 @@ function ReleaseEditor({
             <button
               type="button"
               onClick={() => void changeReleaseStatus("publish")}
-              disabled={
-                saving ||
-                uploadingArtwork ||
-                statusChanging ||
-                deleting ||
-                !title.trim()
-              }
+              disabled={trackOrderDisabled || !title.trim()}
               className="filmwave-backend-button filmwave-backend-button-secondary"
             >
               {statusChanging ? "Publishing..." : "Publish release"}
