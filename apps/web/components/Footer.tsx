@@ -82,8 +82,16 @@ export default function Footer({
   const isProjectDetailPage = /^\/projects\/[^/]+/.test(pathname);
   const isPlaylistDetailPage = /^\/playlists\/[^/]+/.test(pathname);
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
+  const isPublicArtistPage =
+    /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
+      pathname,
+    );
   const removePageGutter =
-    !pageGutter || isMusicPage || isProjectDetailPage || isCommunityPlaylistsPage;
+    !pageGutter ||
+    isMusicPage ||
+    isProjectDetailPage ||
+    isCommunityPlaylistsPage ||
+    isPublicArtistPage;
 
   useEffect(() => {
     if (!isMusicPage) {
