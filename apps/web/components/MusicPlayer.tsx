@@ -31,6 +31,7 @@ import {
   getSongCuePointMarkers,
 } from "@/lib/editPointUtils";
 import Image from "next/image";
+import Link from "next/link";
 import {
   useCallback,
   useEffect,
@@ -546,6 +547,13 @@ export default function MusicPlayer() {
                     Playing in another tab
                   </span>
                 </>
+              ) : currentSong.artistSlug ? (
+                <Link
+                  href={`/artists/${currentSong.artistSlug}`}
+                  className="truncate transition-colors hover:text-[var(--text-primary)]"
+                >
+                  {currentSong.artist}
+                </Link>
               ) : (
                 <span className="truncate">{currentSong.artist}</span>
               )}
