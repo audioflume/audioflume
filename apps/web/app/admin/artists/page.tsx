@@ -432,7 +432,7 @@ export default function AdminArtistsPage() {
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
     >
       {showCreateArtist ? (
-        <section className="mb-4 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
+        <section className="mb-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
           <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end">
             <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
               <span>Name (Required)</span>
@@ -534,7 +534,7 @@ export default function AdminArtistsPage() {
         </div>
       </section>
 
-      <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="overflow-x-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
         <div className="grid min-w-[1140px] grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
           <span>Artist</span>
           <span>Owner</span>
