@@ -218,7 +218,7 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-top {
-          padding: clamp(36px, 3vw, 50px) 0 clamp(86px, 6vw, 104px);
+          padding: 0 0 clamp(86px, 6vw, 104px);
           color: var(--text-primary);
         }
 
@@ -237,9 +237,9 @@ export default function PublicArtistPageView({
         .artist-public-type {
           position: absolute;
           bottom: 28px;
-          left: 45%;
+          left: 41%;
           z-index: 5;
-          width: 16%;
+          width: 15%;
           margin: 0;
           color: #fff;
           font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -253,9 +253,9 @@ export default function PublicArtistPageView({
         .artist-public-intro {
           position: absolute;
           bottom: 28px;
-          left: 64%;
+          left: 59%;
           z-index: 5;
-          width: 25%;
+          width: 30%;
           max-width: 560px;
           margin: 0;
           color: #fff;
@@ -268,11 +268,11 @@ export default function PublicArtistPageView({
 
         .artist-public-feature-media {
           position: absolute;
-          top: clamp(72px, 5.5vw, 96px);
+          top: var(--filmwave-page-gutter);
           right: 0;
           bottom: 0;
           z-index: 1;
-          width: 58%;
+          width: 62%;
           overflow: hidden;
           background: var(--bg-secondary);
         }
@@ -423,7 +423,7 @@ export default function PublicArtistPageView({
           right: 0;
           z-index: 5;
           display: flex;
-          width: 58%;
+          width: 62%;
           min-width: 0;
           flex-wrap: wrap;
           align-items: center;
@@ -518,12 +518,12 @@ export default function PublicArtistPageView({
         }
 
         input.artist-public-type.artist-public-edit-control {
-          width: 16%;
+          width: 15%;
           min-width: 160px;
         }
 
         textarea.artist-public-intro.artist-public-edit-control {
-          width: 25%;
+          width: 30%;
           min-height: 2.7em;
         }
 
@@ -764,7 +764,7 @@ export default function PublicArtistPageView({
         @media (max-width: 900px) {
           .artist-public-top,
           .artist-public-page-editing .artist-public-top {
-            padding-top: 28px;
+            padding-top: var(--filmwave-page-gutter);
             padding-bottom: clamp(64px, 5vw, 82px);
           }
 
