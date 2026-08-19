@@ -1,8 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
+import {
+  BackendSidebarGroup,
+  BackendSidebarHeading,
+  BackendSidebarNavItem,
+  BackendSidebarScrollArea,
+  BackendSidebarShell,
+} from "@/components/backend/BackendSidebar";
 import DashboardIcon from "@/components/icons/DashboardIcon";
 import EngagementIcon from "@/components/icons/EngagementIcon";
 import { usePlayer } from "@/context/PlayerContext";
@@ -91,7 +97,7 @@ function getConsoleValue(tone: StatusTone) {
 
 function mapSystemHealthToConsole(statuses: SystemHealthItem[]): ConsoleStatus[] {
   return DEFAULT_CONSOLE_STATUSES.map((def) => {
-    const match = statuses.find((s) => s.key === def.key);
+    const match = statuses.find((status) => status.key === def.key);
     return match
       ? { ...def, value: getConsoleValue(match.tone), tone: match.tone }
       : { ...def, value: "UNKNOWN" };
@@ -103,79 +109,11 @@ function PrimaryIcon({ icon }: { icon: PrimaryNavItem["icon"] }) {
   return <EngagementIcon size={14} />;
 }
 
-function AdminNavLink({ label, href, status }: AdminNavItem) {
-  const pathname = usePathname();
-  const active = pathname === href;
-
+function SoonBadge() {
   return (
-    <Link
-      href={href}
-      className={`group flex h-[38px] items-center justify-between gap-3 pl-3 pr-2 text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
-        active
-          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-      }`}
-    >
-      <span className="truncate">{label}</span>
-      {status && (
-        <span className="ml-auto bg-[var(--bg-tertiary)] px-1.5 py-[1px] text-[8px] font-semibold uppercase tracking-[0.04em] text-[var(--text-muted)]">
-          Soon
-        </span>
-      )}
-    </Link>
-  );
-}
-
-function PrimaryNavLink({ label, href, icon }: PrimaryNavItem) {
-  const pathname = usePathname();
-  const active = pathname === href;
-
-  return (
-    <Link
-      href={href}
-      className={`group flex h-[38px] items-center gap-2.5 pl-3 pr-2 text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
-        active
-          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-      }`}
-    >
-      <span
-        className={`flex h-4 w-4 items-center justify-center transition-colors ${
-          active
-            ? "text-[var(--text-primary)]"
-            : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]"
-        }`}
-      >
-        <PrimaryIcon icon={icon} />
-      </span>
-      <span className="truncate">{label}</span>
-    </Link>
-  );
-}
-
-function AdminSectionHeading({ children }: { children: string }) {
-  return (
-    <div className="mb-[17px] px-3 font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
-      {children}
-    </div>
-  );
-}
-
-function AdminNavSection({ title, links }: AdminNavGroup) {
-  return (
-    <div className="shrink-0">
-      <AdminSectionHeading>{title}</AdminSectionHeading>
-      <div className="flex flex-col gap-px">
-        {links.map((link) => (
-          <AdminNavLink
-            key={link.href}
-            label={link.label}
-            href={link.href}
-            status={link.status}
-          />
-        ))}
-      </div>
-    </div>
+    <span className="bg-[var(--bg-tertiary)] px-1.5 py-[1px] text-[8px] font-semibold uppercase tracking-[0.04em] text-[var(--text-muted)]">
+      Soon
+    </span>
   );
 }
 
@@ -228,6 +166,7 @@ function SystemStatusConsole({
 }
 
 export default function AdminSidebar() {
+  const pathname = usePathname();
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
 
@@ -248,8 +187,8 @@ export default function AdminSidebar() {
         setLastChecked("just now");
       } catch {
         setConsoleStatuses(
-          DEFAULT_CONSOLE_STATUSES.map((s) => ({
-            ...s,
+          DEFAULT_CONSOLE_STATUSES.map((status) => ({
+            ...status,
             value: "ERROR",
             tone: "error" as StatusTone,
           })),
@@ -259,37 +198,43 @@ export default function AdminSidebar() {
         setSystemHealthLoading(false);
       }
     };
-    fetchSystemHealth();
+    void fetchSystemHealth();
   }, []);
 
   return (
-    <aside
-      className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col"
-      style={{ top: "56px", bottom: playerVisible ? "64px" : "0px" }}
-    >
-      <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
+    <BackendSidebarShell bottom={playerVisible ? "64px" : "0px"}>
+      <BackendSidebarScrollArea>
         <div className="border-b border-[var(--border)] pb-8">
-          <AdminSectionHeading>Admin</AdminSectionHeading>
+          <BackendSidebarHeading>Admin</BackendSidebarHeading>
           <div className="flex flex-col gap-px">
             {primaryLinks.map((link) => (
-              <PrimaryNavLink
+              <BackendSidebarNavItem
                 key={link.href}
-                label={link.label}
                 href={link.href}
-                icon={link.icon}
-                status={link.status}
-              />
+                active={pathname === link.href}
+                leading={<PrimaryIcon icon={link.icon} />}
+                trailing={link.status ? <SoonBadge /> : null}
+              >
+                {link.label}
+              </BackendSidebarNavItem>
             ))}
           </div>
         </div>
 
         <div className="mt-8 grid gap-8">
-          {navGroups.map((section) => (
-            <AdminNavSection
-              key={section.title}
-              title={section.title}
-              links={section.links}
-            />
+          {navGroups.map((group) => (
+            <BackendSidebarGroup key={group.title} title={group.title}>
+              {group.links.map((link) => (
+                <BackendSidebarNavItem
+                  key={link.href}
+                  href={link.href}
+                  active={pathname === link.href}
+                  trailing={link.status ? <SoonBadge /> : null}
+                >
+                  {link.label}
+                </BackendSidebarNavItem>
+              ))}
+            </BackendSidebarGroup>
           ))}
         </div>
 
@@ -300,7 +245,7 @@ export default function AdminSidebar() {
             lastChecked={lastChecked}
           />
         </div>
-      </div>
-    </aside>
+      </BackendSidebarScrollArea>
+    </BackendSidebarShell>
   );
 }
