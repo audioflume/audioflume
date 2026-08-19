@@ -711,6 +711,7 @@ function PlaylistEditor({
             dropDescription="Click to upload playlist artwork."
             variant="compact"
             compactSize={180}
+            compactChooseButton
             allowRemove={Boolean(artworkFile)}
           />
 
