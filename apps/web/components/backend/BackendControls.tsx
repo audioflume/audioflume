@@ -125,6 +125,7 @@ type BackendCheckboxProps = {
   label?: ReactNode;
   disabled?: boolean;
   compact?: boolean;
+  size?: "sm" | "md";
   className?: string;
   ariaLabel?: string;
 };
@@ -135,6 +136,7 @@ export function BackendCheckbox({
   label,
   disabled = false,
   compact = false,
+  size = "md",
   className = "",
   ariaLabel,
 }: BackendCheckboxProps) {
@@ -156,7 +158,12 @@ export function BackendCheckbox({
         onChange={(event) => onChange(event.target.checked)}
         className="peer sr-only"
       />
-      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover/backend-checkbox:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
+      <span
+        className={joinClasses(
+          "flex shrink-0 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover/backend-checkbox:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100",
+          size === "sm" ? "h-3.5 w-3.5" : "h-4 w-4",
+        )}
+      >
         <CheckMarkIcon
           size={10}
           strokeWidth={3}
