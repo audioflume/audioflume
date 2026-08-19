@@ -4,7 +4,15 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import AdminPageHeader from "@/components/admin/AdminPageHeader";
+import { BackendSelect } from "@/components/backend/BackendControls";
+import BackendPageHeader from "@/components/backend/BackendPageHeader";
+import {
+  BackendSidebarGroup,
+  BackendSidebarHeading,
+  BackendSidebarNavItem,
+  BackendSidebarScrollArea,
+  BackendSidebarShell,
+} from "@/components/backend/BackendSidebar";
 import ArtistAgreements from "@/components/artists/ArtistAgreements";
 import ArtistAnalytics from "@/components/artists/ArtistAnalytics";
 import ArtistEarnings from "@/components/artists/ArtistEarnings";
@@ -107,42 +115,6 @@ function formatStatus(status: ArtistDashboardProfile["status"]) {
 
 function formatRole(role: ArtistDashboardProfile["role"]) {
   return role.charAt(0).toUpperCase() + role.slice(1);
-}
-
-function ArtistSectionHeading({ children }: { children: string }) {
-  return (
-    <div className="mb-[17px] px-3 font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
-      {children}
-    </div>
-  );
-}
-
-function ArtistNavButton({
-  section,
-  label,
-  artistId,
-  active,
-  onClick,
-}: {
-  section: ArtistDashboardSection;
-  label: string;
-  artistId: string;
-  active: boolean;
-  onClick: (section: ArtistDashboardSection) => void;
-}) {
-  return (
-    <Link
-      href={getArtistDashboardHref(section, artistId)}
-      onClick={() => onClick(section)}
-      className={`flex h-[38px] w-full cursor-pointer items-center justify-between gap-3 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none ${
-        active
-          ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
-          : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-      }`}
-    >
-      <span className="truncate">{label}</span>
-    </Link>
-  );
 }
 
 function Overview({ artist }: { artist: ArtistDashboardProfile }) {
@@ -358,11 +330,8 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         isMyPage ? "pt-[var(--filmwave-header-height)]" : "pt-14"
       } ${sectionReady ? "" : "invisible"}`}
     >
-      <aside
-        className="fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col"
-        style={{ top: "var(--filmwave-header-height)", bottom: "0px" }}
-      >
-        <div className="flex flex-1 flex-col overflow-y-auto px-7 pb-8 pt-8">
+      <BackendSidebarShell>
+        <BackendSidebarScrollArea>
           <div ref={artistSwitcherRef} className="relative">
             <button
               type="button"
@@ -486,50 +455,47 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
           </div>
 
           <div className="mt-8">
-            <ArtistSectionHeading>Artist</ArtistSectionHeading>
+            <BackendSidebarHeading>Artist</BackendSidebarHeading>
             <div className="flex flex-col gap-px">
-              <ArtistNavButton
-                section="overview"
-                label="Overview"
-                artistId={activeArtist.id}
+              <BackendSidebarNavItem
+                href={getArtistDashboardHref("overview", activeArtist.id)}
                 active={sectionReady && activeSection === "overview"}
-                onClick={handleSectionChange}
-              />
-              <ArtistNavButton
-                section="my-page"
-                label="My Page"
-                artistId={activeArtist.id}
+                onClick={() => handleSectionChange("overview")}
+              >
+                Overview
+              </BackendSidebarNavItem>
+              <BackendSidebarNavItem
+                href={getArtistDashboardHref("my-page", activeArtist.id)}
                 active={sectionReady && activeSection === "my-page"}
-                onClick={handleSectionChange}
-              />
+                onClick={() => handleSectionChange("my-page")}
+              >
+                My Page
+              </BackendSidebarNavItem>
             </div>
           </div>
 
           <div className="mt-8 grid gap-8">
             {NAV_GROUPS.map((group) => (
-              <div key={group.title} className="shrink-0">
-                <ArtistSectionHeading>{group.title}</ArtistSectionHeading>
-                <div className="flex flex-col gap-px">
-                  {group.items
-                    .filter(
-                      (item) => item.section !== "earnings" || earningsVisible,
-                    )
-                    .map((item) => (
-                      <ArtistNavButton
-                        key={item.section}
-                        section={item.section}
-                        label={item.label}
-                        artistId={activeArtist.id}
-                        active={sectionReady && activeSection === item.section}
-                        onClick={handleSectionChange}
-                      />
-                    ))}
-                </div>
-              </div>
+              <BackendSidebarGroup key={group.title} title={group.title}>
+                {group.items
+                  .filter(
+                    (item) => item.section !== "earnings" || earningsVisible,
+                  )
+                  .map((item) => (
+                    <BackendSidebarNavItem
+                      key={item.section}
+                      href={getArtistDashboardHref(item.section, activeArtist.id)}
+                      active={sectionReady && activeSection === item.section}
+                      onClick={() => handleSectionChange(item.section)}
+                    >
+                      {item.label}
+                    </BackendSidebarNavItem>
+                  ))}
+              </BackendSidebarGroup>
             ))}
           </div>
-        </div>
-      </aside>
+        </BackendSidebarScrollArea>
+      </BackendSidebarShell>
 
       <section
         className={
@@ -547,17 +513,17 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         >
           <div className={`mb-5 md:hidden ${isMyPage ? "px-5 pt-5" : ""}`}>
             {dashboardProfiles.length > 1 ? (
-              <select
+              <BackendSelect
                 value={activeArtist.id}
                 onChange={(event) => setActiveArtistId(event.target.value)}
-                className="filmwave-backend-select mb-3"
+                className="mb-3"
               >
                 {dashboardProfiles.map((profile) => (
                   <option key={profile.id} value={profile.id}>
                     {profile.name}
                   </option>
                 ))}
-              </select>
+              </BackendSelect>
             ) : null}
 
             <nav
@@ -584,7 +550,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
           </div>
 
           {!isMyPage ? (
-            <AdminPageHeader section="Artist" label={activeSectionLabel} compact />
+            <BackendPageHeader section="Artist" label={activeSectionLabel} compact />
           ) : null}
 
           {activeSection === "overview" ? (
