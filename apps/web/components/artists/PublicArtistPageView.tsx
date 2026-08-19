@@ -1158,7 +1158,7 @@ export default function PublicArtistPageView({
           ) : null}
 
           <div className="artist-public-footer">
-            <Footer />
+            <Footer pageGutter={false} />
           </div>
         </div>
       </RootElement>
