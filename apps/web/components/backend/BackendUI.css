@@ -32,6 +32,53 @@ main:has(> aside[class*="admin-sidebar-width"]) {
   --danger-hover: var(--status-error-soft);
 }
 
+/* Canonical labels for text/select/textarea fields across admin + artist backend. */
+main:has(> aside[class*="admin-sidebar-width"])
+  label:has(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea
+  ) {
+  row-gap: 6px;
+  color: var(--text-secondary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+main:has(> aside[class*="admin-sidebar-width"])
+  label:has(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea
+  )
+  > span:first-child {
+  margin: 0;
+  color: var(--text-secondary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.2;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+main:has(> aside[class*="admin-sidebar-width"])
+  label:not(.grid):not(.flex):has(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea
+  )
+  > :is(
+    input:not([type="checkbox"]):not([type="radio"]):not([type="file"]),
+    select,
+    textarea
+  ) {
+  margin-top: 6px;
+}
+
 .filmwave-backend-section {
   overflow: hidden;
   border: 1px solid var(--border);
@@ -256,8 +303,14 @@ main:has(> aside[class*="admin-sidebar-width"]) {
   font-size: 10px;
   font-weight: 500;
   line-height: 1;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
+  letter-spacing: 0;
+  text-transform: capitalize;
+}
+
+/* Legacy backend status chips use the same title-case, regular-spacing treatment. */
+main:has(> aside[class*="admin-sidebar-width"]) span.rounded-full.uppercase {
+  letter-spacing: 0;
+  text-transform: capitalize;
 }
 
 /* Backend pages with footers fill the viewport without subtracting shell offsets twice. */
