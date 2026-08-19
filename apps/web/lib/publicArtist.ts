@@ -164,8 +164,6 @@ export async function getPublicArtistPageData(
             )
             .in("id", releaseIds)
             .eq("status", "published")
-            .order("release_date", { ascending: false, nullsFirst: false })
-            .order("created_at", { ascending: false })
         : Promise.resolve({ data: [], error: null }),
       releaseIds.length > 0
         ? supabaseServer
@@ -224,18 +222,26 @@ export async function getPublicArtistPageData(
     );
   }
 
-  const releases: PublicArtistRelease[] = (releasesResult.data ?? []).map(
-    (release) => ({
-      id: String(release.id),
-      title: String(release.title || ""),
-      release_type: release.release_type as PublicArtistRelease["release_type"],
-      cover_image_url: release.cover_image_url
-        ? String(release.cover_image_url)
-        : null,
-      release_date: release.release_date ? String(release.release_date) : null,
-      track_count: releaseTrackCounts.get(String(release.id)) ?? 0,
-    }),
+  const releaseById = new Map(
+    (releasesResult.data ?? []).map((release) => [String(release.id), release]),
   );
+  const releases: PublicArtistRelease[] = releaseIds.flatMap((releaseId) => {
+    const release = releaseById.get(releaseId);
+    if (!release) return [];
+
+    return [
+      {
+        id: String(release.id),
+        title: String(release.title || ""),
+        release_type: release.release_type as PublicArtistRelease["release_type"],
+        cover_image_url: release.cover_image_url
+          ? String(release.cover_image_url)
+          : null,
+        release_date: release.release_date ? String(release.release_date) : null,
+        track_count: releaseTrackCounts.get(String(release.id)) ?? 0,
+      },
+    ];
+  });
 
   const playlists: PublicArtistPlaylist[] = (playlistsResult.data ?? []).map(
     (playlist) => ({
