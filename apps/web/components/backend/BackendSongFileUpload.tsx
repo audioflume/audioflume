@@ -61,6 +61,7 @@ type BackendSongFileUploadProps = {
   onRemoveArtwork: () => void;
   artworkHelp?: string;
   artworkFooter?: ReactNode;
+  topAction?: ReactNode;
   disabled?: boolean;
 };
 
@@ -80,6 +81,7 @@ export default function BackendSongFileUpload({
   onRemoveArtwork,
   artworkHelp = "Click the preview or choose a new image to replace it.",
   artworkFooter,
+  topAction,
   disabled = false,
 }: BackendSongFileUploadProps) {
   const audioInputRef = useRef<HTMLInputElement | null>(null);
@@ -171,6 +173,7 @@ export default function BackendSongFileUpload({
           <StemsActionIcon />
           <span>Choose Stems</span>
         </button>
+        {topAction ? <div className="ml-auto">{topAction}</div> : null}
       </div>
 
       <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
