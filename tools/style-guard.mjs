@@ -37,6 +37,32 @@ const headerSearchRuntimeSelectors = [
   "filmwave-search-pill-input",
 ];
 
+const backendCssOwner = "apps/web/components/backend/BackendUI.css";
+const backendComponentDirectory = "apps/web/components/backend/";
+const migratedBackendFiles = new Set([
+  "apps/web/components/admin/AdminContentPage.tsx",
+  "apps/web/components/admin/AdminImageUpload.tsx",
+  "apps/web/components/admin/AdminSidebar.tsx",
+  "apps/web/components/artists/ArtistDashboardShell.tsx",
+  "apps/web/components/artists/ArtistPlaylistManager.tsx",
+  "apps/web/components/artists/ArtistReleaseManager.tsx",
+  "apps/web/components/artists/ArtistReleaseTrackPicker.tsx",
+  "apps/web/components/artists/ArtistSongUploadForm.tsx",
+]);
+const legacyBackendUploadNames = [
+  "AdminSongUploadPresentationInjector",
+  "AdminSongEditUploadStateAdapter",
+  "AdminSongUploadResetSync",
+];
+const backendFrontendBoundaryPatterns = [
+  'from "@filmwave/shared"',
+  "from '@filmwave/shared'",
+  'from "@/components/uiClasses"',
+  "from '@/components/uiClasses'",
+  'from "@/components/Waveform"',
+  "from '@/components/Waveform'",
+];
+
 const errors = [];
 
 function relativePath(absolutePath) {
@@ -72,12 +98,50 @@ for (const absolutePath of walk(repoRoot)) {
     errors.push(`${rel}: route-level global style block found.`);
   }
 
-  if (ext === ".css" && containsAny(source, headerSearchLayoutSelectors) && !headerSearchLayoutOwners.has(rel)) {
+  if (
+    ext === ".css" &&
+    containsAny(source, headerSearchLayoutSelectors) &&
+    !headerSearchLayoutOwners.has(rel)
+  ) {
     errors.push(`${rel}: header search layout selector ownership violation.`);
   }
 
-  if (ext !== ".css" && source.includes("<style") && containsAny(source, headerSearchRuntimeSelectors)) {
+  if (
+    ext !== ".css" &&
+    source.includes("<style") &&
+    containsAny(source, headerSearchRuntimeSelectors)
+  ) {
     errors.push(`${rel}: component-level header/search style injection found.`);
+  }
+
+  if (
+    ext === ".css" &&
+    source.includes(".filmwave-backend-") &&
+    rel !== backendCssOwner
+  ) {
+    errors.push(
+      `${rel}: backend UI selector ownership violation; use ${backendCssOwner}.`,
+    );
+  }
+
+  if (
+    rel.startsWith(backendComponentDirectory) &&
+    source.includes("!important")
+  ) {
+    errors.push(`${rel}: shared backend components must not add !important overrides.`);
+  }
+
+  if (
+    (rel.startsWith(backendComponentDirectory) || migratedBackendFiles.has(rel)) &&
+    containsAny(source, backendFrontendBoundaryPatterns)
+  ) {
+    errors.push(
+      `${rel}: backend component imports a frontend/shared presentation helper.`,
+    );
+  }
+
+  if (containsAny(source, legacyBackendUploadNames)) {
+    errors.push(`${rel}: deleted legacy song-upload presenter/adapter referenced.`);
   }
 }
 
