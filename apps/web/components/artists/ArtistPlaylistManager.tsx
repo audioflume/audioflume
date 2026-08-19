@@ -458,6 +458,7 @@ function PlaylistEditor({
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
   const [message, setMessage] = useState("");
+  const [playlistSavedVisible, setPlaylistSavedVisible] = useState(false);
   const [error, setError] = useState("");
 
   const songsById = useMemo(
@@ -469,16 +470,34 @@ function PlaylistEditor({
     .filter((song): song is PlaylistSong => Boolean(song));
   const availableSongs = songs.filter((song) => !songIds.includes(song.id));
 
+  useEffect(() => {
+    if (message !== "Playlist saved.") return;
+
+    const fadeTimer = window.setTimeout(() => {
+      setPlaylistSavedVisible(false);
+    }, 2500);
+    const clearTimer = window.setTimeout(() => {
+      setMessage("");
+    }, 3000);
+
+    return () => {
+      window.clearTimeout(fadeTimer);
+      window.clearTimeout(clearTimer);
+    };
+  }, [message]);
+
   function addTrack() {
     if (!songToAdd || !canManage) return;
     setSongIds((current) => [...current, songToAdd]);
     setSongToAdd("");
+    setPlaylistSavedVisible(false);
     setMessage("");
     setError("");
   }
 
   function removeTrack(songId: string) {
     setSongIds((current) => current.filter((id) => id !== songId));
+    setPlaylistSavedVisible(false);
     setMessage("");
     setError("");
   }
@@ -492,6 +511,7 @@ function PlaylistEditor({
       [next[index], next[nextIndex]] = [next[nextIndex], next[index]];
       return next;
     });
+    setPlaylistSavedVisible(false);
     setMessage("");
     setError("");
   }
@@ -503,6 +523,7 @@ function PlaylistEditor({
     try {
       setSaving(true);
       setError("");
+      setPlaylistSavedVisible(false);
       setMessage("");
 
       const response = await fetch(
@@ -525,6 +546,7 @@ function PlaylistEditor({
       }
 
       onUpdated(body.playlist as ArtistPlaylist);
+      setPlaylistSavedVisible(true);
       setMessage("Playlist saved.");
     } catch (saveError) {
       setError(
@@ -541,6 +563,7 @@ function PlaylistEditor({
     try {
       setUploadingArtwork(true);
       setError("");
+      setPlaylistSavedVisible(false);
       setMessage("");
 
       const formData = new FormData();
@@ -780,6 +803,15 @@ function PlaylistEditor({
         <div className="min-h-5 text-xs">
           {error ? (
             <span className="text-[var(--danger)]">{error}</span>
+          ) : message === "Playlist saved." ? (
+            <span
+              className={`transition-opacity duration-500 ${
+                playlistSavedVisible ? "opacity-100" : "opacity-0"
+              }`}
+              style={{ color: "var(--status-success, #48b571)" }}
+            >
+              {message}
+            </span>
           ) : message ? (
             <span className="text-[var(--text-muted)]">{message}</span>
           ) : null}
