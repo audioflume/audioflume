@@ -520,6 +520,10 @@ function CreatePlaylist({
           <h2 className="filmwave-backend-section-title">New playlist</h2>
         </div>
 
+        <div className="px-5 pb-1 text-[11px] text-[var(--text-muted)]">
+          Cover artwork is required and can be added from Playlist details after creating the playlist.
+        </div>
+
         <div className="grid gap-4 p-5">
           <label className="block">
             <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)]">
@@ -735,6 +739,10 @@ function PlaylistEditor({
 
         <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
           <div>
+            <div className="mb-1.5 flex items-center justify-between gap-2 text-[11px] text-[var(--text-secondary)]">
+              <span>Cover artwork</span>
+              <span className="text-[var(--text-muted)]">Required</span>
+            </div>
             <div className="aspect-square overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
               {artworkPreviewUrl || playlist.cover_image_url ? (
                 <img
