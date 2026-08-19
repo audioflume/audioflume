@@ -40,6 +40,8 @@ const headerSearchRuntimeSelectors = [
 const backendCssOwner = "apps/web/components/backend/BackendUI.css";
 const backendComponentDirectory = "apps/web/components/backend/";
 const migratedBackendFiles = new Set([
+  "apps/web/components/admin/AdminAddToPlaylistModal.tsx",
+  "apps/web/components/admin/AdminBrowseFilterSubcategoryGroup.tsx",
   "apps/web/components/admin/AdminContentPage.tsx",
   "apps/web/components/admin/AdminImageUpload.tsx",
   "apps/web/components/admin/AdminSidebar.tsx",
