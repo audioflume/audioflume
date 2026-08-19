@@ -129,10 +129,10 @@ function SortableReleaseRow({
         opacity: isDragging ? 0.45 : 1,
         zIndex: isDragging ? 2 : "auto",
       }}
-      className={`grid gap-4 px-5 py-4 sm:items-center ${
+      className={`grid gap-4 px-5 py-4 min-[480px]:items-center ${
         canManage
-          ? "sm:grid-cols-[28px_52px_minmax(0,1fr)_130px_110px_auto]"
-          : "sm:grid-cols-[52px_minmax(0,1fr)_130px_110px_auto]"
+          ? "min-[480px]:grid-cols-[28px_52px_minmax(0,1fr)_130px_110px_auto]"
+          : "min-[480px]:grid-cols-[52px_minmax(0,1fr)_130px_110px_auto]"
       }`}
     >
       {canManage ? (
