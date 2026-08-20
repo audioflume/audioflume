@@ -314,7 +314,7 @@
 .fw-filter-rail-item.is-active {
   background: var(--bg-control-hover);
   color: var(--text-primary);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .fw-filter-rail-label {
@@ -504,7 +504,7 @@
   border-color: var(--accent);
   background: var(--accent);
   color: var(--accent-contrast, #111111);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .fw-filter-chip:disabled {
