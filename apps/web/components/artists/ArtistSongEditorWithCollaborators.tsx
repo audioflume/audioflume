@@ -32,31 +32,33 @@ export default function ArtistSongEditorWithCollaborators({
   onSaved,
 }: ArtistSongEditorWithCollaboratorsProps) {
   return (
-    <div className="grid gap-5">
-      <ArtistSongEditor
-        artist={artist}
-        songId={song.id}
-        onClose={onClose}
-        onSaved={onSaved}
-      />
-      <ArtistSongAudioReplacement
-        artist={artist}
-        song={song}
-        onClose={onClose}
-        embedded
-        onReplaced={(updatedSong, _resetForReview, revisionPending) =>
-          onSaved(
-            { id: updatedSong.id, title: updatedSong.title },
-            revisionPending,
-          )
-        }
-      />
-      <ArtistCollaboratorsEditor
-        artistId={artist.id}
-        resourceType="song"
-        resourceId={song.id}
-        canEdit={artist.permissions.includes("catalog:edit")}
-      />
-    </div>
+    <ArtistSongEditor
+      artist={artist}
+      songId={song.id}
+      onClose={onClose}
+      onSaved={onSaved}
+      beforeContent={
+        <ArtistSongAudioReplacement
+          artist={artist}
+          song={song}
+          onClose={onClose}
+          embedded
+          onReplaced={(updatedSong, _resetForReview, revisionPending) =>
+            onSaved(
+              { id: updatedSong.id, title: updatedSong.title },
+              revisionPending,
+            )
+          }
+        />
+      }
+      afterContent={
+        <ArtistCollaboratorsEditor
+          artistId={artist.id}
+          resourceType="song"
+          resourceId={song.id}
+          canEdit={artist.permissions.includes("catalog:edit")}
+        />
+      }
+    />
   );
 }
