@@ -375,7 +375,7 @@ export default function ArtistMusicUploader({
                   return (
                     <div
                       key={song.id}
-                      className="grid min-h-[72px] grid-cols-[60px_minmax(180px,1.5fr)_70px_70px_70px_minmax(360px,auto)_120px] items-center gap-4 px-5 text-xs"
+                      className="grid min-h-[72px] grid-cols-[60px_minmax(180px,1.5fr)_70px_70px_70px_120px_minmax(360px,auto)] items-center gap-4 px-5 text-xs"
                       style={{
                         borderBottom:
                           index === songs.length - 1
@@ -408,6 +408,14 @@ export default function ArtistMusicUploader({
 
                       <div className="text-[var(--text-secondary)]">
                         {song.bpm == null ? "—" : song.bpm}
+                      </div>
+
+                      <div className="flex justify-end">
+                        <span
+                          className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
+                        >
+                          {formatStatus(song.status)}
+                        </span>
                       </div>
 
                       <div className="flex flex-wrap justify-end gap-2">
@@ -469,14 +477,6 @@ export default function ArtistMusicUploader({
                             {changingCatalogue ? "Restoring..." : "Restore"}
                           </button>
                         ) : null}
-                      </div>
-
-                      <div className="flex justify-end">
-                        <span
-                          className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
-                        >
-                          {formatStatus(song.status)}
-                        </span>
                       </div>
                     </div>
                   );
