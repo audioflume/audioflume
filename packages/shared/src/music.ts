@@ -24,6 +24,8 @@ export type FilmwaveEditPoints = {
   ranges?: FilmwaveEditPointRange[];
 };
 
+export type FilmwaveSongLicenseType = "standard" | "premium";
+
 export type FilmwaveSong = {
   id: string;
   title: string;
@@ -47,6 +49,7 @@ export type FilmwaveSong = {
   vocals: string[];
   instrumental: boolean;
   aiGenerated?: boolean;
+  licenseType?: FilmwaveSongLicenseType;
   editPoints: string;
   downloadCount: number;
   sizeBytes?: number;
@@ -76,6 +79,7 @@ export type FilmwaveSongApiItem = {
   vocals?: string[] | null;
   instrumental?: boolean | null;
   aiGenerated?: boolean | null;
+  licenseType?: FilmwaveSongLicenseType | null;
   editPoints?: string | null;
   downloadCount?: number | string | null;
   sizeBytes?: number | string | null;
