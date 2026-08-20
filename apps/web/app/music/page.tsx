@@ -49,8 +49,31 @@ const VOCAL_FILTER_OPTIONS = [
   INSTRUMENTAL_VOCAL_FILTER_OPTION,
   ...VOCALS_OPTIONS,
 ];
+const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
+const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
+const LICENSE_FILTER_VALUES = ["standard", "premium"] as const;
 
 type MusicSortMode = "recent" | "popular";
+type LicenseFilterValue = (typeof LICENSE_FILTER_VALUES)[number];
+
+function getStoredLicenseFilters(): LicenseFilterValue[] {
+  if (typeof window === "undefined") return [];
+
+  try {
+    const stored = window.localStorage.getItem(LICENSE_FILTER_STORAGE_KEY);
+    if (!stored) return [];
+
+    const parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) return [];
+
+    return [...new Set(parsed)].filter(
+      (value): value is LicenseFilterValue =>
+        value === "standard" || value === "premium",
+    );
+  } catch {
+    return [];
+  }
+}
 
 function shuffleIds(ids: string[]) {
   const nextIds = [...ids];
@@ -144,8 +167,23 @@ export default function MusicPage() {
   const [sortMode, setSortMode] = useState<MusicSortMode>("recent");
   const [shuffleActive, setShuffleActive] = useState(false);
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[]>([]);
+  const [selectedLicenseFilters, setSelectedLicenseFilters] =
+    useState<LicenseFilterValue[]>([]);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    function syncLicenseFilters() {
+      setSelectedLicenseFilters(getStoredLicenseFilters());
+    }
+
+    syncLicenseFilters();
+    window.addEventListener(LICENSE_FILTER_CHANGE_EVENT, syncLicenseFilters);
+
+    return () => {
+      window.removeEventListener(LICENSE_FILTER_CHANGE_EVENT, syncLicenseFilters);
+    };
+  }, []);
 
   const search = filters.search;
   const selectedMoods = filters.selectedMoods;
@@ -297,7 +335,8 @@ export default function MusicPage() {
     instrumental ||
     bpmValue !== null ||
     keyValue !== null ||
-    selectedPlaylist !== null;
+    selectedPlaylist !== null ||
+    selectedLicenseFilters.length > 0;
 
   const activeFilterCount =
     selectedMoods.length +
@@ -308,9 +347,22 @@ export default function MusicPage() {
     selectedBuilds.length +
     selectedDurations.length +
     selectedEditPoints.length +
+    selectedLicenseFilters.length +
     (bpmValue !== null ? 1 : 0) +
     (keyValue !== null ? 1 : 0) +
     (selectedPlaylist !== null ? 1 : 0);
+
+  function clearLicenseFilters() {
+    setSelectedLicenseFilters([]);
+
+    try {
+      window.localStorage.removeItem(LICENSE_FILTER_STORAGE_KEY);
+    } catch {
+      // Ignore storage failures; local state is already cleared.
+    }
+
+    window.dispatchEvent(new Event(LICENSE_FILTER_CHANGE_EVENT));
+  }
 
   function clearAllFilters() {
     setFilters((current) => ({
@@ -328,6 +380,7 @@ export default function MusicPage() {
       keyValue: null,
       selectedPlaylist: null,
     }));
+    clearLicenseFilters();
   }
 
   const searchPlaceholder = getMusicLibrarySearchPlaceholder(
@@ -464,7 +517,17 @@ export default function MusicPage() {
         })
       : songs;
 
-    return filterMusicLibrarySongs(playlistSongs, {
+    const licenseSongs =
+      selectedLicenseFilters.length === 0 || selectedLicenseFilters.length === 2
+        ? playlistSongs
+        : playlistSongs.filter((song) => {
+            const licenseType: LicenseFilterValue = song.artistId
+              ? "premium"
+              : "standard";
+            return selectedLicenseFilters.includes(licenseType);
+          });
+
+    return filterMusicLibrarySongs(licenseSongs, {
       search,
       selectedMoods,
       selectedGenres,
@@ -489,6 +552,7 @@ export default function MusicPage() {
     selectedEditPoints,
     selectedGenres,
     selectedInstruments,
+    selectedLicenseFilters,
     selectedMoods,
     selectedPlaylistId,
     selectedPlaylistSongIds,
@@ -777,7 +841,6 @@ export default function MusicPage() {
               onClose={() => setFiltersOpen(false)}
             />
           </MusicLibraryToolbar>
-
           <MusicQuickChips>
             {availableFilterOptions.quickFilters.map((filter) => {
               const isActive = selectedGenres.includes(filter);
