@@ -6,6 +6,11 @@ import {
 } from "@/lib/artistPermissions";
 import { processAudioForStreaming } from "@/lib/audioProcessing";
 import { deleteFilesFromR2, uploadFileToR2 } from "@/lib/r2";
+import {
+  getR2KeyFromSongUrl,
+  songStatusUsesPendingRevision,
+  upsertSongAudioRevision,
+} from "@/lib/songPendingRevisions";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -67,17 +72,6 @@ function cleanWaveformPeaks(value: FormDataEntryValue | null) {
   }
 }
 
-function getR2KeyFromUrl(value: unknown) {
-  if (typeof value !== "string" || !value.trim()) return null;
-
-  try {
-    const url = new URL(value);
-    return decodeURIComponent(url.pathname.replace(/^\/+/, ""));
-  } catch {
-    return null;
-  }
-}
-
 async function requirePrimarySong(artistId: string, songId: string) {
   const { data, error } = await supabaseServer
     .from("song_artists")
@@ -130,7 +124,7 @@ export async function POST(request: Request, context: RouteContext) {
 
   try {
     const { id, songId } = await context.params;
-    await requireArtistPermission(id, "catalog:edit");
+    const access = await requireArtistPermission(id, "catalog:edit");
 
     if (!(await requirePrimarySong(id, songId))) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
@@ -167,6 +161,8 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     const currentSong = songResult.data;
+    const usesPendingRevision = songStatusUsesPendingRevision(currentSong.status);
+
     if (currentSong.status === "processing" || currentSong.status === "submitted") {
       return NextResponse.json(
         { error: "Audio cannot be replaced while this track is processing or under review" },
@@ -179,7 +175,7 @@ export async function POST(request: Request, context: RouteContext) {
         { status: 409 },
       );
     }
-    if (await isInPublishedRelease(songId)) {
+    if (!usesPendingRevision && (await isInPublishedRelease(songId))) {
       return NextResponse.json(
         { error: "Unpublish releases containing this track before replacing its audio" },
         { status: 409 },
@@ -220,10 +216,43 @@ export async function POST(request: Request, context: RouteContext) {
       ...streamingAssets.hlsAssetKeys,
     );
 
-    const resetToDraft =
-      currentSong.status === "published" ||
-      currentSong.status === "approved" ||
-      currentSong.status === "rejected";
+    if (usesPendingRevision) {
+      const pendingAudio = await upsertSongAudioRevision({
+        songId,
+        userId: access.userId,
+        audioUrl,
+        playbackUrl: streamingAssets.playbackUrl,
+        hlsUrl: streamingAssets.hlsUrl,
+        waveformPeaks,
+        duration,
+        sizeBytes: file.size,
+      });
+
+      uploadedKeys = [];
+
+      const replacedPendingKeys = [
+        getR2KeyFromSongUrl(pendingAudio.previousAudioUrl),
+        getR2KeyFromSongUrl(pendingAudio.previousPlaybackUrl),
+        getR2KeyFromSongUrl(pendingAudio.previousHlsUrl),
+      ].filter((key): key is string => Boolean(key));
+
+      if (replacedPendingKeys.length > 0) {
+        try {
+          await deleteFilesFromR2(replacedPendingKeys);
+        } catch (error) {
+          console.error("Failed to remove previous pending audio assets:", error);
+        }
+      }
+
+      return NextResponse.json({
+        song: currentSong,
+        revision_pending: true,
+        revision_status: pendingAudio.revision.status,
+        reset_for_review: false,
+      });
+    }
+
+    const resetToDraft = currentSong.status === "rejected";
     const nextStatus = resetToDraft ? "draft" : currentSong.status;
 
     const { data: updatedSong, error: updateError } = await supabaseServer
@@ -248,10 +277,12 @@ export async function POST(request: Request, context: RouteContext) {
       throw updateError;
     }
 
+    uploadedKeys = [];
+
     const oldKeys = [
-      getR2KeyFromUrl(currentSong.audio_url),
-      getR2KeyFromUrl(currentSong.playback_url),
-      getR2KeyFromUrl(currentSong.hls_url),
+      getR2KeyFromSongUrl(currentSong.audio_url),
+      getR2KeyFromSongUrl(currentSong.playback_url),
+      getR2KeyFromSongUrl(currentSong.hls_url),
     ].filter((key): key is string => Boolean(key));
 
     if (oldKeys.length > 0) {
@@ -265,6 +296,7 @@ export async function POST(request: Request, context: RouteContext) {
     return NextResponse.json({
       song: updatedSong,
       reset_for_review: resetToDraft,
+      revision_pending: false,
     });
   } catch (error) {
     if (uploadedKeys.length > 0) {
