@@ -23,9 +23,9 @@ import {
   PlaylistManagerStaticCard,
   sortPlaylistNewestFirst,
 } from "@/components/admin/AdminPlaylistManagerShared";
+import { BackendButton } from "@/components/backend/BackendControls";
 import Toast from "@/components/Toast";
 import PlusIcon from "@/components/icons/PlusIcon";
-import { secondaryPillButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import {
   CURATED_PLAYLIST_SHELF_LABELS,
@@ -298,15 +298,14 @@ export default function AdminPlaylistLibraryView({
                   collapsed={shelfCollapsed}
                   onToggle={() => toggleSection(shelfKey)}
                   actions={
-                    <button
+                    <BackendButton
                       type="button"
                       onClick={() => setPickerShelf(shelfKey)}
-                      className={secondaryPillButtonClass}
                       disabled={shelvesLoading}
                     >
                       <PlusIcon size={12} />
                       <span>Add</span>
-                    </button>
+                    </BackendButton>
                   }
                 >
                   {items.length === 0 ? (
