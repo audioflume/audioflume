@@ -7,7 +7,6 @@ import DownloadArrowIcon from "@/components/icons/DownloadArrowIcon";
 import FunnelIcon from "@/components/icons/FunnelIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import UserIcon from "@/components/icons/UserIcon";
-import { pillButtonClass } from "@/components/uiClasses";
 import { usePlayer } from "@/context/PlayerContext";
 
 type RangeKey = "day" | "week" | "month" | "year" | "all";
@@ -41,6 +40,9 @@ type Dataset = {
   topGenres: { label: string; value: string }[];
   topSearchTerms: { label: string; value: string }[];
 };
+
+const RANGE_BUTTON_CLASS =
+  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-full px-3 text-xs font-normal transition";
 
 const RANGE_OPTIONS: { key: RangeKey; label: string }[] = [
   { key: "day", label: "Day" },
@@ -587,7 +589,7 @@ export default function AdminEngagementPage() {
                 key={option.key}
                 type="button"
                 onClick={() => setRange(option.key)}
-                className={`${pillButtonClass} h-7 rounded-full px-3 ${
+                className={`${RANGE_BUTTON_CLASS} ${
                   active
                     ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
                     : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
