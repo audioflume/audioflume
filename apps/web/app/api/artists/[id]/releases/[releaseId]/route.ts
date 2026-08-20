@@ -150,6 +150,21 @@ export async function PATCH(request: Request, context: RouteContext) {
         );
       }
 
+      const { data: conflictingReleaseLinks, error: conflictingReleaseLinksError } =
+        await supabaseServer
+          .from("artist_release_songs")
+          .select("song_id, release_id")
+          .in("song_id", songIds)
+          .neq("release_id", releaseId);
+
+      if (conflictingReleaseLinksError) throw conflictingReleaseLinksError;
+      if ((conflictingReleaseLinks ?? []).length > 0) {
+        return NextResponse.json(
+          { error: "A track can only belong to one release" },
+          { status: 409 },
+        );
+      }
+
       const { data: songs, error: songsError } = await supabaseServer
         .from("songs")
         .select("id, status")
