@@ -178,6 +178,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     useState<ArtistDashboardSection>("overview");
   const [sectionReady, setSectionReady] = useState(false);
   const [sectionViewVersion, setSectionViewVersion] = useState(0);
+  const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
 
   useEffect(() => {
     if (
@@ -236,6 +237,41 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
       dashboardProfiles[0],
     [activeArtistId, dashboardProfiles],
   );
+
+  useEffect(() => {
+    if (!sectionReady || !activeArtist?.id) {
+      setNotificationUnreadCount(0);
+      return;
+    }
+
+    let cancelled = false;
+
+    async function loadNotificationCount() {
+      try {
+        const response = await fetch(
+          `/api/artists/${activeArtist.id}/notifications`,
+          { cache: "no-store" },
+        );
+        const payload = (await response.json().catch(() => null)) as
+          | { unread_count?: number }
+          | null;
+
+        if (!response.ok || cancelled) return;
+
+        setNotificationUnreadCount(
+          typeof payload?.unread_count === "number" ? payload.unread_count : 0,
+        );
+      } catch {
+        if (!cancelled) setNotificationUnreadCount(0);
+      }
+    }
+
+    void loadNotificationCount();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [activeArtist?.id, activeSection, sectionReady]);
 
   const activeSectionLabel =
     NAV_ITEMS.find((item) => item.section === activeSection)?.label ?? "Artist";
@@ -395,6 +431,17 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                     strokeLinejoin="round"
                   />
                 </svg>
+              ) : null}
+
+              {notificationUnreadCount > 0 ? (
+                <span
+                  className="absolute -right-2 -top-2 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] font-medium leading-none text-[var(--danger-contrast)] ring-2 ring-[var(--bg-primary)]"
+                  aria-label={`${notificationUnreadCount} unread ${
+                    notificationUnreadCount === 1 ? "notification" : "notifications"
+                  }`}
+                >
+                  {notificationUnreadCount > 99 ? "99+" : notificationUnreadCount}
+                </span>
               ) : null}
             </button>
 
@@ -598,6 +645,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             <ArtistNotifications
               key={`${activeArtist.id}-notifications-${sectionViewVersion}`}
               artistId={activeArtist.id}
+              onUnreadCountChange={setNotificationUnreadCount}
             />
           ) : activeSection === "agreements" ? (
             <ArtistAgreements
