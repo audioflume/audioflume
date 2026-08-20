@@ -7,6 +7,10 @@ import {
   requireArtistPermission,
 } from "@/lib/artistPermissions";
 import { r2Client } from "@/lib/r2";
+import {
+  songStatusUsesPendingRevision,
+  upsertSongFileMetadataRevision,
+} from "@/lib/songPendingRevisions";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -38,7 +42,7 @@ function getPublicUrl() {
 export async function POST(request: Request, context: RouteContext) {
   try {
     const { id, songId } = await context.params;
-    await requireArtistPermission(id, "catalog:edit");
+    const access = await requireArtistPermission(id, "catalog:edit");
 
     const { data: songLink, error: linkError } = await supabaseServer
       .from("song_artists")
@@ -63,9 +67,15 @@ export async function POST(request: Request, context: RouteContext) {
     if (!song) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
-    if (song.status !== "draft" && song.status !== "changes_requested") {
+
+    const usesPendingRevision = songStatusUsesPendingRevision(song.status);
+    if (
+      song.status !== "draft" &&
+      song.status !== "changes_requested" &&
+      !usesPendingRevision
+    ) {
       return NextResponse.json(
-        { error: "Only draft tracks or tracks with requested changes can be edited" },
+        { error: "This track cannot be edited from its current status" },
         { status: 409 },
       );
     }
@@ -109,6 +119,20 @@ export async function POST(request: Request, context: RouteContext) {
     );
 
     const imageUrl = `${getPublicUrl()}/${key}`;
+
+    if (usesPendingRevision) {
+      await upsertSongFileMetadataRevision({
+        songId,
+        userId: access.userId,
+        metadataPatch: { cover_url: imageUrl },
+      });
+
+      return NextResponse.json({
+        song: { id: songId, cover_url: imageUrl },
+        revision_pending: true,
+      });
+    }
+
     const { data: updatedSong, error: updateError } = await supabaseServer
       .from("songs")
       .update({ cover_url: imageUrl })
@@ -121,7 +145,7 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
 
-    return NextResponse.json({ song: updatedSong });
+    return NextResponse.json({ song: updatedSong, revision_pending: false });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
       return NextResponse.json(
