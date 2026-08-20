@@ -350,6 +350,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item-playlists {
 main > section:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all {
   order: 1000 !important;
   display: inline-flex !important;
+  flex-shrink: 0 !important;
   align-items: center !important;
   justify-content: center !important;
   align-self: flex-start !important;
