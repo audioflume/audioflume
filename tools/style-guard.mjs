@@ -39,6 +39,10 @@ const headerSearchRuntimeSelectors = [
 
 const backendCssOwner = "apps/web/components/backend/BackendUI.css";
 const backendComponentDirectory = "apps/web/components/backend/";
+const adminBackendDirectories = [
+  "apps/web/app/admin/",
+  "apps/web/components/admin/",
+];
 const migratedBackendFiles = new Set([
   "apps/web/app/admin/engagement/page.tsx",
   "apps/web/app/admin/playlist-manager/discover/[playlistId]/edit/page.tsx",
@@ -68,13 +72,15 @@ const legacyBackendUploadNames = [
   "AdminSongEditUploadStateAdapter",
   "AdminSongUploadResetSync",
 ];
-const backendFrontendBoundaryPatterns = [
-  'from "@filmwave/shared"',
-  "from '@filmwave/shared'",
+const publicPresentationBoundaryPatterns = [
   'from "@/components/uiClasses"',
   "from '@/components/uiClasses'",
   'from "@/components/Waveform"',
   "from '@/components/Waveform'",
+];
+const sharedPresentationBoundaryPatterns = [
+  'from "@filmwave/shared"',
+  "from '@filmwave/shared'",
 ];
 
 const errors = [];
@@ -99,6 +105,10 @@ function walk(directory, files = []) {
 
 function containsAny(source, patterns) {
   return patterns.some((pattern) => source.includes(pattern));
+}
+
+function isAdminBackendFile(rel) {
+  return adminBackendDirectories.some((directory) => rel.startsWith(directory));
 }
 
 for (const absolutePath of walk(repoRoot)) {
@@ -146,11 +156,20 @@ for (const absolutePath of walk(repoRoot)) {
   }
 
   if (
-    (rel.startsWith(backendComponentDirectory) || migratedBackendFiles.has(rel)) &&
-    containsAny(source, backendFrontendBoundaryPatterns)
+    (rel.startsWith(backendComponentDirectory) || isAdminBackendFile(rel)) &&
+    containsAny(source, publicPresentationBoundaryPatterns)
   ) {
     errors.push(
-      `${rel}: backend component imports a frontend/shared presentation helper.`,
+      `${rel}: backend component imports a frontend presentation helper.`,
+    );
+  }
+
+  if (
+    (rel.startsWith(backendComponentDirectory) || migratedBackendFiles.has(rel)) &&
+    containsAny(source, sharedPresentationBoundaryPatterns)
+  ) {
+    errors.push(
+      `${rel}: migrated backend component imports shared presentation code.`,
     );
   }
 
