@@ -51,10 +51,6 @@ function getNotificationColor(kind: string) {
     return "var(--status-error)";
   }
 
-  if (kind.includes("changes")) {
-    return "var(--status-warning)";
-  }
-
   if (kind.includes("approved") || kind.includes("published")) {
     return "var(--status-success)";
   }
