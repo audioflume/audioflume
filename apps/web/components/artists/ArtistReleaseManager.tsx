@@ -19,6 +19,9 @@ import { CSS } from "@dnd-kit/utilities";
 
 import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
+import ArtistTrackOrderRow, {
+  type ArtistTrackOrderSong,
+} from "@/components/artists/ArtistTrackOrderRow";
 import BackendArtworkUpload from "@/components/backend/BackendArtworkUpload";
 import {
   BackendInput,
@@ -28,7 +31,9 @@ import {
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/BackendRow";
 import PlusIcon from "@/components/icons/PlusIcon";
+import { usePlayer } from "@/context/PlayerContext";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
+import type { Song } from "@/lib/types";
 
 type ReleaseType = "single" | "ep" | "album";
 
@@ -44,14 +49,7 @@ type ArtistRelease = {
   track_ids: string[];
 };
 
-type ReleaseSong = {
-  id: string;
-  title: string;
-  status: string;
-  duration: number;
-  cover_url: string | null;
-  created_at: string;
-};
+type ReleaseSong = ArtistTrackOrderSong;
 
 type ReleasesResponse = {
   releases?: ArtistRelease[];
@@ -100,13 +98,6 @@ function releaseYearToDate(value: string) {
   if (!value) return null;
   if (!/^\d{4}$/.test(value)) return undefined;
   return `${value}-01-01`;
-}
-
-function formatDuration(value: number) {
-  if (!Number.isFinite(value) || value <= 0) return "—";
-  const minutes = Math.floor(value / 60);
-  const seconds = Math.round(value % 60);
-  return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
 function ReleaseStatusBadge({ status }: { status: string }) {
@@ -182,77 +173,6 @@ function SortableReleaseRow({
           {canManage ? "Edit" : "View"}
         </button>
       </div>
-    </div>
-  );
-}
-
-function SortableTrackRow({
-  song,
-  index,
-  canManage,
-  disabled,
-  onRemove,
-}: {
-  song: ReleaseSong;
-  index: number;
-  canManage: boolean;
-  disabled: boolean;
-  onRemove: () => void;
-}) {
-  const {
-    attributes,
-    listeners,
-    setNodeRef,
-    transform,
-    transition,
-    isDragging,
-  } = useSortable({ id: song.id, disabled: !canManage || disabled });
-
-  return (
-    <div
-      ref={setNodeRef}
-      style={{
-        transform: CSS.Transform.toString(transform),
-        transition,
-        opacity: isDragging ? 0.45 : 1,
-        zIndex: isDragging ? 2 : "auto",
-      }}
-      className={`grid gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
-        canManage
-          ? "sm:grid-cols-[28px_42px_44px_minmax(0,1fr)_80px_110px_auto]"
-          : "sm:grid-cols-[42px_44px_minmax(0,1fr)_80px_110px]"
-      }`}
-    >
-      {canManage ? (
-        <BackendDragHandle
-          disabled={disabled}
-          aria-label={`Drag ${song.title} to reorder`}
-          {...attributes}
-          {...listeners}
-        />
-      ) : null}
-
-      <div className="text-xs font-medium text-[var(--text-muted)]">{index + 1}</div>
-      <BackendMediaThumbnail src={song.cover_url} size={40} className="rounded-[6px]" />
-      <BackendRowTitle>{song.title}</BackendRowTitle>
-      <div className="text-xs text-[var(--text-muted)]">
-        {formatDuration(Number(song.duration))}
-      </div>
-      <div className="text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
-        {formatStatus(song.status)}
-      </div>
-      {canManage ? (
-        <div className="flex justify-end">
-          <button
-            type="button"
-            onClick={onRemove}
-            disabled={disabled}
-            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
-          >
-            Remove
-          </button>
-        </div>
-      ) : null}
     </div>
   );
 }
@@ -492,6 +412,7 @@ function CreateRelease({
   const trackSensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
+  const { setQueue } = usePlayer();
   const [title, setTitle] = useState("");
   const [releaseType, setReleaseType] = useState<ReleaseType>("single");
   const [releaseYear, setReleaseYear] = useState("");
@@ -508,6 +429,14 @@ function CreateRelease({
   const orderedTracks = trackIds
     .map((songId) => songsById.get(songId))
     .filter((song): song is ReleaseSong => Boolean(song));
+
+  useEffect(() => {
+    setQueue(
+      trackIds
+        .map((songId) => songsById.get(songId)?.player_song)
+        .filter((song): song is Song => Boolean(song?.audioUrl)),
+    );
+  }, [setQueue, trackIds, songsById]);
 
   useEffect(() => {
     if (!artworkFile) {
@@ -755,11 +684,10 @@ function CreateRelease({
                   No tracks added yet.
                 </div>
               ) : (
-                orderedTracks.map((song, index) => (
-                  <SortableTrackRow
+                orderedTracks.map((song) => (
+                  <ArtistTrackOrderRow
                     key={song.id}
                     song={song}
-                    index={index}
                     canManage={canManage}
                     disabled={saving}
                     onRemove={() => removeTrack(song.id)}
@@ -807,6 +735,7 @@ function ReleaseEditor({
   const trackSensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
+  const { setQueue } = usePlayer();
   const [title, setTitle] = useState(release.title);
   const [releaseType, setReleaseType] = useState<ReleaseType>(release.release_type);
   const [releaseYear, setReleaseYear] = useState(getReleaseYear(release.release_date));
@@ -827,6 +756,14 @@ function ReleaseEditor({
   const orderedTracks = trackIds
     .map((songId) => songsById.get(songId))
     .filter((song): song is ReleaseSong => Boolean(song));
+
+  useEffect(() => {
+    setQueue(
+      trackIds
+        .map((songId) => songsById.get(songId)?.player_song)
+        .filter((song): song is Song => Boolean(song?.audioUrl)),
+    );
+  }, [setQueue, trackIds, songsById]);
 
   useEffect(() => {
     if (!artworkFile) {
@@ -1182,11 +1119,10 @@ function ReleaseEditor({
                   No tracks added yet.
                 </div>
               ) : (
-                orderedTracks.map((song, index) => (
-                  <SortableTrackRow
+                orderedTracks.map((song) => (
+                  <ArtistTrackOrderRow
                     key={song.id}
                     song={song}
-                    index={index}
                     canManage={canManage}
                     disabled={trackOrderDisabled}
                     onRemove={() => removeTrack(song.id)}
