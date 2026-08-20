@@ -19,7 +19,7 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
   Display: "display",
 };
 
-const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key"]);
+const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key", "display"]);
 
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
@@ -258,7 +258,12 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
     if (liveCount) count.dataset.countValue = liveCount;
 
     const displayCount = count.dataset.countValue ?? liveCount;
-    const isDotOnly = sectionId ? DOT_ONLY_COUNT_SECTION_IDS.has(sectionId) : false;
+    const panel = railItem.closest<HTMLElement>(".fw-filter-panel-wrap");
+    const useNumericDisplayCount =
+      sectionId === "display" && panel?.dataset.sideFilterDisplayCountMode === "numeric";
+    const isDotOnly = sectionId
+      ? DOT_ONLY_COUNT_SECTION_IDS.has(sectionId) && !useNumericDisplayCount
+      : false;
 
     count.classList.toggle("is-dot-only", isDotOnly);
 
