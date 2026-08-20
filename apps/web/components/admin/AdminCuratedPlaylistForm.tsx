@@ -21,7 +21,10 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import Toast from "@/components/Toast";
-import { BackendCheckbox } from "@/components/backend/BackendControls";
+import {
+  BackendButton,
+  BackendCheckbox,
+} from "@/components/backend/BackendControls";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import AdminBrowseFilterSubcategoryGroup from "@/components/admin/AdminBrowseFilterSubcategoryGroup";
@@ -37,10 +40,6 @@ import type {
   CuratedBrowseAssignment,
   CuratedBrowseTaxonomy,
 } from "@/lib/curatedBrowseTaxonomy";
-import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-} from "@/components/uiClasses";
 
 type Props = {
   mode: "create" | "edit";
@@ -538,9 +537,9 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   ))}
 
               <div className="admin-playlist-actions flex flex-wrap gap-3 pt-2">
-                <button
+                <BackendButton
                   type="submit"
-                  className={primaryPillButtonClass}
+                  variant="primary"
                   disabled={saving}
                 >
                   {saving
@@ -548,14 +547,13 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                     : mode === "edit"
                       ? "Save changes"
                       : "Create playlist"}
-                </button>
-                <button
+                </BackendButton>
+                <BackendButton
                   type="button"
-                  className={secondaryPillButtonClass}
                   onClick={() => router.push(managerHref)}
                 >
                   Back to manager
-                </button>
+                </BackendButton>
               </div>
             </>
           )}
