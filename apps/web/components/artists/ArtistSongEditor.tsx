@@ -7,24 +7,17 @@ import {
   useMemo,
   useState,
 } from "react";
+import ArtistSongTagSections from "@/components/artists/ArtistSongTagSections";
 import {
   BackendCheckbox,
-  BackendChoiceButton,
   BackendInput,
   BackendSelect,
 } from "@/components/backend/BackendControls";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
+import WarningIcon from "@/components/icons/WarningIcon";
 
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
-import {
-  BUILD_OPTIONS,
-  GENRE_OPTIONS,
-  INSTRUMENT_OPTIONS,
-  MOOD_OPTIONS,
-  REGION_OPTIONS,
-  VOCALS_OPTIONS,
-} from "@/lib/constants";
 
 type Credit = {
   credit_name: string;
@@ -95,6 +88,8 @@ type ArtistSongEditorProps = {
   songId: string;
   onClose: () => void;
   onSaved: (song: { id: string; title: string }) => void;
+  beforeContent?: ReactNode;
+  afterContent?: ReactNode;
 };
 
 const KEY_OPTIONS = [
@@ -238,43 +233,6 @@ function CheckboxInput({
   );
 }
 
-function MultiSelectPills({
-  options,
-  selected,
-  onChange,
-  disabled,
-}: {
-  options: readonly string[];
-  selected: string[];
-  onChange: (selected: string[]) => void;
-  disabled: boolean;
-}) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((option) => {
-        const active = selected.includes(option);
-        return (
-          <BackendChoiceButton
-            key={option}
-            type="button"
-            disabled={disabled}
-            active={active}
-            onClick={() =>
-              onChange(
-                active
-                  ? selected.filter((item) => item !== option)
-                  : [...selected, option],
-              )
-            }
-          >
-            {option}
-          </BackendChoiceButton>
-        );
-      })}
-    </div>
-  );
-}
-
 function emptyCredit(): Credit {
   return { credit_name: "", credit_role: "" };
 }
@@ -294,6 +252,8 @@ export default function ArtistSongEditor({
   songId,
   onClose,
   onSaved,
+  beforeContent,
+  afterContent,
 }: ArtistSongEditorProps) {
   const canEditMetadata = artist.permissions.includes("catalog:edit");
   const canEditRights = artist.permissions.includes("rights:edit");
@@ -303,6 +263,7 @@ export default function ArtistSongEditor({
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [warningsOpen, setWarningsOpen] = useState(false);
   const [reviewFeedback, setReviewFeedback] = useState<ReviewFeedback | null>(
     null,
   );
@@ -333,6 +294,7 @@ export default function ArtistSongEditor({
     setLoadState("loading");
     setError("");
     setMessage("");
+    setWarningsOpen(false);
     setReviewFeedback(null);
 
     async function loadDetails() {
@@ -432,6 +394,43 @@ export default function ArtistSongEditor({
       publishing: Math.round(publishing * 100) / 100,
     };
   }, [rightsHolders]);
+
+  const editWarnings = useMemo(() => {
+    const warnings: string[] = [];
+    if (!title.trim()) warnings.push("Song title missing");
+    if (!bpm.trim()) warnings.push("BPM missing");
+    if (!keyValue.trim()) warnings.push("Key missing");
+    if (!duration) warnings.push("Duration missing");
+    if (genres.length === 0) warnings.push("Genre tags empty");
+    if (moods.length === 0) warnings.push("Mood tags empty");
+    if (instruments.length === 0) warnings.push("Instrument tags empty");
+    if (builds.length === 0) warnings.push("Build tags empty");
+    if (!instrumental && vocals.length === 0) warnings.push("Vocals tags empty");
+    if (
+      canEditRights &&
+      (rightsHolders.length === 0 ||
+        Math.abs(ownershipTotals.master - 100) > 0.01 ||
+        Math.abs(ownershipTotals.publishing - 100) > 0.01)
+    ) {
+      warnings.push("Master and publishing ownership must each total 100%");
+    }
+    return warnings;
+  }, [
+    title,
+    bpm,
+    keyValue,
+    duration,
+    genres,
+    moods,
+    instruments,
+    builds,
+    vocals,
+    instrumental,
+    canEditRights,
+    rightsHolders.length,
+    ownershipTotals.master,
+    ownershipTotals.publishing,
+  ]);
 
   function updateCredit(index: number, patch: Partial<Credit>) {
     setCredits((current) =>
@@ -543,405 +542,470 @@ export default function ArtistSongEditor({
 
   return (
     <div>
-      <div className="mb-4 flex min-h-10 flex-wrap items-center justify-end gap-3">
-        <button
-          type="button"
-          onClick={onClose}
-          disabled={saving}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
-        >
-          Back to Music
-        </button>
-      </div>
+      <form
+        onSubmit={handleSubmit}
+        className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
+      >
+        <div className="grid min-w-0 gap-4">
+          {beforeContent}
 
-      <form onSubmit={handleSubmit} className="grid gap-4">
-        {reviewFeedback?.notes ? (
-          <section className="rounded-[10px] border border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
-            <div className="text-xs font-medium text-[var(--status-warning,var(--text-primary))]">
-              Review feedback
+          {reviewFeedback?.notes ? (
+            <section className="rounded-[10px] border border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
+              <div className="text-xs font-medium text-[var(--status-warning,var(--text-primary))]">
+                Review feedback
+              </div>
+              <p className="mt-2 text-xs leading-5 text-[var(--text-primary)]">
+                {reviewFeedback.notes}
+              </p>
+            </section>
+          ) : null}
+
+          <section className="filmwave-backend-section">
+            <div className="filmwave-backend-section-header">
+              <h2 className="filmwave-backend-section-title">Song Info</h2>
             </div>
-            <p className="mt-2 text-xs leading-5 text-[var(--text-primary)]">
-              {reviewFeedback.notes}
-            </p>
-          </section>
-        ) : null}
 
-        <section className="filmwave-backend-section">
-          <div className="filmwave-backend-section-header">
-            <h2 className="filmwave-backend-section-title">Song Info</h2>
-          </div>
-
-          <div className="grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
-            <BackendInput
-              aria-label="Song Title"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              maxLength={160}
-              placeholder="Song Title"
-              disabled={metadataDisabled}
-            />
-            <BackendInput
-              aria-label="Artist"
-              value={artist.name}
-              placeholder="Artist"
-              readOnly
-            />
-            <NumericInput
-              value={bpm}
-              onChange={setBpm}
-              placeholder="BPM"
-              disabled={metadataDisabled}
-            />
-            <SelectInput
-              value={keyValue}
-              onChange={setKeyValue}
-              disabled={metadataDisabled}
-            >
-              <option value="">Key</option>
-              {KEY_OPTIONS.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </SelectInput>
-            <BackendInput
-              aria-label="Duration"
-              value={formatDuration(duration)}
-              placeholder="Duration"
-              readOnly
-            />
-            <CheckboxInput
-              checked={instrumental}
-              onChange={setInstrumental}
-              label="Instrumental"
-              disabled={metadataDisabled}
-            />
-            <CheckboxInput
-              checked={explicit}
-              onChange={setExplicit}
-              label="Explicit"
-              disabled={metadataDisabled}
-            />
-          </div>
-        </section>
-
-        <section className="filmwave-backend-section">
-          <div className="filmwave-backend-section-header">
-            <h2 className="filmwave-backend-section-title">Tags</h2>
-          </div>
-          <div className="grid gap-5 px-5 pb-5">
-            {[
-              ["Genre", GENRE_OPTIONS, genres, setGenres],
-              ["Mood", MOOD_OPTIONS, moods, setMoods],
-              ["Region", REGION_OPTIONS, regions, setRegions],
-              ["Instrument", INSTRUMENT_OPTIONS, instruments, setInstruments],
-              ["Build", BUILD_OPTIONS, builds, setBuilds],
-              ["Vocals", VOCALS_OPTIONS, vocals, setVocals],
-            ].map(([label, options, selected, setter]) => (
-              <div key={label as string}>
-                <div className="mb-2 flex items-center justify-between gap-4">
-                  <FieldLabel>{label as string}</FieldLabel>
-                  <span className="text-[11px] text-[var(--text-muted)]">
-                    {(selected as string[]).length} selected
-                  </span>
-                </div>
-                <MultiSelectPills
-                  options={options as readonly string[]}
-                  selected={selected as string[]}
-                  onChange={setter as (value: string[]) => void}
+            <div className="grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
+              <div>
+                <BackendInput
+                  aria-label="Song Title"
+                  value={title}
+                  onChange={(event) => setTitle(event.target.value)}
+                  maxLength={160}
+                  placeholder="Song Title"
                   disabled={metadataDisabled}
                 />
               </div>
-            ))}
-          </div>
-        </section>
-
-        <section className="filmwave-backend-section">
-          <div className="filmwave-backend-section-header">
-            <h2 className="filmwave-backend-section-title">Credits</h2>
-          </div>
-          <div className="grid gap-3 px-5 pb-5">
-            {credits.length === 0 ? (
-              <div className="text-xs text-[var(--text-muted)]">
-                No credits added yet.
+              <div>
+                <BackendInput
+                  aria-label="Artist"
+                  value={artist.name}
+                  placeholder="Artist"
+                  readOnly
+                />
               </div>
-            ) : null}
-            {credits.map((credit, index) => (
-              <div
-                key={index}
-                className="grid gap-3 md:grid-cols-[1fr_1fr_auto]"
-              >
-                <BackendInput
-                  value={credit.credit_name}
-                  onChange={(event) =>
-                    updateCredit(index, { credit_name: event.target.value })
-                  }
-                  placeholder="Name"
+              <div>
+                <NumericInput
+                  value={bpm}
+                  onChange={setBpm}
+                  placeholder="BPM"
                   disabled={metadataDisabled}
                 />
-                <BackendInput
-                  value={credit.credit_role}
-                  onChange={(event) =>
-                    updateCredit(index, { credit_role: event.target.value })
-                  }
-                  placeholder="Role — composer, producer, performer..."
+              </div>
+              <div>
+                <SelectInput
+                  value={keyValue}
+                  onChange={setKeyValue}
                   disabled={metadataDisabled}
-                />
-                <button
-                  type="button"
-                  disabled={metadataDisabled}
-                  onClick={() =>
-                    setCredits((current) =>
-                      current.filter((_, itemIndex) => itemIndex !== index),
-                    )
-                  }
-                  className="filmwave-backend-button filmwave-backend-button-secondary"
                 >
-                  Remove
-                </button>
+                  <option value="">Key</option>
+                  {KEY_OPTIONS.map((option) => (
+                    <option key={option} value={option}>
+                      {option}
+                    </option>
+                  ))}
+                </SelectInput>
               </div>
-            ))}
-            {canEditMetadata ? (
-              <button
-                type="button"
-                disabled={saving}
-                onClick={() =>
-                  setCredits((current) => [...current, emptyCredit()])
-                }
-                className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-1 w-fit"
-              >
-                Add credit
-              </button>
-            ) : null}
-          </div>
-        </section>
-
-        <section className="filmwave-backend-section">
-          <div className="filmwave-backend-section-header">
-            <h2 className="filmwave-backend-section-title">
-              Rights + Ownership
-            </h2>
-          </div>
-
-          <div className="grid gap-5 px-5 pb-5">
-            {!canEditRights ? (
-              <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]">
-                Your artist role can view rights information but cannot edit
-                ownership details.
-              </div>
-            ) : null}
-
-            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
               <div>
-                <FieldLabel>Master Owner</FieldLabel>
                 <BackendInput
-                  value={masterOwner}
-                  onChange={(event) => setMasterOwner(event.target.value)}
-                  disabled={!canEditRights || saving}
+                  aria-label="Duration"
+                  value={formatDuration(duration)}
+                  placeholder="Duration"
+                  readOnly
                 />
               </div>
               <div>
-                <FieldLabel>Publishing Owner</FieldLabel>
-                <BackendInput
-                  value={publishingOwner}
-                  onChange={(event) => setPublishingOwner(event.target.value)}
-                  disabled={!canEditRights || saving}
+                <CheckboxInput
+                  checked={instrumental}
+                  onChange={setInstrumental}
+                  label="Instrumental"
+                  disabled={metadataDisabled}
                 />
               </div>
               <div>
-                <FieldLabel>PRO Affiliation</FieldLabel>
-                <BackendInput
-                  value={proAffiliation}
-                  onChange={(event) => setProAffiliation(event.target.value)}
-                  placeholder="SOCAN, ASCAP, BMI..."
-                  disabled={!canEditRights || saving}
-                />
-              </div>
-              <div>
-                <FieldLabel>Copyright Year</FieldLabel>
-                <BackendInput
-                  type="number"
-                  min={1900}
-                  max={2200}
-                  value={copyrightYear}
-                  onChange={(event) => setCopyrightYear(event.target.value)}
-                  disabled={!canEditRights || saving}
-                />
-              </div>
-              <div>
-                <FieldLabel>ISRC</FieldLabel>
-                <BackendInput
-                  value={isrc}
-                  onChange={(event) => setIsrc(event.target.value)}
-                  disabled={!canEditRights || saving}
-                />
-              </div>
-              <div>
-                <FieldLabel>ISWC</FieldLabel>
-                <BackendInput
-                  value={iswc}
-                  onChange={(event) => setIswc(event.target.value)}
-                  disabled={!canEditRights || saving}
+                <CheckboxInput
+                  checked={explicit}
+                  onChange={setExplicit}
+                  label="Explicit"
+                  disabled={metadataDisabled}
                 />
               </div>
             </div>
+          </section>
 
-            <div>
-              <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                <div>
-                  <FieldLabel>Ownership Splits</FieldLabel>
-                  <div className="text-[11px] text-[var(--text-muted)]">
-                    Master: {ownershipTotals.master}% · Publishing:{" "}
-                    {ownershipTotals.publishing}%
-                  </div>
+          <ArtistSongTagSections
+            genres={genres}
+            onGenresChange={setGenres}
+            moods={moods}
+            onMoodsChange={setMoods}
+            regions={regions}
+            onRegionsChange={setRegions}
+            instruments={instruments}
+            onInstrumentsChange={setInstruments}
+            builds={builds}
+            onBuildsChange={setBuilds}
+            vocals={vocals}
+            onVocalsChange={setVocals}
+            disabled={metadataDisabled}
+          />
+
+          <section className="filmwave-backend-section">
+            <div className="filmwave-backend-section-header">
+              <h2 className="filmwave-backend-section-title">Credits</h2>
+            </div>
+            <div className="grid gap-3 px-5 pb-5">
+              {credits.length === 0 ? (
+                <div className="text-xs text-[var(--text-muted)]">
+                  No credits added yet.
                 </div>
-                {canEditRights ? (
+              ) : null}
+              {credits.map((credit, index) => (
+                <div
+                  key={index}
+                  className="grid gap-3 md:grid-cols-[1fr_1fr_auto]"
+                >
+                  <BackendInput
+                    value={credit.credit_name}
+                    onChange={(event) =>
+                      updateCredit(index, { credit_name: event.target.value })
+                    }
+                    placeholder="Name"
+                    disabled={metadataDisabled}
+                  />
+                  <BackendInput
+                    value={credit.credit_role}
+                    onChange={(event) =>
+                      updateCredit(index, { credit_role: event.target.value })
+                    }
+                    placeholder="Role — composer, producer, performer..."
+                    disabled={metadataDisabled}
+                  />
                   <button
                     type="button"
-                    disabled={saving}
+                    disabled={metadataDisabled}
                     onClick={() =>
-                      setRightsHolders((current) => [
-                        ...current,
-                        emptyHolder(),
-                      ])
+                      setCredits((current) =>
+                        current.filter((_, itemIndex) => itemIndex !== index),
+                      )
                     }
-                    className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                    className="filmwave-backend-button filmwave-backend-button-secondary"
                   >
-                    Add rights holder
+                    Remove
                   </button>
-                ) : null}
-              </div>
-
-              <div className="grid gap-3">
-                {rightsHolders.length === 0 ? (
-                  <div className="text-xs text-[var(--text-muted)]">
-                    No ownership splits added yet.
-                  </div>
-                ) : null}
-                {rightsHolders.map((holder, index) => (
-                  <div
-                    key={index}
-                    className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3"
-                  >
-                    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
-                      <BackendInput
-                        value={holder.holder_name}
-                        onChange={(event) =>
-                          updateHolder(index, {
-                            holder_name: event.target.value,
-                          })
-                        }
-                        placeholder="Rights holder"
-                        disabled={!canEditRights || saving}
-                      />
-                      <SelectInput
-                        value={holder.rights_type}
-                        onChange={(value) =>
-                          updateHolder(index, {
-                            rights_type: value as RightsHolder["rights_type"],
-                          })
-                        }
-                        disabled={!canEditRights || saving}
-                      >
-                        <option value="both">Master + publishing</option>
-                        <option value="master">Master</option>
-                        <option value="publishing">Publishing</option>
-                      </SelectInput>
-                      <BackendInput
-                        type="number"
-                        min={0}
-                        max={100}
-                        step="0.01"
-                        value={holder.ownership_percent}
-                        onChange={(event) =>
-                          updateHolder(index, {
-                            ownership_percent: event.target.value,
-                          })
-                        }
-                        placeholder="%"
-                        disabled={!canEditRights || saving}
-                      />
-                      <BackendInput
-                        value={holder.pro_affiliation}
-                        onChange={(event) =>
-                          updateHolder(index, {
-                            pro_affiliation: event.target.value,
-                          })
-                        }
-                        placeholder="PRO"
-                        disabled={!canEditRights || saving}
-                      />
-                      <BackendInput
-                        value={holder.ipi_cae_number}
-                        onChange={(event) =>
-                          updateHolder(index, {
-                            ipi_cae_number: event.target.value,
-                          })
-                        }
-                        placeholder="IPI / CAE"
-                        disabled={!canEditRights || saving}
-                      />
-                      <button
-                        type="button"
-                        disabled={!canEditRights || saving}
-                        onClick={() =>
-                          setRightsHolders((current) =>
-                            current.filter(
-                              (_, itemIndex) => itemIndex !== index,
-                            ),
-                          )
-                        }
-                        className="filmwave-backend-button filmwave-backend-button-secondary"
-                      >
-                        Remove
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            <div>
-              <FieldLabel>Rights Notes</FieldLabel>
-              <textarea
-                value={rightsNotes}
-                onChange={(event) => setRightsNotes(event.target.value)}
-                rows={4}
-                maxLength={2000}
-                disabled={!canEditRights || saving}
-                className="filmwave-backend-textarea"
-              />
-            </div>
-          </div>
-        </section>
-
-        <section className="filmwave-backend-section">
-          <div className="filmwave-backend-section-header">
-            <h2 className="filmwave-backend-section-title">Actions</h2>
-          </div>
-          <div className="flex flex-wrap items-center justify-between gap-3 px-5 pb-5">
-            <div className="min-h-5 text-xs">
-              {error ? (
-                <span className="text-[var(--status-error)]">{error}</span>
-              ) : message ? (
-                <span className="text-[var(--status-success)]">{message}</span>
-              ) : !canEditMetadata ? (
-                <span className="text-[var(--text-muted)]">
-                  Your artist role has read-only catalogue access.
-                </span>
+                </div>
+              ))}
+              {canEditMetadata ? (
+                <button
+                  type="button"
+                  disabled={saving}
+                  onClick={() =>
+                    setCredits((current) => [...current, emptyCredit()])
+                  }
+                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-1 w-fit"
+                >
+                  Add credit
+                </button>
               ) : null}
             </div>
-            {canEditMetadata ? (
+          </section>
+
+          <section className="filmwave-backend-section">
+            <div className="filmwave-backend-section-header">
+              <h2 className="filmwave-backend-section-title">
+                Rights + Ownership
+              </h2>
+            </div>
+
+            <div className="grid gap-5 px-5 pb-5">
+              {!canEditRights ? (
+                <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]">
+                  Your artist role can view rights information but cannot edit
+                  ownership details.
+                </div>
+              ) : null}
+
+              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+                <div>
+                  <FieldLabel>Master Owner</FieldLabel>
+                  <BackendInput
+                    value={masterOwner}
+                    onChange={(event) => setMasterOwner(event.target.value)}
+                    disabled={!canEditRights || saving}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Publishing Owner</FieldLabel>
+                  <BackendInput
+                    value={publishingOwner}
+                    onChange={(event) => setPublishingOwner(event.target.value)}
+                    disabled={!canEditRights || saving}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>PRO Affiliation</FieldLabel>
+                  <BackendInput
+                    value={proAffiliation}
+                    onChange={(event) => setProAffiliation(event.target.value)}
+                    placeholder="SOCAN, ASCAP, BMI..."
+                    disabled={!canEditRights || saving}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>Copyright Year</FieldLabel>
+                  <BackendInput
+                    type="number"
+                    min={1900}
+                    max={2200}
+                    value={copyrightYear}
+                    onChange={(event) => setCopyrightYear(event.target.value)}
+                    disabled={!canEditRights || saving}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>ISRC</FieldLabel>
+                  <BackendInput
+                    value={isrc}
+                    onChange={(event) => setIsrc(event.target.value)}
+                    disabled={!canEditRights || saving}
+                  />
+                </div>
+                <div>
+                  <FieldLabel>ISWC</FieldLabel>
+                  <BackendInput
+                    value={iswc}
+                    onChange={(event) => setIswc(event.target.value)}
+                    disabled={!canEditRights || saving}
+                  />
+                </div>
+              </div>
+
+              <div>
+                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+                  <div>
+                    <FieldLabel>Ownership Splits</FieldLabel>
+                    <div className="text-[11px] text-[var(--text-muted)]">
+                      Master: {ownershipTotals.master}% · Publishing:{" "}
+                      {ownershipTotals.publishing}%
+                    </div>
+                  </div>
+                  {canEditRights ? (
+                    <button
+                      type="button"
+                      disabled={saving}
+                      onClick={() =>
+                        setRightsHolders((current) => [
+                          ...current,
+                          emptyHolder(),
+                        ])
+                      }
+                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+                    >
+                      Add rights holder
+                    </button>
+                  ) : null}
+                </div>
+
+                <div className="grid gap-3">
+                  {rightsHolders.length === 0 ? (
+                    <div className="text-xs text-[var(--text-muted)]">
+                      No ownership splits added yet.
+                    </div>
+                  ) : null}
+                  {rightsHolders.map((holder, index) => (
+                    <div
+                      key={index}
+                      className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3"
+                    >
+                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
+                        <BackendInput
+                          value={holder.holder_name}
+                          onChange={(event) =>
+                            updateHolder(index, {
+                              holder_name: event.target.value,
+                            })
+                          }
+                          placeholder="Rights holder"
+                          disabled={!canEditRights || saving}
+                        />
+                        <SelectInput
+                          value={holder.rights_type}
+                          onChange={(value) =>
+                            updateHolder(index, {
+                              rights_type: value as RightsHolder["rights_type"],
+                            })
+                          }
+                          disabled={!canEditRights || saving}
+                        >
+                          <option value="both">Master + publishing</option>
+                          <option value="master">Master</option>
+                          <option value="publishing">Publishing</option>
+                        </SelectInput>
+                        <BackendInput
+                          type="number"
+                          min={0}
+                          max={100}
+                          step="0.01"
+                          value={holder.ownership_percent}
+                          onChange={(event) =>
+                            updateHolder(index, {
+                              ownership_percent: event.target.value,
+                            })
+                          }
+                          placeholder="%"
+                          disabled={!canEditRights || saving}
+                        />
+                        <BackendInput
+                          value={holder.pro_affiliation}
+                          onChange={(event) =>
+                            updateHolder(index, {
+                              pro_affiliation: event.target.value,
+                            })
+                          }
+                          placeholder="PRO"
+                          disabled={!canEditRights || saving}
+                        />
+                        <BackendInput
+                          value={holder.ipi_cae_number}
+                          onChange={(event) =>
+                            updateHolder(index, {
+                              ipi_cae_number: event.target.value,
+                            })
+                          }
+                          placeholder="IPI / CAE"
+                          disabled={!canEditRights || saving}
+                        />
+                        <button
+                          type="button"
+                          disabled={!canEditRights || saving}
+                          onClick={() =>
+                            setRightsHolders((current) =>
+                              current.filter(
+                                (_, itemIndex) => itemIndex !== index,
+                              ),
+                            )
+                          }
+                          className="filmwave-backend-button filmwave-backend-button-secondary"
+                        >
+                          Remove
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <FieldLabel>Rights Notes</FieldLabel>
+                <textarea
+                  value={rightsNotes}
+                  onChange={(event) => setRightsNotes(event.target.value)}
+                  rows={4}
+                  maxLength={2000}
+                  disabled={!canEditRights || saving}
+                  className="filmwave-backend-textarea"
+                />
+              </div>
+            </div>
+          </section>
+
+          {afterContent}
+        </div>
+
+        <aside className="grid h-fit gap-4 xl:sticky xl:top-[24px] xl:mt-14">
+          <section className="filmwave-backend-section">
+            <div className="filmwave-backend-section-header">
+              <h2 className="filmwave-backend-section-title">Checklist</h2>
+            </div>
+            <div className="grid gap-2 px-5 pb-5">
+              {editWarnings.length > 0 ? (
+                <>
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                    <div className="flex items-center gap-2 font-medium">
+                      <WarningIcon />
+                      <span>
+                        {editWarnings.length} item{editWarnings.length === 1 ? "" : "s"} need attention
+                      </span>
+                    </div>
+                    <div className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)]">
+                      {editWarnings[0]}
+                      {editWarnings.length > 1 ? ` + ${editWarnings.length - 1} more` : ""}
+                    </div>
+                    {editWarnings.length > 1 ? (
+                      <button
+                        type="button"
+                        onClick={() => setWarningsOpen((current) => !current)}
+                        className="mt-2 text-[11px] font-medium text-[var(--text-secondary)] underline-offset-4 transition hover:text-[var(--text-primary)] hover:underline"
+                      >
+                        {warningsOpen ? "Hide warnings" : "Show warnings"}
+                      </button>
+                    ) : null}
+                  </div>
+                  {warningsOpen && editWarnings.length > 1 ? (
+                    <ul className="grid gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                      {editWarnings.map((warning) => (
+                        <li key={warning}>{warning}</li>
+                      ))}
+                    </ul>
+                  ) : null}
+                </>
+              ) : (
+                <div className="rounded-[7px] bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs font-medium text-[var(--status-success,#48b571)]">
+                  Ready to save
+                </div>
+              )}
+            </div>
+          </section>
+
+          {(message || error) ? (
+            <section className="filmwave-backend-section">
+              <div className="filmwave-backend-section-header">
+                <h2 className="filmwave-backend-section-title">Save Status</h2>
+              </div>
+              <div className="grid gap-3 px-5 pb-5">
+                {error ? (
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                    {error}
+                  </div>
+                ) : null}
+                {message ? (
+                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
+                    {message}
+                  </div>
+                ) : null}
+              </div>
+            </section>
+          ) : null}
+
+          <section className="filmwave-backend-section">
+            <div className="filmwave-backend-section-header">
+              <h2 className="filmwave-backend-section-title">Actions</h2>
+            </div>
+            <div className="grid gap-2 px-5 pb-5">
               <button
-                type="submit"
-                disabled={saving || !title.trim()}
-                className="filmwave-backend-button filmwave-backend-button-primary"
+                type="button"
+                onClick={onClose}
+                disabled={saving}
+                className="filmwave-backend-button filmwave-backend-button-secondary w-full"
               >
-                {saving ? "Saving..." : "Save track details"}
+                Back to Music
               </button>
-            ) : null}
-          </div>
-        </section>
+              {canEditMetadata ? (
+                <button
+                  type="submit"
+                  disabled={saving || !title.trim()}
+                  className="filmwave-backend-button filmwave-backend-button-primary w-full"
+                >
+                  {saving ? "Saving..." : "Save Changes"}
+                </button>
+              ) : null}
+              {!canEditMetadata ? (
+                <div className="text-[11px] leading-5 text-[var(--text-muted)]">
+                  Your artist role has read-only catalogue access.
+                </div>
+              ) : null}
+            </div>
+          </section>
+        </aside>
       </form>
     </div>
   );
