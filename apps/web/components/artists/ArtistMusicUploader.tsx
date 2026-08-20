@@ -1,14 +1,18 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import ArtistSongAudioReplacement from "@/components/artists/ArtistSongAudioReplacement";
 import ArtistSongEditorWithCollaborators from "@/components/artists/ArtistSongEditorWithCollaborators";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import AudioFileIcon from "@/components/icons/AudioFileIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import UploadIcon from "@/components/icons/UploadIcon";
+import { usePlayer } from "@/context/PlayerContext";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
+import type { Song } from "@/lib/types";
 
 type ArtistSongSummary = {
   id: string;
@@ -18,6 +22,7 @@ type ArtistSongSummary = {
   bpm?: number | null;
   key?: string | null;
   created_at: string;
+  player_song?: Song;
 };
 
 type ArtistSongsResponse = {
@@ -78,6 +83,7 @@ export default function ArtistMusicUploader({
   const canSubmit =
     artist.status === "approved" &&
     artist.permissions.includes("catalog:submit");
+  const { currentSong, isPlaying, togglePlayPause, seekTo, setQueue } = usePlayer();
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [creatingSong, setCreatingSong] = useState(false);
@@ -92,6 +98,15 @@ export default function ArtistMusicUploader({
     "loading",
   );
   const [loadRequestKey, setLoadRequestKey] = useState(0);
+
+  const visibleSongs = useMemo(() => {
+    const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+    return normalizedSearchQuery
+      ? songs.filter((song) =>
+          song.title.toLowerCase().includes(normalizedSearchQuery),
+        )
+      : songs;
+  }, [searchQuery, songs]);
 
   useEffect(() => {
     let cancelled = false;
@@ -139,8 +154,17 @@ export default function ArtistMusicUploader({
     };
   }, [artist.id, loadRequestKey]);
 
+  useEffect(() => {
+    setQueue(
+      visibleSongs
+        .map((song) => song.player_song)
+        .filter((song): song is Song => Boolean(song?.audioUrl)),
+    );
+  }, [setQueue, visibleSongs]);
+
   function handleNewSongUploaded(song: ArtistSongSummary) {
     setSongs((current) => [song, ...current.filter((item) => item.id !== song.id)]);
+    setLoadRequestKey((current) => current + 1);
     onUploaded();
   }
 
@@ -162,12 +186,25 @@ export default function ArtistMusicUploader({
       ),
     );
     setReplacingSongId("");
+    setLoadRequestKey((current) => current + 1);
     setCatalogError("");
     setCatalogMessage(
       resetForReview
         ? "Audio replaced. Track returned to Draft for review."
         : "Audio replaced.",
     );
+  }
+
+  function handlePlayClick(song: ArtistSongSummary) {
+    const playerSong = song.player_song;
+    if (!playerSong?.audioUrl) return;
+
+    if (currentSong?.id === playerSong.id) {
+      togglePlayPause(playerSong);
+      return;
+    }
+
+    seekTo(playerSong, 0, currentSong ? isPlaying : true);
   }
 
   async function handleSubmitForReview(songId: string) {
@@ -289,11 +326,6 @@ export default function ArtistMusicUploader({
     );
   }
 
-  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
-  const visibleSongs = normalizedSearchQuery
-    ? songs.filter((song) => song.title.toLowerCase().includes(normalizedSearchQuery))
-    : songs;
-
   return (
     <div>
       <div className="mb-4 flex items-center justify-between gap-4">
@@ -395,6 +427,9 @@ export default function ArtistMusicUploader({
                   const actionsBusy = Boolean(
                     submittingSongId || catalogActionSongId,
                   );
+                  const isCurrentSong = currentSong?.id === song.id;
+                  const rowIsPlaying = isCurrentSong && isPlaying;
+                  const playerSong = song.player_song;
 
                   return (
                     <div
@@ -408,16 +443,46 @@ export default function ArtistMusicUploader({
                       }}
                     >
                       <div className="flex items-center">
-                        <div className="flex h-[52px] w-[52px] items-center justify-center bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
-                          <AudioFileIcon size={16} />
-                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handlePlayClick(song)}
+                          disabled={!playerSong?.audioUrl}
+                          className="group/artist-song-thumb relative flex h-[52px] w-[52px] items-center justify-center overflow-hidden bg-[var(--bg-tertiary)] text-[var(--text-muted)] disabled:cursor-default"
+                          aria-label={rowIsPlaying ? "Pause song" : "Play song"}
+                        >
+                          {playerSong?.coverArt ? (
+                            <img
+                              src={playerSong.coverArt}
+                              alt={song.title}
+                              className="h-full w-full object-cover"
+                            />
+                          ) : (
+                            <AudioFileIcon size={16} />
+                          )}
+                          {playerSong?.audioUrl ? (
+                            <span
+                              className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${
+                                isCurrentSong
+                                  ? "opacity-100"
+                                  : "opacity-0 group-hover/artist-song-thumb:opacity-100"
+                              }`}
+                            >
+                              {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
+                            </span>
+                          ) : null}
+                        </button>
                       </div>
 
-                      <div className="min-w-0">
+                      <button
+                        type="button"
+                        onClick={() => handlePlayClick(song)}
+                        disabled={!playerSong?.audioUrl}
+                        className="min-w-0 cursor-pointer text-left disabled:cursor-default"
+                      >
                         <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
                           {song.title}
                         </div>
-                      </div>
+                      </button>
 
                       <div className="text-[var(--text-secondary)]">
                         {formatDuration(Number(song.duration))}
