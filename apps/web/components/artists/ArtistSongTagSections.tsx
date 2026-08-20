@@ -100,17 +100,17 @@ export default function ArtistSongTagSections({
         disabled={disabled}
       />
       <TagSection
-        title="Mood"
-        options={MOOD_OPTIONS}
-        selected={moods}
-        onChange={onMoodsChange}
-        disabled={disabled}
-      />
-      <TagSection
         title="Region"
         options={REGION_OPTIONS}
         selected={regions}
         onChange={onRegionsChange}
+        disabled={disabled}
+      />
+      <TagSection
+        title="Scene"
+        options={MOOD_OPTIONS}
+        selected={moods}
+        onChange={onMoodsChange}
         disabled={disabled}
       />
       <TagSection
