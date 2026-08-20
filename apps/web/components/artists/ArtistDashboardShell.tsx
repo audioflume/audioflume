@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import { BackendSelect } from "@/components/backend/BackendControls";
@@ -166,6 +166,7 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
 }
 
 export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellProps) {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const requestedSection = searchParams.get("section");
   const requestedArtistId = searchParams.get("artist");
@@ -243,6 +244,14 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
     setSectionViewVersion((current) => current + 1);
     setActiveSection(section);
     window.localStorage.setItem(ARTIST_DASHBOARD_SECTION_STORAGE_KEY, section);
+  }
+
+  function handleArtistChange(artistId: string) {
+    setArtistSwitcherOpen(false);
+    setActiveArtistId(artistId);
+    router.replace(getArtistDashboardHref(activeSection, artistId), {
+      scroll: false,
+    });
   }
 
   function handleProfileSaved(
@@ -402,10 +411,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                       key={profile.id}
                       type="button"
                       role="menuitem"
-                      onClick={() => {
-                        setArtistSwitcherOpen(false);
-                        setActiveArtistId(profile.id);
-                      }}
+                      onClick={() => handleArtistChange(profile.id)}
                       className={`flex w-full items-center gap-2.5 rounded-[7px] px-2.5 py-2 text-left transition-colors ${
                         selected
                           ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
@@ -515,7 +521,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             {dashboardProfiles.length > 1 ? (
               <BackendSelect
                 value={activeArtist.id}
-                onChange={(event) => setActiveArtistId(event.target.value)}
+                onChange={(event) => handleArtistChange(event.target.value)}
                 className="mb-3"
               >
                 {dashboardProfiles.map((profile) => (
