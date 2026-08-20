@@ -3,7 +3,7 @@
 import Link from "next/link";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverPlaylistForm from "@/components/admin/AdminDiscoverPlaylistForm";
-import { secondaryPillButtonClass } from "@/components/uiClasses";
+import { backendSecondaryButtonClass } from "@/components/backend/backendClasses";
 import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 
 export default function NewDiscoverContentPage() {
@@ -13,7 +13,7 @@ export default function NewDiscoverContentPage() {
       title="New Discover Content"
       description="Create reusable Discover content, then assign it to a section from Playlist Manager."
       headerAction={(
-        <Link href="/admin/playlist-manager?tab=discover" className={secondaryPillButtonClass}>
+        <Link href="/admin/playlist-manager?tab=discover" className={backendSecondaryButtonClass}>
           Back to Manager
         </Link>
       )}
