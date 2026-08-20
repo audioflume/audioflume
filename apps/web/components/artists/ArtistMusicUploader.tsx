@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import ArtistSongAudioReplacement from "@/components/artists/ArtistSongAudioReplacement";
 import ArtistSongEditorWithCollaborators from "@/components/artists/ArtistSongEditorWithCollaborators";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
@@ -78,6 +79,7 @@ export default function ArtistMusicUploader({
     artist.status === "approved" &&
     artist.permissions.includes("catalog:submit");
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [creatingSong, setCreatingSong] = useState(false);
   const [editingSongId, setEditingSongId] = useState("");
   const [replacingSongId, setReplacingSongId] = useState("");
@@ -94,6 +96,7 @@ export default function ArtistMusicUploader({
   useEffect(() => {
     let cancelled = false;
     setSongs([]);
+    setSearchQuery("");
     setCreatingSong(false);
     setEditingSongId("");
     setReplacingSongId("");
@@ -286,6 +289,11 @@ export default function ArtistMusicUploader({
     );
   }
 
+  const normalizedSearchQuery = searchQuery.trim().toLowerCase();
+  const visibleSongs = normalizedSearchQuery
+    ? songs.filter((song) => song.title.toLowerCase().includes(normalizedSearchQuery))
+    : songs;
+
   return (
     <div className="grid gap-4">
       <div className="flex min-h-10 flex-wrap items-center justify-between gap-3">
@@ -297,16 +305,25 @@ export default function ArtistMusicUploader({
           ) : null}
         </div>
 
-        {canUpload ? (
-          <button
-            type="button"
-            onClick={() => setCreatingSong(true)}
-            className="filmwave-backend-button filmwave-backend-button-primary"
-          >
-            <UploadIcon size={15} />
-            Upload Song
-          </button>
-        ) : null}
+        <div className="flex max-w-full flex-wrap items-center justify-end gap-2">
+          <BackendSearchBar
+            value={searchQuery}
+            onChange={setSearchQuery}
+            placeholder="Search music"
+            className="w-[260px] max-w-full"
+            clearLabel="Clear music search"
+          />
+          {canUpload ? (
+            <button
+              type="button"
+              onClick={() => setCreatingSong(true)}
+              className="filmwave-backend-button filmwave-backend-button-primary"
+            >
+              <UploadIcon size={15} />
+              Upload Song
+            </button>
+          ) : null}
+        </div>
       </div>
 
       <section className="filmwave-backend-section">
@@ -351,9 +368,15 @@ export default function ArtistMusicUploader({
               </div>
             ) : null}
 
-            {songs.length > 0 ? (
+            {loadState === "ready" && songs.length > 0 && visibleSongs.length === 0 ? (
+              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                No tracks match your search.
+              </div>
+            ) : null}
+
+            {visibleSongs.length > 0 ? (
               <div>
-                {songs.map((song, index) => {
+                {visibleSongs.map((song, index) => {
                   const editable =
                     song.status === "draft" || song.status === "changes_requested";
                   const replaceable =
@@ -378,7 +401,7 @@ export default function ArtistMusicUploader({
                       className="grid min-h-[72px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs"
                       style={{
                         borderBottom:
-                          index === songs.length - 1
+                          index === visibleSongs.length - 1
                             ? "none"
                             : "1px solid var(--border-subtle)",
                       }}
