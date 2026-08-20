@@ -4,7 +4,11 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import Toast from "@/components/Toast";
-import { BackendCheckbox } from "@/components/backend/BackendControls";
+import {
+  BackendButton,
+  BackendCheckbox,
+  BackendIconButton,
+} from "@/components/backend/BackendControls";
 import TrashIcon from "@/components/icons/TrashIcon";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import type {
@@ -17,11 +21,6 @@ import {
   DEFAULT_DISCOVER_BUTTON_TEXT,
   DISCOVER_SECTION_OPTIONS,
 } from "@/lib/curatedPlaylists";
-import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-  smallIconButtonClass,
-} from "@/components/uiClasses";
 
 type Props = {
   mode: "create" | "edit";
@@ -304,9 +303,9 @@ export default function AdminDiscoverPlaylistForm({
               </label>
 
               <div className="flex flex-wrap gap-3 pt-2">
-                <button
+                <BackendButton
                   type="submit"
-                  className={primaryPillButtonClass}
+                  variant="primary"
                   disabled={saving}
                 >
                   {saving
@@ -314,14 +313,13 @@ export default function AdminDiscoverPlaylistForm({
                     : mode === "edit"
                       ? "Save changes"
                       : "Create Discover content"}
-                </button>
-                <button
+                </BackendButton>
+                <BackendButton
                   type="button"
-                  className={secondaryPillButtonClass}
                   onClick={() => router.push(managerHref)}
                 >
                   Back to manager
-                </button>
+                </BackendButton>
               </div>
             </div>
           )}
@@ -425,14 +423,13 @@ export default function AdminDiscoverPlaylistForm({
                       {song.artist}
                     </div>
                   </div>
-                  <button
+                  <BackendIconButton
                     type="button"
-                    className={smallIconButtonClass}
                     onClick={() => removeSong(song.id)}
                     aria-label={`Remove ${song.title}`}
                   >
                     <TrashIcon size={14} />
-                  </button>
+                  </BackendIconButton>
                 </div>
               ))}
             </div>
