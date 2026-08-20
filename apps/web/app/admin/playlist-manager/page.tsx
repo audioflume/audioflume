@@ -24,7 +24,7 @@ export default function PlaylistManagerPage() {
   const tabParam = searchParams.get("tab");
   const queryTab: ManagerTab | null = isManagerTab(tabParam) ? tabParam : null;
 
-  const [activeTab, setActiveTab] = useState<ManagerTab>(queryTab ?? "playlists");
+  const [activeTab, setActiveTab] = useState<ManagerTab | null>(queryTab);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -38,9 +38,7 @@ export default function PlaylistManagerPage() {
     }
 
     const storedTab = window.localStorage.getItem(PLAYLIST_MANAGER_TAB_STORAGE_KEY);
-    if (isManagerTab(storedTab)) {
-      setActiveTab(storedTab);
-    }
+    setActiveTab(isManagerTab(storedTab) ? storedTab : "playlists");
   }, [queryTab]);
 
   const selectTab = (tab: ManagerTab) => {
@@ -149,7 +147,7 @@ export default function PlaylistManagerPage() {
       </div>
 
       <div className="grid gap-3 [&>section]:rounded-[10px] [&>section]:border [&>section]:border-[var(--border)] [&>section]:bg-[var(--bg-primary)] [&>section]:p-4 sm:[&>section]:p-5 [&>section+section]:!mt-0">
-        {activeTab === "playlists" ? (
+        {activeTab === null ? null : activeTab === "playlists" ? (
           <AdminAllPlaylistsView
             playlists={playlists}
             loading={loading}
