@@ -3,10 +3,6 @@
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import AdminContentPage from "@/components/admin/AdminContentPage";
-import DownloadArrowIcon from "@/components/icons/DownloadArrowIcon";
-import FunnelIcon from "@/components/icons/FunnelIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import UserIcon from "@/components/icons/UserIcon";
 import { usePlayer } from "@/context/PlayerContext";
 
 type RangeKey = "day" | "week" | "month" | "year" | "all";
@@ -40,9 +36,6 @@ type Dataset = {
   topGenres: { label: string; value: string }[];
   topSearchTerms: { label: string; value: string }[];
 };
-
-const RANGE_BUTTON_CLASS =
-  "inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-full px-3 text-xs font-normal transition";
 
 const RANGE_OPTIONS: { key: RangeKey; label: string }[] = [
   { key: "day", label: "Day" },
@@ -281,57 +274,33 @@ const DATASETS: Record<RangeKey, Dataset> = {
   },
 };
 
-function MetricCardBlock({ metric, index }: { metric: Metric; index: number }) {
-  const Icon =
-    index === 0
-      ? DownloadArrowIcon
-      : index === 1
-        ? PlayIconSmall
-        : index === 2
-          ? UserIcon
-          : FunnelIcon;
-
+function MetricCardBlock({ metric }: { metric: Metric }) {
   return (
-    <div className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex items-start justify-between px-4 pt-4">
-        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-          {metric.label}
-        </div>
-
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
-          <Icon size={13} />
-        </div>
+    <div className="filmwave-backend-section flex min-h-[104px] flex-col justify-between p-4">
+      <div className="text-[11px] font-medium text-[var(--text-secondary)]">
+        {metric.label}
       </div>
-
-      <div className="px-4 pb-4">
-        <div className="mt-2 text-[30px] leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+      <div>
+        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
           {metric.value}
         </div>
-
-        <div className="mt-3 flex items-center gap-2">
-          <span className="inline-flex h-6 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] font-medium text-[var(--text-primary)]">
-            {metric.delta}
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]">
+          <span className="text-[var(--text-muted)]">{metric.detail}</span>
+          <span className="text-[var(--text-secondary)]">
+            {metric.delta} vs previous
           </span>
-
-          <span className="text-[11px] text-[var(--text-secondary)]">
-            vs previous
-          </span>
-        </div>
-
-        <div className="mt-2 text-xs text-[var(--text-secondary)]">
-          {metric.detail}
         </div>
       </div>
     </div>
   );
 }
 
-function ActivityCard({ data, accentLabel }: { data: ActivityPoint[]; accentLabel: string }) {
+function ActivityChart({ data }: { data: ActivityPoint[] }) {
   const width = 1000;
-  const height = 176;
+  const height = 210;
   const top = 16;
   const right = 14;
-  const bottom = 30;
+  const bottom = 32;
   const left = 42;
   const values = data.map((point) => point.value);
   const maxValue = Math.max(...values);
@@ -357,9 +326,6 @@ function ActivityCard({ data, accentLabel }: { data: ActivityPoint[]; accentLabe
   const linePath = points
     .map((point, index) => `${index === 0 ? "M" : "L"} ${point.x} ${point.y}`)
     .join(" ");
-  const areaPath = `${linePath} L ${points[points.length - 1].x} ${
-    top + plotHeight
-  } L ${points[0].x} ${top + plotHeight} Z`;
   const yTicks = 4;
   const yValues = Array.from({ length: yTicks + 1 }, (_, index) => {
     const ratio = index / yTicks;
@@ -374,133 +340,75 @@ function ActivityCard({ data, accentLabel }: { data: ActivityPoint[]; accentLabe
   });
 
   return (
-    <div className="flex h-full min-h-[277px] flex-col rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-10 shrink-0 items-center justify-between border-b border-[var(--border)] px-4">
-        <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-          Activity
-        </div>
-
-        <div className="flex items-center gap-4 text-xs text-[var(--text-secondary)]">
-          <div className="flex items-center gap-2">
-            <span className="block h-[2px] w-7 rounded-full bg-[var(--chart-line)]" />
-            <span>{accentLabel}</span>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <span className="block h-px w-7 rounded-full bg-[var(--chart-grid)]" />
-            <span>Grid scale</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="flex flex-1 px-4 py-3">
-        <div className="relative h-full min-h-[200px] w-full">
-          <svg
-            viewBox={`0 0 ${width} ${height}`}
-            className="absolute inset-0 h-full w-full"
-            preserveAspectRatio="none"
-            aria-hidden="true"
-          >
-            {yValues.map((tick, index) => (
-              <line
-                key={`horizontal-${index}`}
-                x1={left}
-                y1={tick.y}
-                x2={width - right}
-                y2={tick.y}
-                stroke="var(--chart-grid)"
-                strokeWidth="1"
-              />
-            ))}
-
-            {points.map((point) => (
-              <line
-                key={`grid-${point.label}`}
-                x1={point.x}
-                y1={top}
-                x2={point.x}
-                y2={top + plotHeight}
-                stroke="var(--chart-grid-subtle)"
-                strokeWidth="1"
-              />
-            ))}
-
-            <path d={areaPath} fill="var(--chart-area)" />
-
-            <path
-              d={linePath}
-              fill="none"
-              stroke="var(--chart-line)"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
+    <div className="border-t border-[var(--border-subtle)] px-5 pb-4 pt-5">
+      <div className="relative h-[220px] w-full text-[var(--text-primary)]">
+        <svg
+          viewBox={`0 0 ${width} ${height}`}
+          className="absolute inset-0 h-full w-full overflow-visible"
+          preserveAspectRatio="none"
+          aria-label="Platform activity"
+          role="img"
+        >
+          {yValues.map((tick, index) => (
+            <line
+              key={`horizontal-${index}`}
+              x1={left}
+              y1={tick.y}
+              x2={width - right}
+              y2={tick.y}
+              stroke="var(--border-subtle)"
+              strokeWidth="1"
               vectorEffect="non-scaling-stroke"
             />
-          </svg>
-
-          {yValues.map((tick) => (
-            <div
-              key={`y-label-${tick.value}`}
-              className="pointer-events-none absolute -translate-y-1/2 text-right text-[10px] font-medium text-[var(--text-muted)]"
-              style={{
-                left: `calc(${(left / width) * 100}% - 24px)`,
-                top: `${tick.yPercent}%`,
-                width: "20px",
-              }}
-            >
-              {tick.value}
-            </div>
           ))}
 
-          {points.map((point) => (
-            <div
-              key={`point-${point.label}`}
-              className="pointer-events-none absolute h-2 w-2 rounded-full border-2 bg-[var(--bg-secondary)]"
-              style={{
-                left: `${point.xPercent}%`,
-                top: `${point.yPercent}%`,
-                borderColor: "var(--chart-line)",
-                transform: "translate(-50%, -50%)",
-              }}
-            />
-          ))}
+          <path
+            d={linePath}
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            vectorEffect="non-scaling-stroke"
+          />
+        </svg>
 
-          {points.map((point) => (
-            <div
-              key={`x-label-${point.label}`}
-              className="pointer-events-none absolute -translate-x-1/2 text-[10px] font-medium text-[var(--text-muted)]"
-              style={{
-                left: `${point.xPercent}%`,
-                bottom: "0px",
-              }}
-            >
-              {point.label}
-            </div>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
+        {yValues.map((tick) => (
+          <div
+            key={`y-label-${tick.value}`}
+            className="pointer-events-none absolute -translate-y-1/2 text-right text-[10px] text-[var(--text-muted)]"
+            style={{
+              left: `calc(${(left / width) * 100}% - 25px)`,
+              top: `${tick.yPercent}%`,
+              width: "20px",
+            }}
+          >
+            {tick.value}
+          </div>
+        ))}
 
-function FunnelCard({ items }: { items: Dataset["funnel"] }) {
-  return (
-    <div className="rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
-        <div>
-          <h2 className="text-sm font-medium text-[var(--text-primary)]">Conversion Funnel</h2>
-          <p className="mt-1 text-[11px] text-[var(--text-secondary)]">Plays into downloads and subscribers.</p>
-        </div>
-        <div className="flex h-7 w-7 items-center justify-center rounded-md bg-[var(--bg-tertiary)] text-[var(--text-secondary)]">
-          <FunnelIcon size={13} />
-        </div>
-      </div>
+        {points.map((point) => (
+          <div
+            key={`point-${point.label}`}
+            className="pointer-events-none absolute h-[5px] w-[5px] rounded-full bg-[var(--text-primary)]"
+            style={{
+              left: `${point.xPercent}%`,
+              top: `${point.yPercent}%`,
+              transform: "translate(-50%, -50%)",
+            }}
+          />
+        ))}
 
-      <div className="grid gap-2 p-4">
-        {items.map((item) => (
-          <div key={item.label} className="flex h-10 items-center justify-between rounded-xl bg-[var(--bg-primary)] px-3">
-            <span className="text-xs text-[var(--text-secondary)]">{item.label}</span>
-            <span className="text-sm font-medium text-[var(--text-primary)]">{item.value}</span>
+        {points.map((point) => (
+          <div
+            key={`x-label-${point.label}`}
+            className="pointer-events-none absolute -translate-x-1/2 text-[10px] text-[var(--text-muted)]"
+            style={{
+              left: `${point.xPercent}%`,
+              bottom: "0px",
+            }}
+          >
+            {point.label}
           </div>
         ))}
       </div>
@@ -508,63 +416,97 @@ function FunnelCard({ items }: { items: Dataset["funnel"] }) {
   );
 }
 
-function CompactListCard({ title, items }: { title: string; items: { label: string; value: string }[] }) {
+function CompactListCard({
+  title,
+  items,
+}: {
+  title: string;
+  items: { label: string; value: string }[];
+}) {
   return (
-    <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-10 items-center border-b border-[var(--border)] px-4 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-        {title}
+    <section className="filmwave-backend-section">
+      <div className="filmwave-backend-section-header-bordered">
+        <h2 className="filmwave-backend-section-title">{title}</h2>
       </div>
-      <div className="px-4 py-2">
-        {items.map((item) => (
-          <div key={item.label} className="flex items-center justify-between gap-3 border-b border-[var(--border-subtle)] py-2.5 text-xs last:border-b-0">
-            <span className="truncate text-[var(--text-secondary)]">{item.label}</span>
+      <div className="px-5 py-2">
+        {items.map((item, index) => (
+          <div
+            key={item.label}
+            className={`flex min-h-10 items-center justify-between gap-3 py-2 text-xs ${
+              index < items.length - 1
+                ? "border-b border-[var(--border-subtle)]"
+                : ""
+            }`}
+          >
+            <span className="truncate text-[var(--text-secondary)]">
+              {item.label}
+            </span>
             <span className="text-[var(--text-primary)]">{item.value}</span>
           </div>
         ))}
       </div>
-    </div>
+    </section>
   );
 }
 
 function TopSongsCard({ songs }: { songs: SongRow[] }) {
   return (
-    <div className="overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-      <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
+    <section className="filmwave-backend-section">
+      <div className="filmwave-backend-section-header-bordered">
         <div>
-          <h2 className="text-sm font-medium text-[var(--text-primary)]">Top Performing Songs</h2>
-          <p className="mt-1 text-[11px] text-[var(--text-secondary)]">Strongest play and download activity.</p>
+          <h2 className="filmwave-backend-section-title">Top performing songs</h2>
+          <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+            Strongest play and download activity in the selected range
+          </div>
         </div>
-        <Link href="/admin/music-library" className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]">
+        <Link
+          href="/admin/music-library"
+          className="text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+        >
           View Library
         </Link>
       </div>
 
-      <div className="overflow-x-auto overflow-y-hidden">
-        <div className="min-w-[680px]">
-          <div className="grid h-8 grid-cols-[minmax(220px,1.6fr)_minmax(120px,1fr)_80px_100px_100px] items-center gap-3 border-b border-[var(--border)] px-4 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
-            <div>Song</div>
-            <div>Artist</div>
-            <div>Plays</div>
-            <div>Downloads</div>
-            <div>Rate</div>
+      <div className="overflow-x-auto">
+        <div className="min-w-[640px]">
+          <div className="grid grid-cols-[minmax(280px,1fr)_90px_100px_90px] items-center border-b border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
+            <span>Track</span>
+            <span className="text-right">Plays</span>
+            <span className="text-right">Downloads</span>
+            <span className="text-right">Rate</span>
           </div>
 
           {songs.map((song, index) => (
             <div
               key={song.title}
-              className="grid min-h-[44px] grid-cols-[minmax(220px,1.6fr)_minmax(120px,1fr)_80px_100px_100px] items-center gap-3 px-4 text-xs"
-              style={{ borderBottom: index === songs.length - 1 ? "none" : "1px solid var(--border-subtle)" }}
+              className={`grid min-h-[60px] grid-cols-[minmax(280px,1fr)_90px_100px_90px] items-center px-5 py-2 ${
+                index < songs.length - 1
+                  ? "border-b border-[var(--border-subtle)]"
+                  : ""
+              }`}
             >
-              <div className="truncate font-medium text-[var(--text-primary)]">{song.title}</div>
-              <div className="truncate text-[var(--text-secondary)]">{song.artist}</div>
-              <div className="text-[var(--text-secondary)]">{song.plays}</div>
-              <div className="text-[var(--text-secondary)]">{song.downloads}</div>
-              <div className="text-[var(--text-secondary)]">{song.conversion}</div>
+              <div className="min-w-0 pr-4">
+                <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+                  {song.title}
+                </div>
+                <div className="mt-1 truncate text-[10px] text-[var(--text-muted)]">
+                  {song.artist}
+                </div>
+              </div>
+              <div className="text-right text-xs text-[var(--text-secondary)]">
+                {song.plays}
+              </div>
+              <div className="text-right text-xs text-[var(--text-secondary)]">
+                {song.downloads}
+              </div>
+              <div className="text-right text-xs text-[var(--text-secondary)]">
+                {song.conversion}
+              </div>
             </div>
           ))}
         </div>
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -577,57 +519,80 @@ export default function AdminEngagementPage() {
   return (
     <AdminContentPage
       label="Engagement"
-      title="Engagement Overview"
-      description="Dense analytics for platform activity, conversion, song performance, and discovery behaviour."
-      titleAction={(
-        <div className="inline-flex h-9 shrink-0 items-center rounded-full bg-[var(--bg-tertiary)] p-1">
-          {RANGE_OPTIONS.map((option) => {
-            const active = option.key === range;
-
-            return (
-              <button
-                key={option.key}
-                type="button"
-                onClick={() => setRange(option.key)}
-                className={`${RANGE_BUTTON_CLASS} ${
-                  active
-                    ? "bg-[var(--bg-hover-strong)] text-[var(--text-primary)]"
-                    : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
-                }`}
-              >
-                {option.label}
-              </button>
-            );
-          })}
-        </div>
-      )}
+      title="Engagement"
+      compactHeader
+      hideIntro
+      contentAreaClassName="bg-[var(--filmwave-admin-canvas)]"
       contentStyle={{
         paddingBottom: playerVisible ? "104px" : "32px",
-        "--chart-line": "var(--text-primary)",
-        "--chart-area": "color-mix(in srgb, var(--text-primary) 10%, transparent)",
-        "--chart-grid": "color-mix(in srgb, var(--text-primary) 10%, transparent)",
-        "--chart-grid-subtle": "color-mix(in srgb, var(--text-primary) 6%, transparent)",
-      } as React.CSSProperties}
+      }}
     >
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-        {data.metrics.map((metric, index) => (
-          <MetricCardBlock key={metric.label} metric={metric} index={index} />
-        ))}
-      </div>
+      <div className="grid gap-4">
+        <section className="grid gap-2 sm:grid-cols-2 xl:grid-cols-4">
+          {data.metrics.map((metric) => (
+            <MetricCardBlock key={metric.label} metric={metric} />
+          ))}
+        </section>
 
-      <div className="mt-3 grid items-stretch gap-3 xl:grid-cols-[minmax(0,1fr)_300px]">
-        <ActivityCard data={data.activity} accentLabel={data.metrics[0].label} />
-        <FunnelCard items={data.funnel} />
-      </div>
+        <section className="filmwave-backend-section">
+          <div className="filmwave-backend-section-header-bordered flex-wrap">
+            <div>
+              <h2 className="filmwave-backend-section-title">Platform activity</h2>
+              <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+                {data.metrics[0].label} activity across the selected range
+              </div>
+            </div>
 
-      <div className="mt-3 grid items-stretch gap-3 xl:grid-cols-[minmax(0,1fr)_300px]">
+            <div className="flex flex-wrap items-center gap-2">
+              {RANGE_OPTIONS.map((option) => (
+                <button
+                  key={option.key}
+                  type="button"
+                  onClick={() => setRange(option.key)}
+                  className={`filmwave-backend-choice-button ${
+                    range === option.key ? "is-active" : ""
+                  }`}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="grid sm:grid-cols-3">
+            {data.funnel.map((item, index) => (
+              <div
+                key={item.label}
+                className={`px-5 py-4 ${
+                  index < data.funnel.length - 1
+                    ? "border-b border-[var(--border-subtle)] sm:border-b-0 sm:border-r"
+                    : ""
+                }`}
+              >
+                <div className="text-[11px] font-medium text-[var(--text-secondary)]">
+                  {item.label}
+                </div>
+                <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                  {item.value}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <ActivityChart data={data.activity} />
+
+          <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
+            Activity follows the same selected period as the summary metrics above.
+          </div>
+        </section>
+
         <TopSongsCard songs={data.songs} />
-        <CompactListCard title="Traffic Sources" items={data.trafficSources} />
-      </div>
 
-      <div className="mt-3 grid gap-3 md:grid-cols-2">
-        <CompactListCard title="Top Genres" items={data.topGenres} />
-        <CompactListCard title="Top Search Terms" items={data.topSearchTerms} />
+        <div className="grid gap-4 md:grid-cols-3">
+          <CompactListCard title="Traffic sources" items={data.trafficSources} />
+          <CompactListCard title="Top genres" items={data.topGenres} />
+          <CompactListCard title="Top search terms" items={data.topSearchTerms} />
+        </div>
       </div>
     </AdminContentPage>
   );
