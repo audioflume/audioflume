@@ -106,19 +106,65 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ songs: [] });
     }
 
-    const { data: songs, error: songsError } = await supabaseServer
-      .from("songs")
-      .select("*")
-      .in("id", songIds)
-      .order("created_at", { ascending: false });
+    const [songsResult, releaseLinksResult] = await Promise.all([
+      supabaseServer
+        .from("songs")
+        .select("*")
+        .in("id", songIds)
+        .order("created_at", { ascending: false }),
+      supabaseServer
+        .from("artist_release_songs")
+        .select("song_id, release_id")
+        .in("song_id", songIds),
+    ]);
 
-    if (songsError) throw songsError;
+    if (songsResult.error) throw songsResult.error;
+    if (releaseLinksResult.error) throw releaseLinksResult.error;
+
+    const releaseIdBySongId = new Map<string, string>();
+    for (const link of releaseLinksResult.data ?? []) {
+      if (typeof link.song_id === "string" && typeof link.release_id === "string") {
+        releaseIdBySongId.set(link.song_id, link.release_id);
+      }
+    }
+
+    const releaseIds = [...new Set(releaseIdBySongId.values())];
+    const releaseCoverById = new Map<string, string>();
+
+    if (releaseIds.length > 0) {
+      const { data: releases, error: releasesError } = await supabaseServer
+        .from("artist_releases")
+        .select("id, cover_image_url")
+        .in("id", releaseIds);
+
+      if (releasesError) throw releasesError;
+
+      for (const release of releases ?? []) {
+        if (
+          typeof release.id === "string" &&
+          typeof release.cover_image_url === "string" &&
+          release.cover_image_url
+        ) {
+          releaseCoverById.set(release.id, release.cover_image_url);
+        }
+      }
+    }
 
     return NextResponse.json({
-      songs: (songs ?? []).map((song) => ({
-        ...song,
-        player_song: normalizeSongRow(song),
-      })),
+      songs: (songsResult.data ?? []).map((song) => {
+        const releaseId = releaseIdBySongId.get(song.id);
+        const releaseCoverUrl = releaseId
+          ? releaseCoverById.get(releaseId) ?? null
+          : null;
+        const playerSongRow = releaseCoverUrl
+          ? { ...song, cover_url: releaseCoverUrl }
+          : song;
+
+        return {
+          ...song,
+          player_song: normalizeSongRow(playerSongRow),
+        };
+      }),
     });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
