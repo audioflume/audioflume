@@ -2,10 +2,11 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import ModalShell from "@/components/ModalShell";
+import AdminModalShell from "@/components/admin/AdminModalShell";
+import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import { backendModalPrimaryButtonClass } from "@/components/backend/backendClasses";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import { modalPrimaryButtonClass } from "@/components/uiClasses";
 import { DISCOVER_LIBRARY_SECTION } from "@/lib/discoverAdmin";
 import {
   DISCOVER_SECTION_LABELS,
@@ -72,21 +73,16 @@ export default function AdminDiscoverContentPickerModal({
   }
 
   return (
-    <ModalShell
+    <AdminModalShell
       isOpen={isOpen}
       title={`Choose for ${title}`}
       onClose={onClose}
       closeLabel={`Close ${title} content picker`}
-      maxWidth="max-w-[540px]"
-      maxHeight="560px"
-      bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-      contentClassName="h-[560px] max-h-[calc(100vh-64px)]"
-      footerClassName="justify-end bg-[var(--bg-tertiary)]"
       footer={
         <button
           type="button"
           onClick={handleAssign}
-          className={modalPrimaryButtonClass}
+          className={backendModalPrimaryButtonClass}
           disabled={selectedId == null || selectedId === currentId || saving}
         >
           {saving ? "Assigning..." : "Assign Content"}
@@ -94,12 +90,11 @@ export default function AdminDiscoverContentPickerModal({
       }
     >
       <div className="pb-4">
-        <input
-          type="search"
+        <AdminSearchBar
           value={search}
-          onChange={(event) => setSearch(event.target.value)}
+          onChange={setSearch}
           placeholder="Search Discover content"
-          className="h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
+          variant="modal"
         />
       </div>
 
@@ -163,6 +158,6 @@ export default function AdminDiscoverContentPickerModal({
           </div>
         )}
       </div>
-    </ModalShell>
+    </AdminModalShell>
   );
 }
