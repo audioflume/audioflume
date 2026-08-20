@@ -20,9 +20,9 @@ import {
   PlaylistManagerCollapsibleSection,
   PlaylistManagerSortableCard,
 } from "@/components/admin/AdminPlaylistManagerShared";
+import { BackendButton } from "@/components/backend/BackendControls";
 import Toast from "@/components/Toast";
 import PlusIcon from "@/components/icons/PlusIcon";
-import { secondaryPillButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import {
   DISCOVER_SECTION_SHELF_KEYS,
@@ -294,15 +294,14 @@ export default function AdminDiscoverLibraryView({
               wrapHeader
               wrapActions
               actions={
-                <button
+                <BackendButton
                   type="button"
                   onClick={() => setPickerSection(sectionKey)}
-                  className={secondaryPillButtonClass}
                   disabled={savingSection}
                 >
                   <PlusIcon size={12} />
                   <span>Add</span>
-                </button>
+                </BackendButton>
               }
             >
               {sectionPlaylists.length === 0 ? (
