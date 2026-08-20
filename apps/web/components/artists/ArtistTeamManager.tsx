@@ -331,7 +331,7 @@ export default function ArtistTeamManager({
         <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Team</h2>
           {!loading ? (
-            <span className="font-mono text-[9px] uppercase tracking-[0.06em] text-[var(--text-muted)]">
+            <span className="text-[10px] text-[var(--text-muted)]">
               {members.length} {members.length === 1 ? "member" : "members"}
             </span>
           ) : null}
@@ -375,7 +375,7 @@ export default function ArtistTeamManager({
                         {member.display_name}
                       </span>
                       {member.is_current_user ? (
-                        <span className="font-mono text-[8px] uppercase tracking-[0.06em] text-[var(--text-muted)]">
+                        <span className="text-[9px] text-[var(--text-muted)]">
                           You
                         </span>
                       ) : null}
@@ -384,7 +384,7 @@ export default function ArtistTeamManager({
                       {member.email || "Email unavailable"}
                     </div>
                     {member.created_at ? (
-                      <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                      <div className="mt-1 text-[9px] text-[var(--text-muted)]">
                         Added {formatJoinedAt(member.created_at)}
                       </div>
                     ) : null}
@@ -453,7 +453,7 @@ export default function ArtistTeamManager({
                     <div className="text-xs font-medium text-[var(--text-primary)]">
                       {invitation.email}
                     </div>
-                    <div className="mt-1 font-mono text-[8px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                    <div className="mt-1 text-[9px] text-[var(--text-muted)]">
                       Pending · {formatRole(invitation.role)} · {formatJoinedAt(invitation.created_at)}
                     </div>
                   </div>
