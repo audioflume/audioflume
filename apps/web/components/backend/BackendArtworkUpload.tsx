@@ -110,7 +110,7 @@ export default function BackendArtworkUpload({
             type="button"
             disabled={disabled}
             onClick={() => inputRef.current?.click()}
-            className="mt-1 h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-1 h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-normal text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
             style={{ width: compactSize }}
           >
             Choose image
@@ -153,7 +153,7 @@ export default function BackendArtworkUpload({
               onClick={() => inputRef.current?.click()}
               onDrop={handleDrop}
               onDragOver={(event) => event.preventDefault()}
-              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--text-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               <img
                 src={previewUrl}
@@ -170,10 +170,10 @@ export default function BackendArtworkUpload({
             onClick={() => inputRef.current?.click()}
             onDrop={handleDrop}
             onDragOver={(event) => event.preventDefault()}
-            className="mt-1 flex cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--text-secondary)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="group mt-1 flex cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
             style={{ minHeight: compactSize }}
           >
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-hover:bg-[var(--bg-primary)]">
               <UploadIcon />
             </span>
             <span className="min-w-0 text-left">
@@ -265,9 +265,9 @@ export default function BackendArtworkUpload({
           onClick={() => inputRef.current?.click()}
           onDrop={handleDrop}
           onDragOver={(event) => event.preventDefault()}
-          className="flex min-h-[180px] w-full cursor-pointer items-center justify-center gap-4 rounded-[10px] border border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-5 text-left transition hover:border-[var(--text-secondary)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="group flex min-h-[180px] w-full cursor-pointer items-center justify-center gap-4 rounded-[10px] border border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-5 text-left transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+          <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-hover:bg-[var(--bg-primary)]">
             <UploadIcon size={18} />
           </span>
           <span>
