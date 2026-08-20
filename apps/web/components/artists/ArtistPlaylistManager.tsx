@@ -27,8 +27,12 @@ import {
 } from "@/components/backend/BackendControls";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/BackendRow";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PlusIcon from "@/components/icons/PlusIcon";
+import { usePlayer } from "@/context/PlayerContext";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
+import type { Song } from "@/lib/types";
 
 type ArtistPlaylist = {
   id: string;
@@ -52,6 +56,7 @@ type PlaylistSong = {
   key: string | null;
   cover_url: string | null;
   created_at: string;
+  player_song?: Song;
 };
 
 type PlaylistsResponse = {
@@ -169,6 +174,19 @@ function SortablePlaylistTrackRow({
     transition,
     isDragging,
   } = useSortable({ id: song.id, disabled: !canManage || disabled });
+  const { currentSong, isPlaying, togglePlayPause, seekTo } = usePlayer();
+  const playerSong = song.player_song;
+  const isCurrentSong = currentSong?.id === song.id;
+  const rowIsPlaying = isCurrentSong && isPlaying;
+
+  function handlePlayClick() {
+    if (!playerSong?.audioUrl) return;
+    if (isCurrentSong) {
+      togglePlayPause(playerSong);
+      return;
+    }
+    seekTo(playerSong, 0, currentSong ? isPlaying : true);
+  }
 
   return (
     <div
@@ -194,7 +212,26 @@ function SortablePlaylistTrackRow({
         />
       ) : null}
 
-      <BackendMediaThumbnail src={song.cover_url} size={40} className="rounded-[6px]" />
+      <button
+        type="button"
+        onClick={handlePlayClick}
+        disabled={!playerSong?.audioUrl}
+        className="group/artist-playlist-thumb relative h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] disabled:cursor-default"
+        aria-label={rowIsPlaying ? "Pause song" : "Play song"}
+      >
+        <BackendMediaThumbnail src={song.cover_url} size={40} className="rounded-[6px]" />
+        {playerSong?.audioUrl ? (
+          <span
+            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${
+              isCurrentSong
+                ? "opacity-100"
+                : "opacity-0 group-hover/artist-playlist-thumb:opacity-100"
+            }`}
+          >
+            {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
+          </span>
+        ) : null}
+      </button>
       <BackendRowTitle>{song.title}</BackendRowTitle>
       <div className="text-xs text-[var(--text-muted)]">
         {formatDuration(Number(song.duration))}
@@ -565,6 +602,7 @@ function PlaylistEditor({
   const trackSensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
   );
+  const { setQueue } = usePlayer();
   const [name, setName] = useState(playlist.name);
   const [description, setDescription] = useState(playlist.description ?? "");
   const [songIds, setSongIds] = useState<string[]>(playlist.song_ids);
@@ -583,6 +621,14 @@ function PlaylistEditor({
     .map((songId) => songsById.get(songId))
     .filter((song): song is PlaylistSong => Boolean(song));
   const trackOrderDisabled = saving || uploadingArtwork;
+
+  useEffect(() => {
+    setQueue(
+      songIds
+        .map((songId) => songsById.get(songId)?.player_song)
+        .filter((song): song is Song => Boolean(song?.audioUrl)),
+    );
+  }, [setQueue, songIds, songsById]);
 
   useEffect(() => {
     if (!artworkFile) {
