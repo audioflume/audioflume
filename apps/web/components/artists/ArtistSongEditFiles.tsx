@@ -37,6 +37,15 @@ type EditFilesResponse = {
   error?: string;
 };
 
+type ArtworkResponse = {
+  song?: {
+    id: string;
+    cover_url: string | null;
+  };
+  revision_pending?: boolean;
+  error?: string;
+};
+
 type ArtistSongEditFilesProps = {
   artist: ArtistDashboardProfile;
   songId: string;
@@ -201,9 +210,7 @@ export default function ArtistSongEditFiles({
         `/api/artists/${artist.id}/songs/${songId}/artwork`,
         { method: "POST", body: formData },
       );
-      const body = (await response.json().catch(() => ({}))) as EditFilesResponse & {
-        song?: EditFileSong & { cover_url?: string | null };
-      };
+      const body = (await response.json().catch(() => ({}))) as ArtworkResponse;
 
       if (!response.ok || !body.song?.cover_url) {
         throw new Error(body.error || "Failed to update song artwork");
@@ -221,6 +228,44 @@ export default function ArtistSongEditFiles({
       setArtworkFile(null);
       setError(
         artworkError instanceof Error ? artworkError.message : "Failed to update song artwork",
+      );
+    } finally {
+      setBusy("");
+    }
+  }
+
+  async function handleRemoveArtwork() {
+    if (currentRelease) return;
+    if (artworkFile) {
+      setArtworkFile(null);
+      return;
+    }
+    if (!coverUrl) return;
+
+    try {
+      setBusy("artwork");
+      setMessage("");
+      setError("");
+      const response = await fetch(
+        `/api/artists/${artist.id}/songs/${songId}/artwork`,
+        { method: "DELETE" },
+      );
+      const body = (await response.json().catch(() => ({}))) as ArtworkResponse;
+
+      if (!response.ok || !body.song) {
+        throw new Error(body.error || "Failed to remove song artwork");
+      }
+
+      setCoverUrl(null);
+      setMessage(
+        body.revision_pending
+          ? "Artwork removal sent for approval. The current version stays live until approved."
+          : "Artwork removed.",
+      );
+      if (body.revision_pending) onRevisionPending?.();
+    } catch (artworkError) {
+      setError(
+        artworkError instanceof Error ? artworkError.message : "Failed to remove song artwork",
       );
     } finally {
       setBusy("");
@@ -284,7 +329,7 @@ export default function ArtistSongEditFiles({
         artworkFile={artworkFile}
         artworkPreviewUrl={displayedArtworkUrl}
         onArtworkFileChange={(file) => void handleArtworkFileChange(file)}
-        onRemoveArtwork={() => setArtworkFile(null)}
+        onRemoveArtwork={() => void handleRemoveArtwork()}
         artworkTitle={releaseArtworkMode ? "Release image" : "Cover image"}
         artworkActionLabel={
           releaseArtworkMode ? "Choose Release Image" : "Choose Cover Art"
