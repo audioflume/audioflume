@@ -1686,7 +1686,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               }}
               audioExistingLabel={
                 isEditMode && existingAudioUrl
-                  ? "Current audio file will be kept"
+                  ? existingAudioUrl.split("?")[0].split("/").pop() ||
+                    "Current audio file"
                   : ""
               }
               audioStatus={peakStatus}
