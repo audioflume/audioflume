@@ -96,7 +96,7 @@ export async function GET(_request: Request, context: RouteContext) {
       songIds.length > 0
         ? supabaseServer
             .from("songs")
-            .select("id, title, status, duration, created_at")
+            .select("id, title, status, duration, cover_url, created_at")
             .in("id", songIds)
             .neq("status", "rejected")
             .order("created_at", { ascending: false })
