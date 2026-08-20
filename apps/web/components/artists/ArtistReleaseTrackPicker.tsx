@@ -99,7 +99,7 @@ function ReleasePickerSongRow({
       </button>
 
       <div className="min-w-0 pr-7">
-        <div className="h-[14px] overflow-hidden">
+        <div className="filmwave-song-wave">
           <Waveform song={song} compact />
         </div>
       </div>
