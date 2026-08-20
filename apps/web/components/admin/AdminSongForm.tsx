@@ -6,6 +6,7 @@ import { useUser } from "@clerk/nextjs";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSongEditPointsSection from "@/components/admin/AdminSongEditPointsSection";
+import { BackendButton } from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
@@ -17,10 +18,6 @@ import UploadIcon from "@/components/icons/UploadIcon";
 import WarningIcon from "@/components/icons/WarningIcon";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import Toast from "@/components/Toast";
-import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-} from "@/components/uiClasses";
 import {
   estimateBpmWithEssentia,
   estimateKeyWithEssentia,
@@ -2096,26 +2093,27 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
               <div className="grid gap-2 p-4">
                 {isSaving && (
-                  <button
+                  <BackendButton
                     type="button"
                     onClick={cancelUpload}
-                    className={`w-full ${secondaryPillButtonClass}`}
+                    className="w-full"
                   >
                     Cancel
-                  </button>
+                  </BackendButton>
                 )}
 
-                <button
+                <BackendButton
                   type={uploadComplete && !isEditMode ? "button" : "submit"}
+                  variant="primary"
                   onClick={
                     uploadComplete && !isEditMode ? resetPage : undefined
                   }
                   disabled={isSaving || isGeneratingPeaks}
-                  className={`w-full ${primaryPillButtonClass} disabled:cursor-default disabled:opacity-50`}
+                  className="w-full"
                 >
                   {!isSaving && <UploadIcon size={15} />}
                   <span>{submitLabel}</span>
-                </button>
+                </BackendButton>
               </div>
             </section>
           </aside>
