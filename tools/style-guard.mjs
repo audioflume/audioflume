@@ -40,6 +40,8 @@ const headerSearchRuntimeSelectors = [
 const backendCssOwner = "apps/web/components/backend/BackendUI.css";
 const backendComponentDirectory = "apps/web/components/backend/";
 const migratedBackendFiles = new Set([
+  "apps/web/app/admin/playlist-manager/discover/[playlistId]/edit/page.tsx",
+  "apps/web/app/admin/playlist-manager/discover/new/page.tsx",
   "apps/web/components/admin/AdminAddToPlaylistModal.tsx",
   "apps/web/components/admin/AdminBrowseFilterSubcategoryGroup.tsx",
   "apps/web/components/admin/AdminContentPage.tsx",
