@@ -27,9 +27,12 @@ import {
 } from "@/components/backend/BackendControls";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import DragIconSmall from "@/components/icons/DragIconSmall";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import AdminBrowseFilterSubcategoryGroup from "@/components/admin/AdminBrowseFilterSubcategoryGroup";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
+import { usePlayer } from "@/context/PlayerContext";
 import type {
   CuratedBrowseTag,
   CuratedPlaylist,
@@ -67,6 +70,18 @@ function SortableSongRow({
     transition,
     isDragging,
   } = useSortable({ id: song.curated_playlist_song_id });
+  const { currentSong, isPlaying, togglePlayPause, seekTo } = usePlayer();
+  const isCurrentSong = currentSong?.id === song.id;
+  const rowIsPlaying = isCurrentSong && isPlaying;
+
+  function handlePlayClick() {
+    if (!song.audioUrl) return;
+    if (isCurrentSong) {
+      togglePlayPause(song);
+      return;
+    }
+    seekTo(song, 0, currentSong ? isPlaying : true);
+  }
 
   return (
     <div
@@ -85,7 +100,13 @@ function SortableSongRow({
         {...attributes}
         {...listeners}
       />
-      <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
+      <button
+        type="button"
+        onClick={handlePlayClick}
+        disabled={!song.audioUrl}
+        className="group/admin-playlist-thumb relative h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-lg bg-[var(--bg-tertiary)] disabled:cursor-default"
+        aria-label={rowIsPlaying ? "Pause song" : "Play song"}
+      >
         {song.coverArt && (
           <Image
             src={song.coverArt}
@@ -95,7 +116,18 @@ function SortableSongRow({
             className="object-cover"
           />
         )}
-      </div>
+        {song.audioUrl ? (
+          <span
+            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${
+              isCurrentSong
+                ? "opacity-100"
+                : "opacity-0 group-hover/admin-playlist-thumb:opacity-100"
+            }`}
+          >
+            {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
+          </span>
+        ) : null}
+      </button>
       <div className="min-w-0 flex-1">
         <div className="truncate text-sm font-medium">{song.title}</div>
         <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
@@ -143,6 +175,7 @@ function DragOverlaySongRow({ song }: { song: CuratedPlaylistSong }) {
 
 export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const router = useRouter();
+  const { setQueue } = usePlayer();
   const [name, setName] = useState("");
   const [kicker, setKicker] = useState("");
   const [coverImageUrl, setCoverImageUrl] = useState("");
@@ -169,6 +202,10 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         (song) => song.curated_playlist_song_id === activeSongRowId,
       ) ?? null)
     : null;
+
+  useEffect(() => {
+    setQueue(songs.filter((song) => Boolean(song.audioUrl)));
+  }, [setQueue, songs]);
 
   useEffect(() => {
     let cancelled = false;
