@@ -145,7 +145,11 @@ export default function BackendSongFileUpload({
         onChange={(event) => onArtworkFileChange(event.target.files?.[0] ?? null)}
       />
 
-      <div className="flex flex-wrap items-center gap-2">
+      <div
+        className={`flex flex-wrap items-center gap-2 ${
+          topAction ? "xl:w-[calc(100%+356px)]" : ""
+        }`}
+      >
         <button
           type="button"
           disabled={disabled}
