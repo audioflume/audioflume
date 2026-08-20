@@ -395,11 +395,11 @@ export default function ArtistReleaseManager({
       <CreateRelease
         artist={artist}
         canManage={canManage}
+        songs={songs}
         onBack={() => setCreating(false)}
         onCreated={(release) => {
           setReleases((current) => [release, ...current]);
           setCreating(false);
-          setSelectedReleaseId(release.id);
           onReleaseCreated();
         }}
       />
@@ -475,6 +475,7 @@ export default function ArtistReleaseManager({
 type CreateReleaseProps = {
   artist: ArtistDashboardProfile;
   canManage: boolean;
+  songs: ReleaseSong[];
   onBack: () => void;
   onCreated: (release: ArtistRelease) => void;
 };
@@ -482,24 +483,75 @@ type CreateReleaseProps = {
 function CreateRelease({
   artist,
   canManage,
+  songs,
   onBack,
   onCreated,
 }: CreateReleaseProps) {
+  const trackSensors = useSensors(
+    useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+  );
   const [title, setTitle] = useState("");
   const [releaseType, setReleaseType] = useState<ReleaseType>("single");
   const [releaseYear, setReleaseYear] = useState("");
+  const [trackIds, setTrackIds] = useState<string[]>([]);
+  const [artworkFile, setArtworkFile] = useState<File | null>(null);
+  const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
+
+  const songsById = useMemo(
+    () => new Map(songs.map((song) => [song.id, song])),
+    [songs],
+  );
+  const orderedTracks = trackIds
+    .map((songId) => songsById.get(songId))
+    .filter((song): song is ReleaseSong => Boolean(song));
+
+  useEffect(() => {
+    if (!artworkFile) {
+      setArtworkPreviewUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(artworkFile);
+    setArtworkPreviewUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [artworkFile]);
+
+  function removeTrack(songId: string) {
+    setTrackIds((current) => current.filter((id) => id !== songId));
+    setError("");
+  }
+
+  function handleTrackDragEnd(event: DragEndEvent) {
+    if (!canManage || saving) return;
+    const { active, over } = event;
+    if (!over || active.id === over.id) return;
+
+    const oldIndex = trackIds.findIndex((songId) => songId === active.id);
+    const newIndex = trackIds.findIndex((songId) => songId === over.id);
+    if (oldIndex === -1 || newIndex === -1) return;
+
+    setTrackIds((current) => arrayMove(current, oldIndex, newIndex));
+    setError("");
+  }
 
   async function createRelease(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!canManage || saving || !title.trim()) return;
+
+    if (releaseType === "single" && trackIds.length > 1) {
+      setError("A single can contain only one track.");
+      return;
+    }
 
     const releaseDate = releaseYearToDate(releaseYear);
     if (releaseDate === undefined) {
       setError("Enter a valid four-digit release year.");
       return;
     }
+
+    let createdReleaseId = "";
 
     try {
       setSaving(true);
@@ -520,8 +572,63 @@ function CreateRelease({
         throw new Error(body.error || "Failed to create release");
       }
 
-      onCreated(body.release as ArtistRelease);
+      createdReleaseId = body.release.id;
+      let createdRelease = body.release as ArtistRelease;
+
+      if (trackIds.length > 0) {
+        const tracksResponse = await fetch(
+          `/api/artists/${artist.id}/releases/${createdReleaseId}`,
+          {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              title: title.trim(),
+              release_type: releaseType,
+              release_date: releaseDate,
+              song_ids: trackIds,
+            }),
+          },
+        );
+        const tracksBody = (await tracksResponse
+          .json()
+          .catch(() => ({}))) as ReleasesResponse;
+
+        if (!tracksResponse.ok || !tracksBody.release) {
+          throw new Error(tracksBody.error || "Failed to add release tracks");
+        }
+
+        createdRelease = tracksBody.release as ArtistRelease;
+      }
+
+      if (artworkFile) {
+        const formData = new FormData();
+        formData.append("file", artworkFile);
+        const artworkResponse = await fetch(
+          `/api/artists/${artist.id}/releases/${createdReleaseId}/artwork`,
+          { method: "POST", body: formData },
+        );
+        const artworkBody = (await artworkResponse
+          .json()
+          .catch(() => ({}))) as ReleasesResponse;
+
+        if (!artworkResponse.ok || !artworkBody.release?.cover_image_url) {
+          throw new Error(artworkBody.error || "Failed to upload release artwork");
+        }
+
+        createdRelease = {
+          ...createdRelease,
+          cover_image_url: artworkBody.release.cover_image_url,
+          updated_at: artworkBody.release.updated_at ?? createdRelease.updated_at,
+        };
+      }
+
+      onCreated({ ...createdRelease, track_ids: trackIds });
     } catch (createError) {
+      if (createdReleaseId) {
+        await fetch(`/api/artists/${artist.id}/releases/${createdReleaseId}`, {
+          method: "DELETE",
+        }).catch(() => undefined);
+      }
       setError(
         createError instanceof Error ? createError.message : "Failed to create release",
       );
@@ -548,47 +655,118 @@ function CreateRelease({
           <h2 className="filmwave-backend-section-title">New release</h2>
         </div>
 
-        <div className="grid gap-4 p-5 md:grid-cols-[minmax(0,1fr)_180px_150px]">
-          <label className="block">
-            <span>Release title</span>
-            <BackendInput
-              type="text"
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              maxLength={180}
-              disabled={!canManage || saving}
-              placeholder="Release title"
-            />
-          </label>
+        <div className="grid gap-5 p-5 md:grid-cols-[180px_minmax(0,1fr)]">
+          <BackendArtworkUpload
+            file={artworkFile}
+            previewUrl={artworkPreviewUrl}
+            onFileChange={setArtworkFile}
+            onRemove={() => setArtworkFile(null)}
+            disabled={!canManage || saving}
+            required
+            title="Cover artwork"
+            dropDescription="Click to upload release artwork."
+            variant="compact"
+            compactSize={180}
+            compactChooseButton
+            allowRemove={Boolean(artworkFile)}
+          />
 
-          <label className="block">
-            <span>Type</span>
-            <BackendSelect
-              value={releaseType}
-              onChange={(event) => setReleaseType(event.target.value as ReleaseType)}
-              disabled={!canManage || saving}
-            >
-              {RELEASE_TYPES.map((type) => (
-                <option key={type.value} value={type.value}>
-                  {type.label}
-                </option>
-              ))}
-            </BackendSelect>
-          </label>
+          <div className="grid content-start gap-4 sm:grid-cols-2">
+            <label className="block sm:col-span-2">
+              <span>Release title</span>
+              <BackendInput
+                type="text"
+                value={title}
+                onChange={(event) => setTitle(event.target.value)}
+                maxLength={180}
+                disabled={!canManage || saving}
+                placeholder="Release title"
+              />
+            </label>
 
-          <label className="block">
-            <span>Year</span>
-            <BackendInput
-              type="text"
-              inputMode="numeric"
-              value={releaseYear}
-              onChange={(event) => setReleaseYear(normalizeYearInput(event.target.value))}
-              maxLength={4}
-              disabled={!canManage || saving}
-              placeholder="Year"
-            />
-          </label>
+            <label className="block">
+              <span>Type</span>
+              <BackendSelect
+                value={releaseType}
+                onChange={(event) => setReleaseType(event.target.value as ReleaseType)}
+                disabled={!canManage || saving}
+              >
+                {RELEASE_TYPES.map((type) => (
+                  <option key={type.value} value={type.value}>
+                    {type.label}
+                  </option>
+                ))}
+              </BackendSelect>
+            </label>
+
+            <label className="block">
+              <span>Year</span>
+              <BackendInput
+                type="text"
+                inputMode="numeric"
+                value={releaseYear}
+                onChange={(event) => setReleaseYear(normalizeYearInput(event.target.value))}
+                maxLength={4}
+                disabled={!canManage || saving}
+                placeholder="Year"
+              />
+            </label>
+          </div>
         </div>
+      </section>
+
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header">
+          <h2 className="filmwave-backend-section-title">Track order</h2>
+        </div>
+
+        {canManage ? (
+          <div className="flex border-b border-[var(--border-subtle)] p-5">
+            <ArtistReleaseTrackPicker
+              artistId={artist.id}
+              releaseType={releaseType}
+              existingTrackIds={trackIds}
+              disabled={saving}
+              onAdd={(songIds) => {
+                setTrackIds((current) => [
+                  ...current,
+                  ...songIds.filter((songId) => !current.includes(songId)),
+                ]);
+                setError("");
+              }}
+            />
+          </div>
+        ) : null}
+
+        <DndContext
+          sensors={trackSensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleTrackDragEnd}
+        >
+          <SortableContext
+            items={orderedTracks.map((song) => song.id)}
+            strategy={verticalListSortingStrategy}
+          >
+            <div className={orderedTracks.length === 0 ? "" : "grid gap-2 p-5"}>
+              {orderedTracks.length === 0 ? (
+                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                  No tracks added yet.
+                </div>
+              ) : (
+                orderedTracks.map((song, index) => (
+                  <SortableTrackRow
+                    key={song.id}
+                    song={song}
+                    index={index}
+                    canManage={canManage}
+                    disabled={saving}
+                    onRemove={() => removeTrack(song.id)}
+                  />
+                ))
+              )}
+            </div>
+          </SortableContext>
+        </DndContext>
       </section>
 
       <div className="flex items-center justify-between gap-3">
