@@ -32,13 +32,13 @@ type SubmissionSummary = {
   artist: string;
   status: ReviewStatus;
   duration: number;
+  key: string | null;
+  bpm: number | null;
   created_at: string;
   artist_profile: ArtistProfileSummary | null;
 };
 
 type SubmissionSong = SubmissionSummary & {
-  bpm: number | null;
-  key: string | null;
   genres: string[];
   moods: string[];
   regions: string[];
@@ -734,7 +734,7 @@ export default function AdminMusicReviewPage() {
                     {visibleSongs.map((item, index) => (
                       <div
                         key={item.id}
-                        className="grid min-h-[72px] grid-cols-[60px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(124px,1fr)_76px_96px_170px] items-center gap-4 px-5 text-xs transition hover:bg-[var(--bg-hover)]"
+                        className="grid min-h-[72px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs transition hover:bg-[var(--bg-hover)]"
                         style={{
                           borderBottom:
                             index === visibleSongs.length - 1
@@ -752,20 +752,24 @@ export default function AdminMusicReviewPage() {
                           </div>
                         </div>
 
-                        <div className="min-w-0 truncate text-[var(--text-subtle)]">
-                          {item.artist_profile?.name || item.artist}
-                        </div>
-
-                        <div className="flex min-w-0 items-center">
-                          <StatusBadge status={item.status} />
-                        </div>
-
                         <div className="text-[var(--text-secondary)]">
                           {formatDuration(Number(item.duration))}
                         </div>
 
                         <div className="text-[var(--text-secondary)]">
+                          {item.key || "—"}
+                        </div>
+
+                        <div className="text-[var(--text-secondary)]">
+                          {item.bpm == null ? "—" : item.bpm}
+                        </div>
+
+                        <div className="text-[var(--text-secondary)]">
                           {formatDate(item.created_at)}
+                        </div>
+
+                        <div className="flex min-w-0 items-center">
+                          <StatusBadge status={item.status} />
                         </div>
 
                         <div className="flex items-center justify-end gap-2">
