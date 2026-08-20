@@ -55,7 +55,7 @@ function getNotificationColor(kind: string) {
     return "var(--status-success)";
   }
 
-  return "color-mix(in srgb, var(--text-primary) 24%, transparent)";
+  return "color-mix(in srgb, var(--text-primary) 14%, transparent)";
 }
 
 export default function ArtistNotifications({
