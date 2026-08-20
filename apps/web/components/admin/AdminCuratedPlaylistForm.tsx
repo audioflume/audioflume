@@ -536,7 +536,13 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                     />
                   ))}
 
-              <div className="admin-playlist-actions flex flex-wrap gap-3 pt-2">
+              <div className="admin-playlist-actions flex flex-wrap justify-between gap-3 pt-2">
+                <BackendButton
+                  type="button"
+                  onClick={() => router.push(managerHref)}
+                >
+                  Back to manager
+                </BackendButton>
                 <BackendButton
                   type="submit"
                   variant="primary"
@@ -547,12 +553,6 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                     : mode === "edit"
                       ? "Save changes"
                       : "Create playlist"}
-                </BackendButton>
-                <BackendButton
-                  type="button"
-                  onClick={() => router.push(managerHref)}
-                >
-                  Back to manager
                 </BackendButton>
               </div>
             </>
