@@ -146,6 +146,16 @@ function formatDuration(value: number) {
   return `${minutes}:${seconds.toString().padStart(2, "0")}`;
 }
 
+function normalizeYearInput(value: string) {
+  return value.replace(/\D/g, "").slice(0, 4);
+}
+
+function releaseYearToDate(value: string) {
+  if (!value) return null;
+  if (!/^\d{4}$/.test(value)) return undefined;
+  return `${value}-01-01`;
+}
+
 function FieldLabel({ children }: { children: string }) {
   return (
     <label className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
@@ -571,6 +581,12 @@ export default function ArtistSongUploadForm({
       return;
     }
 
+    const releaseDate = releaseYearToDate(createReleaseDate);
+    if (releaseDate === undefined) {
+      setCreateReleaseError("Enter a valid four-digit release year.");
+      return;
+    }
+
     try {
       setCreatingRelease(true);
       setCreateReleaseError("");
@@ -581,7 +597,7 @@ export default function ArtistSongUploadForm({
         body: JSON.stringify({
           title: createReleaseTitle.trim(),
           release_type: createReleaseType,
-          release_date: createReleaseDate || null,
+          release_date: releaseDate,
         }),
       });
       const body = (await response.json().catch(() => ({}))) as ArtistReleasesResponse;
@@ -1044,12 +1060,17 @@ export default function ArtistSongUploadForm({
 
                   <label className="block">
                     <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
-                      Release date
+                      Year
                     </span>
                     <BackendInput
-                      type="date"
+                      type="text"
+                      inputMode="numeric"
                       value={createReleaseDate}
-                      onChange={(event) => setCreateReleaseDate(event.target.value)}
+                      onChange={(event) =>
+                        setCreateReleaseDate(normalizeYearInput(event.target.value))
+                      }
+                      maxLength={4}
+                      placeholder="Year"
                       disabled={creatingRelease || busy || uploadComplete}
                     />
                   </label>
@@ -1078,7 +1099,8 @@ export default function ArtistSongUploadForm({
                       busy ||
                       uploadComplete ||
                       !createReleaseTitle.trim() ||
-                      !artworkFile
+                      !artworkFile ||
+                      Boolean(createReleaseDate && !/^\d{4}$/.test(createReleaseDate))
                     }
                     className="filmwave-backend-button filmwave-backend-button-primary"
                   >
