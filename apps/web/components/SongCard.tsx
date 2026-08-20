@@ -118,6 +118,7 @@ export default function SongCard({
   const favorited = isFavorite(song.id);
   const durationLabel = formatDuration(song.duration);
   const showNoVocalsIcon = isInstrumentalSong(song);
+  const isPremium = song.licenseType === "premium";
 
   async function handleCreatePlaylist() {
     if (!newPlaylistName.trim() || isCreatingPlaylist) return;
@@ -237,7 +238,16 @@ export default function SongCard({
             <NoVocalsIcon className="filmwave-song-no-vocals-icon" />
           ) : null
         }
-        title={song.title}
+        title={
+          <span className="flex w-full min-w-0 items-center gap-1.5">
+            <span className="min-w-0 truncate">{song.title}</span>
+            {isPremium ? (
+              <span className="shrink-0 border border-[var(--border)] px-1.5 py-[2px] font-[family-name:var(--font-roboto-mono)] text-[8px] font-normal uppercase leading-none tracking-[0.04em] text-[var(--text-secondary)]">
+                Premium
+              </span>
+            ) : null}
+          </span>
+        }
         artist={song.artist}
         artistLink={
           song.artistSlug ? (
