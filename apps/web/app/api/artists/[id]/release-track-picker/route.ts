@@ -31,23 +31,42 @@ export async function GET(_request: Request, context: RouteContext) {
       .filter((songId): songId is string => typeof songId === "string");
 
     if (songIds.length === 0) {
-      return NextResponse.json({ songs: [] });
+      return NextResponse.json({ songs: [], unavailable_song_ids: [] });
     }
 
-    const { data: rows, error: songsError } = await supabaseServer
-      .from("songs")
-      .select(
-        "id, title, artist, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, edit_points, download_count, size_bytes, created_at",
-      )
-      .in("id", songIds)
-      .eq("status", "published")
-      .order("created_at", { ascending: false });
+    const [songsResult, releaseLinksResult] = await Promise.all([
+      supabaseServer
+        .from("songs")
+        .select(
+          "id, title, artist, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, edit_points, download_count, size_bytes, created_at",
+        )
+        .in("id", songIds)
+        .eq("status", "published")
+        .order("created_at", { ascending: false }),
+      supabaseServer
+        .from("artist_release_songs")
+        .select("song_id")
+        .in("song_id", songIds),
+    ]);
 
-    if (songsError) throw songsError;
+    if (songsResult.error) throw songsResult.error;
+    if (releaseLinksResult.error) throw releaseLinksResult.error;
 
-    const songs = await attachEditPoints((rows ?? []).map(normalizeSongRow));
+    const songs = await attachEditPoints(
+      (songsResult.data ?? []).map(normalizeSongRow),
+    );
+    const unavailableSongIds = [
+      ...new Set(
+        (releaseLinksResult.data ?? [])
+          .map((link) => link.song_id)
+          .filter((songId): songId is string => typeof songId === "string"),
+      ),
+    ];
 
-    return NextResponse.json({ songs });
+    return NextResponse.json({
+      songs,
+      unavailable_song_ids: unavailableSongIds,
+    });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
       return NextResponse.json(
