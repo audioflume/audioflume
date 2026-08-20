@@ -62,6 +62,7 @@ function ReleasePickerSongRow({
         type="button"
         onClick={() => togglePlayPause(song)}
         className="group relative h-[52px] w-[52px] overflow-hidden bg-[var(--bg-tertiary)]"
+        style={{ "--filmwave-song-card-play-size": "32px" } as React.CSSProperties}
         aria-label={actuallyPlaying ? `Pause ${song.title}` : `Play ${song.title}`}
       >
         <BackendMediaThumbnail
@@ -70,11 +71,13 @@ function ReleasePickerSongRow({
           className="h-full w-full"
         />
         <span
-          className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition-opacity ${
+          className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition-opacity ${
             isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
           }`}
         >
-          {actuallyPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+          <span className="filmwave-song-play-button">
+            {actuallyPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+          </span>
         </span>
       </button>
 
