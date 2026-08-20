@@ -149,7 +149,6 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-backend-button-secondary:hover {
-  background: var(--bg-hover);
   color: var(--text-primary);
 }
 
