@@ -5,7 +5,9 @@ import { SideFilterPanelBehavior as SharedSideFilterPanelBehavior } from "@filmw
 
 import { usePlaylists } from "@/hooks/usePlaylists";
 
-const LINKMATCH_BUTTON_CLASS = "fw-filter-ai-linkmatch";
+const LICENSE_FILTER_BOX_CLASS = "fw-license-filter-box";
+const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
+const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
 const WEB_MUSIC_FILTER_PANEL_SELECTOR =
   "main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-panel-wrap";
 const WEB_MUSIC_FILTER_RAIL_SELECTOR =
@@ -18,11 +20,16 @@ const DISPLAY_AI_RAIL_COUNT_CLASS = "fw-display-ai-rail-count";
 const PLAYLIST_FILTER_OPTION_CLASS = "fw-filter-playlist-option";
 const PUBLIC_PLAYLIST_FILTER_OPTION_CLASS = "is-public-playlist";
 
+const LICENSE_FILTER_OPTIONS = [
+  { value: "standard", label: "Standard License" },
+  { value: "premium", label: "Artist Premium" },
+] as const;
 const DISPLAY_AI_FILTER_OPTIONS = [
   { value: "exclude", label: "Human made" },
   { value: "only", label: "AI songs only" },
 ] as const;
 
+type LicenseFilterValue = (typeof LICENSE_FILTER_OPTIONS)[number]["value"];
 type DisplayAiFilterValue = (typeof DISPLAY_AI_FILTER_OPTIONS)[number]["value"];
 type PlaylistFilterDecoration = {
   name: string;
@@ -45,26 +52,136 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
   Display: "display",
 };
 
-function createLinkMatchButton() {
-  const button = document.createElement("button");
-  button.type = "button";
-  button.className = LINKMATCH_BUTTON_CLASS;
-  button.dataset.feature = "desktop-sync";
-  button.setAttribute("aria-label", "Open Desktop Sync companion app");
-  button.innerHTML = `
-    <span class="fw-filter-ai-linkmatch-copy">
-      <span class="fw-filter-ai-linkmatch-title-row">
-        <span class="fw-filter-ai-linkmatch-title">Desktop Sync</span>
-        <span class="fw-filter-ai-linkmatch-pill">App</span>
-      </span>
-      <span class="fw-filter-ai-linkmatch-detail-row">
-        <span class="fw-filter-ai-linkmatch-detail">Save songs, sync locally</span>
-        <span class="fw-filter-ai-linkmatch-arrow" aria-hidden="true">↗</span>
-      </span>
-    </span>
-  `;
+function getStoredLicenseFilters(): LicenseFilterValue[] {
+  try {
+    const stored = window.localStorage.getItem(LICENSE_FILTER_STORAGE_KEY);
+    if (!stored) return [];
 
-  return button;
+    const parsed = JSON.parse(stored);
+    if (!Array.isArray(parsed)) return [];
+
+    return [...new Set(parsed)].filter(
+      (value): value is LicenseFilterValue =>
+        value === "standard" || value === "premium",
+    );
+  } catch {
+    return [];
+  }
+}
+
+function setStoredLicenseFilters(values: LicenseFilterValue[]) {
+  try {
+    if (values.length > 0) {
+      window.localStorage.setItem(
+        LICENSE_FILTER_STORAGE_KEY,
+        JSON.stringify(values),
+      );
+    } else {
+      window.localStorage.removeItem(LICENSE_FILTER_STORAGE_KEY);
+    }
+  } catch {
+    // Ignore storage failures; the current view still updates from the event.
+  }
+
+  window.dispatchEvent(new Event(LICENSE_FILTER_CHANGE_EVENT));
+}
+
+function createLicenseFilterCheckIcon() {
+  return `
+    <svg viewBox="0 0 24 24" width="10" height="10" fill="none" aria-hidden="true">
+      <path
+        d="M5 12.5L9.5 17L19 7"
+        stroke="currentColor"
+        stroke-width="2.6"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  `;
+}
+
+function syncLicenseFilterBoxState(box: HTMLElement) {
+  const selectedFilters = new Set(getStoredLicenseFilters());
+
+  box.querySelectorAll<HTMLInputElement>(".fw-license-filter-input").forEach((input) => {
+    const value = input.dataset.licenseFilter as LicenseFilterValue | undefined;
+    const isSelected = Boolean(value && selectedFilters.has(value));
+    const option = input.closest<HTMLElement>(".fw-license-filter-option");
+    const check = option?.querySelector<HTMLElement>(".fw-license-filter-check");
+
+    input.checked = isSelected;
+    option?.classList.toggle("is-selected", isSelected);
+    check?.classList.toggle("is-selected", isSelected);
+
+    if (check && isSelected && !check.firstElementChild) {
+      check.innerHTML = createLicenseFilterCheckIcon();
+    } else if (check && !isSelected && check.firstElementChild) {
+      check.innerHTML = "";
+    }
+  });
+}
+
+function createLicenseFilterBox() {
+  const box = document.createElement("div");
+  box.className = LICENSE_FILTER_BOX_CLASS;
+
+  const title = document.createElement("div");
+  title.className = "fw-license-filter-title";
+  title.textContent = "License";
+  box.appendChild(title);
+
+  const options = document.createElement("div");
+  options.className = "fw-license-filter-options";
+
+  LICENSE_FILTER_OPTIONS.forEach((option) => {
+    const label = document.createElement("label");
+    label.className = "fw-license-filter-option";
+
+    const labelText = document.createElement("span");
+    labelText.className = "fw-license-filter-label";
+    labelText.textContent = option.label;
+
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.className = "fw-license-filter-input";
+    input.dataset.licenseFilter = option.value;
+    input.setAttribute("aria-label", `Filter by ${option.label}`);
+    input.addEventListener("change", () => {
+      const selectedFilters = new Set(getStoredLicenseFilters());
+
+      if (input.checked) selectedFilters.add(option.value);
+      else selectedFilters.delete(option.value);
+
+      setStoredLicenseFilters([...selectedFilters]);
+      syncLicenseFilterBoxes();
+    });
+
+    const check = document.createElement("span");
+    check.className = "fw-license-filter-check";
+    check.setAttribute("aria-hidden", "true");
+
+    label.appendChild(labelText);
+    label.appendChild(input);
+    label.appendChild(check);
+    options.appendChild(label);
+  });
+
+  box.appendChild(options);
+  syncLicenseFilterBoxState(box);
+  return box;
+}
+
+function syncLicenseFilterBoxes() {
+  document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_RAIL_SELECTOR).forEach((rail) => {
+    syncWebRailItemSectionIds(rail);
+    rail.querySelector(":scope > .fw-filter-ai-linkmatch")?.remove();
+
+    let box = rail.querySelector<HTMLElement>(`:scope > .${LICENSE_FILTER_BOX_CLASS}`);
+    if (!box) box = createLicenseFilterBox();
+    if (rail.firstElementChild !== box) rail.prepend(box);
+
+    syncLicenseFilterBoxState(box);
+  });
 }
 
 function getStoredDisplayAiFilter(): DisplayAiFilterValue | null {
@@ -256,19 +373,8 @@ function syncWebRailItemSectionIds(rail: HTMLElement) {
   });
 }
 
-function syncLinkMatchRailButtons() {
-  document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_RAIL_SELECTOR).forEach((rail) => {
-    syncWebRailItemSectionIds(rail);
-
-    let button = rail.querySelector<HTMLButtonElement>(`:scope > .${LINKMATCH_BUTTON_CLASS}`);
-
-    if (!button) button = createLinkMatchButton();
-    if (rail.firstElementChild !== button) rail.prepend(button);
-  });
-}
-
 function syncWebMusicFilterEnhancements(playlists: PlaylistFilterDecoration[]) {
-  syncLinkMatchRailButtons();
+  syncLicenseFilterBoxes();
   syncDisplayAiFilterOptions();
   syncPlaylistFilterOptionClasses(playlists);
 }
@@ -297,10 +403,12 @@ export default function SideFilterPanelBehavior() {
     syncEnhancements();
     window.requestAnimationFrame(syncEnhancements);
     observer.observe(document.body, { childList: true, subtree: true });
+    window.addEventListener(LICENSE_FILTER_CHANGE_EVENT, scheduleSync);
 
     return () => {
       if (syncFrame) window.cancelAnimationFrame(syncFrame);
       observer.disconnect();
+      window.removeEventListener(LICENSE_FILTER_CHANGE_EVENT, scheduleSync);
     };
   }, [playlists]);
 
