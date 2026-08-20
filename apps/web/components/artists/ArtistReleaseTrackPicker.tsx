@@ -39,10 +39,12 @@ function formatDuration(seconds: number) {
 function ReleasePickerSongRow({
   song,
   selected,
+  alreadyAdded,
   onToggle,
 }: {
   song: Song;
   selected: boolean;
+  alreadyAdded: boolean;
   onToggle: () => void;
 }) {
   const { currentSong, isPlaying, togglePlayPause } = usePlayer();
@@ -50,10 +52,15 @@ function ReleasePickerSongRow({
   const actuallyPlaying = isCurrentSong && isPlaying;
 
   return (
-    <div className="grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs transition-colors last:border-b-0 hover:bg-[var(--bg-hover)]">
+    <div
+      className={`grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs transition-colors last:border-b-0 hover:bg-[var(--bg-hover)] ${
+        alreadyAdded ? "opacity-50" : ""
+      }`}
+    >
       <BackendCheckbox
         checked={selected}
         onChange={() => onToggle()}
+        disabled={alreadyAdded}
         ariaLabel={`Select ${song.title}`}
         className="min-h-0 justify-center"
       />
@@ -84,6 +91,7 @@ function ReleasePickerSongRow({
       <button
         type="button"
         onClick={onToggle}
+        disabled={alreadyAdded}
         className="min-w-0 text-left"
       >
         <BackendRowTitle secondary={song.artist}>{song.title}</BackendRowTitle>
@@ -168,7 +176,6 @@ export default function ArtistReleaseTrackPicker({
     const query = search.trim().toLowerCase();
 
     return songs.filter((song) => {
-      if (existingIdSet.has(song.id)) return false;
       if (!query) return true;
 
       return [song.title, song.artist, ...song.genres]
@@ -176,7 +183,7 @@ export default function ArtistReleaseTrackPicker({
         .toLowerCase()
         .includes(query);
     });
-  }, [existingIdSet, search, songs]);
+  }, [search, songs]);
 
   function toggleSong(songId: string) {
     if (existingIdSet.has(songId) || singleHasTrack) return;
@@ -271,6 +278,7 @@ export default function ArtistReleaseTrackPicker({
                   key={song.id}
                   song={song}
                   selected={selectedIds.has(song.id)}
+                  alreadyAdded={existingIdSet.has(song.id)}
                   onToggle={() => toggleSong(song.id)}
                 />
               ))
