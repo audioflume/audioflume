@@ -296,7 +296,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-license-f
   justify-content: center;
   border: 1px solid var(--filmwave-border-color);
   border-radius: 999px;
-  background: var(--bg-control);
+  background: transparent;
   color: var(--bg-primary);
   transition: background-color 150ms ease, border-color 150ms ease, color 150ms ease;
 }
