@@ -18,6 +18,8 @@ type ArtistSongSummary = {
 type ReplacementResponse = {
   song?: ArtistSongSummary;
   reset_for_review?: boolean;
+  revision_pending?: boolean;
+  revision_status?: string;
   error?: string;
 };
 
@@ -25,7 +27,12 @@ type ArtistSongAudioReplacementProps = {
   artist: ArtistDashboardProfile;
   song: ArtistSongSummary;
   onClose: () => void;
-  onReplaced: (song: ArtistSongSummary, resetForReview: boolean) => void;
+  onReplaced: (
+    song: ArtistSongSummary,
+    resetForReview: boolean,
+    revisionPending: boolean,
+  ) => void;
+  embedded?: boolean;
 };
 
 function downsamplePeaks(peaks: Float32Array, targetLength = 1500) {
@@ -83,6 +90,7 @@ export default function ArtistSongAudioReplacement({
   song,
   onClose,
   onReplaced,
+  embedded = false,
 }: ArtistSongAudioReplacementProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [file, setFile] = useState<File | null>(null);
@@ -91,12 +99,14 @@ export default function ArtistSongAudioReplacement({
   const [analyzing, setAnalyzing] = useState(false);
   const [replacing, setReplacing] = useState(false);
   const [error, setError] = useState("");
+  const [message, setMessage] = useState("");
 
   async function selectFile(nextFile: File | null) {
     setFile(nextFile);
     setWaveformPeaks("[]");
     setDuration(0);
     setError("");
+    setMessage("");
 
     if (!nextFile) return;
 
@@ -123,6 +133,7 @@ export default function ArtistSongAudioReplacement({
     try {
       setReplacing(true);
       setError("");
+      setMessage("");
 
       const formData = new FormData();
       formData.append("file", file);
@@ -139,7 +150,20 @@ export default function ArtistSongAudioReplacement({
         throw new Error(body.error || "Failed to replace track audio");
       }
 
-      onReplaced(body.song, Boolean(body.reset_for_review));
+      const revisionPending = Boolean(body.revision_pending);
+      setFile(null);
+      setWaveformPeaks("[]");
+      setDuration(0);
+      setMessage(
+        revisionPending
+          ? "Audio change sent for approval. The current audio will stay live until it is approved."
+          : "Audio updated.",
+      );
+      onReplaced(
+        body.song,
+        Boolean(body.reset_for_review),
+        revisionPending,
+      );
     } catch (replaceError) {
       setError(
         replaceError instanceof Error
@@ -151,27 +175,29 @@ export default function ArtistSongAudioReplacement({
     }
   }
 
-  const resetsReview =
-    song.status === "published" ||
-    song.status === "approved" ||
-    song.status === "rejected";
+  const pendingApproval = song.status === "published" || song.status === "approved";
+  const resetsReview = song.status === "rejected";
 
   return (
     <div className="grid gap-4">
-      <div className="flex items-center justify-between gap-3">
-        <button
-          type="button"
-          onClick={onClose}
-          disabled={replacing}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
-        >
-          Back to Music
-        </button>
-      </div>
+      {!embedded ? (
+        <div className="flex items-center justify-between gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            disabled={replacing}
+            className="filmwave-backend-button filmwave-backend-button-secondary"
+          >
+            Back to Music
+          </button>
+        </div>
+      ) : null}
 
       <section className="filmwave-backend-section">
         <div className="filmwave-backend-section-header">
-          <h2 className="filmwave-backend-section-title">Replace audio</h2>
+          <h2 className="filmwave-backend-section-title">
+            {embedded ? "Audio" : "Replace audio"}
+          </h2>
         </div>
 
         <div className="grid gap-5 p-5">
@@ -180,9 +206,11 @@ export default function ArtistSongAudioReplacement({
               {song.title}
             </div>
             <div className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
-              {resetsReview
-                ? "Replacing this audio will return the track to Draft so the new master can be reviewed again."
-                : "Metadata, credits, rights, and artist credits will stay unchanged."}
+              {pendingApproval
+                ? "A replacement master will be sent for approval while the current audio remains live."
+                : resetsReview
+                  ? "Replacing this audio will return the track to Draft so the new master can be reviewed again."
+                  : "Metadata, credits, rights, and artist credits will stay unchanged."}
             </div>
           </div>
 
@@ -218,6 +246,8 @@ export default function ArtistSongAudioReplacement({
 
           {error ? (
             <div className="text-xs text-[var(--status-error,#dc584f)]">{error}</div>
+          ) : message ? (
+            <div className="text-xs text-[var(--status-success,#48b571)]">{message}</div>
           ) : null}
         </div>
       </section>
@@ -229,7 +259,7 @@ export default function ArtistSongAudioReplacement({
           disabled={!file || analyzing || replacing}
           className="filmwave-backend-button filmwave-backend-button-primary"
         >
-          {replacing ? "Replacing..." : "Replace Audio"}
+          {replacing ? "Saving..." : embedded ? "Save Audio" : "Replace Audio"}
         </button>
       </div>
     </div>
