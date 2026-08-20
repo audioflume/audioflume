@@ -89,6 +89,7 @@ type ArtistSongEditorProps = {
   onClose: () => void;
   onSaved: (song: { id: string; title: string }) => void;
   beforeContent?: ReactNode;
+  songInfoExtra?: ReactNode;
   afterContent?: ReactNode;
 };
 
@@ -113,10 +114,14 @@ const KEY_OPTIONS = [
   "Gbmin",
   "Gmaj",
   "Gmin",
+  "G#maj",
+  "G#min",
   "Abmaj",
   "Abmin",
   "Amaj",
   "Amin",
+  "A#maj",
+  "A#min",
   "Bbmaj",
   "Bbmin",
   "Bmaj",
@@ -253,6 +258,7 @@ export default function ArtistSongEditor({
   onClose,
   onSaved,
   beforeContent,
+  songInfoExtra,
   afterContent,
 }: ArtistSongEditorProps) {
   const canEditMetadata = artist.permissions.includes("catalog:edit");
@@ -584,6 +590,7 @@ export default function ArtistSongEditor({
                   readOnly
                 />
               </div>
+              {songInfoExtra}
               <div>
                 <NumericInput
                   value={bpm}
