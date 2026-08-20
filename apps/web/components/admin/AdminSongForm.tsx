@@ -901,7 +901,7 @@ function UploadStatusIcon({
           color: "var(--status-contrast)",
         }}
       >
-        <CheckMarkIcon size={11} strokeWidth={3} />
+        <CheckMarkIcon size={11} strokeWidth={3} className="text-white" />
       </div>
     );
   }
