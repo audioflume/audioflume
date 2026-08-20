@@ -1,8 +1,13 @@
 "use client";
 
+import { useCallback, useState } from "react";
+
 import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
-import ArtistSongAudioReplacement from "@/components/artists/ArtistSongAudioReplacement";
+import ArtistSongEditFiles, {
+  type ArtistSongCurrentRelease,
+} from "@/components/artists/ArtistSongEditFiles";
 import ArtistSongEditor from "@/components/artists/ArtistSongEditor";
+import { BackendSelect } from "@/components/backend/BackendControls";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ArtistSongSummary = {
@@ -31,6 +36,13 @@ export default function ArtistSongEditorWithCollaborators({
   onClose,
   onSaved,
 }: ArtistSongEditorWithCollaboratorsProps) {
+  const [currentRelease, setCurrentRelease] =
+    useState<ArtistSongCurrentRelease | null>(null);
+  const handleReleaseLoaded = useCallback(
+    (release: ArtistSongCurrentRelease | null) => setCurrentRelease(release),
+    [],
+  );
+
   return (
     <ArtistSongEditor
       artist={artist}
@@ -38,18 +50,33 @@ export default function ArtistSongEditorWithCollaborators({
       onClose={onClose}
       onSaved={onSaved}
       beforeContent={
-        <ArtistSongAudioReplacement
+        <ArtistSongEditFiles
           artist={artist}
-          song={song}
+          songId={song.id}
           onClose={onClose}
-          embedded
-          onReplaced={(updatedSong, _resetForReview, revisionPending) =>
-            onSaved(
-              { id: updatedSong.id, title: updatedSong.title },
-              revisionPending,
-            )
+          onReleaseLoaded={handleReleaseLoaded}
+          onRevisionPending={() =>
+            onSaved({ id: song.id, title: song.title }, true)
           }
         />
+      }
+      songInfoExtra={
+        <div>
+          <BackendSelect
+            aria-label="Release"
+            value={currentRelease?.id ?? ""}
+            onChange={() => undefined}
+            className={`filmwave-backend-select-end-control ${
+              currentRelease
+                ? "text-[var(--text-primary)]"
+                : "text-[var(--text-muted)]"
+            }`}
+          >
+            <option value={currentRelease?.id ?? ""}>
+              {currentRelease?.title ?? "Not part of a release"}
+            </option>
+          </BackendSelect>
+        </div>
       }
       afterContent={
         <ArtistCollaboratorsEditor
