@@ -164,3 +164,89 @@ export async function POST(request: Request, context: RouteContext) {
     );
   }
 }
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  try {
+    const { id, songId } = await context.params;
+    const access = await requireArtistPermission(id, "catalog:edit");
+
+    const { data: songLink, error: linkError } = await supabaseServer
+      .from("song_artists")
+      .select("song_id")
+      .eq("artist_id", id)
+      .eq("song_id", songId)
+      .eq("role", "primary")
+      .maybeSingle();
+
+    if (linkError) throw linkError;
+    if (!songLink) {
+      return NextResponse.json({ error: "Track not found" }, { status: 404 });
+    }
+
+    const { data: song, error: songError } = await supabaseServer
+      .from("songs")
+      .select("id, status")
+      .eq("id", songId)
+      .maybeSingle();
+
+    if (songError) throw songError;
+    if (!song) {
+      return NextResponse.json({ error: "Track not found" }, { status: 404 });
+    }
+
+    const usesPendingRevision = songStatusUsesPendingRevision(song.status);
+    if (
+      song.status !== "draft" &&
+      song.status !== "changes_requested" &&
+      !usesPendingRevision
+    ) {
+      return NextResponse.json(
+        { error: "This track cannot be edited from its current status" },
+        { status: 409 },
+      );
+    }
+
+    if (usesPendingRevision) {
+      await upsertSongFileMetadataRevision({
+        songId,
+        userId: access.userId,
+        metadataPatch: { cover_url: null },
+      });
+
+      return NextResponse.json({
+        song: { id: songId, cover_url: null },
+        revision_pending: true,
+      });
+    }
+
+    const { data: updatedSong, error: updateError } = await supabaseServer
+      .from("songs")
+      .update({ cover_url: null })
+      .eq("id", songId)
+      .select("id, cover_url")
+      .maybeSingle();
+
+    if (updateError) throw updateError;
+    if (!updatedSong) {
+      return NextResponse.json({ error: "Track not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ song: updatedSong, revision_pending: false });
+  } catch (error) {
+    if (error instanceof ArtistAccessError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    }
+
+    console.error("Artist song artwork removal failed:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to remove song artwork",
+      },
+      { status: 500 },
+    );
+  }
+}
