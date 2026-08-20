@@ -164,7 +164,6 @@ export default function ArtistMusicUploader({
 
   function handleNewSongUploaded(song: ArtistSongSummary) {
     setSongs((current) => [song, ...current.filter((item) => item.id !== song.id)]);
-    setLoadRequestKey((current) => current + 1);
     onUploaded();
   }
 
