@@ -110,7 +110,7 @@ export default function BackendArtworkUpload({
             type="button"
             disabled={disabled}
             onClick={() => inputRef.current?.click()}
-            className="mt-1 h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-normal text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-1 h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
             style={{ width: compactSize }}
           >
             Choose image
@@ -241,7 +241,7 @@ export default function BackendArtworkUpload({
                 type="button"
                 disabled={disabled}
                 onClick={() => inputRef.current?.click()}
-                className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:opacity-50"
+                className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
               >
                 Change image
               </button>
