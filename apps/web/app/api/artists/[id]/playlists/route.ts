@@ -5,6 +5,7 @@ import {
   ArtistAccessError,
   requireArtistPermission,
 } from "@/lib/artistPermissions";
+import { normalizeSongRow } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -92,7 +93,7 @@ export async function GET(_request: Request, context: RouteContext) {
       songIds.length > 0
         ? supabaseServer
             .from("songs")
-            .select("id, title, status, duration, bpm, key, cover_url, created_at")
+            .select("*")
             .in("id", songIds)
             .neq("status", "rejected")
             .order("created_at", { ascending: false })
@@ -117,7 +118,10 @@ export async function GET(_request: Request, context: RouteContext) {
         ...playlist,
         song_ids: songsByPlaylist.get(playlist.id) ?? [],
       })),
-      songs: songsResult.data ?? [],
+      songs: (songsResult.data ?? []).map((song) => ({
+        ...song,
+        player_song: normalizeSongRow(song),
+      })),
     });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
