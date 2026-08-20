@@ -295,36 +295,37 @@ export default function ArtistMusicUploader({
     : songs;
 
   return (
-    <div className="grid gap-4">
-      <div className="flex min-h-10 flex-wrap items-center justify-between gap-3">
-        <div className="min-h-5 text-xs">
+    <div>
+      <div className="mb-4 flex items-center justify-between gap-4">
+        <BackendSearchBar
+          value={searchQuery}
+          onChange={setSearchQuery}
+          placeholder="Search"
+          className="w-full max-w-[500px]"
+          clearLabel="Clear music search"
+        />
+
+        {canUpload ? (
+          <button
+            type="button"
+            onClick={() => setCreatingSong(true)}
+            className="filmwave-backend-button filmwave-backend-button-primary"
+          >
+            <UploadIcon size={15} />
+            Upload Song
+          </button>
+        ) : null}
+      </div>
+
+      {catalogError || catalogMessage ? (
+        <div className="mb-4 min-h-5 text-xs">
           {catalogError ? (
             <span className="text-[var(--status-error,#dc584f)]">{catalogError}</span>
           ) : catalogMessage ? (
             <span className="text-[var(--status-success,#48b571)]">{catalogMessage}</span>
           ) : null}
         </div>
-
-        <div className="flex max-w-full flex-wrap items-center justify-end gap-2">
-          <BackendSearchBar
-            value={searchQuery}
-            onChange={setSearchQuery}
-            placeholder="Search music"
-            className="w-[260px] max-w-full"
-            clearLabel="Clear music search"
-          />
-          {canUpload ? (
-            <button
-              type="button"
-              onClick={() => setCreatingSong(true)}
-              className="filmwave-backend-button filmwave-backend-button-primary"
-            >
-              <UploadIcon size={15} />
-              Upload Song
-            </button>
-          ) : null}
-        </div>
-      </div>
+      ) : null}
 
       <section className="filmwave-backend-section">
         <div className="filmwave-backend-section-header-bordered">
