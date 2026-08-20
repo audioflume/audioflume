@@ -323,7 +323,7 @@ export default function ArtistMusicUploader({
         ) : null}
 
         <div className="overflow-x-auto overflow-y-hidden">
-          <div className="min-w-[1040px]">
+          <div className="min-w-[1280px]">
             {loadState === "loading" ? (
               <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 Loading music...
@@ -375,7 +375,7 @@ export default function ArtistMusicUploader({
                   return (
                     <div
                       key={song.id}
-                      className="grid min-h-[72px] grid-cols-[60px_minmax(180px,1.5fr)_70px_70px_70px_120px_minmax(360px,auto)] items-center gap-4 px-5 text-xs"
+                      className="grid min-h-[72px] grid-cols-[60px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(124px,1fr)_76px_96px_70px_70px_minmax(320px,auto)] items-center gap-4 px-5 text-xs"
                       style={{
                         borderBottom:
                           index === songs.length - 1
@@ -393,13 +393,26 @@ export default function ArtistMusicUploader({
                         <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
                           {song.title}
                         </div>
-                        <div className="mt-1 text-[11px] text-[var(--text-muted)]">
-                          Uploaded {formatDate(song.created_at)}
-                        </div>
+                      </div>
+
+                      <div className="min-w-0 truncate text-[var(--text-subtle)]">
+                        {artist.name}
+                      </div>
+
+                      <div className="flex min-w-0 items-center">
+                        <span
+                          className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
+                        >
+                          {formatStatus(song.status)}
+                        </span>
                       </div>
 
                       <div className="text-[var(--text-secondary)]">
                         {formatDuration(Number(song.duration))}
+                      </div>
+
+                      <div className="text-[var(--text-secondary)]">
+                        {formatDate(song.created_at)}
                       </div>
 
                       <div className="text-[var(--text-secondary)]">
@@ -408,14 +421,6 @@ export default function ArtistMusicUploader({
 
                       <div className="text-[var(--text-secondary)]">
                         {song.bpm == null ? "—" : song.bpm}
-                      </div>
-
-                      <div className="flex justify-end">
-                        <span
-                          className={`filmwave-backend-status-badge ${statusClassName(song.status)}`}
-                        >
-                          {formatStatus(song.status)}
-                        </span>
                       </div>
 
                       <div className="flex flex-wrap justify-end gap-2">
