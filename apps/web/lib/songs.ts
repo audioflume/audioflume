@@ -157,6 +157,7 @@ export function normalizeSongRow(row: any): Song {
     vocals: Array.isArray(row.vocals) ? row.vocals : [],
     instrumental: Boolean(row.instrumental),
     aiGenerated: Boolean(row.ai_generated),
+    licenseType: row.license_type === "premium" ? "premium" : "standard",
     editPoints: String(row.edit_points || emptyEditPoints()),
     downloadCount: Number(row.download_count || 0),
     sizeBytes,
