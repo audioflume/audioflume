@@ -316,7 +316,7 @@ export default function ArtistSongEditFiles({
   const disabled = loading || Boolean(busy) || !canEdit;
 
   return (
-    <div className="grid gap-2">
+    <>
       <BackendSongFileUpload
         audioFile={audioFile}
         onAudioFileChange={(file) => void handleAudioFileChange(file)}
@@ -360,6 +360,6 @@ export default function ArtistSongEditFiles({
           {message}
         </div>
       ) : null}
-    </div>
+    </>
   );
 }
