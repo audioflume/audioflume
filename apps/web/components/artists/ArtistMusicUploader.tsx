@@ -447,6 +447,7 @@ export default function ArtistMusicUploader({
                           onClick={() => handlePlayClick(song)}
                           disabled={!playerSong?.audioUrl}
                           className="group/artist-song-thumb relative flex h-[52px] w-[52px] items-center justify-center overflow-hidden bg-[var(--bg-tertiary)] text-[var(--text-muted)] disabled:cursor-default"
+                          style={{ "--filmwave-song-card-play-size": "32px" } as React.CSSProperties}
                           aria-label={rowIsPlaying ? "Pause song" : "Play song"}
                         >
                           {playerSong?.coverArt ? (
@@ -460,13 +461,15 @@ export default function ArtistMusicUploader({
                           )}
                           {playerSong?.audioUrl ? (
                             <span
-                              className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${
+                              className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition ${
                                 isCurrentSong
                                   ? "opacity-100"
                                   : "opacity-0 group-hover/artist-song-thumb:opacity-100"
                               }`}
                             >
-                              {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
+                              <span className="filmwave-song-play-button">
+                                {rowIsPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+                              </span>
                             </span>
                           ) : null}
                         </button>
