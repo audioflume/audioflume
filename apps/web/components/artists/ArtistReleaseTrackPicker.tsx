@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import Waveform from "@/components/Waveform";
 import {
   BackendButton,
   BackendCheckbox,
@@ -53,7 +54,7 @@ function ReleasePickerSongRow({
 
   return (
     <div
-      className={`grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs transition-colors last:border-b-0 hover:bg-[var(--bg-hover)] ${
+      className={`grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_minmax(220px,1.35fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs transition-colors last:border-b-0 hover:bg-[var(--bg-hover)] ${
         alreadyAdded ? "opacity-50" : ""
       }`}
     >
@@ -96,6 +97,12 @@ function ReleasePickerSongRow({
       >
         <BackendRowTitle secondary={song.artist}>{song.title}</BackendRowTitle>
       </button>
+
+      <div className="min-w-0 pr-7">
+        <div className="h-[14px] overflow-hidden">
+          <Waveform song={song} compact />
+        </div>
+      </div>
 
       <div className="text-[var(--text-secondary)]">
         {formatDuration(song.duration)}
@@ -259,7 +266,7 @@ export default function ArtistReleaseTrackPicker({
         </div>
 
         <div className="-mx-5 min-h-0 flex-1 overflow-x-auto overflow-y-auto border-t border-[var(--border-subtle)]">
-          <div className="min-w-[620px]">
+          <div className="min-w-[900px]">
             {loading ? (
               <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)]">
                 Loading tracks...
