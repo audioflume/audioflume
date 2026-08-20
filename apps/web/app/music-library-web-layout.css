@@ -196,7 +196,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ra
   border: 1px solid var(--filmwave-border-color);
   border-radius: 8px;
   background: var(--bg-primary);
-  margin: 0 0 8px;
+  margin: 10px 0 8px;
   padding: 9px 10px;
   order: 0;
 }
@@ -213,7 +213,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-license-f
   border: 1px solid var(--filmwave-border-color);
   border-radius: 8px;
   background: var(--bg-primary);
-  margin: 0 0 8px;
+  margin: 10px 0 8px;
   padding: 9px 8px 8px 10px;
   color: var(--text-primary);
 }
