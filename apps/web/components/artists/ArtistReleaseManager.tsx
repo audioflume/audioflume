@@ -520,17 +520,17 @@ export default function ArtistReleaseManager({
           >
             <div className="divide-y divide-[var(--border-subtle)]">
               {loadState === "loading" ? (
-                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                   Loading releases...
                 </div>
               ) : null}
               {loadState === "error" ? (
-                <div className="px-5 py-5 text-xs text-[var(--danger)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
                   {loadError || "Releases could not be loaded."}
                 </div>
               ) : null}
               {loadState === "ready" && releases.length === 0 ? (
-                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                   No releases created yet.
                 </div>
               ) : null}
