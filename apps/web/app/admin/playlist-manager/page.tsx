@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
@@ -20,6 +20,7 @@ function isManagerTab(value: string | null): value is ManagerTab {
 }
 
 export default function PlaylistManagerPage() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams.get("tab");
   const queryTab: ManagerTab | null = isManagerTab(tabParam) ? tabParam : null;
@@ -44,6 +45,7 @@ export default function PlaylistManagerPage() {
   const selectTab = (tab: ManagerTab) => {
     setActiveTab(tab);
     window.localStorage.setItem(PLAYLIST_MANAGER_TAB_STORAGE_KEY, tab);
+    router.replace(`/admin/playlist-manager?tab=${tab}`, { scroll: false });
   };
 
   useEffect(() => {
@@ -116,7 +118,7 @@ export default function PlaylistManagerPage() {
       contentAreaBottomPadding={false}
     >
       <div className="mb-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2">
+        <div className={`flex items-center gap-2 ${activeTab === null ? "invisible" : ""}`}>
           {(["playlists", "curated", "discover"] as ManagerTab[]).map((tab) => (
             <button
               key={tab}
