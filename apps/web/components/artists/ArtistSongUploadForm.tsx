@@ -832,17 +832,6 @@ export default function ArtistSongUploadForm({
 
   return (
     <div>
-      <div className="mb-4 flex min-h-10 flex-wrap items-center justify-end gap-3">
-        <button
-          type="button"
-          onClick={onClose}
-          disabled={busy}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
-        >
-          Back to Music
-        </button>
-      </div>
-
       <form
         className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
         onSubmit={handleSubmit}
@@ -884,6 +873,16 @@ export default function ArtistSongUploadForm({
                 </button>
               ) : null
             }
+            topAction={
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={busy}
+                className="filmwave-backend-button filmwave-backend-button-secondary"
+              >
+                Back to Music
+              </button>
+            }
             disabled={!canUpload || !canEditMetadata || busy || uploadComplete}
           />
 
@@ -892,7 +891,7 @@ export default function ArtistSongUploadForm({
               <h2 className="filmwave-backend-section-title">Song Info</h2>
             </div>
 
-            <div className="grid gap-2 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
               <div>
                 <BackendInput
                   aria-label="Song Title"
