@@ -379,7 +379,7 @@ export default function AdminVideoUpload({
             }}
             onDrop={handleDrop}
             onDragOver={(event) => event.preventDefault()}
-            className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--text-secondary)]"
+            className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
           >
             <video
               src={preview}
@@ -412,9 +412,9 @@ export default function AdminVideoUpload({
           }}
           onDrop={handleDrop}
           onDragOver={(event) => event.preventDefault()}
-          className="mt-1 flex min-h-[112px] cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--text-secondary)] hover:bg-[var(--bg-hover)]"
+          className="group mt-1 flex min-h-[112px] cursor-pointer items-center justify-center gap-3 rounded-[14px] border border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)]"
         >
-          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-hover:bg-[var(--bg-primary)]">
             <UploadIcon />
           </div>
 
