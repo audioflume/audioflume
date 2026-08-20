@@ -24,6 +24,7 @@ import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
 import ArtistReleaseManager from "@/components/artists/ArtistReleaseManager";
 import ArtistTeamManager from "@/components/artists/ArtistTeamManager";
 import Footer from "@/components/Footer";
+import { usePlayer } from "@/context/PlayerContext";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ArtistDashboardSection =
@@ -168,6 +169,8 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
 export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellProps) {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { currentSong } = usePlayer();
+  const playerVisible = Boolean(currentSong);
   const requestedSection = searchParams.get("section");
   const requestedArtistId = searchParams.get("artist");
   const artistSwitcherRef = useRef<HTMLDivElement>(null);
@@ -375,7 +378,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         isMyPage ? "pt-[var(--filmwave-header-height)]" : "pt-14"
       } ${sectionReady ? "" : "invisible"}`}
     >
-      <BackendSidebarShell>
+      <BackendSidebarShell bottom={playerVisible ? "64px" : "0px"}>
         <BackendSidebarScrollArea>
           <div ref={artistSwitcherRef} className="relative">
             <button
@@ -676,11 +679,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
           {!isMyPage ? (
             <div className="mt-16">
-              <Footer
-                playerPadding={false}
-                showTopBorder={false}
-                pageGutter={false}
-              />
+              <Footer showTopBorder={false} pageGutter={false} />
             </div>
           ) : null}
         </div>
