@@ -217,18 +217,21 @@ function SortablePlaylistTrackRow({
         onClick={handlePlayClick}
         disabled={!playerSong?.audioUrl}
         className="group/artist-playlist-thumb relative h-10 w-10 shrink-0 cursor-pointer overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] disabled:cursor-default"
+        style={{ "--filmwave-song-card-play-size": "32px" } as React.CSSProperties}
         aria-label={rowIsPlaying ? "Pause song" : "Play song"}
       >
         <BackendMediaThumbnail src={song.cover_url} size={40} className="rounded-[6px]" />
         {playerSong?.audioUrl ? (
           <span
-            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${
+            className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition ${
               isCurrentSong
                 ? "opacity-100"
                 : "opacity-0 group-hover/artist-playlist-thumb:opacity-100"
             }`}
           >
-            {rowIsPlaying ? <PauseIcon /> : <PlayIconSmall />}
+            <span className="filmwave-song-play-button">
+              {rowIsPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+            </span>
           </span>
         ) : null}
       </button>
