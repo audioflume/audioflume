@@ -301,7 +301,7 @@ export async function POST(request: Request, context: RouteContext) {
         size_bytes: file.size,
         status: "draft",
       })
-      .select("id, title, status, duration, bpm, key, created_at")
+      .select("*")
       .single();
 
     if (songError) {
@@ -342,7 +342,12 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     return NextResponse.json(
-      { song: song as ArtistSongSummary },
+      {
+        song: {
+          ...(song as ArtistSongSummary),
+          player_song: normalizeSongRow(song),
+        },
+      },
       { status: 201 },
     );
   } catch (error) {
