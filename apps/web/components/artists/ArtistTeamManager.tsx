@@ -338,11 +338,11 @@ export default function ArtistTeamManager({
         </div>
 
         {loading ? (
-          <div className="px-5 py-10 text-center text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
             Loading team...
           </div>
         ) : members.length === 0 ? (
-          <div className="px-5 py-10 text-center text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
             No team members found.
           </div>
         ) : (
