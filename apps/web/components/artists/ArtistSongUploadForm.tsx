@@ -849,16 +849,6 @@ export default function ArtistSongUploadForm({
             }
             artworkDisabled={releaseArtworkLocked}
             artworkHelp={artworkHelp}
-            topAction={
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={busy || creatingRelease}
-                className="filmwave-backend-button filmwave-backend-button-secondary"
-              >
-                Back to Music
-              </button>
-            }
             disabled={
               !canUpload ||
               !canEditMetadata ||
@@ -1308,14 +1298,6 @@ export default function ArtistSongUploadForm({
             </div>
             <div className="grid gap-2 px-5 pb-5">
               <button
-                type="button"
-                onClick={onClose}
-                disabled={busy || creatingRelease}
-                className="filmwave-backend-button filmwave-backend-button-secondary w-full"
-              >
-                Back to Music
-              </button>
-              <button
                 type="submit"
                 disabled={
                   !canUpload ||
@@ -1338,6 +1320,14 @@ export default function ArtistSongUploadForm({
                           ? "Saving..."
                           : "Upload Song"}
                 </span>
+              </button>
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={busy || creatingRelease}
+                className="filmwave-backend-button filmwave-backend-button-secondary w-full"
+              >
+                Back to Music
               </button>
             </div>
           </section>

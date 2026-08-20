@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSongEditPointsSection from "@/components/admin/AdminSongEditPointsSection";
@@ -910,6 +911,7 @@ function UploadStatusIcon({
 }
 
 export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
+  const router = useRouter();
   const { user, isLoaded } = useUser();
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -2114,6 +2116,15 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 >
                   {!isSaving && <UploadIcon size={15} />}
                   <span>{submitLabel}</span>
+                </BackendButton>
+
+                <BackendButton
+                  type="button"
+                  onClick={() => router.push("/admin/music-library")}
+                  disabled={isSaving}
+                  className="w-full"
+                >
+                  Back to Music
                 </BackendButton>
               </div>
             </section>

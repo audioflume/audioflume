@@ -49,7 +49,6 @@ type ArtworkResponse = {
 type ArtistSongEditFilesProps = {
   artist: ArtistDashboardProfile;
   songId: string;
-  onClose: () => void;
   onReleaseLoaded: (release: ArtistSongCurrentRelease | null) => void;
   onRevisionPending?: () => void;
 };
@@ -77,7 +76,6 @@ function stemLabels(value: string | null) {
 export default function ArtistSongEditFiles({
   artist,
   songId,
-  onClose,
   onReleaseLoaded,
   onRevisionPending,
 }: ArtistSongEditFilesProps) {
@@ -339,16 +337,6 @@ export default function ArtistSongEditFiles({
           currentRelease
             ? `This song uses ${currentRelease.title} release artwork.`
             : undefined
-        }
-        topAction={
-          <button
-            type="button"
-            onClick={onClose}
-            disabled={Boolean(busy)}
-            className="filmwave-backend-button filmwave-backend-button-secondary"
-          >
-            Back to Music
-          </button>
         }
         disabled={disabled}
       />

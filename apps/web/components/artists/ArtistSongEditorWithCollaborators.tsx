@@ -53,7 +53,6 @@ export default function ArtistSongEditorWithCollaborators({
         <ArtistSongEditFiles
           artist={artist}
           songId={song.id}
-          onClose={onClose}
           onReleaseLoaded={handleReleaseLoaded}
           onRevisionPending={() =>
             onSaved({ id: song.id, title: song.title }, true)

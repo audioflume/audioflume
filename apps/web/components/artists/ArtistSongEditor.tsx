@@ -984,14 +984,6 @@ export default function ArtistSongEditor({
               <h2 className="filmwave-backend-section-title">Actions</h2>
             </div>
             <div className="grid gap-2 px-5 pb-5">
-              <button
-                type="button"
-                onClick={onClose}
-                disabled={saving}
-                className="filmwave-backend-button filmwave-backend-button-secondary w-full"
-              >
-                Back to Music
-              </button>
               {canEditMetadata ? (
                 <button
                   type="submit"
@@ -1001,6 +993,14 @@ export default function ArtistSongEditor({
                   {saving ? "Saving..." : "Save Changes"}
                 </button>
               ) : null}
+              <button
+                type="button"
+                onClick={onClose}
+                disabled={saving}
+                className="filmwave-backend-button filmwave-backend-button-secondary w-full"
+              >
+                Back to Music
+              </button>
               {!canEditMetadata ? (
                 <div className="text-[11px] leading-5 text-[var(--text-muted)]">
                   Your artist role has read-only catalogue access.
