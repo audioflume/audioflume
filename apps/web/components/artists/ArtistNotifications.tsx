@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 
+import { BackendButton } from "@/components/backend/BackendControls";
+import MusicIcon from "@/components/icons/MusicIcon";
+import UserIcon from "@/components/icons/UserIcon";
+
 type ArtistNotification = {
   id: string;
   kind: string;
@@ -18,19 +22,79 @@ type NotificationsResponse = {
   error?: string;
 };
 
+type ArtistNotificationsProps = {
+  artistId: string;
+  onUnreadCountChange?: (count: number) => void;
+};
+
 function formatNotificationTime(value: string) {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "";
 
-  return date.toLocaleString([], {
+  const elapsed = Date.now() - date.getTime();
+  const minute = 60 * 1000;
+  const hour = 60 * minute;
+  const day = 24 * hour;
+
+  if (elapsed < minute) return "Just now";
+  if (elapsed < hour) return `${Math.max(1, Math.floor(elapsed / minute))}m ago`;
+  if (elapsed < day) return `${Math.max(1, Math.floor(elapsed / hour))}h ago`;
+  if (elapsed < 7 * day) return `${Math.max(1, Math.floor(elapsed / day))}d ago`;
+
+  return date.toLocaleDateString([], {
     month: "short",
     day: "numeric",
-    hour: "numeric",
-    minute: "2-digit",
+    year: date.getFullYear() === new Date().getFullYear() ? undefined : "numeric",
   });
 }
 
-export default function ArtistNotifications({ artistId }: { artistId: string }) {
+function getNotificationTone(kind: string) {
+  if (kind.includes("rejected") || kind.includes("suspended")) {
+    return {
+      background: "var(--status-error-soft)",
+      color: "var(--status-error)",
+    };
+  }
+
+  if (kind.includes("changes")) {
+    return {
+      background: "var(--status-warning-soft)",
+      color: "var(--status-warning)",
+    };
+  }
+
+  if (kind.includes("approved") || kind.includes("published")) {
+    return {
+      background: "var(--status-success-soft)",
+      color: "var(--status-success)",
+    };
+  }
+
+  return {
+    background: "var(--bg-tertiary)",
+    color: "var(--text-secondary)",
+  };
+}
+
+function NotificationIcon({ kind }: { kind: string }) {
+  const tone = getNotificationTone(kind);
+  const artistNotification = kind.startsWith("artist_");
+
+  return (
+    <span
+      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
+      style={{ backgroundColor: tone.background, color: tone.color }}
+      aria-hidden="true"
+    >
+      {artistNotification ? <UserIcon size={17} /> : <MusicIcon size={16} />}
+    </span>
+  );
+}
+
+export default function ArtistNotifications({
+  artistId,
+  onUnreadCountChange,
+}: ArtistNotificationsProps) {
   const [notifications, setNotifications] = useState<ArtistNotification[]>([]);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
@@ -61,12 +125,14 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
         const rows = Array.isArray(payload?.notifications)
           ? payload.notifications
           : [];
-        setNotifications(rows);
-        setUnreadCount(
+        const nextUnreadCount =
           typeof payload?.unread_count === "number"
             ? payload.unread_count
-            : rows.filter((notification) => !notification.read_at).length,
-        );
+            : rows.filter((notification) => !notification.read_at).length;
+
+        setNotifications(rows);
+        setUnreadCount(nextUnreadCount);
+        onUnreadCountChange?.(nextUnreadCount);
       } catch (loadError) {
         if (!cancelled) {
           setError(
@@ -85,7 +151,7 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
     return () => {
       cancelled = true;
     };
-  }, [artistId]);
+  }, [artistId, onUnreadCountChange]);
 
   async function markNotificationRead(notificationId: string) {
     const notification = notifications.find((item) => item.id === notificationId);
@@ -111,7 +177,11 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
           item.id === notificationId ? { ...item, read_at: readAt } : item,
         ),
       );
-      setUnreadCount((current) => Math.max(0, current - 1));
+      setUnreadCount((current) => {
+        const next = Math.max(0, current - 1);
+        onUnreadCountChange?.(next);
+        return next;
+      });
       return true;
     } catch (updateError) {
       setError(
@@ -124,7 +194,8 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
   }
 
   async function handleNotificationClick(notification: ArtistNotification) {
-    await markNotificationRead(notification.id);
+    const updated = await markNotificationRead(notification.id);
+    if (!updated) return;
 
     if (notification.action_url) {
       window.location.assign(notification.action_url);
@@ -160,6 +231,7 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
         ),
       );
       setUnreadCount(0);
+      onUnreadCountChange?.(0);
     } catch (updateError) {
       setError(
         updateError instanceof Error
@@ -172,51 +244,43 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
   }
 
   return (
-    <section className="filmwave-backend-section overflow-hidden">
-      <div className="flex min-h-[58px] items-center justify-between gap-4 border-b border-[var(--border)] px-4 py-3">
-        <div>
-          <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[13px] font-medium text-[var(--text-primary)]">
-            Activity
-          </div>
-          <div className="mt-1 font-mono text-[9px] uppercase tracking-[0.06em] text-[var(--text-muted)]">
-            {unreadCount === 0
-              ? "No unread notifications"
-              : `${unreadCount} unread ${unreadCount === 1 ? "notification" : "notifications"}`}
-          </div>
-        </div>
-
-        {unreadCount > 0 ? (
-          <button
+    <div className="grid gap-3">
+      {unreadCount > 0 ? (
+        <div className="flex items-center justify-end">
+          <BackendButton
             type="button"
             onClick={() => void markAllRead()}
             disabled={markingAll}
-            className="filmwave-backend-button disabled:cursor-not-allowed disabled:opacity-50"
           >
             {markingAll ? "Marking..." : "Mark all as read"}
-          </button>
-        ) : null}
-      </div>
+          </BackendButton>
+        </div>
+      ) : null}
 
       {error ? (
-        <div className="border-b border-[var(--border)] px-4 py-3 text-xs text-[var(--text-primary)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--danger)]">
           {error}
         </div>
       ) : null}
 
       {loading ? (
-        <div className="px-4 py-10 text-center text-xs text-[var(--text-muted)]">
+        <div className="filmwave-backend-section flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
           Loading notifications...
         </div>
       ) : notifications.length === 0 ? (
-        <div className="px-4 py-10 text-center">
-          <div className="text-sm text-[var(--text-primary)]">Nothing new yet.</div>
-          <div className="mt-1 text-xs text-[var(--text-muted)]">
-            Track reviews and artist account updates will appear here.
+        <div className="filmwave-backend-section flex min-h-[180px] items-center justify-center px-6 text-center">
+          <div>
+            <div className="text-sm font-medium text-[var(--text-primary)]">
+              Nothing new yet.
+            </div>
+            <div className="mt-1.5 text-xs text-[var(--text-muted)]">
+              Track reviews and artist account updates will appear here.
+            </div>
           </div>
         </div>
       ) : (
-        <div>
-          {notifications.map((notification, index) => {
+        <div className="grid gap-2.5">
+          {notifications.map((notification) => {
             const unread = !notification.read_at;
 
             return (
@@ -224,24 +288,13 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
                 key={notification.id}
                 type="button"
                 onClick={() => void handleNotificationClick(notification)}
-                className={`flex w-full items-start gap-3 px-4 py-4 text-left transition-colors hover:bg-[var(--bg-hover)] focus-visible:bg-[var(--bg-hover)] focus-visible:outline-none ${
-                  index < notifications.length - 1
-                    ? "border-b border-[var(--border)]"
-                    : ""
-                }`}
+                className="relative flex w-full items-start gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-left transition-colors hover:border-[var(--border-hover)] focus-visible:border-[var(--text-muted)] focus-visible:outline-none"
               >
-                <span
-                  className={`mt-[6px] h-1.5 w-1.5 shrink-0 ${
-                    unread
-                      ? "bg-[var(--text-primary)]"
-                      : "bg-[var(--border-strong)]"
-                  }`}
-                  aria-hidden="true"
-                />
+                <NotificationIcon kind={notification.kind} />
 
-                <span className="min-w-0 flex-1">
+                <span className="min-w-0 flex-1 pt-0.5">
                   <span
-                    className={`block font-[family-name:var(--font-aktiv-grotesk)] text-[13px] leading-5 text-[var(--text-primary)] ${
+                    className={`block text-[13px] leading-5 text-[var(--text-primary)] ${
                       unread ? "font-medium" : "font-normal"
                     }`}
                   >
@@ -252,21 +305,22 @@ export default function ArtistNotifications({ artistId }: { artistId: string }) 
                       {notification.message}
                     </span>
                   ) : null}
-                  <span className="mt-2 block font-mono text-[9px] uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                  <span className="mt-2 block text-[11px] text-[var(--text-muted)]">
                     {formatNotificationTime(notification.created_at)}
                   </span>
                 </span>
 
-                {notification.action_url ? (
-                  <span className="shrink-0 pt-0.5 text-[11px] text-[var(--text-secondary)]">
-                    View
-                  </span>
+                {unread ? (
+                  <span
+                    className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--danger)]"
+                    aria-label="Unread"
+                  />
                 ) : null}
               </button>
             );
           })}
         </div>
       )}
-    </section>
+    </div>
   );
 }
