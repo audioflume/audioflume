@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverPlaylistForm from "@/components/admin/AdminDiscoverPlaylistForm";
-import { secondaryPillButtonClass } from "@/components/uiClasses";
+import { backendSecondaryButtonClass } from "@/components/backend/backendClasses";
 
 export default function EditDiscoverContentPage() {
   const params = useParams();
@@ -16,7 +16,7 @@ export default function EditDiscoverContentPage() {
       title="Edit Discover Content"
       description="Update this reusable Discover item. Section placement is managed from Playlist Manager."
       headerAction={(
-        <Link href="/admin/playlist-manager?tab=discover" className={secondaryPillButtonClass}>
+        <Link href="/admin/playlist-manager?tab=discover" className={backendSecondaryButtonClass}>
           Back to Manager
         </Link>
       )}
