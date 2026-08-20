@@ -168,7 +168,6 @@ export async function POST(request: Request, context: RouteContext) {
     const waveformPeaks = cleanWaveformPeaks(formData.get("waveformPeaks"));
     const duration = cleanDuration(formData.get("duration"));
     const releaseId = cleanOptionalString(formData.get("releaseId"), 80);
-    const useReleaseArtwork = formData.get("useReleaseArtwork") === "true";
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Missing audio file" }, { status: 400 });
@@ -188,13 +187,6 @@ export async function POST(request: Request, context: RouteContext) {
     if (stemFiles.some((stemFile) => !stemFile.type.startsWith("audio/"))) {
       return NextResponse.json(
         { error: "Stem files must be audio files" },
-        { status: 400 },
-      );
-    }
-
-    if (useReleaseArtwork && !releaseId) {
-      return NextResponse.json(
-        { error: "Choose a release before using release artwork" },
         { status: 400 },
       );
     }
@@ -229,14 +221,14 @@ export async function POST(request: Request, context: RouteContext) {
         return NextResponse.json({ error: "Release not found" }, { status: 404 });
       }
 
-      if (useReleaseArtwork && !release.cover_image_url) {
+      if (!release.cover_image_url) {
         return NextResponse.json(
           { error: "The selected release does not have artwork" },
           { status: 400 },
         );
       }
 
-      releaseCoverUrl = useReleaseArtwork ? release.cover_image_url : null;
+      releaseCoverUrl = release.cover_image_url;
 
       const { data: lastTrack, error: lastTrackError } = await supabaseServer
         .from("artist_release_songs")
