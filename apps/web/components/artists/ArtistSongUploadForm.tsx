@@ -2,9 +2,9 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
+import ArtistSongTagSections from "@/components/artists/ArtistSongTagSections";
 import {
   BackendCheckbox,
-  BackendChoiceButton,
   BackendInput,
   BackendSelect,
 } from "@/components/backend/BackendControls";
@@ -15,14 +15,6 @@ import UploadIcon from "@/components/icons/UploadIcon";
 import WarningIcon from "@/components/icons/WarningIcon";
 import { analyzeArtistSongAudioFile } from "@/lib/artistSongAudioAnalysis";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
-import {
-  BUILD_OPTIONS,
-  GENRE_OPTIONS,
-  INSTRUMENT_OPTIONS,
-  MOOD_OPTIONS,
-  REGION_OPTIONS,
-  VOCALS_OPTIONS,
-} from "@/lib/constants";
 
 type ArtistSongSummary = {
   id: string;
@@ -256,43 +248,6 @@ function CheckboxInput({
       disabled={disabled}
       className="h-10 w-full self-end rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3"
     />
-  );
-}
-
-function MultiSelectPills({
-  options,
-  selected,
-  onChange,
-  disabled,
-}: {
-  options: readonly string[];
-  selected: string[];
-  onChange: (selected: string[]) => void;
-  disabled: boolean;
-}) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((option) => {
-        const active = selected.includes(option);
-        return (
-          <BackendChoiceButton
-            key={option}
-            type="button"
-            disabled={disabled}
-            active={active}
-            onClick={() =>
-              onChange(
-                active
-                  ? selected.filter((item) => item !== option)
-                  : [...selected, option],
-              )
-            }
-          >
-            {option}
-          </BackendChoiceButton>
-        );
-      })}
-    </div>
   );
 }
 
@@ -1111,36 +1066,21 @@ export default function ArtistSongUploadForm({
             </section>
           ) : null}
 
-          <section className="filmwave-backend-section">
-            <div className="filmwave-backend-section-header">
-              <h2 className="filmwave-backend-section-title">Tags</h2>
-            </div>
-            <div className="grid gap-5 px-5 pb-5">
-              {[
-                ["Genre", GENRE_OPTIONS, genres, setGenres],
-                ["Mood", MOOD_OPTIONS, moods, setMoods],
-                ["Region", REGION_OPTIONS, regions, setRegions],
-                ["Instrument", INSTRUMENT_OPTIONS, instruments, setInstruments],
-                ["Build", BUILD_OPTIONS, builds, setBuilds],
-                ["Vocals", VOCALS_OPTIONS, vocals, setVocals],
-              ].map(([label, options, selected, setter]) => (
-                <div key={label as string}>
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <FieldLabel>{label as string}</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
-                      {(selected as string[]).length} selected
-                    </span>
-                  </div>
-                  <MultiSelectPills
-                    options={options as readonly string[]}
-                    selected={selected as string[]}
-                    onChange={setter as (value: string[]) => void}
-                    disabled={!canEditMetadata || busy || uploadComplete}
-                  />
-                </div>
-              ))}
-            </div>
-          </section>
+          <ArtistSongTagSections
+            genres={genres}
+            onGenresChange={setGenres}
+            moods={moods}
+            onMoodsChange={setMoods}
+            regions={regions}
+            onRegionsChange={setRegions}
+            instruments={instruments}
+            onInstrumentsChange={setInstruments}
+            builds={builds}
+            onBuildsChange={setBuilds}
+            vocals={vocals}
+            onVocalsChange={setVocals}
+            disabled={!canEditMetadata || busy || uploadComplete}
+          />
 
           <section className="filmwave-backend-section">
             <div className="filmwave-backend-section-header">
