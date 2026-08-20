@@ -7,6 +7,7 @@ import {
 } from "@/lib/artistPermissions";
 import { processAudioForStreaming } from "@/lib/audioProcessing";
 import { deleteFilesFromR2, uploadFileToR2 } from "@/lib/r2";
+import { normalizeSongRow } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -107,14 +108,17 @@ export async function GET(_request: Request, context: RouteContext) {
 
     const { data: songs, error: songsError } = await supabaseServer
       .from("songs")
-      .select("id, title, status, duration, bpm, key, created_at")
+      .select("*")
       .in("id", songIds)
       .order("created_at", { ascending: false });
 
     if (songsError) throw songsError;
 
     return NextResponse.json({
-      songs: (songs ?? []) as ArtistSongSummary[],
+      songs: (songs ?? []).map((song) => ({
+        ...song,
+        player_song: normalizeSongRow(song),
+      })),
     });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
