@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react";
 
-import ArtistSongAudioReplacement from "@/components/artists/ArtistSongAudioReplacement";
 import ArtistSongEditorWithCollaborators from "@/components/artists/ArtistSongEditorWithCollaborators";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
@@ -88,7 +87,6 @@ export default function ArtistMusicUploader({
   const [searchQuery, setSearchQuery] = useState("");
   const [creatingSong, setCreatingSong] = useState(false);
   const [editingSongId, setEditingSongId] = useState("");
-  const [replacingSongId, setReplacingSongId] = useState("");
   const [submittingSongId, setSubmittingSongId] = useState("");
   const [catalogActionSongId, setCatalogActionSongId] = useState("");
   const [catalogMessage, setCatalogMessage] = useState("");
@@ -114,7 +112,6 @@ export default function ArtistMusicUploader({
     setSearchQuery("");
     setCreatingSong(false);
     setEditingSongId("");
-    setReplacingSongId("");
     setSubmittingSongId("");
     setCatalogActionSongId("");
     setCatalogMessage("");
@@ -167,30 +164,28 @@ export default function ArtistMusicUploader({
     onUploaded();
   }
 
-  function handleSongSaved(savedSong: { id: string; title: string }) {
+  function handleSongSaved(
+    savedSong: { id: string; title: string },
+    revisionPending = false,
+  ) {
+    const currentSongSummary = songs.find((song) => song.id === savedSong.id);
+    const keepsLiveVersion =
+      revisionPending ||
+      currentSongSummary?.status === "published" ||
+      currentSongSummary?.status === "approved";
+
+    if (keepsLiveVersion) {
+      setCatalogError("");
+      setCatalogMessage(
+        "Changes sent for approval. The current version will stay live until they are approved.",
+      );
+      return;
+    }
+
     setSongs((current) =>
       current.map((song) =>
         song.id === savedSong.id ? { ...song, title: savedSong.title } : song,
       ),
-    );
-  }
-
-  function handleAudioReplaced(
-    replacedSong: ArtistSongSummary,
-    resetForReview: boolean,
-  ) {
-    setSongs((current) =>
-      current.map((song) =>
-        song.id === replacedSong.id ? { ...song, ...replacedSong } : song,
-      ),
-    );
-    setReplacingSongId("");
-    setLoadRequestKey((current) => current + 1);
-    setCatalogError("");
-    setCatalogMessage(
-      resetForReview
-        ? "Audio replaced. Track returned to Draft for review."
-        : "Audio replaced.",
     );
   }
 
@@ -302,25 +297,17 @@ export default function ArtistMusicUploader({
     );
   }
 
-  if (editingSongId) {
+  const editingSong = songs.find((song) => song.id === editingSongId);
+  if (editingSong) {
     return (
       <ArtistSongEditorWithCollaborators
         artist={artist}
-        songId={editingSongId}
-        onClose={() => setEditingSongId("")}
+        song={editingSong}
+        onClose={() => {
+          setEditingSongId("");
+          setLoadRequestKey((current) => current + 1);
+        }}
         onSaved={handleSongSaved}
-      />
-    );
-  }
-
-  const replacementSong = songs.find((song) => song.id === replacingSongId);
-  if (replacementSong) {
-    return (
-      <ArtistSongAudioReplacement
-        artist={artist}
-        song={replacementSong}
-        onClose={() => setReplacingSongId("")}
-        onReplaced={handleAudioReplaced}
       />
     );
   }
@@ -410,12 +397,13 @@ export default function ArtistMusicUploader({
               <div>
                 {visibleSongs.map((song, index) => {
                   const editable =
-                    song.status === "draft" || song.status === "changes_requested";
-                  const replaceable =
                     canEdit &&
                     song.status !== "processing" &&
                     song.status !== "submitted" &&
                     song.status !== "archived";
+                  const canSubmitForReview =
+                    canSubmit &&
+                    (song.status === "draft" || song.status === "changes_requested");
                   const archivable =
                     canEdit &&
                     song.status !== "processing" &&
@@ -518,20 +506,10 @@ export default function ArtistMusicUploader({
                             onClick={() => setEditingSongId(song.id)}
                             className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
                           >
-                            Edit details
+                            Edit
                           </button>
                         ) : null}
-                        {replaceable ? (
-                          <button
-                            type="button"
-                            disabled={actionsBusy}
-                            onClick={() => setReplacingSongId(song.id)}
-                            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                          >
-                            Replace audio
-                          </button>
-                        ) : null}
-                        {editable && canSubmit ? (
+                        {canSubmitForReview ? (
                           <button
                             type="button"
                             disabled={actionsBusy}
