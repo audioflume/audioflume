@@ -19,6 +19,7 @@ type ReleaseType = "single" | "ep" | "album" | "playlist";
 
 type PickerResponse = {
   songs?: Song[];
+  unavailable_song_ids?: string[];
   error?: string;
 };
 
@@ -124,6 +125,7 @@ export default function ArtistReleaseTrackPicker({
 }: ArtistReleaseTrackPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [songs, setSongs] = useState<Song[]>([]);
+  const [unavailableTrackIds, setUnavailableTrackIds] = useState<string[]>([]);
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
   const [loading, setLoading] = useState(false);
@@ -133,6 +135,10 @@ export default function ArtistReleaseTrackPicker({
     () => new Set(existingTrackIds),
     [existingTrackIds],
   );
+  const unavailableIdSet = useMemo(
+    () => new Set(unavailableTrackIds),
+    [unavailableTrackIds],
+  );
   const singleHasTrack = releaseType === "single" && existingTrackIds.length >= 1;
 
   useEffect(() => {
@@ -141,6 +147,7 @@ export default function ArtistReleaseTrackPicker({
     let cancelled = false;
     setSearch("");
     setSelectedIds(new Set());
+    setUnavailableTrackIds([]);
     setLoading(true);
     setLoadError("");
 
@@ -160,6 +167,11 @@ export default function ArtistReleaseTrackPicker({
 
         if (!cancelled) {
           setSongs(Array.isArray(body.songs) ? body.songs : []);
+          setUnavailableTrackIds(
+            releaseType === "playlist" || !Array.isArray(body.unavailable_song_ids)
+              ? []
+              : body.unavailable_song_ids,
+          );
         }
       } catch (error) {
         if (!cancelled) {
@@ -193,7 +205,9 @@ export default function ArtistReleaseTrackPicker({
   }, [search, songs]);
 
   function toggleSong(songId: string) {
-    if (existingIdSet.has(songId) || singleHasTrack) return;
+    if (existingIdSet.has(songId) || unavailableIdSet.has(songId) || singleHasTrack) {
+      return;
+    }
 
     setSelectedIds((current) => {
       if (releaseType === "single") {
@@ -285,7 +299,9 @@ export default function ArtistReleaseTrackPicker({
                   key={song.id}
                   song={song}
                   selected={selectedIds.has(song.id)}
-                  alreadyAdded={existingIdSet.has(song.id)}
+                  alreadyAdded={
+                    existingIdSet.has(song.id) || unavailableIdSet.has(song.id)
+                  }
                   onToggle={() => toggleSong(song.id)}
                 />
               ))
