@@ -9,15 +9,18 @@ const LICENSE_FILTER_BOX_CLASS = "fw-license-filter-box";
 const FILTERS_HEADING_CLASS = "fw-filter-section-heading";
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
+const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 const WEB_MUSIC_FILTER_PANEL_SELECTOR =
   "main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-panel-wrap";
 const WEB_MUSIC_FILTER_RAIL_SELECTOR =
   "main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail";
 const DISPLAY_AI_FILTER_OPTION_CLASS = "fw-display-ai-filter-option";
 const DISPLAY_AI_FILTER_STORAGE_KEY = "filmwave-display-ai-filter";
+const DISPLAY_AI_FILTER_CHANGE_EVENT = "filmwave:display-ai-filter-change";
 const DISPLAY_AI_EXCLUDE_ROOT_CLASS = "fw-display-exclude-ai-songs";
 const DISPLAY_AI_ONLY_ROOT_CLASS = "fw-display-ai-songs-only";
 const DISPLAY_AI_RAIL_COUNT_CLASS = "fw-display-ai-rail-count";
+const DISPLAY_AI_CLEAR_ALL_PROXY_CLASS = "fw-display-ai-clear-all-proxy";
 const PLAYLIST_FILTER_OPTION_CLASS = "fw-filter-playlist-option";
 const PUBLIC_PLAYLIST_FILTER_OPTION_CLASS = "is-public-playlist";
 
@@ -216,6 +219,21 @@ function setStoredDisplayAiFilter(value: DisplayAiFilterValue | null) {
   } catch {
     // Ignore storage failures; the class state still applies for the current view.
   }
+
+  window.dispatchEvent(new Event(DISPLAY_AI_FILTER_CHANGE_EVENT));
+}
+
+function dispatchSideFilterSectionClear(sectionId: string) {
+  window.dispatchEvent(
+    new CustomEvent(SIDE_FILTER_SECTION_CLEAR_EVENT, {
+      detail: { sectionId },
+    }),
+  );
+}
+
+function clearDisplayFilters() {
+  if (getStoredDisplayAiFilter()) setStoredDisplayAiFilter(null);
+  dispatchSideFilterSectionClear("display");
 }
 
 function syncDisplayAiRootClasses(value = getStoredDisplayAiFilter()) {
@@ -277,14 +295,17 @@ function getRailItemSectionId(railItem: Element | null) {
   return SECTION_ID_BY_LABEL[label] ?? null;
 }
 
+function getDisplayRailItem(panel: HTMLElement) {
+  return Array.from(
+    panel.querySelectorAll<HTMLElement>(".fw-filter-rail-item"),
+  ).find((railItem) => getRailItemSectionId(railItem) === "display");
+}
+
 function syncDisplayAiRailCount(
   panel: HTMLElement,
   selectedValue: DisplayAiFilterValue | null,
 ) {
-  const displayRailItem = Array.from(
-    panel.querySelectorAll<HTMLElement>(".fw-filter-rail-item"),
-  ).find((railItem) => getRailItemSectionId(railItem) === "display");
-
+  const displayRailItem = getDisplayRailItem(panel);
   if (!displayRailItem) return;
 
   const counts = Array.from(
@@ -297,20 +318,68 @@ function syncDisplayAiRailCount(
     (count) => !count.classList.contains(DISPLAY_AI_RAIL_COUNT_CLASS),
   );
 
-  if (!selectedValue || nativeCount) {
+  if (nativeCount) {
+    injectedCount?.remove();
+    const nextCount = selectedValue ? "2" : "1";
+    nativeCount.dataset.countValue = nextCount;
+    if (nativeCount.textContent?.trim() !== nextCount) {
+      nativeCount.textContent = nextCount;
+    }
+    return;
+  }
+
+  if (!selectedValue) {
     injectedCount?.remove();
     return;
   }
 
-  if (injectedCount) return;
+  if (injectedCount) {
+    injectedCount.dataset.countValue = "1";
+    if (injectedCount.textContent?.trim() !== "1") injectedCount.textContent = "1";
+    return;
+  }
 
   const count = document.createElement("span");
   count.className = `fw-filter-rail-count ${DISPLAY_AI_RAIL_COUNT_CLASS}`;
+  count.dataset.countValue = "1";
   count.textContent = "1";
 
   const chevron = displayRailItem.querySelector(".fw-filter-rail-chevron");
   if (chevron) displayRailItem.insertBefore(count, chevron);
   else displayRailItem.appendChild(count);
+}
+
+function syncDisplayClearAll(panel: HTMLElement) {
+  const footer = panel.querySelector<HTMLElement>(".fw-filter-panel-footer");
+  if (!footer) return;
+
+  const displayRailItem = getDisplayRailItem(panel);
+  const displayActive = Boolean(
+    displayRailItem?.querySelector(".fw-filter-rail-count"),
+  );
+  const clearButtons = Array.from(
+    footer.querySelectorAll<HTMLButtonElement>(".fw-filter-clear-all"),
+  );
+  const proxy = clearButtons.find((button) =>
+    button.classList.contains(DISPLAY_AI_CLEAR_ALL_PROXY_CLASS),
+  );
+  const nativeClear = clearButtons.find(
+    (button) => !button.classList.contains(DISPLAY_AI_CLEAR_ALL_PROXY_CLASS),
+  );
+
+  if (!displayActive || nativeClear) {
+    proxy?.remove();
+    return;
+  }
+
+  if (proxy) return;
+
+  const clearAll = document.createElement("button");
+  clearAll.type = "button";
+  clearAll.className = `fw-filter-clear-all ${DISPLAY_AI_CLEAR_ALL_PROXY_CLASS}`;
+  clearAll.textContent = "Clear all";
+  clearAll.addEventListener("click", () => clearDisplayFilters());
+  footer.prepend(clearAll);
 }
 
 function syncDisplayAiFilterOptions() {
@@ -320,6 +389,7 @@ function syncDisplayAiFilterOptions() {
 
   document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_PANEL_SELECTOR).forEach((panel) => {
     syncDisplayAiRailCount(panel, selectedValue);
+    syncDisplayClearAll(panel);
 
     const activeRailItem = panel.querySelector<HTMLElement>(".fw-filter-rail-item.is-active");
     if (getRailItemSectionId(activeRailItem) !== "display") return;
@@ -389,7 +459,14 @@ function syncWebRailItemSectionIds(rail: HTMLElement) {
   });
 }
 
+function syncWebPanelClearMode() {
+  document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_PANEL_SELECTOR).forEach((panel) => {
+    panel.dataset.sideFilterClearMode = "event";
+  });
+}
+
 function syncWebMusicFilterEnhancements(playlists: PlaylistFilterDecoration[]) {
+  syncWebPanelClearMode();
   syncLicenseFilterBoxes();
   syncDisplayAiFilterOptions();
   syncPlaylistFilterOptionClasses(playlists);
@@ -414,17 +491,53 @@ export default function SideFilterPanelBehavior() {
       });
     }
 
+    function handleSideFilterSectionClear(event: Event) {
+      const customEvent = event as CustomEvent<{ sectionId?: string }>;
+      if (customEvent.detail?.sectionId !== "display") return;
+
+      if (getStoredDisplayAiFilter()) setStoredDisplayAiFilter(null);
+      scheduleSync();
+    }
+
+    function handleClearAllClick(event: MouseEvent) {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const clearAll = target.closest(".fw-filter-clear-all");
+      if (!clearAll) return;
+
+      const panel = clearAll.closest<HTMLElement>(WEB_MUSIC_FILTER_PANEL_SELECTOR);
+      if (!panel) return;
+
+      const displayRailItem = getDisplayRailItem(panel);
+      if (!displayRailItem?.querySelector(".fw-filter-rail-count")) return;
+
+      clearDisplayFilters();
+    }
+
     const observer = new MutationObserver(scheduleSync);
 
     syncEnhancements();
     window.requestAnimationFrame(syncEnhancements);
     observer.observe(document.body, { childList: true, subtree: true });
     window.addEventListener(LICENSE_FILTER_CHANGE_EVENT, scheduleSync);
+    window.addEventListener(DISPLAY_AI_FILTER_CHANGE_EVENT, scheduleSync);
+    window.addEventListener(
+      SIDE_FILTER_SECTION_CLEAR_EVENT,
+      handleSideFilterSectionClear,
+    );
+    document.addEventListener("click", handleClearAllClick, true);
 
     return () => {
       if (syncFrame) window.cancelAnimationFrame(syncFrame);
       observer.disconnect();
       window.removeEventListener(LICENSE_FILTER_CHANGE_EVENT, scheduleSync);
+      window.removeEventListener(DISPLAY_AI_FILTER_CHANGE_EVENT, scheduleSync);
+      window.removeEventListener(
+        SIDE_FILTER_SECTION_CLEAR_EVENT,
+        handleSideFilterSectionClear,
+      );
+      document.removeEventListener("click", handleClearAllClick, true);
     };
   }, [playlists]);
 
