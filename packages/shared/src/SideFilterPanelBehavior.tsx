@@ -260,7 +260,7 @@ function syncDotOnlyRailCounts(root: ParentNode = document) {
     const displayCount = count.dataset.countValue ?? liveCount;
     const panel = railItem.closest<HTMLElement>(".fw-filter-panel-wrap");
     const useNumericDisplayCount =
-      sectionId === "display" && panel?.dataset.sideFilterDisplayCountMode === "numeric";
+      sectionId === "display" && panel?.dataset.sideFilterClearMode === "event";
     const isDotOnly = sectionId
       ? DOT_ONLY_COUNT_SECTION_IDS.has(sectionId) && !useNumericDisplayCount
       : false;
