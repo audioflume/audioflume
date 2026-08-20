@@ -20,7 +20,7 @@ export const pillButtonClass =
 
 export const primaryPillButtonClass = `${pillButtonClass} bg-[var(--text-primary)] text-[var(--bg-primary)]`;
 
-export const secondaryPillButtonClass = `${pillButtonClass} border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
+export const secondaryPillButtonClass = `${pillButtonClass} filmwave-legacy-secondary-action border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
 export const playlistDetailActionButtonClass =
   "inline-flex h-9 min-w-[170px] cursor-pointer items-center justify-center gap-2 rounded-none px-5 font-[family-name:inherit] text-[11px] font-medium leading-none transition max-[720px]:min-w-[160px] max-[640px]:min-w-0 max-[640px]:flex-1";
@@ -63,7 +63,7 @@ export const modalCoverButtonClass =
 export const modalActionButtonClass =
   "flex h-9 cursor-pointer items-center justify-center rounded-none px-4 text-xs font-medium transition disabled:cursor-default disabled:opacity-70";
 
-export const modalCancelButtonClass = `${modalActionButtonClass} text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
+export const modalCancelButtonClass = `${modalActionButtonClass} filmwave-legacy-modal-cancel text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
 export const modalPrimaryButtonClass = `${modalActionButtonClass} font-[family-name:var(--font-aktiv-grotesk)] min-w-[112px] bg-[var(--text-primary)] font-semibold text-[var(--bg-primary)] hover:opacity-80`;
 
@@ -71,7 +71,7 @@ export const modalPrimaryButtonClass = `${modalActionButtonClass} font-[family-n
 export const backendModalActionButtonClass =
   "flex h-9 cursor-pointer items-center justify-center rounded-[7px] px-4 text-xs font-medium transition disabled:cursor-default disabled:opacity-70";
 
-export const backendModalCancelButtonClass = `${backendModalActionButtonClass} border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
+export const backendModalCancelButtonClass = `${backendModalActionButtonClass} border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]`;
 
 export const backendModalPrimaryButtonClass = `${backendModalActionButtonClass} font-[family-name:var(--font-aktiv-grotesk)] min-w-[112px] bg-[var(--text-primary)] font-semibold text-[var(--bg-primary)] hover:opacity-80`;
 
