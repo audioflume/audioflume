@@ -847,7 +847,7 @@ function MultiSelectPills({
                   : [...selected, option],
               );
             }}
-            className={`h-7 rounded-full border px-2.5 text-[11px] font-medium transition ${
+            className={`h-7 rounded-full border px-2.5 text-[11px] font-normal transition ${
               active
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
