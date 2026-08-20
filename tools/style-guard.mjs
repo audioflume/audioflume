@@ -40,17 +40,22 @@ const headerSearchRuntimeSelectors = [
 const backendCssOwner = "apps/web/components/backend/BackendUI.css";
 const backendComponentDirectory = "apps/web/components/backend/";
 const migratedBackendFiles = new Set([
+  "apps/web/app/admin/engagement/page.tsx",
   "apps/web/app/admin/playlist-manager/discover/[playlistId]/edit/page.tsx",
   "apps/web/app/admin/playlist-manager/discover/new/page.tsx",
   "apps/web/components/admin/AdminAddToPlaylistModal.tsx",
   "apps/web/components/admin/AdminBrowseFilterSubcategoryGroup.tsx",
   "apps/web/components/admin/AdminContentPage.tsx",
+  "apps/web/components/admin/AdminCuratedPlaylistForm.tsx",
   "apps/web/components/admin/AdminDiscoverContentPickerModal.tsx",
   "apps/web/components/admin/AdminDiscoverLibraryView.tsx",
+  "apps/web/components/admin/AdminDiscoverPlaylistForm.tsx",
   "apps/web/components/admin/AdminImageUpload.tsx",
+  "apps/web/components/admin/AdminPlaylistGroupManager.tsx",
   "apps/web/components/admin/AdminPlaylistLibraryView.tsx",
   "apps/web/components/admin/AdminPlaylistShelfPickerModal.tsx",
   "apps/web/components/admin/AdminSidebar.tsx",
+  "apps/web/components/admin/AdminSongForm.tsx",
   "apps/web/components/admin/AdminSongRow.tsx",
   "apps/web/components/artists/ArtistDashboardShell.tsx",
   "apps/web/components/artists/ArtistPlaylistManager.tsx",
