@@ -47,18 +47,30 @@ export async function GET() {
       return NextResponse.json({ songs: [] });
     }
 
-    const { data: songs, error: songsError } = await supabaseServer
-      .from("songs")
-      .select("id, title, artist, status, duration, key, bpm, created_at")
-      .in("id", songIds)
-      .in("status", [...REVIEW_STATUSES])
-      .order("created_at", { ascending: false });
+    const [songsResult, revisionsResult] = await Promise.all([
+      supabaseServer
+        .from("songs")
+        .select("id, title, artist, status, duration, key, bpm, created_at")
+        .in("id", songIds)
+        .in("status", [...REVIEW_STATUSES])
+        .order("created_at", { ascending: false }),
+      supabaseServer
+        .from("song_pending_revisions")
+        .select("song_id, status, metadata, duration, updated_at")
+        .in("song_id", songIds),
+    ]);
 
-    if (songsError) throw songsError;
+    if (songsResult.error) throw songsResult.error;
+    if (revisionsResult.error) throw revisionsResult.error;
+
+    const songs = songsResult.data ?? [];
+    const revisionBySongId = new Map(
+      (revisionsResult.data ?? []).map((revision) => [revision.song_id, revision]),
+    );
 
     const artistIds = [
       ...new Set(
-        (songs ?? [])
+        songs
           .map((song) => primaryArtistBySong.get(song.id))
           .filter((artistId): artistId is string => Boolean(artistId)),
       ),
@@ -83,11 +95,38 @@ export async function GET() {
     }
 
     return NextResponse.json({
-      songs: (songs ?? []).map((song) => {
+      songs: songs.map((song) => {
         const artistId = primaryArtistBySong.get(song.id);
+        const revision = revisionBySongId.get(song.id);
+        const metadata =
+          revision?.metadata && typeof revision.metadata === "object"
+            ? (revision.metadata as Record<string, unknown>)
+            : {};
 
         return {
           ...song,
+          ...(revision
+            ? {
+                title:
+                  typeof metadata.title === "string" ? metadata.title : song.title,
+                duration: revision.duration ?? song.duration,
+                key:
+                  typeof metadata.key === "string" || metadata.key === null
+                    ? metadata.key
+                    : song.key,
+                bpm:
+                  typeof metadata.bpm === "number" || metadata.bpm === null
+                    ? metadata.bpm
+                    : song.bpm,
+                status: revision.status,
+                revision_pending: true,
+                live_status: song.status,
+                revision_updated_at: revision.updated_at,
+              }
+            : {
+                revision_pending: false,
+                live_status: song.status,
+              }),
           artist_profile: artistId ? artistsById.get(artistId) ?? null : null,
         };
       }),
