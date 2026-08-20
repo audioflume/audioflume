@@ -84,10 +84,57 @@ export async function upsertSongMetadataRevision({
   const payload = {
     song_id: songId,
     status: "submitted" as const,
-    metadata,
+    metadata: {
+      ...(existingRevision?.metadata ?? {}),
+      ...metadata,
+    },
     credits,
     rights,
     rights_holders: rightsHolders,
+    audio_url: existingRevision?.audio_url ?? null,
+    playback_url: existingRevision?.playback_url ?? null,
+    hls_url: existingRevision?.hls_url ?? null,
+    waveform_peaks: existingRevision?.waveform_peaks ?? null,
+    duration: existingRevision?.duration ?? null,
+    size_bytes: existingRevision?.size_bytes ?? null,
+    submitted_by_clerk_user_id: userId,
+    review_notes: null,
+    updated_at: new Date().toISOString(),
+  };
+
+  const { data, error } = await supabaseServer
+    .from("song_pending_revisions")
+    .upsert(payload, { onConflict: "song_id" })
+    .select(
+      "song_id, status, metadata, credits, rights, rights_holders, audio_url, playback_url, hls_url, waveform_peaks, duration, size_bytes, submitted_by_clerk_user_id, review_notes, created_at, updated_at",
+    )
+    .single();
+
+  if (error) throw error;
+  return data as SongPendingRevision;
+}
+
+export async function upsertSongFileMetadataRevision({
+  songId,
+  userId,
+  metadataPatch,
+}: {
+  songId: string;
+  userId: string | null;
+  metadataPatch: Record<string, unknown>;
+}) {
+  const existingRevision = await getSongPendingRevision(songId);
+
+  const payload = {
+    song_id: songId,
+    status: "submitted" as const,
+    metadata: {
+      ...(existingRevision?.metadata ?? {}),
+      ...metadataPatch,
+    },
+    credits: existingRevision?.credits ?? null,
+    rights: existingRevision?.rights ?? null,
+    rights_holders: existingRevision?.rights_holders ?? null,
     audio_url: existingRevision?.audio_url ?? null,
     playback_url: existingRevision?.playback_url ?? null,
     hls_url: existingRevision?.hls_url ?? null,
