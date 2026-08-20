@@ -59,6 +59,9 @@ type BackendSongFileUploadProps = {
   artworkPreviewUrl: string | null;
   onArtworkFileChange: (file: File | null) => void;
   onRemoveArtwork: () => void;
+  artworkTitle?: string;
+  artworkActionLabel?: string;
+  artworkDisabled?: boolean;
   artworkHelp?: string;
   artworkFooter?: ReactNode;
   topAction?: ReactNode;
@@ -79,6 +82,9 @@ export default function BackendSongFileUpload({
   artworkPreviewUrl,
   onArtworkFileChange,
   onRemoveArtwork,
+  artworkTitle = "Cover image",
+  artworkActionLabel = "Choose Cover Art",
+  artworkDisabled = false,
   artworkHelp = "Click the preview or choose a new image to replace it.",
   artworkFooter,
   topAction,
@@ -140,7 +146,7 @@ export default function BackendSongFileUpload({
         ref={artworkActionInputRef}
         type="file"
         accept="image/*"
-        disabled={disabled}
+        disabled={disabled || artworkDisabled}
         className="hidden"
         onChange={(event) => onArtworkFileChange(event.target.files?.[0] ?? null)}
       />
@@ -161,12 +167,12 @@ export default function BackendSongFileUpload({
         </button>
         <button
           type="button"
-          disabled={disabled}
+          disabled={disabled || artworkDisabled}
           onClick={() => artworkActionInputRef.current?.click()}
           className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <ArtworkActionIcon />
-          <span>Choose Cover Art</span>
+          <span>{artworkActionLabel}</span>
         </button>
         <button
           type="button"
@@ -288,8 +294,8 @@ export default function BackendSongFileUpload({
         previewUrl={artworkPreviewUrl}
         onFileChange={onArtworkFileChange}
         onRemove={onRemoveArtwork}
-        disabled={disabled}
-        title="Cover image"
+        disabled={disabled || artworkDisabled}
+        title={artworkTitle}
         help={artworkHelp}
         footer={artworkFooter}
       />
