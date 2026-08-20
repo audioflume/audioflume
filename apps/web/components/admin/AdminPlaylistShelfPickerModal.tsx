@@ -4,9 +4,9 @@ import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import AdminModalShell from "@/components/admin/AdminModalShell";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import { backendModalPrimaryButtonClass } from "@/components/backend/backendClasses";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
-import { modalPrimaryButtonClass } from "@/components/uiClasses";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 type Props = {
@@ -94,7 +94,7 @@ export default function AdminPlaylistShelfPickerModal({
         <button
           type="button"
           onClick={handleAdd}
-          className={modalPrimaryButtonClass}
+          className={backendModalPrimaryButtonClass}
           disabled={selectedCount === 0 || saving}
         >
           {saving
