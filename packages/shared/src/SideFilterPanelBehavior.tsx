@@ -19,7 +19,7 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
   Display: "display",
 };
 
-const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key", "display"]);
+const DOT_ONLY_COUNT_SECTION_IDS = new Set(["playlist", "duration", "bpm", "key"]);
 
 const FILTER_COLUMN_SELECTOR = ".fw-filter-rail, .fw-filter-detail";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
@@ -437,6 +437,11 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
 
   if (isCurrentOpenSection) {
     clearOpenRailSection(panel, sectionId);
+    return;
+  }
+
+  if (panel.dataset.sideFilterClearMode === "event") {
+    dispatchSideFilterSectionClear(sectionId);
     return;
   }
 
