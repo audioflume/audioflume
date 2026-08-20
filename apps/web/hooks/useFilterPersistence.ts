@@ -206,22 +206,81 @@ export function useFilterPersistence(
     const handleSideFilterSectionClear = (event: Event) => {
       const sectionId = getSideFilterClearSectionFromEvent(event);
 
-      if (sectionId === "duration") {
-        setFilters((current) =>
-          current.selectedDurations.length === 0
+      setFilters((current) => {
+        if (sectionId === "mood") {
+          return current.selectedMoods.length === 0
             ? current
-            : { ...current, selectedDurations: [] },
-        );
-        return;
-      }
+            : { ...current, selectedMoods: [] };
+        }
 
-      if (sectionId === "region") {
-        setFilters((current) =>
-          current.selectedRegions.length === 0
+        if (sectionId === "genre") {
+          return current.selectedGenres.length === 0
             ? current
-            : { ...current, selectedRegions: [] },
-        );
-      }
+            : { ...current, selectedGenres: [] };
+        }
+
+        if (sectionId === "region") {
+          return current.selectedRegions.length === 0
+            ? current
+            : { ...current, selectedRegions: [] };
+        }
+
+        if (sectionId === "instruments") {
+          return current.selectedInstruments.length === 0
+            ? current
+            : { ...current, selectedInstruments: [] };
+        }
+
+        if (sectionId === "vocals") {
+          return current.selectedVocals.length === 0 && !current.instrumental
+            ? current
+            : { ...current, selectedVocals: [], instrumental: false };
+        }
+
+        if (sectionId === "build") {
+          return current.selectedBuilds.length === 0
+            ? current
+            : { ...current, selectedBuilds: [] };
+        }
+
+        if (sectionId === "cuePoints") {
+          return current.selectedEditPoints.length === 0
+            ? current
+            : { ...current, selectedEditPoints: [] };
+        }
+
+        if (sectionId === "playlist") {
+          return current.selectedPlaylist === null
+            ? current
+            : { ...current, selectedPlaylist: null };
+        }
+
+        if (sectionId === "duration") {
+          return current.selectedDurations.length === 0
+            ? current
+            : { ...current, selectedDurations: [] };
+        }
+
+        if (sectionId === "bpm") {
+          return current.bpmValue === null
+            ? current
+            : { ...current, bpmValue: null };
+        }
+
+        if (sectionId === "key") {
+          return current.keyValue === null
+            ? current
+            : { ...current, keyValue: null };
+        }
+
+        if (sectionId === "display") {
+          return current.showEditPointMarkers
+            ? { ...current, showEditPointMarkers: false }
+            : current;
+        }
+
+        return current;
+      });
     };
 
     window.addEventListener(
