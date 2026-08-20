@@ -521,9 +521,8 @@ export default function MusicPage() {
       selectedLicenseFilters.length === 0 || selectedLicenseFilters.length === 2
         ? playlistSongs
         : playlistSongs.filter((song) => {
-            const licenseType: LicenseFilterValue = song.artistId
-              ? "premium"
-              : "standard";
+            const licenseType: LicenseFilterValue =
+              song.licenseType === "premium" ? "premium" : "standard";
             return selectedLicenseFilters.includes(licenseType);
           });
 
