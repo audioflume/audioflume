@@ -3,8 +3,6 @@
 import { useEffect, useState } from "react";
 
 import { BackendButton } from "@/components/backend/BackendControls";
-import MusicIcon from "@/components/icons/MusicIcon";
-import UserIcon from "@/components/icons/UserIcon";
 
 type ArtistNotification = {
   id: string;
@@ -48,47 +46,20 @@ function formatNotificationTime(value: string) {
   });
 }
 
-function getNotificationTone(kind: string) {
+function getNotificationColor(kind: string) {
   if (kind.includes("rejected") || kind.includes("suspended")) {
-    return {
-      background: "var(--status-error-soft)",
-      color: "var(--status-error)",
-    };
+    return "var(--status-error)";
   }
 
   if (kind.includes("changes")) {
-    return {
-      background: "var(--status-warning-soft)",
-      color: "var(--status-warning)",
-    };
+    return "var(--status-warning)";
   }
 
   if (kind.includes("approved") || kind.includes("published")) {
-    return {
-      background: "var(--status-success-soft)",
-      color: "var(--status-success)",
-    };
+    return "var(--status-success)";
   }
 
-  return {
-    background: "var(--bg-tertiary)",
-    color: "var(--text-secondary)",
-  };
-}
-
-function NotificationIcon({ kind }: { kind: string }) {
-  const tone = getNotificationTone(kind);
-  const artistNotification = kind.startsWith("artist_");
-
-  return (
-    <span
-      className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full"
-      style={{ backgroundColor: tone.background, color: tone.color }}
-      aria-hidden="true"
-    >
-      {artistNotification ? <UserIcon size={17} /> : <MusicIcon size={16} />}
-    </span>
-  );
+  return "var(--text-muted)";
 }
 
 export default function ArtistNotifications({
@@ -282,41 +253,56 @@ export default function ArtistNotifications({
         <div className="grid gap-2.5">
           {notifications.map((notification) => {
             const unread = !notification.read_at;
+            const notificationColor = getNotificationColor(notification.kind);
 
             return (
-              <button
+              <div
                 key={notification.id}
-                type="button"
-                onClick={() => void handleNotificationClick(notification)}
-                className="relative flex w-full items-start gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-left transition-colors hover:border-[var(--border-hover)] focus-visible:border-[var(--text-muted)] focus-visible:outline-none"
+                className="relative flex w-full items-start gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4"
               >
-                <NotificationIcon kind={notification.kind} />
+                <span
+                  className="mt-[7px] h-2.5 w-2.5 shrink-0 rounded-full"
+                  style={{ backgroundColor: notificationColor }}
+                  aria-hidden="true"
+                />
 
-                <span className="min-w-0 flex-1 pt-0.5">
-                  <span
-                    className={`block text-[13px] leading-5 text-[var(--text-primary)] ${
+                <div className="min-w-0 flex-1">
+                  <div
+                    className={`text-[13px] leading-5 text-[var(--text-primary)] ${
                       unread ? "font-medium" : "font-normal"
                     }`}
                   >
                     {notification.title}
-                  </span>
+                  </div>
                   {notification.message ? (
-                    <span className="mt-1 block max-w-[760px] text-xs leading-5 text-[var(--text-secondary)]">
+                    <div className="mt-1 max-w-[760px] text-xs leading-5 text-[var(--text-secondary)]">
                       {notification.message}
-                    </span>
+                    </div>
                   ) : null}
-                  <span className="mt-2 block text-[11px] text-[var(--text-muted)]">
+                  <div className="mt-2 text-[11px] text-[var(--text-muted)]">
                     {formatNotificationTime(notification.created_at)}
-                  </span>
-                </span>
+                  </div>
+                </div>
 
-                {unread ? (
-                  <span
-                    className="mt-2 h-2 w-2 shrink-0 rounded-full bg-[var(--danger)]"
-                    aria-label="Unread"
-                  />
-                ) : null}
-              </button>
+                <div className="flex shrink-0 items-center gap-3 pt-0.5">
+                  {unread ? (
+                    <span
+                      className="h-2 w-2 shrink-0 rounded-full bg-[var(--danger)]"
+                      aria-label="Unread"
+                    />
+                  ) : null}
+
+                  {notification.action_url ? (
+                    <BackendButton
+                      type="button"
+                      compact
+                      onClick={() => void handleNotificationClick(notification)}
+                    >
+                      View
+                    </BackendButton>
+                  ) : null}
+                </div>
+              </div>
             );
           })}
         </div>
