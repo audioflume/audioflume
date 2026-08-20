@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import {
   BackendCheckbox,
@@ -8,7 +8,6 @@ import {
   BackendInput,
   BackendSelect,
 } from "@/components/backend/BackendControls";
-import BackendModalShell from "@/components/backend/BackendModalShell";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
@@ -312,7 +311,6 @@ export default function ArtistSongUploadForm({
   const canEditRights = artist.permissions.includes("rights:edit");
   const canManageReleases =
     artist.status === "approved" && artist.permissions.includes("release:manage");
-  const createReleaseArtworkInputRef = useRef<HTMLInputElement | null>(null);
 
   const [audioFile, setAudioFile] = useState<File | null>(null);
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
@@ -344,16 +342,11 @@ export default function ArtistSongUploadForm({
   const [releasesLoading, setReleasesLoading] = useState(false);
   const [releaseLoadError, setReleaseLoadError] = useState("");
   const [selectedReleaseId, setSelectedReleaseId] = useState("");
-  const [useReleaseArtwork, setUseReleaseArtwork] = useState(false);
   const [createReleaseOpen, setCreateReleaseOpen] = useState(false);
   const [createReleaseTitle, setCreateReleaseTitle] = useState("");
   const [createReleaseType, setCreateReleaseType] =
     useState<ReleaseType>("single");
   const [createReleaseDate, setCreateReleaseDate] = useState("");
-  const [createReleaseArtworkFile, setCreateReleaseArtworkFile] =
-    useState<File | null>(null);
-  const [createReleaseArtworkPreviewUrl, setCreateReleaseArtworkPreviewUrl] =
-    useState<string | null>(null);
   const [creatingRelease, setCreatingRelease] = useState(false);
   const [createReleaseError, setCreateReleaseError] = useState("");
   const [stage, setStage] = useState<"idle" | "analyzing" | "uploading" | "saving">(
@@ -369,9 +362,14 @@ export default function ArtistSongUploadForm({
     () => releases.find((release) => release.id === selectedReleaseId) ?? null,
     [releases, selectedReleaseId],
   );
-  const displayedArtworkUrl = useReleaseArtwork
-    ? selectedRelease?.cover_image_url ?? null
-    : artworkPreviewUrl;
+  const releaseArtworkMode = createReleaseOpen || Boolean(selectedReleaseId);
+  const releaseArtworkLocked = Boolean(selectedRelease?.cover_image_url);
+  const displayedArtworkUrl = selectedRelease?.cover_image_url ?? artworkPreviewUrl;
+  const artworkHelp = selectedRelease?.cover_image_url
+    ? `This song will use ${selectedRelease.title} release artwork.`
+    : releaseArtworkMode
+      ? "This image will be used as the release artwork for this song."
+      : undefined;
 
   useEffect(() => {
     if (!canManageReleases) return;
@@ -416,23 +414,6 @@ export default function ArtistSongUploadForm({
     setArtworkPreviewUrl(objectUrl);
     return () => URL.revokeObjectURL(objectUrl);
   }, [artworkFile]);
-
-  useEffect(() => {
-    if (!createReleaseArtworkFile) {
-      setCreateReleaseArtworkPreviewUrl(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(createReleaseArtworkFile);
-    setCreateReleaseArtworkPreviewUrl(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [createReleaseArtworkFile]);
-
-  useEffect(() => {
-    if (useReleaseArtwork && !selectedRelease?.cover_image_url) {
-      setUseReleaseArtwork(false);
-    }
-  }, [selectedRelease, useReleaseArtwork]);
 
   const ownershipTotals = useMemo(() => {
     let master = 0;
@@ -556,7 +537,6 @@ export default function ArtistSongUploadForm({
 
   function handleArtworkFileChange(file: File | null) {
     setArtworkFile(file);
-    if (file) setUseReleaseArtwork(false);
     setError("");
     setSaveStatus("");
   }
@@ -572,11 +552,7 @@ export default function ArtistSongUploadForm({
     setCreateReleaseTitle("");
     setCreateReleaseType("single");
     setCreateReleaseDate("");
-    setCreateReleaseArtworkFile(null);
     setCreateReleaseError("");
-    if (createReleaseArtworkInputRef.current) {
-      createReleaseArtworkInputRef.current.value = "";
-    }
   }
 
   function closeCreateReleaseModal() {
@@ -590,7 +566,7 @@ export default function ArtistSongUploadForm({
       !canManageReleases ||
       creatingRelease ||
       !createReleaseTitle.trim() ||
-      !createReleaseArtworkFile
+      !artworkFile
     ) {
       return;
     }
@@ -618,7 +594,7 @@ export default function ArtistSongUploadForm({
 
       try {
         const artworkFormData = new FormData();
-        artworkFormData.append("file", createReleaseArtworkFile);
+        artworkFormData.append("file", artworkFile);
 
         const artworkResponse = await fetch(
           `/api/artists/${artist.id}/releases/${release.id}/artwork`,
@@ -646,7 +622,7 @@ export default function ArtistSongUploadForm({
         ...current.filter((item) => item.id !== release.id),
       ]);
       setSelectedReleaseId(release.id);
-      setUseReleaseArtwork(!artworkFile);
+      setArtworkFile(null);
       setCreateReleaseOpen(false);
       resetCreateReleaseForm();
     } catch (createError) {
@@ -687,7 +663,8 @@ export default function ArtistSongUploadForm({
     setRightsNotes("");
     setRightsHolders([]);
     setSelectedReleaseId("");
-    setUseReleaseArtwork(false);
+    setCreateReleaseOpen(false);
+    resetCreateReleaseForm();
     setSaveStatus("");
     setError("");
     setWarningsOpen(false);
@@ -703,8 +680,12 @@ export default function ArtistSongUploadForm({
       return;
     }
 
-    if (!canUpload || !canEditMetadata || busy) return;
+    if (!canUpload || !canEditMetadata || busy || creatingRelease) return;
 
+    if (createReleaseOpen) {
+      setError("Create the release before uploading the song.");
+      return;
+    }
     if (!audioFile) {
       setError("Choose an audio file before uploading.");
       return;
@@ -721,11 +702,48 @@ export default function ArtistSongUploadForm({
       setError("Master and publishing ownership splits must each total 100% before uploading.");
       return;
     }
+    if (selectedReleaseId && !selectedRelease?.cover_image_url && !artworkFile) {
+      setError("Add release artwork before uploading the song.");
+      return;
+    }
 
     try {
       setError("");
-      setSaveStatus("Uploading and processing audio...");
       setStage("uploading");
+
+      if (selectedReleaseId && !selectedRelease?.cover_image_url && artworkFile) {
+        setSaveStatus("Uploading release artwork...");
+        const releaseArtworkFormData = new FormData();
+        releaseArtworkFormData.append("file", artworkFile);
+
+        const releaseArtworkResponse = await fetch(
+          `/api/artists/${artist.id}/releases/${selectedReleaseId}/artwork`,
+          { method: "POST", body: releaseArtworkFormData },
+        );
+        const releaseArtworkBody = (await releaseArtworkResponse
+          .json()
+          .catch(() => ({}))) as ArtistArtworkResponse;
+
+        if (!releaseArtworkResponse.ok || !releaseArtworkBody.release?.cover_image_url) {
+          throw new Error(
+            releaseArtworkBody.error || "Failed to upload release artwork",
+          );
+        }
+
+        setReleases((current) =>
+          current.map((release) =>
+            release.id === selectedReleaseId
+              ? {
+                  ...release,
+                  cover_image_url: releaseArtworkBody.release?.cover_image_url ?? null,
+                }
+              : release,
+          ),
+        );
+        setArtworkFile(null);
+      }
+
+      setSaveStatus("Uploading and processing audio...");
 
       const formData = new FormData();
       formData.append("file", audioFile);
@@ -733,8 +751,10 @@ export default function ArtistSongUploadForm({
       formData.append("title", title.trim());
       formData.append("waveformPeaks", waveformPeaks);
       formData.append("duration", String(duration));
-      if (selectedReleaseId) formData.append("releaseId", selectedReleaseId);
-      if (useReleaseArtwork) formData.append("useReleaseArtwork", "true");
+      if (selectedReleaseId) {
+        formData.append("releaseId", selectedReleaseId);
+        formData.append("useReleaseArtwork", "true");
+      }
 
       const uploadResponse = await fetch(`/api/artists/${artist.id}/songs`, {
         method: "POST",
@@ -799,7 +819,7 @@ export default function ArtistSongUploadForm({
         );
       }
 
-      if (artworkFile && !useReleaseArtwork) {
+      if (artworkFile && !selectedReleaseId) {
         setSaveStatus("Uploading song artwork...");
         const artworkFormData = new FormData();
         artworkFormData.append("file", artworkFile);
@@ -851,39 +871,30 @@ export default function ArtistSongUploadForm({
             artworkFile={artworkFile}
             artworkPreviewUrl={displayedArtworkUrl}
             onArtworkFileChange={handleArtworkFileChange}
-            onRemoveArtwork={() => {
-              setArtworkFile(null);
-              setUseReleaseArtwork(false);
-            }}
-            artworkFooter={
-              selectedRelease?.cover_image_url && !uploadComplete ? (
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => setUseReleaseArtwork((current) => !current)}
-                  className={`text-[11px] font-medium transition hover:text-[var(--text-primary)] disabled:opacity-50 ${
-                    useReleaseArtwork
-                      ? "text-[var(--text-primary)]"
-                      : "text-[var(--text-secondary)]"
-                  }`}
-                >
-                  {useReleaseArtwork
-                    ? "Using release artwork"
-                    : `Use ${selectedRelease.title} artwork`}
-                </button>
-              ) : null
+            onRemoveArtwork={() => setArtworkFile(null)}
+            artworkTitle={releaseArtworkMode ? "Release image" : "Cover image"}
+            artworkActionLabel={
+              releaseArtworkMode ? "Choose Release Image" : "Choose Cover Art"
             }
+            artworkDisabled={releaseArtworkLocked}
+            artworkHelp={artworkHelp}
             topAction={
               <button
                 type="button"
                 onClick={onClose}
-                disabled={busy}
+                disabled={busy || creatingRelease}
                 className="filmwave-backend-button filmwave-backend-button-secondary"
               >
                 Back to Music
               </button>
             }
-            disabled={!canUpload || !canEditMetadata || busy || uploadComplete}
+            disabled={
+              !canUpload ||
+              !canEditMetadata ||
+              busy ||
+              creatingRelease ||
+              uploadComplete
+            }
           />
 
           <section className="filmwave-backend-section">
@@ -912,16 +923,21 @@ export default function ArtistSongUploadForm({
               {canManageReleases ? (
                 <div>
                   <SelectInput
-                    value={selectedReleaseId}
+                    value={createReleaseOpen ? "__create__" : selectedReleaseId}
                     onChange={(value) => {
                       if (value === "__create__") {
+                        resetCreateReleaseForm();
+                        setSelectedReleaseId("");
                         setCreateReleaseOpen(true);
                         return;
                       }
+                      setCreateReleaseOpen(false);
+                      resetCreateReleaseForm();
                       setSelectedReleaseId(value);
-                      setUseReleaseArtwork(false);
                     }}
-                    disabled={busy || uploadComplete || releasesLoading}
+                    disabled={
+                      busy || uploadComplete || releasesLoading || creatingRelease
+                    }
                   >
                     <option value="">
                       {releasesLoading ? "Loading releases..." : "Not part of a release"}
@@ -988,6 +1004,90 @@ export default function ArtistSongUploadForm({
               </div>
             </div>
           </section>
+
+          {createReleaseOpen ? (
+            <section className="filmwave-backend-section">
+              <div className="filmwave-backend-section-header">
+                <h2 className="filmwave-backend-section-title">New Release</h2>
+              </div>
+              <div className="grid gap-4 px-5 pb-5">
+                <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_180px]">
+                  <label className="block">
+                    <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+                      Release title
+                    </span>
+                    <BackendInput
+                      type="text"
+                      value={createReleaseTitle}
+                      onChange={(event) => setCreateReleaseTitle(event.target.value)}
+                      maxLength={180}
+                      disabled={creatingRelease || busy || uploadComplete}
+                    />
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+                      Type
+                    </span>
+                    <SelectInput
+                      value={createReleaseType}
+                      onChange={(value) => setCreateReleaseType(value as ReleaseType)}
+                      disabled={creatingRelease || busy || uploadComplete}
+                    >
+                      {RELEASE_TYPE_OPTIONS.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </SelectInput>
+                  </label>
+
+                  <label className="block">
+                    <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+                      Release date
+                    </span>
+                    <BackendInput
+                      type="date"
+                      value={createReleaseDate}
+                      onChange={(event) => setCreateReleaseDate(event.target.value)}
+                      disabled={creatingRelease || busy || uploadComplete}
+                    />
+                  </label>
+                </div>
+
+                {createReleaseError ? (
+                  <div className="text-xs leading-5 text-[var(--danger)]">
+                    {createReleaseError}
+                  </div>
+                ) : null}
+
+                <div className="flex flex-wrap items-center justify-end gap-2">
+                  <button
+                    type="button"
+                    onClick={closeCreateReleaseModal}
+                    disabled={creatingRelease}
+                    className="filmwave-backend-button filmwave-backend-button-secondary"
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => void handleCreateRelease()}
+                    disabled={
+                      creatingRelease ||
+                      busy ||
+                      uploadComplete ||
+                      !createReleaseTitle.trim() ||
+                      !artworkFile
+                    }
+                    className="filmwave-backend-button filmwave-backend-button-primary"
+                  >
+                    {creatingRelease ? "Creating..." : "Create Release"}
+                  </button>
+                </div>
+              </div>
+            </section>
+          ) : null}
 
           <section className="filmwave-backend-section">
             <div className="filmwave-backend-section-header">
@@ -1248,14 +1348,20 @@ export default function ArtistSongUploadForm({
               <button
                 type="button"
                 onClick={onClose}
-                disabled={busy}
+                disabled={busy || creatingRelease}
                 className="filmwave-backend-button filmwave-backend-button-secondary w-full"
               >
                 Back to Music
               </button>
               <button
                 type="submit"
-                disabled={!canUpload || !canEditMetadata || busy}
+                disabled={
+                  !canUpload ||
+                  !canEditMetadata ||
+                  busy ||
+                  creatingRelease ||
+                  createReleaseOpen
+                }
                 className="filmwave-backend-button filmwave-backend-button-primary w-full"
               >
                 {!busy ? <UploadIcon size={15} /> : null}
@@ -1275,130 +1381,6 @@ export default function ArtistSongUploadForm({
           </section>
         </aside>
       </form>
-
-      <BackendModalShell
-        isOpen={createReleaseOpen}
-        title="Create release"
-        onClose={closeCreateReleaseModal}
-        closeLabel="Close create release"
-        footer={
-          <>
-            <button
-              type="button"
-              onClick={closeCreateReleaseModal}
-              disabled={creatingRelease}
-              className="filmwave-backend-button filmwave-backend-button-secondary"
-            >
-              Cancel
-            </button>
-            <button
-              type="button"
-              onClick={() => void handleCreateRelease()}
-              disabled={
-                creatingRelease ||
-                !createReleaseTitle.trim() ||
-                !createReleaseArtworkFile
-              }
-              className="filmwave-backend-button filmwave-backend-button-primary"
-            >
-              {creatingRelease ? "Creating..." : "Create Release"}
-            </button>
-          </>
-        }
-      >
-        <div className="grid gap-4 pb-3">
-          <label className="block">
-            <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
-              Release title
-            </span>
-            <BackendInput
-              type="text"
-              value={createReleaseTitle}
-              onChange={(event) => setCreateReleaseTitle(event.target.value)}
-              maxLength={180}
-              disabled={creatingRelease}
-            />
-          </label>
-
-          <div className="grid gap-3 sm:grid-cols-2">
-            <label className="block">
-              <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
-                Type
-              </span>
-              <SelectInput
-                value={createReleaseType}
-                onChange={(value) => setCreateReleaseType(value as ReleaseType)}
-                disabled={creatingRelease}
-              >
-                {RELEASE_TYPE_OPTIONS.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </SelectInput>
-            </label>
-
-            <label className="block">
-              <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
-                Release date
-              </span>
-              <BackendInput
-                type="date"
-                value={createReleaseDate}
-                onChange={(event) => setCreateReleaseDate(event.target.value)}
-                disabled={creatingRelease}
-              />
-            </label>
-          </div>
-
-          <div>
-            <div className="mb-1.5 flex items-center justify-between gap-3 text-[11px] font-medium text-[var(--text-secondary)]">
-              <span>Cover artwork</span>
-              <span className="text-[var(--text-muted)]">Required</span>
-            </div>
-            <input
-              ref={createReleaseArtworkInputRef}
-              type="file"
-              accept="image/*"
-              disabled={creatingRelease}
-              onChange={(event) =>
-                setCreateReleaseArtworkFile(event.target.files?.[0] ?? null)
-              }
-              className="hidden"
-            />
-            <div className="flex h-10 min-w-0 items-center gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3">
-              <button
-                type="button"
-                disabled={creatingRelease}
-                onClick={() => createReleaseArtworkInputRef.current?.click()}
-                className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0"
-              >
-                Choose image
-              </button>
-              <span className="min-w-0 flex-1 truncate text-xs text-[var(--text-secondary)]">
-                {createReleaseArtworkFile
-                  ? createReleaseArtworkFile.name
-                  : "No file chosen"}
-              </span>
-              {createReleaseArtworkPreviewUrl ? (
-                <div className="h-7 w-7 overflow-hidden rounded-[5px] border border-[var(--border)]">
-                  <img
-                    src={createReleaseArtworkPreviewUrl}
-                    alt="Release artwork preview"
-                    className="h-full w-full object-cover"
-                  />
-                </div>
-              ) : null}
-            </div>
-          </div>
-
-          {createReleaseError ? (
-            <div className="text-xs leading-5 text-[var(--danger)]">
-              {createReleaseError}
-            </div>
-          ) : null}
-        </div>
-      </BackendModalShell>
     </div>
   );
 }
