@@ -350,7 +350,7 @@ export default function AdminEditPointsPage() {
 
                       <Link
                         href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                        className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[12px] font-normal text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
                       >
                         Review
                       </Link>
