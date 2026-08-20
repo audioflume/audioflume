@@ -55,7 +55,7 @@ function ReleasePickerSongRow({
   return (
     <div
       className={`grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_minmax(220px,1.35fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs transition-colors last:border-b-0 hover:bg-[var(--bg-hover)] ${
-        alreadyAdded ? "opacity-50" : ""
+        alreadyAdded ? "opacity-30" : ""
       }`}
     >
       <BackendCheckbox
