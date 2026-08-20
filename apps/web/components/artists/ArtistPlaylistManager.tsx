@@ -393,17 +393,17 @@ export default function ArtistPlaylistManager({
           >
             <div className="divide-y divide-[var(--border-subtle)]">
               {loadState === "loading" ? (
-                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                   Loading playlists...
                 </div>
               ) : null}
               {loadState === "error" ? (
-                <div className="px-5 py-5 text-xs text-[var(--danger)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
                   {loadError || "Playlists could not be loaded."}
                 </div>
               ) : null}
               {loadState === "ready" && playlists.length === 0 ? (
-                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                   No playlists created yet.
                 </div>
               ) : null}
