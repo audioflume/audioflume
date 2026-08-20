@@ -6,6 +6,7 @@ import { SideFilterPanelBehavior as SharedSideFilterPanelBehavior } from "@filmw
 import { usePlaylists } from "@/hooks/usePlaylists";
 
 const LICENSE_FILTER_BOX_CLASS = "fw-license-filter-box";
+const FILTERS_HEADING_CLASS = "fw-filter-section-heading";
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
 const WEB_MUSIC_FILTER_PANEL_SELECTOR =
@@ -127,7 +128,7 @@ function createLicenseFilterBox() {
 
   const title = document.createElement("div");
   title.className = "fw-license-filter-title";
-  title.textContent = "License";
+  title.textContent = "LICENSES";
   box.appendChild(title);
 
   const options = document.createElement("div");
@@ -171,6 +172,13 @@ function createLicenseFilterBox() {
   return box;
 }
 
+function createFiltersHeading() {
+  const heading = document.createElement("div");
+  heading.className = FILTERS_HEADING_CLASS;
+  heading.textContent = "FILTERS";
+  return heading;
+}
+
 function syncLicenseFilterBoxes() {
   document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_RAIL_SELECTOR).forEach((rail) => {
     syncWebRailItemSectionIds(rail);
@@ -179,6 +187,14 @@ function syncLicenseFilterBoxes() {
     let box = rail.querySelector<HTMLElement>(`:scope > .${LICENSE_FILTER_BOX_CLASS}`);
     if (!box) box = createLicenseFilterBox();
     if (rail.firstElementChild !== box) rail.prepend(box);
+
+    let filtersHeading = rail.querySelector<HTMLElement>(`:scope > .${FILTERS_HEADING_CLASS}`);
+    if (!filtersHeading) filtersHeading = createFiltersHeading();
+
+    const firstFilterItem = rail.querySelector<HTMLElement>(":scope > .fw-filter-rail-item");
+    if (firstFilterItem && filtersHeading.nextElementSibling !== firstFilterItem) {
+      rail.insertBefore(filtersHeading, firstFilterItem);
+    }
 
     syncLicenseFilterBoxState(box);
   });
