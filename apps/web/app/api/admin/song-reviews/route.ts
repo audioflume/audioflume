@@ -49,7 +49,7 @@ export async function GET() {
 
     const { data: songs, error: songsError } = await supabaseServer
       .from("songs")
-      .select("id, title, artist, status, duration, created_at")
+      .select("id, title, artist, status, duration, key, bpm, created_at")
       .in("id", songIds)
       .in("status", [...REVIEW_STATUSES])
       .order("created_at", { ascending: false });
