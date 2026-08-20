@@ -97,7 +97,7 @@ export default function AdminContentPage({
     <main
       className={`filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
         isDashboard ? "admin-dashboard-content-page" : ""
-      } ${isSongUpload ? "admin-song-upload-content-page" : ""} ${
+      } ${isSongUpload || isSongEdit ? "admin-song-upload-content-page" : ""} ${
         isSongEdit ? "admin-song-edit-content-page" : ""
       } ${isPlaylistCreate ? "admin-playlist-create-content-page" : ""} ${
         isPlaylistEdit ? "admin-playlist-edit-content-page" : ""
