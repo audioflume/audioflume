@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import ArtistSongEditorWithCollaborators from "@/components/artists/ArtistSongEditorWithCollaborators";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
+import { BackendSelect } from "@/components/backend/BackendControls";
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -13,6 +14,8 @@ import { usePlayer } from "@/context/PlayerContext";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 import type { Song } from "@/lib/types";
 
+type LicenseType = "standard" | "premium";
+
 type ArtistSongSummary = {
   id: string;
   title: string;
@@ -21,12 +24,18 @@ type ArtistSongSummary = {
   bpm?: number | null;
   key?: string | null;
   created_at: string;
+  license_type?: LicenseType;
   player_song?: Song;
 };
 
 type ArtistSongsResponse = {
   songs?: ArtistSongSummary[];
   song?: ArtistSongSummary;
+  error?: string;
+};
+
+type LicenseResponse = {
+  license_type?: LicenseType;
   error?: string;
 };
 
@@ -86,6 +95,10 @@ export default function ArtistMusicUploader({
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [creatingSong, setCreatingSong] = useState(false);
+  const [createLicenseType, setCreateLicenseType] =
+    useState<LicenseType>("premium");
+  const [createLicenseLocked, setCreateLicenseLocked] = useState(false);
+  const [createLicenseError, setCreateLicenseError] = useState("");
   const [editingSongId, setEditingSongId] = useState("");
   const [submittingSongId, setSubmittingSongId] = useState("");
   const [catalogActionSongId, setCatalogActionSongId] = useState("");
@@ -111,6 +124,9 @@ export default function ArtistMusicUploader({
     setSongs([]);
     setSearchQuery("");
     setCreatingSong(false);
+    setCreateLicenseType("premium");
+    setCreateLicenseLocked(false);
+    setCreateLicenseError("");
     setEditingSongId("");
     setSubmittingSongId("");
     setCatalogActionSongId("");
@@ -159,8 +175,38 @@ export default function ArtistMusicUploader({
     );
   }, [setQueue, visibleSongs]);
 
+  function closeCreateSong() {
+    setCreatingSong(false);
+    setCreateLicenseType("premium");
+    setCreateLicenseLocked(false);
+    setCreateLicenseError("");
+  }
+
   function handleNewSongUploaded(song: ArtistSongSummary) {
-    setSongs((current) => [song, ...current.filter((item) => item.id !== song.id)]);
+    setCreateLicenseLocked(true);
+    setCreateLicenseError("");
+    setSongs((current) => [
+      { ...song, license_type: createLicenseType },
+      ...current.filter((item) => item.id !== song.id),
+    ]);
+
+    void fetch(`/api/artists/${artist.id}/songs/${song.id}/license`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ license_type: createLicenseType }),
+    })
+      .then(async (response) => {
+        const body = (await response.json().catch(() => ({}))) as LicenseResponse;
+        if (!response.ok || !body.license_type) {
+          throw new Error(body.error || "Failed to save track license");
+        }
+      })
+      .catch((error) => {
+        setCreateLicenseError(
+          error instanceof Error ? error.message : "Failed to save track license",
+        );
+      });
+
     onUploaded();
   }
 
@@ -289,11 +335,38 @@ export default function ArtistMusicUploader({
 
   if (creatingSong) {
     return (
-      <ArtistSongUploadForm
-        artist={artist}
-        onClose={() => setCreatingSong(false)}
-        onUploaded={handleNewSongUploaded}
-      />
+      <div className="grid gap-4">
+        <section className="filmwave-backend-section">
+          <div className="filmwave-backend-section-header">
+            <h2 className="filmwave-backend-section-title">License</h2>
+          </div>
+          <div className="max-w-[360px] px-5 pb-5">
+            <BackendSelect
+              aria-label="License"
+              value={createLicenseType}
+              onChange={(event) =>
+                setCreateLicenseType(event.target.value as LicenseType)
+              }
+              disabled={createLicenseLocked}
+              className="filmwave-backend-select-end-control text-[var(--text-primary)]"
+            >
+              <option value="standard">Standard License</option>
+              <option value="premium">Artist Premium</option>
+            </BackendSelect>
+            {createLicenseError ? (
+              <div className="mt-1 text-[10px] leading-4 text-[var(--status-error,#dc584f)]">
+                {createLicenseError}
+              </div>
+            ) : null}
+          </div>
+        </section>
+
+        <ArtistSongUploadForm
+          artist={artist}
+          onClose={closeCreateSong}
+          onUploaded={handleNewSongUploaded}
+        />
+      </div>
     );
   }
 
@@ -326,7 +399,12 @@ export default function ArtistMusicUploader({
         {canUpload ? (
           <button
             type="button"
-            onClick={() => setCreatingSong(true)}
+            onClick={() => {
+              setCreateLicenseType("premium");
+              setCreateLicenseLocked(false);
+              setCreateLicenseError("");
+              setCreatingSong(true);
+            }}
             className="filmwave-backend-button filmwave-backend-button-primary"
           >
             <UploadIcon size={15} />
