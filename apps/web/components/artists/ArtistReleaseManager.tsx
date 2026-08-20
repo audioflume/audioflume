@@ -49,6 +49,7 @@ type ReleaseSong = {
   title: string;
   status: string;
   duration: number;
+  cover_url: string | null;
   created_at: string;
 };
 
@@ -218,8 +219,8 @@ function SortableTrackRow({
       }}
       className={`grid gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
         canManage
-          ? "sm:grid-cols-[28px_42px_minmax(0,1fr)_80px_110px_auto]"
-          : "sm:grid-cols-[42px_minmax(0,1fr)_80px_110px]"
+          ? "sm:grid-cols-[28px_42px_44px_minmax(0,1fr)_80px_110px_auto]"
+          : "sm:grid-cols-[42px_44px_minmax(0,1fr)_80px_110px]"
       }`}
     >
       {canManage ? (
@@ -232,6 +233,7 @@ function SortableTrackRow({
       ) : null}
 
       <div className="text-xs font-medium text-[var(--text-muted)]">{index + 1}</div>
+      <BackendMediaThumbnail src={song.cover_url} size={40} className="rounded-[6px]" />
       <BackendRowTitle>{song.title}</BackendRowTitle>
       <div className="text-xs text-[var(--text-muted)]">
         {formatDuration(Number(song.duration))}
