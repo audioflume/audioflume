@@ -20,6 +20,13 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 import Toast from "@/components/Toast";
 import DropdownShell from "@/components/DropdownShell";
+import {
+  BackendButton,
+  BackendIconButton,
+  BackendInput,
+  BackendTextarea,
+} from "@/components/backend/BackendControls";
+import BackendModalShell from "@/components/backend/BackendModalShell";
 import DragIconSmall from "@/components/icons/DragIconSmall";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
@@ -27,18 +34,6 @@ import {
   DEFAULT_CURATED_PLAYLIST_GROUP,
   type CuratedPlaylistGroup,
 } from "@/lib/curatedPlaylists";
-import {
-  iconButtonActiveClass,
-  modalCancelButtonClass,
-  modalFieldLabelClass,
-  modalInputClass,
-  modalPrimaryButtonClass,
-  modalTextareaClass,
-  modalTitleClass,
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
-  smallIconButtonClass,
-} from "@/components/uiClasses";
 
 // ─── Group modal ──────────────────────────────────────────────────────────────
 
@@ -67,53 +62,59 @@ function GroupModal({
   }
 
   return (
-    <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm"
-      onClick={onClose}
+    <BackendModalShell
+      isOpen
+      title={mode === "create" ? "New Playlist Group" : "Edit Playlist Group"}
+      onClose={onClose}
+      closeLabel="Close playlist group modal"
+      maxWidth="max-w-sm"
+      heightClassName="h-auto"
+      maxHeight="calc(100vh - 64px)"
+      bodyClassName="pb-5"
+      footer={
+        <>
+          <BackendButton
+            type="button"
+            onClick={onClose}
+            disabled={saving}
+          >
+            Cancel
+          </BackendButton>
+          <BackendButton
+            type="submit"
+            form="playlist-group-form"
+            variant="primary"
+            disabled={saving || !name.trim()}
+          >
+            {saving ? "Saving…" : mode === "create" ? "Create Group" : "Save Changes"}
+          </BackendButton>
+        </>
+      }
     >
-      <div
-        className="w-full max-w-sm rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-6 shadow-2xl"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <h2 className={`${modalTitleClass} mb-5`}>
-          {mode === "create" ? "New Playlist Group" : "Edit Playlist Group"}
-        </h2>
+      <form id="playlist-group-form" onSubmit={handleSubmit} className="grid gap-4 pt-1">
+        <label className="grid gap-1.5">
+          <span className="text-[11px] text-[var(--text-secondary)]">Group name</span>
+          <BackendInput
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g. Documentary"
+            autoFocus
+            required
+          />
+        </label>
 
-        <form onSubmit={handleSubmit} className="grid gap-4">
-          <label className="grid gap-1.5">
-            <span className={modalFieldLabelClass}>Group name</span>
-            <input
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              className={modalInputClass}
-              placeholder="e.g. Documentary"
-              autoFocus
-              required
-            />
-          </label>
-
-          <label className="grid gap-1.5">
-            <span className={modalFieldLabelClass}>Description</span>
-            <textarea
-              value={description}
-              onChange={(e) => setDescription(e.target.value)}
-              className={`${modalTextareaClass} min-h-[72px]`}
-              placeholder="Short description shown under the group heading…"
-              rows={3}
-            />
-          </label>
-
-          <div className="mt-1 flex items-center justify-end gap-2">
-            <button type="button" className={modalCancelButtonClass} onClick={onClose} disabled={saving}>
-              Cancel
-            </button>
-            <button type="submit" className={modalPrimaryButtonClass} disabled={saving || !name.trim()}>
-              {saving ? "Saving…" : mode === "create" ? "Create Group" : "Save Changes"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
+        <label className="grid gap-1.5">
+          <span className="text-[11px] text-[var(--text-secondary)]">Description</span>
+          <BackendTextarea
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            className="min-h-[72px]"
+            placeholder="Short description shown under the group heading…"
+            rows={3}
+          />
+        </label>
+      </form>
+    </BackendModalShell>
   );
 }
 
@@ -186,14 +187,14 @@ function SortableGroupRow({
           onOpenChange={(o) => setOpenDropdownId(o ? group.id : null)}
           placement="bottom-end"
           trigger={({ open }) => (
-            <button
+            <BackendIconButton
               type="button"
-              className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`}
+              active={open}
               aria-label="More options"
               disabled={saving}
             >
               <MoreIcon size={14} />
-            </button>
+            </BackendIconButton>
           )}
         >
           <button type="button" onClick={() => { setOpenDropdownId(null); onBeginEditing(group); }}>
@@ -520,10 +521,10 @@ export default function AdminPlaylistGroupManager({
             <h2 className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">Playlist Groups</h2>
             <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">Create, rename, and delete the row headers used on the Curated Playlists page.</p>
           </div>
-          <button type="button" className={primaryPillButtonClass} onClick={openCreateModal}>
+          <BackendButton type="button" variant="primary" onClick={openCreateModal}>
             <PlusIcon />
             New Group
-          </button>
+          </BackendButton>
         </div>
 
         {loading && (
@@ -561,9 +562,9 @@ export default function AdminPlaylistGroupManager({
                     onOpenChange={(o) => setOpenDropdownId(o ? group.id : null)}
                     placement="bottom-end"
                     trigger={({ open }) => (
-                      <button type="button" className={`${smallIconButtonClass} ${open ? iconButtonActiveClass : ""}`} aria-label="More options" disabled={saving}>
+                      <BackendIconButton type="button" active={open} aria-label="More options" disabled={saving}>
                         <MoreIcon size={14} />
-                      </button>
+                      </BackendIconButton>
                     )}
                   >
                     <button type="button" onClick={() => { setOpenDropdownId(null); openEditModal(group); }}>Edit Group</button>
