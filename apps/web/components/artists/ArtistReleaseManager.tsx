@@ -27,6 +27,7 @@ import {
 } from "@/components/backend/BackendControls";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/BackendRow";
+import PlusIcon from "@/components/icons/PlusIcon";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ReleaseType = "single" | "ep" | "album";
@@ -80,16 +81,24 @@ function formatStatus(status: string) {
     .replace(/\b\w/g, (letter) => letter.toUpperCase());
 }
 
-function formatDate(value: string | null) {
-  if (!value) return "No release date";
-  const date = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return value;
+function getReleaseYear(value: string | null) {
+  if (!value) return "";
+  const match = value.match(/^(\d{4})/);
+  return match?.[1] ?? "";
+}
 
-  return new Intl.DateTimeFormat("en", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  }).format(date);
+function formatReleaseYear(value: string | null) {
+  return getReleaseYear(value) || "No release year";
+}
+
+function normalizeYearInput(value: string) {
+  return value.replace(/\D/g, "").slice(0, 4);
+}
+
+function releaseYearToDate(value: string) {
+  if (!value) return null;
+  if (!/^\d{4}$/.test(value)) return undefined;
+  return `${value}-01-01`;
 }
 
 function formatDuration(value: number) {
@@ -158,7 +167,7 @@ function SortableReleaseRow({
         {release.title}
       </BackendRowTitle>
       <div className="text-xs text-[var(--text-muted)]">
-        {formatDate(release.release_date)}
+        {formatReleaseYear(release.release_date)}
       </div>
       <div>
         <ReleaseStatusBadge status={release.status} />
@@ -262,11 +271,7 @@ export default function ArtistReleaseManager({
   );
   const [loadError, setLoadError] = useState("");
   const [selectedReleaseId, setSelectedReleaseId] = useState("");
-  const [createTitle, setCreateTitle] = useState("");
-  const [createType, setCreateType] = useState<ReleaseType>("single");
-  const [createDate, setCreateDate] = useState("");
   const [creating, setCreating] = useState(false);
-  const [createError, setCreateError] = useState("");
   const [reordering, setReordering] = useState(false);
   const [reorderError, setReorderError] = useState("");
 
@@ -276,12 +281,9 @@ export default function ArtistReleaseManager({
     setReleases([]);
     setSongs([]);
     setSelectedReleaseId("");
+    setCreating(false);
     setLoadState("loading");
     setLoadError("");
-    setCreateTitle("");
-    setCreateType("single");
-    setCreateDate("");
-    setCreateError("");
     setReorderError("");
 
     async function loadReleases() {
@@ -313,45 +315,6 @@ export default function ArtistReleaseManager({
       cancelled = true;
     };
   }, [artist.id]);
-
-  async function handleCreate(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (!canManage || creating || !createTitle.trim()) return;
-
-    try {
-      setCreating(true);
-      setCreateError("");
-
-      const response = await fetch(`/api/artists/${artist.id}/releases`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          title: createTitle.trim(),
-          release_type: createType,
-          release_date: createDate || null,
-        }),
-      });
-      const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
-
-      if (!response.ok || !body.release) {
-        throw new Error(body.error || "Failed to create release");
-      }
-
-      const release = body.release as ArtistRelease;
-      setReleases((current) => [release, ...current]);
-      setCreateTitle("");
-      setCreateType("single");
-      setCreateDate("");
-      setSelectedReleaseId(release.id);
-      onReleaseCreated();
-    } catch (error) {
-      setCreateError(
-        error instanceof Error ? error.message : "Failed to create release",
-      );
-    } finally {
-      setCreating(false);
-    }
-  }
 
   async function handleReleaseDragEnd(event: DragEndEvent) {
     if (!canManage || reordering) return;
@@ -427,78 +390,36 @@ export default function ArtistReleaseManager({
     );
   }
 
+  if (creating) {
+    return (
+      <CreateRelease
+        artist={artist}
+        canManage={canManage}
+        onBack={() => setCreating(false)}
+        onCreated={(release) => {
+          setReleases((current) => [release, ...current]);
+          setCreating(false);
+          setSelectedReleaseId(release.id);
+          onReleaseCreated();
+        }}
+      />
+    );
+  }
+
   return (
-    <div className="grid gap-4">
-      <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header">
-          <h2 className="filmwave-backend-section-title">Create release</h2>
-        </div>
-
-        <form onSubmit={handleCreate}>
-          <div className="grid gap-4 p-5 md:grid-cols-[minmax(0,1fr)_180px_190px]">
-            <label className="block">
-              <span>Release title</span>
-              <BackendInput
-                type="text"
-                value={createTitle}
-                onChange={(event) => setCreateTitle(event.target.value)}
-                maxLength={180}
-                disabled={!canManage || creating}
-                placeholder="Release title"
-              />
-            </label>
-
-            <label className="block">
-              <span>Type</span>
-              <BackendSelect
-                value={createType}
-                onChange={(event) => setCreateType(event.target.value as ReleaseType)}
-                disabled={!canManage || creating}
-              >
-                {RELEASE_TYPES.map((type) => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </BackendSelect>
-            </label>
-
-            <label className="block">
-              <span>Release date</span>
-              <BackendInput
-                type="date"
-                value={createDate}
-                onChange={(event) => setCreateDate(event.target.value)}
-                disabled={!canManage || creating}
-              />
-            </label>
-          </div>
-
-          <div className="flex flex-wrap items-center justify-between gap-3 border-t border-[var(--border-subtle)] px-5 py-4">
-            <div className="min-h-5 text-xs">
-              {createError ? (
-                <span className="text-[var(--danger)]">{createError}</span>
-              ) : !canManage ? (
-                <span className="text-[var(--text-muted)]">
-                  {artist.status !== "approved"
-                    ? "Your artist profile must be approved before releases can be created."
-                    : "Your artist role does not include release management."}
-                </span>
-              ) : null}
-            </div>
-
-            {canManage ? (
-              <button
-                type="submit"
-                disabled={creating || !createTitle.trim()}
-                className="filmwave-backend-button filmwave-backend-button-primary"
-              >
-                {creating ? "Creating..." : "Create release"}
-              </button>
-            ) : null}
-          </div>
-        </form>
-      </section>
+    <div>
+      <div className="mb-4 flex items-center justify-end">
+        {canManage ? (
+          <button
+            type="button"
+            onClick={() => setCreating(true)}
+            className="filmwave-backend-button filmwave-backend-button-primary"
+          >
+            <PlusIcon size={13} />
+            New Release
+          </button>
+        ) : null}
+      </div>
 
       <section className="filmwave-backend-section">
         <div className="filmwave-backend-section-header">
@@ -551,6 +472,139 @@ export default function ArtistReleaseManager({
   );
 }
 
+type CreateReleaseProps = {
+  artist: ArtistDashboardProfile;
+  canManage: boolean;
+  onBack: () => void;
+  onCreated: (release: ArtistRelease) => void;
+};
+
+function CreateRelease({
+  artist,
+  canManage,
+  onBack,
+  onCreated,
+}: CreateReleaseProps) {
+  const [title, setTitle] = useState("");
+  const [releaseType, setReleaseType] = useState<ReleaseType>("single");
+  const [releaseYear, setReleaseYear] = useState("");
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
+
+  async function createRelease(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!canManage || saving || !title.trim()) return;
+
+    const releaseDate = releaseYearToDate(releaseYear);
+    if (releaseDate === undefined) {
+      setError("Enter a valid four-digit release year.");
+      return;
+    }
+
+    try {
+      setSaving(true);
+      setError("");
+
+      const response = await fetch(`/api/artists/${artist.id}/releases`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          title: title.trim(),
+          release_type: releaseType,
+          release_date: releaseDate,
+        }),
+      });
+      const body = (await response.json().catch(() => ({}))) as ReleasesResponse;
+
+      if (!response.ok || !body.release) {
+        throw new Error(body.error || "Failed to create release");
+      }
+
+      onCreated(body.release as ArtistRelease);
+    } catch (createError) {
+      setError(
+        createError instanceof Error ? createError.message : "Failed to create release",
+      );
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  const yearValid = !releaseYear || /^\d{4}$/.test(releaseYear);
+
+  return (
+    <form onSubmit={createRelease} className="grid gap-4">
+      <button
+        type="button"
+        onClick={onBack}
+        disabled={saving}
+        className="filmwave-backend-button filmwave-backend-button-secondary w-fit"
+      >
+        Back to Releases
+      </button>
+
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header">
+          <h2 className="filmwave-backend-section-title">New release</h2>
+        </div>
+
+        <div className="grid gap-4 p-5 md:grid-cols-[minmax(0,1fr)_180px_150px]">
+          <label className="block">
+            <span>Release title</span>
+            <BackendInput
+              type="text"
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              maxLength={180}
+              disabled={!canManage || saving}
+              placeholder="Release title"
+            />
+          </label>
+
+          <label className="block">
+            <span>Type</span>
+            <BackendSelect
+              value={releaseType}
+              onChange={(event) => setReleaseType(event.target.value as ReleaseType)}
+              disabled={!canManage || saving}
+            >
+              {RELEASE_TYPES.map((type) => (
+                <option key={type.value} value={type.value}>
+                  {type.label}
+                </option>
+              ))}
+            </BackendSelect>
+          </label>
+
+          <label className="block">
+            <span>Year</span>
+            <BackendInput
+              type="text"
+              inputMode="numeric"
+              value={releaseYear}
+              onChange={(event) => setReleaseYear(normalizeYearInput(event.target.value))}
+              maxLength={4}
+              disabled={!canManage || saving}
+              placeholder="Year"
+            />
+          </label>
+        </div>
+      </section>
+
+      <div className="flex items-center justify-between gap-3">
+        <div className="min-h-5 text-xs text-[var(--danger)]">{error}</div>
+        <button
+          type="submit"
+          disabled={!canManage || saving || !title.trim() || !yearValid}
+          className="filmwave-backend-button filmwave-backend-button-primary"
+        >
+          {saving ? "Creating..." : "Create Release"}
+        </button>
+      </div>
+    </form>
+  );
+}
+
 type ReleaseEditorProps = {
   artist: ArtistDashboardProfile;
   canManage: boolean;
@@ -575,7 +629,7 @@ function ReleaseEditor({
   );
   const [title, setTitle] = useState(release.title);
   const [releaseType, setReleaseType] = useState<ReleaseType>(release.release_type);
-  const [releaseDate, setReleaseDate] = useState(release.release_date ?? "");
+  const [releaseYear, setReleaseYear] = useState(getReleaseYear(release.release_date));
   const [trackIds, setTrackIds] = useState<string[]>(release.track_ids);
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
   const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
@@ -650,6 +704,15 @@ function ReleaseEditor({
     return nextRelease;
   }
 
+  function getReleaseDatePayload() {
+    const releaseDate = releaseYearToDate(releaseYear);
+    if (releaseDate === undefined) {
+      setError("Enter a valid four-digit release year.");
+      return undefined;
+    }
+    return releaseDate;
+  }
+
   async function saveRelease(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (!canManage || saving || statusChanging || !title.trim()) return;
@@ -658,6 +721,9 @@ function ReleaseEditor({
       setError("A single can contain only one track.");
       return;
     }
+
+    const releaseDate = getReleaseDatePayload();
+    if (releaseDate === undefined) return;
 
     try {
       setSaving(true);
@@ -672,7 +738,7 @@ function ReleaseEditor({
           body: JSON.stringify({
             title: title.trim(),
             release_type: releaseType,
-            release_date: releaseDate || null,
+            release_date: releaseDate,
             song_ids: trackIds,
           }),
         },
@@ -709,6 +775,9 @@ function ReleaseEditor({
       return;
     }
 
+    const releaseDate = getReleaseDatePayload();
+    if (releaseDate === undefined) return;
+
     try {
       setStatusChanging(true);
       setError("");
@@ -723,7 +792,7 @@ function ReleaseEditor({
             body: JSON.stringify({
               title: title.trim(),
               release_type: releaseType,
-              release_date: releaseDate || null,
+              release_date: releaseDate,
               song_ids: trackIds,
             }),
           },
@@ -745,7 +814,7 @@ function ReleaseEditor({
           body: JSON.stringify({
             title: title.trim(),
             release_type: releaseType,
-            release_date: releaseDate || null,
+            release_date: releaseDate,
             song_ids: trackIds,
             action,
           }),
@@ -814,6 +883,7 @@ function ReleaseEditor({
 
   const trackOrderDisabled =
     saving || uploadingArtwork || statusChanging || deleting;
+  const yearValid = !releaseYear || /^\d{4}$/.test(releaseYear);
 
   return (
     <form onSubmit={saveRelease} className="grid gap-4">
@@ -878,12 +948,15 @@ function ReleaseEditor({
             </label>
 
             <label className="block">
-              <span>Release date</span>
+              <span>Year</span>
               <BackendInput
-                type="date"
-                value={releaseDate}
-                onChange={(event) => setReleaseDate(event.target.value)}
+                type="text"
+                inputMode="numeric"
+                value={releaseYear}
+                onChange={(event) => setReleaseYear(normalizeYearInput(event.target.value))}
+                maxLength={4}
                 disabled={!canManage || saving || statusChanging}
+                placeholder="Year"
               />
             </label>
           </div>
@@ -987,7 +1060,7 @@ function ReleaseEditor({
             <button
               type="button"
               onClick={() => void changeReleaseStatus("publish")}
-              disabled={trackOrderDisabled || !title.trim()}
+              disabled={trackOrderDisabled || !title.trim() || !yearValid}
               className="filmwave-backend-button filmwave-backend-button-secondary"
             >
               {statusChanging ? "Publishing..." : "Publish release"}
@@ -996,7 +1069,7 @@ function ReleaseEditor({
           {canManage ? (
             <button
               type="submit"
-              disabled={saving || statusChanging || deleting || !title.trim()}
+              disabled={saving || statusChanging || deleting || !title.trim() || !yearValid}
               className="filmwave-backend-button filmwave-backend-button-primary"
             >
               {saving ? "Saving..." : "Save release"}
