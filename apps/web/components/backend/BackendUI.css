@@ -152,19 +152,6 @@ main:has(> aside[class*="admin-sidebar-width"])
   color: var(--text-primary);
 }
 
-/* Older admin forms still using the public secondary helper follow backend hover rules. */
-main:has(> aside[class*="admin-sidebar-width"])
-  .filmwave-legacy-secondary-action:hover {
-  background: var(--bg-secondary);
-  color: var(--text-primary);
-}
-
-main:has(> aside[class*="admin-sidebar-width"])
-  .filmwave-legacy-modal-cancel:hover {
-  background: transparent;
-  color: var(--text-primary);
-}
-
 .filmwave-backend-button-secondary-danger {
   border: 1px solid var(--border);
   background: var(--bg-primary);
