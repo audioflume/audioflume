@@ -4,6 +4,12 @@ import {
   ArtistAccessError,
   requireArtistPermission,
 } from "@/lib/artistPermissions";
+import {
+  getSongPendingRevision,
+  mergeSongPendingRevision,
+  songStatusUsesPendingRevision,
+  upsertSongMetadataRevision,
+} from "@/lib/songPendingRevisions";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -156,6 +162,7 @@ export async function GET(_request: Request, context: RouteContext) {
       rightsResult,
       holdersResult,
       reviewResult,
+      pendingRevision,
     ] = await Promise.all([
       supabaseServer
         .from("songs")
@@ -191,6 +198,7 @@ export async function GET(_request: Request, context: RouteContext) {
         .order("created_at", { ascending: false })
         .limit(1)
         .maybeSingle(),
+      getSongPendingRevision(songId),
     ]);
 
     if (songResult.error) throw songResult.error;
@@ -202,21 +210,35 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
 
+    const defaultRights = {
+      master_owner: null,
+      publishing_owner: null,
+      pro_affiliation: null,
+      isrc: null,
+      iswc: null,
+      copyright_year: null,
+      rights_confirmed: false,
+      notes: null,
+    };
+    const pendingFeedback =
+      pendingRevision?.status === "changes_requested"
+        ? {
+            action: "changes_requested" as const,
+            notes: pendingRevision.review_notes,
+            created_at: pendingRevision.updated_at,
+          }
+        : null;
+
     return NextResponse.json({
-      song: songResult.data,
-      credits: creditsResult.data ?? [],
-      rights: rightsResult.data ?? {
-        master_owner: null,
-        publishing_owner: null,
-        pro_affiliation: null,
-        isrc: null,
-        iswc: null,
-        copyright_year: null,
-        rights_confirmed: false,
-        notes: null,
-      },
-      rights_holders: holdersResult.data ?? [],
-      review_feedback: reviewResult.data ?? null,
+      song: mergeSongPendingRevision(songResult.data, pendingRevision),
+      credits: pendingRevision?.credits ?? creditsResult.data ?? [],
+      rights: pendingRevision?.rights ?? rightsResult.data ?? defaultRights,
+      rights_holders:
+        pendingRevision?.rights_holders ?? holdersResult.data ?? [],
+      review_feedback: pendingFeedback ?? reviewResult.data ?? null,
+      revision_status: pendingRevision?.status ?? null,
+      revision_audio_pending: Boolean(pendingRevision?.audio_url),
+      live_status: songResult.data.status,
     });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
@@ -310,7 +332,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       return NextResponse.json({ song: submittedSong });
     }
 
-    await requireArtistPermission(id, "catalog:edit");
+    const access = await requireArtistPermission(id, "catalog:edit");
 
     if (!(await requirePrimarySong(id, songId))) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
@@ -318,7 +340,9 @@ export async function PATCH(request: Request, context: RouteContext) {
 
     const { data: existingSong, error: songLookupError } = await supabaseServer
       .from("songs")
-      .select("id, status")
+      .select(
+        "id, title, status, duration, bpm, key, genres, moods, regions, instruments, builds, vocals, instrumental, explicit, created_at",
+      )
       .eq("id", songId)
       .maybeSingle();
 
@@ -326,12 +350,15 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (!existingSong) {
       return NextResponse.json({ error: "Track not found" }, { status: 404 });
     }
+
+    const usesPendingRevision = songStatusUsesPendingRevision(existingSong.status);
     if (
       existingSong.status !== "draft" &&
-      existingSong.status !== "changes_requested"
+      existingSong.status !== "changes_requested" &&
+      !usesPendingRevision
     ) {
       return NextResponse.json(
-        { error: "Only draft tracks or tracks with requested changes can be edited" },
+        { error: "This track cannot be edited from its current status" },
         { status: 409 },
       );
     }
@@ -405,21 +432,56 @@ export async function PATCH(request: Request, context: RouteContext) {
       rightsConfirmed = true;
     }
 
+    const cleanedMetadata = {
+      title,
+      bpm,
+      key: cleanNullableString(metadata.key, 40),
+      genres: cleanStringArray(metadata.genres),
+      moods: cleanStringArray(metadata.moods),
+      regions: cleanStringArray(metadata.regions),
+      instruments: cleanStringArray(metadata.instruments),
+      builds: cleanStringArray(metadata.builds),
+      vocals: cleanStringArray(metadata.vocals),
+      instrumental: Boolean(metadata.instrumental),
+      explicit: Boolean(metadata.explicit),
+    };
+    const cleanedRights = rights
+      ? {
+          master_owner: cleanNullableString(rights.master_owner, 200),
+          publishing_owner: cleanNullableString(rights.publishing_owner, 200),
+          pro_affiliation: cleanNullableString(rights.pro_affiliation, 120),
+          isrc: cleanNullableString(rights.isrc, 40),
+          iswc: cleanNullableString(rights.iswc, 40),
+          copyright_year: copyrightYear,
+          rights_confirmed: rightsConfirmed,
+          notes: cleanNullableString(rights.notes, 2000),
+        }
+      : null;
+
+    if (usesPendingRevision) {
+      const revision = await upsertSongMetadataRevision({
+        songId,
+        userId: access.userId,
+        metadata: cleanedMetadata,
+        credits,
+        rights: cleanedRights,
+        rightsHolders: rights ? rightsHolders : null,
+      });
+
+      return NextResponse.json({
+        song: {
+          ...existingSong,
+          ...cleanedMetadata,
+        },
+        revision_pending: true,
+        revision_status: revision.status,
+        live_status: existingSong.status,
+      });
+    }
+
     const { data: song, error: songError } = await supabaseServer
       .from("songs")
-      .update({
-        title,
-        bpm,
-        key: cleanNullableString(metadata.key, 40),
-        genres: cleanStringArray(metadata.genres),
-        moods: cleanStringArray(metadata.moods),
-        regions: cleanStringArray(metadata.regions),
-        instruments: cleanStringArray(metadata.instruments),
-        builds: cleanStringArray(metadata.builds),
-        vocals: cleanStringArray(metadata.vocals),
-        instrumental: Boolean(metadata.instrumental),
-        explicit: Boolean(metadata.explicit),
-      })
+      .update(cleanedMetadata)
       .eq("id", songId)
       .select(
         "id, title, status, duration, bpm, key, genres, moods, regions, instruments, builds, vocals, instrumental, explicit, created_at",
@@ -448,20 +510,13 @@ export async function PATCH(request: Request, context: RouteContext) {
       if (creditsInsertError) throw creditsInsertError;
     }
 
-    if (rights) {
+    if (cleanedRights) {
       const { error: rightsError } = await supabaseServer
         .from("song_rights")
         .upsert(
           {
             song_id: songId,
-            master_owner: cleanNullableString(rights.master_owner, 200),
-            publishing_owner: cleanNullableString(rights.publishing_owner, 200),
-            pro_affiliation: cleanNullableString(rights.pro_affiliation, 120),
-            isrc: cleanNullableString(rights.isrc, 40),
-            iswc: cleanNullableString(rights.iswc, 40),
-            copyright_year: copyrightYear,
-            rights_confirmed: rightsConfirmed,
-            notes: cleanNullableString(rights.notes, 2000),
+            ...cleanedRights,
           },
           { onConflict: "song_id" },
         );
@@ -490,7 +545,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       }
     }
 
-    return NextResponse.json({ song });
+    return NextResponse.json({ song, revision_pending: false });
   } catch (error) {
     if (error instanceof ArtistAccessError) {
       return NextResponse.json({ error: error.message }, { status: error.status });
