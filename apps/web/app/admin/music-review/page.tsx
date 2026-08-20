@@ -36,6 +36,8 @@ type SubmissionSummary = {
   bpm: number | null;
   created_at: string;
   artist_profile: ArtistProfileSummary | null;
+  revision_pending?: boolean;
+  live_status?: ReviewStatus;
 };
 
 type SubmissionSong = SubmissionSummary & {
@@ -100,6 +102,8 @@ type DetailsResponse = {
   rights?: Rights | null;
   rights_holders?: RightsHolder[];
   reviews?: ReviewEvent[];
+  revision_pending?: boolean;
+  live_status?: ReviewStatus;
   error?: string;
 };
 
@@ -327,7 +331,11 @@ export default function AdminMusicReviewPage() {
 
     if (
       action === "reject" &&
-      !window.confirm(`Reject ${song.title}? The artist will not be able to resubmit it.`)
+      !window.confirm(
+        details?.revision_pending
+          ? `Reject the proposed changes to ${song.title}? The current version will remain unchanged.`
+          : `Reject ${song.title}? The artist will not be able to resubmit it.`,
+      )
     ) {
       return;
     }
@@ -350,11 +358,29 @@ export default function AdminMusicReviewPage() {
       const body = (await response.json().catch(() => ({}))) as {
         song?: SubmissionSummary;
         review?: ReviewEvent;
+        revision_applied?: boolean;
+        revision_pending?: boolean;
+        live_status?: ReviewStatus;
         error?: string;
       };
 
       if (!response.ok || !body.song) {
         throw new Error(body.error || "Failed to update submission");
+      }
+
+      if (details?.revision_pending) {
+        await loadQueue();
+        showToast(
+          action === "approve"
+            ? `${song.title}: Changes approved`
+            : action === "reject"
+              ? `${song.title}: Changes rejected`
+              : `${song.title}: Changes requested`,
+        );
+        setSelectedSongId("");
+        setDetails(null);
+        setFeedback("");
+        return;
       }
 
       setSongs((current) =>
