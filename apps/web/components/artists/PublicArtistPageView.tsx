@@ -52,14 +52,8 @@ function formatReleaseType(type: PublicArtistRelease["release_type"]) {
 
 function formatReleaseDate(value: string | null) {
   if (!value) return null;
-  const date = new Date(`${value}T00:00:00`);
-  if (Number.isNaN(date.getTime())) return null;
-
-  return new Intl.DateTimeFormat("en", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
+  const match = value.match(/^(\d{4})/);
+  return match?.[1] ?? null;
 }
 
 function formatTrackCount(count: number) {
