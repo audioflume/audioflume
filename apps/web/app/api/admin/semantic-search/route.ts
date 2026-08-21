@@ -11,6 +11,10 @@ import {
   SONG_SEARCH_EMBEDDING_MODEL,
   type SemanticSongSearchMatch,
 } from "@/lib/songEmbeddings";
+import {
+  rankHybridSongSearchResults,
+  type HybridSearchSong,
+} from "@/lib/songSearchHybridRanking";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -20,22 +24,8 @@ export const revalidate = 0;
 const MAX_QUERY_LENGTH = 500;
 const DEFAULT_TEST_MATCH_COUNT = 25;
 const MAX_TEST_MATCH_COUNT = 100;
-
-type SongSearchPreview = {
-  id: string;
-  title: string | null;
-  artist: string | null;
-  genres: string[] | null;
-  moods: string[] | null;
-  regions: string[] | null;
-  instruments: string[] | null;
-  builds: string[] | null;
-  vocals: string[] | null;
-  instrumental: boolean | null;
-  bpm: number | null;
-  key: string | null;
-  duration: number | null;
-};
+const MIN_HYBRID_CANDIDATE_COUNT = 100;
+const MAX_HYBRID_CANDIDATE_COUNT = 200;
 
 function clampMatchCount(value: unknown) {
   const parsed = Number(value);
@@ -46,7 +36,18 @@ function clampMatchCount(value: unknown) {
   );
 }
 
-async function getPreviewResults(matches: SemanticSongSearchMatch[]) {
+function getHybridCandidateCount(matchCount: number) {
+  return Math.min(
+    MAX_HYBRID_CANDIDATE_COUNT,
+    Math.max(MIN_HYBRID_CANDIDATE_COUNT, matchCount * 4),
+  );
+}
+
+async function getPreviewResults(
+  query: string,
+  matches: SemanticSongSearchMatch[],
+  matchCount: number,
+) {
   if (matches.length === 0) return [];
 
   const ids = matches.map((match) => match.songId);
@@ -59,22 +60,37 @@ async function getPreviewResults(matches: SemanticSongSearchMatch[]) {
 
   if (error) throw error;
 
-  const songsById = new Map(
-    ((data ?? []) as SongSearchPreview[]).map((song) => [song.id, song]),
-  );
+  const ranked = rankHybridSongSearchResults(
+    query,
+    matches,
+    (data ?? []) as HybridSearchSong[],
+  ).slice(0, matchCount);
 
-  return matches.flatMap((match, index) => {
-    const song = songsById.get(match.songId);
-    if (!song) return [];
-
-    return [
-      {
-        rank: index + 1,
-        similarity: Number(match.similarity.toFixed(4)),
-        ...song,
-      },
-    ];
-  });
+  return ranked.map((result, index) => ({
+    rank: index + 1,
+    similarity: Number(result.semanticSimilarity.toFixed(4)),
+    semanticScore: Number(result.semanticScore.toFixed(4)),
+    metadataScore: Number(result.metadataScore.toFixed(4)),
+    lexicalScore: Number(result.lexicalScore.toFixed(4)),
+    negativePenalty: Number(result.negativePenalty.toFixed(4)),
+    hybridScore: Number(result.hybridScore.toFixed(4)),
+    matchedConcepts: result.matchedConcepts,
+    matchedMetadata: result.matchedMetadata,
+    penaltyMetadata: result.penaltyMetadata,
+    id: result.id,
+    title: result.title,
+    artist: result.artist,
+    genres: result.genres,
+    moods: result.moods,
+    regions: result.regions,
+    instruments: result.instruments,
+    builds: result.builds,
+    vocals: result.vocals,
+    instrumental: result.instrumental,
+    bpm: result.bpm,
+    key: result.key,
+    duration: result.duration,
+  }));
 }
 
 async function requireSemanticSearchAdmin() {
@@ -171,18 +187,22 @@ export async function POST(request: Request) {
         );
       }
 
+      const matchCount = clampMatchCount(payload.matchCount);
+      const semanticCandidateCount = getHybridCandidateCount(matchCount);
       const updatedEmbeddings = await ensurePublishedSongSearchEmbeddings();
       const matches = await searchPublishedSongsSemantically(query, {
-        matchCount: clampMatchCount(payload.matchCount),
+        matchCount: semanticCandidateCount,
         minSimilarity: -1,
       });
-      const results = await getPreviewResults(matches);
+      const results = await getPreviewResults(query, matches, matchCount);
 
       return NextResponse.json({
         action,
         query,
         updatedEmbeddings,
+        semanticCandidates: matches.length,
         results,
+        ranking: "hybrid-v1",
         model: SONG_SEARCH_EMBEDDING_MODEL,
         dimensions: SONG_SEARCH_EMBEDDING_DIMENSIONS,
       });
