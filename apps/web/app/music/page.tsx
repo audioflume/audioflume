@@ -106,6 +106,21 @@ function normalizeFilterValue(value: string) {
   return value.trim().toLowerCase();
 }
 
+const DIRECT_FILTER_SEARCH_TERMS = new Set(
+  [
+    ...MOOD_OPTIONS,
+    ...GENRE_OPTIONS,
+    ...REGION_OPTIONS,
+    ...INSTRUMENT_OPTIONS,
+    ...BUILD_OPTIONS,
+    ...VOCALS_OPTIONS,
+  ].map(normalizeFilterValue),
+);
+
+function isDirectFilterSearch(value: string) {
+  return DIRECT_FILTER_SEARCH_TERMS.has(normalizeFilterValue(value));
+}
+
 function toFilterStringArray(value: unknown): string[] {
   if (Array.isArray(value)) {
     return value.flatMap(toFilterStringArray);
@@ -201,6 +216,7 @@ export default function MusicPage() {
   }, []);
 
   const search = filters.search;
+  const directFilterSearch = isDirectFilterSearch(search);
   const selectedMoods = filters.selectedMoods;
   const selectedGenres = filters.selectedGenres;
   const selectedRegions = filters.selectedRegions;
@@ -410,6 +426,7 @@ export default function MusicPage() {
     if (
       !userId ||
       !filtersHydrated ||
+      directFilterSearch ||
       query.length < MIN_SEMANTIC_SEARCH_LENGTH
     ) {
       setSemanticSearchState(null);
@@ -451,7 +468,7 @@ export default function MusicPage() {
       window.clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [filtersHydrated, search, userId]);
+  }, [directFilterSearch, filtersHydrated, search, userId]);
 
   useEffect(() => {
     if (!userId || !selectedPlaylistId) return;
