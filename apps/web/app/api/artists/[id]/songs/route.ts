@@ -27,6 +27,8 @@ type ArtistSongSummary = {
   created_at: string;
 };
 
+type ArtistSongLicenseType = "standard" | "premium";
+
 function slugify(value: string) {
   const cleanValue = value
     .toLowerCase()
@@ -75,6 +77,10 @@ function cleanWaveformPeaks(value: FormDataEntryValue | null) {
   } catch {
     return "[]";
   }
+}
+
+function cleanLicenseType(value: FormDataEntryValue | null): ArtistSongLicenseType {
+  return value === "standard" || value === "premium" ? value : "premium";
 }
 
 async function cleanupUploadedFiles(keys: string[]) {
@@ -218,6 +224,7 @@ export async function POST(request: Request, context: RouteContext) {
     const waveformPeaks = cleanWaveformPeaks(formData.get("waveformPeaks"));
     const duration = cleanDuration(formData.get("duration"));
     const releaseId = cleanOptionalString(formData.get("releaseId"), 80);
+    const licenseType = cleanLicenseType(formData.get("licenseType"));
 
     if (!(file instanceof File)) {
       return NextResponse.json({ error: "Missing audio file" }, { status: 400 });
@@ -345,6 +352,7 @@ export async function POST(request: Request, context: RouteContext) {
         waveform_peaks: waveformPeaks,
         duration,
         size_bytes: file.size,
+        license_type: licenseType,
         status: "draft",
       })
       .select("*")
