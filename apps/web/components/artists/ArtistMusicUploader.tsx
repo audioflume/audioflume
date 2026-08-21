@@ -196,6 +196,7 @@ export default function ArtistMusicUploader({
     const currentSongSummary = songs.find((song) => song.id === savedSong.id);
 
     if (revisionPending) {
+      const notificationCreated = !currentSongSummary?.revision_pending;
       const resubmittedAt = new Date().toISOString();
       setSongs((current) =>
         sortByRecentActivity(
@@ -216,7 +217,7 @@ export default function ArtistMusicUploader({
       setCatalogMessage(
         "Track details saved. The song has been resubmitted for review.",
       );
-      onNotificationCreated?.();
+      if (notificationCreated) onNotificationCreated?.();
       return;
     }
 
@@ -229,7 +230,6 @@ export default function ArtistMusicUploader({
       setCatalogMessage(
         "Track details saved. The song has been resubmitted for review.",
       );
-      onNotificationCreated?.();
       return;
     }
 
