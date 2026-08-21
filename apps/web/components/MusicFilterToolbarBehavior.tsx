@@ -55,6 +55,9 @@ export default function MusicFilterToolbarBehavior() {
       headerActions?.style.removeProperty("right");
       headerActions?.style.removeProperty("left");
       headerActions?.style.removeProperty("width");
+      headerActions?.style.removeProperty("display");
+      headerActions?.style.removeProperty("align-items");
+      headerActions?.style.removeProperty("gap");
     }
 
     function applySearchRevealGeometry(toolbar: HTMLElement) {
@@ -99,6 +102,9 @@ export default function MusicFilterToolbarBehavior() {
           `${searchRevealGeometry.actionsWidth}px`,
           "important",
         );
+        headerActions.style.setProperty("display", "flex", "important");
+        headerActions.style.setProperty("align-items", "center", "important");
+        headerActions.style.setProperty("gap", "8px", "important");
       }
     }
 
