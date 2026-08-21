@@ -9,6 +9,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   font-kerning: normal;
   letter-spacing: 0.02em;
   line-height: 1;
+  margin-top: 10px;
   text-transform: uppercase;
 }
 
