@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { PremiumLabel } from "@filmwave/shared";
 import Toast from "@/components/Toast";
 import {
   BackendButton,
@@ -416,8 +417,9 @@ export default function AdminDiscoverPlaylistForm({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-medium">
-                      {song.title}
+                    <div className="flex min-w-0 items-center gap-1.5 text-sm font-medium">
+                      <span className="min-w-0 truncate">{song.title}</span>
+                      {song.licenseType === "premium" ? <PremiumLabel /> : null}
                     </div>
                     <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
                       {song.artist}
