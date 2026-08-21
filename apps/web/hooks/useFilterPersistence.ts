@@ -188,7 +188,11 @@ export function useFilterPersistence(
       ? propsOrStorageKey.authLoaded
       : true;
 
-  const pendingLocationSearchRef = useRef<string | null>(null);
+  const pendingLocationSearchRef = useRef<string | null>(
+    typeof window === "undefined"
+      ? null
+      : new URLSearchParams(window.location.search).get("search")?.trim() || null,
+  );
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
   const [filters, setFilters] = useState<MusicFilterState>(() => ({
@@ -364,7 +368,6 @@ export function useFilterPersistence(
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
-      pendingLocationSearchRef.current = null;
       setHydrated(true);
       setHydratedKey(storageKey);
       return;
@@ -384,11 +387,17 @@ export function useFilterPersistence(
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
     } finally {
-      pendingLocationSearchRef.current = null;
       setHydrated(true);
       setHydratedKey(storageKey);
     }
   }, [authLoaded, hydrated, hydratedKey, storageKey]);
+
+  useEffect(() => {
+    if (!hydrated) return;
+    if (storageKey && hydratedKey !== storageKey) return;
+
+    pendingLocationSearchRef.current = null;
+  }, [hydrated, hydratedKey, storageKey]);
 
   useEffect(() => {
     if (!hydrated) return;
