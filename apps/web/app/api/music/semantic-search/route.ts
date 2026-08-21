@@ -6,13 +6,49 @@ import {
   searchPublishedSongsSemantically,
   SONG_SEARCH_EMBEDDING_DIMENSIONS,
   SONG_SEARCH_EMBEDDING_MODEL,
+  type SemanticSongSearchMatch,
 } from "@/lib/songEmbeddings";
+import {
+  rankHybridSongSearchResults,
+  type HybridSearchSong,
+} from "@/lib/songSearchHybridRanking";
+import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const MAX_QUERY_LENGTH = 500;
+const MAX_RESULT_COUNT = 200;
+
+async function getHybridMatches(
+  query: string,
+  matches: SemanticSongSearchMatch[],
+) {
+  if (matches.length === 0) return [];
+
+  const ids = matches.map((match) => match.songId);
+  const { data, error } = await supabaseServer
+    .from("songs")
+    .select(
+      "id, title, artist, genres, moods, regions, instruments, builds, vocals, instrumental, bpm, key, duration",
+    )
+    .in("id", ids);
+
+  if (error) throw error;
+
+  return rankHybridSongSearchResults(
+    query,
+    matches,
+    (data ?? []) as HybridSearchSong[],
+  )
+    .slice(0, MAX_RESULT_COUNT)
+    .map((result) => ({
+      songId: result.id,
+      score: Number(result.hybridScore.toFixed(6)),
+      similarity: Number(result.semanticSimilarity.toFixed(6)),
+    }));
+}
 
 export async function POST(request: Request) {
   const { userId } = await auth();
@@ -46,12 +82,17 @@ export async function POST(request: Request) {
     }
 
     const updatedEmbeddings = await ensurePublishedSongSearchEmbeddings();
-    const matches = await searchPublishedSongsSemantically(query);
+    const semanticMatches = await searchPublishedSongsSemantically(query, {
+      matchCount: MAX_RESULT_COUNT,
+      minSimilarity: -1,
+    });
+    const matches = await getHybridMatches(query, semanticMatches);
 
     return NextResponse.json(
       {
         matches,
         updatedEmbeddings,
+        ranking: "hybrid-v1",
         model: SONG_SEARCH_EMBEDDING_MODEL,
         dimensions: SONG_SEARCH_EMBEDDING_DIMENSIONS,
       },
