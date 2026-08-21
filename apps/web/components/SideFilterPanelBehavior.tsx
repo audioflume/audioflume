@@ -153,14 +153,18 @@ function createLicenseFilterBox() {
 
     const labelText = document.createElement("span");
     labelText.className = "fw-license-filter-label";
+    labelText.style.cssText = "display:inline-flex;align-items:center;gap:6px;";
     labelText.textContent = option.label;
 
     if (option.premium) {
       const premiumTag = document.createElement("span");
       premiumTag.className = "fw-license-filter-premium-tag";
+      premiumTag.style.cssText =
+        "box-sizing:border-box;display:inline-flex;height:18px;align-items:center;justify-content:center;border:1px solid var(--border);padding:0 6px;font-family:var(--font-roboto-mono),monospace;font-size:8px;font-weight:400;line-height:1;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-secondary);";
       premiumTag.setAttribute("aria-hidden", "true");
 
       const premiumText = document.createElement("span");
+      premiumText.style.transform = "translateY(0.5px)";
       premiumText.textContent = "Premium";
       premiumTag.appendChild(premiumText);
       labelText.appendChild(premiumTag);
