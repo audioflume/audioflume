@@ -3,6 +3,7 @@ import {
   getSongCuePointMarkers,
   normalizeEditPointType,
   parseEditPoints,
+  PremiumLabel,
   SongActionButton,
   SongCardCuePointOverlay,
   SongCardShell,
@@ -184,7 +185,14 @@ export default function DesktopSongCard({
         ) : null
       }
       playOverlay={isPlaying ? <PauseIcon /> : <PlayIcon />}
-      title={displayMeta.title}
+      title={
+        <span style={{ display: "flex", width: "100%", minWidth: 0, alignItems: "center", gap: 6 }}>
+          <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis" }}>
+            {displayMeta.title}
+          </span>
+          {song.licenseType === "premium" ? <PremiumLabel /> : null}
+        </span>
+      }
       artist={displayMeta.artist}
       stems={
         <SongCardStemsSlot
