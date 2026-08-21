@@ -127,13 +127,22 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
+  .fw-toolbar-search-static-icon svg path {
+  stroke: currentColor !important;
+  stroke-width: 12px !important;
+  stroke-linejoin: round !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
   .fw-toolbar-search-static-input,
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-input::placeholder {
   font-size: 14px !important;
-  font-weight: 300 !important;
+  font-weight: 400 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
