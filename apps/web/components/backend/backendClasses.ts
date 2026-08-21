@@ -27,4 +27,4 @@ export const backendModalActionButtonClass =
   "flex h-9 cursor-pointer items-center justify-center rounded-[7px] px-4 text-xs font-normal transition disabled:cursor-default disabled:opacity-70";
 export const backendModalCancelButtonClass = `${backendModalActionButtonClass} border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]`;
 export const backendModalPrimaryButtonClass = `${backendModalActionButtonClass} font-[family-name:var(--font-aktiv-grotesk)] min-w-[112px] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80`;
-export const backendModalDeleteButtonClass = `${backendModalActionButtonClass} border border-[var(--danger)] bg-transparent px-3 text-[var(--danger)] hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]`;
+export const backendModalDeleteButtonClass = `${backendModalActionButtonClass} border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[var(--danger)] hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]`;
