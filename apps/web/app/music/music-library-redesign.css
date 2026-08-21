@@ -108,6 +108,24 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-icon {
+  width: 11px !important;
+  height: 11px !important;
+  flex: 0 0 11px !important;
+  color: var(--filmwave-border-color) !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-icon svg {
+  width: 11px !important;
+  height: 11px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
   > .fw-toolbar-sticky:not(.is-scroll-revealed) {
   grid-template-columns:
     minmax(0, 1fr)
