@@ -140,7 +140,7 @@ function withLocationSearch(state: MusicFilterState): MusicFilterState {
   if (typeof window === "undefined") return state;
 
   const search = new URLSearchParams(window.location.search).get("search")?.trim();
-  return search ? { ...state, search } : state;
+  return search ? { ...state, search } : { ...state, search: "" };
 }
 
 function getEditPointMarkerVisibilityFromEvent(event: Event) {
