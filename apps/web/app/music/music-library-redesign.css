@@ -26,6 +26,12 @@ body:has(.filmwave-music-player) .fw-song-list {
   border-radius: 0 !important;
 }
 
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-quick-row {
+  margin-top: 8px !important;
+}
+
 .fw-song-list .filmwave-song-card,
 .fw-song-list .desktop-song-card,
 .fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
@@ -220,7 +226,7 @@ main
   .fw-toolbar-search-static {
   position: relative !important;
   gap: 0 !important;
-  padding: 0 50px 0 26px !important;
+  padding: 0 46px 0 24px !important;
 }
 
 main
@@ -233,8 +239,8 @@ main
   top: 50% !important;
   right: 10px !important;
   display: inline-flex !important;
-  width: 34px !important;
-  height: 34px !important;
+  width: 30px !important;
+  height: 30px !important;
   align-items: center !important;
   justify-content: center !important;
   border-radius: 999px !important;
@@ -245,7 +251,7 @@ main
   ) !important;
   color: color-mix(in srgb, var(--text-primary) 62%, transparent) !important;
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: 20px !important;
+  font-size: 18px !important;
   line-height: 1 !important;
   transform: translateY(-50%) !important;
   pointer-events: none !important;
@@ -291,7 +297,7 @@ main
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-clear {
   position: absolute !important;
-  right: 50px !important;
+  right: 46px !important;
   z-index: 1 !important;
   color: color-mix(in srgb, var(--text-primary) 55%, transparent) !important;
 }
@@ -340,10 +346,10 @@ main
   box-sizing: border-box !important;
   width: auto !important;
   min-width: 0 !important;
-  height: 58px !important;
+  height: 50px !important;
   overflow: hidden !important;
   border: 0 !important;
-  border-radius: 24px !important;
+  border-radius: 21px !important;
   background: var(--filmwave-neutral-surface) !important;
   background-color: var(--filmwave-neutral-surface) !important;
   box-shadow: none !important;
@@ -471,17 +477,17 @@ main
   > .fw-toolbar-sticky.is-scroll-revealed
   > .fw-toolbar-header-search-row {
   position: fixed !important;
-  top: calc(var(--filmwave-header-height, 56px) + 4px) !important;
+  top: calc(var(--filmwave-header-height, 56px) + 8px) !important;
   right: 268px !important;
   left: var(--filmwave-side-filter-rail-width) !important;
   z-index: var(--filmwave-z-search-filter, 60) !important;
   box-sizing: border-box !important;
   width: auto !important;
-  height: 58px !important;
+  height: 50px !important;
   overflow: hidden !important;
   margin-right: 0 !important;
   border: 0 !important;
-  border-radius: 24px !important;
+  border-radius: 21px !important;
   background: var(--filmwave-neutral-surface) !important;
   background-color: var(--filmwave-neutral-surface) !important;
   box-shadow: none !important;
