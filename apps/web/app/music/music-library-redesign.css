@@ -29,8 +29,7 @@ body:has(.filmwave-music-player) .fw-song-list {
 main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-quick-row {
-  margin-top: 0 !important;
-  padding-top: 10px !important;
+  display: none !important;
 }
 
 .fw-song-list .filmwave-song-card,
@@ -347,7 +346,7 @@ main
   grid-row: 1 !important;
   justify-self: start !important;
   box-sizing: border-box !important;
-  width: min(520px, 100%) !important;
+  width: min(720px, 100%) !important;
   min-width: 0 !important;
   height: 50px !important;
   overflow: hidden !important;
