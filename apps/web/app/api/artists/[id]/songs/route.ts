@@ -112,7 +112,7 @@ export async function GET(_request: Request, context: RouteContext) {
       return NextResponse.json({ songs: [] });
     }
 
-    const [songsResult, releaseLinksResult] = await Promise.all([
+    const [songsResult, releaseLinksResult, revisionsResult] = await Promise.all([
       supabaseServer
         .from("songs")
         .select("*")
@@ -122,10 +122,15 @@ export async function GET(_request: Request, context: RouteContext) {
         .from("artist_release_songs")
         .select("song_id, release_id")
         .in("song_id", songIds),
+      supabaseServer
+        .from("song_pending_revisions")
+        .select("song_id, status, updated_at")
+        .in("song_id", songIds),
     ]);
 
     if (songsResult.error) throw songsResult.error;
     if (releaseLinksResult.error) throw releaseLinksResult.error;
+    if (revisionsResult.error) throw revisionsResult.error;
 
     const releaseIdBySongId = new Map<string, string>();
     for (const link of releaseLinksResult.data ?? []) {
@@ -133,6 +138,10 @@ export async function GET(_request: Request, context: RouteContext) {
         releaseIdBySongId.set(link.song_id, link.release_id);
       }
     }
+
+    const revisionBySongId = new Map(
+      (revisionsResult.data ?? []).map((revision) => [revision.song_id, revision]),
+    );
 
     const releaseIds = [...new Set(releaseIdBySongId.values())];
     const releaseCoverById = new Map<string, string>();
@@ -162,12 +171,17 @@ export async function GET(_request: Request, context: RouteContext) {
         const releaseCoverUrl = releaseId
           ? releaseCoverById.get(releaseId) ?? null
           : null;
+        const revision = revisionBySongId.get(song.id);
         const playerSongRow = releaseCoverUrl
           ? { ...song, cover_url: releaseCoverUrl }
           : song;
 
         return {
           ...song,
+          status: revision?.status ?? song.status,
+          revision_pending: Boolean(revision),
+          live_status: song.status,
+          revision_updated_at: revision?.updated_at ?? null,
           player_song: normalizeSongRow(playerSongRow),
         };
       }),
