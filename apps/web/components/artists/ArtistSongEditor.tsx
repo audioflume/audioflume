@@ -80,6 +80,7 @@ type DetailResponse = {
     ipi_cae_number: string | null;
   }>;
   review_feedback?: ReviewFeedback | null;
+  revision_pending?: boolean;
   error?: string;
 };
 
@@ -87,7 +88,10 @@ type ArtistSongEditorProps = {
   artist: ArtistDashboardProfile;
   songId: string;
   onClose: () => void;
-  onSaved: (song: { id: string; title: string }) => void;
+  onSaved: (
+    song: { id: string; title: string },
+    revisionPending?: boolean,
+  ) => void;
   beforeContent?: ReactNode;
   songInfoExtra?: ReactNode;
   afterSongInfoContent?: ReactNode;
@@ -505,9 +509,17 @@ export default function ArtistSongEditor({
         throw new Error(result.error || "Failed to save track details");
       }
 
+      const revisionPending = Boolean(result.revision_pending);
       setTitle(result.song.title);
-      setMessage("Track details saved.");
-      onSaved({ id: result.song.id, title: result.song.title });
+      setMessage(
+        revisionPending
+          ? "Track details saved. The song has been resubmitted for review."
+          : "Track details saved.",
+      );
+      onSaved(
+        { id: result.song.id, title: result.song.title },
+        revisionPending,
+      );
     } catch (saveError) {
       setError(
         saveError instanceof Error
