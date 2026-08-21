@@ -442,6 +442,14 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap
+  .fw-filter-panel-body::before {
+  display: none !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
   > .fw-filter-panel-wrap.has-selected-filter-section {
   width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
   max-width: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
@@ -453,7 +461,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-filter-panel-wrap.has-selected-filter-section
   .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
-  border-right: 1px solid var(--filmwave-side-filter-divider-color) !important;
+  border-right: 0 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
