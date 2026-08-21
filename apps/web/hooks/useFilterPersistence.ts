@@ -136,6 +136,13 @@ function getDefaultState(): MusicFilterState {
   };
 }
 
+function withLocationSearch(state: MusicFilterState): MusicFilterState {
+  if (typeof window === "undefined") return state;
+
+  const search = new URLSearchParams(window.location.search).get("search")?.trim();
+  return search ? { ...state, search } : state;
+}
+
 function getEditPointMarkerVisibilityFromEvent(event: Event) {
   const customEvent = event as CustomEvent<{ visible?: boolean }>;
 
@@ -320,7 +327,7 @@ export function useFilterPersistence(
     sessionStorage.removeItem("filmwave-music-filters");
 
     if (!storageKey) {
-      const defaultState = getDefaultState();
+      const defaultState = withLocationSearch(getDefaultState());
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
@@ -332,7 +339,7 @@ export function useFilterPersistence(
     const saved = sessionStorage.getItem(storageKey);
 
     if (!saved) {
-      const defaultState = getDefaultState();
+      const defaultState = withLocationSearch(getDefaultState());
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
@@ -342,12 +349,14 @@ export function useFilterPersistence(
     }
 
     try {
-      const normalizedState = normalizeFilterState(JSON.parse(saved));
+      const normalizedState = withLocationSearch(
+        normalizeFilterState(JSON.parse(saved)),
+      );
 
       setFilters(normalizedState);
       notifyCuePointFilterSelection(normalizedState.selectedEditPoints);
     } catch {
-      const defaultState = getDefaultState();
+      const defaultState = withLocationSearch(getDefaultState());
 
       sessionStorage.removeItem(storageKey);
       setFilters(defaultState);
