@@ -51,7 +51,7 @@ export async function GET() {
       supabaseServer
         .from("songs")
         .select(
-          "id, title, artist, status, duration, key, bpm, cover_url, created_at, submitted_at",
+          "id, title, artist, status, duration, key, bpm, cover_url, license_type, created_at, submitted_at",
         )
         .in("id", songIds)
         .in("status", [...REVIEW_STATUSES]),
