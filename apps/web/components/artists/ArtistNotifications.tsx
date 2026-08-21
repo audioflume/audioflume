@@ -283,7 +283,7 @@ export default function ArtistNotifications({
                 <div className="flex shrink-0 items-center gap-3 pt-0.5">
                   {unread ? (
                     <span
-                      className="h-2 w-2 shrink-0 rounded-full bg-[var(--danger)]"
+                      className="h-2 w-2 shrink-0 rounded-full bg-[#3b82f6]"
                       aria-label="Unread"
                     />
                   ) : null}
