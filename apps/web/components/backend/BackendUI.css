@@ -153,24 +153,27 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-backend-button-secondary-danger {
-  border: 1px solid var(--danger);
-  background: transparent;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
   color: var(--danger);
 }
 
 .filmwave-backend-button-secondary-danger:hover {
+  border-color: var(--border);
   background: var(--danger-hover);
   color: var(--danger);
 }
 
 .filmwave-backend-button-danger {
-  border: 1px solid var(--danger);
-  background: transparent;
+  border: 1px solid var(--border);
+  background: var(--bg-primary);
   color: var(--danger);
 }
 
 .filmwave-backend-button-danger:hover {
+  border-color: var(--border);
   background: var(--danger-hover);
+  color: var(--danger);
 }
 
 .filmwave-backend-button-compact {
