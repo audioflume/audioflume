@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import {
   ArtistAccessError,
   requireArtistPermission,
@@ -147,6 +148,23 @@ async function requirePrimarySong(artistId: string, songId: string) {
   return Boolean(link);
 }
 
+async function createResubmissionNotification(
+  artistId: string,
+  songTitle: string,
+) {
+  try {
+    await createArtistNotificationForMembers({
+      artistId,
+      kind: "track_resubmitted",
+      title: `Track resubmitted: ${songTitle}`,
+      message: "Your track has been resubmitted for review.",
+      actionUrl: `/artists/dashboard?section=music&artist=${artistId}`,
+    });
+  } catch (notificationError) {
+    console.error("Failed to create track resubmission notification:", notificationError);
+  }
+}
+
 export async function GET(_request: Request, context: RouteContext) {
   try {
     const { id, songId } = await context.params;
@@ -274,7 +292,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       const [songResult, artistResult, rightsResult] = await Promise.all([
         supabaseServer
           .from("songs")
-          .select("id, title, status, duration, created_at")
+          .select("id, title, status, duration, created_at, submitted_at")
           .eq("id", songId)
           .maybeSingle(),
         supabaseServer
@@ -320,14 +338,20 @@ export async function PATCH(request: Request, context: RouteContext) {
         );
       }
 
+      const wasResubmission = songResult.data.status === "changes_requested";
+      const submittedAt = new Date().toISOString();
       const { data: submittedSong, error: submitError } = await supabaseServer
         .from("songs")
-        .update({ status: "submitted" })
+        .update({ status: "submitted", submitted_at: submittedAt })
         .eq("id", songId)
-        .select("id, title, status, duration, created_at")
+        .select("id, title, status, duration, created_at, submitted_at")
         .single();
 
       if (submitError) throw submitError;
+
+      if (wasResubmission) {
+        await createResubmissionNotification(id, submittedSong.title);
+      }
 
       return NextResponse.json({ song: submittedSong });
     }
@@ -459,6 +483,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       : null;
 
     if (usesPendingRevision) {
+      const previousRevision = await getSongPendingRevision(songId);
       const revision = await upsertSongMetadataRevision({
         songId,
         userId: access.userId,
@@ -467,6 +492,10 @@ export async function PATCH(request: Request, context: RouteContext) {
         rights: cleanedRights,
         rightsHolders: rights ? rightsHolders : null,
       });
+
+      if (previousRevision?.status === "changes_requested") {
+        await createResubmissionNotification(id, title);
+      }
 
       return NextResponse.json({
         song: {
