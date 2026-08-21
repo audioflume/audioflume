@@ -507,9 +507,9 @@ export default function AdminMusicReviewPage() {
                     <div className="text-xs text-[var(--text-muted)]">No credits supplied.</div>
                   ) : (
                     <div className="grid gap-2">
-                      {credits.map((credit) => (
+                      {credits.map((credit, index) => (
                         <div
-                          key={credit.id}
+                          key={credit.id ? `credit-${credit.id}` : `pending-credit-${index}`}
                           className="flex items-center justify-between gap-4 border-b border-[var(--border-subtle)] py-2.5 last:border-b-0"
                         >
                           <span className="text-xs text-[var(--text-primary)]">
@@ -561,9 +561,9 @@ export default function AdminMusicReviewPage() {
                         No ownership splits supplied.
                       </div>
                     ) : (
-                      rightsHolders.map((holder) => (
+                      rightsHolders.map((holder, index) => (
                         <div
-                          key={holder.id}
+                          key={holder.id ? `holder-${holder.id}` : `pending-holder-${index}`}
                           className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
                         >
                           <span className="text-[var(--text-primary)]">{holder.holder_name}</span>
