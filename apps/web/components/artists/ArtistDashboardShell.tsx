@@ -383,7 +383,22 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
           <div ref={artistSwitcherRef} className="relative">
             <button
               type="button"
-              onClick={() => {
+              onClick={(event) => {
+                const target = event.target;
+                if (
+                  notificationUnreadCount > 0 &&
+                  target instanceof Element &&
+                  target.closest("[data-artist-notification-badge]")
+                ) {
+                  setArtistSwitcherOpen(false);
+                  handleSectionChange("notifications");
+                  router.replace(
+                    getArtistDashboardHref("notifications", activeArtist.id),
+                    { scroll: false },
+                  );
+                  return;
+                }
+
                 if (canSwitchArtists) {
                   setArtistSwitcherOpen((open) => !open);
                 }
@@ -438,7 +453,8 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
               {notificationUnreadCount > 0 ? (
                 <span
-                  className="absolute -right-2 -top-2 z-10 flex h-5 min-w-5 items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] font-medium leading-none text-[var(--danger-contrast)] ring-2 ring-[var(--bg-primary)]"
+                  data-artist-notification-badge
+                  className="absolute -right-2 -top-2 z-10 flex h-5 min-w-5 cursor-pointer items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] font-medium leading-none text-[var(--danger-contrast)] ring-2 ring-[var(--bg-primary)]"
                   aria-label={`${notificationUnreadCount} unread ${
                     notificationUnreadCount === 1 ? "notification" : "notifications"
                   }`}
