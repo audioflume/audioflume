@@ -36,7 +36,7 @@ export async function GET(_request: Request, context: RouteContext) {
     const { data: rows, error: songsError } = await supabaseServer
       .from("songs")
       .select(
-        "id, title, artist, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, edit_points, download_count, size_bytes, created_at",
+        "id, title, artist, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points, download_count, size_bytes, created_at",
       )
       .in("id", songIds)
       .neq("status", "rejected")

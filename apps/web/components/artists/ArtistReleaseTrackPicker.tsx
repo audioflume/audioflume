@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { PremiumLabel } from "@filmwave/shared";
 
 import Waveform from "@/components/Waveform";
 import {
@@ -96,7 +97,12 @@ function ReleasePickerSongRow({
         disabled={alreadyAdded}
         className="min-w-0 text-left"
       >
-        <BackendRowTitle secondary={song.artist}>{song.title}</BackendRowTitle>
+        <BackendRowTitle secondary={song.artist}>
+          <span className="flex min-w-0 items-center gap-1.5">
+            <span className="min-w-0 truncate">{song.title}</span>
+            {song.licenseType === "premium" ? <PremiumLabel /> : null}
+          </span>
+        </BackendRowTitle>
       </button>
 
       <div className="min-w-0 pr-7">

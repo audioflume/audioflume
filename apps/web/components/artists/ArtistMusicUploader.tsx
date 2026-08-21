@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { PremiumLabel } from "@filmwave/shared";
 
 import ArtistSongEditorWithCollaborators from "@/components/artists/ArtistSongEditorWithCollaborators";
 import ArtistSongUploadForm from "@/components/artists/ArtistSongUploadForm";
@@ -542,8 +543,9 @@ export default function ArtistMusicUploader({
                         disabled={!playerSong?.audioUrl}
                         className="min-w-0 cursor-pointer text-left disabled:cursor-default"
                       >
-                        <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
-                          {song.title}
+                        <div className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]">
+                          <span className="min-w-0 truncate">{song.title}</span>
+                          {playerSong?.licenseType === "premium" ? <PremiumLabel /> : null}
                         </div>
                       </button>
 

@@ -23,6 +23,7 @@ export * from "./MusicBpmFilter";
 export * from "./MusicKeyFilter";
 export * from "./MusicDurationFilter";
 export * from "./SongCardShell";
+export * from "./PremiumLabel";
 export * from "./SongCardStemsSlot";
 export * from "./SongCardCuePointOverlay";
 export * from "./SongCardWaveform";

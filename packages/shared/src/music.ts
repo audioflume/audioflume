@@ -118,6 +118,7 @@ export type FilmwaveDesktopSong = {
   downloadCount: number;
   sizeBytes?: number;
   aiGenerated?: boolean;
+  licenseType?: FilmwaveSongLicenseType;
   isFavorite?: boolean;
 };
 

@@ -121,6 +121,7 @@ export function normalizeFilmwaveSong(song: FilmwaveSongApiItem): DesktopSong {
     editPoints: String(song.editPoints || ""),
     downloadCount: Number(song.downloadCount || 0),
     aiGenerated: Boolean(song.aiGenerated),
+    licenseType: song.licenseType === "premium" ? "premium" : "standard",
   };
 }
 

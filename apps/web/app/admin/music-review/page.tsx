@@ -1,5 +1,6 @@
 "use client";
 
+import { PremiumLabel } from "@filmwave/shared";
 import { useEffect, useMemo, useState } from "react";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
@@ -34,6 +35,7 @@ type SubmissionSummary = {
   key: string | null;
   bpm: number | null;
   cover_url: string | null;
+  license_type?: "standard" | "premium" | null;
   created_at: string;
   artist_profile: ArtistProfileSummary | null;
   revision_pending?: boolean;
@@ -429,6 +431,7 @@ export default function AdminMusicReviewPage() {
   }
 
   const song = details?.song;
+  const selectedSummary = songs.find((item) => item.id === selectedSongId);
   const artist = details?.artist;
   const rights = details?.rights ?? null;
   const rightsHolders = details?.rights_holders ?? [];
@@ -468,8 +471,9 @@ export default function AdminMusicReviewPage() {
                     <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       {artist?.name || song.artist}
                     </div>
-                    <h2 className="filmwave-backend-section-title mt-1">
-                      {song.title}
+                    <h2 className="filmwave-backend-section-title mt-1 flex items-center gap-1.5">
+                      <span>{song.title}</span>
+                      {selectedSummary?.license_type === "premium" ? <PremiumLabel /> : null}
                     </h2>
                   </div>
                   <StatusBadge status={song.status} />
@@ -780,8 +784,9 @@ export default function AdminMusicReviewPage() {
                         </div>
 
                         <div className="min-w-0">
-                          <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
-                            {item.title}
+                          <div className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]">
+                            <span className="min-w-0 truncate">{item.title}</span>
+                            {item.license_type === "premium" ? <PremiumLabel /> : null}
                           </div>
                         </div>
 

@@ -5,6 +5,7 @@ import {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
+import { PremiumLabel } from "@filmwave/shared";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import WaveformIcon from "@/components/icons/WaveformIcon";
@@ -145,8 +146,9 @@ export default function CuratedFeaturedTrackRow({
       <CoverImage song={song} index={index} />
 
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
-          {song.title}
+        <h3 className="flex min-w-0 items-center gap-1.5 text-[13px] font-medium leading-none text-[var(--text-primary)]">
+          <span className="min-w-0 truncate">{song.title}</span>
+          {song.licenseType === "premium" ? <PremiumLabel /> : null}
         </h3>
 
         <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">

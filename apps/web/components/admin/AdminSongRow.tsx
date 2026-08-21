@@ -1,5 +1,6 @@
 "use client";
 
+import { PremiumLabel } from "@filmwave/shared";
 import type { Song } from "@/lib/types";
 import Link from "next/link";
 import { MouseEvent, useEffect, useMemo, useState } from "react";
@@ -297,8 +298,9 @@ export default function AdminSongRow({
         disabled={!song.audioUrl || isAnalyzingEditPoints}
         className="min-w-0 cursor-pointer text-left disabled:cursor-default"
       >
-        <div className="truncate font-medium leading-tight text-[var(--text-primary)]">
-          {song.title}
+        <div className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]">
+          <span className="min-w-0 truncate">{song.title}</span>
+          {song.licenseType === "premium" ? <PremiumLabel /> : null}
         </div>
       </button>
 

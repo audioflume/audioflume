@@ -2,6 +2,7 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { PremiumLabel } from "@filmwave/shared";
 
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/BackendRow";
@@ -109,7 +110,12 @@ export default function ArtistTrackOrderRow({
           </span>
         ) : null}
       </button>
-      <BackendRowTitle>{song.title}</BackendRowTitle>
+      <BackendRowTitle>
+        <span className="flex min-w-0 items-center gap-1.5">
+          <span className="min-w-0 truncate">{song.title}</span>
+          {playerSong?.licenseType === "premium" ? <PremiumLabel /> : null}
+        </span>
+      </BackendRowTitle>
       <div className="text-xs text-[var(--text-muted)]">
         {formatDuration(Number(song.duration))}
       </div>
