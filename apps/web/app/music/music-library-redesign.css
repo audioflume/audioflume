@@ -101,10 +101,10 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   display: grid !important;
   grid-template-columns: minmax(0, 1fr) auto !important;
   align-items: center !important;
-  width: 100% !important;
+  width: calc(100% + (var(--fw-music-content-inset-right, 20px) * 2)) !important;
   max-width: none !important;
   height: var(--fw-music-search-band-height) !important;
-  margin: 0 !important;
+  margin: 0 0 0 calc(var(--fw-music-content-inset-right, 20px) * -1) !important;
   border: 0 !important;
   border-bottom: 1px solid var(--filmwave-border-color) !important;
   background: var(--bg-primary) !important;
