@@ -21,7 +21,9 @@ type ArtistSongSummary = {
   bpm?: number | null;
   key?: string | null;
   created_at: string;
+  submitted_at?: string | null;
   revision_pending?: boolean;
+  revision_updated_at?: string | null;
   live_status?: string;
   player_song?: Song;
 };
@@ -69,6 +71,18 @@ function statusClassName(status: string) {
     return "bg-[rgba(72,181,113,0.12)] text-[#48b571]";
   }
   return "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]";
+}
+
+function getRecentActivityTime(song: ArtistSongSummary) {
+  const value = song.revision_updated_at ?? song.submitted_at ?? song.created_at;
+  const timestamp = Date.parse(value);
+  return Number.isFinite(timestamp) ? timestamp : 0;
+}
+
+function sortByRecentActivity(songs: ArtistSongSummary[]) {
+  return [...songs].sort(
+    (a, b) => getRecentActivityTime(b) - getRecentActivityTime(a),
+  );
 }
 
 export default function ArtistMusicUploader({
@@ -133,7 +147,9 @@ export default function ArtistMusicUploader({
         }
 
         if (!cancelled) {
-          setSongs(Array.isArray(body.songs) ? body.songs : []);
+          setSongs(
+            sortByRecentActivity(Array.isArray(body.songs) ? body.songs : []),
+          );
           setLoadState("ready");
         }
       } catch (error) {
@@ -162,10 +178,12 @@ export default function ArtistMusicUploader({
   }, [setQueue, visibleSongs]);
 
   function handleNewSongUploaded(song: ArtistSongSummary) {
-    setSongs((current) => [
-      song,
-      ...current.filter((item) => item.id !== song.id),
-    ]);
+    setSongs((current) =>
+      sortByRecentActivity([
+        song,
+        ...current.filter((item) => item.id !== song.id),
+      ]),
+    );
     onUploaded();
   }
 
@@ -176,21 +194,25 @@ export default function ArtistMusicUploader({
     const currentSongSummary = songs.find((song) => song.id === savedSong.id);
 
     if (revisionPending) {
+      const resubmittedAt = new Date().toISOString();
       setSongs((current) =>
-        current.map((song) =>
-          song.id === savedSong.id
-            ? {
-                ...song,
-                title: savedSong.title,
-                status: "submitted",
-                revision_pending: true,
-              }
-            : song,
+        sortByRecentActivity(
+          current.map((song) =>
+            song.id === savedSong.id
+              ? {
+                  ...song,
+                  title: savedSong.title,
+                  status: "submitted",
+                  revision_pending: true,
+                  revision_updated_at: resubmittedAt,
+                }
+              : song,
+          ),
         ),
       );
       setCatalogError("");
       setCatalogMessage(
-        "Changes sent for approval. The current version will stay live until they are approved.",
+        "Track details saved. The song has been resubmitted for review.",
       );
       return;
     }
@@ -202,7 +224,7 @@ export default function ArtistMusicUploader({
     if (keepsLiveVersion) {
       setCatalogError("");
       setCatalogMessage(
-        "Changes sent for approval. The current version will stay live until they are approved.",
+        "Track details saved. The song has been resubmitted for review.",
       );
       return;
     }
@@ -229,6 +251,9 @@ export default function ArtistMusicUploader({
   async function handleSubmitForReview(songId: string) {
     if (!canSubmit || submittingSongId || catalogActionSongId) return;
 
+    const currentSongSummary = songs.find((song) => song.id === songId);
+    const wasResubmission = currentSongSummary?.status === "changes_requested";
+
     try {
       setCatalogError("");
       setCatalogMessage("");
@@ -246,12 +271,30 @@ export default function ArtistMusicUploader({
       }
 
       const submittedSong = body.song;
-      setSongs((current) =>
-        current.map((song) =>
-          song.id === submittedSong.id ? { ...song, ...submittedSong } : song,
-        ),
+      const resubmittedAt =
+        submittedSong.revision_updated_at ??
+        submittedSong.submitted_at ??
+        new Date().toISOString();
+
+      setSongs((current) => {
+        const updated = current.map((song) =>
+          song.id === submittedSong.id
+            ? {
+                ...song,
+                ...submittedSong,
+                ...(submittedSong.revision_pending
+                  ? { revision_updated_at: resubmittedAt }
+                  : { submitted_at: resubmittedAt }),
+              }
+            : song,
+        );
+        return wasResubmission ? sortByRecentActivity(updated) : updated;
+      });
+      setCatalogMessage(
+        wasResubmission
+          ? "Track resubmitted for review."
+          : "Track submitted for review.",
       );
-      setCatalogMessage("Track submitted for review.");
     } catch (error) {
       setCatalogError(
         error instanceof Error ? error.message : "Failed to submit track",
