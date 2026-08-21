@@ -453,6 +453,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-filter-panel-wrap.has-selected-filter-section
   .fw-filter-panel-body {
   grid-template-columns: var(--filmwave-side-filter-rail-width) var(--filmwave-side-filter-detail-width) !important;
+  border-right: 1px solid var(--filmwave-side-filter-divider-color) !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
