@@ -220,7 +220,7 @@ main
   .fw-toolbar-search-static {
   position: relative !important;
   gap: 0 !important;
-  padding: 0 58px 0 30px !important;
+  padding: 0 50px 0 26px !important;
 }
 
 main
@@ -231,10 +231,10 @@ main
   content: "→";
   position: absolute !important;
   top: 50% !important;
-  right: 12px !important;
+  right: 10px !important;
   display: inline-flex !important;
-  width: 40px !important;
-  height: 40px !important;
+  width: 34px !important;
+  height: 34px !important;
   align-items: center !important;
   justify-content: center !important;
   border-radius: 999px !important;
@@ -245,7 +245,7 @@ main
   ) !important;
   color: color-mix(in srgb, var(--text-primary) 62%, transparent) !important;
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: 22px !important;
+  font-size: 20px !important;
   line-height: 1 !important;
   transform: translateY(-50%) !important;
   pointer-events: none !important;
@@ -291,7 +291,7 @@ main
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-clear {
   position: absolute !important;
-  right: 58px !important;
+  right: 50px !important;
   z-index: 1 !important;
   color: color-mix(in srgb, var(--text-primary) 55%, transparent) !important;
 }
@@ -340,10 +340,10 @@ main
   box-sizing: border-box !important;
   width: auto !important;
   min-width: 0 !important;
-  height: 68px !important;
+  height: 58px !important;
   overflow: hidden !important;
   border: 0 !important;
-  border-radius: 28px !important;
+  border-radius: 24px !important;
   background: var(--filmwave-neutral-surface) !important;
   background-color: var(--filmwave-neutral-surface) !important;
   box-shadow: none !important;
@@ -471,17 +471,17 @@ main
   > .fw-toolbar-sticky.is-scroll-revealed
   > .fw-toolbar-header-search-row {
   position: fixed !important;
-  top: calc(var(--filmwave-header-height, 56px) - 1px) !important;
+  top: calc(var(--filmwave-header-height, 56px) + 4px) !important;
   right: 268px !important;
   left: var(--filmwave-side-filter-rail-width) !important;
   z-index: var(--filmwave-z-search-filter, 60) !important;
   box-sizing: border-box !important;
   width: auto !important;
-  height: 68px !important;
+  height: 58px !important;
   overflow: hidden !important;
   margin-right: 0 !important;
   border: 0 !important;
-  border-radius: 28px !important;
+  border-radius: 24px !important;
   background: var(--filmwave-neutral-surface) !important;
   background-color: var(--filmwave-neutral-surface) !important;
   box-shadow: none !important;
