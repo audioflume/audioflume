@@ -1,5 +1,6 @@
 "use client";
 
+import { PremiumLabel } from "@filmwave/shared";
 import type { MouseEvent } from "react";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
@@ -59,7 +60,9 @@ export default function ProjectSongFileCard({
               <PlayPauseIcon playing={previewIsPlaying} />
             </button>
           </span>
-          <span className="project-browser-row-title">{song.title}</span>
+          <span className="project-browser-row-title">
+            {song.title}{song.licenseType === "premium" ? <> <PremiumLabel /></> : null}
+          </span>
         </span>
         <span className="project-browser-row-muted">{song.artist || "--"}</span>
         <span className="project-browser-row-muted">Music</span>
@@ -82,7 +85,9 @@ export default function ProjectSongFileCard({
           <PlayPauseIcon playing={previewIsPlaying} />
         </button>
       </div>
-      <div className="project-file-card-title">{song.title}</div>
+      <div className="project-file-card-title">
+        {song.title}{song.licenseType === "premium" ? <> <PremiumLabel /></> : null}
+      </div>
       <div className="project-file-card-meta">{song.artist || "Unknown Artist"}</div>
     </div>
   );
