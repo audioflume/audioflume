@@ -368,6 +368,20 @@ export function useFilterPersistence(
   }, [authLoaded, hydrated, hydratedKey, storageKey]);
 
   useEffect(() => {
+    if (!hydrated || filters.search.trim()) return;
+
+    const url = new URL(window.location.href);
+    if (!url.searchParams.has("search")) return;
+
+    url.searchParams.delete("search");
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `${url.pathname}${url.search}${url.hash}`,
+    );
+  }, [filters.search, hydrated]);
+
+  useEffect(() => {
     if (!hydrated) return;
     if (!storageKey) return;
     if (hydratedKey !== storageKey) return;
