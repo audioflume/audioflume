@@ -25,8 +25,18 @@ const PLAYLIST_FILTER_OPTION_CLASS = "fw-filter-playlist-option";
 const PUBLIC_PLAYLIST_FILTER_OPTION_CLASS = "is-public-playlist";
 
 const LICENSE_FILTER_OPTIONS = [
-  { value: "standard", label: "Standard License" },
-  { value: "premium", label: "Artist Premium" },
+  {
+    value: "standard",
+    label: "Standard License",
+    ariaLabel: "Standard License",
+    premium: false,
+  },
+  {
+    value: "premium",
+    label: "Artist",
+    ariaLabel: "Artist Premium",
+    premium: true,
+  },
 ] as const;
 const DISPLAY_AI_FILTER_OPTIONS = [
   { value: "exclude", label: "Human made" },
@@ -145,11 +155,22 @@ function createLicenseFilterBox() {
     labelText.className = "fw-license-filter-label";
     labelText.textContent = option.label;
 
+    if (option.premium) {
+      const premiumTag = document.createElement("span");
+      premiumTag.className = "fw-license-filter-premium-tag";
+      premiumTag.setAttribute("aria-hidden", "true");
+
+      const premiumText = document.createElement("span");
+      premiumText.textContent = "Premium";
+      premiumTag.appendChild(premiumText);
+      labelText.appendChild(premiumTag);
+    }
+
     const input = document.createElement("input");
     input.type = "checkbox";
     input.className = "fw-license-filter-input";
     input.dataset.licenseFilter = option.value;
-    input.setAttribute("aria-label", `Filter by ${option.label}`);
+    input.setAttribute("aria-label", `Filter by ${option.ariaLabel}`);
     input.addEventListener("change", () => {
       const selectedFilters = new Set(getStoredLicenseFilters());
 
