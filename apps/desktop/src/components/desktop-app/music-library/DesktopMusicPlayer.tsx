@@ -6,6 +6,7 @@ import {
   getSongCuePointMarkers,
   MusicPlayerShell,
   normalizeEditPointType,
+  PremiumLabel,
   type MusicPlayerShellLayout,
 } from "@filmwave/shared";
 import { invoke } from "@tauri-apps/api/core";
@@ -521,6 +522,7 @@ export default function DesktopMusicPlayer({
           bpm: song.bpm,
           durationSeconds: song.durationSeconds,
         }}
+        titleAddon={song.licenseType === "premium" ? <PremiumLabel /> : null}
         isPlaying={isPlaying}
         currentTime={displayCurrentTime}
         duration={displayDuration}
