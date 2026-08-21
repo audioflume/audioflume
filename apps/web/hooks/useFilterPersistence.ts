@@ -8,7 +8,7 @@ import {
   setStoredEditPointMarkerVisibility,
 } from "@/lib/editPointMarkerVisibility";
 import type { BpmFilterValue, KeyFilterValue, PlaylistRef } from "@/lib/types";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export type MusicFilterState = {
   search: string;
@@ -136,11 +136,22 @@ function getDefaultState(): MusicFilterState {
   };
 }
 
-function withLocationSearch(state: MusicFilterState): MusicFilterState {
-  if (typeof window === "undefined") return state;
+function consumeLocationSearch() {
+  if (typeof window === "undefined") return "";
 
-  const search = new URLSearchParams(window.location.search).get("search")?.trim();
-  return search ? { ...state, search } : { ...state, search: "" };
+  const url = new URL(window.location.href);
+  const search = url.searchParams.get("search")?.trim() ?? "";
+
+  if (url.searchParams.has("search")) {
+    url.searchParams.delete("search");
+    window.history.replaceState(
+      window.history.state,
+      "",
+      `${url.pathname}${url.search}${url.hash}`,
+    );
+  }
+
+  return search;
 }
 
 function getEditPointMarkerVisibilityFromEvent(event: Event) {
@@ -177,6 +188,7 @@ export function useFilterPersistence(
       ? propsOrStorageKey.authLoaded
       : true;
 
+  const pendingLocationSearchRef = useRef<string | null>(null);
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
   const [filters, setFilters] = useState<MusicFilterState>(() => ({
@@ -322,12 +334,21 @@ export function useFilterPersistence(
     if (!authLoaded) return;
     if (hydrated && hydratedKey === storageKey) return;
 
+    const locationSearch = consumeLocationSearch();
+    if (locationSearch) pendingLocationSearchRef.current = locationSearch;
+    const hydrationSearch =
+      locationSearch || pendingLocationSearchRef.current || "";
+    const withHydrationSearch = (state: MusicFilterState): MusicFilterState => ({
+      ...state,
+      search: hydrationSearch,
+    });
+
     setHydrated(false);
     setHydratedKey(null);
     sessionStorage.removeItem("filmwave-music-filters");
 
     if (!storageKey) {
-      const defaultState = withLocationSearch(getDefaultState());
+      const defaultState = withHydrationSearch(getDefaultState());
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
@@ -339,54 +360,45 @@ export function useFilterPersistence(
     const saved = sessionStorage.getItem(storageKey);
 
     if (!saved) {
-      const defaultState = withLocationSearch(getDefaultState());
+      const defaultState = withHydrationSearch(getDefaultState());
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
+      pendingLocationSearchRef.current = null;
       setHydrated(true);
       setHydratedKey(storageKey);
       return;
     }
 
     try {
-      const normalizedState = withLocationSearch(
+      const normalizedState = withHydrationSearch(
         normalizeFilterState(JSON.parse(saved)),
       );
 
       setFilters(normalizedState);
       notifyCuePointFilterSelection(normalizedState.selectedEditPoints);
     } catch {
-      const defaultState = withLocationSearch(getDefaultState());
+      const defaultState = withHydrationSearch(getDefaultState());
 
       sessionStorage.removeItem(storageKey);
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
     } finally {
+      pendingLocationSearchRef.current = null;
       setHydrated(true);
       setHydratedKey(storageKey);
     }
   }, [authLoaded, hydrated, hydratedKey, storageKey]);
 
   useEffect(() => {
-    if (!hydrated || filters.search.trim()) return;
-
-    const url = new URL(window.location.href);
-    if (!url.searchParams.has("search")) return;
-
-    url.searchParams.delete("search");
-    window.history.replaceState(
-      window.history.state,
-      "",
-      `${url.pathname}${url.search}${url.hash}`,
-    );
-  }, [filters.search, hydrated]);
-
-  useEffect(() => {
     if (!hydrated) return;
     if (!storageKey) return;
     if (hydratedKey !== storageKey) return;
 
-    sessionStorage.setItem(storageKey, JSON.stringify(filters));
+    sessionStorage.setItem(
+      storageKey,
+      JSON.stringify({ ...filters, search: "" }),
+    );
     notifyCuePointFilterSelection(filters.selectedEditPoints);
     setStoredEditPointMarkerVisibility(filters.showEditPointMarkers);
   }, [hydrated, hydratedKey, storageKey, filters]);
