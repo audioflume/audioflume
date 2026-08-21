@@ -30,7 +30,7 @@ main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-quick-row {
   margin-top: 0 !important;
-  padding-top: 5px !important;
+  padding-top: 7px !important;
 }
 
 .fw-song-list .filmwave-song-card,
@@ -354,7 +354,7 @@ main
   background: var(--filmwave-neutral-surface) !important;
   background-color: var(--filmwave-neutral-surface) !important;
   box-shadow: none !important;
-  margin: 0 12px 0 0 !important;
+  margin: 0 48px 0 0 !important;
   padding: 0 !important;
 }
 
@@ -479,7 +479,7 @@ main
   > .fw-toolbar-header-search-row {
   position: fixed !important;
   top: calc(var(--filmwave-header-height, 56px) + 8px) !important;
-  right: 268px !important;
+  right: 304px !important;
   left: var(--filmwave-side-filter-rail-width) !important;
   z-index: var(--filmwave-z-search-filter, 60) !important;
   box-sizing: border-box !important;
