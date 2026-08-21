@@ -153,9 +153,9 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-backend-button-secondary-danger {
-  border: 1px solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-secondary);
+  border: 1px solid var(--danger);
+  background: transparent;
+  color: var(--danger);
 }
 
 .filmwave-backend-button-secondary-danger:hover {
@@ -303,22 +303,22 @@ main:has(> aside[class*="admin-sidebar-width"])
 /* Status is intentionally pill-shaped; ordinary backend buttons are not. */
 .filmwave-backend-status-badge {
   display: inline-flex;
-  height: 28px;
+  height: 24px;
   align-items: center;
   border-radius: 999px;
-  padding: 0 12px;
+  padding: 0 10px;
   font-size: 10px;
-  font-weight: 400;
+  font-weight: 500;
   line-height: 1;
-  letter-spacing: 0;
-  text-transform: capitalize;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
-/* Legacy backend status chips use the same title-case, regular-spacing treatment. */
+/* Legacy backend status chips use the same canonical status treatment. */
 main:has(> aside[class*="admin-sidebar-width"]) span.rounded-full.uppercase {
-  font-weight: 400;
-  letter-spacing: 0;
-  text-transform: capitalize;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
 }
 
 /* Backend pages with footers fill the viewport without subtracting shell offsets twice. */
