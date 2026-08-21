@@ -9,7 +9,7 @@ export default function PremiumLabel({
         className ? ` ${className}` : ""
       }`}
     >
-      <span className="relative top-px">Premium</span>
+      <span className="relative top-[0.5px]">Premium</span>
     </span>
   );
 }
