@@ -51,7 +51,7 @@ export async function GET() {
       supabaseServer
         .from("songs")
         .select(
-          "id, title, artist, status, duration, key, bpm, created_at, submitted_at",
+          "id, title, artist, status, duration, key, bpm, cover_url, created_at, submitted_at",
         )
         .in("id", songIds)
         .in("status", [...REVIEW_STATUSES]),
@@ -121,6 +121,10 @@ export async function GET() {
                 typeof metadata.bpm === "number" || metadata.bpm === null
                   ? metadata.bpm
                   : song.bpm,
+              cover_url:
+                typeof metadata.cover_url === "string" || metadata.cover_url === null
+                  ? metadata.cover_url
+                  : song.cover_url,
               status: revision.status,
               revision_pending: true,
               live_status: song.status,
