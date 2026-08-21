@@ -50,10 +50,11 @@ export async function GET() {
     const [songsResult, revisionsResult] = await Promise.all([
       supabaseServer
         .from("songs")
-        .select("id, title, artist, status, duration, key, bpm, created_at")
+        .select(
+          "id, title, artist, status, duration, key, bpm, created_at, submitted_at",
+        )
         .in("id", songIds)
-        .in("status", [...REVIEW_STATUSES])
-        .order("created_at", { ascending: false }),
+        .in("status", [...REVIEW_STATUSES]),
       supabaseServer
         .from("song_pending_revisions")
         .select("song_id, status, metadata, duration, updated_at")
@@ -94,43 +95,53 @@ export async function GET() {
       }
     }
 
-    return NextResponse.json({
-      songs: songs.map((song) => {
-        const artistId = primaryArtistBySong.get(song.id);
-        const revision = revisionBySongId.get(song.id);
-        const metadata =
-          revision?.metadata && typeof revision.metadata === "object"
-            ? (revision.metadata as Record<string, unknown>)
-            : {};
+    const queueSongs = songs.map((song) => {
+      const artistId = primaryArtistBySong.get(song.id);
+      const revision = revisionBySongId.get(song.id);
+      const metadata =
+        revision?.metadata && typeof revision.metadata === "object"
+          ? (revision.metadata as Record<string, unknown>)
+          : {};
+      const submittedAt =
+        revision?.updated_at ?? song.submitted_at ?? song.created_at;
 
-        return {
-          ...song,
-          ...(revision
-            ? {
-                title:
-                  typeof metadata.title === "string" ? metadata.title : song.title,
-                duration: revision.duration ?? song.duration,
-                key:
-                  typeof metadata.key === "string" || metadata.key === null
-                    ? metadata.key
-                    : song.key,
-                bpm:
-                  typeof metadata.bpm === "number" || metadata.bpm === null
-                    ? metadata.bpm
-                    : song.bpm,
-                status: revision.status,
-                revision_pending: true,
-                live_status: song.status,
-                revision_updated_at: revision.updated_at,
-              }
-            : {
-                revision_pending: false,
-                live_status: song.status,
-              }),
-          artist_profile: artistId ? artistsById.get(artistId) ?? null : null,
-        };
-      }),
+      return {
+        ...song,
+        submitted_at: submittedAt,
+        ...(revision
+          ? {
+              title:
+                typeof metadata.title === "string" ? metadata.title : song.title,
+              duration: revision.duration ?? song.duration,
+              key:
+                typeof metadata.key === "string" || metadata.key === null
+                  ? metadata.key
+                  : song.key,
+              bpm:
+                typeof metadata.bpm === "number" || metadata.bpm === null
+                  ? metadata.bpm
+                  : song.bpm,
+              status: revision.status,
+              revision_pending: true,
+              live_status: song.status,
+              revision_updated_at: revision.updated_at,
+            }
+          : {
+              revision_pending: false,
+              live_status: song.status,
+            }),
+        artist_profile: artistId ? artistsById.get(artistId) ?? null : null,
+      };
     });
+
+    queueSongs.sort((a, b) => {
+      const aTime = Date.parse(a.submitted_at ?? a.created_at);
+      const bTime = Date.parse(b.submitted_at ?? b.created_at);
+      return (Number.isFinite(bTime) ? bTime : 0) -
+        (Number.isFinite(aTime) ? aTime : 0);
+    });
+
+    return NextResponse.json({ songs: queueSongs });
   } catch (error) {
     console.error("Failed to load admin song review queue:", error);
 
