@@ -2,6 +2,9 @@
 
 import { FormEvent, useEffect, useMemo, useState } from "react";
 
+import ArtistSongLicenseSelector, {
+  type ArtistSongLicenseType,
+} from "@/components/artists/ArtistSongLicenseSelector";
 import ArtistSongTagSections from "@/components/artists/ArtistSongTagSections";
 import {
   BackendCheckbox,
@@ -22,6 +25,7 @@ type ArtistSongSummary = {
   status: string;
   duration: number;
   created_at: string;
+  license_type?: ArtistSongLicenseType;
 };
 
 type ArtistSongsResponse = {
@@ -294,6 +298,8 @@ export default function ArtistSongUploadForm({
   const [vocals, setVocals] = useState<string[]>([]);
   const [instrumental, setInstrumental] = useState(false);
   const [explicit, setExplicit] = useState(false);
+  const [licenseType, setLicenseType] =
+    useState<ArtistSongLicenseType>("premium");
   const [credits, setCredits] = useState<Credit[]>([]);
   const [masterOwner, setMasterOwner] = useState("");
   const [publishingOwner, setPublishingOwner] = useState("");
@@ -624,6 +630,7 @@ export default function ArtistSongUploadForm({
     setVocals([]);
     setInstrumental(false);
     setExplicit(false);
+    setLicenseType("premium");
     setCredits([]);
     setMasterOwner("");
     setPublishingOwner("");
@@ -722,6 +729,7 @@ export default function ArtistSongUploadForm({
       formData.append("title", title.trim());
       formData.append("waveformPeaks", waveformPeaks);
       formData.append("duration", String(duration));
+      formData.append("licenseType", licenseType);
       if (selectedReleaseId) {
         formData.append("releaseId", selectedReleaseId);
         formData.append("useReleaseArtwork", "true");
@@ -965,6 +973,12 @@ export default function ArtistSongUploadForm({
               </div>
             </div>
           </section>
+
+          <ArtistSongLicenseSelector
+            value={licenseType}
+            onChange={setLicenseType}
+            disabled={!canEditMetadata || busy || uploadComplete}
+          />
 
           {createReleaseOpen ? (
             <section className="filmwave-backend-section">
