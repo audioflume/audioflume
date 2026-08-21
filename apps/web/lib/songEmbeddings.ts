@@ -7,6 +7,7 @@ const OPENAI_EMBEDDINGS_URL = "https://api.openai.com/v1/embeddings";
 const DEFAULT_MATCH_COUNT = 100;
 const DEFAULT_MIN_SIMILARITY = 0.3;
 const MAX_EMBEDDING_REFRESH_BATCH = 100;
+const MAX_EMBEDDING_BACKFILL_BATCHES = 20;
 
 type OpenAIEmbeddingItem = {
   embedding?: number[];
@@ -30,9 +31,21 @@ type SongEmbeddingMatchRow = {
   similarity?: number | string | null;
 };
 
+type SongEmbeddingStatsRow = {
+  published_songs?: number | string | null;
+  embedded_songs?: number | string | null;
+  pending_songs?: number | string | null;
+};
+
 export type SemanticSongSearchMatch = {
   songId: string;
   similarity: number;
+};
+
+export type SongSearchEmbeddingStats = {
+  publishedSongs: number;
+  embeddedSongs: number;
+  pendingSongs: number;
 };
 
 function clampInteger(value: number, min: number, max: number) {
@@ -48,6 +61,14 @@ function getOpenAIApiKey() {
   }
 
   return apiKey;
+}
+
+function normalizeCandidate(candidate: SongEmbeddingCandidate) {
+  const songId = String(candidate.song_id || "").trim();
+  const searchText = String(candidate.search_text || "").trim();
+
+  if (!songId || !searchText) return null;
+  return { songId, searchText };
 }
 
 async function createEmbeddings(inputs: string[]) {
@@ -98,6 +119,35 @@ async function createEmbeddings(inputs: string[]) {
   });
 }
 
+async function upsertSongSearchEmbeddings(
+  candidates: Array<{ songId: string; searchText: string }>,
+) {
+  if (candidates.length === 0) return 0;
+
+  const embeddings = await createEmbeddings(
+    candidates.map((candidate) => candidate.searchText),
+  );
+
+  await Promise.all(
+    candidates.map(async (candidate, index) => {
+      const { error } = await supabaseServer.rpc(
+        "upsert_song_search_embedding",
+        {
+          p_song_id: candidate.songId,
+          p_embedding: embeddings[index],
+          p_model: SONG_SEARCH_EMBEDDING_MODEL,
+          p_dimensions: SONG_SEARCH_EMBEDDING_DIMENSIONS,
+          p_search_text: candidate.searchText,
+        },
+      );
+
+      if (error) throw error;
+    }),
+  );
+
+  return candidates.length;
+}
+
 export async function ensurePublishedSongSearchEmbeddings(
   limit = MAX_EMBEDDING_REFRESH_BATCH,
 ) {
@@ -111,38 +161,80 @@ export async function ensurePublishedSongSearchEmbeddings(
 
   const candidates = ((data ?? []) as SongEmbeddingCandidate[]).flatMap(
     (candidate) => {
-      const songId = String(candidate.song_id || "").trim();
-      const searchText = String(candidate.search_text || "").trim();
-
-      if (!songId || !searchText) return [];
-      return [{ songId, searchText }];
+      const normalized = normalizeCandidate(candidate);
+      return normalized ? [normalized] : [];
     },
   );
 
-  if (candidates.length === 0) return 0;
+  return upsertSongSearchEmbeddings(candidates);
+}
 
-  const embeddings = await createEmbeddings(
-    candidates.map((candidate) => candidate.searchText),
+export async function backfillPublishedSongSearchEmbeddings(
+  options: {
+    batchSize?: number;
+    maxBatches?: number;
+  } = {},
+) {
+  const batchSize = clampInteger(
+    options.batchSize ?? MAX_EMBEDDING_REFRESH_BATCH,
+    1,
+    MAX_EMBEDDING_REFRESH_BATCH,
+  );
+  const maxBatches = clampInteger(
+    options.maxBatches ?? MAX_EMBEDDING_BACKFILL_BATCHES,
+    1,
+    MAX_EMBEDDING_BACKFILL_BATCHES,
   );
 
-  await Promise.all(
-    candidates.map(async (candidate, index) => {
-      const { error: upsertError } = await supabaseServer.rpc(
-        "upsert_song_search_embedding",
-        {
-          p_song_id: candidate.songId,
-          p_embedding: embeddings[index],
-          p_model: SONG_SEARCH_EMBEDDING_MODEL,
-          p_dimensions: SONG_SEARCH_EMBEDDING_DIMENSIONS,
-          p_search_text: candidate.searchText,
-        },
-      );
+  let updated = 0;
+  let batches = 0;
 
-      if (upsertError) throw upsertError;
-    }),
+  while (batches < maxBatches) {
+    const batchUpdated = await ensurePublishedSongSearchEmbeddings(batchSize);
+    batches += 1;
+    updated += batchUpdated;
+
+    if (batchUpdated < batchSize) break;
+  }
+
+  return { updated, batches };
+}
+
+export async function refreshPublishedSongSearchEmbedding(songId: string) {
+  const cleanSongId = songId.trim();
+  if (!cleanSongId) return false;
+
+  const { data, error } = await supabaseServer.rpc(
+    "get_song_search_embedding_candidate",
+    { p_song_id: cleanSongId },
   );
 
-  return candidates.length;
+  if (error) throw error;
+
+  const candidate = ((data ?? []) as SongEmbeddingCandidate[])
+    .map(normalizeCandidate)
+    .find((value) => value !== null);
+
+  if (!candidate) return false;
+
+  await upsertSongSearchEmbeddings([candidate]);
+  return true;
+}
+
+export async function getSongSearchEmbeddingStats(): Promise<SongSearchEmbeddingStats> {
+  const { data, error } = await supabaseServer.rpc(
+    "get_song_search_embedding_stats",
+  );
+
+  if (error) throw error;
+
+  const row = ((data ?? []) as SongEmbeddingStatsRow[])[0];
+
+  return {
+    publishedSongs: Number(row?.published_songs ?? 0),
+    embeddedSongs: Number(row?.embedded_songs ?? 0),
+    pendingSongs: Number(row?.pending_songs ?? 0),
+  };
 }
 
 export async function searchPublishedSongsSemantically(
