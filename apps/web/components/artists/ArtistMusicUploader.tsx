@@ -37,6 +37,7 @@ type ArtistSongsResponse = {
 type ArtistMusicUploaderProps = {
   artist: ArtistDashboardProfile;
   onUploaded: () => void;
+  onNotificationCreated?: () => void;
 };
 
 function formatDuration(value: number) {
@@ -88,6 +89,7 @@ function sortByRecentActivity(songs: ArtistSongSummary[]) {
 export default function ArtistMusicUploader({
   artist,
   onUploaded,
+  onNotificationCreated,
 }: ArtistMusicUploaderProps) {
   const canUpload =
     artist.status === "approved" &&
@@ -214,6 +216,7 @@ export default function ArtistMusicUploader({
       setCatalogMessage(
         "Track details saved. The song has been resubmitted for review.",
       );
+      onNotificationCreated?.();
       return;
     }
 
@@ -226,6 +229,7 @@ export default function ArtistMusicUploader({
       setCatalogMessage(
         "Track details saved. The song has been resubmitted for review.",
       );
+      onNotificationCreated?.();
       return;
     }
 
@@ -295,6 +299,7 @@ export default function ArtistMusicUploader({
           ? "Track resubmitted for review."
           : "Track submitted for review.",
       );
+      if (wasResubmission) onNotificationCreated?.();
     } catch (error) {
       setCatalogError(
         error instanceof Error ? error.message : "Failed to submit track",
