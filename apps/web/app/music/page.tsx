@@ -5,6 +5,7 @@ import {
   EDIT_POINT_FILTER_OPTIONS,
   filterMusicLibrarySongs,
   GENRE_OPTIONS,
+  getMusicLibrarySearchPlaceholder,
   getMusicSongIdentityValues,
   getMusicSongStableId,
   getPlaylistSongIdsFromResponse,
@@ -416,7 +417,9 @@ export default function MusicPage() {
     clearLicenseFilters();
   }
 
-  const searchPlaceholder = "Describe a scene, mood, or feeling";
+  const searchPlaceholder = getMusicLibrarySearchPlaceholder(
+    selectedPlaylist?.name,
+  );
 
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
