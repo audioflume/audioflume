@@ -110,18 +110,30 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-icon {
-  width: 11px !important;
-  height: 11px !important;
-  flex: 0 0 11px !important;
-  color: var(--filmwave-border-color) !important;
+  width: 13px !important;
+  height: 13px !important;
+  flex: 0 0 13px !important;
+  color: var(--text-secondary) !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-icon svg {
-  width: 11px !important;
-  height: 11px !important;
+  width: 13px !important;
+  height: 13px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-input,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-input::placeholder {
+  font-size: 14px !important;
+  font-weight: 300 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
