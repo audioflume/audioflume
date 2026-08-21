@@ -7,7 +7,8 @@ type SearchRevealGeometry = {
   searchLeft: number;
   searchWidth: number;
   actionsTop: number;
-  actionsRight: number;
+  actionsLeft: number;
+  actionsWidth: number;
 };
 
 export default function MusicFilterToolbarBehavior() {
@@ -52,6 +53,8 @@ export default function MusicFilterToolbarBehavior() {
 
       headerActions?.style.removeProperty("top");
       headerActions?.style.removeProperty("right");
+      headerActions?.style.removeProperty("left");
+      headerActions?.style.removeProperty("width");
     }
 
     function applySearchRevealGeometry(toolbar: HTMLElement) {
@@ -85,9 +88,15 @@ export default function MusicFilterToolbarBehavior() {
           `${searchRevealGeometry.actionsTop}px`,
           "important",
         );
+        headerActions.style.setProperty("right", "auto", "important");
         headerActions.style.setProperty(
-          "right",
-          `${searchRevealGeometry.actionsRight}px`,
+          "left",
+          `${searchRevealGeometry.actionsLeft}px`,
+          "important",
+        );
+        headerActions.style.setProperty(
+          "width",
+          `${searchRevealGeometry.actionsWidth}px`,
           "important",
         );
       }
@@ -117,13 +126,16 @@ export default function MusicFilterToolbarBehavior() {
       if (searchRow && headerActions) {
         const searchRect = searchRow.getBoundingClientRect();
         const actionsRect = headerActions.getBoundingClientRect();
+        const actionsMarginLeft =
+          Number.parseFloat(window.getComputedStyle(headerActions).marginLeft) || 0;
 
         searchRevealGeometry = {
           searchTop: window.scrollY + searchRect.top,
           searchLeft: searchRect.left,
           searchWidth: searchRect.width,
           actionsTop: window.scrollY + actionsRect.top,
-          actionsRight: window.innerWidth - actionsRect.right,
+          actionsLeft: actionsRect.left - actionsMarginLeft,
+          actionsWidth: actionsRect.width,
         };
       } else {
         searchRevealGeometry = null;
