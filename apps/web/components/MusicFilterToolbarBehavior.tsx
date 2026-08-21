@@ -2,12 +2,22 @@
 
 import { useEffect } from "react";
 
+type SearchRevealGeometry = {
+  searchTop: number;
+  searchLeft: number;
+  searchWidth: number;
+  actionsTop: number;
+  actionsRight: number;
+};
+
 export default function MusicFilterToolbarBehavior() {
   useEffect(() => {
     let lastScrollY = window.scrollY;
     let searchRevealThreshold = 0;
     let searchRevealFrame = 0;
+    let searchMeasureFrame = 0;
     let searchToolbar: HTMLElement | null = null;
+    let searchRevealGeometry: SearchRevealGeometry | null = null;
 
     function getMusicSearchToolbar() {
       if (searchToolbar?.isConnected) return searchToolbar;
@@ -19,21 +29,110 @@ export default function MusicFilterToolbarBehavior() {
       return searchToolbar;
     }
 
+    function getSearchRow(toolbar: HTMLElement) {
+      return toolbar.querySelector<HTMLElement>(
+        ":scope > .fw-toolbar-header-search-row",
+      );
+    }
+
+    function getHeaderActions(toolbar: HTMLElement) {
+      return toolbar.querySelector<HTMLElement>(
+        ":scope > .fw-toolbar-header-actions",
+      );
+    }
+
+    function clearSearchRevealGeometryStyles(toolbar: HTMLElement) {
+      const searchRow = getSearchRow(toolbar);
+      const headerActions = getHeaderActions(toolbar);
+
+      searchRow?.style.removeProperty("top");
+      searchRow?.style.removeProperty("right");
+      searchRow?.style.removeProperty("left");
+      searchRow?.style.removeProperty("width");
+
+      headerActions?.style.removeProperty("top");
+      headerActions?.style.removeProperty("right");
+    }
+
+    function applySearchRevealGeometry(toolbar: HTMLElement) {
+      if (!searchRevealGeometry) return;
+
+      const searchRow = getSearchRow(toolbar);
+      const headerActions = getHeaderActions(toolbar);
+
+      if (searchRow) {
+        searchRow.style.setProperty(
+          "top",
+          `${searchRevealGeometry.searchTop}px`,
+          "important",
+        );
+        searchRow.style.setProperty("right", "auto", "important");
+        searchRow.style.setProperty(
+          "left",
+          `${searchRevealGeometry.searchLeft}px`,
+          "important",
+        );
+        searchRow.style.setProperty(
+          "width",
+          `${searchRevealGeometry.searchWidth}px`,
+          "important",
+        );
+      }
+
+      if (headerActions) {
+        headerActions.style.setProperty(
+          "top",
+          `${searchRevealGeometry.actionsTop}px`,
+          "important",
+        );
+        headerActions.style.setProperty(
+          "right",
+          `${searchRevealGeometry.actionsRight}px`,
+          "important",
+        );
+      }
+    }
+
     function measureSearchRevealThreshold() {
       const toolbar = getMusicSearchToolbar();
 
       if (!toolbar) {
         searchRevealThreshold = 0;
+        searchRevealGeometry = null;
         return;
       }
 
       const wasRevealed = toolbar.classList.contains("is-scroll-revealed");
-      if (wasRevealed) toolbar.classList.remove("is-scroll-revealed");
+      if (wasRevealed) {
+        clearSearchRevealGeometryStyles(toolbar);
+        toolbar.classList.remove("is-scroll-revealed");
+      }
 
       const rect = toolbar.getBoundingClientRect();
       searchRevealThreshold = window.scrollY + rect.top + rect.height;
 
-      if (wasRevealed) toolbar.classList.add("is-scroll-revealed");
+      const searchRow = getSearchRow(toolbar);
+      const headerActions = getHeaderActions(toolbar);
+
+      if (searchRow && headerActions) {
+        const searchRect = searchRow.getBoundingClientRect();
+        const actionsRect = headerActions.getBoundingClientRect();
+
+        searchRevealGeometry = {
+          searchTop: window.scrollY + searchRect.top,
+          searchLeft: searchRect.left,
+          searchWidth: searchRect.width,
+          actionsTop: window.scrollY + actionsRect.top,
+          actionsRight: window.innerWidth - actionsRect.right,
+        };
+      } else {
+        searchRevealGeometry = null;
+      }
+
+      if (wasRevealed) {
+        toolbar.classList.add("is-scroll-revealed");
+        applySearchRevealGeometry(toolbar);
+      }
     }
 
     function syncSearchReveal() {
@@ -47,16 +146,21 @@ export default function MusicFilterToolbarBehavior() {
         return;
       }
 
-      if (searchRevealThreshold <= 0) measureSearchRevealThreshold();
+      if (searchRevealThreshold <= 0 || !searchRevealGeometry) {
+        measureSearchRevealThreshold();
+      }
 
       const scrollDelta = nextScrollY - lastScrollY;
       const isPastSearchRow = nextScrollY > searchRevealThreshold + 12;
 
       if (!isPastSearchRow) {
+        clearSearchRevealGeometryStyles(toolbar);
         toolbar.classList.remove("is-scroll-revealed");
       } else if (scrollDelta < -8) {
         toolbar.classList.add("is-scroll-revealed");
+        applySearchRevealGeometry(toolbar);
       } else if (scrollDelta > 8) {
+        clearSearchRevealGeometryStyles(toolbar);
         toolbar.classList.remove("is-scroll-revealed");
       }
 
@@ -68,9 +172,26 @@ export default function MusicFilterToolbarBehavior() {
       searchRevealFrame = window.requestAnimationFrame(syncSearchReveal);
     }
 
+    function scheduleSearchRevealMeasurement() {
+      if (searchMeasureFrame) return;
+      searchMeasureFrame = window.requestAnimationFrame(() => {
+        searchMeasureFrame = 0;
+        measureSearchRevealThreshold();
+      });
+    }
+
     function resetSearchRevealMeasurement() {
-      getMusicSearchToolbar()?.classList.remove("is-scroll-revealed");
+      if (searchRevealFrame) window.cancelAnimationFrame(searchRevealFrame);
+      if (searchMeasureFrame) window.cancelAnimationFrame(searchMeasureFrame);
+
+      const toolbar = getMusicSearchToolbar();
+      if (toolbar) {
+        clearSearchRevealGeometryStyles(toolbar);
+        toolbar.classList.remove("is-scroll-revealed");
+      }
+
       searchRevealThreshold = 0;
+      searchRevealGeometry = null;
       searchRevealFrame = 0;
       lastScrollY = window.scrollY;
       window.requestAnimationFrame(() => {
@@ -176,11 +297,33 @@ export default function MusicFilterToolbarBehavior() {
     syncAll();
     window.requestAnimationFrame(measureSearchRevealThreshold);
 
+    const geometryResizeObserver = new ResizeObserver(() => {
+      const toolbar = getMusicSearchToolbar();
+      if (!toolbar || toolbar.classList.contains("is-scroll-revealed")) return;
+      scheduleSearchRevealMeasurement();
+    });
+    const initialToolbar = getMusicSearchToolbar();
+    const initialSearchRow = initialToolbar ? getSearchRow(initialToolbar) : null;
+    const initialHeaderActions = initialToolbar ? getHeaderActions(initialToolbar) : null;
+    if (initialSearchRow) geometryResizeObserver.observe(initialSearchRow);
+    if (initialHeaderActions) geometryResizeObserver.observe(initialHeaderActions);
+
     document.addEventListener("click", handleShuffleClick, true);
     window.addEventListener("scroll", scheduleSearchRevealSync, { passive: true });
     window.addEventListener("resize", resetSearchRevealMeasurement);
 
-    const observer = new MutationObserver(syncAll);
+    const observer = new MutationObserver((mutations) => {
+      syncAll();
+
+      const filterPanelGeometryChanged = mutations.some(
+        (mutation) =>
+          mutation.type === "attributes" &&
+          mutation.target instanceof HTMLElement &&
+          mutation.target.classList.contains("fw-filter-panel-wrap"),
+      );
+
+      if (filterPanelGeometryChanged) scheduleSearchRevealMeasurement();
+    });
     observer.observe(document.body, {
       attributes: true,
       attributeFilter: ["class", "aria-pressed"],
@@ -189,11 +332,15 @@ export default function MusicFilterToolbarBehavior() {
     });
 
     return () => {
+      const toolbar = getMusicSearchToolbar();
+      if (toolbar) clearSearchRevealGeometryStyles(toolbar);
+      geometryResizeObserver.disconnect();
       observer.disconnect();
       document.removeEventListener("click", handleShuffleClick, true);
       window.removeEventListener("scroll", scheduleSearchRevealSync);
       window.removeEventListener("resize", resetSearchRevealMeasurement);
       if (searchRevealFrame) window.cancelAnimationFrame(searchRevealFrame);
+      if (searchMeasureFrame) window.cancelAnimationFrame(searchMeasureFrame);
     };
   }, []);
 
