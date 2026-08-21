@@ -5,7 +5,6 @@ import { useEffect, useMemo, useState } from "react";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
 import ApprovedSongPublishButton from "@/components/admin/ApprovedSongPublishButton";
-import AudioFileIcon from "@/components/icons/AudioFileIcon";
 import Toast from "@/components/Toast";
 
 type ReviewStatus =
@@ -34,6 +33,7 @@ type SubmissionSummary = {
   duration: number;
   key: string | null;
   bpm: number | null;
+  cover_url: string | null;
   created_at: string;
   artist_profile: ArtistProfileSummary | null;
   revision_pending?: boolean;
@@ -52,7 +52,6 @@ type SubmissionSong = SubmissionSummary & {
   audio_url: string | null;
   playback_url: string | null;
   hls_url: string | null;
-  cover_url: string | null;
 };
 
 type Credit = {
@@ -204,10 +203,18 @@ function DetailValue({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ReviewCoverPlaceholder() {
+function ReviewCover({
+  coverUrl,
+  title,
+}: {
+  coverUrl: string | null;
+  title: string;
+}) {
   return (
-    <div className="flex h-[52px] w-[52px] items-center justify-center bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
-      <AudioFileIcon size={16} />
+    <div className="h-[52px] w-[52px] overflow-hidden bg-[var(--bg-tertiary)]">
+      {coverUrl ? (
+        <img src={coverUrl} alt={title} className="h-full w-full object-cover" />
+      ) : null}
     </div>
   );
 }
@@ -769,7 +776,7 @@ export default function AdminMusicReviewPage() {
                         }}
                       >
                         <div className="flex items-center">
-                          <ReviewCoverPlaceholder />
+                          <ReviewCover coverUrl={item.cover_url} title={item.title} />
                         </div>
 
                         <div className="min-w-0">
