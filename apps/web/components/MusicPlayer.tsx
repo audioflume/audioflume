@@ -13,6 +13,7 @@ import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import IconButton from "@/components/IconButton";
+import PremiumLabel from "@/components/PremiumLabel";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
@@ -527,7 +528,10 @@ export default function MusicPlayer() {
           )}
           <div className="filmwave-player-song-copy">
             <div title={currentSong.title} className="filmwave-player-title">
-              {currentSong.title}
+              <span className="flex min-w-0 items-center gap-1.5">
+                <span className="min-w-0 truncate">{currentSong.title}</span>
+                {currentSong.licenseType === "premium" ? <PremiumLabel /> : null}
+              </span>
             </div>
             <div
               title={
