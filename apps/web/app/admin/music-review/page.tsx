@@ -131,8 +131,8 @@ function statusStyle(status: ReviewStatus) {
 
   if (status === "submitted" || status === "changes_requested") {
     return {
-      color: "var(--status-warning, #d9a441)",
-      background: "var(--status-warning-soft, rgba(217, 164, 65, 0.12))",
+      color: "var(--text-secondary)",
+      background: "var(--bg-tertiary)",
     };
   }
 
@@ -145,7 +145,7 @@ function statusStyle(status: ReviewStatus) {
 function StatusBadge({ status }: { status: ReviewStatus }) {
   return (
     <span
-      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-medium uppercase tracking-[0.05em]"
+      className="filmwave-backend-status-badge"
       style={statusStyle(status)}
     >
       {formatStatus(status)}
