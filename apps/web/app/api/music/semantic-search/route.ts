@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import {
@@ -14,6 +15,15 @@ export const revalidate = 0;
 const MAX_QUERY_LENGTH = 500;
 
 export async function POST(request: Request) {
+  const { userId } = await auth();
+
+  if (!userId) {
+    return NextResponse.json(
+      { error: "You must be signed in to search music." },
+      { status: 401 },
+    );
+  }
+
   try {
     const body = await request.json().catch(() => null);
     const query =
