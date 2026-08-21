@@ -10,7 +10,6 @@ import ArtistSongEditor from "@/components/artists/ArtistSongEditor";
 import ArtistSongLicenseSelector, {
   type ArtistSongLicenseType,
 } from "@/components/artists/ArtistSongLicenseSelector";
-import BackendArtworkUpload from "@/components/backend/BackendArtworkUpload";
 import {
   BackendInput,
   BackendSelect,
@@ -100,8 +99,6 @@ export default function ArtistSongEditorWithCollaborators({
   const [createReleaseArtwork, setCreateReleaseArtwork] = useState<File | null>(
     null,
   );
-  const [createReleaseArtworkPreview, setCreateReleaseArtworkPreview] =
-    useState<string | null>(null);
   const [creatingRelease, setCreatingRelease] = useState(false);
   const [createReleaseError, setCreateReleaseError] = useState("");
   const [licenseType, setLicenseType] =
@@ -152,17 +149,6 @@ export default function ArtistSongEditorWithCollaborators({
       cancelled = true;
     };
   }, [artist.id, canManageReleases]);
-
-  useEffect(() => {
-    if (!createReleaseArtwork) {
-      setCreateReleaseArtworkPreview(null);
-      return;
-    }
-
-    const objectUrl = URL.createObjectURL(createReleaseArtwork);
-    setCreateReleaseArtworkPreview(objectUrl);
-    return () => URL.revokeObjectURL(objectUrl);
-  }, [createReleaseArtwork]);
 
   useEffect(() => {
     let cancelled = false;
@@ -376,6 +362,10 @@ export default function ArtistSongEditorWithCollaborators({
           onRevisionPending={() =>
             onSaved({ id: song.id, title: song.title }, true)
           }
+          releaseDraftMode={createReleaseOpen}
+          releaseDraftArtworkFile={createReleaseArtwork}
+          onReleaseDraftArtworkChange={setCreateReleaseArtwork}
+          releaseDraftArtworkDisabled={creatingRelease}
         />
       }
       songInfoExtra={
@@ -456,18 +446,6 @@ export default function ArtistSongEditorWithCollaborators({
                     disabled={creatingRelease}
                   />
                 </div>
-
-                <BackendArtworkUpload
-                  file={createReleaseArtwork}
-                  previewUrl={createReleaseArtworkPreview}
-                  onFileChange={setCreateReleaseArtwork}
-                  onRemove={() => setCreateReleaseArtwork(null)}
-                  disabled={creatingRelease}
-                  required
-                  title="Release image"
-                  variant="compact"
-                  compactChooseButton
-                />
 
                 {createReleaseError ? (
                   <div className="text-xs leading-5 text-[var(--status-error,#dc584f)]">
