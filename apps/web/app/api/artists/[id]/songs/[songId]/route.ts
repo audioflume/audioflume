@@ -283,29 +283,31 @@ export async function PATCH(request: Request, context: RouteContext) {
     const payload = body as Record<string, unknown>;
 
     if (payload.action === "submit") {
-      await requireArtistPermission(id, "catalog:submit");
+      const submitAccess = await requireArtistPermission(id, "catalog:submit");
 
       if (!(await requirePrimarySong(id, songId))) {
         return NextResponse.json({ error: "Track not found" }, { status: 404 });
       }
 
-      const [songResult, artistResult, rightsResult] = await Promise.all([
-        supabaseServer
-          .from("songs")
-          .select("id, title, status, duration, created_at, submitted_at")
-          .eq("id", songId)
-          .maybeSingle(),
-        supabaseServer
-          .from("artists")
-          .select("id, status")
-          .eq("id", id)
-          .maybeSingle(),
-        supabaseServer
-          .from("song_rights")
-          .select("rights_confirmed")
-          .eq("song_id", songId)
-          .maybeSingle(),
-      ]);
+      const [songResult, artistResult, rightsResult, pendingRevision] =
+        await Promise.all([
+          supabaseServer
+            .from("songs")
+            .select("id, title, status, duration, created_at, submitted_at")
+            .eq("id", songId)
+            .maybeSingle(),
+          supabaseServer
+            .from("artists")
+            .select("id, status")
+            .eq("id", id)
+            .maybeSingle(),
+          supabaseServer
+            .from("song_rights")
+            .select("rights_confirmed")
+            .eq("song_id", songId)
+            .maybeSingle(),
+          getSongPendingRevision(songId),
+        ]);
 
       if (songResult.error) throw songResult.error;
       if (artistResult.error) throw artistResult.error;
@@ -319,6 +321,74 @@ export async function PATCH(request: Request, context: RouteContext) {
           { status: 403 },
         );
       }
+
+      if (pendingRevision) {
+        if (pendingRevision.status !== "changes_requested") {
+          return NextResponse.json(
+            { error: "These track changes are already submitted for review" },
+            { status: 409 },
+          );
+        }
+
+        const pendingRightsConfirmed =
+          pendingRevision.rights && typeof pendingRevision.rights === "object"
+            ? pendingRevision.rights.rights_confirmed === true
+            : rightsResult.data?.rights_confirmed === true;
+
+        if (!pendingRightsConfirmed) {
+          return NextResponse.json(
+            {
+              error:
+                "Complete master and publishing ownership splits before resubmitting this track for review",
+            },
+            { status: 400 },
+          );
+        }
+
+        const submittedAt = new Date().toISOString();
+        const { data: submittedRevision, error: revisionError } =
+          await supabaseServer
+            .from("song_pending_revisions")
+            .update({
+              status: "submitted",
+              review_notes: null,
+              submitted_by_clerk_user_id: submitAccess.userId,
+              updated_at: submittedAt,
+            })
+            .eq("song_id", songId)
+            .eq("status", "changes_requested")
+            .select("song_id, status, updated_at")
+            .maybeSingle();
+
+        if (revisionError) throw revisionError;
+        if (!submittedRevision) {
+          return NextResponse.json(
+            { error: "Track changes changed before resubmission completed" },
+            { status: 409 },
+          );
+        }
+
+        const revisionTitle =
+          pendingRevision.metadata &&
+          typeof pendingRevision.metadata.title === "string"
+            ? pendingRevision.metadata.title
+            : songResult.data.title;
+        await createResubmissionNotification(id, revisionTitle);
+
+        return NextResponse.json({
+          song: {
+            ...songResult.data,
+            title: revisionTitle,
+            status: "submitted",
+            revision_pending: true,
+            live_status: songResult.data.status,
+          },
+          revision_pending: true,
+          revision_status: submittedRevision.status,
+          live_status: songResult.data.status,
+        });
+      }
+
       if (
         songResult.data.status !== "draft" &&
         songResult.data.status !== "changes_requested"
