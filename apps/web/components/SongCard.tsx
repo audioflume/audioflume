@@ -24,6 +24,7 @@ import AddToPlaylistModal from "@/components/AddToPlaylistModal";
 import AddToProjectModal from "@/components/AddToProjectModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import ShortenTrackModal from "@/components/ShortenTrackModal";
+import PremiumLabel from "@/components/PremiumLabel";
 import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import NoVocalsIcon from "@/components/icons/NoVocalsIcon";
@@ -241,11 +242,7 @@ export default function SongCard({
         title={
           <span className="flex w-full min-w-0 items-center gap-1.5">
             <span className="min-w-0 truncate">{song.title}</span>
-            {isPremium ? (
-              <span className="shrink-0 border border-[var(--border)] px-1.5 py-[2px] font-[family-name:var(--font-roboto-mono)] text-[8px] font-normal uppercase leading-none tracking-[0.04em] text-[var(--text-secondary)]">
-                Premium
-              </span>
-            ) : null}
+            {isPremium ? <PremiumLabel /> : null}
           </span>
         }
         artist={song.artist}
