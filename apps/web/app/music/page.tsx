@@ -52,9 +52,22 @@ const VOCAL_FILTER_OPTIONS = [
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
 const LICENSE_FILTER_VALUES = ["standard", "premium"] as const;
+const SEMANTIC_SEARCH_DEBOUNCE_MS = 350;
+const MIN_SEMANTIC_SEARCH_LENGTH = 2;
 
 type MusicSortMode = "recent" | "popular";
 type LicenseFilterValue = (typeof LICENSE_FILTER_VALUES)[number];
+type SemanticSearchState =
+  | {
+      query: string;
+      status: "success";
+      songIds: string[];
+    }
+  | {
+      query: string;
+      status: "failed";
+      songIds: [];
+    };
 
 function getStoredLicenseFilters(): LicenseFilterValue[] {
   if (typeof window === "undefined") return [];
@@ -169,6 +182,8 @@ export default function MusicPage() {
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[]>([]);
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
+  const [semanticSearchState, setSemanticSearchState] =
+    useState<SemanticSearchState | null>(null);
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -390,6 +405,55 @@ export default function MusicPage() {
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
   useEffect(() => {
+    const query = search.trim();
+
+    if (
+      !userId ||
+      !filtersHydrated ||
+      query.length < MIN_SEMANTIC_SEARCH_LENGTH
+    ) {
+      setSemanticSearchState(null);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        const response = await fetch("/api/music/semantic-search", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ query }),
+          signal: controller.signal,
+        });
+
+        if (!response.ok) {
+          throw new Error("Semantic search request failed");
+        }
+
+        const data = await response.json();
+        const songIds = Array.isArray(data?.matches)
+          ? data.matches.flatMap((match: unknown) => {
+              if (!match || typeof match !== "object") return [];
+              const songId = (match as Record<string, unknown>).songId;
+              return typeof songId === "string" && songId ? [songId] : [];
+            })
+          : [];
+
+        setSemanticSearchState({ query, status: "success", songIds });
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        console.error("Semantic music search failed:", error);
+        setSemanticSearchState({ query, status: "failed", songIds: [] });
+      }
+    }, SEMANTIC_SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [filtersHydrated, search, userId]);
+
+  useEffect(() => {
     if (!userId || !selectedPlaylistId) return;
 
     const playlistId = selectedPlaylistId;
@@ -526,8 +590,18 @@ export default function MusicPage() {
             return selectedLicenseFilters.includes(licenseType);
           });
 
-    return filterMusicLibrarySongs(licenseSongs, {
-      search,
+    const cleanSearch = search.trim();
+    const semanticSongIds =
+      semanticSearchState?.status === "success" &&
+      semanticSearchState.query === cleanSearch
+        ? semanticSearchState.songIds
+        : null;
+    const semanticOrder = semanticSongIds
+      ? new Map(semanticSongIds.map((songId, index) => [songId, index]))
+      : null;
+
+    const nextSongs = filterMusicLibrarySongs(licenseSongs, {
+      search: semanticOrder ? "" : search,
       selectedMoods,
       selectedGenres,
       selectedRegions,
@@ -540,6 +614,25 @@ export default function MusicPage() {
       bpmValue,
       keyValue,
     });
+
+    if (!semanticOrder) return nextSongs;
+
+    return nextSongs
+      .flatMap((song) => {
+        const order = getMusicSongIdentityValues(song).reduce<number | null>(
+          (currentOrder, id) => {
+            const nextOrder = semanticOrder.get(id);
+            if (nextOrder === undefined) return currentOrder;
+            if (currentOrder === null) return nextOrder;
+            return Math.min(currentOrder, nextOrder);
+          },
+          null,
+        );
+
+        return order === null ? [] : [{ song, order }];
+      })
+      .sort((a, b) => a.order - b.order)
+      .map((entry) => entry.song);
   }, [
     bpmValue,
     filtersHydrated,
@@ -557,6 +650,7 @@ export default function MusicPage() {
     selectedPlaylistSongIds,
     selectedRegions,
     selectedVocals,
+    semanticSearchState,
     songs,
   ]);
 
