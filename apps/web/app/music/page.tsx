@@ -170,7 +170,7 @@ function songIsInstrumental(song: unknown) {
 }
 
 export default function MusicPage() {
-  const { userId } = useAuth();
+  const { userId, isLoaded } = useAuth();
   const musicFilterStorageKey = userId
     ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${userId}`
     : null;
@@ -179,7 +179,10 @@ export default function MusicPage() {
     filters,
     setFilters,
     hydrated: filtersHydrated,
-  } = useFilterPersistence(musicFilterStorageKey);
+  } = useFilterPersistence({
+    storageKey: musicFilterStorageKey,
+    authLoaded: isLoaded,
+  });
 
   const { songs, loading: songsLoading, error: songsError } = useSongs();
   const { playlists } = usePlaylists();
