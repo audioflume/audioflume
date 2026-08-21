@@ -51,6 +51,10 @@ type ArtistSongEditFilesProps = {
   songId: string;
   onReleaseLoaded: (release: ArtistSongCurrentRelease | null) => void;
   onRevisionPending?: () => void;
+  releaseDraftMode?: boolean;
+  releaseDraftArtworkFile?: File | null;
+  onReleaseDraftArtworkChange?: (file: File | null) => void;
+  releaseDraftArtworkDisabled?: boolean;
 };
 
 function fileNameFromUrl(value: string | null) {
@@ -78,6 +82,10 @@ export default function ArtistSongEditFiles({
   songId,
   onReleaseLoaded,
   onRevisionPending,
+  releaseDraftMode = false,
+  releaseDraftArtworkFile = null,
+  onReleaseDraftArtworkChange,
+  releaseDraftArtworkDisabled = false,
 }: ArtistSongEditFilesProps) {
   const canEdit = artist.permissions.includes("catalog:edit");
   const [loading, setLoading] = useState(true);
@@ -86,6 +94,8 @@ export default function ArtistSongEditFiles({
   const [stemFiles, setStemFiles] = useState<File[]>([]);
   const [artworkFile, setArtworkFile] = useState<File | null>(null);
   const [artworkObjectUrl, setArtworkObjectUrl] = useState<string | null>(null);
+  const [releaseDraftArtworkObjectUrl, setReleaseDraftArtworkObjectUrl] =
+    useState<string | null>(null);
   const [audioLabel, setAudioLabel] = useState("");
   const [existingStemLabels, setExistingStemLabels] = useState<string[]>([]);
   const [coverUrl, setCoverUrl] = useState<string | null>(null);
@@ -145,6 +155,17 @@ export default function ArtistSongEditFiles({
     return () => URL.revokeObjectURL(objectUrl);
   }, [artworkFile]);
 
+  useEffect(() => {
+    if (!releaseDraftArtworkFile) {
+      setReleaseDraftArtworkObjectUrl(null);
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(releaseDraftArtworkFile);
+    setReleaseDraftArtworkObjectUrl(objectUrl);
+    return () => URL.revokeObjectURL(objectUrl);
+  }, [releaseDraftArtworkFile]);
+
   async function handleAudioFileChange(file: File | null) {
     setAudioFile(file);
     setAudioStatus("");
@@ -194,9 +215,15 @@ export default function ArtistSongEditFiles({
   }
 
   async function handleArtworkFileChange(file: File | null) {
-    setArtworkFile(file);
     setMessage("");
     setError("");
+
+    if (releaseDraftMode) {
+      onReleaseDraftArtworkChange?.(file);
+      return;
+    }
+
+    setArtworkFile(file);
     if (!file || currentRelease) return;
 
     try {
@@ -233,6 +260,10 @@ export default function ArtistSongEditFiles({
   }
 
   async function handleRemoveArtwork() {
+    if (releaseDraftMode) {
+      onReleaseDraftArtworkChange?.(null);
+      return;
+    }
     if (currentRelease) return;
     if (artworkFile) {
       setArtworkFile(null);
@@ -309,8 +340,13 @@ export default function ArtistSongEditFiles({
     }
   }
 
-  const releaseArtworkMode = Boolean(currentRelease);
-  const displayedArtworkUrl = currentRelease?.cover_image_url ?? artworkObjectUrl ?? coverUrl;
+  const releaseArtworkMode = releaseDraftMode || Boolean(currentRelease);
+  const displayedArtworkFile = releaseDraftMode
+    ? releaseDraftArtworkFile
+    : artworkFile;
+  const displayedArtworkUrl = releaseDraftMode
+    ? releaseDraftArtworkObjectUrl
+    : currentRelease?.cover_image_url ?? artworkObjectUrl ?? coverUrl;
   const disabled = loading || Boolean(busy) || !canEdit;
 
   return (
@@ -324,7 +360,7 @@ export default function ArtistSongEditFiles({
         stemFiles={stemFiles}
         onStemFilesChange={(files) => void handleStemFilesChange(files)}
         existingStemLabels={existingStemLabels}
-        artworkFile={artworkFile}
+        artworkFile={displayedArtworkFile}
         artworkPreviewUrl={displayedArtworkUrl}
         onArtworkFileChange={(file) => void handleArtworkFileChange(file)}
         onRemoveArtwork={() => void handleRemoveArtwork()}
@@ -332,11 +368,15 @@ export default function ArtistSongEditFiles({
         artworkActionLabel={
           releaseArtworkMode ? "Choose Release Image" : "Choose Cover Art"
         }
-        artworkDisabled={releaseArtworkMode}
+        artworkDisabled={
+          releaseDraftMode ? releaseDraftArtworkDisabled : Boolean(currentRelease)
+        }
         artworkHelp={
-          currentRelease
-            ? `This song uses ${currentRelease.title} release artwork.`
-            : undefined
+          releaseDraftMode
+            ? "This image will be used as the release artwork for this song."
+            : currentRelease
+              ? `This song uses ${currentRelease.title} release artwork.`
+              : undefined
         }
         disabled={disabled}
       />
