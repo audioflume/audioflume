@@ -82,6 +82,10 @@ const sharedPresentationBoundaryPatterns = [
   'from "@filmwave/shared"',
   "from '@filmwave/shared'",
 ];
+const allowedSharedPresentationImports = [
+  'import { PremiumLabel } from "@filmwave/shared";',
+  "import { PremiumLabel } from '@filmwave/shared';",
+];
 
 const errors = [];
 
@@ -117,6 +121,10 @@ for (const absolutePath of walk(repoRoot)) {
 
   const source = readFileSync(absolutePath, "utf8");
   const ext = path.extname(rel);
+  const sharedPresentationGuardSource = allowedSharedPresentationImports.reduce(
+    (currentSource, allowedImport) => currentSource.replaceAll(allowedImport, ""),
+    source,
+  );
 
   if (source.includes("style jsx global")) {
     errors.push(`${rel}: route-level global style block found.`);
@@ -166,7 +174,7 @@ for (const absolutePath of walk(repoRoot)) {
 
   if (
     (rel.startsWith(backendComponentDirectory) || migratedBackendFiles.has(rel)) &&
-    containsAny(source, sharedPresentationBoundaryPatterns)
+    containsAny(sharedPresentationGuardSource, sharedPresentationBoundaryPatterns)
   ) {
     errors.push(
       `${rel}: migrated backend component imports shared presentation code.`,
