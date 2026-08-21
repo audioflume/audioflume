@@ -250,7 +250,7 @@ export default function BackendArtworkUpload({
                   type="button"
                   disabled={disabled}
                   onClick={onRemove}
-                  className="h-9 rounded-[7px] border border-[var(--danger)] bg-transparent px-3.5 text-[11px] font-normal text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:opacity-50"
+                  className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
                 >
                   Remove image
                 </button>
