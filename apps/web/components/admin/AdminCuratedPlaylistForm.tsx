@@ -201,6 +201,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   const [activeSongRowId, setActiveSongRowId] = useState<number | null>(null);
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
   const managerHref = "/admin/playlist-manager";
@@ -356,7 +357,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (saving) return;
+    if (saving || deleting) return;
 
     try {
       setSaving(true);
@@ -409,6 +410,33 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
       );
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (mode !== "edit" || !playlistId || saving || deleting) return;
+
+    const confirmed = window.confirm(
+      `Delete "${name || "this playlist"}"? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      const res = await fetch(`/api/admin/curated-playlists/${playlistId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data?.error || "Failed to delete playlist");
+
+      router.push(managerHref);
+    } catch (err) {
+      setToastMessage(
+        err instanceof Error ? err.message : "Failed to delete playlist",
+      );
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -587,20 +615,33 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 <BackendButton
                   type="button"
                   onClick={() => router.push(managerHref)}
+                  disabled={deleting}
                 >
                   Back to manager
                 </BackendButton>
-                <BackendButton
-                  type="submit"
-                  variant="primary"
-                  disabled={saving}
-                >
-                  {saving
-                    ? "Saving..."
-                    : mode === "edit"
-                      ? "Save changes"
-                      : "Create playlist"}
-                </BackendButton>
+                <div className="flex flex-wrap items-center gap-2">
+                  {mode === "edit" ? (
+                    <BackendButton
+                      type="button"
+                      variant="secondary-danger"
+                      onClick={() => void handleDelete()}
+                      disabled={saving || deleting}
+                    >
+                      {deleting ? "Deleting..." : "Delete playlist"}
+                    </BackendButton>
+                  ) : null}
+                  <BackendButton
+                    type="submit"
+                    variant="primary"
+                    disabled={saving || deleting}
+                  >
+                    {saving
+                      ? "Saving..."
+                      : mode === "edit"
+                        ? "Save changes"
+                        : "Create playlist"}
+                  </BackendButton>
+                </div>
               </div>
             </>
           )}

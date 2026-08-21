@@ -61,6 +61,7 @@ export default function AdminDiscoverPlaylistForm({
   const [songs, setSongs] = useState<CuratedPlaylistSong[]>([]);
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
 
   const managerHref = "/admin/playlist-manager?tab=discover";
@@ -139,7 +140,7 @@ export default function AdminDiscoverPlaylistForm({
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (saving) return;
+    if (saving || deleting) return;
 
     try {
       setSaving(true);
@@ -187,6 +188,33 @@ export default function AdminDiscoverPlaylistForm({
       );
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function handleDelete() {
+    if (mode !== "edit" || !playlistId || saving || deleting) return;
+
+    const confirmed = window.confirm(
+      `Delete "${name || "this playlist"}"? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      const res = await fetch(`/api/admin/curated-playlists/${playlistId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data?.error || "Failed to delete playlist");
+
+      router.push(managerHref);
+    } catch (err) {
+      setToastMessage(
+        err instanceof Error ? err.message : "Failed to delete playlist",
+      );
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -305,7 +333,7 @@ export default function AdminDiscoverPlaylistForm({
                 <BackendButton
                   type="submit"
                   variant="primary"
-                  disabled={saving}
+                  disabled={saving || deleting}
                 >
                   {saving
                     ? "Saving..."
@@ -313,9 +341,20 @@ export default function AdminDiscoverPlaylistForm({
                       ? "Save changes"
                       : "Create Discover content"}
                 </BackendButton>
+                {mode === "edit" ? (
+                  <BackendButton
+                    type="button"
+                    variant="secondary-danger"
+                    onClick={() => void handleDelete()}
+                    disabled={saving || deleting}
+                  >
+                    {deleting ? "Deleting..." : "Delete playlist"}
+                  </BackendButton>
+                ) : null}
                 <BackendButton
                   type="button"
                   onClick={() => router.push(managerHref)}
+                  disabled={deleting}
                 >
                   Back to manager
                 </BackendButton>
