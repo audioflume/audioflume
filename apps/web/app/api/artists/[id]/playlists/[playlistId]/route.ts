@@ -190,3 +190,63 @@ export async function PATCH(request: Request, context: RouteContext) {
     );
   }
 }
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  try {
+    const { id, playlistId } = await context.params;
+    await requireArtistPermission(id, "playlist:manage");
+
+    const ownsPlaylist = await requirePlaylistOwnership(id, playlistId);
+    if (!ownsPlaylist) {
+      return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
+    }
+
+    const { data: artist, error: artistError } = await supabaseServer
+      .from("artists")
+      .select("id, status")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (artistError) throw artistError;
+    if (!artist) {
+      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
+    }
+    if (artist.status !== "approved") {
+      return NextResponse.json(
+        { error: "Artist profile must be approved before managing playlists" },
+        { status: 403 },
+      );
+    }
+
+    const { data: deletedPlaylist, error: deleteError } = await supabaseServer
+      .from("artist_playlists")
+      .delete()
+      .eq("id", playlistId)
+      .eq("artist_id", id)
+      .select("id")
+      .maybeSingle();
+
+    if (deleteError) throw deleteError;
+    if (!deletedPlaylist) {
+      return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
+    }
+
+    return NextResponse.json({ deleted_playlist_id: playlistId });
+  } catch (error) {
+    if (error instanceof ArtistAccessError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.status },
+      );
+    }
+
+    console.error("Failed to delete artist playlist:", error);
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error ? error.message : "Failed to delete artist playlist",
+      },
+      { status: 500 },
+    );
+  }
+}

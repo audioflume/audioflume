@@ -129,7 +129,7 @@ export default function ArtistTrackOrderRow({
             type="button"
             onClick={onRemove}
             disabled={disabled}
-            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
+            className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
           >
             Remove
           </button>

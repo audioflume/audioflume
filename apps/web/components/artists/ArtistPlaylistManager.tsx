@@ -258,6 +258,12 @@ export default function ArtistPlaylistManager({
             ),
           )
         }
+        onDeleted={() => {
+          setPlaylists((current) =>
+            current.filter((playlist) => playlist.id !== selectedPlaylist.id),
+          );
+          setSelectedPlaylistId("");
+        }}
       />
     );
   }
@@ -472,6 +478,7 @@ type PlaylistEditorProps = {
   songs: PlaylistSong[];
   onBack: () => void;
   onUpdated: (playlist: ArtistPlaylist) => void;
+  onDeleted: () => void;
 };
 
 function PlaylistEditor({
@@ -481,6 +488,7 @@ function PlaylistEditor({
   songs,
   onBack,
   onUpdated,
+  onDeleted,
 }: PlaylistEditorProps) {
   const trackSensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -493,6 +501,7 @@ function PlaylistEditor({
   const [artworkPreviewUrl, setArtworkPreviewUrl] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [uploadingArtwork, setUploadingArtwork] = useState(false);
+  const [deleting, setDeleting] = useState(false);
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
@@ -503,7 +512,7 @@ function PlaylistEditor({
   const orderedSongs = songIds
     .map((songId) => songsById.get(songId))
     .filter((song): song is PlaylistSong => Boolean(song));
-  const trackOrderDisabled = saving || uploadingArtwork;
+  const trackOrderDisabled = saving || uploadingArtwork || deleting;
 
   useEffect(() => {
     setQueue(
@@ -606,6 +615,38 @@ function PlaylistEditor({
     } finally {
       setUploadingArtwork(false);
       setSaving(false);
+    }
+  }
+
+  async function deletePlaylist() {
+    if (!canManage || saving || uploadingArtwork || deleting) return;
+
+    const confirmed = window.confirm(
+      `Delete "${playlist.name}"? This cannot be undone.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      setDeleting(true);
+      setError("");
+      setMessage("");
+
+      const response = await fetch(
+        `/api/artists/${artist.id}/playlists/${playlist.id}`,
+        { method: "DELETE" },
+      );
+      const body = (await response.json().catch(() => ({}))) as PlaylistsResponse;
+
+      if (!response.ok) throw new Error(body.error || "Failed to delete playlist");
+      onDeleted();
+    } catch (deleteError) {
+      setError(
+        deleteError instanceof Error
+          ? deleteError.message
+          : "Failed to delete playlist",
+      );
+    } finally {
+      setDeleting(false);
     }
   }
 
@@ -742,6 +783,16 @@ function PlaylistEditor({
               <span className="text-[var(--success)]">{message}</span>
             ) : null}
           </div>
+          {canManage ? (
+            <button
+              type="button"
+              onClick={() => void deletePlaylist()}
+              disabled={trackOrderDisabled}
+              className="filmwave-backend-button filmwave-backend-button-secondary-danger"
+            >
+              {deleting ? "Deleting..." : "Delete playlist"}
+            </button>
+          ) : null}
           {canManage ? (
             <button
               type="submit"

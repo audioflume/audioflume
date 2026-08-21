@@ -8,9 +8,7 @@ import Toast from "@/components/Toast";
 import {
   BackendButton,
   BackendCheckbox,
-  BackendIconButton,
 } from "@/components/backend/BackendControls";
-import TrashIcon from "@/components/icons/TrashIcon";
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import type {
   CuratedPlaylist,
@@ -425,13 +423,14 @@ export default function AdminDiscoverPlaylistForm({
                       {song.artist}
                     </div>
                   </div>
-                  <BackendIconButton
+                  <BackendButton
                     type="button"
+                    compact
                     onClick={() => removeSong(song.id)}
                     aria-label={`Remove ${song.title}`}
                   >
-                    <TrashIcon size={14} />
-                  </BackendIconButton>
+                    Remove
+                  </BackendButton>
                 </div>
               ))}
             </div>

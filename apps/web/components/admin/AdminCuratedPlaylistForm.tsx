@@ -144,7 +144,7 @@ function SortableSongRow({
       <button
         type="button"
         onClick={() => onRemove(song.id)}
-        className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary-danger"
+        className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
         aria-label={`Remove ${song.title}`}
       >
         Remove
