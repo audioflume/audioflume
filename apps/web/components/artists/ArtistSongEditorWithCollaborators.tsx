@@ -7,10 +7,11 @@ import ArtistSongEditFiles, {
   type ArtistSongCurrentRelease,
 } from "@/components/artists/ArtistSongEditFiles";
 import ArtistSongEditor from "@/components/artists/ArtistSongEditor";
+import ArtistSongLicenseSelector, {
+  type ArtistSongLicenseType,
+} from "@/components/artists/ArtistSongLicenseSelector";
 import { BackendSelect } from "@/components/backend/BackendControls";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
-
-type LicenseType = "standard" | "premium";
 
 type ArtistSongSummary = {
   id: string;
@@ -33,7 +34,7 @@ type ArtistSongEditorWithCollaboratorsProps = {
 };
 
 type LicenseResponse = {
-  license_type?: LicenseType;
+  license_type?: ArtistSongLicenseType;
   revision_pending?: boolean;
   error?: string;
 };
@@ -46,9 +47,10 @@ export default function ArtistSongEditorWithCollaborators({
 }: ArtistSongEditorWithCollaboratorsProps) {
   const [currentRelease, setCurrentRelease] =
     useState<ArtistSongCurrentRelease | null>(null);
-  const [licenseType, setLicenseType] = useState<LicenseType>("premium");
+  const [licenseType, setLicenseType] =
+    useState<ArtistSongLicenseType>("premium");
   const [savedLicenseType, setSavedLicenseType] =
-    useState<LicenseType>("premium");
+    useState<ArtistSongLicenseType>("premium");
   const [licenseLoading, setLicenseLoading] = useState(true);
   const [licenseSaving, setLicenseSaving] = useState(false);
   const [licenseError, setLicenseError] = useState("");
@@ -153,43 +155,30 @@ export default function ArtistSongEditorWithCollaborators({
         />
       }
       songInfoExtra={
-        <>
-          <div>
-            <BackendSelect
-              aria-label="Release"
-              value={currentRelease?.id ?? ""}
-              onChange={() => undefined}
-              className={`filmwave-backend-select-end-control ${
-                currentRelease
-                  ? "text-[var(--text-primary)]"
-                  : "text-[var(--text-muted)]"
-              }`}
-            >
-              <option value={currentRelease?.id ?? ""}>
-                {currentRelease?.title ?? "Not part of a release"}
-              </option>
-            </BackendSelect>
-          </div>
-          <div>
-            <BackendSelect
-              aria-label="License"
-              value={licenseType}
-              onChange={(event) =>
-                setLicenseType(event.target.value as LicenseType)
-              }
-              disabled={!canEditLicense || licenseLoading || licenseSaving}
-              className="filmwave-backend-select-end-control text-[var(--text-primary)]"
-            >
-              <option value="standard">Standard License</option>
-              <option value="premium">Artist Premium</option>
-            </BackendSelect>
-            {licenseError ? (
-              <div className="mt-1 text-[10px] leading-4 text-[var(--status-error,#dc584f)]">
-                {licenseError}
-              </div>
-            ) : null}
-          </div>
-        </>
+        <div>
+          <BackendSelect
+            aria-label="Release"
+            value={currentRelease?.id ?? ""}
+            onChange={() => undefined}
+            className={`filmwave-backend-select-end-control ${
+              currentRelease
+                ? "text-[var(--text-primary)]"
+                : "text-[var(--text-muted)]"
+            }`}
+          >
+            <option value={currentRelease?.id ?? ""}>
+              {currentRelease?.title ?? "Not part of a release"}
+            </option>
+          </BackendSelect>
+        </div>
+      }
+      afterSongInfoContent={
+        <ArtistSongLicenseSelector
+          value={licenseType}
+          onChange={setLicenseType}
+          disabled={!canEditLicense || licenseLoading || licenseSaving}
+          error={licenseError}
+        />
       }
       afterContent={
         <ArtistCollaboratorsEditor
