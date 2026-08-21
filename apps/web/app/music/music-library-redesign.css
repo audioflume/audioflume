@@ -334,6 +334,7 @@ main
   grid-template-columns:
     minmax(0, 1fr)
     auto !important;
+  column-gap: 12px !important;
   height: var(--fw-music-secondary-row-height) !important;
 }
 
@@ -344,8 +345,9 @@ main
   > .fw-toolbar-header-search-row {
   grid-column: 1 !important;
   grid-row: 1 !important;
+  justify-self: start !important;
   box-sizing: border-box !important;
-  width: auto !important;
+  width: min(520px, 100%) !important;
   min-width: 0 !important;
   height: 50px !important;
   overflow: hidden !important;
@@ -354,7 +356,7 @@ main
   background: var(--filmwave-neutral-surface) !important;
   background-color: var(--filmwave-neutral-surface) !important;
   box-shadow: none !important;
-  margin: 0 272px 0 0 !important;
+  margin: 0 !important;
   padding: 0 !important;
 }
 
@@ -529,7 +531,7 @@ main
     > .fw-toolbar-sticky:not(.is-scroll-revealed)
     > .fw-toolbar-header-search-row {
     min-width: 0 !important;
-    margin-right: 12px !important;
+    margin-right: 0 !important;
     padding-right: 0 !important;
   }
 
