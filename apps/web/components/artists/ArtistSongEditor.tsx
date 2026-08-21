@@ -90,6 +90,7 @@ type ArtistSongEditorProps = {
   onSaved: (song: { id: string; title: string }) => void;
   beforeContent?: ReactNode;
   songInfoExtra?: ReactNode;
+  afterSongInfoContent?: ReactNode;
   afterContent?: ReactNode;
 };
 
@@ -255,6 +256,7 @@ export default function ArtistSongEditor({
   onSaved,
   beforeContent,
   songInfoExtra,
+  afterSongInfoContent,
   afterContent,
 }: ArtistSongEditorProps) {
   const canEditMetadata = artist.permissions.includes("catalog:edit");
@@ -635,6 +637,8 @@ export default function ArtistSongEditor({
               </div>
             </div>
           </section>
+
+          {afterSongInfoContent}
 
           <ArtistSongTagSections
             genres={genres}
