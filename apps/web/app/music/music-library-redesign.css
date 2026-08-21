@@ -110,9 +110,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-icon {
-  width: 13px !important;
-  height: 13px !important;
-  flex: 0 0 13px !important;
+  width: 12px !important;
+  height: 12px !important;
+  flex: 0 0 12px !important;
   color: var(--text-secondary) !important;
 }
 
@@ -120,8 +120,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-icon svg {
-  width: 13px !important;
-  height: 13px !important;
+  width: 12px !important;
+  height: 12px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -199,7 +199,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   color: var(--text-secondary) !important;
   font-family: inherit !important;
   font-size: 12px !important;
-  font-weight: 500 !important;
+  font-weight: 400 !important;
   line-height: 1 !important;
   cursor: pointer !important;
   white-space: nowrap !important;
