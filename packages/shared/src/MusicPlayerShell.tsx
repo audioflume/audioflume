@@ -48,6 +48,7 @@ type MusicPlayerShellProps = {
   onSeek: (progress: number) => void;
   actions: ReactNode;
   cover?: ReactNode;
+  titleAddon?: ReactNode;
   subtitle?: ReactNode;
   waveformOverlay?: ReactNode;
   renderWaveformEndSlot?: (layout: MusicPlayerShellLayout) => ReactNode;
@@ -115,6 +116,7 @@ export default function MusicPlayerShell({
   onSeek,
   actions,
   cover,
+  titleAddon,
   subtitle,
   waveformOverlay,
   renderWaveformEndSlot,
@@ -223,7 +225,12 @@ export default function MusicPlayerShell({
 
         <div className="filmwave-player-song-copy">
           <div title={song.title} className="filmwave-player-title">
-            {song.title}
+            <span style={{ display: "flex", minWidth: 0, alignItems: "center", gap: 6 }}>
+              <span style={{ minWidth: 0, overflow: "hidden", textOverflow: "ellipsis" }}>
+                {song.title}
+              </span>
+              {titleAddon}
+            </span>
           </div>
           <div className="filmwave-player-artist" title={song.artist}>
             {subtitle ?? song.artist}
