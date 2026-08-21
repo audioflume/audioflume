@@ -631,6 +631,9 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               key={`${activeArtist.id}-music-${sectionViewVersion}`}
               artist={activeArtist}
               onUploaded={handleSongUploaded}
+              onNotificationCreated={() =>
+                setNotificationUnreadCount((current) => current + 1)
+              }
             />
           ) : activeSection === "releases" ? (
             <ArtistReleaseManager
