@@ -21,6 +21,8 @@ type ArtistSongSummary = {
   bpm?: number | null;
   key?: string | null;
   created_at: string;
+  revision_pending?: boolean;
+  live_status?: string;
   player_song?: Song;
 };
 
@@ -172,8 +174,28 @@ export default function ArtistMusicUploader({
     revisionPending = false,
   ) {
     const currentSongSummary = songs.find((song) => song.id === savedSong.id);
+
+    if (revisionPending) {
+      setSongs((current) =>
+        current.map((song) =>
+          song.id === savedSong.id
+            ? {
+                ...song,
+                title: savedSong.title,
+                status: "submitted",
+                revision_pending: true,
+              }
+            : song,
+        ),
+      );
+      setCatalogError("");
+      setCatalogMessage(
+        "Changes sent for approval. The current version will stay live until they are approved.",
+      );
+      return;
+    }
+
     const keepsLiveVersion =
-      revisionPending ||
       currentSongSummary?.status === "published" ||
       currentSongSummary?.status === "approved";
 
