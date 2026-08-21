@@ -3,7 +3,7 @@
 @import "./fw-hero.css";
 
 html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
-  --fw-music-search-band-height: 68px;
+  --fw-music-search-band-height: 56px;
   padding-top: var(--filmwave-header-height, 56px) !important;
 }
 
@@ -151,14 +151,14 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static {
-  gap: 14px !important;
+  gap: 12px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static.has-value {
-  gap: 14px !important;
+  gap: 12px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -166,9 +166,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-icon {
   display: inline-flex !important;
-  width: 20px !important;
-  height: 20px !important;
-  flex: 0 0 20px !important;
+  width: 16px !important;
+  height: 16px !important;
+  flex: 0 0 16px !important;
   align-items: center !important;
   justify-content: center !important;
   color: var(--text-muted) !important;
@@ -188,8 +188,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-toolbar-search-static-icon::before {
   content: "";
   display: block !important;
-  width: 20px !important;
-  height: 20px !important;
+  width: 16px !important;
+  height: 16px !important;
   background: currentColor !important;
   -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2038.31%2038.31'%3E%3Cpath%20d='M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z'%20fill='black'/%3E%3C/svg%3E") !important;
   mask-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%2038.31%2038.31'%3E%3Cpath%20d='M38.31,35.48l-11.75-11.74c1.89-2.49,3.03-5.58,3.03-8.94C29.6,6.64,22.96,0,14.8,0S0,6.64,0,14.8s6.64,14.8,14.8,14.8c3.36,0,6.45-1.14,8.94-3.03l11.75,11.74,2.83-2.83ZM14.8,25.6c-5.96,0-10.8-4.84-10.8-10.8S8.84,4,14.8,4s10.8,4.85,10.8,10.8-4.84,10.8-10.8,10.8Z'%20fill='black'/%3E%3C/svg%3E") !important;
@@ -210,7 +210,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-input::placeholder {
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: 20px !important;
+  font-size: 16px !important;
   font-style: normal !important;
   font-weight: 300 !important;
   letter-spacing: 0 !important;
