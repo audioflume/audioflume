@@ -187,12 +187,12 @@
   height: 52px;
   flex-basis: 52px;
   align-self: center;
-  transform: translateY(-21px);
+  transform: translateY(clamp(-21px, calc(-7.8077px - 1.34615vw), -17.5px));
 }
 
 .discover-artist-hero-listen:hover .discover-artist-play-badge,
 .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
-  transform: translateY(-21px) scale(1.03);
+  transform: translateY(clamp(-21px, calc(-7.8077px - 1.34615vw), -17.5px)) scale(1.03);
 }
 
 .discover-artist-hero-listen > span:last-child {
@@ -762,12 +762,6 @@
     width: 44px;
     height: 44px;
     flex-basis: 44px;
-    transform: none;
-  }
-
-  .discover-artist-hero-listen:hover .discover-artist-play-badge,
-  .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
-    transform: scale(1.03);
   }
 
   .discover-artist-hero-listen > span:last-child {
