@@ -1241,7 +1241,7 @@ export default function ArtistSongUploadForm({
           </section>
         </div>
 
-        <aside className="grid h-fit gap-4 xl:sticky xl:top-[24px] xl:mt-14">
+        <aside className="grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
           <section className="filmwave-backend-section">
             <div className="filmwave-backend-section-header">
               <h2 className="filmwave-backend-section-title">Checklist</h2>
