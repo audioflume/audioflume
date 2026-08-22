@@ -999,6 +999,7 @@ export default function MusicPage() {
               onKeyChange={setKeyValue}
               selectedDurations={selectedDurations}
               onDurationsChange={setSelectedDurations}
+              groupAdvancedControls
               markersActive={effectiveShowEditPointMarkers}
               markersDisabled={!filtersHydrated}
               onToggleMarkers={() =>
