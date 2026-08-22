@@ -45,8 +45,10 @@ import SearchIcon from "@/components/icons/SearchIcon";
 import "./music-library-redesign.css";
 
 const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
+const LYRICAL_VOCAL_FILTER_OPTION = "Lyrical";
 const VOCAL_FILTER_OPTIONS = [
   INSTRUMENTAL_VOCAL_FILTER_OPTION,
+  LYRICAL_VOCAL_FILTER_OPTION,
   ...VOCALS_OPTIONS,
 ];
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
@@ -183,6 +185,10 @@ function songIsInstrumental(song: unknown) {
   return getSongField(song, "instrumental") === true;
 }
 
+function songIsLyrical(song: unknown) {
+  return !songIsInstrumental(song);
+}
+
 export default function MusicPage() {
   const { userId, isLoaded } = useAuth();
   const musicFilterStorageKey = userId
@@ -307,6 +313,7 @@ export default function MusicPage() {
       ...(songs.some(songIsInstrumental)
         ? [INSTRUMENTAL_VOCAL_FILTER_OPTION]
         : []),
+      ...(songs.some(songIsLyrical) ? [LYRICAL_VOCAL_FILTER_OPTION] : []),
       ...vocals,
     ];
     const cuePoints = EDIT_POINT_FILTER_OPTIONS.filter((option) =>
@@ -331,17 +338,50 @@ export default function MusicPage() {
     ? [INSTRUMENTAL_VOCAL_FILTER_OPTION, ...selectedVocals]
     : selectedVocals;
 
-  const setSelectedVocalFilters = (values: string[]) => {
-    const hasInstrumental = values.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
+  function toggleVocalFilter(option: string) {
+    if (option === INSTRUMENTAL_VOCAL_FILTER_OPTION) {
+      setFilters((current) => {
+        const nextInstrumental = !current.instrumental;
+
+        return {
+          ...current,
+          instrumental: nextInstrumental,
+          selectedVocals: nextInstrumental
+            ? current.selectedVocals.filter(
+                (value) => value !== LYRICAL_VOCAL_FILTER_OPTION,
+              )
+            : current.selectedVocals,
+        };
+      });
+      return;
+    }
+
+    if (option === LYRICAL_VOCAL_FILTER_OPTION) {
+      setFilters((current) => {
+        const isSelected = current.selectedVocals.includes(
+          LYRICAL_VOCAL_FILTER_OPTION,
+        );
+
+        return {
+          ...current,
+          instrumental: false,
+          selectedVocals: isSelected
+            ? current.selectedVocals.filter(
+                (value) => value !== LYRICAL_VOCAL_FILTER_OPTION,
+              )
+            : [...current.selectedVocals, LYRICAL_VOCAL_FILTER_OPTION],
+        };
+      });
+      return;
+    }
 
     setFilters((current) => ({
       ...current,
-      instrumental: hasInstrumental,
-      selectedVocals: values.filter(
-        (value) => value !== INSTRUMENTAL_VOCAL_FILTER_OPTION,
-      ),
+      selectedVocals: current.selectedVocals.includes(option)
+        ? current.selectedVocals.filter((value) => value !== option)
+        : [...current.selectedVocals, option],
     }));
-  };
+  }
 
   function toggleIn(values: string[], setValues: (next: string[]) => void) {
     return (option: string) =>
@@ -650,6 +690,13 @@ export default function MusicPage() {
                 normalizeFilterValue(selectedArtist) === artist,
             );
           });
+    const lyrical = selectedVocals.includes(LYRICAL_VOCAL_FILTER_OPTION);
+    const selectedVocalCharacteristics = selectedVocals.filter(
+      (value) => value !== LYRICAL_VOCAL_FILTER_OPTION,
+    );
+    const vocalTypeSongs = lyrical
+      ? artistSongs.filter(songIsLyrical)
+      : artistSongs;
 
     const cleanSearch = search.trim();
     const semanticSongIds =
@@ -661,14 +708,14 @@ export default function MusicPage() {
       ? new Map(semanticSongIds.map((songId, index) => [songId, index]))
       : null;
 
-    const nextSongs = filterMusicLibrarySongs(artistSongs, {
+    const nextSongs = filterMusicLibrarySongs(vocalTypeSongs, {
       search: semanticOrder ? "" : search,
       selectedMoods,
       selectedGenres,
       selectedRegions,
       selectedInstruments,
       selectedBuilds,
-      selectedVocals,
+      selectedVocals: selectedVocalCharacteristics,
       selectedDurations,
       selectedEditPoints,
       instrumental,
@@ -835,7 +882,7 @@ export default function MusicPage() {
       label: "Vocals",
       options: availableFilterOptions.vocals,
       selected: selectedVocalFilters,
-      onToggle: toggleIn(selectedVocalFilters, setSelectedVocalFilters),
+      onToggle: toggleVocalFilter,
     },
     {
       id: "build",
