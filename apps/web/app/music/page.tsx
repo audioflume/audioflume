@@ -165,6 +165,20 @@ function filterOptionsWithSongs<T extends string>(
   );
 }
 
+function getArtistFilterOptions(songs: readonly unknown[]) {
+  const artists = new Map<string, string>();
+
+  songs.forEach((song) => {
+    const artist = String(getSongField(song, "artist") ?? "").trim();
+    if (!artist) return;
+
+    const normalizedArtist = normalizeFilterValue(artist);
+    if (!artists.has(normalizedArtist)) artists.set(normalizedArtist, artist);
+  });
+
+  return [...artists.values()].sort((a, b) => a.localeCompare(b));
+}
+
 function songIsInstrumental(song: unknown) {
   return getSongField(song, "instrumental") === true;
 }
@@ -222,6 +236,7 @@ export default function MusicPage() {
   const directFilterSearch = isDirectFilterSearch(search);
   const selectedMoods = filters.selectedMoods;
   const selectedGenres = filters.selectedGenres;
+  const selectedArtists = filters.selectedArtists;
   const selectedRegions = filters.selectedRegions;
   const selectedInstruments = filters.selectedInstruments;
   const selectedBuilds = filters.selectedBuilds;
@@ -243,6 +258,8 @@ export default function MusicPage() {
     setFilters((current) => ({ ...current, selectedMoods: values }));
   const setSelectedGenres = (values: string[]) =>
     setFilters((current) => ({ ...current, selectedGenres: values }));
+  const setSelectedArtists = (values: string[]) =>
+    setFilters((current) => ({ ...current, selectedArtists: values }));
   const setSelectedRegions = (values: string[]) =>
     setFilters((current) => ({ ...current, selectedRegions: values }));
   const setSelectedInstruments = (values: string[]) =>
@@ -273,6 +290,7 @@ export default function MusicPage() {
       "genres",
       "genre",
     ]);
+    const artists = getArtistFilterOptions(songs);
     const regions = filterOptionsWithSongs(REGION_OPTIONS, songs, [
       "regions",
       "region",
@@ -299,6 +317,7 @@ export default function MusicPage() {
     return {
       moods,
       genres,
+      artists,
       regions,
       instruments,
       builds,
@@ -346,6 +365,7 @@ export default function MusicPage() {
     search.trim().length > 0 ||
     selectedMoods.length > 0 ||
     selectedGenres.length > 0 ||
+    selectedArtists.length > 0 ||
     selectedRegions.length > 0 ||
     selectedInstruments.length > 0 ||
     selectedBuilds.length > 0 ||
@@ -360,6 +380,7 @@ export default function MusicPage() {
   const hasActiveClearableFilters =
     selectedMoods.length > 0 ||
     selectedGenres.length > 0 ||
+    selectedArtists.length > 0 ||
     selectedRegions.length > 0 ||
     selectedInstruments.length > 0 ||
     selectedBuilds.length > 0 ||
@@ -375,6 +396,7 @@ export default function MusicPage() {
   const activeFilterCount =
     selectedMoods.length +
     selectedGenres.length +
+    selectedArtists.length +
     selectedRegions.length +
     selectedInstruments.length +
     selectedVocalFilters.length +
@@ -403,6 +425,7 @@ export default function MusicPage() {
       ...current,
       selectedMoods: [],
       selectedGenres: [],
+      selectedArtists: [],
       selectedRegions: [],
       selectedInstruments: [],
       selectedBuilds: [],
@@ -524,6 +547,8 @@ export default function MusicPage() {
       const availableMoods = availableFilterOptions.moods as readonly string[];
       const availableGenres =
         availableFilterOptions.genres as readonly string[];
+      const availableArtists =
+        availableFilterOptions.artists as readonly string[];
       const availableRegions =
         availableFilterOptions.regions as readonly string[];
       const availableInstruments =
@@ -538,6 +563,9 @@ export default function MusicPage() {
       );
       const nextSelectedGenres = current.selectedGenres.filter((value) =>
         availableGenres.includes(value),
+      );
+      const nextSelectedArtists = current.selectedArtists.filter((value) =>
+        availableArtists.includes(value),
       );
       const nextSelectedRegions = current.selectedRegions.filter((value) =>
         availableRegions.includes(value),
@@ -561,6 +589,7 @@ export default function MusicPage() {
       const changed =
         nextSelectedMoods.length !== current.selectedMoods.length ||
         nextSelectedGenres.length !== current.selectedGenres.length ||
+        nextSelectedArtists.length !== current.selectedArtists.length ||
         nextSelectedRegions.length !== current.selectedRegions.length ||
         nextSelectedInstruments.length !== current.selectedInstruments.length ||
         nextSelectedBuilds.length !== current.selectedBuilds.length ||
@@ -574,6 +603,7 @@ export default function MusicPage() {
         ...current,
         selectedMoods: nextSelectedMoods,
         selectedGenres: nextSelectedGenres,
+        selectedArtists: nextSelectedArtists,
         selectedRegions: nextSelectedRegions,
         selectedInstruments: nextSelectedInstruments,
         selectedBuilds: nextSelectedBuilds,
@@ -610,6 +640,17 @@ export default function MusicPage() {
             return selectedLicenseFilters.includes(licenseType);
           });
 
+    const artistSongs =
+      selectedArtists.length === 0
+        ? licenseSongs
+        : licenseSongs.filter((song) => {
+            const artist = normalizeFilterValue(String(song.artist ?? ""));
+            return selectedArtists.some(
+              (selectedArtist) =>
+                normalizeFilterValue(selectedArtist) === artist,
+            );
+          });
+
     const cleanSearch = search.trim();
     const semanticSongIds =
       semanticSearchState?.status === "success" &&
@@ -620,7 +661,7 @@ export default function MusicPage() {
       ? new Map(semanticSongIds.map((songId, index) => [songId, index]))
       : null;
 
-    const nextSongs = filterMusicLibrarySongs(licenseSongs, {
+    const nextSongs = filterMusicLibrarySongs(artistSongs, {
       search: semanticOrder ? "" : search,
       selectedMoods,
       selectedGenres,
@@ -659,6 +700,7 @@ export default function MusicPage() {
     instrumental,
     keyValue,
     search,
+    selectedArtists,
     selectedBuilds,
     selectedDurations,
     selectedEditPoints,
@@ -768,6 +810,13 @@ export default function MusicPage() {
       onToggle: toggleIn(selectedGenres, setSelectedGenres),
     },
     {
+      id: "artist",
+      label: "Artist",
+      options: availableFilterOptions.artists,
+      selected: selectedArtists,
+      onToggle: toggleIn(selectedArtists, setSelectedArtists),
+    },
+    {
       id: "region",
       label: "Region",
       options: availableFilterOptions.regions,
@@ -862,6 +911,7 @@ export default function MusicPage() {
                 <FilterTags
                   selectedMoods={selectedMoods}
                   selectedGenres={selectedGenres}
+                  selectedArtists={selectedArtists}
                   selectedRegions={selectedRegions}
                   selectedInstruments={selectedInstruments}
                   selectedBuilds={selectedBuilds}
@@ -878,6 +928,11 @@ export default function MusicPage() {
                   onRemoveGenre={(v) =>
                     setSelectedGenres(
                       selectedGenres.filter((item) => item !== v),
+                    )
+                  }
+                  onRemoveArtist={(v) =>
+                    setSelectedArtists(
+                      selectedArtists.filter((item) => item !== v),
                     )
                   }
                   onRemoveRegion={(v) =>
