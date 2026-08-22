@@ -1,7 +1,5 @@
 "use client";
 
-import { usePlayer } from "@/context/PlayerContext";
-
 type VolumeIconProps = {
   className?: string;
   size?: number;
@@ -13,12 +11,9 @@ export default function VolumeIcon({
   size = 17,
   muted = false,
 }: VolumeIconProps) {
-  const { volume } = usePlayer();
   const strokeColor = "var(--filmwave-player-action-icon-color, currentColor)";
   const strokeWidth = 2;
-  const strokeStyle = { strokeWidth };
-  const isMuted = muted || volume === 0;
-  const showOuterWave = volume >= 0.5;
+  const strokeStyle = { strokeWidth, fill: "none" };
 
   return (
     <svg
@@ -33,6 +28,7 @@ export default function VolumeIcon({
     >
       <path
         d="M4 9H7.25L12.5 5V19L7.25 15H4V9Z"
+        fill="none"
         stroke={strokeColor}
         strokeWidth={strokeWidth}
         strokeLinecap="round"
@@ -41,10 +37,11 @@ export default function VolumeIcon({
         style={strokeStyle}
       />
 
-      {isMuted ? (
+      {muted ? (
         <>
           <path
             d="M16 9L21 15"
+            fill="none"
             stroke={strokeColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -53,6 +50,7 @@ export default function VolumeIcon({
           />
           <path
             d="M21 9L16 15"
+            fill="none"
             stroke={strokeColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
@@ -64,22 +62,22 @@ export default function VolumeIcon({
         <>
           <path
             d="M15.75 9C17.4 10.65 17.4 13.35 15.75 15"
+            fill="none"
             stroke={strokeColor}
             strokeWidth={strokeWidth}
             strokeLinecap="round"
             vectorEffect="non-scaling-stroke"
             style={strokeStyle}
           />
-          {showOuterWave ? (
-            <path
-              d="M18.5 6.5C21.5 9.5 21.5 14.5 18.5 17.5"
-              stroke={strokeColor}
-              strokeWidth={strokeWidth}
-              strokeLinecap="round"
-              vectorEffect="non-scaling-stroke"
-              style={strokeStyle}
-            />
-          ) : null}
+          <path
+            d="M18.5 6.5C21.5 9.5 21.5 14.5 18.5 17.5"
+            fill="none"
+            stroke={strokeColor}
+            strokeWidth={strokeWidth}
+            strokeLinecap="round"
+            vectorEffect="non-scaling-stroke"
+            style={strokeStyle}
+          />
         </>
       )}
     </svg>
