@@ -35,7 +35,7 @@
     ),
     var(
         --discover-artist-hero-image,
-        url("https://images.filmwave.io/images/discover/Isaac_Haines.jpg")
+        linear-gradient(#171717, #171717)
       )
       var(--discover-artist-hero-position, center 42%) / cover no-repeat;
   background-color: #171717;
