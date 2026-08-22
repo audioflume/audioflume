@@ -88,11 +88,11 @@
   max-width: 100%;
   padding-right: clamp(60px, 4.5vw, 90px);
   padding-left: clamp(60px, 4.5vw, 90px);
-  grid-template-columns: minmax(0, 640px) minmax(0, 560px);
+  grid-template-columns: fit-content(640px) minmax(0, 560px);
   grid-template-rows: auto auto auto;
   align-self: center;
   align-items: start;
-  justify-content: space-between;
+  justify-content: center;
   justify-self: center;
   column-gap: clamp(48px, 4.5vw, 76px);
   row-gap: 0;

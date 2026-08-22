@@ -161,17 +161,31 @@ main
   align-items: center !important;
   justify-content: center !important;
   border-radius: 999px !important;
-  background: color-mix(
-    in srgb,
-    var(--filmwave-neutral-surface) 92%,
-    var(--text-primary) 8%
-  ) !important;
-  color: color-mix(in srgb, var(--text-primary) 62%, transparent) !important;
+  background: var(--filmwave-neutral-surface) !important;
+  color: color-mix(in srgb, var(--filmwave-black) 62%, transparent) !important;
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
   font-size: 18px !important;
   line-height: 1 !important;
   transform: translateY(-50%) !important;
   pointer-events: none !important;
+}
+
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static:hover::after,
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static:focus-within::after {
+  background: color-mix(
+    in srgb,
+    var(--filmwave-neutral-surface) 92%,
+    var(--filmwave-black) 8%
+  ) !important;
+  color: var(--filmwave-black) !important;
 }
 
 main
