@@ -186,7 +186,7 @@ main
   align-self: center !important;
   justify-self: end !important;
   align-items: center !important;
-  gap: 8px !important;
+  gap: 6px !important;
   margin-right: 20px !important;
   pointer-events: auto !important;
 }
@@ -217,6 +217,14 @@ main
     background 150ms ease,
     border-color 150ms ease,
     color 150ms ease !important;
+}
+
+.fw-toolbar-header-actions .fw-music-header-shuffle {
+  width: 35px !important;
+  min-width: 35px !important;
+  flex: 0 0 35px !important;
+  gap: 0 !important;
+  padding: 0 !important;
 }
 
 .fw-toolbar-header-actions .fw-music-header-shuffle .fw-music-header-action-label {
@@ -309,6 +317,7 @@ main
   right: 20px !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 1) !important;
   height: 42px !important;
+  gap: 6px !important;
   margin-right: 0 !important;
 }
 
@@ -340,11 +349,10 @@ main
     > .fw-music-content-column
     > .fw-toolbar-sticky:not(.is-scroll-revealed)
     > .fw-toolbar-header-actions {
-    gap: 8px !important;
+    gap: 6px !important;
     margin-right: 12px !important;
   }
 
-  .fw-toolbar-header-actions .fw-music-header-action,
   .fw-toolbar-header-actions .filmwave-music-sort-button {
     width: 42px !important;
     min-width: 42px !important;
