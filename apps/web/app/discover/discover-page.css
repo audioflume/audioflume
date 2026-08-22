@@ -108,7 +108,8 @@
   min-width: 0;
   grid-column: 2;
   grid-row: 2;
-  align-self: last baseline;
+  align-self: center;
+  transform: translateY(clamp(12px, 0.8vw, 16px));
 }
 
 .discover-artist-hero-eyebrow {
@@ -783,6 +784,7 @@
     grid-column: auto;
     grid-row: auto;
     align-self: auto;
+    transform: none;
   }
 
   .discover-artist-hero-eyebrow {
