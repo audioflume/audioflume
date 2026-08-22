@@ -67,7 +67,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   background: var(--filmwave-white) !important;
   background-color: var(--filmwave-white) !important;
   box-shadow: none !important;
-  padding: 0 14px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
