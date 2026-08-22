@@ -139,7 +139,7 @@ export default function MusicFilterToolbarBehavior() {
             .querySelector<HTMLElement>(".filmwave-web-header")
             ?.getBoundingClientRect().bottom ??
           Math.max(0, Math.min(searchRect.top, actionsRect.top) - 18);
-        const backdropBottom = Math.max(searchRect.bottom, actionsRect.bottom) + 10;
+        const backdropBottom = Math.max(searchRect.bottom, actionsRect.bottom) + 15;
         const backdropLeft = Math.min(searchRect.left, actionsRect.left);
         const backdrop = getSearchRevealBackdrop();
 
