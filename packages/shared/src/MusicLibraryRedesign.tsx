@@ -715,6 +715,108 @@ function MusicKeySection({
 }
 
 /* ------------------------------------------------------------------ */
+/* Advanced section                                                    */
+/* ------------------------------------------------------------------ */
+
+type MusicAdvancedSectionId = "duration" | "bpm" | "key";
+
+function MusicAdvancedSection({
+  bpmValue,
+  onBpmChange,
+  keyValue,
+  onKeyChange,
+  selectedDurations,
+  onDurationsChange,
+}: {
+  bpmValue: FilmwaveBpmFilterValue | null;
+  onBpmChange?: (value: FilmwaveBpmFilterValue | null) => void;
+  keyValue: FilmwaveKeyFilterValue | null;
+  onKeyChange?: (value: FilmwaveKeyFilterValue | null) => void;
+  selectedDurations: string[];
+  onDurationsChange?: (selected: string[]) => void;
+}) {
+  const availableSectionIds: MusicAdvancedSectionId[] = [];
+  if (onDurationsChange) availableSectionIds.push("duration");
+  if (onBpmChange) availableSectionIds.push("bpm");
+  if (onKeyChange) availableSectionIds.push("key");
+
+  const [openSectionId, setOpenSectionId] =
+    useState<MusicAdvancedSectionId | null>(() => {
+      if (onDurationsChange && selectedDurations.length > 0) return "duration";
+      if (onBpmChange && bpmValue) return "bpm";
+      if (onKeyChange && keyValue) return "key";
+      if (onDurationsChange) return "duration";
+      if (onBpmChange) return "bpm";
+      if (onKeyChange) return "key";
+      return null;
+    });
+
+  function renderSection(sectionId: MusicAdvancedSectionId) {
+    if (sectionId === "duration" && onDurationsChange) {
+      return (
+        <MusicDurationSection
+          selected={selectedDurations}
+          onChange={onDurationsChange}
+        />
+      );
+    }
+
+    if (sectionId === "bpm" && onBpmChange) {
+      return <MusicBpmSection value={bpmValue} onChange={onBpmChange} />;
+    }
+
+    if (sectionId === "key" && onKeyChange) {
+      return <MusicKeySection value={keyValue} onChange={onKeyChange} />;
+    }
+
+    return null;
+  }
+
+  return (
+    <div className="fw-filter-advanced-accordion">
+      {availableSectionIds.map((sectionId) => {
+        const isOpen = openSectionId === sectionId;
+        const label =
+          sectionId === "duration"
+            ? "Duration"
+            : sectionId === "bpm"
+              ? "BPM"
+              : "Key";
+
+        return (
+          <div key={sectionId} className="fw-filter-advanced-section">
+            <button
+              type="button"
+              className={`fw-filter-advanced-trigger${isOpen ? " is-open" : ""}`}
+              aria-expanded={isOpen}
+              onClick={() =>
+                setOpenSectionId((current) =>
+                  current === sectionId ? null : sectionId,
+                )
+              }
+            >
+              <span className="fw-filter-advanced-trigger-label">{label}</span>
+              <span
+                className="fw-filter-advanced-trigger-chevron"
+                aria-hidden="true"
+              >
+                <ChevronDownIcon />
+              </span>
+            </button>
+
+            {isOpen && (
+              <div className="fw-filter-advanced-panel">
+                {renderSection(sectionId)}
+              </div>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+/* ------------------------------------------------------------------ */
 /* Playlist section                                                    */
 /* ------------------------------------------------------------------ */
 
@@ -766,6 +868,7 @@ type MusicFilterPanelProps = {
   onKeyChange?: (value: FilmwaveKeyFilterValue | null) => void;
   selectedDurations?: string[];
   onDurationsChange?: (selected: string[]) => void;
+  groupAdvancedControls?: boolean;
   markersActive?: boolean;
   markersDisabled?: boolean;
   onToggleMarkers?: () => void;
@@ -787,6 +890,7 @@ export function MusicFilterPanel({
   onKeyChange,
   selectedDurations = [],
   onDurationsChange,
+  groupAdvancedControls = false,
   markersActive = false,
   markersDisabled = false,
   onToggleMarkers,
@@ -794,12 +898,23 @@ export function MusicFilterPanel({
   onClearAll,
   onClose,
 }: MusicFilterPanelProps) {
+  const advancedFilterCount =
+    (selectedDurations.length > 0 ? 1 : 0) +
+    (bpmValue ? 1 : 0) +
+    (keyValue ? 1 : 0);
+  const hasAdvancedControls = Boolean(
+    onDurationsChange || onBpmChange || onKeyChange,
+  );
   const sections: Array<{ id: string; label: string; count: number }> = [
     ...groups.map((g) => ({ id: g.id, label: g.label, count: g.selected.length })),
     ...(onSelectPlaylist ? [{ id: "playlist", label: "Playlist", count: selectedPlaylistId ? 1 : 0 }] : []),
-    ...(onDurationsChange ? [{ id: "duration", label: "Duration", count: selectedDurations.length > 0 ? 1 : 0 }] : []),
-    ...(onBpmChange ? [{ id: "bpm", label: "BPM", count: bpmValue ? 1 : 0 }] : []),
-    ...(onKeyChange ? [{ id: "key", label: "Key", count: keyValue ? 1 : 0 }] : []),
+    ...(groupAdvancedControls && hasAdvancedControls
+      ? [{ id: "advanced", label: "Advanced", count: advancedFilterCount }]
+      : [
+          ...(onDurationsChange ? [{ id: "duration", label: "Duration", count: selectedDurations.length > 0 ? 1 : 0 }] : []),
+          ...(onBpmChange ? [{ id: "bpm", label: "BPM", count: bpmValue ? 1 : 0 }] : []),
+          ...(onKeyChange ? [{ id: "key", label: "Key", count: keyValue ? 1 : 0 }] : []),
+        ]),
     ...(onToggleMarkers ? [{ id: "display", label: "Display", count: markersActive ? 1 : 0 }] : []),
   ];
 
@@ -826,6 +941,17 @@ export function MusicFilterPanel({
     if (activeSectionId === "playlist" && onSelectPlaylist)
       return <MusicPlaylistSection playlists={playlists ?? []} loading={playlistsLoading}
         selectedPlaylistId={selectedPlaylistId} onSelect={onSelectPlaylist} />;
+    if (activeSectionId === "advanced" && groupAdvancedControls)
+      return (
+        <MusicAdvancedSection
+          bpmValue={bpmValue}
+          onBpmChange={onBpmChange}
+          keyValue={keyValue}
+          onKeyChange={onKeyChange}
+          selectedDurations={selectedDurations}
+          onDurationsChange={onDurationsChange}
+        />
+      );
     if (activeSectionId === "duration" && onDurationsChange)
       return <MusicDurationSection selected={selectedDurations} onChange={onDurationsChange} />;
     if (activeSectionId === "bpm" && onBpmChange)
@@ -858,6 +984,7 @@ export function MusicFilterPanel({
                 const isActive = section.id === activeSectionId;
                 return (
                   <button key={section.id} type="button"
+                    data-filter-section-id={section.id === "advanced" ? "advanced" : undefined}
                     className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
                     aria-current={isActive}
                     onClick={() => setActiveSectionId(section.id)}>
