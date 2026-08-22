@@ -1,7 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import {
+  type PointerEvent as ReactPointerEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -75,6 +80,13 @@ type HeroPosition = {
 type HeroPositionResponse = {
   position?: HeroPosition;
   error?: string;
+};
+
+type HeroDragState = {
+  pointerId: number;
+  startClientX: number;
+  startClientY: number;
+  startPosition: HeroPosition;
 };
 
 function getArtistDashboardHref(section: string, artistId: string) {
@@ -156,6 +168,10 @@ function notificationColor(kind: string) {
   return "color-mix(in srgb, var(--text-primary) 14%, transparent)";
 }
 
+function clampPercent(value: number) {
+  return Math.min(100, Math.max(0, value));
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, { cache: "no-store" });
   const body = (await response.json().catch(() => null)) as (T & { error?: string }) | null;
@@ -196,6 +212,8 @@ export default function ArtistOverview({
 }) {
   const showEarnings = artist.role === "owner" || artist.role === "manager";
   const canAdjustHero = artist.permissions.includes("artist:edit_profile");
+  const heroImageRef = useRef<HTMLImageElement>(null);
+  const heroDragRef = useRef<HeroDragState | null>(null);
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
   const [analytics, setAnalytics] = useState<ArtistAnalyticsResponse | null>(null);
   const [earnings, setEarnings] = useState<EarningsResponse | null>(null);
@@ -203,6 +221,7 @@ export default function ArtistOverview({
   const [heroPosition, setHeroPosition] = useState<HeroPosition>({ x: 50, y: 50 });
   const [cropDraft, setCropDraft] = useState<HeroPosition>({ x: 50, y: 50 });
   const [cropEditing, setCropEditing] = useState(false);
+  const [cropDragging, setCropDragging] = useState(false);
   const [cropSaving, setCropSaving] = useState(false);
   const [cropError, setCropError] = useState("");
   const [loading, setLoading] = useState(true);
@@ -288,9 +307,11 @@ export default function ArtistOverview({
   useEffect(() => {
     let cancelled = false;
 
+    heroDragRef.current = null;
     setHeroPosition({ x: 50, y: 50 });
     setCropDraft({ x: 50, y: 50 });
     setCropEditing(false);
+    setCropDragging(false);
     setCropError("");
 
     void fetchJson<HeroPositionResponse>(`/api/artists/${artist.id}/hero-position`)
@@ -308,7 +329,7 @@ export default function ArtistOverview({
     };
   }, [artist.id]);
 
-  async function saveCropPosition() {
+  async function saveCropPosition(position: HeroPosition) {
     if (!canAdjustHero || cropSaving) return;
 
     setCropSaving(true);
@@ -318,7 +339,7 @@ export default function ArtistOverview({
       const response = await fetch(`/api/artists/${artist.id}/hero-position`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cropDraft),
+        body: JSON.stringify(position),
       });
       const payload = (await response.json().catch(() => null)) as
         | HeroPositionResponse
@@ -340,6 +361,83 @@ export default function ArtistOverview({
     } finally {
       setCropSaving(false);
     }
+  }
+
+  function handleCropToggle() {
+    if (!canAdjustHero || cropSaving) return;
+
+    if (cropEditing) {
+      void saveCropPosition(cropDraft);
+      return;
+    }
+
+    setCropDraft(heroPosition);
+    setCropEditing(true);
+    setCropError("");
+  }
+
+  function handleCropPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    if (!cropEditing || cropSaving) return;
+
+    heroDragRef.current = {
+      pointerId: event.pointerId,
+      startClientX: event.clientX,
+      startClientY: event.clientY,
+      startPosition: cropDraft,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setCropDragging(true);
+    event.preventDefault();
+  }
+
+  function handleCropPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = heroDragRef.current;
+    const image = heroImageRef.current;
+    if (!cropEditing || !drag || drag.pointerId !== event.pointerId || !image) {
+      return;
+    }
+
+    const width = event.currentTarget.clientWidth;
+    const height = event.currentTarget.clientHeight;
+    if (
+      width <= 0 ||
+      height <= 0 ||
+      image.naturalWidth <= 0 ||
+      image.naturalHeight <= 0
+    ) {
+      return;
+    }
+
+    const scale = Math.max(
+      width / image.naturalWidth,
+      height / image.naturalHeight,
+    );
+    const overflowX = Math.max(0, image.naturalWidth * scale - width);
+    const overflowY = Math.max(0, image.naturalHeight * scale - height);
+    const deltaX = event.clientX - drag.startClientX;
+    const deltaY = event.clientY - drag.startClientY;
+
+    setCropDraft({
+      x:
+        overflowX > 0.5
+          ? clampPercent(drag.startPosition.x - (deltaX / overflowX) * 100)
+          : drag.startPosition.x,
+      y:
+        overflowY > 0.5
+          ? clampPercent(drag.startPosition.y - (deltaY / overflowY) * 100)
+          : drag.startPosition.y,
+    });
+  }
+
+  function finishCropDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = heroDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    heroDragRef.current = null;
+    setCropDragging(false);
   }
 
   async function handleNotificationView(notification: ArtistNotification) {
@@ -403,16 +501,85 @@ export default function ArtistOverview({
 
       {artist.hero_image_url ? (
         <section className="filmwave-backend-section overflow-hidden">
-          <div className="h-[240px] bg-[var(--bg-tertiary)] md:h-[320px]">
+          <div className="relative h-[240px] select-none overflow-hidden bg-[var(--bg-tertiary)] md:h-[320px]">
             <img
+              ref={heroImageRef}
               src={artist.hero_image_url}
               alt={`${artist.name} hero`}
-              className="h-full w-full object-cover"
+              draggable={false}
+              className="pointer-events-none h-full w-full object-cover"
               style={{
                 objectPosition: `${displayedHeroPosition.x}% ${displayedHeroPosition.y}%`,
               }}
             />
+
+            {cropEditing ? (
+              <div
+                className={`absolute inset-0 z-[1] ${
+                  cropDragging ? "cursor-grabbing" : "cursor-grab"
+                }`}
+                style={{ touchAction: "none" }}
+                onPointerDown={handleCropPointerDown}
+                onPointerMove={handleCropPointerMove}
+                onPointerUp={finishCropDrag}
+                onPointerCancel={finishCropDrag}
+              />
+            ) : null}
+
+            {canAdjustHero ? (
+              <button
+                type="button"
+                onClick={handleCropToggle}
+                disabled={cropSaving}
+                aria-label={cropEditing ? "Save crop" : "Adjust crop"}
+                title={cropEditing ? "Save crop" : "Adjust crop"}
+                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-[7px] border border-white/25 bg-black/55 text-white transition-colors hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-60"
+              >
+                {cropEditing ? (
+                  <svg
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      d="M3.25 8.2 6.45 11.25 12.75 4.75"
+                      stroke="currentColor"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                ) : (
+                  <svg
+                    viewBox="0 0 16 16"
+                    fill="none"
+                    aria-hidden="true"
+                    className="h-4 w-4"
+                  >
+                    <path
+                      d="M5 2H2v3M11 2h3v3M14 11v3h-3M5 14H2v-3"
+                      stroke="currentColor"
+                      strokeWidth="1.35"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                    />
+                  </svg>
+                )}
+              </button>
+            ) : null}
+
+            {cropEditing ? (
+              <div className="pointer-events-none absolute bottom-3 left-1/2 z-[2] -translate-x-1/2 rounded-[5px] bg-black/55 px-3 py-2 text-[10px] text-white">
+                {cropSaving
+                  ? "Saving..."
+                  : cropDragging
+                    ? "Repositioning..."
+                    : "Drag to reposition"}
+              </div>
+            ) : null}
           </div>
+
           <div className="flex items-center justify-between gap-5 px-5 py-4">
             <div className="min-w-0">
               <div className="truncate font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
@@ -424,99 +591,17 @@ export default function ArtistOverview({
                 </div>
               ) : null}
             </div>
-            <div className="flex shrink-0 items-center gap-2">
-              {canAdjustHero ? (
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCropDraft(heroPosition);
-                    setCropEditing((current) => !current);
-                    setCropError("");
-                  }}
-                  className="filmwave-backend-button"
-                >
-                  {cropEditing ? "Close crop" : "Adjust crop"}
-                </button>
-              ) : null}
-              <Link
-                href={getArtistDashboardHref("my-page", artist.id)}
-                className="filmwave-backend-button"
-              >
-                View my page
-              </Link>
-            </div>
+            <Link
+              href={getArtistDashboardHref("my-page", artist.id)}
+              className="filmwave-backend-button shrink-0"
+            >
+              View my page
+            </Link>
           </div>
 
-          {cropEditing ? (
-            <div className="grid gap-4 border-t border-[var(--border-subtle)] px-5 py-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end">
-              <label className="block">
-                <div className="flex items-center justify-between gap-3 text-[10px] text-[var(--text-secondary)]">
-                  <span>Horizontal position</span>
-                  <span>{cropDraft.x}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={cropDraft.x}
-                  onChange={(event) =>
-                    setCropDraft((current) => ({
-                      ...current,
-                      x: Number(event.target.value),
-                    }))
-                  }
-                  className="mt-2 w-full"
-                />
-              </label>
-
-              <label className="block">
-                <div className="flex items-center justify-between gap-3 text-[10px] text-[var(--text-secondary)]">
-                  <span>Vertical position</span>
-                  <span>{cropDraft.y}%</span>
-                </div>
-                <input
-                  type="range"
-                  min="0"
-                  max="100"
-                  value={cropDraft.y}
-                  onChange={(event) =>
-                    setCropDraft((current) => ({
-                      ...current,
-                      y: Number(event.target.value),
-                    }))
-                  }
-                  className="mt-2 w-full"
-                />
-              </label>
-
-              <div className="flex items-center justify-end gap-2">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setCropDraft(heroPosition);
-                    setCropEditing(false);
-                    setCropError("");
-                  }}
-                  disabled={cropSaving}
-                  className="filmwave-backend-button"
-                >
-                  Cancel
-                </button>
-                <button
-                  type="button"
-                  onClick={() => void saveCropPosition()}
-                  disabled={cropSaving}
-                  className="filmwave-backend-button filmwave-backend-button-primary"
-                >
-                  {cropSaving ? "Saving..." : "Save crop"}
-                </button>
-              </div>
-
-              {cropError ? (
-                <div className="text-[10px] text-[var(--status-error)] md:col-span-3">
-                  {cropError}
-                </div>
-              ) : null}
+          {cropError ? (
+            <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--status-error)]">
+              {cropError}
             </div>
           ) : null}
         </section>
