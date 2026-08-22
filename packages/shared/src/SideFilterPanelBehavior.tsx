@@ -435,6 +435,11 @@ function clearOpenRailSection(panel: HTMLElement, sectionId: string) {
 }
 
 function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: string) {
+  if (sectionId === "advanced") {
+    dispatchSideFilterSectionClear(sectionId);
+    return;
+  }
+
   const railItemKey = getRailItemKey(railItem, panel);
   const isCurrentOpenSection =
     panel.classList.contains("has-selected-filter-section") &&
