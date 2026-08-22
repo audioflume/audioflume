@@ -9,7 +9,7 @@
   box-sizing: border-box !important;
   display: flex !important;
   width: var(--fw-header-search-row-width, 100%) !important;
-  height: 42px !important;
+  height: var(--fw-header-search-row-height, 42px) !important;
   min-width: var(--fw-header-search-row-min-width, 0) !important;
   flex: var(--fw-header-search-row-flex, 0 1 auto) !important;
   align-items: center !important;
