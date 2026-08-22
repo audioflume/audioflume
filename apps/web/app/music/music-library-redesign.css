@@ -235,7 +235,7 @@ main
   > .fw-music-content-column
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-input::placeholder {
-  color: color-mix(in srgb, var(--text-primary) 55%, transparent) !important;
+  color: color-mix(in srgb, var(--text-primary) 40%, transparent) !important;
   opacity: 1 !important;
 }
 
