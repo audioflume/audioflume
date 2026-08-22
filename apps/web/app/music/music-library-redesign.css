@@ -142,8 +142,77 @@ main
   > .fw-toolbar-sticky
   .fw-toolbar-search-static {
   position: relative !important;
-  gap: 12px !important;
-  padding: 0 24px !important;
+  gap: 0 !important;
+  padding: 0 46px 0 24px !important;
+}
+
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static::after {
+  content: "→";
+  position: absolute !important;
+  top: 50% !important;
+  right: 10px !important;
+  display: inline-flex !important;
+  width: 30px !important;
+  height: 30px !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 999px !important;
+  background: var(--filmwave-neutral-surface) !important;
+  color: color-mix(in srgb, var(--filmwave-black) 62%, transparent) !important;
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
+  font-size: 18px !important;
+  line-height: 1 !important;
+  transform: translateY(-50%) !important;
+  pointer-events: none !important;
+}
+
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-icon {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+  flex: 0 0 0 !important;
+  opacity: 0 !important;
+}
+
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-icon
+  svg {
+  width: 12px !important;
+  height: 12px !important;
+}
+
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-icon
+  svg
+  path {
+  stroke: currentColor !important;
+  stroke-width: 30px !important;
+  stroke-linejoin: round !important;
+}
+
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-clear {
+  position: absolute !important;
+  right: 46px !important;
+  z-index: 1 !important;
+  color: color-mix(in srgb, var(--text-primary) 55%, transparent) !important;
 }
 
 main
@@ -157,8 +226,8 @@ main
   > .fw-toolbar-sticky
   .fw-toolbar-search-static-input::placeholder {
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
-  font-size: clamp(16px, 1.05vw, 19px) !important;
-  font-weight: 300 !important;
+  font-size: clamp(14px, 0.9vw, 17px) !important;
+  font-weight: 400 !important;
 }
 
 main
