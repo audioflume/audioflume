@@ -858,7 +858,7 @@ export default function MusicPage() {
     },
     {
       id: "artist",
-      label: "Artist",
+      label: "Artists",
       options: availableFilterOptions.artists,
       selected: selectedArtists,
       onToggle: toggleIn(selectedArtists, setSelectedArtists),
@@ -1047,6 +1047,7 @@ export default function MusicPage() {
               selectedDurations={selectedDurations}
               onDurationsChange={setSelectedDurations}
               groupAdvancedControls
+              advancedGroupIds={["build", "region"]}
               markersActive={effectiveShowEditPointMarkers}
               markersDisabled={!filtersHydrated}
               onToggleMarkers={() =>
