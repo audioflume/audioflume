@@ -33,8 +33,12 @@
       rgba(0, 0, 0, 0.06) 64%,
       transparent 80%
     ),
-    url("https://images.filmwave.io/images/discover/Isaac_Haines.jpg") center 42% /
-      cover no-repeat;
+    var(
+        --discover-artist-hero-image,
+        url("https://images.filmwave.io/images/discover/Isaac_Haines.jpg")
+      )
+      var(--discover-artist-hero-position, center 42%) / cover no-repeat;
+  background-color: #171717;
   color: #fff;
 }
 
@@ -153,11 +157,29 @@
   text-transform: uppercase;
 }
 
+.discover-artist-hero-actions a {
+  color: inherit;
+  text-decoration: none;
+}
+
 .discover-artist-hero-listen {
   display: inline-grid;
   grid-template-columns: 52px auto;
   align-items: center;
   column-gap: 18px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  line-height: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.discover-artist-hero-listen:disabled {
+  cursor: default;
 }
 
 .discover-artist-hero-listen .discover-artist-play-badge {
@@ -166,6 +188,11 @@
   flex-basis: 52px;
   align-self: center;
   transform: translateY(-21px);
+}
+
+.discover-artist-hero-listen:hover .discover-artist-play-badge,
+.discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
+  transform: translateY(-21px) scale(1.03);
 }
 
 .discover-artist-hero-listen > span:last-child {
@@ -209,19 +236,15 @@
   width: 178px;
 }
 
-.discover-artist-hero-slider-marks span,
-.discover-artist-hero-slider-marks::after {
+.discover-artist-hero-slider-marks span {
   display: block;
-  width: 54px;
+  min-width: 0;
   height: 1px;
+  flex: 1 1 0;
   background: rgba(255, 255, 255, 0.32);
 }
 
-.discover-artist-hero-slider-marks::after {
-  content: "";
-}
-
-.discover-artist-hero-slider-marks span:first-child {
+.discover-artist-hero-slider-marks span.is-active {
   height: 2px;
   background: #fff;
 }
@@ -351,6 +374,10 @@
   flex-basis: 52px;
 }
 
+.discover-artist-feature-overlay .discover-artist-play-badge:hover {
+  transform: scale(1.03);
+}
+
 .discover-artist-play-badge {
   display: inline-flex;
   width: 42px;
@@ -361,6 +388,8 @@
   border-radius: 999px;
   background: #fff;
   color: #111;
+  transition: transform 160ms ease;
+  transform-origin: center;
 }
 
 .discover-artist-shelf-section {
@@ -678,7 +707,7 @@
 
   .discover-artist-hero {
     min-height: 880px;
-    background-position: 54% 38%;
+    background-position: var(--discover-artist-hero-position, 54% 38%);
   }
 
   .discover-artist-hero-feature {
@@ -734,6 +763,11 @@
     height: 44px;
     flex-basis: 44px;
     transform: none;
+  }
+
+  .discover-artist-hero-listen:hover .discover-artist-play-badge,
+  .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
+    transform: scale(1.03);
   }
 
   .discover-artist-hero-listen > span:last-child {
