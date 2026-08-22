@@ -244,7 +244,8 @@ export default function PublicArtistPageView({
           text-transform: uppercase;
         }
 
-        .artist-public-intro {
+        .artist-public-intro,
+        .artist-public-intro-editor {
           position: absolute;
           bottom: 28px;
           left: 59%;
@@ -465,7 +466,8 @@ export default function PublicArtistPageView({
           flex: 0 0 auto;
         }
 
-        .artist-public-bio {
+        .artist-public-bio,
+        .artist-public-bio-editor {
           width: 100%;
           margin: 9px 0 0;
           color: var(--text-primary);
@@ -475,6 +477,33 @@ export default function PublicArtistPageView({
           letter-spacing: -0.008em;
           line-height: 1.5;
           pointer-events: auto;
+        }
+
+        .artist-public-bio-editor,
+        .artist-public-intro-editor {
+          position: absolute;
+        }
+
+        .artist-public-bio-editor {
+          position: relative;
+        }
+
+        .artist-public-character-count {
+          position: absolute;
+          right: 2px;
+          bottom: 2px;
+          z-index: 2;
+          color: var(--text-muted);
+          font-family: var(--font-roboto-mono-filmwave), monospace;
+          font-size: 9px;
+          font-weight: 300;
+          letter-spacing: 0;
+          line-height: 1;
+          pointer-events: none;
+        }
+
+        .artist-public-intro-editor .artist-public-character-count {
+          color: rgba(255, 255, 255, 0.72);
         }
 
         .artist-public-edit-control {
@@ -517,10 +546,14 @@ export default function PublicArtistPageView({
           color: #fff;
         }
 
-        textarea.artist-public-intro.artist-public-edit-control {
-          width: 32%;
+        textarea.artist-public-intro-input.artist-public-edit-control {
+          width: 100%;
           min-height: 2.7em;
-          color: #fff;
+          padding: 0 0 15px;
+          color: inherit;
+          font: inherit;
+          letter-spacing: inherit;
+          line-height: inherit;
         }
 
         input.artist-public-name.artist-public-edit-control {
@@ -534,9 +567,15 @@ export default function PublicArtistPageView({
           mix-blend-mode: normal;
         }
 
-        textarea.artist-public-bio.artist-public-edit-control {
+        textarea.artist-public-bio-input.artist-public-edit-control {
           width: 100%;
           min-height: 6.4em;
+          margin: 0;
+          padding: 0 0 15px;
+          color: inherit;
+          font: inherit;
+          letter-spacing: inherit;
+          line-height: inherit;
         }
 
         .artist-public-feature-edit-overlay {
@@ -752,6 +791,7 @@ export default function PublicArtistPageView({
 
           .artist-public-type,
           .artist-public-intro,
+          .artist-public-intro-editor,
           .artist-public-name,
           .artist-public-feature-media,
           .artist-public-profile-meta {
@@ -768,11 +808,16 @@ export default function PublicArtistPageView({
             color: var(--text-primary);
           }
 
-          .artist-public-intro {
+          .artist-public-intro,
+          .artist-public-intro-editor {
             order: 7;
             width: 100%;
             max-width: 720px;
             color: var(--text-primary);
+          }
+
+          .artist-public-intro-editor .artist-public-character-count {
+            color: var(--text-muted);
           }
 
           .artist-public-name {
@@ -790,7 +835,7 @@ export default function PublicArtistPageView({
           }
 
           input.artist-public-type.artist-public-edit-control,
-          textarea.artist-public-intro.artist-public-edit-control {
+          textarea.artist-public-intro-input.artist-public-edit-control {
             width: 100%;
             min-width: 0;
             color: var(--text-primary);
@@ -834,7 +879,8 @@ export default function PublicArtistPageView({
             width: 100%;
           }
 
-          .artist-public-bio {
+          .artist-public-bio,
+          .artist-public-bio-editor {
             width: 100%;
             margin-top: 9px;
           }
@@ -846,7 +892,7 @@ export default function PublicArtistPageView({
             margin-top: -10px;
           }
 
-          textarea.artist-public-bio.artist-public-edit-control {
+          textarea.artist-public-bio-input.artist-public-edit-control {
             width: 100%;
           }
         }
@@ -905,17 +951,22 @@ export default function PublicArtistPageView({
               ) : null}
 
               {editMode ? (
-                <textarea
-                  aria-label="Intro text"
-                  className="artist-public-intro artist-public-edit-control"
-                  value={displayArtist.intro_text ?? ""}
-                  maxLength={114}
-                  rows={2}
-                  placeholder="Intro text"
-                  onChange={(event) =>
-                    updateField("intro_text", event.target.value)
-                  }
-                />
+                <div className="artist-public-intro-editor">
+                  <textarea
+                    aria-label="Intro text"
+                    className="artist-public-intro-input artist-public-edit-control"
+                    value={displayArtist.intro_text ?? ""}
+                    maxLength={114}
+                    rows={2}
+                    placeholder="Intro text"
+                    onChange={(event) =>
+                      updateField("intro_text", event.target.value)
+                    }
+                  />
+                  <span className="artist-public-character-count" aria-hidden="true">
+                    {(displayArtist.intro_text ?? "").length} / 114
+                  </span>
+                </div>
               ) : displayArtist.intro_text ? (
                 <p className="artist-public-intro">{displayArtist.intro_text}</p>
               ) : null}
@@ -992,15 +1043,22 @@ export default function PublicArtistPageView({
                     </div>
 
                     {editMode ? (
-                      <textarea
-                        aria-label="Artist bio"
-                        className="artist-public-bio artist-public-edit-control"
-                        value={displayArtist.bio ?? ""}
-                        maxLength={383}
-                        rows={5}
-                        placeholder="Artist bio"
-                        onChange={(event) => updateField("bio", event.target.value)}
-                      />
+                      <div className="artist-public-bio-editor">
+                        <textarea
+                          aria-label="Artist bio"
+                          className="artist-public-bio-input artist-public-edit-control"
+                          value={displayArtist.bio ?? ""}
+                          maxLength={383}
+                          rows={5}
+                          placeholder="Artist bio"
+                          onChange={(event) =>
+                            updateField("bio", event.target.value)
+                          }
+                        />
+                        <span className="artist-public-character-count" aria-hidden="true">
+                          {(displayArtist.bio ?? "").length} / 383
+                        </span>
+                      </div>
                     ) : displayArtist.bio ? (
                       <p className="artist-public-bio">{displayArtist.bio}</p>
                     ) : null}
