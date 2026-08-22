@@ -9,6 +9,7 @@ import PlaylistIcon from "@/components/icons/PlaylistIcon";
 type FilterTagsProps = {
   selectedMoods: string[];
   selectedGenres: string[];
+  selectedArtists?: string[];
   selectedRegions?: string[];
   selectedInstruments: string[];
   selectedBuilds: string[];
@@ -22,6 +23,7 @@ type FilterTagsProps = {
   shuffleActive?: boolean;
   onRemoveMood: (value: string) => void;
   onRemoveGenre: (value: string) => void;
+  onRemoveArtist?: (value: string) => void;
   onRemoveRegion?: (value: string) => void;
   onRemoveInstrument: (value: string) => void;
   onRemoveBuild: (value: string) => void;
@@ -38,6 +40,7 @@ type FilterTagsProps = {
 export default function FilterTags({
   selectedMoods,
   selectedGenres,
+  selectedArtists = [],
   selectedRegions = [],
   selectedInstruments,
   selectedBuilds,
@@ -50,6 +53,7 @@ export default function FilterTags({
   selectedPlaylist,
   onRemoveMood,
   onRemoveGenre,
+  onRemoveArtist = () => {},
   onRemoveRegion = () => {},
   onRemoveInstrument,
   onRemoveBuild,
@@ -71,6 +75,11 @@ export default function FilterTags({
       id: `genre-${value}`,
       label: value,
       onRemove: () => onRemoveGenre(value),
+    })),
+    ...selectedArtists.map((value) => ({
+      id: `artist-${value}`,
+      label: value,
+      onRemove: () => onRemoveArtist(value),
     })),
     ...selectedRegions.map((value) => ({
       id: `region-${value}`,
