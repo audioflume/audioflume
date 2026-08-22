@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
@@ -74,8 +74,14 @@ export default function ArtistProfileEditor({
   );
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
+  const preserveDraftOnNextArtistUpdateRef = useRef(false);
 
   useEffect(() => {
+    if (preserveDraftOnNextArtistUpdateRef.current) {
+      preserveDraftOnNextArtistUpdateRef.current = false;
+      return;
+    }
+
     setName(artist.name);
     setSlug(artist.slug);
     setDesignation(artist.designation ?? "");
@@ -156,6 +162,7 @@ export default function ArtistProfileEditor({
         throw new Error(body.error || "Failed to upload artist image");
       }
 
+      preserveDraftOnNextArtistUpdateRef.current = true;
       onSaved(body.artist);
     } catch (uploadError) {
       setError(
