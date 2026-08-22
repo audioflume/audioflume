@@ -486,12 +486,13 @@ export default function PublicArtistPageView({
 
         .artist-public-bio-editor {
           position: relative;
+          margin-bottom: 14px;
         }
 
         .artist-public-character-count {
           position: absolute;
-          right: 2px;
-          bottom: 2px;
+          right: 0;
+          bottom: -14px;
           z-index: 2;
           color: var(--text-muted);
           font-family: var(--font-roboto-mono-filmwave), monospace;
@@ -549,7 +550,7 @@ export default function PublicArtistPageView({
         textarea.artist-public-intro-input.artist-public-edit-control {
           width: 100%;
           min-height: 2.7em;
-          padding: 0 0 15px;
+          padding: 0;
           color: inherit;
           font: inherit;
           letter-spacing: inherit;
@@ -571,7 +572,7 @@ export default function PublicArtistPageView({
           width: 100%;
           min-height: 6.4em;
           margin: 0;
-          padding: 0 0 15px;
+          padding: 0;
           color: inherit;
           font: inherit;
           letter-spacing: inherit;
