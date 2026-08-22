@@ -877,7 +877,7 @@ export default function ArtistOverview({
                   ) : null}
                 </div>
               </div>
-            ))}
+            ))
           )}
         </section>
       </div>
