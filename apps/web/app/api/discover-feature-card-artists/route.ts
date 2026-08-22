@@ -11,7 +11,7 @@ export async function GET() {
   try {
     const { data: featureRows, error: featureError } = await supabaseServer
       .from("discover_feature_card_artists")
-      .select("artist_id, position")
+      .select("artist_id, position, custom_text")
       .order("position", { ascending: true })
       .limit(2);
 
@@ -28,7 +28,7 @@ export async function GET() {
     const { data: artists, error: artistsError } = await supabaseServer
       .from("artists")
       .select(
-        "id, name, slug, designation, intro_text, profile_image_url, hero_image_url, hero_image_position_x, hero_image_position_y",
+        "id, name, slug, hero_image_url, hero_image_position_x, hero_image_position_y",
       )
       .in("id", orderedArtistIds)
       .eq("status", "approved");
@@ -85,11 +85,15 @@ export async function GET() {
     const artistById = new Map(
       (artists ?? []).map((artist) => [String(artist.id), artist] as const),
     );
+    const featureRowByArtistId = new Map(
+      (featureRows ?? []).map((row) => [String(row.artist_id), row] as const),
+    );
 
     return NextResponse.json({
       artists: orderedArtistIds.flatMap((artistId) => {
         const artist = artistById.get(artistId);
-        if (!artist) return [];
+        const featureRow = featureRowByArtistId.get(artistId);
+        if (!artist || !featureRow) return [];
 
         const linkedSongIds = songIdsByArtist.get(artistId) ?? new Set<string>();
 
@@ -98,10 +102,8 @@ export async function GET() {
             id: artistId,
             name: String(artist.name || ""),
             slug: String(artist.slug || ""),
-            designation: artist.designation ? String(artist.designation) : null,
-            intro_text: artist.intro_text ? String(artist.intro_text) : null,
-            profile_image_url: artist.profile_image_url
-              ? String(artist.profile_image_url)
+            custom_text: featureRow.custom_text
+              ? String(featureRow.custom_text)
               : null,
             hero_image_url: artist.hero_image_url
               ? String(artist.hero_image_url)

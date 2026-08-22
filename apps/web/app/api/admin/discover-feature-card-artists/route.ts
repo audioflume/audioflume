@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 const FEATURE_CARD_LIMIT = 2;
+const CUSTOM_TEXT_MAX_LENGTH = 160;
 const UUID_PATTERN =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
@@ -42,7 +43,7 @@ export async function GET() {
   try {
     const { data: featureRows, error: featureError } = await supabaseServer
       .from("discover_feature_card_artists")
-      .select("artist_id, position")
+      .select("artist_id, position, custom_text")
       .order("position", { ascending: true });
 
     if (featureError) throw featureError;
@@ -76,6 +77,7 @@ export async function GET() {
           {
             artist_id: artistId,
             position: Number(row.position || 0),
+            custom_text: row.custom_text ? String(row.custom_text) : null,
             artist: {
               id: artistId,
               name: String(artist.name || ""),
@@ -203,6 +205,45 @@ export async function PATCH(request: Request) {
 
   try {
     const body = await request.json();
+
+    if (Object.prototype.hasOwnProperty.call(body, "custom_text")) {
+      const artistId =
+        typeof body.artist_id === "string" ? body.artist_id.trim() : "";
+      if (!UUID_PATTERN.test(artistId)) {
+        return NextResponse.json({ error: "Invalid artist" }, { status: 400 });
+      }
+
+      if (body.custom_text != null && typeof body.custom_text !== "string") {
+        return NextResponse.json(
+          { error: "Custom text must be text" },
+          { status: 400 },
+        );
+      }
+
+      const customText =
+        typeof body.custom_text === "string" ? body.custom_text.trim() : "";
+      if (customText.length > CUSTOM_TEXT_MAX_LENGTH) {
+        return NextResponse.json(
+          {
+            error: `Custom text must be ${CUSTOM_TEXT_MAX_LENGTH} characters or fewer`,
+          },
+          { status: 400 },
+        );
+      }
+
+      const { error } = await supabaseServer
+        .from("discover_feature_card_artists")
+        .update({ custom_text: customText || null })
+        .eq("artist_id", artistId);
+
+      if (error) throw error;
+
+      return NextResponse.json({
+        success: true,
+        custom_text: customText || null,
+      });
+    }
+
     const artistIds = cleanArtistIds(body.artist_ids);
 
     if (artistIds.length > FEATURE_CARD_LIMIT) {
@@ -226,7 +267,7 @@ export async function PATCH(request: Request) {
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error("Admin feature card artist reorder failed:", error);
+    console.error("Admin feature card artist update failed:", error);
     return NextResponse.json(
       { error: featureCardArtistError(error) },
       { status: 500 },
