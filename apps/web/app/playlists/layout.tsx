@@ -103,9 +103,9 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
         .playlist-detail-page .playlist-detail-shell {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 42px;
+          grid-template-columns: minmax(0, 1fr) 35px;
           column-gap: 18px;
-          align-items: center;
+          align-items: start;
           padding-top: 22px;
           padding-right: var(--playlist-detail-page-gutter) !important;
           padding-left: var(--playlist-detail-page-gutter) !important;
@@ -177,14 +177,14 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           display: inline-flex !important;
           grid-column: 2;
           grid-row: 1;
-          width: 42px !important;
-          min-width: 42px !important;
-          height: 42px !important;
+          width: 35px !important;
+          min-width: 35px !important;
+          height: 35px !important;
           align-items: center !important;
           justify-content: center !important;
-          border: 1px solid var(--border) !important;
-          border-radius: 0 !important;
-          background: var(--bg-secondary) !important;
+          border: 1px solid var(--filmwave-border-color) !important;
+          border-radius: 5px !important;
+          background: var(--bg-primary) !important;
           padding: 0 !important;
           color: var(--text-secondary) !important;
           cursor: pointer;
@@ -192,7 +192,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         .playlist-detail-page .playlist-detail-top-actions > button:last-child:hover {
-          border-color: var(--border-hover) !important;
+          border-color: var(--filmwave-border-color) !important;
           background: var(--bg-hover) !important;
           color: var(--text-primary) !important;
         }
@@ -210,14 +210,14 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           display: inline-flex;
           box-sizing: border-box;
           min-width: 82px;
-          height: 42px;
+          height: 35px;
           cursor: pointer;
           align-items: center;
           justify-content: center;
           gap: 8px;
-          border: 1px solid var(--border);
-          border-radius: 0;
-          background: var(--bg-secondary);
+          border: 1px solid var(--filmwave-border-color);
+          border-radius: 5px;
+          background: var(--bg-primary);
           padding: 0 14px;
           color: var(--text-secondary);
           font-family: inherit;
@@ -228,7 +228,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         .playlist-detail-page .playlist-detail-browser-back:hover {
-          border-color: var(--border-hover);
+          border-color: var(--filmwave-border-color);
           background: var(--bg-hover);
           color: var(--text-primary);
         }
@@ -378,12 +378,50 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-actions {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 6px;
           margin-top: 24px !important;
         }
 
+        .playlist-detail-page .playlist-detail-actions > button {
+          box-sizing: border-box !important;
+          display: inline-flex !important;
+          height: 35px !important;
+          min-height: 35px !important;
+          min-width: 0 !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 8px !important;
+          border: 1px solid var(--filmwave-border-color) !important;
+          border-radius: 5px !important;
+          background: var(--bg-primary) !important;
+          background-color: var(--bg-primary) !important;
+          padding: 0 14px !important;
+          color: var(--text-secondary) !important;
+          font-family: inherit !important;
+          font-size: 12px !important;
+          font-weight: 400 !important;
+          line-height: 1 !important;
+          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
+        }
+
+        .playlist-detail-page .playlist-detail-actions > button:hover:not(:disabled) {
+          border-color: var(--filmwave-border-color) !important;
+          background: var(--bg-hover) !important;
+          background-color: var(--bg-hover) !important;
+          color: var(--text-primary) !important;
+        }
+
+        .playlist-detail-page .playlist-detail-actions > button svg {
+          display: block !important;
+          width: 14px !important;
+          height: 14px !important;
+          flex: 0 0 14px !important;
+        }
+
         .playlist-detail-page .playlist-detail-skeleton-button {
-          border-radius: 0 !important;
+          height: 35px !important;
+          min-height: 35px !important;
+          border-radius: 5px !important;
         }
 
         .playlist-detail-page .playlist-detail-quick-row,
@@ -461,7 +499,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           }
 
           .playlist-detail-page .playlist-detail-shell {
-            grid-template-columns: minmax(0, 1fr) 42px;
+            grid-template-columns: minmax(0, 1fr) 35px;
             row-gap: 12px;
           }
 
