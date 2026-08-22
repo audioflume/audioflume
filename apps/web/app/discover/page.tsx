@@ -14,6 +14,7 @@ import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
@@ -172,10 +173,10 @@ const EDITORIAL_FEATURES = [
 const MOCKUP_LOREM =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.";
 
-function PlayBadge() {
+function PlayBadge({ isPlaying = false }: { isPlaying?: boolean }) {
   return (
     <span className="discover-artist-play-badge" aria-hidden="true">
-      <PlayIconSmall size={18} />
+      {isPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
     </span>
   );
 }
@@ -336,7 +337,7 @@ function ArtistShelf({
 }
 
 export default function DiscoverPage() {
-  const { currentSong, setQueue, togglePlayPause } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const playerVisible = Boolean(currentSong);
@@ -346,6 +347,11 @@ export default function DiscoverPage() {
     (song) => Boolean(song.audioUrl),
   );
   const firstFeaturedSong = playableFeaturedSongs[0];
+  const featuredArtistIsPlaying = Boolean(
+    isPlaying &&
+      currentSong &&
+      playableFeaturedSongs.some((song) => song.id === currentSong.id),
+  );
   const heroStyle = ({
     "--discover-artist-hero-image": activeFeaturedArtist?.hero_image_url
       ? `url("${activeFeaturedArtist.hero_image_url.replaceAll('"', '\\"')}")`
@@ -392,6 +398,11 @@ export default function DiscoverPage() {
   }
 
   function playFeaturedArtist() {
+    if (featuredArtistIsPlaying && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+
     if (!firstFeaturedSong) return;
     setQueue(playableFeaturedSongs);
     togglePlayPause(firstFeaturedSong);
@@ -422,12 +433,14 @@ export default function DiscoverPage() {
                     onClick={playFeaturedArtist}
                     disabled={!firstFeaturedSong}
                     aria-label={
-                      firstFeaturedSong
-                        ? `Play music by ${activeFeaturedArtist.name}`
-                        : `No playable music for ${activeFeaturedArtist.name}`
+                      featuredArtistIsPlaying
+                        ? `Pause music by ${activeFeaturedArtist.name}`
+                        : firstFeaturedSong
+                          ? `Play music by ${activeFeaturedArtist.name}`
+                          : `No playable music for ${activeFeaturedArtist.name}`
                     }
                   >
-                    <PlayBadge />
+                    <PlayBadge isPlaying={featuredArtistIsPlaying} />
                     <span>Listen now</span>
                   </button>
                   <Link href={`/artists/${activeFeaturedArtist.slug}`}>
