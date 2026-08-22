@@ -19,6 +19,7 @@ export default function MusicFilterToolbarBehavior() {
     let searchMeasureFrame = 0;
     let searchToolbar: HTMLElement | null = null;
     let searchRevealGeometry: SearchRevealGeometry | null = null;
+    let searchRevealBackdrop: HTMLDivElement | null = null;
 
     function getMusicSearchToolbar() {
       if (searchToolbar?.isConnected) return searchToolbar;
@@ -42,6 +43,27 @@ export default function MusicFilterToolbarBehavior() {
       );
     }
 
+    function getSearchRevealBackdrop() {
+      if (searchRevealBackdrop?.isConnected) return searchRevealBackdrop;
+
+      searchRevealBackdrop = document.createElement("div");
+      searchRevealBackdrop.className = "fw-music-scroll-reveal-backdrop";
+      searchRevealBackdrop.setAttribute("aria-hidden", "true");
+      document.body.appendChild(searchRevealBackdrop);
+
+      return searchRevealBackdrop;
+    }
+
+    function hideSearchRevealBackdrop() {
+      if (!searchRevealBackdrop) return;
+
+      searchRevealBackdrop.classList.remove("is-visible");
+      searchRevealBackdrop.style.removeProperty("top");
+      searchRevealBackdrop.style.removeProperty("right");
+      searchRevealBackdrop.style.removeProperty("left");
+      searchRevealBackdrop.style.removeProperty("height");
+    }
+
     function clearSearchRevealGeometryStyles(toolbar: HTMLElement) {
       const searchRow = getSearchRow(toolbar);
       const headerActions = getHeaderActions(toolbar);
@@ -58,6 +80,8 @@ export default function MusicFilterToolbarBehavior() {
       headerActions?.style.removeProperty("display");
       headerActions?.style.removeProperty("align-items");
       headerActions?.style.removeProperty("gap");
+
+      hideSearchRevealBackdrop();
     }
 
     function applySearchRevealGeometry(toolbar: HTMLElement) {
@@ -106,6 +130,37 @@ export default function MusicFilterToolbarBehavior() {
         headerActions.style.setProperty("align-items", "center", "important");
         headerActions.style.setProperty("gap", "8px", "important");
       }
+
+      if (searchRow && headerActions) {
+        const searchRect = searchRow.getBoundingClientRect();
+        const actionsRect = headerActions.getBoundingClientRect();
+        const headerBottom =
+          document
+            .querySelector<HTMLElement>(".filmwave-web-header")
+            ?.getBoundingClientRect().bottom ??
+          Math.max(0, Math.min(searchRect.top, actionsRect.top) - 18);
+        const backdropBottom = Math.max(searchRect.bottom, actionsRect.bottom) + 8;
+        const backdropLeft = Math.min(searchRect.left, actionsRect.left);
+        const backdrop = getSearchRevealBackdrop();
+
+        backdrop.style.setProperty(
+          "top",
+          `${Math.max(0, headerBottom)}px`,
+          "important",
+        );
+        backdrop.style.setProperty("right", "0", "important");
+        backdrop.style.setProperty(
+          "left",
+          `${Math.max(0, backdropLeft)}px`,
+          "important",
+        );
+        backdrop.style.setProperty(
+          "height",
+          `${Math.max(0, backdropBottom - headerBottom)}px`,
+          "important",
+        );
+        backdrop.classList.add("is-visible");
+      }
     }
 
     function measureSearchRevealThreshold() {
@@ -114,6 +169,7 @@ export default function MusicFilterToolbarBehavior() {
       if (!toolbar) {
         searchRevealThreshold = 0;
         searchRevealGeometry = null;
+        hideSearchRevealBackdrop();
         return;
       }
 
@@ -160,6 +216,7 @@ export default function MusicFilterToolbarBehavior() {
       const nextScrollY = window.scrollY;
 
       if (!toolbar) {
+        hideSearchRevealBackdrop();
         lastScrollY = nextScrollY;
         return;
       }
@@ -206,6 +263,8 @@ export default function MusicFilterToolbarBehavior() {
       if (toolbar) {
         clearSearchRevealGeometryStyles(toolbar);
         toolbar.classList.remove("is-scroll-revealed");
+      } else {
+        hideSearchRevealBackdrop();
       }
 
       searchRevealThreshold = 0;
@@ -341,6 +400,7 @@ export default function MusicFilterToolbarBehavior() {
       );
 
       if (filterPanelGeometryChanged) scheduleSearchRevealMeasurement();
+      if (!getMusicSearchToolbar()) hideSearchRevealBackdrop();
     });
     observer.observe(document.body, {
       attributes: true,
@@ -352,6 +412,8 @@ export default function MusicFilterToolbarBehavior() {
     return () => {
       const toolbar = getMusicSearchToolbar();
       if (toolbar) clearSearchRevealGeometryStyles(toolbar);
+      searchRevealBackdrop?.remove();
+      searchRevealBackdrop = null;
       geometryResizeObserver.disconnect();
       observer.disconnect();
       document.removeEventListener("click", handleShuffleClick, true);
