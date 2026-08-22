@@ -392,6 +392,7 @@
   cursor: default;
 }
 
+.discover-artist-feature-overlay .discover-artist-play-badge:hover,
 .discover-artist-feature-play-button:hover .discover-artist-play-badge,
 .discover-artist-feature-play-button:focus-visible .discover-artist-play-badge {
   transform: scale(1.03);
