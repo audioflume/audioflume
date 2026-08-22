@@ -11,12 +11,13 @@ body .playlists-tabs-row {
 }
 
 .playlists-top-controls {
+  --fw-header-search-row-height: 50px;
   box-sizing: border-box !important;
   display: grid !important;
   width: calc(100% - 64px) !important;
   min-height: 54px !important;
   grid-template-columns: 130px minmax(300px, 640px) minmax(270px, auto) !important;
-  align-items: start !important;
+  align-items: center !important;
   gap: 24px !important;
   margin-top: calc(
     var(--filmwave-header-height, 56px) + var(--filmwave-page-top-gap, 22px)
@@ -29,19 +30,28 @@ body .playlists-tabs-row {
 .playlists-status-pill {
   display: inline-flex !important;
   width: 110px !important;
-  height: 42px !important;
+  height: 35px !important;
+  min-height: 35px !important;
   align-items: center !important;
-  justify-content: space-between !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 0 !important;
-  background: var(--bg-secondary) !important;
-  padding: 0 14px !important;
+  justify-content: center !important;
+  gap: 5px !important;
+  border: 1px solid var(--filmwave-border-color) !important;
+  border-radius: 5px !important;
+  background: var(--bg-primary) !important;
+  padding: 0 10px 0 14px !important;
   color: var(--text-secondary) !important;
   font-family: var(--font-aktiv-grotesk) !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
   letter-spacing: normal !important;
-  line-height: normal !important;
+  line-height: 1 !important;
+}
+
+.playlists-status-pill > svg {
+  display: block !important;
+  width: 11px !important;
+  height: 11px !important;
+  flex: 0 0 11px !important;
 }
 
 .playlists-search {
@@ -98,67 +108,94 @@ body .playlists-tabs-row {
   display: flex !important;
   justify-content: flex-end !important;
   align-items: center !important;
-  gap: 18px !important;
+  gap: 6px !important;
 }
 
 .playlists-sort-button,
 .playlists-view-button {
-  height: 42px !important;
+  box-sizing: border-box !important;
+  height: 35px !important;
+  min-height: 35px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  gap: 9px !important;
-  border: 1px solid var(--border) !important;
-  border-radius: 0 !important;
-  background: var(--bg-secondary) !important;
+  gap: 5px !important;
+  border: 1px solid var(--filmwave-border-color) !important;
+  border-radius: 5px !important;
+  background: var(--bg-primary) !important;
   color: var(--text-secondary) !important;
   cursor: pointer !important;
   font-family: var(--font-aktiv-grotesk) !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
   letter-spacing: normal !important;
-  line-height: normal !important;
+  line-height: 1 !important;
   transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
 }
 
 .playlists-sort-button {
-  padding: 0 16px !important;
+  padding: 0 10px 0 14px !important;
+}
+
+.playlists-sort-button-chevron,
+.playlists-sort-button-chevron svg {
+  display: block !important;
+  width: 11px !important;
+  height: 11px !important;
+}
+
+.playlists-sort-button-chevron {
+  flex: 0 0 11px !important;
 }
 
 .playlists-view-button {
-  width: 42px !important;
+  width: 35px !important;
+  min-width: 35px !important;
+  flex: 0 0 35px !important;
+  gap: 0 !important;
   padding: 0 !important;
+}
+
+.playlists-view-button > svg {
+  display: block !important;
+  width: 14px !important;
+  height: 14px !important;
 }
 
 .playlists-sort-button:hover,
 .playlists-sort-button.is-open,
 .playlists-view-button:hover {
   background: var(--bg-hover) !important;
-  border-color: var(--border-hover) !important;
+  border-color: var(--filmwave-border-color) !important;
   color: var(--text-primary) !important;
 }
 
 .playlists-new-button {
-  height: 42px !important;
+  box-sizing: border-box !important;
+  height: 35px !important;
+  min-height: 35px !important;
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  border: 1px solid var(--text-primary) !important;
-  border-radius: 0 !important;
-  background: var(--text-primary) !important;
-  padding: 0 22px !important;
-  color: var(--bg-primary) !important;
+  gap: 8px !important;
+  border: 1px solid var(--filmwave-border-color) !important;
+  border-radius: 5px !important;
+  background: var(--bg-primary) !important;
+  padding: 0 14px !important;
+  color: var(--text-secondary) !important;
   cursor: pointer !important;
   font-family: var(--font-aktiv-grotesk) !important;
-  font-size: 12.5px !important;
+  font-size: 12px !important;
   font-weight: 400 !important;
   letter-spacing: normal !important;
-  line-height: normal !important;
-  transition: opacity 0.15s ease !important;
+  line-height: 1 !important;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
 }
 
 .playlists-new-button:hover {
-  opacity: 0.82 !important;
+  background: var(--bg-hover) !important;
+  border-color: var(--filmwave-border-color) !important;
+  color: var(--text-primary) !important;
 }
 
 :where(html.dark, html[data-theme="dark"])
