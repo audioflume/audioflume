@@ -1,0 +1,24 @@
+html[data-theme="dark"]
+  main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-header-search-row {
+  --text-primary: var(--filmwave-white);
+  --text-muted: color-mix(
+    in srgb,
+    var(--filmwave-white) 30%,
+    transparent
+  );
+  background: var(--bg-primary) !important;
+  background-color: var(--bg-primary) !important;
+}
+
+html[data-theme="dark"]
+  main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static::after {
+  color: var(--text-secondary) !important;
+}
