@@ -463,7 +463,7 @@ export default function ProjectsPage() {
       <style>{`
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 22px 32px 0 32px; }
-        .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
+        .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto); align-items: center; gap: 24px; }
         .projects-status-pill { display: inline-flex; width: 150px; height: 35px; align-items: center; justify-content: center; gap: 5px; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 10px 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-aktiv-grotesk); font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .projects-status-pill:hover, .projects-status-pill.is-open { background: var(--bg-hover); border-color: var(--filmwave-border-color); color: var(--text-primary); }
         .projects-status-dropdown { min-width: 150px; }
