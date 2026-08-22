@@ -38,6 +38,17 @@ type DiscoverFeaturedArtist = {
   songs: Song[];
 };
 
+type DiscoverFeatureCardArtist = {
+  id: string;
+  name: string;
+  slug: string;
+  custom_text: string | null;
+  hero_image_url: string | null;
+  hero_image_position_x: number;
+  hero_image_position_y: number;
+  songs: Song[];
+};
+
 const ARTISTS_WATCHING: ShelfItem[] = [
   {
     title: "Loremipsum Dolorit",
@@ -343,7 +354,7 @@ export default function DiscoverPage() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [featureCardArtists, setFeatureCardArtists] = useState<
-    DiscoverFeaturedArtist[]
+    DiscoverFeatureCardArtist[]
   >([]);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const playerVisible = Boolean(currentSong);
@@ -440,7 +451,7 @@ export default function DiscoverPage() {
     togglePlayPause(firstFeaturedSong);
   }
 
-  function playFeatureCardArtist(artist: DiscoverFeaturedArtist) {
+  function playFeatureCardArtist(artist: DiscoverFeatureCardArtist) {
     const playableSongs = artist.songs.filter((song) => Boolean(song.audioUrl));
     const firstSong = playableSongs[0];
     const artistIsPlaying = Boolean(
@@ -579,7 +590,7 @@ export default function DiscoverPage() {
                       <div className="discover-artist-feature-overlay">
                         <div>
                           <h3>{artist.name}</h3>
-                          {artist.designation ? <p>{artist.designation}</p> : null}
+                          {artist.custom_text ? <p>{artist.custom_text}</p> : null}
                         </div>
                         <button
                           type="button"
