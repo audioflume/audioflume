@@ -377,7 +377,7 @@ main
   > .fw-toolbar-sticky.is-scroll-revealed::before {
   content: "";
   position: fixed !important;
-  top: var(--filmwave-header-height, 56px) !important;
+  top: calc(var(--filmwave-header-height, 56px) + 18px) !important;
   right: 0 !important;
   left: 0 !important;
   z-index: 59 !important;
