@@ -287,6 +287,22 @@ export function useFilterPersistence(
             : { ...current, selectedPlaylist: null };
         }
 
+        if (sectionId === "advanced") {
+          const advancedFiltersClear =
+            current.selectedDurations.length === 0 &&
+            current.bpmValue === null &&
+            current.keyValue === null;
+
+          return advancedFiltersClear
+            ? current
+            : {
+                ...current,
+                selectedDurations: [],
+                bpmValue: null,
+                keyValue: null,
+              };
+        }
+
         if (sectionId === "duration") {
           return current.selectedDurations.length === 0
             ? current
