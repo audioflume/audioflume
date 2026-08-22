@@ -235,6 +235,8 @@ main
   width: 128px !important;
   min-width: 128px !important;
   flex: 0 0 128px !important;
+  gap: 5px !important;
+  padding: 0 10px 0 14px !important;
 }
 
 .fw-toolbar-header-actions .fw-music-header-action:hover,
@@ -260,9 +262,9 @@ main
 
 .fw-toolbar-header-actions .filmwave-music-sort-chevron {
   display: block !important;
-  width: 10px !important;
-  height: 10px !important;
-  flex: 0 0 10px !important;
+  width: 11px !important;
+  height: 11px !important;
+  flex: 0 0 11px !important;
 }
 
 .fw-toolbar-header-actions .filmwave-music-sort-menu {
