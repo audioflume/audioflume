@@ -73,19 +73,19 @@
 
 .discover-artist-hero-feature {
   position: absolute;
-  top: calc(var(--filmwave-header-height, 75px) + clamp(250px, 17vw, 330px));
+  top: 50%;
   right: auto;
   left: 50%;
   display: grid;
   width: 100%;
   max-width: 100%;
-  grid-template-columns: max-content minmax(360px, 560px);
+  grid-template-columns: min(700px, 43vw) min(560px, 34vw);
   grid-template-rows: auto auto auto;
   align-items: start;
   justify-content: center;
   column-gap: clamp(32px, 5vw, 70px);
   row-gap: 0;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
 }
 
 .discover-artist-hero-identity,
@@ -109,6 +109,8 @@
 .discover-artist-hero-identity h1 {
   grid-column: 1;
   grid-row: 2;
+  min-width: 0;
+  max-width: 100%;
   align-self: last baseline;
   margin: 0;
   font-size: clamp(66px, 7.8vw, 98px);
@@ -121,6 +123,8 @@
 .discover-artist-hero-identity p {
   grid-column: 1;
   grid-row: 3;
+  min-width: 0;
+  max-width: 100%;
   align-self: baseline;
   margin: clamp(28px, 2vw, 36px) 0 0;
   font-size: clamp(18px, 1.25vw, 24px);
@@ -132,8 +136,9 @@
 .discover-artist-hero-detail > p {
   grid-column: 2;
   grid-row: 2;
+  width: 100%;
+  max-width: none;
   align-self: last baseline;
-  max-width: 560px;
   margin: 0;
   font-size: clamp(18px, 1.3vw, 24px);
   font-weight: 300;
@@ -683,14 +688,14 @@
   }
 
   .discover-artist-hero-feature {
-    top: calc(var(--filmwave-header-height, 75px) + 240px);
+    top: 50%;
     right: auto;
     left: 50%;
     width: 91%;
     max-width: none;
     grid-template-columns: minmax(0, 0.72fr) minmax(330px, 1fr);
     column-gap: 32px;
-    transform: translateX(-50%);
+    transform: translate(-50%, -50%);
   }
 
   .discover-artist-hero-identity h1 {
