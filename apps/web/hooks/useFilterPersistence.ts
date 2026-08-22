@@ -290,6 +290,8 @@ export function useFilterPersistence(
         if (sectionId === "advanced") {
           const advancedFiltersClear =
             current.selectedDurations.length === 0 &&
+            current.selectedBuilds.length === 0 &&
+            current.selectedRegions.length === 0 &&
             current.bpmValue === null &&
             current.keyValue === null;
 
@@ -298,6 +300,8 @@ export function useFilterPersistence(
             : {
                 ...current,
                 selectedDurations: [],
+                selectedBuilds: [],
+                selectedRegions: [],
                 bpmValue: null,
                 keyValue: null,
               };
