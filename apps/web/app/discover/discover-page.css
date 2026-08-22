@@ -131,7 +131,7 @@
   max-width: 100%;
   align-self: last baseline;
   margin: 0;
-  font-size: clamp(66px, 7.8vw, 98px);
+  font-size: clamp(66px, 6.8vw, 98px);
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.96;
