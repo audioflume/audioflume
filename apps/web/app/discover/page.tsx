@@ -39,13 +39,12 @@ type DiscoverFeaturedArtist = {
 
 const FALLBACK_FEATURED_ARTIST = {
   name: "Isaac Haines",
-  slug: "isaac-haines",
   designation: "Musician / Composer",
   intro_text:
     "Musician and composer from Grand Prairie, Alberta. Creating heartfelt sounds that evoke emotion and introspection.",
 };
 
-const FEATURED_ARTISTS = [
+const FALLBACK_FEATURED_ARTISTS = [
   {
     name: "Isaac Haines",
     note: "Authentic, evocative music for real stories",
@@ -207,11 +206,13 @@ function PlaceholderMedia({
   index,
   className = "",
   imageSrc,
+  imagePosition,
   children,
 }: {
   index: number;
   className?: string;
   imageSrc?: string;
+  imagePosition?: string;
   children?: ReactNode;
 }) {
   return (
@@ -240,6 +241,7 @@ function PlaceholderMedia({
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            objectPosition: imagePosition || "50% 50%",
           }}
         />
       ) : null}
@@ -368,8 +370,7 @@ export default function DiscoverPage() {
   const displayedFeaturedArtist = activeFeaturedArtist
     ? {
         name: activeFeaturedArtist.name,
-        slug: activeFeaturedArtist.slug,
-        designation: activeFeaturedArtist.designation || "Artist / Composer",
+        designation: activeFeaturedArtist.designation || "",
         intro_text: activeFeaturedArtist.intro_text || "",
       }
     : FALLBACK_FEATURED_ARTIST;
@@ -422,10 +423,18 @@ export default function DiscoverPage() {
     });
   }
 
+  function playArtistSongs(artist: DiscoverFeaturedArtist) {
+    const playableSongs = artist.songs.filter((song) => Boolean(song.audioUrl));
+    const firstSong = playableSongs[0];
+    if (!firstSong) return;
+
+    setQueue(playableSongs);
+    togglePlayPause(firstSong);
+  }
+
   function playFeaturedArtist() {
-    if (!firstFeaturedSong) return;
-    setQueue(playableFeaturedSongs);
-    togglePlayPause(firstFeaturedSong);
+    if (!activeFeaturedArtist) return;
+    playArtistSongs(activeFeaturedArtist);
   }
 
   return (
@@ -460,9 +469,13 @@ export default function DiscoverPage() {
                   <PlayBadge />
                   <span>Listen now</span>
                 </button>
-                <Link href={`/artists/${displayedFeaturedArtist.slug}`}>
-                  View license catalogue
-                </Link>
+                {activeFeaturedArtist ? (
+                  <Link href={`/artists/${activeFeaturedArtist.slug}`}>
+                    View license catalogue
+                  </Link>
+                ) : (
+                  <span>View license catalogue</span>
+                )}
               </div>
             </div>
           </div>
@@ -514,23 +527,64 @@ export default function DiscoverPage() {
       <div className="discover-artist-content">
         <section className="discover-artist-featured">
           <div className="discover-artist-featured-grid">
-            {FEATURED_ARTISTS.map((artist, index) => (
-              <article key={artist.name} className="discover-artist-feature-card">
-                <PlaceholderMedia
-                  index={index}
-                  imageSrc={artist.image}
-                  className="discover-artist-feature-media"
-                >
-                  <div className="discover-artist-feature-overlay">
-                    <div>
-                      <h3>{artist.name}</h3>
-                      <p style={{ marginTop: "13px" }}>{artist.note}</p>
-                    </div>
-                    <PlayBadge />
-                  </div>
-                </PlaceholderMedia>
-              </article>
-            ))}
+            {featuredArtists.length > 0
+              ? featuredArtists.map((artist, index) => {
+                  const hasPlayableSongs = artist.songs.some((song) =>
+                    Boolean(song.audioUrl),
+                  );
+
+                  return (
+                    <article key={artist.id} className="discover-artist-feature-card">
+                      <PlaceholderMedia
+                        index={index}
+                        imageSrc={artist.hero_image_url || undefined}
+                        imagePosition={`${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`}
+                        className="discover-artist-feature-media"
+                      >
+                        <div className="discover-artist-feature-overlay">
+                          <div>
+                            <h3>{artist.name}</h3>
+                            {artist.designation ? (
+                              <p style={{ marginTop: "13px" }}>
+                                {artist.designation}
+                              </p>
+                            ) : null}
+                          </div>
+                          <button
+                            type="button"
+                            className="discover-artist-feature-play-button"
+                            onClick={() => playArtistSongs(artist)}
+                            disabled={!hasPlayableSongs}
+                            aria-label={
+                              hasPlayableSongs
+                                ? `Play music by ${artist.name}`
+                                : `No playable music for ${artist.name}`
+                            }
+                          >
+                            <PlayBadge />
+                          </button>
+                        </div>
+                      </PlaceholderMedia>
+                    </article>
+                  );
+                })
+              : FALLBACK_FEATURED_ARTISTS.map((artist, index) => (
+                  <article key={artist.name} className="discover-artist-feature-card">
+                    <PlaceholderMedia
+                      index={index}
+                      imageSrc={artist.image}
+                      className="discover-artist-feature-media"
+                    >
+                      <div className="discover-artist-feature-overlay">
+                        <div>
+                          <h3>{artist.name}</h3>
+                          <p style={{ marginTop: "13px" }}>{artist.note}</p>
+                        </div>
+                        <PlayBadge />
+                      </div>
+                    </PlaceholderMedia>
+                  </article>
+                ))}
           </div>
         </section>
 
