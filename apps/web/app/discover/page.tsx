@@ -482,18 +482,8 @@ export default function DiscoverPage() {
             <div className="discover-artist-hero-feature">
               <div className="discover-artist-hero-identity">
                 <span className="discover-artist-hero-eyebrow">Featured Artist</span>
-                <h1
-                  style={
-                    /\s/.test(activeFeaturedArtist.name.trim())
-                      ? { maxWidth: "7.2em" }
-                      : undefined
-                  }
-                >
-                  {activeFeaturedArtist.name}
-                </h1>
-                <p style={{ maxWidth: "700px" }}>
-                  {activeFeaturedArtist.designation || ""}
-                </p>
+                <h1>{activeFeaturedArtist.name}</h1>
+                <p>{activeFeaturedArtist.designation || ""}</p>
               </div>
 
               <div className="discover-artist-hero-detail">
