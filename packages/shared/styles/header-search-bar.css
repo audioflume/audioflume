@@ -9,7 +9,7 @@
   flex: var(--fw-header-search-row-flex, 0 1 auto) !important;
   align-items: center !important;
   border: 1px solid var(--filmwave-border-color) !important;
-  border-radius: 0 !important;
+  border-radius: 5px !important;
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
   box-shadow: none !important;
