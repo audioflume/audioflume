@@ -14,6 +14,7 @@ export type MusicFilterState = {
   search: string;
   selectedMoods: string[];
   selectedGenres: string[];
+  selectedArtists: string[];
   selectedRegions: string[];
   selectedInstruments: string[];
   selectedBuilds: string[];
@@ -53,6 +54,7 @@ const baseDefaultState: MusicFilterState = {
   search: "",
   selectedMoods: [],
   selectedGenres: [],
+  selectedArtists: [],
   selectedRegions: [],
   selectedInstruments: [],
   selectedBuilds: [],
@@ -86,6 +88,7 @@ function normalizeFilterState(value: unknown): MusicFilterState {
     selectedGenres: stringArray(parsed.selectedGenres).length
       ? stringArray(parsed.selectedGenres)
       : stringArray(parsed.genres),
+    selectedArtists: stringArray(parsed.selectedArtists),
     selectedRegions: stringArray(parsed.selectedRegions).length
       ? stringArray(parsed.selectedRegions)
       : stringArray(parsed.regions),
@@ -240,6 +243,12 @@ export function useFilterPersistence(
           return current.selectedGenres.length === 0
             ? current
             : { ...current, selectedGenres: [] };
+        }
+
+        if (sectionId === "artist") {
+          return current.selectedArtists.length === 0
+            ? current
+            : { ...current, selectedArtists: [] };
         }
 
         if (sectionId === "region") {
