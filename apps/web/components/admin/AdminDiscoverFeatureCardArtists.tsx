@@ -40,10 +40,12 @@ type FeatureCardArtist = {
 type FeatureCardArtistItem = {
   artist_id: string;
   position: number;
+  custom_text: string | null;
   artist: FeatureCardArtist;
 };
 
 const FEATURE_CARD_LIMIT = 2;
+const CUSTOM_TEXT_MAX_LENGTH = 160;
 
 async function fetchFeatureCardArtists() {
   const response = await fetch("/api/admin/discover-feature-card-artists");
@@ -57,9 +59,13 @@ async function fetchFeatureCardArtists() {
 function FeatureCardArtistSortableCard({
   item,
   onRemove,
+  onTextSave,
+  savingText,
 }: {
   item: FeatureCardArtistItem;
   onRemove: () => void;
+  onTextSave: (value: string) => void;
+  savingText: boolean;
 }) {
   const {
     attributes,
@@ -70,6 +76,17 @@ function FeatureCardArtistSortableCard({
     isDragging,
   } = useSortable({ id: item.artist_id });
   const { artist } = item;
+  const [customText, setCustomText] = useState(item.custom_text ?? "");
+
+  useEffect(() => {
+    setCustomText(item.custom_text ?? "");
+  }, [item.artist_id, item.custom_text]);
+
+  function commitCustomText() {
+    const nextValue = customText.trim();
+    if (nextValue === (item.custom_text ?? "")) return;
+    onTextSave(nextValue);
+  }
 
   return (
     <article
@@ -124,6 +141,24 @@ function FeatureCardArtistSortableCard({
         <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
           /artists/{artist.slug}
         </p>
+        <label className="mt-2 block">
+          <span className="mb-1.5 block text-[10px] font-medium text-[var(--text-secondary)]">
+            Custom text
+          </span>
+          <input
+            type="text"
+            value={customText}
+            maxLength={CUSTOM_TEXT_MAX_LENGTH}
+            disabled={savingText}
+            placeholder="Custom card text"
+            onChange={(event) => setCustomText(event.target.value)}
+            onBlur={commitCustomText}
+            onKeyDown={(event) => {
+              if (event.key === "Enter") event.currentTarget.blur();
+            }}
+            className="filmwave-backend-input h-8 px-2 text-[11px]"
+          />
+        </label>
       </div>
     </article>
   );
@@ -134,6 +169,7 @@ export default function AdminDiscoverFeatureCardArtists() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
+  const [savingTextArtistId, setSavingTextArtistId] = useState<string | null>(null);
   const [collapsed, setCollapsed] = useState(false);
   const [pickerOpen, setPickerOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
@@ -213,6 +249,48 @@ export default function AdminDiscoverFeatureCardArtists() {
       );
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function saveCustomText(item: FeatureCardArtistItem, value: string) {
+    if (savingTextArtistId) return;
+
+    try {
+      setSavingTextArtistId(item.artist_id);
+      const response = await fetch("/api/admin/discover-feature-card-artists", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          artist_id: item.artist_id,
+          custom_text: value,
+        }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to save Featured Card text");
+      }
+
+      setItems((current) =>
+        current.map((currentItem) =>
+          currentItem.artist_id === item.artist_id
+            ? {
+                ...currentItem,
+                custom_text:
+                  typeof data?.custom_text === "string" ? data.custom_text : null,
+              }
+            : currentItem,
+        ),
+      );
+      setToastMessage("Featured Card text saved");
+    } catch (saveError) {
+      setToastMessage(
+        saveError instanceof Error
+          ? saveError.message
+          : "Failed to save Featured Card text",
+      );
+      await refresh().catch(() => undefined);
+    } finally {
+      setSavingTextArtistId(null);
     }
   }
 
@@ -345,6 +423,8 @@ export default function AdminDiscoverFeatureCardArtists() {
                     key={item.artist_id}
                     item={item}
                     onRemove={() => void removeArtist(item)}
+                    onTextSave={(value) => void saveCustomText(item, value)}
+                    savingText={savingTextArtistId === item.artist_id}
                   />
                 ))}
               </div>
