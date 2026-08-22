@@ -14,6 +14,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         body:has(.projects-page) {
           --projects-content-gutter: clamp(28px, 5.2vw, 82px);
           --projects-shell-gutter: 32px;
+          --fw-header-search-row-height: 50px;
         }
 
         .projects-route-shell > .projects-page {
@@ -193,7 +194,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 940px) {
           .projects-page .projects-control-bar {
             grid-template-columns: 150px minmax(0, 1fr) auto !important;
-            align-items: start !important;
+            align-items: center !important;
             gap: 12px !important;
           }
 
@@ -204,7 +205,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           .projects-page .projects-control-right {
             justify-content: flex-end !important;
             flex-wrap: nowrap !important;
-            gap: 8px !important;
+            gap: 6px !important;
           }
 
           .projects-page .projects-sort-button,
