@@ -20,6 +20,14 @@ main
   opacity: 1 !important;
 }
 
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-icon {
+  opacity: 0.8 !important;
+}
+
 html[data-theme="dark"]
   main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
