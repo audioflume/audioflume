@@ -21,6 +21,8 @@ export type ArtistDashboardProfile = {
   youtube_url: string | null;
   profile_image_url: string | null;
   hero_image_url: string | null;
+  hero_image_position_x: number | null;
+  hero_image_position_y: number | null;
   role: ArtistMembershipRole;
   permissions: ArtistPermission[];
   stats: {
@@ -56,7 +58,7 @@ export async function getArtistDashboardProfiles(
       supabaseServer
         .from("artists")
         .select(
-          "id, name, slug, status, designation, intro_text, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url",
+          "id, name, slug, status, designation, intro_text, bio, location, website_url, instagram_url, spotify_url, youtube_url, profile_image_url, hero_image_url, hero_image_position_x, hero_image_position_y",
         )
         .in("id", artistIds),
       supabaseServer
@@ -161,6 +163,8 @@ export async function getArtistDashboardProfiles(
         youtube_url: artist.youtube_url,
         profile_image_url: artist.profile_image_url,
         hero_image_url: artist.hero_image_url,
+        hero_image_position_x: artist.hero_image_position_x,
+        hero_image_position_y: artist.hero_image_position_y,
         role: membership.role,
         permissions: getArtistPermissions(membership.role),
         stats: {
