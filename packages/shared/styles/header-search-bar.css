@@ -1,6 +1,11 @@
 /* Shared search bar used by Music, Projects, Project Detail, and Playlists. */
 
 .fw-toolbar-header-search-row {
+  --fw-header-search-muted-color: color-mix(
+    in srgb,
+    var(--filmwave-white) 30%,
+    transparent
+  );
   box-sizing: border-box !important;
   display: flex !important;
   width: var(--fw-header-search-row-width, 100%) !important;
@@ -14,6 +19,14 @@
   background-color: var(--bg-primary) !important;
   box-shadow: none !important;
   padding: 0 14px !important;
+}
+
+:where(html.light, html[data-theme="light"]) .fw-toolbar-header-search-row {
+  --fw-header-search-muted-color: color-mix(
+    in srgb,
+    var(--filmwave-black) 42%,
+    transparent
+  );
 }
 
 .fw-toolbar-header-search-form {
@@ -58,7 +71,7 @@
   align-self: center !important;
   align-items: center !important;
   justify-content: center !important;
-  color: var(--text-muted) !important;
+  color: var(--fw-header-search-muted-color) !important;
   line-height: 0 !important;
   margin: 0 !important;
   transform: none !important;
@@ -84,7 +97,7 @@
   border-radius: 0 !important;
   background: transparent !important;
   background-color: transparent !important;
-  color: var(--text-muted) !important;
+  color: var(--fw-header-search-muted-color) !important;
   cursor: pointer !important;
   margin: 0 !important;
   padding: 0 !important;
@@ -142,7 +155,7 @@
 }
 
 .fw-toolbar-search-static-input::placeholder {
-  color: var(--text-muted) !important;
+  color: var(--fw-header-search-muted-color) !important;
   font-family: inherit !important;
   font-size: 12px !important;
   font-style: normal !important;
