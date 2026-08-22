@@ -67,6 +67,16 @@ type NotificationsResponse = {
   error?: string;
 };
 
+type HeroPosition = {
+  x: number;
+  y: number;
+};
+
+type HeroPositionResponse = {
+  position?: HeroPosition;
+  error?: string;
+};
+
 function getArtistDashboardHref(section: string, artistId: string) {
   const params = new URLSearchParams({ section, artist: artistId });
   return `/artists/dashboard?${params.toString()}`;
@@ -185,10 +195,16 @@ export default function ArtistOverview({
   artist: ArtistDashboardProfile;
 }) {
   const showEarnings = artist.role === "owner" || artist.role === "manager";
+  const canAdjustHero = artist.permissions.includes("artist:edit_profile");
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
   const [analytics, setAnalytics] = useState<ArtistAnalyticsResponse | null>(null);
   const [earnings, setEarnings] = useState<EarningsResponse | null>(null);
   const [notifications, setNotifications] = useState<ArtistNotification[]>([]);
+  const [heroPosition, setHeroPosition] = useState<HeroPosition>({ x: 50, y: 50 });
+  const [cropDraft, setCropDraft] = useState<HeroPosition>({ x: 50, y: 50 });
+  const [cropEditing, setCropEditing] = useState(false);
+  const [cropSaving, setCropSaving] = useState(false);
+  const [cropError, setCropError] = useState("");
   const [loading, setLoading] = useState(true);
   const [warning, setWarning] = useState("");
 
@@ -269,8 +285,93 @@ export default function ArtistOverview({
     };
   }, [artist.id, showEarnings]);
 
+  useEffect(() => {
+    let cancelled = false;
+
+    setHeroPosition({ x: 50, y: 50 });
+    setCropDraft({ x: 50, y: 50 });
+    setCropEditing(false);
+    setCropError("");
+
+    void fetchJson<HeroPositionResponse>(`/api/artists/${artist.id}/hero-position`)
+      .then((payload) => {
+        if (cancelled || !payload.position) return;
+        setHeroPosition(payload.position);
+        setCropDraft(payload.position);
+      })
+      .catch(() => {
+        if (!cancelled) setCropError("Could not load the saved crop position.");
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [artist.id]);
+
+  async function saveCropPosition() {
+    if (!canAdjustHero || cropSaving) return;
+
+    setCropSaving(true);
+    setCropError("");
+
+    try {
+      const response = await fetch(`/api/artists/${artist.id}/hero-position`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(cropDraft),
+      });
+      const payload = (await response.json().catch(() => null)) as
+        | HeroPositionResponse
+        | null;
+
+      if (!response.ok || !payload?.position) {
+        throw new Error(payload?.error || "Failed to save crop position");
+      }
+
+      setHeroPosition(payload.position);
+      setCropDraft(payload.position);
+      setCropEditing(false);
+    } catch (saveError) {
+      setCropError(
+        saveError instanceof Error
+          ? saveError.message
+          : "Failed to save crop position",
+      );
+    } finally {
+      setCropSaving(false);
+    }
+  }
+
+  async function handleNotificationView(notification: ArtistNotification) {
+    if (!notification.action_url) return;
+
+    if (!notification.read_at) {
+      try {
+        const response = await fetch(`/api/artists/${artist.id}/notifications`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ notification_id: notification.id }),
+        });
+
+        if (response.ok) {
+          const readAt = new Date().toISOString();
+          setNotifications((current) =>
+            current.map((item) =>
+              item.id === notification.id ? { ...item, read_at: readAt } : item,
+            ),
+          );
+        }
+      } catch {
+        // Navigation should still work if marking the notification read fails.
+      }
+    }
+
+    window.location.assign(notification.action_url);
+  }
+
   const recentSongs = songs.slice(0, 5);
   const recentNotifications = notifications.slice(0, 4);
+  const displayedHeroPosition = cropEditing ? cropDraft : heroPosition;
   const period = analytics?.period ?? {
     saves: 0,
     playlist_adds: 0,
@@ -302,11 +403,14 @@ export default function ArtistOverview({
 
       {artist.hero_image_url ? (
         <section className="filmwave-backend-section overflow-hidden">
-          <div className="h-[180px] bg-[var(--bg-tertiary)] md:h-[220px]">
+          <div className="h-[240px] bg-[var(--bg-tertiary)] md:h-[320px]">
             <img
               src={artist.hero_image_url}
               alt={`${artist.name} hero`}
               className="h-full w-full object-cover"
+              style={{
+                objectPosition: `${displayedHeroPosition.x}% ${displayedHeroPosition.y}%`,
+              }}
             />
           </div>
           <div className="flex items-center justify-between gap-5 px-5 py-4">
@@ -320,13 +424,101 @@ export default function ArtistOverview({
                 </div>
               ) : null}
             </div>
-            <Link
-              href={getArtistDashboardHref("my-page", artist.id)}
-              className="filmwave-backend-button shrink-0"
-            >
-              View my page
-            </Link>
+            <div className="flex shrink-0 items-center gap-2">
+              {canAdjustHero ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCropDraft(heroPosition);
+                    setCropEditing((current) => !current);
+                    setCropError("");
+                  }}
+                  className="filmwave-backend-button"
+                >
+                  {cropEditing ? "Close crop" : "Adjust crop"}
+                </button>
+              ) : null}
+              <Link
+                href={getArtistDashboardHref("my-page", artist.id)}
+                className="filmwave-backend-button"
+              >
+                View my page
+              </Link>
+            </div>
           </div>
+
+          {cropEditing ? (
+            <div className="grid gap-4 border-t border-[var(--border-subtle)] px-5 py-4 md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] md:items-end">
+              <label className="block">
+                <div className="flex items-center justify-between gap-3 text-[10px] text-[var(--text-secondary)]">
+                  <span>Horizontal position</span>
+                  <span>{cropDraft.x}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={cropDraft.x}
+                  onChange={(event) =>
+                    setCropDraft((current) => ({
+                      ...current,
+                      x: Number(event.target.value),
+                    }))
+                  }
+                  className="mt-2 w-full"
+                />
+              </label>
+
+              <label className="block">
+                <div className="flex items-center justify-between gap-3 text-[10px] text-[var(--text-secondary)]">
+                  <span>Vertical position</span>
+                  <span>{cropDraft.y}%</span>
+                </div>
+                <input
+                  type="range"
+                  min="0"
+                  max="100"
+                  value={cropDraft.y}
+                  onChange={(event) =>
+                    setCropDraft((current) => ({
+                      ...current,
+                      y: Number(event.target.value),
+                    }))
+                  }
+                  className="mt-2 w-full"
+                />
+              </label>
+
+              <div className="flex items-center justify-end gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setCropDraft(heroPosition);
+                    setCropEditing(false);
+                    setCropError("");
+                  }}
+                  disabled={cropSaving}
+                  className="filmwave-backend-button"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="button"
+                  onClick={() => void saveCropPosition()}
+                  disabled={cropSaving}
+                  className="filmwave-backend-button filmwave-backend-button-primary"
+                >
+                  {cropSaving ? "Saving..." : "Save crop"}
+                </button>
+              </div>
+
+              {cropError ? (
+                <div className="text-[10px] text-[var(--status-error)] md:col-span-3">
+                  {cropError}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </section>
       ) : null}
 
@@ -585,8 +777,19 @@ export default function ArtistOverview({
                     </div>
                   ) : null}
                 </div>
-                <div className="shrink-0 pt-0.5 text-[10px] text-[var(--text-muted)]">
-                  {formatNotificationTime(notification.created_at)}
+                <div className="flex shrink-0 items-center gap-3 pt-0.5">
+                  <div className="text-[10px] text-[var(--text-muted)]">
+                    {formatNotificationTime(notification.created_at)}
+                  </div>
+                  {notification.action_url ? (
+                    <button
+                      type="button"
+                      onClick={() => void handleNotificationView(notification)}
+                      className="filmwave-backend-button filmwave-backend-button-compact"
+                    >
+                      View
+                    </button>
+                  ) : null}
                 </div>
               </div>
             ))
