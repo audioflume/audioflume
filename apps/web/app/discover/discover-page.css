@@ -374,7 +374,26 @@
   flex-basis: 52px;
 }
 
-.discover-artist-feature-overlay .discover-artist-play-badge:hover {
+.discover-artist-feature-play-button {
+  display: flex;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.discover-artist-feature-play-button:disabled {
+  cursor: default;
+}
+
+.discover-artist-feature-play-button:hover .discover-artist-play-badge,
+.discover-artist-feature-play-button:focus-visible .discover-artist-play-badge {
   transform: scale(1.03);
 }
 
