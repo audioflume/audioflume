@@ -174,11 +174,6 @@ main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
-  .fw-toolbar-search-static:hover::after,
-main
-  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
   .fw-toolbar-search-static:focus-within::after {
   background: color-mix(
     in srgb,
