@@ -718,7 +718,7 @@ function MusicKeySection({
 /* Advanced section                                                    */
 /* ------------------------------------------------------------------ */
 
-type MusicAdvancedSectionId = "duration" | "bpm" | "key";
+type MusicAdvancedSectionId = "key" | "bpm" | "duration" | "build" | "region";
 
 function MusicAdvancedSection({
   bpmValue,
@@ -727,6 +727,7 @@ function MusicAdvancedSection({
   onKeyChange,
   selectedDurations,
   onDurationsChange,
+  advancedGroups,
 }: {
   bpmValue: FilmwaveBpmFilterValue | null;
   onBpmChange?: (value: FilmwaveBpmFilterValue | null) => void;
@@ -734,24 +735,30 @@ function MusicAdvancedSection({
   onKeyChange?: (value: FilmwaveKeyFilterValue | null) => void;
   selectedDurations: string[];
   onDurationsChange?: (selected: string[]) => void;
+  advancedGroups: MusicFilterChipGroup[];
 }) {
+  const advancedGroupById = new Map(
+    advancedGroups.map((group) => [group.id, group]),
+  );
   const availableSectionIds: MusicAdvancedSectionId[] = [];
-  if (onDurationsChange) availableSectionIds.push("duration");
-  if (onBpmChange) availableSectionIds.push("bpm");
   if (onKeyChange) availableSectionIds.push("key");
+  if (onBpmChange) availableSectionIds.push("bpm");
+  if (onDurationsChange) availableSectionIds.push("duration");
+  if (advancedGroupById.has("build")) availableSectionIds.push("build");
+  if (advancedGroupById.has("region")) availableSectionIds.push("region");
 
   const [openSectionId, setOpenSectionId] =
-    useState<MusicAdvancedSectionId | null>(() => {
-      if (onDurationsChange && selectedDurations.length > 0) return "duration";
-      if (onBpmChange && bpmValue) return "bpm";
-      if (onKeyChange && keyValue) return "key";
-      if (onDurationsChange) return "duration";
-      if (onBpmChange) return "bpm";
-      if (onKeyChange) return "key";
-      return null;
-    });
+    useState<MusicAdvancedSectionId | null>(null);
 
   function renderSection(sectionId: MusicAdvancedSectionId) {
+    if (sectionId === "key" && onKeyChange) {
+      return <MusicKeySection value={keyValue} onChange={onKeyChange} />;
+    }
+
+    if (sectionId === "bpm" && onBpmChange) {
+      return <MusicBpmSection value={bpmValue} onChange={onBpmChange} />;
+    }
+
     if (sectionId === "duration" && onDurationsChange) {
       return (
         <MusicDurationSection
@@ -761,15 +768,8 @@ function MusicAdvancedSection({
       );
     }
 
-    if (sectionId === "bpm" && onBpmChange) {
-      return <MusicBpmSection value={bpmValue} onChange={onBpmChange} />;
-    }
-
-    if (sectionId === "key" && onKeyChange) {
-      return <MusicKeySection value={keyValue} onChange={onKeyChange} />;
-    }
-
-    return null;
+    const group = advancedGroupById.get(sectionId);
+    return group ? <MusicFilterOptionList group={group} /> : null;
   }
 
   return (
@@ -777,11 +777,13 @@ function MusicAdvancedSection({
       {availableSectionIds.map((sectionId) => {
         const isOpen = openSectionId === sectionId;
         const label =
-          sectionId === "duration"
-            ? "Duration"
+          sectionId === "key"
+            ? "Key"
             : sectionId === "bpm"
               ? "BPM"
-              : "Key";
+              : sectionId === "duration"
+                ? "Duration"
+                : advancedGroupById.get(sectionId)?.label ?? sectionId;
 
         return (
           <div key={sectionId} className="fw-filter-advanced-section">
@@ -869,6 +871,7 @@ type MusicFilterPanelProps = {
   selectedDurations?: string[];
   onDurationsChange?: (selected: string[]) => void;
   groupAdvancedControls?: boolean;
+  advancedGroupIds?: string[];
   markersActive?: boolean;
   markersDisabled?: boolean;
   onToggleMarkers?: () => void;
@@ -891,6 +894,7 @@ export function MusicFilterPanel({
   selectedDurations = [],
   onDurationsChange,
   groupAdvancedControls = false,
+  advancedGroupIds = [],
   markersActive = false,
   markersDisabled = false,
   onToggleMarkers,
@@ -898,15 +902,23 @@ export function MusicFilterPanel({
   onClearAll,
   onClose,
 }: MusicFilterPanelProps) {
+  const advancedGroupIdSet = new Set(advancedGroupIds);
+  const advancedGroups = groupAdvancedControls
+    ? groups.filter((group) => advancedGroupIdSet.has(group.id))
+    : [];
+  const railGroups = groupAdvancedControls
+    ? groups.filter((group) => !advancedGroupIdSet.has(group.id))
+    : groups;
   const advancedFilterCount =
     (selectedDurations.length > 0 ? 1 : 0) +
     (bpmValue ? 1 : 0) +
-    (keyValue ? 1 : 0);
+    (keyValue ? 1 : 0) +
+    advancedGroups.reduce((count, group) => count + group.selected.length, 0);
   const hasAdvancedControls = Boolean(
-    onDurationsChange || onBpmChange || onKeyChange,
+    onDurationsChange || onBpmChange || onKeyChange || advancedGroups.length > 0,
   );
   const sections: Array<{ id: string; label: string; count: number }> = [
-    ...groups.map((g) => ({ id: g.id, label: g.label, count: g.selected.length })),
+    ...railGroups.map((g) => ({ id: g.id, label: g.label, count: g.selected.length })),
     ...(onSelectPlaylist ? [{ id: "playlist", label: "Playlist", count: selectedPlaylistId ? 1 : 0 }] : []),
     ...(groupAdvancedControls && hasAdvancedControls
       ? [{ id: "advanced", label: "Advanced", count: advancedFilterCount }]
@@ -924,7 +936,7 @@ export function MusicFilterPanel({
     if (sections.some((s) => s.id === activeSectionId)) return;
     setActiveSectionId(sections[0]?.id ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [groups.length, activeSectionId]);
+  }, [railGroups.length, activeSectionId]);
 
   useEffect(() => {
     if (!open) return;
@@ -934,7 +946,7 @@ export function MusicFilterPanel({
   }, [open, onClose]);
 
   const activeSection = sections.find((s) => s.id === activeSectionId);
-  const activeGroup = groups.find((g) => g.id === activeSectionId);
+  const activeGroup = railGroups.find((g) => g.id === activeSectionId);
 
   function renderDetail() {
     if (activeGroup) return <MusicFilterOptionList group={activeGroup} />;
@@ -950,6 +962,7 @@ export function MusicFilterPanel({
           onKeyChange={onKeyChange}
           selectedDurations={selectedDurations}
           onDurationsChange={onDurationsChange}
+          advancedGroups={advancedGroups}
         />
       );
     if (activeSectionId === "duration" && onDurationsChange)
