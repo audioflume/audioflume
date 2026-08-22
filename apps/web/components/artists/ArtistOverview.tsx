@@ -870,7 +870,7 @@ export default function ArtistOverview({
                     <button
                       type="button"
                       onClick={() => void handleNotificationView(notification)}
-                      className="filmwave-backend-button filmwave-backend-button-compact"
+                      className="filmwave-backend-button filmwave-backend-button-secondary filmwave-backend-button-compact"
                     >
                       View
                     </button>
