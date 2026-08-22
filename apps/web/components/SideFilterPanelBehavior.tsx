@@ -55,6 +55,7 @@ const SECTION_ID_BY_LABEL: Record<string, string> = {
   Scene: "mood",
   Genre: "genre",
   Artist: "artist",
+  Artists: "artist",
   Region: "region",
   Instruments: "instruments",
   Vocals: "vocals",
