@@ -54,20 +54,12 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[d
   order: 7;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="duration"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="advanced"] {
   order: 8;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="bpm"] {
-  order: 9;
-}
-
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="key"] {
-  order: 10;
-}
-
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="playlist"] {
-  order: 11;
+  order: 9;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
