@@ -18,6 +18,7 @@ import ArtistAnalytics from "@/components/artists/ArtistAnalytics";
 import ArtistEarnings from "@/components/artists/ArtistEarnings";
 import ArtistMusicUploader from "@/components/artists/ArtistMusicUploader";
 import ArtistNotifications from "@/components/artists/ArtistNotifications";
+import ArtistOverview from "@/components/artists/ArtistOverview";
 import ArtistPagePreview from "@/components/artists/ArtistPagePreview";
 import ArtistPlaylistManager from "@/components/artists/ArtistPlaylistManager";
 import ArtistProfileEditor from "@/components/artists/ArtistProfileEditor";
@@ -119,39 +120,7 @@ function formatRole(role: ArtistDashboardProfile["role"]) {
 }
 
 function Overview({ artist }: { artist: ArtistDashboardProfile }) {
-  const stats = [
-    { label: "Approved Tracks", value: artist.stats.tracks },
-    { label: "Releases", value: artist.stats.releases },
-    { label: "Playlists", value: artist.stats.playlists },
-  ];
-
-  return (
-    <div className="grid gap-4">
-      {artist.hero_image_url ? (
-        <div className="h-[250px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
-          <img
-            src={artist.hero_image_url}
-            alt={`${artist.name} hero`}
-            className="h-full w-full object-cover"
-          />
-        </div>
-      ) : null}
-
-      <section className="grid gap-2 sm:grid-cols-3">
-        {stats.map((stat) => (
-          <div
-            key={stat.label}
-            className="filmwave-backend-section flex min-h-[72px] flex-col justify-between p-3"
-          >
-            <span className="text-xs text-[var(--text-secondary)]">{stat.label}</span>
-            <span className="mt-3 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
-              {stat.value}
-            </span>
-          </div>
-        ))}
-      </section>
-    </div>
-  );
+  return <ArtistOverview artist={artist} />;
 }
 
 function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
