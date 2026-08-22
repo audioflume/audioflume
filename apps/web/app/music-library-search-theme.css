@@ -12,6 +12,14 @@
   display: block !important;
 }
 
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky
+  .fw-toolbar-search-static-input::placeholder {
+  opacity: 1 !important;
+}
+
 html[data-theme="dark"]
   main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
