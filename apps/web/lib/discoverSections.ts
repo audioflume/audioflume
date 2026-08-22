@@ -1,4 +1,5 @@
 export const DISCOVER_SECTION_SHELF_KEYS = [
+  "discover_feature_cards",
   "discover_moods",
   "discover_curated",
   "discover_production",
@@ -18,6 +19,7 @@ export type DiscoverSectionShelfState = Record<
 >;
 
 export const EMPTY_DISCOVER_SECTION_SHELVES: DiscoverSectionShelfState = {
+  discover_feature_cards: [],
   discover_moods: [],
   discover_curated: [],
   discover_production: [],
@@ -27,6 +29,7 @@ export const DISCOVER_SECTION_SHELF_LABELS: Record<
   DiscoverSectionShelfKey,
   string
 > = {
+  discover_feature_cards: "Featured Cards",
   discover_moods: "Explore These Moods",
   discover_curated: "Curated Playlists",
   discover_production: "Browse by Production Style",
