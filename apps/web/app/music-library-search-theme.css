@@ -3,8 +3,8 @@
   z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
   display: none !important;
   box-sizing: border-box !important;
-  background: var(--bg-primary) !important;
-  background-color: var(--bg-primary) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   pointer-events: none !important;
 }
 
