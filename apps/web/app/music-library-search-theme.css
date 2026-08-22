@@ -1,3 +1,10 @@
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
+  > .fw-toolbar-sticky.is-scroll-revealed::before {
+  display: block !important;
+}
+
 html[data-theme="dark"]
   main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
