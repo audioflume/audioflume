@@ -136,3 +136,65 @@ main > section:has(.fw-filter-panel-wrap):has(.fw-music-content-column)
   > .fw-toolbar-header-search-row {
   left: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-side-filter-detail-width)) !important;
 }
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-accordion {
+  max-width: 430px;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-section {
+  border-top: 1px solid var(--filmwave-border-color);
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-section:last-child {
+  border-bottom: 1px solid var(--filmwave-border-color);
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-trigger {
+  display: flex;
+  width: 100%;
+  min-height: 42px;
+  align-items: center;
+  justify-content: space-between;
+  border: 0;
+  background: transparent;
+  padding: 0 8px;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 12.5px;
+  font-weight: 400;
+  text-align: left;
+  cursor: pointer;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-trigger:hover {
+  background: var(--bg-hover);
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-trigger-label {
+  min-width: 0;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-trigger-chevron {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--text-secondary);
+  transition: transform 140ms ease;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-trigger.is-open
+  .fw-filter-advanced-trigger-chevron {
+  transform: rotate(180deg);
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel {
+  padding: 14px 8px 18px;
+}
