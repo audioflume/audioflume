@@ -20,6 +20,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import Toast from "@/components/Toast";
 import AdminArtistShelfPickerModal from "@/components/admin/AdminArtistShelfPickerModal";
+import AdminDiscoverFeatureCardArtists from "@/components/admin/AdminDiscoverFeatureCardArtists";
 import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelfPickerModal";
 import {
   PLAYLIST_MANAGER_GRID_CLASS,
@@ -58,13 +59,8 @@ type FeaturedArtistItem = {
   artist: FeaturedArtist;
 };
 
-const DISCOVER_FEATURE_CARDS_KEY: DiscoverSectionShelfKey =
-  "discover_feature_cards";
-const DISCOVER_FEATURE_CARDS_LIMIT = 2;
-
 function emptySectionState(): DiscoverSectionShelfState {
   return {
-    discover_feature_cards: [],
     discover_moods: [],
     discover_curated: [],
     discover_production: [],
@@ -182,7 +178,6 @@ export default function AdminDiscoverLibraryView({
   const [collapsedSections, setCollapsedSections] = useState<
     Record<DiscoverSectionShelfKey, boolean>
   >({
-    discover_feature_cards: false,
     discover_moods: false,
     discover_curated: false,
     discover_production: false,
@@ -573,24 +568,18 @@ export default function AdminDiscoverLibraryView({
           )}
         </PlaylistManagerCollapsibleSection>
 
+        <AdminDiscoverFeatureCardArtists />
+
         {DISCOVER_SECTION_SHELF_KEYS.map((sectionKey) => {
           const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
           const sectionPlaylists = getSectionPlaylists(sectionKey);
           const sectionCollapsed = collapsedSections[sectionKey];
-          const isFeatureCards = sectionKey === DISCOVER_FEATURE_CARDS_KEY;
-          const featureCardsFull =
-            isFeatureCards &&
-            sectionPlaylists.length >= DISCOVER_FEATURE_CARDS_LIMIT;
 
           return (
             <PlaylistManagerCollapsibleSection
               key={sectionKey}
               title={sectionLabel}
-              subtitle={
-                isFeatureCards
-                  ? `${sectionPlaylists.length}/${DISCOVER_FEATURE_CARDS_LIMIT} cards`
-                  : `${sectionPlaylists.length} playlist${sectionPlaylists.length === 1 ? "" : "s"}`
-              }
+              subtitle={`${sectionPlaylists.length} playlist${sectionPlaylists.length === 1 ? "" : "s"}`}
               collapsed={sectionCollapsed}
               onToggle={() => toggleSection(sectionKey)}
               wrapHeader
@@ -599,7 +588,7 @@ export default function AdminDiscoverLibraryView({
                 <BackendButton
                   type="button"
                   onClick={() => setPickerSection(sectionKey)}
-                  disabled={savingSection || featureCardsFull}
+                  disabled={savingSection}
                 >
                   <PlusIcon size={12} />
                   <span>Add</span>
@@ -608,9 +597,7 @@ export default function AdminDiscoverLibraryView({
             >
               {sectionPlaylists.length === 0 ? (
                 <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-                  {isFeatureCards
-                    ? "Add up to two playlists to the Discover feature cards."
-                    : "Add a playlist to this section."}
+                  Add a playlist to this section.
                 </div>
               ) : (
                 <DndContext
@@ -662,15 +649,6 @@ export default function AdminDiscoverLibraryView({
           playlists={playlists}
           existingIds={sectionState[pickerSection].map((item) => item.playlist_id)}
           saving={savingSection}
-          maxSelections={
-            pickerSection === DISCOVER_FEATURE_CARDS_KEY
-              ? Math.max(
-                  0,
-                  DISCOVER_FEATURE_CARDS_LIMIT -
-                    sectionState[pickerSection].length,
-                )
-              : undefined
-          }
           onClose={() => setPickerSection(null)}
           onAdd={(playlistIds) => addToSection(pickerSection, playlistIds)}
         />

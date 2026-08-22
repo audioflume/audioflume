@@ -17,11 +17,6 @@ import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import { usePlayer } from "@/context/PlayerContext";
-import type {
-  CuratedPlaylist,
-  CuratedPlaylistSong,
-} from "@/lib/curatedPlaylists";
-import type { DiscoverSectionShelfState } from "@/lib/discoverSections";
 import type { Song } from "@/lib/types";
 
 type ShelfItem = {
@@ -190,11 +185,13 @@ function PlaceholderMedia({
   index,
   className = "",
   imageSrc,
+  imagePosition,
   children,
 }: {
   index: number;
   className?: string;
   imageSrc?: string;
+  imagePosition?: string;
   children?: ReactNode;
 }) {
   return (
@@ -223,6 +220,7 @@ function PlaceholderMedia({
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            objectPosition: imagePosition || "center",
           }}
         />
       ) : null}
@@ -344,19 +342,10 @@ function ArtistShelf({
 export default function DiscoverPage() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
-  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
-  const [featuredCardPlaylists, setFeaturedCardPlaylists] = useState<
-    CuratedPlaylist[]
+  const [featureCardArtists, setFeatureCardArtists] = useState<
+    DiscoverFeaturedArtist[]
   >([]);
-  const [featuredCardSongs, setFeaturedCardSongs] = useState<
-    Record<number, CuratedPlaylistSong[]>
-  >({});
-  const [activeFeaturedCardId, setActiveFeaturedCardId] = useState<number | null>(
-    null,
-  );
-  const [loadingFeaturedCardId, setLoadingFeaturedCardId] = useState<
-    number | null
-  >(null);
+  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const playerVisible = Boolean(currentSong);
   const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
   const featuredArtistCount = featuredArtists.length;
@@ -406,43 +395,23 @@ export default function DiscoverPage() {
   useEffect(() => {
     let cancelled = false;
 
-    async function loadFeaturedCards() {
+    async function loadFeatureCardArtists() {
       try {
-        const [sectionResponse, playlistResponse] = await Promise.all([
-          fetch("/api/discover-sections"),
-          fetch("/api/curated-playlists"),
-        ]);
-        const sectionData = (await sectionResponse.json()) as
-          | DiscoverSectionShelfState
-          | { error?: string };
-        const playlistData = await playlistResponse.json();
+        const response = await fetch("/api/discover-feature-card-artists");
+        const data = await response.json();
+        if (!response.ok) return;
 
-        if (!sectionResponse.ok || !playlistResponse.ok) return;
-
-        const featureItems =
-          "discover_feature_cards" in sectionData &&
-          Array.isArray(sectionData.discover_feature_cards)
-            ? [...sectionData.discover_feature_cards]
-                .sort((a, b) => a.position - b.position)
-                .slice(0, 2)
-            : [];
-        const availablePlaylists: CuratedPlaylist[] = Array.isArray(playlistData)
-          ? playlistData
-          : [];
-        const playlistById = new Map(
-          availablePlaylists.map((playlist) => [playlist.id, playlist] as const),
-        );
-        const selectedPlaylists = featureItems
-          .map((item) => playlistById.get(item.playlist_id))
-          .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
-
-        if (!cancelled) setFeaturedCardPlaylists(selectedPlaylists);
+        if (!cancelled) {
+          setFeatureCardArtists(
+            Array.isArray(data?.artists) ? data.artists.slice(0, 2) : [],
+          );
+        }
       } catch {
-        // Leave the managed card slots empty if their playlist data is unavailable.
+        // Leave the managed card slots empty if feature card data is unavailable.
       }
     }
 
-    void loadFeaturedCards();
+    void loadFeatureCardArtists();
 
     return () => {
       cancelled = true;
@@ -471,53 +440,23 @@ export default function DiscoverPage() {
     togglePlayPause(firstFeaturedSong);
   }
 
-  async function playFeaturedCardPlaylist(playlist: CuratedPlaylist) {
-    const cachedSongs = featuredCardSongs[playlist.id] ?? [];
-    const currentSongBelongsToPlaylist = Boolean(
-      currentSong && cachedSongs.some((song) => song.id === currentSong.id),
+  function playFeatureCardArtist(artist: DiscoverFeaturedArtist) {
+    const playableSongs = artist.songs.filter((song) => Boolean(song.audioUrl));
+    const firstSong = playableSongs[0];
+    const artistIsPlaying = Boolean(
+      isPlaying &&
+        currentSong &&
+        playableSongs.some((song) => song.id === currentSong.id),
     );
 
-    if (
-      activeFeaturedCardId === playlist.id &&
-      currentSongBelongsToPlaylist &&
-      currentSong
-    ) {
+    if (artistIsPlaying && currentSong) {
       togglePlayPause(currentSong);
       return;
     }
 
-    if (loadingFeaturedCardId === playlist.id) return;
-    setLoadingFeaturedCardId(playlist.id);
-
-    try {
-      let songs = cachedSongs;
-
-      if (songs.length === 0) {
-        const response = await fetch(
-          `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/songs`,
-        );
-        const data = await response.json();
-        if (!response.ok || !Array.isArray(data)) return;
-
-        songs = data as CuratedPlaylistSong[];
-        setFeaturedCardSongs((current) => ({
-          ...current,
-          [playlist.id]: songs,
-        }));
-      }
-
-      const playableSongs = songs.filter((song) => Boolean(song.audioUrl));
-      const firstSong = playableSongs[0];
-      if (!firstSong) return;
-
-      setQueue(playableSongs);
-      setActiveFeaturedCardId(playlist.id);
-      togglePlayPause(firstSong);
-    } finally {
-      setLoadingFeaturedCardId((current) =>
-        current === playlist.id ? null : current,
-      );
-    }
+    if (!firstSong) return;
+    setQueue(playableSongs);
+    togglePlayPause(firstSong);
   }
 
   return (
@@ -613,42 +552,44 @@ export default function DiscoverPage() {
         <section className="discover-artist-featured">
           <div className="discover-artist-featured-grid">
             {Array.from({ length: 2 }).map((_, index) => {
-              const playlist = featuredCardPlaylists[index];
-              const cachedSongs = playlist
-                ? featuredCardSongs[playlist.id] ?? []
-                : [];
-              const playlistIsPlaying = Boolean(
-                playlist &&
-                  activeFeaturedCardId === playlist.id &&
+              const artist = featureCardArtists[index];
+              const playableSongs = (artist?.songs ?? []).filter((song) =>
+                Boolean(song.audioUrl),
+              );
+              const artistIsPlaying = Boolean(
+                artist &&
                   isPlaying &&
                   currentSong &&
-                  cachedSongs.some((song) => song.id === currentSong.id),
+                  playableSongs.some((song) => song.id === currentSong.id),
               );
 
               return (
-                <article key={playlist?.id ?? index} className="discover-artist-feature-card">
+                <article key={artist?.id ?? index} className="discover-artist-feature-card">
                   <PlaceholderMedia
                     index={index}
-                    imageSrc={playlist?.cover_image_url || undefined}
+                    imageSrc={artist?.hero_image_url || undefined}
+                    imagePosition={
+                      artist
+                        ? `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`
+                        : undefined
+                    }
                     className="discover-artist-feature-media"
                   >
-                    {playlist ? (
+                    {artist ? (
                       <div className="discover-artist-feature-overlay">
                         <div>
-                          <h3>{playlist.name}</h3>
-                          {playlist.kicker ? (
-                            <p style={{ marginTop: "13px" }}>{playlist.kicker}</p>
-                          ) : null}
+                          <h3>{artist.name}</h3>
+                          {artist.designation ? <p>{artist.designation}</p> : null}
                         </div>
                         <button
                           type="button"
                           className="discover-artist-feature-play-button"
-                          onClick={() => void playFeaturedCardPlaylist(playlist)}
-                          disabled={loadingFeaturedCardId === playlist.id}
-                          aria-label={`${playlistIsPlaying ? "Pause" : "Play"} ${playlist.name}`}
-                          aria-pressed={playlistIsPlaying}
+                          onClick={() => playFeatureCardArtist(artist)}
+                          disabled={playableSongs.length === 0}
+                          aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
+                          aria-pressed={artistIsPlaying}
                         >
-                          <PlayBadge isPlaying={playlistIsPlaying} />
+                          <PlayBadge isPlaying={artistIsPlaying} />
                         </button>
                       </div>
                     ) : null}

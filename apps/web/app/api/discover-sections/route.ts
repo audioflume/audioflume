@@ -8,9 +8,6 @@ import {
 
 function emptySections(): DiscoverSectionShelfState {
   return {
-    discover_feature_cards: [
-      ...EMPTY_DISCOVER_SECTION_SHELVES.discover_feature_cards,
-    ],
     discover_moods: [...EMPTY_DISCOVER_SECTION_SHELVES.discover_moods],
     discover_curated: [...EMPTY_DISCOVER_SECTION_SHELVES.discover_curated],
     discover_production: [...EMPTY_DISCOVER_SECTION_SHELVES.discover_production],
