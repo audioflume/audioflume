@@ -174,19 +174,6 @@ main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky
-  .fw-toolbar-search-static:focus-within::after {
-  background: color-mix(
-    in srgb,
-    var(--filmwave-neutral-surface) 92%,
-    var(--filmwave-black) 8%
-  ) !important;
-  color: var(--filmwave-black) !important;
-}
-
-main
-  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  > .fw-music-content-column
-  > .fw-toolbar-sticky
   .fw-toolbar-search-static-icon {
   display: none !important;
   width: 0 !important;
