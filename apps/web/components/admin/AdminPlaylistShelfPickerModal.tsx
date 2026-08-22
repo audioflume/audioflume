@@ -19,6 +19,7 @@ type Props = {
   itemLabelPlural?: string;
   searchPlaceholder?: string;
   emptyMessage?: string;
+  maxSelections?: number;
   onClose: () => void;
   onAdd: (playlistIds: number[]) => void | Promise<void>;
 };
@@ -33,6 +34,7 @@ export default function AdminPlaylistShelfPickerModal({
   itemLabelPlural,
   searchPlaceholder,
   emptyMessage,
+  maxSelections,
   onClose,
   onAdd,
 }: Props) {
@@ -66,8 +68,12 @@ export default function AdminPlaylistShelfPickerModal({
 
     setSelectedIds((current) => {
       const next = new Set(current);
-      if (next.has(playlistId)) next.delete(playlistId);
-      else next.add(playlistId);
+      if (next.has(playlistId)) {
+        next.delete(playlistId);
+      } else {
+        if (maxSelections != null && next.size >= maxSelections) return current;
+        next.add(playlistId);
+      }
       return next;
     });
   }
@@ -78,6 +84,8 @@ export default function AdminPlaylistShelfPickerModal({
   }
 
   const selectedCount = selectedIds.size;
+  const selectionLimitReached =
+    maxSelections != null && selectedCount >= maxSelections;
   const pluralLabel = itemLabelPlural || `${itemLabel}s`;
   const resolvedSearchPlaceholder =
     searchPlaceholder || `Search ${pluralLabel.toLowerCase()}`;
@@ -125,17 +133,21 @@ export default function AdminPlaylistShelfPickerModal({
               {displayedPlaylists.map((playlist) => {
                 const alreadyAdded = existingIdSet.has(playlist.id);
                 const selected = selectedIds.has(playlist.id);
+                const selectionDisabled =
+                  selectionLimitReached && !selected && !alreadyAdded;
 
                 return (
                   <button
                     key={playlist.id}
                     type="button"
                     onClick={() => togglePlaylist(playlist.id)}
-                    disabled={alreadyAdded || saving}
+                    disabled={alreadyAdded || saving || selectionDisabled}
                     className={`group flex min-h-[52px] w-full items-center gap-3 rounded-none p-2 text-left transition-colors ${
                       alreadyAdded || selected
                         ? "bg-[var(--bg-primary)]"
-                        : "cursor-pointer hover:bg-[var(--bg-hover)]"
+                        : selectionDisabled
+                          ? "opacity-50"
+                          : "cursor-pointer hover:bg-[var(--bg-hover)]"
                     } disabled:cursor-default`}
                   >
                     <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-tertiary)] text-[var(--text-muted)]">

@@ -3,6 +3,9 @@ import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { isDiscoverSectionShelfKey } from "@/lib/discoverSections";
 
+const DISCOVER_FEATURE_CARDS_KEY = "discover_feature_cards";
+const DISCOVER_FEATURE_CARDS_LIMIT = 2;
+
 function cleanPlaylistIds(value: unknown) {
   if (!Array.isArray(value)) return [];
 
@@ -58,6 +61,16 @@ export async function POST(req: Request) {
     );
     const newIds = playlistIds.filter((id) => !existingIds.has(id));
 
+    if (
+      shelfKey === DISCOVER_FEATURE_CARDS_KEY &&
+      existingIds.size + newIds.length > DISCOVER_FEATURE_CARDS_LIMIT
+    ) {
+      return NextResponse.json(
+        { error: "Featured Cards can contain up to 2 playlists." },
+        { status: 400 },
+      );
+    }
+
     if (newIds.length === 0) {
       return NextResponse.json({ success: true, added_playlist_ids: [] });
     }
@@ -109,6 +122,16 @@ export async function PATCH(req: Request) {
 
     if (!isDiscoverSectionShelfKey(shelfKey)) {
       return NextResponse.json({ error: "Invalid section" }, { status: 400 });
+    }
+
+    if (
+      shelfKey === DISCOVER_FEATURE_CARDS_KEY &&
+      playlistIds.length > DISCOVER_FEATURE_CARDS_LIMIT
+    ) {
+      return NextResponse.json(
+        { error: "Featured Cards can contain up to 2 playlists." },
+        { status: 400 },
+      );
     }
 
     const results = await Promise.all(
