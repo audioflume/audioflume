@@ -194,7 +194,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         @media (max-width: 940px) {
           .projects-page .projects-control-bar {
             grid-template-columns: 150px minmax(0, 1fr) auto !important;
-            align-items: center !important;
+            align-items: start !important;
             gap: 12px !important;
           }
 
