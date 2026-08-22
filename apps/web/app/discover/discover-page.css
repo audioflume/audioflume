@@ -83,27 +83,29 @@
 .discover-artist-hero-feature {
   display: grid;
   grid-row: 2;
+  box-sizing: border-box;
   width: 100%;
   max-width: 100%;
-  grid-template-columns: minmax(0, 740px) minmax(0, 740px);
-  grid-template-rows: auto auto auto;
+  padding-right: clamp(30px, 3vw, 60px);
+  padding-left: clamp(30px, 3vw, 60px);
+  grid-template-columns: minmax(0, 680px) minmax(0, 620px);
   align-self: center;
-  align-items: start;
-  justify-content: center;
+  align-items: center;
+  justify-content: space-between;
   justify-self: center;
-  column-gap: clamp(32px, 5vw, 70px);
-  row-gap: 0;
+  column-gap: clamp(42px, 4vw, 70px);
 }
 
 .discover-artist-hero-identity,
 .discover-artist-hero-detail {
-  display: contents;
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .discover-artist-hero-eyebrow {
   display: block;
-  grid-column: 1;
-  grid-row: 1;
   margin-bottom: 22px;
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 18px;
@@ -114,11 +116,8 @@
 }
 
 .discover-artist-hero-identity h1 {
-  grid-column: 1;
-  grid-row: 2;
   min-width: 0;
   max-width: 100%;
-  align-self: last baseline;
   margin: 0;
   font-size: clamp(66px, 7.8vw, 98px);
   font-weight: 400;
@@ -128,11 +127,8 @@
 }
 
 .discover-artist-hero-identity p {
-  grid-column: 1;
-  grid-row: 3;
   min-width: 0;
   max-width: 100%;
-  align-self: baseline;
   margin: clamp(28px, 2vw, 36px) 0 0;
   font-size: clamp(18px, 1.25vw, 24px);
   font-weight: 300;
@@ -141,11 +137,8 @@
 }
 
 .discover-artist-hero-detail > p {
-  grid-column: 2;
-  grid-row: 2;
   width: 100%;
-  max-width: none;
-  align-self: last baseline;
+  max-width: 620px;
   margin: 0;
   font-size: clamp(18px, 1.3vw, 24px);
   font-weight: 300;
@@ -155,9 +148,6 @@
 
 .discover-artist-hero-actions {
   display: flex;
-  grid-column: 2;
-  grid-row: 3;
-  align-self: baseline;
   align-items: baseline;
   gap: clamp(42px, 4vw, 72px);
   margin-top: clamp(28px, 2.2vw, 38px);
@@ -697,6 +687,8 @@
   .discover-artist-hero-feature {
     width: 91%;
     max-width: none;
+    padding-right: 0;
+    padding-left: 0;
     grid-template-columns: minmax(0, 0.72fr) minmax(330px, 1fr);
     justify-self: center;
     column-gap: 32px;
@@ -707,6 +699,7 @@
   }
 
   .discover-artist-hero-detail > p {
+    max-width: none;
     font-size: clamp(17px, 2.4vw, 20px);
   }
 
@@ -755,8 +748,9 @@
     max-width: none;
     grid-row: auto;
     grid-template-columns: 1fr;
-    grid-template-rows: none;
     align-self: auto;
+    align-items: stretch;
+    justify-content: stretch;
     justify-self: auto;
     gap: 28px;
   }
