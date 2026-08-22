@@ -172,6 +172,16 @@ function clampPercent(value: number) {
   return Math.min(100, Math.max(0, value));
 }
 
+function getArtistHeroPosition(artist: ArtistDashboardProfile): HeroPosition {
+  const x = Number(artist.hero_image_position_x ?? 50);
+  const y = Number(artist.hero_image_position_y ?? 50);
+
+  return {
+    x: Number.isFinite(x) ? clampPercent(x) : 50,
+    y: Number.isFinite(y) ? clampPercent(y) : 50,
+  };
+}
+
 async function fetchJson<T>(url: string): Promise<T> {
   const response = await fetch(url, { cache: "no-store" });
   const body = (await response.json().catch(() => null)) as (T & { error?: string }) | null;
@@ -212,14 +222,15 @@ export default function ArtistOverview({
 }) {
   const showEarnings = artist.role === "owner" || artist.role === "manager";
   const canAdjustHero = artist.permissions.includes("artist:edit_profile");
+  const initialHeroPosition = getArtistHeroPosition(artist);
   const heroImageRef = useRef<HTMLImageElement>(null);
   const heroDragRef = useRef<HeroDragState | null>(null);
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
   const [analytics, setAnalytics] = useState<ArtistAnalyticsResponse | null>(null);
   const [earnings, setEarnings] = useState<EarningsResponse | null>(null);
   const [notifications, setNotifications] = useState<ArtistNotification[]>([]);
-  const [heroPosition, setHeroPosition] = useState<HeroPosition>({ x: 50, y: 50 });
-  const [cropDraft, setCropDraft] = useState<HeroPosition>({ x: 50, y: 50 });
+  const [heroPosition, setHeroPosition] = useState<HeroPosition>(initialHeroPosition);
+  const [cropDraft, setCropDraft] = useState<HeroPosition>(initialHeroPosition);
   const [cropEditing, setCropEditing] = useState(false);
   const [cropDragging, setCropDragging] = useState(false);
   const [cropSaving, setCropSaving] = useState(false);
@@ -306,10 +317,11 @@ export default function ArtistOverview({
 
   useEffect(() => {
     let cancelled = false;
+    const serverHeroPosition = getArtistHeroPosition(artist);
 
     heroDragRef.current = null;
-    setHeroPosition({ x: 50, y: 50 });
-    setCropDraft({ x: 50, y: 50 });
+    setHeroPosition(serverHeroPosition);
+    setCropDraft(serverHeroPosition);
     setCropEditing(false);
     setCropDragging(false);
     setCropError("");
@@ -327,7 +339,7 @@ export default function ArtistOverview({
     return () => {
       cancelled = true;
     };
-  }, [artist.id]);
+  }, [artist.id, artist.hero_image_position_x, artist.hero_image_position_y]);
 
   async function saveCropPosition(position: HeroPosition) {
     if (!canAdjustHero || cropSaving) return;
