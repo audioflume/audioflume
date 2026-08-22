@@ -40,7 +40,6 @@ import FilterTags from "@/components/FilterTags";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
-import SearchIcon from "@/components/icons/SearchIcon";
 
 import "./music-library-redesign.css";
 
@@ -923,7 +922,6 @@ export default function MusicPage() {
             searchPlaceholder={searchPlaceholder}
             onSearchChange={setSearch}
             searchInputRef={searchInputRef}
-            searchIcon={<SearchIcon />}
             filterCount={activeFilterCount}
             filtersOpen={filtersOpen}
             onToggleFilters={() => setFiltersOpen((open) => !open)}
