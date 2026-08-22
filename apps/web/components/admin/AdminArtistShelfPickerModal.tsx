@@ -21,6 +21,8 @@ type Props = {
   isOpen: boolean;
   existingIds: readonly string[];
   saving?: boolean;
+  title?: string;
+  maxSelections?: number;
   onClose: () => void;
   onAdd: (artistIds: string[]) => void | Promise<void>;
 };
@@ -29,6 +31,8 @@ export default function AdminArtistShelfPickerModal({
   isOpen,
   existingIds,
   saving = false,
+  title = "Featured Artists",
+  maxSelections,
   onClose,
   onAdd,
 }: Props) {
@@ -103,8 +107,12 @@ export default function AdminArtistShelfPickerModal({
 
     setSelectedIds((current) => {
       const next = new Set(current);
-      if (next.has(artistId)) next.delete(artistId);
-      else next.add(artistId);
+      if (next.has(artistId)) {
+        next.delete(artistId);
+      } else {
+        if (maxSelections != null && next.size >= maxSelections) return current;
+        next.add(artistId);
+      }
       return next;
     });
   }
@@ -115,13 +123,15 @@ export default function AdminArtistShelfPickerModal({
   }
 
   const selectedCount = selectedIds.size;
+  const selectionLimitReached =
+    maxSelections != null && selectedCount >= maxSelections;
 
   return (
     <AdminModalShell
       isOpen={isOpen}
-      title="Add to Featured Artists"
+      title={`Add to ${title}`}
       onClose={onClose}
-      closeLabel="Close featured artist picker"
+      closeLabel={`Close ${title.toLowerCase()} artist picker`}
       footer={
         <button
           type="button"
@@ -173,17 +183,21 @@ export default function AdminArtistShelfPickerModal({
               {displayedArtists.map((artist) => {
                 const alreadyAdded = existingIdSet.has(artist.id);
                 const selected = selectedIds.has(artist.id);
+                const selectionDisabled =
+                  selectionLimitReached && !selected && !alreadyAdded;
 
                 return (
                   <button
                     key={artist.id}
                     type="button"
                     onClick={() => toggleArtist(artist.id)}
-                    disabled={alreadyAdded || saving}
+                    disabled={alreadyAdded || saving || selectionDisabled}
                     className={`group flex min-h-[52px] w-full items-center gap-3 rounded-none p-2 text-left transition-colors ${
                       alreadyAdded || selected
                         ? "bg-[var(--bg-primary)]"
-                        : "cursor-pointer hover:bg-[var(--bg-hover)]"
+                        : selectionDisabled
+                          ? "opacity-50"
+                          : "cursor-pointer hover:bg-[var(--bg-hover)]"
                     } disabled:cursor-default`}
                   >
                     <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-tertiary)] text-[11px] font-medium text-[var(--text-muted)]">
