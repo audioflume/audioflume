@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import {
   type CSSProperties,
   type ReactNode,
@@ -15,6 +16,7 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import { usePlayer } from "@/context/PlayerContext";
+import type { Song } from "@/lib/types";
 
 type ShelfItem = {
   title: string;
@@ -22,14 +24,27 @@ type ShelfItem = {
   image: string;
 };
 
-const FEATURED_ARTIST = {
+type DiscoverFeaturedArtist = {
+  id: string;
+  name: string;
+  slug: string;
+  designation: string | null;
+  intro_text: string | null;
+  profile_image_url: string | null;
+  hero_image_url: string | null;
+  hero_image_position_x: number;
+  hero_image_position_y: number;
+  songs: Song[];
+};
+
+const FALLBACK_FEATURED_ARTIST = {
   name: "Isaac Haines",
-  role: "Musician / Composer",
-  description:
+  designation: "Musician / Composer",
+  intro_text:
     "Musician and composer from Grand Prairie, Alberta. Creating heartfelt sounds that evoke emotion and introspection.",
 };
 
-const FEATURED_ARTISTS = [
+const FALLBACK_FEATURED_ARTISTS = [
   {
     name: "Isaac Haines",
     note: "Authentic, evocative music for real stories",
@@ -179,9 +194,9 @@ const EDITORIAL_FEATURES = [
 const MOCKUP_LOREM =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.";
 
-function PlayBadge({ style }: { style?: CSSProperties }) {
+function PlayBadge() {
   return (
-    <span className="discover-artist-play-badge" aria-hidden="true" style={style}>
+    <span className="discover-artist-play-badge" aria-hidden="true">
       <PlayIconSmall size={18} />
     </span>
   );
@@ -191,11 +206,13 @@ function PlaceholderMedia({
   index,
   className = "",
   imageSrc,
+  imagePosition,
   children,
 }: {
   index: number;
   className?: string;
   imageSrc?: string;
+  imagePosition?: string;
   children?: ReactNode;
 }) {
   return (
@@ -224,6 +241,7 @@ function PlaceholderMedia({
             width: "100%",
             height: "100%",
             objectFit: "cover",
+            objectPosition: imagePosition || "50% 50%",
           }}
         />
       ) : null}
@@ -343,33 +361,121 @@ function ArtistShelf({
 }
 
 export default function DiscoverPage() {
-  const { currentSong } = usePlayer();
+  const { currentSong, setQueue, togglePlayPause } = usePlayer();
+  const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
+  const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const playerVisible = Boolean(currentSong);
+  const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
+  const featuredArtistCount = featuredArtists.length || 1;
+  const displayedFeaturedArtist = activeFeaturedArtist
+    ? {
+        name: activeFeaturedArtist.name,
+        designation: activeFeaturedArtist.designation || "",
+        intro_text: activeFeaturedArtist.intro_text || "",
+      }
+    : FALLBACK_FEATURED_ARTIST;
+  const playableFeaturedSongs = (activeFeaturedArtist?.songs ?? []).filter(
+    (song) => Boolean(song.audioUrl),
+  );
+  const firstFeaturedSong = playableFeaturedSongs[0];
+  const heroStyle = activeFeaturedArtist
+    ? ({
+        "--discover-artist-hero-image": activeFeaturedArtist.hero_image_url
+          ? `url("${activeFeaturedArtist.hero_image_url.replaceAll('"', '\\"')}")`
+          : "linear-gradient(#171717, #171717)",
+        "--discover-artist-hero-position": `${activeFeaturedArtist.hero_image_position_x}% ${activeFeaturedArtist.hero_image_position_y}%`,
+      } as CSSProperties)
+    : undefined;
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadFeaturedArtists() {
+      try {
+        const response = await fetch("/api/discover-featured-artists");
+        const data = await response.json();
+        if (!response.ok) return;
+
+        if (!cancelled) {
+          setFeaturedArtists(Array.isArray(data?.artists) ? data.artists : []);
+          setActiveFeaturedIndex(0);
+        }
+      } catch {
+        // Keep the existing static feature as a fallback if managed content is unavailable.
+      }
+    }
+
+    void loadFeaturedArtists();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  function moveFeaturedArtist(direction: "prev" | "next") {
+    if (featuredArtists.length <= 1) return;
+
+    setActiveFeaturedIndex((current) => {
+      if (direction === "next") {
+        return (current + 1) % featuredArtists.length;
+      }
+      return (current - 1 + featuredArtists.length) % featuredArtists.length;
+    });
+  }
+
+  function playArtistSongs(artist: DiscoverFeaturedArtist) {
+    const playableSongs = artist.songs.filter((song) => Boolean(song.audioUrl));
+    const firstSong = playableSongs[0];
+    if (!firstSong) return;
+
+    setQueue(playableSongs);
+    togglePlayPause(firstSong);
+  }
+
+  function playFeaturedArtist() {
+    if (!activeFeaturedArtist) return;
+    playArtistSongs(activeFeaturedArtist);
+  }
 
   return (
     <main className="discover-page-root">
-      <section className="discover-artist-hero" aria-label="Featured artist">
+      <section
+        className="discover-artist-hero"
+        aria-label="Featured artist"
+        style={heroStyle}
+      >
         <div className="discover-artist-hero-inner">
           <div className="discover-artist-hero-feature">
             <div className="discover-artist-hero-identity">
               <span className="discover-artist-hero-eyebrow">Featured Artist</span>
-              <h1>{FEATURED_ARTIST.name}</h1>
-              <p>{FEATURED_ARTIST.role}</p>
+              <h1>{displayedFeaturedArtist.name}</h1>
+              <p>{displayedFeaturedArtist.designation}</p>
             </div>
 
             <div className="discover-artist-hero-detail">
-              <p>{FEATURED_ARTIST.description}</p>
+              <p>{displayedFeaturedArtist.intro_text}</p>
               <div className="discover-artist-hero-actions">
-                <span className="discover-artist-hero-listen">
-                  <PlayBadge
-                    style={{
-                      transform:
-                        "translateY(clamp(-21px, calc(-7.8077px - 1.34615vw), -17.5px))",
-                    }}
-                  />
+                <button
+                  type="button"
+                  className="discover-artist-hero-listen"
+                  onClick={playFeaturedArtist}
+                  disabled={!firstFeaturedSong}
+                  aria-label={
+                    firstFeaturedSong
+                      ? `Play music by ${displayedFeaturedArtist.name}`
+                      : `No playable music for ${displayedFeaturedArtist.name}`
+                  }
+                >
+                  <PlayBadge />
                   <span>Listen now</span>
-                </span>
-                <span>View license catalogue</span>
+                </button>
+                {activeFeaturedArtist ? (
+                  <Link href={`/artists/${activeFeaturedArtist.slug}`}>
+                    View license catalogue
+                  </Link>
+                ) : (
+                  <span>View license catalogue</span>
+                )}
               </div>
             </div>
           </div>
@@ -382,23 +488,36 @@ export default function DiscoverPage() {
             </span>
             <p>{MOCKUP_LOREM}</p>
             <div className="flex w-[178px] justify-self-end flex-col items-end max-[720px]:hidden">
-              <div
-                className="mb-[10px] inline-flex h-[22px] items-center gap-0 text-white"
-                aria-hidden="true"
-              >
-                <span className="inline-flex h-[22px] w-[18px] items-center justify-center">
+              <div className="mb-[10px] inline-flex h-[22px] items-center gap-0 text-white">
+                <button
+                  type="button"
+                  onClick={() => moveFeaturedArtist("prev")}
+                  disabled={featuredArtists.length <= 1}
+                  className="inline-flex h-[22px] w-[18px] cursor-pointer items-center justify-center bg-transparent disabled:cursor-default"
+                  aria-label="Previous featured artist"
+                >
                   <ChevronLeftIcon size={14} />
-                </span>
-                <span className="inline-flex h-[22px] w-[18px] items-center justify-center">
+                </button>
+                <button
+                  type="button"
+                  onClick={() => moveFeaturedArtist("next")}
+                  disabled={featuredArtists.length <= 1}
+                  className="inline-flex h-[22px] w-[18px] cursor-pointer items-center justify-center bg-transparent disabled:cursor-default"
+                  aria-label="Next featured artist"
+                >
                   <ChevronRightIcon size={14} />
-                </span>
+                </button>
                 <span className="ml-[8px] text-[10px] font-medium leading-none [font-variant-numeric:tabular-nums]">
-                  1/3
+                  {activeFeaturedIndex + 1}/{featuredArtistCount}
                 </span>
               </div>
               <div className="discover-artist-hero-slider-marks" aria-hidden="true">
-                <span />
-                <span />
+                {Array.from({ length: featuredArtistCount }).map((_, index) => (
+                  <span
+                    key={index}
+                    className={index === activeFeaturedIndex ? "is-active" : ""}
+                  />
+                ))}
               </div>
             </div>
           </div>
@@ -408,23 +527,64 @@ export default function DiscoverPage() {
       <div className="discover-artist-content">
         <section className="discover-artist-featured">
           <div className="discover-artist-featured-grid">
-            {FEATURED_ARTISTS.map((artist, index) => (
-              <article key={artist.name} className="discover-artist-feature-card">
-                <PlaceholderMedia
-                  index={index}
-                  imageSrc={artist.image}
-                  className="discover-artist-feature-media"
-                >
-                  <div className="discover-artist-feature-overlay">
-                    <div>
-                      <h3>{artist.name}</h3>
-                      <p style={{ marginTop: "13px" }}>{artist.note}</p>
-                    </div>
-                    <PlayBadge />
-                  </div>
-                </PlaceholderMedia>
-              </article>
-            ))}
+            {featuredArtists.length > 0
+              ? featuredArtists.map((artist, index) => {
+                  const hasPlayableSongs = artist.songs.some((song) =>
+                    Boolean(song.audioUrl),
+                  );
+
+                  return (
+                    <article key={artist.id} className="discover-artist-feature-card">
+                      <PlaceholderMedia
+                        index={index}
+                        imageSrc={artist.hero_image_url || undefined}
+                        imagePosition={`${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`}
+                        className="discover-artist-feature-media"
+                      >
+                        <div className="discover-artist-feature-overlay">
+                          <div>
+                            <h3>{artist.name}</h3>
+                            {artist.designation ? (
+                              <p style={{ marginTop: "13px" }}>
+                                {artist.designation}
+                              </p>
+                            ) : null}
+                          </div>
+                          <button
+                            type="button"
+                            className="discover-artist-feature-play-button"
+                            onClick={() => playArtistSongs(artist)}
+                            disabled={!hasPlayableSongs}
+                            aria-label={
+                              hasPlayableSongs
+                                ? `Play music by ${artist.name}`
+                                : `No playable music for ${artist.name}`
+                            }
+                          >
+                            <PlayBadge />
+                          </button>
+                        </div>
+                      </PlaceholderMedia>
+                    </article>
+                  );
+                })
+              : FALLBACK_FEATURED_ARTISTS.map((artist, index) => (
+                  <article key={artist.name} className="discover-artist-feature-card">
+                    <PlaceholderMedia
+                      index={index}
+                      imageSrc={artist.image}
+                      className="discover-artist-feature-media"
+                    >
+                      <div className="discover-artist-feature-overlay">
+                        <div>
+                          <h3>{artist.name}</h3>
+                          <p style={{ marginTop: "13px" }}>{artist.note}</p>
+                        </div>
+                        <PlayBadge />
+                      </div>
+                    </PlaceholderMedia>
+                  </article>
+                ))}
           </div>
         </section>
 
