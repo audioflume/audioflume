@@ -18,7 +18,7 @@
   background: var(--bg-primary) !important;
   background-color: var(--bg-primary) !important;
   box-shadow: none !important;
-  padding: 0 14px !important;
+  padding: 0 14px 0 18px !important;
 }
 
 :where(html.light, html[data-theme="light"]) .fw-toolbar-header-search-row {
