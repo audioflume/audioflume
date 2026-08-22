@@ -23,6 +23,7 @@ const DISPLAY_AI_RAIL_COUNT_CLASS = "fw-display-ai-rail-count";
 const DISPLAY_AI_CLEAR_ALL_PROXY_CLASS = "fw-display-ai-clear-all-proxy";
 const PLAYLIST_FILTER_OPTION_CLASS = "fw-filter-playlist-option";
 const PUBLIC_PLAYLIST_FILTER_OPTION_CLASS = "is-public-playlist";
+const AUDIOFLUME_ORIGINALS_ARTIST = "Audioflume Originals";
 
 const LICENSE_FILTER_OPTIONS = [
   {
@@ -53,6 +54,7 @@ type PlaylistFilterDecoration = {
 const SECTION_ID_BY_LABEL: Record<string, string> = {
   Scene: "mood",
   Genre: "genre",
+  Artist: "artist",
   Region: "region",
   Instruments: "instruments",
   Vocals: "vocals",
@@ -468,6 +470,47 @@ function syncPlaylistFilterOptionClasses(playlists: PlaylistFilterDecoration[]) 
   });
 }
 
+function syncArtistFilterOptionOrder() {
+  document.querySelectorAll<HTMLElement>(WEB_MUSIC_FILTER_PANEL_SELECTOR).forEach((panel) => {
+    const activeRailItem = panel.querySelector<HTMLElement>(".fw-filter-rail-item.is-active");
+    if (getRailItemSectionId(activeRailItem) !== "artist") return;
+
+    const optionList = panel.querySelector<HTMLElement>(
+      ".fw-filter-detail .fw-filter-option-list",
+    );
+    if (!optionList) return;
+
+    const optionButtons = Array.from(
+      optionList.querySelectorAll<HTMLButtonElement>(
+        ":scope > .fw-filter-option",
+      ),
+    );
+    const getLabel = (button: HTMLButtonElement) =>
+      button.querySelector<HTMLElement>(".fw-filter-option-label")?.textContent?.trim() ?? "";
+    const sortedButtons = [...optionButtons].sort((a, b) => {
+      const aLabel = getLabel(a);
+      const bLabel = getLabel(b);
+      const aIsOriginals =
+        aLabel.localeCompare(AUDIOFLUME_ORIGINALS_ARTIST, undefined, {
+          sensitivity: "base",
+        }) === 0;
+      const bIsOriginals =
+        bLabel.localeCompare(AUDIOFLUME_ORIGINALS_ARTIST, undefined, {
+          sensitivity: "base",
+        }) === 0;
+
+      if (aIsOriginals !== bIsOriginals) return aIsOriginals ? -1 : 1;
+      return aLabel.localeCompare(bLabel, undefined, { sensitivity: "base" });
+    });
+
+    if (sortedButtons.every((button, index) => button === optionButtons[index])) {
+      return;
+    }
+
+    sortedButtons.forEach((button) => optionList.appendChild(button));
+  });
+}
+
 function syncWebRailItemSectionIds(rail: HTMLElement) {
   rail.querySelectorAll<HTMLElement>(".fw-filter-rail-item").forEach((railItem) => {
     const label = railItem.querySelector<HTMLElement>(".fw-filter-rail-label");
@@ -494,6 +537,7 @@ function syncWebMusicFilterEnhancements(playlists: PlaylistFilterDecoration[]) {
   syncWebPanelClearMode();
   syncLicenseFilterBoxes();
   syncDisplayAiFilterOptions();
+  syncArtistFilterOptionOrder();
   syncPlaylistFilterOptionClasses(playlists);
 }
 

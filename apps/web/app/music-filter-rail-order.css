@@ -34,36 +34,40 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[d
   order: 2;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="instruments"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="artist"] {
   order: 3;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="region"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="instruments"] {
   order: 4;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="vocals"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="region"] {
   order: 5;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="build"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="vocals"] {
   order: 6;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="duration"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="build"] {
   order: 7;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="bpm"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="duration"] {
   order: 8;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="key"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="bpm"] {
   order: 9;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="playlist"] {
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="key"] {
   order: 10;
+}
+
+main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item[data-filter-section-id="playlist"] {
+  order: 11;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
