@@ -53,6 +53,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-header-search-row {
   --fw-header-search-field-height: 100%;
   --fw-header-search-transform: none;
+  --text-primary: var(--filmwave-black);
+  --text-muted: color-mix(in srgb, var(--filmwave-black) 55%, transparent);
   grid-column: 1 !important;
   grid-row: 1 !important;
   display: flex !important;
@@ -62,8 +64,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   height: 42px !important;
   border: 1px solid var(--filmwave-border-color) !important;
   border-radius: 0 !important;
-  background: var(--bg-primary) !important;
-  background-color: var(--bg-primary) !important;
+  background: var(--filmwave-white) !important;
+  background-color: var(--filmwave-white) !important;
   box-shadow: none !important;
   padding: 0 14px !important;
 }
