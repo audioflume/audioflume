@@ -1,14 +1,20 @@
 "use client";
 
+import { PremiumLabel } from "@filmwave/shared";
 import Link from "next/link";
 import {
+  type CSSProperties,
   type PointerEvent as ReactPointerEvent,
   useEffect,
   useRef,
   useState,
 } from "react";
 
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import { usePlayer } from "@/context/PlayerContext";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
+import type { Song } from "@/lib/types";
 
 type ArtistSongSummary = {
   id: string;
@@ -16,9 +22,7 @@ type ArtistSongSummary = {
   status: string;
   duration: number;
   created_at: string;
-  player_song?: {
-    coverArt?: string | null;
-  };
+  player_song?: Song;
 };
 
 type ArtistSongsResponse = {
@@ -223,6 +227,7 @@ export default function ArtistOverview({
   const showEarnings = artist.role === "owner" || artist.role === "manager";
   const canAdjustHero = artist.permissions.includes("artist:edit_profile");
   const initialHeroPosition = getArtistHeroPosition(artist);
+  const { currentSong, isPlaying, togglePlayPause, seekTo, setQueue } = usePlayer();
   const heroImageRef = useRef<HTMLImageElement>(null);
   const heroDragRef = useRef<HeroDragState | null>(null);
   const [songs, setSongs] = useState<ArtistSongSummary[]>([]);
@@ -314,6 +319,15 @@ export default function ArtistOverview({
       cancelled = true;
     };
   }, [artist.id, showEarnings]);
+
+  useEffect(() => {
+    setQueue(
+      songs
+        .slice(0, 5)
+        .map((song) => song.player_song)
+        .filter((song): song is Song => Boolean(song?.audioUrl)),
+    );
+  }, [setQueue, songs]);
 
   useEffect(() => {
     let cancelled = false;
@@ -450,6 +464,18 @@ export default function ArtistOverview({
     }
     heroDragRef.current = null;
     setCropDragging(false);
+  }
+
+  function handleRecentSongPlay(song: ArtistSongSummary) {
+    const playerSong = song.player_song;
+    if (!playerSong?.audioUrl) return;
+
+    if (currentSong?.id === playerSong.id) {
+      togglePlayPause(playerSong);
+      return;
+    }
+
+    seekTo(playerSong, 0, currentSong ? isPlaying : true);
   }
 
   async function handleNotificationView(notification: ArtistNotification) {
@@ -654,44 +680,79 @@ export default function ArtistOverview({
               No songs added yet.
             </div>
           ) : (
-            recentSongs.map((song, index) => (
-              <div
-                key={song.id}
-                className={`flex items-center gap-3 px-4 py-3 ${
-                  index < recentSongs.length - 1
-                    ? "border-b border-[var(--border-subtle)]"
-                    : ""
-                }`}
-              >
-                <div className="h-11 w-11 shrink-0 overflow-hidden rounded-[5px] bg-[var(--bg-tertiary)]">
-                  {song.player_song?.coverArt ? (
-                    <img
-                      src={song.player_song.coverArt}
-                      alt=""
-                      className="h-full w-full object-cover"
-                    />
-                  ) : null}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <div className="truncate text-xs font-medium text-[var(--text-primary)]">
-                    {song.title}
+            recentSongs.map((song, index) => {
+              const playerSong = song.player_song;
+              const isCurrentSong = currentSong?.id === playerSong?.id;
+              const rowIsPlaying = isCurrentSong && isPlaying;
+
+              return (
+                <div
+                  key={song.id}
+                  className={`flex items-center gap-3 px-4 py-3 ${
+                    index < recentSongs.length - 1
+                      ? "border-b border-[var(--border-subtle)]"
+                      : ""
+                  }`}
+                >
+                  <button
+                    type="button"
+                    onClick={() => handleRecentSongPlay(song)}
+                    disabled={!playerSong?.audioUrl}
+                    className="group/artist-overview-thumb relative h-11 w-11 shrink-0 cursor-pointer overflow-hidden rounded-[5px] bg-[var(--bg-tertiary)] disabled:cursor-default"
+                    style={
+                      { "--filmwave-song-card-play-size": "32px" } as CSSProperties
+                    }
+                    aria-label={rowIsPlaying ? "Pause song" : "Play song"}
+                  >
+                    {playerSong?.coverArt ? (
+                      <img
+                        src={playerSong.coverArt}
+                        alt=""
+                        className="h-full w-full object-cover"
+                      />
+                    ) : null}
+                    {playerSong?.audioUrl ? (
+                      <span
+                        className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition ${
+                          isCurrentSong
+                            ? "opacity-100"
+                            : "opacity-0 group-hover/artist-overview-thumb:opacity-100"
+                        }`}
+                      >
+                        <span className="filmwave-song-play-button">
+                          {rowIsPlaying ? (
+                            <PauseIcon size={15} />
+                          ) : (
+                            <PlayIconSmall size={15} />
+                          )}
+                        </span>
+                      </span>
+                    ) : null}
+                  </button>
+                  <div className="min-w-0 flex-1">
+                    <div className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-[var(--text-primary)]">
+                      <span className="min-w-0 truncate">{song.title}</span>
+                      {playerSong?.licenseType === "premium" ? (
+                        <PremiumLabel />
+                      ) : null}
+                    </div>
+                    <div className="mt-1 text-[10px] text-[var(--text-muted)] sm:hidden">
+                      {formatDate(song.created_at)}
+                    </div>
                   </div>
-                  <div className="mt-1 text-[10px] text-[var(--text-muted)] sm:hidden">
+                  <span
+                    className={`hidden rounded-full px-2 py-1 text-[9px] font-medium sm:inline-flex ${statusClassName(
+                      song.status,
+                    )}`}
+                  >
+                    {formatStatus(song.status)}
+                  </span>
+                  <div className="hidden w-[86px] shrink-0 text-right text-[10px] text-[var(--text-muted)] sm:block">
                     {formatDate(song.created_at)}
                   </div>
                 </div>
-                <span
-                  className={`hidden rounded-full px-2 py-1 text-[9px] font-medium sm:inline-flex ${statusClassName(
-                    song.status,
-                  )}`}
-                >
-                  {formatStatus(song.status)}
-                </span>
-                <div className="hidden w-[86px] shrink-0 text-right text-[10px] text-[var(--text-muted)] sm:block">
-                  {formatDate(song.created_at)}
-                </div>
-              </div>
-            ))
+              );
+            })
           )}
         </section>
 
