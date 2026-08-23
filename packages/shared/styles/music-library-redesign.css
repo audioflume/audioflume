@@ -83,7 +83,7 @@
   color: var(--text-primary);
   font-family: inherit;
   font-size: 13.5px;
-  font-weight: 320;
+  font-weight: 300;
   outline: none;
 }
 
@@ -125,7 +125,7 @@
   color: var(--text-secondary);
   font-family: var(--font-zalando-sans);
   font-size: 12.5px;
-  font-weight: 320;
+  font-weight: 400;
   letter-spacing: normal;
   line-height: normal;
   cursor: pointer;
@@ -160,7 +160,7 @@
   padding: 0 5px;
   color: var(--accent-contrast, #111111);
   font-size: 10px;
-  font-weight: 320;
+  font-weight: 600;
   line-height: 1;
 }
 
@@ -301,7 +301,7 @@
   padding: 0 8px 0 12px;
   font-family: inherit;
   font-size: 12.5px;
-  font-weight: 320;
+  font-weight: 400;
   text-align: left;
   transition: background 130ms ease, color 130ms ease;
 }
@@ -336,7 +336,7 @@
   padding: 0 4px;
   color: var(--accent-contrast, #111111);
   font-size: 9.5px;
-  font-weight: 320;
+  font-weight: 700;
 }
 
 .fw-filter-rail-chevron {
@@ -370,7 +370,7 @@
   margin: 0 0 9px;
   color: var(--text-muted);
   font-size: 10.5px;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: uppercase;
 }
 
@@ -385,7 +385,7 @@
   padding: 0 4px;
   color: var(--accent-contrast, #111111);
   font-size: 9px;
-  font-weight: 320;
+  font-weight: 700;
   letter-spacing: 0;
 }
 
@@ -410,7 +410,7 @@
   padding: 6px 8px;
   font-family: inherit;
   font-size: 12.5px;
-  font-weight: 320;
+  font-weight: 400;
   line-height: 1.3;
   text-align: left;
   transition: background 120ms ease, color 120ms ease;
@@ -484,7 +484,7 @@
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 11.5px;
-  font-weight: 320;
+  font-weight: 400;
   line-height: 1.4;
   cursor: pointer;
   white-space: nowrap;
@@ -527,7 +527,6 @@
 
 .fw-filter-chip-stacked small {
   font-size: 10px;
-  font-weight: 320;
   opacity: 0.7;
 }
 
@@ -539,7 +538,6 @@
 .fw-filter-empty {
   color: var(--text-muted);
   font-size: 12px;
-  font-weight: 320;
 }
 
 /* Segmented control */
@@ -560,7 +558,7 @@
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 11px;
-  font-weight: 320;
+  font-weight: 400;
   line-height: 1.3;
   cursor: pointer;
   transition: background 140ms ease, color 140ms ease;
@@ -627,7 +625,6 @@
   margin-top: 6px;
   color: var(--text-muted);
   font-size: 10px;
-  font-weight: 320;
 }
 
 /* Duration summary */
@@ -638,13 +635,13 @@
   gap: 8px;
   color: var(--text-primary);
   font-size: 12px;
-  font-weight: 320;
+  font-weight: 500;
 }
 
 .fw-duration-summary-mid {
   color: var(--text-muted);
   font-size: 9.5px;
-  font-weight: 320;
+  font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
@@ -665,7 +662,7 @@
 .fw-filter-mini-field span {
   color: var(--text-muted);
   font-size: 10px;
-  font-weight: 320;
+  font-weight: 500;
 }
 
 .fw-filter-input {
@@ -678,7 +675,6 @@
   color: var(--text-primary);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 320;
   outline: none;
   transition: border-color 150ms ease;
 }
@@ -691,7 +687,6 @@
   padding-bottom: 7px;
   color: var(--text-muted);
   font-size: 12px;
-  font-weight: 320;
 }
 
 .fw-filter-panel-footer {
@@ -710,7 +705,6 @@
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 320;
   cursor: pointer;
   transition: color 140ms ease;
 }
@@ -727,7 +721,7 @@
   color: var(--bg-primary);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 320;
+  font-weight: 500;
   cursor: pointer;
   transition: opacity 140ms ease;
 }
@@ -765,7 +759,7 @@
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 11.5px;
-  font-weight: 320;
+  font-weight: 400;
   line-height: 1.4;
   cursor: pointer;
   white-space: nowrap;
@@ -803,14 +797,13 @@
 .fw-song-list-title {
   color: var(--text-primary);
   font-size: 12.5px;
-  font-weight: 320;
+  font-weight: 500;
   letter-spacing: 0.01em;
 }
 
 .fw-song-list-meta {
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 320;
 }
 
 .fw-song-list .desktop-music-list {

@@ -57,7 +57,7 @@ function SongFilePreview({ song, fallbackTitle }: { song?: ProjectPickerSong | n
         <MusicGlyph small />
       </span>
 
-      <span className="block max-w-[300px] truncate text-[12px] font-[320] tracking-[-0.015em] text-[var(--text-primary)]">
+      <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
         {label}
       </span>
     </div>
@@ -72,7 +72,7 @@ function FolderPreview({ folder, fallbackName }: { folder?: ProjectFolder | null
       <span className="flex h-6 w-6 shrink-0 items-center justify-center">
         <FolderGlyph small />
       </span>
-      <span className="block max-w-[300px] truncate text-[12px] font-[320] tracking-[-0.015em] text-[var(--text-primary)]">
+      <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
         {label}
       </span>
     </div>
@@ -255,10 +255,10 @@ export default function ProjectFolderPickerModal({
       footer={
         <>
           <div className="flex min-w-0 flex-1 items-center gap-2">
-            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--filmwave-menu-bg)] px-3.5 py-2 text-xs font-[320] text-[var(--text-muted)]">
+            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--filmwave-menu-bg)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
               From: <span className="font-medium text-[var(--text-primary)]">{sourceLabel}</span>
             </div>
-            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--filmwave-menu-bg)] px-3.5 py-2 text-xs font-[320] text-[var(--text-muted)]">
+            <div className="min-w-0 truncate rounded-none border border-[var(--border)] bg-[var(--filmwave-menu-bg)] px-3.5 py-2 text-xs text-[var(--text-muted)]">
               Into: <span className="font-medium text-[var(--text-primary)]">{destinationLabel}</span>
             </div>
           </div>
@@ -297,7 +297,7 @@ export default function ProjectFolderPickerModal({
                   <button
                     type="button"
                     onClick={() => setSelectedFolderId(headerFolderId)}
-                    className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full cursor-pointer items-center rounded-full bg-[var(--bg-hover)] px-3 text-left text-[10px] font-[320] leading-none transition-colors hover:bg-white/[0.06] [.light_&:hover]:bg-black/[0.075]`}
+                    className={`${modalFieldLabelClass} !mb-0 flex h-6 w-full cursor-pointer items-center rounded-full bg-[var(--bg-hover)] px-3 text-left text-[10px] leading-none transition-colors hover:bg-white/[0.06] [.light_&:hover]:bg-black/[0.075]`}
                   >
                     <span className="truncate">{columnLabel}</span>
                   </button>
@@ -306,7 +306,7 @@ export default function ProjectFolderPickerModal({
                 <div className="min-h-0 flex-1 overflow-y-auto px-3 py-3">
                   <div className="flex min-h-full flex-col gap-0">
                     {isRootPreviewColumn ? (
-                      <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs font-[320] text-[var(--text-muted)]">
+                      <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs text-[var(--text-muted)]">
                         Currently in &quot;All Files&quot;
                       </div>
                     ) : isRootColumn ? (
@@ -321,7 +321,7 @@ export default function ProjectFolderPickerModal({
                                 key={folder.id}
                                 type="button"
                                 onClick={() => setSelectedFolderId(folder.id)}
-                                className={`group flex h-8 w-full flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-[320] transition ${
+                                className={`group flex h-8 w-full flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                                   isSelected
                                     ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
                                     : isAncestor
@@ -341,15 +341,15 @@ export default function ProjectFolderPickerModal({
                           {column.songs.map((song) => (
                             <div
                               key={song.id}
-                              className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs font-[320] text-[var(--text-secondary)]"
+                              className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs text-[var(--text-secondary)]"
                             >
                               <MusicGlyph small />
-                              <span className="min-w-0 truncate font-[400]">{song.title}</span>
+                              <span className="min-w-0 truncate font-medium">{song.title}</span>
                             </div>
                           ))}
                         </>
                       ) : (
-                        <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs font-[320] text-[var(--text-muted)]">
+                        <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs text-[var(--text-muted)]">
                           Empty folder
                         </div>
                       )
@@ -366,7 +366,7 @@ export default function ProjectFolderPickerModal({
                                   key={folder.id}
                                   type="button"
                                   onClick={() => setSelectedFolderId(folder.id)}
-                                  className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-[320] transition ${
+                                  className={`group flex h-8 flex-shrink-0 cursor-pointer items-center justify-between gap-2 rounded-none px-2.5 text-left text-xs font-medium transition ${
                                     isSelected
                                       ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
                                       : isAncestor
@@ -386,15 +386,15 @@ export default function ProjectFolderPickerModal({
                             {column.songs.map((song) => (
                               <div
                                 key={song.id}
-                                className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs font-[320] text-[var(--text-secondary)]"
+                                className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs text-[var(--text-secondary)]"
                               >
                                 <MusicGlyph small />
-                                <span className="min-w-0 truncate font-[400]">{song.title}</span>
+                                <span className="min-w-0 truncate font-medium">{song.title}</span>
                               </div>
                             ))}
                           </>
                         ) : (
-                          <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs font-[320] text-[var(--text-muted)]">
+                          <div className="flex min-h-0 flex-1 items-center justify-center px-4 text-center text-xs text-[var(--text-muted)]">
                             Empty folder
                           </div>
                         )}

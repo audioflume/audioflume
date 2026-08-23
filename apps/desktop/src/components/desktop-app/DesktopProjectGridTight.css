@@ -20,7 +20,6 @@
 .project-file-browser .project-file-card-title,
 .project-folder-card-name {
   font-size: 10.5px;
-  font-weight: 320;
   line-height: 1.5;
 }
 
@@ -70,7 +69,7 @@ body > div[style*="z-index: 99999"] > span:last-child {
   white-space: normal !important;
   color: var(--text-primary) !important;
   font-size: 10.5px !important;
-  font-weight: 320 !important;
+  font-weight: 500 !important;
   line-height: 1.5 !important;
   letter-spacing: -0.01em !important;
   text-align: center !important;
@@ -86,5 +85,4 @@ body > div[style*="z-index: 99999"] .project-music-glyph.small {
   height: 44px !important;
   border-radius: 8px !important;
   font-size: 20px !important;
-  font-weight: 200 !important;
 }

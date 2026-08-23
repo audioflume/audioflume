@@ -23,7 +23,6 @@
 .audioflume-home-playlist-feature-copy h2,
 .audioflume-editorial-display {
   font-size: 56px;
-  font-weight: 400;
 }
 
 .audioflume-home-eyebrow,
@@ -32,7 +31,7 @@
   margin-bottom: 18px;
   color: var(--text-muted);
   font-size: 11.5px;
-  font-weight: 320;
+  font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1;
   text-transform: uppercase;
@@ -45,7 +44,7 @@
   margin: 0;
   color: var(--text-primary);
   font-size: clamp(16px, 1.45vw, 20px);
-  font-weight: 200;
+  font-weight: 300;
   line-height: 1.35;
 }
 

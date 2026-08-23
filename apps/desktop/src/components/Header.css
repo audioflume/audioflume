@@ -57,7 +57,7 @@ html[data-theme="light"] .filmwave-header.desktop-header {
   color: currentColor;
   font-family: var(--font-zalando-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   font-size: 22px;
-  font-weight: 200;
+  font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 1;
   text-transform: lowercase;

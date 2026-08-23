@@ -180,7 +180,7 @@ export default function SongRow({
           showWaveform
             ? "grid-cols-[48px_minmax(180px,240px)_minmax(150px,210px)_minmax(250px,1fr)_minmax(150px,190px)_64px_76px_92px]"
             : "grid-cols-[48px_minmax(160px,1.4fr)_minmax(120px,1fr)_minmax(112px,140px)_64px_76px_92px]"
-        } items-center gap-3 px-6 text-xs font-[320] ${
+        } items-center gap-3 px-6 text-xs ${
           isLast ? "is-last" : ""
         } ${isCurrentSong ? "bg-[var(--bg-hover)]" : ""}`}
         onClick={handlePlayClick}
@@ -227,7 +227,7 @@ export default function SongRow({
         >
           <div
             title={safeSong.title}
-            className="truncate font-[400] leading-tight text-[var(--text-primary)]"
+            className="truncate font-medium leading-tight text-[var(--text-primary)]"
           >
             {safeSong.title}
           </div>

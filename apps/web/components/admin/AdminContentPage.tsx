@@ -189,12 +189,12 @@ export default function AdminContentPage({
           {!hidePageIntro ? (
             <div className="mb-8 flex min-h-[58px] items-end justify-between gap-4">
               <div className="min-w-0">
-                <h1 className="font-[family-name:var(--font-zalando-sans)] text-[34px] font-[200] leading-none tracking-[-0.045em] text-[var(--text-primary)]">
+                <h1 className="font-[family-name:var(--font-zalando-sans)] text-[34px] font-medium leading-none tracking-[-0.045em] text-[var(--text-primary)]">
                   {title}
                 </h1>
 
                 {description ? (
-                  <p className="mt-2 max-w-[620px] text-sm font-[320] leading-6 text-[var(--text-secondary)]">
+                  <p className="mt-2 max-w-[620px] text-sm leading-6 text-[var(--text-secondary)]">
                     {description}
                   </p>
                 ) : null}

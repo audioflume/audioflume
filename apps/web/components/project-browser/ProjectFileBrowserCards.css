@@ -26,7 +26,7 @@
   margin: 0 0 -2px !important;
   color: var(--text-muted) !important;
   font-size: 11px !important;
-  font-weight: 320 !important;
+  font-weight: 500 !important;
   letter-spacing: -0.01em !important;
   line-height: 1.2 !important;
 }
@@ -118,15 +118,10 @@
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   font-size: 12px !important;
-  font-weight: 320 !important;
+  font-weight: 500 !important;
   line-height: 1.15 !important;
   letter-spacing: -0.01em !important;
   color: var(--text-primary) !important;
-}
-
-.project-file-browser .project-song-file-title,
-.project-browser-row-title.project-song-file-title {
-  font-weight: 400 !important;
 }
 
 .project-file-browser .project-file-card-meta,
@@ -141,7 +136,6 @@
   white-space: nowrap !important;
   margin-top: 0 !important;
   font-size: 10px !important;
-  font-weight: 320 !important;
   line-height: 1.2 !important;
   color: var(--text-muted) !important;
 }
@@ -156,7 +150,6 @@
   background: transparent !important;
   opacity: 0;
   font-size: 14px !important;
-  font-weight: 320 !important;
   color: var(--text-primary) !important;
 }
 

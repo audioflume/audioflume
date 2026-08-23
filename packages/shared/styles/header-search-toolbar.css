@@ -36,7 +36,6 @@
   background-color: var(--bg-control) !important;
   padding: 0 14px !important;
   font-size: 13px !important;
-  font-weight: 320 !important;
   line-height: 1 !important;
 }
 
@@ -361,7 +360,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   padding: 0 30px !important;
   color: var(--text-primary) !important;
   font-size: 14px !important;
-  font-weight: 320 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -453,7 +451,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   align-items: initial !important;
   justify-content: initial !important;
   font-size: 14px !important;
-  font-weight: 320 !important;
   line-height: 1 !important;
 }
 
@@ -572,7 +569,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-toolbar-sticky
   .filmwave-search-pill-input {
   font-size: 14px !important;
-  font-weight: 320 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)

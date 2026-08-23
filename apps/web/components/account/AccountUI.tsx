@@ -118,8 +118,8 @@ export function Card({ children, className = "" }: { children: React.ReactNode; 
 export function CardTitle({ title, description }: { title: string; description?: string }) {
   return (
     <div className="border-b border-[var(--border)] px-4 py-3.5">
-      <h2 className="text-2xl font-[200] tracking-[-0.02em] text-[var(--text-primary)]">{title}</h2>
-      {description ? <p className="mt-1 text-xs font-[320] leading-5 text-[var(--text-muted)]">{description}</p> : null}
+      <h2 className="text-2xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</h2>
+      {description ? <p className="mt-1 text-xs leading-5 text-[var(--text-muted)]">{description}</p> : null}
     </div>
   );
 }
@@ -127,14 +127,14 @@ export function CardTitle({ title, description }: { title: string; description?:
 export function Input({ label, value, placeholder, onChange, readOnly = false, type = "text" }: { label: string; value?: string; placeholder?: string; onChange?: (value: string) => void; readOnly?: boolean; type?: string }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs font-[320] text-[var(--text-muted)]">{label}</span>
+      <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">{label}</span>
       <input
         type={type}
         value={value || ""}
         placeholder={placeholder}
         readOnly={readOnly}
         onChange={(event) => onChange?.(event.target.value)}
-        className="h-10 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] read-only:cursor-default"
+        className="h-10 w-full border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] read-only:cursor-default"
       />
     </label>
   );
@@ -143,8 +143,8 @@ export function Input({ label, value, placeholder, onChange, readOnly = false, t
 export function Info({ label, value }: { label: string; value: string }) {
   return (
     <div className="border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3">
-      <div className="text-xs font-[320] text-[var(--text-muted)]">{label}</div>
-      <div className="mt-1 truncate text-sm font-[320] text-[var(--text-primary)]">{value}</div>
+      <div className="text-xs font-medium text-[var(--text-muted)]">{label}</div>
+      <div className="mt-1 truncate text-sm font-medium text-[var(--text-primary)]">{value}</div>
     </div>
   );
 }
@@ -155,7 +155,7 @@ export function Button({ children, subtle = false, dark = false, disabled = fals
       type={type}
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 border px-3.5 text-xs font-[320] transition disabled:cursor-not-allowed disabled:opacity-45 ${dark ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80" : subtle ? "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]" : "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"}`}
+      className={`inline-flex h-8 cursor-pointer items-center justify-center gap-2 border px-3.5 text-xs font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${dark ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80" : subtle ? "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]" : "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"}`}
     >
       {children}
     </button>
@@ -164,7 +164,7 @@ export function Button({ children, subtle = false, dark = false, disabled = fals
 
 export function DangerButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) {
   return (
-    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center border border-[var(--border)] bg-transparent px-3.5 text-xs font-[320] text-[var(--danger)] transition hover:border-transparent hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]">
+    <button type="button" onClick={onClick} className="inline-flex h-8 cursor-pointer items-center justify-center border border-[var(--border)] bg-transparent px-3.5 text-xs font-medium text-[var(--danger)] transition hover:border-transparent hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]">
       {children}
     </button>
   );
@@ -172,7 +172,7 @@ export function DangerButton({ children, onClick }: { children: React.ReactNode;
 
 export function Option<T extends string>({ label, value, active, onClick }: { label: string; value: T; active: boolean; onClick: (value: T) => void }) {
   return (
-    <button type="button" onClick={() => onClick(value)} className={`flex h-8 cursor-pointer items-center justify-center gap-2 border border-[var(--border)] px-3 text-xs font-[320] transition ${active ? "bg-[var(--text-primary)] text-[var(--bg-primary)]" : "bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"}`}>
+    <button type="button" onClick={() => onClick(value)} className={`flex h-8 cursor-pointer items-center justify-center gap-2 border border-[var(--border)] px-3 text-xs font-medium transition ${active ? "bg-[var(--text-primary)] text-[var(--bg-primary)]" : "bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"}`}>
       {active ? <CheckIcon /> : null}
       {label}
     </button>
@@ -185,8 +185,8 @@ export function Row({ title, description, icon, children }: { title: string; des
       <div className="flex gap-3">
         {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-md border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)]">{icon}</div> : null}
         <div>
-          <div className="text-sm font-[320] tracking-[-0.02em] text-[var(--text-primary)]">{title}</div>
-          <p className="mt-1 max-w-xl text-xs font-[320] leading-5 text-[var(--text-muted)]">{description}</p>
+          <div className="text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</div>
+          <p className="mt-1 max-w-xl text-xs leading-5 text-[var(--text-muted)]">{description}</p>
         </div>
       </div>
       <div className="flex flex-wrap gap-2 md:justify-end">{children}</div>
@@ -196,7 +196,7 @@ export function Row({ title, description, icon, children }: { title: string; des
 
 export function Feedback({ message, tone }: { message: string; tone: "success" | "error" }) {
   return (
-    <div className={`border px-3 py-2 text-xs font-[320] ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
+    <div className={`border px-3 py-2 text-xs ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
       {message}
     </div>
   );
@@ -207,18 +207,18 @@ export function AccountHero({ config }: { config: HeroConfig }) {
     <section className="mb-8">
       <div className="mb-6 grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(360px,0.72fr)] xl:items-end">
         <div>
-          <div className="mb-3 inline-flex items-center text-[11px] font-[320] uppercase tracking-[0.08em] text-[var(--text-muted)]">{config.eyebrow}</div>
+          <div className="mb-3 inline-flex items-center text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">{config.eyebrow}</div>
           <h1 className="max-w-[760px] font-[family-name:var(--font-zalando-sans)] text-[clamp(42px,6vw,76px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">{config.title}</h1>
         </div>
-        <p className="max-w-[520px] text-sm font-[320] leading-6 text-[var(--text-secondary)] xl:justify-self-end">{config.description}</p>
+        <p className="max-w-[520px] text-sm leading-6 text-[var(--text-secondary)] xl:justify-self-end">{config.description}</p>
       </div>
       <div className="group relative min-h-[255px] overflow-hidden border border-[var(--border)] bg-[var(--bg-secondary)]">
         <img src={config.image} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
         <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
-          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-[320] leading-none text-white/75 backdrop-blur"><span className="truncate">Audioflume account</span></div>
+          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur"><span className="truncate">Audioflume account</span></div>
           <div className="grid gap-2 sm:grid-cols-3">
-            {[config.statA, config.statB, config.statC].map((stat) => <div key={stat} className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-[320] text-white/80 backdrop-blur">{stat}</div>)}
+            {[config.statA, config.statB, config.statC].map((stat) => <div key={stat} className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">{stat}</div>)}
           </div>
         </div>
       </div>
@@ -258,13 +258,13 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-[320] text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
+      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
         <span className="absolute inset-0 overflow-hidden rounded-full">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
         {!value ? <span>{initials || "A"}</span> : null}
         <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
       </label>
-      {value ? <button type="button" onClick={removeImage} className="text-[11px] font-[320] text-[var(--text-muted)] transition hover:text-[var(--text-primary)]">Remove photo</button> : null}
+      {value ? <button type="button" onClick={removeImage} className="text-[11px] font-medium text-[var(--text-muted)] transition hover:text-[var(--text-primary)]">Remove photo</button> : null}
     </div>
   );
 }

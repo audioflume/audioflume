@@ -334,7 +334,7 @@ export default function AdminMusicPlayer() {
                   ? "Playing in another tab"
                   : currentSong.artist
               }
-              className="flex min-w-0 items-center gap-1.5 truncate text-xs font-[320] text-[var(--text-subtle)]"
+              className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
             >
               {remotePlayingInAnotherTab ? (
                 <>
@@ -389,7 +389,7 @@ export default function AdminMusicPlayer() {
           >
             {showWaveform ? (
               <div className="flex w-full min-w-0 items-center gap-4 overflow-visible">
-                <span className="w-10 flex-shrink-0 text-right text-xs font-[320] text-[var(--icon-color)]">
+                <span className="w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]">
                   {formatTime(currentTime)}
                 </span>
 
@@ -406,12 +406,12 @@ export default function AdminMusicPlayer() {
                   />
                 </div>
 
-                <span className="w-10 flex-shrink-0 text-xs font-[320] text-[var(--icon-color)]">
+                <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
                   {formatTime(duration)}
                 </span>
               </div>
             ) : (
-              <div className="whitespace-nowrap text-xs font-[320] text-[var(--icon-color)]">
+              <div className="whitespace-nowrap text-xs text-[var(--icon-color)]">
                 {showFullCompactTime
                   ? `${formatTime(currentTime)} / ${formatTime(duration)}`
                   : formatTime(currentTime)}

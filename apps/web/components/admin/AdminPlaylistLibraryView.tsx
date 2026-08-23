@@ -267,13 +267,13 @@ export default function AdminPlaylistLibraryView({
   }
 
   if (error) {
-    return <div className="py-10 text-sm font-[320] text-[var(--danger)]">{error}</div>;
+    return <div className="py-10 text-sm text-[var(--danger)]">{error}</div>;
   }
 
   return (
     <>
       {shelfError && (
-        <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs font-[320] text-[var(--danger)]">
+        <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs text-[var(--danger)]">
           {shelfError}
         </div>
       )}
@@ -312,7 +312,7 @@ export default function AdminPlaylistLibraryView({
                     <button
                       type="button"
                       onClick={() => setPickerShelf(shelfKey)}
-                      className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs font-[320] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
+                      className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
                     >
                       Add playlists from All Playlists
                     </button>

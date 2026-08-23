@@ -401,7 +401,7 @@ export default function ArtistSongEditorWithCollaborators({
             ) : null}
           </BackendSelect>
           {releaseError ? (
-            <div className="mt-1.5 text-[11px] font-[320] leading-4 text-[var(--status-error,#dc584f)]">
+            <div className="mt-1.5 text-[11px] leading-4 text-[var(--status-error,#dc584f)]">
               {releaseError}
             </div>
           ) : null}
@@ -448,7 +448,7 @@ export default function ArtistSongEditorWithCollaborators({
                 </div>
 
                 {createReleaseError ? (
-                  <div className="text-xs font-[320] leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="text-xs leading-5 text-[var(--status-error,#dc584f)]">
                     {createReleaseError}
                   </div>
                 ) : null}

@@ -669,7 +669,7 @@ function formatDuration(seconds: number) {
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="mb-1.5 block text-[11px] font-[320] uppercase tracking-[0.08em] text-[var(--text-muted)]">
+    <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
       {children}
     </label>
   );
@@ -697,7 +697,7 @@ function TextInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs font-[320] text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
+          className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
         />
 
         <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col">
@@ -729,7 +729,7 @@ function TextInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-[320] text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
+      className="h-9 w-full rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
     />
   );
 }
@@ -748,7 +748,7 @@ function SelectInput({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`h-9 w-full appearance-none rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs font-[320] outline-none transition focus:border-[var(--text-secondary)] ${
+        className={`h-9 w-full appearance-none rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs outline-none transition focus:border-[var(--text-secondary)] ${
           value ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"
         }`}
       >
@@ -774,7 +774,7 @@ function CheckboxInput({
 }) {
   return (
     <label
-      className={`group flex h-9 cursor-pointer items-center gap-2.5 self-end rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-[320] transition hover:text-[var(--text-primary)] ${
+      className={`group flex h-9 cursor-pointer items-center gap-2.5 self-end rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition hover:text-[var(--text-primary)] ${
         checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"
       }`}
     >
@@ -818,7 +818,7 @@ function TextArea({
       placeholder={placeholder}
       rows={rows}
       readOnly={readOnly}
-      className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs font-[320] leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] read-only:text-[var(--text-secondary)]"
+      className="w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] read-only:text-[var(--text-secondary)]"
     />
   );
 }
@@ -848,7 +848,7 @@ function MultiSelectPills({
                   : [...selected, option],
               );
             }}
-            className={`h-7 rounded-full border px-2.5 text-[11px] font-[320] transition ${
+            className={`h-7 rounded-full border px-2.5 text-[11px] font-normal transition ${
               active
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -1536,7 +1536,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const titleAction = (
     <div className="hidden items-center gap-2 lg:flex">
       {uploadWarnings.length > 0 && !uploadComplete ? (
-        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-error-soft)] px-3 text-xs font-[320] text-[var(--status-error)]">
+        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-error-soft)] px-3 text-xs font-medium text-[var(--status-error)]">
           <WarningIcon />
           <span>
             {uploadWarnings.length} warning
@@ -1544,7 +1544,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           </span>
         </div>
       ) : (
-        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-success-soft)] px-3 text-xs font-[320] text-[var(--status-success)]">
+        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-success-soft)] px-3 text-xs font-medium text-[var(--status-success)]">
           <span className="h-2 w-2 rounded-full bg-[var(--status-success)]" />
           <span>Ready</span>
         </div>
@@ -1599,7 +1599,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         title={pageTitle}
         description={pageDescription}
       >
-        <p className="text-sm font-[320] text-[var(--status-error)]">{loadError}</p>
+        <p className="text-sm text-[var(--status-error)]">{loadError}</p>
       </AdminContentPage>
     );
   }
@@ -1841,7 +1841,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
 
               <div className="p-4">
-                <p className="mb-3 text-xs font-[320] leading-5 text-[var(--text-secondary)]">
+                <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
                   {isEditMode
                     ? "Existing peak data is loaded from Supabase. Re-analyze only when needed."
                     : "Generated automatically from the selected audio file using the same 300-point peak format."}
@@ -1866,7 +1866,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Genre</FieldLabel>
-                    <span className="text-[11px] font-[320] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)]">
                       {selectedGenres.length} selected
                     </span>
                   </div>
@@ -1880,7 +1880,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Region</FieldLabel>
-                    <span className="text-[11px] font-[320] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)]">
                       {selectedRegions.length} selected
                     </span>
                   </div>
@@ -1894,7 +1894,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Scene</FieldLabel>
-                    <span className="text-[11px] font-[320] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)]">
                       {selectedMoods.length} selected
                     </span>
                   </div>
@@ -1908,7 +1908,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Instrument</FieldLabel>
-                    <span className="text-[11px] font-[320] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)]">
                       {selectedInstruments.length} selected
                     </span>
                   </div>
@@ -1923,7 +1923,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <div>
                     <div className="mb-2 flex items-center justify-between gap-4">
                       <FieldLabel>Build</FieldLabel>
-                      <span className="text-[11px] font-[320] text-[var(--text-muted)]">
+                      <span className="text-[11px] text-[var(--text-muted)]">
                         {selectedBuilds.length} selected
                       </span>
                     </div>
@@ -1937,7 +1937,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <div>
                     <div className="mb-2 flex items-center justify-between gap-4">
                       <FieldLabel>Vocals</FieldLabel>
-                      <span className="text-[11px] font-[320] text-[var(--text-muted)]">
+                      <span className="text-[11px] text-[var(--text-muted)]">
                         {selectedVocals.length} selected
                       </span>
                     </div>
@@ -1978,7 +1978,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               <div className="grid gap-2 p-4">
                 {uploadWarnings.length > 0 && !uploadComplete ? (
                   <>
-                    <div className="rounded-lg bg-[rgba(220,88,79,0.08)] p-3 text-xs font-[320] leading-5 text-[#dc584f]">
+                    <div className="rounded-lg bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
                       <div className="flex items-center gap-2 font-medium">
                         <WarningIcon />
                         <span>
@@ -1988,7 +1988,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                         </span>
                       </div>
 
-                      <div className="mt-2 text-[11px] font-[320] leading-5 text-[var(--text-secondary)]">
+                      <div className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)]">
                         {uploadWarnings[0]}
                         {uploadWarnings.length > 1
                           ? ` + ${uploadWarnings.length - 1} more`
@@ -1999,7 +1999,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                         <button
                           type="button"
                           onClick={() => setWarningsOpen((current) => !current)}
-                          className="mt-2 text-[11px] font-[320] text-[var(--text-secondary)] underline-offset-4 transition hover:text-[var(--text-primary)] hover:underline"
+                          className="mt-2 text-[11px] font-medium text-[var(--text-secondary)] underline-offset-4 transition hover:text-[var(--text-primary)] hover:underline"
                         >
                           {warningsOpen ? "Hide warnings" : "Show warnings"}
                         </button>
@@ -2007,7 +2007,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </div>
 
                     {warningsOpen && uploadWarnings.length > 1 && (
-                      <ul className="grid gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] font-[320] leading-5 text-[var(--text-secondary)]">
+                      <ul className="grid gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
                         {uploadWarnings.map((warning) => (
                           <li key={warning}>{warning}</li>
                         ))}
@@ -2015,7 +2015,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     )}
                   </>
                 ) : (
-                  <div className="rounded-lg bg-[rgba(72,181,113,0.08)] p-3 text-xs font-[320] text-[#48b571]">
+                  <div className="rounded-lg bg-[rgba(72,181,113,0.08)] p-3 text-xs font-medium text-[#48b571]">
                     Ready to save
                   </div>
                 )}
@@ -2039,14 +2039,14 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                         isSaving={isSaving}
                       />
 
-                      <p className="text-xs font-[320] leading-5 text-[var(--text-secondary)]">
+                      <p className="text-xs leading-5 text-[var(--text-secondary)]">
                         {saveStatus}
                       </p>
                     </div>
                   )}
 
                   {savedRecordId && (
-                    <p className="truncate text-[11px] font-[320] text-[var(--text-muted)]">
+                    <p className="truncate text-[11px] text-[var(--text-muted)]">
                       Song ID: {savedRecordId}
                     </p>
                   )}
@@ -2054,7 +2054,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   {(uploadedFiles.audio ||
                     uploadedFiles.cover ||
                     uploadedFiles.stems.length > 0) && (
-                    <div className="grid gap-2 text-[11px] font-[320] text-[var(--text-secondary)]">
+                    <div className="grid gap-2 text-[11px] text-[var(--text-secondary)]">
                       {uploadedFiles.audio && (
                         <a
                           href={uploadedFiles.audio.url}

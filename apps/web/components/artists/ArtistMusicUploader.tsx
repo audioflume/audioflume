@@ -410,7 +410,7 @@ export default function ArtistMusicUploader({
       </div>
 
       {catalogError || catalogMessage ? (
-        <div className="mb-4 min-h-5 text-xs font-[320]">
+        <div className="mb-4 min-h-5 text-xs">
           {catalogError ? (
             <span className="text-[var(--status-error,#dc584f)]">{catalogError}</span>
           ) : catalogMessage ? (
@@ -425,7 +425,7 @@ export default function ArtistMusicUploader({
         </div>
 
         {!canUpload ? (
-          <div className="border-b border-[var(--border-subtle)] px-5 py-3 text-xs font-[320] text-[var(--text-muted)]">
+          <div className="border-b border-[var(--border-subtle)] px-5 py-3 text-xs text-[var(--text-muted)]">
             {artist.status !== "approved"
               ? "Your artist profile must be approved before music can be uploaded."
               : "Your artist role does not include music upload access."}
@@ -435,13 +435,13 @@ export default function ArtistMusicUploader({
         <div className="overflow-x-auto overflow-y-hidden">
           <div className="min-w-[980px]">
             {loadState === "loading" ? (
-              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
+              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 Loading music...
               </div>
             ) : null}
 
             {loadState === "error" && songs.length === 0 ? (
-              <div className="flex min-h-[180px] items-center justify-center gap-3 px-5 text-xs font-[320]">
+              <div className="flex min-h-[180px] items-center justify-center gap-3 px-5 text-xs">
                 <span className="text-[var(--text-muted)]">
                   {loadError || "Music could not be loaded."}
                 </span>
@@ -456,13 +456,13 @@ export default function ArtistMusicUploader({
             ) : null}
 
             {loadState === "ready" && songs.length === 0 ? (
-              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
+              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 No tracks uploaded yet.
               </div>
             ) : null}
 
             {loadState === "ready" && songs.length > 0 && visibleSongs.length === 0 ? (
-              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
+              <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 No tracks match your search.
               </div>
             ) : null}
@@ -495,7 +495,7 @@ export default function ArtistMusicUploader({
                   return (
                     <div
                       key={song.id}
-                      className="grid min-h-[72px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs font-[320]"
+                      className="grid min-h-[72px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs"
                       style={{
                         borderBottom:
                           index === visibleSongs.length - 1
@@ -543,7 +543,7 @@ export default function ArtistMusicUploader({
                         disabled={!playerSong?.audioUrl}
                         className="min-w-0 cursor-pointer text-left disabled:cursor-default"
                       >
-                        <div className="flex min-w-0 items-center gap-1.5 font-[400] leading-tight text-[var(--text-primary)]">
+                        <div className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]">
                           <span className="min-w-0 truncate">{song.title}</span>
                           {playerSong?.licenseType === "premium" ? <PremiumLabel /> : null}
                         </div>

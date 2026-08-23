@@ -91,7 +91,7 @@ function SongPreview({ song }: { song: Song }) {
           )}
         </span>
 
-        <span className="block max-w-[300px] truncate text-[12px] font-[400] tracking-[-0.015em] text-[var(--text-primary)]">
+        <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
           {song.title} by {song.artist}
         </span>
       </div>
@@ -405,7 +405,7 @@ export default function AddToProjectModal({
                     onChange={(e) => setNewProjectName(e.target.value)}
                     placeholder="Name"
                     autoFocus
-                    className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:opacity-60"
+                    className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:opacity-60"
                   />
 
                   <div className="mt-2 flex items-center gap-2">
@@ -416,7 +416,7 @@ export default function AddToProjectModal({
                         setNewProjectOpen(false);
                         setNewProjectName("");
                       }}
-                      className="h-8 rounded-none border border-[var(--border)] px-4 text-xs font-[320] text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                      className="h-8 rounded-none border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                     >
                       Cancel
                     </button>
@@ -424,7 +424,7 @@ export default function AddToProjectModal({
                     <button
                       type="submit"
                       disabled={creatingProject || !newProjectName.trim()}
-                      className="h-8 rounded-none bg-[var(--text-primary)] px-5 text-xs font-[320] text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                      className="h-8 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
                     >
                       Add
                     </button>
@@ -440,7 +440,7 @@ export default function AddToProjectModal({
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--icon-button-hover)]">
                   <PlusIcon size={18} />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
+                <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                   New Project...
                 </span>
               </button>
@@ -462,7 +462,7 @@ export default function AddToProjectModal({
 
             {!loading && displayedError && (
               <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
-                <div className="text-xs font-[320] text-[var(--danger)]">
+                <div className="text-xs font-medium text-[var(--danger)]">
                   {displayedError}
                 </div>
 
@@ -470,7 +470,7 @@ export default function AddToProjectModal({
                   <button
                     type="button"
                     onClick={refetchProjects}
-                    className="h-8 rounded-none bg-[var(--text-primary)] px-3.5 text-xs font-[320] text-[var(--bg-primary)] transition hover:opacity-80"
+                    className="h-8 rounded-none bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
                   >
                     Try Again
                   </button>
@@ -479,7 +479,7 @@ export default function AddToProjectModal({
             )}
 
             {!loading && !displayedError && displayedProjects.length === 0 && (
-              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs font-[320] text-[var(--text-secondary)]">
+              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
                 You don&apos;t have any projects yet.
               </div>
             )}
@@ -506,10 +506,10 @@ export default function AddToProjectModal({
                     <ProjectThumbnail />
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
+                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                         {project.name}
                       </span>
-                      <span className="mt-0.5 block truncate text-[11px] font-[320] text-[var(--text-muted)]">
+                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
                         {isSelected ? "Added" : "Click to add"}
                       </span>
                     </span>

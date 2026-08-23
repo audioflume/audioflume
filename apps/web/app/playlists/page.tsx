@@ -1322,10 +1322,10 @@ export default function PlaylistsPage() {
 
           {playlistsError && !showSkeleton ? (
             <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center">
-              <div className="text-sm font-[320] text-[var(--text-primary)]">
+              <div className="text-sm font-medium text-[var(--text-primary)]">
                 Couldn&apos;t load playlists
               </div>
-              <div className="max-w-[320px] text-xs font-[320] leading-5 text-[var(--text-secondary)]">
+              <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
                 {playlistsError}
               </div>
               <button

@@ -211,7 +211,7 @@ function SectionHeader({
       <h2 className="filmwave-backend-section-title">{title}</h2>
       <Link
         href={href}
-        className="text-[11px] font-[320] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
+        className="text-[11px] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)]"
       >
         {linkLabel}
       </Link>
@@ -532,7 +532,7 @@ export default function ArtistOverview({
   return (
     <div className="grid gap-4">
       {warning ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs font-[320] text-[var(--text-secondary)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--text-secondary)]">
           {warning}
         </div>
       ) : null}
@@ -608,7 +608,7 @@ export default function ArtistOverview({
             ) : null}
 
             {cropEditing ? (
-              <div className="pointer-events-none absolute bottom-3 left-1/2 z-[2] -translate-x-1/2 rounded-[5px] bg-black/55 px-3 py-2 text-[10px] font-[320] text-white">
+              <div className="pointer-events-none absolute bottom-3 left-1/2 z-[2] -translate-x-1/2 rounded-[5px] bg-black/55 px-3 py-2 text-[10px] text-white">
                 {cropSaving
                   ? "Saving..."
                   : cropDragging
@@ -620,11 +620,11 @@ export default function ArtistOverview({
 
           <div className="flex items-center justify-between gap-5 px-5 py-4">
             <div className="min-w-0">
-              <div className="truncate font-[family-name:var(--font-zalando-sans)] text-[18px] font-[500] tracking-[-0.03em] text-[var(--text-primary)]">
+              <div className="truncate font-[family-name:var(--font-zalando-sans)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                 {artist.name}
               </div>
               {artist.designation ? (
-                <div className="mt-1 text-[11px] font-[320] text-[var(--text-muted)]">
+                <div className="mt-1 text-[11px] text-[var(--text-muted)]">
                   {artist.designation}
                 </div>
               ) : null}
@@ -638,7 +638,7 @@ export default function ArtistOverview({
           </div>
 
           {cropError ? (
-            <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[10px] font-[320] text-[var(--status-error)]">
+            <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--status-error)]">
               {cropError}
             </div>
           ) : null}
@@ -651,10 +651,10 @@ export default function ArtistOverview({
             key={stat.label}
             className="filmwave-backend-section flex min-h-[104px] flex-col justify-between p-4"
           >
-            <span className="text-[11px] font-[320] text-[var(--text-secondary)]">
+            <span className="text-[11px] font-medium text-[var(--text-secondary)]">
               {stat.label}
             </span>
-            <span className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-[500] leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+            <span className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
               {loading && stat.label === "30-Day Interactions"
                 ? "—"
                 : formatNumber(stat.value)}
@@ -672,11 +672,11 @@ export default function ArtistOverview({
           />
 
           {loading ? (
-            <div className="flex min-h-[260px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
+            <div className="flex min-h-[260px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
               Loading songs...
             </div>
           ) : recentSongs.length === 0 ? (
-            <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs font-[320] text-[var(--text-muted)]">
+            <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
               No songs added yet.
             </div>
           ) : (
@@ -730,24 +730,24 @@ export default function ArtistOverview({
                     ) : null}
                   </button>
                   <div className="min-w-0 flex-1">
-                    <div className="flex min-w-0 items-center gap-1.5 text-xs font-[400] text-[var(--text-primary)]">
+                    <div className="flex min-w-0 items-center gap-1.5 text-xs font-medium text-[var(--text-primary)]">
                       <span className="min-w-0 truncate">{song.title}</span>
                       {playerSong?.licenseType === "premium" ? (
                         <PremiumLabel />
                       ) : null}
                     </div>
-                    <div className="mt-1 text-[10px] font-[320] text-[var(--text-muted)] sm:hidden">
+                    <div className="mt-1 text-[10px] text-[var(--text-muted)] sm:hidden">
                       {formatDate(song.created_at)}
                     </div>
                   </div>
                   <span
-                    className={`hidden rounded-full px-2 py-1 text-[9px] font-[320] sm:inline-flex ${statusClassName(
+                    className={`hidden rounded-full px-2 py-1 text-[9px] font-medium sm:inline-flex ${statusClassName(
                       song.status,
                     )}`}
                   >
                     {formatStatus(song.status)}
                   </span>
-                  <div className="hidden w-[86px] shrink-0 text-right text-[10px] font-[320] text-[var(--text-muted)] sm:block">
+                  <div className="hidden w-[86px] shrink-0 text-right text-[10px] text-[var(--text-muted)] sm:block">
                     {formatDate(song.created_at)}
                   </div>
                 </div>
@@ -764,11 +764,11 @@ export default function ArtistOverview({
           />
 
           <div className="px-5 pb-5 pt-5">
-            <div className="text-[11px] font-[320] text-[var(--text-muted)]">Last 30 days</div>
-            <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[36px] font-[500] leading-none tracking-[-0.05em] text-[var(--text-primary)]">
+            <div className="text-[11px] text-[var(--text-muted)]">Last 30 days</div>
+            <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[36px] font-medium leading-none tracking-[-0.05em] text-[var(--text-primary)]">
               {loading ? "—" : formatNumber(period.total)}
             </div>
-            <div className="mt-2 text-[10px] font-[320] text-[var(--text-muted)]">
+            <div className="mt-2 text-[10px] text-[var(--text-muted)]">
               Total interactions
             </div>
           </div>
@@ -785,17 +785,17 @@ export default function ArtistOverview({
                   index < 2 ? "border-r border-[var(--border-subtle)]" : ""
                 }`}
               >
-                <div className="text-[9px] font-[320] text-[var(--text-muted)]">
+                <div className="text-[9px] text-[var(--text-muted)]">
                   {metric.label}
                 </div>
-                <div className="mt-2 text-sm font-[500] text-[var(--text-primary)]">
+                <div className="mt-2 text-sm font-medium text-[var(--text-primary)]">
                   {loading ? "—" : formatNumber(metric.value)}
                 </div>
               </div>
             ))}
           </div>
 
-          <div className="flex items-center justify-between border-t border-[var(--border-subtle)] px-5 py-4 text-[11px] font-[320] text-[var(--text-secondary)]">
+          <div className="flex items-center justify-between border-t border-[var(--border-subtle)] px-5 py-4 text-[11px] text-[var(--text-secondary)]">
             <span>All-time downloads</span>
             <span className="font-medium text-[var(--text-primary)]">
               {loading ? "—" : formatNumber(totals.downloads)}
@@ -820,11 +820,11 @@ export default function ArtistOverview({
             />
 
             {loading ? (
-              <div className="flex min-h-[220px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 Loading earnings...
               </div>
             ) : currencies.length === 0 ? (
-              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs font-[320] text-[var(--text-muted)]">
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
                 No earnings recorded yet.
               </div>
             ) : singleCurrency ? (
@@ -849,13 +849,13 @@ export default function ArtistOverview({
                       index < 2 ? "border-r border-[var(--border-subtle)]" : ""
                     }`}
                   >
-                    <div className="text-[9px] font-[320] text-[var(--text-muted)]">
+                    <div className="text-[9px] text-[var(--text-muted)]">
                       {metric.label}
                     </div>
                     <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[16px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                       {formatMoney(metric.value, singleCurrency.currency)}
                     </div>
-                    <div className="mt-1 text-[9px] font-[320] text-[var(--text-muted)]">
+                    <div className="mt-1 text-[9px] text-[var(--text-muted)]">
                       {singleCurrency.currency}
                     </div>
                   </div>
@@ -871,17 +871,17 @@ export default function ArtistOverview({
                       : ""
                   }`}
                 >
-                  <div className="text-xs font-[320] text-[var(--text-primary)]">
+                  <div className="text-xs font-medium text-[var(--text-primary)]">
                     {summary.currency}
                   </div>
                   <div className="text-right">
-                    <div className="text-xs font-[320] text-[var(--text-primary)]">
+                    <div className="text-xs text-[var(--text-primary)]">
                       {formatMoney(
                         summary.available_balance_cents,
                         summary.currency,
                       )}
                     </div>
-                    <div className="mt-1 text-[9px] font-[320] text-[var(--text-muted)]">
+                    <div className="mt-1 text-[9px] text-[var(--text-muted)]">
                       available
                     </div>
                   </div>
@@ -899,11 +899,11 @@ export default function ArtistOverview({
           />
 
           {loading ? (
-            <div className="flex min-h-[220px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
+            <div className="flex min-h-[220px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
               Loading notifications...
             </div>
           ) : recentNotifications.length === 0 ? (
-            <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs font-[320] text-[var(--text-muted)]">
+            <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
               Nothing new yet.
             </div>
           ) : (
@@ -923,20 +923,20 @@ export default function ArtistOverview({
                 />
                 <div className="min-w-0 flex-1">
                   <div
-                    className={`truncate text-xs font-[320] text-[var(--text-primary)] ${
+                    className={`truncate text-xs text-[var(--text-primary)] ${
                       notification.read_at ? "font-normal" : "font-medium"
                     }`}
                   >
                     {notification.title}
                   </div>
                   {notification.message ? (
-                    <div className="mt-1 truncate text-[10px] font-[320] text-[var(--text-secondary)]">
+                    <div className="mt-1 truncate text-[10px] text-[var(--text-secondary)]">
                       {notification.message}
                     </div>
                   ) : null}
                 </div>
                 <div className="flex shrink-0 items-center gap-3 pt-0.5">
-                  <div className="text-[10px] font-[320] text-[var(--text-muted)]">
+                  <div className="text-[10px] text-[var(--text-muted)]">
                     {formatNotificationTime(notification.created_at)}
                   </div>
                   {notification.action_url ? (

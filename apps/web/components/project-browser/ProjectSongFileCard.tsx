@@ -60,7 +60,7 @@ export default function ProjectSongFileCard({
               <PlayPauseIcon playing={previewIsPlaying} />
             </button>
           </span>
-          <span className="project-browser-row-title project-song-file-title">
+          <span className="project-browser-row-title">
             {song.title}{song.licenseType === "premium" ? <> <PremiumLabel /></> : null}
           </span>
         </span>
@@ -85,7 +85,7 @@ export default function ProjectSongFileCard({
           <PlayPauseIcon playing={previewIsPlaying} />
         </button>
       </div>
-      <div className="project-file-card-title project-song-file-title">
+      <div className="project-file-card-title">
         {song.title}{song.licenseType === "premium" ? <> <PremiumLabel /></> : null}
       </div>
       <div className="project-file-card-meta">{song.artist || "Unknown Artist"}</div>

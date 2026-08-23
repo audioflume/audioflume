@@ -33,7 +33,7 @@
   margin: 0 0 17px;
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 320;
+  font-weight: 500;
   letter-spacing: 0.02em;
   text-transform: uppercase;
 }
@@ -56,7 +56,7 @@
   width: fit-content;
   color: var(--text-primary);
   font-size: 12.5px;
-  font-weight: 320;
+  font-weight: 400;
   letter-spacing: normal;
   line-height: normal;
   text-decoration: none;
@@ -118,7 +118,7 @@
   overflow: hidden;
   color: var(--text-primary);
   font-size: 13px;
-  font-weight: 320;
+  font-weight: 500;
   line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -127,7 +127,6 @@
 .community-featured-item small {
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 320;
   line-height: 1;
 }
 
@@ -178,7 +177,6 @@
   color: var(--text-primary);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 320;
   font-style: italic;
 }
 
@@ -428,7 +426,6 @@
   margin-top: 9px;
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 320;
   line-height: 1;
 }
 
@@ -445,7 +442,6 @@
   margin: 10px 0 0;
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 320;
   line-height: 1;
 }
 

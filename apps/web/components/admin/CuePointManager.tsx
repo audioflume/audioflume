@@ -380,7 +380,7 @@ export default function CuePointManager({
 
       {reAnalyzeMessage && (
         <div
-          className={`rounded-[7px] border px-3 py-2 text-xs font-[320] leading-5 ${
+          className={`rounded-[7px] border px-3 py-2 text-xs leading-5 ${
             reAnalyzeFailed
               ? "border-[var(--status-error-soft)] bg-[var(--status-error-soft)] text-[var(--status-error)]"
               : "border-[var(--status-success-soft)] bg-[var(--status-success-soft)] text-[var(--status-success)]"

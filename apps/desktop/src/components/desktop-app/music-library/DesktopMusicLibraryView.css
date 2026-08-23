@@ -47,7 +47,6 @@
   padding: 12px 14px;
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 320;
 }
 
 .desktop-music-hero-wrap {
@@ -100,7 +99,7 @@
   padding: 5px 12px;
   color: rgba(255, 255, 255, 0.8);
   font-size: 11px;
-  font-weight: 320;
+  font-weight: 500;
   line-height: 1;
   backdrop-filter: blur(12px);
 }
@@ -110,7 +109,7 @@
   margin: 0;
   color: #fff;
   font-size: clamp(42px, 4.45vw, 72px);
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -0.064em;
   line-height: 0.9;
 }
@@ -128,7 +127,6 @@
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
   font-size: 14px;
-  font-weight: 320;
   line-height: 1.72;
 }
 
@@ -143,7 +141,6 @@
   gap: 8px;
   color: rgba(255, 255, 255, 0.72);
   font-size: 11px;
-  font-weight: 320;
 }
 
 .desktop-music-count-pills span {
@@ -163,7 +160,7 @@
   margin: 0;
   color: #fff;
   font-size: 30px;
-  font-weight: 200;
+  font-weight: 500;
   letter-spacing: -0.055em;
   line-height: 1.05;
 }
@@ -172,7 +169,6 @@
   max-width: 320px;
   margin-top: 8px;
   font-size: 12px;
-  font-weight: 320;
 }
 
 .desktop-sync-hero-button {
@@ -188,7 +184,7 @@
   padding: 0 16px;
   color: #000;
   font-size: 14px;
-  font-weight: 320;
+  font-weight: 500;
   transition: transform 160ms ease;
 }
 
@@ -214,12 +210,11 @@
   margin: 0;
   color: var(--text-primary);
   font-size: 18px;
-  font-weight: 200;
+  font-weight: 500;
 }
 
 .desktop-music-empty-state p {
   margin: 8px 0 0;
   color: var(--text-secondary);
   font-size: 13px;
-  font-weight: 320;
 }

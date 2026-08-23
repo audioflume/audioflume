@@ -1079,7 +1079,7 @@ export default function MusicPage() {
           </MusicQuickChips>
 
           {songsError && (
-            <div className="px-5 py-4 text-sm font-[320] text-[var(--danger)]">
+            <div className="px-5 py-4 text-sm text-[var(--danger)]">
               Failed to load songs. Showing cached results where available.
             </div>
           )}
