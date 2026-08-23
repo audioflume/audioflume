@@ -333,7 +333,7 @@
   color: var(--text-primary) !important;
   font-family: var(--font-zalando-sans), sans-serif !important;
   font-size: 24px !important;
-  font-weight: 200 !important;
+  font-weight: 450 !important;
   letter-spacing: -.035em !important;
   line-height: 1 !important;
   text-transform: none !important;
@@ -347,7 +347,7 @@
   color: var(--text-primary) !important;
   font-family: var(--font-zalando-sans), sans-serif !important;
   font-size: clamp(18px, 1.45vw, 24px) !important;
-  font-weight: 200 !important;
+  font-weight: 450 !important;
   letter-spacing: -.025em !important;
   line-height: 1.1 !important;
 }
