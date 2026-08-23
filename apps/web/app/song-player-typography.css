@@ -3,12 +3,6 @@
   letter-spacing: normal;
 }
 
-.filmwave-song-card .filmwave-song-title,
-.filmwave-music-player[data-platform="web"] .filmwave-player-title {
-  font-size: 14.5px;
-  font-weight: 400;
-}
-
 .filmwave-song-card .filmwave-song-artist,
 .filmwave-song-card .filmwave-song-meta,
 .filmwave-song-card .filmwave-song-duration,
