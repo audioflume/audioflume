@@ -2,6 +2,7 @@ import type { ElementType, MouseEventHandler, ReactNode } from "react";
 
 type ThemeMode = "dark" | "light";
 export type UserMenuGlyphName =
+  | "profile"
   | "settings"
   | "membership"
   | "payment"
@@ -27,6 +28,12 @@ export function UserMenuGlyph({ name }: { name: UserMenuGlyphName }) {
 
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+      {name === "profile" && (
+        <>
+          <circle {...common} cx="12" cy="8" r="3" />
+          <path {...common} d="M6.5 19c.7-3.2 2.5-5 5.5-5s4.8 1.8 5.5 5" />
+        </>
+      )}
       {name === "settings" && (
         <>
           <path {...common} d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h8M16 17h4" />
