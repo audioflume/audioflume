@@ -9,19 +9,19 @@ import {
   BackendSidebarScrollArea,
   BackendSidebarShell,
 } from "@/components/backend/BackendSidebar";
-import DashboardIcon from "@/components/icons/DashboardIcon";
-import EngagementIcon from "@/components/icons/EngagementIcon";
+import BackendSidebarGlyph, {
+  type BackendSidebarGlyphName,
+} from "@/components/backend/BackendSidebarGlyph";
 import { usePlayer } from "@/context/PlayerContext";
 
 type AdminNavItem = {
   label: string;
   href: string;
+  icon: BackendSidebarGlyphName;
   status?: "soon";
 };
 
-type PrimaryNavItem = AdminNavItem & {
-  icon: "dashboard" | "engagement";
-};
+type PrimaryNavItem = AdminNavItem;
 
 type AdminNavGroup = {
   title: string;
@@ -46,32 +46,51 @@ type ConsoleStatus = {
 
 const primaryLinks: PrimaryNavItem[] = [
   { label: "Dashboard", href: "/admin", icon: "dashboard" },
-  { label: "Engagement", href: "/admin/engagement", icon: "engagement" },
+  { label: "Engagement", href: "/admin/engagement", icon: "analytics" },
 ];
 
 const navGroups: AdminNavGroup[] = [
   {
     title: "Upload",
     links: [
-      { label: "Song Upload", href: "/admin/songs/new" },
-      { label: "Upload Queue", href: "/admin/queue", status: "soon" },
+      { label: "Song Upload", href: "/admin/songs/new", icon: "upload" },
+      {
+        label: "Upload Queue",
+        href: "/admin/queue",
+        icon: "queue",
+        status: "soon",
+      },
     ],
   },
   {
     title: "Database",
     links: [
-      { label: "Music Library", href: "/admin/music-library" },
-      { label: "Music Review", href: "/admin/music-review" },
-      { label: "Artists", href: "/admin/artists" },
-      { label: "Playlist Manager", href: "/admin/playlist-manager" },
-      { label: "Cue Points", href: "/admin/edit-points" },
+      { label: "Music Library", href: "/admin/music-library", icon: "music" },
+      { label: "Music Review", href: "/admin/music-review", icon: "review" },
+      { label: "Artists", href: "/admin/artists", icon: "artists" },
+      {
+        label: "Playlist Manager",
+        href: "/admin/playlist-manager",
+        icon: "playlist",
+      },
+      { label: "Cue Points", href: "/admin/edit-points", icon: "cue" },
     ],
   },
   {
     title: "System",
     links: [
-      { label: "Storage Health", href: "/admin/storage", status: "soon" },
-      { label: "Settings", href: "/admin/settings", status: "soon" },
+      {
+        label: "Storage Health",
+        href: "/admin/storage",
+        icon: "storage",
+        status: "soon",
+      },
+      {
+        label: "Settings",
+        href: "/admin/settings",
+        icon: "settings",
+        status: "soon",
+      },
     ],
   },
 ];
@@ -102,11 +121,6 @@ function mapSystemHealthToConsole(statuses: SystemHealthItem[]): ConsoleStatus[]
       ? { ...def, value: getConsoleValue(match.tone), tone: match.tone }
       : { ...def, value: "UNKNOWN" };
   });
-}
-
-function PrimaryIcon({ icon }: { icon: PrimaryNavItem["icon"] }) {
-  if (icon === "dashboard") return <DashboardIcon size={14} />;
-  return <EngagementIcon size={14} />;
 }
 
 function SoonBadge() {
@@ -212,7 +226,7 @@ export default function AdminSidebar() {
                 key={link.href}
                 href={link.href}
                 active={pathname === link.href}
-                leading={<PrimaryIcon icon={link.icon} />}
+                leading={<BackendSidebarGlyph name={link.icon} />}
                 trailing={link.status ? <SoonBadge /> : null}
               >
                 {link.label}
@@ -229,6 +243,7 @@ export default function AdminSidebar() {
                   key={link.href}
                   href={link.href}
                   active={pathname === link.href}
+                  leading={<BackendSidebarGlyph name={link.icon} />}
                   trailing={link.status ? <SoonBadge /> : null}
                 >
                   {link.label}
