@@ -399,6 +399,11 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
         }
 
+        .playlist-detail-page .playlist-detail-actions > button:first-child {
+          background: var(--filmwave-black);
+          color: var(--filmwave-white);
+        }
+
         .playlist-detail-page .playlist-detail-actions > button svg {
           display: block !important;
           width: 14px !important;
