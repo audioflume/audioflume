@@ -144,7 +144,7 @@ export function Input({ label, value, placeholder, onChange, readOnly = false, t
 
 export function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 py-3">
+    <div className="rounded-[var(--filmwave-backend-control-radius)] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 py-3">
       <div className="text-[11px] font-normal text-[var(--text-secondary)]">{label}</div>
       <div className="mt-1 truncate text-[12px] font-medium text-[var(--text-primary)]">{value}</div>
     </div>
