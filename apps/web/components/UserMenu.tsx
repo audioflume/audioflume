@@ -46,7 +46,7 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
         <MenuLink href="/account/payment" label="Payment" onClose={onClose} />
         <MenuLink href="/account/security" label="Security" onClose={onClose} />
         <MenuLink href="/account/support" label="Support & FAQ" onClose={onClose} />
-        <UserMenuExitAction label="Sign out" trailing="Exit" onClick={() => signOut()} />
+        <UserMenuExitAction label="Sign Out" onClick={() => signOut()} />
       </UserMenuActions>
 
       <UserMenuThemeToggle
