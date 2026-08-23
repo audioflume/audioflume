@@ -24,6 +24,7 @@ export default function HeartIcon({
         stroke="var(--favorite-icon-color, currentColor)"
         strokeWidth="1.9"
         strokeLinejoin="round"
+        style={{ strokeWidth: 1.9 }}
       />
     </svg>
   );
