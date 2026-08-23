@@ -253,10 +253,6 @@ main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-sel
   opacity: 0.65 !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item:has(.fw-filter-rail-count):hover .fw-filter-rail-chevron {
-  opacity: 0 !important;
-}
-
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
   display: inline-flex !important;
   align-items: center !important;
