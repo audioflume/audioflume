@@ -1,0 +1,47 @@
+name: Temporary curated letterspacing
+
+on:
+  push:
+    branches:
+      - style/curated-editorial-letterspacing
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: style/curated-editorial-letterspacing
+      - name: Adjust curated editorial letter spacing
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('apps/web/app/curated-playlists/page.tsx')
+          text = path.read_text()
+
+          old_h1 = 'style={{ fontSize: "42px", maxWidth: "520px" }}'
+          new_h1 = 'style={{ fontSize: "42px", maxWidth: "520px", letterSpacing: "-0.035em" }}'
+          if text.count(old_h1) != 1:
+              raise SystemExit('curated h1 style anchor mismatch')
+          text = text.replace(old_h1, new_h1)
+
+          old_support = '<p className="audioflume-editorial-support">'
+          new_support = '<p className="audioflume-editorial-support" style={{ letterSpacing: "0" }}>'
+          if text.count(old_support) != 1:
+              raise SystemExit('curated support anchor mismatch')
+          text = text.replace(old_support, new_support)
+
+          path.write_text(text)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/app/curated-playlists/page.tsx
+          git commit -m "Adjust curated editorial letter spacing"
+          git push origin HEAD:style/curated-editorial-letterspacing
