@@ -102,6 +102,7 @@
   margin: 0 !important;
   padding: 0 !important;
   opacity: 1 !important;
+  transform: translateX(12px) !important;
 }
 
 .fw-toolbar-search-static-clear[hidden] {
@@ -144,7 +145,7 @@
   background: transparent !important;
   color: var(--text-primary) !important;
   font-family: inherit !important;
-  font-size: 12px !important;
+  font-size: 13.5px !important;
   font-style: normal !important;
   font-weight: 400 !important;
   letter-spacing: 0 !important;
@@ -157,11 +158,12 @@
 .fw-toolbar-search-static-input::placeholder {
   color: var(--fw-header-search-muted-color) !important;
   font-family: inherit !important;
-  font-size: 12px !important;
+  font-size: 13.5px !important;
   font-style: normal !important;
   font-weight: 400 !important;
   letter-spacing: 0 !important;
   line-height: 20px !important;
+  opacity: 0.45;
 }
 
 .fw-toolbar-search-static-input::-webkit-search-cancel-button {
