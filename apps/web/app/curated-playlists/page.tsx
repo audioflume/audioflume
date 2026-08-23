@@ -469,7 +469,7 @@ export default function CuratedPlaylistsPage() {
             playlists.length > 0 &&
             (activeBrowseFilter || hasActiveSearch) &&
             groupedPlaylists.length === 0 && (
-              <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
+              <div className="mt-[75px] text-sm font-[320] text-[var(--text-secondary)]">
                 {hasActiveSearch
                   ? "No curated playlists match your search."
                   : "No playlists are assigned to this filter yet."}

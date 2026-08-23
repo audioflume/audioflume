@@ -56,7 +56,7 @@ function ReleasePickerSongRow({
 
   return (
     <div
-      className={`grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_minmax(220px,1.35fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs transition-colors last:border-b-0 hover:bg-[var(--bg-hover)] ${
+      className={`grid min-h-[72px] grid-cols-[32px_52px_minmax(180px,1fr)_minmax(220px,1.35fr)_70px_70px_78px] items-center gap-3 border-b border-[var(--border-subtle)] px-5 text-xs font-[320] transition-colors last:border-b-0 hover:bg-[var(--bg-hover)] ${
         alreadyAdded ? "opacity-30" : ""
       }`}
     >
@@ -99,7 +99,7 @@ function ReleasePickerSongRow({
       >
         <BackendRowTitle secondary={song.artist}>
           <span className="flex min-w-0 items-center gap-1.5">
-            <span className="min-w-0 truncate">{song.title}</span>
+            <span className="min-w-0 truncate font-[400]">{song.title}</span>
             {song.licenseType === "premium" ? <PremiumLabel /> : null}
           </span>
         </BackendRowTitle>
@@ -288,15 +288,15 @@ export default function ArtistReleaseTrackPicker({
         <div className="-mx-5 min-h-0 flex-1 overflow-x-auto overflow-y-auto border-t border-[var(--border-subtle)]">
           <div className="min-w-[900px]">
             {loading ? (
-              <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)]">
+              <div className="flex min-h-[220px] items-center justify-center text-xs font-[320] text-[var(--text-muted)]">
                 Loading tracks...
               </div>
             ) : loadError ? (
-              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs font-[320] text-[var(--danger)]">
                 {loadError}
               </div>
             ) : displayedSongs.length === 0 ? (
-              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs font-[320] text-[var(--text-muted)]">
                 {search.trim() ? "No tracks match your search." : "No tracks are available."}
               </div>
             ) : (

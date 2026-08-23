@@ -225,22 +225,22 @@ export default function ArtistNotifications({
       ) : null}
 
       {error ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--danger)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs font-[320] text-[var(--danger)]">
           {error}
         </div>
       ) : null}
 
       {loading ? (
-        <div className="filmwave-backend-section flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+        <div className="filmwave-backend-section flex min-h-[144px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
           Loading notifications...
         </div>
       ) : notifications.length === 0 ? (
         <div className="filmwave-backend-section flex min-h-[180px] items-center justify-center px-6 text-center">
           <div>
-            <div className="text-sm font-medium text-[var(--text-primary)]">
+            <div className="text-sm font-[320] text-[var(--text-primary)]">
               Nothing new yet.
             </div>
-            <div className="mt-1.5 text-xs text-[var(--text-muted)]">
+            <div className="mt-1.5 text-xs font-[320] text-[var(--text-muted)]">
               Track reviews and artist account updates will appear here.
             </div>
           </div>
@@ -264,18 +264,18 @@ export default function ArtistNotifications({
 
                 <div className="min-w-0 flex-1">
                   <div
-                    className={`text-[13px] leading-5 text-[var(--text-primary)] ${
+                    className={`text-[13px] font-[320] leading-5 text-[var(--text-primary)] ${
                       unread ? "font-medium" : "font-normal"
                     }`}
                   >
                     {notification.title}
                   </div>
                   {notification.message ? (
-                    <div className="mt-1 max-w-[760px] text-xs leading-5 text-[var(--text-secondary)]">
+                    <div className="mt-1 max-w-[760px] text-xs font-[320] leading-5 text-[var(--text-secondary)]">
                       {notification.message}
                     </div>
                   ) : null}
-                  <div className="mt-2 text-[11px] text-[var(--text-muted)]">
+                  <div className="mt-2 text-[11px] font-[320] text-[var(--text-muted)]">
                     {formatNotificationTime(notification.created_at)}
                   </div>
                 </div>

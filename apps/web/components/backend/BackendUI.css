@@ -43,7 +43,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   color: var(--text-secondary);
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 11px;
-  font-weight: 400;
+  font-weight: 320;
   letter-spacing: 0;
   text-transform: none;
 }
@@ -59,7 +59,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   color: var(--text-secondary);
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 11px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.2;
   letter-spacing: 0;
   text-transform: none;
@@ -126,7 +126,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   padding: 0 16px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1;
   transition: border-color 150ms ease, background-color 150ms ease,
     color 150ms ease, opacity 150ms ease;
@@ -182,6 +182,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   padding-right: 12px;
   padding-left: 12px;
   font-size: 11px;
+  font-weight: 320;
 }
 
 .filmwave-backend-button:disabled,
@@ -206,6 +207,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   color: var(--text-primary);
   font-family: inherit;
   font-size: 12px;
+  font-weight: 320;
   line-height: 20px;
   outline: none;
   transition: border-color 150ms ease, opacity 150ms ease;
@@ -264,6 +266,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   color: var(--text-primary);
   font-family: inherit;
   font-size: 12px;
+  font-weight: 320;
   line-height: 20px;
   outline: none;
   transition: border-color 150ms ease, opacity 150ms ease;
@@ -282,7 +285,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 11px;
-  font-weight: 400;
+  font-weight: 320;
   transition: border-color 150ms ease, background-color 150ms ease,
     color 150ms ease, opacity 150ms ease;
 }
@@ -311,7 +314,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   border-radius: 999px;
   padding: 0 10px;
   font-size: 10px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1;
   letter-spacing: 0;
   text-transform: capitalize;
@@ -319,12 +322,12 @@ main:has(> aside[class*="admin-sidebar-width"])
 
 /* Legacy backend status chips use the same title-case, regular-weight treatment. */
 main:has(> aside[class*="admin-sidebar-width"]) span.rounded-full.uppercase {
-  font-weight: 400;
+  font-weight: 320;
   letter-spacing: 0;
   text-transform: capitalize;
 }
 
-/* Checklist status copy stays regular weight across admin + artist song forms. */
+/* Checklist status copy stays at the small-text weight across admin + artist song forms. */
 main:has(> aside[class*="admin-sidebar-width"])
   form
   > aside
@@ -337,7 +340,7 @@ main:has(.admin-song-form-card)
   > .admin-song-form-card:first-child
   > [class~="grid"][class~="gap-2"][class~="p-4"]
   .font-medium {
-  font-weight: 400;
+  font-weight: 320;
 }
 
 /* Backend pages with footers fill the viewport without subtracting shell offsets twice. */

@@ -382,9 +382,9 @@ export default function ArtistSongEditFiles({
       />
 
       {error ? (
-        <div className="text-xs leading-5 text-[var(--status-error,#dc584f)]">{error}</div>
+        <div className="text-xs font-[320] leading-5 text-[var(--status-error,#dc584f)]">{error}</div>
       ) : message ? (
-        <div className="text-xs leading-5 text-[var(--status-success,#48b571)]">
+        <div className="text-xs font-[320] leading-5 text-[var(--status-success,#48b571)]">
           {message}
         </div>
       ) : null}

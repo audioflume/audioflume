@@ -334,7 +334,7 @@ export default function AdminVideoUpload({
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-[var(--text-secondary)]">
+        <span className="text-xs font-[320] text-[var(--text-secondary)]">
           Cover video
         </span>
 
@@ -343,7 +343,7 @@ export default function AdminVideoUpload({
             type="button"
             onClick={handleDelete}
             disabled={deleting || uploading}
-            className="text-[11px] font-medium text-[var(--danger)] transition hover:opacity-70 disabled:opacity-40"
+            className="text-[11px] font-[320] text-[var(--danger)] transition hover:opacity-70 disabled:opacity-40"
           >
             {deleting ? "Removing…" : "Remove video"}
           </button>
@@ -367,7 +367,7 @@ export default function AdminVideoUpload({
               event.stopPropagation();
               void handleDelete();
             }}
-            className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-medium leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
+            className="absolute right-1 top-1 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-md bg-[var(--media-overlay-control)] text-[13px] font-[320] leading-none text-[var(--media-overlay-contrast)] transition hover:bg-[var(--media-overlay-control-hover)] disabled:cursor-default disabled:opacity-70"
             aria-label="Remove cover video"
           >
             ×
@@ -393,7 +393,7 @@ export default function AdminVideoUpload({
             />
 
             <div className="absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
-              <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)]">
+              <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-[320] leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)]">
                 {uploading ? "Uploading…" : "Change video"}
               </span>
             </div>
@@ -419,20 +419,20 @@ export default function AdminVideoUpload({
           </div>
 
           <div className="min-w-0">
-            <div className="text-xs font-medium text-[var(--text-primary)]">
+            <div className="text-xs font-[320] text-[var(--text-primary)]">
               {uploading ? "Uploading…" : "Drop video here"}
             </div>
 
-            <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+            <div className="mt-1 text-[11px] font-[320] leading-4 text-[var(--text-secondary)]">
               MP4, WebM, or MOV. Max 250 MB.
             </div>
           </div>
         </div>
       )}
 
-      {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
+      {error && <p className="text-xs font-[320] text-[var(--danger)]">{error}</p>}
 
-      <label className="grid gap-1.5 text-xs font-medium text-[var(--text-muted)]">
+      <label className="grid gap-1.5 text-xs font-[320] text-[var(--text-muted)]">
         Or paste video URL
         <input
           type="url"
@@ -444,7 +444,7 @@ export default function AdminVideoUpload({
             onUploaded(event.target.value);
           }}
           placeholder="https://…"
-          className="h-9 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+          className="h-9 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-[320] text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
         />
       </label>
     </div>

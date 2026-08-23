@@ -209,7 +209,7 @@ main
   color: var(--text-secondary) !important;
   font-family: inherit !important;
   font-size: 12px !important;
-  font-weight: 400 !important;
+  font-weight: 320 !important;
   line-height: 1 !important;
   cursor: pointer !important;
   white-space: nowrap !important;

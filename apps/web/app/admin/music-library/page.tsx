@@ -475,7 +475,7 @@ export default function AdminMusicLibraryPage() {
 
           <Link
             href="/admin/songs/new"
-            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
+            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-[320] text-[var(--bg-primary)] transition"
           >
             <UploadIcon size={13} />
             <span>Upload Song</span>
@@ -488,7 +488,7 @@ export default function AdminMusicLibraryPage() {
               <div className="text-base font-medium text-[var(--text-primary)]">
                 Music Library
               </div>
-              <div className="mt-1 text-xs text-[var(--text-secondary)]">
+              <div className="mt-1 text-xs font-[320] text-[var(--text-secondary)]">
                 {songs.length} song{songs.length === 1 ? "" : "s"}
               </div>
             </div>
@@ -500,7 +500,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={handleBatchDelete}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-[12px] font-normal text-[var(--danger-contrast)] transition hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] disabled:opacity-50"
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-[12px] font-[320] text-[var(--danger-contrast)] transition hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] disabled:opacity-50"
                   >
                     <TrashIcon />
                     {isBatchDeleting
@@ -512,7 +512,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={clearSelection}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-[12px] font-normal text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
+                    className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-[12px] font-[320] text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -522,7 +522,7 @@ export default function AdminMusicLibraryPage() {
               <button
                 type="button"
                 onClick={() => setFiltersOpen((open) => !open)}
-                className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-[12px] font-normal transition-colors ${
+                className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-[12px] font-[320] transition-colors ${
                   filtersOpen || activeFilterCount > 0
                     ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
                     : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -531,7 +531,7 @@ export default function AdminMusicLibraryPage() {
               >
                 <span>Filters</span>
                 <span
-                  className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] ${
+                  className={`flex h-5 min-w-5 items-center justify-center rounded-full px-1.5 text-[10px] font-[320] ${
                     filtersOpen || activeFilterCount > 0
                       ? "bg-[var(--bg-primary)] text-[var(--text-primary)]"
                       : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)]"
@@ -554,10 +554,10 @@ export default function AdminMusicLibraryPage() {
                   )}
 
                   <div>
-                    <div className="font-[family-name:var(--font-zalando-sans)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
+                    <div className="font-[family-name:var(--font-zalando-sans)] text-[11px] font-[320] uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
                       Library Health
                     </div>
-                    <div className="mt-1.5 text-xs text-[var(--text-secondary)]">
+                    <div className="mt-1.5 text-xs font-[320] text-[var(--text-secondary)]">
                       {healthLabel}
                     </div>
                   </div>
@@ -579,7 +579,7 @@ export default function AdminMusicLibraryPage() {
                         key={filter.key}
                         type="button"
                         onClick={() => setIssueFilter(filter.key)}
-                        className={`flex h-8 items-center gap-2 rounded-full px-3 text-xs font-medium transition ${
+                        className={`flex h-8 items-center gap-2 rounded-full px-3 text-xs font-[320] transition ${
                           active
                             ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
                             : "bg-[var(--bg-tertiary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -587,7 +587,7 @@ export default function AdminMusicLibraryPage() {
                       >
                         <span>{filter.label}</span>
                         <span
-                          className="rounded-full bg-[var(--bg-secondary)] px-1.5 py-[1px] text-[10px]"
+                          className="rounded-full bg-[var(--bg-secondary)] px-1.5 py-[1px] text-[10px] font-[320]"
                           style={{
                             color:
                               filter.count > 0 && severityColor
@@ -642,11 +642,11 @@ export default function AdminMusicLibraryPage() {
 
                 {songsError && !songsLoading && (
                   <div className="flex min-h-[220px] flex-col items-center justify-center gap-3 px-8 text-center">
-                    <div className="text-sm font-medium text-[var(--text-primary)]">
+                    <div className="text-sm font-[320] text-[var(--text-primary)]">
                       Couldn&apos;t load songs
                     </div>
 
-                    <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+                    <div className="max-w-[320px] text-xs font-[320] leading-5 text-[var(--text-secondary)]">
                       {songsError}
                     </div>
 
@@ -657,7 +657,7 @@ export default function AdminMusicLibraryPage() {
                 )}
 
                 {!songsError && !showSkeleton && visibleSongs.length === 0 && (
-                  <div className="flex min-h-[180px] items-center justify-center px-8 text-sm text-[var(--text-secondary)]">
+                  <div className="flex min-h-[180px] items-center justify-center px-8 text-sm font-[320] text-[var(--text-secondary)]">
                     No songs found.
                   </div>
                 )}

@@ -177,14 +177,14 @@ function TagGroup({ label, values }: { label: string; values: string[] }) {
 
   return (
     <div>
-      <div className="mb-2 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+      <div className="mb-2 text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
         {label}
       </div>
       <div className="flex flex-wrap gap-1.5">
         {values.map((value) => (
           <span
             key={value}
-            className="inline-flex h-7 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] text-[var(--text-secondary)]"
+            className="inline-flex h-7 items-center rounded-full bg-[var(--bg-tertiary)] px-2.5 text-[11px] font-[320] text-[var(--text-secondary)]"
           >
             {value}
           </span>
@@ -197,10 +197,10 @@ function TagGroup({ label, values }: { label: string; values: string[] }) {
 function DetailValue({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+      <div className="text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
         {label}
       </div>
-      <div className="mt-1.5 text-xs text-[var(--text-primary)]">{value || "—"}</div>
+      <div className="mt-1.5 text-xs font-[320] text-[var(--text-primary)]">{value || "—"}</div>
     </div>
   );
 }
@@ -460,7 +460,7 @@ export default function AdminMusicReviewPage() {
           </button>
 
           {detailsLoading ? (
-            <div className="filmwave-backend-section flex min-h-[320px] items-center justify-center text-xs text-[var(--text-muted)]">
+            <div className="filmwave-backend-section flex min-h-[320px] items-center justify-center text-xs font-[320] text-[var(--text-muted)]">
               Loading submission...
             </div>
           ) : song ? (
@@ -468,10 +468,10 @@ export default function AdminMusicReviewPage() {
               <section className="filmwave-backend-section">
                 <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-5 py-4">
                   <div>
-                    <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                    <div className="text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       {artist?.name || song.artist}
                     </div>
-                    <h2 className="filmwave-backend-section-title mt-1 flex items-center gap-1.5">
+                    <h2 className="filmwave-backend-section-title mt-1 flex items-center gap-1.5 font-[400]">
                       <span>{song.title}</span>
                       {selectedSummary?.license_type === "premium" ? <PremiumLabel /> : null}
                     </h2>
@@ -515,7 +515,7 @@ export default function AdminMusicReviewPage() {
                 </div>
                 <div className="p-5">
                   {credits.length === 0 ? (
-                    <div className="text-xs text-[var(--text-muted)]">No credits supplied.</div>
+                    <div className="text-xs font-[320] text-[var(--text-muted)]">No credits supplied.</div>
                   ) : (
                     <div className="grid gap-2">
                       {credits.map((credit, index) => (
@@ -523,10 +523,10 @@ export default function AdminMusicReviewPage() {
                           key={credit.id ? `credit-${credit.id}` : `pending-credit-${index}`}
                           className="flex items-center justify-between gap-4 border-b border-[var(--border-subtle)] py-2.5 last:border-b-0"
                         >
-                          <span className="text-xs text-[var(--text-primary)]">
+                          <span className="text-xs font-[320] text-[var(--text-primary)]">
                             {credit.credit_name}
                           </span>
-                          <span className="text-xs text-[var(--text-muted)]">
+                          <span className="text-xs font-[320] text-[var(--text-muted)]">
                             {credit.credit_role}
                           </span>
                         </div>
@@ -541,7 +541,7 @@ export default function AdminMusicReviewPage() {
                   <h3 className="filmwave-backend-section-title">
                     Rights + ownership
                   </h3>
-                  <span className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                  <span className="text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
                     {rights?.rights_confirmed ? "100% complete" : "Incomplete"}
                   </span>
                 </div>
@@ -560,7 +560,7 @@ export default function AdminMusicReviewPage() {
                   </div>
 
                   <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)]">
-                    <div className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                    <div className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       <span>Rights holder</span>
                       <span>Rights</span>
                       <span>Share</span>
@@ -568,14 +568,14 @@ export default function AdminMusicReviewPage() {
                       <span>IPI / CAE</span>
                     </div>
                     {rightsHolders.length === 0 ? (
-                      <div className="px-4 py-4 text-xs text-[var(--text-muted)]">
+                      <div className="px-4 py-4 text-xs font-[320] text-[var(--text-muted)]">
                         No ownership splits supplied.
                       </div>
                     ) : (
                       rightsHolders.map((holder, index) => (
                         <div
                           key={holder.id ? `holder-${holder.id}` : `pending-holder-${index}`}
-                          className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
+                          className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-xs font-[320] last:border-b-0"
                         >
                           <span className="text-[var(--text-primary)]">{holder.holder_name}</span>
                           <span className="text-[var(--text-secondary)]">
@@ -598,7 +598,7 @@ export default function AdminMusicReviewPage() {
                   </div>
 
                   {rights?.notes ? (
-                    <div className="rounded-[7px] bg-[var(--bg-secondary)] px-4 py-3 text-xs leading-5 text-[var(--text-secondary)]">
+                    <div className="rounded-[7px] bg-[var(--bg-secondary)] px-4 py-3 text-xs font-[320] leading-5 text-[var(--text-secondary)]">
                       {rights.notes}
                     </div>
                   ) : null}
@@ -616,15 +616,15 @@ export default function AdminMusicReviewPage() {
                     {reviews.map((review) => (
                       <div key={review.id} className="px-5 py-4">
                         <div className="flex flex-wrap items-center justify-between gap-3">
-                          <span className="text-xs font-medium text-[var(--text-primary)]">
+                          <span className="text-xs font-[320] text-[var(--text-primary)]">
                             {formatStatus(review.action)}
                           </span>
-                          <span className="text-[11px] text-[var(--text-muted)]">
+                          <span className="text-[11px] font-[320] text-[var(--text-muted)]">
                             {formatDate(review.created_at)}
                           </span>
                         </div>
                         {review.notes ? (
-                          <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
+                          <p className="mt-2 text-xs font-[320] leading-5 text-[var(--text-secondary)]">
                             {review.notes}
                           </p>
                         ) : null}
@@ -637,7 +637,7 @@ export default function AdminMusicReviewPage() {
               {song.status === "submitted" || song.status === "approved" ? (
                 <section className="filmwave-backend-section p-5">
                   <label className="block">
-                    <span className="mb-1.5 block text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                    <span className="mb-1.5 block text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       {song.status === "submitted" ? "Review feedback" : "Publish note (optional)"}
                     </span>
                     <textarea
@@ -717,7 +717,7 @@ export default function AdminMusicReviewPage() {
                     key={filter.value}
                     type="button"
                     onClick={() => setStatusFilter(filter.value)}
-                    className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border px-3 text-[11px] font-medium transition ${
+                    className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border px-3 text-[11px] font-[320] transition ${
                       active
                         ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                         : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -739,7 +739,7 @@ export default function AdminMusicReviewPage() {
                 <div className="text-base font-medium text-[var(--text-primary)]">
                   Review Queue
                 </div>
-                <div className="mt-1 text-xs text-[var(--text-secondary)]">
+                <div className="mt-1 text-xs font-[320] text-[var(--text-secondary)]">
                   {visibleSongs.length} submission{visibleSongs.length === 1 ? "" : "s"}
                 </div>
               </div>
@@ -748,11 +748,11 @@ export default function AdminMusicReviewPage() {
             <div className="overflow-x-auto overflow-y-hidden border-t border-[var(--border-subtle)]">
               <div className="min-w-[980px]">
                 {loading ? (
-                  <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                  <div className="flex min-h-[180px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
                     Loading submissions...
                   </div>
                 ) : error ? (
-                  <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
+                  <div className="flex min-h-[180px] flex-col items-center justify-center gap-3 px-5 text-center text-xs font-[320] text-[var(--text-secondary)]">
                     <span>{error}</span>
                     <button
                       type="button"
@@ -763,7 +763,7 @@ export default function AdminMusicReviewPage() {
                     </button>
                   </div>
                 ) : visibleSongs.length === 0 ? (
-                  <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                  <div className="flex min-h-[180px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
                     No submissions match this view.
                   </div>
                 ) : (
@@ -771,7 +771,7 @@ export default function AdminMusicReviewPage() {
                     {visibleSongs.map((item, index) => (
                       <div
                         key={item.id}
-                        className="grid min-h-[72px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs transition hover:bg-[var(--bg-hover)]"
+                        className="grid min-h-[72px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs font-[320] transition hover:bg-[var(--bg-hover)]"
                         style={{
                           borderBottom:
                             index === visibleSongs.length - 1
@@ -784,7 +784,7 @@ export default function AdminMusicReviewPage() {
                         </div>
 
                         <div className="min-w-0">
-                          <div className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]">
+                          <div className="flex min-w-0 items-center gap-1.5 font-[400] leading-tight text-[var(--text-primary)]">
                             <span className="min-w-0 truncate">{item.title}</span>
                             {item.license_type === "premium" ? <PremiumLabel /> : null}
                           </div>

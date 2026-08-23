@@ -39,6 +39,7 @@
 .project-sync-status.is-syncing > span:first-child::before {
   content: "Syncing";
   font-size: 11px;
+  font-weight: 320;
 }
 
 .project-sync-status-dot {

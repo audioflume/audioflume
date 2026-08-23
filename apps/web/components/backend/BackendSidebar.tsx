@@ -54,7 +54,7 @@ export function BackendSidebarScrollArea({
 
 export function BackendSidebarHeading({ children }: { children: ReactNode }) {
   return (
-    <div className="mb-[17px] px-3 font-[family-name:var(--font-zalando-sans)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
+    <div className="mb-[17px] px-3 font-[family-name:var(--font-zalando-sans)] text-[11px] font-[320] uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
       {children}
     </div>
   );
@@ -103,7 +103,7 @@ export function BackendSidebarNavItem({
       href={href}
       onClick={onClick}
       className={joinClasses(
-        "group flex h-[38px] w-full items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-normal transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none",
+        "group flex h-[38px] w-full items-center gap-2.5 pl-3 pr-2 text-left text-[12.5px] font-[320] transition-colors focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none",
         active
           ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]",

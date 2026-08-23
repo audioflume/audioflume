@@ -113,7 +113,7 @@ function statusStyle(status: ArtistStatus) {
 function StatusBadge({ status }: { status: ArtistStatus }) {
   return (
     <span
-      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-medium uppercase tracking-[0.05em]"
+      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-[320] uppercase tracking-[0.05em]"
       style={statusStyle(status)}
     >
       {formatStatus(status)}
@@ -137,7 +137,7 @@ function ActionButton({
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border px-3 text-[11px] font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${
+      className={`inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border px-3 text-[11px] font-[320] transition disabled:cursor-not-allowed disabled:opacity-45 ${
         primary
           ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"
           : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -434,18 +434,18 @@ export default function AdminArtistsPage() {
       {showCreateArtist ? (
         <section className="mb-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
           <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end">
-            <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
+            <label className="grid gap-2 text-[11px] font-[320] text-[var(--text-secondary)]">
               <span>Name (Required)</span>
               <input
                 type="text"
                 value={newArtistName}
                 maxLength={160}
                 onChange={(event) => setNewArtistName(event.target.value)}
-                className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-[13px] font-normal text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
+                className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-[13px] font-[320] text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
               />
             </label>
 
-            <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
+            <label className="grid gap-2 text-[11px] font-[320] text-[var(--text-secondary)]">
               <span>Artist URL (Required)</span>
               <input
                 type="text"
@@ -453,17 +453,17 @@ export default function AdminArtistsPage() {
                 maxLength={80}
                 placeholder="artist-name"
                 onChange={(event) => setNewArtistSlug(event.target.value)}
-                className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-[13px] font-normal text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
+                className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-[13px] font-[320] text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
               />
             </label>
 
-            <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
+            <label className="grid gap-2 text-[11px] font-[320] text-[var(--text-secondary)]">
               <span>Owner Email (Required)</span>
               <input
                 type="email"
                 value={newArtistEmail}
                 onChange={(event) => setNewArtistEmail(event.target.value)}
-                className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-[13px] font-normal text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
+                className="h-10 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-[13px] font-[320] text-[var(--text-primary)] outline-none focus:border-[var(--text-muted)]"
               />
             </label>
 
@@ -477,7 +477,7 @@ export default function AdminArtistsPage() {
                   !newArtistEmail.trim()
                 }
                 onClick={() => void createAndInviteArtist()}
-                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
+                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[11px] font-[320] text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
               >
                 {creatingArtist ? "Creating..." : "Create & Invite"}
               </button>
@@ -485,7 +485,7 @@ export default function AdminArtistsPage() {
                 type="button"
                 disabled={creatingArtist}
                 onClick={() => setShowCreateArtist(false)}
-                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-[11px] font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-[11px] font-[320] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
               >
                 Cancel
               </button>
@@ -506,7 +506,7 @@ export default function AdminArtistsPage() {
           <button
             type="button"
             onClick={() => setShowCreateArtist((current) => !current)}
-            className="inline-flex h-10 shrink-0 cursor-pointer items-center rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80"
+            className="inline-flex h-10 shrink-0 cursor-pointer items-center rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[11px] font-[320] text-[var(--bg-primary)] transition hover:opacity-80"
           >
             Create & Invite
           </button>
@@ -518,7 +518,7 @@ export default function AdminArtistsPage() {
                 key={filter.value}
                 type="button"
                 onClick={() => setStatusFilter(filter.value)}
-                className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border px-3 text-[11px] font-medium transition ${
+                className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border px-3 text-[11px] font-[320] transition ${
                   active
                     ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                     : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -535,7 +535,7 @@ export default function AdminArtistsPage() {
       </section>
 
       <div className="overflow-x-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="grid min-w-[1140px] grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+        <div className="grid min-w-[1140px] grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
           <span>Artist</span>
           <span>Owner</span>
           <span>Location</span>
@@ -545,22 +545,22 @@ export default function AdminArtistsPage() {
         </div>
 
         {loading ? (
-          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center text-xs font-[320] text-[var(--text-muted)]">
             Loading artists...
           </div>
         ) : error ? (
-          <div className="flex min-h-[180px] min-w-[1140px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
+          <div className="flex min-h-[180px] min-w-[1140px] flex-col items-center justify-center gap-3 px-5 text-center text-xs font-[320] text-[var(--text-secondary)]">
             <span>{error}</span>
             <button
               type="button"
               onClick={() => void loadArtists()}
-              className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-primary)]"
+              className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-[320] text-[var(--text-primary)]"
             >
               Try again
             </button>
           </div>
         ) : visibleArtists.length === 0 ? (
-          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
             No artists match this view.
           </div>
         ) : (
@@ -583,10 +583,10 @@ export default function AdminArtistsPage() {
                   className="grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0"
                 >
                   <div className="min-w-0">
-                    <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                    <div className="truncate text-sm font-[320] text-[var(--text-primary)]">
                       {artist.name}
                     </div>
-                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--text-muted)]">
+                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] font-[320] text-[var(--text-muted)]">
                       <span>/{artist.slug}</span>
                       {artist.website_url ? (
                         <a
@@ -612,26 +612,26 @@ export default function AdminArtistsPage() {
                   </div>
 
                   <div className="min-w-0">
-                    <div className="truncate text-xs text-[var(--text-primary)]">
+                    <div className="truncate text-xs font-[320] text-[var(--text-primary)]">
                       {ownerLabel}
                     </div>
                     {artist.owner?.company_name &&
                     artist.owner.company_name !== ownerLabel ? (
-                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                      <div className="mt-1 truncate text-[11px] font-[320] text-[var(--text-muted)]">
                         {artist.owner.company_name}
                       </div>
                     ) : pendingClaim ? (
-                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                      <div className="mt-1 truncate text-[11px] font-[320] text-[var(--text-muted)]">
                         {pendingClaim.email}
                       </div>
                     ) : null}
                   </div>
 
-                  <div className="truncate text-xs text-[var(--text-secondary)]">
+                  <div className="truncate text-xs font-[320] text-[var(--text-secondary)]">
                     {artist.location || "—"}
                   </div>
 
-                  <div className="text-xs text-[var(--text-secondary)]">
+                  <div className="text-xs font-[320] text-[var(--text-secondary)]">
                     {formatDate(artist.created_at)}
                   </div>
 

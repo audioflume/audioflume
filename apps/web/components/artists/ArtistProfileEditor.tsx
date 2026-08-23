@@ -23,7 +23,7 @@ type ArtistImageResponse = {
 
 function FieldLabel({ children }: { children: string }) {
   return (
-    <span className="mb-2 block text-[11px] font-medium text-[var(--text-secondary)]">
+    <span className="mb-2 block text-[11px] font-[320] text-[var(--text-secondary)]">
       {children}
     </span>
   );
@@ -37,7 +37,7 @@ function CharacterCount({
   maxLength: number;
 }) {
   return (
-    <div className="mt-1.5 text-right text-[10px] leading-none text-[var(--text-muted)]">
+    <div className="mt-1.5 text-right text-[10px] font-[320] leading-none text-[var(--text-muted)]">
       {value.length} / {maxLength}
     </div>
   );
@@ -196,7 +196,7 @@ export default function ArtistProfileEditor({
               }
             />
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium text-[var(--text-primary)]">
+              <div className="text-xs font-[320] text-[var(--text-primary)]">
                 Profile image
               </div>
               {canEdit ? (
@@ -228,7 +228,7 @@ export default function ArtistProfileEditor({
               }
             />
             <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium text-[var(--text-primary)]">
+              <div className="text-xs font-[320] text-[var(--text-primary)]">
                 Feature image
               </div>
               {canEdit ? (
@@ -301,12 +301,12 @@ export default function ArtistProfileEditor({
                 disabled={!canEdit || saving}
                 className="filmwave-backend-input"
               />
-              <div className="mt-1.5 text-[11px] leading-5 text-[var(--text-muted)]">
+              <div className="mt-1.5 text-[11px] font-[320] leading-5 text-[var(--text-muted)]">
                 /artists/{displayedSlug || "artist"}
               </div>
               <CharacterCount value={displayedSlug} maxLength={80} />
               {slugChanged ? (
-                <div className="mt-1 text-[11px] leading-5 text-[var(--status-warning)]">
+                <div className="mt-1 text-[11px] font-[320] leading-5 text-[var(--status-warning)]">
                   Changing this will change your public artist URL. The previous URL will be kept so old links can redirect when public artist pages launch.
                 </div>
               ) : null}
@@ -408,7 +408,7 @@ export default function ArtistProfileEditor({
       </section>
 
       <div className="flex min-h-10 flex-wrap items-center justify-between gap-3">
-        <div className="min-h-5 text-xs">
+        <div className="min-h-5 text-xs font-[320]">
           {error ? (
             <span className="text-[var(--status-error)]">{error}</span>
           ) : message ? (

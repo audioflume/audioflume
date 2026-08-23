@@ -257,10 +257,10 @@ export default function AdminDiscoverPlaylistForm({
       >
         <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-5">
-            <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
+            <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-[200] tracking-[-0.05em]">
               Discover content details
             </h2>
-            <p className="mt-1 text-sm text-[var(--text-secondary)]">
+            <p className="mt-1 text-sm font-[320] text-[var(--text-secondary)]">
               Manage the title, copy, artwork, and button for this reusable
               Discover content.
             </p>
@@ -270,33 +270,33 @@ export default function AdminDiscoverPlaylistForm({
             <div className="h-96 animate-pulse rounded-xl bg-[var(--bg-tertiary)]" />
           ) : (
             <div className="grid gap-4">
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+              <label className="grid gap-2 text-xs font-[320] text-[var(--text-secondary)]">
                 Title
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Quiet documentary beds"
                   required
                 />
               </label>
 
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+              <label className="grid gap-2 text-xs font-[320] text-[var(--text-secondary)]">
                 Kicker text
                 <input
                   value={kicker}
                   onChange={(e) => setKicker(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Human / Minimal / Warm"
                 />
               </label>
 
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+              <label className="grid gap-2 text-xs font-[320] text-[var(--text-secondary)]">
                 Description text
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Describe what this Discover content is for."
                 />
               </label>
@@ -305,25 +305,25 @@ export default function AdminDiscoverPlaylistForm({
                 checked={buttonEnabled}
                 onChange={setButtonEnabled}
                 size="sm"
-                className="items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]"
+                className="items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm font-[320] text-[var(--text-secondary)]"
                 label={
                   <span>
                     <span className="block font-medium text-[var(--text-primary)]">
                       Show white pill button
                     </span>
-                    <span className="mt-1 block text-xs text-[var(--text-muted)]">
+                    <span className="mt-1 block text-xs font-[320] text-[var(--text-muted)]">
                       Controls the hero-style CTA button for this Discover content.
                     </span>
                   </span>
                 }
               />
 
-              <label className="grid gap-2 text-xs font-medium text-[var(--text-secondary)]">
+              <label className="grid gap-2 text-xs font-[320] text-[var(--text-secondary)]">
                 Button text
                 <input
                   value={buttonText}
                   onChange={(e) => setButtonText(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)] disabled:opacity-50"
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)] disabled:opacity-50"
                   placeholder={DEFAULT_DISCOVER_BUTTON_TEXT}
                   disabled={!buttonEnabled}
                 />
@@ -375,7 +375,7 @@ export default function AdminDiscoverPlaylistForm({
           </div>
 
           <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
-            <h3 className="font-[family-name:var(--font-zalando-sans)] text-xl font-medium tracking-[-0.05em]">
+            <h3 className="font-[family-name:var(--font-zalando-sans)] text-xl font-[200] tracking-[-0.05em]">
               Card preview
             </h3>
             <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
@@ -391,19 +391,19 @@ export default function AdminDiscoverPlaylistForm({
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/72 via-black/28 to-black/8" />
               <div className="relative z-10 flex min-h-[320px] flex-col justify-end p-5 text-white">
-                <div className="text-[10px] font-medium uppercase tracking-[0.12em] text-white/55">
+                <div className="text-[10px] font-[320] uppercase tracking-[0.12em] text-white/55">
                   {kicker || "Kicker text"}
                 </div>
-                <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-3xl font-medium leading-none tracking-[-0.055em]">
+                <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-3xl font-[200] leading-none tracking-[-0.055em]">
                   {name || "Discover content title"}
                 </div>
                 {description && (
-                  <p className="mt-3 line-clamp-3 text-xs leading-5 text-white/68">
+                  <p className="mt-3 line-clamp-3 text-xs font-[320] leading-5 text-white/68">
                     {description}
                   </p>
                 )}
                 {buttonEnabled && (
-                  <div className="mt-5 inline-flex h-10 w-fit items-center rounded-full bg-white px-4 text-xs font-medium text-black">
+                  <div className="mt-5 inline-flex h-10 w-fit items-center rounded-full bg-white px-4 text-xs font-[320] text-black">
                     {buttonText || DEFAULT_DISCOVER_BUTTON_TEXT}
                   </div>
                 )}
@@ -417,21 +417,21 @@ export default function AdminDiscoverPlaylistForm({
         <section className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
+              <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-[200] tracking-[-0.05em]">
                 Songs
               </h2>
-              <p className="mt-1 text-sm text-[var(--text-secondary)]">
+              <p className="mt-1 text-sm font-[320] text-[var(--text-secondary)]">
                 Songs linked to this Discover content. Add via the admin music
                 player.
               </p>
             </div>
-            <span className="text-xs font-medium text-[var(--text-muted)]">
+            <span className="text-xs font-[320] text-[var(--text-muted)]">
               {songs.length} songs
             </span>
           </div>
 
           {songs.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm text-[var(--text-secondary)]">
+            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm font-[320] text-[var(--text-secondary)]">
               No songs yet. Open a song in the admin music player and choose Add
               to Playlist.
             </div>
@@ -454,11 +454,11 @@ export default function AdminDiscoverPlaylistForm({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex min-w-0 items-center gap-1.5 text-sm font-medium">
+                    <div className="flex min-w-0 items-center gap-1.5 text-sm font-[400]">
                       <span className="min-w-0 truncate">{song.title}</span>
                       {song.licenseType === "premium" ? <PremiumLabel /> : null}
                     </div>
-                    <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
+                    <div className="mt-0.5 truncate text-xs font-[320] text-[var(--text-muted)]">
                       {song.artist}
                     </div>
                   </div>

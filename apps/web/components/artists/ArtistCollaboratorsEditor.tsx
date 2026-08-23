@@ -179,18 +179,18 @@ export default function ArtistCollaboratorsEditor({
 
       <div className="grid gap-4 p-5">
         <div className="grid gap-1">
-          <span className="text-[11px] text-[var(--text-muted)]">Primary artist</span>
-          <div className="text-sm font-medium text-[var(--text-primary)]">
+          <span className="text-[11px] font-[320] text-[var(--text-muted)]">Primary artist</span>
+          <div className="text-sm font-[320] text-[var(--text-primary)]">
             {primaryArtist?.name || "Current artist"}
           </div>
         </div>
 
         {loading ? (
-          <div className="text-xs text-[var(--text-muted)]">Loading artist credits...</div>
+          <div className="text-xs font-[320] text-[var(--text-muted)]">Loading artist credits...</div>
         ) : null}
 
         {!loading && rows.length === 0 ? (
-          <div className="text-xs text-[var(--text-muted)]">
+          <div className="text-xs font-[320] text-[var(--text-muted)]">
             No featured or collaborating artists added.
           </div>
         ) : null}
@@ -256,13 +256,13 @@ export default function ArtistCollaboratorsEditor({
         ) : null}
 
         {!loading && options.length === 0 ? (
-          <div className="text-xs text-[var(--text-muted)]">
+          <div className="text-xs font-[320] text-[var(--text-muted)]">
             No other approved artist profiles are available yet.
           </div>
         ) : null}
 
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="min-h-5 text-xs">
+          <div className="min-h-5 text-xs font-[320]">
             {error ? (
               <span className="text-[var(--danger)]">{error}</span>
             ) : message ? (

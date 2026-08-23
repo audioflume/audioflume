@@ -229,7 +229,7 @@ export default function ArtistApplicationForm() {
                 }
               />
               <label className="block sm:col-span-2">
-                <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
+                <span className="mb-1.5 block text-xs font-[320] text-[var(--text-muted)]">
                   Artist bio
                 </span>
                 <textarea
@@ -239,7 +239,7 @@ export default function ArtistApplicationForm() {
                     setForm((current) => ({ ...current, bio: event.target.value }))
                   }
                   rows={6}
-                  className="w-full resize-y border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm leading-6 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
+                  className="w-full resize-y border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm font-[320] leading-6 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
                 />
               </label>
             </div>
@@ -270,17 +270,17 @@ export default function ArtistApplicationForm() {
         />
         <div className="grid gap-3 p-4">
           {loadState === "loading" ? (
-            <div className="text-xs text-[var(--text-muted)]">Loading artist profiles...</div>
+            <div className="text-xs font-[320] text-[var(--text-muted)]">Loading artist profiles...</div>
           ) : null}
 
           {loadState === "error" ? (
-            <div className="text-xs text-[var(--text-muted)]">
+            <div className="text-xs font-[320] text-[var(--text-muted)]">
               Artist profiles could not be loaded.
             </div>
           ) : null}
 
           {loadState === "ready" && applications.length === 0 ? (
-            <div className="border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs leading-5 text-[var(--text-muted)]">
+            <div className="border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs font-[320] leading-5 text-[var(--text-muted)]">
               No artist profiles yet. Your first submitted application will appear here.
             </div>
           ) : null}
@@ -292,14 +292,14 @@ export default function ArtistApplicationForm() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <div className="truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                  <div className="truncate text-sm font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
                     {application.name}
                   </div>
-                  <div className="mt-1 text-xs text-[var(--text-muted)]">
+                  <div className="mt-1 text-xs font-[320] text-[var(--text-muted)]">
                     {formatDate(application.created_at)}
                   </div>
                 </div>
-                <span className="shrink-0 text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--text-secondary)]">
+                <span className="shrink-0 text-[11px] font-[320] uppercase tracking-[0.06em] text-[var(--text-secondary)]">
                   {formatStatus(application.status)}
                 </span>
               </div>

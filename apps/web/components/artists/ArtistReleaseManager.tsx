@@ -158,7 +158,7 @@ function SortableReleaseRow({
       >
         {release.title}
       </BackendRowTitle>
-      <div className="text-xs text-[var(--text-muted)]">
+      <div className="text-xs font-[320] text-[var(--text-muted)]">
         {formatReleaseYear(release.release_date)}
       </div>
       <div>
@@ -349,7 +349,7 @@ export default function ArtistReleaseManager({
         </div>
 
         {reorderError ? (
-          <div className="px-5 pb-3 text-xs text-[var(--danger)]">{reorderError}</div>
+          <div className="px-5 pb-3 text-xs font-[320] text-[var(--danger)]">{reorderError}</div>
         ) : null}
 
         <DndContext
@@ -363,17 +363,17 @@ export default function ArtistReleaseManager({
           >
             <div className="divide-y divide-[var(--border-subtle)]">
               {loadState === "loading" ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
                   Loading releases...
                 </div>
               ) : null}
               {loadState === "error" ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs font-[320] text-[var(--danger)]">
                   {loadError || "Releases could not be loaded."}
                 </div>
               ) : null}
               {loadState === "ready" && releases.length === 0 ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs font-[320] text-[var(--text-muted)]">
                   No releases created yet.
                 </div>
               ) : null}
@@ -680,7 +680,7 @@ function CreateRelease({
           >
             <div className={orderedTracks.length === 0 ? "" : "grid gap-2 p-5"}>
               {orderedTracks.length === 0 ? (
-                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                <div className="px-5 py-5 text-xs font-[320] text-[var(--text-muted)]">
                   No tracks added yet.
                 </div>
               ) : (
@@ -700,7 +700,7 @@ function CreateRelease({
       </section>
 
       <div className="flex items-center justify-between gap-3">
-        <div className="min-h-5 text-xs text-[var(--danger)]">{error}</div>
+        <div className="min-h-5 text-xs font-[320] text-[var(--danger)]">{error}</div>
         <button
           type="submit"
           disabled={!canManage || saving || !title.trim() || !yearValid}
@@ -1115,7 +1115,7 @@ function ReleaseEditor({
           >
             <div className={orderedTracks.length === 0 ? "" : "grid gap-2 p-5"}>
               {orderedTracks.length === 0 ? (
-                <div className="px-5 py-5 text-xs text-[var(--text-muted)]">
+                <div className="px-5 py-5 text-xs font-[320] text-[var(--text-muted)]">
                   No tracks added yet.
                 </div>
               ) : (
@@ -1145,7 +1145,7 @@ function ReleaseEditor({
         </button>
 
         <div className="flex flex-wrap items-center justify-end gap-2">
-          <div className="mr-1 min-h-5 text-xs">
+          <div className="mr-1 min-h-5 text-xs font-[320]">
             {error ? (
               <span className="text-[var(--danger)]">{error}</span>
             ) : message ? (

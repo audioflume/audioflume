@@ -143,7 +143,7 @@ export function BackendCheckbox({
   return (
     <label
       className={joinClasses(
-        "group/backend-checkbox inline-flex items-center text-xs",
+        "group/backend-checkbox inline-flex items-center text-xs font-[320]",
         compact ? "min-h-0 gap-0" : "min-h-10 gap-2.5",
         disabled ? "cursor-not-allowed opacity-60" : "cursor-pointer",
         checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]",

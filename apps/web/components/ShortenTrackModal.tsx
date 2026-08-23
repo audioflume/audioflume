@@ -597,7 +597,7 @@ function SongPreview({ song }: { song: Song }) {
           )}
         </span>
 
-        <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+        <span className="block max-w-[300px] truncate text-[12px] font-[400] tracking-[-0.015em] text-[var(--text-primary)]">
           {song.title} by {song.artist}
         </span>
       </div>
@@ -730,7 +730,7 @@ export default function ShortenTrackModal({
       <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--filmwave-menu-sep)] bg-[var(--filmwave-menu-bg)]">
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
-            <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
+            <p className="text-center text-xs font-[320] leading-5 text-[var(--text-secondary)]">
               Generate a shorter version by isolating one usable continuous section with a more deliberate start or ending.
             </p>
 
@@ -747,7 +747,7 @@ export default function ShortenTrackModal({
                     type="button"
                     disabled={disabled}
                     onClick={() => handleGenerate(option.seconds)}
-                    className="flex h-12 items-center justify-center rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-semibold text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40"
+                    className="flex h-12 items-center justify-center rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-[320] text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40"
                   >
                     {isGenerating ? (
                       <span className="flex items-center gap-2">
@@ -764,25 +764,25 @@ export default function ShortenTrackModal({
           </div>
 
           {error && (
-            <div className="rounded-none border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-3 py-2 text-center text-xs font-medium text-[var(--danger)]">
+            <div className="rounded-none border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-3 py-2 text-center text-xs font-[320] text-[var(--danger)]">
               {error}
             </div>
           )}
 
           <div className="border-t border-[var(--filmwave-menu-sep)] pt-4">
             <div className="mb-2 flex items-center justify-between gap-3">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              <h3 className="text-xs font-[320] uppercase tracking-[0.08em] text-[var(--text-muted)]">
                 Short Options
               </h3>
               {generatedTracks.length > 0 && (
-                <span className="text-[11px] text-[var(--text-muted)]">
+                <span className="text-[11px] font-[320] text-[var(--text-muted)]">
                   {generatedTracks.length} ready
                 </span>
               )}
             </div>
 
             {generatedTracks.length === 0 ? (
-              <div className="flex min-h-[92px] items-center justify-center border border-dashed border-[var(--border)] px-4 text-center text-xs leading-5 text-[var(--text-secondary)]">
+              <div className="flex min-h-[92px] items-center justify-center border border-dashed border-[var(--border)] px-4 text-center text-xs font-[320] leading-5 text-[var(--text-secondary)]">
                 Generated short versions will appear here for preview.
               </div>
             ) : (
@@ -830,10 +830,10 @@ export default function ShortenTrackModal({
                       </span>
 
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                        <span className="block truncate text-sm font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
                           {track.label} Version
                         </span>
-                        <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                        <span className="mt-0.5 block truncate text-[11px] font-[320] text-[var(--text-muted)]">
                           {formatDuration(track.actualDurationSeconds)} deliberate excerpt · waveform ready
                         </span>
                       </span>

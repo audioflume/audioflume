@@ -119,7 +119,7 @@ export default function CreateProjectModal({
         />
 
         {error && (
-          <p className="mt-3 text-xs font-medium text-[var(--danger)]">{error}</p>
+          <p className="mt-3 text-xs font-[320] text-[var(--danger)]">{error}</p>
         )}
       </form>
     </ModalShell>
