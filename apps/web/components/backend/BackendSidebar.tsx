@@ -7,6 +7,17 @@ function joinClasses(...values: Array<string | false | null | undefined>) {
   return values.filter(Boolean).join(" ");
 }
 
+function ChevronRightIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="11" height="11" aria-hidden="true">
+      <path
+        fill="currentColor"
+        d="M8.6 5.3a1.3 1.3 0 0 1 1.84.04l5.5 5.76a1.3 1.3 0 0 1 0 1.8l-5.5 5.76a1.3 1.3 0 0 1-1.88-1.8L13.2 12 8.56 7.14a1.3 1.3 0 0 1 .04-1.84Z"
+      />
+    </svg>
+  );
+}
+
 type BackendSidebarShellProps = {
   children: ReactNode;
   className?: string;
@@ -123,7 +134,20 @@ export function BackendSidebarNavItem({
         </span>
       ) : null}
       <span className="min-w-0 flex-1 truncate">{children}</span>
-      {trailing ? <span className="ml-auto shrink-0">{trailing}</span> : null}
+      <span className="ml-auto flex shrink-0 items-center gap-2">
+        {trailing ? <span className="shrink-0">{trailing}</span> : null}
+        <span
+          className={joinClasses(
+            "inline-flex shrink-0 text-[var(--text-muted)] transition-opacity duration-[130ms]",
+            active
+              ? "opacity-100"
+              : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100",
+          )}
+          aria-hidden="true"
+        >
+          <ChevronRightIcon />
+        </span>
+      </span>
     </Link>
   );
 }
