@@ -216,7 +216,7 @@ export function AccountHero({ config }: { config: HeroConfig }) {
         <img src={config.image} alt="" className="absolute inset-0 h-full w-full object-cover transition duration-700 group-hover:scale-[1.03]" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
         <div className="relative z-10 flex min-h-[255px] flex-col justify-between p-5 md:p-6">
-          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur"><span className="truncate">Filmwave account</span></div>
+          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur"><span className="truncate">Audioflume account</span></div>
           <div className="grid gap-2 sm:grid-cols-3">
             {[config.statA, config.statB, config.statC].map((stat) => <div key={stat} className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">{stat}</div>)}
           </div>
@@ -260,7 +260,7 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
     <div className="flex flex-col items-start gap-2">
       <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
         <span className="absolute inset-0 overflow-hidden rounded-full">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
-        {!value ? <span>{initials || "FW"}</span> : null}
+        {!value ? <span>{initials || "A"}</span> : null}
         <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
       </label>
