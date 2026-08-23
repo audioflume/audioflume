@@ -387,7 +387,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           display: inline-flex !important;
           height: 44px !important;
           min-height: 44px !important;
-          min-width: 0 !important;
           align-items: center !important;
           justify-content: center !important;
           gap: 8px !important;
