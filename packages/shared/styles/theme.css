@@ -40,7 +40,11 @@
   --filmwave-browse-filter-border-color: var(--filmwave-border-color);
 
   --text-primary: var(--filmwave-white);
-  --text-secondary: #808080;
+  --text-secondary: color-mix(
+    in srgb,
+    var(--filmwave-white) 40%,
+    transparent
+  );
   --text-muted: color-mix(
     in srgb,
     var(--filmwave-white) 30%,
@@ -167,7 +171,7 @@
   --text-primary: var(--filmwave-black);
   --text-secondary: color-mix(
     in srgb,
-    var(--filmwave-black) 62%,
+    var(--filmwave-black) 48%,
     transparent
   );
   --text-muted: color-mix(
