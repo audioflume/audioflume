@@ -33,7 +33,7 @@ function applyDesktopCorsHeaders(response: NextResponse, request: NextRequest) {
   response.headers.set("Access-Control-Allow-Methods", "GET, OPTIONS");
   response.headers.set(
     "Access-Control-Allow-Headers",
-    "Content-Type, Authorization, X-Filmwave-Desktop-Dev-Key",
+    "Content-Type, Authorization, X-Audioflume-Desktop-Dev-Key, X-Filmwave-Desktop-Dev-Key",
   );
   response.headers.set("Vary", "Origin");
 

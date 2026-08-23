@@ -70,7 +70,7 @@ function getTokenFromDeepLink(url: string) {
   try {
     const parsedUrl = new URL(url);
 
-    if (parsedUrl.protocol !== "filmwave:") return null;
+    if (parsedUrl.protocol !== "audioflume:") return null;
     if (parsedUrl.hostname !== "auth") return null;
 
     return parsedUrl.searchParams.get("token");
@@ -339,7 +339,7 @@ function App() {
   }
 
   useEffect(() => {
-    register("filmwave").catch((error) => {
+    register("audioflume").catch((error) => {
       console.warn("Could not register Audioflume deep link scheme.", error);
     });
   }, []);
