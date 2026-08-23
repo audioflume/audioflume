@@ -390,24 +390,13 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           align-items: center !important;
           justify-content: center !important;
           gap: 8px !important;
-          border: 1px solid var(--filmwave-border-color) !important;
           border-radius: 0 !important;
-          background: var(--bg-primary) !important;
-          background-color: var(--bg-primary) !important;
           padding: 0 14px !important;
-          color: var(--text-secondary) !important;
           font-family: inherit !important;
           font-size: 12px !important;
           font-weight: 400 !important;
           line-height: 1 !important;
           transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button:hover:not(:disabled) {
-          border-color: var(--filmwave-border-color) !important;
-          background: var(--bg-hover) !important;
-          background-color: var(--bg-hover) !important;
-          color: var(--text-primary) !important;
         }
 
         .playlist-detail-page .playlist-detail-actions > button svg {
