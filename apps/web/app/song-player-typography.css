@@ -7,7 +7,7 @@
 .filmwave-song-card .filmwave-song-meta,
 .filmwave-song-card .filmwave-song-duration,
 .filmwave-song-card .filmwave-song-genre {
-  color: var(--text-secondary);
+  color: var(--text-subtle);
 }
 
 .filmwave-song-card .filmwave-song-genre {
