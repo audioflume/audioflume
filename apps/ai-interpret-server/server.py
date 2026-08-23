@@ -8,7 +8,7 @@ from fastapi.responses import JSONResponse
 
 from model_adapter import InterpretationRequest, ModelNotConfiguredError, generate_interpretation
 
-app = FastAPI(title="Filmwave AI Server")
+app = FastAPI(title="Audioflume AI Server")
 
 
 @app.get("/health")
@@ -30,7 +30,7 @@ async def interpret(
 
     suffix = Path(audio.filename or "source.wav").suffix or ".wav"
 
-    with TemporaryDirectory(prefix="filmwave-ai-interpret-") as temp_dir:
+    with TemporaryDirectory(prefix="audioflume-ai-interpret-") as temp_dir:
         source_path = Path(temp_dir) / f"source{suffix}"
         source_path.write_bytes(await audio.read())
 
