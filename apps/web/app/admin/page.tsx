@@ -243,7 +243,7 @@ function OverviewMetric({
       <span className="text-xs font-[320] text-[var(--text-secondary)] transition group-hover:text-[var(--text-primary)]">
         {label}
       </span>
-      <span className="mt-3 font-[family-name:var(--font-zalando-sans)] text-[24px] font-[200] leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+      <span className="mt-3 font-[family-name:var(--font-zalando-sans)] text-[24px] font-[500] leading-none tracking-[-0.04em] text-[var(--text-primary)]">
         {value}
       </span>
     </Link>
