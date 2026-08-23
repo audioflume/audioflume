@@ -81,7 +81,7 @@ function getDisplayName(user: {
   return (
     [user.firstName, user.lastName].filter(Boolean).join(" ") ||
     user.username ||
-    "Filmwave member"
+    "Audioflume member"
   );
 }
 
@@ -240,7 +240,7 @@ export async function GET(_request: Request, context: RouteContext) {
         .filter((song): song is CommunityPlaylistSong => Boolean(song));
     }
 
-    let creator = { name: "Filmwave member", imageUrl: null as string | null };
+    let creator = { name: "Audioflume member", imageUrl: null as string | null };
     try {
       const client = await clerkClient();
       const user = await client.users.getUser(playlist.clerk_user_id);
