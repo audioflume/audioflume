@@ -6,8 +6,17 @@
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
-  letter-spacing: -0.055em;
   line-height: 0.98;
+}
+
+.audioflume-home-intro h1,
+.audioflume-home-playlist-feature-copy h2,
+.audioflume-editorial-display {
+  letter-spacing: -0.055em;
+}
+
+.audioflume-home-statement h2 {
+  letter-spacing: -0.035em;
 }
 
 .audioflume-home-statement h2,
@@ -36,6 +45,14 @@
   color: var(--text-primary);
   font-size: clamp(16px, 1.45vw, 20px);
   font-weight: 300;
-  letter-spacing: -0.025em;
   line-height: 1.35;
+}
+
+.audioflume-home-intro-copy > p,
+.audioflume-editorial-support {
+  letter-spacing: -0.025em;
+}
+
+.audioflume-home-statement-copy > p {
+  letter-spacing: normal;
 }
