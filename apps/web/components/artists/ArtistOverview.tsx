@@ -553,7 +553,13 @@ export default function ArtistOverview({
 
             {!cropEditing ? (
               <>
-                <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
+                <div
+        className="pointer-events-none absolute inset-0"
+        style={{
+          background:
+            "linear-gradient(rgba(13, 13, 13, 0.2), rgba(13, 13, 13, 0.2)), linear-gradient(180deg, rgba(0, 0, 0, 0.115) 0%, rgba(0, 0, 0, 0.03) 46%, rgba(0, 0, 0, 0.06) 64%, transparent 80%)",
+        }}
+      />
                 <div className="pointer-events-none relative z-[2] flex min-h-[355px] flex-col justify-between p-5 md:p-6">
                   <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
                     <span
