@@ -56,7 +56,7 @@ export default function PlaylistDetailBackButton() {
                 .playlist-detail-page .playlist-detail-shell {
                   --playlist-detail-control-inset-left: 32px;
                   --playlist-detail-control-inset-right: 32px;
-                  grid-template-columns: 82px minmax(0, 1fr) 42px !important;
+                  grid-template-columns: 82px minmax(0, 1fr) 35px !important;
                   padding-left: var(--playlist-detail-control-inset-left) !important;
                   padding-right: var(--playlist-detail-control-inset-right) !important;
                 }
@@ -70,7 +70,7 @@ export default function PlaylistDetailBackButton() {
                   grid-row: 1 !important;
                   width: 82px !important;
                   min-width: 82px !important;
-                  height: 42px !important;
+                  height: 35px !important;
                   justify-self: start;
                   margin: 0 !important;
                   padding: 0 14px !important;
