@@ -222,12 +222,12 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-option-list {
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item {
   height: 38px !important;
   border-radius: var(--filmwave-ui-radius-control) !important;
-  font-weight: 400 !important;
+  font-weight: 320 !important;
   transition: background-color 160ms ease, color 160ms ease !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item.is-active {
-  font-weight: 400 !important;
+  font-weight: 320 !important;
 }
 
 main > section:has(.fw-filter-panel-wrap)
@@ -288,7 +288,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count.is-dot-only::bef
   width: 100% !important;
   height: 100% !important;
   font-size: 10px !important;
-  font-weight: 500 !important;
+  font-weight: 320 !important;
   line-height: 1 !important;
   transform: translateY(-0.5px) !important;
 }
@@ -309,7 +309,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count:hover::after {
   width: 100% !important;
   height: 100% !important;
   font-size: 12px !important;
-  font-weight: 450 !important;
+  font-weight: 320 !important;
   line-height: 1 !important;
   transform: translateY(-1px) !important;
 }
@@ -362,7 +362,7 @@ main > section:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all {
   color: var(--text-secondary) !important;
   font-family: inherit !important;
   font-size: 10.5px !important;
-  font-weight: 400 !important;
+  font-weight: 320 !important;
   line-height: 1 !important;
   letter-spacing: 0 !important;
   cursor: pointer !important;
@@ -416,7 +416,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ra
   color: var(--text-secondary) !important;
   font-family: inherit !important;
   font-size: 12.5px !important;
-  font-weight: 400 !important;
+  font-weight: 320 !important;
   line-height: normal !important;
   text-align: left !important;
   text-decoration: none !important;
