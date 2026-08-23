@@ -1,0 +1,159 @@
+name: Preserve song title weight
+
+on:
+  push:
+    branches:
+      - style/zalando-weight-rules-v2
+
+permissions:
+  contents: write
+
+jobs:
+  fix:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply song-title weight exceptions
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              'apps/web/components/SongRow.tsx': [
+                  ('className="truncate font-medium leading-tight text-[var(--text-primary)]"',
+                   'className="truncate font-[400] leading-tight text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/admin/AdminSongRow.tsx': [
+                  ('className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]"',
+                   'className="flex min-w-0 items-center gap-1.5 font-[400] leading-tight text-[var(--text-primary)]"'),
+              ],
+              'apps/web/app/admin/music-review/page.tsx': [
+                  ('className="filmwave-backend-section-title mt-1 flex items-center gap-1.5"',
+                   'className="filmwave-backend-section-title mt-1 flex items-center gap-1.5 font-[400]"'),
+                  ('className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]"',
+                   'className="flex min-w-0 items-center gap-1.5 font-[400] leading-tight text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/artists/ArtistMusicUploader.tsx': [
+                  ('className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]"',
+                   'className="flex min-w-0 items-center gap-1.5 font-[400] leading-tight text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/admin/AdminCuratedPlaylistForm.tsx': [
+                  ('className="flex min-w-0 items-center gap-1.5 text-sm font-[320]"',
+                   'className="flex min-w-0 items-center gap-1.5 text-sm font-[400]"'),
+              ],
+              'apps/web/components/admin/AdminDiscoverPlaylistForm.tsx': [
+                  ('className="flex min-w-0 items-center gap-1.5 text-sm font-[320]"',
+                   'className="flex min-w-0 items-center gap-1.5 text-sm font-[400]"'),
+              ],
+              'apps/web/components/artists/ArtistOverview.tsx': [
+                  ('className="flex min-w-0 items-center gap-1.5 text-xs font-[320] text-[var(--text-primary)]"',
+                   'className="flex min-w-0 items-center gap-1.5 text-xs font-[400] text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/artists/ArtistSongAudioReplacement.tsx': [
+                  ('className="text-sm font-[320] text-[var(--text-primary)]"',
+                   'className="text-sm font-[400] text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/curated/CuratedFeaturedTrackRow.tsx': [
+                  ('className="flex min-w-0 items-center gap-1.5 text-[13px] font-[320] leading-none text-[var(--text-primary)]"',
+                   'className="flex min-w-0 items-center gap-1.5 text-[13px] font-[400] leading-none text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/AddToPlaylistModal.tsx': [
+                  ('className="block max-w-[300px] truncate text-[12px] font-[320] tracking-[-0.015em] text-[var(--text-primary)]"',
+                   'className="block max-w-[300px] truncate text-[12px] font-[400] tracking-[-0.015em] text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/AddToProjectModal.tsx': [
+                  ('className="block max-w-[300px] truncate text-[12px] font-[320] tracking-[-0.015em] text-[var(--text-primary)]"',
+                   'className="block max-w-[300px] truncate text-[12px] font-[400] tracking-[-0.015em] text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/ShortenTrackModal.tsx': [
+                  ('className="block max-w-[300px] truncate text-[12px] font-[320] tracking-[-0.015em] text-[var(--text-primary)]"',
+                   'className="block max-w-[300px] truncate text-[12px] font-[400] tracking-[-0.015em] text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/admin/AdminAddToPlaylistModal.tsx': [
+                  ('className="block max-w-[300px] truncate text-[12px] font-[320] tracking-[-0.015em] text-[var(--text-primary)]"',
+                   'className="block max-w-[300px] truncate text-[12px] font-[400] tracking-[-0.015em] text-[var(--text-primary)]"'),
+              ],
+              'apps/web/components/artists/ArtistReleaseTrackPicker.tsx': [
+                  ('<span className="min-w-0 truncate">{song.title}</span>',
+                   '<span className="min-w-0 truncate font-[400]">{song.title}</span>'),
+              ],
+              'apps/web/components/artists/ArtistTrackOrderRow.tsx': [
+                  ('<span className="min-w-0 truncate">{song.title}</span>',
+                   '<span className="min-w-0 truncate font-[400]">{song.title}</span>'),
+              ],
+              'apps/web/components/ProjectFolderPickerModal.tsx': [
+                  ('<span className="min-w-0 truncate font-medium">{song.title}</span>',
+                   '<span className="min-w-0 truncate font-[400]">{song.title}</span>'),
+              ],
+          }
+
+          for filename, pairs in replacements.items():
+              path = Path(filename)
+              text = path.read_text()
+              before = text
+              for old, new in pairs:
+                  if old not in text:
+                      raise SystemExit(f'Missing expected song-title pattern in {filename}: {old}')
+                  text = text.replace(old, new)
+              if text != before:
+                  path.write_text(text)
+
+          # Context-specific title variables that use names other than song.title.
+          path = Path('apps/web/app/admin/engagement/page.tsx')
+          text = path.read_text()
+          old = 'className="truncate text-xs font-[320] text-[var(--text-primary)]">\n                  {song.title}'
+          new = 'className="truncate text-xs font-[400] text-[var(--text-primary)]">\n                  {song.title}'
+          if old not in text:
+              raise SystemExit('Missing TopSongsCard song-title pattern')
+          path.write_text(text.replace(old, new, 1))
+
+          path = Path('apps/web/components/artists/ArtistAnalytics.tsx')
+          text = path.read_text()
+          old = 'className="truncate text-xs font-[320] text-[var(--text-primary)]">\n                        {track.title}'
+          new = 'className="truncate text-xs font-[400] text-[var(--text-primary)]">\n                        {track.title}'
+          if old not in text:
+              raise SystemExit('Missing ArtistAnalytics track-title pattern')
+          path.write_text(text.replace(old, new, 1))
+
+          # Project song files use generic project-file title classes, so add a song-specific source class.
+          path = Path('apps/web/components/project-browser/ProjectSongFileCard.tsx')
+          text = path.read_text()
+          old1 = 'className="project-browser-row-title"'
+          old2 = 'className="project-file-card-title"'
+          if old1 not in text or old2 not in text:
+              raise SystemExit('Missing ProjectSongFileCard title classes')
+          text = text.replace(old1, 'className="project-browser-row-title project-song-file-title"', 1)
+          text = text.replace(old2, 'className="project-file-card-title project-song-file-title"', 1)
+          path.write_text(text)
+
+          path = Path('apps/web/components/project-browser/ProjectFileBrowserCards.css')
+          text = path.read_text()
+          marker = '''.project-file-browser .project-file-card-meta,\n.project-file-browser .project-folder-card-meta {'''
+          rule = '''.project-file-browser .project-song-file-title,\n.project-browser-row-title.project-song-file-title {\n  font-weight: 400 !important;\n}\n\n'''
+          if marker not in text:
+              raise SystemExit('Missing ProjectFileBrowserCards insertion marker')
+          if 'project-song-file-title' not in text:
+              text = text.replace(marker, rule + marker, 1)
+          path.write_text(text)
+          PY
+
+      - name: Run style guard
+        run: npm run style:guard
+
+      - name: Check diff whitespace
+        run: git diff --check
+
+      - name: Remove temporary workflow
+        run: rm -f .github/workflows/preserve-song-title-weight.yml
+
+      - name: Commit song-title exceptions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Preserve song title weight"
+          git push origin HEAD:style/zalando-weight-rules-v2
