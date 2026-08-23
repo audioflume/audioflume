@@ -385,14 +385,14 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-actions > button {
           box-sizing: border-box !important;
           display: inline-flex !important;
-          height: 35px !important;
-          min-height: 35px !important;
+          height: 44px !important;
+          min-height: 44px !important;
           min-width: 0 !important;
           align-items: center !important;
           justify-content: center !important;
           gap: 8px !important;
           border: 1px solid var(--filmwave-border-color) !important;
-          border-radius: 5px !important;
+          border-radius: 0 !important;
           background: var(--bg-primary) !important;
           background-color: var(--bg-primary) !important;
           padding: 0 14px !important;
@@ -419,9 +419,9 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         .playlist-detail-page .playlist-detail-skeleton-button {
-          height: 35px !important;
-          min-height: 35px !important;
-          border-radius: 5px !important;
+          height: 44px !important;
+          min-height: 44px !important;
+          border-radius: 0 !important;
         }
 
         .playlist-detail-page .playlist-detail-quick-row,

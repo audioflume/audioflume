@@ -416,8 +416,8 @@ export default function PlaylistDetailActionsMenu() {
         .playlist-detail-page .playlist-detail-cover:not(:has(img)) { background: ${placeholderGradient} !important; }
         .playlist-detail-page .playlist-detail-top-actions > button:not(:first-child) { display: none !important; }
         .playlist-detail-page .playlist-detail-more-menu { grid-column: 3 !important; grid-row: 1 !important; justify-self: end; }
-        .playlist-detail-page .playlist-detail-more-button { box-sizing: border-box; display: inline-flex; width: 42px; min-width: 42px; height: 42px; align-items: center; justify-content: center; border: 1px solid var(--border); border-radius: 0; background: var(--bg-secondary); padding: 0; color: var(--text-secondary); cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .playlist-detail-page .playlist-detail-more-button:hover, .playlist-detail-page .playlist-detail-more-button.is-active { border-color: var(--border-hover); background: var(--bg-hover); color: var(--text-primary); }
+        .playlist-detail-page .playlist-detail-more-button { box-sizing: border-box; display: inline-flex; width: 35px; min-width: 35px; height: 35px; align-items: center; justify-content: center; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0; color: var(--text-secondary); cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .playlist-detail-page .playlist-detail-more-button:hover, .playlist-detail-page .playlist-detail-more-button.is-active { border-color: var(--filmwave-border-color); background: var(--bg-hover); color: var(--text-primary); }
         .playlist-detail-page .playlist-detail-more-button svg { display: block; width: 16px; height: 16px; }
         .playlist-detail-more-dropdown { min-width: 154px; }
         .playlist-detail-more-dropdown button:disabled { cursor: default; opacity: 0.42; }
