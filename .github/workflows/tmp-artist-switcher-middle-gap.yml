@@ -1,0 +1,37 @@
+name: Temporary artist switcher middle gap
+
+on:
+  push:
+    branches:
+      - style/artist-switcher-middle-gap
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: style/artist-switcher-middle-gap
+      - name: Update artist switcher profile gap
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('apps/web/components/artists/ArtistDashboardShell.tsx')
+          text = path.read_text()
+          old = 'flex max-h-64 flex-col gap-1.5 overflow-y-auto'
+          new = 'flex max-h-64 flex-col gap-[3.5px] overflow-y-auto'
+          if text.count(old) != 1:
+              raise SystemExit(f'Expected exactly one match, found {text.count(old)}')
+          path.write_text(text.replace(old, new))
+          PY
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/components/artists/ArtistDashboardShell.tsx
+          git commit -m "Set artist switcher profile gap to middle value"
+          git push origin HEAD:style/artist-switcher-middle-gap
