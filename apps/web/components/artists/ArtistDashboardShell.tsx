@@ -13,6 +13,9 @@ import {
   BackendSidebarScrollArea,
   BackendSidebarShell,
 } from "@/components/backend/BackendSidebar";
+import BackendSidebarGlyph, {
+  type BackendSidebarGlyphName,
+} from "@/components/backend/BackendSidebarGlyph";
 import ArtistAgreements from "@/components/artists/ArtistAgreements";
 import ArtistAnalytics from "@/components/artists/ArtistAnalytics";
 import ArtistEarnings from "@/components/artists/ArtistEarnings";
@@ -66,6 +69,23 @@ const NAV_ITEMS: { section: ArtistDashboardSection; label: string }[] = [
   { section: "earnings", label: "Earnings" },
   { section: "team", label: "Team" },
 ];
+
+const ARTIST_NAV_ICONS: Record<
+  ArtistDashboardSection,
+  BackendSidebarGlyphName
+> = {
+  overview: "dashboard",
+  "my-page": "page",
+  profile: "profile",
+  music: "music",
+  releases: "release",
+  playlists: "playlist",
+  notifications: "notifications",
+  agreements: "agreements",
+  analytics: "analytics",
+  earnings: "earnings",
+  team: "team",
+};
 
 const NAV_GROUPS: ArtistNavGroup[] = [
   {
@@ -501,6 +521,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               <BackendSidebarNavItem
                 href={getArtistDashboardHref("overview", activeArtist.id)}
                 active={sectionReady && activeSection === "overview"}
+                leading={<BackendSidebarGlyph name={ARTIST_NAV_ICONS.overview} />}
                 onClick={() => handleSectionChange("overview")}
               >
                 Overview
@@ -508,6 +529,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               <BackendSidebarNavItem
                 href={getArtistDashboardHref("my-page", activeArtist.id)}
                 active={sectionReady && activeSection === "my-page"}
+                leading={<BackendSidebarGlyph name={ARTIST_NAV_ICONS["my-page"]} />}
                 onClick={() => handleSectionChange("my-page")}
               >
                 My Page
@@ -527,6 +549,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                       key={item.section}
                       href={getArtistDashboardHref(item.section, activeArtist.id)}
                       active={sectionReady && activeSection === item.section}
+                      leading={<BackendSidebarGlyph name={ARTIST_NAV_ICONS[item.section]} />}
                       onClick={() => handleSectionChange(item.section)}
                     >
                       {item.label}
