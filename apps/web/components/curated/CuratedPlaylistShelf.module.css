@@ -79,7 +79,7 @@
 
 .portalLabel {
   max-width: calc(100% - 48px);
-  font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
+  font-family: var(--font-zalando-sans), ui-sans-serif, system-ui, sans-serif;
   font-size: clamp(16px, 1.35vw, 20px);
   font-weight: 400;
   letter-spacing: -0.04em;

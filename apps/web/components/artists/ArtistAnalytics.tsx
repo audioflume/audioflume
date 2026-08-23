@@ -82,7 +82,7 @@ function MetricCard({
         {label}
       </div>
       <div>
-        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
           {formatNumber(value)}
         </div>
         <div className="mt-2 text-[10px] text-[var(--text-muted)]">{note}</div>
@@ -315,7 +315,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
               <div className="text-[11px] font-medium text-[var(--text-secondary)]">
                 {metric.label}
               </div>
-              <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+              <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                 {formatNumber(metric.value)}
               </div>
             </div>

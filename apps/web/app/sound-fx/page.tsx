@@ -64,7 +64,7 @@ export default function SoundFxPage() {
           background: transparent;
           color: var(--filmwave-white);
           padding: 0 12px 0 30px;
-          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-family: var(--font-zalando-sans), sans-serif;
           font-size: clamp(14px, 0.9vw, 17px);
           font-weight: 400;
         }
@@ -88,7 +88,7 @@ export default function SoundFxPage() {
           border-radius: 999px;
           background: #202020;
           color: rgba(255, 255, 255, 0.62);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-family: var(--font-zalando-sans), sans-serif;
           font-size: 22px;
           line-height: 1;
           transition:
@@ -121,7 +121,7 @@ export default function SoundFxPage() {
           width: min(calc(100% - 40px), 420px);
           margin: 65px 0 40px;
           color: var(--text-primary);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-family: var(--font-zalando-sans), sans-serif;
           font-size: clamp(17px, 1.15vw, 22px);
           font-weight: 300;
           letter-spacing: -0.025em;
@@ -151,7 +151,7 @@ export default function SoundFxPage() {
           border-radius: 999px;
           background: var(--filmwave-neutral-surface);
           color: rgba(255, 255, 255, 0.82);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-family: var(--font-zalando-sans), sans-serif;
           font-size: 12px;
           font-weight: 400;
           line-height: 1.15;

@@ -127,7 +127,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   background: transparent;
   color: var(--filmwave-black);
   padding: 0 20px 0 0;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: 14px;
 }
 
@@ -144,7 +144,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   color: var(--filmwave-white);
   margin-right: 7px;
   padding: 0 16px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: 12px;
 }
 
@@ -186,7 +186,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   width: fit-content;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 500;
   letter-spacing: normal;
@@ -253,7 +253,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   background: transparent;
   color: var(--filmwave-white);
   padding: 0 12px 0 30px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(14px, 0.9vw, 17px);
   font-weight: 400;
 }
@@ -277,7 +277,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   border-radius: 999px;
   background: var(--filmwave-neutral-surface);
   color: rgba(255, 255, 255, 0.62);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: 22px;
   line-height: 1;
   transition:
@@ -314,7 +314,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   width: min(calc(100% - 40px), 420px);
   margin: 0;
   color: var(--filmwave-white);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(17px, 1.15vw, 22px);
   font-weight: 500;
   letter-spacing: -0.025em;
@@ -343,7 +343,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   border-radius: 999px;
   background: transparent;
   color: rgba(255, 255, 255, 0.92);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: 12px;
   font-weight: 400;
   line-height: 1;
@@ -421,7 +421,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   border-radius: 999px;
   background: var(--filmwave-neutral-surface);
   color: rgba(255, 255, 255, 0.82);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: 12px;
   font-weight: 400;
   line-height: 1.15;

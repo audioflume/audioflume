@@ -334,14 +334,14 @@ export default function PlaylistDetailPage() {
           pointer-events: none;
         }
         .playlist-detail-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-        .playlist-detail-title { margin-top: 8px; max-width: 640px; font-family: var(--font-aktiv-grotesk); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
+        .playlist-detail-title { margin-top: 8px; max-width: 640px; font-family: var(--font-zalando-sans); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
         .playlist-detail-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .playlist-detail-dot { color: var(--text-muted); }
         .playlist-detail-actions { margin-top: 24px; display: flex; align-items: center; gap: 8px; }
         .playlist-detail-search-sticky { position: sticky; top: 55px; z-index: 90; margin-left: -28px; margin-right: -28px; background: var(--bg-primary); }
         .playlist-detail-search-row { display: flex; min-height: 49px; align-items: center; gap: 3px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0 28px; cursor: text; }
         .playlist-detail-search-inner { display: flex; width: 320px; flex-shrink: 0; align-items: center; gap: 8px; padding: 12px 16px 12px 0; cursor: text; }
-        .playlist-detail-search-input { width: 100%; background: transparent; color: var(--text-primary); font-family: var(--font-aktiv-grotesk); font-size: 12px; font-weight: 400; font-style: italic; letter-spacing: normal; line-height: normal; outline: none; }
+        .playlist-detail-search-input { width: 100%; background: transparent; color: var(--text-primary); font-family: var(--font-zalando-sans); font-size: 12px; font-weight: 400; font-style: italic; letter-spacing: normal; line-height: normal; outline: none; }
         .playlist-detail-search-input::placeholder { color: var(--text-muted); }
         .playlist-detail-quick-row { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; margin-left: -28px; margin-right: -28px; background: var(--bg-primary); padding: 16px 28px; }
         .playlist-detail-section { margin-left: -28px; margin-right: -28px; }

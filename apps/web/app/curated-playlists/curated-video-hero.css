@@ -73,7 +73,7 @@ body:has(.curated-playlists-page-root)
 
 .curated-video-hero-content h1 {
   margin: 0;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(24px, 1.8vw, 33px);
   font-weight: 500;
   letter-spacing: normal;
@@ -120,7 +120,7 @@ body:has(.curated-playlists-page-root)
 }
 
 .curated-video-hero-secondary-copy strong {
-  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 500;
   letter-spacing: normal;
