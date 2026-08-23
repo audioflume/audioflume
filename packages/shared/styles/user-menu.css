@@ -38,14 +38,22 @@ html[data-theme="light"] {
 
 /* ── Profile / identity ──────────────────────────────────────────── */
 
-.filmwave-user-menu-profile-link {
+.filmwave-dropdown-shell.filmwave-user-menu > .filmwave-user-menu-profile-link {
+  box-sizing: border-box;
   display: block;
+  width: 100%;
+  height: auto;
+  min-height: 0;
   border-bottom: 1px solid var(--filmwave-menu-sep);
+  background: transparent;
+  padding: 0;
   color: inherit;
+  line-height: normal;
   text-decoration: none;
+  white-space: normal;
 }
 
-.filmwave-user-menu-profile-link:hover {
+.filmwave-dropdown-shell.filmwave-user-menu > .filmwave-user-menu-profile-link:hover {
   background: var(--filmwave-menu-hover);
 }
 
@@ -130,6 +138,27 @@ html[data-theme="light"] {
 
 .filmwave-user-menu .filmwave-dropdown-item:hover:not(:disabled) {
   color: var(--text-primary);
+}
+
+.filmwave-user-menu .filmwave-user-menu-action,
+.filmwave-user-menu .filmwave-user-menu-exit {
+  gap: 10px;
+}
+
+.filmwave-user-menu-action-icon {
+  display: inline-flex;
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.filmwave-user-menu-action-icon svg {
+  display: block;
+  width: 15px;
+  height: 15px;
 }
 
 .filmwave-user-menu-action-label {
