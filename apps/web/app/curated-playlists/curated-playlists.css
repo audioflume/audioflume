@@ -145,7 +145,7 @@ body:has(.curated-playlists-page-root) {
   color: #fff;
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(30px, 3.2vw, 48px);
-  font-weight: 200;
+  font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.98;
 }
@@ -595,7 +595,7 @@ body:has(.curated-playlists-page-root)
 
   .curated-feature-hero-title-block h1 {
     font-size: clamp(30px, 8vw, 42px);
-    font-weight: 200;
+    font-weight: 400;
   }
 
   .curated-feature-hero-open {
