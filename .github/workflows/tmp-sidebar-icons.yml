@@ -1,0 +1,236 @@
+name: Temporary admin artist sidebar icons
+
+on:
+  push:
+    branches:
+      - style/admin-artist-sidebar-icons
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: style/admin-artist-sidebar-icons
+      - name: Add sidebar icons
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          shared = Path('packages/shared/src/UserMenuShell.tsx')
+          text = shared.read_text()
+          old_union = '''  | "appearance";'''
+          new_union = '''  | "appearance"
+  | "dashboard"
+  | "analytics"
+  | "upload"
+  | "queue"
+  | "music"
+  | "review"
+  | "artists"
+  | "playlist"
+  | "cue"
+  | "storage"
+  | "page"
+  | "release"
+  | "notifications"
+  | "agreements"
+  | "earnings"
+  | "team";'''
+          if text.count(old_union) != 1:
+              raise SystemExit('shared glyph union anchor mismatch')
+          text = text.replace(old_union, new_union)
+
+          anchor = '''      {name === "sync" && (\n'''
+          glyphs = '''      {name === "dashboard" && (
+        <>
+          <rect {...common} x="4.5" y="4.5" width="6" height="6" rx="1.2" />
+          <rect {...common} x="13.5" y="4.5" width="6" height="6" rx="1.2" />
+          <rect {...common} x="4.5" y="13.5" width="6" height="6" rx="1.2" />
+          <rect {...common} x="13.5" y="13.5" width="6" height="6" rx="1.2" />
+        </>
+      )}
+      {name === "analytics" && (
+        <>
+          <path {...common} d="M4.5 19.5V5" />
+          <path {...common} d="M4.5 19.5h15" />
+          <path {...common} d="m7 15 3.2-3.4 3 2 4.3-5.1" />
+        </>
+      )}
+      {name === "upload" && (
+        <>
+          <path {...common} d="M12 16V5" />
+          <path {...common} d="m8.5 8.5 3.5-3.5 3.5 3.5" />
+          <path {...common} d="M5 15.5v3.5h14v-3.5" />
+        </>
+      )}
+      {name === "queue" && (
+        <>
+          <path {...common} d="M7.5 7h11M7.5 12h11M7.5 17h11" />
+          <circle {...common} cx="4.5" cy="7" r=".7" />
+          <circle {...common} cx="4.5" cy="12" r=".7" />
+          <circle {...common} cx="4.5" cy="17" r=".7" />
+        </>
+      )}
+      {name === "music" && (
+        <>
+          <path {...common} d="M9 18V6l9-1.5v11.8" />
+          <path {...common} d="M9 9.5 18 8" />
+          <ellipse {...common} cx="6.7" cy="18" rx="2.3" ry="1.8" />
+          <ellipse {...common} cx="15.7" cy="16.3" rx="2.3" ry="1.8" />
+        </>
+      )}
+      {name === "review" && (
+        <>
+          <circle {...common} cx="12" cy="12" r="8" />
+          <path {...common} d="m8.3 12.2 2.4 2.4 5-5" />
+        </>
+      )}
+      {name === "artists" && (
+        <>
+          <circle {...common} cx="9" cy="8.5" r="2.5" />
+          <path {...common} d="M4.8 18c.5-2.8 1.9-4.4 4.2-4.4 2.4 0 3.8 1.6 4.3 4.4" />
+          <path {...common} d="M15.2 6.8a2.3 2.3 0 0 1 0 4.4M15.3 13.8c2.2.2 3.5 1.6 3.9 4.2" />
+        </>
+      )}
+      {name === "playlist" && (
+        <>
+          <path {...common} d="M5 7h10M5 12h8M5 17h6" />
+          <path {...common} d="m16 13.5 3.5 2.2-3.5 2.2Z" />
+        </>
+      )}
+      {name === "cue" && (
+        <>
+          <path {...common} d="M4 12h3l1.5-5 2.3 10 2.2-8 1.7 6 1.3-3h4" />
+          <circle {...common} cx="8.5" cy="7" r="1" />
+          <circle {...common} cx="13" cy="9" r="1" />
+        </>
+      )}
+      {name === "storage" && (
+        <>
+          <ellipse {...common} cx="12" cy="6.5" rx="6.5" ry="2.5" />
+          <path {...common} d="M5.5 6.5v5c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-5" />
+          <path {...common} d="M5.5 11.5v5c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-5" />
+        </>
+      )}
+      {name === "page" && (
+        <>
+          <rect {...common} x="4" y="5" width="16" height="14" rx="2" />
+          <path {...common} d="M4 9h16" />
+          <path {...common} d="M7 7h.01M10 7h.01" />
+        </>
+      )}
+      {name === "release" && (
+        <>
+          <rect {...common} x="5" y="4.5" width="14" height="15" rx="2" />
+          <circle {...common} cx="12" cy="12" r="3.5" />
+          <circle {...common} cx="12" cy="12" r=".8" />
+        </>
+      )}
+      {name === "notifications" && (
+        <>
+          <path {...common} d="M6.5 16.5h11l-1.2-1.8V11a4.3 4.3 0 0 0-8.6 0v3.7L6.5 16.5Z" />
+          <path {...common} d="M10 18.2c.5.8 1.1 1.2 2 1.2s1.5-.4 2-1.2" />
+        </>
+      )}
+      {name === "agreements" && (
+        <>
+          <path {...common} d="M7 4.5h7l3 3v12H7Z" />
+          <path {...common} d="M14 4.5v3h3" />
+          <path {...common} d="m9.5 14 1.6 1.6 3.4-3.4" />
+        </>
+      )}
+      {name === "earnings" && (
+        <>
+          <circle {...common} cx="12" cy="12" r="7.5" />
+          <path {...common} d="M14.7 9.3c-.6-.7-1.5-1-2.6-1-1.4 0-2.4.7-2.4 1.8 0 2.8 5.1 1.2 5.1 4 0 1.1-1 1.9-2.6 1.9-1.2 0-2.2-.4-2.9-1.2M12 6.8v10.4" />
+        </>
+      )}
+      {name === "team" && (
+        <>
+          <circle {...common} cx="8.5" cy="9" r="2.4" />
+          <circle {...common} cx="15.5" cy="9" r="2.4" />
+          <path {...common} d="M4.5 18c.4-2.6 1.8-4 4-4 1.4 0 2.5.5 3.2 1.5M19.5 18c-.4-2.6-1.8-4-4-4-1.4 0-2.5.5-3.2 1.5" />
+        </>
+      )}
+'''
+          if text.count(anchor) != 1:
+              raise SystemExit('shared glyph insertion anchor mismatch')
+          text = text.replace(anchor, glyphs + anchor)
+          shared.write_text(text)
+
+          admin = Path('apps/web/components/admin/AdminSidebar.tsx')
+          text = admin.read_text()
+          text = text.replace('''import DashboardIcon from "@/components/icons/DashboardIcon";\nimport EngagementIcon from "@/components/icons/EngagementIcon";\n''', '''import { UserMenuGlyph, type UserMenuGlyphName } from "@filmwave/shared";\n''')
+          text = text.replace('''type AdminNavItem = {\n  label: string;\n  href: string;\n  status?: "soon";\n};\n\ntype PrimaryNavItem = AdminNavItem & {\n  icon: "dashboard" | "engagement";\n};\n''', '''type AdminNavItem = {\n  label: string;\n  href: string;\n  icon: UserMenuGlyphName;\n  status?: "soon";\n};\n\ntype PrimaryNavItem = AdminNavItem;\n''')
+          replacements = {
+              '{ label: "Engagement", href: "/admin/engagement", icon: "engagement" }': '{ label: "Engagement", href: "/admin/engagement", icon: "analytics" }',
+              '{ label: "Song Upload", href: "/admin/songs/new" }': '{ label: "Song Upload", href: "/admin/songs/new", icon: "upload" }',
+              '{ label: "Upload Queue", href: "/admin/queue", status: "soon" }': '{ label: "Upload Queue", href: "/admin/queue", icon: "queue", status: "soon" }',
+              '{ label: "Music Library", href: "/admin/music-library" }': '{ label: "Music Library", href: "/admin/music-library", icon: "music" }',
+              '{ label: "Music Review", href: "/admin/music-review" }': '{ label: "Music Review", href: "/admin/music-review", icon: "review" }',
+              '{ label: "Artists", href: "/admin/artists" }': '{ label: "Artists", href: "/admin/artists", icon: "artists" }',
+              '{ label: "Playlist Manager", href: "/admin/playlist-manager" }': '{ label: "Playlist Manager", href: "/admin/playlist-manager", icon: "playlist" }',
+              '{ label: "Cue Points", href: "/admin/edit-points" }': '{ label: "Cue Points", href: "/admin/edit-points", icon: "cue" }',
+              '{ label: "Storage Health", href: "/admin/storage", status: "soon" }': '{ label: "Storage Health", href: "/admin/storage", icon: "storage", status: "soon" }',
+              '{ label: "Settings", href: "/admin/settings", status: "soon" }': '{ label: "Settings", href: "/admin/settings", icon: "settings", status: "soon" }',
+          }
+          for old, new in replacements.items():
+              if text.count(old) != 1:
+                  raise SystemExit(f'admin config anchor mismatch: {old}')
+              text = text.replace(old, new)
+          old_primary_icon = '''function PrimaryIcon({ icon }: { icon: PrimaryNavItem["icon"] }) {\n  if (icon === "dashboard") return <DashboardIcon size={14} />;\n  return <EngagementIcon size={14} />;\n}\n\n'''
+          if text.count(old_primary_icon) != 1:
+              raise SystemExit('admin PrimaryIcon anchor mismatch')
+          text = text.replace(old_primary_icon, '')
+          text = text.replace('leading={<PrimaryIcon icon={link.icon} />}', 'leading={<UserMenuGlyph name={link.icon} />}')
+          group_anchor = '''                  active={pathname === link.href}\n                  trailing={link.status ? <SoonBadge /> : null}\n'''
+          group_new = '''                  active={pathname === link.href}\n                  leading={<UserMenuGlyph name={link.icon} />}\n                  trailing={link.status ? <SoonBadge /> : null}\n'''
+          if text.count(group_anchor) != 1:
+              raise SystemExit('admin group render anchor mismatch')
+          text = text.replace(group_anchor, group_new)
+          admin.write_text(text)
+
+          artist = Path('apps/web/components/artists/ArtistDashboardShell.tsx')
+          text = artist.read_text()
+          import_anchor = '''import type { ArtistDashboardProfile } from "@/lib/artistDashboard";\n'''
+          import_new = '''import type { ArtistDashboardProfile } from "@/lib/artistDashboard";\nimport { UserMenuGlyph, type UserMenuGlyphName } from "@filmwave/shared";\n'''
+          if text.count(import_anchor) != 1:
+              raise SystemExit('artist import anchor mismatch')
+          text = text.replace(import_anchor, import_new)
+          map_anchor = '''const NAV_GROUPS: ArtistNavGroup[] = [\n'''
+          icon_map = '''const ARTIST_NAV_ICONS: Record<ArtistDashboardSection, UserMenuGlyphName> = {\n  overview: "dashboard",\n  "my-page": "page",\n  profile: "profile",\n  music: "music",\n  releases: "release",\n  playlists: "playlist",\n  notifications: "notifications",\n  agreements: "agreements",\n  analytics: "analytics",\n  earnings: "earnings",\n  team: "team",\n};\n\n'''
+          if text.count(map_anchor) != 1:
+              raise SystemExit('artist map insertion anchor mismatch')
+          text = text.replace(map_anchor, icon_map + map_anchor)
+
+          overview_anchor = '''                active={sectionReady && activeSection === "overview"}\n                onClick={() => handleSectionChange("overview")}\n'''
+          overview_new = '''                active={sectionReady && activeSection === "overview"}\n                leading={<UserMenuGlyph name={ARTIST_NAV_ICONS.overview} />}\n                onClick={() => handleSectionChange("overview")}\n'''
+          if text.count(overview_anchor) != 1:
+              raise SystemExit('artist overview render anchor mismatch')
+          text = text.replace(overview_anchor, overview_new)
+
+          mypage_anchor = '''                active={sectionReady && activeSection === "my-page"}\n                onClick={() => handleSectionChange("my-page")}\n'''
+          mypage_new = '''                active={sectionReady && activeSection === "my-page"}\n                leading={<UserMenuGlyph name={ARTIST_NAV_ICONS["my-page"]} />}\n                onClick={() => handleSectionChange("my-page")}\n'''
+          if text.count(mypage_anchor) != 1:
+              raise SystemExit('artist my-page render anchor mismatch')
+          text = text.replace(mypage_anchor, mypage_new)
+
+          group_artist_anchor = '''                      active={sectionReady && activeSection === item.section}\n                      onClick={() => handleSectionChange(item.section)}\n'''
+          group_artist_new = '''                      active={sectionReady && activeSection === item.section}\n                      leading={<UserMenuGlyph name={ARTIST_NAV_ICONS[item.section]} />}\n                      onClick={() => handleSectionChange(item.section)}\n'''
+          if text.count(group_artist_anchor) != 1:
+              raise SystemExit('artist group render anchor mismatch')
+          text = text.replace(group_artist_anchor, group_artist_new)
+          artist.write_text(text)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add packages/shared/src/UserMenuShell.tsx apps/web/components/admin/AdminSidebar.tsx apps/web/components/artists/ArtistDashboardShell.tsx
+          git commit -m "Add icons to admin and artist sidebars"
+          git push origin HEAD:style/admin-artist-sidebar-icons
