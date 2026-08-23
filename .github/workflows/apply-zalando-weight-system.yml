@@ -1,0 +1,38 @@
+name: Apply Zalando weight system
+
+on:
+  push:
+    branches:
+      - style/zalando-weight-system
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: ${{ !contains(github.event.head_commit.message, '[typography-pass]') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: style/zalando-weight-system
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Apply typography rules
+        run: python tools/apply_zalando_weight_rules.py
+      - name: Remove temporary automation files
+        run: |
+          rm -f tools/apply_zalando_weight_rules.py
+          rm -f .github/workflows/apply-zalando-weight-system.yml
+      - name: Commit typography pass
+        run: |
+          git config user.name "audioflume"
+          git config user.email "filmwave.webmaster@gmail.com"
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
+          git commit -m "Apply Zalando typography weight rules [typography-pass]"
+          git push origin HEAD:style/zalando-weight-system
