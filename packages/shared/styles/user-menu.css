@@ -96,13 +96,17 @@ html[data-theme="light"] {
 }
 
 .filmwave-user-menu .filmwave-dropdown-item {
-  height: 42px;
+  height: 35px;
   padding: 0 16px;
-  color: var(--text-primary);
-  font-size: 14.5px;
+  color: var(--filmwave-menu-text-muted);
+  font-size: 13.5px;
   font-weight: 400;
   letter-spacing: normal;
   line-height: normal;
+}
+
+.filmwave-user-menu .filmwave-dropdown-item:hover:not(:disabled) {
+  color: var(--filmwave-menu-text-muted);
 }
 
 .filmwave-user-menu-action-label {
@@ -115,7 +119,7 @@ html[data-theme="light"] {
 
 .filmwave-user-menu .filmwave-user-menu-exit {
   justify-content: flex-start;
-  color: var(--text-primary);
+  color: var(--filmwave-menu-text-muted);
 }
 
 .filmwave-user-menu-exit-hint {
