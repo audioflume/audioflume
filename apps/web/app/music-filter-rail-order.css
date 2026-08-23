@@ -5,7 +5,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   color: #fff;
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 11px;
-  font-weight: 320;
+  font-weight: 500;
   font-kerning: normal;
   letter-spacing: 0.02em;
   line-height: 1;
@@ -108,7 +108,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-r
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item[data-filter-section-id="playlist"].is-active) .fw-filter-group-label::before {
   content: "Playlists";
   font-size: 11px;
-  font-weight: 320;
+  font-weight: 500;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {

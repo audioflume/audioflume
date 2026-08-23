@@ -206,7 +206,7 @@ export default function Header() {
           color: var(--text-primary) !important;
           font-family: var(--font-zalando-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
           font-size: 22px !important;
-          font-weight: 600 !important;
+          font-weight: 500 !important;
           letter-spacing: -0.045em !important;
           line-height: 1 !important;
           text-transform: lowercase !important;
