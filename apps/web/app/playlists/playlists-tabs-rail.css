@@ -40,7 +40,7 @@ body .playlists-tabs-row {
   background: var(--bg-primary) !important;
   padding: 0 10px 0 14px !important;
   color: var(--text-secondary) !important;
-  font-family: var(--font-zalando-sans) !important;
+  font-family: var(--font-aktiv-grotesk) !important;
   font-size: 12px !important;
   font-weight: 400 !important;
   letter-spacing: normal !important;
@@ -125,7 +125,7 @@ body .playlists-tabs-row {
   background: var(--bg-primary) !important;
   color: var(--text-secondary) !important;
   cursor: pointer !important;
-  font-family: var(--font-zalando-sans) !important;
+  font-family: var(--font-aktiv-grotesk) !important;
   font-size: 12px !important;
   font-weight: 400 !important;
   letter-spacing: normal !important;
@@ -184,7 +184,7 @@ body .playlists-tabs-row {
   padding: 0 14px !important;
   color: var(--text-secondary) !important;
   cursor: pointer !important;
-  font-family: var(--font-zalando-sans) !important;
+  font-family: var(--font-aktiv-grotesk) !important;
   font-size: 12px !important;
   font-weight: 400 !important;
   letter-spacing: normal !important;
@@ -635,7 +635,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
-  font-family: var(--font-zalando-sans) !important;
+  font-family: var(--font-aktiv-grotesk) !important;
   font-size: 13px !important;
   font-weight: 500 !important;
   line-height: 1.1 !important;

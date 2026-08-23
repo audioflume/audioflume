@@ -145,7 +145,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
           </div>
 
           <div className="min-w-0">
-            <h2 className="truncate font-[family-name:var(--font-zalando-sans)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+            <h2 className="truncate font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               {typedSong.title || "Untitled Song"}
             </h2>
             <p className="mt-1 truncate text-xs text-[var(--text-secondary)]">

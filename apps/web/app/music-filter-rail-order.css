@@ -3,7 +3,7 @@
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-group-label {
   color: #fff;
-  font-family: var(--font-zalando-sans), sans-serif;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 11px;
   font-weight: 500;
   font-kerning: normal;
@@ -155,7 +155,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   background: transparent;
   padding: 0 8px;
   color: var(--text-primary);
-  font-family: var(--font-zalando-sans), sans-serif;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 12.5px;
   font-weight: 400;
   text-align: left;

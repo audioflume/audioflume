@@ -329,7 +329,7 @@
 .curated-playlist-shelf-heading h2 {
   margin: 0 !important;
   color: var(--text-primary) !important;
-  font-family: var(--font-zalando-sans), sans-serif !important;
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
   font-size: 24px !important;
   font-weight: 500 !important;
   letter-spacing: -.035em !important;
@@ -343,7 +343,7 @@
 .playlists-page .playlists-hero .playlists-title::before {
   margin: 0 !important;
   color: var(--text-primary) !important;
-  font-family: var(--font-zalando-sans), sans-serif !important;
+  font-family: var(--font-aktiv-grotesk), sans-serif !important;
   font-size: clamp(18px, 1.45vw, 24px) !important;
   font-weight: 400 !important;
   letter-spacing: -.025em !important;

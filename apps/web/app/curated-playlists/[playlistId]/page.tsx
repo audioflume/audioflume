@@ -291,7 +291,7 @@ export default function CuratedPlaylistDetailPage() {
         .playlist-detail-title {
           margin-top: 8px;
           max-width: 640px;
-          font-family: var(--font-zalando-sans);
+          font-family: var(--font-aktiv-grotesk);
           font-size: 56px;
           font-weight: 500;
           line-height: 0.94;

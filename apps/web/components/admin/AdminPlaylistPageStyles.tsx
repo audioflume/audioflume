@@ -71,7 +71,7 @@ export default function AdminPlaylistPageStyles() {
         + section
         h2 {
         color: var(--text-primary);
-        font-family: var(--font-zalando-sans), sans-serif;
+        font-family: var(--font-aktiv-grotesk), sans-serif;
         font-size: 16px;
         font-weight: 500;
         line-height: 24px;
@@ -106,7 +106,7 @@ export default function AdminPlaylistPageStyles() {
         > label.grid {
         gap: 0;
         color: var(--text-primary);
-        font-family: var(--font-zalando-sans), sans-serif;
+        font-family: var(--font-aktiv-grotesk), sans-serif;
         font-size: 0;
         font-weight: 500;
         line-height: 0;

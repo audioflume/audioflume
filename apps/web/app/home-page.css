@@ -175,7 +175,7 @@
   background: transparent;
   color: var(--filmwave-black);
   padding: 0 12px 0 30px;
-  font-family: var(--font-zalando-sans), sans-serif;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(14px, 0.9vw, 17px);
   font-weight: 400;
 }
@@ -199,7 +199,7 @@
   border-radius: 999px;
   background: var(--filmwave-neutral-surface);
   color: color-mix(in srgb, var(--filmwave-black) 62%, transparent);
-  font-family: var(--font-zalando-sans), sans-serif;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 22px;
   line-height: 1;
   transition:
@@ -263,7 +263,7 @@
   width: fit-content;
   align-items: center;
   gap: 4px;
-  font-family: var(--font-zalando-sans), sans-serif;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(11px, 0.8vw, 14px);
   font-weight: 500;
   letter-spacing: normal;

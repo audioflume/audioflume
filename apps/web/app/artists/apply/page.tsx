@@ -25,7 +25,7 @@ export default function ArtistApplyPage() {
               <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
                 Artist application
               </div>
-              <h1 className="max-w-[720px] font-[family-name:var(--font-zalando-sans)] text-[clamp(42px,6vw,72px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
+              <h1 className="max-w-[720px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
                 Join Audioflume as an artist.
               </h1>
             </div>

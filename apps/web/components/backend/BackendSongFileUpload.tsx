@@ -187,7 +187,7 @@ export default function BackendSongFileUpload({
       </div>
 
       <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
-        <h2 className="mb-3 font-[family-name:var(--font-zalando-sans)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
+        <h2 className="mb-3 font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
           Files
         </h2>
 

@@ -128,7 +128,7 @@ function PlaceholderSection({ section }: { section: ArtistDashboardSection }) {
 
   return (
     <div className="filmwave-backend-section flex min-h-[280px] items-center justify-center px-6 text-center">
-      <div className="font-[family-name:var(--font-zalando-sans)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+      <div className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
         {label}
       </div>
     </div>
@@ -319,7 +319,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
       <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[900px]">
           <div className="filmwave-backend-section px-6 py-10 text-center">
-            <h1 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.04em]">
+            <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.04em]">
               No artist profile yet
             </h1>
             <p className="mx-auto mt-2 max-w-[460px] text-sm leading-6 text-[var(--text-secondary)]">

@@ -87,22 +87,12 @@ export default async function RootLayout({
         <head>
           <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
           <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
-          <link rel="preconnect" href="https://fonts.googleapis.com" />
-          <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Zalando+Sans:ital,wght@0,200..900;1,200..900&display=swap"
-          />
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Manrope:wght@200..800&display=swap"
-          />
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
           <style>{`
             html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
               gap: 12px !important;
-              font-family: var(--font-zalando-sans), sans-serif !important;
+              font-family: var(--font-aktiv-grotesk), sans-serif !important;
               font-size: 13px !important;
               text-transform: none !important;
             }
