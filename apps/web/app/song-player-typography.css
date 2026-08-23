@@ -1,0 +1,12 @@
+.filmwave-song-genre,
+.desktop-song-genre,
+.desktop-song-genre-slot span {
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.filmwave-song-title,
+.filmwave-song-artist,
+.filmwave-player-song-copy > div {
+  letter-spacing: normal;
+}
