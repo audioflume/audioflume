@@ -4,9 +4,9 @@
 }
 
 .filmwave-song-card .filmwave-song-title,
-.filmwave-music-player[data-platform="web"] .filmwave-player-title {
-  font-size: 14.5px;
-  font-weight: 400;
+.filmwave-music-player .filmwave-player-title > span > span:first-child {
+  font-size: 14.5px !important;
+  font-weight: 400 !important;
 }
 
 .filmwave-song-card .filmwave-song-artist,
