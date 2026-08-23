@@ -145,7 +145,7 @@
   max-width: 100%;
   margin: clamp(28px, 2vw, 36px) 0 0;
   font-size: clamp(18px, 1.25vw, 24px);
-  font-weight: 200;
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
 }
@@ -155,7 +155,7 @@
   max-width: 560px;
   margin: 0;
   font-size: clamp(18px, 1.3vw, 24px);
-  font-weight: 200;
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
 }
@@ -529,7 +529,7 @@
 .discover-artist-card-overlay strong {
   color: #fff;
   font-size: 12px;
-  font-weight: 320;
+  font-weight: 400;
   letter-spacing: -0.02em;
   line-height: 15px;
 }
@@ -538,7 +538,7 @@
   margin-top: 3px;
   color: #fff;
   font-size: 10px;
-  font-weight: 320;
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 15px;
   text-transform: none;
@@ -577,7 +577,7 @@
 
 .discover-artist-card-meta strong {
   font-size: 12px;
-  font-weight: 320;
+  font-weight: 400;
   letter-spacing: -0.015em;
   line-height: 15px;
 }
@@ -586,7 +586,7 @@
   margin-top: 2px;
   color: var(--filmwave-black);
   font-size: 10px;
-  font-weight: 320;
+  font-weight: 300;
   line-height: 15px;
 }
 
@@ -648,7 +648,7 @@
   margin: 0 0 clamp(28px, 2.6vw, 42px)
     calc(clamp(18px, 1.7vw, 28px) * -1);
   font-size: clamp(28px, 2.1vw, 36px);
-  font-weight: 200;
+  font-weight: 300;
   letter-spacing: -0.045em;
   line-height: 1.03;
 }
@@ -664,7 +664,7 @@
 
 .discover-artist-editorial-meta span:first-child {
   font-size: 12px;
-  font-weight: 320;
+  font-weight: 400;
   letter-spacing: -0.015em;
   line-height: 15px;
   white-space: nowrap;
@@ -673,7 +673,7 @@
 .discover-artist-editorial-meta span:nth-child(2) {
   color: var(--filmwave-black);
   font-size: 10px;
-  font-weight: 320;
+  font-weight: 300;
   letter-spacing: 0;
   line-height: 15px;
   white-space: nowrap;
@@ -682,7 +682,7 @@
 .discover-artist-editorial-meta span:last-child {
   justify-self: end;
   font-size: 11px;
-  font-weight: 320;
+  font-weight: 400;
   line-height: 15px;
   text-transform: uppercase;
   white-space: nowrap;
@@ -713,13 +713,11 @@
 
   .discover-artist-hero-identity h1 {
     font-size: clamp(52px, 7vw, 66px);
-    font-weight: 400;
   }
 
   .discover-artist-hero-detail > p {
     max-width: none;
     font-size: clamp(17px, 2.4vw, 20px);
-    font-weight: 200;
   }
 
   .discover-artist-hero-featured-intro {
@@ -790,24 +788,20 @@
   .discover-artist-hero-eyebrow {
     margin-bottom: 16px;
     font-size: 18px;
-    font-weight: 200;
   }
 
   .discover-artist-hero-identity h1 {
     font-size: clamp(46px, 12vw, 58px);
-    font-weight: 400;
   }
 
   .discover-artist-hero-identity p {
     margin-top: 20px;
     font-size: 18px;
-    font-weight: 200;
   }
 
   .discover-artist-hero-detail > p {
     max-width: 500px;
     font-size: 17px;
-    font-weight: 200;
   }
 
   .discover-artist-hero-actions {
@@ -815,7 +809,6 @@
     gap: 28px;
     margin-top: 24px;
     font-size: 11.5px;
-    font-weight: 320;
   }
 
   .discover-artist-hero-listen {
@@ -848,7 +841,6 @@
   .discover-artist-hero-featured-intro > span,
   .discover-artist-hero-featured-intro p {
     font-size: 11px;
-    font-weight: 320;
   }
 
   .discover-artist-hero-slider-marks {

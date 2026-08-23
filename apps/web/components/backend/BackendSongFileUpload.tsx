@@ -160,7 +160,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled}
           onClick={() => audioInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-[320] leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <AudioActionIcon />
           <span>Choose Audio</span>
@@ -169,7 +169,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled || artworkDisabled}
           onClick={() => artworkActionInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-[320] leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <ArtworkActionIcon />
           <span>{artworkActionLabel}</span>
@@ -178,7 +178,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled}
           onClick={() => stemsInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-[320] leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <StemsActionIcon />
           <span>Choose Stems</span>
@@ -211,15 +211,15 @@ export default function BackendSongFileUpload({
 
         <div className="grid gap-2">
           <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${audioStatusBusy || (audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus)) ? "py-2" : ""}`}>
-            <div className="text-xs font-[320] leading-[18px] text-[var(--text-primary)]">
+            <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
               Audio
             </div>
             <div className="min-w-0">
-              <div className={`truncate text-xs font-[320] leading-[18px] ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
+              <div className={`truncate text-xs leading-[18px] ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
                 {audioFile?.name || audioExistingLabel || "No file chosen"}
               </div>
               {audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus) ? (
-                <div className="mt-1 flex items-start gap-2 text-[11px] font-[320] leading-4 text-[var(--text-secondary)]">
+                <div className="mt-1 flex items-start gap-2 text-[11px] leading-4 text-[var(--text-secondary)]">
                   {audioStatusBusy ? (
                     <span className="mt-px h-3.5 w-3.5 shrink-0 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
                   ) : null}
@@ -232,7 +232,7 @@ export default function BackendSongFileUpload({
                 type="button"
                 disabled={disabled || audioStatusBusy}
                 onClick={() => onAudioFileChange(null)}
-                className="text-[11px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:cursor-not-allowed disabled:opacity-50"
+                className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:cursor-not-allowed disabled:opacity-50"
               >
                 Remove
               </button>
@@ -240,11 +240,11 @@ export default function BackendSongFileUpload({
           </div>
 
           <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${visibleStemLabels.length > 0 ? "py-2" : ""}`}>
-            <div className="text-xs font-[320] leading-[18px] text-[var(--text-primary)]">
+            <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
               Stems
             </div>
             <div className="min-w-0">
-              <div className={`truncate text-xs font-[320] leading-[18px] ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
+              <div className={`truncate text-xs leading-[18px] ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}>
                 {stemFiles.length > 0
                   ? `${stemFiles.length} file${stemFiles.length === 1 ? "" : "s"} chosen`
                   : existingStemLabels.length > 0
@@ -256,7 +256,7 @@ export default function BackendSongFileUpload({
                   {visibleStemLabels.map((label, index) => (
                     <div
                       key={`${label}-${index}`}
-                      className="flex min-w-0 items-center justify-between gap-3 text-[11px] font-[320] leading-4 text-[var(--text-secondary)]"
+                      className="flex min-w-0 items-center justify-between gap-3 text-[11px] leading-4 text-[var(--text-secondary)]"
                     >
                       <span className="min-w-0 flex-1 truncate">{label}</span>
                       {stemFiles.length > 0 ? (
@@ -280,7 +280,7 @@ export default function BackendSongFileUpload({
                 type="button"
                 disabled={disabled}
                 onClick={onClearExistingStems}
-                className="text-[11px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50"
+                className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50"
               >
                 Remove
               </button>

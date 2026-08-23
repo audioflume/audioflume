@@ -129,7 +129,7 @@
   order: 2 !important;
   padding: 0 4px 0 7px !important;
   font-size: 13px !important;
-  font-weight: 320 !important;
+  font-weight: 400 !important;
 }
 
 .desktop-app-main .desktop-music-page:has(.fw-filter-panel-wrap) > .fw-toolbar-sticky > .fw-toolbar-float .fw-toolbar-filters,
@@ -367,7 +367,7 @@
   width: 100% !important;
   height: 100% !important;
   font-size: 10px !important;
-  font-weight: 320 !important;
+  font-weight: 500 !important;
   line-height: 1 !important;
   transform: translateY(-0.5px) !important;
 }
@@ -388,7 +388,7 @@
   width: 100% !important;
   height: 100% !important;
   font-size: 12px !important;
-  font-weight: 320 !important;
+  font-weight: 450 !important;
   line-height: 1 !important;
   transform: translateY(-1px) !important;
 }

@@ -93,7 +93,7 @@ function GroupModal({
     >
       <form id="playlist-group-form" onSubmit={handleSubmit} className="grid gap-4 pt-1">
         <label className="grid gap-1.5">
-          <span className="text-[11px] font-[320] text-[var(--text-secondary)]">Group name</span>
+          <span className="text-[11px] text-[var(--text-secondary)]">Group name</span>
           <BackendInput
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -104,7 +104,7 @@ function GroupModal({
         </label>
 
         <label className="grid gap-1.5">
-          <span className="text-[11px] font-[320] text-[var(--text-secondary)]">Description</span>
+          <span className="text-[11px] text-[var(--text-secondary)]">Description</span>
           <BackendTextarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
@@ -174,8 +174,8 @@ function SortableGroupRow({
       </button>
 
       <div className="min-w-0 flex-1 py-2">
-        <div className="truncate text-sm font-[320] text-[var(--text-primary)]">{group.name}</div>
-        <div className="mt-0.5 text-[11px] font-[320] text-[var(--text-muted)]">
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
+        <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
           {group.playlist_count || 0} playlist{group.playlist_count === 1 ? "" : "s"}
           {isDefaultGroup ? " · Default" : ""}
         </div>
@@ -224,8 +224,8 @@ function GroupDragOverlayRow({ group }: { group: CuratedPlaylistGroup }) {
         <DragIconSmall />
       </div>
       <div className="min-w-0 flex-1 py-2 pr-4">
-        <div className="truncate text-sm font-[320] text-[var(--text-primary)]">{group.name}</div>
-        <div className="mt-0.5 text-[11px] font-[320] text-[var(--text-muted)]">
+        <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
+        <div className="mt-0.5 text-[11px] text-[var(--text-muted)]">
           {group.playlist_count || 0} playlist{group.playlist_count === 1 ? "" : "s"}
         </div>
       </div>
@@ -433,15 +433,15 @@ export default function AdminPlaylistGroupManager({
         <div className="overflow-hidden rounded-xl border border-[var(--border)] bg-[var(--bg-secondary)]">
           <div className="flex h-[58px] items-center justify-between border-b border-[var(--border)] px-4">
             <div>
-              <h2 className="text-sm font-[320] text-[var(--text-primary)]">Playlist Groups</h2>
-              <p className="mt-0.5 text-[11px] font-[320] text-[var(--text-secondary)]">
+              <h2 className="text-sm font-medium text-[var(--text-primary)]">Playlist Groups</h2>
+              <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
                 {loading ? "Loading..." : `${sortedGroups.length} group${sortedGroups.length === 1 ? "" : "s"}`}
               </p>
             </div>
             <button
               type="button"
               onClick={openCreateModal}
-              className="flex items-center gap-1 text-xs font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              className="flex items-center gap-1 text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
             >
               <PlusIcon />
               New
@@ -456,10 +456,10 @@ export default function AdminPlaylistGroupManager({
             </div>
           )}
 
-          {!loading && error && <div className="px-4 py-3 text-sm font-[320] text-[var(--danger)]">{error}</div>}
+          {!loading && error && <div className="px-4 py-3 text-sm text-[var(--danger)]">{error}</div>}
 
           {!loading && !error && sortedGroups.length === 0 && (
-            <div className="flex min-h-[100px] items-center justify-center px-4 text-sm font-[320] text-[var(--text-secondary)]">
+            <div className="flex min-h-[100px] items-center justify-center px-4 text-sm text-[var(--text-secondary)]">
               No groups yet.
             </div>
           )}
@@ -517,9 +517,9 @@ export default function AdminPlaylistGroupManager({
       <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
-            <div className="text-[11px] font-[320] uppercase tracking-[0.12em] text-[var(--text-muted)]">Groups</div>
-            <h2 className="mt-2 font-[family-name:var(--font-zalando-sans)] text-2xl font-[200] tracking-[-0.05em]">Playlist Groups</h2>
-            <p className="mt-2 text-sm font-[320] leading-6 text-[var(--text-secondary)]">Create, rename, and delete the row headers used on the Curated Playlists page.</p>
+            <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">Groups</div>
+            <h2 className="mt-2 font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">Playlist Groups</h2>
+            <p className="mt-2 text-sm leading-6 text-[var(--text-secondary)]">Create, rename, and delete the row headers used on the Curated Playlists page.</p>
           </div>
           <BackendButton type="button" variant="primary" onClick={openCreateModal}>
             <PlusIcon />
@@ -536,11 +536,11 @@ export default function AdminPlaylistGroupManager({
         )}
 
         {!loading && error && (
-          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm font-[320] text-[var(--danger)]">{error}</div>
+          <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--danger)]">{error}</div>
         )}
 
         {!loading && !error && sortedGroups.length === 0 && (
-          <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm font-[320] text-[var(--text-secondary)]">No groups yet.</div>
+          <div className="rounded-xl border border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--text-secondary)]">No groups yet.</div>
         )}
 
         {!loading && !error && sortedGroups.length > 0 && (
@@ -551,8 +551,8 @@ export default function AdminPlaylistGroupManager({
               return (
                 <div key={group.id} className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2">
                   <div className="min-w-0 flex-1">
-                    <div className="truncate text-sm font-[320] text-[var(--text-primary)]">{group.name}</div>
-                    <div className="mt-0.5 text-xs font-[320] text-[var(--text-muted)]">
+                    <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
+                    <div className="mt-0.5 text-xs text-[var(--text-muted)]">
                       {group.playlist_count || 0} playlist{group.playlist_count === 1 ? "" : "s"}
                       {isDefaultGroup ? " · Default" : ""}
                     </div>

@@ -133,11 +133,11 @@ function SortableSongRow({
         ) : null}
       </button>
       <div className="min-w-0 flex-1">
-        <div className="flex min-w-0 items-center gap-1.5 text-sm font-[400]">
+        <div className="flex min-w-0 items-center gap-1.5 text-sm font-medium">
           <span className="min-w-0 truncate">{song.title}</span>
           {song.licenseType === "premium" ? <PremiumLabel /> : null}
         </div>
-        <div className="mt-0.5 truncate text-xs font-[320] text-[var(--text-muted)]">
+        <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
           {song.artist}
         </div>
       </div>
@@ -171,11 +171,11 @@ function DragOverlaySongRow({ song }: { song: CuratedPlaylistSong }) {
         )}
       </div>
       <div className="min-w-0 flex-1 pr-4">
-        <div className="flex min-w-0 items-center gap-1.5 text-sm font-[400]">
+        <div className="flex min-w-0 items-center gap-1.5 text-sm font-medium">
           <span className="min-w-0 truncate">{song.title}</span>
           {song.licenseType === "premium" ? <PremiumLabel /> : null}
         </div>
-        <div className="mt-0.5 truncate text-xs font-[320] text-[var(--text-muted)]">
+        <div className="mt-0.5 truncate text-xs text-[var(--text-muted)]">
           {song.artist}
         </div>
       </div>
@@ -531,7 +531,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
       >
         <div className="admin-playlist-main-stack grid min-w-0 gap-4">
           <section className="admin-playlist-section-card admin-playlist-details-card">
-            <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-[200] tracking-[-0.05em]">
+            <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
               Playlist details
             </h2>
 
@@ -543,7 +543,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   aria-label="Playlist name"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Playlist Name"
                   required
                 />
@@ -552,7 +552,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   aria-label="Kicker text"
                   value={kicker}
                   onChange={(e) => setKicker(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-[320] text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Kicker Text"
                 />
               </div>
@@ -562,7 +562,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           {!loading && (
             <>
               <section className="admin-playlist-section-card admin-playlist-browse-card">
-                <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-[200] tracking-[-0.05em]">
+                <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
                   Browse filters
                 </h2>
 
@@ -678,17 +678,17 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         <section className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-[200] tracking-[-0.05em]">
+              <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
                 Songs
               </h2>
             </div>
-            <span className="text-xs font-[320] text-[var(--text-muted)]">
+            <span className="text-xs font-medium text-[var(--text-muted)]">
               {songs.length} songs
             </span>
           </div>
 
           {songs.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm font-[320] leading-5 text-[var(--text-secondary)]">
+            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm font-normal leading-5 text-[var(--text-secondary)]">
               No songs yet. Open a song in the admin music player and choose Add
               to Playlist.
             </div>

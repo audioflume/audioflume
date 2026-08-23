@@ -111,7 +111,7 @@ function PrimaryIcon({ icon }: { icon: PrimaryNavItem["icon"] }) {
 
 function SoonBadge() {
   return (
-    <span className="bg-[var(--bg-tertiary)] px-1.5 py-[1px] text-[8px] font-[320] uppercase tracking-[0.04em] text-[var(--text-muted)]">
+    <span className="bg-[var(--bg-tertiary)] px-1.5 py-[1px] text-[8px] font-semibold uppercase tracking-[0.04em] text-[var(--text-muted)]">
       Soon
     </span>
   );
@@ -144,7 +144,7 @@ function SystemStatusConsole({
               <span className="truncate">{status.label}</span>
             </div>
             <span
-              className="shrink-0 text-[9px] font-[320]"
+              className="shrink-0 text-[9px]"
               style={{
                 color:
                   status.tone === "success"

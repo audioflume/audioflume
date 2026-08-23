@@ -318,7 +318,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
   return (
     <section className="group relative admin-playlist-section-card admin-playlist-shelf-card">
       <div className="mb-4 flex min-h-8 items-center justify-between gap-4">
-        <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-[200] tracking-[-0.05em]">
+        <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
           {filter.label}
         </h2>
 
@@ -328,7 +328,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               type="button"
               onClick={() => void saveEdits()}
               disabled={saving}
-              className="text-[11px] font-[320] text-[var(--text-primary)] transition disabled:opacity-40"
+              className="text-[11px] font-normal text-[var(--text-primary)] transition disabled:opacity-40"
             >
               {saving ? "Saving..." : "Save"}
             </button>
@@ -339,7 +339,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               type="button"
               onClick={() => void deleteSelected()}
               disabled={saving}
-              className="text-[11px] font-[320] text-[var(--danger)] transition disabled:opacity-40"
+              className="text-[11px] font-normal text-[var(--danger)] transition disabled:opacity-40"
             >
               {saving ? "Deleting..." : "Delete"}
             </button>
@@ -353,7 +353,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 setMode(null);
               }}
               disabled={saving}
-              className="text-[11px] font-[320] text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
+              className="text-[11px] font-normal text-[var(--text-muted)] transition hover:text-[var(--text-primary)] disabled:opacity-40"
             >
               Cancel
             </button>
@@ -386,7 +386,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
           return (
             <div
               key={subcategory.id}
-              className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs font-[320] text-[var(--text-secondary)]"
+              className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
             >
               <BackendCheckbox
                 checked={checked}
@@ -418,7 +418,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                   onKeyDown={(event) => {
                     if (event.key === "Enter") event.preventDefault();
                   }}
-                  className="min-w-0 flex-1 bg-transparent text-xs font-[320] text-[var(--text-secondary)] outline-none"
+                  className="min-w-0 flex-1 bg-transparent text-xs text-[var(--text-secondary)] outline-none"
                   aria-label={`Rename ${subcategory.label}`}
                 />
               ) : (
@@ -441,7 +441,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               setNewFieldOpen(true);
               setNewDropdownOpen(true);
             }}
-            className="flex h-10 items-center rounded-lg border border-dashed border-[var(--border)] px-3 py-0 text-left text-xs font-[320] text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
+            className="flex h-10 items-center rounded-lg border border-dashed border-[var(--border)] px-3 py-0 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
           >
             New
           </button>
@@ -462,7 +462,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                 onKeyDown={(event) => {
                   if (event.key === "Enter") event.preventDefault();
                 }}
-                className="h-full w-full min-w-0 flex-1 bg-transparent px-3 py-0 text-xs font-[320] text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
+                className="h-full w-full min-w-0 flex-1 bg-transparent px-3 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)]"
                 placeholder="Category Name"
                 aria-label={`New category for ${filter.label}`}
                 autoFocus
@@ -485,7 +485,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
                     type="button"
                     onMouseDown={(event) => event.preventDefault()}
                     onClick={() => selectExisting(subcategory)}
-                    className="block w-full px-3 py-2 text-left text-xs font-[320] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
                     {subcategory.label}
                   </button>

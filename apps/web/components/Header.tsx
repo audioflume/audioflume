@@ -206,7 +206,7 @@ export default function Header() {
           color: var(--text-primary) !important;
           font-family: var(--font-zalando-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
           font-size: 22px !important;
-          font-weight: 550 !important;
+          font-weight: 600 !important;
           letter-spacing: -0.045em !important;
           line-height: 1 !important;
           text-transform: lowercase !important;
@@ -246,10 +246,6 @@ export default function Header() {
         .filmwave-web-header .filmwave-header-nav-link {
           padding-right: 8px !important;
           padding-left: 8px !important;
-        }
-
-        .filmwave-web-header .filmwave-header-nav-link-text {
-          font-weight: 500 !important;
         }
         .filmwave-header-right-actions {
           display: inline-flex;
@@ -630,9 +626,7 @@ export default function Header() {
                         aria-expanded={playlistsMenuOpen}
                         onClick={closePlaylistsMenu}
                       >
-                        <span className="filmwave-header-nav-link-text">
-                          {link.label}
-                        </span>
+                        {link.label}
                       </Link>
 
                       <div
@@ -752,9 +746,7 @@ export default function Header() {
                     className={`filmwave-header-nav-link${isActive ? " is-active" : ""}`}
                     aria-current={isActive ? "page" : undefined}
                   >
-                    <span className="filmwave-header-nav-link-text">
-                      {link.label}
-                    </span>
+                    {link.label}
                   </Link>
                 );
               })}

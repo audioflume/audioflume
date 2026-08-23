@@ -100,7 +100,7 @@ export default function AdminDiscoverContentPickerModal({
 
       <div className="-mx-5 min-h-0 flex-1 overflow-y-auto bg-[var(--bg-tertiary)] p-3">
         {displayedPlaylists.length === 0 ? (
-          <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs font-[320] text-[var(--text-secondary)]">
+          <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
             No Discover content matches your search.
           </div>
         ) : (
@@ -139,10 +139,10 @@ export default function AdminDiscoverContentPickerModal({
                   </span>
 
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-sm font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
+                    <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                       {playlist.name}
                     </span>
-                    <span className="mt-0.5 block truncate text-[11px] font-[320] text-[var(--text-muted)]">
+                    <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
                       {isCurrent ? "Currently assigned" : getPlacementLabel(playlist)}
                     </span>
                   </span>

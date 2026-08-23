@@ -71,7 +71,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
         compactHeader
         contentAreaBottomPadding={false}
       >
-        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs font-[320] text-[var(--text-secondary)]">
+        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           You do not have access to this admin page.
         </section>
         <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
@@ -126,7 +126,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
       <div className="mb-4 flex items-center gap-2">
         <Link
           href={`/admin/songs/${id}/edit`}
-          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           Edit Details
         </Link>
@@ -148,12 +148,12 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
             <h2 className="truncate font-[family-name:var(--font-zalando-sans)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               {typedSong.title || "Untitled Song"}
             </h2>
-            <p className="mt-1 truncate text-xs font-[320] text-[var(--text-secondary)]">
+            <p className="mt-1 truncate text-xs text-[var(--text-secondary)]">
               {typedSong.artist || "Unknown artist"}
             </p>
           </div>
 
-          <div className="ml-auto hidden items-center gap-5 text-xs font-[320] text-[var(--text-secondary)] md:flex">
+          <div className="ml-auto hidden items-center gap-5 text-xs text-[var(--text-secondary)] md:flex">
             {typedSong.key ? <span>{typedSong.key}</span> : null}
             {typedSong.bpm ? <span>{typedSong.bpm} BPM</span> : null}
             {duration > 0 ? <span>{formatTime(duration)}</span> : null}

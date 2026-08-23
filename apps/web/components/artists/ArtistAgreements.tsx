@@ -146,7 +146,7 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
 
   if (loading && documents.length === 0) {
     return (
-      <div className="filmwave-backend-section flex min-h-[280px] items-center justify-center text-xs font-[320] text-[var(--text-muted)]">
+      <div className="filmwave-backend-section flex min-h-[280px] items-center justify-center text-xs text-[var(--text-muted)]">
         Loading agreements...
       </div>
     );
@@ -155,13 +155,13 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
   return (
     <div className="grid gap-4">
       {message ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs font-[320] text-[var(--status-success,#48b571)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--status-success,#48b571)]">
           {message}
         </div>
       ) : null}
 
       {error ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs font-[320] text-[var(--status-error,#dc584f)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--status-error,#dc584f)]">
           {error}
         </div>
       ) : null}
@@ -187,14 +187,14 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
             </span>
           )}
         </div>
-        <div className="px-5 py-4 text-xs font-[320] leading-6 text-[var(--text-secondary)]">
+        <div className="px-5 py-4 text-xs leading-6 text-[var(--text-secondary)]">
           Required artist agreements and onboarding documents will live here. Each
           acceptance is recorded against the exact document version.
         </div>
       </section>
 
       {documents.length === 0 ? (
-        <section className="filmwave-backend-section flex min-h-[180px] items-center justify-center px-5 text-center text-xs font-[320] text-[var(--text-muted)]">
+        <section className="filmwave-backend-section flex min-h-[180px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
           No onboarding documents have been added yet.
         </section>
       ) : (
@@ -227,12 +227,12 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
 
               <div className="px-5 py-5">
                 {document.summary ? (
-                  <p className="m-0 max-w-[720px] text-xs font-[320] leading-6 text-[var(--text-secondary)]">
+                  <p className="m-0 max-w-[720px] text-xs leading-6 text-[var(--text-secondary)]">
                     {document.summary}
                   </p>
                 ) : null}
 
-                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[11px] font-[320] text-[var(--text-muted)]">
+                <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-[11px] text-[var(--text-muted)]">
                   <span>Version {document.version}</span>
                   {document.effective_at ? (
                     <span>Effective {formatDate(document.effective_at)}</span>
@@ -248,7 +248,7 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
                 </div>
 
                 {isDraft ? (
-                  <div className="mt-5 text-xs font-[320] text-[var(--text-muted)]">
+                  <div className="mt-5 text-xs text-[var(--text-muted)]">
                     This document is being prepared and cannot be accepted yet.
                   </div>
                 ) : (
@@ -264,7 +264,7 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
                           Review document
                         </a>
                       ) : (
-                        <span className="text-xs font-[320] text-[var(--text-muted)]">
+                        <span className="text-xs text-[var(--text-muted)]">
                           Document file unavailable.
                         </span>
                       )}
@@ -292,13 +292,13 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
                         }
                         disabled={isBusy}
                         size="sm"
-                        className="mt-4 max-w-[720px] items-start gap-2 text-[11px] font-[320] leading-5"
+                        className="mt-4 max-w-[720px] items-start gap-2 text-[11px] leading-5"
                         label="I have reviewed this document and agree on behalf of the artist."
                       />
                     ) : null}
 
                     {!document.accepted && !canAccept ? (
-                      <div className="mt-4 text-[11px] font-[320] leading-5 text-[var(--text-muted)]">
+                      <div className="mt-4 text-[11px] leading-5 text-[var(--text-muted)]">
                         Only the artist owner can accept agreements on behalf of the
                         artist.
                       </div>

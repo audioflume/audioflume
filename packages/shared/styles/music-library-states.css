@@ -95,7 +95,6 @@
   margin: 0;
   color: var(--text-secondary);
   font-size: 13px;
-  font-weight: 320;
   line-height: 1.5;
 }
 
@@ -103,7 +102,6 @@
   padding: 16px 32px;
   color: var(--danger);
   font-size: 14px;
-  font-weight: 320;
   line-height: 1.5;
 }
 

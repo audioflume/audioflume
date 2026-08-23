@@ -495,11 +495,11 @@ export default function FavoritesPage() {
 
             {songsError && !songsLoading && favoritesLoaded && (
               <div className="flex min-h-[240px] flex-col items-center justify-center gap-3 px-8 text-center">
-                <div className="text-sm font-[320] text-[var(--text-primary)]">
+                <div className="text-sm font-medium text-[var(--text-primary)]">
                   Couldn&apos;t load favorites
                 </div>
 
-                <div className="max-w-[320px] text-xs font-[320] leading-5 text-[var(--text-secondary)]">
+                <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
                   {songsError}
                 </div>
 

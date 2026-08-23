@@ -76,7 +76,7 @@ function summarizeResults(results: BatchAnalyzeResult[], totalMissing: number) {
 
 function ResultStatus({ status }: { status: BatchAnalyzeResult["status"] }) {
   return (
-    <div className="flex items-center gap-2 text-xs font-[320] text-[var(--text-secondary)]">
+    <div className="flex items-center gap-2 text-xs text-[var(--text-secondary)]">
       <span
         className="flex h-[18px] w-[18px] flex-[0_0_18px] items-center justify-center rounded-full"
         style={{
@@ -101,7 +101,7 @@ function SummaryRow({
   value: number | string;
 }) {
   return (
-    <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs font-[320] text-[var(--text-secondary)]">
+    <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)]">
       <span>{label}</span>
       <span className="font-medium text-[var(--text-primary)]">{value}</span>
     </div>
@@ -231,7 +231,7 @@ export default function AdminEditPointsPage() {
           type="button"
           onClick={analyzeMissingEditPoints}
           disabled={isAnalyzing}
-          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-[320] text-[var(--bg-primary)] transition disabled:cursor-default disabled:opacity-50"
+          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition disabled:cursor-default disabled:opacity-50"
         >
           {isAnalyzing && (
             <LoadingSpinner size={13} stroke={11} color="currentColor" />
@@ -241,7 +241,7 @@ export default function AdminEditPointsPage() {
 
         <Link
           href="/admin/music-library?issue=editPoints"
-          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           View Missing
         </Link>
@@ -255,14 +255,14 @@ export default function AdminEditPointsPage() {
                 Batch Analyzer
               </h2>
               {isAnalyzing ? (
-                <span className="text-xs font-[320] text-[var(--text-secondary)]">
+                <span className="text-xs font-medium text-[var(--text-secondary)]">
                   {progressPercent}%
                 </span>
               ) : null}
             </div>
 
             <div className="px-5 pb-5">
-              <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs font-[320]">
+              <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs">
                 <span className="min-w-0 truncate text-[var(--text-secondary)]">
                   {isAnalyzing
                     ? currentSongTitle
@@ -293,7 +293,7 @@ export default function AdminEditPointsPage() {
               )}
 
               {analysisStartedAt && isAnalyzing && (
-                <p className="mt-2 text-xs font-[320] leading-5 text-[var(--text-secondary)]">
+                <p className="mt-2 text-xs leading-5 text-[var(--text-secondary)]">
                   Keep this page open until the batch completes.
                 </p>
               )}
@@ -306,13 +306,13 @@ export default function AdminEditPointsPage() {
                 <h2 className="font-[family-name:var(--font-zalando-sans)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                   Recently Analyzed
                 </h2>
-                <span className="text-xs font-[320] text-[var(--text-muted)]">
+                <span className="text-xs text-[var(--text-muted)]">
                   {getRecentAnalysisLabel(result.completedAt)}
                 </span>
               </div>
 
               {result.results.length === 0 ? (
-                <div className="flex min-h-[120px] items-center justify-center border-t border-[var(--border-subtle)] px-5 text-xs font-[320] text-[var(--text-secondary)]">
+                <div className="flex min-h-[120px] items-center justify-center border-t border-[var(--border-subtle)] px-5 text-xs text-[var(--text-secondary)]">
                   No songs are missing cue points.
                 </div>
               ) : (
@@ -320,7 +320,7 @@ export default function AdminEditPointsPage() {
                   {result.results.map((item, index) => (
                     <div
                       key={item.songId}
-                      className="grid min-h-[58px] grid-cols-[minmax(0,1fr)_110px_58px_92px] items-center gap-3 px-5 text-xs font-[320]"
+                      className="grid min-h-[58px] grid-cols-[minmax(0,1fr)_110px_58px_92px] items-center gap-3 px-5 text-xs"
                       style={{
                         borderBottom:
                           index === result.results.length - 1
@@ -336,7 +336,7 @@ export default function AdminEditPointsPage() {
                           {item.title || "Untitled song"}
                         </Link>
                         {item.error && (
-                          <div className="mt-1 truncate text-[11px] font-[320] text-[var(--status-error,#dc584f)]">
+                          <div className="mt-1 truncate text-[11px] text-[var(--status-error,#dc584f)]">
                             {item.error}
                           </div>
                         )}
@@ -350,7 +350,7 @@ export default function AdminEditPointsPage() {
 
                       <Link
                         href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                        className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[12px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+                        className="inline-flex h-8 items-center justify-center rounded-[7px] border border-[var(--border)] px-3 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
                       >
                         Review
                       </Link>

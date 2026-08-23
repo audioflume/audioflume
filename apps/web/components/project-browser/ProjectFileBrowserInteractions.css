@@ -74,7 +74,7 @@
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   font-size: 12px !important;
-  font-weight: 320 !important;
+  font-weight: 500 !important;
   line-height: 1.2 !important;
 }
 
@@ -94,7 +94,6 @@
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
   font-size: 10px !important;
-  font-weight: 320 !important;
   line-height: 1.2 !important;
   color: var(--text-muted) !important;
 }
