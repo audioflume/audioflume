@@ -247,6 +247,10 @@ export default function Header() {
           padding-right: 8px !important;
           padding-left: 8px !important;
         }
+
+        .filmwave-web-header .filmwave-header-nav-link-text {
+          font-weight: 500 !important;
+        }
         .filmwave-header-right-actions {
           display: inline-flex;
           height: 100%;
@@ -626,7 +630,9 @@ export default function Header() {
                         aria-expanded={playlistsMenuOpen}
                         onClick={closePlaylistsMenu}
                       >
-                        {link.label}
+                        <span className="filmwave-header-nav-link-text">
+                          {link.label}
+                        </span>
                       </Link>
 
                       <div
@@ -746,7 +752,9 @@ export default function Header() {
                     className={`filmwave-header-nav-link${isActive ? " is-active" : ""}`}
                     aria-current={isActive ? "page" : undefined}
                   >
-                    {link.label}
+                    <span className="filmwave-header-nav-link-text">
+                      {link.label}
+                    </span>
                   </Link>
                 );
               })}
