@@ -134,7 +134,7 @@ export async function getFilmwaveSongs(apiBaseUrl?: string | null) {
   const data = (await response.json()) as DesktopSongsApiResponse;
 
   if (!response.ok) {
-    throw new Error(data.error || "Failed to load Filmwave songs");
+    throw new Error(data.error || "Failed to load Audioflume songs");
   }
 
   return (data.songs ?? []).map((item) => normalizeFilmwaveSong(item));
