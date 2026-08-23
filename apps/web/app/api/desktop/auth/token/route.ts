@@ -2,7 +2,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { createDesktopToken } from "@/lib/desktopAuth";
 
-const DESKTOP_CALLBACK_URL = "filmwave://auth/callback";
+const DESKTOP_CALLBACK_URL = "audioflume://auth/callback";
 
 function escapeHtml(value: string) {
   return value
