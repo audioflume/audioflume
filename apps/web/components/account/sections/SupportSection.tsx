@@ -20,7 +20,7 @@ export default function SupportSection() {
     },
     {
       title: "Contact support",
-      description: "Reach the Filmwave team directly for account questions or help using the library.",
+      description: "Reach the Audioflume team directly for account questions or help using the library.",
       action: "Email support",
       icon: <MailIcon />,
     },
@@ -33,7 +33,7 @@ export default function SupportSection() {
   ];
 
   const faqs = [
-    ["Can I use Filmwave songs in client work?", "Yes. Filmwave is structured for royalty-free commercial project use."],
+    ["Can I use Audioflume songs in client work?", "Yes. Audioflume is structured for royalty-free commercial project use."],
     ["Can I download stems?", "Tracks that include stems can expose them directly from the song card or player menu when configured."],
     ["How do I report a broken file?", "Submit a support ticket with the song title and issue type."],
   ];
