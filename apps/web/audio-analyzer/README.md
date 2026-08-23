@@ -1,6 +1,6 @@
-# Filmwave Audio Analyzer
+# Audioflume Audio Analyzer
 
-Python service for detecting basic edit-point markers from uploaded Filmwave songs.
+Python service for detecting basic edit-point markers from uploaded Audioflume songs.
 
 ## Local setup
 
@@ -46,7 +46,7 @@ curl -X POST "http://localhost:8000/analyze" \
 
 ## Next.js env vars
 
-Add these to the main Filmwave app:
+Add these to the main Audioflume app:
 
 ```env
 AUDIO_ANALYZER_URL=http://localhost:8000
