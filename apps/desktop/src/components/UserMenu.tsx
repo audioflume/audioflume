@@ -117,6 +117,7 @@ export default function UserMenu({
               <UserMenuActions>
                 <UserMenuAction
                   label="Desktop Sync"
+                  icon="sync"
                   helper=""
                   onClick={() => {
                     setOpen(false);
@@ -126,6 +127,7 @@ export default function UserMenu({
 
                 <UserMenuAction
                   label={isSignedIn ? "Reconnect" : "Sign in"}
+                  icon="sign-in"
                   helper=""
                   onClick={() => {
                     setOpen(false);
@@ -143,6 +145,7 @@ export default function UserMenu({
                 <UserMenuActions className="filmwave-user-menu-signout">
                   <UserMenuExitAction
                     label="Sign Out"
+                    icon="sign-out"
                     onClick={() => {
                       setOpen(false);
                       void onSignOut();
