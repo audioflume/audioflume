@@ -128,8 +128,7 @@ export default function UserMenu({
 
                 {isSignedIn && (
                   <UserMenuExitAction
-                    label="Sign out"
-                    trailing="Exit"
+                    label="Sign Out"
                     onClick={() => {
                       setOpen(false);
                       void onSignOut();
