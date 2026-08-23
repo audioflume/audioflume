@@ -218,7 +218,7 @@ export default function AdminSidebar() {
   return (
     <BackendSidebarShell bottom={playerVisible ? "64px" : "0px"}>
       <BackendSidebarScrollArea>
-        <div className="border-b border-[var(--border)] pb-8">
+        <div>
           <BackendSidebarHeading>Admin</BackendSidebarHeading>
           <div className="flex flex-col gap-px">
             {primaryLinks.map((link) => (
