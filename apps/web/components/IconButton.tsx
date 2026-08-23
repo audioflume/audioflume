@@ -17,7 +17,11 @@ export default function IconButton({
   const activeMode: SongActionButtonActiveMode =
     isCueMarkerToggle || isFavoriteToggle ? "plain-icon" : "background";
   const style = isFavoriteToggle
-    ? ({ "--filmwave-song-card-action-hover-bg": "transparent" } as React.CSSProperties)
+    ? ({
+        "--filmwave-song-card-action-hover-bg": "transparent",
+        "--filmwave-song-card-action-color":
+          "var(--filmwave-player-action-icon-color, var(--icon-color))",
+      } as React.CSSProperties)
     : undefined;
 
   return (
