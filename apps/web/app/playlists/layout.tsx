@@ -400,8 +400,8 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         .playlist-detail-page .playlist-detail-actions > button:first-child {
-          background: var(--filmwave-black);
-          color: var(--filmwave-white);
+          background: var(--text-primary);
+          color: var(--bg-primary);
         }
 
         .playlist-detail-page .playlist-detail-actions > button svg {
