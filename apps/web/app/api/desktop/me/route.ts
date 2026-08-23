@@ -24,7 +24,7 @@ export async function GET(req: Request) {
             [user.firstName, user.lastName].filter(Boolean).join(" ") ||
             user.username ||
             primaryEmail?.emailAddress ||
-            "Filmwave user",
+            "Audioflume user",
           email: primaryEmail?.emailAddress ?? null,
           imageUrl: user.imageUrl ?? null,
         },
