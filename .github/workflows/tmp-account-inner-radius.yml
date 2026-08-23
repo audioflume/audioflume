@@ -1,0 +1,58 @@
+name: Temporary account inner radius
+
+on:
+  push:
+    branches:
+      - style/account-inner-radius
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: style/account-inner-radius
+      - name: Round account inner blocks
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          replacements = {
+              Path('apps/web/components/account/AccountUI.tsx'): [
+                  (
+                      'className="border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 py-3"',
+                      'className="rounded-[var(--filmwave-backend-control-radius)] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 py-3"',
+                  ),
+              ],
+              Path('apps/web/components/account/sections/PaymentSection.tsx'): [
+                  (
+                      'className="border border-[var(--border)] bg-[var(--bg-primary)] p-3.5"',
+                      'className="rounded-[var(--filmwave-backend-control-radius)] border border-[var(--border)] bg-[var(--bg-primary)] p-3.5"',
+                  ),
+                  (
+                      'className="border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]"',
+                      'className="rounded-[var(--filmwave-backend-control-radius)] border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]"',
+                  ),
+              ],
+          }
+
+          for path, pairs in replacements.items():
+              text = path.read_text()
+              for old, new in pairs:
+                  count = text.count(old)
+                  if count != 1:
+                      raise SystemExit(f'{path}: expected exactly one match for {old!r}, found {count}')
+                  text = text.replace(old, new)
+              path.write_text(text)
+          PY
+      - name: Commit change
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/components/account/AccountUI.tsx apps/web/components/account/sections/PaymentSection.tsx
+          git commit -m "Round account inner information blocks"
+          git push origin HEAD:style/account-inner-radius
