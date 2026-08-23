@@ -113,7 +113,7 @@ function MetricCard({
     <div className="filmwave-backend-section flex min-h-[108px] flex-col justify-between p-4">
       <span className="text-xs font-[320] text-[var(--text-secondary)]">{label}</span>
       <div>
-        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-[200] leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-[500] leading-none tracking-[-0.04em] text-[var(--text-primary)]">
           {value}
         </div>
         {note ? (
@@ -282,7 +282,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
               <span className="text-xs font-[320] text-[var(--text-primary)]">
                 {sourceLabel(item.source)}
               </span>
-              <span className="text-xs font-[320] text-[var(--text-primary)]">
+              <span className="text-xs font-[500] text-[var(--text-primary)]">
                 {formatMoney(item.amount_cents, item.currency)}
               </span>
             </div>
@@ -330,7 +330,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
                       {statusLabel(earning.status)}
                     </span>
                   </div>
-                  <span className="text-right text-xs font-[320] text-[var(--text-primary)]">
+                  <span className="text-right text-xs font-[500] text-[var(--text-primary)]">
                     {formatMoney(earning.artist_amount_cents, earning.currency)}
                   </span>
                 </div>
@@ -374,7 +374,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
                   {statusLabel(payout.status)}
                 </span>
               </div>
-              <span className="text-right text-xs font-[320] text-[var(--text-primary)]">
+              <span className="text-right text-xs font-[500] text-[var(--text-primary)]">
                 {formatMoney(payout.amount_cents, payout.currency)}
               </span>
             </div>
