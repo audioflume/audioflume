@@ -27,7 +27,7 @@ export const playlistDetailActionButtonClass =
 
 export const playlistDetailPrimaryActionButtonClass = `${playlistDetailActionButtonClass} bg-[var(--text-primary)] text-[var(--bg-primary)]`;
 
-export const playlistDetailSecondaryActionButtonClass = `${playlistDetailActionButtonClass} border border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
+export const playlistDetailSecondaryActionButtonClass = `${playlistDetailActionButtonClass} border border-[var(--filmwave-border-color)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
 export const dangerButtonClass =
   "text-[var(--danger)] hover:bg-[var(--danger-hover)] hover:text-[var(--danger)]";
