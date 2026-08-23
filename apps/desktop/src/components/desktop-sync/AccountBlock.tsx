@@ -14,8 +14,8 @@ type AccountBlockProps = {
 };
 
 function getAccountInitial(account: DesktopAccount | null) {
-  const value = account?.name || account?.email || "F";
-  return value.trim().charAt(0).toUpperCase() || "F";
+  const value = account?.name || account?.email || "A";
+  return value.trim().charAt(0).toUpperCase() || "A";
 }
 
 export default function AccountBlock({
@@ -63,10 +63,10 @@ export default function AccountBlock({
             </div>
             <div>
               <span className="account-name">
-                {account?.name ?? (accountLoading ? "Loading..." : "Filmwave user")}
+                {account?.name ?? (accountLoading ? "Loading..." : "Audioflume user")}
               </span>
               <span className="account-email">
-                {account?.email ?? "Connected to Filmwave"}
+                {account?.email ?? "Connected to Audioflume"}
               </span>
             </div>
           </div>
