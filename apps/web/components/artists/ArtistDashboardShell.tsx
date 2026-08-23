@@ -436,7 +436,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
             {canSwitchArtists && artistSwitcherOpen ? (
               <div
                 role="menu"
-                className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 flex max-h-64 flex-col gap-px overflow-y-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.14)]"
+                className="absolute left-0 right-0 top-[calc(100%+6px)] z-50 flex max-h-64 flex-col gap-1.5 overflow-y-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-1.5 shadow-[0_12px_30px_rgba(0,0,0,0.14)]"
               >
                 {dashboardProfiles.map((profile) => {
                   const selected = profile.id === activeArtist.id;
