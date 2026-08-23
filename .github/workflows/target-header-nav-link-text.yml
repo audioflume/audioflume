@@ -1,0 +1,54 @@
+name: Target header nav link text
+
+on:
+  push:
+    branches:
+      - fix/header-nav-link-text-weight
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Patch header nav text
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('apps/web/components/Header.tsx')
+          s = p.read_text()
+
+          css_old = '''        .filmwave-web-header .filmwave-header-nav-link {\n          padding-right: 8px !important;\n          padding-left: 8px !important;\n        }'''
+          css_new = '''        .filmwave-web-header .filmwave-header-nav-link {\n          padding-right: 8px !important;\n          padding-left: 8px !important;\n        }\n\n        .filmwave-web-header .filmwave-header-nav-link-text {\n          font-weight: 500 !important;\n        }'''
+          if s.count(css_old) != 1:
+              raise SystemExit('header nav CSS anchor did not match exactly once')
+          s = s.replace(css_old, css_new, 1)
+
+          playlist_old = '''                      >\n                        {link.label}\n                      </Link>'''
+          playlist_new = '''                      >\n                        <span className="filmwave-header-nav-link-text">\n                          {link.label}\n                        </span>\n                      </Link>'''
+          if s.count(playlist_old) != 1:
+              raise SystemExit(f'playlist nav label matched {s.count(playlist_old)} times')
+          s = s.replace(playlist_old, playlist_new, 1)
+
+          standard_old = '''                  >\n                    {link.label}\n                  </Link>'''
+          standard_new = '''                  >\n                    <span className="filmwave-header-nav-link-text">\n                      {link.label}\n                    </span>\n                  </Link>'''
+          if s.count(standard_old) != 1:
+              raise SystemExit(f'primary nav label matched {s.count(standard_old)} times')
+          s = s.replace(standard_old, standard_new, 1)
+
+          p.write_text(s)
+          PY
+      - name: Verify only header changed
+        run: |
+          git diff --exit-code -- . ':!apps/web/components/Header.tsx'
+          grep -q 'filmwave-header-nav-link-text' apps/web/components/Header.tsx
+      - name: Commit patch
+        run: |
+          git config user.name github-actions[bot]
+          git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+          git add apps/web/components/Header.tsx
+          git commit -m "Target header nav link text weight" || exit 0
+          git push
