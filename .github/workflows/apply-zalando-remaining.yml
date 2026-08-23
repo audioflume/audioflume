@@ -1,0 +1,61 @@
+name: Apply remaining Zalando weight rules
+
+on:
+  push:
+    branches:
+      - style/zalando-weight-rules-v2
+
+permissions:
+  contents: write
+
+jobs:
+  apply:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Apply remaining source-level typography rules
+        run: python tools/apply_zalando_remaining.py
+
+      - name: Restore unrelated desktop sync hover token
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          path = Path('apps/desktop/src/components/desktop-sync/DesktopSyncLayout.css')
+          text = path.read_text()
+          old = '''html[data-theme="light"] .secondary-button:hover:not(:disabled) {
+            background: var(--sync-control-hover);
+            color: var(--text-primary);
+          }'''
+          new = '''html[data-theme="light"] .secondary-button:hover:not(:disabled) {
+            background: var(--bg-control-hover);
+            color: var(--text-primary);
+          }'''
+          if old in text:
+              path.write_text(text.replace(old, new, 1))
+          PY
+
+      - name: Run style guard
+        run: npm run style:guard
+
+      - name: Check diff whitespace
+        run: git diff --check
+
+      - name: Remove temporary audit files
+        run: |
+          rm -f tools/apply_zalando_remaining.py
+          rm -f .github/workflows/apply-zalando-remaining.yml
+
+      - name: Commit audited typography changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "Apply remaining Zalando weight rules"
+          git push origin HEAD:style/zalando-weight-rules-v2
