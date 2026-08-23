@@ -34,21 +34,22 @@ export function UserMenuPanel({
 }
 
 // ── Profile / identity row ────────────────────────────────────────────
-// Gradient pill initial + name + email in one compact row.
 export function UserMenuHeader({
   title,
   detail,
+  imageSrc,
 }: {
   title: ReactNode;
   detail: ReactNode;
+  imageSrc?: string | null;
 }) {
   const initial =
-    typeof title === "string" ? title.charAt(0).toUpperCase() : "F";
+    typeof title === "string" ? title.charAt(0).toUpperCase() : "A";
 
   return (
     <div className="filmwave-user-menu-profile">
       <span className="filmwave-user-menu-avatar" aria-hidden="true">
-        {initial}
+        {imageSrc ? <img src={imageSrc} alt="" /> : initial}
       </span>
       <span className="filmwave-user-menu-identity">
         <span className="filmwave-user-menu-name">{title}</span>
@@ -59,8 +60,16 @@ export function UserMenuHeader({
 }
 
 // ── Action group ──────────────────────────────────────────────────────
-export function UserMenuActions({ children }: { children: ReactNode }) {
-  return <div className="filmwave-user-menu-actions">{children}</div>;
+export function UserMenuActions({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
+  return (
+    <div className={cx("filmwave-user-menu-actions", className)}>{children}</div>
+  );
 }
 
 // ── Action row — text only, no icon, no arrow ─────────────────────────
@@ -116,49 +125,39 @@ export function UserMenuExitAction({
   );
 }
 
-// ── Theme toggle — segmented control ─────────────────────────────────
+// ── Appearance — single light/dark action row ─────────────────────────
 export function UserMenuThemeToggle({
   theme,
   onThemeChange,
-  darkIcon,
-  lightIcon,
 }: {
   theme: ThemeMode;
   onThemeChange: (theme: ThemeMode) => void;
-  darkIcon: ReactNode;
-  lightIcon: ReactNode;
 }) {
-  const isDark = theme === "dark";
-  const isLight = theme === "light";
+  const nextTheme: ThemeMode = theme === "dark" ? "light" : "dark";
+  const currentThemeLabel = theme === "dark" ? "Dark" : "Light";
 
   return (
-    <div className="filmwave-user-menu-theme-wrap">
-      <div className="filmwave-user-menu-theme" aria-label="Theme">
-        <button
-          type="button"
-          onClick={() => !isDark && onThemeChange("dark")}
-          className={cx(
-            "filmwave-user-menu-theme-option",
-            isDark && "is-active",
-          )}
-          aria-pressed={isDark}
-        >
-          {darkIcon}
-          <span>Dark</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => !isLight && onThemeChange("light")}
-          className={cx(
-            "filmwave-user-menu-theme-option",
-            isLight && "is-active",
-          )}
-          aria-pressed={isLight}
-        >
-          {lightIcon}
-          <span>Light</span>
-        </button>
-      </div>
-    </div>
+    <button
+      type="button"
+      onClick={() => onThemeChange(nextTheme)}
+      className="filmwave-dropdown-item filmwave-user-menu-theme-action"
+      aria-label={`Switch to ${nextTheme} mode`}
+    >
+      <span className="filmwave-user-menu-theme-icon" aria-hidden="true">
+        <svg width="16" height="16" viewBox="0 0 24 24">
+          <circle
+            cx="12"
+            cy="12"
+            r="8"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.6"
+          />
+          <path d="M12 4a8 8 0 0 0 0 16Z" fill="currentColor" />
+        </svg>
+      </span>
+      <span className="filmwave-user-menu-action-label">Appearance</span>
+      <span className="filmwave-user-menu-theme-value">{currentThemeLabel}</span>
+    </button>
   );
 }
