@@ -29,7 +29,7 @@ function getDisplayName(user: {
   return (
     [user.firstName, user.lastName].filter(Boolean).join(" ") ||
     user.username ||
-    "Filmwave member"
+    "Audioflume member"
   );
 }
 
@@ -107,7 +107,7 @@ export async function GET() {
         } catch {
           return [
             userId,
-            { name: "Filmwave member", imageUrl: null },
+            { name: "Audioflume member", imageUrl: null },
           ] as const;
         }
       }),
@@ -134,7 +134,7 @@ export async function GET() {
           like_count: likeCounts.get(playlist.id) ?? 0,
           seven_day_like_count: sevenDayLikeCounts.get(playlist.id) ?? 0,
           creator: usersById.get(playlist.clerk_user_id) ?? {
-            name: "Filmwave member",
+            name: "Audioflume member",
             imageUrl: null,
           },
         })),

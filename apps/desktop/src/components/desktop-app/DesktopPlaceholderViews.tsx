@@ -321,7 +321,7 @@ export function CuratedPlaylistsView() {
           <div className="desktop-view-eyebrow">Collections</div>
           <h1 className="desktop-view-title">Curated playlists</h1>
           <p className="desktop-view-description">
-            Filmwave editorial playlists organized by use case, production style, and energy.
+            Audioflume editorial playlists organized by use case, production style, and energy.
           </p>
         </div>
       </div>

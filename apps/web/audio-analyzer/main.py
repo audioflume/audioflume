@@ -27,7 +27,7 @@ if not ANALYZER_SECRET:
     raise RuntimeError("Missing ANALYZER_SECRET")
 
 supabase = create_client(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY)
-app = FastAPI(title="Filmwave Audio Analyzer")
+app = FastAPI(title="Audioflume Audio Analyzer")
 
 EditPointType = Literal[
     "first_hit",

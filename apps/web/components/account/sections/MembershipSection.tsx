@@ -61,7 +61,7 @@ export default function MembershipSection() {
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <Card>
-          <CardTitle title="Current membership" description="Your active Filmwave plan and license coverage." />
+          <CardTitle title="Current membership" description="Your active Audioflume plan and license coverage." />
           <div className="grid gap-4 p-4 md:grid-cols-[0.9fr_1.1fr]">
             <div>
               <div className="text-xs font-medium text-[var(--text-muted)]">Plan</div>
@@ -77,7 +77,7 @@ export default function MembershipSection() {
               <div className="text-xs font-medium text-[var(--text-muted)]">License</div>
               <div className="mt-1 text-sm font-medium leading-5 text-[var(--text-primary)]">{licenseLabel}</div>
               <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
-                Covers eligible Filmwave downloads for client, commercial, and creator projects.
+                Covers eligible Audioflume downloads for client, commercial, and creator projects.
               </p>
             </div>
           </div>
@@ -89,7 +89,7 @@ export default function MembershipSection() {
         </Card>
 
         <Card>
-          <CardTitle title="Usage snapshot" description="Live account signals from your Filmwave workspace." />
+          <CardTitle title="Usage snapshot" description="Live account signals from your Audioflume workspace." />
           <div className="grid gap-3 p-4 sm:grid-cols-2 xl:grid-cols-1">
             <Info label="Songs downloaded" value={formatCount(usage?.downloads ?? 0, "download")} />
             <Info label="Projects created" value={formatCount(usage?.projects ?? 0, "project")} />

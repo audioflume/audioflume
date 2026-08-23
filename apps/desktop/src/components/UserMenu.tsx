@@ -30,8 +30,8 @@ type MenuPosition = {
 };
 
 function getAccountInitial(account: DesktopAccount | null) {
-  const value = account?.name || account?.email || "F";
-  return value.trim().charAt(0).toUpperCase() || "F";
+  const value = account?.name || account?.email || "A";
+  return value.trim().charAt(0).toUpperCase() || "A";
 }
 
 export default function UserMenu({
@@ -51,7 +51,7 @@ export default function UserMenu({
   const panelRef = useRef<HTMLDivElement>(null);
 
   const accountLabel = isSignedIn
-    ? account?.name ?? (accountLoading ? "Loading account" : "Filmwave account")
+    ? account?.name ?? (accountLoading ? "Loading account" : "Audioflume account")
     : "Account";
 
   function updateMenuPosition() {

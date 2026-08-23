@@ -64,7 +64,7 @@ function getSongFilename(song: Song) {
   const urlFilename = getUrlFilename(song.audioUrl || song.playbackUrl || "");
   const extension = getFilenameExtension(urlFilename) ?? ".mp3";
   const title = sanitizeFilenamePart(song.title || "Untitled");
-  const artist = sanitizeFilenamePart(song.artist || "Filmwave");
+  const artist = sanitizeFilenamePart(song.artist || "Audioflume");
 
   return `${title} - ${artist}${extension}`;
 }

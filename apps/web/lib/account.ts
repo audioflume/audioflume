@@ -76,7 +76,7 @@ export function getProfileSeed(userId: string, user: ClerkAccountUser) {
     clerk_user_id: userId,
     first_name: firstName,
     last_name: lastName,
-    display_name: fullName ?? username ?? "Filmwave Member",
+    display_name: fullName ?? username ?? "Audioflume Member",
     company_name: null,
     primary_use: null,
     avatar_url: cleanOptionalString(user?.imageUrl, 500),

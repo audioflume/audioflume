@@ -1,8 +1,8 @@
-# Filmwave AI Interpretation Server
+# Audioflume AI Interpretation Server
 
 This is the local server endpoint for the Shorten Track AI interpretation prototype.
 
-The Filmwave web script sends the original source song to:
+The Audioflume web script sends the original source song to:
 
 ```txt
 http://localhost:8000/interpret
@@ -44,12 +44,12 @@ uvicorn server:app --host 127.0.0.1 --port 8000
 Then, in a second terminal:
 
 ```bash
-cd ~/filmwave-monorepo/apps/web
+cd ~/audioflume/apps/web
 npm run shorten:interpret-local -- --source "$HOME/Desktop/Rain Dance - Amber Caravan.wav" --length 30
 ```
 
-Expected result: the Filmwave request reaches the server, Stable Audio generates a WAV, and the web script writes `ai-interpretation-30s.wav`.
+Expected result: the Audioflume request reaches the server, Stable Audio generates a WAV, and the web script writes `ai-interpretation-30s.wav`.
 
 ## Current limitation
 
-This first wiring uses Stable Audio 3 text generation through the local CLI. The source audio is accepted by the endpoint, but Stable Audio is not yet using the source file as true audio conditioning in this adapter. This is still useful for validating the full Filmwave-to-local-model pipeline before deeper audio-conditioned interpretation work.
+This first wiring uses Stable Audio 3 text generation through the local CLI. The source audio is accepted by the endpoint, but Stable Audio is not yet using the source file as true audio conditioning in this adapter. This is still useful for validating the full Audioflume-to-local-model pipeline before deeper audio-conditioned interpretation work.

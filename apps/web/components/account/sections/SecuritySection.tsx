@@ -39,7 +39,7 @@ export default function SecuritySection() {
       <div className="grid gap-4 lg:grid-cols-[1fr_0.9fr]">
         <Card>
           <CardTitle title="Sign-in security" description="Secure identity controls are handled by Clerk." />
-          <Row title="Password" description="Change the password used to access your Filmwave account through Clerk.">
+          <Row title="Password" description="Change the password used to access your Audioflume account through Clerk.">
             <Button subtle onClick={() => openUserProfile()}>
               Manage password
             </Button>
@@ -67,7 +67,7 @@ export default function SecuritySection() {
       </div>
 
       <Card className="mt-4">
-        <CardTitle title="Recent security events" description="Lightweight Filmwave-side audit trail. Clerk remains the source of truth for auth sessions." />
+        <CardTitle title="Recent security events" description="Lightweight Audioflume-side audit trail. Clerk remains the source of truth for auth sessions." />
         <div className="divide-y divide-[var(--border)]">
           {events.length > 0 ? (
             events.map((event) => (
@@ -77,12 +77,12 @@ export default function SecuritySection() {
                   {event.description ? <div className="mt-1 text-xs text-[var(--text-muted)]">{event.description}</div> : null}
                 </div>
                 <div className="text-xs text-[var(--text-muted)]">
-                  {event.location_label || "Filmwave"} · {formatDate(event.created_at)}
+                  {event.location_label || "Audioflume"} · {formatDate(event.created_at)}
                 </div>
               </div>
             ))
           ) : (
-            <div className="px-4 py-6 text-sm text-[var(--text-muted)]">No Filmwave security events yet.</div>
+            <div className="px-4 py-6 text-sm text-[var(--text-muted)]">No Audioflume security events yet.</div>
           )}
         </div>
       </Card>

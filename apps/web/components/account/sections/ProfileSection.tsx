@@ -20,7 +20,7 @@ export default function ProfileSection() {
     resetProfileForm,
   } = useAccountProfile();
 
-  const fullName = form.display_name || user?.fullName || "Filmwave Member";
+  const fullName = form.display_name || user?.fullName || "Audioflume Member";
   const email = identityEmail || user?.primaryEmailAddress?.emailAddress || "No email on file";
   const initials = fullName
     .split(" ")
@@ -66,7 +66,7 @@ export default function ProfileSection() {
           </div>
         </div>
         <div className="grid gap-3 p-4">
-          <Info label="Account type" value="Filmwave Member" />
+          <Info label="Account type" value="Audioflume Member" />
           <Info label="Company / studio" value={form.company_name || "Not set"} />
           <Info label="Member since" value={formatDate(profile?.created_at)} />
         </div>

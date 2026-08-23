@@ -9,7 +9,11 @@ async function getDesktopUserId() {
   if (userId) return userId;
 
   if (process.env.NODE_ENV !== "production") {
-    return process.env.FILMWAVE_DESKTOP_DEV_USER_ID ?? null;
+    return (
+      process.env.AUDIOFLUME_DESKTOP_DEV_USER_ID ??
+      process.env.FILMWAVE_DESKTOP_DEV_USER_ID ??
+      null
+    );
   }
 
   return null;
@@ -18,9 +22,9 @@ async function getDesktopUserId() {
 function getFilenameFromUrl(url: string) {
   try {
     const filename = decodeURIComponent(new URL(url).pathname.split("/").pop() || "");
-    return filename || "filmwave-audio.wav";
+    return filename || "audioflume-audio.wav";
   } catch {
-    return "filmwave-audio.wav";
+    return "audioflume-audio.wav";
   }
 }
 

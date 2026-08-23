@@ -8,9 +8,9 @@ const DEFAULT_GROUP_DESCRIPTIONS: Record<string, string> = {
   "editor picks":
     "Handpicked playlists selected for strong storytelling, pacing, and cinematic range.",
   "featured playlists":
-    "A rotating selection of standout playlists chosen by the Filmwave team.",
+    "A rotating selection of standout playlists chosen by the Audioflume team.",
   "newly added":
-    "Freshly published playlists and recent additions to the Filmwave library.",
+    "Freshly published playlists and recent additions to the Audioflume library.",
   "popular right now":
     "The playlists filmmakers are exploring, saving, and using most right now.",
   tension:
