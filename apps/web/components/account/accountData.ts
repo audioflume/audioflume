@@ -17,7 +17,7 @@ export const navItems: {
 export const heroConfig: Record<AccountSection, HeroConfig> = {
   profile: {
     eyebrow: "Account",
-    title: "Your Filmwave profile.",
+    title: "Your Audioflume profile.",
     description: "Keep your account details, studio info, and creative use case aligned with the music library you build around.",
     image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1400&q=80",
     statA: "Creator profile",
@@ -26,7 +26,7 @@ export const heroConfig: Record<AccountSection, HeroConfig> = {
   },
   settings: {
     eyebrow: "Preferences",
-    title: "Shape how Filmwave behaves.",
+    title: "Shape how Audioflume behaves.",
     description: "Adjust the global settings that control your browsing layout, theme, playlist order, and sidebar project workflow.",
     image: "https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80",
     statA: "Synced prefs",
@@ -54,7 +54,7 @@ export const heroConfig: Record<AccountSection, HeroConfig> = {
   security: {
     eyebrow: "Access",
     title: "Keep the account protected.",
-    description: "Review sign-in controls, recovery details, and account access settings for your Filmwave workspace.",
+    description: "Review sign-in controls, recovery details, and account access settings for your Audioflume workspace.",
     image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80",
     statA: "Verified email",
     statB: "Clerk security",
