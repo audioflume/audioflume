@@ -98,7 +98,7 @@ export default function ProjectsBlock({
           <span className="sync-report-dot" />
           <div>
             <p>
-              {localRemovals.length} local removal{localRemovals.length === 1 ? "" : "s"} detected. Applying will remove these items from the Filmwave project only.
+              {localRemovals.length} local removal{localRemovals.length === 1 ? "" : "s"} detected. Applying will remove these items from the Audioflume project only.
             </p>
             <div className="local-removal-list">
               {localRemovals.slice(0, 5).map((removal) => (
@@ -110,7 +110,7 @@ export default function ProjectsBlock({
             </div>
             <div className="local-removal-actions">
               <button type="button" className="secondary-button" disabled={applyingLocalRemovals || syncing} onClick={onApplyLocalRemovals}>
-                {applyingLocalRemovals ? "Applying..." : "Apply to Filmwave"}
+                {applyingLocalRemovals ? "Applying..." : "Apply to Audioflume"}
               </button>
               <button type="button" className="secondary-button" disabled={applyingLocalRemovals || syncing} onClick={onIgnoreLocalRemovals}>
                 Ignore
@@ -144,7 +144,7 @@ export default function ProjectsBlock({
           <div className="project-row is-loading">
             <span className="project-check" aria-hidden="true" />
             <span className="project-main">
-              <span className="project-name">Loading Filmwave projects</span>
+              <span className="project-name">Loading Audioflume projects</span>
               <span className="project-description">Fetching your project file trees...</span>
             </span>
           </div>
@@ -153,7 +153,7 @@ export default function ProjectsBlock({
             <span className="project-check" aria-hidden="true" />
             <span className="project-main">
               <span className="project-name">No projects found</span>
-              <span className="project-description">Try switching sources or creating a project on Filmwave.</span>
+              <span className="project-description">Try switching sources or creating a project on Audioflume.</span>
             </span>
           </div>
         ) : (
