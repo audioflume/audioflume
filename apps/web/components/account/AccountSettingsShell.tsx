@@ -1,9 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import Footer from "@/components/Footer";
+import BackendPageHeader from "@/components/backend/BackendPageHeader";
 import { usePlayer } from "@/context/PlayerContext";
+import AccountSidebar from "./AccountSidebar";
 import { AccountHero } from "./AccountUI";
 import { heroConfig, navItems } from "./accountData";
 import type { AccountSection } from "./accountTypes";
@@ -13,7 +14,6 @@ import ProfileSection from "./sections/ProfileSection";
 import SecuritySection from "./sections/SecuritySection";
 import SettingsSection from "./sections/SettingsSection";
 import SupportSection from "./sections/SupportSection";
-import { SettingsSideNav } from "@filmwave/shared";
 
 type AccountSettingsShellProps = {
   section: AccountSection;
@@ -29,52 +29,45 @@ function AccountContent({ section }: { section: AccountSection }) {
 }
 
 export default function AccountSettingsShell({ section }: AccountSettingsShellProps) {
-  const pathname = usePathname();
   const { currentSong } = usePlayer();
   const activeNav = navItems.find((item) => item.section === section);
   const currentHero = heroConfig[section];
-  const hasPlayer = Boolean(currentSong);
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <div className="grid min-h-screen lg:grid-cols-[260px_1fr]">
-        <SettingsSideNav
-          kicker="Account"
-          title="Filmwave"
-          ariaLabel="Account sections"
-          linkComponent={Link}
-          className="lg:sticky lg:top-0 lg:h-screen"
-          items={navItems.map((item) => ({
-            label: item.label,
-            helper: item.helper,
-            href: item.href,
-            active: pathname === item.href || section === item.section,
-          }))}
-        />
+    <main className="filmwave-account-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+      <AccountSidebar />
 
-        <section className="min-w-0 px-5 pt-[88px] md:px-8 xl:px-10">
-          <div className="mx-auto max-w-[1180px]">
-            <div className="mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
-              <div className="text-xs text-[var(--text-muted)]">
-                Account / <span className="text-[var(--text-secondary)]">{activeNav?.label || "Account"}</span>
-              </div>
+      <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-8 xl:px-10">
+        <div className="mx-auto flex min-h-full max-w-[1180px] flex-col">
+          <BackendPageHeader
+            section="Account"
+            label={activeNav?.label || "Account"}
+            action={
               <Link
                 href="/music"
-                className="inline-flex h-8 items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                className="filmwave-backend-button filmwave-backend-button-secondary filmwave-backend-button-compact"
               >
-                Back to music
+                Back to Music
               </Link>
-            </div>
+            }
+          />
 
-            <AccountHero config={currentHero} />
-            <AccountContent section={section} />
+          <AccountHero config={currentHero} />
+          <AccountContent section={section} />
 
-            <div className="mt-16 border-t border-[var(--border)] pt-8" style={{ paddingBottom: hasPlayer ? "72px" : "8px" }}>
-              <Footer />
-            </div>
+          <div
+            className="mt-auto pt-16"
+            style={{ paddingBottom: currentSong ? "72px" : "8px" }}
+          >
+            <Footer
+              className="!px-0"
+              playerPadding={false}
+              showTopBorder={false}
+              pageGutter={false}
+            />
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
     </main>
   );
 }
