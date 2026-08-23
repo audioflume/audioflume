@@ -1,14 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import { useClerk } from "@clerk/nextjs";
+import { useClerk, useUser } from "@clerk/nextjs";
 import { useTheme } from "@/context/ThemeContext";
-import DarkMode from "@/components/icons/DarkMode";
-import LightMode from "@/components/icons/LightMode";
 import {
   UserMenuAction,
   UserMenuActions,
   UserMenuExitAction,
+  UserMenuHeader,
   UserMenuPanel,
   UserMenuThemeToggle,
 } from "@filmwave/shared";
@@ -35,26 +34,40 @@ function MenuLink({
 
 export default function UserMenu({ onClose }: { onClose?: () => void }) {
   const { signOut } = useClerk();
+  const { user } = useUser();
   const { theme, setTheme } = useTheme();
+  const displayName =
+    user?.fullName ||
+    user?.username ||
+    user?.primaryEmailAddress?.emailAddress ||
+    "Audioflume account";
 
   return (
     <UserMenuPanel>
+      <Link
+        href="/account/profile"
+        className="filmwave-user-menu-profile-link"
+        onClick={onClose}
+      >
+        <UserMenuHeader
+          title={displayName}
+          detail="View Profile"
+          imageSrc={user?.imageUrl}
+        />
+      </Link>
+
       <UserMenuActions>
-        <MenuLink href="/account/profile" label="Profile" onClose={onClose} />
         <MenuLink href="/account/settings" label="Settings" onClose={onClose} />
         <MenuLink href="/account/membership" label="Membership" onClose={onClose} />
         <MenuLink href="/account/payment" label="Payment" onClose={onClose} />
         <MenuLink href="/account/security" label="Security" onClose={onClose} />
         <MenuLink href="/account/support" label="Support & FAQ" onClose={onClose} />
-        <UserMenuExitAction label="Sign Out" onClick={() => signOut()} />
+        <UserMenuThemeToggle theme={theme} onThemeChange={setTheme} />
       </UserMenuActions>
 
-      <UserMenuThemeToggle
-        theme={theme}
-        onThemeChange={setTheme}
-        darkIcon={<DarkMode />}
-        lightIcon={<LightMode />}
-      />
+      <UserMenuActions className="filmwave-user-menu-signout">
+        <UserMenuExitAction label="Sign Out" onClick={() => signOut()} />
+      </UserMenuActions>
     </UserMenuPanel>
   );
 }

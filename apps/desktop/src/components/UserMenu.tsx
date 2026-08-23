@@ -1,12 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import DarkMode from "./icons/DarkMode";
-import LightMode from "./icons/LightMode";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 import {
   UserMenuAction,
   UserMenuActions,
   UserMenuExitAction,
+  UserMenuHeader,
   UserMenuPanel,
   UserMenuThemeToggle,
 } from "@filmwave/shared";
@@ -107,6 +106,14 @@ export default function UserMenu({
             }}
           >
             <UserMenuPanel>
+              {isSignedIn && (
+                <UserMenuHeader
+                  title={accountLabel}
+                  detail={account?.email ?? "Connected account"}
+                  imageSrc={account?.imageUrl}
+                />
+              )}
+
               <UserMenuActions>
                 <UserMenuAction
                   label="Desktop Sync"
@@ -126,7 +133,14 @@ export default function UserMenu({
                   }}
                 />
 
-                {isSignedIn && (
+                <UserMenuThemeToggle
+                  theme={theme}
+                  onThemeChange={onThemeChange}
+                />
+              </UserMenuActions>
+
+              {isSignedIn && (
+                <UserMenuActions className="filmwave-user-menu-signout">
                   <UserMenuExitAction
                     label="Sign Out"
                     onClick={() => {
@@ -134,15 +148,8 @@ export default function UserMenu({
                       void onSignOut();
                     }}
                   />
-                )}
-              </UserMenuActions>
-
-              <UserMenuThemeToggle
-                theme={theme}
-                onThemeChange={onThemeChange}
-                darkIcon={<DarkMode size={12} />}
-                lightIcon={<LightMode size={13} />}
-              />
+                </UserMenuActions>
+              )}
             </UserMenuPanel>
           </div>,
           document.body,
