@@ -11,7 +11,9 @@ type DesktopTokenPayload = {
 };
 
 function getDesktopTokenSecret() {
-  const secret = process.env.FILMWAVE_DESKTOP_TOKEN_SECRET;
+  const secret =
+    process.env.AUDIOFLUME_DESKTOP_TOKEN_SECRET ??
+    process.env.FILMWAVE_DESKTOP_TOKEN_SECRET;
 
   if (secret) return secret;
 
@@ -19,7 +21,7 @@ function getDesktopTokenSecret() {
     return "filmwave-desktop-dev-secret";
   }
 
-  throw new Error("Missing FILMWAVE_DESKTOP_TOKEN_SECRET");
+  throw new Error("Missing AUDIOFLUME_DESKTOP_TOKEN_SECRET");
 }
 
 function base64UrlEncode(value: string) {
