@@ -1,12 +1,28 @@
+.filmwave-song-card,
+.filmwave-song-card *,
+.desktop-song-card,
+.desktop-song-card * {
+  letter-spacing: normal;
+}
+
+.filmwave-song-card .filmwave-song-artist,
+.filmwave-song-card .filmwave-song-meta,
+.filmwave-song-card .filmwave-song-duration,
+.filmwave-song-card .filmwave-song-genre,
+.desktop-song-card .desktop-song-artist,
+.desktop-song-card .desktop-song-key-bpm,
+.desktop-song-card .desktop-song-duration,
+.desktop-song-card .desktop-song-genre,
+.desktop-song-card .desktop-song-genre-slot span {
+  color: var(--text-subtle);
+}
+
 .filmwave-song-genre,
 .desktop-song-genre,
 .desktop-song-genre-slot span {
-  color: var(--text-secondary);
   font-weight: 400;
 }
 
-.filmwave-song-title,
-.filmwave-song-artist,
 .filmwave-player-song-copy > div {
   letter-spacing: normal;
 }
