@@ -471,7 +471,7 @@ export default function AdminMusicReviewPage() {
                     <div className="text-[10px] font-[320] uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       {artist?.name || song.artist}
                     </div>
-                    <h2 className="filmwave-backend-section-title mt-1 flex items-center gap-1.5">
+                    <h2 className="filmwave-backend-section-title mt-1 flex items-center gap-1.5 font-[400]">
                       <span>{song.title}</span>
                       {selectedSummary?.license_type === "premium" ? <PremiumLabel /> : null}
                     </h2>
@@ -784,7 +784,7 @@ export default function AdminMusicReviewPage() {
                         </div>
 
                         <div className="min-w-0">
-                          <div className="flex min-w-0 items-center gap-1.5 font-medium leading-tight text-[var(--text-primary)]">
+                          <div className="flex min-w-0 items-center gap-1.5 font-[400] leading-tight text-[var(--text-primary)]">
                             <span className="min-w-0 truncate">{item.title}</span>
                             {item.license_type === "premium" ? <PremiumLabel /> : null}
                           </div>

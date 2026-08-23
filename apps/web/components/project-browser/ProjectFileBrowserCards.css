@@ -124,6 +124,11 @@
   color: var(--text-primary) !important;
 }
 
+.project-file-browser .project-song-file-title,
+.project-browser-row-title.project-song-file-title {
+  font-weight: 400 !important;
+}
+
 .project-file-browser .project-file-card-meta,
 .project-file-browser .project-folder-card-meta {
   grid-column: 2 !important;

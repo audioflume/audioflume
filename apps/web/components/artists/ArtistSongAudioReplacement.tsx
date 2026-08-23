@@ -202,7 +202,7 @@ export default function ArtistSongAudioReplacement({
 
         <div className="grid gap-5 p-5">
           <div>
-            <div className="text-sm font-[320] text-[var(--text-primary)]">
+            <div className="text-sm font-[400] text-[var(--text-primary)]">
               {song.title}
             </div>
             <div className="mt-1 text-xs font-[320] leading-5 text-[var(--text-muted)]">

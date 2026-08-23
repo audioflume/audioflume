@@ -375,7 +375,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <div className="truncate text-xs font-[320] text-[var(--text-primary)]">
+                      <div className="truncate text-xs font-[400] text-[var(--text-primary)]">
                         {track.title}
                       </div>
                       <div className="mt-1 text-[10px] font-[320] text-[var(--text-muted)]">

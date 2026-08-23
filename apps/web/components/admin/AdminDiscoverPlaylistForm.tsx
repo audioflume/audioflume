@@ -454,7 +454,7 @@ export default function AdminDiscoverPlaylistForm({
                     )}
                   </div>
                   <div className="min-w-0 flex-1">
-                    <div className="flex min-w-0 items-center gap-1.5 text-sm font-[320]">
+                    <div className="flex min-w-0 items-center gap-1.5 text-sm font-[400]">
                       <span className="min-w-0 truncate">{song.title}</span>
                       {song.licenseType === "premium" ? <PremiumLabel /> : null}
                     </div>

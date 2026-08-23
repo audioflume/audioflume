@@ -227,7 +227,7 @@ export default function SongRow({
         >
           <div
             title={safeSong.title}
-            className="truncate font-medium leading-tight text-[var(--text-primary)]"
+            className="truncate font-[400] leading-tight text-[var(--text-primary)]"
           >
             {safeSong.title}
           </div>

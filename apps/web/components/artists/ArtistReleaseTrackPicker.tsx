@@ -99,7 +99,7 @@ function ReleasePickerSongRow({
       >
         <BackendRowTitle secondary={song.artist}>
           <span className="flex min-w-0 items-center gap-1.5">
-            <span className="min-w-0 truncate">{song.title}</span>
+            <span className="min-w-0 truncate font-[400]">{song.title}</span>
             {song.licenseType === "premium" ? <PremiumLabel /> : null}
           </span>
         </BackendRowTitle>

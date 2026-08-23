@@ -486,7 +486,7 @@ function TopSongsCard({ songs }: { songs: SongRow[] }) {
               }`}
             >
               <div className="min-w-0 pr-4">
-                <div className="truncate text-xs font-[320] text-[var(--text-primary)]">
+                <div className="truncate text-xs font-[400] text-[var(--text-primary)]">
                   {song.title}
                 </div>
                 <div className="mt-1 truncate text-[10px] font-[320] text-[var(--text-muted)]">

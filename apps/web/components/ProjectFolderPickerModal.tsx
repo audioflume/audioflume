@@ -344,7 +344,7 @@ export default function ProjectFolderPickerModal({
                               className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs font-[320] text-[var(--text-secondary)]"
                             >
                               <MusicGlyph small />
-                              <span className="min-w-0 truncate font-medium">{song.title}</span>
+                              <span className="min-w-0 truncate font-[400]">{song.title}</span>
                             </div>
                           ))}
                         </>
@@ -389,7 +389,7 @@ export default function ProjectFolderPickerModal({
                                 className="flex h-8 flex-shrink-0 items-center gap-2 rounded-none px-2.5 text-xs font-[320] text-[var(--text-secondary)]"
                               >
                                 <MusicGlyph small />
-                                <span className="min-w-0 truncate font-medium">{song.title}</span>
+                                <span className="min-w-0 truncate font-[400]">{song.title}</span>
                               </div>
                             ))}
                           </>

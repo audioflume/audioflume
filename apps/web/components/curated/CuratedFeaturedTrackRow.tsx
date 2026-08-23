@@ -146,7 +146,7 @@ export default function CuratedFeaturedTrackRow({
       <CoverImage song={song} index={index} />
 
       <div className="min-w-0 flex-1">
-        <h3 className="flex min-w-0 items-center gap-1.5 text-[13px] font-[320] leading-none text-[var(--text-primary)]">
+        <h3 className="flex min-w-0 items-center gap-1.5 text-[13px] font-[400] leading-none text-[var(--text-primary)]">
           <span className="min-w-0 truncate">{song.title}</span>
           {song.licenseType === "premium" ? <PremiumLabel /> : null}
         </h3>

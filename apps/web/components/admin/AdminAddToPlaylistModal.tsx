@@ -275,7 +275,7 @@ export default function AdminAddToPlaylistModal({
                 <Image src={song.coverArt} alt={song.title} fill sizes="24px" className="object-cover" />
               ) : null}
             </span>
-            <span className="block max-w-[300px] truncate text-[12px] font-[320] tracking-[-0.015em] text-[var(--text-primary)]">
+            <span className="block max-w-[300px] truncate text-[12px] font-[400] tracking-[-0.015em] text-[var(--text-primary)]">
               {song.title} by {song.artist}
             </span>
           </div>
