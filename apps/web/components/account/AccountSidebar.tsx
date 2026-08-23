@@ -2,7 +2,6 @@
 
 import { usePathname } from "next/navigation";
 import {
-  BackendSidebarGroup,
   BackendSidebarHeading,
   BackendSidebarNavItem,
   BackendSidebarScrollArea,
@@ -32,10 +31,6 @@ export default function AccountSidebar() {
             ))}
           </div>
         </div>
-
-        <BackendSidebarGroup title="Audioflume" className="mt-8">
-          <BackendSidebarNavItem href="/music">Back to Music</BackendSidebarNavItem>
-        </BackendSidebarGroup>
       </BackendSidebarScrollArea>
     </BackendSidebarShell>
   );
