@@ -5,8 +5,7 @@ import Footer from "@/components/Footer";
 import BackendPageHeader from "@/components/backend/BackendPageHeader";
 import { usePlayer } from "@/context/PlayerContext";
 import AccountSidebar from "./AccountSidebar";
-import { AccountHero } from "./AccountUI";
-import { heroConfig, navItems } from "./accountData";
+import { navItems } from "./accountData";
 import type { AccountSection } from "./accountTypes";
 import MembershipSection from "./sections/MembershipSection";
 import PaymentSection from "./sections/PaymentSection";
@@ -31,7 +30,6 @@ function AccountContent({ section }: { section: AccountSection }) {
 export default function AccountSettingsShell({ section }: AccountSettingsShellProps) {
   const { currentSong } = usePlayer();
   const activeNav = navItems.find((item) => item.section === section);
-  const currentHero = heroConfig[section];
 
   return (
     <main className="filmwave-account-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
@@ -42,6 +40,7 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
           <BackendPageHeader
             section="Account"
             label={activeNav?.label || "Account"}
+            compact
             action={
               <Link
                 href="/music"
@@ -52,7 +51,6 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
             }
           />
 
-          <AccountHero config={currentHero} />
           <AccountContent section={section} />
 
           <div
