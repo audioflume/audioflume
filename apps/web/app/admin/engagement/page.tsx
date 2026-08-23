@@ -277,14 +277,14 @@ const DATASETS: Record<RangeKey, Dataset> = {
 function MetricCardBlock({ metric }: { metric: Metric }) {
   return (
     <div className="filmwave-backend-section flex min-h-[104px] flex-col justify-between p-4">
-      <div className="text-[11px] font-medium text-[var(--text-secondary)]">
+      <div className="text-[11px] text-[var(--text-secondary)] font-[320]">
         {metric.label}
       </div>
       <div>
-        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] leading-none tracking-[-0.04em] text-[var(--text-primary)] font-[200]">
           {metric.value}
         </div>
-        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]">
+        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px] font-[320]">
           <span className="text-[var(--text-muted)]">{metric.detail}</span>
           <span className="text-[var(--text-secondary)]">
             {metric.delta} vs previous
@@ -376,7 +376,7 @@ function ActivityChart({ data }: { data: ActivityPoint[] }) {
         {yValues.map((tick) => (
           <div
             key={`y-label-${tick.value}`}
-            className="pointer-events-none absolute -translate-y-1/2 text-right text-[10px] text-[var(--text-muted)]"
+            className="pointer-events-none absolute -translate-y-1/2 text-right text-[10px] text-[var(--text-muted)] font-[320]"
             style={{
               left: `calc(${(left / width) * 100}% - 25px)`,
               top: `${tick.yPercent}%`,
@@ -402,7 +402,7 @@ function ActivityChart({ data }: { data: ActivityPoint[] }) {
         {points.map((point) => (
           <div
             key={`x-label-${point.label}`}
-            className="pointer-events-none absolute -translate-x-1/2 text-[10px] text-[var(--text-muted)]"
+            className="pointer-events-none absolute -translate-x-1/2 text-[10px] text-[var(--text-muted)] font-[320]"
             style={{
               left: `${point.xPercent}%`,
               bottom: "0px",
@@ -455,13 +455,13 @@ function TopSongsCard({ songs }: { songs: SongRow[] }) {
       <div className="filmwave-backend-section-header-bordered">
         <div>
           <h2 className="filmwave-backend-section-title">Top performing songs</h2>
-          <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+          <div className="mt-1 text-[11px] text-[var(--text-muted)] font-[320]">
             Strongest play and download activity in the selected range
           </div>
         </div>
         <Link
           href="/admin/music-library"
-          className="text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] font-[320]"
         >
           View Library
         </Link>
@@ -469,7 +469,7 @@ function TopSongsCard({ songs }: { songs: SongRow[] }) {
 
       <div className="overflow-x-auto">
         <div className="min-w-[640px]">
-          <div className="grid grid-cols-[minmax(280px,1fr)_90px_100px_90px] items-center border-b border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
+          <div className="grid grid-cols-[minmax(280px,1fr)_90px_100px_90px] items-center border-b border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--text-secondary)] font-[320]">
             <span>Track</span>
             <span className="text-right">Plays</span>
             <span className="text-right">Downloads</span>
@@ -486,20 +486,20 @@ function TopSongsCard({ songs }: { songs: SongRow[] }) {
               }`}
             >
               <div className="min-w-0 pr-4">
-                <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+                <div className="truncate text-xs text-[var(--text-primary)] font-[320]">
                   {song.title}
                 </div>
-                <div className="mt-1 truncate text-[10px] text-[var(--text-muted)]">
+                <div className="mt-1 truncate text-[10px] text-[var(--text-muted)] font-[320]">
                   {song.artist}
                 </div>
               </div>
-              <div className="text-right text-xs text-[var(--text-secondary)]">
+              <div className="text-right text-xs text-[var(--text-secondary)] font-[320]">
                 {song.plays}
               </div>
-              <div className="text-right text-xs text-[var(--text-secondary)]">
+              <div className="text-right text-xs text-[var(--text-secondary)] font-[320]">
                 {song.downloads}
               </div>
-              <div className="text-right text-xs text-[var(--text-secondary)]">
+              <div className="text-right text-xs text-[var(--text-secondary)] font-[320]">
                 {song.conversion}
               </div>
             </div>
@@ -538,7 +538,7 @@ export default function AdminEngagementPage() {
           <div className="filmwave-backend-section-header-bordered flex-wrap">
             <div>
               <h2 className="filmwave-backend-section-title">Platform activity</h2>
-              <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+              <div className="mt-1 text-[11px] text-[var(--text-muted)] font-[320]">
                 {data.metrics[0].label} activity across the selected range
               </div>
             </div>
@@ -569,10 +569,10 @@ export default function AdminEngagementPage() {
                     : ""
                 }`}
               >
-                <div className="text-[11px] font-medium text-[var(--text-secondary)]">
+                <div className="text-[11px] text-[var(--text-secondary)] font-[320]">
                   {item.label}
                 </div>
-                <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[18px] tracking-[-0.03em] text-[var(--text-primary)] font-[200]">
                   {item.value}
                 </div>
               </div>
@@ -581,7 +581,7 @@ export default function AdminEngagementPage() {
 
           <ActivityChart data={data.activity} />
 
-          <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
+          <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)] font-[320]">
             Activity follows the same selected period as the summary metrics above.
           </div>
         </section>

@@ -61,7 +61,7 @@ html[data-theme="light"] .desktop-settings-view {
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 320;
   line-height: 1;
   text-align: left;
   cursor: pointer;
@@ -117,7 +117,7 @@ html[data-theme="light"] .desktop-settings-view {
   margin: 0;
   color: var(--text-primary);
   font-size: 24px;
-  font-weight: 500;
+  font-weight: 200;
   letter-spacing: -0.03em;
   line-height: 1.1;
 }
@@ -149,7 +149,7 @@ html[data-theme="light"] .desktop-settings-view {
   margin: 0;
   color: var(--text-primary);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 320;
   letter-spacing: -0.01em;
   line-height: 1.2;
 }
@@ -158,6 +158,7 @@ html[data-theme="light"] .desktop-settings-view {
   margin: 5px 0 0;
   color: var(--text-secondary);
   font-size: 12px;
+  font-weight: 320;
   line-height: 1.4;
 }
 
@@ -180,7 +181,7 @@ html[data-theme="light"] .desktop-settings-view {
 .status-row-label {
   color: var(--text-primary);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 320;
   letter-spacing: -0.01em;
 }
 
@@ -190,7 +191,7 @@ html[data-theme="light"] .desktop-settings-view {
   gap: 8px;
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 320;
 }
 
 .status-dot {
@@ -239,7 +240,7 @@ html[data-theme="light"] .desktop-settings-view {
   background: var(--sync-control-hover);
   color: var(--text-primary);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 320;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -257,7 +258,7 @@ html[data-theme="light"] .desktop-settings-view {
   display: block;
   color: var(--text-primary);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 320;
   line-height: 1;
 }
 
@@ -265,6 +266,7 @@ html[data-theme="light"] .desktop-settings-view {
   display: block;
   color: var(--text-secondary);
   font-size: 12px;
+  font-weight: 320;
   line-height: 1;
   margin-top: 4px;
 }
@@ -281,7 +283,7 @@ html[data-theme="light"] .desktop-settings-view {
   border-radius: 999px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 320;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -305,7 +307,7 @@ html[data-theme="light"] .desktop-settings-view {
   border-radius: 999px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 320;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -359,7 +361,7 @@ html[data-theme="light"] .desktop-settings-view {
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 320;
   line-height: 1;
   white-space: nowrap;
   cursor: pointer;
@@ -389,6 +391,7 @@ input {
   color: var(--text-primary);
   font-family: inherit;
   font-size: 12px;
+  font-weight: 320;
   outline: none;
   min-width: 0;
   max-width: 100%;
@@ -448,6 +451,7 @@ input:focus {
     monospace
   );
   font-size: 12px !important;
+  font-weight: 320;
   color: var(--text-secondary) !important;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -475,7 +479,7 @@ input:focus {
   gap: 10px;
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 500;
+  font-weight: 320;
   min-width: 0;
 }
 
@@ -513,6 +517,7 @@ input:focus {
   margin: 0;
   min-width: 0;
   font-size: 12px;
+  font-weight: 320;
   color: var(--text-secondary);
   line-height: 1.4;
 }
@@ -526,6 +531,7 @@ input:focus {
   gap: 4px;
   margin-top: 8px;
   font-size: 10px;
+  font-weight: 320;
   color: var(--text-muted);
   min-width: 0;
 }
@@ -561,7 +567,7 @@ input:focus {
   margin: 0;
   color: var(--text-primary);
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 320;
   letter-spacing: -0.01em;
 }
 
@@ -569,6 +575,7 @@ input:focus {
   margin: 5px 0 0;
   color: var(--text-secondary);
   font-size: 12px;
+  font-weight: 320;
   line-height: 1.4;
 }
 
@@ -625,7 +632,7 @@ button.project-row:hover,
   background: transparent;
   color: var(--text-primary);
   font-size: 10px;
-  font-weight: 700;
+  font-weight: 320;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -646,7 +653,7 @@ button.project-row:hover,
 .project-name {
   color: var(--text-primary);
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 320;
   line-height: 1.1;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -656,6 +663,7 @@ button.project-row:hover,
 .project-description {
   color: var(--text-secondary);
   font-size: 11px;
+  font-weight: 320;
   line-height: 1.2;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -668,7 +676,7 @@ button.project-row:hover,
   gap: 5px;
   color: var(--text-muted);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 320;
   white-space: nowrap;
 }
 
@@ -715,18 +723,20 @@ button.project-row:hover,
 
 .sync-card > .projects-panel:last-child .project-name {
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 320;
   letter-spacing: 0.02em;
 }
 
 .sync-card > .projects-panel:last-child .project-description {
   font-size: 10px;
+  font-weight: 320;
 }
 
 .sync-card > .projects-panel:last-child .project-meta span {
   border-radius: 4px;
   background: transparent;
   font-size: 9px;
+  font-weight: 320;
   letter-spacing: 0.03em;
   text-transform: uppercase;
 }

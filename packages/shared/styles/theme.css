@@ -73,7 +73,7 @@
   /* Canonical Filmwave section-title typography. */
   --filmwave-section-title-font-family: var(--font-zalando-sans), sans-serif;
   --filmwave-section-title-font-size: 22px;
-  --filmwave-section-title-font-weight: 400;
+  --filmwave-section-title-font-weight: 200;
   --filmwave-section-title-letter-spacing: -0.035em;
   --filmwave-section-title-line-height: 1;
 
@@ -88,7 +88,7 @@
   --filmwave-ui-control-text-active: var(--text-primary);
   --filmwave-ui-title-font-family: var(--font-zalando-sans), sans-serif;
   --filmwave-ui-title-font-size: clamp(18px, 1.45vw, 24px);
-  --filmwave-ui-title-font-weight: 400;
+  --filmwave-ui-title-font-weight: 200;
   --filmwave-ui-title-letter-spacing: -0.045em;
   --filmwave-ui-title-line-height: 1.1;
 

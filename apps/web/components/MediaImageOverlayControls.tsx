@@ -15,7 +15,7 @@ export function MediaImageChangeOverlay({
 }: MediaImageChangeOverlayProps) {
   return (
     <span className="pointer-events-none absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
-      <span className="whitespace-nowrap rounded-full bg-[rgba(0,0,0,0.58)] px-3 py-1.5 text-[10px] font-medium leading-none text-white shadow-[var(--shadow-ui)] backdrop-blur-[2px]">
+      <span className="whitespace-nowrap rounded-full bg-[rgba(0,0,0,0.58)] px-3 py-1.5 text-[10px] leading-none text-white shadow-[var(--shadow-ui)] backdrop-blur-[2px] font-[320]">
         {label}
       </span>
     </span>

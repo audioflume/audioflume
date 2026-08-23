@@ -669,7 +669,7 @@ function formatDuration(seconds: number) {
 
 function FieldLabel({ children }: { children: React.ReactNode }) {
   return (
-    <label className="mb-1.5 block text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+    <label className="mb-1.5 block text-[11px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-[320]">
       {children}
     </label>
   );
@@ -1536,7 +1536,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const titleAction = (
     <div className="hidden items-center gap-2 lg:flex">
       {uploadWarnings.length > 0 && !uploadComplete ? (
-        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-error-soft)] px-3 text-xs font-medium text-[var(--status-error)]">
+        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-error-soft)] px-3 text-xs text-[var(--status-error)] font-[320]">
           <WarningIcon />
           <span>
             {uploadWarnings.length} warning
@@ -1544,7 +1544,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           </span>
         </div>
       ) : (
-        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-success-soft)] px-3 text-xs font-medium text-[var(--status-success)]">
+        <div className="flex h-8 items-center gap-2 rounded-full bg-[var(--status-success-soft)] px-3 text-xs text-[var(--status-success)] font-[320]">
           <span className="h-2 w-2 rounded-full bg-[var(--status-success)]" />
           <span>Ready</span>
         </div>
@@ -1599,7 +1599,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         title={pageTitle}
         description={pageDescription}
       >
-        <p className="text-sm text-[var(--status-error)]">{loadError}</p>
+        <p className="text-sm text-[var(--status-error)] font-[320]">{loadError}</p>
       </AdminContentPage>
     );
   }
@@ -1631,7 +1631,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
         .admin-song-form-kicker {
           font-size: 11px;
-          font-weight: 500;
+          font-weight: 320;
           letter-spacing: 0.08em;
           text-transform: uppercase;
           color: var(--text-muted);
@@ -1841,7 +1841,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
 
               <div className="p-4">
-                <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
+                <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)] font-[320]">
                   {isEditMode
                     ? "Existing peak data is loaded from Supabase. Re-analyze only when needed."
                     : "Generated automatically from the selected audio file using the same 300-point peak format."}
@@ -1866,7 +1866,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Genre</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)] font-[320]">
                       {selectedGenres.length} selected
                     </span>
                   </div>
@@ -1880,7 +1880,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Region</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)] font-[320]">
                       {selectedRegions.length} selected
                     </span>
                   </div>
@@ -1894,7 +1894,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Scene</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)] font-[320]">
                       {selectedMoods.length} selected
                     </span>
                   </div>
@@ -1908,7 +1908,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Instrument</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
+                    <span className="text-[11px] text-[var(--text-muted)] font-[320]">
                       {selectedInstruments.length} selected
                     </span>
                   </div>
@@ -1923,7 +1923,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <div>
                     <div className="mb-2 flex items-center justify-between gap-4">
                       <FieldLabel>Build</FieldLabel>
-                      <span className="text-[11px] text-[var(--text-muted)]">
+                      <span className="text-[11px] text-[var(--text-muted)] font-[320]">
                         {selectedBuilds.length} selected
                       </span>
                     </div>
@@ -1937,7 +1937,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   <div>
                     <div className="mb-2 flex items-center justify-between gap-4">
                       <FieldLabel>Vocals</FieldLabel>
-                      <span className="text-[11px] text-[var(--text-muted)]">
+                      <span className="text-[11px] text-[var(--text-muted)] font-[320]">
                         {selectedVocals.length} selected
                       </span>
                     </div>
@@ -1978,7 +1978,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               <div className="grid gap-2 p-4">
                 {uploadWarnings.length > 0 && !uploadComplete ? (
                   <>
-                    <div className="rounded-lg bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
+                    <div className="rounded-lg bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f] font-[320]">
                       <div className="flex items-center gap-2 font-medium">
                         <WarningIcon />
                         <span>
@@ -1988,7 +1988,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                         </span>
                       </div>
 
-                      <div className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)]">
+                      <div className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)] font-[320]">
                         {uploadWarnings[0]}
                         {uploadWarnings.length > 1
                           ? ` + ${uploadWarnings.length - 1} more`
@@ -2007,7 +2007,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </div>
 
                     {warningsOpen && uploadWarnings.length > 1 && (
-                      <ul className="grid gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                      <ul className="grid gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)] font-[320]">
                         {uploadWarnings.map((warning) => (
                           <li key={warning}>{warning}</li>
                         ))}
@@ -2015,7 +2015,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     )}
                   </>
                 ) : (
-                  <div className="rounded-lg bg-[rgba(72,181,113,0.08)] p-3 text-xs font-medium text-[#48b571]">
+                  <div className="rounded-lg bg-[rgba(72,181,113,0.08)] p-3 text-xs text-[#48b571] font-[320]">
                     Ready to save
                   </div>
                 )}
@@ -2039,14 +2039,14 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                         isSaving={isSaving}
                       />
 
-                      <p className="text-xs leading-5 text-[var(--text-secondary)]">
+                      <p className="text-xs leading-5 text-[var(--text-secondary)] font-[320]">
                         {saveStatus}
                       </p>
                     </div>
                   )}
 
                   {savedRecordId && (
-                    <p className="truncate text-[11px] text-[var(--text-muted)]">
+                    <p className="truncate text-[11px] text-[var(--text-muted)] font-[320]">
                       Song ID: {savedRecordId}
                     </p>
                   )}
@@ -2054,7 +2054,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   {(uploadedFiles.audio ||
                     uploadedFiles.cover ||
                     uploadedFiles.stems.length > 0) && (
-                    <div className="grid gap-2 text-[11px] text-[var(--text-secondary)]">
+                    <div className="grid gap-2 text-[11px] text-[var(--text-secondary)] font-[320]">
                       {uploadedFiles.audio && (
                         <a
                           href={uploadedFiles.audio.url}

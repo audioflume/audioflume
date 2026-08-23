@@ -288,15 +288,15 @@ export default function ArtistReleaseTrackPicker({
         <div className="-mx-5 min-h-0 flex-1 overflow-x-auto overflow-y-auto border-t border-[var(--border-subtle)]">
           <div className="min-w-[900px]">
             {loading ? (
-              <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)]">
+              <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)] font-[320]">
                 Loading tracks...
               </div>
             ) : loadError ? (
-              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--danger)] font-[320]">
                 {loadError}
               </div>
             ) : displayedSongs.length === 0 ? (
-              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
+              <div className="flex min-h-[220px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)] font-[320]">
                 {search.trim() ? "No tracks match your search." : "No tracks are available."}
               </div>
             ) : (

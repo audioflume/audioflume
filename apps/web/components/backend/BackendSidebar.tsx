@@ -54,7 +54,7 @@ export function BackendSidebarScrollArea({
 
 export function BackendSidebarHeading({ children }: { children: ReactNode }) {
   return (
-    <div className="mb-[17px] px-3 font-[family-name:var(--font-zalando-sans)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
+    <div className="mb-[17px] px-3 font-[family-name:var(--font-zalando-sans)] text-[11px] uppercase leading-none tracking-[0.02em] text-[var(--text-primary)] font-[320]">
       {children}
     </div>
   );

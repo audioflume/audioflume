@@ -117,7 +117,7 @@ export default function AdminPlaylistShelfPickerModal({
       <div className="-mx-5 flex min-h-0 flex-1 flex-col">
         <div className="min-h-0 flex-1 overflow-y-auto p-3">
           {displayedPlaylists.length === 0 ? (
-            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)] font-[320]">
               {resolvedEmptyMessage}
             </div>
           ) : (
@@ -154,10 +154,10 @@ export default function AdminPlaylistShelfPickerModal({
                     </span>
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      <span className="block truncate text-sm tracking-[-0.02em] text-[var(--text-primary)] font-[320]">
                         {playlist.name}
                       </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)] font-[320]">
                         {alreadyAdded
                           ? "Already added"
                           : `${playlist.song_count || 0} songs`}

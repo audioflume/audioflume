@@ -97,6 +97,7 @@ export default function AdminPlaylistPageStyles() {
         padding-top: 0;
         padding-bottom: 0;
         font-size: 12px;
+        font-weight: 320;
       }
 
       /* Keep playlist name and kicker labels accessible but visually hidden. */
@@ -126,6 +127,7 @@ export default function AdminPlaylistPageStyles() {
         border-radius: 7px;
         font-family: inherit;
         font-size: 12px;
+        font-weight: 320;
         line-height: normal;
         text-transform: none;
         letter-spacing: normal;
@@ -154,7 +156,7 @@ export default function AdminPlaylistPageStyles() {
         padding-right: 18px;
         padding-left: 18px;
         font-size: 12px;
-        font-weight: 400;
+        font-weight: 320;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)

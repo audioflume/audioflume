@@ -289,7 +289,7 @@ export default function PublishPlaylistModal({
           margin: 0 0 8px;
           color: var(--text-muted);
           font-size: 10px;
-          font-weight: 600;
+          font-weight: 320;
           letter-spacing: 0.09em;
           text-transform: uppercase;
         }
@@ -297,7 +297,7 @@ export default function PublishPlaylistModal({
         .publish-playlist-modal-header h2 {
           margin: 0;
           font-size: 22px;
-          font-weight: 500;
+          font-weight: 200;
           letter-spacing: -0.035em;
           line-height: 1.1;
         }
@@ -306,6 +306,7 @@ export default function PublishPlaylistModal({
           margin: 9px 0 0;
           color: var(--text-muted);
           font-size: 12px;
+          font-weight: 320;
           line-height: 1.5;
         }
 
@@ -317,6 +318,7 @@ export default function PublishPlaylistModal({
           background: transparent;
           color: var(--text-secondary);
           font-size: 22px;
+          font-weight: 200;
           cursor: pointer;
         }
 
@@ -335,13 +337,14 @@ export default function PublishPlaylistModal({
 
         .publish-playlist-modal-label-row strong {
           font-size: 12px;
-          font-weight: 600;
+          font-weight: 320;
         }
 
         .publish-playlist-modal-label-row span,
         .publish-playlist-modal-footer p {
           color: var(--text-muted);
           font-size: 10.5px;
+          font-weight: 320;
         }
 
         .publish-playlist-category-grid {
@@ -357,6 +360,7 @@ export default function PublishPlaylistModal({
           color: var(--text-primary);
           font-family: inherit;
           font-size: 11.5px;
+          font-weight: 320;
           cursor: pointer;
         }
 

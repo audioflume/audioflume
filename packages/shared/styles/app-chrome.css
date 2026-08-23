@@ -20,6 +20,7 @@
   --filmwave-filter-trigger-height: 48px;
   --filmwave-filter-trigger-padding-x: 10px;
   --filmwave-filter-trigger-font-size: 13px;
+  font-weight: 320;
   --filmwave-filter-menu-radius: 12px;
 
   --filmwave-search-row-height: 48px;
@@ -187,7 +188,7 @@ body > header > div {
   padding: 0 16px;
   font-family: inherit;
   font-size: 12px !important;
-  font-weight: 500 !important;
+  font-weight: 320 !important;
   letter-spacing: normal !important;
   line-height: normal !important;
   text-decoration: none;
@@ -332,7 +333,7 @@ body > header > div {
 .filmwave-playlists-mega-feature-kicker {
   color: rgba(255, 255, 255, 0.66);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 320;
   letter-spacing: 0.07em;
   line-height: 1;
   text-transform: uppercase;
@@ -342,7 +343,7 @@ body > header > div {
   overflow: hidden;
   color: #fff;
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 200;
   letter-spacing: -0.035em;
   line-height: 1.05;
   text-overflow: ellipsis;
@@ -352,7 +353,7 @@ body > header > div {
 .filmwave-playlists-mega-feature-detail {
   color: rgba(255, 255, 255, 0.72);
   font-size: 11.5px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.25;
 }
 
@@ -368,7 +369,7 @@ body > header > div {
   display: block;
   color: var(--text-muted);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 320;
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
@@ -394,7 +395,7 @@ body > header > div {
 .filmwave-playlists-mega-page-link span {
   color: var(--text-primary);
   font-size: 13px;
-  font-weight: 500;
+  font-weight: 320;
   line-height: 1.25;
 }
 
@@ -402,7 +403,7 @@ body > header > div {
   margin-top: 4px;
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.25;
 }
 
@@ -432,7 +433,7 @@ body > header > div {
   margin: 16px 0 0;
   color: var(--text-primary);
   font-size: 18px;
-  font-weight: 500;
+  font-weight: 200;
   letter-spacing: -0.035em;
   line-height: 1.05;
 }
@@ -441,7 +442,7 @@ body > header > div {
   margin: 9px 0 18px;
   color: var(--text-secondary);
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.45;
 }
 
@@ -456,7 +457,7 @@ body > header > div {
   margin-top: auto;
   padding: 0 12px;
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 320;
   line-height: 1;
   text-decoration: none;
 }
@@ -497,7 +498,7 @@ body > header > div {
   padding-right: 2px;
   font-family: inherit;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1;
   text-decoration: none;
   transition: color 150ms ease;
@@ -562,7 +563,7 @@ body > header > div {
   background: var(--bg-control);
   color: var(--text-primary);
   font-size: 10px;
-  font-weight: 600;
+  font-weight: 320;
   line-height: 1;
 }
 

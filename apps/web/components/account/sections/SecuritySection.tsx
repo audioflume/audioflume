@@ -73,16 +73,16 @@ export default function SecuritySection() {
             events.map((event) => (
               <div key={event.id} className="grid gap-1 px-4 py-3.5 sm:grid-cols-[1fr_auto]">
                 <div>
-                  <div className="text-sm font-medium text-[var(--text-primary)]">{event.event_type}</div>
-                  {event.description ? <div className="mt-1 text-xs text-[var(--text-muted)]">{event.description}</div> : null}
+                  <div className="text-sm text-[var(--text-primary)] font-[320]">{event.event_type}</div>
+                  {event.description ? <div className="mt-1 text-xs text-[var(--text-muted)] font-[320]">{event.description}</div> : null}
                 </div>
-                <div className="text-xs text-[var(--text-muted)]">
+                <div className="text-xs text-[var(--text-muted)] font-[320]">
                   {event.location_label || "Audioflume"} · {formatDate(event.created_at)}
                 </div>
               </div>
             ))
           ) : (
-            <div className="px-4 py-6 text-sm text-[var(--text-muted)]">No Audioflume security events yet.</div>
+            <div className="px-4 py-6 text-sm text-[var(--text-muted)] font-[320]">No Audioflume security events yet.</div>
           )}
         </div>
       </Card>

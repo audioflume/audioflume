@@ -202,10 +202,10 @@ export default function ArtistSongAudioReplacement({
 
         <div className="grid gap-5 p-5">
           <div>
-            <div className="text-sm font-medium text-[var(--text-primary)]">
+            <div className="text-sm text-[var(--text-primary)] font-[320]">
               {song.title}
             </div>
-            <div className="mt-1 text-xs leading-5 text-[var(--text-muted)]">
+            <div className="mt-1 text-xs leading-5 text-[var(--text-muted)] font-[320]">
               {pendingApproval
                 ? "A replacement master will be sent for approval while the current audio remains live."
                 : resetsReview
@@ -235,7 +235,7 @@ export default function ArtistSongAudioReplacement({
               Choose Audio
             </button>
 
-            <div className="min-w-0 text-xs text-[var(--text-muted)]">
+            <div className="min-w-0 text-xs text-[var(--text-muted)] font-[320]">
               {analyzing
                 ? "Analyzing audio..."
                 : file
@@ -245,9 +245,9 @@ export default function ArtistSongAudioReplacement({
           </div>
 
           {error ? (
-            <div className="text-xs text-[var(--status-error,#dc584f)]">{error}</div>
+            <div className="text-xs text-[var(--status-error,#dc584f)] font-[320]">{error}</div>
           ) : message ? (
-            <div className="text-xs text-[var(--status-success,#48b571)]">{message}</div>
+            <div className="text-xs text-[var(--status-success,#48b571)] font-[320]">{message}</div>
           ) : null}
         </div>
       </section>

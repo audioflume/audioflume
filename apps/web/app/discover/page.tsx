@@ -541,7 +541,7 @@ export default function DiscoverPage() {
                   >
                     <ChevronRightIcon size={14} />
                   </button>
-                  <span className="ml-[8px] text-[10px] font-medium leading-none [font-variant-numeric:tabular-nums]">
+                  <span className="ml-[8px] text-[10px] leading-none [font-variant-numeric:tabular-nums] font-[320]">
                     {activeFeaturedIndex + 1}/{featuredArtistCount}
                   </span>
                 </div>

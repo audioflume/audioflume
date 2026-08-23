@@ -617,7 +617,7 @@ export default function EditPointWaveformReview({
         .cue-point-dirty-state {
           min-height: 14px;
           font-size: 11px;
-          font-weight: 500;
+          font-weight: 320;
           line-height: 1;
           color: var(--status-warning);
         }
@@ -736,11 +736,11 @@ export default function EditPointWaveformReview({
 
       <div className="cue-point-review-header mb-4">
         <div className="min-w-0">
-          <div className="text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+          <div className="text-[11px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-[320]">
             Waveform Review
           </div>
 
-          <p className="mt-1 max-w-[560px] text-xs text-[var(--text-secondary)]">
+          <p className="mt-1 max-w-[560px] text-xs text-[var(--text-secondary)] font-[320]">
             Spacebar toggles playback. Drag cue points, drag the playhead, or
             set a marker to the current playhead time.
           </p>
@@ -777,7 +777,7 @@ export default function EditPointWaveformReview({
                 type="button"
                 onClick={saveEditPoints}
                 disabled={isSaving || !hasChanges}
-                className="h-8 rounded-full border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+                className="h-8 rounded-full border border-[var(--border)] px-4 text-xs text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent font-[320]"
               >
                 {isSaving ? "Saving..." : "Save Cue Points"}
               </button>
@@ -857,7 +857,7 @@ export default function EditPointWaveformReview({
                 />
               ))
             ) : (
-              <div className="w-full text-center text-xs text-[var(--text-muted)]">
+              <div className="w-full text-center text-xs text-[var(--text-muted)] font-[320]">
                 No waveform peak data available.
               </div>
             )}
@@ -915,7 +915,7 @@ export default function EditPointWaveformReview({
 
       <div className="cue-point-table-shell mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
         <div>
-          <div className="cue-point-row-grid border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+          <div className="cue-point-row-grid border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-[320]">
             <div>Marker</div>
             <div>Play</div>
             <div>Set</div>
@@ -926,7 +926,7 @@ export default function EditPointWaveformReview({
           </div>
 
           {sortedMarkers.length === 0 ? (
-            <div className="px-3 py-5 text-xs text-[var(--text-secondary)]">
+            <div className="px-3 py-5 text-xs text-[var(--text-secondary)] font-[320]">
               No cue points yet. Use the add buttons above to create markers at
               the current playhead time.
             </div>
@@ -950,7 +950,7 @@ export default function EditPointWaveformReview({
                     <div className="truncate font-medium text-[var(--text-primary)]">
                       {marker.label}
                     </div>
-                    <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                    <div className="mt-1 truncate text-[11px] text-[var(--text-muted)] font-[320]">
                       {confidenceLabel}
                     </div>
                   </div>
@@ -1018,7 +1018,7 @@ export default function EditPointWaveformReview({
                     </button>
                   </div>
 
-                  <div className="cue-point-source-column truncate text-center text-[11px] capitalize text-[var(--text-muted)]">
+                  <div className="cue-point-source-column truncate text-center text-[11px] capitalize text-[var(--text-muted)] font-[320]">
                     {marker.source}
                   </div>
 
@@ -1042,7 +1042,7 @@ export default function EditPointWaveformReview({
       </div>
 
       {saveMessage && (
-        <p className="mt-3 text-xs text-[var(--text-secondary)]">
+        <p className="mt-3 text-xs text-[var(--text-secondary)] font-[320]">
           {saveMessage}
         </p>
       )}

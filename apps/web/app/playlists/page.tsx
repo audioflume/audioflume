@@ -1051,14 +1051,15 @@ export default function PlaylistsPage() {
         .playlists-page { position: relative; margin-left: var(--sidebar-width); margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); transition: margin-left 0.2s ease; }
         .playlists-shell { position: relative; z-index: 1; padding: 0 32px; }
         .playlists-hero { display: block; padding: 88px 0 0; }
-        .playlists-kicker { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
-        .playlists-title { margin-top: 8px; max-width: 640px; font-family: var(--font-zalando-sans); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
-        .playlists-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
+        .playlists-kicker { font-size: 10px; font-weight: 320; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+        .playlists-title { margin-top: 8px; max-width: 640px; font-family: var(--font-zalando-sans); font-size: 56px; font-weight: 400; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
+        .playlists-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px;
+ font-weight: 320; color: var(--text-secondary); }
         .playlists-dot { color: var(--text-muted); }
         .playlists-control-bar { min-height: 34px; display: flex; align-items: center; justify-content: flex-end; gap: 8px; margin-top: -34px; margin-bottom: 32px; }
         .playlists-control-left { display: none; }
         .playlists-control-right { display: flex; align-items: center; gap: 8px; }
-        .playlists-control-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
+        .playlists-control-label { font-size: 10px; font-weight: 320; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
         .playlist-action-btn { display: none; }
 
         /* 28px to match project page icon buttons */
@@ -1084,9 +1085,10 @@ export default function PlaylistsPage() {
         }
 
         .playlist-edit-banner { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; margin-bottom: 24px; padding: 0 16px; border: 1px dashed var(--border); border-radius: 16px; background: var(--bg-secondary); }
-        .playlist-edit-banner span { font-size: 13px; color: var(--text-secondary); }
+        .playlist-edit-banner span { font-size: 13px;
+ font-weight: 320; color: var(--text-secondary); }
         .playlist-edit-actions { display: flex; align-items: center; gap: 8px; }
-        .playlist-edit-actions button { height: 30px; border-radius: 999px; padding: 0 15px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.15s ease, background 0.15s ease; }
+        .playlist-edit-actions button { height: 30px; border-radius: 999px; padding: 0 15px; border: none; font-size: 12px; font-weight: 320; cursor: pointer; transition: opacity 0.15s ease, background 0.15s ease; }
         .playlist-edit-cancel { background: var(--bg-tertiary); color: var(--text-primary); }
         .playlist-edit-cancel:hover { background: var(--bg-hover); }
         .playlist-edit-save { background: var(--text-primary); color: var(--bg-primary); }
@@ -1103,18 +1105,18 @@ export default function PlaylistsPage() {
         .playlist-gallery-art img, .playlist-row-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
         .playlist-gallery-art img { transition: transform 0.7s ease; }
         .playlist-gallery-card:hover .playlist-gallery-art img, .playlist-gallery-card.is-menu-open .playlist-gallery-art img { transform: scale(1.025); }
-        .playlist-gallery-letters { position: absolute; left: 18px; bottom: 18px; z-index: 1; font-family: var(--font-zalando-sans); font-size: 44px; font-weight: 500; line-height: 0.9; letter-spacing: -0.07em; color: rgba(255, 255, 255, 0.12); pointer-events: none; }
+        .playlist-gallery-letters { position: absolute; left: 18px; bottom: 18px; z-index: 1; font-family: var(--font-zalando-sans); font-size: 44px; font-weight: 200; line-height: 0.9; letter-spacing: -0.07em; color: rgba(255, 255, 255, 0.12); pointer-events: none; }
         .playlist-gallery-top-row { position: relative; z-index: 4; display: flex; justify-content: flex-end; padding: 16px; }
         .playlist-gallery-arrow { display: flex; width: 32px; height: 32px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: white; backdrop-filter: blur(12px); transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease; }
         .playlist-gallery-card:hover .playlist-gallery-arrow, .playlist-gallery-card.is-menu-open .playlist-gallery-arrow { background: white; color: black; }
         .playlist-gallery-content { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 4; }
-        .playlist-gallery-kicker { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.52); }
-        .playlist-gallery-content h3 { margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-zalando-sans); font-size: 25px; font-weight: 500; line-height: 1.15; letter-spacing: -0.055em; color: white; }
-        .playlist-gallery-content p { margin-top: 12px; font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.58); }
+        .playlist-gallery-kicker { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 320; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.52); }
+        .playlist-gallery-content h3 { margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-zalando-sans); font-size: 25px; font-weight: 200; line-height: 1.15; letter-spacing: -0.055em; color: white; }
+        .playlist-gallery-content p { margin-top: 12px; font-size: 11px; font-weight: 320; color: rgba(255, 255, 255, 0.58); }
         .playlist-rename-input { box-sizing: border-box; width: 100%; min-width: 0; height: auto; border: 0 !important; border-radius: 0 !important; outline: 0 !important; background: transparent !important; padding: 0 !important; color: var(--text-primary); box-shadow: none !important; font-family: inherit; }
         .playlist-rename-input:focus { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
-        .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-zalando-sans); font-size: 13px; font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
-        .playlist-row-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; letter-spacing: normal; }
+        .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-zalando-sans); font-size: 13px; font-weight: 320; line-height: 1.1; letter-spacing: -0.035em; }
+        .playlist-row-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 320; line-height: 1.35; letter-spacing: normal; }
         .playlist-gallery-handle { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); }
         .playlist-gallery-card.is-reordering .playlist-gallery-art-wrap { border-style: dashed; }
         .playlist-index { display: flex; flex-direction: column; gap: 8px; }
@@ -1124,12 +1126,14 @@ export default function PlaylistsPage() {
         .playlist-index-row.is-reordering { grid-template-columns: 16px 40px 50px minmax(0, 1fr) minmax(84px, 120px); padding-right: 18px; }
         .playlist-index-row:hover, .playlist-index-row-shell:hover .playlist-index-row { background: var(--bg-hover); border-color: var(--border); transform: translateY(-1px); }
         .playlist-row-handle { width: 16px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
-        .playlist-row-number { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.05em; }
+        .playlist-row-number { font-size: 10px; font-weight: 320; color: var(--text-muted); letter-spacing: 0.05em; }
         .playlist-row-cover { position: relative; width: 50px; height: 50px; border-radius: 10px; overflow: hidden; background: var(--bg-secondary); }
         .playlist-row-main { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-        .playlist-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 500; color: var(--text-primary); }
-        .playlist-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--text-muted); }
-        .playlist-row-count { text-align: right; font-size: 11px; color: var(--text-secondary); }
+        .playlist-row-main span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 14px; font-weight: 320; color: var(--text-primary); }
+        .playlist-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px;
+ font-weight: 320; color: var(--text-muted); }
+        .playlist-row-count { text-align: right; font-size: 11px;
+ font-weight: 320; color: var(--text-secondary); }
         .playlist-card-menu-wrap { position: absolute; z-index: 12; top: 16px; left: 16px; }
         .playlist-index-row-shell .playlist-card-menu-wrap { top: 50%; left: auto; right: 12px; transform: translateY(-50%); }
         .playlist-menu-btn { opacity: 0; transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
@@ -1149,8 +1153,9 @@ export default function PlaylistsPage() {
         .playlist-create-mark { width: 38px; height: 38px; border-radius: 0; display: flex; align-items: center; justify-content: center; background: var(--bg-card); color: var(--text-primary); transition: background 0.15s ease; }
         .playlist-create-card:hover .playlist-create-mark, .playlist-create-row:hover .playlist-create-mark { background: var(--bg-hover-strong); }
         .playlist-create-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-        .playlist-create-copy span { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-        .playlist-create-copy small { font-size: 11px; color: var(--text-secondary); }
+        .playlist-create-copy span { font-size: 14px; font-weight: 320; color: var(--text-primary); }
+        .playlist-create-copy small { font-size: 11px;
+ font-weight: 320; color: var(--text-secondary); }
         .playlist-deleting-overlay { position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; border-radius: inherit; background: var(--media-overlay-strong); pointer-events: none; }
         .drag-preview-card { width: 320px; overflow: hidden; border-radius: 18px; transform: scale(1.04); box-shadow: 0 24px 80px var(--media-overlay-heavy); }
         .drag-preview-card .playlist-gallery-art-wrap { overflow: hidden; border-radius: 18px; }
@@ -1179,7 +1184,8 @@ export default function PlaylistsPage() {
           .playlists-control-bar { margin-top: -34px; margin-bottom: 32px; }
           .playlist-gallery, .playlist-skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
           .playlist-gallery-art-wrap, .playlist-create-card, .playlist-skeleton-gallery-art { min-height: 188px; }
-          .playlist-gallery-content h3 { font-size: 23px; }
+          .playlist-gallery-content h3 { font-size: 23px;
+ font-weight: 200; }
           .drag-preview-row { width: calc(100vw - var(--sidebar-width) - 36px); }
         }
         @media (max-width: 520px) {
@@ -1322,10 +1328,10 @@ export default function PlaylistsPage() {
 
           {playlistsError && !showSkeleton ? (
             <div className="flex min-h-[280px] flex-col items-center justify-center gap-3 text-center">
-              <div className="text-sm font-medium text-[var(--text-primary)]">
+              <div className="text-sm text-[var(--text-primary)] font-[320]">
                 Couldn&apos;t load playlists
               </div>
-              <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+              <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)] font-[320]">
                 {playlistsError}
               </div>
               <button

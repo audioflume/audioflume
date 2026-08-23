@@ -275,7 +275,7 @@ export default function AdminAddToPlaylistModal({
                 <Image src={song.coverArt} alt={song.title} fill sizes="24px" className="object-cover" />
               ) : null}
             </span>
-            <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+            <span className="block max-w-[300px] truncate text-[12px] tracking-[-0.015em] text-[var(--text-primary)] font-[320]">
               {song.title} by {song.artist}
             </span>
           </div>
@@ -308,7 +308,7 @@ export default function AdminAddToPlaylistModal({
 
             {!loading && !selectedLoading && displayedError ? (
               <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
-                <div className="text-xs font-medium text-[var(--danger)]">{displayedError}</div>
+                <div className="text-xs text-[var(--danger)] font-[320]">{displayedError}</div>
                 {playlistsError ? (
                   <BackendButton type="button" compact onClick={refetchPlaylists}>
                     Try Again
@@ -318,7 +318,7 @@ export default function AdminAddToPlaylistModal({
             ) : null}
 
             {!loading && !selectedLoading && !displayedError && displayedPlaylists.length === 0 ? (
-              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)] font-[320]">
                 {search.trim()
                   ? "No curated playlists match your search."
                   : "No curated playlists yet. Create one in Playlist Manager."}
@@ -356,10 +356,10 @@ export default function AdminAddToPlaylistModal({
                         )}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                        <span className="block truncate text-sm tracking-[-0.02em] text-[var(--text-primary)] font-[320]">
                           {playlist.name}
                         </span>
-                        <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                        <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)] font-[320]">
                           {isSelected ? "Added" : "Click to add"}
                         </span>
                       </span>

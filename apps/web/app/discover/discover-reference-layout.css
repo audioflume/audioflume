@@ -150,6 +150,7 @@ body:has(.discover-page-root) .discover-content > .discover-ready-to-cut-section
   top: 10.6%;
   left: 0;
   font-size: clamp(39px, 4.55vw, 61px);
+  font-weight: 400;
   letter-spacing: -0.045em;
   line-height: 0.94;
 }
@@ -202,7 +203,7 @@ body:has(.discover-page-root) .discover-content > .discover-ready-to-cut-section
   color: var(--text-primary);
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(11px, 0.8vw, 14px);
-  font-weight: 500;
+  font-weight: 320;
   letter-spacing: normal;
   line-height: 1.15;
   text-transform: uppercase;
@@ -309,6 +310,7 @@ body:has(.discover-page-root) .discover-content > .discover-ready-to-cut-section
   width: 100%;
   max-width: none;
   font-size: clamp(34px, 3vw, 42px);
+  font-weight: 400;
   letter-spacing: -0.045em;
   line-height: 0.96;
   white-space: nowrap;
@@ -382,6 +384,7 @@ body:has(.discover-page-root) .discover-content > .discover-ready-to-cut-section
     position: relative;
     inset: auto;
     font-size: clamp(36px, 6vw, 54px);
+    font-weight: 400;
   }
 
   .discover-reference-intro-title .curated-video-hero-primary-copy {

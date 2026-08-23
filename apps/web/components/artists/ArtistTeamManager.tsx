@@ -274,7 +274,7 @@ export default function ArtistTeamManager({
             className="grid gap-3 px-5 pb-5 md:grid-cols-[minmax(0,1fr)_170px_auto] md:items-end"
           >
             <label className="block">
-              <span className="mb-2 block text-[11px] font-medium text-[var(--text-secondary)]">
+              <span className="mb-2 block text-[11px] text-[var(--text-secondary)] font-[320]">
                 Email
               </span>
               <input
@@ -288,7 +288,7 @@ export default function ArtistTeamManager({
             </label>
 
             <label className="block">
-              <span className="mb-2 block text-[11px] font-medium text-[var(--text-secondary)]">
+              <span className="mb-2 block text-[11px] text-[var(--text-secondary)] font-[320]">
                 Access
               </span>
               <select
@@ -316,13 +316,13 @@ export default function ArtistTeamManager({
       ) : null}
 
       {message ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--text-primary)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--text-primary)] font-[320]">
           {message}
         </div>
       ) : null}
 
       {error ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--text-primary)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--text-primary)] font-[320]">
           {error}
         </div>
       ) : null}
@@ -331,18 +331,18 @@ export default function ArtistTeamManager({
         <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Team</h2>
           {!loading ? (
-            <span className="text-[10px] text-[var(--text-muted)]">
+            <span className="text-[10px] text-[var(--text-muted)] font-[320]">
               {members.length} {members.length === 1 ? "member" : "members"}
             </span>
           ) : null}
         </div>
 
         {loading ? (
-          <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)] font-[320]">
             Loading team...
           </div>
         ) : members.length === 0 ? (
-          <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--text-muted)] font-[320]">
             No team members found.
           </div>
         ) : (
@@ -371,20 +371,20 @@ export default function ArtistTeamManager({
 
                   <div className="min-w-[180px] flex-1">
                     <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs font-medium text-[var(--text-primary)]">
+                      <span className="text-xs text-[var(--text-primary)] font-[320]">
                         {member.display_name}
                       </span>
                       {member.is_current_user ? (
-                        <span className="text-[9px] text-[var(--text-muted)]">
+                        <span className="text-[9px] text-[var(--text-muted)] font-[320]">
                           You
                         </span>
                       ) : null}
                     </div>
-                    <div className="mt-1 text-[11px] text-[var(--text-secondary)]">
+                    <div className="mt-1 text-[11px] text-[var(--text-secondary)] font-[320]">
                       {member.email || "Email unavailable"}
                     </div>
                     {member.created_at ? (
-                      <div className="mt-1 text-[9px] text-[var(--text-muted)]">
+                      <div className="mt-1 text-[9px] text-[var(--text-muted)] font-[320]">
                         Added {formatJoinedAt(member.created_at)}
                       </div>
                     ) : null}
@@ -419,7 +419,7 @@ export default function ArtistTeamManager({
                       </button>
                     </div>
                   ) : (
-                    <span className="shrink-0 text-[11px] text-[var(--text-secondary)]">
+                    <span className="shrink-0 text-[11px] text-[var(--text-secondary)] font-[320]">
                       {formatRole(member.role)}
                     </span>
                   )}
@@ -450,10 +450,10 @@ export default function ArtistTeamManager({
                   }`}
                 >
                   <div className="min-w-[180px] flex-1">
-                    <div className="text-xs font-medium text-[var(--text-primary)]">
+                    <div className="text-xs text-[var(--text-primary)] font-[320]">
                       {invitation.email}
                     </div>
-                    <div className="mt-1 text-[9px] text-[var(--text-muted)]">
+                    <div className="mt-1 text-[9px] text-[var(--text-muted)] font-[320]">
                       Pending · {formatRole(invitation.role)} · {formatJoinedAt(invitation.created_at)}
                     </div>
                   </div>

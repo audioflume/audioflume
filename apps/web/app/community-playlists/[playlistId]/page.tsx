@@ -380,6 +380,7 @@ export default function CommunityPlaylistDetailPage() {
           cursor: pointer;
           font: inherit;
           font-size: 13px;
+          font-weight: 320;
           transition: color 150ms ease;
         }
 
@@ -416,7 +417,7 @@ export default function CommunityPlaylistDetailPage() {
         .community-detail-kicker {
           color: var(--text-muted);
           font-size: 10px;
-          font-weight: 500;
+          font-weight: 320;
           letter-spacing: 0.1em;
           text-transform: uppercase;
         }
@@ -427,7 +428,7 @@ export default function CommunityPlaylistDetailPage() {
           color: var(--text-primary);
           font-family: var(--font-zalando-sans);
           font-size: 56px;
-          font-weight: 500;
+          font-weight: 400;
           line-height: 0.94;
           letter-spacing: -0.055em;
         }
@@ -440,6 +441,7 @@ export default function CommunityPlaylistDetailPage() {
           margin-top: 16px;
           color: var(--text-secondary);
           font-size: 11px;
+          font-weight: 320;
         }
 
         .community-detail-creator {
@@ -542,13 +544,14 @@ export default function CommunityPlaylistDetailPage() {
           margin: 0;
           color: var(--text-primary);
           font-size: 14px;
-          font-weight: 500;
+          font-weight: 320;
         }
 
         .community-detail-empty p {
           max-width: 340px;
           margin: 6px 0 0;
           font-size: 12px;
+          font-weight: 320;
           line-height: 1.6;
         }
 
@@ -614,6 +617,7 @@ export default function CommunityPlaylistDetailPage() {
 
           .community-detail-title {
             font-size: 42px;
+            font-weight: 400;
           }
 
           .community-detail-search-sticky,

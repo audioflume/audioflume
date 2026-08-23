@@ -50,7 +50,7 @@ function StatusDot({ health }: { health: SongHealthStatus }) {
 function AutoEditPointChip() {
   return (
     <span
-      className="inline-flex h-6 items-center rounded-full border px-2 text-[10px] font-semibold uppercase tracking-[0.04em]"
+      className="inline-flex h-6 items-center rounded-full border px-2 text-[10px] uppercase tracking-[0.04em] font-[320]"
       style={{
         borderColor: "rgba(251, 143, 97, 0.35)",
         backgroundColor: "rgba(251, 143, 97, 0.1)",

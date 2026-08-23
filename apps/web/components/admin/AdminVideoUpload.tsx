@@ -334,7 +334,7 @@ export default function AdminVideoUpload({
   return (
     <div className="grid gap-2">
       <div className="flex items-center justify-between">
-        <span className="text-xs font-medium text-[var(--text-secondary)]">
+        <span className="text-xs text-[var(--text-secondary)] font-[320]">
           Cover video
         </span>
 
@@ -343,7 +343,7 @@ export default function AdminVideoUpload({
             type="button"
             onClick={handleDelete}
             disabled={deleting || uploading}
-            className="text-[11px] font-medium text-[var(--danger)] transition hover:opacity-70 disabled:opacity-40"
+            className="text-[11px] text-[var(--danger)] transition hover:opacity-70 disabled:opacity-40 font-[320]"
           >
             {deleting ? "Removing…" : "Remove video"}
           </button>
@@ -393,7 +393,7 @@ export default function AdminVideoUpload({
             />
 
             <div className="absolute inset-0 flex items-center justify-center bg-transparent p-2 opacity-0 transition group-hover:bg-[var(--media-overlay-preview)] group-hover:opacity-100">
-              <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] font-medium leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)]">
+              <span className="whitespace-nowrap rounded-md bg-[var(--media-overlay-label)] px-2.5 py-1.5 text-[10px] leading-none text-[var(--media-overlay-contrast)] shadow-[var(--shadow-ui)] font-[320]">
                 {uploading ? "Uploading…" : "Change video"}
               </span>
             </div>
@@ -419,20 +419,20 @@ export default function AdminVideoUpload({
           </div>
 
           <div className="min-w-0">
-            <div className="text-xs font-medium text-[var(--text-primary)]">
+            <div className="text-xs text-[var(--text-primary)] font-[320]">
               {uploading ? "Uploading…" : "Drop video here"}
             </div>
 
-            <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+            <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)] font-[320]">
               MP4, WebM, or MOV. Max 250 MB.
             </div>
           </div>
         </div>
       )}
 
-      {error && <p className="text-xs text-[var(--danger)]">{error}</p>}
+      {error && <p className="text-xs text-[var(--danger)] font-[320]">{error}</p>}
 
-      <label className="grid gap-1.5 text-xs font-medium text-[var(--text-muted)]">
+      <label className="grid gap-1.5 text-xs text-[var(--text-muted)] font-[320]">
         Or paste video URL
         <input
           type="url"

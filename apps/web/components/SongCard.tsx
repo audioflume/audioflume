@@ -305,7 +305,7 @@ export default function SongCard({
               type="button"
               aria-label="License song"
               onClick={handleDownloadSong}
-              className="ml-2 inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-[var(--text-primary)] px-3 text-[11px] font-medium leading-none text-[var(--bg-primary)] transition hover:opacity-80"
+              className="ml-2 inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-[var(--text-primary)] px-3 text-[11px] leading-none text-[var(--bg-primary)] transition hover:opacity-80 font-[320]"
             >
               <span>License</span>
               <DownloadIcon size={13} />

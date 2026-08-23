@@ -201,18 +201,18 @@ function AdminHero({
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
         <div className="relative z-10 flex min-h-[355px] flex-col justify-between p-5 md:p-6">
-          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
+          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] leading-none text-white/75 backdrop-blur font-[320]">
             <span className="truncate">Audioflume admin</span>
           </div>
 
           <div className="grid gap-2 sm:grid-cols-3">
-            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] text-white/80 backdrop-blur font-[320]">
               {songsLoading ? "Scanning library" : `${stats.totalSongs} songs scanned`}
             </div>
-            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] text-white/80 backdrop-blur font-[320]">
               Library health · {songsLoading ? "—" : `${progress}%`}
             </div>
-            <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+            <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] text-white/80 backdrop-blur font-[320]">
               <span
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ backgroundColor: STATUS_COLORS[healthTone] }}
@@ -240,10 +240,10 @@ function OverviewMetric({
       href={href}
       className="group flex min-h-[72px] flex-col justify-between rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3 transition hover:text-[var(--text-primary)]"
     >
-      <span className="text-xs text-[var(--text-secondary)] transition group-hover:text-[var(--text-primary)]">
+      <span className="text-xs text-[var(--text-secondary)] transition group-hover:text-[var(--text-primary)] font-[320]">
         {label}
       </span>
-      <span className="mt-3 font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+      <span className="mt-3 font-[family-name:var(--font-zalando-sans)] text-[24px] leading-none tracking-[-0.04em] text-[var(--text-primary)] font-[200]">
         {value}
       </span>
     </Link>
@@ -266,7 +266,7 @@ function RecentSongsCard({
         action={
           <Link
             href="/admin/music-library"
-            className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+            className="text-xs text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] font-[320]"
           >
             View Library
           </Link>
@@ -302,7 +302,7 @@ function RecentSongsCard({
             )}
 
             {!songsLoading && songs.length === 0 && (
-              <div className="flex min-h-[180px] items-center justify-center border-t border-[var(--border-subtle)] px-8 text-xs text-[var(--text-secondary)]">
+              <div className="flex min-h-[180px] items-center justify-center border-t border-[var(--border-subtle)] px-8 text-xs text-[var(--text-secondary)] font-[320]">
                 No songs uploaded yet.
               </div>
             )}
@@ -423,7 +423,7 @@ export default function AdminDashboardPage() {
         contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
         contentAreaBottomPadding={false}
       >
-        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)] font-[320]">
           Loading...
         </section>
         <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
@@ -440,7 +440,7 @@ export default function AdminDashboardPage() {
         contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
         contentAreaBottomPadding={false}
       >
-        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)] font-[320]">
           You do not have access to this page.
         </section>
         <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
@@ -578,7 +578,7 @@ export default function AdminDashboardPage() {
                   <div
                     key={status.key}
                     title={status.message}
-                    className="flex min-h-10 items-center gap-2.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)]"
+                    className="flex min-h-10 items-center gap-2.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)] font-[320]"
                   >
                     <StatusIcon tone={status.tone} />
                     <span>{status.label}</span>
@@ -591,7 +591,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {songsError ? (
-        <section className="mt-3 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+        <section className="mt-3 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)] font-[320]">
           {songsError}
         </section>
       ) : null}

@@ -55,12 +55,12 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
         <section className="min-w-0 px-5 pt-[88px] md:px-8 xl:px-10">
           <div className="mx-auto max-w-[1180px]">
             <div className="mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
-              <div className="text-xs text-[var(--text-muted)]">
+              <div className="text-xs text-[var(--text-muted)] font-[320]">
                 Account / <span className="text-[var(--text-secondary)]">{activeNav?.label || "Account"}</span>
               </div>
               <Link
                 href="/music"
-                className="inline-flex h-8 items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                className="inline-flex h-8 items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] font-[320]"
               >
                 Back to music
               </Link>

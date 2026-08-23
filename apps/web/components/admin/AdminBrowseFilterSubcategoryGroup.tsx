@@ -318,7 +318,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
   return (
     <section className="group relative admin-playlist-section-card admin-playlist-shelf-card">
       <div className="mb-4 flex min-h-8 items-center justify-between gap-4">
-        <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
+        <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl tracking-[-0.05em] font-[200]">
           {filter.label}
         </h2>
 
@@ -386,7 +386,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
           return (
             <div
               key={subcategory.id}
-              className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
+              className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)] font-[320]"
             >
               <BackendCheckbox
                 checked={checked}

@@ -247,6 +247,7 @@
   align-items: center !important;
   justify-content: center !important;
   font-size: 44px !important;
+  font-weight: 200;
   color: rgba(255, 255, 255, 0.2) !important;
 }
 
@@ -273,7 +274,7 @@
 
 .playlists-page .playlist-create-card .playlist-create-copy span {
   font-size: 17px !important;
-  font-weight: 500 !important;
+  font-weight: 200 !important;
   letter-spacing: -0.045em !important;
 }
 
@@ -299,6 +300,7 @@
 .playlist-gallery-content h3 {
   margin-top: 0;
   font-size: 22px !important;
+  font-weight: 200;
 }
 
 /* Shared playlist title and count typography for My Playlists. */
@@ -307,7 +309,7 @@
   color: var(--text-primary) !important;
   font-family: inherit !important;
   font-size: 13.5px !important;
-  font-weight: 500 !important;
+  font-weight: 320 !important;
   line-height: 1.25 !important;
   letter-spacing: normal !important;
 }
@@ -319,7 +321,7 @@
   color: var(--text-muted) !important;
   font-family: inherit !important;
   font-size: 11.5px !important;
-  font-weight: 400 !important;
+  font-weight: 320 !important;
   line-height: 1.45 !important;
   letter-spacing: normal !important;
 }
@@ -331,7 +333,7 @@
   color: var(--text-primary) !important;
   font-family: var(--font-zalando-sans), sans-serif !important;
   font-size: 24px !important;
-  font-weight: 500 !important;
+  font-weight: 200 !important;
   letter-spacing: -.035em !important;
   line-height: 1 !important;
   text-transform: none !important;
@@ -345,7 +347,7 @@
   color: var(--text-primary) !important;
   font-family: var(--font-zalando-sans), sans-serif !important;
   font-size: clamp(18px, 1.45vw, 24px) !important;
-  font-weight: 400 !important;
+  font-weight: 200 !important;
   letter-spacing: -.025em !important;
   line-height: 1.1 !important;
 }
@@ -371,7 +373,7 @@
   box-shadow: none !important;
   font-family: inherit !important;
   font-size: 13.5px !important;
-  font-weight: 500 !important;
+  font-weight: 320 !important;
   line-height: 1.25 !important;
   letter-spacing: normal !important;
 }
@@ -392,7 +394,7 @@
   box-shadow: none !important;
   font-family: inherit !important;
   font-size: 13.5px !important;
-  font-weight: 500 !important;
+  font-weight: 320 !important;
   line-height: 1.35 !important;
   letter-spacing: normal !important;
 }

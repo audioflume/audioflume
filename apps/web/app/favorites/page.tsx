@@ -236,7 +236,7 @@ export default function FavoritesPage() {
 
         .favorites-kicker {
           font-size: 10px;
-          font-weight: 500;
+          font-weight: 320;
           letter-spacing: 0.1em;
           text-transform: uppercase;
           color: var(--text-muted);
@@ -247,7 +247,7 @@ export default function FavoritesPage() {
           max-width: 640px;
           font-family: var(--font-zalando-sans);
           font-size: 56px;
-          font-weight: 500;
+          font-weight: 400;
           line-height: 0.94;
           letter-spacing: -0.055em;
           color: var(--text-primary);
@@ -260,6 +260,7 @@ export default function FavoritesPage() {
           align-items: center;
           gap: 8px;
           font-size: 11px;
+          font-weight: 320;
           color: var(--text-secondary);
         }
 
@@ -346,7 +347,7 @@ export default function FavoritesPage() {
 
         .favorites-empty h2 {
           font-size: 14px;
-          font-weight: 500;
+          font-weight: 320;
           color: var(--text-primary);
         }
 
@@ -354,6 +355,7 @@ export default function FavoritesPage() {
           margin-top: 6px;
           max-width: 320px;
           font-size: 12px;
+          font-weight: 320;
           line-height: 1.6;
         }
 
@@ -495,11 +497,11 @@ export default function FavoritesPage() {
 
             {songsError && !songsLoading && favoritesLoaded && (
               <div className="flex min-h-[240px] flex-col items-center justify-center gap-3 px-8 text-center">
-                <div className="text-sm font-medium text-[var(--text-primary)]">
+                <div className="text-sm text-[var(--text-primary)] font-[320]">
                   Couldn&apos;t load favorites
                 </div>
 
-                <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
+                <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)] font-[320]">
                   {songsError}
                 </div>
 

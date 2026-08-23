@@ -219,7 +219,7 @@ export default function AdminSongEditPresentationInjector() {
         color: var(--text-secondary);
         font-family: inherit;
         font-size: 12px;
-        font-weight: 400;
+        font-weight: 320;
         line-height: 1;
         transition: color 150ms ease, background 150ms ease;
       }
@@ -287,7 +287,7 @@ export default function AdminSongEditPresentationInjector() {
         color: var(--text-primary);
         font-family: var(--font-zalando-sans), sans-serif;
         font-size: 11px;
-        font-weight: 500;
+        font-weight: 320;
         letter-spacing: 0.02em;
         line-height: 1;
         text-transform: uppercase;
@@ -341,6 +341,7 @@ export default function AdminSongEditPresentationInjector() {
         > div[class~="h-9"]
         > span {
         font-size: 12px;
+        font-weight: 320;
         line-height: 18px;
       }
 

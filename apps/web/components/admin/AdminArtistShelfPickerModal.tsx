@@ -171,11 +171,11 @@ export default function AdminArtistShelfPickerModal({
               ))}
             </div>
           ) : error ? (
-            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--danger)]">
+            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--danger)] font-[320]">
               {error}
             </div>
           ) : displayedArtists.length === 0 ? (
-            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+            <div className="flex min-h-[180px] items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)] font-[320]">
               No approved artists match your search.
             </div>
           ) : (
@@ -200,7 +200,7 @@ export default function AdminArtistShelfPickerModal({
                           : "cursor-pointer hover:bg-[var(--bg-hover)]"
                     } disabled:cursor-default`}
                   >
-                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-tertiary)] text-[11px] font-medium text-[var(--text-muted)]">
+                    <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-muted)] font-[320]">
                       {artist.profile_image_url ? (
                         <Image
                           src={artist.profile_image_url}
@@ -218,10 +218,10 @@ export default function AdminArtistShelfPickerModal({
                     </span>
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      <span className="block truncate text-sm tracking-[-0.02em] text-[var(--text-primary)] font-[320]">
                         {artist.name}
                       </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)] font-[320]">
                         {alreadyAdded ? "Already added" : `/artists/${artist.slug}`}
                       </span>
                     </span>

@@ -166,6 +166,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           color: var(--text-primary);
           font-family: inherit;
           font-size: 12px;
+          font-weight: 320;
           font-style: italic;
         }
 
@@ -222,7 +223,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           color: var(--text-secondary);
           font-family: inherit;
           font-size: 12px;
-          font-weight: 400;
+          font-weight: 320;
           line-height: 1;
           transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
         }
@@ -307,7 +308,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           color: var(--text-primary) !important;
           font-family: var(--font-zalando-sans), sans-serif !important;
           font-size: clamp(22px, 2vw, 32px) !important;
-          font-weight: 400 !important;
+          font-weight: 200 !important;
           letter-spacing: -0.055em !important;
           line-height: 0.98 !important;
         }
@@ -355,7 +356,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           color: var(--text-primary) !important;
           font-family: var(--font-zalando-sans), sans-serif !important;
           font-size: clamp(22px, 2vw, 32px) !important;
-          font-weight: 400 !important;
+          font-weight: 200 !important;
           letter-spacing: -0.055em !important;
           line-height: 0.98 !important;
           vertical-align: top !important;
@@ -367,7 +368,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           gap: 8px !important;
           color: var(--text-secondary) !important;
           font-size: 11.5px !important;
-          font-weight: 400;
+          font-weight: 320;
           line-height: 1.4;
         }
 
@@ -394,7 +395,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           padding: 0 14px !important;
           font-family: inherit !important;
           font-size: 12px !important;
-          font-weight: 400 !important;
+          font-weight: 320 !important;
           line-height: 1 !important;
           transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
         }
@@ -540,6 +541,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
           .playlist-detail-page .playlist-detail-title {
             font-size: 26px !important;
+            font-weight: 200;
           }
 
           .playlists-route-shell
@@ -548,6 +550,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
             > .min-w-0
             .playlist-detail-rename-input {
             font-size: 26px !important;
+            font-weight: 200;
           }
 
           .playlist-detail-page .playlist-detail-shell > div:has(> footer) {

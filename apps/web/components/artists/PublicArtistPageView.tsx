@@ -338,7 +338,7 @@ export default function PublicArtistPageView({
           color: #fff;
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: clamp(72px, var(--artist-name-fit-size), 150px);
-          font-weight: 400;
+          font-weight: 200;
           letter-spacing: -0.045em;
           line-height: 0.92;
           white-space: nowrap;
@@ -385,6 +385,7 @@ export default function PublicArtistPageView({
           border-radius: 999px;
           background: var(--bg-tertiary);
           font-size: 13px;
+          font-weight: 320;
           letter-spacing: 0;
           line-height: 1;
         }
@@ -428,7 +429,7 @@ export default function PublicArtistPageView({
           color: var(--text-primary);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: 11px;
-          font-weight: 300;
+          font-weight: 320;
           letter-spacing: 0;
           line-height: 1.2;
           pointer-events: auto;
@@ -473,7 +474,7 @@ export default function PublicArtistPageView({
           color: var(--text-primary);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: 11px;
-          font-weight: 300;
+          font-weight: 320;
           letter-spacing: -0.008em;
           line-height: 1.5;
           pointer-events: auto;
@@ -611,7 +612,7 @@ export default function PublicArtistPageView({
           color: #fff;
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: 10px;
-          font-weight: 500;
+          font-weight: 320;
           letter-spacing: 0;
           line-height: 1;
         }
@@ -638,7 +639,7 @@ export default function PublicArtistPageView({
           color: var(--text-primary);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: 9px;
-          font-weight: 500;
+          font-weight: 320;
           letter-spacing: 0;
           line-height: 1;
         }
@@ -650,7 +651,7 @@ export default function PublicArtistPageView({
           color: var(--text-primary);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: 11px;
-          font-weight: 300;
+          font-weight: 320;
           line-height: 1.2;
         }
 
@@ -678,6 +679,7 @@ export default function PublicArtistPageView({
         .artist-public-section-count {
           color: var(--text-muted);
           font-size: 11px;
+          font-weight: 320;
         }
 
         .artist-public-music {
@@ -732,7 +734,7 @@ export default function PublicArtistPageView({
           overflow: hidden;
           color: var(--text-primary);
           font-size: 13px;
-          font-weight: 500;
+          font-weight: 320;
           line-height: 1.35;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -742,6 +744,7 @@ export default function PublicArtistPageView({
           margin: 4px 0 0;
           color: var(--text-muted);
           font-size: 11px;
+          font-weight: 320;
           line-height: 1.45;
         }
 
@@ -751,6 +754,7 @@ export default function PublicArtistPageView({
           overflow: hidden;
           color: var(--text-secondary);
           font-size: 11px;
+          font-weight: 320;
           line-height: 1.5;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 2;
@@ -763,6 +767,7 @@ export default function PublicArtistPageView({
           justify-content: center;
           color: var(--text-muted);
           font-size: 12px;
+          font-weight: 320;
         }
 
         .artist-public-footer {
@@ -908,6 +913,7 @@ export default function PublicArtistPageView({
         @media (max-width: 560px) {
           .artist-public-stat-row {
             font-size: 18px;
+            font-weight: 200;
           }
 
           .artist-public-edit-meta-grid {

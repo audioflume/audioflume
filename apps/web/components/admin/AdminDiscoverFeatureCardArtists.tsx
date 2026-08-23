@@ -110,7 +110,7 @@ function FeatureCardArtistSortableCard({
             unoptimized
           />
         ) : (
-          <span className="absolute inset-0 flex items-center justify-center text-[11px] font-medium text-[var(--text-muted)]">
+          <span className="absolute inset-0 flex items-center justify-center text-[11px] text-[var(--text-muted)] font-[320]">
             No feature image
           </span>
         )}
@@ -126,7 +126,7 @@ function FeatureCardArtistSortableCard({
         <button
           type="button"
           onClick={onRemove}
-          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_90%,var(--danger)_10%)] hover:text-[var(--danger)] group-hover:opacity-100"
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_90%,var(--danger)_10%)] hover:text-[var(--danger)] group-hover:opacity-100 font-[200]"
           aria-label={`Remove ${artist.name} from Featured Cards`}
           title="Remove from Featured Cards"
         >
@@ -135,14 +135,14 @@ function FeatureCardArtistSortableCard({
       </div>
 
       <div className="mt-2.5 min-w-0">
-        <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+        <h4 className="truncate text-[13px] tracking-[-0.02em] text-[var(--text-primary)] font-[320]">
           {artist.name}
         </h4>
-        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
+        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)] font-[320]">
           /artists/{artist.slug}
         </p>
         <label className="mt-2 block">
-          <span className="mb-1.5 block text-[10px] font-medium text-[var(--text-secondary)]">
+          <span className="mb-1.5 block text-[10px] text-[var(--text-secondary)] font-[320]">
             Custom text
           </span>
           <input
@@ -400,11 +400,11 @@ export default function AdminDiscoverFeatureCardArtists() {
             ))}
           </div>
         ) : error ? (
-          <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--danger)]">
+          <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--danger)] font-[320]">
             {error}
           </div>
         ) : items.length === 0 ? (
-          <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+          <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)] font-[320]">
             Add up to two artists to the Discover feature cards.
           </div>
         ) : (

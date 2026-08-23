@@ -464,21 +464,22 @@ export default function ProjectsPage() {
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 22px 32px 0 32px; }
         .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
-        .projects-status-pill { display: inline-flex; width: 150px; height: 35px; align-items: center; justify-content: center; gap: 5px; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 10px 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-zalando-sans); font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-status-pill { display: inline-flex; width: 150px; height: 35px; align-items: center; justify-content: center; gap: 5px; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 10px 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-zalando-sans); font-size: 12px; font-weight: 320; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .projects-status-pill:hover, .projects-status-pill.is-open { background: var(--bg-hover); border-color: var(--filmwave-border-color); color: var(--text-primary); }
         .projects-status-dropdown { min-width: 150px; }
         .projects-status-dropdown button.is-active { background: var(--filmwave-menu-hover); color: var(--filmwave-menu-text); }
         .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid var(--filmwave-border-color); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
-        .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
+        .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px;
+ font-weight: 320; font-style: italic; }
         .projects-search input::placeholder { color: var(--text-muted); }
         .projects-search-clear { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
         .projects-search-clear:hover { background: var(--bg-hover); color: var(--text-primary); }
         .projects-control-right { display: flex; justify-content: flex-end; align-items: center; gap: 6px; }
-        .projects-sort-button { height: 35px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 10px 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-zalando-sans); font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-sort-button { height: 35px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 10px 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-zalando-sans); font-size: 12px; font-weight: 320; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .projects-sort-button:hover, .projects-sort-button.is-open { background: var(--bg-hover); border-color: var(--filmwave-border-color); color: var(--text-primary); }
         .projects-sort-dropdown { min-width: 154px; }
         .projects-sort-dropdown button.is-active { background: var(--bg-hover); color: var(--text-primary); }
-        .projects-new-button { height: 35px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-zalando-sans); font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
+        .projects-new-button { height: 35px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-zalando-sans); font-size: 12px; font-weight: 320; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .projects-new-button:hover { background: var(--bg-hover); border-color: var(--filmwave-border-color); color: var(--text-primary); }
         .projects-title { margin: 36px 0 20px; max-width: 640px; font-size: 1.6em; font-weight: 500; line-height: 1; letter-spacing: -0.035em; color: var(--text-primary); }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
@@ -490,20 +491,22 @@ export default function ProjectsPage() {
         .projects-row-icon { display: flex; width: 42px; height: 42px; align-items: center; justify-content: center; overflow: visible; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); }
         .projects-row-icon-inner { display: block; transform: translateY(-2px) scale(0.58); transform-origin: center; }
         .projects-row-main { min-width: 0; display: flex; flex-direction: column; gap: 0; }
-        .projects-row-main > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
-        .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 2px 0 0; font-size: 11.5px; line-height: 1.35; color: var(--text-subtle); }
+        .projects-row-main > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 320; line-height: 1.35; color: var(--text-primary); }
+        .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 2px 0 0; font-size: 11.5px;
+ font-weight: 320; line-height: 1.35; color: var(--text-subtle); }
         .projects-row-rename { display: flex; min-width: 0; align-items: center; }
-        .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 500; outline: none; }
+        .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 320; outline: none; }
         .projects-row-rename-input:focus { border-color: var(--text-primary); }
         .projects-row-archive-status { display: inline-flex; width: 12px; justify-self: end; align-items: center; justify-content: center; transform: translateX(12px); color: var(--text-muted); line-height: 0; }
         .projects-row-archive-icon { display: inline-flex; width: 12px; height: 13px; align-items: center; justify-content: center; color: inherit; line-height: 0; }
-        .projects-row-count { justify-self: start; width: 64px; text-align: left; font-size: 11.5px; font-weight: 400; line-height: 1.35; color: var(--text-subtle); }
+        .projects-row-count { justify-self: start; width: 64px; text-align: left; font-size: 11.5px; font-weight: 320; line-height: 1.35; color: var(--text-subtle); }
         .projects-row-actions { display: inline-flex; justify-self: end; align-items: center; gap: 8px; }
         .projects-row-actions > .project-toolbar-icon-button { flex: 0 0 auto; }
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
-        .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
-        .projects-empty p, .projects-error p { max-width: 360px; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
-        .projects-retry-button { height: 36px; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 14px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; }
+        .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 200; color: var(--text-primary); }
+        .projects-empty p, .projects-error p { max-width: 360px; font-size: 13px;
+ font-weight: 320; line-height: 1.5; color: var(--text-muted); }
+        .projects-retry-button { height: 36px; border: 1px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 14px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 320; }
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }

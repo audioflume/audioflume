@@ -45,7 +45,7 @@ function TagSection({
     <section className="filmwave-backend-section">
       <div className="filmwave-backend-section-header">
         <h2 className="filmwave-backend-section-title">{title}</h2>
-        <span className="text-[11px] text-[var(--text-muted)]">
+        <span className="text-[11px] text-[var(--text-muted)] font-[320]">
           {selected.length} selected
         </span>
       </div>

@@ -91,7 +91,7 @@ function SongPreview({ song }: { song: Song }) {
           )}
         </span>
 
-        <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+        <span className="block max-w-[300px] truncate text-[12px] tracking-[-0.015em] text-[var(--text-primary)] font-[320]">
           {song.title} by {song.artist}
         </span>
       </div>
@@ -424,7 +424,7 @@ export default function AddToProjectModal({
                     <button
                       type="submit"
                       disabled={creatingProject || !newProjectName.trim()}
-                      className="h-8 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                      className="h-8 rounded-none bg-[var(--text-primary)] px-5 text-xs text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40 font-[320]"
                     >
                       Add
                     </button>
@@ -440,7 +440,7 @@ export default function AddToProjectModal({
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--icon-button-hover)]">
                   <PlusIcon size={18} />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                <span className="min-w-0 flex-1 truncate text-sm tracking-[-0.02em] text-[var(--text-primary)] font-[320]">
                   New Project...
                 </span>
               </button>
@@ -462,7 +462,7 @@ export default function AddToProjectModal({
 
             {!loading && displayedError && (
               <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
-                <div className="text-xs font-medium text-[var(--danger)]">
+                <div className="text-xs text-[var(--danger)] font-[320]">
                   {displayedError}
                 </div>
 
@@ -470,7 +470,7 @@ export default function AddToProjectModal({
                   <button
                     type="button"
                     onClick={refetchProjects}
-                    className="h-8 rounded-none bg-[var(--text-primary)] px-3.5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80"
+                    className="h-8 rounded-none bg-[var(--text-primary)] px-3.5 text-xs text-[var(--bg-primary)] transition hover:opacity-80 font-[320]"
                   >
                     Try Again
                   </button>
@@ -479,7 +479,7 @@ export default function AddToProjectModal({
             )}
 
             {!loading && !displayedError && displayedProjects.length === 0 && (
-              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
+              <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)] font-[320]">
                 You don&apos;t have any projects yet.
               </div>
             )}
@@ -506,10 +506,10 @@ export default function AddToProjectModal({
                     <ProjectThumbnail />
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      <span className="block truncate text-sm tracking-[-0.02em] text-[var(--text-primary)] font-[320]">
                         {project.name}
                       </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)] font-[320]">
                         {isSelected ? "Added" : "Click to add"}
                       </span>
                     </span>

@@ -366,7 +366,7 @@ export default function ArtistPagePreview({
 
   if (loading) {
     return (
-      <div className="flex min-h-[320px] items-center justify-center text-xs text-[var(--text-muted)]">
+      <div className="flex min-h-[320px] items-center justify-center text-xs text-[var(--text-muted)] font-[320]">
         Loading page preview...
       </div>
     );
@@ -374,7 +374,7 @@ export default function ArtistPagePreview({
 
   if (loadError || !data) {
     return (
-      <div className="flex min-h-[320px] items-center justify-center px-6 text-center text-xs text-[var(--text-secondary)]">
+      <div className="flex min-h-[320px] items-center justify-center px-6 text-center text-xs text-[var(--text-secondary)] font-[320]">
         {loadError || "Artist page preview is unavailable."}
       </div>
     );
@@ -395,7 +395,7 @@ export default function ArtistPagePreview({
       }}
     >
       {!layoutReady ? (
-        <div className="absolute inset-0 flex items-center justify-center text-xs text-[var(--text-muted)]">
+        <div className="absolute inset-0 flex items-center justify-center text-xs text-[var(--text-muted)] font-[320]">
           Loading page preview...
         </div>
       ) : null}
@@ -406,11 +406,11 @@ export default function ArtistPagePreview({
           style={{ top: `${layout.topInset + 18}px` }}
         >
           {editError ? (
-            <span className="max-w-[320px] text-right text-[11px] leading-4 text-[var(--status-error)]">
+            <span className="max-w-[320px] text-right text-[11px] leading-4 text-[var(--status-error)] font-[320]">
               {editError}
             </span>
           ) : message ? (
-            <span className="text-[11px] text-[var(--status-success)]">{message}</span>
+            <span className="text-[11px] text-[var(--status-success)] font-[320]">{message}</span>
           ) : null}
 
           {editing && hasChanges ? (

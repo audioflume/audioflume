@@ -267,13 +267,13 @@ export default function AdminPlaylistLibraryView({
   }
 
   if (error) {
-    return <div className="py-10 text-sm text-[var(--danger)]">{error}</div>;
+    return <div className="py-10 text-sm text-[var(--danger)] font-[320]">{error}</div>;
   }
 
   return (
     <>
       {shelfError && (
-        <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs text-[var(--danger)]">
+        <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs text-[var(--danger)] font-[320]">
           {shelfError}
         </div>
       )}

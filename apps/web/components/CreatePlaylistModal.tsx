@@ -150,7 +150,7 @@ export default function CreatePlaylistModal({
           <button
             type="button"
             disabled={busy}
-            className="flex h-8 cursor-pointer items-center gap-1.5 rounded-none px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
+            className="flex h-8 cursor-pointer items-center gap-1.5 rounded-none px-2.5 text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70 font-[320]"
           >
             Unsplash
             <SearchIconSmall />
@@ -263,11 +263,11 @@ export default function CreatePlaylistModal({
               </div>
 
               <div className="min-w-0">
-                <div className="text-xs font-medium text-[var(--text-primary)]">
+                <div className="text-xs text-[var(--text-primary)] font-[320]">
                   {isUploadingCover ? "Uploading…" : "Drop image here"}
                 </div>
 
-                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)] font-[320]">
                   Click to upload a playlist cover.
                 </div>
               </div>
@@ -275,7 +275,7 @@ export default function CreatePlaylistModal({
           )}
 
           {coverUploadError && (
-            <p className="mt-2 text-[11px] text-[var(--danger)]">
+            <p className="mt-2 text-[11px] text-[var(--danger)] font-[320]">
               {coverUploadError}
             </p>
           )}

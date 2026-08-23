@@ -611,7 +611,7 @@ export default function Sidebar({
       <button
         type="button"
         onClick={restoreAlphabeticalOrder}
-        className="h-6 cursor-pointer rounded-md px-2 text-[10px] font-medium text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+        className="h-6 cursor-pointer rounded-md px-2 text-[10px] text-[var(--text-muted)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] font-[320]"
       >
         Alphabetical
       </button>

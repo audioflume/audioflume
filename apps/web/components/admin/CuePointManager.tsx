@@ -194,6 +194,7 @@ export default function CuePointManager({
           min-height: 0;
           margin-right: 2px;
           font-size: 11px;
+          font-weight: 320;
           line-height: 16px;
         }
 
@@ -212,7 +213,7 @@ export default function CuePointManager({
           padding-left: 12px !important;
           padding-right: 12px !important;
           font-size: 12px;
-          font-weight: 400;
+          font-weight: 320;
         }
 
         .admin-cue-point-standalone
@@ -297,7 +298,7 @@ export default function CuePointManager({
           padding-bottom: 0 !important;
           color: var(--text-muted) !important;
           font-size: 11px !important;
-          font-weight: 500 !important;
+          font-weight: 320 !important;
           letter-spacing: normal !important;
           text-transform: none !important;
         }
@@ -328,6 +329,7 @@ export default function CuePointManager({
           background: var(--bg-secondary) !important;
           font-family: inherit !important;
           font-size: 12px !important;
+          font-weight: 320;
         }
 
         .admin-cue-point-standalone

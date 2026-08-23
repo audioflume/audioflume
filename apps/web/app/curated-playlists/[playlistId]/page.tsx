@@ -283,7 +283,7 @@ export default function CuratedPlaylistDetailPage() {
         }
         .playlist-detail-kicker {
           font-size: 10px;
-          font-weight: 500;
+          font-weight: 320;
           letter-spacing: 0.1em;
           text-transform: uppercase;
           color: var(--text-muted);
@@ -293,7 +293,7 @@ export default function CuratedPlaylistDetailPage() {
           max-width: 640px;
           font-family: var(--font-zalando-sans);
           font-size: 56px;
-          font-weight: 500;
+          font-weight: 400;
           line-height: 0.94;
           letter-spacing: -0.055em;
           color: var(--text-primary);
@@ -305,6 +305,7 @@ export default function CuratedPlaylistDetailPage() {
           align-items: center;
           gap: 8px;
           font-size: 11px;
+          font-weight: 320;
           color: var(--text-secondary);
         }
         .playlist-detail-dot { color: var(--text-muted); }
@@ -375,13 +376,14 @@ export default function CuratedPlaylistDetailPage() {
         }
         .playlist-detail-empty h2 {
           font-size: 14px;
-          font-weight: 500;
+          font-weight: 320;
           color: var(--text-primary);
         }
         .playlist-detail-empty p {
           margin-top: 6px;
           max-width: 320px;
           font-size: 12px;
+          font-weight: 320;
           line-height: 1.6;
         }
         .playlist-detail-skeleton-cover { background: var(--bg-elevated); }

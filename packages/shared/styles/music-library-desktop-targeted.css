@@ -201,6 +201,7 @@
   width: 100% !important;
   height: 100% !important;
   font-size: 12px !important;
+  font-weight: 320;
   line-height: 1 !important;
   transform: translate(-50%, -50%) !important;
 }
@@ -226,7 +227,7 @@
   color: var(--text-secondary) !important;
   font-family: inherit !important;
   font-size: 10.5px !important;
-  font-weight: 400 !important;
+  font-weight: 320 !important;
   line-height: 22px !important;
   letter-spacing: 0 !important;
   white-space: nowrap !important;

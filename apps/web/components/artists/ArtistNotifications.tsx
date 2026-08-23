@@ -225,22 +225,22 @@ export default function ArtistNotifications({
       ) : null}
 
       {error ? (
-        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--danger)]">
+        <div className="filmwave-backend-section px-4 py-3 text-xs text-[var(--danger)] font-[320]">
           {error}
         </div>
       ) : null}
 
       {loading ? (
-        <div className="filmwave-backend-section flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+        <div className="filmwave-backend-section flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)] font-[320]">
           Loading notifications...
         </div>
       ) : notifications.length === 0 ? (
         <div className="filmwave-backend-section flex min-h-[180px] items-center justify-center px-6 text-center">
           <div>
-            <div className="text-sm font-medium text-[var(--text-primary)]">
+            <div className="text-sm text-[var(--text-primary)] font-[320]">
               Nothing new yet.
             </div>
-            <div className="mt-1.5 text-xs text-[var(--text-muted)]">
+            <div className="mt-1.5 text-xs text-[var(--text-muted)] font-[320]">
               Track reviews and artist account updates will appear here.
             </div>
           </div>
@@ -271,11 +271,11 @@ export default function ArtistNotifications({
                     {notification.title}
                   </div>
                   {notification.message ? (
-                    <div className="mt-1 max-w-[760px] text-xs leading-5 text-[var(--text-secondary)]">
+                    <div className="mt-1 max-w-[760px] text-xs leading-5 text-[var(--text-secondary)] font-[320]">
                       {notification.message}
                     </div>
                   ) : null}
-                  <div className="mt-2 text-[11px] text-[var(--text-muted)]">
+                  <div className="mt-2 text-[11px] text-[var(--text-muted)] font-[320]">
                     {formatNotificationTime(notification.created_at)}
                   </div>
                 </div>

@@ -90,6 +90,7 @@ export default function SoundFxPage() {
           color: rgba(255, 255, 255, 0.62);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: 22px;
+          font-weight: 200;
           line-height: 1;
           transition:
             background-color 150ms ease,
@@ -123,7 +124,7 @@ export default function SoundFxPage() {
           color: var(--text-primary);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: clamp(17px, 1.15vw, 22px);
-          font-weight: 300;
+          font-weight: 200;
           letter-spacing: -0.025em;
           line-height: 1.35;
           text-align: center;
@@ -153,7 +154,7 @@ export default function SoundFxPage() {
           color: rgba(255, 255, 255, 0.82);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: 12px;
-          font-weight: 400;
+          font-weight: 320;
           line-height: 1.15;
           transition:
             border-color 150ms ease,
@@ -238,6 +239,7 @@ export default function SoundFxPage() {
           .sound-fx-discover-top .discover-category-search input {
             padding-left: 22px;
             font-size: 14px;
+            font-weight: 320;
           }
 
           .sound-fx-discover-top .discover-category-search button {
@@ -245,11 +247,13 @@ export default function SoundFxPage() {
             height: 36px;
             margin-right: 9px;
             font-size: 20px;
+            font-weight: 200;
           }
 
           .sound-fx-discover-top .discover-category-description {
             width: calc(100% - 40px);
             font-size: 18px;
+            font-weight: 200;
           }
 
           .sound-fx-discover-top .discover-mood-pill-list {
@@ -264,6 +268,7 @@ export default function SoundFxPage() {
             padding-right: 10px;
             padding-left: 10px;
             font-size: 11px;
+            font-weight: 320;
           }
         }
       `}</style>

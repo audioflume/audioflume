@@ -211,7 +211,7 @@ export default function BackendSongFileUpload({
 
         <div className="grid gap-2">
           <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${audioStatusBusy || (audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus)) ? "py-2" : ""}`}>
-            <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
+            <div className="text-xs leading-[18px] text-[var(--text-primary)] font-[320]">
               Audio
             </div>
             <div className="min-w-0">
@@ -219,7 +219,7 @@ export default function BackendSongFileUpload({
                 {audioFile?.name || audioExistingLabel || "No file chosen"}
               </div>
               {audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus) ? (
-                <div className="mt-1 flex items-start gap-2 text-[11px] leading-4 text-[var(--text-secondary)]">
+                <div className="mt-1 flex items-start gap-2 text-[11px] leading-4 text-[var(--text-secondary)] font-[320]">
                   {audioStatusBusy ? (
                     <span className="mt-px h-3.5 w-3.5 shrink-0 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
                   ) : null}
@@ -240,7 +240,7 @@ export default function BackendSongFileUpload({
           </div>
 
           <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${visibleStemLabels.length > 0 ? "py-2" : ""}`}>
-            <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
+            <div className="text-xs leading-[18px] text-[var(--text-primary)] font-[320]">
               Stems
             </div>
             <div className="min-w-0">
@@ -256,7 +256,7 @@ export default function BackendSongFileUpload({
                   {visibleStemLabels.map((label, index) => (
                     <div
                       key={`${label}-${index}`}
-                      className="flex min-w-0 items-center justify-between gap-3 text-[11px] leading-4 text-[var(--text-secondary)]"
+                      className="flex min-w-0 items-center justify-between gap-3 text-[11px] leading-4 text-[var(--text-secondary)] font-[320]"
                     >
                       <span className="min-w-0 flex-1 truncate">{label}</span>
                       {stemFiles.length > 0 ? (
@@ -280,7 +280,7 @@ export default function BackendSongFileUpload({
                 type="button"
                 disabled={disabled}
                 onClick={onClearExistingStems}
-                className="text-[11px] font-medium text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50"
+                className="text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--danger)] disabled:opacity-50 font-[320]"
               >
                 Remove
               </button>

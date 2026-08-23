@@ -29,6 +29,7 @@
   flex-wrap: nowrap !important;
   overflow: visible !important;
   font-size: 12px !important;
+  font-weight: 320;
 }
 
 .project-breadcrumbs.project-path button,

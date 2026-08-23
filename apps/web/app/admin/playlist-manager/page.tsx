@@ -141,7 +141,7 @@ export default function PlaylistManagerPage() {
 
         <Link
           href="/admin/playlist-manager/new"
-          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
+          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] text-[var(--bg-primary)] transition font-[320]"
         >
           <PlusIcon size={13} />
           <span>New Playlist</span>

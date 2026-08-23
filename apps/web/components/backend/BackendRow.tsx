@@ -43,11 +43,11 @@ export function BackendRowTitle({
 }) {
   return (
     <div className="min-w-0">
-      <div className="truncate text-xs font-medium leading-tight text-[var(--text-primary)]">
+      <div className="truncate text-xs leading-tight text-[var(--text-primary)] font-[320]">
         {children}
       </div>
       {secondary ? (
-        <div className="mt-1 text-[11px] text-[var(--text-muted)]">{secondary}</div>
+        <div className="mt-1 text-[11px] text-[var(--text-muted)] font-[320]">{secondary}</div>
       ) : null}
     </div>
   );

@@ -78,14 +78,14 @@ function MetricCard({
 }) {
   return (
     <div className="filmwave-backend-section flex min-h-[104px] flex-col justify-between p-4">
-      <div className="text-[11px] font-medium text-[var(--text-secondary)]">
+      <div className="text-[11px] text-[var(--text-secondary)] font-[320]">
         {label}
       </div>
       <div>
-        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] leading-none tracking-[-0.04em] text-[var(--text-primary)] font-[200]">
           {formatNumber(value)}
         </div>
-        <div className="mt-2 text-[10px] text-[var(--text-muted)]">{note}</div>
+        <div className="mt-2 text-[10px] text-[var(--text-muted)] font-[320]">{note}</div>
       </div>
     </div>
   );
@@ -106,7 +106,7 @@ function ActivityChart({ timeline }: { timeline: ArtistAnalyticsTimelinePoint[] 
 
   if (!hasActivity) {
     return (
-      <div className="flex h-[220px] items-center justify-center border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
+      <div className="flex h-[220px] items-center justify-center border-t border-[var(--border-subtle)] text-xs text-[var(--text-muted)] font-[320]">
         No engagement activity in this period yet.
       </div>
     );
@@ -158,7 +158,7 @@ function ActivityChart({ timeline }: { timeline: ArtistAnalyticsTimelinePoint[] 
           })}
         </svg>
       </div>
-      <div className="mt-1 flex items-center justify-between text-[10px] text-[var(--text-muted)]">
+      <div className="mt-1 flex items-center justify-between text-[10px] text-[var(--text-muted)] font-[320]">
         <span>{timeline[0] ? formatDate(timeline[0].date) : ""}</span>
         <span>
           {timeline[timeline.length - 1]
@@ -239,7 +239,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
 
   if (loading && !data) {
     return (
-      <div className="filmwave-backend-section flex min-h-[320px] items-center justify-center text-xs text-[var(--text-muted)]">
+      <div className="filmwave-backend-section flex min-h-[320px] items-center justify-center text-xs text-[var(--text-muted)] font-[320]">
         Loading analytics...
       </div>
     );
@@ -247,7 +247,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
 
   if (error && !data) {
     return (
-      <div className="filmwave-backend-section flex min-h-[320px] items-center justify-center px-6 text-center text-xs text-[var(--text-secondary)]">
+      <div className="filmwave-backend-section flex min-h-[320px] items-center justify-center px-6 text-center text-xs text-[var(--text-secondary)] font-[320]">
         {error}
       </div>
     );
@@ -256,7 +256,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
   return (
     <div className="grid gap-4">
       {error ? (
-        <div className="filmwave-backend-section px-5 py-3 text-xs text-[var(--text-primary)]">
+        <div className="filmwave-backend-section px-5 py-3 text-xs text-[var(--text-primary)] font-[320]">
           {error}
         </div>
       ) : null}
@@ -280,7 +280,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
         <div className="filmwave-backend-section-header-bordered flex-wrap">
           <div>
             <h2 className="filmwave-backend-section-title">Engagement activity</h2>
-            <div className="mt-1 text-[11px] text-[var(--text-muted)]">
+            <div className="mt-1 text-[11px] text-[var(--text-muted)] font-[320]">
               {formatNumber(period.total)} interactions in the last {rangeDays} days
             </div>
           </div>
@@ -312,10 +312,10 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
                   : ""
               }`}
             >
-              <div className="text-[11px] font-medium text-[var(--text-secondary)]">
+              <div className="text-[11px] text-[var(--text-secondary)] font-[320]">
                 {metric.label}
               </div>
-              <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+              <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[18px] tracking-[-0.03em] text-[var(--text-primary)] font-[200]">
                 {formatNumber(metric.value)}
               </div>
             </div>
@@ -324,7 +324,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
 
         <ActivityChart timeline={timeline} />
 
-        <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
+        <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)] font-[320]">
           Downloads are currently reported as all-time totals. The activity chart
           uses timestamped saves, playlist adds, and project adds.
         </div>
@@ -333,19 +333,19 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
       <section className="filmwave-backend-section">
         <div className="filmwave-backend-section-header-bordered">
           <h2 className="filmwave-backend-section-title">Track performance</h2>
-          <span className="text-[11px] text-[var(--text-muted)]">
+          <span className="text-[11px] text-[var(--text-muted)] font-[320]">
             {tracks.length} {tracks.length === 1 ? "track" : "tracks"} · All time
           </span>
         </div>
 
         {tracks.length === 0 ? (
-          <div className="px-5 py-10 text-center text-xs text-[var(--text-muted)]">
+          <div className="px-5 py-10 text-center text-xs text-[var(--text-muted)] font-[320]">
             No tracks to report yet.
           </div>
         ) : (
           <div className="overflow-x-auto">
             <div className="min-w-[720px]">
-              <div className="grid grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center border-b border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
+              <div className="grid grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center border-b border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--text-secondary)] font-[320]">
                 <span>Track</span>
                 <span className="text-right">Downloads</span>
                 <span className="text-right">Saves</span>
@@ -363,7 +363,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
                   }`}
                 >
                   <div className="flex min-w-0 items-center gap-3 pr-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-[var(--border)] bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-muted)]">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border border-[var(--border)] bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-muted)] font-[320]">
                       {track.cover_url ? (
                         <img
                           src={track.cover_url}
@@ -375,24 +375,24 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
                       )}
                     </div>
                     <div className="min-w-0">
-                      <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+                      <div className="truncate text-xs text-[var(--text-primary)] font-[320]">
                         {track.title}
                       </div>
-                      <div className="mt-1 text-[10px] text-[var(--text-muted)]">
+                      <div className="mt-1 text-[10px] text-[var(--text-muted)] font-[320]">
                         {formatStatus(track.status || "track")}
                       </div>
                     </div>
                   </div>
-                  <div className="text-right text-xs text-[var(--text-secondary)]">
+                  <div className="text-right text-xs text-[var(--text-secondary)] font-[320]">
                     {formatNumber(track.downloads)}
                   </div>
-                  <div className="text-right text-xs text-[var(--text-secondary)]">
+                  <div className="text-right text-xs text-[var(--text-secondary)] font-[320]">
                     {formatNumber(track.saves)}
                   </div>
-                  <div className="text-right text-xs text-[var(--text-secondary)]">
+                  <div className="text-right text-xs text-[var(--text-secondary)] font-[320]">
                     {formatNumber(track.playlist_adds)}
                   </div>
-                  <div className="text-right text-xs text-[var(--text-secondary)]">
+                  <div className="text-right text-xs text-[var(--text-secondary)] font-[320]">
                     {formatNumber(track.project_adds)}
                   </div>
                 </div>

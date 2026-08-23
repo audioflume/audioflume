@@ -31,7 +31,7 @@ export default function AdminAllPlaylistsView({
   }
 
   if (error) {
-    return <div className="py-10 text-sm text-[var(--danger)]">{error}</div>;
+    return <div className="py-10 text-sm text-[var(--danger)] font-[320]">{error}</div>;
   }
 
   return (

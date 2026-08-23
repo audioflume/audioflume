@@ -48,13 +48,15 @@ function renderPage({
       * { box-sizing: border-box; }
       body { min-height: 100vh; margin: 0; display: grid; place-items: center; background: var(--bg); color: var(--text); font-family: Arial, Helvetica, sans-serif; }
       main { width: min(680px, calc(100vw - 32px)); border: 1px solid var(--border); border-radius: 24px; background: var(--panel); padding: 28px; }
-      h1 { margin: 0; font-size: 42px; line-height: 0.95; letter-spacing: -0.06em; font-weight: 500; }
-      p { margin: 14px 0 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+      h1 { margin: 0; font-size: 42px; line-height: 0.95; letter-spacing: -0.06em; font-weight: 400; }
+      p { margin: 14px 0 0; color: var(--muted); font-size: 14px;
+ font-weight: 320; line-height: 1.55; }
       textarea { width: 100%; min-height: 110px; margin-top: 18px; resize: vertical; border: 1px solid var(--border); border-radius: 16px; background: #0d0d0d; color: var(--text); padding: 14px; font: 12px/1.45 SFMono-Regular, Consolas, monospace; }
       .actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
       a.button, button.button { min-height: 40px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 999px; background: var(--accent); color: #111111; cursor: pointer; padding: 0 18px; font-weight: 700; text-decoration: none; }
       .secondary { background: transparent !important; color: var(--text) !important; border: 1px solid var(--border) !important; }
-      .status { min-height: 20px; margin-top: 12px; color: var(--muted); font-size: 12px; }
+      .status { min-height: 20px; margin-top: 12px; color: var(--muted); font-size: 12px;
+ font-weight: 320; }
     </style>
   </head>
   <body>

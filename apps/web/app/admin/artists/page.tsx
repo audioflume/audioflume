@@ -113,7 +113,7 @@ function statusStyle(status: ArtistStatus) {
 function StatusBadge({ status }: { status: ArtistStatus }) {
   return (
     <span
-      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] font-medium uppercase tracking-[0.05em]"
+      className="inline-flex h-6 items-center rounded-full px-2.5 text-[10px] uppercase tracking-[0.05em] font-[320]"
       style={statusStyle(status)}
     >
       {formatStatus(status)}
@@ -434,7 +434,7 @@ export default function AdminArtistsPage() {
       {showCreateArtist ? (
         <section className="mb-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
           <div className="grid gap-4 lg:grid-cols-[1fr_1fr_1fr_auto] lg:items-end">
-            <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
+            <label className="grid gap-2 text-[11px] text-[var(--text-secondary)] font-[320]">
               <span>Name (Required)</span>
               <input
                 type="text"
@@ -445,7 +445,7 @@ export default function AdminArtistsPage() {
               />
             </label>
 
-            <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
+            <label className="grid gap-2 text-[11px] text-[var(--text-secondary)] font-[320]">
               <span>Artist URL (Required)</span>
               <input
                 type="text"
@@ -457,7 +457,7 @@ export default function AdminArtistsPage() {
               />
             </label>
 
-            <label className="grid gap-2 text-[11px] font-medium text-[var(--text-secondary)]">
+            <label className="grid gap-2 text-[11px] text-[var(--text-secondary)] font-[320]">
               <span>Owner Email (Required)</span>
               <input
                 type="email"
@@ -535,7 +535,7 @@ export default function AdminArtistsPage() {
       </section>
 
       <div className="overflow-x-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="grid min-w-[1140px] grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+        <div className="grid min-w-[1140px] grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] uppercase tracking-[0.05em] text-[var(--text-muted)] font-[320]">
           <span>Artist</span>
           <span>Owner</span>
           <span>Location</span>
@@ -545,11 +545,11 @@ export default function AdminArtistsPage() {
         </div>
 
         {loading ? (
-          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center text-xs text-[var(--text-muted)] font-[320]">
             Loading artists...
           </div>
         ) : error ? (
-          <div className="flex min-h-[180px] min-w-[1140px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
+          <div className="flex min-h-[180px] min-w-[1140px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)] font-[320]">
             <span>{error}</span>
             <button
               type="button"
@@ -560,7 +560,7 @@ export default function AdminArtistsPage() {
             </button>
           </div>
         ) : visibleArtists.length === 0 ? (
-          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center px-5 text-xs text-[var(--text-muted)] font-[320]">
             No artists match this view.
           </div>
         ) : (
@@ -583,10 +583,10 @@ export default function AdminArtistsPage() {
                   className="grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0"
                 >
                   <div className="min-w-0">
-                    <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                    <div className="truncate text-sm text-[var(--text-primary)] font-[320]">
                       {artist.name}
                     </div>
-                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--text-muted)]">
+                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--text-muted)] font-[320]">
                       <span>/{artist.slug}</span>
                       {artist.website_url ? (
                         <a
@@ -612,26 +612,26 @@ export default function AdminArtistsPage() {
                   </div>
 
                   <div className="min-w-0">
-                    <div className="truncate text-xs text-[var(--text-primary)]">
+                    <div className="truncate text-xs text-[var(--text-primary)] font-[320]">
                       {ownerLabel}
                     </div>
                     {artist.owner?.company_name &&
                     artist.owner.company_name !== ownerLabel ? (
-                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)] font-[320]">
                         {artist.owner.company_name}
                       </div>
                     ) : pendingClaim ? (
-                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)] font-[320]">
                         {pendingClaim.email}
                       </div>
                     ) : null}
                   </div>
 
-                  <div className="truncate text-xs text-[var(--text-secondary)]">
+                  <div className="truncate text-xs text-[var(--text-secondary)] font-[320]">
                     {artist.location || "—"}
                   </div>
 
-                  <div className="text-xs text-[var(--text-secondary)]">
+                  <div className="text-xs text-[var(--text-secondary)] font-[320]">
                     {formatDate(artist.created_at)}
                   </div>
 

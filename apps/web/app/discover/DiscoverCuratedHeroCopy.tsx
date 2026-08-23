@@ -146,7 +146,7 @@ export default function DiscoverCuratedHeroCopy({
           color: var(--text-primary);
           font-family: var(--font-zalando-sans), sans-serif;
           font-size: clamp(17px, 1.15vw, 22px);
-          font-weight: 300;
+          font-weight: 200;
           letter-spacing: -0.025em;
           line-height: 1.35;
           text-align: center;
@@ -173,6 +173,7 @@ export default function DiscoverCuratedHeroCopy({
           .discover-category-description {
             width: calc(100% - 40px);
             font-size: 18px;
+            font-weight: 200;
           }
 
           .discover-mood-pill-list {
@@ -260,6 +261,7 @@ export default function DiscoverCuratedHeroCopy({
               color: color-mix(in srgb, var(--filmwave-black) 62%, transparent);
               font-family: var(--font-zalando-sans), sans-serif;
               font-size: 22px;
+              font-weight: 200;
               line-height: 1;
               transition:
                 background-color 150ms ease,
@@ -337,6 +339,7 @@ export default function DiscoverCuratedHeroCopy({
               .discover-home-search input {
                 padding-left: 22px;
                 font-size: 14px;
+                font-weight: 320;
               }
 
               .discover-home-search button {
@@ -344,6 +347,7 @@ export default function DiscoverCuratedHeroCopy({
                 height: 36px;
                 margin-right: 9px;
                 font-size: 20px;
+                font-weight: 200;
               }
             }
           `}</style>

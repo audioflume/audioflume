@@ -56,10 +56,10 @@ export default function ArtistSongLicenseSelector({
               }`}
             >
               <span className="min-w-0">
-                <span className="block text-xs font-medium text-[var(--text-primary)]">
+                <span className="block text-xs text-[var(--text-primary)] font-[320]">
                   {option.title}
                 </span>
-                <span className="mt-1.5 block text-[11px] leading-5 text-[var(--text-muted)]">
+                <span className="mt-1.5 block text-[11px] leading-5 text-[var(--text-muted)] font-[320]">
                   {option.description}
                 </span>
               </span>
@@ -82,7 +82,7 @@ export default function ArtistSongLicenseSelector({
       </div>
 
       {error ? (
-        <div className="-mt-2 px-5 pb-5 text-[10px] leading-4 text-[var(--status-error,#dc584f)]">
+        <div className="-mt-2 px-5 pb-5 text-[10px] leading-4 text-[var(--status-error,#dc584f)] font-[320]">
           {error}
         </div>
       ) : null}

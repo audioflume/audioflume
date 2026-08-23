@@ -68,7 +68,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         .projects-page .projects-row-count {
           grid-column: 3;
           font-size: 11.5px;
-          font-weight: 400;
+          font-weight: 320;
           line-height: 1.35;
           color: var(--text-subtle);
         }
@@ -248,7 +248,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           .projects-page .projects-new-button::before {
             content: "+";
             font-size: 18px;
-            font-weight: 400;
+            font-weight: 200;
             line-height: 1;
           }
         }

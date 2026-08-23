@@ -229,7 +229,7 @@ export default function ArtistApplicationForm() {
                 }
               />
               <label className="block sm:col-span-2">
-                <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
+                <span className="mb-1.5 block text-xs text-[var(--text-muted)] font-[320]">
                   Artist bio
                 </span>
                 <textarea
@@ -270,17 +270,17 @@ export default function ArtistApplicationForm() {
         />
         <div className="grid gap-3 p-4">
           {loadState === "loading" ? (
-            <div className="text-xs text-[var(--text-muted)]">Loading artist profiles...</div>
+            <div className="text-xs text-[var(--text-muted)] font-[320]">Loading artist profiles...</div>
           ) : null}
 
           {loadState === "error" ? (
-            <div className="text-xs text-[var(--text-muted)]">
+            <div className="text-xs text-[var(--text-muted)] font-[320]">
               Artist profiles could not be loaded.
             </div>
           ) : null}
 
           {loadState === "ready" && applications.length === 0 ? (
-            <div className="border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs leading-5 text-[var(--text-muted)]">
+            <div className="border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs leading-5 text-[var(--text-muted)] font-[320]">
               No artist profiles yet. Your first submitted application will appear here.
             </div>
           ) : null}
@@ -292,14 +292,14 @@ export default function ArtistApplicationForm() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="min-w-0">
-                  <div className="truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                  <div className="truncate text-sm tracking-[-0.02em] text-[var(--text-primary)] font-[320]">
                     {application.name}
                   </div>
-                  <div className="mt-1 text-xs text-[var(--text-muted)]">
+                  <div className="mt-1 text-xs text-[var(--text-muted)] font-[320]">
                     {formatDate(application.created_at)}
                   </div>
                 </div>
-                <span className="shrink-0 text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--text-secondary)]">
+                <span className="shrink-0 text-[11px] uppercase tracking-[0.06em] text-[var(--text-secondary)] font-[320]">
                   {formatStatus(application.status)}
                 </span>
               </div>

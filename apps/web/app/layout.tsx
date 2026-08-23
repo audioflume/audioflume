@@ -104,6 +104,7 @@ export default async function RootLayout({
               gap: 12px !important;
               font-family: var(--font-zalando-sans), sans-serif !important;
               font-size: 13px !important;
+              font-weight: 320;
               text-transform: none !important;
             }
           `}</style>

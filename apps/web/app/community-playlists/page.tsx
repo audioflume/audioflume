@@ -564,6 +564,7 @@ export default function CommunityPlaylistsPage() {
 
         .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-input {
           font-size: 10px !important;
+          font-weight: 320;
         }
 
         .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-icon {
@@ -604,7 +605,7 @@ export default function CommunityPlaylistsPage() {
           color: #fff !important;
           font-family: var(--font-zalando-sans), sans-serif !important;
           font-size: 11px !important;
-          font-weight: 500 !important;
+          font-weight: 320 !important;
           font-kerning: normal !important;
           letter-spacing: 0.02em !important;
           line-height: 1 !important;
@@ -638,6 +639,7 @@ export default function CommunityPlaylistsPage() {
           margin-left: auto;
           color: var(--text-muted);
           font-size: 10px;
+          font-weight: 320;
         }
 
         .community-categories .fw-filter-rail-item.is-active .community-category-count {
@@ -671,6 +673,7 @@ export default function CommunityPlaylistsPage() {
           margin-top: 9px;
           color: var(--text-muted);
           font-size: 11px;
+          font-weight: 320;
           line-height: 1;
         }
 
@@ -695,7 +698,7 @@ export default function CommunityPlaylistsPage() {
           margin: 0;
           color: var(--text-primary);
           font-size: 18px;
-          font-weight: 500;
+          font-weight: 200;
           line-height: 1.2;
           letter-spacing: -0.035em;
         }
@@ -739,6 +742,7 @@ export default function CommunityPlaylistsPage() {
           padding: 5px 8px 5px 5px;
           color: #fff;
           font-size: 10.5px;
+          font-weight: 320;
           line-height: 1;
           -webkit-backdrop-filter: blur(8px);
           backdrop-filter: blur(8px);
@@ -778,6 +782,7 @@ export default function CommunityPlaylistsPage() {
           justify-content: center;
           color: var(--text-muted);
           font-size: 12px;
+          font-weight: 320;
         }
 
         .community-cover {

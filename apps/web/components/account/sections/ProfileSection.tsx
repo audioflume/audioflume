@@ -61,7 +61,7 @@ export default function ProfileSection() {
             <ProfileImageUploader initials={initials} value={form.avatar_url} onChange={(value) => setForm((current) => ({ ...current, avatar_url: value }))} />
             <div className="min-w-0">
               <div className="truncate text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">{fullName}</div>
-              <div className="mt-1 truncate text-xs text-[var(--text-muted)]">{email}</div>
+              <div className="mt-1 truncate text-xs text-[var(--text-muted)] font-[320]">{email}</div>
             </div>
           </div>
         </div>

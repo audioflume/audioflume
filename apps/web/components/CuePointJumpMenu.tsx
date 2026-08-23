@@ -49,7 +49,7 @@ export default function CuePointJumpMenu({
       trigger={() => (
         <button
           type="button"
-          className="flex h-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] px-3 text-[11px] font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)]"
+          className="flex h-8 cursor-pointer items-center justify-center rounded-full border border-[var(--border)] px-3 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover-strong)] hover:text-[var(--text-primary)] font-[320]"
           aria-label="Open cue points"
           aria-expanded={open}
         >
@@ -57,7 +57,7 @@ export default function CuePointJumpMenu({
         </button>
       )}
     >
-      <div className="px-2 pb-1 pt-1 text-[10px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+      <div className="px-2 pb-1 pt-1 text-[10px] uppercase tracking-[0.08em] text-[var(--text-muted)] font-[320]">
         Jump to
       </div>
 

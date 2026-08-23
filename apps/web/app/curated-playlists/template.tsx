@@ -82,7 +82,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     .curated-feature-hero-play-copy
     span {
     font-size: 11.5px !important;
-    font-weight: 400 !important;
+    font-weight: 320 !important;
     letter-spacing: 0 !important;
     line-height: 1.45 !important;
   }
@@ -98,7 +98,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     strong {
     font-family: var(--discover-playlist-card-title-font-family, inherit) !important;
     font-size: var(--discover-playlist-card-title-font-size, 16.5px) !important;
-    font-weight: 400 !important;
+    font-weight: 200 !important;
     letter-spacing: var(--discover-playlist-card-title-letter-spacing, normal) !important;
     line-height: var(--discover-playlist-card-title-line-height, 1.25) !important;
   }
@@ -123,7 +123,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     padding-right: 10px;
     padding-left: 10px;
     font-size: 11.5px !important;
-    font-weight: 400 !important;
+    font-weight: 320 !important;
     letter-spacing: 0 !important;
     line-height: 1.45 !important;
   }

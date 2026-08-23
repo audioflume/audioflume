@@ -95,7 +95,7 @@ export default function ArtistClaimPanel() {
 
   if (loading) {
     return (
-      <div className="text-sm text-[var(--text-muted)]">
+      <div className="text-sm text-[var(--text-muted)] font-[320]">
         Loading artist invitation...
       </div>
     );
@@ -104,31 +104,31 @@ export default function ArtistClaimPanel() {
   return (
     <div className="w-full max-w-[720px]">
       <div className="mb-9">
-        <h1 className="m-0 text-[32px] font-medium tracking-[-0.04em] text-[var(--text-primary)]">
+        <h1 className="m-0 text-[32px] tracking-[-0.04em] text-[var(--text-primary)] font-[200]">
           Claim your artist profile
         </h1>
-        <p className="mt-3 max-w-[580px] text-[14px] font-light leading-[1.55] text-[var(--text-secondary)]">
+        <p className="mt-3 max-w-[580px] text-[14px] leading-[1.55] text-[var(--text-secondary)] font-[320]">
           Claiming connects this existing Audioflume artist profile to your account and gives you Owner access to its catalogue, profile and artist tools.
         </p>
       </div>
 
       {error ? (
-        <div className="mb-5 border border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3 text-[12px] text-[var(--text-primary)]">
+        <div className="mb-5 border border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3 text-[12px] text-[var(--text-primary)] font-[320]">
           {error}
         </div>
       ) : null}
 
       {invitations.length === 0 ? (
         <div className="border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-6">
-          <div className="text-sm font-medium text-[var(--text-primary)]">
+          <div className="text-sm text-[var(--text-primary)] font-[320]">
             No profile is waiting to be claimed.
           </div>
-          <p className="mt-2 text-[12px] font-light leading-[1.5] text-[var(--text-secondary)]">
+          <p className="mt-2 text-[12px] leading-[1.5] text-[var(--text-secondary)] font-[320]">
             Make sure you are signed in with the same verified email address that received the artist invitation.
           </p>
           <a
             href="/artists/dashboard"
-            className="mt-5 inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-[12px] font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+            className="mt-5 inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-[12px] text-[var(--text-primary)] transition hover:border-[var(--text-muted)] font-[320]"
           >
             Go to Artist Dashboard
           </a>
@@ -157,10 +157,10 @@ export default function ArtistClaimPanel() {
                   <div className="truncate text-[15px] font-medium text-[var(--text-primary)]">
                     {invitation.artist.name}
                   </div>
-                  <div className="mt-1 truncate text-[12px] font-light text-[var(--text-muted)]">
+                  <div className="mt-1 truncate text-[12px] text-[var(--text-muted)] font-[320]">
                     /artists/{invitation.artist.slug}
                   </div>
-                  <div className="mt-2 truncate text-[11px] font-light text-[var(--text-secondary)]">
+                  <div className="mt-2 truncate text-[11px] text-[var(--text-secondary)] font-[320]">
                     Invited as {invitation.email}
                   </div>
                 </div>

@@ -206,7 +206,7 @@ export default function Header() {
           color: var(--text-primary) !important;
           font-family: var(--font-zalando-sans), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
           font-size: 22px !important;
-          font-weight: 600 !important;
+          font-weight: 200 !important;
           letter-spacing: -0.045em !important;
           line-height: 1 !important;
           text-transform: lowercase !important;
@@ -263,7 +263,7 @@ export default function Header() {
           color: inherit;
           font-family: inherit;
           font-size: 12px;
-          font-weight: 500;
+          font-weight: 320;
           line-height: 1;
           text-decoration: none;
           white-space: nowrap;
@@ -285,7 +285,7 @@ export default function Header() {
           padding: 0 18px;
           font-family: inherit;
           font-size: 11px;
-          font-weight: 500;
+          font-weight: 320;
           line-height: 1;
           text-decoration: none;
           white-space: nowrap;
@@ -496,7 +496,7 @@ export default function Header() {
         .filmwave-playlists-mega-feature-title {
           color: var(--text-primary) !important;
           font-size: 13.5px !important;
-          font-weight: 500 !important;
+          font-weight: 320 !important;
           letter-spacing: 0 !important;
           line-height: 1.25 !important;
         }
@@ -505,7 +505,7 @@ export default function Header() {
           margin-top: 4px !important;
           color: var(--text-muted) !important;
           font-size: 11.5px !important;
-          font-weight: 400 !important;
+          font-weight: 320 !important;
           line-height: 1.45 !important;
         }
 
@@ -541,7 +541,7 @@ export default function Header() {
           right: 0;
           color: var(--text-primary);
           font-size: 12px;
-          font-weight: 500;
+          font-weight: 320;
           line-height: 1;
           transform: translateY(-50%);
           transition: transform 150ms ease;

@@ -196,7 +196,7 @@ export default function DiscoverHeaderScrollState() {
           color: var(--filmwave-white);
           font-family: inherit;
           font-size: 12px;
-          font-weight: 500;
+          font-weight: 320;
           margin: 0 10px !important;
           padding: 0 20px;
           transition:
@@ -269,7 +269,7 @@ export default function DiscoverHeaderScrollState() {
           overflow: hidden;
           color: var(--text-primary);
           font-size: 13.5px;
-          font-weight: 500;
+          font-weight: 320;
           line-height: 1.25;
           text-overflow: ellipsis;
           white-space: nowrap;
@@ -280,7 +280,7 @@ export default function DiscoverHeaderScrollState() {
           margin-top: 4px;
           color: var(--text-muted);
           font-size: 11px;
-          font-weight: 400;
+          font-weight: 320;
           line-height: 1.25;
         }
 
@@ -290,7 +290,7 @@ export default function DiscoverHeaderScrollState() {
           overflow: hidden;
           color: var(--text-muted);
           font-size: 11.5px;
-          font-weight: 400;
+          font-weight: 320;
           line-height: 1.45;
           -webkit-box-orient: vertical;
           -webkit-line-clamp: 3;

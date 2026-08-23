@@ -207,7 +207,7 @@ export default function Footer({
 
             <div className="flex max-w-[370px] flex-col gap-5">
               <h2 className={footerHeadingClass}>Who is Audioflume?</h2>
-              <div className="flex flex-col gap-2 text-[11px] font-normal leading-[1.75] text-[var(--text-muted)]">
+              <div className="flex flex-col gap-2 text-[11px] leading-[1.75] text-[var(--text-muted)] font-[320]">
                 <p className="m-0">
                   We are filmmakers, musicians and creative technologists building a more thoughtful way to find, organize and license music for moving images.
                 </p>

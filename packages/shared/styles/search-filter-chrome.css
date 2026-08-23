@@ -189,7 +189,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   padding: 0 5px 0 8px;
   color: var(--accent-contrast, #111111);
   font-size: 11px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.2;
   pointer-events: auto;
   white-space: nowrap;
@@ -238,7 +238,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   padding: 3px 8px;
   color: var(--text-muted);
   font-size: 11px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.2;
   text-transform: capitalize;
   white-space: nowrap;
@@ -272,7 +272,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 13px;
-  font-weight: 400;
+  font-weight: 320;
   white-space: nowrap;
   transition: color 150ms ease;
 }
@@ -336,7 +336,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   padding: 0 6px;
   color: var(--text-primary);
   font-size: 10px;
-  font-weight: 500;
+  font-weight: 320;
   line-height: 1;
 }
 
@@ -409,7 +409,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 320;
   text-align: left;
   transition:
     background 150ms ease,
@@ -492,6 +492,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   padding: 18px;
   color: var(--text-muted);
   font-size: 12px;
+  font-weight: 320;
 }
 
 .filmwave-filter-row-button {
@@ -509,7 +510,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   color: var(--text-secondary);
   font-family: inherit;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 320;
   text-align: left;
   transition:
     background 150ms ease,

@@ -67,7 +67,7 @@
   background: var(--bg-hover);
   color: var(--text-muted);
   font-size: 13px;
-  font-weight: 600;
+  font-weight: 320;
 }
 
 .filmwave-player-cover img {
@@ -91,7 +91,7 @@
 .filmwave-player-title {
   color: var(--text-primary);
   font-size: 14.5px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.35;
 }
 
@@ -99,6 +99,7 @@
   margin-top: 1px;
   color: var(--text-subtle);
   font-size: 11.5px;
+  font-weight: 320;
   line-height: 1.35;
 }
 
@@ -155,6 +156,7 @@
   flex-shrink: 0;
   color: var(--text-secondary);
   font-size: 11.5px;
+  font-weight: 320;
   white-space: nowrap;
 }
 
@@ -276,7 +278,7 @@
   padding: 4px 10px;
   color: var(--text-primary);
   font-size: 11px;
-  font-weight: 500;
+  font-weight: 320;
   opacity: 0;
   pointer-events: none;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.18);
@@ -347,6 +349,7 @@
   white-space: nowrap;
   color: var(--text-secondary);
   font-size: 11.5px;
+  font-weight: 320;
 }
 
 .filmwave-player-meta {
@@ -354,6 +357,7 @@
   gap: var(--filmwave-player-meta-gap);
   color: var(--text-secondary);
   font-size: 11.5px;
+  font-weight: 320;
 }
 
 .filmwave-player-actions {
@@ -553,7 +557,7 @@
   padding: 0 11px;
   font-family: inherit;
   font-size: 12.5px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1;
   text-align: left;
   text-decoration: none;

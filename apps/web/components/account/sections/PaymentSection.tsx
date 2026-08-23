@@ -27,12 +27,12 @@ export default function PaymentSection() {
             <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
-                  <div className="text-sm font-medium text-[var(--text-primary)]">Stripe customer portal not connected yet</div>
-                  <div className="mt-1 text-xs text-[var(--text-muted)]">
+                  <div className="text-sm text-[var(--text-primary)] font-[320]">Stripe customer portal not connected yet</div>
+                  <div className="mt-1 text-xs text-[var(--text-muted)] font-[320]">
                     Customer ID: {billingProfile?.stripe_customer_id || "Not created"}
                   </div>
                 </div>
-                <div className="border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]">
+                <div className="border border-[var(--border)] px-2.5 py-1 text-[11px] text-[var(--text-muted)] font-[320]">
                   Stripe-ready
                 </div>
               </div>
@@ -69,7 +69,7 @@ export default function PaymentSection() {
 
       <Card className="mt-4">
         <CardTitle title="Recent invoices" description="Invoices will come from Stripe once subscriptions are connected." />
-        <div className="px-4 py-6 text-sm text-[var(--text-muted)]">No Stripe invoices are connected yet.</div>
+        <div className="px-4 py-6 text-sm text-[var(--text-muted)] font-[320]">No Stripe invoices are connected yet.</div>
       </Card>
     </>
   );

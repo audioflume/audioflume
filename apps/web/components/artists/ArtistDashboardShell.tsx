@@ -319,10 +319,10 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
       <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[900px]">
           <div className="filmwave-backend-section px-6 py-10 text-center">
-            <h1 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.04em]">
+            <h1 className="font-[family-name:var(--font-zalando-sans)] text-2xl tracking-[-0.04em] font-[200]">
               No artist profile yet
             </h1>
-            <p className="mx-auto mt-2 max-w-[460px] text-sm leading-6 text-[var(--text-secondary)]">
+            <p className="mx-auto mt-2 max-w-[460px] text-sm leading-6 text-[var(--text-secondary)] font-[320]">
               Create an artist application first. Once the profile exists, this dashboard becomes its central workspace.
             </p>
             <Link
@@ -379,7 +379,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               }`}
             >
               <div className="flex items-center gap-3">
-                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[14px] font-medium text-[var(--text-secondary)]">
+                <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[14px] text-[var(--text-secondary)] font-[320]">
                   {activeArtist.profile_image_url ? (
                     <img
                       src={activeArtist.profile_image_url}
@@ -391,10 +391,10 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                   )}
                 </div>
                 <div className={`min-w-0 flex-1 ${canSwitchArtists ? "pr-5" : ""}`}>
-                  <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+                  <div className="truncate text-xs text-[var(--text-primary)] font-[320]">
                     {activeArtist.name}
                   </div>
-                  <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-[var(--text-muted)]">
+                  <div className="mt-1.5 flex items-center justify-between gap-2 text-[10px] text-[var(--text-muted)] font-[320]">
                     <span>{formatStatus(activeArtist.status)}</span>
                     <span>{formatRole(activeArtist.role)}</span>
                   </div>
@@ -423,7 +423,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
               {notificationUnreadCount > 0 ? (
                 <span
                   data-artist-notification-badge
-                  className="absolute -right-2 -top-2 z-10 flex h-5 min-w-5 cursor-pointer items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] font-medium leading-none text-[var(--danger-contrast)] ring-2 ring-[var(--bg-primary)]"
+                  className="absolute -right-2 -top-2 z-10 flex h-5 min-w-5 cursor-pointer items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] leading-none text-[var(--danger-contrast)] ring-2 ring-[var(--bg-primary)] font-[320]"
                   aria-label={`${notificationUnreadCount} unread ${
                     notificationUnreadCount === 1 ? "notification" : "notifications"
                   }`}
@@ -453,7 +453,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                       }`}
                     >
-                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-[5px] bg-[var(--bg-tertiary)] text-[11px] font-medium text-[var(--text-secondary)]">
+                      <div className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-[5px] bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-secondary)] font-[320]">
                         {profile.profile_image_url ? (
                           <img
                             src={profile.profile_image_url}
@@ -465,10 +465,10 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                         )}
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="truncate text-[11px] font-medium text-[var(--text-primary)]">
+                        <div className="truncate text-[11px] text-[var(--text-primary)] font-[320]">
                           {profile.name}
                         </div>
-                        <div className="mt-0.5 truncate text-[9px] text-[var(--text-muted)]">
+                        <div className="mt-0.5 truncate text-[9px] text-[var(--text-muted)] font-[320]">
                           {formatStatus(profile.status)}
                         </div>
                       </div>

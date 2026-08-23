@@ -154,7 +154,7 @@ function releaseYearToDate(value: string) {
 
 function FieldLabel({ children }: { children: string }) {
   return (
-    <label className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+    <label className="mb-1.5 block text-[11px] text-[var(--text-secondary)] font-[320]">
       {children}
     </label>
   );
@@ -919,7 +919,7 @@ export default function ArtistSongUploadForm({
                     <option value="__create__">+ Create new release</option>
                   </SelectInput>
                   {releaseLoadError ? (
-                    <div className="mt-1 text-[10px] leading-4 text-[var(--danger)]">
+                    <div className="mt-1 text-[10px] leading-4 text-[var(--danger)] font-[320]">
                       {releaseLoadError}
                     </div>
                   ) : null}
@@ -988,7 +988,7 @@ export default function ArtistSongUploadForm({
               <div className="grid gap-4 px-5 pb-5">
                 <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_180px]">
                   <label className="block">
-                    <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+                    <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)] font-[320]">
                       Release title
                     </span>
                     <BackendInput
@@ -1001,7 +1001,7 @@ export default function ArtistSongUploadForm({
                   </label>
 
                   <label className="block">
-                    <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+                    <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)] font-[320]">
                       Type
                     </span>
                     <SelectInput
@@ -1018,7 +1018,7 @@ export default function ArtistSongUploadForm({
                   </label>
 
                   <label className="block">
-                    <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+                    <span className="mb-1.5 block text-[11px] text-[var(--text-secondary)] font-[320]">
                       Year
                     </span>
                     <BackendInput
@@ -1036,7 +1036,7 @@ export default function ArtistSongUploadForm({
                 </div>
 
                 {createReleaseError ? (
-                  <div className="text-xs leading-5 text-[var(--danger)]">
+                  <div className="text-xs leading-5 text-[var(--danger)] font-[320]">
                     {createReleaseError}
                   </div>
                 ) : null}
@@ -1092,7 +1092,7 @@ export default function ArtistSongUploadForm({
             </div>
             <div className="grid gap-3 px-5 pb-5">
               {credits.length === 0 ? (
-                <div className="text-xs text-[var(--text-muted)]">No credits added yet.</div>
+                <div className="text-xs text-[var(--text-muted)] font-[320]">No credits added yet.</div>
               ) : null}
               {credits.map((credit, index) => (
                 <div key={index} className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
@@ -1145,7 +1145,7 @@ export default function ArtistSongUploadForm({
             </div>
             <div className="grid gap-5 px-5 pb-5">
               {!canEditRights ? (
-                <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]">
+                <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)] font-[320]">
                   Your role cannot edit ownership. You can upload the draft, and a manager or owner can complete rights before submission.
                 </div>
               ) : null}
@@ -1181,7 +1181,7 @@ export default function ArtistSongUploadForm({
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <FieldLabel>Ownership Splits</FieldLabel>
-                    <div className="text-[11px] text-[var(--text-muted)]">
+                    <div className="text-[11px] text-[var(--text-muted)] font-[320]">
                       Master: {ownershipTotals.master}% · Publishing: {ownershipTotals.publishing}%
                     </div>
                   </div>
@@ -1201,7 +1201,7 @@ export default function ArtistSongUploadForm({
 
                 <div className="grid gap-3">
                   {rightsHolders.length === 0 ? (
-                    <div className="text-xs text-[var(--text-muted)]">
+                    <div className="text-xs text-[var(--text-muted)] font-[320]">
                       No ownership splits added yet.
                     </div>
                   ) : null}
@@ -1249,14 +1249,14 @@ export default function ArtistSongUploadForm({
             <div className="grid gap-2 px-5 pb-5">
               {uploadWarnings.length > 0 && !uploadComplete ? (
                 <>
-                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)] font-[320]">
                     <div className="flex items-center gap-2 font-medium">
                       <WarningIcon />
                       <span>
                         {uploadWarnings.length} item{uploadWarnings.length === 1 ? "" : "s"} need attention
                       </span>
                     </div>
-                    <div className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <div className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)] font-[320]">
                       {uploadWarnings[0]}
                       {uploadWarnings.length > 1 ? ` + ${uploadWarnings.length - 1} more` : ""}
                     </div>
@@ -1271,7 +1271,7 @@ export default function ArtistSongUploadForm({
                     ) : null}
                   </div>
                   {warningsOpen && uploadWarnings.length > 1 ? (
-                    <ul className="grid gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <ul className="grid gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)] font-[320]">
                       {uploadWarnings.map((warning) => (
                         <li key={warning}>{warning}</li>
                       ))}
@@ -1279,7 +1279,7 @@ export default function ArtistSongUploadForm({
                   ) : null}
                 </>
               ) : (
-                <div className="rounded-[7px] bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs font-medium text-[var(--status-success,#48b571)]">
+                <div className="rounded-[7px] bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs text-[var(--status-success,#48b571)] font-[320]">
                   Ready to save
                 </div>
               )}
@@ -1293,12 +1293,12 @@ export default function ArtistSongUploadForm({
               </div>
               <div className="grid gap-3 px-5 pb-5">
                 {error ? (
-                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)] font-[320]">
                     {error}
                   </div>
                 ) : null}
                 {saveStatus ? (
-                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
+                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)] font-[320]">
                     {saveStatus}
                   </div>
                 ) : null}
