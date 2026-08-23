@@ -116,11 +116,11 @@ export default function ArtistTrackOrderRow({
           {playerSong?.licenseType === "premium" ? <PremiumLabel /> : null}
         </span>
       </BackendRowTitle>
-      <div className="text-xs text-[var(--text-muted)]">
+      <div className="text-xs font-[320] text-[var(--text-muted)]">
         {formatDuration(Number(song.duration))}
       </div>
-      <div className="text-xs text-[var(--text-muted)]">{song.key || "—"}</div>
-      <div className="text-xs text-[var(--text-muted)]">
+      <div className="text-xs font-[320] text-[var(--text-muted)]">{song.key || "—"}</div>
+      <div className="text-xs font-[320] text-[var(--text-muted)]">
         {song.bpm ? `${song.bpm} BPM` : "—"}
       </div>
       {canManage ? (

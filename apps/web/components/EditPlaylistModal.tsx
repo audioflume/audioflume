@@ -262,11 +262,11 @@ export default function EditPlaylistModal({
               </div>
 
               <div className="min-w-0">
-                <div className="text-xs font-medium text-[var(--text-primary)]">
+                <div className="text-xs font-[320] text-[var(--text-primary)]">
                   {isUploadingCover ? "Uploading…" : "Drop image here"}
                 </div>
 
-                <div className="mt-1 text-[11px] leading-4 text-[var(--text-secondary)]">
+                <div className="mt-1 text-[11px] font-[320] leading-4 text-[var(--text-secondary)]">
                   Click to upload a playlist cover.
                 </div>
               </div>
@@ -274,7 +274,7 @@ export default function EditPlaylistModal({
           )}
 
           {coverUploadError && (
-            <p className="mt-2 text-[11px] text-[var(--danger)]">
+            <p className="mt-2 text-[11px] font-[320] text-[var(--danger)]">
               {coverUploadError}
             </p>
           )}

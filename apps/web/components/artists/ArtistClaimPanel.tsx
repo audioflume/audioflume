@@ -95,7 +95,7 @@ export default function ArtistClaimPanel() {
 
   if (loading) {
     return (
-      <div className="text-sm text-[var(--text-muted)]">
+      <div className="text-sm font-[320] text-[var(--text-muted)]">
         Loading artist invitation...
       </div>
     );
@@ -104,31 +104,31 @@ export default function ArtistClaimPanel() {
   return (
     <div className="w-full max-w-[720px]">
       <div className="mb-9">
-        <h1 className="m-0 text-[32px] font-medium tracking-[-0.04em] text-[var(--text-primary)]">
+        <h1 className="m-0 text-[32px] font-[200] tracking-[-0.04em] text-[var(--text-primary)]">
           Claim your artist profile
         </h1>
-        <p className="mt-3 max-w-[580px] text-[14px] font-light leading-[1.55] text-[var(--text-secondary)]">
+        <p className="mt-3 max-w-[580px] text-[14px] font-[320] leading-[1.55] text-[var(--text-secondary)]">
           Claiming connects this existing Audioflume artist profile to your account and gives you Owner access to its catalogue, profile and artist tools.
         </p>
       </div>
 
       {error ? (
-        <div className="mb-5 border border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3 text-[12px] text-[var(--text-primary)]">
+        <div className="mb-5 border border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3 text-[12px] font-[320] text-[var(--text-primary)]">
           {error}
         </div>
       ) : null}
 
       {invitations.length === 0 ? (
         <div className="border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-6">
-          <div className="text-sm font-medium text-[var(--text-primary)]">
+          <div className="text-sm font-[320] text-[var(--text-primary)]">
             No profile is waiting to be claimed.
           </div>
-          <p className="mt-2 text-[12px] font-light leading-[1.5] text-[var(--text-secondary)]">
+          <p className="mt-2 text-[12px] font-[320] leading-[1.5] text-[var(--text-secondary)]">
             Make sure you are signed in with the same verified email address that received the artist invitation.
           </p>
           <a
             href="/artists/dashboard"
-            className="mt-5 inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-[12px] font-medium text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+            className="mt-5 inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] px-4 text-[12px] font-[320] text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
           >
             Go to Artist Dashboard
           </a>
@@ -157,10 +157,10 @@ export default function ArtistClaimPanel() {
                   <div className="truncate text-[15px] font-medium text-[var(--text-primary)]">
                     {invitation.artist.name}
                   </div>
-                  <div className="mt-1 truncate text-[12px] font-light text-[var(--text-muted)]">
+                  <div className="mt-1 truncate text-[12px] font-[320] text-[var(--text-muted)]">
                     /artists/{invitation.artist.slug}
                   </div>
-                  <div className="mt-2 truncate text-[11px] font-light text-[var(--text-secondary)]">
+                  <div className="mt-2 truncate text-[11px] font-[320] text-[var(--text-secondary)]">
                     Invited as {invitation.email}
                   </div>
                 </div>
@@ -169,7 +169,7 @@ export default function ArtistClaimPanel() {
                   type="button"
                   disabled={Boolean(claimingId)}
                   onClick={() => void claimArtist(invitation)}
-                  className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
+                  className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-[320] text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
                 >
                   {claiming ? "Claiming..." : "Claim Profile"}
                 </button>

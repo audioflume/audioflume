@@ -17,15 +17,15 @@ import { useMembershipData } from "../hooks/useMembershipData";
 function PlanDetail({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-xs font-medium text-[var(--text-muted)]">{label}</div>
-      <div className="mt-1 text-sm font-medium leading-5 text-[var(--text-primary)]">{value}</div>
+      <div className="text-xs font-[320] text-[var(--text-muted)]">{label}</div>
+      <div className="mt-1 text-sm font-[320] leading-5 text-[var(--text-primary)]">{value}</div>
     </div>
   );
 }
 
 function ActivePill() {
   return (
-    <div className="inline-flex items-center rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
+    <div className="inline-flex items-center rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-[320] text-[#48b571]">
       Active
     </div>
   );
@@ -33,7 +33,7 @@ function ActivePill() {
 
 function CurrentPlanButton() {
   return (
-    <div className="inline-flex h-8 min-w-[122px] items-center justify-center border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-3.5 text-xs font-medium text-[#48b571]">
+    <div className="inline-flex h-8 min-w-[122px] items-center justify-center border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-3.5 text-xs font-[320] text-[#48b571]">
       Current plan
     </div>
   );
@@ -64,19 +64,19 @@ export default function MembershipSection() {
           <CardTitle title="Current membership" description="Your active Audioflume plan and license coverage." />
           <div className="grid gap-4 p-4 md:grid-cols-[0.9fr_1.1fr]">
             <div>
-              <div className="text-xs font-medium text-[var(--text-muted)]">Plan</div>
-              <div className="mt-1 text-xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+              <div className="text-xs font-[320] text-[var(--text-muted)]">Plan</div>
+              <div className="mt-1 text-xl font-[200] tracking-[-0.02em] text-[var(--text-primary)]">
                 {currentPlanLabel}
               </div>
-              <div className="mt-3 inline-flex rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
+              <div className="mt-3 inline-flex rounded-full border border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-[320] text-[#48b571]">
                 {display?.status_label || "Active"}
               </div>
             </div>
 
             <div className="border-t border-[var(--border)] pt-4 md:border-l md:border-t-0 md:pl-4 md:pt-0">
-              <div className="text-xs font-medium text-[var(--text-muted)]">License</div>
-              <div className="mt-1 text-sm font-medium leading-5 text-[var(--text-primary)]">{licenseLabel}</div>
-              <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
+              <div className="text-xs font-[320] text-[var(--text-muted)]">License</div>
+              <div className="mt-1 text-sm font-[320] leading-5 text-[var(--text-primary)]">{licenseLabel}</div>
+              <p className="mt-2 text-xs font-[320] leading-5 text-[var(--text-muted)]">
                 Covers eligible Audioflume downloads for client, commercial, and creator projects.
               </p>
             </div>
@@ -109,11 +109,11 @@ export default function MembershipSection() {
               <div className="p-4">
                 <div className="flex min-h-[190px] flex-col">
                   <div className="flex min-h-7 items-start justify-between gap-3">
-                    <div className="text-sm font-medium text-[var(--text-primary)]">{name}</div>
+                    <div className="text-sm font-[320] text-[var(--text-primary)]">{name}</div>
                     {isCurrentPlan ? <ActivePill /> : null}
                   </div>
-                  <div className="mt-2 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">{price}</div>
-                  <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{description}</p>
+                  <div className="mt-2 text-2xl font-[200] tracking-[-0.05em] text-[var(--text-primary)]">{price}</div>
+                  <p className="mt-2 text-xs font-[320] leading-5 text-[var(--text-muted)]">{description}</p>
                   <div className="mt-auto pt-5">
                     {isCurrentPlan ? (
                       <CurrentPlanButton />
@@ -133,8 +133,8 @@ export default function MembershipSection() {
       <Card className="mt-4">
         <div className="flex flex-wrap items-center justify-between gap-4 p-4">
           <div>
-            <div className="text-sm font-medium text-[var(--text-primary)]">Cancel membership</div>
-            <p className="mt-1 max-w-2xl text-xs leading-5 text-[var(--text-muted)]">
+            <div className="text-sm font-[320] text-[var(--text-primary)]">Cancel membership</div>
+            <p className="mt-1 max-w-2xl text-xs font-[320] leading-5 text-[var(--text-muted)]">
               Membership cancellation will be handled through Stripe once subscriptions are connected.
             </p>
           </div>

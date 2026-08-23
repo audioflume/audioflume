@@ -45,8 +45,8 @@ export default function SupportSection() {
           <Card key={card.title} className="group">
             <VisualPanel index={index} />
             <div className="p-4">
-              <div className="text-sm font-medium text-[var(--text-primary)]">{card.title}</div>
-              <p className="mt-2 min-h-[66px] text-xs leading-5 text-[var(--text-muted)]">{card.description}</p>
+              <div className="text-sm font-[320] text-[var(--text-primary)]">{card.title}</div>
+              <p className="mt-2 min-h-[66px] text-xs font-[320] leading-5 text-[var(--text-muted)]">{card.description}</p>
               <div className="mt-4">
                 <Button dark>
                   {card.action} {card.icon}
@@ -62,8 +62,8 @@ export default function SupportSection() {
         <div className="divide-y divide-[var(--border)]">
           {faqs.map(([question, answer]) => (
             <div key={question} className="px-4 py-3.5">
-              <div className="text-sm font-medium text-[var(--text-primary)]">{question}</div>
-              <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{answer}</p>
+              <div className="text-sm font-[320] text-[var(--text-primary)]">{question}</div>
+              <p className="mt-2 text-xs font-[320] leading-5 text-[var(--text-muted)]">{answer}</p>
             </div>
           ))}
         </div>

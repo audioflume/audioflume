@@ -161,12 +161,12 @@ export default function AdminImageUpload({
         variant="compact"
         allowRemove={allowRemove}
         footer={
-          error ? <p className="text-xs text-[var(--danger)]">{error}</p> : null
+          error ? <p className="text-xs font-[320] text-[var(--danger)]">{error}</p> : null
         }
       />
 
       {showUrlInput ? (
-        <label className="grid gap-1.5 text-xs font-medium text-[var(--text-muted)]">
+        <label className="grid gap-1.5 text-xs font-[320] text-[var(--text-muted)]">
           Or paste image URL
           <BackendInput
             type="url"

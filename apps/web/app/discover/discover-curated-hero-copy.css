@@ -129,6 +129,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   padding: 0 20px 0 0;
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 14px;
+  font-weight: 320;
 }
 
 .discover-integrated-search button {
@@ -146,6 +147,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   padding: 0 16px;
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 12px;
+  font-weight: 320;
 }
 
 .discover-integrated-search-arrow {
@@ -153,6 +155,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   flex: 0 0 auto;
   font-family: inherit;
   font-size: 13px;
+  font-weight: 320;
   line-height: 1;
 }
 
@@ -188,7 +191,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   gap: 4px;
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(11px, 0.8vw, 14px);
-  font-weight: 500;
+  font-weight: 320;
   letter-spacing: normal;
   line-height: 1.15;
   text-transform: uppercase;
@@ -279,6 +282,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   color: rgba(255, 255, 255, 0.62);
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 22px;
+  font-weight: 200;
   line-height: 1;
   transition:
     background-color 150ms ease,
@@ -316,7 +320,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   color: var(--filmwave-white);
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: clamp(17px, 1.15vw, 22px);
-  font-weight: 500;
+  font-weight: 200;
   letter-spacing: -0.025em;
   line-height: 1;
 }
@@ -345,7 +349,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   color: rgba(255, 255, 255, 0.92);
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1;
   transition:
     border-color 150ms ease,
@@ -423,7 +427,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-zalando-sans), sans-serif;
   font-size: 12px;
-  font-weight: 400;
+  font-weight: 320;
   line-height: 1.15;
   transition:
     border-color 150ms ease,
@@ -607,6 +611,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
   .discover-category-search input {
     padding-left: 22px;
     font-size: 14px;
+    font-weight: 320;
   }
 
   .discover-category-search button {
@@ -614,6 +619,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
     height: 36px;
     margin-right: 9px;
     font-size: 20px;
+    font-weight: 200;
   }
 
   .discover-category-browser {
@@ -622,6 +628,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
 
   .discover-category-browser h2 {
     font-size: 18px;
+    font-weight: 200;
   }
 
   .discover-category-filter-controls {
@@ -635,6 +642,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
     padding-right: 12px;
     padding-left: 12px;
     font-size: 11px;
+    font-weight: 320;
   }
 
   .discover-category-filter-panel {
@@ -651,5 +659,6 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
     padding-right: 10px;
     padding-left: 10px;
     font-size: 11px;
+    font-weight: 320;
   }
 }

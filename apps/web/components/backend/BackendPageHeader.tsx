@@ -19,7 +19,7 @@ export default function BackendPageHeader({
         compact ? "mb-3" : "mb-8 border-b border-[var(--border)] pb-4"
       }`}
     >
-      <div className="text-xs text-[var(--text-muted)]">
+      <div className="text-xs font-[320] text-[var(--text-muted)]">
         {section} / <span className="text-[var(--text-primary)]">{label}</span>
       </div>
 

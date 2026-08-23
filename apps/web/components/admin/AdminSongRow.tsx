@@ -50,7 +50,7 @@ function StatusDot({ health }: { health: SongHealthStatus }) {
 function AutoEditPointChip() {
   return (
     <span
-      className="inline-flex h-6 items-center rounded-full border px-2 text-[10px] font-semibold uppercase tracking-[0.04em]"
+      className="inline-flex h-6 items-center rounded-full border px-2 text-[10px] font-[320] uppercase tracking-[0.04em]"
       style={{
         borderColor: "rgba(251, 143, 97, 0.35)",
         backgroundColor: "rgba(251, 143, 97, 0.1)",
@@ -228,7 +228,7 @@ export default function AdminSongRow({
     <div
       data-admin-song-id={song.id}
       onClick={handleRowClick}
-      className={`admin-song-row group/admin-song-row grid ${largeRow ? "min-h-[72px]" : "min-h-[46px]"} cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
+      className={`admin-song-row group/admin-song-row grid ${largeRow ? "min-h-[72px]" : "min-h-[46px]"} cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs font-[320] transition ${
         rowHealth === "error" ? "is-error" : ""
       } ${rowHealth === "warning" ? "is-warning" : ""} ${
         isAnalyzingEditPoints ? "pointer-events-none opacity-45" : ""

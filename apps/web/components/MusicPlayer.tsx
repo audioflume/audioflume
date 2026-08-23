@@ -539,7 +539,7 @@ export default function MusicPlayer() {
                   ? "Playing in another tab"
                   : currentSong.artist
               }
-              className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
+              className="flex min-w-0 items-center gap-1.5 truncate text-xs font-[320] text-[var(--text-subtle)]"
             >
               {remotePlayingInAnotherTab ? (
                 <>
@@ -604,7 +604,7 @@ export default function MusicPlayer() {
           >
             {showWaveform ? (
               <div className="flex w-full min-w-0 items-center gap-4 overflow-visible">
-                <span className="w-10 flex-shrink-0 text-right text-xs text-[var(--icon-color)]">
+                <span className="w-10 flex-shrink-0 text-right text-xs font-[320] text-[var(--icon-color)]">
                   {formatTime(currentTime)}
                 </span>
 
@@ -647,7 +647,7 @@ export default function MusicPlayer() {
                             opacity: "var(--cue-marker-opacity)",
                           }}
                         />
-                        <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-[80] flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
+                        <span className="pointer-events-none absolute bottom-[calc(100%+8px)] left-1/2 z-[80] flex -translate-x-1/2 translate-y-1 items-center whitespace-nowrap rounded-full border border-[var(--border)] bg-[var(--bg-primary)] px-2.5 py-1 text-[11px] font-[320] text-[var(--text-primary)] opacity-0 shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition duration-150 group-hover/player-cue-point:translate-y-0 group-hover/player-cue-point:opacity-100">
                           {label} · {formatEditPointTime(marker.time)}
                         </span>
                       </button>
@@ -661,7 +661,7 @@ export default function MusicPlayer() {
                   />
                 </div>
 
-                <span className="w-10 flex-shrink-0 text-xs text-[var(--icon-color)]">
+                <span className="w-10 flex-shrink-0 text-xs font-[320] text-[var(--icon-color)]">
                   {formatTime(duration)}
                 </span>
 
@@ -699,7 +699,7 @@ export default function MusicPlayer() {
                 )}
               </div>
             ) : (
-              <div className="whitespace-nowrap text-xs text-[var(--icon-color)]">
+              <div className="whitespace-nowrap text-xs font-[320] text-[var(--icon-color)]">
                 {showFullCompactTime
                   ? `${formatTime(currentTime)} / ${formatTime(duration)}`
                   : formatTime(currentTime)}
@@ -859,7 +859,7 @@ export default function MusicPlayer() {
               href={currentSong.audioUrl}
               download
               aria-label="License song"
-              className="ml-2 inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-[var(--text-primary)] px-3 text-[11px] font-medium leading-none text-[var(--bg-primary)] transition hover:opacity-80"
+              className="ml-2 inline-flex h-7 cursor-pointer items-center justify-center gap-2 rounded-none bg-[var(--text-primary)] px-3 text-[11px] font-[320] leading-none text-[var(--bg-primary)] transition hover:opacity-80"
             >
               <span>License</span>
               <DownloadIcon size={13} />

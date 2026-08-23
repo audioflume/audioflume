@@ -5,7 +5,7 @@ type FooterBottomProps = {
 export default function FooterBottom({ className = "" }: FooterBottomProps) {
   return (
     <div
-      className={`flex min-h-9 items-center justify-between border-t border-[var(--border-subtle)] text-[9px] font-normal leading-none text-[var(--text-muted)] ${className}`}
+      className={`flex min-h-9 items-center justify-between border-t border-[var(--border-subtle)] text-[9px] font-[320] leading-none text-[var(--text-muted)] ${className}`}
     >
       <span>© 2026 Audioflume</span>
       <span>All rights reserved</span>

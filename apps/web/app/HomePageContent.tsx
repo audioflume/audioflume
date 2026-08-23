@@ -369,7 +369,7 @@ function HomeSongs({
         <SectionTitle>Newly Added Tracks</SectionTitle>
         <Link
           href="/music"
-          className="text-xs font-medium text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="text-xs font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           Explore music library
         </Link>
@@ -390,7 +390,7 @@ function HomeSongs({
       <div className="mt-5 flex justify-center">
         <Link
           href="/music"
-          className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--filmwave-neutral-surface)] px-10 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
+          className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--filmwave-neutral-surface)] px-10 text-[13px] font-[320] text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
         >
           Explore music library
         </Link>

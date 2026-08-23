@@ -139,6 +139,7 @@
     inset 0 0 0 1px var(--border),
     inset 0 1px 0 rgba(255, 255, 255, 0.07) !important;
   font-size: 20px !important;
+  font-weight: 200 !important;
   line-height: 1 !important;
 }
 
@@ -148,4 +149,5 @@
   width: 22px !important;
   border-radius: 5px !important;
   font-size: 12px !important;
+  font-weight: 320 !important;
 }

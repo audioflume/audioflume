@@ -374,7 +374,7 @@ export default function PlaylistDetailPage() {
             <button
               type="button"
               onClick={() => router.push("/playlists")}
-              className="inline-flex cursor-pointer items-center gap-2 text-[13px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+              className="inline-flex cursor-pointer items-center gap-2 text-[13px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
             >
               <BackIcon />
               Back to playlists

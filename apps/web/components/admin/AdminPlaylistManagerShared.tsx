@@ -82,10 +82,10 @@ function PlaylistManagerLibraryCard({
 
       <div className="mt-2.5 flex min-w-0 items-start gap-3">
         <Link href={editHref} className="min-w-0 flex-1">
-          <h3 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+          <h3 className="truncate text-[13px] font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
             {playlist.name}
           </h3>
-          <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
+          <p className="mt-0.5 truncate text-[10px] font-[320] text-[var(--text-muted)]">
             {meta}
           </p>
         </Link>
@@ -179,7 +179,7 @@ export function PlaylistManagerSortableCard({
         <button
           type="button"
           onClick={onRemove}
-          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_90%,var(--danger)_10%)] hover:text-[var(--danger)] group-hover:opacity-100"
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-[200] leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_90%,var(--danger)_10%)] hover:text-[var(--danger)] group-hover:opacity-100"
           aria-label={removeAriaLabel}
           title={removeTitle}
         >
@@ -188,10 +188,10 @@ export function PlaylistManagerSortableCard({
       </div>
 
       <Link href={editHref} className="mt-2.5 block min-w-0">
-        <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+        <h4 className="truncate text-[13px] font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
           {playlist.name}
         </h4>
-        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
+        <p className="mt-0.5 truncate text-[10px] font-[320] text-[var(--text-muted)]">
           {meta}
         </p>
       </Link>
@@ -217,10 +217,10 @@ export function PlaylistManagerStaticCard({
         <PlaylistManagerArtwork playlist={playlist} />
       </Link>
       <Link href={editHref} className="mt-2.5 block min-w-0">
-        <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+        <h4 className="truncate text-[13px] font-[320] tracking-[-0.02em] text-[var(--text-primary)]">
           {playlist.name}
         </h4>
-        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
+        <p className="mt-0.5 truncate text-[10px] font-[320] text-[var(--text-muted)]">
           {meta}
         </p>
       </Link>
@@ -258,7 +258,7 @@ export function PlaylistManagerCollapsibleSection({
           <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             {title}
           </h3>
-          <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+          <p className="mt-1 text-[11px] font-[320] text-[var(--text-muted)]">
             {subtitle}
           </p>
         </div>
@@ -343,14 +343,14 @@ export function PlaylistManagerLibrarySection({
           <h3 className="text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             {title}
           </h3>
-          <p className="mt-1 text-[11px] text-[var(--text-muted)]">
+          <p className="mt-1 text-[11px] font-[320] text-[var(--text-muted)]">
             {subtitle}
           </p>
         </div>
       </div>
 
       {playlists.length === 0 ? (
-        <div className="flex min-h-[180px] items-center justify-center border border-[var(--border)] text-sm text-[var(--text-secondary)]">
+        <div className="flex min-h-[180px] items-center justify-center border border-[var(--border)] text-sm font-[320] text-[var(--text-secondary)]">
           {emptyMessage}
         </div>
       ) : (

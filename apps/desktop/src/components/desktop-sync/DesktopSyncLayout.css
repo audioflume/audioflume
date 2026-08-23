@@ -757,7 +757,7 @@ html[data-theme="light"] .primary-button:hover:not(:disabled) {
 }
 
 html[data-theme="light"] .secondary-button:hover:not(:disabled) {
-  background: var(--sync-control-hover);
+  background: var(--bg-control-hover);
   color: var(--text-primary);
 }
 

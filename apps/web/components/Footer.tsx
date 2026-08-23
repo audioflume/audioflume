@@ -30,10 +30,10 @@ const quickLinks = [
 ];
 
 const footerLinkClass =
-  "inline-flex w-fit text-[11px] font-normal leading-[1.75] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
+  "inline-flex w-fit text-[11px] font-[320] leading-[1.75] text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 
 const footerHeadingClass =
-  "m-0 text-[11px] font-medium leading-none text-[var(--text-primary)]";
+  "m-0 text-[11px] font-[320] leading-none text-[var(--text-primary)]";
 
 type FooterProps = {
   className?: string;
@@ -153,7 +153,7 @@ export default function Footer({
 
       <footer
         ref={footerRef}
-        className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isPlaylistDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
+        className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-[320] text-[var(--text-muted)] ${isPlaylistDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
         style={{
           paddingRight: removePageGutter ? "0px" : undefined,
           paddingLeft: removePageGutter ? "0px" : undefined,
@@ -207,7 +207,7 @@ export default function Footer({
 
             <div className="flex max-w-[370px] flex-col gap-5">
               <h2 className={footerHeadingClass}>Who is Audioflume?</h2>
-              <div className="flex flex-col gap-2 text-[11px] font-normal leading-[1.75] text-[var(--text-muted)]">
+              <div className="flex flex-col gap-2 text-[11px] font-[320] leading-[1.75] text-[var(--text-muted)]">
                 <p className="m-0">
                   We are filmmakers, musicians and creative technologists building a more thoughtful way to find, organize and license music for moving images.
                 </p>

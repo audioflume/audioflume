@@ -95,7 +95,7 @@ export default function ModalShell({
           }
         >
           {headerContent || (
-            <h2 className={`${modalTitleClass} text-[22px] tracking-[-0.04em]`}>{title}</h2>
+            <h2 className={`${modalTitleClass} text-[22px] font-[200] tracking-[-0.04em]`}>{title}</h2>
           )}
         </div>
 

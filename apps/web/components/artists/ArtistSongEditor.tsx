@@ -138,7 +138,7 @@ function formatDuration(value: number) {
 
 function FieldLabel({ children }: { children: string }) {
   return (
-    <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
+    <span className="mb-1.5 block text-[11px] font-[320] text-[var(--text-secondary)]">
       {children}
     </span>
   );
@@ -533,7 +533,7 @@ export default function ArtistSongEditor({
 
   if (loadState === "loading") {
     return (
-      <section className="filmwave-backend-section px-5 py-6 text-xs text-[var(--text-muted)]">
+      <section className="filmwave-backend-section px-5 py-6 text-xs font-[320] text-[var(--text-muted)]">
         Loading track details...
       </section>
     );
@@ -542,7 +542,7 @@ export default function ArtistSongEditor({
   if (loadState === "error") {
     return (
       <section className="filmwave-backend-section p-5">
-        <div className="text-xs text-[var(--status-error)]">{error}</div>
+        <div className="text-xs font-[320] text-[var(--status-error)]">{error}</div>
         <button
           type="button"
           onClick={onClose}
@@ -567,10 +567,10 @@ export default function ArtistSongEditor({
 
           {reviewFeedback?.notes ? (
             <section className="rounded-[10px] border border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
-              <div className="text-xs font-medium text-[var(--status-warning,var(--text-primary))]">
+              <div className="text-xs font-[320] text-[var(--status-warning,var(--text-primary))]">
                 Review feedback
               </div>
-              <p className="mt-2 text-xs leading-5 text-[var(--text-primary)]">
+              <p className="mt-2 text-xs font-[320] leading-5 text-[var(--text-primary)]">
                 {reviewFeedback.notes}
               </p>
             </section>
@@ -674,7 +674,7 @@ export default function ArtistSongEditor({
             </div>
             <div className="grid gap-3 px-5 pb-5">
               {credits.length === 0 ? (
-                <div className="text-xs text-[var(--text-muted)]">
+                <div className="text-xs font-[320] text-[var(--text-muted)]">
                   No credits added yet.
                 </div>
               ) : null}
@@ -737,7 +737,7 @@ export default function ArtistSongEditor({
 
             <div className="grid gap-5 px-5 pb-5">
               {!canEditRights ? (
-                <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]">
+                <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs font-[320] text-[var(--text-muted)]">
                   Your artist role can view rights information but cannot edit
                   ownership details.
                 </div>
@@ -802,7 +802,7 @@ export default function ArtistSongEditor({
                 <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
                   <div>
                     <FieldLabel>Ownership Splits</FieldLabel>
-                    <div className="text-[11px] text-[var(--text-muted)]">
+                    <div className="text-[11px] font-[320] text-[var(--text-muted)]">
                       Master: {ownershipTotals.master}% · Publishing:{" "}
                       {ownershipTotals.publishing}%
                     </div>
@@ -826,7 +826,7 @@ export default function ArtistSongEditor({
 
                 <div className="grid gap-3">
                   {rightsHolders.length === 0 ? (
-                    <div className="text-xs text-[var(--text-muted)]">
+                    <div className="text-xs font-[320] text-[var(--text-muted)]">
                       No ownership splits added yet.
                     </div>
                   ) : null}
@@ -938,14 +938,14 @@ export default function ArtistSongEditor({
             <div className="grid gap-2 px-5 pb-5">
               {editWarnings.length > 0 ? (
                 <>
-                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs font-[320] leading-5 text-[var(--status-error,#dc584f)]">
                     <div className="flex items-center gap-2 font-medium">
                       <WarningIcon />
                       <span>
                         {editWarnings.length} item{editWarnings.length === 1 ? "" : "s"} need attention
                       </span>
                     </div>
-                    <div className="mt-2 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <div className="mt-2 text-[11px] font-[320] leading-5 text-[var(--text-secondary)]">
                       {editWarnings[0]}
                       {editWarnings.length > 1 ? ` + ${editWarnings.length - 1} more` : ""}
                     </div>
@@ -953,14 +953,14 @@ export default function ArtistSongEditor({
                       <button
                         type="button"
                         onClick={() => setWarningsOpen((current) => !current)}
-                        className="mt-2 text-[11px] font-medium text-[var(--text-secondary)] underline-offset-4 transition hover:text-[var(--text-primary)] hover:underline"
+                        className="mt-2 text-[11px] font-[320] text-[var(--text-secondary)] underline-offset-4 transition hover:text-[var(--text-primary)] hover:underline"
                       >
                         {warningsOpen ? "Hide warnings" : "Show warnings"}
                       </button>
                     ) : null}
                   </div>
                   {warningsOpen && editWarnings.length > 1 ? (
-                    <ul className="grid gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <ul className="grid gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] font-[320] leading-5 text-[var(--text-secondary)]">
                       {editWarnings.map((warning) => (
                         <li key={warning}>{warning}</li>
                       ))}
@@ -968,7 +968,7 @@ export default function ArtistSongEditor({
                   ) : null}
                 </>
               ) : (
-                <div className="rounded-[7px] bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs font-medium text-[var(--status-success,#48b571)]">
+                <div className="rounded-[7px] bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs font-[320] text-[var(--status-success,#48b571)]">
                   Ready to save
                 </div>
               )}
@@ -982,12 +982,12 @@ export default function ArtistSongEditor({
               </div>
               <div className="grid gap-3 px-5 pb-5">
                 {error ? (
-                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs font-[320] leading-5 text-[var(--status-error,#dc584f)]">
                     {error}
                   </div>
                 ) : null}
                 {message ? (
-                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
+                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs font-[320] leading-5 text-[var(--text-secondary)]">
                     {message}
                   </div>
                 ) : null}
@@ -1018,7 +1018,7 @@ export default function ArtistSongEditor({
                 Back to Music
               </button>
               {!canEditMetadata ? (
-                <div className="text-[11px] leading-5 text-[var(--text-muted)]">
+                <div className="text-[11px] font-[320] leading-5 text-[var(--text-muted)]">
                   Your artist role has read-only catalogue access.
                 </div>
               ) : null}

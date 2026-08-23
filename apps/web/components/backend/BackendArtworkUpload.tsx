@@ -73,11 +73,11 @@ export default function BackendArtworkUpload({
       return (
         <div className="grid gap-2">
           <div className="flex items-center justify-between gap-3">
-            <span className="text-xs font-medium text-[var(--text-secondary)]">
+            <span className="text-xs font-[320] text-[var(--text-secondary)]">
               {title}
             </span>
             {required ? (
-              <span className="text-[11px] text-[var(--text-muted)]">Required</span>
+              <span className="text-[11px] font-[320] text-[var(--text-muted)]">Required</span>
             ) : null}
           </div>
 
@@ -110,7 +110,7 @@ export default function BackendArtworkUpload({
             type="button"
             disabled={disabled}
             onClick={() => inputRef.current?.click()}
-            className="mt-1 h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-1 h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
             style={{ width: compactSize }}
           >
             Choose image
@@ -124,11 +124,11 @@ export default function BackendArtworkUpload({
     return (
       <div className="grid gap-2">
         <div className="flex items-center justify-between gap-3">
-          <span className="text-xs font-medium text-[var(--text-secondary)]">
+          <span className="text-xs font-[320] text-[var(--text-secondary)]">
             {title}
           </span>
           {required ? (
-            <span className="text-[11px] text-[var(--text-muted)]">Required</span>
+            <span className="text-[11px] font-[320] text-[var(--text-muted)]">Required</span>
           ) : null}
         </div>
 
@@ -177,10 +177,10 @@ export default function BackendArtworkUpload({
               <UploadIcon />
             </span>
             <span className="min-w-0 text-left">
-              <span className="block text-xs font-medium text-[var(--text-primary)]">
+              <span className="block text-xs font-[320] text-[var(--text-primary)]">
                 {dropTitle}
               </span>
-              <span className="mt-1 block text-[11px] leading-4 text-[var(--text-secondary)]">
+              <span className="mt-1 block text-[11px] font-[320] leading-4 text-[var(--text-secondary)]">
                 {dropDescription}
               </span>
             </span>
@@ -199,7 +199,7 @@ export default function BackendArtworkUpload({
           {title}
         </h2>
         {required ? (
-          <span className="text-[11px] text-[var(--text-muted)]">Required</span>
+          <span className="text-[11px] font-[320] text-[var(--text-muted)]">Required</span>
         ) : null}
       </div>
 
@@ -221,17 +221,17 @@ export default function BackendArtworkUpload({
               alt={`${title} preview`}
               className="h-full w-full object-cover"
             />
-            <span className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)] text-[10px] font-medium text-[var(--media-overlay-contrast)] opacity-0 transition group-hover:opacity-100">
+            <span className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)] text-[10px] font-[320] text-[var(--media-overlay-contrast)] opacity-0 transition group-hover:opacity-100">
               Change image
             </span>
           </button>
 
           <div className="flex min-h-[180px] min-w-0 flex-1 flex-col justify-between gap-5 py-1 max-[720px]:min-h-0 max-[720px]:w-full">
             <div>
-              <div className="truncate text-xs font-medium text-[var(--text-primary)]">
+              <div className="truncate text-xs font-[320] text-[var(--text-primary)]">
                 {file?.name || `Current ${title.toLowerCase()}`}
               </div>
-              <div className="mt-[5px] text-[11px] leading-4 text-[var(--text-secondary)]">
+              <div className="mt-[5px] text-[11px] font-[320] leading-4 text-[var(--text-secondary)]">
                 {help}
               </div>
             </div>
@@ -241,7 +241,7 @@ export default function BackendArtworkUpload({
                 type="button"
                 disabled={disabled}
                 onClick={() => inputRef.current?.click()}
-                className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
               >
                 Change image
               </button>
@@ -250,7 +250,7 @@ export default function BackendArtworkUpload({
                   type="button"
                   disabled={disabled}
                   onClick={onRemove}
-                  className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                  className="h-9 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-[320] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
                 >
                   Remove image
                 </button>
@@ -271,10 +271,10 @@ export default function BackendArtworkUpload({
             <UploadIcon size={18} />
           </span>
           <span>
-            <span className="block text-xs font-medium text-[var(--text-primary)]">
+            <span className="block text-xs font-[320] text-[var(--text-primary)]">
               {dropTitle}
             </span>
-            <span className="mt-1 block text-[11px] leading-4 text-[var(--text-secondary)]">
+            <span className="mt-1 block text-[11px] font-[320] leading-4 text-[var(--text-secondary)]">
               {dropDescription}
             </span>
           </span>
