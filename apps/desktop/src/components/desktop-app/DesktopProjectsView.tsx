@@ -217,9 +217,8 @@ function getFolderChain(project: Project, activeFolder: ProjectFileNode | null) 
   });
   return chain;
 }
-
 function getFileArtist(node: ProjectFileNode) {
-  return node.path.includes("/") ? getNodeParentPath(node).split("/").pop() : "Filmwave";
+  return node.path.includes("/") ? getNodeParentPath(node).split("/").pop() : "Audioflume";
 }
 
 function getFileDisplayMetadata(node: ProjectFileNode) {
@@ -398,7 +397,7 @@ function ProjectListView({
           <div className="desktop-project-list-button" role="status">
             <div>
               <div className="desktop-project-list-name">Loading projects...</div>
-              <div className="desktop-project-list-meta">Fetching your Filmwave project list.</div>
+              <div className="desktop-project-list-meta">Fetching your Audioflume project list.</div>
             </div>
           </div>
         ) : projects.length > 0 ? (
@@ -415,7 +414,7 @@ function ProjectListView({
           <div className="desktop-project-list-button" role="status">
             <div>
               <div className="desktop-project-list-name">No projects loaded</div>
-              <div className="desktop-project-list-meta">Connect your Filmwave account in Desktop Sync settings.</div>
+              <div className="desktop-project-list-meta">Connect your Audioflume account in Desktop Sync settings.</div>
             </div>
           </div>
         )}
