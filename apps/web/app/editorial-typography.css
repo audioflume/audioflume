@@ -10,13 +10,13 @@
 }
 
 .audioflume-home-intro h1,
-.audioflume-home-playlist-feature-copy h2,
-.audioflume-editorial-display {
-  letter-spacing: -0.055em;
+.audioflume-home-statement h2,
+.audioflume-home-playlist-feature-copy h2 {
+  letter-spacing: -0.035em;
 }
 
-.audioflume-home-statement h2 {
-  letter-spacing: -0.035em;
+.audioflume-editorial-display {
+  letter-spacing: -0.055em;
 }
 
 .audioflume-home-statement h2,
@@ -30,11 +30,19 @@
   display: block;
   margin-bottom: 18px;
   color: var(--text-muted);
-  font-size: 11.5px;
-  font-weight: 500;
   letter-spacing: 0.04em;
   line-height: 1;
   text-transform: uppercase;
+}
+
+.audioflume-home-eyebrow {
+  font-size: 14.5px;
+  font-weight: 400;
+}
+
+.audioflume-editorial-eyebrow {
+  font-size: 11.5px;
+  font-weight: 500;
 }
 
 .audioflume-home-intro-copy > p,
@@ -48,7 +56,10 @@
   line-height: 1.35;
 }
 
-.audioflume-home-intro-copy > p,
+.audioflume-home-intro-copy > p {
+  letter-spacing: 0;
+}
+
 .audioflume-editorial-support {
   letter-spacing: -0.025em;
 }
