@@ -1,3 +1,4 @@
+import DiscoverHeroIndicatorControls from "./DiscoverHeroIndicatorControls";
 import DiscoverHeroNameWidthSync from "./DiscoverHeroNameWidthSync";
 
 export default function DiscoverLayout({
@@ -7,6 +8,7 @@ export default function DiscoverLayout({
 }) {
   return (
     <>
+      <DiscoverHeroIndicatorControls />
       <DiscoverHeroNameWidthSync />
       {children}
     </>
