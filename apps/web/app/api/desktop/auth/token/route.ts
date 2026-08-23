@@ -34,7 +34,7 @@ function renderPage({
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Connect Filmwave Desktop</title>
+    <title>Connect Audioflume Desktop</title>
     <style>
       :root {
         color-scheme: dark;
@@ -59,25 +59,25 @@ function renderPage({
   </head>
   <body>
     <main>
-      <h1>Connect Filmwave Desktop</h1>
+      <h1>Connect Audioflume Desktop</h1>
       <p>${message}</p>
       ${signedIn ? `<textarea id="connection-code" readonly>${safeConnectionCode}</textarea>` : ""}
       <div class="actions">
-        ${signedIn ? `<a class="button" id="open-desktop" href="${safeCallbackUrl}">Open Filmwave Desktop</a><button class="button secondary" id="copy-code" type="button">Copy connection code</button>` : `<a class="button" href="${signInUrl}">Sign in to Filmwave</a>`}
+        ${signedIn ? `<a class="button" id="open-desktop" href="${safeCallbackUrl}">Open Audioflume Desktop</a><button class="button secondary" id="copy-code" type="button">Copy connection code</button>` : `<a class="button" href="${signInUrl}">Sign in to Audioflume</a>`}
         <a class="button secondary" href="/api/desktop/auth/token?callback=deeplink">Try again</a>
       </div>
-      <div class="status" id="status">${signedIn ? "If the app does not open, copy the connection code and paste it into Filmwave Desktop." : "After signing in, Filmwave Desktop will open automatically."}</div>
+      <div class="status" id="status">${signedIn ? "If the app does not open, copy the connection code and paste it into Audioflume Desktop." : "After signing in, Audioflume Desktop will open automatically."}</div>
     </main>
     ${signedIn ? `<script>
       const openButton = document.getElementById("open-desktop");
       const copyButton = document.getElementById("copy-code");
       const code = document.getElementById("connection-code");
       const status = document.getElementById("status");
-      openButton?.addEventListener("click", () => { status.textContent = "Opening Filmwave Desktop... If nothing happens, use the fallback connection code."; });
+      openButton?.addEventListener("click", () => { status.textContent = "Opening Audioflume Desktop... If nothing happens, use the fallback connection code."; });
       copyButton?.addEventListener("click", async () => {
         code.select();
         await navigator.clipboard.writeText(code.value);
-        status.textContent = "Copied. Paste the connection code into Filmwave Desktop.";
+        status.textContent = "Copied. Paste the connection code into Audioflume Desktop.";
       });
       window.setTimeout(() => { openButton?.click(); }, 300);
     </script>` : ""}
@@ -116,7 +116,7 @@ export async function GET(req: Request) {
     return new NextResponse(
       renderPage({
         message:
-          "Sign in with your normal Filmwave account. After signing in, this page will open the desktop app automatically.",
+          "Sign in with your normal Audioflume account. After signing in, this page will open the desktop app automatically.",
         signedIn: false,
         signInUrl: signInUrl.toString(),
       }),
@@ -137,8 +137,8 @@ export async function GET(req: Request) {
       callbackUrl: shouldDeepLink ? callbackUrl : undefined,
       connectionCode: token,
       message: shouldDeepLink
-        ? "You are signed in. Filmwave Desktop should open automatically."
-        : "You are signed in. Click the button below to connect Filmwave Desktop.",
+        ? "You are signed in. Audioflume Desktop should open automatically."
+        : "You are signed in. Click the button below to connect Audioflume Desktop.",
       signedIn: true,
       signInUrl: signInUrl.toString(),
     }),
