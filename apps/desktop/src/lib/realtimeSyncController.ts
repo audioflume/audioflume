@@ -236,7 +236,7 @@ async function runWebsiteToLocalSync(settings: RealtimeSettings, projectIds = ne
       mode: "auto",
       status: "success",
       title: "Realtime sync complete",
-      detail: `Synced after a Filmwave project change. Skipped ${result.skippedFileCount} unchanged files and downloaded ${result.downloadedFileCount} files.`,
+      detail: `Synced after an Audioflume project change. Skipped ${result.skippedFileCount} unchanged files and downloaded ${result.downloadedFileCount} files.`,
       projectNames: getProjectNames(projectsToSync),
     });
   } catch (error) {
