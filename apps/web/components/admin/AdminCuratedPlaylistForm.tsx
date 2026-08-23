@@ -531,7 +531,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
       >
         <div className="admin-playlist-main-stack grid min-w-0 gap-4">
           <section className="admin-playlist-section-card admin-playlist-details-card">
-            <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
+            <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
               Playlist details
             </h2>
 
@@ -562,7 +562,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           {!loading && (
             <>
               <section className="admin-playlist-section-card admin-playlist-browse-card">
-                <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
+                <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
                   Browse filters
                 </h2>
 
@@ -678,7 +678,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         <section className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
-              <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
+              <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
                 Songs
               </h2>
             </div>

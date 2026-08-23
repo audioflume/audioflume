@@ -251,7 +251,7 @@ export default function AdminEditPointsPage() {
         <div className="grid content-start gap-3">
           <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
             <div className="flex items-center justify-between gap-4 px-5 pb-3 pt-5">
-              <h2 className="font-[family-name:var(--font-zalando-sans)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+              <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                 Batch Analyzer
               </h2>
               {isAnalyzing ? (
@@ -303,7 +303,7 @@ export default function AdminEditPointsPage() {
           {result && (
             <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
               <div className="flex items-center justify-between gap-4 px-5 pb-3 pt-5">
-                <h2 className="font-[family-name:var(--font-zalando-sans)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                   Recently Analyzed
                 </h2>
                 <span className="text-xs text-[var(--text-muted)]">
@@ -364,7 +364,7 @@ export default function AdminEditPointsPage() {
 
         <section className="h-fit overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
           <div className="px-5 pb-3 pt-5">
-            <h2 className="font-[family-name:var(--font-zalando-sans)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+            <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               Run Summary
             </h2>
           </div>

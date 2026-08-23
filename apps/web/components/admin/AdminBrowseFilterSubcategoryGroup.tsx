@@ -318,7 +318,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
   return (
     <section className="group relative admin-playlist-section-card admin-playlist-shelf-card">
       <div className="mb-4 flex min-h-8 items-center justify-between gap-4">
-        <h2 className="font-[family-name:var(--font-zalando-sans)] text-2xl font-medium tracking-[-0.05em]">
+        <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
           {filter.label}
         </h2>
 

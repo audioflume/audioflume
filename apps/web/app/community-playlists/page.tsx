@@ -602,7 +602,7 @@ export default function CommunityPlaylistsPage() {
 
         .community-sidebar-heading {
           color: #fff !important;
-          font-family: var(--font-zalando-sans), sans-serif !important;
+          font-family: var(--font-aktiv-grotesk), sans-serif !important;
           font-size: 11px !important;
           font-weight: 500 !important;
           font-kerning: normal !important;

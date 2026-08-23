@@ -144,7 +144,7 @@ export default function DiscoverCuratedHeroCopy({
           width: min(calc(100% - 40px), 420px);
           margin: 65px 0 40px;
           color: var(--text-primary);
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(17px, 1.15vw, 22px);
           font-weight: 300;
           letter-spacing: -0.025em;
@@ -234,7 +234,7 @@ export default function DiscoverCuratedHeroCopy({
               background: transparent;
               color: var(--filmwave-black);
               padding: 0 12px 0 30px;
-              font-family: var(--font-zalando-sans), sans-serif;
+              font-family: var(--font-aktiv-grotesk), sans-serif;
               font-size: clamp(14px, 0.9vw, 17px);
               font-weight: 400;
             }
@@ -258,7 +258,7 @@ export default function DiscoverCuratedHeroCopy({
               border-radius: 999px;
               background: var(--filmwave-neutral-surface);
               color: color-mix(in srgb, var(--filmwave-black) 62%, transparent);
-              font-family: var(--font-zalando-sans), sans-serif;
+              font-family: var(--font-aktiv-grotesk), sans-serif;
               font-size: 22px;
               line-height: 1;
               transition:

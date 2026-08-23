@@ -236,7 +236,7 @@ export default function PublicArtistPageView({
           width: 15%;
           margin: 0;
           color: #fff;
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(15px, 1.05vw, 18px);
           font-weight: 300;
           letter-spacing: 0;
@@ -254,7 +254,7 @@ export default function PublicArtistPageView({
           max-width: 560px;
           margin: 0;
           color: #fff;
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 16px;
           font-weight: 300;
           letter-spacing: 0;
@@ -336,7 +336,7 @@ export default function PublicArtistPageView({
           width: 73%;
           margin: 0;
           color: #fff;
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(72px, var(--artist-name-fit-size), 150px);
           font-weight: 400;
           letter-spacing: -0.045em;
@@ -360,7 +360,7 @@ export default function PublicArtistPageView({
           display: grid;
           gap: 4px;
           color: var(--text-primary);
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-weight: 300;
           letter-spacing: -0.02em;
           line-height: 1;
@@ -426,7 +426,7 @@ export default function PublicArtistPageView({
           gap: 8px 18px;
           margin: 0;
           color: var(--text-primary);
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 11px;
           font-weight: 300;
           letter-spacing: 0;
@@ -471,7 +471,7 @@ export default function PublicArtistPageView({
           width: 100%;
           margin: 9px 0 0;
           color: var(--text-primary);
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 11px;
           font-weight: 300;
           letter-spacing: -0.008em;
@@ -609,7 +609,7 @@ export default function PublicArtistPageView({
           border-radius: 4px;
           background: rgba(17, 17, 17, 0.82);
           color: #fff;
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 10px;
           font-weight: 500;
           letter-spacing: 0;
@@ -636,7 +636,7 @@ export default function PublicArtistPageView({
 
         .artist-public-edit-meta-field > span {
           color: var(--text-primary);
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 9px;
           font-weight: 500;
           letter-spacing: 0;
@@ -648,7 +648,7 @@ export default function PublicArtistPageView({
           min-width: 0;
           padding: 3px 4px;
           color: var(--text-primary);
-          font-family: var(--font-zalando-sans), sans-serif;
+          font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: 11px;
           font-weight: 300;
           line-height: 1.2;
