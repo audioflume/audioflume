@@ -113,7 +113,7 @@ function MetricCard({
     <div className="filmwave-backend-section flex min-h-[108px] flex-col justify-between p-4">
       <span className="text-xs text-[var(--text-secondary)]">{label}</span>
       <div>
-        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
           {value}
         </div>
         {note ? (

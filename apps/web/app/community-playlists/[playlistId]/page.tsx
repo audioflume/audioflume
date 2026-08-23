@@ -425,7 +425,7 @@ export default function CommunityPlaylistDetailPage() {
           max-width: 680px;
           margin: 8px 0 0;
           color: var(--text-primary);
-          font-family: var(--font-aktiv-grotesk);
+          font-family: var(--font-zalando-sans);
           font-size: 56px;
           font-weight: 500;
           line-height: 0.94;

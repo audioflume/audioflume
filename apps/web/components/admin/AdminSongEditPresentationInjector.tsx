@@ -285,7 +285,7 @@ export default function AdminSongEditPresentationInjector() {
         > div:first-child
         > div:first-child {
         color: var(--text-primary);
-        font-family: var(--font-aktiv-grotesk), sans-serif;
+        font-family: var(--font-zalando-sans), sans-serif;
         font-size: 11px;
         font-weight: 500;
         letter-spacing: 0.02em;

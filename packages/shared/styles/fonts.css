@@ -5,12 +5,11 @@
     BlinkMacSystemFont, "Segoe UI", sans-serif;
   --font-zalando-sans: "Zalando Sans", ui-sans-serif, system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", sans-serif;
-  --font-aktiv-grotesk: var(--font-zalando-sans);
 }
 
 .playlists-page .playlist-gallery-content > .playlist-gallery-rename-input,
 .playlists-page .playlist-row-main > .playlist-row-rename-input {
-  font-family: var(--font-aktiv-grotesk) !important;
+  font-family: var(--font-zalando-sans) !important;
   font-style: normal !important;
   font-variant: normal !important;
   font-stretch: normal !important;

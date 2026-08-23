@@ -46,7 +46,7 @@ export const navLinkClass =
   "flex h-8 items-center gap-1.5 rounded-md px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]";
 
 export const modalTitleClass =
-  "min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium tracking-[-0.045em] text-[var(--text-primary)]";
+  "min-w-0 font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium tracking-[-0.045em] text-[var(--text-primary)]";
 
 export const modalFieldLabelClass =
   "block text-[11px] font-medium text-[var(--text-secondary)]";
@@ -65,7 +65,7 @@ export const modalActionButtonClass =
 
 export const modalCancelButtonClass = `${modalActionButtonClass} filmwave-legacy-modal-cancel text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
-export const modalPrimaryButtonClass = `${modalActionButtonClass} font-[family-name:var(--font-aktiv-grotesk)] min-w-[112px] bg-[var(--text-primary)] font-semibold text-[var(--bg-primary)] hover:opacity-80`;
+export const modalPrimaryButtonClass = `${modalActionButtonClass} font-[family-name:var(--font-zalando-sans)] min-w-[112px] bg-[var(--text-primary)] font-semibold text-[var(--bg-primary)] hover:opacity-80`;
 
 // Admin + artist backend modal footer buttons only.
 export const backendModalActionButtonClass =
@@ -73,7 +73,7 @@ export const backendModalActionButtonClass =
 
 export const backendModalCancelButtonClass = `${backendModalActionButtonClass} border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]`;
 
-export const backendModalPrimaryButtonClass = `${backendModalActionButtonClass} font-[family-name:var(--font-aktiv-grotesk)] min-w-[112px] bg-[var(--text-primary)] font-semibold text-[var(--bg-primary)] hover:opacity-80`;
+export const backendModalPrimaryButtonClass = `${backendModalActionButtonClass} font-[family-name:var(--font-zalando-sans)] min-w-[112px] bg-[var(--text-primary)] font-semibold text-[var(--bg-primary)] hover:opacity-80`;
 
 // Danger/delete button for modal footers
 export const modalDeleteButtonClass =

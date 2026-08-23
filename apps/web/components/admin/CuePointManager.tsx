@@ -169,7 +169,7 @@ export default function CuePointManager({
           > div:first-child
           > div:first-child {
           color: var(--text-primary) !important;
-          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-family: var(--font-zalando-sans), sans-serif;
           font-size: 16px !important;
           font-weight: 500 !important;
           line-height: 24px;

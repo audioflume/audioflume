@@ -281,7 +281,7 @@ function MetricCardBlock({ metric }: { metric: Metric }) {
         {metric.label}
       </div>
       <div>
-        <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+        <div className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
           {metric.value}
         </div>
         <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-[10px]">
@@ -572,7 +572,7 @@ export default function AdminEngagementPage() {
                 <div className="text-[11px] font-medium text-[var(--text-secondary)]">
                   {item.label}
                 </div>
-                <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                   {item.value}
                 </div>
               </div>

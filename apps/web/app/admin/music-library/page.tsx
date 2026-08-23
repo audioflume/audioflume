@@ -554,7 +554,7 @@ export default function AdminMusicLibraryPage() {
                   )}
 
                   <div>
-                    <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
+                    <div className="font-[family-name:var(--font-zalando-sans)] text-[11px] font-medium uppercase leading-none tracking-[0.02em] text-[var(--text-primary)]">
                       Library Health
                     </div>
                     <div className="mt-1.5 text-xs text-[var(--text-secondary)]">

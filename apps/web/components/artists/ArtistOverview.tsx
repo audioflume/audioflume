@@ -620,7 +620,7 @@ export default function ArtistOverview({
 
           <div className="flex items-center justify-between gap-5 px-5 py-4">
             <div className="min-w-0">
-              <div className="truncate font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+              <div className="truncate font-[family-name:var(--font-zalando-sans)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                 {artist.name}
               </div>
               {artist.designation ? (
@@ -654,7 +654,7 @@ export default function ArtistOverview({
             <span className="text-[11px] font-medium text-[var(--text-secondary)]">
               {stat.label}
             </span>
-            <span className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+            <span className="font-[family-name:var(--font-zalando-sans)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
               {loading && stat.label === "30-Day Interactions"
                 ? "—"
                 : formatNumber(stat.value)}
@@ -765,7 +765,7 @@ export default function ArtistOverview({
 
           <div className="px-5 pb-5 pt-5">
             <div className="text-[11px] text-[var(--text-muted)]">Last 30 days</div>
-            <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-[36px] font-medium leading-none tracking-[-0.05em] text-[var(--text-primary)]">
+            <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[36px] font-medium leading-none tracking-[-0.05em] text-[var(--text-primary)]">
               {loading ? "—" : formatNumber(period.total)}
             </div>
             <div className="mt-2 text-[10px] text-[var(--text-muted)]">
@@ -852,7 +852,7 @@ export default function ArtistOverview({
                     <div className="text-[9px] text-[var(--text-muted)]">
                       {metric.label}
                     </div>
-                    <div className="mt-2 font-[family-name:var(--font-aktiv-grotesk)] text-[16px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+                    <div className="mt-2 font-[family-name:var(--font-zalando-sans)] text-[16px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                       {formatMoney(metric.value, singleCurrency.currency)}
                     </div>
                     <div className="mt-1 text-[9px] text-[var(--text-muted)]">
