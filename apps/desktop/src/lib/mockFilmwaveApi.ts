@@ -238,7 +238,7 @@ async function reportLocalReadinessForProjects({
       },
     );
   } catch (error) {
-    console.warn("Could not report Filmwave local readiness.", error);
+    console.warn("Could not report Audioflume local readiness.", error);
   }
 }
 
@@ -259,7 +259,7 @@ export async function getFilmwaveProjects(token?: string | null, apiBaseUrl?: st
   };
 
   if (!response.ok) {
-    throw new Error(data.error || "Failed to load Filmwave projects");
+    throw new Error(data.error || "Failed to load Audioflume projects");
   }
 
   const projects = (data.projects ?? []).map(normalizeApiProject);
@@ -279,7 +279,7 @@ export async function getDesktopAccount(token?: string | null, apiBaseUrl?: stri
   const data = (await response.json()) as DesktopAccountApiResponse;
 
   if (!response.ok) {
-    throw new Error(data.error || "Failed to load Filmwave account");
+    throw new Error(data.error || "Failed to load Audioflume account");
   }
 
   return data.user ?? null;

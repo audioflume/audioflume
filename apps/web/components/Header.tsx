@@ -28,7 +28,7 @@ const PLAYLIST_PAGE_LINKS = [
   {
     href: "/curated-playlists",
     label: "Curated Collections",
-    detail: "Filmwave editor picks",
+    detail: "Audioflume editor picks",
   },
   {
     href: "/playlists",
@@ -247,7 +247,6 @@ export default function Header() {
           padding-right: 8px !important;
           padding-left: 8px !important;
         }
-
         .filmwave-header-right-actions {
           display: inline-flex;
           height: 100%;

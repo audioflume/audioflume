@@ -50,7 +50,7 @@ jobs:
           grep -q 'onToggleArchive={(targetProject)' apps/web/app/projects/page.tsx
           ! grep -q 'onToast={showToast}' apps/web/app/projects/page.tsx
           npm run style:guard
-          git config user.name "filmwave-webmaster"
+          git config user.name "audioflume"
           git config user.email "actions@users.noreply.github.com"
           git add -A
           git commit -m "Fix project archive handler"

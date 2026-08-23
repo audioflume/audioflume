@@ -57,7 +57,7 @@ const THEME_BOOT_SCRIPT = `
 `;
 
 export const metadata: Metadata = {
-  title: "Filmwave",
+  title: "Audioflume",
   description: "Royalty-free music for filmmakers",
 };
 

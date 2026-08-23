@@ -51,6 +51,19 @@ html[data-theme="light"] .filmwave-header.desktop-header {
   gap: 0;
 }
 
+.desktop-audioflume-wordmark {
+  display: inline-flex;
+  align-items: center;
+  color: currentColor;
+  font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-size: 22px;
+  font-weight: 600;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-transform: lowercase;
+  transform: translateY(-1px);
+}
+
 .filmwave-header.desktop-header .desktop-user-menu-wrap {
   height: auto;
 }

@@ -169,12 +169,12 @@ function App() {
     ? desktopAccount
       ? `Signed in as ${desktopAccount.name}`
       : accountLoading
-        ? "Loading your Filmwave account..."
-        : "Filmwave Desktop is connected."
-    : "Connect with your normal Filmwave sign-in to access your real project files.";
+        ? "Loading your Audioflume account..."
+        : "Audioflume Desktop is connected."
+    : "Connect with your normal Audioflume sign-in to access your real project files.";
 
   const autoSyncDescription = autoSyncEnabled
-    ? "Realtime sync is on. Local folder changes and Filmwave project changes trigger sync automatically."
+    ? "Realtime sync is on. Local folder changes and Audioflume project changes trigger sync automatically."
     : "Realtime sync is off. Manual sync still works.";
 
   const fallbackSyncDescription = `Fallback check runs every ${autoSyncIntervalMinutes} minutes when realtime sync is on, catching missed changes after sleep or reconnect.`;
@@ -239,7 +239,7 @@ function App() {
       setLastSyncReport(
         error instanceof Error
           ? error.message
-          : "Could not load Filmwave account.",
+          : "Could not load Audioflume account.",
       );
       return null;
     } finally {
@@ -268,7 +268,7 @@ function App() {
       mode: "system",
       status: "info",
       title: "Signed in",
-      detail: "Filmwave Desktop connected to your account.",
+      detail: "Audioflume Desktop connected to your account.",
       projectNames: [],
     });
   }
@@ -316,7 +316,7 @@ function App() {
       );
       setLastRefreshedAt(new Date());
       setSyncStatus(
-        projectSource === "local-api" ? "Filmwave loaded" : "Mock data loaded",
+        projectSource === "local-api" ? "Audioflume loaded" : "Mock data loaded",
       );
 
       return nextProjects;
@@ -330,7 +330,7 @@ function App() {
       setLastSyncReport(
         error instanceof Error
           ? error.message
-          : "Could not load Filmwave projects.",
+          : "Could not load Audioflume projects.",
       );
       throw error;
     } finally {
@@ -340,7 +340,7 @@ function App() {
 
   useEffect(() => {
     register("filmwave").catch((error) => {
-      console.warn("Could not register Filmwave deep link scheme.", error);
+      console.warn("Could not register Audioflume deep link scheme.", error);
     });
   }, []);
 
@@ -456,7 +456,7 @@ function App() {
         setLastRefreshedAt(new Date());
         setSyncStatus(
           projectSource === "local-api"
-            ? "Filmwave loaded"
+            ? "Audioflume loaded"
             : "Mock data loaded",
         );
       } catch (error) {
@@ -471,7 +471,7 @@ function App() {
         setLastSyncReport(
           error instanceof Error
             ? error.message
-            : "Could not load Filmwave projects.",
+            : "Could not load Audioflume projects.",
         );
       } finally {
         if (!cancelled) setProjectsLoading(false);
@@ -522,7 +522,7 @@ function App() {
     const selected = await open({
       directory: true,
       multiple: false,
-      title: "Choose Filmwave sync folder",
+      title: "Choose Audioflume sync folder",
     });
 
     if (typeof selected === "string") {
@@ -566,7 +566,7 @@ function App() {
       status: "info",
       title: nextEnabled ? "Realtime sync enabled" : "Realtime sync disabled",
       detail: nextEnabled
-        ? `Local folder changes and Filmwave project changes now trigger sync automatically. Fallback check runs every ${autoSyncIntervalMinutes} minutes.`
+        ? `Local folder changes and Audioflume project changes now trigger sync automatically. Fallback check runs every ${autoSyncIntervalMinutes} minutes.`
         : "Realtime sync was turned off. Manual sync still works.",
       projectNames: getProjectNames(selectedProjects),
     });
@@ -634,7 +634,7 @@ function App() {
       setLastSyncReport(
         error instanceof Error
           ? error.message
-          : "Could not open Filmwave sign in.",
+          : "Could not open Audioflume sign in.",
       );
     }
   }
@@ -660,7 +660,7 @@ function App() {
       mode: "system",
       status: "info",
       title: "Signed out",
-      detail: "Filmwave Desktop disconnected from the current account.",
+      detail: "Audioflume Desktop disconnected from the current account.",
       projectNames: [],
     });
   }
@@ -693,7 +693,7 @@ function App() {
     }
 
     if (projectSource !== "local-api") {
-      setSyncStatus("Use Filmwave source first");
+      setSyncStatus("Use Audioflume source first");
       return;
     }
 
@@ -713,7 +713,7 @@ function App() {
       );
       setLastSyncReport(
         removals.length > 0
-          ? `${removals.length} local removal${removals.length === 1 ? "" : "s"} detected. Review and apply them to remove those items from the Filmwave project only.`
+          ? `${removals.length} local removal${removals.length === 1 ? "" : "s"} detected. Review and apply them to remove those items from the Audioflume project only.`
           : "No local removals were detected for the selected projects.",
       );
       await addSyncActivityLogEntry({
@@ -806,11 +806,11 @@ function App() {
         });
 
         setLastSyncReport(
-          `Applied local removals to Filmwave. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. ${formatSyncReport(syncResult)}`,
+          `Applied local removals to Audioflume. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. ${formatSyncReport(syncResult)}`,
         );
       } else {
         setLastSyncReport(
-          `Applied local removals to Filmwave. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}.`,
+          `Applied local removals to Audioflume. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}.`,
         );
       }
 
@@ -819,7 +819,7 @@ function App() {
         mode: "local",
         status: "success",
         title: "Local removals applied",
-        detail: `Applied ${pendingRemovalCount} local removal${pendingRemovalCount === 1 ? "" : "s"}. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"} from Filmwave projects only.`,
+        detail: `Applied ${pendingRemovalCount} local removal${pendingRemovalCount === 1 ? "" : "s"}. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"} from Audioflume projects only.`,
         projectNames: pendingProjectNames,
       });
     } catch (error) {
@@ -930,7 +930,7 @@ function App() {
           appliedRemovalCount = removals.length;
           removedAssetCount = removalResult.removedAssetCount;
           removedFolderCount = removalResult.removedFolderCount;
-          autoRemovalSummary = `Applied ${removals.length} local removal${removals.length === 1 ? "" : "s"} to Filmwave. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. `;
+          autoRemovalSummary = `Applied ${removals.length} local removal${removals.length === 1 ? "" : "s"} to Audioflume. Removed ${removalResult.removedAssetCount} project file${removalResult.removedAssetCount === 1 ? "" : "s"} and ${removalResult.removedFolderCount} folder${removalResult.removedFolderCount === 1 ? "" : "s"}. `;
         }
       }
 
@@ -1000,7 +1000,7 @@ function App() {
           mode: "local",
           status: "success",
           title: "Local removals auto-applied",
-          detail: `Auto-applied ${appliedRemovalCount} local removal${appliedRemovalCount === 1 ? "" : "s"}. Removed ${removedAssetCount} project file${removedAssetCount === 1 ? "" : "s"} and ${removedFolderCount} folder${removedFolderCount === 1 ? "" : "s"} from Filmwave projects only.`,
+          detail: `Auto-applied ${appliedRemovalCount} local removal${appliedRemovalCount === 1 ? "" : "s"}. Removed ${removedAssetCount} project file${removedAssetCount === 1 ? "" : "s"} and ${removedFolderCount} folder${removedFolderCount === 1 ? "" : "s"} from Audioflume projects only.`,
           projectNames: getProjectNames(latestSelectedProjects),
         });
       }

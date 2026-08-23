@@ -1,7 +1,6 @@
 import { HeaderShell, SideFilterPanelBehavior } from "@filmwave/shared";
 import { useEffect, useState, type PointerEvent } from "react";
 import { getCurrentWebviewWindow } from "@tauri-apps/api/webviewWindow";
-import FilmwaveLogoIcon from "./icons/FilmwaveLogoIcon";
 import UserMenu from "./UserMenu";
 import type { DesktopAccount } from "../lib/mockFilmwaveApi";
 import type { DesktopAppView } from "./desktop-app/DesktopAppShell";
@@ -94,14 +93,10 @@ export default function Header({
           <button
             type="button"
             className="filmwave-header-logo-action"
-            aria-label="Filmwave Desktop home"
+            aria-label="Audioflume Desktop home"
             onClick={() => onActiveViewChange("music")}
           >
-            <FilmwaveLogoIcon
-              className="filmwave-header-logo-mark"
-              width={115}
-              height={22}
-            />
+            <span className="desktop-audioflume-wordmark">audioflume</span>
           </button>
         }
         actions={
