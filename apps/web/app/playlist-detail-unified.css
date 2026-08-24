@@ -1,6 +1,6 @@
 .playlist-detail-page {
   --playlist-detail-control-strip-height: 86px;
-  --playlist-detail-section-gap: 28px;
+  --playlist-detail-section-gap: 6px;
   margin-left: var(--sidebar-width);
   margin-top: 56px;
   min-height: calc(100vh - 56px);
@@ -288,8 +288,8 @@
   height: 32px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.46);
-  border-radius: 0;
+  border: 1px solid rgba(255, 255, 255, 0.24);
+  border-radius: 5px;
   background: rgba(0, 0, 0, 0.08);
   padding: 0 13px;
   color: var(--filmwave-white);
@@ -305,7 +305,7 @@
 
 .playlist-detail-hero-secondary-action:hover,
 .playlist-detail-hero-secondary-action:focus-visible {
-  border-color: rgba(255, 255, 255, 0.72);
+  border-color: rgba(255, 255, 255, 0.42);
   background: rgba(0, 0, 0, 0.18);
   outline: none;
 }
@@ -320,7 +320,7 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 6px;
-  margin: 0;
+  margin: var(--playlist-detail-section-gap) 0 0;
   background: var(--filmwave-white);
   padding: 28px var(--filmwave-page-gutter) 0;
 }
@@ -517,7 +517,7 @@
   );
   max-width: var(--filmwave-editorial-max-width);
   margin: var(--playlist-detail-section-gap) auto 0;
-  overflow: hidden;
+  overflow: visible;
   background: var(--filmwave-white);
   padding: 50px var(--filmwave-page-gutter) 58px;
   color: var(--filmwave-black);
@@ -571,7 +571,15 @@
 
 .playlist-detail-similar-scroller {
   display: flex;
-  width: 100%;
+  width: calc(
+    100% + var(--filmwave-page-gutter) +
+      max(
+        var(--filmwave-editorial-inset),
+        calc(
+          (100vw - var(--sidebar-width) - var(--filmwave-editorial-max-width)) / 2
+        )
+      )
+  );
   overflow-x: auto;
   overflow-y: hidden;
   gap: 10px;
@@ -681,6 +689,16 @@
   .playlist-detail-similar {
     padding-right: 24px;
     padding-left: 24px;
+  }
+
+  .playlist-detail-similar-scroller {
+    width: calc(
+      100% + 24px +
+        max(
+          var(--filmwave-editorial-inset),
+          calc((100vw - var(--filmwave-editorial-max-width)) / 2)
+        )
+    );
   }
 
   .playlist-detail-hero-secondary-actions {
