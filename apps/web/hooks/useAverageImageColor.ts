@@ -9,8 +9,11 @@ export default function useAverageImageColor(
   fallbackColor = DEFAULT_AVERAGE_COLOR,
 ) {
   const [averageColor, setAverageColor] = useState(fallbackColor);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
+    setIsReady(false);
+
     if (!imageUrl) {
       setAverageColor(fallbackColor);
       return;
@@ -32,6 +35,7 @@ export default function useAverageImageColor(
 
         if (!context) {
           setAverageColor(fallbackColor);
+          setIsReady(true);
           return;
         }
 
@@ -55,6 +59,7 @@ export default function useAverageImageColor(
 
         if (weight <= 0) {
           setAverageColor(fallbackColor);
+          setIsReady(true);
           return;
         }
 
@@ -63,13 +68,18 @@ export default function useAverageImageColor(
             blue / weight,
           )})`,
         );
+        setIsReady(true);
       } catch {
         setAverageColor(fallbackColor);
+        setIsReady(true);
       }
     };
 
     image.onerror = () => {
-      if (!cancelled) setAverageColor(fallbackColor);
+      if (!cancelled) {
+        setAverageColor(fallbackColor);
+        setIsReady(true);
+      }
     };
 
     image.src = imageUrl;
@@ -79,5 +89,5 @@ export default function useAverageImageColor(
     };
   }, [fallbackColor, imageUrl]);
 
-  return averageColor;
+  return { averageColor, isReady };
 }
