@@ -106,3 +106,5 @@ jobs:
           git add apps/web/components/artists/PublicArtistPageView.tsx
           git commit -m "Make public artist releases and playlists sliding shelves"
           git push origin HEAD:feature/artist-public-sliding-shelves
+
+# trigger
