@@ -1,5 +1,10 @@
 .art {
   background: var(--bg-tertiary);
+  transition: transform 180ms ease;
+}
+
+:global(.playlists-page .playlist-gallery-card:hover) .art {
+  transform: translateY(-4px);
 }
 
 .icon {
