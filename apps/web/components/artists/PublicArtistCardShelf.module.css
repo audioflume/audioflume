@@ -31,7 +31,7 @@
 .cardSlot {
   position: relative;
   min-width: 0;
-  flex: 0 0 calc((var(--artist-public-shelf-content-width) - 66px) / 4.2);
+  flex: 0 0 calc((var(--artist-public-shelf-content-width) - 66px) / 4.5);
   padding-bottom: 10px;
   cursor: pointer;
   outline: none;
