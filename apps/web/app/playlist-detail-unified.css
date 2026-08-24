@@ -88,7 +88,7 @@
   padding:
     calc(clamp(54px, 5vw, 84px) + var(--playlist-detail-control-strip-height))
     0
-    calc(clamp(54px, 5vw, 84px) + var(--playlist-detail-control-strip-height));
+    clamp(54px, 5vw, 84px);
   isolation: isolate;
 }
 
@@ -374,7 +374,7 @@
 
   .playlist-detail-stage {
     padding-top: calc(36px + var(--playlist-detail-control-strip-height));
-    padding-bottom: calc(36px + var(--playlist-detail-control-strip-height));
+    padding-bottom: 36px;
   }
 
   .playlist-detail-card-inner {
