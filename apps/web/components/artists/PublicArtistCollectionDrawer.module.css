@@ -11,6 +11,7 @@
 }
 
 .summary {
+  position: relative;
   display: grid;
   grid-template-columns: auto minmax(260px, 1fr) auto;
   align-items: center;
@@ -129,27 +130,22 @@
 
 .closeDetails {
   display: inline-flex;
-  height: 34px;
+  width: 24px;
+  height: 24px;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  align-self: center;
-  padding: 0 13px;
-  border: 1px solid var(--text-secondary);
-  border-radius: 4px;
+  align-self: start;
+  justify-self: end;
+  padding: 0;
+  border: 0;
   background: transparent;
   color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  text-transform: uppercase;
   cursor: pointer;
+  transition: opacity 150ms ease;
 }
 
 .closeDetails:hover {
-  background: var(--bg-hover);
+  opacity: 0.6;
 }
 
 .tracks {
@@ -170,8 +166,9 @@
   }
 
   .closeDetails {
-    grid-column: 1 / -1;
-    justify-self: start;
+    position: absolute;
+    top: 0;
+    right: 0;
   }
 }
 
