@@ -80,7 +80,10 @@ export default function Footer({
   const isAdminPage = pathname.startsWith("/admin");
   const shouldUsePlayerPadding = playerPadding || isAdminPage;
   const isProjectDetailPage = /^\/projects\/[^/]+/.test(pathname);
-  const isPlaylistDetailPage = /^\/playlists\/[^/]+/.test(pathname);
+  const isPlaylistDetailPage =
+    /^\/playlists\/[^/]+/.test(pathname) ||
+    /^\/curated-playlists\/[^/]+/.test(pathname) ||
+    /^\/community-playlists\/[^/]+/.test(pathname);
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const isPublicArtistPage =
     /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
