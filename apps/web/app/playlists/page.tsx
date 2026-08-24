@@ -2,6 +2,7 @@
 
 import type { Playlist } from "@/lib/types";
 import Link from "next/link";
+import FavoritesPlaylistTile from "@/components/FavoritesPlaylistTile";
 import Footer from "@/components/Footer";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ListRowStatusCount from "@/components/ListRowStatusCount";
@@ -1364,10 +1365,13 @@ export default function PlaylistsPage() {
                     }
                   >
                     {!isEditing && (
-                      <CreatePlaylistTile
-                        viewMode={viewMode}
-                        onClick={() => setShowNewModal(true)}
-                      />
+                      <>
+                        <CreatePlaylistTile
+                          viewMode={viewMode}
+                          onClick={() => setShowNewModal(true)}
+                        />
+                        <FavoritesPlaylistTile viewMode={viewMode} />
+                      </>
                     )}
                     {displayedPlaylists.map((playlist, index) => (
                       <SortablePlaylistItem
