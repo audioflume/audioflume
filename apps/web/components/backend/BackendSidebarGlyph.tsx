@@ -1,3 +1,5 @@
+import GearIcon from "@/components/icons/GearIcon";
+
 export type BackendSidebarGlyphName =
   | "dashboard"
   | "analytics"
@@ -30,6 +32,10 @@ export default function BackendSidebarGlyph({
     strokeLinecap: "round" as const,
     strokeLinejoin: "round" as const,
   };
+
+  if (name === "settings") {
+    return <GearIcon size={16} strokeWidth={1.6} />;
+  }
 
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
@@ -102,14 +108,6 @@ export default function BackendSidebarGlyph({
           <ellipse {...common} cx="12" cy="6.5" rx="6.5" ry="2.5" />
           <path {...common} d="M5.5 6.5v5c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-5" />
           <path {...common} d="M5.5 11.5v5c0 1.4 2.9 2.5 6.5 2.5s6.5-1.1 6.5-2.5v-5" />
-        </>
-      )}
-      {name === "settings" && (
-        <>
-          <path {...common} d="M4 7h9M17 7h3M4 12h3M11 12h9M4 17h8M16 17h4" />
-          <circle {...common} cx="15" cy="7" r="2" />
-          <circle {...common} cx="9" cy="12" r="2" />
-          <circle {...common} cx="14" cy="17" r="2" />
         </>
       )}
       {name === "page" && (
