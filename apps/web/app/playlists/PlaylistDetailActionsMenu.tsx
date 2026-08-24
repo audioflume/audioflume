@@ -86,7 +86,7 @@ export default function PlaylistDetailActionsMenu() {
 
     const updateTargets = () => {
       const nextActionsTarget = document.querySelector<HTMLElement>(
-        ".playlist-detail-page .playlist-detail-top-actions",
+        ".playlist-detail-page .playlist-detail-card-inner",
       );
       const nextRenameTarget = document.querySelector<HTMLElement>(
         ".playlist-detail-page .playlist-detail-hero > .min-w-0",
@@ -414,8 +414,7 @@ export default function PlaylistDetailActionsMenu() {
     <>
       <style>{`
         .playlist-detail-page .playlist-detail-cover:not(:has(img)) { background: ${placeholderGradient} !important; }
-        .playlist-detail-page .playlist-detail-top-actions > button:not(:first-child) { display: none !important; }
-        .playlist-detail-page .playlist-detail-more-menu { grid-column: 3 !important; grid-row: 1 !important; justify-self: end; }
+        .playlist-detail-page .playlist-detail-more-menu { position: absolute; top: 44px; right: var(--filmwave-page-gutter); z-index: 4; }
         .playlist-detail-page .playlist-detail-more-button { box-sizing: border-box; display: inline-flex; width: 35px; min-width: 35px; height: 35px; align-items: center; justify-content: center; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0; color: var(--text-secondary); cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
         .playlist-detail-page .playlist-detail-more-button:hover, .playlist-detail-page .playlist-detail-more-button.is-active { border-color: var(--filmwave-border-color); background: var(--bg-hover); color: var(--text-primary); }
         .playlist-detail-page .playlist-detail-more-button svg { display: block; width: 16px; height: 16px; }
