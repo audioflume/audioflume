@@ -1,11 +1,15 @@
 "use client";
 
-import { MusicListShell } from "@filmwave/shared";
 import { useMemo } from "react";
 
-import "@/app/music/music-library-redesign.css";
-import SongCard from "@/components/SongCard";
-import { usePlayer } from "@/context/PlayerContext";
+import DownloadIcon from "@/components/icons/DownloadIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import Waveform from "@/components/Waveform";
+import {
+  useIsCurrentSongPlaying,
+  usePlayer,
+} from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import type {
   PublicArtistPlaylist,
@@ -43,6 +47,13 @@ function formatTrackCount(count: number) {
   return `${count} track${count === 1 ? "" : "s"}`;
 }
 
+function formatDuration(seconds: number) {
+  if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
 function PlayGlyph() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
@@ -51,15 +62,87 @@ function PlayGlyph() {
   );
 }
 
+function ShareGlyph() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="14.5" cy="4.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="5.5" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="14.5" cy="15.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <path d="m7.5 8.9 5-3.1M7.5 11.1l5 3.1" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
 function CloseGlyph() {
   return (
-    <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <svg width="11" height="11" viewBox="0 0 12 12" fill="none" aria-hidden="true">
       <path
         d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5"
         stroke="currentColor"
         strokeWidth="1.25"
       />
     </svg>
+  );
+}
+
+function CollectionTrackRow({ song, index }: { song: Song; index: number }) {
+  const actuallyPlaying = useIsCurrentSongPlaying(song.id);
+  const { togglePlayPause } = usePlayer();
+
+  async function handleLicense() {
+    try {
+      const response = await fetch(
+        `/api/songs/${encodeURIComponent(song.id)}/download`,
+        { method: "POST" },
+      );
+      const data = await response.json();
+
+      if (!response.ok || !data?.downloadUrl) {
+        console.error("Failed to prepare song download", data);
+        return;
+      }
+
+      window.open(String(data.downloadUrl), "_blank", "noopener,noreferrer");
+    } catch (error) {
+      console.error("Failed to download song", error);
+    }
+  }
+
+  return (
+    <div className={styles.trackRow}>
+      <button
+        type="button"
+        className={`${styles.trackLead}${
+          actuallyPlaying ? ` ${styles.trackLeadPlaying}` : ""
+        }`}
+        onClick={() => togglePlayPause(song)}
+        aria-label={actuallyPlaying ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        <span className={styles.trackNumber}>{index + 1}</span>
+        <span className={styles.trackPlayIcon} aria-hidden="true">
+          {actuallyPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+        </span>
+      </button>
+
+      <button
+        type="button"
+        className={styles.trackTitle}
+        onClick={() => togglePlayPause(song)}
+      >
+        {song.title}
+      </button>
+
+      <div className={styles.waveform}>
+        <Waveform song={song} compact showEditPointMarkers={false} />
+      </div>
+
+      <span className={styles.duration}>{formatDuration(song.duration)}</span>
+
+      <button type="button" className={styles.licenseButton} onClick={handleLicense}>
+        <span>License</span>
+        <DownloadIcon size={13} />
+      </button>
+    </div>
   );
 }
 
@@ -95,6 +178,20 @@ export default function PublicArtistCollectionDrawer({
     togglePlayPause(firstSong);
   }
 
+  async function handleShare() {
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+        return;
+      }
+      await navigator.clipboard?.writeText(url);
+    } catch {
+      // Sharing was cancelled or unavailable.
+    }
+  }
+
   return (
     <div id={id} className={styles.drawer}>
       <div className={styles.inner}>
@@ -116,36 +213,39 @@ export default function PublicArtistCollectionDrawer({
             <h3>{title}</h3>
             <p className={styles.meta}>{metadata}</p>
             {description ? <p className={styles.description}>{description}</p> : null}
+
+            <div className={styles.collectionActions}>
+              <button
+                type="button"
+                className={styles.roundAction}
+                onClick={handlePlayAll}
+                disabled={playableSongs.length === 0}
+                aria-label={`Play all tracks in ${title}`}
+              >
+                <PlayGlyph />
+              </button>
+              <button
+                type="button"
+                className={styles.roundAction}
+                onClick={handleShare}
+                aria-label={`Share ${title}`}
+              >
+                <ShareGlyph />
+              </button>
+            </div>
           </div>
 
-          <div className={styles.actions}>
-            <button
-              type="button"
-              className={styles.playButton}
-              onClick={handlePlayAll}
-              disabled={playableSongs.length === 0}
-            >
-              <PlayGlyph />
-              <span>Play All</span>
-            </button>
-            <button
-              type="button"
-              className={styles.closeButton}
-              onClick={onClose}
-              aria-label={`Close ${title}`}
-            >
-              <CloseGlyph />
-            </button>
-          </div>
+          <button type="button" className={styles.closeDetails} onClick={onClose}>
+            <span>Close Details</span>
+            <CloseGlyph />
+          </button>
         </div>
 
         <div className={styles.tracks}>
           {songs.length > 0 ? (
-            <MusicListShell title={null}>
-              {songs.map((song) => (
-                <SongCard key={song.id} song={song} />
-              ))}
-            </MusicListShell>
+            songs.map((song, index) => (
+              <CollectionTrackRow key={song.id} song={song} index={index} />
+            ))
           ) : (
             <div className={styles.empty}>
               No published tracks in this collection yet.
