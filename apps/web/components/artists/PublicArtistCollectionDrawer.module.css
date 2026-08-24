@@ -149,7 +149,7 @@
 }
 
 .tracks {
-  margin: 38px calc(var(--filmwave-page-gutter) * -1) 0;
+  margin-top: 38px;
 }
 
 .empty {
