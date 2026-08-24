@@ -103,12 +103,7 @@
 }
 
 .discover-artist-hero-detail {
-  position: relative;
-  display: block;
-  min-width: 0;
-  grid-column: 2;
-  grid-row: 2;
-  align-self: last baseline;
+  display: contents;
 }
 
 .discover-artist-hero-eyebrow {
@@ -143,6 +138,7 @@
   grid-row: 3;
   min-width: 0;
   max-width: 100%;
+  align-self: baseline;
   margin: clamp(28px, 2vw, 36px) 0 0;
   font-size: clamp(18px, 1.25vw, 24px);
   font-weight: 300;
@@ -153,6 +149,10 @@
 .discover-artist-hero-detail > p {
   width: 100%;
   max-width: 560px;
+  min-width: 0;
+  grid-column: 2;
+  grid-row: 2;
+  align-self: last baseline;
   margin: 0;
   font-size: clamp(18px, 1.3vw, 24px);
   font-weight: 300;
@@ -161,10 +161,11 @@
 }
 
 .discover-artist-hero-actions {
-  position: absolute;
-  top: calc(100% + clamp(28px, 2.2vw, 38px));
-  left: 0;
+  position: static;
   display: flex;
+  grid-column: 2;
+  grid-row: 3;
+  align-self: baseline;
   align-items: baseline;
   gap: clamp(42px, 4vw, 72px);
   margin-top: 0;
