@@ -34,6 +34,7 @@ import AdminBrowseFilterSubcategoryGroup from "@/components/admin/AdminBrowseFil
 import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminVideoUpload from "@/components/admin/AdminVideoUpload";
 import { usePlayer } from "@/context/PlayerContext";
+import { toSmartTitleCaseInput } from "@/lib/smartTitleCase";
 import type {
   CuratedBrowseTag,
   CuratedPlaylist,
@@ -542,7 +543,9 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                 <input
                   aria-label="Playlist name"
                   value={name}
-                  onChange={(e) => setName(e.target.value)}
+                  onChange={(e) =>
+                    setName(toSmartTitleCaseInput(e.target.value))
+                  }
                   className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Playlist Name"
                   required
