@@ -87,10 +87,7 @@
   overflow: hidden;
   margin-top: calc(var(--playlist-detail-control-strip-height) * -1);
   background: var(--playlist-detail-average-color);
-  padding:
-    calc(clamp(64px, 6vw, 110px) + var(--playlist-detail-control-strip-height))
-    0
-    clamp(72px, 7vw, 120px);
+  padding: clamp(72px, 7vw, 120px) 0;
   isolation: isolate;
 }
 
