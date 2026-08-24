@@ -28,12 +28,56 @@
   display: none;
 }
 
-.scroller > :global(.artist-public-card) {
+.cardSlot {
+  position: relative;
+  min-width: 0;
   flex: 0 0 calc((var(--artist-public-shelf-content-width) - 66px) / 4.2);
+  padding-bottom: 10px;
+  cursor: pointer;
+  outline: none;
+}
+
+.cardSlot > :global(.artist-public-card) {
+  width: 100%;
+}
+
+.cardSlot::after {
+  content: "";
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  background: transparent;
+  transition: background-color 150ms ease;
+}
+
+.cardSlotSelected::after {
+  background: var(--text-primary);
+}
+
+.cardSlot:focus-visible {
+  outline: 1px solid var(--text-primary);
+  outline-offset: 4px;
+}
+
+.drawerStatus {
+  box-sizing: border-box;
+  width: 100vw;
+  min-height: 112px;
+  margin-top: 24px;
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
+  padding: 32px var(--filmwave-page-gutter);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  font-size: 12px;
 }
 
 @media (max-width: 980px) {
-  .scroller > :global(.artist-public-card) {
+  .cardSlot {
     flex-basis: calc((var(--artist-public-shelf-content-width) - 44px) / 3);
   }
 }
@@ -43,13 +87,13 @@
     gap: 16px;
   }
 
-  .scroller > :global(.artist-public-card) {
+  .cardSlot {
     flex-basis: calc((var(--artist-public-shelf-content-width) - 16px) / 2);
   }
 }
 
 @media (max-width: 480px) {
-  .scroller > :global(.artist-public-card) {
+  .cardSlot {
     flex-basis: var(--artist-public-shelf-content-width);
   }
 }
