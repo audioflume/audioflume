@@ -1,6 +1,7 @@
 "use client";
 
-import { Children, type KeyboardEvent, type ReactNode } from "react";
+import Link from "next/link";
+import { Children, isValidElement, type KeyboardEvent, type ReactNode } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -29,6 +30,12 @@ type PublicArtistCardShelfProps = {
   countLabel: string;
   children: ReactNode;
 };
+
+function getCardCollectionId(card: ReactNode) {
+  if (!isValidElement(card) || card.key == null) return null;
+  const key = String(card.key);
+  return key.startsWith(".$") ? key.slice(2) : key;
+}
 
 export default function PublicArtistCardShelf({
   title,
@@ -233,6 +240,22 @@ export default function PublicArtistCardShelf({
       <div ref={scrollerRef} className={styles.scroller}>
         {cards.map((card, index) => {
           const selected = collectionKind === "release" && index === selectedIndex;
+          const playlistId =
+            collectionKind === "playlist" ? getCardCollectionId(card) : null;
+          const playlistHref =
+            playlistId && artistSlug
+              ? `/playlists/${encodeURIComponent(playlistId)}?artist=${encodeURIComponent(
+                  artistSlug,
+                )}`
+              : null;
+
+          if (playlistHref) {
+            return (
+              <Link key={playlistId} href={playlistHref} className={styles.cardSlot}>
+                {card}
+              </Link>
+            );
+          }
 
           return (
             <div
