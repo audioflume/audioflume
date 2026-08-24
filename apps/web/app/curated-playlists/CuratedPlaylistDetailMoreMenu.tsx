@@ -50,13 +50,11 @@ async function addCuratedPlaylistToMyPlaylists(
   if (!songsRes.ok) return playlist.name;
 
   const songs = await songsRes.json();
-
   if (!Array.isArray(songs) || songs.length === 0) return playlist.name;
 
   for (let index = 0; index < songs.length; index += 1) {
     const song = songs[index];
     const songId = song.song_id ?? song.id;
-
     if (!songId) continue;
 
     try {
@@ -93,7 +91,7 @@ export default function CuratedPlaylistDetailMoreMenu() {
 
     const updateTarget = () => {
       const nextTarget = document.querySelector<HTMLElement>(
-        ".playlist-detail-page .playlist-detail-shell",
+        ".playlist-detail-page .playlist-detail-card-inner",
       );
       setTarget((currentTarget) =>
         currentTarget === nextTarget ? currentTarget : nextTarget,
@@ -103,7 +101,6 @@ export default function CuratedPlaylistDetailMoreMenu() {
     updateTarget();
     const observer = new MutationObserver(updateTarget);
     observer.observe(document.body, { childList: true, subtree: true });
-
     return () => observer.disconnect();
   }, [isCuratedPlaylistDetail]);
 
@@ -135,59 +132,7 @@ export default function CuratedPlaylistDetailMoreMenu() {
 
   return createPortal(
     <>
-      <style>{`
-        body .playlist-detail-page .playlist-detail-shell {
-          grid-template-columns: 82px minmax(0, 1fr) 42px !important;
-          column-gap: 18px !important;
-        }
-
-        .playlist-detail-page .playlist-detail-more-menu {
-          grid-column: 3 !important;
-          grid-row: 1 !important;
-          justify-self: end;
-        }
-
-        .playlist-detail-page .playlist-detail-more-button {
-          box-sizing: border-box;
-          display: inline-flex;
-          width: 42px;
-          min-width: 42px;
-          height: 42px;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid var(--border);
-          border-radius: 0;
-          background: var(--bg-secondary);
-          padding: 0;
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-        }
-
-        .playlist-detail-page .playlist-detail-more-button:hover,
-        .playlist-detail-page .playlist-detail-more-button.is-active {
-          border-color: var(--border-hover);
-          background: var(--bg-hover);
-          color: var(--text-primary);
-        }
-
-        .playlist-detail-page .playlist-detail-more-button:disabled {
-          cursor: default;
-          opacity: 0.42;
-        }
-
-        .playlist-detail-page .playlist-detail-more-button svg {
-          display: block;
-          width: 16px;
-          height: 16px;
-        }
-
-        .playlist-detail-more-dropdown {
-          min-width: 154px;
-        }
-      `}</style>
-
-      <div className="playlist-detail-more-menu">
+      <div className="playlist-detail-card-corner-actions">
         <DropdownShell
           open={menuOpen}
           onOpenChange={setMenuOpen}
@@ -198,7 +143,7 @@ export default function CuratedPlaylistDetailMoreMenu() {
           trigger={({ open }) => (
             <button
               type="button"
-              className={`playlist-detail-more-button${open ? " is-active" : ""}`}
+              className={`playlist-detail-corner-button${open ? " is-active" : ""}`}
               aria-label="More curated playlist actions"
               aria-expanded={open}
               title="More"
