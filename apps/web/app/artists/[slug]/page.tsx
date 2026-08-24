@@ -2,6 +2,8 @@ import PublicArtistPageView from "@/components/artists/PublicArtistPageView";
 import { getPublicArtistPageData } from "@/lib/publicArtist";
 import { notFound, redirect } from "next/navigation";
 
+import "./public-artist-width.css";
+
 export const dynamic = "force-dynamic";
 
 type ArtistPageProps = {
