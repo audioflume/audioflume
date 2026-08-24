@@ -112,6 +112,18 @@
   display: none;
 }
 
+.playlist-detail-stage.is-system-playlist {
+  background: var(--filmwave-neutral-surface);
+}
+
+.playlist-detail-stage.is-system-playlist::before {
+  display: none;
+}
+
+.playlist-detail-stage.is-system-playlist::after {
+  background: var(--filmwave-neutral-surface);
+}
+
 .playlist-detail-card {
   --bg-primary: var(--filmwave-white);
   --bg-secondary: var(--filmwave-white);
@@ -172,6 +184,23 @@
   object-fit: cover;
 }
 
+.playlist-detail-system-cover {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--filmwave-black);
+  color: var(--filmwave-white);
+}
+
+.playlist-detail-system-cover svg {
+  display: block;
+}
+
+:where(html.light, html[data-theme="light"]) .playlist-detail-system-cover {
+  background: var(--filmwave-white);
+  color: var(--filmwave-black);
+}
+
 .playlist-detail-hero > .min-w-0 {
   --text-primary: var(--filmwave-white);
   --text-secondary: rgba(255, 255, 255, 0.75);
@@ -193,6 +222,22 @@
   background: transparent;
   padding: clamp(34px, 3.5vw, 58px) clamp(38px, 4vw, 66px);
   color: var(--filmwave-white);
+}
+
+:where(html.light, html[data-theme="light"])
+  .playlist-detail-stage.is-system-playlist
+  .playlist-detail-hero
+  > .min-w-0 {
+  --text-primary: var(--filmwave-black);
+  --text-secondary: color-mix(in srgb, var(--filmwave-black) 48%, transparent);
+  --text-muted: color-mix(in srgb, var(--filmwave-black) 42%, transparent);
+  --text-subtle: color-mix(in srgb, var(--filmwave-black) 48%, transparent);
+  --icon-color: color-mix(in srgb, var(--filmwave-black) 48%, transparent);
+  --border: color-mix(in srgb, var(--filmwave-black) 9%, transparent);
+  --filmwave-border-color: color-mix(in srgb, var(--filmwave-black) 9%, transparent);
+  --bg-primary: var(--filmwave-white);
+  --bg-hover: var(--filmwave-neutral-surface);
+  color: var(--filmwave-black);
 }
 
 .playlist-detail-kicker,
