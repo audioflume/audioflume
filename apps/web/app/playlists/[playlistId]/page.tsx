@@ -361,9 +361,11 @@ export default function PlaylistDetailPage() {
   };
 
   const showPlaylistLoading = artistSlug ? songsLoading : playlistsLoading;
-  const stageStyle = playlist?.cover_image_url
-    ? { backgroundImage: `url(${JSON.stringify(playlist.cover_image_url)})` }
-    : { background: GRADIENTS[playlistIndex % GRADIENTS.length] };
+  const stageStyle = !playlist
+    ? { background: "var(--filmwave-black)" }
+    : playlist.cover_image_url
+      ? { backgroundImage: `url(${JSON.stringify(playlist.cover_image_url)})` }
+      : { background: GRADIENTS[playlistIndex % GRADIENTS.length] };
 
   return (
     <>
