@@ -327,6 +327,7 @@ export default function PlaylistDetailPage() {
     <>
       <style>{`
         .playlist-detail-page {
+          --playlist-detail-control-strip-height: 86px;
           margin-left: var(--sidebar-width);
           margin-top: 56px;
           min-height: calc(100vh - 56px);
@@ -339,6 +340,7 @@ export default function PlaylistDetailPage() {
 
         .playlist-detail-shell {
           position: relative;
+          z-index: 2;
           display: grid;
           width: calc(
             100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
@@ -481,11 +483,16 @@ export default function PlaylistDetailPage() {
 
         .playlist-detail-stage {
           position: relative;
+          z-index: 1;
           width: 100%;
           overflow: hidden;
+          margin-top: calc(var(--playlist-detail-control-strip-height) * -1);
           background-position: center;
           background-size: cover;
-          padding: clamp(54px, 5vw, 84px) 0 clamp(58px, 5.5vw, 92px);
+          padding:
+            calc(clamp(54px, 5vw, 84px) + var(--playlist-detail-control-strip-height))
+            0
+            clamp(58px, 5.5vw, 92px);
           isolation: isolate;
         }
 
@@ -699,7 +706,7 @@ export default function PlaylistDetailPage() {
           }
 
           .playlist-detail-stage {
-            padding-top: 36px;
+            padding-top: calc(36px + var(--playlist-detail-control-strip-height));
             padding-bottom: 42px;
           }
 
