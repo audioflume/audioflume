@@ -2,14 +2,8 @@
 
 import { useMemo } from "react";
 
-import DownloadIcon from "@/components/icons/DownloadIcon";
-import PauseIcon from "@/components/icons/PauseIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import Waveform from "@/components/Waveform";
-import {
-  useIsCurrentSongPlaying,
-  usePlayer,
-} from "@/context/PlayerContext";
+import SongCard from "@/components/SongCard";
+import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import type {
   PublicArtistPlaylist,
@@ -47,13 +41,6 @@ function formatTrackCount(count: number) {
   return `${count} track${count === 1 ? "" : "s"}`;
 }
 
-function formatDuration(seconds: number) {
-  if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
-  const minutes = Math.floor(seconds / 60);
-  const remainingSeconds = Math.floor(seconds % 60);
-  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
-}
-
 function PlayGlyph() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
@@ -82,67 +69,6 @@ function CloseGlyph() {
         strokeWidth="1.25"
       />
     </svg>
-  );
-}
-
-function CollectionTrackRow({ song, index }: { song: Song; index: number }) {
-  const actuallyPlaying = useIsCurrentSongPlaying(song.id);
-  const { togglePlayPause } = usePlayer();
-
-  async function handleLicense() {
-    try {
-      const response = await fetch(
-        `/api/songs/${encodeURIComponent(song.id)}/download`,
-        { method: "POST" },
-      );
-      const data = await response.json();
-
-      if (!response.ok || !data?.downloadUrl) {
-        console.error("Failed to prepare song download", data);
-        return;
-      }
-
-      window.open(String(data.downloadUrl), "_blank", "noopener,noreferrer");
-    } catch (error) {
-      console.error("Failed to download song", error);
-    }
-  }
-
-  return (
-    <div className={styles.trackRow}>
-      <button
-        type="button"
-        className={`${styles.trackLead}${
-          actuallyPlaying ? ` ${styles.trackLeadPlaying}` : ""
-        }`}
-        onClick={() => togglePlayPause(song)}
-        aria-label={actuallyPlaying ? `Pause ${song.title}` : `Play ${song.title}`}
-      >
-        <span className={styles.trackNumber}>{index + 1}</span>
-        <span className={styles.trackPlayIcon} aria-hidden="true">
-          {actuallyPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
-        </span>
-      </button>
-
-      <button
-        type="button"
-        className={styles.trackTitle}
-        onClick={() => togglePlayPause(song)}
-      >
-        {song.title}
-      </button>
-
-      <div className={styles.waveform}>
-        <Waveform song={song} compact showEditPointMarkers={false} />
-      </div>
-
-      <span className={styles.duration}>{formatDuration(song.duration)}</span>
-
-      <button type="button" className={styles.licenseButton} onClick={handleLicense}>
-        <span>License</span>
-        <DownloadIcon size={13} />
-      </button>
-    </div>
   );
 }
 
@@ -243,8 +169,8 @@ export default function PublicArtistCollectionDrawer({
 
         <div className={styles.tracks}>
           {songs.length > 0 ? (
-            songs.map((song, index) => (
-              <CollectionTrackRow key={song.id} song={song} index={index} />
+            songs.map((song) => (
+              <SongCard key={song.id} song={song} showDivider={false} />
             ))
           ) : (
             <div className={styles.empty}>
