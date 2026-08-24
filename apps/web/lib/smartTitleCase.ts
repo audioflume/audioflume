@@ -97,3 +97,15 @@ export function toSmartTitleCase(value: string) {
     })
     .join(" ");
 }
+
+export function toSmartTitleCaseInput(value: string) {
+  const leadingWhitespace = value.match(/^\s*/)?.[0] ?? "";
+  const trailingWhitespace = value.match(/\s*$/)?.[0] ?? "";
+  const coreStart = leadingWhitespace.length;
+  const coreEnd = value.length - trailingWhitespace.length;
+  const core = value.slice(coreStart, coreEnd);
+
+  if (!core) return value;
+
+  return `${leadingWhitespace}${toSmartTitleCase(core)}${trailingWhitespace}`;
+}
