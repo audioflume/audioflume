@@ -39,6 +39,7 @@ export default function PublicArtistCardShelf({
   const requestIdRef = useRef(0);
   const cacheRef = useRef(new Map<number, DrawerPayload>());
   const allArtistSongsRef = useRef<Song[]>([]);
+  const hasArtistQueueRef = useRef(false);
   const drawerId = useId();
   const { setQueue } = usePlayer();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -75,6 +76,7 @@ export default function PublicArtistCardShelf({
   }
 
   function restoreArtistQueue() {
+    if (!hasArtistQueueRef.current) return;
     setQueue(allArtistSongsRef.current.filter((song) => song.audioUrl));
   }
 
@@ -101,6 +103,7 @@ export default function PublicArtistCardShelf({
     if (cached) {
       setDrawerData(cached);
       allArtistSongsRef.current = cached.all_songs;
+      hasArtistQueueRef.current = true;
       setQueue(cached.songs.filter((song) => song.audioUrl));
       setIsLoading(false);
       return;
@@ -132,6 +135,7 @@ export default function PublicArtistCardShelf({
 
       cacheRef.current.set(index, payload);
       allArtistSongsRef.current = payload.all_songs;
+      hasArtistQueueRef.current = true;
       setDrawerData(payload);
       setQueue(payload.songs.filter((song) => song.audioUrl));
     } catch (error) {
