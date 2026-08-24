@@ -7,22 +7,21 @@ import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import FilterTags from "@/components/FilterTags";
 import EditIcon from "@/components/icons/EditIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
-import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
   borderedIconButton9Class,
-  playlistDetailPrimaryActionButtonClass,
-  playlistDetailSecondaryActionButtonClass,
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
 import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
+import type { PublicArtistPlaylist } from "@/lib/publicArtist";
 import type { Playlist, Song } from "@/lib/types";
-import { useParams, useRouter } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+
+import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
 
 const GRADIENTS = [
   "linear-gradient(160deg,#1a3a2a,#2d5a3d)",
@@ -54,10 +53,35 @@ type PlaylistSong = Song & {
   position?: number;
 };
 
+type PublicArtistPlaylistPayload = {
+  collection?: PublicArtistPlaylist;
+  songs?: PlaylistSong[];
+  error?: string;
+};
+
 function BackIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M15 5L8 12L15 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function PlayGlyph() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
+      <path d="M3 2.15 9.5 6 3 9.85V2.15Z" fill="currentColor" />
+    </svg>
+  );
+}
+
+function ShareGlyph() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="14.5" cy="4.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="5.5" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="14.5" cy="15.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <path d="m7.5 8.9 5-3.1M7.5 11.1l5 3.1" stroke="currentColor" strokeWidth="1.4" />
     </svg>
   );
 }
@@ -107,41 +131,22 @@ function getSongAddedTime(song: PlaylistSong) {
   return Number.isFinite(time) ? time : 0;
 }
 
-function shuffleSongList<T>(songs: T[]) {
-  if (songs.length < 2) return [...songs];
-  let bestShuffle = [...songs];
-  let bestMovedCount = -1;
-  for (let attempt = 0; attempt < 12; attempt += 1) {
-    const shuffled = [...songs];
-    for (let i = shuffled.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = shuffled[i];
-      shuffled[i] = shuffled[j];
-      shuffled[j] = temp;
-    }
-    const movedCount = shuffled.filter((song, index) => song !== songs[index]).length;
-    if (movedCount > bestMovedCount) {
-      bestShuffle = shuffled;
-      bestMovedCount = movedCount;
-    }
-    if (movedCount >= Math.floor(songs.length * 0.85)) break;
-  }
-  return bestShuffle;
-}
-
 export default function PlaylistDetailPage() {
   const params = useParams();
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { currentSong, setQueue } = usePlayer();
   const { favoriteIdSet } = useFavorites();
   const { playlists, setPlaylists, loading: playlistsLoading } = usePlaylists();
 
   const playlistId = String(params.playlistId || "");
+  const artistSlug = searchParams.get("artist")?.trim() || null;
   const playerVisible = !!currentSong;
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [songs, setSongs] = useState<PlaylistSong[]>([]);
   const [songsLoading, setSongsLoading] = useState(true);
+  const [publicArtistPlaylist, setPublicArtistPlaylist] = useState<PublicArtistPlaylist | null>(null);
   const [search, setSearch] = useState("");
   const [quickFilter, setQuickFilter] = useState<QuickFilterValue>("newest");
   const [error, setError] = useState("");
@@ -151,13 +156,12 @@ export default function PlaylistDetailPage() {
   const [isSavingPlaylist, setIsSavingPlaylist] = useState(false);
   const [deletingPlaylistId, setDeletingPlaylistId] = useState<number | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
-  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
-  const shuffleActive = shuffleOrderIds !== null;
 
-  const playlist = useMemo(
+  const ownedPlaylist = useMemo(
     () => playlists.find((item) => String(item.id) === playlistId),
     [playlists, playlistId],
   );
+  const playlist = ownedPlaylist ?? publicArtistPlaylist;
 
   const playlistIndex = useMemo(() => {
     const index = playlists.findIndex((item) => String(item.id) === playlistId);
@@ -186,17 +190,8 @@ export default function PlaylistDetailPage() {
       if (aTime !== bTime) return quickFilter === "oldest" ? aTime - bTime : bTime - aTime;
       return quickFilter === "oldest" ? a.index - b.index : b.index - a.index;
     });
-    if (!shuffleOrderIds) return sortedSongs.map(({ song }) => song);
-    const orderMap = new Map(shuffleOrderIds.map((songId, index) => [songId, index]));
-    return sortedSongs.map(({ song }) => song).sort((a, b) => {
-      const aOrder = orderMap.get(a.id);
-      const bOrder = orderMap.get(b.id);
-      if (aOrder === undefined && bOrder === undefined) return 0;
-      if (aOrder === undefined) return 1;
-      if (bOrder === undefined) return -1;
-      return aOrder - bOrder;
-    });
-  }, [searchedSongs, quickFilter, favoriteIdSet, shuffleOrderIds]);
+    return sortedSongs.map(({ song }) => song);
+  }, [searchedSongs, quickFilter, favoriteIdSet]);
 
   const topGenres = useMemo(() => getTopGenres(songs), [songs]);
 
@@ -206,7 +201,29 @@ export default function PlaylistDetailPage() {
     async function loadSongs() {
       setSongsLoading(true);
       setError("");
+      if (artistSlug) setPublicArtistPlaylist(null);
       try {
+        if (artistSlug) {
+          const res = await fetch(
+            `/api/public/artists/${encodeURIComponent(
+              artistSlug,
+            )}/collection?kind=playlist&id=${encodeURIComponent(playlistId)}`,
+          );
+          const data = (await res.json()) as PublicArtistPlaylistPayload;
+          if (!res.ok || !data.collection) {
+            throw new Error(data?.error || "Failed to load playlist songs.");
+          }
+          if (cancelled) return;
+          setPublicArtistPlaylist(data.collection);
+          setSongs(
+            (Array.isArray(data.songs) ? data.songs : []).filter(
+              (song: PlaylistSong) => song.id,
+            ),
+          );
+          return;
+        }
+
+        setPublicArtistPlaylist(null);
         const res = await fetch(`/api/playlists/${playlistId}/songs`);
         const data = await res.json();
         if (!res.ok) throw new Error(data?.error || "Failed to load playlist songs.");
@@ -219,6 +236,7 @@ export default function PlaylistDetailPage() {
       } catch (err) {
         if (cancelled) return;
         setSongs([]);
+        setPublicArtistPlaylist(null);
         setError(err instanceof Error ? err.message : "Failed to load playlist songs.");
       } finally {
         if (!cancelled) setSongsLoading(false);
@@ -226,26 +244,30 @@ export default function PlaylistDetailPage() {
     }
     loadSongs();
     return () => { cancelled = true; };
-  }, [playlistId]);
+  }, [artistSlug, playlistId]);
 
   useEffect(() => {
     setQueue(filteredSongs.filter((song) => song.audioUrl));
   }, [filteredSongs, setQueue]);
-
-  useEffect(() => {
-    setShuffleOrderIds(null);
-  }, [quickFilter, search]);
 
   function playFirstSong() {
     const firstSongButton = document.querySelector<HTMLButtonElement>(`[aria-label="Play song"], [aria-label="Pause song"]`);
     firstSongButton?.click();
   }
 
-  function shufflePlaylist() {
-    if (filteredSongs.length < 2) return;
-    const shuffled = shuffleSongList(filteredSongs);
-    setShuffleOrderIds(shuffled.map((song) => song.id));
-    setQueue(shuffled.filter((song) => song.audioUrl));
+  async function sharePlaylist() {
+    if (!playlist) return;
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: playlist.name, url });
+        return;
+      }
+      await navigator.clipboard?.writeText(url);
+    } catch {
+      // Sharing was cancelled or unavailable.
+    }
   }
 
   const showToast = (message: string) => {
@@ -254,10 +276,10 @@ export default function PlaylistDetailPage() {
   };
 
   const openEdit = () => {
-    if (!playlist) return;
-    setEditingPlaylist(playlist);
-    setEditName(playlist.name);
-    setEditCoverPreview(playlist.cover_image_url ?? null);
+    if (!ownedPlaylist) return;
+    setEditingPlaylist(ownedPlaylist);
+    setEditName(ownedPlaylist.name);
+    setEditCoverPreview(ownedPlaylist.cover_image_url ?? null);
   };
 
   const handleSaveEdit = async () => {
@@ -299,7 +321,7 @@ export default function PlaylistDetailPage() {
     }
   };
 
-  const showPlaylistLoading = playlistsLoading;
+  const showPlaylistLoading = artistSlug ? songsLoading : playlistsLoading;
 
   return (
     <>
@@ -337,7 +359,7 @@ export default function PlaylistDetailPage() {
         .playlist-detail-title { margin-top: 8px; max-width: 640px; font-family: var(--font-aktiv-grotesk); font-size: 56px; font-weight: 500; line-height: 0.94; letter-spacing: -0.055em; color: var(--text-primary); }
         .playlist-detail-meta { margin-top: 16px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; font-size: 11px; color: var(--text-secondary); }
         .playlist-detail-dot { color: var(--text-muted); }
-        .playlist-detail-actions { margin-top: 24px; display: flex; align-items: center; gap: 8px; }
+        .playlist-detail-actions { margin-top: 24px; display: flex; align-items: center; gap: 10px; }
         .playlist-detail-search-sticky { position: sticky; top: 55px; z-index: 90; margin-left: -28px; margin-right: -28px; background: var(--bg-primary); }
         .playlist-detail-search-row { display: flex; min-height: 49px; align-items: center; gap: 3px; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0 28px; cursor: text; }
         .playlist-detail-search-inner { display: flex; width: 320px; flex-shrink: 0; align-items: center; gap: 8px; padding: 12px 16px 12px 0; cursor: text; }
@@ -355,8 +377,8 @@ export default function PlaylistDetailPage() {
         .playlist-detail-skeleton-meta { display: flex; align-items: center; gap: 8px; margin-top: 18px; }
         .playlist-detail-skeleton-meta-line { width: 72px; height: 8px; }
         .playlist-detail-skeleton-meta-line.short { width: 140px; }
-        .playlist-detail-skeleton-button { width: 70px; height: 36px; border-radius: 999px; }
-        .playlist-detail-skeleton-button.secondary { width: 92px; }
+        .playlist-detail-skeleton-button { width: 42px; height: 42px; border-radius: 999px; }
+        .playlist-detail-skeleton-button.secondary { width: 42px; }
         @media (max-width: 760px) {
           .playlist-detail-shell { padding: 0 18px; }
           .playlist-detail-hero { grid-template-columns: minmax(0, 1fr); gap: 0; padding: 36px 0 30px; }
@@ -382,9 +404,9 @@ export default function PlaylistDetailPage() {
             <button
               type="button"
               onClick={openEdit}
-              disabled={!playlist}
-              className={`${borderedIconButton9Class} ${playlist ? "" : "pointer-events-none invisible"}`}
-              aria-label={playlist ? `Edit ${playlist.name}` : "Edit playlist"}
+              disabled={!ownedPlaylist}
+              className={`${borderedIconButton9Class} ${ownedPlaylist ? "" : "pointer-events-none invisible"}`}
+              aria-label={ownedPlaylist ? `Edit ${ownedPlaylist.name}` : "Edit playlist"}
             >
               <EditIcon />
             </button>
@@ -429,19 +451,18 @@ export default function PlaylistDetailPage() {
                       type="button"
                       onClick={playFirstSong}
                       disabled={filteredSongs.length === 0}
-                      className={`${playlistDetailPrimaryActionButtonClass} disabled:cursor-default disabled:opacity-40`}
+                      className={artistDrawerStyles.roundAction}
+                      aria-label={`Play ${playlist.name}`}
                     >
-                      <PlayIconSmall />
-                      Play
+                      <PlayGlyph />
                     </button>
                     <button
                       type="button"
-                      onClick={shufflePlaylist}
-                      disabled={filteredSongs.length < 2}
-                      className={`${playlistDetailSecondaryActionButtonClass} disabled:cursor-default disabled:opacity-40`}
+                      onClick={sharePlaylist}
+                      className={artistDrawerStyles.roundAction}
+                      aria-label={`Share ${playlist.name}`}
                     >
-                      <ShuffleIconSmall />
-                      Shuffle
+                      <ShareGlyph />
                     </button>
                   </div>
                 </div>
@@ -456,7 +477,7 @@ export default function PlaylistDetailPage() {
                       type="text"
                       placeholder="Search Playlist"
                       value={search}
-                      onChange={(event) => { setSearch(event.target.value); setShuffleOrderIds(null); }}
+                      onChange={(event) => setSearch(event.target.value)}
                       className="playlist-detail-search-input"
                     />
                   </label>
@@ -464,23 +485,23 @@ export default function PlaylistDetailPage() {
                     selectedMoods={[]} selectedGenres={[]} selectedInstruments={[]}
                     selectedBuilds={[]} selectedVocals={[]} selectedDurations={[]}
                     instrumental={false} bpmValue={null} keyValue={null} selectedPlaylist={null}
-                    shuffleActive={shuffleActive}
+                    shuffleActive={false}
                     onRemoveMood={() => {}} onRemoveGenre={() => {}} onRemoveInstrument={() => {}}
                     onRemoveBuild={() => {}} onRemoveVocal={() => {}} onRemoveDuration={() => {}}
                     onRemoveInstrumental={() => {}} onRemoveBpm={() => {}} onRemoveKey={() => {}}
-                    onRemovePlaylist={() => {}} onRemoveShuffle={() => setShuffleOrderIds(null)}
+                    onRemovePlaylist={() => {}} onRemoveShuffle={() => {}}
                   />
                 </div>
               </div>
 
               <div className="playlist-detail-quick-row">
                 {QUICK_FILTERS.map((filter) => {
-                  const isActive = !shuffleActive && quickFilter === filter.value;
+                  const isActive = quickFilter === filter.value;
                   return (
                     <button
                       key={filter.value}
                       type="button"
-                      onClick={() => { setQuickFilter(filter.value); setShuffleOrderIds(null); }}
+                      onClick={() => setQuickFilter(filter.value)}
                       className={`${quickFilterButtonClass} ${isActive ? quickFilterButtonActiveClass : ""}`}
                     >
                       {filter.label}
@@ -515,11 +536,15 @@ export default function PlaylistDetailPage() {
                         song={song}
                         isFirst={index === 0}
                         isLast={index === filteredSongs.length - 1}
-                        playlistId={playlistId}
-                        onRemoveFromPlaylist={(songId) => {
-                          setSongs((prev) => prev.filter((item) => item.id !== songId));
-                          showToast("Song removed");
-                        }}
+                        playlistId={ownedPlaylist ? playlistId : undefined}
+                        onRemoveFromPlaylist={
+                          ownedPlaylist
+                            ? (songId) => {
+                                setSongs((prev) => prev.filter((item) => item.id !== songId));
+                                showToast("Song removed");
+                              }
+                            : undefined
+                        }
                       />
                     ))}
                   </div>
