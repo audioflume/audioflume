@@ -217,7 +217,7 @@
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(38px, 4vw, 58px);
   font-weight: 400;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
   line-height: 0.98;
 }
 
@@ -507,7 +507,7 @@
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(38px, 4vw, 58px);
   font-weight: 400;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.035em;
   line-height: 0.98;
   outline: none;
   white-space: nowrap;
