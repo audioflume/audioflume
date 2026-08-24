@@ -1,15 +1,9 @@
 .actions {
   position: absolute;
-  top: calc(var(--filmwave-page-gutter) + 28px);
-  left: 28px;
+  top: var(--filmwave-page-gutter);
+  left: 0;
   z-index: 6;
   display: flex;
   align-items: center;
   gap: 10px;
-}
-
-@media (max-width: 760px) {
-  .actions {
-    left: 18px;
-  }
 }
