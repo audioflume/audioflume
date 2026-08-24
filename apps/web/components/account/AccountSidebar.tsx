@@ -8,6 +8,7 @@ import {
   BackendSidebarScrollArea,
   BackendSidebarShell,
 } from "@/components/backend/BackendSidebar";
+import GearIcon from "@/components/icons/GearIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import {
   UserMenuGlyph,
@@ -71,7 +72,13 @@ export default function AccountSidebar() {
                 key={item.href}
                 href={item.href}
                 active={pathname === item.href}
-                leading={<UserMenuGlyph name={iconBySection[item.section]} />}
+                leading={
+                  item.section === "settings" ? (
+                    <GearIcon />
+                  ) : (
+                    <UserMenuGlyph name={iconBySection[item.section]} />
+                  )
+                }
               >
                 {item.label}
               </BackendSidebarNavItem>
