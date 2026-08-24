@@ -378,37 +378,8 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-actions {
           display: flex;
           align-items: center;
-          gap: 6px;
+          gap: 10px;
           margin-top: 24px !important;
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button {
-          box-sizing: border-box !important;
-          display: inline-flex !important;
-          height: 44px !important;
-          min-height: 44px !important;
-          align-items: center !important;
-          justify-content: center !important;
-          gap: 8px !important;
-          border-radius: 0 !important;
-          padding: 0 14px !important;
-          font-family: inherit !important;
-          font-size: 12px !important;
-          font-weight: 400 !important;
-          line-height: 1 !important;
-          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease !important;
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button:first-child {
-          background: var(--text-primary);
-          color: var(--bg-primary);
-        }
-
-        .playlist-detail-page .playlist-detail-actions > button svg {
-          display: block !important;
-          width: 14px !important;
-          height: 14px !important;
-          flex: 0 0 14px !important;
         }
 
         .playlist-detail-page .playlist-detail-skeleton-button {
