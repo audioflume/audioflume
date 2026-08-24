@@ -25,7 +25,9 @@ export default function FavoritesPlaylistTile({
         <Link href="/favorites" className="playlist-index-row">
           <div className="playlist-row-number" aria-hidden="true" />
           <div className={`playlist-row-cover ${styles.rowCover}`}>
-            <HeartIcon size={18} filled />
+            <div className={styles.rowCoverSurface}>
+              <HeartIcon size={18} filled />
+            </div>
           </div>
           <div className="playlist-row-main">
             <span>Favorites</span>
