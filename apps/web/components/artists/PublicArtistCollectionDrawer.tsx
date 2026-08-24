@@ -62,11 +62,11 @@ function ShareGlyph() {
 
 function CloseGlyph() {
   return (
-    <svg width="17" height="17" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+    <svg width="19" height="19" viewBox="0 0 12 12" fill="none" aria-hidden="true">
       <path
         d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5"
         stroke="currentColor"
-        strokeWidth="1.25"
+        strokeWidth="0.9"
       />
     </svg>
   );
