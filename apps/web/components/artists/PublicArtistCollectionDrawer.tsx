@@ -161,8 +161,12 @@ export default function PublicArtistCollectionDrawer({
             </div>
           </div>
 
-          <button type="button" className={styles.closeDetails} onClick={onClose}>
-            <span>Close Details</span>
+          <button
+            type="button"
+            className={styles.closeDetails}
+            onClick={onClose}
+            aria-label="Close details"
+          >
             <CloseGlyph />
           </button>
         </div>
