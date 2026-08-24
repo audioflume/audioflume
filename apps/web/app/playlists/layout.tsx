@@ -22,6 +22,10 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
         body:has(.playlist-detail-page) {
           --playlist-detail-page-gutter: clamp(28px, 5.2vw, 82px);
+          --playlist-detail-content-gutter: var(--filmwave-page-gutter);
+          --playlist-detail-content-max-width: 1640px;
+          --playlist-detail-control-inset-left: 32px;
+          --playlist-detail-control-inset-right: 32px;
           --playlist-detail-featured-card-gap: clamp(10px, 1.25vw, 18px);
           --playlist-detail-featured-hero-height: clamp(500px, 69vh, 760px);
           --playlist-detail-featured-padding-top: calc(
@@ -103,12 +107,10 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
         .playlist-detail-page .playlist-detail-shell {
           display: grid;
-          grid-template-columns: minmax(0, 1fr) 35px;
+          grid-template-columns: 82px minmax(0, 1fr) 35px;
           column-gap: 18px;
           align-items: start;
           padding-top: 22px;
-          padding-right: var(--playlist-detail-page-gutter) !important;
-          padding-left: var(--playlist-detail-page-gutter) !important;
         }
 
         .playlist-detail-page .playlist-detail-top-actions {
@@ -123,12 +125,12 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           position: static !important;
           top: auto !important;
           z-index: auto !important;
-          grid-column: 1;
+          grid-column: 2;
           grid-row: 1;
           box-sizing: border-box;
           width: min(640px, 100%);
           justify-self: end;
-          margin: 0 !important;
+          margin: 0;
           background: transparent !important;
         }
 
@@ -175,7 +177,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
         .playlist-detail-page .playlist-detail-top-actions > button:last-child {
           display: inline-flex !important;
-          grid-column: 2;
+          grid-column: 3;
           grid-row: 1;
           width: 35px !important;
           min-width: 35px !important;
@@ -203,18 +205,24 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         .playlist-detail-page .playlist-detail-browser-back {
-          position: absolute;
-          top: 0;
-          right: 0;
+          position: static;
+          top: auto;
+          right: auto;
+          left: auto;
           z-index: 3;
           display: inline-flex;
+          grid-column: 1;
+          grid-row: 1;
           box-sizing: border-box;
+          width: 82px;
           min-width: 82px;
           height: 35px;
           cursor: pointer;
           align-items: center;
           justify-content: center;
+          justify-self: start;
           gap: 8px;
+          margin: 0;
           border: 1px solid var(--filmwave-border-color);
           border-radius: 5px;
           background: var(--bg-primary);
@@ -241,7 +249,23 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         .playlist-detail-page .playlist-detail-hero,
         .playlist-detail-page .playlist-detail-quick-row,
         .playlist-detail-page .playlist-detail-section,
-        .playlist-detail-page .playlist-detail-shell > .playlist-detail-empty,
+        .playlist-detail-page .playlist-detail-shell > .playlist-detail-empty {
+          grid-column: 1 / -1;
+          box-sizing: border-box;
+          width: min(
+            calc(
+              100% + var(--playlist-detail-control-inset-left) +
+                var(--playlist-detail-control-inset-right) -
+                var(--playlist-detail-content-gutter) -
+                var(--playlist-detail-content-gutter)
+            ),
+            var(--playlist-detail-content-max-width)
+          );
+          justify-self: center;
+          margin-right: auto;
+          margin-left: auto;
+        }
+
         .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
           grid-column: 1 / -1;
         }
@@ -388,17 +412,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           border-radius: 0 !important;
         }
 
-        .playlist-detail-page .playlist-detail-quick-row,
-        .playlist-detail-page .playlist-detail-section {
-          margin-right: 0 !important;
-          margin-left: 0 !important;
-        }
-
-        .playlist-detail-page .playlist-detail-quick-row {
-          padding-right: 0 !important;
-          padding-left: 0 !important;
-        }
-
         .playlist-detail-page .playlist-detail-section > div {
           display: flex;
           flex-direction: column;
@@ -416,8 +429,8 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         .playlist-detail-page .playlist-detail-shell > div:has(> footer) {
-          margin-right: calc(32px - var(--playlist-detail-page-gutter)) !important;
-          margin-left: calc(32px - var(--playlist-detail-page-gutter)) !important;
+          margin-right: 0;
+          margin-left: 0;
           padding-top: 64px !important;
         }
 
@@ -463,18 +476,18 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           }
 
           .playlist-detail-page .playlist-detail-shell {
-            grid-template-columns: minmax(0, 1fr) 35px;
+            grid-template-columns: 82px minmax(0, 1fr) 35px;
             row-gap: 12px;
           }
 
           .playlist-detail-page .playlist-detail-search-sticky {
-            grid-column: 1;
+            grid-column: 2;
             grid-row: 1;
             width: 100%;
           }
 
           .playlist-detail-page .playlist-detail-top-actions > button:last-child {
-            grid-column: 2;
+            grid-column: 3;
             grid-row: 1;
           }
 
@@ -495,6 +508,8 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
           body:has(.playlist-detail-page) {
             --playlist-detail-page-gutter: 20px;
+            --playlist-detail-control-inset-left: 20px;
+            --playlist-detail-control-inset-right: 20px;
             --playlist-detail-featured-cover-size: calc(
               (
                   100vw - var(--playlist-detail-page-gutter) -
