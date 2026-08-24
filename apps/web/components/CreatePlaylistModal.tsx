@@ -14,7 +14,10 @@ import {
 import LoadingSpinner from "@/components/LoadingSpinner";
 import SearchIconSmall from "@/components/icons/SearchIconSmall";
 import UploadIcon from "@/components/icons/UploadIcon";
-import { toSmartTitleCase } from "@/lib/smartTitleCase";
+import {
+  toSmartTitleCase,
+  toSmartTitleCaseInput,
+} from "@/lib/smartTitleCase";
 
 type CreatePlaylistModalProps = {
   isOpen: boolean;
@@ -198,7 +201,7 @@ export default function CreatePlaylistModal({
             type="text"
             value={name}
             disabled={isCreating}
-            onChange={(e) => onNameChange(e.target.value)}
+            onChange={(e) => onNameChange(toSmartTitleCaseInput(e.target.value))}
             onBlur={normalizeName}
             placeholder="Example: Cinematic"
             className={modalInputClass}
