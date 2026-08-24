@@ -1,5 +1,6 @@
 "use client";
 
+import { MusicListShell } from "@filmwave/shared";
 import { useMemo } from "react";
 
 import SongCard from "@/components/SongCard";
@@ -173,9 +174,11 @@ export default function PublicArtistCollectionDrawer({
 
         <div className={styles.tracks}>
           {songs.length > 0 ? (
-            songs.map((song) => (
-              <SongCard key={song.id} song={song} showDivider={false} />
-            ))
+            <MusicListShell title={null}>
+              {songs.map((song) => (
+                <SongCard key={song.id} song={song} showDivider={false} />
+              ))}
+            </MusicListShell>
           ) : (
             <div className={styles.empty}>
               No published tracks in this collection yet.
