@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import PlaylistDetailBackdropEnhancer from "@/components/PlaylistDetailBackdropEnhancer";
 import PlaylistDetailBackButton from "./PlaylistDetailBackButton";
 import PlaylistTopControls from "./PlaylistTopControls";
 import "./playlists-tabs-rail.css";
@@ -6,6 +7,7 @@ import "./playlists-tabs-rail.css";
 export default function PlaylistsLayout({ children }: { children: ReactNode }) {
   return (
     <div className="playlists-route-shell">
+      <PlaylistDetailBackdropEnhancer />
       <PlaylistDetailBackButton />
       <PlaylistTopControls />
       <style>{`
