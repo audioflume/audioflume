@@ -7,6 +7,7 @@ import {
 } from "@/lib/artistPermissions";
 import { normalizeSongRow } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { toSmartTitleCase } from "@/lib/smartTitleCase";
 
 export const runtime = "nodejs";
 
@@ -153,7 +154,8 @@ export async function POST(request: Request, context: RouteContext) {
     }
 
     const body = (await request.json().catch(() => ({}))) as Record<string, unknown>;
-    const name = cleanOptionalString(body.name, 180);
+    const cleanName = cleanOptionalString(body.name, 180);
+    const name = cleanName ? toSmartTitleCase(cleanName) : null;
     const description = cleanOptionalString(body.description, 1000);
     const isPublic = body.is_public === true;
 
