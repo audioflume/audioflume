@@ -1,5 +1,6 @@
 "use client";
 
+import { MusicListShell } from "@filmwave/shared";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
@@ -7,8 +8,6 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
   quickFilterButtonActiveClass,
   quickFilterButtonClass,
 } from "@/components/uiClasses";
@@ -17,11 +16,17 @@ import { usePlayer } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import type { CommunityPlaylistCategory } from "@/lib/communityPlaylistCategories";
 import type { Song } from "@/lib/types";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
+
+import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
+import "@/app/music/music-library-redesign.css";
+import "@/app/playlist-detail-unified.css";
 
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
   "filmwave-recent-community-playlists";
+const FALLBACK_BACKGROUND =
+  "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)";
 
 const QUICK_FILTERS = [
   { label: "Default", value: "default" },
@@ -56,48 +61,35 @@ type CommunityPlaylistDetailResponse = {
   songs: CommunityPlaylistSong[];
 };
 
-function BackIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path
-        d="M15 5L8 12L15 19"
-        stroke="currentColor"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
 function PlaylistDetailSkeleton() {
   return (
-    <>
-      <section className="community-detail-hero community-detail-skeleton-hero">
-        <div className="community-detail-cover community-detail-skeleton-cover skeleton-block" />
-        <div className="min-w-0">
-          <div className="community-detail-skeleton-kicker skeleton-block" />
-          <div className="community-detail-skeleton-title skeleton-block" />
-          <div className="community-detail-skeleton-meta">
-            <div className="community-detail-skeleton-meta-line skeleton-block" />
-            <div className="community-detail-skeleton-meta-line short skeleton-block" />
+    <div className="playlist-detail-card">
+      <div className="playlist-detail-card-inner">
+        <section className="playlist-detail-hero playlist-detail-skeleton-hero">
+          <div className="playlist-detail-cover playlist-detail-skeleton-cover skeleton-block" />
+          <div className="min-w-0">
+            <div className="playlist-detail-skeleton-kicker skeleton-block" />
+            <div className="playlist-detail-skeleton-title skeleton-block" />
+            <div className="playlist-detail-skeleton-meta">
+              <div className="playlist-detail-skeleton-meta-line skeleton-block" />
+              <div className="playlist-detail-skeleton-meta-line short skeleton-block" />
+            </div>
+            <div className="playlist-detail-actions">
+              <div className="playlist-detail-skeleton-button skeleton-block" />
+              <div className="playlist-detail-skeleton-button secondary skeleton-block" />
+            </div>
           </div>
-          <div className="community-detail-actions">
-            <div className="community-detail-skeleton-button skeleton-block" />
-            <div className="community-detail-skeleton-button secondary skeleton-block" />
-          </div>
-        </div>
-      </section>
-      <section className="community-detail-section">
-        <SkeletonSongList />
-      </section>
-    </>
+        </section>
+        <section className="playlist-detail-section">
+          <SkeletonSongList />
+        </section>
+      </div>
+    </div>
   );
 }
 
 function parseRecentPlaylistIds(value: unknown) {
   if (!Array.isArray(value)) return [];
-
   return value
     .map((playlistId) => Number(playlistId))
     .filter((playlistId) => Number.isInteger(playlistId) && playlistId > 0);
@@ -108,9 +100,7 @@ function getStoredRecentPlaylistIds() {
     const storedValue = window.localStorage.getItem(
       RECENT_COMMUNITY_PLAYLISTS_KEY,
     );
-    return storedValue
-      ? parseRecentPlaylistIds(JSON.parse(storedValue))
-      : [];
+    return storedValue ? parseRecentPlaylistIds(JSON.parse(storedValue)) : [];
   } catch {
     return [];
   }
@@ -150,13 +140,11 @@ function removeRecentPlaylist(playlistId: number) {
 
 function getTopGenres(songs: CommunityPlaylistSong[]) {
   const counts = new Map<string, number>();
-
   for (const song of songs) {
     for (const genre of song.genres) {
       counts.set(genre, (counts.get(genre) ?? 0) + 1);
     }
   }
-
   return [...counts.entries()]
     .sort((a, b) => b[1] - a[1])
     .slice(0, 4)
@@ -169,7 +157,6 @@ function formatSongCount(count: number) {
 
 function shuffleSongList<T>(songs: T[]) {
   if (songs.length < 2) return [...songs];
-
   const shuffled = [...songs];
   for (let index = shuffled.length - 1; index > 0; index -= 1) {
     const randomIndex = Math.floor(Math.random() * (index + 1));
@@ -177,17 +164,14 @@ function shuffleSongList<T>(songs: T[]) {
     shuffled[index] = shuffled[randomIndex];
     shuffled[randomIndex] = current;
   }
-
   return shuffled;
 }
 
 export default function CommunityPlaylistDetailPage() {
   const params = useParams();
-  const router = useRouter();
   const { currentSong, setQueue } = usePlayer();
   const { favoriteIdSet } = useFavorites();
-  const { showEditPointMarkers, setShowEditPointMarkers } =
-    useUserPreferences();
+  const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
 
   const playlistId = String(params.playlistId || "");
   const playerVisible = Boolean(currentSong);
@@ -198,8 +182,7 @@ export default function CommunityPlaylistDetailPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
-  const [quickFilter, setQuickFilter] =
-    useState<QuickFilterValue>("default");
+  const [quickFilter, setQuickFilter] = useState<QuickFilterValue>("default");
   const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
   const shuffleActive = shuffleOrderIds !== null;
 
@@ -230,11 +213,7 @@ export default function CommunityPlaylistDetailPage() {
           );
         }
 
-        if (
-          !("playlist" in data) ||
-          !("songs" in data) ||
-          !Array.isArray(data.songs)
-        ) {
+        if (!("playlist" in data) || !("songs" in data) || !Array.isArray(data.songs)) {
           throw new Error("Invalid community playlist response");
         }
 
@@ -338,333 +317,60 @@ export default function CommunityPlaylistDetailPage() {
 
   function shufflePlaylist() {
     if (filteredSongs.length < 2) return;
-
     const shuffledSongs = shuffleSongList(filteredSongs);
     setShuffleOrderIds(shuffledSongs.map((song) => song.id));
     setQueue(shuffledSongs.filter((song) => song.audioUrl));
   }
 
+  const stageStyle = playlist?.cover_image_url
+    ? { backgroundImage: `url(${JSON.stringify(playlist.cover_image_url)})` }
+    : { background: FALLBACK_BACKGROUND };
+
   return (
-    <>
-      <style>{`
-        .community-detail-page {
-          margin-left: var(--sidebar-width);
-          margin-top: 56px;
-          min-height: calc(100vh - 56px);
-          overflow-x: clip;
-          background: var(--bg-primary);
-          color: var(--text-primary);
-          transition: margin-left 0.2s ease;
-        }
-
-        .community-detail-shell {
-          position: relative;
-          padding: 0 28px;
-        }
-
-        .community-detail-top-actions {
-          display: flex;
-          min-height: 32px;
-          align-items: center;
-          padding-top: 24px;
-        }
-
-        .community-detail-back {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          border: 0;
-          background: transparent;
-          padding: 0;
-          color: var(--text-secondary);
-          cursor: pointer;
-          font: inherit;
-          font-size: 13px;
-          transition: color 150ms ease;
-        }
-
-        .community-detail-back:hover,
-        .community-detail-back:focus-visible {
-          color: var(--text-primary);
-          outline: none;
-        }
-
-        .community-detail-hero {
-          display: grid;
-          grid-template-columns: 162px minmax(0, 1fr);
-          align-items: stretch;
-          gap: 32px;
-          padding: 36px 0 30px;
-        }
-
-        .community-detail-cover {
-          position: relative;
-          min-height: 162px;
-          overflow: hidden;
-          border-radius: 18px;
-          background: var(--bg-secondary);
-        }
-
-        .community-detail-cover img {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .community-detail-kicker {
-          color: var(--text-muted);
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-        }
-
-        .community-detail-title {
-          max-width: 680px;
-          margin: 8px 0 0;
-          color: var(--text-primary);
-          font-family: var(--font-aktiv-grotesk);
-          font-size: 56px;
-          font-weight: 500;
-          line-height: 0.94;
-          letter-spacing: -0.055em;
-        }
-
-        .community-detail-meta {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px;
-          margin-top: 16px;
-          color: var(--text-secondary);
-          font-size: 11px;
-        }
-
-        .community-detail-creator {
-          display: inline-flex;
-          align-items: center;
-          gap: 6px;
-        }
-
-        .community-detail-creator img,
-        .community-detail-creator-placeholder {
-          display: block;
-          width: 20px;
-          height: 20px;
-          flex: 0 0 20px;
-          border-radius: 50%;
-          object-fit: cover;
-          background: var(--bg-elevated);
-        }
-
-        .community-detail-dot {
-          color: var(--text-muted);
-        }
-
-        .community-detail-actions {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-top: 24px;
-        }
-
-        .community-detail-search-sticky {
-          position: sticky;
-          top: 55px;
-          z-index: 90;
-          margin-right: -28px;
-          margin-left: -28px;
-          background: var(--bg-primary);
-        }
-
-        .community-detail-search-row {
-          display: flex;
-          min-height: 49px;
-          align-items: center;
-          border-top: 1px solid var(--border);
-          border-bottom: 1px solid var(--border);
-          padding: 0 28px;
-          cursor: text;
-        }
-
-        .community-detail-search-inner {
-          display: flex;
-          width: 320px;
-          align-items: center;
-          gap: 8px;
-          padding: 12px 16px 12px 0;
-        }
-
-        .community-detail-search-input {
-          width: 100%;
-          border: 0;
-          outline: 0;
-          background: transparent;
-          color: var(--text-primary);
-          font-family: inherit;
-          font-size: 15px;
-          font-weight: 300;
-        }
-
-        .community-detail-search-input::placeholder {
-          color: var(--text-muted);
-        }
-
-        .community-detail-quick-row {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 6px;
-          margin-right: -28px;
-          margin-left: -28px;
-          padding: 16px 28px;
-          background: var(--bg-primary);
-        }
-
-        .community-detail-section {
-          margin-right: -28px;
-          margin-left: -28px;
-        }
-
-        .community-detail-empty {
-          display: flex;
-          min-height: 280px;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          color: var(--text-secondary);
-          text-align: center;
-        }
-
-        .community-detail-empty h2 {
-          margin: 0;
-          color: var(--text-primary);
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .community-detail-empty p {
-          max-width: 340px;
-          margin: 6px 0 0;
-          font-size: 12px;
-          line-height: 1.6;
-        }
-
-        .community-detail-skeleton-cover {
-          background: var(--bg-elevated);
-        }
-
-        .community-detail-skeleton-kicker {
-          width: 82px;
-          height: 8px;
-          margin-top: 2px;
-        }
-
-        .community-detail-skeleton-title {
-          width: min(420px, 72%);
-          height: 52px;
-          margin-top: 13px;
-        }
-
-        .community-detail-skeleton-meta {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-top: 18px;
-        }
-
-        .community-detail-skeleton-meta-line {
-          width: 72px;
-          height: 8px;
-        }
-
-        .community-detail-skeleton-meta-line.short {
-          width: 140px;
-        }
-
-        .community-detail-skeleton-button {
-          width: 70px;
-          height: 36px;
-          border-radius: 999px;
-        }
-
-        .community-detail-skeleton-button.secondary {
-          width: 92px;
-        }
-
-        @media (max-width: 760px) {
-          .community-detail-page {
-            margin-left: 0;
-          }
-
-          .community-detail-shell {
-            padding: 0 18px;
-          }
-
-          .community-detail-hero {
-            grid-template-columns: minmax(0, 1fr);
-            gap: 0;
-          }
-
-          .community-detail-cover {
-            display: none;
-          }
-
-          .community-detail-title {
-            font-size: 42px;
-          }
-
-          .community-detail-search-sticky,
-          .community-detail-quick-row,
-          .community-detail-section {
-            margin-right: -18px;
-            margin-left: -18px;
-          }
-
-          .community-detail-search-row,
-          .community-detail-quick-row {
-            padding-right: 18px;
-            padding-left: 18px;
-          }
-
-          .community-detail-search-inner {
-            width: 100%;
-            padding-right: 0;
-          }
-        }
-      `}</style>
-
-      <main className="community-detail-page">
-        <div className="community-detail-shell">
-          <div className="community-detail-top-actions">
-            <button
-              type="button"
-              className="community-detail-back"
-              onClick={() => router.push("/community-playlists")}
-            >
-              <BackIcon />
-              Back to community playlists
-            </button>
+    <main className="playlist-detail-page community-detail-page">
+      <div className="playlist-detail-shell">
+        <div className="playlist-detail-search-sticky">
+          <div
+            className="playlist-detail-search-row"
+            onClick={() => searchInputRef.current?.focus()}
+          >
+            <label className="playlist-detail-search-inner">
+              <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                value={search}
+                placeholder="Search Playlist"
+                className="playlist-detail-search-input"
+                onChange={(event) => setSearch(event.target.value)}
+              />
+            </label>
           </div>
+        </div>
+      </div>
 
-          {loading ? (
-            <PlaylistDetailSkeleton />
-          ) : error ? (
-            <div className="community-detail-empty">
-              <h2>Couldn&apos;t load playlist</h2>
-              <p>{error}</p>
+      <div className="playlist-detail-stage" style={stageStyle}>
+        {loading ? (
+          <PlaylistDetailSkeleton />
+        ) : error ? (
+          <div className="playlist-detail-card">
+            <div className="playlist-detail-card-inner">
+              <div className="playlist-detail-empty">
+                <h2>Couldn&apos;t load playlist</h2>
+                <p>{error}</p>
+              </div>
             </div>
-          ) : (
-            <>
-              <section className="community-detail-hero">
+          </div>
+        ) : (
+          <div className="playlist-detail-card">
+            <div className="playlist-detail-card-inner">
+              <section className="playlist-detail-hero">
                 <div
-                  className="community-detail-cover"
+                  className="playlist-detail-cover"
                   style={{
                     background: playlist?.cover_image_url
-                      ? "var(--media-overlay-solid)"
-                      : "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
+                      ? "var(--bg-tertiary)"
+                      : FALLBACK_BACKGROUND,
                   }}
                 >
                   {playlist?.cover_image_url && (
@@ -673,87 +379,65 @@ export default function CommunityPlaylistDetailPage() {
                 </div>
 
                 <div className="min-w-0">
-                  <div className="community-detail-kicker">
-                    Community Playlist
-                  </div>
-                  <h1 className="community-detail-title">
+                  <span className="playlist-detail-kicker">Community Playlist</span>
+                  <h1 className="playlist-detail-title">
                     {playlist?.name || "Playlist"}
                   </h1>
 
-                  <div className="community-detail-meta">
-                    <span className="community-detail-creator">
+                  <p className="playlist-detail-meta">
+                    <span className="playlist-detail-creator">
                       {playlist?.creator.imageUrl ? (
                         <img src={playlist.creator.imageUrl} alt="" />
                       ) : (
                         <span
-                          className="community-detail-creator-placeholder"
+                          className="playlist-detail-creator-placeholder"
                           aria-hidden="true"
                         />
                       )}
                       <span>{playlist?.creator.name}</span>
                     </span>
-                    <span className="community-detail-dot">·</span>
+                    <span className="playlist-detail-dot">·</span>
                     <span>{formatSongCount(songs.length)}</span>
                     {categories.length > 0 && (
                       <>
-                        <span className="community-detail-dot">·</span>
+                        <span className="playlist-detail-dot">·</span>
                         <span>{categories.join(" · ")}</span>
                       </>
                     )}
                     {topGenres.length > 0 && (
                       <>
-                        <span className="community-detail-dot">·</span>
+                        <span className="playlist-detail-dot">·</span>
                         <span>{topGenres.join(" · ")}</span>
                       </>
                     )}
-                  </div>
+                  </p>
 
-                  <div className="community-detail-actions">
+                  <div className="playlist-detail-actions">
                     <button
                       type="button"
                       onClick={playFirstSong}
                       disabled={filteredSongs.length === 0}
-                      className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
+                      className={artistDrawerStyles.roundAction}
+                      aria-label={`Play ${playlist?.name || "playlist"}`}
                     >
-                      <PlayIconSmall />
-                      Play
+                      <PlayIconSmall size={15} />
                     </button>
                     <button
                       type="button"
                       onClick={shufflePlaylist}
                       disabled={filteredSongs.length < 2}
-                      className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
+                      className={artistDrawerStyles.roundAction}
+                      aria-label={`Shuffle ${playlist?.name || "playlist"}`}
                     >
                       <ShuffleIconSmall />
-                      Shuffle
                     </button>
                   </div>
                 </div>
               </section>
 
-              <div className="community-detail-search-sticky">
-                <div
-                  className="community-detail-search-row"
-                  onClick={() => searchInputRef.current?.focus()}
-                >
-                  <label className="community-detail-search-inner">
-                    <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
-                    <input
-                      ref={searchInputRef}
-                      type="text"
-                      value={search}
-                      placeholder="Search Playlist"
-                      className="community-detail-search-input"
-                      onChange={(event) => setSearch(event.target.value)}
-                    />
-                  </label>
-                </div>
-              </div>
-
-              <div className="community-detail-quick-row">
+              <div className="playlist-detail-quick-row">
                 {QUICK_FILTERS.map((filter) => {
-                  const isActive =
-                    !shuffleActive && quickFilter === filter.value;
+                  const isActive = !shuffleActive && quickFilter === filter.value;
                   return (
                     <button
                       key={filter.value}
@@ -777,55 +461,51 @@ export default function CommunityPlaylistDetailPage() {
                     showEditPointMarkers ? quickFilterButtonActiveClass : ""
                   }`}
                   aria-pressed={showEditPointMarkers}
-                  onClick={() =>
-                    setShowEditPointMarkers(!showEditPointMarkers)
-                  }
+                  onClick={() => setShowEditPointMarkers(!showEditPointMarkers)}
                 >
                   markers
                 </button>
               </div>
 
-              <section className="community-detail-section">
+              <section className="playlist-detail-section">
                 {songs.length === 0 ? (
-                  <div className="community-detail-empty">
+                  <div className="playlist-detail-empty">
                     <h2>No songs yet</h2>
                     <p>This community playlist doesn&apos;t have any songs yet.</p>
                   </div>
                 ) : filteredSongs.length === 0 ? (
-                  <div className="community-detail-empty">
+                  <div className="playlist-detail-empty">
                     <h2>No songs found</h2>
-                    <p>
-                      Try searching for a different title, artist, genre, mood,
-                      or tag.
-                    </p>
+                    <p>Try searching for a different title, artist, genre, mood, or tag.</p>
                   </div>
                 ) : (
-                  <div>
+                  <MusicListShell title={null}>
                     {filteredSongs.map((song, index) => (
                       <SongCard
                         key={song.id}
                         song={song}
                         isFirst={index === 0}
                         isLast={index === filteredSongs.length - 1}
+                        showDivider={false}
                         showEditPointMarkers={showEditPointMarkers}
                       />
                     ))}
-                  </div>
+                  </MusicListShell>
                 )}
               </section>
-            </>
-          )}
-
-          {!loading && (
-            <div
-              className="pt-10"
-              style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
-            >
-              <Footer />
             </div>
-          )}
+          </div>
+        )}
+      </div>
+
+      {!loading && (
+        <div
+          className="playlist-detail-footer-shell"
+          style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
+        >
+          <Footer />
         </div>
-      </main>
-    </>
+      )}
+    </main>
   );
 }
