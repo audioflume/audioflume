@@ -12,6 +12,7 @@ import {
   normalizeCuratedBrowseTags,
   normalizeCuratedPlaylist,
 } from "@/lib/curatedPlaylists";
+import { toSmartTitleCase } from "@/lib/smartTitleCase";
 
 type RouteContext = {
   params: Promise<{ playlistId: string }> | { playlistId: string };
@@ -48,7 +49,7 @@ export async function PATCH(req: Request, context: RouteContext) {
   try {
     const { playlistId } = await context.params;
     const body = (await req.json()) as Record<string, unknown>;
-    const name = cleanString(body.name);
+    const name = toSmartTitleCase(cleanString(body.name));
 
     if (!name) {
       return NextResponse.json(
