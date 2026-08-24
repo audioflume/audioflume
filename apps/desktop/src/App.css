@@ -21,6 +21,9 @@
 @import "../../../packages/shared/styles/project-browser-icons.css";
 
 :root {
+  --filmwave-menu-shell-radius: 0;
+  --filmwave-menu-item-height: 34px;
+  --filmwave-menu-item-padding-x: 12px;
   color: var(--text-primary);
   background: var(--bg-primary);
   font-family: var(--font-aktiv-grotesk);
