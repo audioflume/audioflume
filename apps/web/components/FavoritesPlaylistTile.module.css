@@ -4,7 +4,7 @@
 }
 
 :global(.playlists-page .playlist-gallery-card:hover) .art {
-  transform: translateY(-4px);
+  transform: translateY(-8px);
 }
 
 .icon {
