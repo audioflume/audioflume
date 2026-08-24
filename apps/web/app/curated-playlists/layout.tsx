@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import PlaylistDetailBackdropEnhancer from "@/components/PlaylistDetailBackdropEnhancer";
 import CuratedFeaturedCarouselControls from "./CuratedFeaturedCarouselControls";
 import CuratedPlaylistsLoadingStyles from "./CuratedPlaylistsLoadingStyles";
 import "../editorial-typography.css";
@@ -11,6 +12,7 @@ export default function CuratedPlaylistsLayout({
 }) {
   return (
     <>
+      <PlaylistDetailBackdropEnhancer />
       <CuratedPlaylistsLoadingStyles />
       <CuratedFeaturedCarouselControls />
       {children}
