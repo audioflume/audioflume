@@ -23,6 +23,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
 import "@/app/music/music-library-redesign.css";
+import "@/app/playlist-detail-unified.css";
 
 const GRADIENTS = [
   "linear-gradient(160deg,#1a3a2a,#2d5a3d)",
@@ -105,7 +106,10 @@ function getTopGenres(songs: Song[]) {
       counts.set(genre, (counts.get(genre) || 0) + 1);
     });
   });
-  return [...counts.entries()].sort((a, b) => b[1] - a[1]).slice(0, 4).map(([genre]) => genre);
+  return [...counts.entries()]
+    .sort((a, b) => b[1] - a[1])
+    .slice(0, 4)
+    .map(([genre]) => genre);
 }
 
 function formatSongCount(count: number) {
@@ -159,22 +163,39 @@ export default function PlaylistDetailPage() {
     const query = search.trim().toLowerCase();
     if (!query) return songs;
     return songs.filter((song) => {
-      const searchableText = [song.title, song.artist, song.key, ...song.genres, ...song.moods, ...song.instruments, ...song.builds, ...song.vocals]
-        .join(" ").toLowerCase();
+      const searchableText = [
+        song.title,
+        song.artist,
+        song.key,
+        ...song.genres,
+        ...song.moods,
+        ...song.instruments,
+        ...song.builds,
+        ...song.vocals,
+      ]
+        .join(" ")
+        .toLowerCase();
       return searchableText.includes(query);
     });
   }, [songs, search]);
 
   const filteredSongs = useMemo(() => {
     const indexedSongs = searchedSongs.map((song, index) => ({ song, index }));
-    const nextSongs = quickFilter === "liked"
-      ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
-      : indexedSongs;
+    const nextSongs =
+      quickFilter === "liked"
+        ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
+        : indexedSongs;
     const sortedSongs = [...nextSongs].sort((a, b) => {
-      if (quickFilter === "alphabetical") return a.song.title.localeCompare(b.song.title, undefined, { sensitivity: "base" });
+      if (quickFilter === "alphabetical") {
+        return a.song.title.localeCompare(b.song.title, undefined, {
+          sensitivity: "base",
+        });
+      }
       const aTime = getSongAddedTime(a.song);
       const bTime = getSongAddedTime(b.song);
-      if (aTime !== bTime) return quickFilter === "oldest" ? aTime - bTime : bTime - aTime;
+      if (aTime !== bTime) {
+        return quickFilter === "oldest" ? aTime - bTime : bTime - aTime;
+      }
       return quickFilter === "oldest" ? a.index - b.index : b.index - a.index;
     });
     return sortedSongs.map(({ song }) => song);
@@ -185,10 +206,12 @@ export default function PlaylistDetailPage() {
   useEffect(() => {
     if (!playlistId) return;
     let cancelled = false;
+
     async function loadSongs() {
       setSongsLoading(true);
       setError("");
       if (artistSlug) setPublicArtistPlaylist(null);
+
       try {
         if (artistSlug) {
           const res = await fetch(
@@ -213,24 +236,34 @@ export default function PlaylistDetailPage() {
         setPublicArtistPlaylist(null);
         const res = await fetch(`/api/playlists/${playlistId}/songs`);
         const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Failed to load playlist songs.");
-        const loadedSongs = Array.isArray(data) ? data
-          : Array.isArray(data?.songs) ? data.songs
-          : Array.isArray(data?.playlistSongs) ? data.playlistSongs
-          : [];
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to load playlist songs.");
+        }
+        const loadedSongs = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.songs)
+            ? data.songs
+            : Array.isArray(data?.playlistSongs)
+              ? data.playlistSongs
+              : [];
         if (cancelled) return;
         setSongs(loadedSongs.filter((song: PlaylistSong) => song.id));
       } catch (err) {
         if (cancelled) return;
         setSongs([]);
         setPublicArtistPlaylist(null);
-        setError(err instanceof Error ? err.message : "Failed to load playlist songs.");
+        setError(
+          err instanceof Error ? err.message : "Failed to load playlist songs.",
+        );
       } finally {
         if (!cancelled) setSongsLoading(false);
       }
     }
-    loadSongs();
-    return () => { cancelled = true; };
+
+    void loadSongs();
+    return () => {
+      cancelled = true;
+    };
   }, [artistSlug, playlistId]);
 
   useEffect(() => {
@@ -238,7 +271,9 @@ export default function PlaylistDetailPage() {
   }, [filteredSongs, setQueue]);
 
   function playFirstSong() {
-    const firstSongButton = document.querySelector<HTMLButtonElement>(`[aria-label="Play song"], [aria-label="Pause song"]`);
+    const firstSongButton = document.querySelector<HTMLButtonElement>(
+      '[aria-label="Play song"], [aria-label="Pause song"]',
+    );
     firstSongButton?.click();
   }
 
@@ -269,12 +304,28 @@ export default function PlaylistDetailPage() {
       const res = await fetch(`/api/playlists/${editingPlaylist.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: editName, cover_image_url: editCoverPreview }),
+        body: JSON.stringify({
+          name: editName,
+          cover_image_url: editCoverPreview,
+        }),
       });
       const text = await res.text();
       const data = text ? JSON.parse(text) : null;
-      if (!res.ok) { console.error("Failed to save playlist:", data || res.statusText); return; }
-      setPlaylists((prev) => prev.map((p) => p.id === editingPlaylist.id ? data || { ...p, name: editName, cover_image_url: editCoverPreview } : p));
+      if (!res.ok) {
+        console.error("Failed to save playlist:", data || res.statusText);
+        return;
+      }
+      setPlaylists((prev) =>
+        prev.map((item) =>
+          item.id === editingPlaylist.id
+            ? data || {
+                ...item,
+                name: editName,
+                cover_image_url: editCoverPreview,
+              }
+            : item,
+        ),
+      );
       showToast("Changes saved");
       setEditingPlaylist(null);
     } finally {
@@ -284,15 +335,23 @@ export default function PlaylistDetailPage() {
 
   const handleDelete = async () => {
     if (!editingPlaylist || deletingPlaylistId) return;
-    const confirmed = window.confirm(`Are you sure you want to delete "${editingPlaylist.name}"? This cannot be undone.`);
+    const confirmed = window.confirm(
+      `Are you sure you want to delete "${editingPlaylist.name}"? This cannot be undone.`,
+    );
     if (!confirmed) return;
+
     const playlistIdToDelete = editingPlaylist.id;
     setEditingPlaylist(null);
     setDeletingPlaylistId(playlistIdToDelete);
+
     try {
-      const res = await fetch(`/api/playlists/${playlistIdToDelete}`, { method: "DELETE" });
+      const res = await fetch(`/api/playlists/${playlistIdToDelete}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
-        setPlaylists((prev) => prev.filter((p) => p.id !== playlistIdToDelete));
+        setPlaylists((prev) =>
+          prev.filter((item) => item.id !== playlistIdToDelete),
+        );
         showToast("Playlist deleted");
         router.push("/playlists");
       }
@@ -308,340 +367,13 @@ export default function PlaylistDetailPage() {
 
   return (
     <>
-      <style>{`
-        .playlist-detail-page {
-          --playlist-detail-control-strip-height: 86px;
-          margin-left: var(--sidebar-width);
-          margin-top: 56px;
-          min-height: calc(100vh - 56px);
-          overflow-x: clip;
-          overflow-y: visible;
-          background: var(--bg-primary);
-          color: var(--text-primary);
-          transition: margin-left 0.2s ease;
-        }
-
-        .playlist-detail-shell {
-          position: relative;
-          z-index: 2;
-          display: grid;
-          width: calc(
-            100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-          );
-          max-width: var(--filmwave-editorial-max-width);
-          grid-template-columns: 82px minmax(0, 1fr) 35px;
-          align-items: start;
-          column-gap: 18px;
-          margin: 0 auto;
-          padding: 22px 0;
-        }
-
-        .playlist-detail-search-sticky {
-          position: static;
-          grid-column: 2;
-          grid-row: 1;
-          box-sizing: border-box;
-          width: min(640px, 100%);
-          justify-self: end;
-          margin: 0;
-          background: transparent;
-        }
-
-        .playlist-detail-search-row {
-          display: flex;
-          width: 100%;
-          height: 42px;
-          min-height: 42px;
-          align-items: center;
-          gap: 12px;
-          border: 1px solid var(--filmwave-border-color);
-          border-radius: 0;
-          background: var(--bg-primary);
-          padding: 0 14px;
-          color: var(--text-muted);
-          box-shadow: none;
-        }
-
-        .playlist-detail-search-inner {
-          display: flex;
-          width: auto;
-          min-width: 0;
-          flex: 1 1 auto;
-          align-items: center;
-          gap: 12px;
-          padding: 0;
-        }
-
-        .playlist-detail-search-input {
-          min-width: 0;
-          flex: 1 1 auto;
-          border: 0;
-          outline: 0;
-          background: transparent;
-          color: var(--text-primary);
-          font-family: inherit;
-          font-size: 12px;
-          font-style: italic;
-        }
-
-        .playlist-detail-search-input::placeholder {
-          color: var(--text-muted);
-        }
-
-        .playlist-detail-stage {
-          position: relative;
-          z-index: 1;
-          width: 100%;
-          overflow: hidden;
-          margin-top: calc(var(--playlist-detail-control-strip-height) * -1);
-          background-position: center;
-          background-size: cover;
-          padding:
-            calc(clamp(54px, 5vw, 84px) + var(--playlist-detail-control-strip-height))
-            0
-            clamp(58px, 5.5vw, 92px);
-          isolation: isolate;
-        }
-
-        .playlist-detail-stage::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: -1;
-          background: rgba(0, 0, 0, 0.2);
-          pointer-events: none;
-        }
-
-        .playlist-detail-card {
-          --bg-primary: var(--filmwave-white);
-          --bg-secondary: var(--filmwave-white);
-          --bg-tertiary: #f2f2f2;
-          --bg-hover: #f2f2f2;
-          --bg-hover-strong: #e8e8e8;
-          --text-primary: var(--filmwave-black);
-          --text-secondary: color-mix(in srgb, var(--filmwave-black) 48%, transparent);
-          --text-muted: color-mix(in srgb, var(--filmwave-black) 42%, transparent);
-          --text-subtle: color-mix(in srgb, var(--filmwave-black) 48%, transparent);
-          --icon-color: color-mix(in srgb, var(--filmwave-black) 48%, transparent);
-          --border: color-mix(in srgb, var(--filmwave-black) 9%, transparent);
-          --border-subtle: color-mix(in srgb, var(--filmwave-black) 9%, transparent);
-          --filmwave-border-color: color-mix(in srgb, var(--filmwave-black) 9%, transparent);
-          --waveform-color: color-mix(in srgb, var(--filmwave-black) 30%, transparent);
-          --waveform-progress: var(--filmwave-black);
-          position: relative;
-          z-index: 1;
-          width: calc(
-            100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-          );
-          max-width: var(--filmwave-editorial-max-width);
-          margin: 0 auto;
-          background: var(--filmwave-white);
-          color: var(--filmwave-black);
-        }
-
-        .playlist-detail-card-inner {
-          padding: 44px var(--filmwave-page-gutter) 34px;
-        }
-
-        .playlist-detail-hero {
-          position: relative;
-          display: grid;
-          grid-template-columns: auto minmax(260px, 1fr);
-          align-items: center;
-          gap: 30px;
-          padding: 0;
-        }
-
-        .playlist-detail-cover {
-          position: relative;
-          width: 188px;
-          overflow: hidden;
-          aspect-ratio: 1;
-          background: var(--bg-tertiary);
-        }
-
-        .playlist-detail-cover img {
-          display: block;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-        }
-
-        .playlist-detail-hero > .min-w-0 {
-          min-width: 0;
-        }
-
-        .playlist-detail-kicker,
-        .playlist-detail-meta {
-          color: var(--text-muted);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: 11px;
-          font-weight: 400;
-          letter-spacing: normal;
-          line-height: 1.45;
-        }
-
-        .playlist-detail-kicker {
-          display: block;
-          margin-bottom: 9px;
-        }
-
-        .playlist-detail-title {
-          margin: 0;
-          color: var(--text-primary);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(28px, 2.25vw, 36px);
-          font-weight: 400;
-          letter-spacing: -0.035em;
-          line-height: 0.98;
-        }
-
-        .playlist-detail-meta {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px;
-          margin: 10px 0 0;
-        }
-
-        .playlist-detail-dot {
-          color: var(--text-muted);
-        }
-
-        .playlist-detail-actions {
-          display: flex;
-          align-items: center;
-          gap: 10px;
-          margin-top: 24px;
-        }
-
-        .playlist-detail-quick-row {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 6px;
-          margin-top: 38px;
-          background: transparent;
-          padding: 0;
-        }
-
-        .playlist-detail-section {
-          margin-top: 18px;
-        }
-
-        .playlist-detail-empty {
-          display: flex;
-          min-height: 280px;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          color: var(--text-secondary);
-        }
-
-        .playlist-detail-empty h2 {
-          color: var(--text-primary);
-          font-size: 14px;
-          font-weight: 500;
-        }
-
-        .playlist-detail-empty p {
-          max-width: 320px;
-          margin-top: 6px;
-          font-size: 12px;
-          line-height: 1.6;
-        }
-
-        .playlist-detail-skeleton-cover {
-          background: var(--bg-tertiary);
-        }
-
-        .playlist-detail-skeleton-kicker {
-          width: 72px;
-          height: 8px;
-        }
-
-        .playlist-detail-skeleton-title {
-          width: min(360px, 72%);
-          height: 30px;
-          margin-top: 10px;
-        }
-
-        .playlist-detail-skeleton-meta {
-          display: flex;
-          align-items: center;
-          gap: 8px;
-          margin-top: 14px;
-        }
-
-        .playlist-detail-skeleton-meta-line {
-          width: 72px;
-          height: 8px;
-        }
-
-        .playlist-detail-skeleton-meta-line.short {
-          width: 140px;
-        }
-
-        .playlist-detail-skeleton-button {
-          width: 42px;
-          height: 42px;
-          border-radius: 999px;
-        }
-
-        .playlist-detail-skeleton-button.secondary {
-          width: 42px;
-        }
-
-        .playlist-detail-footer-shell {
-          width: calc(
-            100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-          );
-          max-width: var(--filmwave-editorial-max-width);
-          margin: 0 auto;
-          padding-top: 64px;
-        }
-
-        @media (max-width: 760px) {
-          .playlist-detail-shell {
-            grid-template-columns: 82px minmax(0, 1fr) 35px;
-            row-gap: 12px;
-          }
-
-          .playlist-detail-search-sticky {
-            width: 100%;
-          }
-
-          .playlist-detail-stage {
-            padding-top: calc(36px + var(--playlist-detail-control-strip-height));
-            padding-bottom: 42px;
-          }
-
-          .playlist-detail-card-inner {
-            padding-top: 30px;
-          }
-
-          .playlist-detail-cover {
-            width: 142px;
-          }
-        }
-
-        @media (max-width: 560px) {
-          .playlist-detail-hero {
-            grid-template-columns: 1fr;
-          }
-
-          .playlist-detail-cover {
-            width: 100%;
-            max-width: 220px;
-          }
-        }
-      `}</style>
-
       <main className="playlist-detail-page">
         <div className="playlist-detail-shell">
           <div className="playlist-detail-search-sticky">
-            <div className="playlist-detail-search-row" onClick={() => searchInputRef.current?.focus()}>
+            <div
+              className="playlist-detail-search-row"
+              onClick={() => searchInputRef.current?.focus()}
+            >
               <label className="playlist-detail-search-inner">
                 <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
                 <input
@@ -654,14 +386,28 @@ export default function PlaylistDetailPage() {
                 />
               </label>
               <FilterTags
-                selectedMoods={[]} selectedGenres={[]} selectedInstruments={[]}
-                selectedBuilds={[]} selectedVocals={[]} selectedDurations={[]}
-                instrumental={false} bpmValue={null} keyValue={null} selectedPlaylist={null}
+                selectedMoods={[]}
+                selectedGenres={[]}
+                selectedInstruments={[]}
+                selectedBuilds={[]}
+                selectedVocals={[]}
+                selectedDurations={[]}
+                instrumental={false}
+                bpmValue={null}
+                keyValue={null}
+                selectedPlaylist={null}
                 shuffleActive={false}
-                onRemoveMood={() => {}} onRemoveGenre={() => {}} onRemoveInstrument={() => {}}
-                onRemoveBuild={() => {}} onRemoveVocal={() => {}} onRemoveDuration={() => {}}
-                onRemoveInstrumental={() => {}} onRemoveBpm={() => {}} onRemoveKey={() => {}}
-                onRemovePlaylist={() => {}} onRemoveShuffle={() => {}}
+                onRemoveMood={() => {}}
+                onRemoveGenre={() => {}}
+                onRemoveInstrument={() => {}}
+                onRemoveBuild={() => {}}
+                onRemoveVocal={() => {}}
+                onRemoveDuration={() => {}}
+                onRemoveInstrumental={() => {}}
+                onRemoveBpm={() => {}}
+                onRemoveKey={() => {}}
+                onRemovePlaylist={() => {}}
+                onRemoveShuffle={() => {}}
               />
             </div>
           </div>
@@ -698,7 +444,9 @@ export default function PlaylistDetailPage() {
 
                   <div className="min-w-0">
                     <span className="playlist-detail-kicker">Playlist</span>
-                    <h1 className="playlist-detail-title">{playlist.name || "Playlist"}</h1>
+                    <h1 className="playlist-detail-title">
+                      {playlist.name || "Playlist"}
+                    </h1>
                     <p className="playlist-detail-meta">
                       <span>{formatSongCount(filteredSongs.length)}</span>
                       {topGenres.length > 0 && (
@@ -708,6 +456,7 @@ export default function PlaylistDetailPage() {
                         </>
                       )}
                     </p>
+
                     <div className="playlist-detail-actions">
                       <button
                         type="button"
@@ -716,7 +465,12 @@ export default function PlaylistDetailPage() {
                         className={artistDrawerStyles.roundAction}
                         aria-label={`Play ${playlist.name}`}
                       >
-                        <span style={{ display: "inline-flex", transform: "translateX(0.5px)" }}>
+                        <span
+                          style={{
+                            display: "inline-flex",
+                            transform: "translateX(0.5px)",
+                          }}
+                        >
                           <PlayIconSmall size={15} />
                         </span>
                       </button>
@@ -740,7 +494,9 @@ export default function PlaylistDetailPage() {
                         key={filter.value}
                         type="button"
                         onClick={() => setQuickFilter(filter.value)}
-                        className={`${quickFilterButtonClass} ${isActive ? quickFilterButtonActiveClass : ""}`}
+                        className={`${quickFilterButtonClass} ${
+                          isActive ? quickFilterButtonActiveClass : ""
+                        }`}
                       >
                         {filter.label}
                       </button>
@@ -759,12 +515,18 @@ export default function PlaylistDetailPage() {
                   ) : songs.length === 0 ? (
                     <div className="playlist-detail-empty">
                       <h2>No songs yet</h2>
-                      <p>Add songs from the music library, then they will appear here as a playable playlist.</p>
+                      <p>
+                        Add songs from the music library, then they will appear
+                        here as a playable playlist.
+                      </p>
                     </div>
                   ) : filteredSongs.length === 0 ? (
                     <div className="playlist-detail-empty">
                       <h2>No songs found</h2>
-                      <p>Try searching for a different title, artist, genre, mood, tag, or filter.</p>
+                      <p>
+                        Try searching for a different title, artist, genre,
+                        mood, tag, or filter.
+                      </p>
                     </div>
                   ) : (
                     <MusicListShell title={null}>
@@ -779,7 +541,9 @@ export default function PlaylistDetailPage() {
                           onRemoveFromPlaylist={
                             ownedPlaylist
                               ? (songId) => {
-                                  setSongs((prev) => prev.filter((item) => item.id !== songId));
+                                  setSongs((prev) =>
+                                    prev.filter((item) => item.id !== songId),
+                                  );
                                   showToast("Song removed");
                                 }
                               : undefined
@@ -804,7 +568,10 @@ export default function PlaylistDetailPage() {
         )}
       </main>
 
-      <Toast message={toastMessage} bottomOffset={playerVisible ? "88px" : "24px"} />
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
 
       <EditPlaylistModal
         isOpen={!!editingPlaylist}
