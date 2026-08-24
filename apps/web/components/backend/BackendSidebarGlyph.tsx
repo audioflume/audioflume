@@ -34,7 +34,7 @@ export default function BackendSidebarGlyph({
   };
 
   if (name === "settings") {
-    return <GearIcon size={16} strokeWidth={1.6} />;
+    return <GearIcon size={15} strokeWidth={1.6} />;
   }
 
   return (
