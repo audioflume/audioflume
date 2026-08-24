@@ -457,7 +457,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 
 .playlists-page .playlist-gallery-card:hover .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image),
 .playlists-page .playlist-gallery-card.is-menu-open .playlist-gallery-art > img:not(.playlist-gallery-art-layer-image) {
-  transform: translateY(-8px) !important;
+  transform: translateY(-4px) !important;
 }
 
 .playlists-page .playlist-gallery-card:hover .playlist-gallery-art-layer-middle,
