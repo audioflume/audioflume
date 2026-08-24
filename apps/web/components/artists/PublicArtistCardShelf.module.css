@@ -41,6 +41,54 @@
   width: 100%;
 }
 
+.cardSlot :global(.artist-public-playlist-card-art)::before,
+.cardSlot :global(.artist-public-playlist-card-art)::after {
+  content: "";
+  position: absolute;
+  z-index: 4;
+  pointer-events: none;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.cardSlot :global(.artist-public-playlist-card-art)::before {
+  top: 16px;
+  right: 16px;
+  width: 32px;
+  height: 32px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.cardSlot :global(.artist-public-playlist-card-art)::after {
+  top: 25.5px;
+  right: 25.5px;
+  width: 13px;
+  height: 13px;
+  background: var(--filmwave-white);
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  -webkit-mask-position: center;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-size: contain;
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.cardSlot:hover :global(.artist-public-playlist-card-art)::before,
+.cardSlot:focus-visible :global(.artist-public-playlist-card-art)::before {
+  background: var(--filmwave-white);
+}
+
+.cardSlot:hover :global(.artist-public-playlist-card-art)::after,
+.cardSlot:focus-visible :global(.artist-public-playlist-card-art)::after {
+  background: var(--filmwave-black);
+}
+
 .cardSlot::after {
   content: "";
   position: absolute;
