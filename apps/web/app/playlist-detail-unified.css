@@ -324,7 +324,7 @@
 }
 
 .playlist-detail-section {
-  margin: var(--playlist-detail-section-gap) 0 0;
+  margin: 35px 0 0;
   background: var(--filmwave-white);
   padding: var(--filmwave-page-gutter);
 }
@@ -451,31 +451,6 @@
   border-color: rgba(255, 255, 255, 0.62);
   background: rgba(255, 255, 255, 0.18);
   color: var(--filmwave-white);
-  outline: none;
-}
-
-.playlist-detail-more-button {
-  display: inline-flex;
-  width: 28px;
-  min-width: 28px;
-  height: 42px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  padding: 0;
-  color: var(--filmwave-white);
-  cursor: pointer;
-  transition: opacity 150ms ease;
-}
-
-.playlist-detail-more-button:hover,
-.playlist-detail-more-button:focus-visible,
-.playlist-detail-more-button.is-active {
-  background: transparent;
-  color: var(--filmwave-white);
-  opacity: 0.62;
   outline: none;
 }
 
