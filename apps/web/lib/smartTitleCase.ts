@@ -27,50 +27,47 @@ const LOWERCASE_WORDS = new Set([
   "without",
 ]);
 
+const PRESERVED_UPPERCASE_WORDS = new Set([
+  "AI",
+  "BPM",
+  "DJ",
+  "EDM",
+  "EP",
+  "LP",
+  "SFX",
+  "TV",
+  "UK",
+  "US",
+  "USA",
+]);
+
 function hasIntentionalInternalCaps(word: string) {
-  return /[a-z][A-Z]/.test(word) || /^[a-z]+[A-Z]/.test(word);
-}
-
-function isAllCapsWord(word: string) {
-  return /^[A-Z0-9&]+$/.test(word) && /[A-Z]/.test(word);
-}
-
-function uppercaseFirstLetter(value: string) {
-  return value.charAt(0).toUpperCase() + value.slice(1);
-}
-
-function preserveInternalCapsWithLeadingTitleCase(word: string) {
-  return word
-    .split(/([\-'’])/)
-    .map((part) => {
-      if (part === "-" || part === "'" || part === "’") return part;
-      if (!part) return part;
-
-      return uppercaseFirstLetter(part);
-    })
-    .join("");
+  return /[a-z][A-Z]/.test(word);
 }
 
 function formatWord(word: string, isFirstWord: boolean) {
   if (!word) return word;
 
-  const match = word.match(/^([^A-Za-z0-9]*)([A-Za-z0-9][A-Za-z0-9'’&.-]*)([^A-Za-z0-9]*)$/);
+  const match = word.match(
+    /^([^A-Za-z0-9]*)([A-Za-z0-9][A-Za-z0-9'’&.-]*)([^A-Za-z0-9]*)$/,
+  );
 
   if (!match) return word;
 
   const [, prefix, core, suffix] = match;
   const lowerCore = core.toLowerCase();
+  const upperCore = core.toUpperCase();
+
+  if (PRESERVED_UPPERCASE_WORDS.has(upperCore)) {
+    return `${prefix}${upperCore}${suffix}`;
+  }
 
   if (!isFirstWord && LOWERCASE_WORDS.has(lowerCore)) {
     return `${prefix}${lowerCore}${suffix}`;
   }
 
-  if (isAllCapsWord(core)) {
-    return `${prefix}${core}${suffix}`;
-  }
-
   if (hasIntentionalInternalCaps(core)) {
-    return `${prefix}${preserveInternalCapsWithLeadingTitleCase(core)}${suffix}`;
+    return `${prefix}${core}${suffix}`;
   }
 
   const formattedCore = core
