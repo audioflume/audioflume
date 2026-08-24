@@ -1,6 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { toSmartTitleCase } from "@/lib/smartTitleCase";
 import {
   isCommunityPlaylistCategory,
   normalizeCommunityPlaylistCategories,
@@ -90,7 +91,7 @@ export async function PATCH(req: Request, context: RouteContext) {
           { status: 400 },
         );
       }
-      updates.name = cleanName;
+      updates.name = toSmartTitleCase(cleanName);
     }
 
     const coverWasIncluded = Object.prototype.hasOwnProperty.call(
