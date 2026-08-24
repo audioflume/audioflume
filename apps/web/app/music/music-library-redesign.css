@@ -18,7 +18,14 @@ html
 }
 
 /* Main music library and project music tabs only need player-safe scroll space when the player is visible. */
-body:has(.filmwave-music-player) .fw-song-list {
+body:has(.filmwave-music-player)
+  main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-song-list,
+body:has(.filmwave-music-player)
+  .project-detail-page
+  .project-tab-panel
+  .fw-song-list {
   margin-bottom: calc(var(--filmwave-player-height, 72px) + 28px);
 }
 
