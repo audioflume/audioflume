@@ -10,7 +10,8 @@ export default function PlaylistDetailBackdropEnhancer() {
   const [stage, setStage] = useState<HTMLElement | null>(null);
   const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
   const [showSimilarSounds, setShowSimilarSounds] = useState(false);
-  const averageColor = useAverageImageColor(coverImageUrl);
+  const { averageColor, isReady } = useAverageImageColor(coverImageUrl);
+  const backdropReady = Boolean(coverImageUrl && isReady);
 
   useEffect(() => {
     let frame = 0;
@@ -66,12 +67,22 @@ export default function PlaylistDetailBackdropEnhancer() {
     stage.style.removeProperty("background");
     stage.style.removeProperty("background-image");
     stage.style.removeProperty("background-color");
-    stage.style.setProperty("--playlist-detail-average-color", averageColor);
+    stage.classList.toggle("is-backdrop-ready", backdropReady);
+    stage.style.setProperty(
+      "--playlist-detail-average-color",
+      backdropReady ? averageColor : "var(--bg-primary)",
+    );
     stage.style.setProperty(
       "--playlist-detail-cover-image",
-      coverImageUrl ? `url(${JSON.stringify(coverImageUrl)})` : "none",
+      backdropReady && coverImageUrl
+        ? `url(${JSON.stringify(coverImageUrl)})`
+        : "none",
     );
-  }, [averageColor, coverImageUrl, stage]);
+
+    return () => {
+      stage.classList.remove("is-backdrop-ready");
+    };
+  }, [averageColor, backdropReady, coverImageUrl, stage]);
 
   if (!stage || !showSimilarSounds) return null;
 
