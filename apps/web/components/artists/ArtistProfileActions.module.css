@@ -1,0 +1,15 @@
+.actions {
+  position: absolute;
+  top: calc(var(--filmwave-page-gutter) + 28px);
+  right: 28px;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 760px) {
+  .actions {
+    right: 18px;
+  }
+}
