@@ -82,10 +82,9 @@ function PlaylistThumbnail({
   playlist: Playlist;
   index: number;
 }) {
-  const cover =
-    typeof playlist.cover_image_url === "string" && playlist.cover_image_url.trim()
-      ? playlist.cover_image_url
-      : null;
+  const cover = typeof playlist.cover_image_url === "string" && playlist.cover_image_url.trim()
+    ? playlist.cover_image_url
+    : null;
 
   return (
     <span
@@ -97,6 +96,7 @@ function PlaylistThumbnail({
       }}
     >
       {cover ? (
+        // Use <img> instead of Next/Image so any URL source works (R2, Unsplash, etc.)
         <img
           src={cover}
           alt={playlist.name}
@@ -112,10 +112,9 @@ function PlaylistThumbnail({
 }
 
 function SongPreview({ song }: { song: Song }) {
-  const cover =
-    typeof song.coverArt === "string" && song.coverArt.trim()
-      ? song.coverArt
-      : null;
+  const cover = typeof song.coverArt === "string" && song.coverArt.trim()
+    ? song.coverArt
+    : null;
 
   return (
     <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
@@ -167,6 +166,7 @@ export default function AddToPlaylistModal({
 
   useEffect(() => {
     if (!isOpen) return;
+
     setRecentPlaylistIds(readRecentPlaylistIds());
   }, [isOpen]);
 
@@ -224,7 +224,9 @@ export default function AddToPlaylistModal({
           setSelectedIds(new Set());
         }
       } finally {
-        if (!cancelled) setSelectedLoading(false);
+        if (!cancelled) {
+          setSelectedLoading(false);
+        }
       }
     }
 
@@ -256,19 +258,17 @@ export default function AddToPlaylistModal({
 
   function updateRecentPlaylists(playlistId: number) {
     const current = readRecentPlaylistIds();
-    const next = [playlistId, ...current.filter((id) => id !== playlistId)].slice(
-      0,
-      RECENT_PLAYLIST_LIMIT,
-    );
+
+    const next = [
+      playlistId,
+      ...current.filter((id) => id !== playlistId),
+    ].slice(0, RECENT_PLAYLIST_LIMIT);
 
     writeRecentPlaylistIds(next);
     setRecentPlaylistIds(next);
   }
 
-  function updatePlaylistCover(
-    playlistId: number,
-    coverImageUrl?: string | null,
-  ) {
+  function updatePlaylistCover(playlistId: number, coverImageUrl?: string | null) {
     if (!coverImageUrl) return;
 
     setPlaylists((current) =>
@@ -296,7 +296,9 @@ export default function AddToPlaylistModal({
       `/api/songs/${encodeURIComponent(song.id)}/playlists`,
       {
         method: "PATCH",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           playlist_id: playlistId,
           selected,
@@ -318,13 +320,7 @@ export default function AddToPlaylistModal({
   }
 
   async function handlePlaylistClick(playlist: Playlist) {
-    if (
-      !song ||
-      selectedLoading ||
-      pendingPlaylistIds.has(playlist.id) ||
-      creatingPlaylist
-    )
-      return;
+    if (!song || selectedLoading || pendingPlaylistIds.has(playlist.id) || creatingPlaylist) return;
 
     const wasSelected = selectedIds.has(playlist.id);
     const nextSelected = !wasSelected;
@@ -333,8 +329,10 @@ export default function AddToPlaylistModal({
     setError(null);
     setSelectedIds((current) => {
       const next = new Set(current);
+
       if (nextSelected) next.add(playlist.id);
       else next.delete(playlist.id);
+
       return next;
     });
 
@@ -350,8 +348,10 @@ export default function AddToPlaylistModal({
     } catch (err) {
       setSelectedIds((current) => {
         const next = new Set(current);
+
         if (wasSelected) next.add(playlist.id);
         else next.delete(playlist.id);
+
         return next;
       });
       setError(err instanceof Error ? err.message : "Failed to update playlist");
@@ -375,7 +375,9 @@ export default function AddToPlaylistModal({
     try {
       const createRes = await fetch("/api/playlists", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+        },
         body: JSON.stringify({
           name: cleanName,
           position: playlists.length,
@@ -456,9 +458,7 @@ export default function AddToPlaylistModal({
                     type="text"
                     value={newPlaylistName}
                     disabled={creatingPlaylist}
-                    onChange={(e) =>
-                      setNewPlaylistName(toSmartTitleCaseInput(e.target.value))
-                    }
+                    onChange={(e) => setNewPlaylistName(toSmartTitleCaseInput(e.target.value))}
                     placeholder="Name"
                     autoFocus
                     className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:opacity-60"
