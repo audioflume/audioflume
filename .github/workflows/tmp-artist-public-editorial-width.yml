@@ -46,3 +46,5 @@ jobs:
           git add apps/web/components/artists/PublicArtistPageView.tsx
           git commit -m "Match artist content width to homepage shelf"
           git push origin HEAD:style/artist-public-editorial-width
+
+# trigger
