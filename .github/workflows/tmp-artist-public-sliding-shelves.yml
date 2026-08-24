@@ -3,7 +3,7 @@ name: Temporary artist public sliding shelves
 on:
   push:
     branches:
-      - feature/artist-public-sliding-shelves
+      - "feature/artist-public-sliding-shelves*"
   pull_request:
     branches:
       - main
@@ -18,7 +18,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ref: feature/artist-public-sliding-shelves
+          ref: ${{ github.head_ref || github.ref_name }}
       - name: Convert artist release and playlist grids to shelves
         run: |
           python - <<'PY'
@@ -93,4 +93,4 @@ import PublicArtistMusic from "@/components/artists/PublicArtistMusic";'''
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add apps/web/components/artists/PublicArtistPageView.tsx
           git commit -m "Make public artist releases and playlists sliding shelves"
-          git push origin HEAD:feature/artist-public-sliding-shelves
+          git push origin HEAD:${{ github.head_ref || github.ref_name }}
