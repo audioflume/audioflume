@@ -1,3 +1,4 @@
+import ArtistProfileActions from "@/components/artists/ArtistProfileActions";
 import PublicArtistPageView from "@/components/artists/PublicArtistPageView";
 import { getPublicArtistPageData } from "@/lib/publicArtist";
 import { notFound, redirect } from "next/navigation";
@@ -18,5 +19,13 @@ export default async function PublicArtistPage({ params }: ArtistPageProps) {
 
   if (!lookup.data) notFound();
 
-  return <PublicArtistPageView data={lookup.data} />;
+  return (
+    <>
+      <PublicArtistPageView data={lookup.data} />
+      <ArtistProfileActions
+        artistId={lookup.data.artist.id}
+        artistName={lookup.data.artist.name}
+      />
+    </>
+  );
 }
