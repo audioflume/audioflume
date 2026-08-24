@@ -22,6 +22,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--bg-tertiary);
   color: var(--text-primary);
+}
+
+.rowCoverSurface {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--filmwave-neutral-surface);
 }
