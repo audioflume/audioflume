@@ -26,6 +26,7 @@ import {
   type PlaylistViewMode,
 } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
+import { toSmartTitleCaseInput } from "@/lib/smartTitleCase";
 import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import {
@@ -274,7 +275,9 @@ function PlaylistRenameInput({
       disabled={saving}
       aria-label={`Rename ${playlist.name}`}
       onFocus={(event) => event.currentTarget.select()}
-      onChange={(event) => onChange(event.target.value)}
+      onChange={(event) =>
+        onChange(toSmartTitleCaseInput(event.target.value))
+      }
       onBlur={(event) => {
         if (event.currentTarget.dataset.cancelRename === "true") {
           delete event.currentTarget.dataset.cancelRename;
@@ -1061,7 +1064,6 @@ export default function PlaylistsPage() {
         .playlists-control-label { font-size: 10px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); }
         .playlist-action-btn { display: none; }
 
-        /* 28px to match project page icon buttons */
         .playlist-icon-btn {
           width: 28px;
           height: 28px;
