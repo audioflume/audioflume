@@ -454,6 +454,31 @@
   outline: none;
 }
 
+.playlist-detail-more-button {
+  display: inline-flex;
+  width: 28px;
+  min-width: 28px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--filmwave-white);
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.playlist-detail-more-button:hover,
+.playlist-detail-more-button:focus-visible,
+.playlist-detail-more-button.is-active {
+  background: transparent;
+  color: var(--filmwave-white);
+  opacity: 0.62;
+  outline: none;
+}
+
 .playlist-detail-corner-button:disabled,
 .playlist-detail-more-button:disabled {
   cursor: default;
