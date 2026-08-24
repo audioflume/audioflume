@@ -447,7 +447,9 @@ export default function PlaylistDetailPage() {
                       className={artistDrawerStyles.roundAction}
                       aria-label={`Play ${playlist.name}`}
                     >
-                      <PlayIconSmall size={15} />
+                      <span style={{ display: "inline-flex", transform: "translateX(0.5px)" }}>
+                        <PlayIconSmall size={15} />
+                      </span>
                     </button>
                     <button
                       type="button"
