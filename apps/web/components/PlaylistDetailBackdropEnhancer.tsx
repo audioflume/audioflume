@@ -3,8 +3,8 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-import useAverageImageColor from "@/hooks/useAverageImageColor";
 import PlaylistSimilarSounds from "@/components/PlaylistSimilarSounds";
+import useAverageImageColor from "@/hooks/useAverageImageColor";
 
 export default function PlaylistDetailBackdropEnhancer() {
   const [stage, setStage] = useState<HTMLElement | null>(null);
@@ -63,6 +63,9 @@ export default function PlaylistDetailBackdropEnhancer() {
   useEffect(() => {
     if (!stage) return;
 
+    stage.style.removeProperty("background");
+    stage.style.removeProperty("background-image");
+    stage.style.removeProperty("background-color");
     stage.style.setProperty("--playlist-detail-average-color", averageColor);
     stage.style.setProperty(
       "--playlist-detail-cover-image",
