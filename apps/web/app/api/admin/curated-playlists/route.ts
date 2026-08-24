@@ -11,6 +11,7 @@ import {
   normalizeCuratedBrowseTags,
   normalizeCuratedPlaylist,
 } from "@/lib/curatedPlaylists";
+import { toSmartTitleCase } from "@/lib/smartTitleCase";
 
 function cleanString(value: unknown) {
   return typeof value === "string" ? value.trim() : "";
@@ -86,7 +87,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const name = cleanString(body.name);
+    const name = toSmartTitleCase(cleanString(body.name));
     const kicker = cleanString(body.kicker);
     const coverImageUrl = cleanString(body.cover_image_url);
     const coverVideoUrl = cleanString(body.cover_video_url);
