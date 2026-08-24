@@ -1,5 +1,4 @@
 .playlist-detail-page {
-  --playlist-detail-control-strip-height: 86px;
   --playlist-detail-section-gap: 6px;
   margin-left: var(--sidebar-width);
   margin-top: 56px;
@@ -12,18 +11,7 @@
 }
 
 .playlist-detail-shell {
-  position: relative;
-  z-index: 3;
-  display: grid;
-  width: calc(
-    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-  );
-  max-width: var(--filmwave-editorial-max-width);
-  grid-template-columns: 82px minmax(0, 1fr) 35px;
-  align-items: start;
-  column-gap: 18px;
-  margin: 0 auto;
-  padding: 22px 0;
+  display: none;
 }
 
 .playlist-detail-search-sticky {
@@ -85,7 +73,7 @@
   z-index: 1;
   width: 100%;
   overflow: hidden;
-  margin-top: calc(var(--playlist-detail-control-strip-height) * -1);
+  margin-top: 0;
   background: var(--playlist-detail-average-color);
   padding: clamp(72px, 7vw, 120px) 0;
   isolation: isolate;
@@ -662,18 +650,8 @@
     margin-left: 0;
   }
 
-  .playlist-detail-shell {
-    grid-template-columns: 82px minmax(0, 1fr) 35px;
-    row-gap: 12px;
-  }
-
-  .playlist-detail-search-sticky {
-    width: 100%;
-  }
-
   .playlist-detail-stage {
-    padding-top: calc(42px + var(--playlist-detail-control-strip-height));
-    padding-bottom: 54px;
+    padding: 54px 0;
   }
 
   .playlist-detail-stage::before {
