@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useTheme } from "@/context/ThemeContext";
+import GearIcon from "@/components/icons/GearIcon";
 import {
   UserMenuAction,
   UserMenuActions,
@@ -24,6 +25,21 @@ function MenuLink({
   icon: UserMenuGlyphName;
   onClose?: () => void;
 }) {
+  if (icon === "settings") {
+    return (
+      <Link
+        href={href}
+        className="filmwave-dropdown-item filmwave-user-menu-action"
+        onClick={onClose}
+      >
+        <span className="filmwave-user-menu-action-icon" aria-hidden="true">
+          <GearIcon />
+        </span>
+        <span className="filmwave-user-menu-action-label">{label}</span>
+      </Link>
+    );
+  }
+
   return (
     <UserMenuAction
       as={Link}
