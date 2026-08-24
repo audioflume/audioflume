@@ -10,6 +10,7 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
+  primaryPillButtonClass,
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
@@ -84,7 +85,12 @@ function shuffleSongList<T>(songs: T[]) {
 }
 
 export default function FavoritesPage() {
-  const { songs, loading: songsLoading, error: songsError } = useSongs();
+  const {
+    songs,
+    loading: songsLoading,
+    error: songsError,
+    refetchSongs,
+  } = useSongs();
   const { favoriteIds, favoriteIdSet, favoritesLoaded } = useFavorites();
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = !!currentSong;
@@ -162,7 +168,10 @@ export default function FavoritesPage() {
     });
   }, [filteredSongs, shuffleOrderIds]);
 
-  const topGenres = useMemo(() => getTopGenres(favoriteSongs), [favoriteSongs]);
+  const topGenres = useMemo(
+    () => getTopGenres(displayedSongs),
+    [displayedSongs],
+  );
   const showSongSkeleton = !songsError && (!favoritesLoaded || songsLoading);
   const hasAnyFavorites = favoriteIdSet.size > 0;
   const shuffleActive = shuffleOrderIds !== null;
@@ -176,6 +185,9 @@ export default function FavoritesPage() {
   }, [favoriteIds, quickFilter, search]);
 
   function playFirstSong() {
+    const firstSong = displayedSongs[0];
+    if (!firstSong) return;
+
     const firstSongButton = document.querySelector<HTMLButtonElement>(
       '[aria-label="Play song"], [aria-label="Pause song"]',
     );
@@ -312,6 +324,13 @@ export default function FavoritesPage() {
                 <div className="playlist-detail-empty">
                   <h2>Couldn&apos;t load favorites</h2>
                   <p>{songsError}</p>
+                  <button
+                    type="button"
+                    onClick={refetchSongs}
+                    className={primaryPillButtonClass}
+                  >
+                    Try Again
+                  </button>
                 </div>
               ) : displayedSongs.length === 0 ? (
                 <div className="playlist-detail-empty">
