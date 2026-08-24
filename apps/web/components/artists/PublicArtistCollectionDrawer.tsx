@@ -1,7 +1,7 @@
 "use client";
 
 import { MusicListShell } from "@filmwave/shared";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 
 import "@/app/music/music-library-redesign.css";
 import SongCard from "@/components/SongCard";
@@ -87,10 +87,6 @@ export default function PublicArtistCollectionDrawer({
         .join(" · ")
     : formatTrackCount(collection.track_count);
   const description = release ? null : collection.description;
-
-  useEffect(() => {
-    setQueue(playableSongs);
-  }, [playableSongs, setQueue]);
 
   function handlePlayAll() {
     const firstSong = playableSongs[0];
