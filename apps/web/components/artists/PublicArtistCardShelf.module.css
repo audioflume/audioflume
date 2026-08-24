@@ -29,7 +29,7 @@
 }
 
 .scroller > :global(.artist-public-card) {
-  flex: 0 0 calc((var(--artist-public-shelf-content-width) - 66px) / 4);
+  flex: 0 0 calc((var(--artist-public-shelf-content-width) - 66px) / 4.2);
 }
 
 @media (max-width: 980px) {
