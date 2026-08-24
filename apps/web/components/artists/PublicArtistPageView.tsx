@@ -2,6 +2,7 @@ import type { CSSProperties } from "react";
 
 import Footer from "@/components/Footer";
 import ArtistFeaturePlayControl from "@/components/artists/ArtistFeaturePlayControl";
+import PublicArtistCardShelf from "@/components/artists/PublicArtistCardShelf";
 import PublicArtistMusic from "@/components/artists/PublicArtistMusic";
 import type {
   PublicArtistPageData,
@@ -1179,35 +1180,29 @@ export default function PublicArtistPageView({
           </section>
 
           {releases.length > 0 ? (
-            <section className="artist-public-section">
-              <div className="artist-public-section-header">
-                <h2 className="artist-public-section-title">Releases</h2>
-                <span className="artist-public-section-count">
-                  {releases.length} {releases.length === 1 ? "release" : "releases"}
-                </span>
-              </div>
-              <div className="artist-public-grid">
-                {releases.map((release) => (
-                  <ReleaseCard key={release.id} release={release} />
-                ))}
-              </div>
-            </section>
+            <PublicArtistCardShelf
+              title="Releases"
+              countLabel={`${releases.length} ${
+                releases.length === 1 ? "release" : "releases"
+              }`}
+            >
+              {releases.map((release) => (
+                <ReleaseCard key={release.id} release={release} />
+              ))}
+            </PublicArtistCardShelf>
           ) : null}
 
           {playlists.length > 0 ? (
-            <section className="artist-public-section">
-              <div className="artist-public-section-header">
-                <h2 className="artist-public-section-title">Playlists</h2>
-                <span className="artist-public-section-count">
-                  {playlists.length} {playlists.length === 1 ? "playlist" : "playlists"}
-                </span>
-              </div>
-              <div className="artist-public-grid">
-                {playlists.map((playlist) => (
-                  <PlaylistCard key={playlist.id} playlist={playlist} />
-                ))}
-              </div>
-            </section>
+            <PublicArtistCardShelf
+              title="Playlists"
+              countLabel={`${playlists.length} ${
+                playlists.length === 1 ? "playlist" : "playlists"
+              }`}
+            >
+              {playlists.map((playlist) => (
+                <PlaylistCard key={playlist.id} playlist={playlist} />
+              ))}
+            </PublicArtistCardShelf>
           ) : null}
 
           <div className="artist-public-footer">
