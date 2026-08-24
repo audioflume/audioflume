@@ -23,37 +23,30 @@ jobs:
         run: |
           python - <<'PY'
           from pathlib import Path
+          import re
 
           path = Path('apps/web/components/artists/PublicArtistPageView.tsx')
           text = path.read_text()
 
           old_import = '''import Footer from "@/components/Footer";
-          import ArtistFeaturePlayControl from "@/components/artists/ArtistFeaturePlayControl";
-          import PublicArtistMusic from "@/components/artists/PublicArtistMusic";'''.replace('          ', '')
+import ArtistFeaturePlayControl from "@/components/artists/ArtistFeaturePlayControl";
+import PublicArtistMusic from "@/components/artists/PublicArtistMusic";'''
           new_import = '''import Footer from "@/components/Footer";
-          import ArtistFeaturePlayControl from "@/components/artists/ArtistFeaturePlayControl";
-          import PublicArtistCardShelf from "@/components/artists/PublicArtistCardShelf";
-          import PublicArtistMusic from "@/components/artists/PublicArtistMusic";'''.replace('          ', '')
+import ArtistFeaturePlayControl from "@/components/artists/ArtistFeaturePlayControl";
+import PublicArtistCardShelf from "@/components/artists/PublicArtistCardShelf";
+import PublicArtistMusic from "@/components/artists/PublicArtistMusic";'''
           if text.count(old_import) != 1:
               raise SystemExit('artist shelf import anchor mismatch')
           text = text.replace(old_import, new_import)
 
-          old_releases = '''          {releases.length > 0 ? (
-            <section className="artist-public-section">
-              <div className="artist-public-section-header">
-                <h2 className="artist-public-section-title">Releases</h2>
-                <span className="artist-public-section-count">
-                  {releases.length} {releases.length === 1 ? "release" : "releases"}
-                </span>
-              </div>
-              <div className="artist-public-grid">
-                {releases.map((release) => (
-                  <ReleaseCard key={release.id} release={release} />
-                ))}
-              </div>
-            </section>
-          ) : null}'''
-          new_releases = '''          {releases.length > 0 ? (
+          release_pattern = re.compile(
+              r'\{releases\.length > 0 \? \(\n'
+              r'\s*<section className="artist-public-section">.*?'
+              r'<h2 className="artist-public-section-title">Releases</h2>.*?'
+              r'</section>\n\s*\) : null\}',
+              re.S,
+          )
+          release_replacement = '''{releases.length > 0 ? (
             <PublicArtistCardShelf
               title="Releases"
               countLabel={`${releases.length} ${
@@ -65,26 +58,18 @@ jobs:
               ))}
             </PublicArtistCardShelf>
           ) : null}'''
-          if text.count(old_releases) != 1:
+          text, release_count = release_pattern.subn(release_replacement, text, count=1)
+          if release_count != 1:
               raise SystemExit('releases section anchor mismatch')
-          text = text.replace(old_releases, new_releases)
 
-          old_playlists = '''          {playlists.length > 0 ? (
-            <section className="artist-public-section">
-              <div className="artist-public-section-header">
-                <h2 className="artist-public-section-title">Playlists</h2>
-                <span className="artist-public-section-count">
-                  {playlists.length} {playlists.length === 1 ? "playlist" : "playlists"}
-                </span>
-              </div>
-              <div className="artist-public-grid">
-                {playlists.map((playlist) => (
-                  <PlaylistCard key={playlist.id} playlist={playlist} />
-                ))}
-              </div>
-            </section>
-          ) : null}'''
-          new_playlists = '''          {playlists.length > 0 ? (
+          playlist_pattern = re.compile(
+              r'\{playlists\.length > 0 \? \(\n'
+              r'\s*<section className="artist-public-section">.*?'
+              r'<h2 className="artist-public-section-title">Playlists</h2>.*?'
+              r'</section>\n\s*\) : null\}',
+              re.S,
+          )
+          playlist_replacement = '''{playlists.length > 0 ? (
             <PublicArtistCardShelf
               title="Playlists"
               countLabel={`${playlists.length} ${
@@ -96,9 +81,9 @@ jobs:
               ))}
             </PublicArtistCardShelf>
           ) : null}'''
-          if text.count(old_playlists) != 1:
+          text, playlist_count = playlist_pattern.subn(playlist_replacement, text, count=1)
+          if playlist_count != 1:
               raise SystemExit('playlists section anchor mismatch')
-          text = text.replace(old_playlists, new_playlists)
 
           path.write_text(text)
           PY
