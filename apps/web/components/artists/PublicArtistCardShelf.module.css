@@ -1,0 +1,46 @@
+/* Public artist release and playlist shelf sizing. */
+.headerActions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.scroller {
+  display: flex;
+  gap: 22px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.scroller > :global(.artist-public-card) {
+  flex: 0 0 calc((100% - 66px) / 4);
+}
+
+@media (max-width: 980px) {
+  .scroller > :global(.artist-public-card) {
+    flex-basis: calc((100% - 44px) / 3);
+  }
+}
+
+@media (max-width: 760px) {
+  .scroller {
+    gap: 16px;
+  }
+
+  .scroller > :global(.artist-public-card) {
+    flex-basis: calc((100% - 16px) / 2);
+  }
+}
+
+@media (max-width: 480px) {
+  .scroller > :global(.artist-public-card) {
+    flex-basis: 100%;
+  }
+}
