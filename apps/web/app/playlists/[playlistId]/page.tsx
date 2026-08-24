@@ -7,11 +7,9 @@ import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import FilterTags from "@/components/FilterTags";
-import EditIcon from "@/components/icons/EditIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
-  borderedIconButton9Class,
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
@@ -61,14 +59,6 @@ type PublicArtistPlaylistPayload = {
   songs?: PlaylistSong[];
   error?: string;
 };
-
-function BackIcon() {
-  return (
-    <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M15 5L8 12L15 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
 
 function ShareGlyph() {
   return (
@@ -272,13 +262,6 @@ export default function PlaylistDetailPage() {
     window.setTimeout(() => setToastMessage(null), 1800);
   };
 
-  const openEdit = () => {
-    if (!ownedPlaylist) return;
-    setEditingPlaylist(ownedPlaylist);
-    setEditName(ownedPlaylist.name);
-    setEditCoverPreview(ownedPlaylist.cover_image_url ?? null);
-  };
-
   const handleSaveEdit = async () => {
     if (!editingPlaylist || isSavingPlaylist) return;
     setIsSavingPlaylist(true);
@@ -353,14 +336,6 @@ export default function PlaylistDetailPage() {
           padding: 22px 0;
         }
 
-        .playlist-detail-top-actions {
-          display: contents;
-        }
-
-        .playlist-detail-top-actions > button:first-child {
-          display: none;
-        }
-
         .playlist-detail-search-sticky {
           position: static;
           grid-column: 2;
@@ -411,74 +386,6 @@ export default function PlaylistDetailPage() {
 
         .playlist-detail-search-input::placeholder {
           color: var(--text-muted);
-        }
-
-        .playlist-detail-top-actions > button:last-child {
-          display: inline-flex;
-          grid-column: 3;
-          grid-row: 1;
-          width: 35px;
-          min-width: 35px;
-          height: 35px;
-          align-items: center;
-          justify-content: center;
-          border: 1px solid var(--filmwave-border-color);
-          border-radius: 5px;
-          background: var(--bg-primary);
-          padding: 0;
-          color: var(--text-secondary);
-          cursor: pointer;
-          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-        }
-
-        .playlist-detail-top-actions > button:last-child:hover {
-          border-color: var(--filmwave-border-color);
-          background: var(--bg-hover);
-          color: var(--text-primary);
-        }
-
-        .playlist-detail-top-actions > button:last-child svg {
-          width: 14px;
-          height: 14px;
-        }
-
-        .playlist-detail-browser-back {
-          position: static;
-          z-index: 3;
-          display: inline-flex;
-          grid-column: 1;
-          grid-row: 1;
-          box-sizing: border-box;
-          width: 82px;
-          min-width: 82px;
-          height: 35px;
-          cursor: pointer;
-          align-items: center;
-          justify-content: center;
-          justify-self: start;
-          gap: 8px;
-          margin: 0;
-          border: 1px solid var(--filmwave-border-color);
-          border-radius: 5px;
-          background: var(--bg-primary);
-          padding: 0 14px;
-          color: var(--text-secondary);
-          font-family: inherit;
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 1;
-          transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
-        }
-
-        .playlist-detail-browser-back:hover {
-          border-color: var(--filmwave-border-color);
-          background: var(--bg-hover);
-          color: var(--text-primary);
-        }
-
-        .playlist-detail-browser-back svg {
-          width: 14px;
-          height: 14px;
         }
 
         .playlist-detail-stage {
@@ -733,26 +640,6 @@ export default function PlaylistDetailPage() {
 
       <main className="playlist-detail-page">
         <div className="playlist-detail-shell">
-          <div className="playlist-detail-top-actions">
-            <button
-              type="button"
-              onClick={() => router.push("/playlists")}
-              className="inline-flex cursor-pointer items-center gap-2 text-[13px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-            >
-              <BackIcon />
-              Back to playlists
-            </button>
-            <button
-              type="button"
-              onClick={openEdit}
-              disabled={!ownedPlaylist}
-              className={`${borderedIconButton9Class} ${ownedPlaylist ? "" : "pointer-events-none invisible"}`}
-              aria-label={ownedPlaylist ? `Edit ${ownedPlaylist.name}` : "Edit playlist"}
-            >
-              <EditIcon />
-            </button>
-          </div>
-
           <div className="playlist-detail-search-sticky">
             <div className="playlist-detail-search-row" onClick={() => searchInputRef.current?.focus()}>
               <label className="playlist-detail-search-inner">
