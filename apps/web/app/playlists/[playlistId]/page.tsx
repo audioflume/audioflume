@@ -7,6 +7,7 @@ import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import FilterTags from "@/components/FilterTags";
 import EditIcon from "@/components/icons/EditIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
   borderedIconButton9Class,
@@ -63,14 +64,6 @@ function BackIcon() {
   return (
     <svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true">
       <path d="M15 5L8 12L15 19" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PlayGlyph() {
-  return (
-    <svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true">
-      <path d="M3 2.15 9.5 6 3 9.85V2.15Z" fill="currentColor" />
     </svg>
   );
 }
@@ -454,7 +447,7 @@ export default function PlaylistDetailPage() {
                       className={artistDrawerStyles.roundAction}
                       aria-label={`Play ${playlist.name}`}
                     >
-                      <PlayGlyph />
+                      <PlayIconSmall size={15} />
                     </button>
                     <button
                       type="button"
