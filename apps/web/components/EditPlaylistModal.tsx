@@ -14,6 +14,7 @@ import {
 } from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import UploadIcon from "@/components/icons/UploadIcon";
+import { toSmartTitleCaseInput } from "@/lib/smartTitleCase";
 
 type Playlist = {
   id: number;
@@ -187,7 +188,7 @@ export default function EditPlaylistModal({
             type="text"
             value={name}
             disabled={isSaving}
-            onChange={(e) => onNameChange(e.target.value)}
+            onChange={(e) => onNameChange(toSmartTitleCaseInput(e.target.value))}
             placeholder="Example: Cinematic Favorites"
             className={modalInputClass}
           />
