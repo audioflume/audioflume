@@ -4,6 +4,7 @@ import { Children, type KeyboardEvent, type ReactNode } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+import LoadingSpinner from "@/components/LoadingSpinner";
 import PublicArtistCollectionDrawer from "@/components/artists/PublicArtistCollectionDrawer";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import { usePlayer } from "@/context/PlayerContext";
@@ -263,7 +264,7 @@ export default function PublicArtistCardShelf({
         selectedIndex !== null &&
         (isLoading || loadError) ? (
         <div id={drawerId} className={styles.drawerStatus}>
-          {loadError || "Loading collection…"}
+          {isLoading ? <LoadingSpinner /> : loadError}
         </div>
       ) : null}
     </section>
