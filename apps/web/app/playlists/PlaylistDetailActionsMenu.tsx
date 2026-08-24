@@ -12,19 +12,6 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
-const PLAYLIST_GRADIENTS = [
-  "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
-  "linear-gradient(135deg,#1f3d3a 0%,#111111 52%,#4d8c7b 100%)",
-  "linear-gradient(135deg,#4f3529 0%,#111111 50%,#b66c45 100%)",
-  "linear-gradient(135deg,#25364f 0%,#111111 52%,#6287c4 100%)",
-  "linear-gradient(135deg,#45233d 0%,#111111 52%,#b75d91 100%)",
-  "linear-gradient(135deg,#0f172a 0%,#111111 52%,#1e3a5f 100%)",
-  "linear-gradient(135deg,#003344 0%,#111111 52%,#00516b 100%)",
-  "linear-gradient(135deg,#3d2800 0%,#111111 52%,#6b4500 100%)",
-  "linear-gradient(135deg,#1a0a2e 0%,#111111 52%,#2d1554 100%)",
-  "linear-gradient(135deg,#0a2e0a 0%,#111111 52%,#145214 100%)",
-];
-
 function parseResponse(text: string) {
   if (!text) return null;
   try {
@@ -43,7 +30,7 @@ export default function PlaylistDetailActionsMenu() {
   const isPlaylistDetail = playlistId !== null;
 
   const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null);
-  const [renameTarget, setRenameTarget] = useState<HTMLElement | null>(null);
+  const [heroTarget, setHeroTarget] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [renameName, setRenameName] = useState("");
@@ -64,14 +51,6 @@ export default function PlaylistDetailActionsMenu() {
     [playlists, playlistId],
   );
 
-  const playlistIndex = useMemo(() => {
-    const index = playlists.findIndex((item) => String(item.id) === playlistId);
-    return index >= 0 ? index : 0;
-  }, [playlists, playlistId]);
-
-  const placeholderGradient =
-    PLAYLIST_GRADIENTS[playlistIndex % PLAYLIST_GRADIENTS.length];
-
   function showToast(message: string) {
     setToastMessage(message);
     window.setTimeout(() => setToastMessage(null), 1800);
@@ -80,23 +59,23 @@ export default function PlaylistDetailActionsMenu() {
   useEffect(() => {
     if (!isPlaylistDetail) {
       setActionsTarget(null);
-      setRenameTarget(null);
+      setHeroTarget(null);
       return;
     }
 
     const updateTargets = () => {
       const nextActionsTarget = document.querySelector<HTMLElement>(
-        ".playlist-detail-page .playlist-detail-card-inner",
+        ".playlist-detail-page .playlist-detail-actions",
       );
-      const nextRenameTarget = document.querySelector<HTMLElement>(
+      const nextHeroTarget = document.querySelector<HTMLElement>(
         ".playlist-detail-page .playlist-detail-hero > .min-w-0",
       );
 
       setActionsTarget((current) =>
         current === nextActionsTarget ? current : nextActionsTarget,
       );
-      setRenameTarget((current) =>
-        current === nextRenameTarget ? current : nextRenameTarget,
+      setHeroTarget((current) =>
+        current === nextHeroTarget ? current : nextHeroTarget,
       );
     };
 
@@ -121,7 +100,7 @@ export default function PlaylistDetailActionsMenu() {
   }, [playlistId]);
 
   useEffect(() => {
-    if (!renaming || !renameTarget || !playlist) return;
+    if (!renaming || !heroTarget || !playlist) return;
     const editor = renameEditorRef.current;
     if (!editor) return;
 
@@ -132,7 +111,7 @@ export default function PlaylistDetailActionsMenu() {
     range.selectNodeContents(editor);
     selection?.removeAllRanges();
     selection?.addRange(range);
-  }, [playlist, renameTarget, renaming]);
+  }, [heroTarget, playlist, renaming]);
 
   function startRename() {
     if (!playlist) return;
@@ -368,8 +347,29 @@ export default function PlaylistDetailActionsMenu() {
         )
       : null;
 
+  const visibilityAction =
+    heroTarget && playlist
+      ? createPortal(
+          <div className="playlist-detail-hero-secondary-actions">
+            <button
+              type="button"
+              className="playlist-detail-hero-secondary-action"
+              disabled={visibilitySaving}
+              onClick={togglePublic}
+            >
+              {visibilitySaving
+                ? "Saving…"
+                : playlist.is_public
+                  ? "Make Private"
+                  : "Make Public"}
+            </button>
+          </div>,
+          heroTarget,
+        )
+      : null;
+
   const renameField =
-    renaming && renameTarget && playlist
+    renaming && heroTarget && playlist
       ? createPortal(
           <div className="playlist-detail-rename-shell">
             <div
@@ -406,25 +406,14 @@ export default function PlaylistDetailActionsMenu() {
               }}
             />
           </div>,
-          renameTarget,
+          heroTarget,
         )
       : null;
 
   return (
     <>
-      <style>{`
-        .playlist-detail-page .playlist-detail-cover:not(:has(img)) { background: ${placeholderGradient} !important; }
-        .playlist-detail-page .playlist-detail-more-menu { position: absolute; top: 44px; right: var(--filmwave-page-gutter); z-index: 4; }
-        .playlist-detail-page .playlist-detail-more-button { box-sizing: border-box; display: inline-flex; width: 35px; min-width: 35px; height: 35px; align-items: center; justify-content: center; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0; color: var(--text-secondary); cursor: pointer; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .playlist-detail-page .playlist-detail-more-button:hover, .playlist-detail-page .playlist-detail-more-button.is-active { border-color: var(--filmwave-border-color); background: var(--bg-hover); color: var(--text-primary); }
-        .playlist-detail-page .playlist-detail-more-button svg { display: block; width: 16px; height: 16px; }
-        .playlist-detail-more-dropdown { min-width: 154px; }
-        .playlist-detail-more-dropdown button:disabled { cursor: default; opacity: 0.42; }
-        .playlist-detail-page:has(.playlist-detail-rename-shell) .playlist-detail-title { display: none !important; }
-        .playlist-detail-page .playlist-detail-rename-shell { order: -1; width: min(480px, 100%); max-width: 480px; }
-        .playlist-detail-page .playlist-detail-rename-input { box-sizing: border-box; display: block; width: 100%; min-width: 0; height: auto; margin: 0; overflow: hidden; border: 0; border-radius: 0; background: transparent; padding: 0; color: var(--text-primary); caret-color: var(--text-primary); font-family: var(--font-aktiv-grotesk), sans-serif; font-size: clamp(22px, 2vw, 32px); font-weight: 400; letter-spacing: -0.055em; line-height: 0.98; outline: none; transform: none !important; white-space: nowrap; }
-      `}</style>
       {menu}
+      {visibilityAction}
       {renameField}
       {playlist && (
         <PublishPlaylistModal
