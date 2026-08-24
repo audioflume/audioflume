@@ -1,0 +1,48 @@
+name: Temporary artist public editorial width
+
+on:
+  push:
+    branches:
+      - style/artist-public-editorial-width
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: style/artist-public-editorial-width
+      - name: Match artist content width to home editorial shelf
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('apps/web/components/artists/PublicArtistPageView.tsx')
+          text = path.read_text()
+          old = '''        .artist-public-section {
+          padding: 0 0 44px;
+        }'''
+          new = '''        .artist-public-section {
+          width: calc(
+            100% - var(--filmwave-editorial-inner-inset) - var(--filmwave-editorial-inner-inset)
+          );
+          max-width: var(--filmwave-editorial-max-width);
+          margin-right: auto;
+          margin-left: auto;
+          padding: 0 0 44px;
+        }'''
+          if text.count(old) != 1:
+              raise SystemExit('artist public section anchor mismatch')
+          path.write_text(text.replace(old, new))
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/components/artists/PublicArtistPageView.tsx
+          git commit -m "Match artist content width to homepage shelf"
+          git push origin HEAD:style/artist-public-editorial-width
