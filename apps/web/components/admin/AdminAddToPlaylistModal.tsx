@@ -81,6 +81,7 @@ export default function AdminAddToPlaylistModal({
 
   useEffect(() => {
     if (!isOpen) return;
+    setRecentPlaylistIds(readRecentPlaylistIds());
     setSearch("");
     const timeout = window.setTimeout(() => {
       refetchPlaylists();
