@@ -9,12 +9,71 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+type CommunityPlaylistSavePayload = {
+  playlist?: {
+    name?: string;
+    cover_image_url?: string | null;
+  };
+  songs?: Array<{
+    id?: string;
+    song_id?: string;
+  }>;
+  error?: string;
+};
+
 function parseFavoriteIds(value: unknown) {
   if (!Array.isArray(value)) return [];
 
   return value
     .map((playlistId) => Number(playlistId))
     .filter((playlistId) => Number.isInteger(playlistId) && playlistId > 0);
+}
+
+async function saveCommunityPlaylistToMyPlaylists(playlistId: number) {
+  const sourceResponse = await fetch(`/api/community-playlists/${playlistId}`, {
+    cache: "no-store",
+  });
+  const sourceData = (await sourceResponse.json().catch(() => null)) as
+    | CommunityPlaylistSavePayload
+    | null;
+
+  if (!sourceResponse.ok || !sourceData?.playlist) {
+    throw new Error(sourceData?.error || "Could not load community playlist");
+  }
+
+  const playlistName = sourceData.playlist.name?.trim() || "Community Playlist";
+  const createResponse = await fetch("/api/playlists", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      name: playlistName,
+      cover_image_url: sourceData.playlist.cover_image_url ?? null,
+      position: 0,
+    }),
+  });
+  const createdPlaylist = await createResponse.json().catch(() => null);
+
+  if (!createResponse.ok || !createdPlaylist?.id) {
+    throw new Error(createdPlaylist?.error || "Could not save playlist");
+  }
+
+  const songs = Array.isArray(sourceData.songs) ? sourceData.songs : [];
+  for (let index = 0; index < songs.length; index += 1) {
+    const songId = songs[index]?.song_id ?? songs[index]?.id;
+    if (!songId) continue;
+
+    try {
+      await fetch(`/api/playlists/${createdPlaylist.id}/songs`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ song_id: songId, position: index }),
+      });
+    } catch {
+      // Keep the saved playlist even if one song cannot be copied.
+    }
+  }
+
+  return playlistName;
 }
 
 export default function CommunityPlaylistDetailChrome() {
@@ -25,29 +84,39 @@ export default function CommunityPlaylistDetailChrome() {
   const isCommunityPlaylistDetail =
     playlistIdMatch !== null && Number.isInteger(playlistId) && playlistId > 0;
 
-  const [target, setTarget] = useState<HTMLElement | null>(null);
+  const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null);
+  const [heroTarget, setHeroTarget] = useState<HTMLElement | null>(null);
   const [favorite, setFavorite] = useState(false);
   const [favoritePending, setFavoritePending] = useState(false);
+  const [savingToPlaylists, setSavingToPlaylists] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isCommunityPlaylistDetail) {
-      setTarget(null);
+      setActionsTarget(null);
+      setHeroTarget(null);
       return;
     }
 
-    const updateTarget = () => {
-      const nextTarget = document.querySelector<HTMLElement>(
-        ".community-detail-page .playlist-detail-card-inner",
+    const updateTargets = () => {
+      const nextActionsTarget = document.querySelector<HTMLElement>(
+        ".community-detail-page .playlist-detail-actions",
       );
-      setTarget((currentTarget) =>
-        currentTarget === nextTarget ? currentTarget : nextTarget,
+      const nextHeroTarget = document.querySelector<HTMLElement>(
+        ".community-detail-page .playlist-detail-hero > .min-w-0",
+      );
+
+      setActionsTarget((currentTarget) =>
+        currentTarget === nextActionsTarget ? currentTarget : nextActionsTarget,
+      );
+      setHeroTarget((currentTarget) =>
+        currentTarget === nextHeroTarget ? currentTarget : nextHeroTarget,
       );
     };
 
-    updateTarget();
-    const observer = new MutationObserver(updateTarget);
+    updateTargets();
+    const observer = new MutationObserver(updateTargets);
     observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [isCommunityPlaylistDetail]);
@@ -82,6 +151,7 @@ export default function CommunityPlaylistDetailChrome() {
 
   useEffect(() => {
     setMenuOpen(false);
+    setSavingToPlaylists(false);
     setToastMessage(null);
   }, [playlistId]);
 
@@ -115,6 +185,22 @@ export default function CommunityPlaylistDetailChrome() {
     }
   }
 
+  async function saveToPlaylists() {
+    if (!isCommunityPlaylistDetail || savingToPlaylists) return;
+
+    setSavingToPlaylists(true);
+    try {
+      const playlistName = await saveCommunityPlaylistToMyPlaylists(playlistId);
+      setToastMessage(`"${playlistName}" added to My Playlists`);
+    } catch (error) {
+      setToastMessage(
+        error instanceof Error ? error.message : "Could not save playlist",
+      );
+    } finally {
+      setSavingToPlaylists(false);
+    }
+  }
+
   async function copyPlaylistLink() {
     setMenuOpen(false);
 
@@ -126,52 +212,76 @@ export default function CommunityPlaylistDetailChrome() {
     }
   }
 
-  if (!isCommunityPlaylistDetail || !target) return null;
+  if (!isCommunityPlaylistDetail) return null;
 
-  return createPortal(
-    <>
-      <div className="playlist-detail-card-corner-actions">
-        <button
-          type="button"
-          className={`playlist-detail-corner-button${favorite ? " is-active" : ""}`}
-          onClick={() => void toggleFavorite()}
-          disabled={favoritePending}
-          aria-label={favorite ? "Remove playlist from favorites" : "Add playlist to favorites"}
-          aria-pressed={favorite}
-        >
-          <HeartIcon size={15} filled={favorite} />
-        </button>
-
-        <DropdownShell
-          open={menuOpen}
-          onOpenChange={setMenuOpen}
-          placement="bottom-end"
-          className="playlist-detail-more-dropdown"
-          offsetAmount={8}
-          collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
-          trigger={({ open }) => (
+  const inlineActions =
+    actionsTarget
+      ? createPortal(
+          <div className="playlist-detail-card-corner-actions">
             <button
               type="button"
-              className={`playlist-detail-corner-button${open ? " is-active" : ""}`}
-              aria-label="More community playlist actions"
-              aria-expanded={open}
-              title="More"
+              className={`playlist-detail-corner-button${favorite ? " is-active" : ""}`}
+              onClick={() => void toggleFavorite()}
+              disabled={favoritePending}
+              aria-label={favorite ? "Remove playlist from favorites" : "Add playlist to favorites"}
+              aria-pressed={favorite}
             >
-              <MoreIcon />
+              <HeartIcon size={15} filled={favorite} />
             </button>
-          )}
-        >
-          <button type="button" role="menuitem" onClick={() => void copyPlaylistLink()}>
-            Copy Playlist Link
-          </button>
-        </DropdownShell>
-      </div>
 
+            <DropdownShell
+              open={menuOpen}
+              onOpenChange={setMenuOpen}
+              placement="bottom-end"
+              className="playlist-detail-more-dropdown"
+              offsetAmount={8}
+              collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+              trigger={({ open }) => (
+                <button
+                  type="button"
+                  className={`playlist-detail-more-button${open ? " is-active" : ""}`}
+                  aria-label="More community playlist actions"
+                  aria-expanded={open}
+                  title="More"
+                >
+                  <MoreIcon />
+                </button>
+              )}
+            >
+              <button type="button" role="menuitem" onClick={() => void copyPlaylistLink()}>
+                Copy Playlist Link
+              </button>
+            </DropdownShell>
+          </div>,
+          actionsTarget,
+        )
+      : null;
+
+  const saveAction =
+    heroTarget
+      ? createPortal(
+          <div className="playlist-detail-hero-secondary-actions">
+            <button
+              type="button"
+              className="playlist-detail-hero-secondary-action"
+              disabled={savingToPlaylists}
+              onClick={() => void saveToPlaylists()}
+            >
+              {savingToPlaylists ? "Saving…" : "Save to Playlists"}
+            </button>
+          </div>,
+          heroTarget,
+        )
+      : null;
+
+  return (
+    <>
+      {inlineActions}
+      {saveAction}
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}
       />
-    </>,
-    target,
+    </>
   );
 }
