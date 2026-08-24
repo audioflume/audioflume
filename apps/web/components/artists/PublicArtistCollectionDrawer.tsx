@@ -1,7 +1,7 @@
 "use client";
 
 import { MusicListShell } from "@filmwave/shared";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 
 import "@/app/music/music-library-redesign.css";
 import SongCard from "@/components/SongCard";
@@ -54,7 +54,11 @@ function PlayGlyph() {
 function CloseGlyph() {
   return (
     <svg width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
-      <path d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5" stroke="currentColor" strokeWidth="1.25" />
+      <path
+        d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5"
+        stroke="currentColor"
+        strokeWidth="1.25"
+      />
     </svg>
   );
 }
@@ -69,9 +73,14 @@ export default function PublicArtistCollectionDrawer({
   const release = isRelease(collection);
   const title = release ? collection.title : collection.name;
   const coverImageUrl = collection.cover_image_url;
-  const playableSongs = songs.filter((song) => song.audioUrl);
+  const playableSongs = useMemo(
+    () => songs.filter((song) => song.audioUrl),
+    [songs],
+  );
   const releaseYear = release ? formatReleaseYear(collection.release_date) : null;
-  const eyebrow = release ? formatReleaseType(collection.release_type) : "Artist Playlist";
+  const eyebrow = release
+    ? formatReleaseType(collection.release_type)
+    : "Artist Playlist";
   const metadata = release
     ? [formatTrackCount(collection.track_count), releaseYear]
         .filter(Boolean)
@@ -142,7 +151,9 @@ export default function PublicArtistCollectionDrawer({
               ))}
             </MusicListShell>
           ) : (
-            <div className={styles.empty}>No published tracks in this collection yet.</div>
+            <div className={styles.empty}>
+              No published tracks in this collection yet.
+            </div>
           )}
         </div>
       </div>
