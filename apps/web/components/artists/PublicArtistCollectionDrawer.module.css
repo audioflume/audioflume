@@ -7,7 +7,7 @@
 }
 
 .inner {
-  padding: 44px var(--filmwave-page-gutter) 48px;
+  padding: 44px var(--filmwave-page-gutter) 0;
 }
 
 .summary {
@@ -57,7 +57,7 @@
   display: block;
   margin-bottom: 9px;
   color: var(--text-muted);
-  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 10px;
   font-weight: 300;
   letter-spacing: 0;
@@ -159,124 +159,6 @@
   margin-top: 38px;
 }
 
-.trackRow {
-  display: grid;
-  min-height: 68px;
-  grid-template-columns: 42px minmax(180px, 26%) minmax(280px, 1fr) 52px auto;
-  align-items: center;
-  column-gap: 18px;
-  border-top: 1px solid color-mix(in srgb, var(--border) 58%, transparent);
-}
-
-.trackRow:first-child {
-  border-top: 0;
-}
-
-.trackRow:hover {
-  background: color-mix(in srgb, var(--bg-primary) 34%, transparent);
-}
-
-.trackLead,
-.trackTitle,
-.licenseButton {
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-}
-
-.trackLead {
-  position: relative;
-  display: inline-flex;
-  width: 30px;
-  height: 30px;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--text-muted);
-  cursor: pointer;
-}
-
-.trackNumber,
-.trackPlayIcon {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.trackNumber {
-  font-size: 12px;
-}
-
-.trackPlayIcon {
-  opacity: 0;
-  color: var(--text-primary);
-  transition: opacity 120ms ease;
-}
-
-.trackRow:hover .trackNumber,
-.trackLeadPlaying .trackNumber {
-  opacity: 0;
-}
-
-.trackRow:hover .trackPlayIcon,
-.trackLeadPlaying .trackPlayIcon,
-.trackLead:focus-visible .trackPlayIcon {
-  opacity: 1;
-}
-
-.trackTitle {
-  min-width: 0;
-  overflow: hidden;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 500;
-  letter-spacing: -0.015em;
-  line-height: 1.2;
-  text-align: left;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.waveform {
-  min-width: 0;
-  color: var(--text-muted);
-}
-
-.duration {
-  color: var(--text-primary);
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-  text-align: right;
-}
-
-.licenseButton {
-  display: inline-flex;
-  height: 38px;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0 14px;
-  border: 1px solid var(--text-primary);
-  border-radius: 4px;
-  background: var(--text-primary);
-  color: var(--bg-primary);
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1;
-  cursor: pointer;
-}
-
-.licenseButton:hover {
-  opacity: 0.78;
-}
-
 .empty {
   display: flex;
   min-height: 120px;
@@ -294,17 +176,11 @@
     grid-column: 1 / -1;
     justify-self: start;
   }
-
-  .trackRow {
-    grid-template-columns: 36px minmax(150px, 32%) minmax(180px, 1fr) 46px auto;
-    column-gap: 12px;
-  }
 }
 
 @media (max-width: 760px) {
   .inner {
     padding-top: 30px;
-    padding-bottom: 36px;
   }
 
   .releaseArtwork {
@@ -313,14 +189,6 @@
 
   .playlistArtwork {
     width: 210px;
-  }
-
-  .trackRow {
-    grid-template-columns: 34px minmax(0, 1fr) 44px auto;
-  }
-
-  .waveform {
-    display: none;
   }
 }
 
@@ -333,14 +201,5 @@
   .playlistArtwork {
     width: 100%;
     max-width: 220px;
-  }
-
-  .trackRow {
-    grid-template-columns: 30px minmax(0, 1fr) 40px;
-    column-gap: 10px;
-  }
-
-  .licenseButton {
-    display: none;
   }
 }
