@@ -3,20 +3,18 @@
   margin-top: 24px;
   margin-right: calc(50% - 50vw);
   margin-left: calc(50% - 50vw);
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
   background: var(--bg-secondary);
 }
 
 .inner {
-  padding: 30px var(--filmwave-page-gutter) 34px;
+  padding: 44px var(--filmwave-page-gutter) 48px;
 }
 
 .summary {
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
+  grid-template-columns: auto minmax(260px, 1fr) auto;
   align-items: center;
-  gap: 24px;
+  gap: 30px;
 }
 
 .artwork {
@@ -25,12 +23,12 @@
 }
 
 .releaseArtwork {
-  width: 108px;
+  width: 188px;
   aspect-ratio: 1;
 }
 
 .playlistArtwork {
-  width: 168px;
+  width: 260px;
   aspect-ratio: 16 / 9;
 }
 
@@ -57,7 +55,7 @@
 
 .eyebrow {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 9px;
   color: var(--text-muted);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
@@ -71,10 +69,10 @@
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(24px, 2vw, 30px);
+  font-size: clamp(28px, 2.25vw, 36px);
   font-weight: 400;
   letter-spacing: -0.035em;
-  line-height: 1;
+  line-height: 0.98;
 }
 
 .meta,
@@ -86,105 +84,247 @@
 }
 
 .meta {
-  margin: 9px 0 0;
-  font-size: 12px;
+  margin: 10px 0 0;
+  font-size: 13px;
   line-height: 1.3;
 }
 
 .description {
-  max-width: 680px;
+  max-width: 620px;
   margin: 12px 0 0;
   font-size: 12px;
   line-height: 1.5;
 }
 
-.actions {
+.collectionActions {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
+  margin-top: 24px;
 }
 
-.playButton,
-.closeButton {
-  box-sizing: border-box;
+.roundAction {
   display: inline-flex;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   align-items: center;
   justify-content: center;
-  border-radius: 7px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition:
+    border-color 150ms ease,
+    background-color 150ms ease;
+}
+
+.roundAction:hover {
+  border-color: var(--text-muted);
+  background: var(--bg-hover);
+}
+
+.roundAction:disabled {
+  cursor: default;
+  opacity: 0.4;
+}
+
+.closeDetails {
+  display: inline-flex;
+  height: 34px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  align-self: center;
+  padding: 0 13px;
+  border: 1px solid var(--text-secondary);
+  border-radius: 4px;
+  background: transparent;
+  color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.01em;
+  line-height: 1;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.closeDetails:hover {
+  background: var(--bg-hover);
+}
+
+.tracks {
+  margin-top: 38px;
+}
+
+.trackRow {
+  display: grid;
+  min-height: 68px;
+  grid-template-columns: 42px minmax(180px, 26%) minmax(280px, 1fr) 52px auto;
+  align-items: center;
+  column-gap: 18px;
+  border-top: 1px solid color-mix(in srgb, var(--border) 58%, transparent);
+}
+
+.trackRow:first-child {
+  border-top: 0;
+}
+
+.trackRow:hover {
+  background: color-mix(in srgb, var(--bg-primary) 34%, transparent);
+}
+
+.trackLead,
+.trackTitle,
+.licenseButton {
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+}
+
+.trackLead {
+  position: relative;
+  display: inline-flex;
+  width: 30px;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.trackNumber,
+.trackPlayIcon {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.trackNumber {
   font-size: 12px;
+}
+
+.trackPlayIcon {
+  opacity: 0;
+  color: var(--text-primary);
+  transition: opacity 120ms ease;
+}
+
+.trackRow:hover .trackNumber,
+.trackLeadPlaying .trackNumber {
+  opacity: 0;
+}
+
+.trackRow:hover .trackPlayIcon,
+.trackLeadPlaying .trackPlayIcon,
+.trackLead:focus-visible .trackPlayIcon {
+  opacity: 1;
+}
+
+.trackTitle {
+  min-width: 0;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  letter-spacing: -0.015em;
+  line-height: 1.2;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.waveform {
+  min-width: 0;
+  color: var(--text-muted);
+}
+
+.duration {
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  text-align: right;
+}
+
+.licenseButton {
+  display: inline-flex;
+  height: 38px;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--text-primary);
+  border-radius: 4px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  font-size: 11px;
   font-weight: 400;
   line-height: 1;
   cursor: pointer;
 }
 
-.playButton {
-  gap: 8px;
-  padding: 0 16px;
-  border: 1px solid var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
-}
-
-.playButton:disabled {
-  cursor: default;
-  opacity: 0.4;
-}
-
-.closeButton {
-  width: 40px;
-  padding: 0;
-  border: 1px solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-.playButton:not(:disabled):hover,
-.closeButton:hover {
-  opacity: 0.72;
-}
-
-.tracks {
-  margin-top: 28px;
-  padding-top: 14px;
-  border-top: 1px solid var(--border);
+.licenseButton:hover {
+  opacity: 0.78;
 }
 
 .empty {
   display: flex;
-  min-height: 92px;
+  min-height: 120px;
   align-items: center;
   color: var(--text-muted);
   font-size: 12px;
 }
 
-@media (max-width: 760px) {
-  .inner {
-    padding-top: 24px;
-    padding-bottom: 28px;
-  }
-
+@media (max-width: 980px) {
   .summary {
     grid-template-columns: auto minmax(0, 1fr);
-    gap: 18px;
   }
 
-  .actions {
+  .closeDetails {
     grid-column: 1 / -1;
-    justify-content: flex-start;
+    justify-self: start;
   }
 
-  .releaseArtwork {
-    width: 88px;
-  }
-
-  .playlistArtwork {
-    width: 132px;
+  .trackRow {
+    grid-template-columns: 36px minmax(150px, 32%) minmax(180px, 1fr) 46px auto;
+    column-gap: 12px;
   }
 }
 
-@media (max-width: 520px) {
+@media (max-width: 760px) {
+  .inner {
+    padding-top: 30px;
+    padding-bottom: 36px;
+  }
+
+  .releaseArtwork {
+    width: 142px;
+  }
+
+  .playlistArtwork {
+    width: 210px;
+  }
+
+  .trackRow {
+    grid-template-columns: 34px minmax(0, 1fr) 44px auto;
+  }
+
+  .waveform {
+    display: none;
+  }
+}
+
+@media (max-width: 560px) {
   .summary {
     grid-template-columns: 1fr;
   }
@@ -192,6 +332,15 @@
   .releaseArtwork,
   .playlistArtwork {
     width: 100%;
-    max-width: 180px;
+    max-width: 220px;
+  }
+
+  .trackRow {
+    grid-template-columns: 30px minmax(0, 1fr) 40px;
+    column-gap: 10px;
+  }
+
+  .licenseButton {
+    display: none;
   }
 }
