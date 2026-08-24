@@ -2,7 +2,7 @@
 
 import { Children, type KeyboardEvent, type ReactNode } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 
 import PublicArtistCollectionDrawer from "@/components/artists/PublicArtistCollectionDrawer";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
@@ -35,6 +35,7 @@ export default function PublicArtistCardShelf({
   children,
 }: PublicArtistCardShelfProps) {
   const pathname = usePathname();
+  const router = useRouter();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const requestIdRef = useRef(0);
   const cacheRef = useRef(new Map<number, DrawerPayload>());
@@ -90,11 +91,48 @@ export default function PublicArtistCardShelf({
   }
 
   async function openCollection(index: number) {
+    if (!artistSlug) return;
+
+    if (collectionKind === "playlist") {
+      const cached = cacheRef.current.get(index);
+      if (cached) {
+        router.push(
+          `/playlists/${encodeURIComponent(cached.collection.id)}?artist=${encodeURIComponent(
+            artistSlug,
+          )}`,
+        );
+        return;
+      }
+
+      try {
+        const response = await fetch(
+          `/api/public/artists/${encodeURIComponent(
+            artistSlug,
+          )}/collection?kind=playlist&index=${index}`,
+        );
+        const payload = (await response.json().catch(() => null)) as
+          | DrawerPayload
+          | { error?: string }
+          | null;
+
+        if (!response.ok || !payload || !("collection" in payload)) return;
+
+        cacheRef.current.set(index, payload);
+        router.push(
+          `/playlists/${encodeURIComponent(payload.collection.id)}?artist=${encodeURIComponent(
+            artistSlug,
+          )}`,
+        );
+      } catch {
+        // Keep the artist page in place if the playlist route cannot be resolved.
+      }
+      return;
+    }
+
     if (selectedIndex === index) {
       closeDrawer();
       return;
     }
-    if (!artistSlug) return;
 
     setSelectedIndex(index);
     setLoadError(null);
@@ -193,7 +231,7 @@ export default function PublicArtistCardShelf({
 
       <div ref={scrollerRef} className={styles.scroller}>
         {cards.map((card, index) => {
-          const selected = index === selectedIndex;
+          const selected = collectionKind === "release" && index === selectedIndex;
 
           return (
             <div
@@ -203,7 +241,7 @@ export default function PublicArtistCardShelf({
               }`}
               role="button"
               tabIndex={0}
-              aria-expanded={selected}
+              aria-expanded={collectionKind === "release" ? selected : undefined}
               aria-controls={selected ? drawerId : undefined}
               onClick={() => void openCollection(index)}
               onKeyDown={(event) => handleCardKeyDown(event, index)}
@@ -214,14 +252,16 @@ export default function PublicArtistCardShelf({
         })}
       </div>
 
-      {drawerData && selectedIndex !== null ? (
+      {collectionKind === "release" && drawerData && selectedIndex !== null ? (
         <PublicArtistCollectionDrawer
           id={drawerId}
           collection={drawerData.collection}
           songs={drawerData.songs}
           onClose={closeDrawer}
         />
-      ) : selectedIndex !== null && (isLoading || loadError) ? (
+      ) : collectionKind === "release" &&
+        selectedIndex !== null &&
+        (isLoading || loadError) ? (
         <div id={drawerId} className={styles.drawerStatus}>
           {loadError || "Loading collection…"}
         </div>
