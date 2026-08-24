@@ -2,6 +2,7 @@
 
 import { Children, type KeyboardEvent, type ReactNode } from "react";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { usePathname } from "next/navigation";
 
 import PublicArtistCollectionDrawer from "@/components/artists/PublicArtistCollectionDrawer";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
@@ -16,41 +17,42 @@ import styles from "./PublicArtistCardShelf.module.css";
 
 type PublicArtistCollection = PublicArtistRelease | PublicArtistPlaylist;
 
+type DrawerPayload = {
+  collection: PublicArtistCollection;
+  songs: Song[];
+  all_songs: Song[];
+};
+
 type PublicArtistCardShelfProps = {
   title: string;
   countLabel: string;
-  collections: PublicArtistCollection[];
-  songs: Song[];
   children: ReactNode;
 };
 
 export default function PublicArtistCardShelf({
   title,
   countLabel,
-  collections,
-  songs,
   children,
 }: PublicArtistCardShelfProps) {
+  const pathname = usePathname();
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const requestIdRef = useRef(0);
+  const cacheRef = useRef(new Map<number, DrawerPayload>());
+  const allArtistSongsRef = useRef<Song[]>([]);
   const drawerId = useId();
   const { setQueue } = usePlayer();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [drawerData, setDrawerData] = useState<DrawerPayload | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const cards = Children.toArray(children);
-  const selectedCollection =
-    collections.find((collection) => collection.id === selectedId) ?? null;
-  const songById = useMemo(
-    () => new Map(songs.map((song) => [song.id, song])),
-    [songs],
-  );
-  const selectedSongs = useMemo(() => {
-    if (!selectedCollection) return [];
-    return selectedCollection.song_ids.flatMap((songId) => {
-      const song = songById.get(songId);
-      return song ? [song] : [];
-    });
-  }, [selectedCollection, songById]);
+  const artistSlug = useMemo(() => {
+    const match = pathname.match(/^\/artists\/([^/]+)/);
+    return match?.[1] ? decodeURIComponent(match[1]) : null;
+  }, [pathname]);
+  const collectionKind = title === "Releases" ? "release" : "playlist";
 
   function updateScrollState() {
     const scroller = scrollerRef.current;
@@ -73,29 +75,82 @@ export default function PublicArtistCardShelf({
   }
 
   function restoreArtistQueue() {
-    setQueue(songs.filter((song) => song.audioUrl));
+    setQueue(allArtistSongsRef.current.filter((song) => song.audioUrl));
   }
 
   function closeDrawer() {
-    setSelectedId(null);
+    requestIdRef.current += 1;
+    setSelectedIndex(null);
+    setDrawerData(null);
+    setIsLoading(false);
+    setLoadError(null);
     restoreArtistQueue();
   }
 
-  function toggleCollection(collectionId: string) {
-    if (selectedId === collectionId) {
+  async function openCollection(index: number) {
+    if (selectedIndex === index) {
       closeDrawer();
       return;
     }
-    setSelectedId(collectionId);
+    if (!artistSlug) return;
+
+    setSelectedIndex(index);
+    setLoadError(null);
+
+    const cached = cacheRef.current.get(index);
+    if (cached) {
+      setDrawerData(cached);
+      allArtistSongsRef.current = cached.all_songs;
+      setQueue(cached.songs.filter((song) => song.audioUrl));
+      setIsLoading(false);
+      return;
+    }
+
+    setDrawerData(null);
+    setIsLoading(true);
+    const requestId = ++requestIdRef.current;
+
+    try {
+      const response = await fetch(
+        `/api/public/artists/${encodeURIComponent(
+          artistSlug,
+        )}/collection?kind=${collectionKind}&index=${index}`,
+      );
+      const payload = (await response.json().catch(() => null)) as
+        | DrawerPayload
+        | { error?: string }
+        | null;
+
+      if (!response.ok || !payload || !("collection" in payload)) {
+        throw new Error(
+          payload && "error" in payload && payload.error
+            ? payload.error
+            : "Unable to load collection",
+        );
+      }
+      if (requestId !== requestIdRef.current) return;
+
+      cacheRef.current.set(index, payload);
+      allArtistSongsRef.current = payload.all_songs;
+      setDrawerData(payload);
+      setQueue(payload.songs.filter((song) => song.audioUrl));
+    } catch (error) {
+      if (requestId !== requestIdRef.current) return;
+      setLoadError(
+        error instanceof Error ? error.message : "Unable to load collection",
+      );
+    } finally {
+      if (requestId === requestIdRef.current) setIsLoading(false);
+    }
   }
 
   function handleCardKeyDown(
     event: KeyboardEvent<HTMLDivElement>,
-    collectionId: string,
+    index: number,
   ) {
     if (event.key !== "Enter" && event.key !== " ") return;
     event.preventDefault();
-    toggleCollection(collectionId);
+    void openCollection(index);
   }
 
   useEffect(() => {
@@ -134,13 +189,11 @@ export default function PublicArtistCardShelf({
 
       <div ref={scrollerRef} className={styles.scroller}>
         {cards.map((card, index) => {
-          const collection = collections[index];
-          if (!collection) return card;
-          const selected = collection.id === selectedId;
+          const selected = index === selectedIndex;
 
           return (
             <div
-              key={collection.id}
+              key={index}
               className={`${styles.cardSlot}${
                 selected ? ` ${styles.cardSlotSelected}` : ""
               }`}
@@ -148,8 +201,8 @@ export default function PublicArtistCardShelf({
               tabIndex={0}
               aria-expanded={selected}
               aria-controls={selected ? drawerId : undefined}
-              onClick={() => toggleCollection(collection.id)}
-              onKeyDown={(event) => handleCardKeyDown(event, collection.id)}
+              onClick={() => void openCollection(index)}
+              onKeyDown={(event) => handleCardKeyDown(event, index)}
             >
               {card}
             </div>
@@ -157,13 +210,17 @@ export default function PublicArtistCardShelf({
         })}
       </div>
 
-      {selectedCollection ? (
+      {drawerData && selectedIndex !== null ? (
         <PublicArtistCollectionDrawer
           id={drawerId}
-          collection={selectedCollection}
-          songs={selectedSongs}
+          collection={drawerData.collection}
+          songs={drawerData.songs}
           onClose={closeDrawer}
         />
+      ) : selectedIndex !== null && (isLoading || loadError) ? (
+        <div id={drawerId} className={styles.drawerStatus}>
+          {loadError || "Loading collection…"}
+        </div>
       ) : null}
     </section>
   );
