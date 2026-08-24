@@ -1,15 +1,15 @@
 "use client";
 
+import { MusicListShell } from "@filmwave/shared";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import FilterTags from "@/components/FilterTags";
+import HeartIcon from "@/components/icons/HeartIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
-  primaryPillButtonClass,
-  secondaryPillButtonClass,
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
 } from "@/components/uiClasses";
@@ -17,6 +17,10 @@ import { useFavorites } from "@/context/FavoritesContext";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import { useEffect, useMemo, useRef, useState } from "react";
+
+import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
+import "@/app/music/music-library-redesign.css";
+import "@/app/playlist-detail-unified.css";
 
 const QUICK_FILTERS = [
   { label: "Newest", value: "newest" },
@@ -80,17 +84,10 @@ function shuffleSongList<T>(songs: T[]) {
 }
 
 export default function FavoritesPage() {
-  const {
-    songs,
-    loading: songsLoading,
-    error: songsError,
-    refetchSongs,
-  } = useSongs();
-
+  const { songs, loading: songsLoading, error: songsError } = useSongs();
   const { favoriteIds, favoriteIdSet, favoritesLoaded } = useFavorites();
   const { currentSong, setQueue } = usePlayer();
   const playerVisible = !!currentSong;
-
   const searchInputRef = useRef<HTMLInputElement>(null);
 
   const [search, setSearch] = useState("");
@@ -106,11 +103,10 @@ export default function FavoritesPage() {
   }, [songs, favoriteIds]);
 
   const searchedSongs = useMemo(() => {
+    const query = search.trim().toLowerCase();
+    if (!query) return favoriteSongs;
+
     return favoriteSongs.filter((song) => {
-      const query = search.trim().toLowerCase();
-
-      if (!query) return true;
-
       const searchableText = [
         song.title,
         song.artist,
@@ -129,11 +125,7 @@ export default function FavoritesPage() {
   }, [favoriteSongs, search]);
 
   const filteredSongs = useMemo(() => {
-    const indexedSongs = searchedSongs.map((song, index) => ({
-      song,
-      index,
-    }));
-
+    const indexedSongs = searchedSongs.map((song, index) => ({ song, index }));
     const nextSongs =
       quickFilter === "liked"
         ? indexedSongs.filter(({ song }) => favoriteIdSet.has(song.id))
@@ -166,16 +158,11 @@ export default function FavoritesPage() {
       if (aOrder === undefined && bOrder === undefined) return 0;
       if (aOrder === undefined) return 1;
       if (bOrder === undefined) return -1;
-
       return aOrder - bOrder;
     });
   }, [filteredSongs, shuffleOrderIds]);
 
-  const topGenres = useMemo(
-    () => getTopGenres(displayedSongs),
-    [displayedSongs],
-  );
-
+  const topGenres = useMemo(() => getTopGenres(favoriteSongs), [favoriteSongs]);
   const showSongSkeleton = !songsError && (!favoritesLoaded || songsLoading);
   const hasAnyFavorites = favoriteIdSet.size > 0;
   const shuffleActive = shuffleOrderIds !== null;
@@ -189,14 +176,9 @@ export default function FavoritesPage() {
   }, [favoriteIds, quickFilter, search]);
 
   function playFirstSong() {
-    const firstSong = displayedSongs[0];
-
-    if (!firstSong) return;
-
     const firstSongButton = document.querySelector<HTMLButtonElement>(
-      `[aria-label="Play song"], [aria-label="Pause song"]`,
+      '[aria-label="Play song"], [aria-label="Pause song"]',
     );
-
     firstSongButton?.click();
   }
 
@@ -209,314 +191,130 @@ export default function FavoritesPage() {
   }
 
   return (
-    <>
-      <style>{`
-        .favorites-page {
-          position: relative;
-          margin-left: var(--sidebar-width);
-          margin-top: 56px;
-          min-height: calc(100vh - 56px);
-          overflow-x: clip;
-          overflow-y: visible;
-          background: var(--bg-primary);
-          color: var(--text-primary);
-          transition: margin-left 0.2s ease;
-        }
-
-        .favorites-shell {
-          position: relative;
-          z-index: 1;
-          padding: 0 32px;
-        }
-
-        .favorites-hero {
-          display: block;
-          padding: 88px 0 0;
-        }
-
-        .favorites-kicker {
-          font-size: 10px;
-          font-weight: 500;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          color: var(--text-muted);
-        }
-
-        .favorites-title {
-          margin-top: 8px;
-          max-width: 640px;
-          font-family: var(--font-aktiv-grotesk);
-          font-size: 56px;
-          font-weight: 500;
-          line-height: 0.94;
-          letter-spacing: -0.055em;
-          color: var(--text-primary);
-        }
-
-        .favorites-meta {
-          margin-top: 16px;
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 8px;
-          font-size: 11px;
-          color: var(--text-secondary);
-        }
-
-        .favorites-dot {
-          color: var(--text-muted);
-        }
-
-        .favorites-actions {
-          margin-top: 24px;
-          margin-bottom: 30px;
-          display: flex;
-          align-items: center;
-          gap: 8px;
-        }
-
-        .favorites-search-sticky {
-          position: sticky;
-          top: 55px;
-          z-index: 90;
-          margin-left: -32px;
-          margin-right: -32px;
-          background: var(--bg-primary);
-        }
-
-        .favorites-search-row {
-          display: flex;
-          min-height: 49px;
-          align-items: center;
-          gap: 3px;
-          border-top: 1px solid var(--border);
-          border-bottom: 1px solid var(--border);
-          padding: 0 28px;
-          cursor: text;
-        }
-
-        .favorites-search-inner {
-          display: flex;
-          width: 320px;
-          flex-shrink: 0;
-          align-items: center;
-          gap: 8px;
-          padding: 12px 16px 12px 0;
-          cursor: text;
-        }
-
-        .favorites-search-input {
-          width: 100%;
-          background: transparent;
-          font-size: 15px;
-          font-weight: 300;
-          color: var(--text-primary);
-          outline: none;
-        }
-
-        .favorites-search-input::placeholder {
-          color: var(--text-muted);
-        }
-
-        .favorites-quick-row {
-          display: flex;
-          flex-wrap: wrap;
-          align-items: center;
-          gap: 6px;
-          margin-left: -32px;
-          margin-right: -32px;
-          background: var(--bg-primary);
-          padding: 16px 28px;
-        }
-
-        .favorites-section {
-          margin-left: -32px;
-          margin-right: -32px;
-        }
-
-        .favorites-empty {
-          display: flex;
-          min-height: 280px;
-          flex-direction: column;
-          align-items: center;
-          justify-content: center;
-          text-align: center;
-          color: var(--text-secondary);
-        }
-
-        .favorites-empty h2 {
-          font-size: 14px;
-          font-weight: 500;
-          color: var(--text-primary);
-        }
-
-        .favorites-empty p {
-          margin-top: 6px;
-          max-width: 320px;
-          font-size: 12px;
-          line-height: 1.6;
-        }
-
-        .favorites-footer-wrap {
-          padding-top: 40px;
-        }
-
-        @media (max-width: 720px) {
-          .favorites-hero {
-            padding-top: 88px;
-          }
-
-          .favorites-actions {
-            margin-bottom: 32px;
-          }
-        }
-
-        @media (max-width: 760px) {
-          .favorites-search-inner {
-            width: 100%;
-            padding-right: 0;
-          }
-        }
-      `}</style>
-
-      <main className="favorites-page">
-        <div className="favorites-shell">
-          <section className="favorites-hero">
-            <div className="favorites-kicker">Favorites</div>
-
-            <h1 className="favorites-title">Favorites</h1>
-
-            <div className="favorites-meta">
-              <span>{formatSongCount(displayedSongs.length)}</span>
-
-              {topGenres.length > 0 && (
-                <>
-                  <span className="favorites-dot">·</span>
-                  <span>{topGenres.join(" · ")}</span>
-                </>
-              )}
-            </div>
-
-            <div className="favorites-actions">
-              <button
-                type="button"
-                onClick={playFirstSong}
-                disabled={displayedSongs.length === 0}
-                className={`${primaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
-              >
-                <PlayIconSmall />
-                Play
-              </button>
-
-              <button
-                type="button"
-                onClick={shuffleFavorites}
-                disabled={displayedSongs.length < 2}
-                className={`${secondaryPillButtonClass} disabled:cursor-default disabled:opacity-40`}
-              >
-                <ShuffleIconSmall />
-                Shuffle
-              </button>
-            </div>
-          </section>
-
-          <div className="favorites-search-sticky">
-            <div
-              className="favorites-search-row"
-              onClick={() => searchInputRef.current?.focus()}
-            >
-              <label className="favorites-search-inner">
-                <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
-
-                <input
-                  ref={searchInputRef}
-                  type="text"
-                  placeholder="Search Favorites"
-                  value={search}
-                  onChange={(event) => {
-                    setSearch(event.target.value);
-                    setShuffleOrderIds(null);
-                  }}
-                  className="favorites-search-input"
-                />
-              </label>
-
-              <FilterTags
-                selectedMoods={[]}
-                selectedGenres={[]}
-                selectedInstruments={[]}
-                selectedBuilds={[]}
-                selectedVocals={[]}
-                selectedDurations={[]}
-                instrumental={false}
-                bpmValue={null}
-                keyValue={null}
-                selectedPlaylist={null}
-                shuffleActive={shuffleActive}
-                onRemoveMood={() => {}}
-                onRemoveGenre={() => {}}
-                onRemoveInstrument={() => {}}
-                onRemoveBuild={() => {}}
-                onRemoveVocal={() => {}}
-                onRemoveDuration={() => {}}
-                onRemoveInstrumental={() => {}}
-                onRemoveBpm={() => {}}
-                onRemoveKey={() => {}}
-                onRemovePlaylist={() => {}}
-                onRemoveShuffle={() => setShuffleOrderIds(null)}
+    <main className="playlist-detail-page">
+      <div className="playlist-detail-shell">
+        <div className="playlist-detail-search-sticky">
+          <div
+            className="playlist-detail-search-row"
+            onClick={() => searchInputRef.current?.focus()}
+          >
+            <label className="playlist-detail-search-inner">
+              <SearchIcon className="shrink-0 text-[var(--text-muted)]" />
+              <input
+                ref={searchInputRef}
+                type="text"
+                placeholder="Search Favorites"
+                value={search}
+                onChange={(event) => {
+                  setSearch(event.target.value);
+                  setShuffleOrderIds(null);
+                }}
+                className="playlist-detail-search-input"
               />
-            </div>
+            </label>
+            <FilterTags
+              selectedMoods={[]}
+              selectedGenres={[]}
+              selectedInstruments={[]}
+              selectedBuilds={[]}
+              selectedVocals={[]}
+              selectedDurations={[]}
+              instrumental={false}
+              bpmValue={null}
+              keyValue={null}
+              selectedPlaylist={null}
+              shuffleActive={shuffleActive}
+              onRemoveMood={() => {}}
+              onRemoveGenre={() => {}}
+              onRemoveInstrument={() => {}}
+              onRemoveBuild={() => {}}
+              onRemoveVocal={() => {}}
+              onRemoveDuration={() => {}}
+              onRemoveInstrumental={() => {}}
+              onRemoveBpm={() => {}}
+              onRemoveKey={() => {}}
+              onRemovePlaylist={() => {}}
+              onRemoveShuffle={() => setShuffleOrderIds(null)}
+            />
           </div>
+        </div>
+      </div>
 
-          <div className="favorites-quick-row">
-            {QUICK_FILTERS.map((filter) => {
-              const isActive = !shuffleActive && quickFilter === filter.value;
-
-              return (
-                <button
-                  key={filter.value}
-                  type="button"
-                  onClick={() => {
-                    setQuickFilter(filter.value);
-                    setShuffleOrderIds(null);
-                  }}
-                  className={`${quickFilterButtonClass} ${
-                    isActive ? quickFilterButtonActiveClass : ""
-                  }`}
-                >
-                  {filter.label}
-                </button>
-              );
-            })}
-          </div>
-
-          <section className="favorites-section">
-            {showSongSkeleton && <SkeletonSongList />}
-
-            {songsError && !songsLoading && favoritesLoaded && (
-              <div className="flex min-h-[240px] flex-col items-center justify-center gap-3 px-8 text-center">
-                <div className="text-sm font-medium text-[var(--text-primary)]">
-                  Couldn&apos;t load favorites
-                </div>
-
-                <div className="max-w-[320px] text-xs leading-5 text-[var(--text-secondary)]">
-                  {songsError}
-                </div>
-
-                <button
-                  type="button"
-                  onClick={refetchSongs}
-                  className={primaryPillButtonClass}
-                >
-                  Try Again
-                </button>
+      <div className="playlist-detail-stage is-system-playlist">
+        <div className="playlist-detail-card">
+          <div className="playlist-detail-card-inner">
+            <section className="playlist-detail-hero">
+              <div className="playlist-detail-cover playlist-detail-system-cover">
+                <HeartIcon size={52} filled />
               </div>
-            )}
 
-            {!songsError &&
-              !showSongSkeleton &&
-              displayedSongs.length === 0 && (
-                <div className="favorites-empty">
+              <div className="min-w-0">
+                <span className="playlist-detail-kicker">Playlist</span>
+                <h1 className="playlist-detail-title">Favorites</h1>
+                <p className="playlist-detail-meta">
+                  <span>{formatSongCount(displayedSongs.length)}</span>
+                  {topGenres.length > 0 && (
+                    <>
+                      <span className="playlist-detail-dot">·</span>
+                      <span>{topGenres.join(" · ")}</span>
+                    </>
+                  )}
+                </p>
+
+                <div className="playlist-detail-actions">
+                  <button
+                    type="button"
+                    onClick={playFirstSong}
+                    disabled={displayedSongs.length === 0}
+                    className={artistDrawerStyles.roundAction}
+                    aria-label="Play Favorites"
+                  >
+                    <PlayIconSmall size={15} />
+                  </button>
+                  <button
+                    type="button"
+                    onClick={shuffleFavorites}
+                    disabled={displayedSongs.length < 2}
+                    className={artistDrawerStyles.roundAction}
+                    aria-label="Shuffle Favorites"
+                  >
+                    <ShuffleIconSmall />
+                  </button>
+                </div>
+              </div>
+            </section>
+
+            <div className="playlist-detail-quick-row">
+              {QUICK_FILTERS.map((filter) => {
+                const isActive = !shuffleActive && quickFilter === filter.value;
+                return (
+                  <button
+                    key={filter.value}
+                    type="button"
+                    onClick={() => {
+                      setQuickFilter(filter.value);
+                      setShuffleOrderIds(null);
+                    }}
+                    className={`${quickFilterButtonClass} ${
+                      isActive ? quickFilterButtonActiveClass : ""
+                    }`}
+                  >
+                    {filter.label}
+                  </button>
+                );
+              })}
+            </div>
+
+            <section className="playlist-detail-section">
+              {showSongSkeleton ? (
+                <SkeletonSongList />
+              ) : songsError ? (
+                <div className="playlist-detail-empty">
+                  <h2>Couldn&apos;t load favorites</h2>
+                  <p>{songsError}</p>
+                </div>
+              ) : displayedSongs.length === 0 ? (
+                <div className="playlist-detail-empty">
                   {hasAnyFavorites ? (
                     <>
                       <h2>No songs found</h2>
@@ -535,32 +333,32 @@ export default function FavoritesPage() {
                     </>
                   )}
                 </div>
+              ) : (
+                <MusicListShell title={null}>
+                  {displayedSongs.map((song, index) => (
+                    <SongCard
+                      key={song.id}
+                      song={song}
+                      isFirst={index === 0}
+                      isLast={index === displayedSongs.length - 1}
+                      showDivider={false}
+                    />
+                  ))}
+                </MusicListShell>
               )}
-
-            {!songsError &&
-              !showSongSkeleton &&
-              displayedSongs.map((song, index) => (
-                <SongCard
-                  key={song.id}
-                  song={song}
-                  isFirst={index === 0}
-                  isLast={index === displayedSongs.length - 1}
-                />
-              ))}
-          </section>
-
-          {!showSongSkeleton && (
-            <div
-              className="favorites-footer-wrap"
-              style={{
-                paddingBottom: playerVisible ? "72px" : "8px",
-              }}
-            >
-              <Footer />
-            </div>
-          )}
+            </section>
+          </div>
         </div>
-      </main>
-    </>
+      </div>
+
+      {!showSongSkeleton && (
+        <div
+          className="playlist-detail-footer-shell"
+          style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
+        >
+          <Footer />
+        </div>
+      )}
+    </main>
   );
 }
