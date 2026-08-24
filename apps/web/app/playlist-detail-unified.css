@@ -342,7 +342,12 @@
 .playlist-detail-section {
   margin: var(--playlist-detail-section-gap) 0 0;
   background: var(--filmwave-white);
-  padding: 24px var(--filmwave-page-gutter) 36px;
+  padding: 24px var(--filmwave-page-gutter);
+}
+
+.playlist-detail-section .fw-song-list {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 
 .playlist-detail-empty {
