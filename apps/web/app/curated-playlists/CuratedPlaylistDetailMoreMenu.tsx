@@ -78,28 +78,37 @@ export default function CuratedPlaylistDetailMoreMenu() {
   const playlistId = playlistIdMatch?.[1] ?? null;
   const isCuratedPlaylistDetail = playlistId !== null;
 
-  const [target, setTarget] = useState<HTMLElement | null>(null);
+  const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null);
+  const [heroTarget, setHeroTarget] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isCuratedPlaylistDetail) {
-      setTarget(null);
+      setActionsTarget(null);
+      setHeroTarget(null);
       return;
     }
 
-    const updateTarget = () => {
-      const nextTarget = document.querySelector<HTMLElement>(
-        ".playlist-detail-page .playlist-detail-card-inner",
+    const updateTargets = () => {
+      const nextActionsTarget = document.querySelector<HTMLElement>(
+        ".playlist-detail-page .playlist-detail-actions",
       );
-      setTarget((currentTarget) =>
-        currentTarget === nextTarget ? currentTarget : nextTarget,
+      const nextHeroTarget = document.querySelector<HTMLElement>(
+        ".playlist-detail-page .playlist-detail-hero > .min-w-0",
+      );
+
+      setActionsTarget((currentTarget) =>
+        currentTarget === nextActionsTarget ? currentTarget : nextActionsTarget,
+      );
+      setHeroTarget((currentTarget) =>
+        currentTarget === nextHeroTarget ? currentTarget : nextHeroTarget,
       );
     };
 
-    updateTarget();
-    const observer = new MutationObserver(updateTarget);
+    updateTargets();
+    const observer = new MutationObserver(updateTargets);
     observer.observe(document.body, { childList: true, subtree: true });
     return () => observer.disconnect();
   }, [isCuratedPlaylistDetail]);
@@ -128,47 +137,71 @@ export default function CuratedPlaylistDetailMoreMenu() {
     }
   }
 
-  if (!isCuratedPlaylistDetail || !target) return null;
+  if (!isCuratedPlaylistDetail) return null;
 
-  return createPortal(
-    <>
-      <div className="playlist-detail-card-corner-actions">
-        <DropdownShell
-          open={menuOpen}
-          onOpenChange={setMenuOpen}
-          placement="bottom-end"
-          className="playlist-detail-more-dropdown"
-          offsetAmount={8}
-          collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
-          trigger={({ open }) => (
+  const menu =
+    actionsTarget
+      ? createPortal(
+          <div className="playlist-detail-more-menu">
+            <DropdownShell
+              open={menuOpen}
+              onOpenChange={setMenuOpen}
+              placement="bottom-end"
+              className="playlist-detail-more-dropdown"
+              offsetAmount={8}
+              collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+              trigger={({ open }) => (
+                <button
+                  type="button"
+                  className={`playlist-detail-more-button${open ? " is-active" : ""}`}
+                  aria-label="More curated playlist actions"
+                  aria-expanded={open}
+                  title="More"
+                  disabled={saving}
+                >
+                  <MoreIcon />
+                </button>
+              )}
+            >
+              <button
+                type="button"
+                role="menuitem"
+                disabled={saving}
+                onClick={() => void handleAddToMyPlaylists()}
+              >
+                {saving ? "Saving…" : "Save to Playlists"}
+              </button>
+            </DropdownShell>
+          </div>,
+          actionsTarget,
+        )
+      : null;
+
+  const saveAction =
+    heroTarget
+      ? createPortal(
+          <div className="playlist-detail-hero-secondary-actions">
             <button
               type="button"
-              className={`playlist-detail-corner-button${open ? " is-active" : ""}`}
-              aria-label="More curated playlist actions"
-              aria-expanded={open}
-              title="More"
+              className="playlist-detail-hero-secondary-action"
               disabled={saving}
+              onClick={() => void handleAddToMyPlaylists()}
             >
-              <MoreIcon />
+              {saving ? "Saving…" : "Save to Playlists"}
             </button>
-          )}
-        >
-          <button
-            type="button"
-            role="menuitem"
-            disabled={saving}
-            onClick={() => void handleAddToMyPlaylists()}
-          >
-            {saving ? "Adding…" : "Add to My Playlists"}
-          </button>
-        </DropdownShell>
-      </div>
+          </div>,
+          heroTarget,
+        )
+      : null;
 
+  return (
+    <>
+      {menu}
+      {saveAction}
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}
       />
-    </>,
-    target,
+    </>
   );
 }
