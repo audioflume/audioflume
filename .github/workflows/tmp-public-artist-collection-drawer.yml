@@ -1,0 +1,186 @@
+name: Temporary public artist collection drawer patch
+
+on:
+  pull_request:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  patch:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.head_ref }}
+      - name: Wire collection song ids into public artist shelves
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          public_artist = Path('apps/web/lib/publicArtist.ts')
+          text = public_artist.read_text()
+
+          text = text.replace(
+            '  track_count: number;\n};\n\nexport type PublicArtistPlaylist = {',
+            '  track_count: number;\n  song_ids: string[];\n};\n\nexport type PublicArtistPlaylist = {',
+            1,
+          )
+          text = text.replace(
+            '  track_count: number;\n};\n\nexport type PublicArtistPageData = {',
+            '  track_count: number;\n  song_ids: string[];\n};\n\nexport type PublicArtistPageData = {',
+            1,
+          )
+
+          old_release_query = '''        ? supabaseServer
+            .from("artist_release_songs")
+            .select("release_id, song_id")
+            .in("release_id", releaseIds)'''
+          new_release_query = '''        ? supabaseServer
+            .from("artist_release_songs")
+            .select("release_id, song_id, disc_number, track_number")
+            .in("release_id", releaseIds)
+            .order("disc_number", { ascending: true })
+            .order("track_number", { ascending: true })'''
+          if text.count(old_release_query) != 1:
+            raise SystemExit('release query anchor mismatch')
+          text = text.replace(old_release_query, new_release_query)
+
+          old_release_counts = '''  const releaseTrackCounts = new Map<string, number>();
+  for (const track of releaseTracksResult.data ?? []) {
+    if (
+      typeof track.release_id !== "string" ||
+      typeof track.song_id !== "string" ||
+      !publishedSongIds.has(track.song_id)
+    ) {
+      continue;
+    }
+
+    releaseTrackCounts.set(
+      track.release_id,
+      (releaseTrackCounts.get(track.release_id) ?? 0) + 1,
+    );
+  }'''
+          new_release_counts = '''  const releaseTrackCounts = new Map<string, number>();
+  const releaseSongIds = new Map<string, string[]>();
+  for (const track of releaseTracksResult.data ?? []) {
+    if (
+      typeof track.release_id !== "string" ||
+      typeof track.song_id !== "string" ||
+      !publishedSongIds.has(track.song_id)
+    ) {
+      continue;
+    }
+
+    const currentSongIds = releaseSongIds.get(track.release_id) ?? [];
+    currentSongIds.push(track.song_id);
+    releaseSongIds.set(track.release_id, currentSongIds);
+    releaseTrackCounts.set(
+      track.release_id,
+      (releaseTrackCounts.get(track.release_id) ?? 0) + 1,
+    );
+  }'''
+          if text.count(old_release_counts) != 1:
+            raise SystemExit('release count anchor mismatch')
+          text = text.replace(old_release_counts, new_release_counts)
+
+          old_playlist_counts = '''  const playlistTrackCounts = new Map<string, number>();
+  for (const track of playlistTracksResult.data ?? []) {
+    if (
+      typeof track.playlist_id !== "string" ||
+      typeof track.song_id !== "string" ||
+      !publishedSongIds.has(track.song_id)
+    ) {
+      continue;
+    }
+
+    playlistTrackCounts.set(
+      track.playlist_id,
+      (playlistTrackCounts.get(track.playlist_id) ?? 0) + 1,
+    );
+  }'''
+          new_playlist_counts = '''  const playlistTrackCounts = new Map<string, number>();
+  const playlistSongIds = new Map<string, string[]>();
+  for (const track of playlistTracksResult.data ?? []) {
+    if (
+      typeof track.playlist_id !== "string" ||
+      typeof track.song_id !== "string" ||
+      !publishedSongIds.has(track.song_id)
+    ) {
+      continue;
+    }
+
+    const currentSongIds = playlistSongIds.get(track.playlist_id) ?? [];
+    currentSongIds.push(track.song_id);
+    playlistSongIds.set(track.playlist_id, currentSongIds);
+    playlistTrackCounts.set(
+      track.playlist_id,
+      (playlistTrackCounts.get(track.playlist_id) ?? 0) + 1,
+    );
+  }'''
+          if text.count(old_playlist_counts) != 1:
+            raise SystemExit('playlist count anchor mismatch')
+          text = text.replace(old_playlist_counts, new_playlist_counts)
+
+          text = text.replace(
+            '        track_count: releaseTrackCounts.get(String(release.id)) ?? 0,\n',
+            '        track_count: releaseTrackCounts.get(String(release.id)) ?? 0,\n        song_ids: releaseSongIds.get(String(release.id)) ?? [],\n',
+            1,
+          )
+          text = text.replace(
+            '      track_count: playlistTrackCounts.get(String(playlist.id)) ?? 0,\n',
+            '      track_count: playlistTrackCounts.get(String(playlist.id)) ?? 0,\n      song_ids: playlistSongIds.get(String(playlist.id)) ?? [],\n',
+            1,
+          )
+
+          public_artist.write_text(text)
+
+          view = Path('apps/web/components/artists/PublicArtistPageView.tsx')
+          text = view.read_text()
+          old_releases = '''            <PublicArtistCardShelf
+              title="Releases"
+              countLabel={`${releases.length} ${
+                releases.length === 1 ? "release" : "releases"
+              }`}
+            >'''
+          new_releases = '''            <PublicArtistCardShelf
+              title="Releases"
+              countLabel={`${releases.length} ${
+                releases.length === 1 ? "release" : "releases"
+              }`}
+              collections={releases}
+              songs={songs}
+            >'''
+          if text.count(old_releases) != 1:
+            raise SystemExit('release shelf anchor mismatch')
+          text = text.replace(old_releases, new_releases)
+
+          old_playlists = '''            <PublicArtistCardShelf
+              title="Playlists"
+              countLabel={`${playlists.length} ${
+                playlists.length === 1 ? "playlist" : "playlists"
+              }`}
+            >'''
+          new_playlists = '''            <PublicArtistCardShelf
+              title="Playlists"
+              countLabel={`${playlists.length} ${
+                playlists.length === 1 ? "playlist" : "playlists"
+              }`}
+              collections={playlists}
+              songs={songs}
+            >'''
+          if text.count(old_playlists) != 1:
+            raise SystemExit('playlist shelf anchor mismatch')
+          text = text.replace(old_playlists, new_playlists)
+          view.write_text(text)
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add apps/web/lib/publicArtist.ts apps/web/components/artists/PublicArtistPageView.tsx
+          git commit -m "Wire public artist collection songs into shelves"
+          git push origin HEAD:${{ github.head_ref }}
