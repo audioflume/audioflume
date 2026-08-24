@@ -33,6 +33,7 @@ import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/Bac
 import PlusIcon from "@/components/icons/PlusIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
+import { toSmartTitleCaseInput } from "@/lib/smartTitleCase";
 import type { Song } from "@/lib/types";
 
 type ArtistPlaylist = {
@@ -430,7 +431,9 @@ function CreatePlaylist({
             <BackendInput
               type="text"
               value={name}
-              onChange={(event) => setName(event.target.value)}
+              onChange={(event) =>
+                setName(toSmartTitleCaseInput(event.target.value))
+              }
               maxLength={180}
               disabled={!canManage || saving}
             />
@@ -691,7 +694,9 @@ function PlaylistEditor({
               <BackendInput
                 type="text"
                 value={name}
-                onChange={(event) => setName(event.target.value)}
+                onChange={(event) =>
+                  setName(toSmartTitleCaseInput(event.target.value))
+                }
                 maxLength={180}
                 disabled={!canManage || saving}
               />
