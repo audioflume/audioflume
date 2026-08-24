@@ -32,8 +32,9 @@ export async function GET(request: Request, context: RouteContext) {
     const url = new URL(request.url);
     const kind = parseCollectionKind(url.searchParams.get("kind"));
     const index = parseCollectionIndex(url.searchParams.get("index"));
+    const collectionId = url.searchParams.get("id")?.trim() || null;
 
-    if (!kind || index === null) {
+    if (!kind || (index === null && !collectionId)) {
       return NextResponse.json(
         { error: "Invalid collection request" },
         { status: 400 },
@@ -45,10 +46,13 @@ export async function GET(request: Request, context: RouteContext) {
       return NextResponse.json({ error: "Artist not found" }, { status: 404 });
     }
 
-    const collection =
-      kind === "release"
-        ? lookup.data.releases[index]
-        : lookup.data.playlists[index];
+    const collections =
+      kind === "release" ? lookup.data.releases : lookup.data.playlists;
+    const collection = collectionId
+      ? collections.find((item) => item.id === collectionId)
+      : index === null
+        ? null
+        : collections[index];
 
     if (!collection) {
       return NextResponse.json(
