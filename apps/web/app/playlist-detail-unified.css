@@ -113,6 +113,19 @@
   pointer-events: none;
 }
 
+.playlist-detail-stage::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--bg-primary);
+  pointer-events: none;
+}
+
+.playlist-detail-stage.is-backdrop-ready::after {
+  display: none;
+}
+
 .playlist-detail-card {
   --bg-primary: var(--filmwave-white);
   --bg-secondary: var(--filmwave-white);
