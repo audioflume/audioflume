@@ -412,6 +412,11 @@ main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-
   border-radius: 0;
 }
 
+/* Canonical admin action controls retain the backend control radius. */
+.filmwave-admin-content-page :is(button, a)[class~="rounded-[7px]"] {
+  border-radius: var(--filmwave-backend-control-radius, 7px);
+}
+
 .filmwave-admin-content-page :is(
   [class~="rounded-full"],
   [class~="admin-main-image-pill"],
