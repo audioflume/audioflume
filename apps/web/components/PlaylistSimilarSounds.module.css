@@ -2,6 +2,14 @@
   gap: 22px;
 }
 
+.sideArrowLeft {
+  left: calc(28px - var(--filmwave-page-gutter));
+}
+
+.sideArrowRight {
+  right: calc(28px - var(--filmwave-page-gutter));
+}
+
 .card {
   display: block;
   min-width: 230px;
@@ -126,6 +134,14 @@
 }
 
 @media (max-width: 760px) {
+  .sideArrowLeft {
+    left: 4px;
+  }
+
+  .sideArrowRight {
+    right: 4px;
+  }
+
   .card {
     min-width: 230px;
     flex-basis: 230px;
