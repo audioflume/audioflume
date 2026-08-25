@@ -33,8 +33,6 @@ type CuratedPlaylistShelfProps = {
   className?: string;
 };
 
-const SHOW_HEADER_SHELF_CONTROLS = false;
-
 const FALLBACK_GRADIENTS = [
   "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)",
   "linear-gradient(135deg,#1f3d3a 0%,#111111 52%,#4d8c7b 100%)",
@@ -186,15 +184,13 @@ export default function CuratedPlaylistShelf({
             <SectionTitle>{title}</SectionTitle>
           </div>
 
-          {SHOW_HEADER_SHELF_CONTROLS && (
-            <ShelfNavigationControls
-              label={title}
-              onPrev={() => scrollPlaylists("prev")}
-              onNext={() => scrollPlaylists("next")}
-              canScrollPrev={canScrollPrev}
-              canScrollNext={canScrollNext}
-            />
-          )}
+          <ShelfNavigationControls
+            label={title}
+            onPrev={() => scrollPlaylists("prev")}
+            onNext={() => scrollPlaylists("next")}
+            canScrollPrev={canScrollPrev}
+            canScrollNext={canScrollNext}
+          />
         </div>
 
         <div
