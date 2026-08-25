@@ -283,6 +283,7 @@ export async function GET(request: Request) {
           score: scorePlaylistSimilarity(sourceProfile, profile),
         };
       })
+      .filter((playlist) => playlist.song_count > 0)
       .sort(
         (a, b) =>
           b.score - a.score ||
