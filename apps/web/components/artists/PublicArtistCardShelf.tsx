@@ -8,6 +8,8 @@ import { usePathname, useRouter } from "next/navigation";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import PublicArtistCollectionDrawer from "@/components/artists/PublicArtistCollectionDrawer";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
+import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import type {
@@ -53,6 +55,7 @@ export default function PublicArtistCardShelf({
   const { setQueue } = usePlayer();
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [imageCenterY, setImageCenterY] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [drawerData, setDrawerData] = useState<DrawerPayload | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -207,12 +210,22 @@ export default function PublicArtistCardShelf({
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
+    const image = scroller.querySelector<HTMLElement>(".artist-public-card-art");
+    const updateImageCenter = () => {
+      setImageCenterY(image ? image.getBoundingClientRect().height / 2 : null);
+    };
+
     updateScrollState();
+    updateImageCenter();
     scroller.addEventListener("scroll", updateScrollState, { passive: true });
     window.addEventListener("resize", updateScrollState);
 
-    const resizeObserver = new ResizeObserver(updateScrollState);
+    const resizeObserver = new ResizeObserver(() => {
+      updateScrollState();
+      updateImageCenter();
+    });
     resizeObserver.observe(scroller);
+    if (image) resizeObserver.observe(image);
 
     return () => {
       scroller.removeEventListener("scroll", updateScrollState);
@@ -237,43 +250,71 @@ export default function PublicArtistCardShelf({
         </div>
       </div>
 
-      <div ref={scrollerRef} className={styles.scroller}>
-        {cards.map((card, index) => {
-          const selected = collectionKind === "release" && index === selectedIndex;
-          const playlistId =
-            collectionKind === "playlist" ? getCardCollectionId(card) : null;
-          const playlistHref =
-            playlistId && artistSlug
-              ? `/playlists/${encodeURIComponent(playlistId)}?artist=${encodeURIComponent(
-                  artistSlug,
-                )}`
-              : null;
-
-          if (playlistHref) {
-            return (
-              <Link key={playlistId} href={playlistHref} className={styles.cardSlot}>
-                {card}
-              </Link>
-            );
-          }
-
-          return (
-            <div
-              key={index}
-              className={`${styles.cardSlot}${
-                selected ? ` ${styles.cardSlotSelected}` : ""
-              }`}
-              role="button"
-              tabIndex={0}
-              aria-expanded={collectionKind === "release" ? selected : undefined}
-              aria-controls={selected ? drawerId : undefined}
-              onClick={() => void openCollection(index)}
-              onKeyDown={(event) => handleCardKeyDown(event, index)}
+      <div className="group/artist-public-shelf relative left-1/2 w-screen -translate-x-1/2 overflow-hidden">
+        {imageCenterY !== null && (
+          <>
+            <button
+              type="button"
+              onClick={() => scroll("prev")}
+              disabled={!canScrollPrev}
+              className="absolute left-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/artist-public-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              style={{ top: imageCenterY }}
+              aria-label={`Scroll ${title} left`}
             >
-              {card}
-            </div>
-          );
-        })}
+              <ChevronLeftIcon size={18} />
+            </button>
+
+            <button
+              type="button"
+              onClick={() => scroll("next")}
+              disabled={!canScrollNext}
+              className="absolute right-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/artist-public-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              style={{ top: imageCenterY }}
+              aria-label={`Scroll ${title} right`}
+            >
+              <ChevronRightIcon size={18} />
+            </button>
+          </>
+        )}
+
+        <div ref={scrollerRef} className={styles.scroller}>
+          {cards.map((card, index) => {
+            const selected = collectionKind === "release" && index === selectedIndex;
+            const playlistId =
+              collectionKind === "playlist" ? getCardCollectionId(card) : null;
+            const playlistHref =
+              playlistId && artistSlug
+                ? `/playlists/${encodeURIComponent(playlistId)}?artist=${encodeURIComponent(
+                    artistSlug,
+                  )}`
+                : null;
+
+            if (playlistHref) {
+              return (
+                <Link key={playlistId} href={playlistHref} className={styles.cardSlot}>
+                  {card}
+                </Link>
+              );
+            }
+
+            return (
+              <div
+                key={index}
+                className={`${styles.cardSlot}${
+                  selected ? ` ${styles.cardSlotSelected}` : ""
+                }`}
+                role="button"
+                tabIndex={0}
+                aria-expanded={collectionKind === "release" ? selected : undefined}
+                aria-controls={selected ? drawerId : undefined}
+                onClick={() => void openCollection(index)}
+                onKeyDown={(event) => handleCardKeyDown(event, index)}
+              >
+                {card}
+              </div>
+            );
+          })}
+        </div>
       </div>
 
       {collectionKind === "release" && drawerData && selectedIndex !== null ? (
