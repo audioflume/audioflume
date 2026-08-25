@@ -701,7 +701,7 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-playlist-card-art {
-          aspect-ratio: 1;
+          aspect-ratio: 16 / 9;
         }
 
         .artist-public-card-art img,
