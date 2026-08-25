@@ -30,21 +30,13 @@
 
 .cardSlot {
   position: relative;
+  min-width: 0;
+  flex: 0 0 calc((var(--artist-public-shelf-content-width) - 66px) / 4.35);
   padding-bottom: 10px;
   color: inherit;
   cursor: pointer;
   outline: none;
   text-decoration: none;
-}
-
-.cardSlot:not([href]) {
-  min-width: 0;
-  flex: 0 0 calc((var(--artist-public-shelf-content-width) - 66px) / 4.35);
-}
-
-.cardSlot[href] {
-  min-width: clamp(190px, 15vw, 220px);
-  flex: 0 0 clamp(190px, 15vw, 220px);
 }
 
 .cardSlot > :global(.artist-public-card) {
@@ -136,7 +128,7 @@
 }
 
 @media (max-width: 980px) {
-  .cardSlot:not([href]) {
+  .cardSlot {
     flex-basis: calc((var(--artist-public-shelf-content-width) - 44px) / 3);
   }
 }
@@ -146,18 +138,13 @@
     gap: 16px;
   }
 
-  .cardSlot:not([href]) {
+  .cardSlot {
     flex-basis: calc((var(--artist-public-shelf-content-width) - 16px) / 2);
-  }
-
-  .cardSlot[href] {
-    min-width: 190px;
-    flex-basis: 190px;
   }
 }
 
 @media (max-width: 480px) {
-  .cardSlot:not([href]) {
+  .cardSlot {
     flex-basis: var(--artist-public-shelf-content-width);
   }
 }
