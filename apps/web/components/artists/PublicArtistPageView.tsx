@@ -142,9 +142,6 @@ function PlaylistCard({ playlist }: { playlist: PublicArtistPlaylist }) {
       <div className="artist-public-card-copy">
         <h3>{playlist.name}</h3>
         <p>{formatTrackCount(playlist.track_count)}</p>
-        {playlist.description ? (
-          <div className="artist-public-card-description">{playlist.description}</div>
-        ) : null}
       </div>
     </article>
   );
@@ -704,7 +701,7 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-playlist-card-art {
-          aspect-ratio: 16 / 9;
+          aspect-ratio: 1;
         }
 
         .artist-public-card-art img,
