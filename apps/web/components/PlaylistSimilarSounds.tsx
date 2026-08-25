@@ -200,7 +200,7 @@ export default function PlaylistSimilarSounds() {
               type="button"
               onClick={() => scrollShelf(-1)}
               disabled={!canScrollPrev}
-              className="absolute left-[50px] z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/similar-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              className={`absolute z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/similar-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex ${styles.sideArrowLeft}`}
               style={{ top: imageCenterY }}
               aria-label="Scroll Similar Sounds left"
             >
@@ -211,7 +211,7 @@ export default function PlaylistSimilarSounds() {
               type="button"
               onClick={() => scrollShelf(1)}
               disabled={!canScrollNext}
-              className="absolute right-[50px] z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/similar-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              className={`absolute z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/similar-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex ${styles.sideArrowRight}`}
               style={{ top: imageCenterY }}
               aria-label="Scroll Similar Sounds right"
             >
