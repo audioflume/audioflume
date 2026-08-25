@@ -1,7 +1,7 @@
 .shell {
-  width: min(var(--filmwave-curated-shelf-card-width), 280px);
+  width: var(--filmwave-curated-shelf-card-width);
   min-width: 0;
-  flex: 0 0 min(var(--filmwave-curated-shelf-card-width), 280px);
+  flex: 0 0 var(--filmwave-curated-shelf-card-width);
 }
 
 .card {
@@ -71,7 +71,7 @@
 .image {
   position: relative;
   width: 100%;
-  aspect-ratio: 1 / 1;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border-radius: 0;
   background: var(--bg-secondary);
