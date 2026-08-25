@@ -4,8 +4,8 @@
 
 .card {
   display: block;
-  min-width: clamp(190px, 15vw, 220px);
-  flex: 0 0 clamp(190px, 15vw, 220px);
+  min-width: 230px;
+  flex: 0 0 calc((100% - 66px) / 4.35);
   color: inherit;
   text-decoration: none;
   scroll-snap-align: start;
@@ -127,7 +127,7 @@
 
 @media (max-width: 760px) {
   .card {
-    min-width: 190px;
-    flex-basis: 190px;
+    min-width: 230px;
+    flex-basis: 230px;
   }
 }
