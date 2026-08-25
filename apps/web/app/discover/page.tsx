@@ -254,6 +254,7 @@ function ArtistShelf({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [imageCenterY, setImageCenterY] = useState<number | null>(null);
 
   function updateScrollState() {
     const scroller = scrollerRef.current;
@@ -282,14 +283,26 @@ function ArtistShelf({
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
+    const image = scroller.querySelector<HTMLElement>(
+      ".discover-artist-shelf-media",
+    );
+    const updateImageCenter = () => {
+      setImageCenterY(image ? image.getBoundingClientRect().height / 2 : null);
+    };
+
     updateScrollState();
+    updateImageCenter();
 
     scroller.addEventListener("scroll", updateScrollState, { passive: true });
     window.addEventListener("resize", updateScrollState);
 
+    const resizeObserver = new ResizeObserver(updateImageCenter);
+    if (image) resizeObserver.observe(image);
+
     return () => {
       scroller.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", updateScrollState);
+      resizeObserver.disconnect();
     };
   }, [items.length]);
 
@@ -309,35 +322,63 @@ function ArtistShelf({
         />
       </div>
 
-      <div ref={scrollerRef} className="discover-artist-shelf-scroller">
-        {items.map((item, index) => (
-          <article
-            key={`${title}-${index}`}
-            className={`discover-artist-shelf-card${square ? " is-square" : ""}`}
-          >
-            <PlaceholderMedia
-              index={index + (square ? 2 : 0)}
-              imageSrc={item.image}
-              className="discover-artist-shelf-media"
+      <div className="group/discover-shelf relative left-1/2 w-screen -translate-x-1/2 overflow-hidden">
+        {imageCenterY !== null && (
+          <>
+            <button
+              type="button"
+              onClick={() => scroll("prev")}
+              disabled={!canScrollPrev}
+              className="absolute left-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/discover-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              style={{ top: imageCenterY }}
+              aria-label={`Scroll ${title} left`}
             >
-              <div
-                className="discover-artist-card-overlay"
-                style={!item.image ? { background: "transparent" } : undefined}
-              >
-                <div>
-                  <strong>{item.title}</strong>
-                  <span>{item.subtitle}</span>
-                </div>
-                <PlayBadge />
-              </div>
-            </PlaceholderMedia>
+              <ChevronLeftIcon size={18} />
+            </button>
 
-            <div className="discover-artist-card-meta">
-              <strong>{item.title}</strong>
-              <span>{item.subtitle}</span>
-            </div>
-          </article>
-        ))}
+            <button
+              type="button"
+              onClick={() => scroll("next")}
+              disabled={!canScrollNext}
+              className="absolute right-8 z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/discover-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex"
+              style={{ top: imageCenterY }}
+              aria-label={`Scroll ${title} right`}
+            >
+              <ChevronRightIcon size={18} />
+            </button>
+          </>
+        )}
+
+        <div ref={scrollerRef} className="discover-artist-shelf-scroller">
+          {items.map((item, index) => (
+            <article
+              key={`${title}-${index}`}
+              className={`discover-artist-shelf-card${square ? " is-square" : ""}`}
+            >
+              <PlaceholderMedia
+                index={index + (square ? 2 : 0)}
+                imageSrc={item.image}
+                className="discover-artist-shelf-media"
+              >
+                <div
+                  className="discover-artist-card-overlay"
+                  style={!item.image ? { background: "transparent" } : undefined}
+                >
+                  <div>
+                    <strong>{item.title}</strong>
+                    <span>{item.subtitle}</span>
+                  </div>
+                  <PlayBadge />
+                </div>
+              </PlaceholderMedia>
+
+              <div className="discover-artist-card-meta">
+                <strong>{item.title}</strong>
+                <span>{item.subtitle}</span>
+              </div>
+            </article>
+          ))}
+        </div>
       </div>
 
       {footerCopy && (
