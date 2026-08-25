@@ -484,7 +484,6 @@
   overflow-x: auto;
   overflow-y: hidden;
   gap: 10px;
-  margin-left: calc(var(--discover-artist-content-inset) * -1);
   padding-right: var(--discover-artist-content-inset);
   padding-left: var(--discover-artist-content-inset);
   scroll-behavior: smooth;
