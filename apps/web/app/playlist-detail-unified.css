@@ -369,7 +369,7 @@
 }
 
 .playlist-detail-section {
-  margin: 35px 0 0;
+  margin: var(--playlist-detail-section-gap) 0 0;
   background: var(--filmwave-white);
   padding: var(--filmwave-page-gutter);
 }
