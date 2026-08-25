@@ -1,7 +1,7 @@
 .shell {
-  width: var(--filmwave-curated-shelf-card-width);
+  width: min(var(--filmwave-curated-shelf-card-width), 300px);
   min-width: 0;
-  flex: 0 0 var(--filmwave-curated-shelf-card-width);
+  flex: 0 0 min(var(--filmwave-curated-shelf-card-width), 300px);
 }
 
 .card {
