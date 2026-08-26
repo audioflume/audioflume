@@ -23,6 +23,20 @@ type CommunityPlaylistSavePayload = {
   error?: string;
 };
 
+function BookmarkGlyph() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path
+        d="M5.5 3.25h9v13.5L10 14l-4.5 2.75V3.25Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function ShareGlyph() {
   return (
     <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
@@ -272,6 +286,16 @@ export default function CommunityPlaylistDetailChrome() {
           <button
             type="button"
             className={artistDrawerStyles.roundAction}
+            onClick={() => void saveToPlaylists()}
+            disabled={savingToPlaylists}
+            aria-label="Save community playlist to My Playlists"
+          >
+            <BookmarkGlyph />
+          </button>
+
+          <button
+            type="button"
+            className={artistDrawerStyles.roundAction}
             onClick={() => void sharePlaylist()}
             aria-label="Share community playlist"
           >
@@ -298,14 +322,6 @@ export default function CommunityPlaylistDetailChrome() {
                 </button>
               )}
             >
-              <button
-                type="button"
-                role="menuitem"
-                disabled={savingToPlaylists}
-                onClick={() => void saveToPlaylists()}
-              >
-                {savingToPlaylists ? "Saving…" : "Save to Playlists"}
-              </button>
               <button
                 type="button"
                 role="menuitem"
