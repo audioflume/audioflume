@@ -8,6 +8,7 @@ import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import FilterTags from "@/components/FilterTags";
+import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
@@ -193,7 +194,7 @@ export default function PlaylistDetailPage() {
   const params = useParams();
   const router = useRouter();
   const searchParams = useSearchParams();
-  const { currentSong, setQueue } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const { favoriteIdSet } = useFavorites();
   const { playlists, setPlaylists, loading: playlistsLoading } = usePlaylists();
 
@@ -274,6 +275,10 @@ export default function PlaylistDetailPage() {
     () => buildSimilarSoundsHref(similarSoundTags),
     [similarSoundTags],
   );
+  const currentSongInPlaylist = Boolean(
+    currentSong && songs.some((song) => song.id === currentSong.id),
+  );
+  const playlistIsPlaying = currentSongInPlaylist && isPlaying;
 
   useEffect(() => {
     if (!playlistId) return;
@@ -347,6 +352,14 @@ export default function PlaylistDetailPage() {
       '[aria-label="Play song"], [aria-label="Pause song"]',
     );
     firstSongButton?.click();
+  }
+
+  function toggleCoverPlayback() {
+    if (playlistIsPlaying && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+    playFirstSong();
   }
 
   const showToast = (message: string) => {
@@ -531,12 +544,17 @@ export default function PlaylistDetailPage() {
 
                     <button
                       type="button"
-                      onClick={playFirstSong}
+                      onClick={toggleCoverPlayback}
                       disabled={filteredSongs.length === 0}
                       className="playlist-detail-cover-play-button"
-                      aria-label={`Play ${playlist.name}`}
+                      aria-label={`${playlistIsPlaying ? "Pause" : "Play"} ${playlist.name}`}
+                      aria-pressed={playlistIsPlaying}
                     >
-                      <PlayIconSmall size={18} />
+                      {playlistIsPlaying ? (
+                        <PauseIcon size={18} />
+                      ) : (
+                        <PlayIconSmall size={18} />
+                      )}
                     </button>
                   </div>
 
