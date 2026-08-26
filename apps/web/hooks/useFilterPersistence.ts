@@ -47,6 +47,12 @@ type UseFilterPersistenceProps = {
   authLoaded: boolean;
 };
 
+type LocationFilterOverrides = {
+  search: string;
+  selectedGenres: string[];
+  selectedMoods: string[];
+};
+
 const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 
@@ -139,14 +145,35 @@ function getDefaultState(): MusicFilterState {
   };
 }
 
-function consumeLocationSearch() {
-  if (typeof window === "undefined") return "";
+function getLocationFilterValues(searchParams: URLSearchParams, key: string) {
+  return [
+    ...new Set(
+      searchParams
+        .getAll(key)
+        .map((value) => value.trim())
+        .filter(Boolean),
+    ),
+  ];
+}
+
+function consumeLocationFilters(): LocationFilterOverrides {
+  if (typeof window === "undefined") {
+    return { search: "", selectedGenres: [], selectedMoods: [] };
+  }
 
   const url = new URL(window.location.href);
   const search = url.searchParams.get("search")?.trim() ?? "";
+  const selectedGenres = getLocationFilterValues(url.searchParams, "genre");
+  const selectedMoods = getLocationFilterValues(url.searchParams, "mood");
 
-  if (url.searchParams.has("search")) {
+  if (
+    url.searchParams.has("search") ||
+    url.searchParams.has("genre") ||
+    url.searchParams.has("mood")
+  ) {
     url.searchParams.delete("search");
+    url.searchParams.delete("genre");
+    url.searchParams.delete("mood");
     window.history.replaceState(
       window.history.state,
       "",
@@ -154,7 +181,7 @@ function consumeLocationSearch() {
     );
   }
 
-  return search;
+  return { search, selectedGenres, selectedMoods };
 }
 
 function getEditPointMarkerVisibilityFromEvent(event: Event) {
@@ -195,6 +222,22 @@ export function useFilterPersistence(
     typeof window === "undefined"
       ? null
       : new URLSearchParams(window.location.search).get("search")?.trim() || null,
+  );
+  const pendingLocationGenresRef = useRef<string[]>(
+    typeof window === "undefined"
+      ? []
+      : getLocationFilterValues(
+          new URLSearchParams(window.location.search),
+          "genre",
+        ),
+  );
+  const pendingLocationMoodsRef = useRef<string[]>(
+    typeof window === "undefined"
+      ? []
+      : getLocationFilterValues(
+          new URLSearchParams(window.location.search),
+          "mood",
+        ),
   );
   const [hydrated, setHydrated] = useState(false);
   const [hydratedKey, setHydratedKey] = useState<string | null>(null);
@@ -367,21 +410,49 @@ export function useFilterPersistence(
     if (!authLoaded) return;
     if (hydrated && hydratedKey === storageKey) return;
 
-    const locationSearch = consumeLocationSearch();
-    if (locationSearch) pendingLocationSearchRef.current = locationSearch;
+    const locationFilters = consumeLocationFilters();
+    if (locationFilters.search) {
+      pendingLocationSearchRef.current = locationFilters.search;
+    }
+    if (locationFilters.selectedGenres.length > 0) {
+      pendingLocationGenresRef.current = locationFilters.selectedGenres;
+    }
+    if (locationFilters.selectedMoods.length > 0) {
+      pendingLocationMoodsRef.current = locationFilters.selectedMoods;
+    }
+
     const hydrationSearch =
-      locationSearch || pendingLocationSearchRef.current || "";
-    const withHydrationSearch = (state: MusicFilterState): MusicFilterState => ({
-      ...state,
-      search: hydrationSearch,
-    });
+      locationFilters.search || pendingLocationSearchRef.current || "";
+    const hydrationGenres =
+      locationFilters.selectedGenres.length > 0
+        ? locationFilters.selectedGenres
+        : pendingLocationGenresRef.current;
+    const hydrationMoods =
+      locationFilters.selectedMoods.length > 0
+        ? locationFilters.selectedMoods
+        : pendingLocationMoodsRef.current;
+    const hasExploreFilters =
+      hydrationGenres.length > 0 || hydrationMoods.length > 0;
+    const withLocationFilters = (state: MusicFilterState): MusicFilterState =>
+      hasExploreFilters
+        ? {
+            ...baseDefaultState,
+            search: hydrationSearch,
+            selectedGenres: hydrationGenres,
+            selectedMoods: hydrationMoods,
+            showEditPointMarkers: getStoredEditPointMarkerVisibility(),
+          }
+        : {
+            ...state,
+            search: hydrationSearch,
+          };
 
     setHydrated(false);
     setHydratedKey(null);
     sessionStorage.removeItem("filmwave-music-filters");
 
     if (!storageKey) {
-      const defaultState = withHydrationSearch(getDefaultState());
+      const defaultState = withLocationFilters(getDefaultState());
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
@@ -393,7 +464,7 @@ export function useFilterPersistence(
     const saved = sessionStorage.getItem(storageKey);
 
     if (!saved) {
-      const defaultState = withHydrationSearch(getDefaultState());
+      const defaultState = withLocationFilters(getDefaultState());
 
       setFilters(defaultState);
       notifyCuePointFilterSelection(defaultState.selectedEditPoints);
@@ -403,14 +474,14 @@ export function useFilterPersistence(
     }
 
     try {
-      const normalizedState = withHydrationSearch(
+      const normalizedState = withLocationFilters(
         normalizeFilterState(JSON.parse(saved)),
       );
 
       setFilters(normalizedState);
       notifyCuePointFilterSelection(normalizedState.selectedEditPoints);
     } catch {
-      const defaultState = withHydrationSearch(getDefaultState());
+      const defaultState = withLocationFilters(getDefaultState());
 
       sessionStorage.removeItem(storageKey);
       setFilters(defaultState);
@@ -426,6 +497,8 @@ export function useFilterPersistence(
     if (storageKey && hydratedKey !== storageKey) return;
 
     pendingLocationSearchRef.current = null;
+    pendingLocationGenresRef.current = [];
+    pendingLocationMoodsRef.current = [];
   }, [hydrated, hydratedKey, storageKey]);
 
   useEffect(() => {
