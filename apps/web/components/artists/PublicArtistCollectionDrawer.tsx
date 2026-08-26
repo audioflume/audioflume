@@ -1,6 +1,7 @@
 "use client";
 
 import { MusicListShell } from "@filmwave/shared";
+import Link from "next/link";
 import { useMemo } from "react";
 
 import SongCard from "@/components/SongCard";
@@ -17,6 +18,7 @@ type PublicArtistCollection = PublicArtistRelease | PublicArtistPlaylist;
 
 type PublicArtistCollectionDrawerProps = {
   id: string;
+  artistSlug: string | null;
   collection: PublicArtistCollection;
   songs: Song[];
   onClose: () => void;
@@ -61,6 +63,26 @@ function ShareGlyph() {
   );
 }
 
+function NortheastArrowGlyph() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 17L17 7"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9 7H17V15"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function CloseGlyph() {
   return (
     <svg width="19" height="19" viewBox="0 0 12 12" fill="none" aria-hidden="true">
@@ -75,6 +97,7 @@ function CloseGlyph() {
 
 export default function PublicArtistCollectionDrawer({
   id,
+  artistSlug,
   collection,
   songs,
   onClose,
@@ -97,6 +120,12 @@ export default function PublicArtistCollectionDrawer({
         .join(" · ")
     : formatTrackCount(collection.track_count);
   const description = release ? null : collection.description;
+  const albumHref =
+    release && collection.release_type === "album" && artistSlug
+      ? `/artists/${encodeURIComponent(artistSlug)}/albums/${encodeURIComponent(
+          collection.id,
+        )}`
+      : null;
 
   function handlePlayAll() {
     const firstSong = playableSongs[0];
@@ -170,6 +199,13 @@ export default function PublicArtistCollectionDrawer({
           >
             <CloseGlyph />
           </button>
+
+          {albumHref ? (
+            <Link href={albumHref} className={styles.viewAlbumLink}>
+              View Album Page
+              <NortheastArrowGlyph />
+            </Link>
+          ) : null}
         </div>
 
         <div className={styles.tracks}>
