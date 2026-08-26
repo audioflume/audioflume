@@ -349,6 +349,11 @@ export default function PlaylistDetailPage() {
     firstSongButton?.click();
   }
 
+  const showToast = (message: string) => {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  };
+
   async function sharePlaylist() {
     if (!playlist) return;
     const url = window.location.href;
@@ -356,18 +361,19 @@ export default function PlaylistDetailPage() {
     try {
       if (navigator.share) {
         await navigator.share({ title: playlist.name, url });
+        showToast("Playlist shared");
         return;
       }
-      await navigator.clipboard?.writeText(url);
-    } catch {
-      // Sharing was cancelled or unavailable.
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard unavailable");
+      }
+      await navigator.clipboard.writeText(url);
+      showToast("Playlist link copied");
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      showToast("Could not share playlist");
     }
   }
-
-  const showToast = (message: string) => {
-    setToastMessage(message);
-    window.setTimeout(() => setToastMessage(null), 1800);
-  };
 
   const handleSaveEdit = async () => {
     if (!editingPlaylist || isSavingPlaylist) return;
@@ -385,6 +391,7 @@ export default function PlaylistDetailPage() {
       const data = text ? JSON.parse(text) : null;
       if (!res.ok) {
         console.error("Failed to save playlist:", data || res.statusText);
+        showToast(data?.error || "Couldn't save playlist");
         return;
       }
       setPlaylists((prev) =>
@@ -400,6 +407,8 @@ export default function PlaylistDetailPage() {
       );
       showToast("Changes saved");
       setEditingPlaylist(null);
+    } catch {
+      showToast("Couldn't save playlist");
     } finally {
       setIsSavingPlaylist(false);
     }
@@ -420,13 +429,18 @@ export default function PlaylistDetailPage() {
       const res = await fetch(`/api/playlists/${playlistIdToDelete}`, {
         method: "DELETE",
       });
-      if (res.ok) {
-        setPlaylists((prev) =>
-          prev.filter((item) => item.id !== playlistIdToDelete),
-        );
-        showToast("Playlist deleted");
-        router.push("/playlists");
+      if (!res.ok) {
+        const data = await res.json().catch(() => null);
+        showToast(data?.error || "Couldn't delete playlist");
+        return;
       }
+      setPlaylists((prev) =>
+        prev.filter((item) => item.id !== playlistIdToDelete),
+      );
+      showToast("Playlist deleted");
+      router.push("/playlists");
+    } catch {
+      showToast("Couldn't delete playlist");
     } finally {
       setDeletingPlaylistId(null);
     }
