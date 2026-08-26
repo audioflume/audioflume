@@ -493,7 +493,7 @@ export default function CuratedPlaylistDetailPage() {
                       <button
                         type="button"
                         onClick={() => void saveToMyPlaylists()}
-                        disabled={savingToPlaylists || savedToPlaylists}
+                        disabled={savingToPlaylists}
                         className={artistDrawerStyles.roundAction}
                         aria-label={
                           savedToPlaylists
