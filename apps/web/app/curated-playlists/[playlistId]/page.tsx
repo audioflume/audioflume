@@ -8,7 +8,6 @@ import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import FilterTags from "@/components/FilterTags";
-import HeartIcon from "@/components/icons/HeartIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
@@ -41,6 +40,20 @@ type SimilarSoundTag = {
   type: "genre" | "mood";
   value: string;
 };
+
+function BookmarkGlyph({ filled }: { filled: boolean }) {
+  return (
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <path
+        d="M5.5 3.25h9v13.5L10 14l-4.5 2.75V3.25Z"
+        fill={filled ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function ShareGlyph() {
   return (
@@ -520,7 +533,7 @@ export default function CuratedPlaylistDetailPage() {
                         }
                         aria-pressed={savedToPlaylists}
                       >
-                        <HeartIcon size={15} filled={savedToPlaylists} />
+                        <BookmarkGlyph filled={savedToPlaylists} />
                       </button>
                       <button
                         type="button"
