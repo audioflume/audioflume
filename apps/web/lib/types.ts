@@ -29,6 +29,7 @@ export type Playlist = FilmwavePlaylist & {
   primary_category: string | null;
   secondary_categories: string[];
   source_type?: PlaylistSourceType;
+  source_playlist_id?: number | null;
 };
 
 export type PlaylistSong = FilmwavePlaylistSong;

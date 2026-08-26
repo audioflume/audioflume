@@ -25,19 +25,55 @@ function parseCoverImageUrl(value: unknown): string | null | undefined {
   }
 }
 
-function getPlaylistSourceType(req: Request): PlaylistSourceType {
+type PlaylistSourceReference = {
+  sourceType: PlaylistSourceType;
+  sourcePlaylistId: number | null;
+};
+
+function getPlaylistSourceReference(req: Request): PlaylistSourceReference {
   const referer = req.headers.get("referer");
-  if (!referer) return "user";
+  if (!referer) {
+    return { sourceType: "user", sourcePlaylistId: null };
+  }
 
   try {
     const pathname = new URL(referer).pathname;
-    if (/^\/curated-playlists\/[^/]+\/?$/.test(pathname)) return "curated";
-    if (/^\/community-playlists\/[^/]+\/?$/.test(pathname)) return "community";
+    const curatedMatch = pathname.match(/^\/curated-playlists\/(\d+)\/?$/);
+    if (curatedMatch) {
+      return {
+        sourceType: "curated",
+        sourcePlaylistId: Number(curatedMatch[1]),
+      };
+    }
+
+    const communityMatch = pathname.match(/^\/community-playlists\/(\d+)\/?$/);
+    if (communityMatch) {
+      return {
+        sourceType: "community",
+        sourcePlaylistId: Number(communityMatch[1]),
+      };
+    }
   } catch {
-    return "user";
+    return { sourceType: "user", sourcePlaylistId: null };
   }
 
-  return "user";
+  return { sourceType: "user", sourcePlaylistId: null };
+}
+
+function getSourceKey(value: {
+  source_type?: unknown;
+  source_playlist_id?: unknown;
+}) {
+  if (value.source_type !== "curated" && value.source_type !== "community") {
+    return null;
+  }
+
+  const sourcePlaylistId = Number(value.source_playlist_id);
+  if (!Number.isInteger(sourcePlaylistId) || sourcePlaylistId <= 0) {
+    return null;
+  }
+
+  return `${value.source_type}:${sourcePlaylistId}`;
 }
 
 export async function GET() {
@@ -51,10 +87,20 @@ export async function GET() {
     let playlistsResult = await supabaseServer
       .from("playlists")
       .select(
-        "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories, source_type",
+        "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories, source_type, source_playlist_id",
       )
       .eq("clerk_user_id", userId)
       .order("position", { ascending: true });
+
+    if (playlistsResult.error) {
+      playlistsResult = await supabaseServer
+        .from("playlists")
+        .select(
+          "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories, source_type",
+        )
+        .eq("clerk_user_id", userId)
+        .order("position", { ascending: true });
+    }
 
     if (playlistsResult.error) {
       playlistsResult = await supabaseServer
@@ -87,6 +133,7 @@ export async function GET() {
       throw coversResult.error;
     }
 
+    const playlistRows = playlistsResult.data ?? [];
     const coversByPlaylistId = new Map(
       (coversResult.data ?? []).map((playlist) => [
         Number(playlist.id),
@@ -94,14 +141,107 @@ export async function GET() {
       ]),
     );
 
-    return NextResponse.json(
-      (playlistsResult.data ?? []).map((playlist) =>
-        normalizePlaylist({
-          ...playlist,
-          cover_image_url:
-            coversByPlaylistId.get(Number(playlist.id)) ?? null,
-        }),
+    const curatedSourceIds = [
+      ...new Set(
+        playlistRows
+          .filter((playlist) => playlist.source_type === "curated")
+          .map((playlist) => Number(playlist.source_playlist_id))
+          .filter(
+            (sourcePlaylistId) =>
+              Number.isInteger(sourcePlaylistId) && sourcePlaylistId > 0,
+          ),
       ),
+    ];
+    const communitySourceIds = [
+      ...new Set(
+        playlistRows
+          .filter((playlist) => playlist.source_type === "community")
+          .map((playlist) => Number(playlist.source_playlist_id))
+          .filter(
+            (sourcePlaylistId) =>
+              Number.isInteger(sourcePlaylistId) && sourcePlaylistId > 0,
+          ),
+      ),
+    ];
+
+    const curatedCoversById = new Map<number, string | null>();
+    if (curatedSourceIds.length > 0) {
+      const { data: curatedSources, error: curatedSourcesError } =
+        await supabaseServer
+          .from("curated_playlists")
+          .select("id, cover_image_url")
+          .in("id", curatedSourceIds);
+
+      if (!curatedSourcesError) {
+        for (const source of curatedSources ?? []) {
+          curatedCoversById.set(
+            Number(source.id),
+            typeof source.cover_image_url === "string" && source.cover_image_url.trim()
+              ? source.cover_image_url
+              : null,
+          );
+        }
+      }
+    }
+
+    const communityCoversById = new Map<number, string | null>();
+    if (communitySourceIds.length > 0) {
+      const { data: communitySources, error: communitySourcesError } =
+        await supabaseServer
+          .from("playlists")
+          .select("id, cover_image_url")
+          .in("id", communitySourceIds)
+          .eq("is_public", true);
+
+      if (!communitySourcesError) {
+        for (const source of communitySources ?? []) {
+          communityCoversById.set(
+            Number(source.id),
+            typeof source.cover_image_url === "string" && source.cover_image_url.trim()
+              ? source.cover_image_url
+              : null,
+          );
+        }
+      }
+    }
+
+    const seenSourceKeys = new Set<string>();
+    const visiblePlaylistRows = playlistRows.filter((playlist) => {
+      const sourceKey = getSourceKey(playlist);
+      if (!sourceKey) return true;
+      if (seenSourceKeys.has(sourceKey)) return false;
+      seenSourceKeys.add(sourceKey);
+      return true;
+    });
+
+    return NextResponse.json(
+      visiblePlaylistRows.map((playlist) => {
+        const sourcePlaylistId = Number(playlist.source_playlist_id);
+        const storedCover =
+          coversByPlaylistId.get(Number(playlist.id)) ?? null;
+        let resolvedCover = storedCover;
+
+        if (
+          playlist.source_type === "curated" &&
+          Number.isInteger(sourcePlaylistId) &&
+          sourcePlaylistId > 0
+        ) {
+          resolvedCover =
+            curatedCoversById.get(sourcePlaylistId) ?? storedCover;
+        } else if (
+          playlist.source_type === "community" &&
+          Number.isInteger(sourcePlaylistId) &&
+          sourcePlaylistId > 0
+        ) {
+          resolvedCover =
+            communityCoversById.get(sourcePlaylistId) ?? storedCover;
+        }
+
+        return normalizePlaylist({
+          ...playlist,
+          cover_image_url: resolvedCover,
+        });
+      }),
     );
   } catch (err) {
     console.error("Supabase playlists fetch error:", err);
@@ -143,13 +283,87 @@ export async function POST(req: Request) {
       );
     }
 
-    const coverImageUrl = parseCoverImageUrl(body.cover_image_url);
+    let coverImageUrl = parseCoverImageUrl(body.cover_image_url);
 
     if (coverImageUrl === undefined) {
       return NextResponse.json(
         { error: "Playlist cover must be an uploaded image URL" },
         { status: 400 },
       );
+    }
+
+    const sourceReference = getPlaylistSourceReference(req);
+
+    if (
+      sourceReference.sourceType !== "user" &&
+      sourceReference.sourcePlaylistId !== null
+    ) {
+      if (sourceReference.sourceType === "curated") {
+        const { data: sourcePlaylist, error: sourceError } = await supabaseServer
+          .from("curated_playlists")
+          .select("id, cover_image_url")
+          .eq("id", sourceReference.sourcePlaylistId)
+          .maybeSingle();
+
+        if (sourceError) throw sourceError;
+        if (!sourcePlaylist) {
+          return NextResponse.json(
+            { error: "Curated playlist not found" },
+            { status: 404 },
+          );
+        }
+
+        const sourceCover = parseCoverImageUrl(sourcePlaylist.cover_image_url);
+        if (sourceCover !== undefined) {
+          coverImageUrl = sourceCover;
+        }
+      } else {
+        const { data: sourcePlaylist, error: sourceError } = await supabaseServer
+          .from("playlists")
+          .select("id, cover_image_url")
+          .eq("id", sourceReference.sourcePlaylistId)
+          .eq("is_public", true)
+          .maybeSingle();
+
+        if (sourceError) throw sourceError;
+        if (!sourcePlaylist) {
+          return NextResponse.json(
+            { error: "Community playlist not found" },
+            { status: 404 },
+          );
+        }
+
+        const sourceCover = parseCoverImageUrl(sourcePlaylist.cover_image_url);
+        if (sourceCover !== undefined) {
+          coverImageUrl = sourceCover;
+        }
+      }
+
+      const { data: existingSourcePlaylists, error: existingSourceError } =
+        await supabaseServer
+          .from("playlists")
+          .select(
+            "id, clerk_user_id, name, cover_image_url, position, is_public, published_at, primary_category, secondary_categories, source_type, source_playlist_id",
+          )
+          .eq("clerk_user_id", userId)
+          .eq("source_type", sourceReference.sourceType)
+          .eq("source_playlist_id", sourceReference.sourcePlaylistId)
+          .order("id", { ascending: true })
+          .limit(1);
+
+      if (existingSourceError) {
+        throw existingSourceError;
+      }
+
+      if (existingSourcePlaylists?.[0]) {
+        return NextResponse.json(
+          {
+            error: `"${cleanName}" is already in My Playlists`,
+            playlist: normalizePlaylist(existingSourcePlaylists[0]),
+          },
+          { status: 409 },
+        );
+      }
     }
 
     const { data: existingPlaylists, error: positionError } =
@@ -175,7 +389,8 @@ export async function POST(req: Request) {
         clerk_user_id: userId,
         name: cleanName,
         cover_image_url: coverImageUrl,
-        source_type: getPlaylistSourceType(req),
+        source_type: sourceReference.sourceType,
+        source_playlist_id: sourceReference.sourcePlaylistId,
         position:
           typeof body.position === "number" && Number.isFinite(body.position)
             ? body.position

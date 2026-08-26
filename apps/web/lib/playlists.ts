@@ -6,6 +6,7 @@ import {
 
 export function normalizePlaylist(value: unknown): Playlist {
   const playlist = value as Partial<Playlist>;
+  const sourcePlaylistId = Number(playlist.source_playlist_id);
 
   return {
     id: Number(playlist.id),
@@ -36,6 +37,10 @@ export function normalizePlaylist(value: unknown): Playlist {
       playlist.source_type === "curated" || playlist.source_type === "community"
         ? playlist.source_type
         : "user",
+    source_playlist_id:
+      Number.isInteger(sourcePlaylistId) && sourcePlaylistId > 0
+        ? sourcePlaylistId
+        : null,
   };
 }
 
