@@ -4,6 +4,7 @@ import DropdownShell from "@/components/DropdownShell";
 import EditPlaylistModal from "@/components/EditPlaylistModal";
 import PublishPlaylistModal from "@/components/PublishPlaylistModal";
 import MoreIcon from "@/components/icons/MoreIcon";
+import PublicPlaylistIcon from "@/components/icons/PublicPlaylistIcon";
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
@@ -11,6 +12,8 @@ import type { CommunityPlaylistCategory } from "@/lib/communityPlaylistCategorie
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+
+import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
 
 function parseResponse(text: string) {
   if (!text) return null;
@@ -310,62 +313,85 @@ export default function PlaylistDetailActionsMenu() {
 
   const menu = actionsTarget
     ? createPortal(
-        <div className="playlist-detail-more-menu">
-          <DropdownShell
-            open={menuOpen}
-            onOpenChange={setMenuOpen}
-            placement="bottom-end"
-            className="playlist-detail-more-dropdown"
-            offsetAmount={8}
-            collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
-            trigger={({ open }) => (
-              <button
-                type="button"
-                className={`playlist-detail-more-button${open ? " is-active" : ""}`}
-                aria-label={
-                  playlist ? `More actions for ${playlist.name}` : "More playlist actions"
-                }
-                aria-expanded={open}
-                title="More"
-              >
-                <MoreIcon />
-              </button>
-            )}
-          >
+        <>
+          {playlist && (
             <button
               type="button"
-              role="menuitem"
-              onClick={() => void copyPlaylistLink()}
+              className={artistDrawerStyles.roundAction}
+              onClick={togglePublic}
+              disabled={visibilitySaving}
+              aria-label={
+                playlist.is_public
+                  ? `Make ${playlist.name} private`
+                  : `Make ${playlist.name} public`
+              }
+              aria-pressed={playlist.is_public}
+              title={playlist.is_public ? "Make Private" : "Make Public"}
             >
-              Copy Link
+              <PublicPlaylistIcon
+                size={15}
+                title={playlist.is_public ? "Public playlist" : "Make playlist public"}
+              />
             </button>
-            {playlist && (
-              <>
-                <button type="button" role="menuitem" onClick={openEditModal}>
-                  Edit
-                </button>
-                <button type="button" role="menuitem" onClick={startRename}>
-                  Rename
-                </button>
+          )}
+
+          <div className="playlist-detail-more-menu">
+            <DropdownShell
+              open={menuOpen}
+              onOpenChange={setMenuOpen}
+              placement="bottom-end"
+              className="playlist-detail-more-dropdown"
+              offsetAmount={8}
+              collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+              trigger={({ open }) => (
                 <button
                   type="button"
-                  role="menuitem"
-                  disabled={visibilitySaving}
-                  onClick={togglePublic}
+                  className={`playlist-detail-more-button${open ? " is-active" : ""}`}
+                  aria-label={
+                    playlist ? `More actions for ${playlist.name}` : "More playlist actions"
+                  }
+                  aria-expanded={open}
+                  title="More"
                 >
-                  {playlist.is_public ? "Make Private" : "Make Public"}
+                  <MoreIcon />
                 </button>
-                <button
-                  type="button"
-                  role="menuitem"
-                  onClick={() => void deletePlaylist()}
-                >
-                  Delete
-                </button>
-              </>
-            )}
-          </DropdownShell>
-        </div>,
+              )}
+            >
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => void copyPlaylistLink()}
+              >
+                Copy Link
+              </button>
+              {playlist && (
+                <>
+                  <button type="button" role="menuitem" onClick={openEditModal}>
+                    Edit
+                  </button>
+                  <button type="button" role="menuitem" onClick={startRename}>
+                    Rename
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    disabled={visibilitySaving}
+                    onClick={togglePublic}
+                  >
+                    {playlist.is_public ? "Make Private" : "Make Public"}
+                  </button>
+                  <button
+                    type="button"
+                    role="menuitem"
+                    onClick={() => void deletePlaylist()}
+                  >
+                    Delete
+                  </button>
+                </>
+              )}
+            </DropdownShell>
+          </div>
+        </>,
         actionsTarget,
       )
     : null;
