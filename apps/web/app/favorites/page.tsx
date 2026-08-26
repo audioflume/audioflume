@@ -6,6 +6,7 @@ import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import FilterTags from "@/components/FilterTags";
 import HeartIcon from "@/components/icons/HeartIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
@@ -92,7 +93,7 @@ export default function FavoritesPage() {
     refetchSongs,
   } = useSongs();
   const { favoriteIds, favoriteIdSet, favoritesLoaded } = useFavorites();
-  const { currentSong, setQueue } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playerVisible = !!currentSong;
   const searchInputRef = useRef<HTMLInputElement>(null);
 
@@ -175,6 +176,10 @@ export default function FavoritesPage() {
   const showSongSkeleton = !songsError && (!favoritesLoaded || songsLoading);
   const hasAnyFavorites = favoriteIdSet.size > 0;
   const shuffleActive = shuffleOrderIds !== null;
+  const currentSongInFavorites = Boolean(
+    currentSong && favoriteSongs.some((song) => song.id === currentSong.id),
+  );
+  const favoritesIsPlaying = currentSongInFavorites && isPlaying;
 
   useEffect(() => {
     setQueue(displayedSongs.filter((song) => song.audioUrl));
@@ -192,6 +197,14 @@ export default function FavoritesPage() {
       '[aria-label="Play song"], [aria-label="Pause song"]',
     );
     firstSongButton?.click();
+  }
+
+  function toggleFavoritesPlayback() {
+    if (favoritesIsPlaying && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+    playFirstSong();
   }
 
   function shuffleFavorites() {
@@ -276,12 +289,17 @@ export default function FavoritesPage() {
                 <div className="playlist-detail-actions">
                   <button
                     type="button"
-                    onClick={playFirstSong}
+                    onClick={toggleFavoritesPlayback}
                     disabled={displayedSongs.length === 0}
                     className={artistDrawerStyles.roundAction}
-                    aria-label="Play Favorites"
+                    aria-label={`${favoritesIsPlaying ? "Pause" : "Play"} Favorites`}
+                    aria-pressed={favoritesIsPlaying}
                   >
-                    <PlayIconSmall size={15} />
+                    {favoritesIsPlaying ? (
+                      <PauseIcon size={15} />
+                    ) : (
+                      <PlayIconSmall size={15} />
+                    )}
                   </button>
                   <button
                     type="button"
