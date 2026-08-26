@@ -25,6 +25,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
 import "@/app/music/music-library-redesign.css";
 import "@/app/playlist-detail-unified.css";
+import "./curated-playlist-detail.css";
 
 const QUICK_FILTERS = [
   { label: "Default", value: "default" },
@@ -186,8 +187,9 @@ export default function CuratedPlaylistDetailPage() {
   const [quickFilter, setQuickFilter] = useState<QuickFilterValue>("default");
   const [error, setError] = useState("");
   const [savingToPlaylists, setSavingToPlaylists] = useState(false);
-  const [savedToPlaylists, setSavedToPlaylists] = useState(false);
+  const [savedPlaylistId, setSavedPlaylistId] = useState<number | string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const savedToPlaylists = savedPlaylistId !== null;
 
   useEffect(() => {
     let cancelled = false;
@@ -218,7 +220,7 @@ export default function CuratedPlaylistDetailPage() {
         if (!cancelled) {
           setPlaylist(playlistData);
           setSongs(songsData);
-          setSavedToPlaylists(false);
+          setSavedPlaylistId(null);
         }
       } catch (err) {
         if (!cancelled) {
@@ -309,12 +311,28 @@ export default function CuratedPlaylistDetailPage() {
     window.setTimeout(() => setToastMessage(null), 1800);
   }
 
-  async function saveToMyPlaylists() {
-    if (!playlist || savingToPlaylists || savedToPlaylists) return;
+  async function toggleMyPlaylistsSave() {
+    if (!playlist || savingToPlaylists) return;
 
     setSavingToPlaylists(true);
 
     try {
+      if (savedPlaylistId !== null) {
+        const removeRes = await fetch(
+          `/api/playlists/${encodeURIComponent(String(savedPlaylistId))}`,
+          { method: "DELETE" },
+        );
+        const removeData = await removeRes.json().catch(() => null);
+
+        if (!removeRes.ok) {
+          throw new Error(removeData?.error || "Failed to remove playlist");
+        }
+
+        setSavedPlaylistId(null);
+        showToast(`"${playlist.name}" removed from My Playlists`);
+        return;
+      }
+
       const createRes = await fetch("/api/playlists", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -346,11 +364,11 @@ export default function CuratedPlaylistDetailPage() {
         }
       }
 
-      setSavedToPlaylists(true);
+      setSavedPlaylistId(newPlaylist.id);
       showToast(`"${playlist.name}" added to My Playlists`);
     } catch (saveError) {
       showToast(
-        saveError instanceof Error ? saveError.message : "Failed to add playlist",
+        saveError instanceof Error ? saveError.message : "Failed to update playlist",
       );
     } finally {
       setSavingToPlaylists(false);
@@ -459,10 +477,10 @@ export default function CuratedPlaylistDetailPage() {
                       type="button"
                       onClick={playFirstSong}
                       disabled={filteredSongs.length === 0}
-                      className={`${artistDrawerStyles.roundAction} playlist-detail-cover-play-button`}
+                      className="playlist-detail-cover-play-button"
                       aria-label={`Play ${playlist?.name || "playlist"}`}
                     >
-                      <PlayIconSmall size={15} />
+                      <PlayIconSmall size={18} />
                     </button>
                   </div>
 
@@ -492,12 +510,12 @@ export default function CuratedPlaylistDetailPage() {
                     <div className="playlist-detail-actions">
                       <button
                         type="button"
-                        onClick={() => void saveToMyPlaylists()}
+                        onClick={() => void toggleMyPlaylistsSave()}
                         disabled={savingToPlaylists}
                         className={artistDrawerStyles.roundAction}
                         aria-label={
                           savedToPlaylists
-                            ? `${playlist?.name || "Playlist"} saved to My Playlists`
+                            ? `Remove ${playlist?.name || "playlist"} from My Playlists`
                             : `Save ${playlist?.name || "playlist"} to My Playlists`
                         }
                         aria-pressed={savedToPlaylists}
