@@ -184,6 +184,13 @@
   object-fit: cover;
 }
 
+.playlist-detail-cover-play-button {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: auto;
+}
+
 .playlist-detail-system-cover {
   display: flex;
   align-items: center;
@@ -344,6 +351,11 @@
   line-height: 1;
   cursor: pointer;
   transition: border-color 150ms ease;
+}
+
+.playlist-detail-explore-similar-action {
+  gap: 7px;
+  text-decoration: none;
 }
 
 .playlist-detail-hero-secondary-action:hover,
