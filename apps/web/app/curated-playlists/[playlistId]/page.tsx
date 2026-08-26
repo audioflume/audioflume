@@ -304,6 +304,11 @@ export default function CuratedPlaylistDetailPage() {
     button?.click();
   }
 
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
+
   async function sharePlaylist() {
     if (!playlist) return;
     const url = window.location.href;
@@ -311,17 +316,18 @@ export default function CuratedPlaylistDetailPage() {
     try {
       if (navigator.share) {
         await navigator.share({ title: playlist.name, url });
+        showToast("Playlist shared");
         return;
       }
-      await navigator.clipboard?.writeText(url);
-    } catch {
-      // Sharing was cancelled or unavailable.
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard unavailable");
+      }
+      await navigator.clipboard.writeText(url);
+      showToast("Playlist link copied");
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      showToast("Could not share playlist");
     }
-  }
-
-  function showToast(message: string) {
-    setToastMessage(message);
-    window.setTimeout(() => setToastMessage(null), 1800);
   }
 
   async function toggleMyPlaylistsSave() {
