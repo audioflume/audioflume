@@ -23,9 +23,12 @@ export type Song = FilmwaveSong & {
   createdAt?: string;
 };
 
+export type PlaylistSourceType = "user" | "curated" | "community";
+
 export type Playlist = FilmwavePlaylist & {
   primary_category: string | null;
   secondary_categories: string[];
+  source_type: PlaylistSourceType;
 };
 
 export type PlaylistSong = FilmwavePlaylistSong;

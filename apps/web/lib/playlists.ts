@@ -32,6 +32,10 @@ export function normalizePlaylist(value: unknown): Playlist {
     secondary_categories: normalizeCommunityPlaylistCategories(
       playlist.secondary_categories,
     ),
+    source_type:
+      playlist.source_type === "curated" || playlist.source_type === "community"
+        ? playlist.source_type
+        : "user",
   };
 }
 

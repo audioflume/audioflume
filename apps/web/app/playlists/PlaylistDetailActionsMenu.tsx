@@ -221,7 +221,7 @@ export default function PlaylistDetailActionsMenu() {
   }
 
   function togglePublic() {
-    if (!playlist || visibilitySaving) return;
+    if (!playlist || playlist.source_type !== "user" || visibilitySaving) return;
     setMenuOpen(false);
 
     if (!playlist.is_public) {
@@ -314,7 +314,7 @@ export default function PlaylistDetailActionsMenu() {
   const menu = actionsTarget
     ? createPortal(
         <>
-          {playlist && (
+          {playlist?.source_type === "user" && (
             <button
               type="button"
               className={artistDrawerStyles.roundAction}
@@ -372,14 +372,16 @@ export default function PlaylistDetailActionsMenu() {
                   <button type="button" role="menuitem" onClick={startRename}>
                     Rename
                   </button>
-                  <button
-                    type="button"
-                    role="menuitem"
-                    disabled={visibilitySaving}
-                    onClick={togglePublic}
-                  >
-                    {playlist.is_public ? "Make Private" : "Make Public"}
-                  </button>
+                  {playlist.source_type === "user" && (
+                    <button
+                      type="button"
+                      role="menuitem"
+                      disabled={visibilitySaving}
+                      onClick={togglePublic}
+                    >
+                      {playlist.is_public ? "Make Private" : "Make Public"}
+                    </button>
+                  )}
                   <button
                     type="button"
                     role="menuitem"
@@ -442,7 +444,7 @@ export default function PlaylistDetailActionsMenu() {
     <>
       {menu}
       {renameField}
-      {playlist && (
+      {playlist?.source_type === "user" && (
         <PublishPlaylistModal
           isOpen={publishOpen}
           playlistId={playlist.id}

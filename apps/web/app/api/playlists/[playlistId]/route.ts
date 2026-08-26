@@ -169,6 +169,39 @@ export async function PATCH(req: Request, context: RouteContext) {
       }
 
       if (body.is_public) {
+        stage = "check-playlist-source";
+        const { data: sourcePlaylist, error: sourceError } = await supabaseServer
+          .from("playlists")
+          .select("source_type")
+          .eq("id", playlistId)
+          .eq("clerk_user_id", userId)
+          .maybeSingle();
+
+        if (sourceError) {
+          throw sourceError;
+        }
+
+        if (!sourcePlaylist) {
+          return NextResponse.json(
+            { error: "Playlist not found", stage },
+            { status: 404 },
+          );
+        }
+
+        if (
+          sourcePlaylist.source_type === "curated" ||
+          sourcePlaylist.source_type === "community"
+        ) {
+          return NextResponse.json(
+            {
+              error: "Saved curated and community playlists cannot be published",
+              stage,
+            },
+            { status: 403 },
+          );
+        }
+
+        stage = "parse-request";
         const requestedPrimary = categoryWasIncluded
           ? updates.primary_category
           : undefined;
@@ -200,7 +233,7 @@ export async function PATCH(req: Request, context: RouteContext) {
       .eq("id", playlistId)
       .eq("clerk_user_id", userId)
       .select(
-        "id, clerk_user_id, name, cover_image_url, position, is_public, published_at, primary_category, secondary_categories",
+        "id, clerk_user_id, name, cover_image_url, position, is_public, published_at, primary_category, secondary_categories, source_type",
       )
       .maybeSingle();
 

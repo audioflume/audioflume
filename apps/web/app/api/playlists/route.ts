@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { normalizePlaylist, getPlaylistErrorResponse } from "@/lib/playlists";
 import { toSmartTitleCase } from "@/lib/smartTitleCase";
+import type { PlaylistSourceType } from "@/lib/types";
 
 function parseCoverImageUrl(value: unknown): string | null | undefined {
   if (value == null || value === "") return null;
@@ -24,6 +25,21 @@ function parseCoverImageUrl(value: unknown): string | null | undefined {
   }
 }
 
+function getPlaylistSourceType(req: Request): PlaylistSourceType {
+  const referer = req.headers.get("referer");
+  if (!referer) return "user";
+
+  try {
+    const pathname = new URL(referer).pathname;
+    if (/^\/curated-playlists\/[^/]+\/?$/.test(pathname)) return "curated";
+    if (/^\/community-playlists\/[^/]+\/?$/.test(pathname)) return "community";
+  } catch {
+    return "user";
+  }
+
+  return "user";
+}
+
 export async function GET() {
   const { userId } = await auth();
 
@@ -35,7 +51,7 @@ export async function GET() {
     let playlistsResult = await supabaseServer
       .from("playlists")
       .select(
-        "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories",
+        "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories, source_type",
       )
       .eq("clerk_user_id", userId)
       .order("position", { ascending: true });
@@ -159,6 +175,7 @@ export async function POST(req: Request) {
         clerk_user_id: userId,
         name: cleanName,
         cover_image_url: coverImageUrl,
+        source_type: getPlaylistSourceType(req),
         position:
           typeof body.position === "number" && Number.isFinite(body.position)
             ? body.position
