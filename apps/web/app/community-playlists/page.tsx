@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import RecentPlaylistCards from "@/components/RecentPlaylistCards";
+import Toast from "@/components/Toast";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
@@ -158,7 +159,13 @@ export default function CommunityPlaylistsPage() {
   const [activePlaybackPlaylistId, setActivePlaybackPlaylistId] = useState<number | null>(null);
   const [loadingPlaybackPlaylistId, setLoadingPlaybackPlaylistId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const playerVisible = !!currentSong;
+
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
 
   useEffect(() => {
     let cancelled = false;
@@ -352,6 +359,8 @@ export default function CommunityPlaylistsPage() {
   async function togglePlaylistFavorite(playlistId: number) {
     if (pendingFavoriteIds.has(playlistId)) return;
 
+    const playlistName =
+      playlists.find((playlist) => playlist.id === playlistId)?.name || "Playlist";
     const wasFavorite = favoritePlaylistIds.has(playlistId);
     const wasRecentFavorite = recentFavoritePlaylistIds.has(playlistId);
     const countDelta = wasFavorite ? -1 : 1;
@@ -396,6 +405,12 @@ export default function CommunityPlaylistsPage() {
         const data = await response.json().catch(() => null);
         throw new Error(data?.error || "Could not update favorite playlist");
       }
+
+      showToast(
+        wasFavorite
+          ? `"${playlistName}" removed from favorites`
+          : `"${playlistName}" added to favorites`,
+      );
     } catch (error) {
       console.warn("Community playlist favorite update failed", error);
       setFavoritePlaylistIds((current) => {
@@ -423,6 +438,11 @@ export default function CommunityPlaylistsPage() {
               }
             : playlist,
         ),
+      );
+      showToast(
+        error instanceof Error
+          ? error.message
+          : "Could not update favorite playlist",
       );
     } finally {
       setPendingFavoriteIds((current) => {
@@ -1039,6 +1059,11 @@ export default function CommunityPlaylistsPage() {
           </div>
         </section>
       </main>
+
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
     </>
   );
 }
