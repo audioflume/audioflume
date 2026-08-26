@@ -320,6 +320,7 @@ export default function PublicArtistCardShelf({
       {collectionKind === "release" && drawerData && selectedIndex !== null ? (
         <PublicArtistCollectionDrawer
           id={drawerId}
+          artistSlug={artistSlug}
           collection={drawerData.collection}
           songs={drawerData.songs}
           onClose={closeDrawer}
