@@ -75,7 +75,7 @@
   overflow: hidden;
   margin-top: 0;
   background: var(--bg-hover);
-  padding: 60px 0 clamp(72px, 7vw, 120px);
+  padding: clamp(72px, 7vw, 120px) 0;
   isolation: isolate;
 }
 
@@ -717,7 +717,7 @@
   }
 
   .playlist-detail-stage {
-    padding: 60px 0 54px;
+    padding: 54px 0;
   }
 
   .playlist-detail-stage::before {
