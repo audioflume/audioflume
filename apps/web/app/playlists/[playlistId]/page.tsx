@@ -527,7 +527,13 @@ export default function PlaylistDetailPage() {
                   </div>
 
                   <div className="min-w-0">
-                    <span className="playlist-detail-kicker">Playlist</span>
+                    <span className="playlist-detail-kicker">
+                      {ownedPlaylist?.source_type === "curated"
+                        ? "Curated Playlist"
+                        : ownedPlaylist?.source_type === "community"
+                          ? "Community Playlist"
+                          : "Playlist"}
+                    </span>
                     <h1 className="playlist-detail-title">
                       {playlist.name || "Playlist"}
                     </h1>
