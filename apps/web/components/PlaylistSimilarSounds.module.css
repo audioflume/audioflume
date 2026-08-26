@@ -23,57 +23,42 @@
   position: relative;
   width: 100%;
   overflow: hidden;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1;
   border-radius: 0;
   background: var(--bg-secondary);
 }
 
-.card[href] .art::before,
-.card[href] .art::after {
-  content: "";
+.playButton {
   position: absolute;
+  right: 16px;
+  bottom: 16px;
   z-index: 4;
-  pointer-events: none;
+  display: inline-flex;
+  width: 32px;
+  height: 32px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.12);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+  color: var(--filmwave-white);
+  cursor: pointer;
   transition:
     background-color 150ms ease,
     color 150ms ease;
 }
 
-.card[href] .art::before {
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-}
-
-.card[href] .art::after {
-  top: 25.5px;
-  right: 25.5px;
-  width: 13px;
-  height: 13px;
+.playButton:hover,
+.playButton:focus-visible {
   background: var(--filmwave-white);
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
+  color: var(--filmwave-black);
 }
 
-.card[href]:hover .art::before,
-.card[href]:focus-visible .art::before {
-  background: var(--filmwave-white);
-}
-
-.card[href]:hover .art::after,
-.card[href]:focus-visible .art::after {
-  background: var(--filmwave-black);
+.playButton svg {
+  display: block;
 }
 
 .art img,
@@ -114,9 +99,12 @@
 
 .copy p {
   margin-top: 4px;
+  overflow: hidden;
   color: var(--text-muted);
   font-size: 11px;
   line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .skeletonLine {

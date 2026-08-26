@@ -8,6 +8,7 @@ import {
   type PlaylistProfileContext,
   type PlaylistProfileSong,
 } from "@/lib/playlistProfiles";
+import { attachPrimaryArtistProfiles, normalizeSongRow } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -15,32 +16,20 @@ export const runtime = "nodejs";
 const MAX_RECOMMENDATIONS = 14;
 const PROFILE_SONG_SELECT =
   "id, artist, bpm, genres, moods, regions, instruments, builds, vocals, instrumental";
+const SONG_SELECT =
+  "id, title, artist, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points, download_count, size_bytes, created_at";
 
 type SourceKind =
   | "playlist"
   | "community"
   | "curated"
   | "favorites"
-  | "artist";
+  | "artist"
+  | "album";
 
 type SourceDescriptor = {
   songIds: string[];
   context: PlaylistProfileContext;
-  excludeCuratedPlaylistId: number | null;
-};
-
-type CuratedPlaylistRow = {
-  id: number;
-  name: string;
-  cover_image_url: string | null;
-  browse_tags: string[] | null;
-  browse_subcategories: string[] | null;
-  position: number | null;
-};
-
-type CuratedPlaylistSongRow = {
-  curated_playlist_id: number;
-  song_id: string;
 };
 
 type ProfileSongRow = PlaylistProfileSong & {
@@ -53,7 +42,8 @@ function parseSourceKind(value: string | null): SourceKind | null {
     value === "community" ||
     value === "curated" ||
     value === "favorites" ||
-    value === "artist"
+    value === "artist" ||
+    value === "album"
   ) {
     return value;
   }
@@ -115,7 +105,6 @@ async function loadSource(
     return {
       songIds: uniqueSongIds((data ?? []) as Array<{ song_id?: unknown }>),
       context: {},
-      excludeCuratedPlaylistId: null,
     };
   }
 
@@ -141,7 +130,6 @@ async function loadSource(
         playlist.browse_tags,
         playlist.browse_subcategories,
       ),
-      excludeCuratedPlaylistId: Number(playlist.id),
     };
   }
 
@@ -163,7 +151,28 @@ async function loadSource(
         id,
       ),
       context: {},
-      excludeCuratedPlaylistId: null,
+    };
+  }
+
+  if (kind === "album") {
+    const { data: release, error } = await supabaseServer
+      .from("artist_releases")
+      .select("id")
+      .eq("id", id)
+      .eq("status", "published")
+      .eq("release_type", "album")
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!release) return null;
+
+    return {
+      songIds: await loadPlaylistSongIds(
+        "artist_release_songs",
+        "release_id",
+        id,
+      ),
+      context: {},
     };
   }
 
@@ -189,7 +198,6 @@ async function loadSource(
       playlist.primary_category ? [playlist.primary_category] : [],
       playlist.secondary_categories,
     ),
-    excludeCuratedPlaylistId: null,
   };
 }
 
@@ -227,75 +235,63 @@ export async function GET(request: Request) {
       );
     }
 
-    const [sourceSongs, playlistsResult, playlistSongsResult] =
-      await Promise.all([
-        loadProfileSongs(source.songIds),
-        supabaseServer
-          .from("curated_playlists")
-          .select(
-            "id, name, cover_image_url, browse_tags, browse_subcategories, position",
-          )
-          .order("position", { ascending: true }),
-        supabaseServer
-          .from("curated_playlist_songs")
-          .select("curated_playlist_id, song_id"),
-      ]);
+    const [sourceSongs, candidatesResult] = await Promise.all([
+      loadProfileSongs(source.songIds),
+      supabaseServer
+        .from("songs")
+        .select(PROFILE_SONG_SELECT)
+        .eq("status", "published"),
+    ]);
 
-    if (playlistsResult.error) throw playlistsResult.error;
-    if (playlistSongsResult.error) throw playlistSongsResult.error;
-
-    const curatedPlaylists = (playlistsResult.data ?? []) as CuratedPlaylistRow[];
-    const curatedPlaylistSongs = (playlistSongsResult.data ?? []) as CuratedPlaylistSongRow[];
-    const candidateSongIds = uniqueSongIds(curatedPlaylistSongs);
-    const candidateSongs = await loadProfileSongs(candidateSongIds);
-    const songById = new Map(candidateSongs.map((song) => [String(song.id), song]));
-    const songIdsByPlaylist = new Map<number, string[]>();
-
-    curatedPlaylistSongs.forEach((row) => {
-      const playlistId = Number(row.curated_playlist_id);
-      const current = songIdsByPlaylist.get(playlistId) ?? [];
-      current.push(String(row.song_id));
-      songIdsByPlaylist.set(playlistId, current);
-    });
+    if (candidatesResult.error) throw candidatesResult.error;
 
     const sourceProfile = buildPlaylistProfile(sourceSongs, source.context);
-    const recommendations = curatedPlaylists
-      .filter(
-        (playlist) =>
-          source.excludeCuratedPlaylistId === null ||
-          Number(playlist.id) !== source.excludeCuratedPlaylistId,
-      )
-      .map((playlist) => {
-        const songs = (songIdsByPlaylist.get(Number(playlist.id)) ?? [])
-          .map((songId) => songById.get(songId))
-          .filter((song): song is ProfileSongRow => Boolean(song));
-        const profile = buildPlaylistProfile(
-          songs,
-          sourceContext(playlist.browse_tags, playlist.browse_subcategories),
-        );
+    const sourceSongIds = new Set(source.songIds);
+    const scoredCandidates = ((candidatesResult.data ?? []) as ProfileSongRow[])
+      .filter((song) => !sourceSongIds.has(String(song.id)))
+      .map((song) => ({
+        id: String(song.id),
+        score: scorePlaylistSimilarity(
+          sourceProfile,
+          buildPlaylistProfile([song]),
+        ),
+      }))
+      .filter((song) => song.score > 0)
+      .sort((a, b) => b.score - a.score || a.id.localeCompare(b.id))
+      .slice(0, MAX_RECOMMENDATIONS);
 
-        return {
-          id: Number(playlist.id),
-          name: playlist.name,
-          cover_image_url: playlist.cover_image_url,
-          song_count: songs.length,
-          position: Number(playlist.position ?? 0),
-          score: scorePlaylistSimilarity(sourceProfile, profile),
-        };
-      })
-      .filter((playlist) => playlist.song_count > 0)
-      .sort(
-        (a, b) =>
-          b.score - a.score ||
-          b.song_count - a.song_count ||
-          a.position - b.position ||
-          a.name.localeCompare(b.name),
-      )
-      .slice(0, MAX_RECOMMENDATIONS)
-      .map(({ position: _position, ...playlist }) => ({
-        ...playlist,
-        score: Number(playlist.score.toFixed(4)),
-      }));
+    if (scoredCandidates.length === 0) {
+      return NextResponse.json({
+        profile: summarizePlaylistProfile(sourceProfile),
+        recommendations: [],
+      });
+    }
+
+    const recommendationIds = scoredCandidates.map((song) => song.id);
+    const { data: recommendationRows, error: recommendationError } =
+      await supabaseServer
+        .from("songs")
+        .select(SONG_SELECT)
+        .in("id", recommendationIds)
+        .eq("status", "published");
+
+    if (recommendationError) throw recommendationError;
+
+    const normalizedSongs = await attachPrimaryArtistProfiles(
+      (recommendationRows ?? []).map((row) => normalizeSongRow(row)),
+    );
+    const songById = new Map(normalizedSongs.map((song) => [song.id, song]));
+    const recommendations = scoredCandidates.flatMap(({ id: songId, score }) => {
+      const song = songById.get(songId);
+      if (!song) return [];
+
+      return [
+        {
+          ...song,
+          score: Number(score.toFixed(4)),
+        },
+      ];
+    });
 
     return NextResponse.json({
       profile: summarizePlaylistProfile(sourceProfile),

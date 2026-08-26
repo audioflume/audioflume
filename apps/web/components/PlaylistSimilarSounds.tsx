@@ -1,25 +1,24 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import { usePlayer } from "@/context/PlayerContext";
+import type { Song } from "@/lib/types";
 
 import styles from "./PlaylistSimilarSounds.module.css";
 
-type SimilarPlaylist = {
-  id: number;
-  name: string;
-  cover_image_url: string | null;
-  song_count: number;
+type SimilarSong = Song & {
   score: number;
 };
 
 type RecommendationResponse = {
-  recommendations?: SimilarPlaylist[];
+  recommendations?: SimilarSong[];
   error?: string;
 };
 
@@ -37,6 +36,7 @@ function buildRecommendationUrl(
     const curatedMatch = pathname.match(/^\/curated-playlists\/([^/]+)$/);
     const communityMatch = pathname.match(/^\/community-playlists\/([^/]+)$/);
     const playlistMatch = pathname.match(/^\/playlists\/([^/]+)$/);
+    const albumMatch = pathname.match(/^\/artists\/[^/]+\/albums\/([^/]+)$/);
 
     if (curatedMatch?.[1]) {
       params.set("kind", "curated");
@@ -47,6 +47,9 @@ function buildRecommendationUrl(
     } else if (playlistMatch?.[1]) {
       params.set("kind", artistSlug ? "artist" : "playlist");
       params.set("id", decodeURIComponent(playlistMatch[1]));
+    } else if (albumMatch?.[1]) {
+      params.set("kind", "album");
+      params.set("id", decodeURIComponent(albumMatch[1]));
     } else {
       return null;
     }
@@ -55,15 +58,12 @@ function buildRecommendationUrl(
   return `/api/playlist-recommendations?${params.toString()}`;
 }
 
-function formatSongCount(count: number) {
-  return `${count} song${count === 1 ? "" : "s"}`;
-}
-
 export default function PlaylistSimilarSounds() {
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [recommendations, setRecommendations] = useState<SimilarPlaylist[]>([]);
+  const [recommendations, setRecommendations] = useState<SimilarSong[]>([]);
   const [loading, setLoading] = useState(true);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -115,7 +115,7 @@ export default function PlaylistSimilarSounds() {
           | null;
 
         if (!response.ok) {
-          throw new Error(payload?.error || "Unable to load similar playlists");
+          throw new Error(payload?.error || "Unable to load similar songs");
         }
 
         setRecommendations(
@@ -123,7 +123,7 @@ export default function PlaylistSimilarSounds() {
         );
       } catch (error) {
         if (controller.signal.aborted) return;
-        console.error("Failed to load similar playlists:", error);
+        console.error("Failed to load similar songs:", error);
         setRecommendations([]);
       } finally {
         if (!controller.signal.aborted) setLoading(false);
@@ -234,27 +234,40 @@ export default function PlaylistSimilarSounds() {
                   <div className={styles.skeletonLineShort} />
                 </div>
               ))
-            : recommendations.map((playlist) => (
-                <Link
-                  key={playlist.id}
-                  href={`/curated-playlists/${playlist.id}`}
-                  className={styles.card}
-                >
-                  <article>
-                    <div className={styles.art} data-playlist-similar-image>
-                      {playlist.cover_image_url ? (
-                        <img src={playlist.cover_image_url} alt="" />
-                      ) : (
-                        <div className={styles.placeholder} aria-hidden="true" />
-                      )}
-                    </div>
-                    <div className={styles.copy}>
-                      <h3>{playlist.name}</h3>
-                      <p>{formatSongCount(playlist.song_count)}</p>
-                    </div>
-                  </article>
-                </Link>
-              ))}
+            : recommendations.map((song) => {
+                const songIsPlaying = currentSong?.id === song.id && isPlaying;
+
+                return (
+                  <div key={song.id} className={styles.card}>
+                    <article>
+                      <div className={styles.art} data-playlist-similar-image>
+                        {song.coverArt ? (
+                          <img src={song.coverArt} alt="" />
+                        ) : (
+                          <div className={styles.placeholder} aria-hidden="true" />
+                        )}
+
+                        <button
+                          type="button"
+                          className={styles.playButton}
+                          onClick={() => togglePlayPause(song)}
+                          aria-label={`${songIsPlaying ? "Pause" : "Play"} ${song.title}`}
+                        >
+                          {songIsPlaying ? (
+                            <PauseIcon size={13} />
+                          ) : (
+                            <PlayIconSmall size={13} />
+                          )}
+                        </button>
+                      </div>
+                      <div className={styles.copy}>
+                        <h3>{song.title}</h3>
+                        <p>{song.artist}</p>
+                      </div>
+                    </article>
+                  </div>
+                );
+              })}
         </div>
       </div>
     </section>
