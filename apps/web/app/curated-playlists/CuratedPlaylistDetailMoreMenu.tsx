@@ -8,69 +8,6 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-type CuratedPlaylistSummary = {
-  id: number | string;
-  name: string;
-  cover_image_url?: string | null;
-};
-
-async function addCuratedPlaylistToMyPlaylists(
-  curatedPlaylistId: string,
-): Promise<string> {
-  const playlistRes = await fetch(
-    `/api/curated-playlists/${encodeURIComponent(curatedPlaylistId)}`,
-  );
-  const playlistData = await playlistRes.json().catch(() => null);
-
-  if (!playlistRes.ok || !playlistData) {
-    throw new Error(playlistData?.error || "Failed to load playlist");
-  }
-
-  const playlist = playlistData as CuratedPlaylistSummary;
-  const createRes = await fetch("/api/playlists", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      name: playlist.name,
-      cover_image_url: playlist.cover_image_url ?? null,
-      position: 0,
-    }),
-  });
-
-  if (!createRes.ok) {
-    const errorData = await createRes.json().catch(() => null);
-    throw new Error(errorData?.error || "Failed to create playlist");
-  }
-
-  const newPlaylist = await createRes.json();
-  const songsRes = await fetch(
-    `/api/curated-playlists/${encodeURIComponent(curatedPlaylistId)}/songs`,
-  );
-
-  if (!songsRes.ok) return playlist.name;
-
-  const songs = await songsRes.json();
-  if (!Array.isArray(songs) || songs.length === 0) return playlist.name;
-
-  for (let index = 0; index < songs.length; index += 1) {
-    const song = songs[index];
-    const songId = song.song_id ?? song.id;
-    if (!songId) continue;
-
-    try {
-      await fetch(`/api/playlists/${newPlaylist.id}/songs`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ song_id: songId, position: index }),
-      });
-    } catch (error) {
-      console.warn(`Error adding song ${songId}:`, error);
-    }
-  }
-
-  return playlist.name;
-}
-
 export default function CuratedPlaylistDetailMoreMenu() {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
@@ -79,15 +16,12 @@ export default function CuratedPlaylistDetailMoreMenu() {
   const isCuratedPlaylistDetail = playlistId !== null;
 
   const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null);
-  const [heroTarget, setHeroTarget] = useState<HTMLElement | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isCuratedPlaylistDetail) {
       setActionsTarget(null);
-      setHeroTarget(null);
       return;
     }
 
@@ -95,15 +29,9 @@ export default function CuratedPlaylistDetailMoreMenu() {
       const nextActionsTarget = document.querySelector<HTMLElement>(
         ".playlist-detail-page .playlist-detail-actions",
       );
-      const nextHeroTarget = document.querySelector<HTMLElement>(
-        ".playlist-detail-page .playlist-detail-hero > .min-w-0",
-      );
 
       setActionsTarget((currentTarget) =>
         currentTarget === nextActionsTarget ? currentTarget : nextActionsTarget,
-      );
-      setHeroTarget((currentTarget) =>
-        currentTarget === nextHeroTarget ? currentTarget : nextHeroTarget,
       );
     };
 
@@ -115,89 +43,60 @@ export default function CuratedPlaylistDetailMoreMenu() {
 
   useEffect(() => {
     setMenuOpen(false);
-    setSaving(false);
     setToastMessage(null);
   }, [playlistId]);
 
-  async function handleAddToMyPlaylists() {
-    if (!playlistId || saving) return;
-
+  async function copyPlaylistLink() {
     setMenuOpen(false);
-    setSaving(true);
 
     try {
-      const playlistName = await addCuratedPlaylistToMyPlaylists(playlistId);
-      setToastMessage(`"${playlistName}" added to My Playlists`);
-    } catch (error) {
-      setToastMessage(
-        error instanceof Error ? error.message : "Failed to add playlist",
-      );
-    } finally {
-      setSaving(false);
+      await navigator.clipboard.writeText(window.location.href);
+      setToastMessage("Playlist link copied");
+    } catch {
+      setToastMessage("Could not copy playlist link");
     }
   }
 
   if (!isCuratedPlaylistDetail) return null;
 
-  const menu =
-    actionsTarget
-      ? createPortal(
-          <div className="playlist-detail-more-menu">
-            <DropdownShell
-              open={menuOpen}
-              onOpenChange={setMenuOpen}
-              placement="bottom-end"
-              className="playlist-detail-more-dropdown"
-              offsetAmount={8}
-              collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
-              trigger={({ open }) => (
-                <button
-                  type="button"
-                  className={`playlist-detail-more-button${open ? " is-active" : ""}`}
-                  aria-label="More curated playlist actions"
-                  aria-expanded={open}
-                  title="More"
-                  disabled={saving}
-                >
-                  <MoreIcon />
-                </button>
-              )}
-            >
+  const menu = actionsTarget
+    ? createPortal(
+        <div className="playlist-detail-more-menu">
+          <DropdownShell
+            open={menuOpen}
+            onOpenChange={setMenuOpen}
+            placement="bottom-end"
+            className="playlist-detail-more-dropdown"
+            offsetAmount={8}
+            collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+            trigger={({ open }) => (
               <button
                 type="button"
-                role="menuitem"
-                disabled={saving}
-                onClick={() => void handleAddToMyPlaylists()}
+                className={`playlist-detail-more-button${open ? " is-active" : ""}`}
+                aria-label="More curated playlist actions"
+                aria-expanded={open}
+                title="More"
               >
-                {saving ? "Saving…" : "Save to Playlists"}
+                <MoreIcon />
               </button>
-            </DropdownShell>
-          </div>,
-          actionsTarget,
-        )
-      : null;
-
-  const saveAction =
-    heroTarget
-      ? createPortal(
-          <div className="playlist-detail-hero-secondary-actions">
+            )}
+          >
             <button
               type="button"
-              className="playlist-detail-hero-secondary-action"
-              disabled={saving}
-              onClick={() => void handleAddToMyPlaylists()}
+              role="menuitem"
+              onClick={() => void copyPlaylistLink()}
             >
-              {saving ? "Saving…" : "Save to Playlists"}
+              Copy Link
             </button>
-          </div>,
-          heroTarget,
-        )
-      : null;
+          </DropdownShell>
+        </div>,
+        actionsTarget,
+      )
+    : null;
 
   return (
     <>
       {menu}
-      {saveAction}
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}
