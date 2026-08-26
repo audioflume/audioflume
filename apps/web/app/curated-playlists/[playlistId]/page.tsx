@@ -1,14 +1,16 @@
 "use client";
 
 import { MusicListShell } from "@filmwave/shared";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import RecentPlaylistTracker from "@/components/RecentPlaylistTracker";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import Toast from "@/components/Toast";
 import FilterTags from "@/components/FilterTags";
+import HeartIcon from "@/components/icons/HeartIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
-import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
   quickFilterButtonClass,
   quickFilterButtonActiveClass,
@@ -34,6 +36,41 @@ const FALLBACK_BACKGROUND =
   "linear-gradient(135deg,#372f4f 0%,#111111 48%,#75649a 100%)";
 
 type QuickFilterValue = (typeof QUICK_FILTERS)[number]["value"];
+type SimilarSoundTag = {
+  type: "genre" | "mood";
+  value: string;
+};
+
+function ShareGlyph() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="14.5" cy="4.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="5.5" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="14.5" cy="15.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <path d="m7.5 8.9 5-3.1M7.5 11.1l5 3.1" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function NortheastArrowGlyph() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 17L17 7"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9 7H17V15"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function PlaylistDetailSkeleton() {
   return (
@@ -75,6 +112,47 @@ function getTopGenres(songs: CuratedPlaylistSong[]) {
     .map(([genre]) => genre);
 }
 
+function getTopSimilarSoundTags(songs: CuratedPlaylistSong[]) {
+  const counts = new Map<string, { tag: SimilarSoundTag; count: number }>();
+
+  songs.forEach((song) => {
+    song.genres.forEach((genre) => {
+      const value = genre.trim();
+      if (!value) return;
+      const key = `genre:${value.toLowerCase()}`;
+      const current = counts.get(key);
+      counts.set(key, {
+        tag: current?.tag ?? { type: "genre", value },
+        count: (current?.count ?? 0) + 1,
+      });
+    });
+
+    song.moods.forEach((mood) => {
+      const value = mood.trim();
+      if (!value) return;
+      const key = `mood:${value.toLowerCase()}`;
+      const current = counts.get(key);
+      counts.set(key, {
+        tag: current?.tag ?? { type: "mood", value },
+        count: (current?.count ?? 0) + 1,
+      });
+    });
+  });
+
+  return [...counts.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
+    .map(({ tag }) => tag);
+}
+
+function buildSimilarSoundsHref(tags: SimilarSoundTag[]) {
+  if (tags.length === 0) return "/music";
+
+  const params = new URLSearchParams();
+  tags.forEach((tag) => params.append(tag.type, tag.value));
+  return `/music?${params.toString()}`;
+}
+
 function formatSongCount(count: number) {
   return `${count} song${count === 1 ? "" : "s"}`;
 }
@@ -89,30 +167,6 @@ function playCoverVideo(element: HTMLElement) {
 
 function pauseCoverVideo(element: HTMLElement) {
   element.querySelector<HTMLVideoElement>("video")?.pause();
-}
-
-function shuffleSongList<T>(songs: T[]) {
-  if (songs.length < 2) return [...songs];
-  let bestShuffle = [...songs];
-  let bestMovedCount = -1;
-
-  for (let attempt = 0; attempt < 12; attempt += 1) {
-    const shuffled = [...songs];
-    for (let i = shuffled.length - 1; i > 0; i -= 1) {
-      const j = Math.floor(Math.random() * (i + 1));
-      const temp = shuffled[i];
-      shuffled[i] = shuffled[j];
-      shuffled[j] = temp;
-    }
-    const movedCount = shuffled.filter((song, index) => song !== songs[index]).length;
-    if (movedCount > bestMovedCount) {
-      bestShuffle = shuffled;
-      bestMovedCount = movedCount;
-    }
-    if (movedCount >= Math.floor(songs.length * 0.85)) break;
-  }
-
-  return bestShuffle;
 }
 
 export default function CuratedPlaylistDetailPage() {
@@ -131,8 +185,9 @@ export default function CuratedPlaylistDetailPage() {
   const [search, setSearch] = useState("");
   const [quickFilter, setQuickFilter] = useState<QuickFilterValue>("default");
   const [error, setError] = useState("");
-  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
-  const shuffleActive = shuffleOrderIds !== null;
+  const [savingToPlaylists, setSavingToPlaylists] = useState(false);
+  const [savedToPlaylists, setSavedToPlaylists] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -163,6 +218,7 @@ export default function CuratedPlaylistDetailPage() {
         if (!cancelled) {
           setPlaylist(playlistData);
           setSongs(songsData);
+          setSavedToPlaylists(false);
         }
       } catch (err) {
         if (!cancelled) {
@@ -212,28 +268,19 @@ export default function CuratedPlaylistDetailPage() {
       result = result.sort((a, b) => a.position - b.position);
     }
 
-    if (!shuffleOrderIds) return result;
-
-    const orderMap = new Map(shuffleOrderIds.map((id, index) => [id, index]));
-    return [...result].sort((a, b) => {
-      const aOrder = orderMap.get(a.id);
-      const bOrder = orderMap.get(b.id);
-      if (aOrder === undefined && bOrder === undefined) return 0;
-      if (aOrder === undefined) return 1;
-      if (bOrder === undefined) return -1;
-      return aOrder - bOrder;
-    });
-  }, [searchedSongs, quickFilter, favoriteIdSet, shuffleOrderIds]);
+    return result;
+  }, [searchedSongs, quickFilter, favoriteIdSet]);
 
   const topGenres = useMemo(() => getTopGenres(songs), [songs]);
+  const similarSoundTags = useMemo(() => getTopSimilarSoundTags(songs), [songs]);
+  const similarSoundsHref = useMemo(
+    () => buildSimilarSoundsHref(similarSoundTags),
+    [similarSoundTags],
+  );
 
   useEffect(() => {
     setQueue(filteredSongs.filter((song) => song.audioUrl));
   }, [filteredSongs, setQueue]);
-
-  useEffect(() => {
-    setShuffleOrderIds(null);
-  }, [quickFilter, search]);
 
   function playFirstSong() {
     const button = document.querySelector<HTMLButtonElement>(
@@ -242,11 +289,72 @@ export default function CuratedPlaylistDetailPage() {
     button?.click();
   }
 
-  function shufflePlaylist() {
-    if (filteredSongs.length < 2) return;
-    const shuffled = shuffleSongList(filteredSongs);
-    setShuffleOrderIds(shuffled.map((song) => song.id));
-    setQueue(shuffled.filter((song) => song.audioUrl));
+  async function sharePlaylist() {
+    if (!playlist) return;
+    const url = window.location.href;
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title: playlist.name, url });
+        return;
+      }
+      await navigator.clipboard?.writeText(url);
+    } catch {
+      // Sharing was cancelled or unavailable.
+    }
+  }
+
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
+
+  async function saveToMyPlaylists() {
+    if (!playlist || savingToPlaylists || savedToPlaylists) return;
+
+    setSavingToPlaylists(true);
+
+    try {
+      const createRes = await fetch("/api/playlists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: playlist.name,
+          cover_image_url: playlist.cover_image_url ?? null,
+          position: 0,
+        }),
+      });
+      const newPlaylist = await createRes.json().catch(() => null);
+
+      if (!createRes.ok || !newPlaylist?.id) {
+        throw new Error(newPlaylist?.error || "Failed to create playlist");
+      }
+
+      for (let index = 0; index < songs.length; index += 1) {
+        const song = songs[index];
+        const songId = song.song_id ?? song.id;
+        if (!songId) continue;
+
+        try {
+          await fetch(`/api/playlists/${newPlaylist.id}/songs`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ song_id: songId, position: index }),
+          });
+        } catch (songError) {
+          console.warn(`Error adding song ${songId}:`, songError);
+        }
+      }
+
+      setSavedToPlaylists(true);
+      showToast(`"${playlist.name}" added to My Playlists`);
+    } catch (saveError) {
+      showToast(
+        saveError instanceof Error ? saveError.message : "Failed to add playlist",
+      );
+    } finally {
+      setSavingToPlaylists(false);
+    }
   }
 
   const stageStyle = playlist?.cover_image_url
@@ -271,10 +379,7 @@ export default function CuratedPlaylistDetailPage() {
                   type="text"
                   placeholder="Search Playlist"
                   value={search}
-                  onChange={(event) => {
-                    setSearch(event.target.value);
-                    setShuffleOrderIds(null);
-                  }}
+                  onChange={(event) => setSearch(event.target.value)}
                   className="playlist-detail-search-input"
                 />
               </label>
@@ -290,7 +395,7 @@ export default function CuratedPlaylistDetailPage() {
                 bpmValue={null}
                 keyValue={null}
                 selectedPlaylist={null}
-                shuffleActive={shuffleActive}
+                shuffleActive={false}
                 onRemoveMood={() => {}}
                 onRemoveGenre={() => {}}
                 onRemoveInstrument={() => {}}
@@ -301,7 +406,7 @@ export default function CuratedPlaylistDetailPage() {
                 onRemoveBpm={() => {}}
                 onRemoveKey={() => {}}
                 onRemovePlaylist={() => {}}
-                onRemoveShuffle={() => setShuffleOrderIds(null)}
+                onRemoveShuffle={() => {}}
               />
             </div>
           </div>
@@ -349,6 +454,16 @@ export default function CuratedPlaylistDetailPage() {
                         <img src={playlist.cover_image_url} alt={playlist.name} />
                       )
                     )}
+
+                    <button
+                      type="button"
+                      onClick={playFirstSong}
+                      disabled={filteredSongs.length === 0}
+                      className={`${artistDrawerStyles.roundAction} playlist-detail-cover-play-button`}
+                      aria-label={`Play ${playlist?.name || "playlist"}`}
+                    >
+                      <PlayIconSmall size={15} />
+                    </button>
                   </div>
 
                   <div className="min-w-0">
@@ -377,37 +492,48 @@ export default function CuratedPlaylistDetailPage() {
                     <div className="playlist-detail-actions">
                       <button
                         type="button"
-                        onClick={playFirstSong}
-                        disabled={filteredSongs.length === 0}
+                        onClick={() => void saveToMyPlaylists()}
+                        disabled={savingToPlaylists || savedToPlaylists}
                         className={artistDrawerStyles.roundAction}
-                        aria-label={`Play ${playlist?.name || "playlist"}`}
+                        aria-label={
+                          savedToPlaylists
+                            ? `${playlist?.name || "Playlist"} saved to My Playlists`
+                            : `Save ${playlist?.name || "playlist"} to My Playlists`
+                        }
+                        aria-pressed={savedToPlaylists}
                       >
-                        <PlayIconSmall size={15} />
+                        <HeartIcon size={15} filled={savedToPlaylists} />
                       </button>
                       <button
                         type="button"
-                        onClick={shufflePlaylist}
-                        disabled={filteredSongs.length < 2}
+                        onClick={() => void sharePlaylist()}
                         className={artistDrawerStyles.roundAction}
-                        aria-label={`Shuffle ${playlist?.name || "playlist"}`}
+                        aria-label={`Share ${playlist?.name || "playlist"}`}
                       >
-                        <ShuffleIconSmall />
+                        <ShareGlyph />
                       </button>
+                    </div>
+
+                    <div className="playlist-detail-hero-secondary-actions">
+                      <Link
+                        href={similarSoundsHref}
+                        className="playlist-detail-hero-secondary-action playlist-detail-explore-similar-action"
+                      >
+                        Explore Similar Sounds
+                        <NortheastArrowGlyph />
+                      </Link>
                     </div>
                   </div>
                 </section>
 
                 <div className="playlist-detail-quick-row">
                   {QUICK_FILTERS.map((filter) => {
-                    const isActive = !shuffleActive && quickFilter === filter.value;
+                    const isActive = quickFilter === filter.value;
                     return (
                       <button
                         key={filter.value}
                         type="button"
-                        onClick={() => {
-                          setQuickFilter(filter.value);
-                          setShuffleOrderIds(null);
-                        }}
+                        onClick={() => setQuickFilter(filter.value)}
                         className={`${quickFilterButtonClass} ${
                           isActive ? quickFilterButtonActiveClass : ""
                         }`}
@@ -469,6 +595,11 @@ export default function CuratedPlaylistDetailPage() {
           </div>
         )}
       </main>
+
+      <Toast
+        message={toastMessage}
+        bottomOffset={currentSong ? "88px" : "24px"}
+      />
     </>
   );
 }
