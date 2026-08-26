@@ -104,6 +104,11 @@ export default function CommunityPlaylistDetailChrome() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
+
   useEffect(() => {
     if (!isCommunityPlaylistDetail) {
       setActionsTarget(null);
@@ -178,9 +183,13 @@ export default function CommunityPlaylistDetailChrome() {
       if (!response.ok) {
         throw new Error(data?.error || "Could not update favorite playlist");
       }
+
+      showToast(
+        wasFavorite ? "Playlist removed from favorites" : "Playlist added to favorites",
+      );
     } catch (error) {
       setFavorite(wasFavorite);
-      setToastMessage(
+      showToast(
         error instanceof Error
           ? error.message
           : "Could not update favorite playlist",
@@ -200,11 +209,17 @@ export default function CommunityPlaylistDetailChrome() {
     try {
       if (navigator.share) {
         await navigator.share({ title, url });
+        showToast("Playlist shared");
         return;
       }
-      await navigator.clipboard?.writeText(url);
-    } catch {
-      // Sharing was cancelled or unavailable.
+      if (!navigator.clipboard) {
+        throw new Error("Clipboard unavailable");
+      }
+      await navigator.clipboard.writeText(url);
+      showToast("Playlist link copied");
+    } catch (error) {
+      if (error instanceof Error && error.name === "AbortError") return;
+      showToast("Could not share playlist");
     }
   }
 
@@ -215,9 +230,9 @@ export default function CommunityPlaylistDetailChrome() {
     setSavingToPlaylists(true);
     try {
       const playlistName = await saveCommunityPlaylistToMyPlaylists(playlistId);
-      setToastMessage(`"${playlistName}" added to My Playlists`);
+      showToast(`"${playlistName}" added to My Playlists`);
     } catch (error) {
-      setToastMessage(
+      showToast(
         error instanceof Error ? error.message : "Could not save playlist",
       );
     } finally {
@@ -230,9 +245,9 @@ export default function CommunityPlaylistDetailChrome() {
 
     try {
       await navigator.clipboard.writeText(window.location.href);
-      setToastMessage("Playlist link copied");
+      showToast("Playlist link copied");
     } catch {
-      setToastMessage("Could not copy playlist link");
+      showToast("Could not copy playlist link");
     }
   }
 
