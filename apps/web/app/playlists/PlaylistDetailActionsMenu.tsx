@@ -301,7 +301,8 @@ export default function PlaylistDetailActionsMenu() {
         current.filter((item) => item.id !== playlist.id),
       );
       setEditOpen(false);
-      router.push("/playlists");
+      showToast("Playlist deleted");
+      window.setTimeout(() => router.push("/playlists"), 600);
     } catch {
       showToast("Couldn't reach the playlist service");
     } finally {
