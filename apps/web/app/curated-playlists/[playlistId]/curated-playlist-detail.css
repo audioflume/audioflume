@@ -2,8 +2,8 @@
   position: absolute;
   z-index: 3;
   display: inline-flex;
-  width: 52px;
-  height: 52px;
+  width: clamp(52px, 5vw, 72px);
+  height: clamp(52px, 5vw, 72px);
   align-items: center;
   justify-content: center;
   padding: 0;
@@ -13,6 +13,11 @@
   color: #111;
   cursor: pointer;
   transition: transform 160ms ease;
+}
+
+.playlist-detail-cover-play-button svg {
+  width: clamp(18px, 1.7vw, 25px);
+  height: clamp(18px, 1.7vw, 25px);
 }
 
 .playlist-detail-cover-play-button:hover,
