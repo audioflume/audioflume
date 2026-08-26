@@ -9,6 +9,8 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
+import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
+
 type CommunityPlaylistSavePayload = {
   playlist?: {
     name?: string;
@@ -20,6 +22,17 @@ type CommunityPlaylistSavePayload = {
   }>;
   error?: string;
 };
+
+function ShareGlyph() {
+  return (
+    <svg width="15" height="15" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+      <circle cx="14.5" cy="4.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="5.5" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <circle cx="14.5" cy="15.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
+      <path d="m7.5 8.9 5-3.1M7.5 11.1l5 3.1" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
 
 function parseFavoriteIds(value: unknown) {
   if (!Array.isArray(value)) return [];
@@ -85,7 +98,6 @@ export default function CommunityPlaylistDetailChrome() {
     playlistIdMatch !== null && Number.isInteger(playlistId) && playlistId > 0;
 
   const [actionsTarget, setActionsTarget] = useState<HTMLElement | null>(null);
-  const [heroTarget, setHeroTarget] = useState<HTMLElement | null>(null);
   const [favorite, setFavorite] = useState(false);
   const [favoritePending, setFavoritePending] = useState(false);
   const [savingToPlaylists, setSavingToPlaylists] = useState(false);
@@ -95,7 +107,6 @@ export default function CommunityPlaylistDetailChrome() {
   useEffect(() => {
     if (!isCommunityPlaylistDetail) {
       setActionsTarget(null);
-      setHeroTarget(null);
       return;
     }
 
@@ -103,15 +114,9 @@ export default function CommunityPlaylistDetailChrome() {
       const nextActionsTarget = document.querySelector<HTMLElement>(
         ".community-detail-page .playlist-detail-actions",
       );
-      const nextHeroTarget = document.querySelector<HTMLElement>(
-        ".community-detail-page .playlist-detail-hero > .min-w-0",
-      );
 
       setActionsTarget((currentTarget) =>
         currentTarget === nextActionsTarget ? currentTarget : nextActionsTarget,
-      );
-      setHeroTarget((currentTarget) =>
-        currentTarget === nextHeroTarget ? currentTarget : nextHeroTarget,
       );
     };
 
@@ -185,9 +190,28 @@ export default function CommunityPlaylistDetailChrome() {
     }
   }
 
+  async function sharePlaylist() {
+    const url = window.location.href;
+    const title =
+      document
+        .querySelector<HTMLElement>(".community-detail-page .playlist-detail-title")
+        ?.textContent?.trim() || "Playlist";
+
+    try {
+      if (navigator.share) {
+        await navigator.share({ title, url });
+        return;
+      }
+      await navigator.clipboard?.writeText(url);
+    } catch {
+      // Sharing was cancelled or unavailable.
+    }
+  }
+
   async function saveToPlaylists() {
     if (!isCommunityPlaylistDetail || savingToPlaylists) return;
 
+    setMenuOpen(false);
     setSavingToPlaylists(true);
     try {
       const playlistName = await saveCommunityPlaylistToMyPlaylists(playlistId);
@@ -214,21 +238,32 @@ export default function CommunityPlaylistDetailChrome() {
 
   if (!isCommunityPlaylistDetail) return null;
 
-  const inlineActions =
-    actionsTarget
-      ? createPortal(
-          <div className="playlist-detail-card-corner-actions">
-            <button
-              type="button"
-              className={`playlist-detail-corner-button${favorite ? " is-active" : ""}`}
-              onClick={() => void toggleFavorite()}
-              disabled={favoritePending}
-              aria-label={favorite ? "Remove playlist from favorites" : "Add playlist to favorites"}
-              aria-pressed={favorite}
-            >
-              <HeartIcon size={15} filled={favorite} />
-            </button>
+  const inlineActions = actionsTarget
+    ? createPortal(
+        <>
+          <button
+            type="button"
+            className={artistDrawerStyles.roundAction}
+            onClick={() => void toggleFavorite()}
+            disabled={favoritePending}
+            aria-label={
+              favorite ? "Remove playlist from favorites" : "Add playlist to favorites"
+            }
+            aria-pressed={favorite}
+          >
+            <HeartIcon size={15} filled={favorite} />
+          </button>
 
+          <button
+            type="button"
+            className={artistDrawerStyles.roundAction}
+            onClick={() => void sharePlaylist()}
+            aria-label="Share community playlist"
+          >
+            <ShareGlyph />
+          </button>
+
+          <div className="playlist-detail-more-menu">
             <DropdownShell
               open={menuOpen}
               onOpenChange={setMenuOpen}
@@ -248,36 +283,31 @@ export default function CommunityPlaylistDetailChrome() {
                 </button>
               )}
             >
-              <button type="button" role="menuitem" onClick={() => void copyPlaylistLink()}>
-                Copy Playlist Link
+              <button
+                type="button"
+                role="menuitem"
+                disabled={savingToPlaylists}
+                onClick={() => void saveToPlaylists()}
+              >
+                {savingToPlaylists ? "Saving…" : "Save to Playlists"}
+              </button>
+              <button
+                type="button"
+                role="menuitem"
+                onClick={() => void copyPlaylistLink()}
+              >
+                Copy Link
               </button>
             </DropdownShell>
-          </div>,
-          actionsTarget,
-        )
-      : null;
-
-  const saveAction =
-    heroTarget
-      ? createPortal(
-          <div className="playlist-detail-hero-secondary-actions">
-            <button
-              type="button"
-              className="playlist-detail-hero-secondary-action"
-              disabled={savingToPlaylists}
-              onClick={() => void saveToPlaylists()}
-            >
-              {savingToPlaylists ? "Saving…" : "Save to Playlists"}
-            </button>
-          </div>,
-          heroTarget,
-        )
-      : null;
+          </div>
+        </>,
+        actionsTarget,
+      )
+    : null;
 
   return (
     <>
       {inlineActions}
-      {saveAction}
       <Toast
         message={toastMessage}
         bottomOffset={currentSong ? "88px" : "24px"}

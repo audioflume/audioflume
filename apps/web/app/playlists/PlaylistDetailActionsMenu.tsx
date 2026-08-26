@@ -113,6 +113,17 @@ export default function PlaylistDetailActionsMenu() {
     selection?.addRange(range);
   }, [heroTarget, playlist, renaming]);
 
+  async function copyPlaylistLink() {
+    setMenuOpen(false);
+
+    try {
+      await navigator.clipboard.writeText(window.location.href);
+      showToast("Playlist link copied");
+    } catch {
+      showToast("Could not copy playlist link");
+    }
+  }
+
   function startRename() {
     if (!playlist) return;
     setMenuOpen(false);
@@ -297,76 +308,67 @@ export default function PlaylistDetailActionsMenu() {
 
   if (!isPlaylistDetail) return null;
 
-  const menu =
-    actionsTarget && playlist
-      ? createPortal(
-          <div className="playlist-detail-more-menu">
-            <DropdownShell
-              open={menuOpen}
-              onOpenChange={setMenuOpen}
-              placement="bottom-end"
-              className="playlist-detail-more-dropdown"
-              offsetAmount={8}
-              collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
-              trigger={({ open }) => (
-                <button
-                  type="button"
-                  className={`playlist-detail-more-button${open ? " is-active" : ""}`}
-                  aria-label={`More actions for ${playlist.name}`}
-                  aria-expanded={open}
-                  title="More"
-                >
-                  <MoreIcon />
-                </button>
-              )}
-            >
-              <button type="button" role="menuitem" onClick={openEditModal}>
-                Edit
-              </button>
-              <button type="button" role="menuitem" onClick={startRename}>
-                Rename
-              </button>
+  const menu = actionsTarget
+    ? createPortal(
+        <div className="playlist-detail-more-menu">
+          <DropdownShell
+            open={menuOpen}
+            onOpenChange={setMenuOpen}
+            placement="bottom-end"
+            className="playlist-detail-more-dropdown"
+            offsetAmount={8}
+            collisionPadding={{ top: 72, right: 16, bottom: 88, left: 16 }}
+            trigger={({ open }) => (
               <button
                 type="button"
-                role="menuitem"
-                disabled={visibilitySaving}
-                onClick={togglePublic}
+                className={`playlist-detail-more-button${open ? " is-active" : ""}`}
+                aria-label={
+                  playlist ? `More actions for ${playlist.name}` : "More playlist actions"
+                }
+                aria-expanded={open}
+                title="More"
               >
-                {playlist.is_public ? "Make Private" : "Make Public"}
+                <MoreIcon />
               </button>
-              <button
-                type="button"
-                role="menuitem"
-                onClick={() => void deletePlaylist()}
-              >
-                Delete
-              </button>
-            </DropdownShell>
-          </div>,
-          actionsTarget,
-        )
-      : null;
-
-  const visibilityAction =
-    heroTarget && playlist
-      ? createPortal(
-          <div className="playlist-detail-hero-secondary-actions">
+            )}
+          >
             <button
               type="button"
-              className="playlist-detail-hero-secondary-action"
-              disabled={visibilitySaving}
-              onClick={togglePublic}
+              role="menuitem"
+              onClick={() => void copyPlaylistLink()}
             >
-              {visibilitySaving
-                ? "Saving…"
-                : playlist.is_public
-                  ? "Make Private"
-                  : "Make Public"}
+              Copy Link
             </button>
-          </div>,
-          heroTarget,
-        )
-      : null;
+            {playlist && (
+              <>
+                <button type="button" role="menuitem" onClick={openEditModal}>
+                  Edit
+                </button>
+                <button type="button" role="menuitem" onClick={startRename}>
+                  Rename
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  disabled={visibilitySaving}
+                  onClick={togglePublic}
+                >
+                  {playlist.is_public ? "Make Private" : "Make Public"}
+                </button>
+                <button
+                  type="button"
+                  role="menuitem"
+                  onClick={() => void deletePlaylist()}
+                >
+                  Delete
+                </button>
+              </>
+            )}
+          </DropdownShell>
+        </div>,
+        actionsTarget,
+      )
+    : null;
 
   const renameField =
     renaming && heroTarget && playlist
@@ -413,7 +415,6 @@ export default function PlaylistDetailActionsMenu() {
   return (
     <>
       {menu}
-      {visibilityAction}
       {renameField}
       {playlist && (
         <PublishPlaylistModal

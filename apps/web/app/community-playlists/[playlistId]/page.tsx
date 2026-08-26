@@ -1,12 +1,12 @@
 "use client";
 
 import { MusicListShell } from "@filmwave/shared";
+import Link from "next/link";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
-import ShuffleIconSmall from "@/components/icons/ShuffleIconSmall";
 import {
   quickFilterButtonActiveClass,
   quickFilterButtonClass,
@@ -19,9 +19,9 @@ import type { Song } from "@/lib/types";
 import { useParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
 import "@/app/music/music-library-redesign.css";
 import "@/app/playlist-detail-unified.css";
+import "@/app/curated-playlists/[playlistId]/curated-playlist-detail.css";
 
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
   "filmwave-recent-community-playlists";
@@ -35,6 +35,10 @@ const QUICK_FILTERS = [
 ] as const;
 
 type QuickFilterValue = (typeof QUICK_FILTERS)[number]["value"];
+type SimilarSoundTag = {
+  type: "genre" | "mood";
+  value: string;
+};
 
 type CommunityPlaylistDetail = {
   id: number;
@@ -60,6 +64,26 @@ type CommunityPlaylistDetailResponse = {
   playlist: CommunityPlaylistDetail;
   songs: CommunityPlaylistSong[];
 };
+
+function NortheastArrowGlyph() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 17L17 7"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9 7H17V15"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 function PlaylistDetailSkeleton() {
   return (
@@ -151,20 +175,49 @@ function getTopGenres(songs: CommunityPlaylistSong[]) {
     .map(([genre]) => genre);
 }
 
-function formatSongCount(count: number) {
-  return `${count} song${count === 1 ? "" : "s"}`;
+function getTopSimilarSoundTags(songs: CommunityPlaylistSong[]) {
+  const counts = new Map<string, { tag: SimilarSoundTag; count: number }>();
+
+  songs.forEach((song) => {
+    song.genres.forEach((genre) => {
+      const value = genre.trim();
+      if (!value) return;
+      const key = `genre:${value.toLowerCase()}`;
+      const current = counts.get(key);
+      counts.set(key, {
+        tag: current?.tag ?? { type: "genre", value },
+        count: (current?.count ?? 0) + 1,
+      });
+    });
+
+    song.moods.forEach((mood) => {
+      const value = mood.trim();
+      if (!value) return;
+      const key = `mood:${value.toLowerCase()}`;
+      const current = counts.get(key);
+      counts.set(key, {
+        tag: current?.tag ?? { type: "mood", value },
+        count: (current?.count ?? 0) + 1,
+      });
+    });
+  });
+
+  return [...counts.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
+    .map(({ tag }) => tag);
 }
 
-function shuffleSongList<T>(songs: T[]) {
-  if (songs.length < 2) return [...songs];
-  const shuffled = [...songs];
-  for (let index = shuffled.length - 1; index > 0; index -= 1) {
-    const randomIndex = Math.floor(Math.random() * (index + 1));
-    const current = shuffled[index];
-    shuffled[index] = shuffled[randomIndex];
-    shuffled[randomIndex] = current;
-  }
-  return shuffled;
+function buildSimilarSoundsHref(tags: SimilarSoundTag[]) {
+  if (tags.length === 0) return "/music";
+
+  const params = new URLSearchParams();
+  tags.forEach((tag) => params.append(tag.type, tag.value));
+  return `/music?${params.toString()}`;
+}
+
+function formatSongCount(count: number) {
+  return `${count} song${count === 1 ? "" : "s"}`;
 }
 
 export default function CommunityPlaylistDetailPage() {
@@ -183,8 +236,6 @@ export default function CommunityPlaylistDetailPage() {
   const [error, setError] = useState("");
   const [search, setSearch] = useState("");
   const [quickFilter, setQuickFilter] = useState<QuickFilterValue>("default");
-  const [shuffleOrderIds, setShuffleOrderIds] = useState<string[] | null>(null);
-  const shuffleActive = shuffleOrderIds !== null;
 
   useEffect(() => {
     let cancelled = false;
@@ -265,34 +316,27 @@ export default function CommunityPlaylistDetailPage() {
   }, [search, songs]);
 
   const filteredSongs = useMemo(() => {
-    let nextSongs = [...searchedSongs];
+    const nextSongs = [...searchedSongs];
 
     if (quickFilter === "liked") {
-      nextSongs = nextSongs.filter((song) => favoriteIdSet.has(song.id));
-    } else if (quickFilter === "alphabetical") {
-      nextSongs.sort((a, b) =>
-        a.title.localeCompare(b.title, undefined, { sensitivity: "base" }),
-      );
-    } else {
-      nextSongs.sort((a, b) => a.position - b.position);
+      return nextSongs.filter((song) => favoriteIdSet.has(song.id));
     }
 
-    if (!shuffleOrderIds) return nextSongs;
+    if (quickFilter === "alphabetical") {
+      return nextSongs.sort((a, b) =>
+        a.title.localeCompare(b.title, undefined, { sensitivity: "base" }),
+      );
+    }
 
-    const orderById = new Map(
-      shuffleOrderIds.map((songId, index) => [songId, index]),
-    );
-    return [...nextSongs].sort((a, b) => {
-      const aOrder = orderById.get(a.id);
-      const bOrder = orderById.get(b.id);
-      if (aOrder === undefined && bOrder === undefined) return 0;
-      if (aOrder === undefined) return 1;
-      if (bOrder === undefined) return -1;
-      return aOrder - bOrder;
-    });
-  }, [favoriteIdSet, quickFilter, searchedSongs, shuffleOrderIds]);
+    return nextSongs.sort((a, b) => a.position - b.position);
+  }, [favoriteIdSet, quickFilter, searchedSongs]);
 
   const topGenres = useMemo(() => getTopGenres(songs), [songs]);
+  const similarSoundTags = useMemo(() => getTopSimilarSoundTags(songs), [songs]);
+  const similarSoundsHref = useMemo(
+    () => buildSimilarSoundsHref(similarSoundTags),
+    [similarSoundTags],
+  );
   const categories = playlist
     ? [
         ...(playlist.primary_category ? [playlist.primary_category] : []),
@@ -304,22 +348,11 @@ export default function CommunityPlaylistDetailPage() {
     setQueue(filteredSongs.filter((song) => song.audioUrl));
   }, [filteredSongs, setQueue]);
 
-  useEffect(() => {
-    setShuffleOrderIds(null);
-  }, [quickFilter, search]);
-
   function playFirstSong() {
     const firstSongButton = document.querySelector<HTMLButtonElement>(
       '[aria-label="Play song"], [aria-label="Pause song"]',
     );
     firstSongButton?.click();
-  }
-
-  function shufflePlaylist() {
-    if (filteredSongs.length < 2) return;
-    const shuffledSongs = shuffleSongList(filteredSongs);
-    setShuffleOrderIds(shuffledSongs.map((song) => song.id));
-    setQueue(shuffledSongs.filter((song) => song.audioUrl));
   }
 
   const stageStyle = playlist?.cover_image_url
@@ -376,6 +409,16 @@ export default function CommunityPlaylistDetailPage() {
                   {playlist?.cover_image_url && (
                     <img src={playlist.cover_image_url} alt={playlist.name} />
                   )}
+
+                  <button
+                    type="button"
+                    onClick={playFirstSong}
+                    disabled={filteredSongs.length === 0}
+                    className="playlist-detail-cover-play-button"
+                    aria-label={`Play ${playlist?.name || "playlist"}`}
+                  >
+                    <PlayIconSmall size={18} />
+                  </button>
                 </div>
 
                 <div className="min-w-0">
@@ -412,32 +455,23 @@ export default function CommunityPlaylistDetailPage() {
                     )}
                   </p>
 
-                  <div className="playlist-detail-actions">
-                    <button
-                      type="button"
-                      onClick={playFirstSong}
-                      disabled={filteredSongs.length === 0}
-                      className={artistDrawerStyles.roundAction}
-                      aria-label={`Play ${playlist?.name || "playlist"}`}
+                  <div className="playlist-detail-actions" />
+
+                  <div className="playlist-detail-hero-secondary-actions">
+                    <Link
+                      href={similarSoundsHref}
+                      className="playlist-detail-hero-secondary-action playlist-detail-explore-similar-action"
                     >
-                      <PlayIconSmall size={15} />
-                    </button>
-                    <button
-                      type="button"
-                      onClick={shufflePlaylist}
-                      disabled={filteredSongs.length < 2}
-                      className={artistDrawerStyles.roundAction}
-                      aria-label={`Shuffle ${playlist?.name || "playlist"}`}
-                    >
-                      <ShuffleIconSmall />
-                    </button>
+                      Explore Similar Sounds
+                      <NortheastArrowGlyph />
+                    </Link>
                   </div>
                 </div>
               </section>
 
               <div className="playlist-detail-quick-row">
                 {QUICK_FILTERS.map((filter) => {
-                  const isActive = !shuffleActive && quickFilter === filter.value;
+                  const isActive = quickFilter === filter.value;
                   return (
                     <button
                       key={filter.value}
@@ -445,10 +479,7 @@ export default function CommunityPlaylistDetailPage() {
                       className={`${quickFilterButtonClass} ${
                         isActive ? quickFilterButtonActiveClass : ""
                       }`}
-                      onClick={() => {
-                        setQuickFilter(filter.value);
-                        setShuffleOrderIds(null);
-                      }}
+                      onClick={() => setQuickFilter(filter.value)}
                     >
                       {filter.label}
                     </button>

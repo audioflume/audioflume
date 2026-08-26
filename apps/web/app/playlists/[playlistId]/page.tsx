@@ -1,6 +1,7 @@
 "use client";
 
 import { MusicListShell } from "@filmwave/shared";
+import Link from "next/link";
 import EditPlaylistModal from "@/components/EditPlaylistModal";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
@@ -24,6 +25,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import artistDrawerStyles from "@/components/artists/PublicArtistCollectionDrawer.module.css";
 import "@/app/music/music-library-redesign.css";
 import "@/app/playlist-detail-unified.css";
+import "@/app/curated-playlists/[playlistId]/curated-playlist-detail.css";
 
 const GRADIENTS = [
   "linear-gradient(160deg,#1a3a2a,#2d5a3d)",
@@ -46,6 +48,10 @@ const QUICK_FILTERS = [
 ] as const;
 
 type QuickFilterValue = (typeof QUICK_FILTERS)[number]["value"];
+type SimilarSoundTag = {
+  type: "genre" | "mood";
+  value: string;
+};
 
 type PlaylistSong = Song & {
   created_at?: string;
@@ -68,6 +74,26 @@ function ShareGlyph() {
       <circle cx="5.5" cy="10" r="2.25" stroke="currentColor" strokeWidth="1.4" />
       <circle cx="14.5" cy="15.5" r="2.25" stroke="currentColor" strokeWidth="1.4" />
       <path d="m7.5 8.9 5-3.1M7.5 11.1l5 3.1" stroke="currentColor" strokeWidth="1.4" />
+    </svg>
+  );
+}
+
+function NortheastArrowGlyph() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path
+        d="M7 17L17 7"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+      />
+      <path
+        d="M9 7H17V15"
+        stroke="currentColor"
+        strokeWidth="2.2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
     </svg>
   );
 }
@@ -110,6 +136,47 @@ function getTopGenres(songs: Song[]) {
     .sort((a, b) => b[1] - a[1])
     .slice(0, 4)
     .map(([genre]) => genre);
+}
+
+function getTopSimilarSoundTags(songs: Song[]) {
+  const counts = new Map<string, { tag: SimilarSoundTag; count: number }>();
+
+  songs.forEach((song) => {
+    song.genres.forEach((genre) => {
+      const value = genre.trim();
+      if (!value) return;
+      const key = `genre:${value.toLowerCase()}`;
+      const current = counts.get(key);
+      counts.set(key, {
+        tag: current?.tag ?? { type: "genre", value },
+        count: (current?.count ?? 0) + 1,
+      });
+    });
+
+    song.moods.forEach((mood) => {
+      const value = mood.trim();
+      if (!value) return;
+      const key = `mood:${value.toLowerCase()}`;
+      const current = counts.get(key);
+      counts.set(key, {
+        tag: current?.tag ?? { type: "mood", value },
+        count: (current?.count ?? 0) + 1,
+      });
+    });
+  });
+
+  return [...counts.values()]
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 3)
+    .map(({ tag }) => tag);
+}
+
+function buildSimilarSoundsHref(tags: SimilarSoundTag[]) {
+  if (tags.length === 0) return "/music";
+
+  const params = new URLSearchParams();
+  tags.forEach((tag) => params.append(tag.type, tag.value));
+  return `/music?${params.toString()}`;
 }
 
 function formatSongCount(count: number) {
@@ -202,6 +269,11 @@ export default function PlaylistDetailPage() {
   }, [searchedSongs, quickFilter, favoriteIdSet]);
 
   const topGenres = useMemo(() => getTopGenres(songs), [songs]);
+  const similarSoundTags = useMemo(() => getTopSimilarSoundTags(songs), [songs]);
+  const similarSoundsHref = useMemo(
+    () => buildSimilarSoundsHref(similarSoundTags),
+    [similarSoundTags],
+  );
 
   useEffect(() => {
     if (!playlistId) return;
@@ -442,6 +514,16 @@ export default function PlaylistDetailPage() {
                     {playlist.cover_image_url && (
                       <img src={playlist.cover_image_url} alt={playlist.name} />
                     )}
+
+                    <button
+                      type="button"
+                      onClick={playFirstSong}
+                      disabled={filteredSongs.length === 0}
+                      className="playlist-detail-cover-play-button"
+                      aria-label={`Play ${playlist.name}`}
+                    >
+                      <PlayIconSmall size={18} />
+                    </button>
                   </div>
 
                   <div className="min-w-0">
@@ -462,28 +544,22 @@ export default function PlaylistDetailPage() {
                     <div className="playlist-detail-actions">
                       <button
                         type="button"
-                        onClick={playFirstSong}
-                        disabled={filteredSongs.length === 0}
-                        className={artistDrawerStyles.roundAction}
-                        aria-label={`Play ${playlist.name}`}
-                      >
-                        <span
-                          style={{
-                            display: "inline-flex",
-                            transform: "translateX(0.5px)",
-                          }}
-                        >
-                          <PlayIconSmall size={15} />
-                        </span>
-                      </button>
-                      <button
-                        type="button"
                         onClick={sharePlaylist}
                         className={artistDrawerStyles.roundAction}
                         aria-label={`Share ${playlist.name}`}
                       >
                         <ShareGlyph />
                       </button>
+                    </div>
+
+                    <div className="playlist-detail-hero-secondary-actions">
+                      <Link
+                        href={similarSoundsHref}
+                        className="playlist-detail-hero-secondary-action playlist-detail-explore-similar-action"
+                      >
+                        Explore Similar Sounds
+                        <NortheastArrowGlyph />
+                      </Link>
                     </div>
                   </div>
                 </section>
