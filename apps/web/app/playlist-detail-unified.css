@@ -658,7 +658,7 @@
   margin-left: calc(var(--filmwave-page-gutter) * -1);
   overflow-x: auto;
   overflow-y: hidden;
-  gap: 10px;
+  gap: clamp(16px, 1.4vw, 22px);
   padding: 0 var(--filmwave-page-gutter);
   scroll-behavior: smooth;
   scroll-padding-inline: var(--filmwave-page-gutter);

@@ -1,7 +1,3 @@
-.scroller {
-  gap: 22px;
-}
-
 .sideArrowLeft {
   left: calc(28px - var(--filmwave-page-gutter));
 }
