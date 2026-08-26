@@ -8,6 +8,7 @@ import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import Toast from "@/components/Toast";
 import FilterTags from "@/components/FilterTags";
+import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
@@ -185,7 +186,7 @@ function pauseCoverVideo(element: HTMLElement) {
 
 export default function CuratedPlaylistDetailPage() {
   const params = useParams();
-  const { currentSong, setQueue } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const { favoriteIdSet } = useFavorites();
   const { showEditPointMarkers, setShowEditPointMarkers } = useUserPreferences();
 
@@ -292,6 +293,10 @@ export default function CuratedPlaylistDetailPage() {
     () => buildSimilarSoundsHref(similarSoundTags),
     [similarSoundTags],
   );
+  const currentSongInPlaylist = Boolean(
+    currentSong && songs.some((song) => song.id === currentSong.id),
+  );
+  const playlistIsPlaying = currentSongInPlaylist && isPlaying;
 
   useEffect(() => {
     setQueue(filteredSongs.filter((song) => song.audioUrl));
@@ -302,6 +307,14 @@ export default function CuratedPlaylistDetailPage() {
       '[aria-label="Play song"], [aria-label="Pause song"]',
     );
     button?.click();
+  }
+
+  function toggleCoverPlayback() {
+    if (playlistIsPlaying && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+    playFirstSong();
   }
 
   function showToast(message: string) {
@@ -494,12 +507,17 @@ export default function CuratedPlaylistDetailPage() {
 
                     <button
                       type="button"
-                      onClick={playFirstSong}
+                      onClick={toggleCoverPlayback}
                       disabled={filteredSongs.length === 0}
                       className="playlist-detail-cover-play-button"
-                      aria-label={`Play ${playlist?.name || "playlist"}`}
+                      aria-label={`${playlistIsPlaying ? "Pause" : "Play"} ${playlist?.name || "playlist"}`}
+                      aria-pressed={playlistIsPlaying}
                     >
-                      <PlayIconSmall size={18} />
+                      {playlistIsPlaying ? (
+                        <PauseIcon size={18} />
+                      ) : (
+                        <PlayIconSmall size={18} />
+                      )}
                     </button>
                   </div>
 
