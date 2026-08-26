@@ -2,6 +2,7 @@
 
 import { HeaderSearchBar } from "@filmwave/shared";
 import DropdownShell from "@/components/DropdownShell";
+import Toast from "@/components/Toast";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
@@ -293,10 +294,16 @@ export default function PlaylistTopControls() {
   const [draggingId, setDraggingId] = useState<number | null>(null);
   const [savingOrder, setSavingOrder] = useState(false);
   const [countLabels, setCountLabels] = useState<Record<number, string>>({});
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
   const startReorderRef = useRef<() => void>(() => undefined);
 
   const playerVisible = Boolean(currentSong);
   const isMyPlaylistsPage = pathname === "/playlists";
+
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
 
   useEffect(() => {
     if (!isMyPlaylistsPage) return;
@@ -434,10 +441,16 @@ export default function PlaylistTopControls() {
         }),
       });
 
-      if (!response.ok) return;
+      if (!response.ok) {
+        showToast("Couldn't save playlist order");
+        return;
+      }
 
       setPlaylists(reordered);
       cancelReorder();
+      showToast("Order saved");
+    } catch {
+      showToast("Couldn't save playlist order");
     } finally {
       setSavingOrder(false);
     }
@@ -453,7 +466,10 @@ export default function PlaylistTopControls() {
                 <button
                   type="button"
                   className="playlist-edit-cancel"
-                  onClick={cancelReorder}
+                  onClick={() => {
+                    cancelReorder();
+                    showToast("Reorder cancelled");
+                  }}
                   disabled={savingOrder}
                 >
                   Cancel
@@ -760,6 +776,10 @@ export default function PlaylistTopControls() {
         )}
       </section>
       {reorderPortal}
+      <Toast
+        message={toastMessage}
+        bottomOffset={playerVisible ? "88px" : "24px"}
+      />
     </>
   );
 }
