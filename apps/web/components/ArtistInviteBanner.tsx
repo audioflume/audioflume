@@ -3,52 +3,19 @@
 import Link from "next/link";
 import { useUser } from "@clerk/nextjs";
 import { useEffect, useLayoutEffect, useState } from "react";
+import { useArtistInvites } from "@/context/ArtistInvitesContext";
 
 const ROOT_CLASS = "filmwave-artist-invite-banner-active";
 const PENDING_ROOT_CLASS = "filmwave-artist-invite-pending";
 
 export default function ArtistInviteBanner() {
   const { user } = useUser();
-  const [pendingInviteCount, setPendingInviteCount] = useState(0);
+  const { pendingInviteCount } = useArtistInvites();
   const [dismissed, setDismissed] = useState(false);
   const visible = pendingInviteCount > 0 && !dismissed;
 
   useEffect(() => {
     setDismissed(false);
-  }, [user?.id]);
-
-  useEffect(() => {
-    if (!user?.id) {
-      setPendingInviteCount(0);
-      return;
-    }
-
-    let cancelled = false;
-
-    async function loadInvites() {
-      try {
-        const response = await fetch("/api/artists/claim", { cache: "no-store" });
-        const body = (await response.json().catch(() => ({}))) as {
-          invitations?: unknown[];
-        };
-
-        if (!cancelled && response.ok) {
-          setPendingInviteCount(
-            Array.isArray(body.invitations) ? body.invitations.length : 0,
-          );
-        }
-      } catch {
-        if (!cancelled) setPendingInviteCount(0);
-      }
-    }
-
-    void loadInvites();
-    window.addEventListener("focus", loadInvites);
-
-    return () => {
-      cancelled = true;
-      window.removeEventListener("focus", loadInvites);
-    };
   }, [user?.id]);
 
   useLayoutEffect(() => {
@@ -120,8 +87,8 @@ export default function ArtistInviteBanner() {
           .filmwave-header-account-trigger::after {
           content: var(--filmwave-artist-invite-count);
           position: absolute;
-          top: -8px;
-          right: -8px;
+          top: -9px;
+          right: -9px;
           z-index: 10;
           box-sizing: border-box;
           display: flex;
