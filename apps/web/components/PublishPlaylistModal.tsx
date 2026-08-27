@@ -177,7 +177,13 @@ export default function PublishPlaylistModal({
             disabled={isSaving}
             onClick={onClose}
           >
-            ×
+            <svg width="19" height="19" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+              <path
+                d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5"
+                stroke="currentColor"
+                strokeWidth="0.9"
+              />
+            </svg>
           </button>
         </header>
 
@@ -258,31 +264,30 @@ export default function PublishPlaylistModal({
           display: flex;
           align-items: center;
           justify-content: center;
-          background: rgba(0, 0, 0, 0.58);
+          background: var(--modal-backdrop);
           padding: 24px;
         }
 
         .publish-playlist-modal {
+          position: relative;
           width: min(680px, 100%);
           max-height: min(760px, calc(100vh - 48px));
           overflow: auto;
-          border: 1px solid var(--border);
+          border: 0;
+          border-radius: 10px;
           background: var(--bg-primary);
           color: var(--text-primary);
-          box-shadow: 0 28px 90px rgba(0, 0, 0, 0.32);
-        }
-
-        .publish-playlist-modal-header,
-        .publish-playlist-modal-footer {
-          display: flex;
-          align-items: flex-start;
-          justify-content: space-between;
-          gap: 24px;
-          padding: 24px;
+          box-shadow: var(--filmwave-menu-shadow);
         }
 
         .publish-playlist-modal-header {
-          border-bottom: 1px solid var(--border);
+          position: relative;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 24px;
+          padding: 20px 52px 18px;
+          text-align: center;
         }
 
         .publish-playlist-modal-kicker {
@@ -296,10 +301,10 @@ export default function PublishPlaylistModal({
 
         .publish-playlist-modal-header h2 {
           margin: 0;
-          font-size: 22px;
+          font-size: 16px;
           font-weight: 500;
-          letter-spacing: -0.035em;
-          line-height: 1.1;
+          letter-spacing: -0.03em;
+          line-height: 1.2;
         }
 
         .publish-playlist-modal-header p:not(.publish-playlist-modal-kicker) {
@@ -310,14 +315,29 @@ export default function PublishPlaylistModal({
         }
 
         .publish-playlist-modal-header > button {
-          width: 32px;
-          height: 32px;
-          flex: 0 0 32px;
+          position: absolute;
+          top: 16px;
+          right: 16px;
+          display: inline-flex;
+          width: 24px;
+          height: 24px;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
           border: 0;
           background: transparent;
-          color: var(--text-secondary);
-          font-size: 22px;
+          color: var(--text-muted);
           cursor: pointer;
+          transition: color 150ms ease;
+        }
+
+        .publish-playlist-modal-header > button:hover {
+          color: var(--text-primary);
+        }
+
+        .publish-playlist-modal-header > button:disabled {
+          cursor: default;
+          opacity: 0.4;
         }
 
         .publish-playlist-modal-section {
@@ -353,7 +373,8 @@ export default function PublishPlaylistModal({
         .publish-playlist-category-grid button,
         .publish-playlist-modal-footer button {
           border: 1px solid var(--border);
-          background: var(--bg-secondary);
+          border-radius: 7px;
+          background: var(--bg-primary);
           color: var(--text-primary);
           font-family: inherit;
           font-size: 11.5px;
@@ -380,7 +401,10 @@ export default function PublishPlaylistModal({
         }
 
         .publish-playlist-modal-footer {
+          display: flex;
           align-items: center;
+          justify-content: space-between;
+          gap: 24px;
           padding: 20px 24px;
         }
 
@@ -396,7 +420,7 @@ export default function PublishPlaylistModal({
         .publish-playlist-modal-footer button {
           height: 36px;
           padding: 0 16px;
-          font-weight: 500;
+          font-weight: 400;
         }
 
         @media (max-width: 640px) {
