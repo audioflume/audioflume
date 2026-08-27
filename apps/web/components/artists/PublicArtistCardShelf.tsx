@@ -1,11 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { Children, isValidElement, type KeyboardEvent, type ReactNode } from "react";
+import {
+  Children,
+  isValidElement,
+  type AnimationEvent,
+  type KeyboardEvent,
+  type ReactNode,
+} from "react";
 import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
-import LoadingSpinner from "@/components/LoadingSpinner";
 import PublicArtistCollectionDrawer from "@/components/artists/PublicArtistCollectionDrawer";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
@@ -59,7 +64,7 @@ export default function PublicArtistCardShelf({
   const [imageCenterY, setImageCenterY] = useState<number | null>(null);
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
   const [drawerData, setDrawerData] = useState<DrawerPayload | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isDrawerClosing, setIsDrawerClosing] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const cards = Children.toArray(children);
   const cardCount = cards.length;
@@ -148,11 +153,24 @@ export default function PublicArtistCardShelf({
 
   function closeDrawer() {
     requestIdRef.current += 1;
-    setSelectedIndex(null);
-    setDrawerData(null);
-    setIsLoading(false);
     setLoadError(null);
     restoreArtistQueue();
+
+    if (!drawerData) {
+      setSelectedIndex(null);
+      setDrawerData(null);
+      setIsDrawerClosing(false);
+      return;
+    }
+
+    setIsDrawerClosing(true);
+  }
+
+  function handleDrawerAnimationEnd(event: AnimationEvent<HTMLDivElement>) {
+    if (event.currentTarget !== event.target || !isDrawerClosing) return;
+    setSelectedIndex(null);
+    setDrawerData(null);
+    setIsDrawerClosing(false);
   }
 
   async function openCollection(index: number) {
@@ -194,6 +212,8 @@ export default function PublicArtistCardShelf({
       return;
     }
 
+    if (isDrawerClosing) return;
+
     if (selectedIndex === index) {
       closeDrawer();
       return;
@@ -208,12 +228,10 @@ export default function PublicArtistCardShelf({
       allArtistSongsRef.current = cached.all_songs;
       hasArtistQueueRef.current = true;
       setQueue(cached.songs.filter((song) => song.audioUrl));
-      setIsLoading(false);
       return;
     }
 
     setDrawerData(null);
-    setIsLoading(true);
     const requestId = ++requestIdRef.current;
 
     try {
@@ -229,8 +247,6 @@ export default function PublicArtistCardShelf({
       setLoadError(
         error instanceof Error ? error.message : "Unable to load collection",
       );
-    } finally {
-      if (requestId === requestIdRef.current) setIsLoading(false);
     }
   }
 
@@ -365,18 +381,25 @@ export default function PublicArtistCardShelf({
       </div>
 
       {collectionKind === "release" && drawerData && selectedIndex !== null ? (
-        <PublicArtistCollectionDrawer
-          id={drawerId}
-          artistSlug={artistSlug}
-          collection={drawerData.collection}
-          songs={drawerData.songs}
-          onClose={closeDrawer}
-        />
-      ) : collectionKind === "release" &&
-        selectedIndex !== null &&
-        (isLoading || loadError) ? (
+        <div
+          className={`${styles.drawerTransition} ${
+            isDrawerClosing ? styles.drawerClosing : styles.drawerOpening
+          }`}
+          onAnimationEnd={handleDrawerAnimationEnd}
+        >
+          <div className={styles.drawerTransitionInner}>
+            <PublicArtistCollectionDrawer
+              id={drawerId}
+              artistSlug={artistSlug}
+              collection={drawerData.collection}
+              songs={drawerData.songs}
+              onClose={closeDrawer}
+            />
+          </div>
+        </div>
+      ) : collectionKind === "release" && selectedIndex !== null && loadError ? (
         <div id={drawerId} className={styles.drawerStatus}>
-          {isLoading ? <LoadingSpinner /> : loadError}
+          {loadError}
         </div>
       ) : null}
     </section>
