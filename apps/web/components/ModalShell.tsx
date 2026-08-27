@@ -2,9 +2,7 @@
 
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
-import { flatIconButtonClass, modalTitleClass } from "@/components/uiClasses";
 
 type ModalShellProps = {
   isOpen: boolean;
@@ -35,15 +33,15 @@ export default function ModalShell({
   maxWidth = "max-w-[420px]",
   maxHeight = "520px",
   closeLabel = "Close modal",
-  centerTitle = false,
+  centerTitle = true,
   bodyScroll = false,
   bodyClassName,
   contentClassName = "",
   footerClassName = "",
   headerContent,
-  inputCorners = "square",
-  contentCorners = "square",
-  background = "var(--filmwave-menu-bg)",
+  inputCorners = "rounded",
+  contentCorners = "rounded",
+  background = "var(--bg-primary)",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -95,17 +93,25 @@ export default function ModalShell({
           }
         >
           {headerContent || (
-            <h2 className={`${modalTitleClass} text-[22px] tracking-[-0.04em]`}>{title}</h2>
+            <h2 className="min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+              {title}
+            </h2>
           )}
         </div>
 
         <button
           type="button"
           onClick={onClose}
-          className={`absolute right-4 top-4 z-10 ${flatIconButtonClass}`}
+          className="absolute right-4 top-4 z-10 inline-flex h-6 w-6 items-center justify-center border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
-          <XIcon size={18} />
+          <svg width="19" height="19" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+            <path
+              d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5"
+              stroke="currentColor"
+              strokeWidth="0.9"
+            />
+          </svg>
         </button>
 
         <div
@@ -117,7 +123,11 @@ export default function ModalShell({
         </div>
 
         {footer && (
-          <div className={`flex flex-shrink-0 items-center gap-2 px-5 pb-5 pt-2 ${footerClassName || "justify-end"}`}>
+          <div
+            className={`flex flex-shrink-0 items-center gap-2 px-5 pb-5 pt-2 ${
+              footerClassName || "justify-end"
+            } [&>button]:rounded-[7px]`}
+          >
             {footer}
           </div>
         )}
