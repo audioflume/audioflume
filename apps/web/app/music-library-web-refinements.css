@@ -318,7 +318,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   .filmwave-song-card,
   .desktop-song-card,
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
-) {
+):not(.artist-public-collection-drawer *) {
   --filmwave-song-card-hover-bg: var(--filmwave-neutral-surface) !important;
 }
 
@@ -332,7 +332,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   .filmwave-song-card,
   .desktop-song-card,
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
-):is(:hover, .is-playing, .is-current, .is-active, [aria-current="true"], [data-active="true"]) {
+):not(.artist-public-collection-drawer *):is(:hover, .is-playing, .is-current, .is-active, [aria-current="true"], [data-active="true"]) {
   background: var(--filmwave-neutral-surface) !important;
 }
 
