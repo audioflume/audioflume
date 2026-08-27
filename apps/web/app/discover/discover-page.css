@@ -2,8 +2,8 @@
   --discover-artist-gutter: var(--filmwave-page-gutter);
   --discover-artist-max-width: 1640px;
   --discover-artist-content-inset: max(
-    var(--discover-artist-gutter),
-    calc((100vw - var(--discover-artist-max-width)) / 2)
+    var(--filmwave-editorial-inset),
+    calc((100vw - var(--filmwave-editorial-max-width)) / 2)
   );
   min-height: 100vh;
   overflow: hidden;
@@ -270,10 +270,10 @@
 .discover-artist-content {
   position: relative;
   z-index: 3;
-  width: min(
-    calc(100% - (var(--discover-artist-gutter) * 2)),
-    var(--discover-artist-max-width)
+  width: calc(
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
+  max-width: var(--filmwave-editorial-max-width);
   margin: clamp(-250px, -13vw, -190px) auto 0;
 }
 
