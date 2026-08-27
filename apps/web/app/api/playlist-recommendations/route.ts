@@ -14,6 +14,8 @@ import { supabaseServer } from "@/lib/supabaseServer";
 export const runtime = "nodejs";
 
 const MAX_RECOMMENDATIONS = 14;
+const UUID_PATTERN =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const PROFILE_SONG_SELECT =
   "id, artist, bpm, genres, moods, regions, instruments, builds, vocals, instrumental";
 const SONG_SELECT =
@@ -103,7 +105,9 @@ async function loadSource(
 
     if (error) throw error;
     return {
-      songIds: uniqueSongIds((data ?? []) as Array<{ song_id?: unknown }>),
+      songIds: uniqueSongIds(
+        (data ?? []) as Array<{ song_id?: unknown }>,
+      ).filter((songId) => UUID_PATTERN.test(songId)),
       context: {},
     };
   }
