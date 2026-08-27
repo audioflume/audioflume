@@ -222,6 +222,7 @@
   --media-overlay-strong: rgba(255, 255, 255, 0.62);
 }
 
+:where(.audioflume-home-page-root),
 :where(.discover-page-root),
 :where(.playlist-detail-page),
 :where(.artist-public-page:not(.artist-public-page-embedded)),
