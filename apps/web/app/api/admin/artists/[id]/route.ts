@@ -17,6 +17,17 @@ const ARTIST_STATUSES: ArtistStatus[] = [
   "suspended",
 ];
 
+const PROTECTED_ARTIST_TABLES = [
+  "artist_agreement_acceptances",
+  "artist_earnings",
+  "artist_payouts",
+  "artist_playlists",
+  "artist_release_artists",
+  "song_artists",
+  "song_credits",
+  "song_rights_holders",
+] as const;
+
 function normalizeArtistStatus(value: unknown): ArtistStatus | null {
   return ARTIST_STATUSES.includes(value as ArtistStatus)
     ? (value as ArtistStatus)
@@ -54,6 +65,24 @@ function getArtistStatusNotification(status: ArtistStatus, artistName: string) {
     title: `${artistName} is pending review`,
     message: "Your artist profile has been returned to pending review.",
   };
+}
+
+async function artistHasProtectedData(artistId: string) {
+  const results = await Promise.all(
+    PROTECTED_ARTIST_TABLES.map((table) =>
+      supabaseServer
+        .from(table)
+        .select("*", { count: "exact", head: true })
+        .eq("artist_id", artistId),
+    ),
+  );
+
+  for (const result of results) {
+    if (result.error) throw result.error;
+    if ((result.count ?? 0) > 0) return true;
+  }
+
+  return false;
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
@@ -130,6 +159,52 @@ export async function PATCH(request: Request, context: RouteContext) {
     console.error("Failed to update artist status:", error);
     return NextResponse.json(
       { error: "Failed to update artist status" },
+      { status: 500 },
+    );
+  }
+}
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  const admin = await requireAdmin();
+  if (!admin.isAdmin) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
+  }
+
+  try {
+    const { id } = await context.params;
+    const { data: artist, error: artistError } = await supabaseServer
+      .from("artists")
+      .select("id, name")
+      .eq("id", id)
+      .maybeSingle();
+
+    if (artistError) throw artistError;
+    if (!artist) {
+      return NextResponse.json({ error: "Artist not found" }, { status: 404 });
+    }
+
+    if (await artistHasProtectedData(id)) {
+      return NextResponse.json(
+        {
+          error:
+            "This artist has catalogue, rights, agreement, or financial data attached and cannot be deleted.",
+        },
+        { status: 409 },
+      );
+    }
+
+    const { error: deleteError } = await supabaseServer
+      .from("artists")
+      .delete()
+      .eq("id", id);
+
+    if (deleteError) throw deleteError;
+
+    return NextResponse.json({ deleted: true, artist_id: id });
+  } catch (error) {
+    console.error("Failed to delete artist:", error);
+    return NextResponse.json(
+      { error: "Failed to delete artist" },
       { status: 500 },
     );
   }
