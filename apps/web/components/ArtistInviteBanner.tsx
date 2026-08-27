@@ -120,8 +120,8 @@ export default function ArtistInviteBanner() {
           .filmwave-header-account-trigger::after {
           content: var(--filmwave-artist-invite-count);
           position: absolute;
-          top: -6px;
-          right: -6px;
+          top: -8px;
+          right: -8px;
           z-index: 10;
           box-sizing: border-box;
           display: flex;
@@ -136,7 +136,6 @@ export default function ArtistInviteBanner() {
           font-size: 10px;
           font-weight: 500;
           line-height: 1;
-          box-shadow: 0 0 0 2px var(--bg-primary);
           pointer-events: none;
         }
       `}</style>
