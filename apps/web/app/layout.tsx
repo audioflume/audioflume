@@ -11,6 +11,7 @@ import { FavoritesProvider } from "@/context/FavoritesContext";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
+import ArtistInviteBanner from "@/components/ArtistInviteBanner";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
@@ -105,6 +106,7 @@ export default async function RootLayout({
                 <ProjectsProvider>
                   <PlayerProvider>
                     <FavoritesProvider>
+                      <ArtistInviteBanner />
                       <Header />
                       <SidebarRenderer initialCollapsed={initialSidebarCollapsed} />
                       {children}
