@@ -153,7 +153,7 @@ body:has(.discover-page-root)
   display: flex;
   min-height: 0;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 }
 
 .discover-hero-last-viewed-heading h2 {
