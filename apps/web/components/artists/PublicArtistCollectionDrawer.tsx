@@ -149,7 +149,7 @@ export default function PublicArtistCollectionDrawer({
   }
 
   return (
-    <div id={id} className={styles.drawer}>
+    <div id={id} className={`${styles.drawer} artist-public-collection-drawer`}>
       <div className={styles.inner}>
         <div className={styles.summary}>
           <div
