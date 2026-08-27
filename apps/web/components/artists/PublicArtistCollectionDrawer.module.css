@@ -17,9 +17,9 @@
   margin-left: auto;
   border: 1px solid var(--filmwave-border-color);
   border-radius: 10px;
-  background: var(--filmwave-white);
+  background: var(--bg-primary);
   padding: var(--filmwave-page-gutter);
-  color: var(--filmwave-black);
+  color: var(--text-primary);
 }
 
 .summary {
