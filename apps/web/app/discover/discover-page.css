@@ -21,7 +21,7 @@
 
 .discover-artist-hero {
   --discover-artist-featured-intro-bottom: calc(clamp(190px, 13vw, 250px) + 30px);
-  --discover-artist-hero-height: clamp(960px, 65vw, 1240px);
+  --discover-artist-hero-height: clamp(930px, 58vw, 1100px);
   position: relative;
   min-height: var(--discover-artist-hero-height);
   overflow: hidden;
