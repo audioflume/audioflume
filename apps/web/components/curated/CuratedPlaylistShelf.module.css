@@ -1,8 +1,15 @@
 .shelf {
   --filmwave-curated-shelf-card-gap: 12px;
+  --filmwave-curated-shelf-edge: var(
+    --curated-page-gutter,
+    var(--filmwave-page-gutter)
+  );
   --filmwave-curated-shelf-content-width: min(
-    calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)),
-    1280px
+    calc(
+      100vw - var(--filmwave-curated-shelf-edge) -
+        var(--filmwave-curated-shelf-edge)
+    ),
+    var(--filmwave-editorial-max-width)
   );
   --filmwave-curated-shelf-card-width: calc(
     (
@@ -12,7 +19,7 @@
       ) /
       3
   );
-  width: min(100%, 1280px);
+  width: min(100%, var(--filmwave-editorial-max-width));
   margin-right: auto;
   margin-bottom: 0;
   margin-left: auto;
@@ -20,15 +27,15 @@
 
 .heading {
   display: flex;
-  width: calc(
-    100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
-  );
+  width: var(--filmwave-curated-shelf-content-width);
   min-height: 34px;
   align-items: center;
   justify-content: space-between;
   gap: 20px;
   margin-bottom: 12px;
-  margin-left: calc(50% - 50vw + var(--filmwave-page-gutter));
+  margin-left: calc(
+    50% - 50vw + var(--filmwave-curated-shelf-edge)
+  );
 }
 
 .viewport {
@@ -41,8 +48,8 @@
 .scroller {
   align-items: flex-start;
   gap: var(--filmwave-curated-shelf-card-gap);
-  padding-right: var(--filmwave-page-gutter);
-  padding-left: var(--filmwave-page-gutter);
+  padding-right: var(--filmwave-curated-shelf-edge);
+  padding-left: var(--filmwave-curated-shelf-edge);
 }
 
 .portalShell {
