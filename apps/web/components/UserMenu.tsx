@@ -56,7 +56,7 @@ function MenuLink({
 function InviteCountBadge({ count }: { count: number }) {
   return (
     <span
-      className="ml-auto inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] font-medium leading-none text-[var(--danger-contrast)]"
+      className="ml-auto inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[var(--status-error)] px-1.5 text-[10px] font-medium leading-none text-white"
       aria-label={`${count} pending artist ${count === 1 ? "invitation" : "invitations"}`}
     >
       {count > 99 ? "99+" : count}
