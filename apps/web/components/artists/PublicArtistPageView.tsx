@@ -192,6 +192,10 @@ export default function PublicArtistPageView({
     <>
       <style>{`
         .artist-public-page {
+          --artist-public-page-edge: max(
+            var(--filmwave-editorial-inset),
+            calc((100vw - var(--filmwave-editorial-max-width)) / 2)
+          );
           margin-top: var(--filmwave-header-height);
           min-height: calc(100vh - var(--filmwave-header-height));
           overflow-x: clip;
@@ -201,12 +205,13 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-page.artist-public-page-embedded {
+          --artist-public-page-edge: var(--filmwave-page-gutter);
           margin-top: 0;
           min-height: 0;
         }
 
         .artist-public-shell {
-          padding: 0 var(--filmwave-page-gutter);
+          padding: 0 var(--artist-public-page-edge);
         }
 
         .artist-public-top {
@@ -679,7 +684,7 @@ export default function PublicArtistPageView({
         }
 
         .artist-public-music {
-          margin: 0 calc(var(--filmwave-page-gutter) * -1);
+          margin: 0 calc(var(--artist-public-page-edge) * -1);
         }
 
         .artist-public-grid {
