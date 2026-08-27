@@ -8,10 +8,12 @@ type GoogleAccountChooserSignInProps = {
   redirectUrl?: string;
 };
 
-const GOOGLE_BUTTON_SELECTOR = [
-  ".cl-socialButtonsBlockButton__google",
-  ".cl-socialButtonsIconButton__google",
-].join(",");
+function isGoogleButton(button: HTMLButtonElement) {
+  const text = button.textContent?.trim().toLowerCase() || "";
+  const ariaLabel = button.getAttribute("aria-label")?.trim().toLowerCase() || "";
+
+  return text.includes("google") || ariaLabel.includes("google");
+}
 
 export default function GoogleAccountChooserSignIn({
   redirectUrl,
@@ -21,7 +23,9 @@ export default function GoogleAccountChooserSignIn({
   function handleClickCapture(event: MouseEvent<HTMLDivElement>) {
     const target = event.target;
     if (!(target instanceof Element)) return;
-    if (!target.closest(GOOGLE_BUTTON_SELECTOR)) return;
+
+    const button = target.closest("button");
+    if (!(button instanceof HTMLButtonElement) || !isGoogleButton(button)) return;
 
     event.preventDefault();
     event.stopPropagation();
