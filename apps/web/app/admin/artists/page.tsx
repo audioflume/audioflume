@@ -801,7 +801,7 @@ export default function AdminArtistsPage() {
                               },
                         );
                       }}
-                      className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-45"
+                      className="inline-flex h-8 w-6 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-45"
                     >
                       <svg
                         width="16"
@@ -826,14 +826,14 @@ export default function AdminArtistsPage() {
       {artistMenu && menuArtist ? (
         <div
           data-artist-more-menu
-          className="fixed z-[90] min-w-[164px] rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1 shadow-[0_12px_32px_rgba(0,0,0,0.16)]"
+          className="filmwave-dropdown-shell fixed z-[90]"
           style={{ top: artistMenu.top, right: artistMenu.right }}
         >
           <button
             type="button"
             disabled={Boolean(updatingArtistId)}
             onClick={() => void deleteArtist(menuArtist)}
-            className="flex h-9 w-full cursor-pointer items-center rounded-[5px] px-3 text-left text-[11px] font-medium text-[var(--danger)] transition hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-45"
+            className="danger-hover"
           >
             Delete Artist
           </button>
