@@ -21,6 +21,7 @@ type ArtistClaimInvitation = {
   artist_id: string;
   email: string;
   status: ClaimInvitationStatus;
+  ownership_transfer: boolean;
   expires_at: string;
   claimed_at: string | null;
   revoked_at: string | null;
@@ -351,6 +352,62 @@ export default function AdminArtistsPage() {
     }
   }
 
+  async function changeArtistOwnerEmail(artist: AdminArtist) {
+    if (updatingArtistId) return;
+
+    const email = window.prompt(
+      artist.owner
+        ? `Email address to transfer ownership of ${artist.name} to:`
+        : `Owner email for ${artist.name}:`,
+      artist.claim_invitation?.email ?? "",
+    );
+    if (!email?.trim()) return;
+
+    try {
+      setArtistMenu(null);
+      setUpdatingArtistId(artist.id);
+
+      const response = await fetch(
+        `/api/admin/artists/${artist.id}/claim-invitation`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email,
+            transfer_ownership: Boolean(artist.owner),
+            replace_pending: true,
+          }),
+        },
+      );
+      const body = (await response.json().catch(() => ({}))) as ArtistsResponse;
+
+      if (!response.ok || !body.invitation) {
+        throw new Error(body.error || "Failed to update artist owner email");
+      }
+
+      setArtists((current) =>
+        current.map((item) =>
+          item.id === artist.id
+            ? { ...item, claim_invitation: body.invitation! }
+            : item,
+        ),
+      );
+      showToast(
+        artist.owner
+          ? `${artist.name}: ownership transfer sent`
+          : `${artist.name}: owner invitation updated`,
+      );
+    } catch (transferError) {
+      showToast(
+        transferError instanceof Error
+          ? transferError.message
+          : "Failed to update artist owner email",
+      );
+    } finally {
+      setUpdatingArtistId(null);
+    }
+  }
+
   async function revokeArtistInvite(artist: AdminArtist) {
     if (updatingArtistId || artist.claim_invitation?.status !== "pending") return;
 
@@ -643,6 +700,12 @@ export default function AdminArtistsPage() {
                 !artist.owner && artist.claim_invitation?.status === "pending"
                   ? artist.claim_invitation
                   : null;
+              const pendingTransfer =
+                artist.owner &&
+                artist.claim_invitation?.status === "pending" &&
+                artist.claim_invitation.ownership_transfer
+                  ? artist.claim_invitation
+                  : null;
               const ownerLabel = artist.owner
                 ? artist.owner.display_name || artist.owner.company_name || "Owner"
                 : pendingClaim
@@ -687,7 +750,11 @@ export default function AdminArtistsPage() {
                     <div className="truncate text-xs text-[var(--text-primary)]">
                       {ownerLabel}
                     </div>
-                    {artist.owner?.company_name &&
+                    {pendingTransfer ? (
+                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                        Transfer pending · {pendingTransfer.email}
+                      </div>
+                    ) : artist.owner?.company_name &&
                     artist.owner.company_name !== ownerLabel ? (
                       <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
                         {artist.owner.company_name}
@@ -785,7 +852,7 @@ export default function AdminArtistsPage() {
                       disabled={Boolean(updatingArtistId)}
                       onClick={(event) => {
                         const rect = event.currentTarget.getBoundingClientRect();
-                        const menuHeight = 44;
+                        const menuHeight = 72;
                         const top =
                           rect.bottom + 6 + menuHeight <= window.innerHeight - 12
                             ? rect.bottom + 6
@@ -829,6 +896,13 @@ export default function AdminArtistsPage() {
           className="filmwave-dropdown-shell fixed z-[90]"
           style={{ top: artistMenu.top, right: artistMenu.right }}
         >
+          <button
+            type="button"
+            disabled={Boolean(updatingArtistId)}
+            onClick={() => void changeArtistOwnerEmail(menuArtist)}
+          >
+            Change Owner Email
+          </button>
           <button
             type="button"
             disabled={Boolean(updatingArtistId)}
