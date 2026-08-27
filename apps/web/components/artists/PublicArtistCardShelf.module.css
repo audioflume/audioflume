@@ -6,8 +6,12 @@
 }
 
 .scroller {
+  --artist-public-shelf-edge: var(
+    --artist-public-page-edge,
+    var(--filmwave-page-gutter)
+  );
   --artist-public-shelf-content-width: calc(
-    100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+    100vw - var(--artist-public-shelf-edge) - var(--artist-public-shelf-edge)
   );
   display: flex;
   width: 100vw;
@@ -15,8 +19,8 @@
   gap: 22px;
   margin-right: calc(50% - 50vw);
   margin-left: calc(50% - 50vw);
-  padding-right: var(--filmwave-page-gutter);
-  padding-left: var(--filmwave-page-gutter);
+  padding-right: var(--artist-public-shelf-edge);
+  padding-left: var(--artist-public-shelf-edge);
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
