@@ -52,7 +52,14 @@ type ArtistsResponse = {
   artist?: AdminArtist;
   invitation?: ArtistClaimInvitation;
   revoked?: boolean;
+  deleted?: boolean;
   error?: string;
+};
+
+type ArtistMenuState = {
+  artistId: string;
+  top: number;
+  right: number;
 };
 
 const FILTERS: { value: ArtistStatusFilter; label: string }[] = [
@@ -161,6 +168,7 @@ export default function AdminArtistsPage() {
   const [newArtistSlug, setNewArtistSlug] = useState("");
   const [newArtistEmail, setNewArtistEmail] = useState("");
   const [creatingArtist, setCreatingArtist] = useState(false);
+  const [artistMenu, setArtistMenu] = useState<ArtistMenuState | null>(null);
 
   async function loadArtists() {
     try {
@@ -187,6 +195,34 @@ export default function AdminArtistsPage() {
   useEffect(() => {
     void loadArtists();
   }, []);
+
+  useEffect(() => {
+    if (!artistMenu) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (target instanceof Element && target.closest("[data-artist-more-menu]")) {
+        return;
+      }
+      setArtistMenu(null);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setArtistMenu(null);
+    };
+    const closeMenu = () => setArtistMenu(null);
+
+    document.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("resize", closeMenu);
+    window.addEventListener("scroll", closeMenu, true);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("resize", closeMenu);
+      window.removeEventListener("scroll", closeMenu, true);
+    };
+  }, [artistMenu]);
 
   const counts = useMemo(() => {
     return {
@@ -222,6 +258,10 @@ export default function AdminArtistsPage() {
       return searchable.includes(query);
     });
   }, [artists, search, statusFilter]);
+
+  const menuArtist = artistMenu
+    ? artists.find((artist) => artist.id === artistMenu.artistId) ?? null
+    : null;
 
   function showToast(message: string) {
     setToastMessage(message);
@@ -415,6 +455,38 @@ export default function AdminArtistsPage() {
         updateError instanceof Error
           ? updateError.message
           : "Failed to update artist status",
+      );
+    } finally {
+      setUpdatingArtistId(null);
+    }
+  }
+
+  async function deleteArtist(artist: AdminArtist) {
+    if (updatingArtistId) return;
+
+    const confirmed = window.confirm(
+      `Delete ${artist.name}? This permanently removes the artist profile. Artists with catalogue, rights, agreement, or financial data are protected and cannot be deleted.`,
+    );
+    if (!confirmed) return;
+
+    try {
+      setArtistMenu(null);
+      setUpdatingArtistId(artist.id);
+
+      const response = await fetch(`/api/admin/artists/${artist.id}`, {
+        method: "DELETE",
+      });
+      const body = (await response.json().catch(() => ({}))) as ArtistsResponse;
+
+      if (!response.ok || !body.deleted) {
+        throw new Error(body.error || "Failed to delete artist");
+      }
+
+      setArtists((current) => current.filter((item) => item.id !== artist.id));
+      showToast(`${artist.name}: deleted`);
+    } catch (deleteError) {
+      showToast(
+        deleteError instanceof Error ? deleteError.message : "Failed to delete artist",
       );
     } finally {
       setUpdatingArtistId(null);
@@ -704,6 +776,45 @@ export default function AdminArtistsPage() {
                         {updating ? "Saving..." : "Restore"}
                       </ActionButton>
                     ) : null}
+
+                    <button
+                      type="button"
+                      data-artist-more-menu
+                      aria-label={`More actions for ${artist.name}`}
+                      aria-expanded={artistMenu?.artistId === artist.id}
+                      disabled={Boolean(updatingArtistId)}
+                      onClick={(event) => {
+                        const rect = event.currentTarget.getBoundingClientRect();
+                        const menuHeight = 44;
+                        const top =
+                          rect.bottom + 6 + menuHeight <= window.innerHeight - 12
+                            ? rect.bottom + 6
+                            : rect.top - menuHeight - 6;
+
+                        setArtistMenu((current) =>
+                          current?.artistId === artist.id
+                            ? null
+                            : {
+                                artistId: artist.id,
+                                top,
+                                right: Math.max(12, window.innerWidth - rect.right),
+                              },
+                        );
+                      }}
+                      className="inline-flex h-8 w-8 shrink-0 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-45"
+                    >
+                      <svg
+                        width="16"
+                        height="16"
+                        viewBox="0 0 16 16"
+                        fill="currentColor"
+                        aria-hidden="true"
+                      >
+                        <circle cx="8" cy="3" r="1.15" />
+                        <circle cx="8" cy="8" r="1.15" />
+                        <circle cx="8" cy="13" r="1.15" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               );
@@ -711,6 +822,23 @@ export default function AdminArtistsPage() {
           </div>
         )}
       </div>
+
+      {artistMenu && menuArtist ? (
+        <div
+          data-artist-more-menu
+          className="fixed z-[90] min-w-[164px] rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1 shadow-[0_12px_32px_rgba(0,0,0,0.16)]"
+          style={{ top: artistMenu.top, right: artistMenu.right }}
+        >
+          <button
+            type="button"
+            disabled={Boolean(updatingArtistId)}
+            onClick={() => void deleteArtist(menuArtist)}
+            className="flex h-9 w-full cursor-pointer items-center rounded-[5px] px-3 text-left text-[11px] font-medium text-[var(--danger)] transition hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-45"
+          >
+            Delete Artist
+          </button>
+        </div>
+      ) : null}
 
       <Toast message={toastMessage} />
     </AdminContentPage>
