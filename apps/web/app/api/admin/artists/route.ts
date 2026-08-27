@@ -26,6 +26,7 @@ type ArtistClaimInvitationRow = {
   artist_id: string;
   email: string;
   status: "pending" | "claimed" | "revoked" | "expired";
+  ownership_transfer: boolean;
   expires_at: string;
   claimed_at: string | null;
   revoked_at: string | null;
@@ -91,7 +92,7 @@ export async function GET() {
         supabaseServer
           .from("artist_claim_invitations")
           .select(
-            "id, artist_id, email, status, expires_at, claimed_at, revoked_at, created_at",
+            "id, artist_id, email, status, ownership_transfer, expires_at, claimed_at, revoked_at, created_at",
           )
           .in("artist_id", artistIds)
           .order("created_at", { ascending: false }),
