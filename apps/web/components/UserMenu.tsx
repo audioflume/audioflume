@@ -53,6 +53,17 @@ function MenuLink({
   );
 }
 
+function InviteCountBadge({ count }: { count: number }) {
+  return (
+    <span
+      className="ml-auto inline-flex h-5 min-w-5 shrink-0 items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] font-medium leading-none text-[var(--danger-contrast)]"
+      aria-label={`${count} pending artist ${count === 1 ? "invitation" : "invitations"}`}
+    >
+      {count > 99 ? "99+" : count}
+    </span>
+  );
+}
+
 export default function UserMenu({ onClose }: { onClose?: () => void }) {
   const { signOut } = useClerk();
   const { user } = useUser();
@@ -110,16 +121,19 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
 
       <UserMenuActions>
         {pendingArtistInviteCount > 0 ? (
-          <MenuLink
+          <Link
             href="/artists/claim"
-            label={
-              pendingArtistInviteCount === 1
-                ? "Artist Invitation"
-                : `Artist Invitations (${pendingArtistInviteCount})`
-            }
-            icon="profile"
-            onClose={onClose}
-          />
+            className="filmwave-dropdown-item filmwave-user-menu-action"
+            onClick={onClose}
+          >
+            <span className="filmwave-user-menu-action-icon" aria-hidden="true">
+              <UserMenuGlyph name="profile" />
+            </span>
+            <span className="filmwave-user-menu-action-label">
+              Artist Invitation
+            </span>
+            <InviteCountBadge count={pendingArtistInviteCount} />
+          </Link>
         ) : null}
         <MenuLink
           href="/account/settings"
