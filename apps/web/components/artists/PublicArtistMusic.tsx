@@ -16,7 +16,12 @@ export default function PublicArtistMusic({ songs }: { songs: Song[] }) {
   }, [setQueue, songs]);
 
   return (
-    <div style={{ margin: "0 var(--filmwave-page-gutter)" }}>
+    <div
+      style={{
+        margin:
+          "0 var(--artist-public-page-edge, var(--filmwave-page-gutter))",
+      }}
+    >
       <MusicListShell title={null}>
         {songs.map((song) => (
           <SongCard key={song.id} song={song} />
