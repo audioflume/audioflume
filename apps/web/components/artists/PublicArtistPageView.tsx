@@ -661,7 +661,7 @@ export default function PublicArtistPageView({
           align-items: baseline;
           justify-content: space-between;
           gap: 16px;
-          padding-bottom: 16px;
+          padding-bottom: 12px;
         }
 
         .artist-public-section-title {
