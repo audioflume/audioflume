@@ -197,13 +197,13 @@
 }
 
 .tracks :global(.filmwave-song-card) {
-  --filmwave-song-card-hover-bg: var(--bg-primary);
+  --filmwave-song-card-hover-bg: var(--filmwave-white);
 }
 
 .tracks :global(.filmwave-song-card:hover),
 .tracks :global(.filmwave-song-card.is-current),
 .tracks :global(.filmwave-song-card.is-playing) {
-  background: var(--bg-primary);
+  background: var(--filmwave-white);
 }
 
 .empty {
