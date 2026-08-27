@@ -3,6 +3,11 @@ import "../discover/discover-reference-layout.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
+    --curated-page-gutter: max(
+      var(--filmwave-editorial-inset),
+      calc((100vw - var(--filmwave-editorial-max-width)) / 2)
+    );
+    --curated-feature-edge: var(--curated-page-gutter);
     --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
     --curated-feature-title-thumbnail-size: calc(
       25.675px + clamp(29.4px, 3.136vw, 47.04px)
@@ -14,7 +19,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
       calc(
         100vw - var(--curated-feature-edge) - var(--curated-feature-edge)
       ),
-      var(--discover-editorial-width, 1280px)
+      var(--filmwave-editorial-max-width)
     );
     --curated-landing-card-width: calc(
       (
@@ -41,13 +46,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     .curated-playlists-page-layer
     > div
     > section[aria-labelledby="curated-page-heading"] {
-    width: min(
-      calc(
-        100% - var(--filmwave-editorial-inner-inset) -
-          var(--filmwave-editorial-inner-inset)
-      ),
-      var(--filmwave-editorial-max-width)
-    );
+    width: 100%;
     margin-right: auto;
     margin-left: auto;
   }
