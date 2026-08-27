@@ -41,7 +41,7 @@ export async function GET() {
 
     const { data: invitations, error: invitationsError } = await supabaseServer
       .from("artist_claim_invitations")
-      .select("id, artist_id, email, status, expires_at, created_at")
+      .select("id, artist_id, email, status, ownership_transfer, expires_at, created_at")
       .eq("status", "pending")
       .gt("expires_at", new Date().toISOString())
       .in("email", emails)
@@ -80,7 +80,11 @@ export async function GET() {
 
     return NextResponse.json({
       invitations: invitations
-        .filter((invitation) => !ownedArtistIds.has(invitation.artist_id))
+        .filter(
+          (invitation) =>
+            invitation.ownership_transfer ||
+            !ownedArtistIds.has(invitation.artist_id),
+        )
         .map((invitation) => ({
           ...invitation,
           artist: artistsById.get(invitation.artist_id) ?? null,
@@ -129,7 +133,7 @@ export async function POST(request: Request) {
 
     const { data: invitation, error: invitationError } = await supabaseServer
       .from("artist_claim_invitations")
-      .select("id, artist_id, email, status, expires_at")
+      .select("id, artist_id, email, status, ownership_transfer, expires_at")
       .eq("id", invitationId)
       .eq("status", "pending")
       .maybeSingle();
