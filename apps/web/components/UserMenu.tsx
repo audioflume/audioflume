@@ -7,7 +7,7 @@ import GearIcon from "@/components/icons/GearIcon";
 import {
   UserMenuAction,
   UserMenuActions,
-  UserMenuExitAction,
+  UserMenuGlyph,
   UserMenuHeader,
   UserMenuPanel,
   UserMenuThemeToggle,
@@ -111,11 +111,20 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
       </UserMenuActions>
 
       <UserMenuActions className="filmwave-user-menu-signout">
-        <UserMenuExitAction
-          label="Sign Out"
-          icon="sign-out"
+        <button
+          type="button"
           onClick={() => signOut()}
-        />
+          className="filmwave-dropdown-item filmwave-user-menu-exit"
+        >
+          <span
+            className="filmwave-user-menu-action-icon"
+            aria-hidden="true"
+            style={{ transform: "scaleX(-1)" }}
+          >
+            <UserMenuGlyph name="sign-out" />
+          </span>
+          <span>Sign Out</span>
+        </button>
       </UserMenuActions>
     </UserMenuPanel>
   );
