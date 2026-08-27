@@ -15,7 +15,7 @@ type FilterIconName =
   | "globe"
   | "camera"
   | "clapper"
-  | "moon";
+  | "youtube";
 
 type CuratedBrowseFiltersVariant = "pill" | "curated-page";
 
@@ -27,7 +27,7 @@ const FILTER_ICONS: Record<CuratedBrowseTag, FilterIconName> = {
   travel: "globe",
   documentary: "camera",
   cinematic: "clapper",
-  "dark-moody": "moon",
+  "dark-moody": "youtube",
 };
 
 function FilterIcon({ icon }: { icon: FilterIconName }) {
@@ -106,7 +106,8 @@ function FilterIcon({ icon }: { icon: FilterIconName }) {
 
   return (
     <svg {...commonProps}>
-      <path d="M18.5 15.5A8 8 0 0 1 8.5 5.5 8 8 0 1 0 18.5 15.5Z" />
+      <rect x="3" y="6.5" width="18" height="11" rx="3.5" />
+      <path d="m10 9.5 5 2.5-5 2.5Z" fill="currentColor" stroke="none" />
     </svg>
   );
 }
