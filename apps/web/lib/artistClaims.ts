@@ -14,6 +14,7 @@ export type ArtistClaimInvitation = {
   email: string;
   status: ArtistClaimInvitationStatus;
   clerk_invitation_id: string | null;
+  ownership_transfer: boolean;
   expires_at: string;
   claimed_at: string | null;
   revoked_at: string | null;
@@ -60,11 +61,13 @@ export async function createArtistClaimInvitation({
   email: rawEmail,
   invitedByClerkUserId,
   origin,
+  allowOwnershipTransfer = false,
 }: {
   artistId: string;
   email: string;
   invitedByClerkUserId: string | null;
   origin: string;
+  allowOwnershipTransfer?: boolean;
 }) {
   const email = normalizeArtistClaimEmail(rawEmail);
   if (!email || !isValidArtistClaimEmail(email)) {
@@ -90,7 +93,7 @@ export async function createArtistClaimInvitation({
     .maybeSingle();
 
   if (ownerError) throw ownerError;
-  if (owner) {
+  if (owner && !allowOwnershipTransfer) {
     throw new ArtistClaimError("This artist profile already has an owner", 409);
   }
 
@@ -128,10 +131,11 @@ export async function createArtistClaimInvitation({
       status: "pending",
       clerk_invitation_id: invitation.id,
       invited_by_clerk_user_id: invitedByClerkUserId,
+      ownership_transfer: Boolean(owner && allowOwnershipTransfer),
       expires_at: expiresAt,
     })
     .select(
-      "id, artist_id, email, status, clerk_invitation_id, expires_at, claimed_at, revoked_at, created_at",
+      "id, artist_id, email, status, clerk_invitation_id, ownership_transfer, expires_at, claimed_at, revoked_at, created_at",
     )
     .single();
 
