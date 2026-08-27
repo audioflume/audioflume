@@ -222,9 +222,13 @@
 .discover-artist-hero-featured-intro {
   display: grid;
   grid-row: 3;
-  width: 100%;
+  width: calc(
+    100vw - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
+  );
+  max-width: var(--filmwave-editorial-max-width);
   grid-template-columns: 18% minmax(300px, 40%) 1fr;
   align-items: end;
+  justify-self: center;
   gap: clamp(24px, 2.5vw, 44px);
 }
 
