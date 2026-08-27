@@ -15,7 +15,12 @@
   max-width: var(--filmwave-editorial-max-width);
   margin-right: auto;
   margin-left: auto;
-  padding: 44px 0 0;
+  background: var(--filmwave-white);
+  padding: var(--filmwave-page-gutter);
+  color: var(--filmwave-black);
+  box-shadow:
+    0 24px 72px rgba(17, 17, 17, 0.09),
+    0 6px 24px rgba(17, 17, 17, 0.04);
 }
 
 .summary {
@@ -210,7 +215,7 @@
 
 @media (max-width: 760px) {
   .inner {
-    padding-top: 30px;
+    padding: 24px;
   }
 
   .releaseArtwork {
