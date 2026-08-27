@@ -15,7 +15,9 @@
   max-width: var(--filmwave-editorial-max-width);
   margin-right: auto;
   margin-left: auto;
-  background: var(--filmwave-neutral-surface);
+  border: 1px solid var(--filmwave-border-color);
+  border-radius: 10px;
+  background: var(--filmwave-white);
   padding: var(--filmwave-page-gutter);
   color: var(--filmwave-black);
 }
@@ -188,6 +190,10 @@
 
 .tracks {
   margin-top: 38px;
+}
+
+.tracks :global(.fw-song-list) {
+  margin-bottom: 0;
 }
 
 .empty {
