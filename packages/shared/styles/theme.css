@@ -63,7 +63,12 @@
 
   /* Canonical Filmwave page construction. */
   --filmwave-page-gutter: 50px;
-  --filmwave-editorial-inset: clamp(28px, 7.8vw, 96px);
+  --filmwave-editorial-inset-default: clamp(28px, 7.8vw, 96px);
+  --filmwave-editorial-inset: var(--filmwave-editorial-inset-default);
+  --filmwave-editorial-inset-compact: min(
+    var(--filmwave-editorial-inset-default),
+    80px
+  );
   --filmwave-editorial-inner-inset: max(
     0px,
     calc(var(--filmwave-editorial-inset) - var(--filmwave-page-gutter))
@@ -217,10 +222,18 @@
   --media-overlay-strong: rgba(255, 255, 255, 0.62);
 }
 
+:where(.discover-page-root),
+:where(.playlist-detail-page),
+:where(.artist-public-page:not(.artist-public-page-embedded)),
+:where(body:has(.curated-playlists-page-root)) {
+  --filmwave-editorial-inset: var(--filmwave-editorial-inset-compact);
+}
+
 @media (max-width: 620px) {
   :where(:root) {
     --filmwave-page-gutter: 18px;
-    --filmwave-editorial-inset: 18px;
+    --filmwave-editorial-inset-default: 18px;
+    --filmwave-editorial-inset: var(--filmwave-editorial-inset-default);
   }
 }
 
