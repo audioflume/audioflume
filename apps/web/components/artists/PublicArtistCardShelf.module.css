@@ -115,6 +115,52 @@
   outline-offset: 4px;
 }
 
+.drawerTransition {
+  display: grid;
+  width: 100vw;
+  margin-right: calc(50% - 50vw);
+  margin-left: calc(50% - 50vw);
+  overflow: hidden;
+}
+
+.drawerTransitionInner {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.drawerOpening {
+  animation: artist-public-drawer-open 240ms cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.drawerClosing {
+  pointer-events: none;
+  animation: artist-public-drawer-close 180ms cubic-bezier(0.4, 0, 1, 1) both;
+}
+
+@keyframes artist-public-drawer-open {
+  from {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+
+  to {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+}
+
+@keyframes artist-public-drawer-close {
+  from {
+    grid-template-rows: 1fr;
+    opacity: 1;
+  }
+
+  to {
+    grid-template-rows: 0fr;
+    opacity: 0;
+  }
+}
+
 .drawerStatus {
   display: flex;
   box-sizing: border-box;
@@ -129,6 +175,13 @@
   background: var(--bg-secondary);
   color: var(--text-muted);
   font-size: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drawerOpening,
+  .drawerClosing {
+    animation-duration: 1ms;
+  }
 }
 
 @media (max-width: 980px) {
