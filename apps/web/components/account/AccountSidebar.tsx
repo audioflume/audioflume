@@ -2,7 +2,7 @@
 
 import { useUser } from "@clerk/nextjs";
 import { usePathname } from "next/navigation";
-import { Fragment, useEffect, useState } from "react";
+import { Fragment } from "react";
 import {
   BackendSidebarHeading,
   BackendSidebarNavItem,
@@ -11,6 +11,7 @@ import {
 } from "@/components/backend/BackendSidebar";
 import GearIcon from "@/components/icons/GearIcon";
 import { usePlayer } from "@/context/PlayerContext";
+import { useArtistInvites } from "@/context/ArtistInvitesContext";
 import {
   UserMenuGlyph,
   type UserMenuGlyphName,
@@ -42,47 +43,13 @@ export default function AccountSidebar() {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
   const { user } = useUser();
-  const [pendingArtistInviteCount, setPendingArtistInviteCount] = useState(0);
+  const { pendingInviteCount } = useArtistInvites();
   const displayName =
     user?.fullName ||
     user?.username ||
     user?.primaryEmailAddress?.emailAddress ||
     "Audioflume Member";
   const email = user?.primaryEmailAddress?.emailAddress || "Audioflume Member";
-
-  useEffect(() => {
-    if (!user?.id) {
-      setPendingArtistInviteCount(0);
-      return;
-    }
-
-    let cancelled = false;
-
-    async function loadInvites() {
-      try {
-        const response = await fetch("/api/artists/claim", { cache: "no-store" });
-        const body = (await response.json().catch(() => ({}))) as {
-          invitations?: unknown[];
-        };
-
-        if (!cancelled && response.ok) {
-          setPendingArtistInviteCount(
-            Array.isArray(body.invitations) ? body.invitations.length : 0,
-          );
-        }
-      } catch {
-        if (!cancelled) setPendingArtistInviteCount(0);
-      }
-    }
-
-    void loadInvites();
-    window.addEventListener("focus", loadInvites);
-
-    return () => {
-      cancelled = true;
-      window.removeEventListener("focus", loadInvites);
-    };
-  }, [user?.id]);
 
   return (
     <BackendSidebarShell bottom={currentSong ? "64px" : "0px"}>
@@ -130,12 +97,12 @@ export default function AccountSidebar() {
                   {item.label}
                 </BackendSidebarNavItem>
 
-                {item.section === "profile" && pendingArtistInviteCount > 0 ? (
+                {item.section === "profile" && pendingInviteCount > 0 ? (
                   <BackendSidebarNavItem
                     href="/artists/claim"
                     active={pathname === "/artists/claim"}
                     leading={<UserMenuGlyph name="profile" />}
-                    trailing={<InviteCountBadge count={pendingArtistInviteCount} />}
+                    trailing={<InviteCountBadge count={pendingInviteCount} />}
                   >
                     Artist Invitation
                   </BackendSidebarNavItem>
