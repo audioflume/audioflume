@@ -4,9 +4,11 @@ import { requireAdmin } from "@/lib/admin";
 import {
   ArtistClaimError,
   createArtistClaimInvitation,
+  expireArtistClaimInvitations,
   normalizeArtistClaimEmail,
   revokeArtistClaimInvitation,
 } from "@/lib/artistClaims";
+import { supabaseServer } from "@/lib/supabaseServer";
 
 type RouteContext = {
   params: Promise<{ id: string }> | { id: string };
@@ -24,12 +26,34 @@ export async function POST(request: Request, context: RouteContext) {
       | Record<string, unknown>
       | null;
     const email = normalizeArtistClaimEmail(body?.email);
+    const allowOwnershipTransfer = body?.transfer_ownership === true;
+    const replacePending = body?.replace_pending === true;
+
+    if (replacePending) {
+      await expireArtistClaimInvitations(id);
+
+      const { data: pendingInvitation, error: pendingError } = await supabaseServer
+        .from("artist_claim_invitations")
+        .select("id")
+        .eq("artist_id", id)
+        .eq("status", "pending")
+        .maybeSingle();
+
+      if (pendingError) throw pendingError;
+      if (pendingInvitation) {
+        await revokeArtistClaimInvitation({
+          artistId: id,
+          invitationId: pendingInvitation.id,
+        });
+      }
+    }
 
     const invitation = await createArtistClaimInvitation({
       artistId: id,
       email,
       invitedByClerkUserId: admin.user?.id ?? null,
       origin: new URL(request.url).origin,
+      allowOwnershipTransfer,
     });
 
     return NextResponse.json({ invitation }, { status: 201 });
