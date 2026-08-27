@@ -196,6 +196,12 @@
   margin-bottom: 0;
 }
 
+.tracks :global(.filmwave-song-card:hover),
+.tracks :global(.filmwave-song-card.is-current),
+.tracks :global(.filmwave-song-card.is-playing) {
+  background: var(--bg-primary);
+}
+
 .empty {
   display: flex;
   min-height: 120px;
