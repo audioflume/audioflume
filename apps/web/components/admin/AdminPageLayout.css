@@ -8,7 +8,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] {
 }
 
 main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] {
-  padding-top: 88px !important;
+  padding-top: calc(var(--filmwave-header-height, 75px) + 13px) !important;
 }
 
 /* Shared admin missing-content message treatment. */
@@ -179,256 +179,40 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   border-radius: 7px;
 }
 
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  > .admin-song-form-card-header
-  + div
-  > div:nth-child(-n + 6)
-  > label:first-child,
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  .admin-song-ai-field
-  > label:first-child {
-  display: none;
-}
-
-/* Song Info checkbox geometry. */
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  > .admin-song-form-card-header
-  + div
-  > div:nth-child(6)
-  > label:last-child
-  > span,
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  .admin-song-ai-field
-  > label:last-child
-  > span {
-  width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
-  border: 1.5px solid var(--border);
-  border-radius: 4px;
-  background: var(--bg-secondary);
-  color: var(--bg-primary);
-  transition: border 0.15s ease, background 0.15s ease, color 0.15s ease;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  > .admin-song-form-card-header
-  + div
-  > div:nth-child(6)
-  > label:last-child:hover
-  > span,
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  .admin-song-ai-field
-  > label:last-child:hover
-  > span {
-  border-color: var(--text-secondary);
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  > .admin-song-form-card-header
-  + div
-  > div:nth-child(6)
-  > label:last-child
-  > input:checked
-  + span,
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:first-of-type
-  .admin-song-ai-field
-  > label:last-child
-  > input:checked
-  + span {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
-}
-
-@media (min-width: 1280px) {
-  .admin-song-upload-content-page
-    form
-    > div:first-child
-    > section:first-of-type
-    > .admin-song-form-card-header
-    + div {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3) {
-  display: contents;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header {
-  display: none;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div {
-  display: contents;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div[class*="md:grid-cols-2"] {
-  display: contents;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div:not([class*="md:grid-cols-2"]),
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div[class*="md:grid-cols-2"]
-  > div {
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  background: var(--bg-primary);
-  padding: 20px var(--admin-song-card-x) var(--admin-song-card-bottom);
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div:not([class*="md:grid-cols-2"])
-  > div:first-child,
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div[class*="md:grid-cols-2"]
-  > div
-  > div:first-child {
-  margin-bottom: var(--admin-song-title-gap);
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  label[class*="uppercase"] {
-  margin-bottom: 0;
-  color: var(--text-primary);
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: -0.03em;
-  text-transform: none;
-}
-
-.admin-song-upload-content-page
-  form
-  > aside
-  > .admin-song-form-card:last-child
-  > div:last-child
-  > button {
-  height: 40px;
+.admin-song-upload-content-page form [class~="rounded-md"]:has(input[type="file"]) {
   border-radius: 7px;
-  font-size: 12px;
-  font-weight: 400;
 }
 
-/* Source-owned admin page corner system */
-.filmwave-admin-content-page:not(.admin-song-upload-content-page):not(.admin-song-edit-content-page) :is(
-  [class~="rounded"],
-  [class~="rounded-sm"],
-  [class~="rounded-md"],
-  [class~="rounded-lg"],
-  [class~="rounded-xl"],
-  [class~="rounded-2xl"],
-  [class~="rounded-[4px]"],
-  [class~="rounded-[8px]"],
-  [class~="rounded-[9px]"],
-  [class~="rounded-[14px]"],
-  [class~="rounded-[18px]"]
-),
-main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-song-edit-content-page)
-  .admin-song-form-card,
-main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-song-edit-content-page)
-  .admin-song-form-icon-btn,
-main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-song-edit-content-page) form :is(
-  [class~="rounded"],
-  [class~="rounded-sm"],
-  [class~="rounded-md"],
-  [class~="rounded-lg"],
-  [class~="rounded-xl"],
-  [class~="rounded-2xl"],
-  [class~="rounded-[4px]"],
-  [class~="rounded-[8px]"],
-  [class~="rounded-[9px]"],
-  [class~="rounded-[14px]"],
-  [class~="rounded-[18px]"]
-) {
-  border-radius: 0;
+.admin-song-upload-content-page form [class~="rounded-lg"]:has(input[type="file"]) {
+  border-radius: 10px;
 }
 
-/* Canonical admin action controls retain the backend control radius. */
-.filmwave-admin-content-page :is(button, a)[class~="rounded-[7px]"] {
-  border-radius: var(--filmwave-backend-control-radius, 7px);
+.admin-song-upload-content-page form [class~="rounded-lg"]:has(input[type="checkbox"]) {
+  border-radius: 7px;
 }
 
-.filmwave-admin-content-page :is(
-  [class~="rounded-full"],
-  [class~="admin-main-image-pill"],
-  [class~="admin-round-icon-button"]
-),
-main:has(.admin-song-form-card) .edit-point-play-button,
-main:has(.admin-song-form-card) button[aria-label="Toggle spacebar start from selected marker"],
-main:has(.admin-song-form-card) .cue-point-row-grid button[aria-label^="Play from"],
-main:has(.admin-song-form-card) .cue-point-marker-dot,
-main:has(.admin-song-form-card) .edit-point-selected-dot,
-main:has(.admin-song-form-card) form [style*="--status-success"],
-main:has(.admin-song-form-card) form [style*="--status-error"],
-main:has(.admin-song-form-card) form [class*="animate-spin"][class*="rounded-full"] {
-  border-radius: 999px;
+.admin-song-upload-content-page form input[type="checkbox"] {
+  border-radius: 3px;
+}
+
+.admin-song-upload-content-page form textarea {
+  min-height: 96px;
+}
+
+.admin-song-upload-content-page form button[class*="rounded-full"] {
+  border-radius: 7px;
+}
+
+.admin-song-upload-content-page .admin-song-form-card + .admin-song-form-card {
+  margin-top: 16px;
+}
+
+.admin-song-upload-content-page .admin-song-form-card-header + div {
+  padding-top: var(--admin-song-title-gap);
+}
+
+.admin-song-upload-content-page .admin-song-form-card-header + div[class*="grid"] {
+  padding-right: var(--admin-song-card-x);
+  padding-bottom: var(--admin-song-card-bottom);
+  padding-left: var(--admin-song-card-x);
 }
