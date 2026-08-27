@@ -15,9 +15,9 @@
   max-width: var(--filmwave-editorial-max-width);
   margin-right: auto;
   margin-left: auto;
-  border: 1px solid var(--filmwave-border-color);
-  border-radius: 10px;
-  background: var(--bg-primary);
+  border: 0;
+  border-radius: 0;
+  background: var(--bg-secondary);
   padding: var(--filmwave-page-gutter);
   color: var(--text-primary);
 }
