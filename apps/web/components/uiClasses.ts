@@ -52,16 +52,16 @@ export const modalFieldLabelClass =
   "block text-[11px] font-medium text-[var(--text-secondary)]";
 
 export const modalInputClass =
-  "mt-2 h-10 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
+  "mt-2 h-10 w-full rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
 
 export const modalTextareaClass =
-  "w-full resize-none rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
+  "w-full resize-none rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)] disabled:cursor-default disabled:opacity-70";
 
 export const modalCoverButtonClass =
-  "h-8 cursor-pointer rounded-none border border-[var(--border)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70";
+  "h-8 cursor-pointer rounded-[7px] border border-[var(--border)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70";
 
 export const modalActionButtonClass =
-  "flex h-9 cursor-pointer items-center justify-center rounded-none px-4 text-xs font-medium transition disabled:cursor-default disabled:opacity-70";
+  "flex h-9 cursor-pointer items-center justify-center rounded-[7px] px-4 text-xs font-medium transition disabled:cursor-default disabled:opacity-70";
 
 export const modalCancelButtonClass = `${modalActionButtonClass} filmwave-legacy-modal-cancel text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]`;
 
@@ -77,7 +77,7 @@ export const backendModalPrimaryButtonClass = `${backendModalActionButtonClass} 
 
 // Danger/delete button for modal footers
 export const modalDeleteButtonClass =
-  "flex h-9 cursor-pointer items-center justify-center rounded-none px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:cursor-default disabled:opacity-70";
+  "flex h-9 cursor-pointer items-center justify-center rounded-[7px] px-3 text-xs font-medium text-[var(--danger)] transition hover:bg-[var(--danger-hover)] hover:text-[var(--danger)] disabled:cursor-default disabled:opacity-70";
 
 export const modalIconCloseButtonClass = flatIconButtonClass;
 
