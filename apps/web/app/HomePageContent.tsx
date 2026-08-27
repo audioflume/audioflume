@@ -365,7 +365,7 @@ function HomeSongs({
 
   return (
     <section className="audioflume-home-songs">
-      <div className="mb-4 flex min-h-[34px] items-center justify-between gap-5">
+      <div className="mb-[12px] flex min-h-[34px] items-center justify-between gap-5">
         <SectionTitle>Newly Added Tracks</SectionTitle>
         <Link
           href="/music"
