@@ -75,7 +75,7 @@
   overflow: hidden;
   margin-top: 0;
   background: var(--bg-hover);
-  padding: clamp(72px, 7vw, 120px) 0;
+  padding: 80px 0;
   isolation: isolate;
 }
 
@@ -247,7 +247,6 @@
   --bg-hover: var(--filmwave-neutral-surface);
   color: var(--filmwave-black);
 }
-
 .playlist-detail-kicker,
 .playlist-detail-meta {
   color: var(--text-muted);
