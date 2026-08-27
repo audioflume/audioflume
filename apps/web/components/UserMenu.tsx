@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useTheme } from "@/context/ThemeContext";
 import GearIcon from "@/components/icons/GearIcon";
@@ -56,11 +57,42 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
   const { signOut } = useClerk();
   const { user } = useUser();
   const { theme, setTheme } = useTheme();
+  const [pendingArtistInviteCount, setPendingArtistInviteCount] = useState(0);
   const displayName =
     user?.fullName ||
     user?.username ||
     user?.primaryEmailAddress?.emailAddress ||
     "Audioflume account";
+
+  useEffect(() => {
+    if (!user?.id) {
+      setPendingArtistInviteCount(0);
+      return;
+    }
+
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        const response = await fetch("/api/artists/claim", { cache: "no-store" });
+        const body = (await response.json().catch(() => ({}))) as {
+          invitations?: unknown[];
+        };
+
+        if (!cancelled && response.ok) {
+          setPendingArtistInviteCount(
+            Array.isArray(body.invitations) ? body.invitations.length : 0,
+          );
+        }
+      } catch {
+        if (!cancelled) setPendingArtistInviteCount(0);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [user?.id]);
 
   return (
     <UserMenuPanel>
@@ -77,6 +109,18 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
       </Link>
 
       <UserMenuActions>
+        {pendingArtistInviteCount > 0 ? (
+          <MenuLink
+            href="/artists/claim"
+            label={
+              pendingArtistInviteCount === 1
+                ? "Artist Invitation"
+                : `Artist Invitations (${pendingArtistInviteCount})`
+            }
+            icon="profile"
+            onClose={onClose}
+          />
+        ) : null}
         <MenuLink
           href="/account/settings"
           label="Settings"
