@@ -47,6 +47,15 @@ function normalizeArtistSlug(value: unknown) {
     .slice(0, 80);
 }
 
+function getArchivedRejectedArtistSlug(slug: string, artistId: string) {
+  const suffix = `-rejected-${artistId.replace(/-/g, "").slice(0, 8)}`;
+  const base = slug
+    .slice(0, Math.max(1, 80 - suffix.length))
+    .replace(/-+$/g, "");
+
+  return `${base || "artist"}${suffix}`;
+}
+
 export async function GET() {
   const admin = await requireAdmin();
   if (!admin.isAdmin) {
@@ -184,8 +193,40 @@ export async function POST(request: Request) {
   }
 
   let createdArtistId: string | null = null;
+  let archivedRejectedArtistId: string | null = null;
 
   try {
+    const { data: existingSlugArtist, error: existingSlugError } =
+      await supabaseServer
+        .from("artists")
+        .select("id, status")
+        .eq("slug", slug)
+        .maybeSingle();
+
+    if (existingSlugError) throw existingSlugError;
+
+    if (existingSlugArtist) {
+      if (existingSlugArtist.status !== "rejected") {
+        return NextResponse.json(
+          { error: "That artist URL is already in use" },
+          { status: 409 },
+        );
+      }
+
+      const archivedSlug = getArchivedRejectedArtistSlug(
+        slug,
+        existingSlugArtist.id,
+      );
+      const { error: archiveError } = await supabaseServer
+        .from("artists")
+        .update({ slug: archivedSlug })
+        .eq("id", existingSlugArtist.id)
+        .eq("status", "rejected");
+
+      if (archiveError) throw archiveError;
+      archivedRejectedArtistId = existingSlugArtist.id;
+    }
+
     const { data: artist, error: artistError } = await supabaseServer
       .from("artists")
       .insert({
@@ -228,6 +269,18 @@ export async function POST(request: Request) {
 
       if (cleanupError) {
         console.error("Failed to clean up uninvited artist profile:", cleanupError);
+      }
+    }
+
+    if (archivedRejectedArtistId) {
+      const { error: restoreError } = await supabaseServer
+        .from("artists")
+        .update({ slug })
+        .eq("id", archivedRejectedArtistId)
+        .eq("status", "rejected");
+
+      if (restoreError) {
+        console.error("Failed to restore rejected artist URL:", restoreError);
       }
     }
 
