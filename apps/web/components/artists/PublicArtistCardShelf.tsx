@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Children, isValidElement, type KeyboardEvent, type ReactNode } from "react";
-import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useId, useMemo, useRef, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
 import LoadingSpinner from "@/components/LoadingSpinner";
@@ -49,6 +49,7 @@ export default function PublicArtistCardShelf({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const requestIdRef = useRef(0);
   const cacheRef = useRef(new Map<number, DrawerPayload>());
+  const prefetchRef = useRef(new Map<number, Promise<DrawerPayload>>());
   const allArtistSongsRef = useRef<Song[]>([]);
   const hasArtistQueueRef = useRef(false);
   const drawerId = useId();
@@ -61,11 +62,64 @@ export default function PublicArtistCardShelf({
   const [isLoading, setIsLoading] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const cards = Children.toArray(children);
+  const cardCount = cards.length;
   const artistSlug = useMemo(() => {
     const match = pathname.match(/^\/artists\/([^/]+)/);
     return match?.[1] ? decodeURIComponent(match[1]) : null;
   }, [pathname]);
   const collectionKind = title === "Releases" ? "release" : "playlist";
+
+  const loadReleasePayload = useCallback(
+    async (index: number) => {
+      if (!artistSlug) throw new Error("Unable to load collection");
+
+      const cached = cacheRef.current.get(index);
+      if (cached) return cached;
+
+      const pending = prefetchRef.current.get(index);
+      if (pending) return pending;
+
+      const request = (async () => {
+        const response = await fetch(
+          `/api/public/artists/${encodeURIComponent(
+            artistSlug,
+          )}/collection?kind=release&index=${index}`,
+        );
+        const payload = (await response.json().catch(() => null)) as
+          | DrawerPayload
+          | { error?: string }
+          | null;
+
+        if (!response.ok || !payload || !("collection" in payload)) {
+          throw new Error(
+            payload && "error" in payload && payload.error
+              ? payload.error
+              : "Unable to load collection",
+          );
+        }
+
+        cacheRef.current.set(index, payload);
+        return payload;
+      })();
+
+      prefetchRef.current.set(index, request);
+      void request.then(
+        () => {
+          if (prefetchRef.current.get(index) === request) {
+            prefetchRef.current.delete(index);
+          }
+        },
+        () => {
+          if (prefetchRef.current.get(index) === request) {
+            prefetchRef.current.delete(index);
+          }
+        },
+      );
+
+      return request;
+    },
+    [artistSlug],
+  );
 
   function updateScrollState() {
     const scroller = scrollerRef.current;
@@ -163,26 +217,9 @@ export default function PublicArtistCardShelf({
     const requestId = ++requestIdRef.current;
 
     try {
-      const response = await fetch(
-        `/api/public/artists/${encodeURIComponent(
-          artistSlug,
-        )}/collection?kind=${collectionKind}&index=${index}`,
-      );
-      const payload = (await response.json().catch(() => null)) as
-        | DrawerPayload
-        | { error?: string }
-        | null;
-
-      if (!response.ok || !payload || !("collection" in payload)) {
-        throw new Error(
-          payload && "error" in payload && payload.error
-            ? payload.error
-            : "Unable to load collection",
-        );
-      }
+      const payload = await loadReleasePayload(index);
       if (requestId !== requestIdRef.current) return;
 
-      cacheRef.current.set(index, payload);
       allArtistSongsRef.current = payload.all_songs;
       hasArtistQueueRef.current = true;
       setDrawerData(payload);
@@ -205,6 +242,16 @@ export default function PublicArtistCardShelf({
     event.preventDefault();
     void openCollection(index);
   }
+
+  useEffect(() => {
+    if (collectionKind !== "release" || !artistSlug || cardCount === 0) return;
+
+    for (let index = 0; index < cardCount; index += 1) {
+      void loadReleasePayload(index).catch(() => {
+        // Opening the drawer can retry a failed prefetch.
+      });
+    }
+  }, [artistSlug, cardCount, collectionKind, loadReleasePayload]);
 
   useEffect(() => {
     const scroller = scrollerRef.current;
