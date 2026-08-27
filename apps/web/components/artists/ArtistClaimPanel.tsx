@@ -14,6 +14,7 @@ type ClaimInvitation = {
   id: string;
   artist_id: string;
   email: string;
+  ownership_transfer: boolean;
   expires_at: string;
   created_at: string;
   artist: ClaimArtist;
@@ -161,7 +162,9 @@ export default function ArtistClaimPanel() {
                     /artists/{invitation.artist.slug}
                   </div>
                   <div className="mt-2 truncate text-[11px] font-light text-[var(--text-secondary)]">
-                    Invited as {invitation.email}
+                    {invitation.ownership_transfer
+                      ? `Ownership transfer to ${invitation.email}`
+                      : `Invited as ${invitation.email}`}
                   </div>
                 </div>
 
@@ -171,7 +174,13 @@ export default function ArtistClaimPanel() {
                   onClick={() => void claimArtist(invitation)}
                   className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
                 >
-                  {claiming ? "Claiming..." : "Claim Profile"}
+                  {claiming
+                    ? invitation.ownership_transfer
+                      ? "Transferring..."
+                      : "Claiming..."
+                    : invitation.ownership_transfer
+                      ? "Accept Transfer"
+                      : "Claim Profile"}
                 </button>
               </div>
             );
