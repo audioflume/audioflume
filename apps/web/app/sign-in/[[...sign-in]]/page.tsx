@@ -1,4 +1,4 @@
-import { SignIn } from "@clerk/nextjs";
+import GoogleAccountChooserSignIn from "./GoogleAccountChooserSignIn";
 
 type SignInPageProps = {
   searchParams: Promise<{
@@ -15,10 +15,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
 
   return (
     <div className="flex min-h-screen items-center justify-center">
-      <SignIn
-        forceRedirectUrl={redirectUrl}
-        fallbackRedirectUrl={redirectUrl || "/music"}
-      />
+      <GoogleAccountChooserSignIn redirectUrl={redirectUrl} />
     </div>
   );
 }
