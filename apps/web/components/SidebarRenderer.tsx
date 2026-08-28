@@ -26,6 +26,7 @@ export default function SidebarRenderer({
   const pathname = usePathname();
   const isAdminPage = pathname.startsWith("/admin");
   const isDiscoverPage = pathname === "/discover";
+  const isArtistApplyPage = pathname === "/artists/apply";
   const [resolvedInitialCollapsed, setResolvedInitialCollapsed] =
     useState(initialCollapsed);
 
@@ -34,7 +35,7 @@ export default function SidebarRenderer({
   }, [initialCollapsed]);
 
   if (isAdminPage) return <AdminSidebar />;
-  if (isDiscoverPage) return null;
+  if (isDiscoverPage || isArtistApplyPage) return null;
 
   return (
     <>
