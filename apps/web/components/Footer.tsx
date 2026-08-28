@@ -22,11 +22,11 @@ const listenLinks = [
   { href: "/sound-fx", label: "Browse sound effects" },
 ];
 
-const quickLinks = [
-  { href: "/music", label: "Cinematic" },
-  { href: "/music", label: "Documentary" },
-  { href: "/music", label: "Pop" },
-  { href: "/music", label: "Ambient" },
+const artistLinks = [
+  { href: "/artists/apply", label: "Artist signup" },
+  { href: "/artists/claim", label: "Claim your profile" },
+  { href: "/artists/dashboard?section=agreements", label: "Licensing & agreements" },
+  { href: "/artists/dashboard", label: "Artist dashboard" },
 ];
 
 const footerLinkClass =
@@ -205,9 +205,9 @@ export default function Footer({
             </div>
 
             <div className="flex flex-col gap-5">
-              <h2 className={footerHeadingClass}>Quick Links</h2>
-              <nav aria-label="Quick footer links" className="flex flex-col gap-0">
-                {quickLinks.map((link) => (
+              <h2 className={footerHeadingClass}>Artists</h2>
+              <nav aria-label="Artist footer links" className="flex flex-col gap-0">
+                {artistLinks.map((link) => (
                   <Link key={link.label} href={link.href} className={footerLinkClass}>
                     {link.label}
                   </Link>
