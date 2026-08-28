@@ -177,6 +177,26 @@ export default function ArtistProfileEditor({
 
   const slugChanged = slug.replace(/-+$/g, "") !== artist.slug;
   const displayedSlug = slug.replace(/-+$/g, "");
+  const missingRequiredFieldCount = [
+    !name.trim(),
+    !displayedSlug,
+    !introText.trim(),
+    !bio.trim(),
+  ].filter(Boolean).length;
+  const missingImageCount = [
+    !artist.profile_image_url,
+    !artist.hero_image_url,
+  ].filter(Boolean).length;
+  const setupWarning = [
+    missingRequiredFieldCount > 0
+      ? `${missingRequiredFieldCount} required field${missingRequiredFieldCount === 1 ? "" : "s"} missing`
+      : "",
+    missingImageCount > 0
+      ? `${missingImageCount} image${missingImageCount === 1 ? "" : "s"} missing`
+      : "",
+  ]
+    .filter(Boolean)
+    .join(" · ");
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4">
@@ -421,19 +441,21 @@ export default function ArtistProfileEditor({
         </div>
 
         {canEdit ? (
-          <button
-            type="submit"
-            disabled={
-              saving ||
-              !name.trim() ||
-              !displayedSlug ||
-              !introText.trim() ||
-              !bio.trim()
-            }
-            className="filmwave-backend-button filmwave-backend-button-primary"
-          >
-            {saving ? "Saving..." : "Save profile"}
-          </button>
+          <div className="flex flex-wrap items-center justify-end gap-3">
+            {setupWarning ? (
+              <span className="text-right text-[11px] leading-4 text-[var(--status-warning)]">
+                {setupWarning}
+              </span>
+            ) : null}
+
+            <button
+              type="submit"
+              disabled={saving || missingRequiredFieldCount > 0}
+              className="filmwave-backend-button filmwave-backend-button-primary"
+            >
+              {saving ? "Saving..." : "Save profile"}
+            </button>
+          </div>
         ) : null}
       </div>
     </form>
