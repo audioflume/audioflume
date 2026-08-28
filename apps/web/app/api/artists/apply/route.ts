@@ -19,9 +19,24 @@ type ArtistApplication = {
   website_url: string | null;
   instagram_url: string | null;
   spotify_url: string | null;
+  intro_text: string | null;
   bio: string | null;
+  profile_image_url: string | null;
+  hero_image_url: string | null;
   created_at: string;
 };
+
+type ArtistApplicationSamplePayload = {
+  file_name: string;
+  audio_url: string;
+  size_bytes: number | null;
+};
+
+const INTRO_CHARACTER_LIMIT = 114;
+const INTRO_WORD_LIMIT = 20;
+const DESCRIPTION_CHARACTER_LIMIT = 383;
+const DESCRIPTION_WORD_LIMIT = 70;
+const MAX_SAMPLE_FILES = 4;
 
 function slugifyArtistName(value: string) {
   const normalized = value
@@ -51,6 +66,126 @@ function cleanOptionalHttpUrl(value: unknown) {
   }
 }
 
+function countWords(value: string) {
+  const trimmed = value.trim();
+  return trimmed ? trimmed.split(/\s+/).length : 0;
+}
+
+function cleanRequiredProfileText(
+  value: unknown,
+  fieldLabel: string,
+  characterLimit: number,
+  wordLimit: number,
+) {
+  if (typeof value !== "string" || !value.trim()) {
+    return { value: null, error: `${fieldLabel} is required` };
+  }
+
+  const cleaned = value.trim();
+  if (cleaned.length > characterLimit) {
+    return {
+      value: null,
+      error: `${fieldLabel} must be ${characterLimit} characters or fewer`,
+    };
+  }
+
+  if (countWords(cleaned) > wordLimit) {
+    return {
+      value: null,
+      error: `${fieldLabel} must be ${wordLimit} words or fewer`,
+    };
+  }
+
+  return { value: cleaned, error: null };
+}
+
+function getUserKey(userId: string) {
+  return userId.replace(/[^a-zA-Z0-9_-]/g, "");
+}
+
+function getImagePublicBaseUrl() {
+  const value =
+    process.env.CLOUDFLARE_R2_IMAGES_PUBLIC_URL ||
+    process.env.CLOUDFLARE_R2_PUBLIC_URL;
+  return value?.replace(/\/$/, "") ?? null;
+}
+
+function getAudioPublicBaseUrl() {
+  return process.env.CLOUDFLARE_R2_PUBLIC_URL?.replace(/\/$/, "") ?? null;
+}
+
+function cleanApplicationImageUrl(
+  value: unknown,
+  userId: string,
+  fieldLabel: string,
+) {
+  if (typeof value !== "string" || !value.trim()) {
+    return { value: null, error: `${fieldLabel} is required` };
+  }
+
+  const publicBaseUrl = getImagePublicBaseUrl();
+  if (!publicBaseUrl) {
+    return { value: null, error: "Artist application image storage is unavailable" };
+  }
+
+  const prefix = `${publicBaseUrl}/images/artist-applications/${getUserKey(userId)}/`;
+  const cleaned = value.trim();
+  if (!cleaned.startsWith(prefix)) {
+    return { value: null, error: `Invalid ${fieldLabel.toLowerCase()} upload` };
+  }
+
+  return { value: cleaned, error: null };
+}
+
+function cleanApplicationSamples(value: unknown, userId: string) {
+  if (!Array.isArray(value)) {
+    return { value: [] as ArtistApplicationSamplePayload[], error: null };
+  }
+
+  if (value.length > MAX_SAMPLE_FILES) {
+    return {
+      value: [] as ArtistApplicationSamplePayload[],
+      error: `Upload no more than ${MAX_SAMPLE_FILES} sample songs`,
+    };
+  }
+
+  const publicBaseUrl = getAudioPublicBaseUrl();
+  if (value.length > 0 && !publicBaseUrl) {
+    return {
+      value: [] as ArtistApplicationSamplePayload[],
+      error: "Artist application audio storage is unavailable",
+    };
+  }
+
+  const prefix = `${publicBaseUrl ?? ""}/artist-applications/${getUserKey(userId)}/samples/`;
+  const samples: ArtistApplicationSamplePayload[] = [];
+
+  for (const entry of value) {
+    if (!entry || typeof entry !== "object") {
+      return { value: [], error: "Invalid sample song upload" };
+    }
+
+    const sample = entry as Record<string, unknown>;
+    const fileName = cleanOptionalString(sample.file_name, 255);
+    const audioUrl =
+      typeof sample.audio_url === "string" ? sample.audio_url.trim() : "";
+    const sizeBytes = Number(sample.size_bytes);
+
+    if (!fileName || !audioUrl.startsWith(prefix)) {
+      return { value: [], error: "Invalid sample song upload" };
+    }
+
+    samples.push({
+      file_name: fileName,
+      audio_url: audioUrl,
+      size_bytes:
+        Number.isFinite(sizeBytes) && sizeBytes >= 0 ? sizeBytes : null,
+    });
+  }
+
+  return { value: samples, error: null };
+}
+
 async function getOwnedArtistApplications(clerkUserId: string) {
   const { data: memberships, error: membershipsError } = await supabaseServer
     .from("artist_memberships")
@@ -69,7 +204,7 @@ async function getOwnedArtistApplications(clerkUserId: string) {
   const { data: artists, error: artistsError } = await supabaseServer
     .from("artists")
     .select(
-      "id, name, slug, status, location, website_url, instagram_url, spotify_url, bio, created_at",
+      "id, name, slug, status, location, website_url, instagram_url, spotify_url, intro_text, bio, profile_image_url, hero_image_url, created_at",
     )
     .in("id", artistIds)
     .order("created_at", { ascending: false });
@@ -128,14 +263,48 @@ export async function POST(request: Request) {
 
   const payload = body as Record<string, unknown>;
   const name = cleanOptionalString(payload.name, 160);
-  const location = cleanOptionalString(payload.location, 160);
-  const bio = cleanOptionalString(payload.bio, 1200);
+  const introText = cleanRequiredProfileText(
+    payload.intro_text,
+    "Intro text",
+    INTRO_CHARACTER_LIMIT,
+    INTRO_WORD_LIMIT,
+  );
+  const description = cleanRequiredProfileText(
+    payload.bio,
+    "Description",
+    DESCRIPTION_CHARACTER_LIMIT,
+    DESCRIPTION_WORD_LIMIT,
+  );
   const website = cleanOptionalHttpUrl(payload.website_url);
   const instagram = cleanOptionalHttpUrl(payload.instagram_url);
   const spotify = cleanOptionalHttpUrl(payload.spotify_url);
+  const profileImage = cleanApplicationImageUrl(
+    payload.profile_image_url,
+    user.id,
+    "Profile image",
+  );
+  const heroImage = cleanApplicationImageUrl(
+    payload.hero_image_url,
+    user.id,
+    "Feature image",
+  );
+  const samples = cleanApplicationSamples(payload.samples, user.id);
 
   if (!name) {
     return NextResponse.json({ error: "Artist name is required" }, { status: 400 });
+  }
+
+  const validations = [
+    introText,
+    description,
+    profileImage,
+    heroImage,
+    samples,
+  ];
+  for (const result of validations) {
+    if (result.error) {
+      return NextResponse.json({ error: result.error }, { status: 400 });
+    }
   }
 
   const urls = [
@@ -177,16 +346,18 @@ export async function POST(request: Request) {
       .insert({
         name,
         slug,
-        bio,
-        location,
+        intro_text: introText.value,
+        bio: description.value,
         website_url: website.value,
         instagram_url: instagram.value,
         spotify_url: spotify.value,
+        profile_image_url: profileImage.value,
+        hero_image_url: heroImage.value,
         status: "pending",
         created_by_clerk_user_id: user.id,
       })
       .select(
-        "id, name, slug, status, location, website_url, instagram_url, spotify_url, bio, created_at",
+        "id, name, slug, status, location, website_url, instagram_url, spotify_url, intro_text, bio, profile_image_url, hero_image_url, created_at",
       )
       .single();
 
@@ -203,6 +374,25 @@ export async function POST(request: Request) {
     if (membershipError) {
       await supabaseServer.from("artists").delete().eq("id", artist.id);
       throw membershipError;
+    }
+
+    if (samples.value.length > 0) {
+      const { error: samplesError } = await supabaseServer
+        .from("artist_application_samples")
+        .insert(
+          samples.value.map((sample, position) => ({
+            artist_id: artist.id,
+            file_name: sample.file_name,
+            audio_url: sample.audio_url,
+            position,
+            size_bytes: sample.size_bytes,
+          })),
+        );
+
+      if (samplesError) {
+        await supabaseServer.from("artists").delete().eq("id", artist.id);
+        throw samplesError;
+      }
     }
 
     return NextResponse.json({ application: artist }, { status: 201 });
