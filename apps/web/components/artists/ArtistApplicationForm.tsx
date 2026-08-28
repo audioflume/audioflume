@@ -94,6 +94,8 @@ export default function ArtistApplicationForm() {
   const [applications, setApplications] = useState<ArtistApplication[]>([]);
   const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
   const [featureImageFile, setFeatureImageFile] = useState<File | null>(null);
+  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState("");
+  const [featurePreviewUrl, setFeaturePreviewUrl] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
@@ -107,6 +109,28 @@ export default function ArtistApplicationForm() {
     () => applications.find((application) => application.status === "pending") ?? null,
     [applications],
   );
+
+  useEffect(() => {
+    if (!thumbnailFile) {
+      setThumbnailPreviewUrl("");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(thumbnailFile);
+    setThumbnailPreviewUrl(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [thumbnailFile]);
+
+  useEffect(() => {
+    if (!featureImageFile) {
+      setFeaturePreviewUrl("");
+      return;
+    }
+
+    const previewUrl = URL.createObjectURL(featureImageFile);
+    setFeaturePreviewUrl(previewUrl);
+    return () => URL.revokeObjectURL(previewUrl);
+  }, [featureImageFile]);
 
   useEffect(() => {
     let cancelled = false;
@@ -228,140 +252,153 @@ export default function ArtistApplicationForm() {
     }
   }
 
-  return (
-    <Card>
-      {pendingApplication ? (
+  if (pendingApplication) {
+    return (
+      <Card>
         <div className="grid gap-3 p-4">
           <Info label="Artist" value={pendingApplication.name} />
           <Info label="Status" value={formatStatus(pendingApplication.status)} />
           <Info label="Submitted" value={formatDate(pendingApplication.created_at)} />
           {message ? <Feedback tone={message.tone} message={message.text} /> : null}
         </div>
-      ) : (
-        <form onSubmit={submitApplication}>
-          <div className="grid gap-4 p-4 sm:grid-cols-2">
-            <Input
-              label="Artist name"
-              value={form.name}
-              placeholder="Artist name"
-              onChange={(value) =>
-                setForm((current) => ({ ...current, name: value }))
-              }
-            />
-            <Input
-              label="Location"
-              value={form.location}
-              placeholder="City, province / state, country"
-              onChange={(value) =>
-                setForm((current) => ({ ...current, location: value }))
-              }
-            />
-            <Input
-              label="Website"
-              type="url"
-              value={form.website_url}
-              placeholder="https://"
-              onChange={(value) =>
-                setForm((current) => ({ ...current, website_url: value }))
-              }
-            />
-            <Input
-              label="Instagram"
-              type="url"
-              value={form.instagram_url}
-              placeholder="https://instagram.com/..."
-              onChange={(value) =>
-                setForm((current) => ({ ...current, instagram_url: value }))
-              }
-            />
+      </Card>
+    );
+  }
 
-            <div className="grid gap-4 sm:col-span-2 sm:grid-cols-2">
-              <div>
-                <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
-                  Artist thumbnail
-                </span>
-                <div className="flex min-h-[96px] items-center gap-3 border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                  <div className="h-14 w-14 shrink-0 border border-[var(--border)] bg-[var(--bg-tertiary)]" />
-                  <div className="min-w-0 flex-1">
-                    <label className="inline-flex h-8 cursor-pointer items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]">
-                      Choose image
-                      <input
-                        type="file"
-                        accept="image/*"
-                        disabled={submitting}
-                        className="hidden"
-                        onChange={(event) => {
-                          setThumbnailFile(event.target.files?.[0] ?? null);
-                        }}
-                      />
-                    </label>
-                    <div className="mt-2 truncate text-[10px] text-[var(--text-muted)]">
-                      {thumbnailFile?.name || "Square image recommended"}
-                    </div>
-                  </div>
-                </div>
+  return (
+    <form onSubmit={submitApplication} className="grid gap-4">
+      <section className="filmwave-backend-section">
+        <div className="filmwave-backend-section-header">
+          <h2 className="filmwave-backend-section-title">Images</h2>
+        </div>
+
+        <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
+          <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
+            <div
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+              style={
+                thumbnailPreviewUrl
+                  ? { backgroundImage: `url(${thumbnailPreviewUrl})` }
+                  : undefined
+              }
+            />
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium text-[var(--text-primary)]">
+                Artist thumbnail
               </div>
-
-              <div>
-                <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
-                  Feature image
-                </span>
-                <div className="flex min-h-[96px] items-center gap-3 border border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                  <div className="h-14 w-24 shrink-0 border border-[var(--border)] bg-[var(--bg-tertiary)]" />
-                  <div className="min-w-0 flex-1">
-                    <label className="inline-flex h-8 cursor-pointer items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]">
-                      Choose image
-                      <input
-                        type="file"
-                        accept="image/*"
-                        disabled={submitting}
-                        className="hidden"
-                        onChange={(event) => {
-                          setFeatureImageFile(event.target.files?.[0] ?? null);
-                        }}
-                      />
-                    </label>
-                    <div className="mt-2 truncate text-[10px] text-[var(--text-muted)]">
-                      {featureImageFile?.name || "Wide image recommended"}
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <label className="block sm:col-span-2">
-              <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
-                Artist bio
-              </span>
-              <textarea
-                value={form.bio}
-                placeholder="A short introduction to the artist and the music you make."
-                onChange={(event) =>
-                  setForm((current) => ({ ...current, bio: event.target.value }))
-                }
-                rows={6}
-                className="w-full resize-y border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-sm leading-6 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-muted)]"
-              />
-            </label>
-          </div>
-
-          <div className="grid gap-3 px-4 py-3.5">
-            {message ? <Feedback tone={message.tone} message={message.text} /> : null}
-            <div className="flex flex-wrap gap-2">
-              <Button
-                type="submit"
-                disabled={
-                  submitting ||
-                  loadState === "loading" ||
-                  !form.name.trim()
-                }
-              >
-                {submitting ? "Submitting..." : "Submit application"}
-              </Button>
+              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                Choose image
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={submitting}
+                  className="hidden"
+                  onChange={(event) => {
+                    setThumbnailFile(event.target.files?.[0] ?? null);
+                  }}
+                />
+              </label>
             </div>
           </div>
-        </form>
-      )}
-    </Card>
+
+          <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
+            <div
+              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+              style={
+                featurePreviewUrl
+                  ? { backgroundImage: `url(${featurePreviewUrl})` }
+                  : undefined
+              }
+            />
+            <div className="min-w-0 flex-1">
+              <div className="text-xs font-medium text-[var(--text-primary)]">
+                Feature image
+              </div>
+              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                Choose image
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={submitting}
+                  className="hidden"
+                  onChange={(event) => {
+                    setFeatureImageFile(event.target.files?.[0] ?? null);
+                  }}
+                />
+              </label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="filmwave-backend-section">
+        <div className="grid gap-4 p-5 sm:grid-cols-2">
+          <Input
+            label="Artist name"
+            value={form.name}
+            placeholder="Artist name"
+            onChange={(value) =>
+              setForm((current) => ({ ...current, name: value }))
+            }
+          />
+          <Input
+            label="Location"
+            value={form.location}
+            placeholder="City, province / state, country"
+            onChange={(value) =>
+              setForm((current) => ({ ...current, location: value }))
+            }
+          />
+          <Input
+            label="Website"
+            type="url"
+            value={form.website_url}
+            placeholder="https://"
+            onChange={(value) =>
+              setForm((current) => ({ ...current, website_url: value }))
+            }
+          />
+          <Input
+            label="Instagram"
+            type="url"
+            value={form.instagram_url}
+            placeholder="https://instagram.com/..."
+            onChange={(value) =>
+              setForm((current) => ({ ...current, instagram_url: value }))
+            }
+          />
+          <label className="block sm:col-span-2">
+            <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
+              Artist bio
+            </span>
+            <textarea
+              value={form.bio}
+              placeholder="A short introduction to the artist and the music you make."
+              onChange={(event) =>
+                setForm((current) => ({ ...current, bio: event.target.value }))
+              }
+              rows={6}
+              className="filmwave-backend-textarea"
+            />
+          </label>
+        </div>
+      </section>
+
+      <div className="flex min-h-10 flex-wrap items-center justify-between gap-3">
+        <div className="min-h-5 text-xs">
+          {message ? <Feedback tone={message.tone} message={message.text} /> : null}
+        </div>
+        <Button
+          type="submit"
+          disabled={
+            submitting ||
+            loadState === "loading" ||
+            !form.name.trim()
+          }
+        >
+          {submitting ? "Submitting..." : "Submit application"}
+        </Button>
+      </div>
+    </form>
   );
 }
