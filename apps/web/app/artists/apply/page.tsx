@@ -14,16 +14,14 @@ export default function ArtistApplyPage() {
           backgroundSize: "cover",
         }}
       >
-        <div className="mx-auto max-w-[980px]">
-          <section className="mb-8 grid gap-6 md:grid-cols-[minmax(0,0.92fr)_minmax(280px,0.62fr)] md:items-end">
-            <h1 className="m-0 max-w-[720px] font-[family-name:var(--font-aktiv-grotesk)] text-[56px] font-normal leading-[0.98] tracking-[-0.035em] text-white">
+        <div className="mx-auto max-w-[650px]">
+          <section className="mb-8">
+            <h1 className="m-0 max-w-[650px] font-[family-name:var(--font-aktiv-grotesk)] text-[72px] font-normal leading-[0.98] tracking-[-0.035em] text-white">
               Join Audioflume as an artist.
             </h1>
           </section>
 
-          <div className="max-w-[650px]">
-            <ArtistApplicationForm />
-          </div>
+          <ArtistApplicationForm />
         </div>
       </section>
 
