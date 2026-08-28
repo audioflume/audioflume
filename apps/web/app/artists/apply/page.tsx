@@ -6,6 +6,15 @@ export default function ArtistApplyPage() {
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="px-5 pt-[112px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[980px]">
+          <section className="mb-8 grid gap-6 md:grid-cols-[minmax(0,0.92fr)_minmax(280px,0.62fr)] md:items-end">
+            <h1 className="m-0 max-w-[720px] font-[family-name:var(--font-aktiv-grotesk)] text-[42px] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--text-primary)]">
+              Join Audioflume as an artist.
+            </h1>
+            <p className="m-0 max-w-[440px] text-sm leading-6 text-[var(--text-secondary)] md:justify-self-end">
+              Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
+            </p>
+          </section>
+
           <ArtistApplicationForm />
 
           <div className="mt-16 border-t border-[var(--border)] pt-8 pb-[72px]">
