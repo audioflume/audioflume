@@ -547,7 +547,7 @@ export default function ArtistApplicationForm() {
           ) : null}
 
           {step === 2 ? (
-            <div className="grid gap-4">
+            <div className="grid gap-2 pb-2">
               <label className="grid gap-1.5">
                 <span className="flex items-center justify-between gap-4">
                   <span>Intro text</span>
@@ -585,7 +585,7 @@ export default function ArtistApplicationForm() {
                   onChange={(event) =>
                     setForm((current) => ({ ...current, bio: event.target.value }))
                   }
-                  className="filmwave-backend-textarea relative -top-px"
+                  className="filmwave-backend-textarea"
                 />
               </label>
             </div>
