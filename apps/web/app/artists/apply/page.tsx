@@ -5,7 +5,7 @@ export default function ArtistApplyPage() {
   return (
     <main className="artist-apply-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section
-        className="px-5 pb-[100px] pt-[156px] md:px-8 xl:px-10"
+        className="px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10"
         style={{
           backgroundImage:
             'url("https://images.filmwave.io/images/artist-signup/soundtrap-7pAguituFGo-unsplash-web.jpg")',
