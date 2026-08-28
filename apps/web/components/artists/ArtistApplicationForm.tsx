@@ -135,6 +135,14 @@ function InstagramIcon() {
   );
 }
 
+function RequiredMark() {
+  return (
+    <span className="text-[9px] font-normal text-[var(--text-muted)]">
+      Required
+    </span>
+  );
+}
+
 export default function ArtistApplicationForm() {
   const [form, setForm] = useState<ApplicationForm>(EMPTY_FORM);
   const [applications, setApplications] = useState<ArtistApplication[]>([]);
@@ -480,14 +488,24 @@ export default function ArtistApplicationForm() {
               </p>
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                <Input
-                  label="Artist name"
-                  value={form.name}
-                  placeholder="Artist name"
-                  onChange={(value) =>
-                    setForm((current) => ({ ...current, name: value }))
-                  }
-                />
+                <label className="grid gap-1.5">
+                  <span className="flex items-center gap-1.5">
+                    Artist name
+                    <RequiredMark />
+                  </span>
+                  <input
+                    type="text"
+                    value={form.name}
+                    placeholder="Artist name"
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        name: event.target.value,
+                      }))
+                    }
+                    className="filmwave-backend-input"
+                  />
+                </label>
                 <Input
                   label="Website"
                   type="url"
@@ -541,7 +559,10 @@ export default function ArtistApplicationForm() {
             <div className="grid gap-2 pb-2">
               <label className="grid gap-1.5">
                 <span className="flex items-center justify-between gap-4">
-                  <span>Intro text</span>
+                  <span className="flex items-center gap-1.5">
+                    <span>Intro text</span>
+                    <RequiredMark />
+                  </span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
                     {form.intro_text.length} / {INTRO_CHARACTER_LIMIT}
                   </span>
@@ -563,7 +584,10 @@ export default function ArtistApplicationForm() {
 
               <label className="grid gap-1.5">
                 <span className="flex items-center justify-between gap-4">
-                  <span>Description</span>
+                  <span className="flex items-center gap-1.5">
+                    <span>Description</span>
+                    <RequiredMark />
+                  </span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
                     {form.bio.length} / {DESCRIPTION_CHARACTER_LIMIT}
                   </span>
@@ -604,8 +628,9 @@ export default function ArtistApplicationForm() {
                     }
                   />
                   <div className="min-w-0 flex-1">
-                    <div className="text-xs font-medium text-[var(--text-primary)]">
-                      Artist thumbnail
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-primary)]">
+                      <span>Artist thumbnail</span>
+                      <RequiredMark />
                     </div>
                     <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
                       Choose image
@@ -632,8 +657,9 @@ export default function ArtistApplicationForm() {
                     }
                   />
                   <div className="min-w-0 flex-1">
-                    <div className="text-xs font-medium text-[var(--text-primary)]">
-                      Feature image
+                    <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-primary)]">
+                      <span>Feature image</span>
+                      <RequiredMark />
                     </div>
                     <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
                       Choose image
