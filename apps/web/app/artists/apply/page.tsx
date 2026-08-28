@@ -18,8 +18,17 @@ export default function ArtistApplyPage() {
         </section>
       </main>
 
-      <section className="mt-16 w-screen">
-        <Footer />
+      <section className="mt-16 w-full">
+        <div
+          className="mx-auto"
+          style={{
+            width:
+              "calc(100vw - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))",
+            maxWidth: "var(--filmwave-editorial-max-width)",
+          }}
+        >
+          <Footer pageGutter={false} />
+        </div>
       </section>
     </>
   );
