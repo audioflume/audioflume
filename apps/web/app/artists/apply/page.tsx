@@ -14,17 +14,17 @@ export default function ArtistApplyPage() {
 
           <ArtistApplicationForm />
         </div>
+      </section>
 
-        <div
-          className="mx-auto mt-16 pb-[72px]"
-          style={{
-            width:
-              "calc(100vw - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))",
-            maxWidth: "var(--filmwave-editorial-max-width)",
-          }}
-        >
-          <Footer pageGutter={false} />
-        </div>
+      <section
+        className="mx-auto mt-16 pb-[72px]"
+        style={{
+          width:
+            "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))",
+          maxWidth: "var(--filmwave-editorial-max-width)",
+        }}
+      >
+        <Footer pageGutter={false} />
       </section>
     </main>
   );
