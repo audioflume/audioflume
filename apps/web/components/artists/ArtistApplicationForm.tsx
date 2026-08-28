@@ -21,10 +21,9 @@ type ArtistApplication = {
   name: string;
   slug: string;
   status: ArtistApplicationStatus;
-  location: string | null;
   website_url: string | null;
+  spotify_url: string | null;
   instagram_url: string | null;
-  bio: string | null;
   created_at: string;
 };
 
@@ -36,20 +35,16 @@ type ApplicationResponse = {
 
 type ApplicationForm = {
   name: string;
-  location: string;
   website_url: string;
+  spotify_url: string;
   instagram_url: string;
-  bio: string;
 };
-
-type ArtistImageKind = "profile" | "hero";
 
 const EMPTY_FORM: ApplicationForm = {
   name: "",
-  location: "",
   website_url: "",
+  spotify_url: "",
   instagram_url: "",
-  bio: "",
 };
 
 function formatStatus(status: ArtistApplicationStatus) {
@@ -69,33 +64,9 @@ function formatDate(value: string) {
   }).format(date);
 }
 
-async function uploadArtistImage(
-  artistId: string,
-  kind: ArtistImageKind,
-  file: File,
-) {
-  const formData = new FormData();
-  formData.append("file", file);
-  formData.append("kind", kind);
-
-  const response = await fetch(`/api/artists/${artistId}/images`, {
-    method: "POST",
-    body: formData,
-  });
-  const body = (await response.json().catch(() => ({}))) as { error?: string };
-
-  if (!response.ok) {
-    throw new Error(body.error || "Failed to upload artist image");
-  }
-}
-
 export default function ArtistApplicationForm() {
   const [form, setForm] = useState<ApplicationForm>(EMPTY_FORM);
   const [applications, setApplications] = useState<ArtistApplication[]>([]);
-  const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
-  const [featureImageFile, setFeatureImageFile] = useState<File | null>(null);
-  const [thumbnailPreviewUrl, setThumbnailPreviewUrl] = useState("");
-  const [featurePreviewUrl, setFeaturePreviewUrl] = useState("");
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
@@ -109,28 +80,6 @@ export default function ArtistApplicationForm() {
     () => applications.find((application) => application.status === "pending") ?? null,
     [applications],
   );
-
-  useEffect(() => {
-    if (!thumbnailFile) {
-      setThumbnailPreviewUrl("");
-      return;
-    }
-
-    const previewUrl = URL.createObjectURL(thumbnailFile);
-    setThumbnailPreviewUrl(previewUrl);
-    return () => URL.revokeObjectURL(previewUrl);
-  }, [thumbnailFile]);
-
-  useEffect(() => {
-    if (!featureImageFile) {
-      setFeaturePreviewUrl("");
-      return;
-    }
-
-    const previewUrl = URL.createObjectURL(featureImageFile);
-    setFeaturePreviewUrl(previewUrl);
-    return () => URL.revokeObjectURL(previewUrl);
-  }, [featureImageFile]);
 
   useEffect(() => {
     let cancelled = false;
@@ -202,43 +151,11 @@ export default function ArtistApplicationForm() {
 
       const application = body.application;
       setApplications((current) => [application, ...current]);
-
-      const failedImages: string[] = [];
-      const imageUploads: Array<{
-        kind: ArtistImageKind;
-        file: File | null;
-        label: string;
-      }> = [
-        { kind: "profile", file: thumbnailFile, label: "artist thumbnail" },
-        { kind: "hero", file: featureImageFile, label: "feature image" },
-      ];
-
-      for (const image of imageUploads) {
-        if (!image.file) continue;
-
-        try {
-          await uploadArtistImage(application.id, image.kind, image.file);
-        } catch (uploadError) {
-          console.error(`Failed to upload ${image.label}:`, uploadError);
-          failedImages.push(image.label);
-        }
-      }
-
       setForm(EMPTY_FORM);
-      setThumbnailFile(null);
-      setFeatureImageFile(null);
-
-      if (failedImages.length > 0) {
-        setMessage({
-          tone: "error",
-          text: `Application submitted, but the ${failedImages.join(" and ")} could not be uploaded. You can add ${failedImages.length === 1 ? "it" : "them"} from your artist profile.`,
-        });
-      } else {
-        setMessage({
-          tone: "success",
-          text: "Application submitted. Your artist profile is now pending review.",
-        });
-      }
+      setMessage({
+        tone: "success",
+        text: "Application submitted. Your artist profile is now pending review.",
+      });
     } catch (error) {
       setMessage({
         tone: "error",
@@ -268,6 +185,12 @@ export default function ArtistApplicationForm() {
   return (
     <form onSubmit={submitApplication}>
       <section className="filmwave-backend-section">
+        <div className="px-5 pt-5">
+          <p className="m-0 max-w-[680px] text-sm leading-6 text-[var(--text-secondary)]">
+            Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
+          </p>
+        </div>
+
         <div className="grid gap-4 p-5 sm:grid-cols-2">
           <Input
             label="Artist name"
@@ -275,14 +198,6 @@ export default function ArtistApplicationForm() {
             placeholder="Artist name"
             onChange={(value) =>
               setForm((current) => ({ ...current, name: value }))
-            }
-          />
-          <Input
-            label="Location"
-            value={form.location}
-            placeholder="City, province / state, country"
-            onChange={(value) =>
-              setForm((current) => ({ ...current, location: value }))
             }
           />
           <Input
@@ -295,6 +210,15 @@ export default function ArtistApplicationForm() {
             }
           />
           <Input
+            label="Spotify"
+            type="url"
+            value={form.spotify_url}
+            placeholder="https://open.spotify.com/..."
+            onChange={(value) =>
+              setForm((current) => ({ ...current, spotify_url: value }))
+            }
+          />
+          <Input
             label="Instagram"
             type="url"
             value={form.instagram_url}
@@ -303,82 +227,6 @@ export default function ArtistApplicationForm() {
               setForm((current) => ({ ...current, instagram_url: value }))
             }
           />
-          <label className="block sm:col-span-2">
-            <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
-              Artist bio
-            </span>
-            <textarea
-              value={form.bio}
-              placeholder="A short introduction to the artist and the music you make."
-              onChange={(event) =>
-                setForm((current) => ({ ...current, bio: event.target.value }))
-              }
-              rows={6}
-              className="filmwave-backend-textarea"
-            />
-          </label>
-        </div>
-
-        <div className="px-5 pb-5">
-          <h2 className="filmwave-backend-section-title mb-3">Images</h2>
-
-          <div className="grid gap-4 md:grid-cols-2">
-            <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
-              <div
-                className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
-                style={
-                  thumbnailPreviewUrl
-                    ? { backgroundImage: `url(${thumbnailPreviewUrl})` }
-                    : undefined
-                }
-              />
-              <div className="min-w-0 flex-1">
-                <div className="text-xs font-medium text-[var(--text-primary)]">
-                  Artist thumbnail
-                </div>
-                <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
-                  Choose image
-                  <input
-                    type="file"
-                    accept="image/*"
-                    disabled={submitting}
-                    className="hidden"
-                    onChange={(event) => {
-                      setThumbnailFile(event.target.files?.[0] ?? null);
-                    }}
-                  />
-                </label>
-              </div>
-            </div>
-
-            <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
-              <div
-                className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
-                style={
-                  featurePreviewUrl
-                    ? { backgroundImage: `url(${featurePreviewUrl})` }
-                    : undefined
-                }
-              />
-              <div className="min-w-0 flex-1">
-                <div className="text-xs font-medium text-[var(--text-primary)]">
-                  Feature image
-                </div>
-                <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
-                  Choose image
-                  <input
-                    type="file"
-                    accept="image/*"
-                    disabled={submitting}
-                    className="hidden"
-                    onChange={(event) => {
-                      setFeatureImageFile(event.target.files?.[0] ?? null);
-                    }}
-                  />
-                </label>
-              </div>
-            </div>
-          </div>
         </div>
 
         <div className="flex min-h-10 flex-wrap items-center justify-between gap-3 px-5 pb-5">
