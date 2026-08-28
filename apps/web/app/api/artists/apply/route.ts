@@ -18,6 +18,7 @@ type ArtistApplication = {
   location: string | null;
   website_url: string | null;
   instagram_url: string | null;
+  spotify_url: string | null;
   bio: string | null;
   created_at: string;
 };
@@ -68,7 +69,7 @@ async function getOwnedArtistApplications(clerkUserId: string) {
   const { data: artists, error: artistsError } = await supabaseServer
     .from("artists")
     .select(
-      "id, name, slug, status, location, website_url, instagram_url, bio, created_at",
+      "id, name, slug, status, location, website_url, instagram_url, spotify_url, bio, created_at",
     )
     .in("id", artistIds)
     .order("created_at", { ascending: false });
@@ -131,23 +132,25 @@ export async function POST(request: Request) {
   const bio = cleanOptionalString(payload.bio, 1200);
   const website = cleanOptionalHttpUrl(payload.website_url);
   const instagram = cleanOptionalHttpUrl(payload.instagram_url);
+  const spotify = cleanOptionalHttpUrl(payload.spotify_url);
 
   if (!name) {
     return NextResponse.json({ error: "Artist name is required" }, { status: 400 });
   }
 
-  if (website.error) {
-    return NextResponse.json(
-      { error: `Website: ${website.error}` },
-      { status: 400 },
-    );
-  }
+  const urls = [
+    ["Website", website],
+    ["Instagram", instagram],
+    ["Spotify", spotify],
+  ] as const;
 
-  if (instagram.error) {
-    return NextResponse.json(
-      { error: `Instagram: ${instagram.error}` },
-      { status: 400 },
-    );
+  for (const [label, result] of urls) {
+    if (result.error) {
+      return NextResponse.json(
+        { error: `${label}: ${result.error}` },
+        { status: 400 },
+      );
+    }
   }
 
   try {
@@ -178,11 +181,12 @@ export async function POST(request: Request) {
         location,
         website_url: website.value,
         instagram_url: instagram.value,
+        spotify_url: spotify.value,
         status: "pending",
         created_by_clerk_user_id: user.id,
       })
       .select(
-        "id, name, slug, status, location, website_url, instagram_url, bio, created_at",
+        "id, name, slug, status, location, website_url, instagram_url, spotify_url, bio, created_at",
       )
       .single();
 
