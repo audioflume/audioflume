@@ -220,7 +220,7 @@ export default function ArtistApplicationForm() {
   return (
     <form onSubmit={submitApplication}>
       <section className="filmwave-backend-section p-[50px]">
-        <p className="m-0 max-w-[560px] text-[clamp(16px,1.45vw,20px)] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
+        <p className="m-0 max-w-[560px] text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
           Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
         </p>
 
