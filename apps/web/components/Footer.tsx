@@ -24,10 +24,10 @@ const listenLinks = [
 
 const artistLinks = [
   { href: "/artists/apply", label: "Artist signup" },
-  { href: "/artists/earnings", label: "Artist earnings" },
   { href: "/artists/claim", label: "Claim your profile" },
-  { href: "/artists/dashboard?section=agreements", label: "Licensing & agreements" },
   { href: "/artists/dashboard", label: "Artist dashboard" },
+  { href: "/artists/dashboard?section=agreements", label: "Licensing & agreements" },
+  { href: "/artists/earnings", label: "Artist earnings" },
 ];
 
 const footerLinkClass =
