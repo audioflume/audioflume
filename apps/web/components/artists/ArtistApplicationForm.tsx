@@ -489,8 +489,8 @@ export default function ArtistApplicationForm() {
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <label className="grid gap-1.5">
-                  <span className="flex items-center gap-1.5">
-                    Artist name
+                  <span className="flex items-baseline gap-1.5">
+                    Artist Name
                     <RequiredMark />
                   </span>
                   <input
@@ -559,8 +559,8 @@ export default function ArtistApplicationForm() {
             <div className="grid gap-2 pb-2">
               <label className="grid gap-1.5">
                 <span className="flex items-center justify-between gap-4">
-                  <span className="flex items-center gap-1.5">
-                    <span>Intro text</span>
+                  <span className="flex items-baseline gap-1.5">
+                    <span>Intro Text</span>
                     <RequiredMark />
                   </span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
@@ -584,7 +584,7 @@ export default function ArtistApplicationForm() {
 
               <label className="grid gap-1.5">
                 <span className="flex items-center justify-between gap-4">
-                  <span className="flex items-center gap-1.5">
+                  <span className="flex items-baseline gap-1.5">
                     <span>Description</span>
                     <RequiredMark />
                   </span>
@@ -628,8 +628,8 @@ export default function ArtistApplicationForm() {
                     }
                   />
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-primary)]">
-                      <span>Artist thumbnail</span>
+                    <div className="flex items-baseline gap-1.5 text-xs font-medium text-[var(--text-primary)]">
+                      <span>Artist Thumbnail</span>
                       <RequiredMark />
                     </div>
                     <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
@@ -657,8 +657,8 @@ export default function ArtistApplicationForm() {
                     }
                   />
                   <div className="min-w-0 flex-1">
-                    <div className="flex items-center gap-1.5 text-xs font-medium text-[var(--text-primary)]">
-                      <span>Feature image</span>
+                    <div className="flex items-baseline gap-1.5 text-xs font-medium text-[var(--text-primary)]">
+                      <span>Feature Image</span>
                       <RequiredMark />
                     </div>
                     <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
