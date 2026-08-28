@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import ArtistApplicationReviewPanel from "@/components/admin/ArtistApplicationReviewPanel";
 import Toast from "@/components/Toast";
 
 type ArtistStatus = "pending" | "approved" | "rejected" | "suspended";
@@ -28,14 +29,25 @@ type ArtistClaimInvitation = {
   created_at: string;
 };
 
+type ArtistApplicationSample = {
+  id: string;
+  file_name: string;
+  audio_url: string;
+  position: number;
+  size_bytes: number | null;
+  created_at: string;
+};
+
 type AdminArtist = {
   id: string;
   name: string;
   slug: string;
+  intro_text: string | null;
   bio: string | null;
   location: string | null;
   website_url: string | null;
   instagram_url: string | null;
+  spotify_url: string | null;
   profile_image_url: string | null;
   hero_image_url: string | null;
   status: ArtistStatus;
@@ -46,6 +58,7 @@ type AdminArtist = {
   updated_at: string;
   owner: ArtistOwner | null;
   claim_invitation: ArtistClaimInvitation | null;
+  application_samples: ArtistApplicationSample[];
 };
 
 type ArtistsResponse = {
@@ -883,6 +896,19 @@ export default function AdminArtistsPage() {
                       </svg>
                     </button>
                   </div>
+
+                  {artist.status === "pending" ? (
+                    <ArtistApplicationReviewPanel
+                      introText={artist.intro_text}
+                      description={artist.bio}
+                      websiteUrl={artist.website_url}
+                      spotifyUrl={artist.spotify_url}
+                      instagramUrl={artist.instagram_url}
+                      profileImageUrl={artist.profile_image_url}
+                      heroImageUrl={artist.hero_image_url}
+                      samples={artist.application_samples}
+                    />
+                  ) : null}
                 </div>
               );
             })}
