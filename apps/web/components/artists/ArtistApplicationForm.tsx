@@ -64,6 +64,41 @@ function formatDate(value: string) {
   }).format(date);
 }
 
+function SpotifyIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.7" />
+      <path d="M7.4 9.3C10.9 8.1 14.7 8.3 17.9 9.9" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M8.2 12.4C11.2 11.5 14.3 11.7 17 13" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path d="M9 15.3C11.4 14.7 13.9 14.9 16 15.9" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function InstagramIcon() {
+  return (
+    <svg width="11" height="11" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <rect
+        x="3"
+        y="3"
+        width="18"
+        height="18"
+        rx="5"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+      <circle
+        cx="12"
+        cy="12"
+        r="4.2"
+        stroke="currentColor"
+        strokeWidth="1.7"
+      />
+      <circle cx="17.4" cy="6.7" r="1" fill="currentColor" />
+    </svg>
+  );
+}
+
 export default function ArtistApplicationForm() {
   const [form, setForm] = useState<ApplicationForm>(EMPTY_FORM);
   const [applications, setApplications] = useState<ArtistApplication[]>([]);
@@ -207,24 +242,42 @@ export default function ArtistApplicationForm() {
               setForm((current) => ({ ...current, website_url: value }))
             }
           />
-          <Input
-            label="Spotify"
-            type="url"
-            value={form.spotify_url}
-            placeholder="https://open.spotify.com/..."
-            onChange={(value) =>
-              setForm((current) => ({ ...current, spotify_url: value }))
-            }
-          />
-          <Input
-            label="Instagram"
-            type="url"
-            value={form.instagram_url}
-            placeholder="https://instagram.com/..."
-            onChange={(value) =>
-              setForm((current) => ({ ...current, instagram_url: value }))
-            }
-          />
+          <label className="grid gap-1.5">
+            <span className="flex items-center gap-1.5">
+              <SpotifyIcon />
+              Spotify
+            </span>
+            <input
+              type="url"
+              value={form.spotify_url}
+              placeholder="https://open.spotify.com/..."
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  spotify_url: event.target.value,
+                }))
+              }
+              className="filmwave-backend-input"
+            />
+          </label>
+          <label className="grid gap-1.5">
+            <span className="flex items-center gap-1.5">
+              <InstagramIcon />
+              Instagram
+            </span>
+            <input
+              type="url"
+              value={form.instagram_url}
+              placeholder="https://instagram.com/..."
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  instagram_url: event.target.value,
+                }))
+              }
+              className="filmwave-backend-input"
+            />
+          </label>
         </div>
 
         <div className="mt-5 flex min-h-10 flex-wrap items-center justify-between gap-3">
