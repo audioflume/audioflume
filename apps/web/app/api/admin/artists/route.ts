@@ -33,6 +33,16 @@ type ArtistClaimInvitationRow = {
   created_at: string;
 };
 
+type ArtistApplicationSampleRow = {
+  id: string;
+  artist_id: string;
+  file_name: string;
+  audio_url: string;
+  position: number;
+  size_bytes: number | null;
+  created_at: string;
+};
+
 function normalizeArtistName(value: unknown) {
   if (typeof value !== "string") return "";
   return value.trim().slice(0, 160);
@@ -69,7 +79,7 @@ export async function GET() {
     const { data: artists, error: artistsError } = await supabaseServer
       .from("artists")
       .select(
-        "id, name, slug, bio, location, website_url, instagram_url, profile_image_url, hero_image_url, status, created_by_clerk_user_id, approved_at, approved_by_clerk_user_id, created_at, updated_at",
+        "id, name, slug, intro_text, bio, location, website_url, instagram_url, spotify_url, profile_image_url, hero_image_url, status, created_by_clerk_user_id, approved_at, approved_by_clerk_user_id, created_at, updated_at",
       )
       .order("created_at", { ascending: false });
 
@@ -81,9 +91,10 @@ export async function GET() {
 
     const ownerMemberships: ArtistOwnerMembership[] = [];
     const claimInvitations: ArtistClaimInvitationRow[] = [];
+    const applicationSamples: ArtistApplicationSampleRow[] = [];
 
     if (artistIds.length > 0) {
-      const [ownersResult, claimsResult] = await Promise.all([
+      const [ownersResult, claimsResult, samplesResult] = await Promise.all([
         supabaseServer
           .from("artist_memberships")
           .select("artist_id, clerk_user_id")
@@ -96,16 +107,27 @@ export async function GET() {
           )
           .in("artist_id", artistIds)
           .order("created_at", { ascending: false }),
+        supabaseServer
+          .from("artist_application_samples")
+          .select(
+            "id, artist_id, file_name, audio_url, position, size_bytes, created_at",
+          )
+          .in("artist_id", artistIds)
+          .order("position", { ascending: true }),
       ]);
 
       if (ownersResult.error) throw ownersResult.error;
       if (claimsResult.error) throw claimsResult.error;
+      if (samplesResult.error) throw samplesResult.error;
 
       ownerMemberships.push(
         ...((ownersResult.data ?? []) as ArtistOwnerMembership[]),
       );
       claimInvitations.push(
         ...((claimsResult.data ?? []) as ArtistClaimInvitationRow[]),
+      );
+      applicationSamples.push(
+        ...((samplesResult.data ?? []) as ArtistApplicationSampleRow[]),
       );
     }
 
@@ -141,6 +163,13 @@ export async function GET() {
       }
     }
 
+    const samplesByArtist = new Map<string, ArtistApplicationSampleRow[]>();
+    for (const sample of applicationSamples) {
+      const current = samplesByArtist.get(sample.artist_id) ?? [];
+      current.push(sample);
+      samplesByArtist.set(sample.artist_id, current);
+    }
+
     return NextResponse.json({
       artists: (artists ?? []).map((artist) => {
         const ownerMembership = ownerByArtist.get(artist.id);
@@ -158,6 +187,7 @@ export async function GET() {
               }
             : null,
           claim_invitation: latestClaimByArtist.get(artist.id) ?? null,
+          application_samples: samplesByArtist.get(artist.id) ?? [],
         };
       }),
     });
@@ -237,7 +267,7 @@ export async function POST(request: Request) {
         created_by_clerk_user_id: admin.user?.id ?? null,
       })
       .select(
-        "id, name, slug, bio, location, website_url, instagram_url, profile_image_url, hero_image_url, status, created_by_clerk_user_id, approved_at, approved_by_clerk_user_id, created_at, updated_at",
+        "id, name, slug, intro_text, bio, location, website_url, instagram_url, spotify_url, profile_image_url, hero_image_url, status, created_by_clerk_user_id, approved_at, approved_by_clerk_user_id, created_at, updated_at",
       )
       .single();
 
@@ -257,6 +287,7 @@ export async function POST(request: Request) {
           ...artist,
           owner: null,
           claim_invitation: invitation,
+          application_samples: [],
         },
       },
       { status: 201 },
