@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import {
   Button,
@@ -143,6 +143,8 @@ function InstagramIcon() {
 export default function ArtistApplicationForm() {
   const [form, setForm] = useState<ApplicationForm>(EMPTY_FORM);
   const [applications, setApplications] = useState<ArtistApplication[]>([]);
+  const [submittedApplication, setSubmittedApplication] =
+    useState<ArtistApplication | null>(null);
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
@@ -278,9 +280,16 @@ export default function ArtistApplicationForm() {
     }
   }
 
-  async function submitApplication(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-    if (submitting || pendingApplication || step !== TOTAL_STEPS) return;
+  async function submitApplication() {
+    if (submitting || step !== TOTAL_STEPS) return;
+
+    if (pendingApplication) {
+      setMessage({
+        tone: "error",
+        text: "You already have an artist application pending review.",
+      });
+      return;
+    }
 
     if (
       !form.name.trim() ||
@@ -351,6 +360,7 @@ export default function ArtistApplicationForm() {
 
       const application = body.application;
       setApplications((current) => [application, ...current]);
+      setSubmittedApplication(application);
       setForm(EMPTY_FORM);
       setProfileImageFile(null);
       setHeroImageFile(null);
@@ -421,13 +431,13 @@ export default function ArtistApplicationForm() {
     (step === 2 && !stepTwoComplete) ||
     (step === 3 && !stepThreeComplete);
 
-  if (pendingApplication) {
+  if (submittedApplication) {
     return (
       <Card>
         <div className="grid gap-3 p-4">
-          <Info label="Artist" value={pendingApplication.name} />
-          <Info label="Status" value={formatStatus(pendingApplication.status)} />
-          <Info label="Submitted" value={formatDate(pendingApplication.created_at)} />
+          <Info label="Artist" value={submittedApplication.name} />
+          <Info label="Status" value={formatStatus(submittedApplication.status)} />
+          <Info label="Submitted" value={formatDate(submittedApplication.created_at)} />
           {message ? <Feedback tone={message.tone} message={message.text} /> : null}
         </div>
       </Card>
@@ -435,9 +445,9 @@ export default function ArtistApplicationForm() {
   }
 
   return (
-    <form onSubmit={submitApplication}>
+    <form onSubmit={(event) => event.preventDefault()}>
       <section className="filmwave-backend-section flex h-[420px] flex-col p-[50px]">
-        <div className="min-h-0 flex-1 overflow-y-auto">
+        <div className="min-h-0 flex-1 overflow-y-auto pb-px">
           {step === 1 ? (
             <>
               <p className="m-0 max-w-[560px] text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
@@ -701,7 +711,11 @@ export default function ArtistApplicationForm() {
                 Next
               </Button>
             ) : (
-              <Button type="submit" disabled={submitting}>
+              <Button
+                type="button"
+                disabled={submitting}
+                onClick={() => void submitApplication()}
+              >
                 {submitting ? "Submitting..." : "Submit application"}
               </Button>
             )}
