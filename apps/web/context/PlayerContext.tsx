@@ -77,6 +77,7 @@ const PlaybackStoreContext = createContext<PlaybackStore | null>(null);
 
 const PLAYER_STORAGE_KEY = "filmwave-player-state";
 const VOLUME_STORAGE_KEY = "filmwave-player-volume";
+const WEBSITE_VOLUME_SCALE = 0.5;
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
 const PLAYER_BROADCAST_CHANNEL = "filmwave-player";
 const STORAGE_WRITE_INTERVAL_MS = 5000;
@@ -332,7 +333,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       : 1;
     volumeRef.current = nextVolume;
     setVolumeState(nextVolume);
-    if (audioRef.current) audioRef.current.volume = nextVolume;
+    if (audioRef.current) {
+      audioRef.current.volume = nextVolume * WEBSITE_VOLUME_SCALE;
+    }
     try {
       window.localStorage.setItem(VOLUME_STORAGE_KEY, String(nextVolume));
     } catch {
@@ -428,7 +431,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     if (!audioRef.current) {
       const audio = new Audio();
       audio.preload = "auto";
-      audio.volume = volumeRef.current;
+      audio.volume = volumeRef.current * WEBSITE_VOLUME_SCALE;
 
       audio.addEventListener("play", () => {
         remoteOwnerTabIdRef.current = null;
@@ -747,7 +750,9 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const nextVolume = Math.max(0, Math.min(1, parsedVolume));
       volumeRef.current = nextVolume;
       setVolumeState(nextVolume);
-      if (audioRef.current) audioRef.current.volume = nextVolume;
+      if (audioRef.current) {
+        audioRef.current.volume = nextVolume * WEBSITE_VOLUME_SCALE;
+      }
     };
 
     try {
