@@ -18,7 +18,7 @@ export default function ArtistApplyPage() {
         </section>
       </main>
 
-      <section className="mt-16">
+      <section className="mt-16 w-screen">
         <Footer />
       </section>
     </>
