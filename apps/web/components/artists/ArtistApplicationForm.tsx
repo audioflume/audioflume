@@ -24,6 +24,10 @@ type ArtistApplication = {
   website_url: string | null;
   spotify_url: string | null;
   instagram_url: string | null;
+  intro_text: string | null;
+  bio: string | null;
+  profile_image_url: string | null;
+  hero_image_url: string | null;
   created_at: string;
 };
 
@@ -38,13 +42,45 @@ type ApplicationForm = {
   website_url: string;
   spotify_url: string;
   instagram_url: string;
+  intro_text: string;
+  bio: string;
 };
+
+type ImageUploadResponse = {
+  upload?: {
+    kind: "profile" | "hero";
+    key: string;
+    url: string;
+  };
+  error?: string;
+};
+
+type SampleUploadResponse = {
+  upload?: {
+    key: string;
+    url: string;
+    file_name: string;
+    size_bytes: number;
+  };
+  error?: string;
+};
+
+type UploadedSample = NonNullable<SampleUploadResponse["upload"]>;
+
+const TOTAL_STEPS = 4;
+const INTRO_WORD_LIMIT = 20;
+const DESCRIPTION_WORD_LIMIT = 70;
+const INTRO_CHARACTER_LIMIT = 114;
+const DESCRIPTION_CHARACTER_LIMIT = 383;
+const MAX_SAMPLE_FILES = 4;
 
 const EMPTY_FORM: ApplicationForm = {
   name: "",
   website_url: "",
   spotify_url: "",
   instagram_url: "",
+  intro_text: "",
+  bio: "",
 };
 
 function formatStatus(status: ArtistApplicationStatus) {
@@ -62,6 +98,11 @@ function formatDate(value: string) {
     month: "short",
     day: "numeric",
   }).format(date);
+}
+
+function countWords(value: string) {
+  const trimmed = value.trim();
+  return trimmed ? trimmed.split(/\s+/).length : 0;
 }
 
 function SpotifyIcon() {
@@ -105,6 +146,10 @@ export default function ArtistApplicationForm() {
   const [loadState, setLoadState] = useState<"loading" | "ready" | "error">(
     "loading",
   );
+  const [step, setStep] = useState(1);
+  const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
+  const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
+  const [sampleFiles, setSampleFiles] = useState<File[]>([]);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<{
     tone: "success" | "error";
@@ -115,6 +160,28 @@ export default function ArtistApplicationForm() {
     () => applications.find((application) => application.status === "pending") ?? null,
     [applications],
   );
+  const introWordCount = countWords(form.intro_text);
+  const descriptionWordCount = countWords(form.bio);
+  const profileImagePreviewUrl = useMemo(
+    () => (profileImageFile ? URL.createObjectURL(profileImageFile) : null),
+    [profileImageFile],
+  );
+  const heroImagePreviewUrl = useMemo(
+    () => (heroImageFile ? URL.createObjectURL(heroImageFile) : null),
+    [heroImageFile],
+  );
+
+  useEffect(() => {
+    return () => {
+      if (profileImagePreviewUrl) URL.revokeObjectURL(profileImagePreviewUrl);
+    };
+  }, [profileImagePreviewUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (heroImagePreviewUrl) URL.revokeObjectURL(heroImagePreviewUrl);
+    };
+  }, [heroImagePreviewUrl]);
 
   useEffect(() => {
     let cancelled = false;
@@ -153,18 +220,116 @@ export default function ArtistApplicationForm() {
     };
   }, []);
 
+  async function uploadImage(file: File, kind: "profile" | "hero") {
+    const uploadData = new FormData();
+    uploadData.append("file", file);
+    uploadData.append("kind", kind);
+
+    const response = await fetch("/api/artists/apply/images", {
+      method: "POST",
+      body: uploadData,
+    });
+    const body = (await response.json().catch(() => ({}))) as ImageUploadResponse;
+
+    if (!response.ok || !body.upload) {
+      throw new Error(body.error || "Failed to upload artist image");
+    }
+
+    return body.upload;
+  }
+
+  async function uploadSample(file: File) {
+    const uploadData = new FormData();
+    uploadData.append("file", file);
+
+    const response = await fetch("/api/artists/apply/samples", {
+      method: "POST",
+      body: uploadData,
+    });
+    const body = (await response.json().catch(() => ({}))) as SampleUploadResponse;
+
+    if (!response.ok || !body.upload) {
+      throw new Error(body.error || "Failed to upload sample song");
+    }
+
+    return body.upload;
+  }
+
+  async function cleanupUploads(imageKeys: string[], sampleKeys: string[]) {
+    try {
+      await Promise.all([
+        imageKeys.length > 0
+          ? fetch("/api/artists/apply/images", {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ keys: imageKeys }),
+            })
+          : Promise.resolve(),
+        sampleKeys.length > 0
+          ? fetch("/api/artists/apply/samples", {
+              method: "DELETE",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ keys: sampleKeys }),
+            })
+          : Promise.resolve(),
+      ]);
+    } catch (cleanupError) {
+      console.error("Failed to clean up artist application uploads:", cleanupError);
+    }
+  }
+
   async function submitApplication(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (submitting || pendingApplication) return;
+    if (submitting || pendingApplication || step !== TOTAL_STEPS) return;
+
+    if (
+      !form.name.trim() ||
+      !form.intro_text.trim() ||
+      !form.bio.trim() ||
+      introWordCount > INTRO_WORD_LIMIT ||
+      descriptionWordCount > DESCRIPTION_WORD_LIMIT ||
+      !profileImageFile ||
+      !heroImageFile
+    ) {
+      setMessage({
+        tone: "error",
+        text: "Complete all required application fields before submitting.",
+      });
+      return;
+    }
 
     setSubmitting(true);
     setMessage(null);
+    const imageKeys: string[] = [];
+    const sampleKeys: string[] = [];
 
     try {
+      const profileUpload = await uploadImage(profileImageFile, "profile");
+      imageKeys.push(profileUpload.key);
+
+      const heroUpload = await uploadImage(heroImageFile, "hero");
+      imageKeys.push(heroUpload.key);
+
+      const uploadedSamples: UploadedSample[] = [];
+      for (const file of sampleFiles) {
+        const upload = await uploadSample(file);
+        sampleKeys.push(upload.key);
+        uploadedSamples.push(upload);
+      }
+
       const response = await fetch("/api/artists/apply", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({
+          ...form,
+          profile_image_url: profileUpload.url,
+          hero_image_url: heroUpload.url,
+          samples: uploadedSamples.map((sample) => ({
+            file_name: sample.file_name,
+            audio_url: sample.url,
+            size_bytes: sample.size_bytes,
+          })),
+        }),
       });
       const body = (await response.json().catch(() => ({}))) as ApplicationResponse;
 
@@ -187,11 +352,16 @@ export default function ArtistApplicationForm() {
       const application = body.application;
       setApplications((current) => [application, ...current]);
       setForm(EMPTY_FORM);
+      setProfileImageFile(null);
+      setHeroImageFile(null);
+      setSampleFiles([]);
+      setStep(1);
       setMessage({
         tone: "success",
         text: "Application submitted. Your artist profile is now pending review.",
       });
     } catch (error) {
+      await cleanupUploads(imageKeys, sampleKeys);
       setMessage({
         tone: "error",
         text:
@@ -203,6 +373,53 @@ export default function ArtistApplicationForm() {
       setSubmitting(false);
     }
   }
+
+  function goBack() {
+    if (submitting || step <= 1) return;
+    setMessage(null);
+    setStep((current) => Math.max(1, current - 1));
+  }
+
+  function goNext() {
+    if (submitting || step >= TOTAL_STEPS) return;
+    setMessage(null);
+    setStep((current) => Math.min(TOTAL_STEPS, current + 1));
+  }
+
+  function addSampleFiles(files: FileList | null) {
+    if (!files) return;
+    const nextFiles = Array.from(files);
+
+    if (sampleFiles.length + nextFiles.length > MAX_SAMPLE_FILES) {
+      setMessage({
+        tone: "error",
+        text: `Upload no more than ${MAX_SAMPLE_FILES} sample songs.`,
+      });
+      return;
+    }
+
+    if (nextFiles.some((file) => !file.type.startsWith("audio/"))) {
+      setMessage({ tone: "error", text: "Sample files must be audio files." });
+      return;
+    }
+
+    setMessage(null);
+    setSampleFiles((current) => [...current, ...nextFiles]);
+  }
+
+  const stepOneComplete = Boolean(form.name.trim());
+  const stepTwoComplete = Boolean(
+    form.intro_text.trim() &&
+      form.bio.trim() &&
+      introWordCount <= INTRO_WORD_LIMIT &&
+      descriptionWordCount <= DESCRIPTION_WORD_LIMIT,
+  );
+  const stepThreeComplete = Boolean(profileImageFile && heroImageFile);
+  const nextDisabled =
+    loadState === "loading" ||
+    (step === 1 && !stepOneComplete) ||
+    (step === 2 && !stepTwoComplete) ||
+    (step === 3 && !stepThreeComplete);
 
   if (pendingApplication) {
     return (
@@ -219,81 +436,276 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={submitApplication}>
-      <section className="filmwave-backend-section p-[50px]">
-        <p className="m-0 max-w-[560px] text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
-          Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
-        </p>
+      <section className="filmwave-backend-section flex h-[420px] flex-col p-[50px]">
+        <div className="min-h-0 flex-1 overflow-y-auto">
+          {step === 1 ? (
+            <>
+              <p className="m-0 max-w-[560px] text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
+                Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
+              </p>
 
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          <Input
-            label="Artist name"
-            value={form.name}
-            placeholder="Artist name"
-            onChange={(value) =>
-              setForm((current) => ({ ...current, name: value }))
-            }
-          />
-          <Input
-            label="Website"
-            type="url"
-            value={form.website_url}
-            placeholder="https://"
-            onChange={(value) =>
-              setForm((current) => ({ ...current, website_url: value }))
-            }
-          />
-          <label className="grid gap-1.5">
-            <span className="flex items-center gap-1.5">
-              <SpotifyIcon />
-              Spotify
-            </span>
-            <input
-              type="url"
-              value={form.spotify_url}
-              placeholder="https://open.spotify.com/..."
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  spotify_url: event.target.value,
-                }))
-              }
-              className="filmwave-backend-input"
-            />
-          </label>
-          <label className="grid gap-1.5">
-            <span className="flex items-center gap-1.5">
-              <InstagramIcon />
-              Instagram
-            </span>
-            <input
-              type="url"
-              value={form.instagram_url}
-              placeholder="https://instagram.com/..."
-              onChange={(event) =>
-                setForm((current) => ({
-                  ...current,
-                  instagram_url: event.target.value,
-                }))
-              }
-              className="filmwave-backend-input"
-            />
-          </label>
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                <Input
+                  label="Artist name"
+                  value={form.name}
+                  placeholder="Artist name"
+                  onChange={(value) =>
+                    setForm((current) => ({ ...current, name: value }))
+                  }
+                />
+                <Input
+                  label="Website"
+                  type="url"
+                  value={form.website_url}
+                  placeholder="https://"
+                  onChange={(value) =>
+                    setForm((current) => ({ ...current, website_url: value }))
+                  }
+                />
+                <label className="grid gap-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <SpotifyIcon />
+                    Spotify
+                  </span>
+                  <input
+                    type="url"
+                    value={form.spotify_url}
+                    placeholder="https://open.spotify.com/..."
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        spotify_url: event.target.value,
+                      }))
+                    }
+                    className="filmwave-backend-input"
+                  />
+                </label>
+                <label className="grid gap-1.5">
+                  <span className="flex items-center gap-1.5">
+                    <InstagramIcon />
+                    Instagram
+                  </span>
+                  <input
+                    type="url"
+                    value={form.instagram_url}
+                    placeholder="https://instagram.com/..."
+                    onChange={(event) =>
+                      setForm((current) => ({
+                        ...current,
+                        instagram_url: event.target.value,
+                      }))
+                    }
+                    className="filmwave-backend-input"
+                  />
+                </label>
+              </div>
+            </>
+          ) : null}
+
+          {step === 2 ? (
+            <div className="grid gap-4">
+              <label className="grid gap-1.5">
+                <span className="flex items-center justify-between gap-4">
+                  <span>Intro text</span>
+                  <span className="text-[10px] font-normal text-[var(--text-muted)]">
+                    {introWordCount} / {INTRO_WORD_LIMIT} words
+                  </span>
+                </span>
+                <textarea
+                  value={form.intro_text}
+                  maxLength={INTRO_CHARACTER_LIMIT}
+                  rows={3}
+                  placeholder="A short introduction to the artist."
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      intro_text: event.target.value,
+                    }))
+                  }
+                  className="filmwave-backend-textarea"
+                />
+              </label>
+
+              <label className="grid gap-1.5">
+                <span className="flex items-center justify-between gap-4">
+                  <span>Description</span>
+                  <span className="text-[10px] font-normal text-[var(--text-muted)]">
+                    {descriptionWordCount} / {DESCRIPTION_WORD_LIMIT} words
+                  </span>
+                </span>
+                <textarea
+                  value={form.bio}
+                  maxLength={DESCRIPTION_CHARACTER_LIMIT}
+                  rows={4}
+                  placeholder="Tell us about the artist and the music you make."
+                  onChange={(event) =>
+                    setForm((current) => ({ ...current, bio: event.target.value }))
+                  }
+                  className="filmwave-backend-textarea"
+                />
+              </label>
+            </div>
+          ) : null}
+
+          {step === 3 ? (
+            <div className="grid gap-5">
+              <div>
+                <div className="text-[18px] font-[300] leading-[1.35] text-[var(--text-primary)]">
+                  Add the images that will shape your artist profile.
+                </div>
+                <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
+                  Both images are required. Images are optimized automatically after upload.
+                </p>
+              </div>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="flex min-w-0 items-center gap-4">
+                  <div
+                    className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+                    style={
+                      profileImagePreviewUrl
+                        ? { backgroundImage: `url(${profileImagePreviewUrl})` }
+                        : undefined
+                    }
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-medium text-[var(--text-primary)]">
+                      Artist thumbnail
+                    </div>
+                    <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                      Choose image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={submitting}
+                        className="hidden"
+                        onChange={(event) =>
+                          setProfileImageFile(event.target.files?.[0] ?? null)
+                        }
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex min-w-0 items-center gap-4">
+                  <div
+                    className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+                    style={
+                      heroImagePreviewUrl
+                        ? { backgroundImage: `url(${heroImagePreviewUrl})` }
+                        : undefined
+                    }
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-medium text-[var(--text-primary)]">
+                      Feature image
+                    </div>
+                    <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                      Choose image
+                      <input
+                        type="file"
+                        accept="image/*"
+                        disabled={submitting}
+                        className="hidden"
+                        onChange={(event) =>
+                          setHeroImageFile(event.target.files?.[0] ?? null)
+                        }
+                      />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
+
+          {step === 4 ? (
+            <div className="grid gap-4">
+              <div>
+                <div className="text-[18px] font-[300] leading-[1.35] text-[var(--text-primary)]">
+                  Share a few samples of your music.
+                </div>
+                <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
+                  Upload up to four sample songs so our team can hear your music. If you have an active website, Spotify, or Instagram profile where your music can be heard, these uploads are optional.
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                <label className="filmwave-backend-button filmwave-backend-button-secondary inline-flex">
+                  Choose audio files
+                  <input
+                    type="file"
+                    accept="audio/*"
+                    multiple
+                    disabled={submitting || sampleFiles.length >= MAX_SAMPLE_FILES}
+                    className="hidden"
+                    onChange={(event) => addSampleFiles(event.target.files)}
+                  />
+                </label>
+                <span className="text-[10px] text-[var(--text-muted)]">
+                  {sampleFiles.length} / {MAX_SAMPLE_FILES} files
+                </span>
+              </div>
+
+              {sampleFiles.length > 0 ? (
+                <div className="grid gap-1.5">
+                  {sampleFiles.map((file, index) => (
+                    <div
+                      key={`${file.name}-${file.size}-${index}`}
+                      className="flex min-h-8 items-center justify-between gap-3 rounded-[7px] border border-[var(--border)] px-3 py-1.5"
+                    >
+                      <span className="min-w-0 truncate text-[11px] text-[var(--text-secondary)]">
+                        {file.name}
+                      </span>
+                      <button
+                        type="button"
+                        disabled={submitting}
+                        onClick={() =>
+                          setSampleFiles((current) =>
+                            current.filter((_, fileIndex) => fileIndex !== index),
+                          )
+                        }
+                        className="shrink-0 border-0 bg-transparent p-0 text-[10px] text-[var(--text-muted)] transition hover:text-[var(--text-primary)]"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
-        <div className="mt-5 flex min-h-10 flex-wrap items-center justify-between gap-3">
-          <div className="min-h-5 text-xs">
-            {message ? <Feedback tone={message.tone} message={message.text} /> : null}
+        <div className="mt-5 flex min-h-10 shrink-0 items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
+            {step > 1 ? (
+              <Button type="button" subtle disabled={submitting} onClick={goBack}>
+                Back
+              </Button>
+            ) : null}
+            <div className="min-w-0 text-xs">
+              {message ? <Feedback tone={message.tone} message={message.text} /> : null}
+            </div>
           </div>
-          <Button
-            type="submit"
-            disabled={
-              submitting ||
-              loadState === "loading" ||
-              !form.name.trim()
-            }
-          >
-            {submitting ? "Submitting..." : "Submit application"}
-          </Button>
+
+          <div className="flex shrink-0 items-center gap-3">
+            <span className="text-xs text-[var(--text-muted)]">
+              {step}/{TOTAL_STEPS}
+            </span>
+            {step < TOTAL_STEPS ? (
+              <Button
+                type="button"
+                disabled={submitting || nextDisabled}
+                onClick={goNext}
+              >
+                Next
+              </Button>
+            ) : (
+              <Button type="submit" disabled={submitting}>
+                {submitting ? "Submitting..." : "Submit application"}
+              </Button>
+            )}
+          </div>
         </div>
       </section>
     </form>
