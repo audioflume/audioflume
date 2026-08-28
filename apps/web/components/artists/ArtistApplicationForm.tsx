@@ -268,6 +268,59 @@ export default function ArtistApplicationForm() {
   return (
     <form onSubmit={submitApplication} className="grid gap-4">
       <section className="filmwave-backend-section">
+        <div className="grid gap-4 p-5 sm:grid-cols-2">
+          <Input
+            label="Artist name"
+            value={form.name}
+            placeholder="Artist name"
+            onChange={(value) =>
+              setForm((current) => ({ ...current, name: value }))
+            }
+          />
+          <Input
+            label="Location"
+            value={form.location}
+            placeholder="City, province / state, country"
+            onChange={(value) =>
+              setForm((current) => ({ ...current, location: value }))
+            }
+          />
+          <Input
+            label="Website"
+            type="url"
+            value={form.website_url}
+            placeholder="https://"
+            onChange={(value) =>
+              setForm((current) => ({ ...current, website_url: value }))
+            }
+          />
+          <Input
+            label="Instagram"
+            type="url"
+            value={form.instagram_url}
+            placeholder="https://instagram.com/..."
+            onChange={(value) =>
+              setForm((current) => ({ ...current, instagram_url: value }))
+            }
+          />
+          <label className="block sm:col-span-2">
+            <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
+              Artist bio
+            </span>
+            <textarea
+              value={form.bio}
+              placeholder="A short introduction to the artist and the music you make."
+              onChange={(event) =>
+                setForm((current) => ({ ...current, bio: event.target.value }))
+              }
+              rows={6}
+              className="filmwave-backend-textarea"
+            />
+          </label>
+        </div>
+      </section>
+
+      <section className="filmwave-backend-section">
         <div className="filmwave-backend-section-header">
           <h2 className="filmwave-backend-section-title">Images</h2>
         </div>
@@ -328,59 +381,6 @@ export default function ArtistApplicationForm() {
               </label>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="filmwave-backend-section">
-        <div className="grid gap-4 p-5 sm:grid-cols-2">
-          <Input
-            label="Artist name"
-            value={form.name}
-            placeholder="Artist name"
-            onChange={(value) =>
-              setForm((current) => ({ ...current, name: value }))
-            }
-          />
-          <Input
-            label="Location"
-            value={form.location}
-            placeholder="City, province / state, country"
-            onChange={(value) =>
-              setForm((current) => ({ ...current, location: value }))
-            }
-          />
-          <Input
-            label="Website"
-            type="url"
-            value={form.website_url}
-            placeholder="https://"
-            onChange={(value) =>
-              setForm((current) => ({ ...current, website_url: value }))
-            }
-          />
-          <Input
-            label="Instagram"
-            type="url"
-            value={form.instagram_url}
-            placeholder="https://instagram.com/..."
-            onChange={(value) =>
-              setForm((current) => ({ ...current, instagram_url: value }))
-            }
-          />
-          <label className="block sm:col-span-2">
-            <span className="mb-1.5 block text-xs font-medium text-[var(--text-muted)]">
-              Artist bio
-            </span>
-            <textarea
-              value={form.bio}
-              placeholder="A short introduction to the artist and the music you make."
-              onChange={(event) =>
-                setForm((current) => ({ ...current, bio: event.target.value }))
-              }
-              rows={6}
-              className="filmwave-backend-textarea"
-            />
-          </label>
         </div>
       </section>
 
