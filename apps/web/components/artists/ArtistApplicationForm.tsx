@@ -68,8 +68,6 @@ type SampleUploadResponse = {
 type UploadedSample = NonNullable<SampleUploadResponse["upload"]>;
 
 const TOTAL_STEPS = 4;
-const INTRO_WORD_LIMIT = 20;
-const DESCRIPTION_WORD_LIMIT = 70;
 const INTRO_CHARACTER_LIMIT = 114;
 const DESCRIPTION_CHARACTER_LIMIT = 383;
 const MAX_SAMPLE_FILES = 4;
@@ -100,11 +98,6 @@ function formatDate(value: string) {
     month: "short",
     day: "numeric",
   }).format(date);
-}
-
-function countWords(value: string) {
-  const trimmed = value.trim();
-  return trimmed ? trimmed.split(/\s+/).length : 0;
 }
 
 function SpotifyIcon() {
@@ -166,8 +159,6 @@ export default function ArtistApplicationForm() {
     () => applications.find((application) => application.status === "pending") ?? null,
     [applications],
   );
-  const introWordCount = countWords(form.intro_text);
-  const descriptionWordCount = countWords(form.bio);
   const profileImagePreviewUrl = useMemo(
     () => (profileImageFile ? URL.createObjectURL(profileImageFile) : null),
     [profileImageFile],
@@ -299,8 +290,8 @@ export default function ArtistApplicationForm() {
       !form.name.trim() ||
       !form.intro_text.trim() ||
       !form.bio.trim() ||
-      introWordCount > INTRO_WORD_LIMIT ||
-      descriptionWordCount > DESCRIPTION_WORD_LIMIT ||
+      form.intro_text.length > INTRO_CHARACTER_LIMIT ||
+      form.bio.length > DESCRIPTION_CHARACTER_LIMIT ||
       !profileImageFile ||
       !heroImageFile
     ) {
@@ -447,8 +438,8 @@ export default function ArtistApplicationForm() {
   const stepTwoComplete = Boolean(
     form.intro_text.trim() &&
       form.bio.trim() &&
-      introWordCount <= INTRO_WORD_LIMIT &&
-      descriptionWordCount <= DESCRIPTION_WORD_LIMIT,
+      form.intro_text.length <= INTRO_CHARACTER_LIMIT &&
+      form.bio.length <= DESCRIPTION_CHARACTER_LIMIT,
   );
   const stepThreeComplete = Boolean(profileImageFile && heroImageFile);
   const nextDisabled =
@@ -552,7 +543,7 @@ export default function ArtistApplicationForm() {
                 <span className="flex items-center justify-between gap-4">
                   <span>Intro text</span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
-                    {introWordCount} / {INTRO_WORD_LIMIT} words
+                    {form.intro_text.length} / {INTRO_CHARACTER_LIMIT}
                   </span>
                 </span>
                 <textarea
@@ -574,7 +565,7 @@ export default function ArtistApplicationForm() {
                 <span className="flex items-center justify-between gap-4">
                   <span>Description</span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
-                    {descriptionWordCount} / {DESCRIPTION_WORD_LIMIT} words
+                    {form.bio.length} / {DESCRIPTION_CHARACTER_LIMIT}
                   </span>
                 </span>
                 <textarea
