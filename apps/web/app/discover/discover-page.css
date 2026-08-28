@@ -278,7 +278,7 @@
     100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
   max-width: var(--filmwave-editorial-max-width);
-  margin: clamp(-265px, calc(-13vw - 15px), -205px) auto 0;
+  margin: clamp(-257.5px, calc(-13vw - 7.5px), -197.5px) auto 0;
 }
 
 .discover-artist-featured {
@@ -730,7 +730,7 @@
   }
 
   .discover-artist-content {
-    margin-top: -225px;
+    margin-top: -217.5px;
   }
 
   .discover-artist-editorial-grid {
@@ -852,7 +852,7 @@
   }
 
   .discover-artist-content {
-    margin-top: -195px;
+    margin-top: -187.5px;
   }
 
   .discover-artist-featured-grid {
