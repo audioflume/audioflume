@@ -88,7 +88,9 @@ export default function Footer({
   const isAlbumDetailPage = /^\/artists\/[^/]+\/albums\/[^/]+/.test(pathname);
   const isInteriorDetailPage = isPlaylistDetailPage || isAlbumDetailPage;
   const isEditorialLandingPage =
-    pathname === "/discover" || pathname === "/curated-playlists";
+    pathname === "/discover" ||
+    pathname === "/curated-playlists" ||
+    pathname === "/artists/apply";
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const isPublicArtistPage =
     /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
