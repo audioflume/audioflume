@@ -73,6 +73,8 @@ const DESCRIPTION_WORD_LIMIT = 70;
 const INTRO_CHARACTER_LIMIT = 114;
 const DESCRIPTION_CHARACTER_LIMIT = 383;
 const MAX_SAMPLE_FILES = 4;
+const PANEL_FADE_OUT_MS = 140;
+const PANEL_FADE_IN_MS = 160;
 
 const EMPTY_FORM: ApplicationForm = {
   name: "",
@@ -149,6 +151,8 @@ export default function ArtistApplicationForm() {
     "loading",
   );
   const [step, setStep] = useState(1);
+  const [panelVisible, setPanelVisible] = useState(true);
+  const [transitioning, setTransitioning] = useState(false);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
   const [sampleFiles, setSampleFiles] = useState<File[]>([]);
@@ -384,16 +388,38 @@ export default function ArtistApplicationForm() {
     }
   }
 
-  function goBack() {
-    if (submitting || step <= 1) return;
+  function transitionToStep(nextStep: number) {
+    if (
+      submitting ||
+      transitioning ||
+      nextStep < 1 ||
+      nextStep > TOTAL_STEPS ||
+      nextStep === step
+    ) {
+      return;
+    }
+
     setMessage(null);
-    setStep((current) => Math.max(1, current - 1));
+    setTransitioning(true);
+    setPanelVisible(false);
+
+    window.setTimeout(() => {
+      setStep(nextStep);
+      window.requestAnimationFrame(() => {
+        setPanelVisible(true);
+        window.setTimeout(() => setTransitioning(false), PANEL_FADE_IN_MS);
+      });
+    }, PANEL_FADE_OUT_MS);
+  }
+
+  function goBack() {
+    if (step <= 1) return;
+    transitionToStep(step - 1);
   }
 
   function goNext() {
-    if (submitting || step >= TOTAL_STEPS) return;
-    setMessage(null);
-    setStep((current) => Math.min(TOTAL_STEPS, current + 1));
+    if (step >= TOTAL_STEPS) return;
+    transitionToStep(step + 1);
   }
 
   function addSampleFiles(files: FileList | null) {
@@ -447,7 +473,15 @@ export default function ArtistApplicationForm() {
   return (
     <form onSubmit={(event) => event.preventDefault()}>
       <section className="filmwave-backend-section flex h-[420px] flex-col p-[50px]">
-        <div className="min-h-0 flex-1 overflow-y-auto pb-px">
+        <div
+          className="min-h-0 flex-1 overflow-y-auto pb-px"
+          style={{
+            opacity: panelVisible ? 1 : 0,
+            transition: `opacity ${
+              panelVisible ? PANEL_FADE_IN_MS : PANEL_FADE_OUT_MS
+            }ms ease`,
+          }}
+        >
           {step === 1 ? (
             <>
               <p className="m-0 max-w-[560px] text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
@@ -551,7 +585,7 @@ export default function ArtistApplicationForm() {
                   onChange={(event) =>
                     setForm((current) => ({ ...current, bio: event.target.value }))
                   }
-                  className="filmwave-backend-textarea"
+                  className="filmwave-backend-textarea relative -top-px"
                 />
               </label>
             </div>
@@ -689,7 +723,12 @@ export default function ArtistApplicationForm() {
         <div className="mt-5 flex min-h-10 shrink-0 items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
             {step > 1 ? (
-              <Button type="button" subtle disabled={submitting} onClick={goBack}>
+              <Button
+                type="button"
+                subtle
+                disabled={submitting || transitioning}
+                onClick={goBack}
+              >
                 Back
               </Button>
             ) : null}
@@ -705,7 +744,7 @@ export default function ArtistApplicationForm() {
             {step < TOTAL_STEPS ? (
               <Button
                 type="button"
-                disabled={submitting || nextDisabled}
+                disabled={submitting || transitioning || nextDisabled}
                 onClick={goNext}
               >
                 Next
@@ -713,7 +752,7 @@ export default function ArtistApplicationForm() {
             ) : (
               <Button
                 type="button"
-                disabled={submitting}
+                disabled={submitting || transitioning}
                 onClick={() => void submitApplication()}
               >
                 {submitting ? "Submitting..." : "Submit application"}
