@@ -184,14 +184,12 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={submitApplication}>
-      <section className="filmwave-backend-section">
-        <div className="px-5 pt-5">
-          <p className="m-0 max-w-[680px] text-sm leading-6 text-[var(--text-secondary)]">
-            Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
-          </p>
-        </div>
+      <section className="filmwave-backend-section p-5">
+        <p className="m-0 max-w-[680px] text-[18px] leading-7 text-[var(--text-secondary)]">
+          Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
+        </p>
 
-        <div className="grid gap-4 p-5 sm:grid-cols-2">
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <Input
             label="Artist name"
             value={form.name}
@@ -229,7 +227,7 @@ export default function ArtistApplicationForm() {
           />
         </div>
 
-        <div className="flex min-h-10 flex-wrap items-center justify-between gap-3 px-5 pb-5">
+        <div className="mt-5 flex min-h-10 flex-wrap items-center justify-between gap-3">
           <div className="min-h-5 text-xs">
             {message ? <Feedback tone={message.tone} message={message.text} /> : null}
           </div>
