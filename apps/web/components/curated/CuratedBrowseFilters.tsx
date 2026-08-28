@@ -106,8 +106,8 @@ function FilterIcon({ icon }: { icon: FilterIconName }) {
 
   return (
     <svg {...commonProps}>
-      <rect x="3" y="5.5" width="18" height="13" rx="4" />
-      <path d="m10 9 5 3-5 3Z" fill="currentColor" stroke="none" />
+      <rect x="3" y="4.5" width="18" height="15" rx="4.5" />
+      <path d="m10 8.5 5 3.5-5 3.5Z" fill="currentColor" stroke="none" />
     </svg>
   );
 }
