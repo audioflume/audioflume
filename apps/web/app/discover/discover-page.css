@@ -27,7 +27,7 @@
   overflow: hidden;
   margin-top: calc(var(--filmwave-header-height, 75px) * -1);
   background:
-    linear-gradient(rgba(13, 13, 13, 0.2), rgba(13, 13, 13, 0.2)),
+    linear-gradient(rgba(13, 13, 13, 0.32), rgba(13, 13, 13, 0.32)),
     linear-gradient(
       180deg,
       rgba(0, 0, 0, 0.115) 0%,
