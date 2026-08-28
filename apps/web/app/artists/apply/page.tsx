@@ -10,9 +10,6 @@ export default function ArtistApplyPage() {
             <h1 className="m-0 max-w-[720px] font-[family-name:var(--font-aktiv-grotesk)] text-[56px] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--text-primary)]">
               Join Audioflume as an artist.
             </h1>
-            <p className="m-0 max-w-[440px] text-sm leading-6 text-[var(--text-secondary)] md:justify-self-end">
-              Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
-            </p>
           </section>
 
           <ArtistApplicationForm />
@@ -22,7 +19,7 @@ export default function ArtistApplyPage() {
           className="mx-auto mt-16 pb-[72px]"
           style={{
             width:
-              "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))",
+              "calc(100vw - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))",
             maxWidth: "var(--filmwave-editorial-max-width)",
           }}
         >
