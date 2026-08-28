@@ -16,15 +16,8 @@ export default function ArtistApplyPage() {
         </div>
       </section>
 
-      <section
-        className="mx-auto mt-16 pb-[72px]"
-        style={{
-          width:
-            "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))",
-          maxWidth: "var(--filmwave-editorial-max-width)",
-        }}
-      >
-        <Footer pageGutter={false} />
+      <section className="mt-16">
+        <Footer />
       </section>
     </main>
   );
