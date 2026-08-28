@@ -268,6 +268,12 @@ export default function ArtistApplicationForm() {
   return (
     <form onSubmit={submitApplication} className="grid gap-4">
       <section className="filmwave-backend-section">
+        <div className="px-5 pt-5">
+          <p className="m-0 max-w-[680px] text-sm leading-6 text-[var(--text-secondary)]">
+            Create your artist profile and submit it for review. Once approved, this profile will become the home for your catalogue, releases, playlists, and artist tools.
+          </p>
+        </div>
+
         <div className="grid gap-4 p-5 sm:grid-cols-2">
           <Input
             label="Artist name"
