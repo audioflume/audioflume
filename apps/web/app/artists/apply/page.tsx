@@ -3,7 +3,7 @@ import ArtistApplicationForm from "@/components/artists/ArtistApplicationForm";
 
 export default function ArtistApplyPage() {
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="artist-apply-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="px-5 pt-[112px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[980px]">
           <section className="mb-8 grid gap-6 md:grid-cols-[minmax(0,0.92fr)_minmax(280px,0.62fr)] md:items-end">
