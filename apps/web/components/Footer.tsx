@@ -46,7 +46,7 @@ type FooterProps = {
 function InstagramIcon() {
   return (
     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" strokeWidth="1.7" />
+      <rect width="18" height="18" x="3" y="3" rx="5" stroke="currentColor" strokeWidth="1.7" />
       <circle cx="12" cy="12" r="4.2" stroke="currentColor" strokeWidth="1.7" />
       <circle cx="17.4" cy="6.7" r="1" fill="currentColor" />
     </svg>
@@ -88,7 +88,9 @@ export default function Footer({
   const isAlbumDetailPage = /^\/artists\/[^/]+\/albums\/[^/]+/.test(pathname);
   const isInteriorDetailPage = isPlaylistDetailPage || isAlbumDetailPage;
   const isEditorialLandingPage =
-    pathname === "/discover" || pathname === "/curated-playlists";
+    pathname === "/discover" ||
+    pathname === "/curated-playlists" ||
+    pathname === "/artists/apply";
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const isPublicArtistPage =
     /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
