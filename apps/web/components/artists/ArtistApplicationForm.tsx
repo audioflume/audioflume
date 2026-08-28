@@ -266,7 +266,7 @@ export default function ArtistApplicationForm() {
   }
 
   return (
-    <form onSubmit={submitApplication} className="grid gap-4">
+    <form onSubmit={submitApplication}>
       <section className="filmwave-backend-section">
         <div className="px-5 pt-5">
           <p className="m-0 max-w-[680px] text-sm leading-6 text-[var(--text-secondary)]">
@@ -324,87 +324,85 @@ export default function ArtistApplicationForm() {
             />
           </label>
         </div>
-      </section>
 
-      <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header">
-          <h2 className="filmwave-backend-section-title">Images</h2>
-        </div>
+        <div className="px-5 pb-5">
+          <h2 className="filmwave-backend-section-title mb-3">Images</h2>
 
-        <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
-          <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
-            <div
-              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
-              style={
-                thumbnailPreviewUrl
-                  ? { backgroundImage: `url(${thumbnailPreviewUrl})` }
-                  : undefined
-              }
-            />
-            <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium text-[var(--text-primary)]">
-                Artist thumbnail
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
+              <div
+                className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+                style={
+                  thumbnailPreviewUrl
+                    ? { backgroundImage: `url(${thumbnailPreviewUrl})` }
+                    : undefined
+                }
+              />
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-medium text-[var(--text-primary)]">
+                  Artist thumbnail
+                </div>
+                <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                  Choose image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={submitting}
+                    className="hidden"
+                    onChange={(event) => {
+                      setThumbnailFile(event.target.files?.[0] ?? null);
+                    }}
+                  />
+                </label>
               </div>
-              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
-                Choose image
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled={submitting}
-                  className="hidden"
-                  onChange={(event) => {
-                    setThumbnailFile(event.target.files?.[0] ?? null);
-                  }}
-                />
-              </label>
+            </div>
+
+            <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
+              <div
+                className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+                style={
+                  featurePreviewUrl
+                    ? { backgroundImage: `url(${featurePreviewUrl})` }
+                    : undefined
+                }
+              />
+              <div className="min-w-0 flex-1">
+                <div className="text-xs font-medium text-[var(--text-primary)]">
+                  Feature image
+                </div>
+                <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
+                  Choose image
+                  <input
+                    type="file"
+                    accept="image/*"
+                    disabled={submitting}
+                    className="hidden"
+                    onChange={(event) => {
+                      setFeatureImageFile(event.target.files?.[0] ?? null);
+                    }}
+                  />
+                </label>
+              </div>
             </div>
           </div>
+        </div>
 
-          <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
-            <div
-              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
-              style={
-                featurePreviewUrl
-                  ? { backgroundImage: `url(${featurePreviewUrl})` }
-                  : undefined
-              }
-            />
-            <div className="min-w-0 flex-1">
-              <div className="text-xs font-medium text-[var(--text-primary)]">
-                Feature image
-              </div>
-              <label className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-3 inline-flex">
-                Choose image
-                <input
-                  type="file"
-                  accept="image/*"
-                  disabled={submitting}
-                  className="hidden"
-                  onChange={(event) => {
-                    setFeatureImageFile(event.target.files?.[0] ?? null);
-                  }}
-                />
-              </label>
-            </div>
+        <div className="flex min-h-10 flex-wrap items-center justify-between gap-3 px-5 pb-5">
+          <div className="min-h-5 text-xs">
+            {message ? <Feedback tone={message.tone} message={message.text} /> : null}
           </div>
+          <Button
+            type="submit"
+            disabled={
+              submitting ||
+              loadState === "loading" ||
+              !form.name.trim()
+            }
+          >
+            {submitting ? "Submitting..." : "Submit application"}
+          </Button>
         </div>
       </section>
-
-      <div className="flex min-h-10 flex-wrap items-center justify-between gap-3">
-        <div className="min-h-5 text-xs">
-          {message ? <Feedback tone={message.tone} message={message.text} /> : null}
-        </div>
-        <Button
-          type="submit"
-          disabled={
-            submitting ||
-            loadState === "loading" ||
-            !form.name.trim()
-          }
-        >
-          {submitting ? "Submitting..." : "Submit application"}
-        </Button>
-      </div>
     </form>
   );
 }
