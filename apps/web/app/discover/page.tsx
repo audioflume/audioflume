@@ -561,8 +561,7 @@ export default function DiscoverPage() {
                 <br />
                 featured artists
               </span>
-              <p>{MOCKUP_LOREM}</p>
-              <div className="flex w-[178px] justify-self-end flex-col items-end max-[720px]:hidden">
+              <div className="col-start-3 flex w-[178px] justify-self-end flex-col items-end max-[720px]:hidden">
                 <div className="mb-[10px] inline-flex h-[22px] items-center gap-0 text-white">
                   <button
                     type="button"
