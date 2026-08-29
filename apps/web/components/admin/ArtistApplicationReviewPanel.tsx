@@ -42,8 +42,8 @@ export default function ArtistApplicationReviewPanel({
   samples,
 }: ArtistApplicationReviewPanelProps) {
   return (
-    <section className="col-span-6 grid cursor-default gap-4 border-t border-[var(--border-subtle)] pt-4 lg:grid-cols-[210px_minmax(0,1fr)_minmax(280px,0.9fr)]">
-      <div className="grid gap-3">
+    <section className="col-span-6 grid cursor-auto gap-4 border-t border-[var(--border-subtle)] pt-4 lg:grid-cols-[210px_minmax(0,1fr)_minmax(280px,0.9fr)]">
+      <div className="grid cursor-auto gap-3">
         <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
           Profile images
         </div>
@@ -74,7 +74,7 @@ export default function ArtistApplicationReviewPanel({
         </div>
       </div>
 
-      <div className="grid content-start gap-4">
+      <div className="grid cursor-auto content-start gap-4">
         <div>
           <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
             Intro text
@@ -93,7 +93,7 @@ export default function ArtistApplicationReviewPanel({
         </div>
       </div>
 
-      <div className="grid content-start gap-2">
+      <div className="grid cursor-auto content-start gap-2">
         <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
           Sample music
         </div>
