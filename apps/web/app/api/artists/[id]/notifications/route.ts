@@ -119,3 +119,34 @@ export async function PATCH(request: Request, context: RouteContext) {
     );
   }
 }
+
+export async function DELETE(_request: Request, context: RouteContext) {
+  try {
+    const { id } = await context.params;
+    const access = await requireArtistPermission(id, "artist:view");
+
+    if (!access.userId) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const { error } = await supabaseServer
+      .from("artist_notifications")
+      .delete()
+      .eq("artist_id", id)
+      .eq("recipient_clerk_user_id", access.userId);
+
+    if (error) throw error;
+
+    return NextResponse.json({ cleared: true });
+  } catch (error) {
+    if (error instanceof ArtistAccessError) {
+      return NextResponse.json({ error: error.message }, { status: error.status });
+    }
+
+    console.error("Failed to clear artist notifications:", error);
+    return NextResponse.json(
+      { error: "Failed to clear notifications" },
+      { status: 500 },
+    );
+  }
+}
