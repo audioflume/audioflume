@@ -649,7 +649,7 @@ export default function ArtistApplicationForm() {
           {step === 2 ? (
             <div className="grid gap-2 pb-2">
               <label className="grid gap-1.5">
-                <span className="flex items-center justify-between gap-4">
+                <span className="flex items-baseline justify-between gap-4">
                   <span className="flex items-baseline gap-1.5">
                     <span>Intro Text</span>
                     <RequiredMark />
@@ -748,7 +748,7 @@ export default function ArtistApplicationForm() {
               </div>
 
               <label className="grid gap-1.5">
-                <span className="flex items-center justify-between gap-4">
+                <span className="flex items-baseline justify-between gap-4">
                   <span className="flex items-baseline gap-1.5">
                     <span>Description</span>
                     <RequiredMark />
