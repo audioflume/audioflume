@@ -562,7 +562,7 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <section className="flex h-[420px] flex-col overflow-hidden rounded-[10px] bg-[var(--bg-primary)] p-[50px]">
+      <section className="flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
         <div
           className="min-h-0 flex-1 overflow-y-auto pb-px"
           style={{
@@ -580,7 +580,7 @@ export default function ArtistApplicationForm() {
 
               <div className="mt-5 grid gap-4 sm:grid-cols-2">
                 <label className="grid gap-1.5">
-                  <span className="flex items-baseline gap-1.5">
+                  <span className="flex items-baseline gap-1.5 text-[12px]">
                     Artist Name
                     <RequiredMark />
                   </span>
@@ -597,17 +597,19 @@ export default function ArtistApplicationForm() {
                     className="filmwave-backend-input"
                   />
                 </label>
-                <Input
-                  label="Website"
-                  type="url"
-                  value={form.website_url}
-                  placeholder="https://"
-                  onChange={(value) =>
-                    setForm((current) => ({ ...current, website_url: value }))
-                  }
-                />
+                <div className="text-[12px]">
+                  <Input
+                    label="Website"
+                    type="url"
+                    value={form.website_url}
+                    placeholder="https://"
+                    onChange={(value) =>
+                      setForm((current) => ({ ...current, website_url: value }))
+                    }
+                  />
+                </div>
                 <label className="grid gap-1.5">
-                  <span className="flex items-center gap-1.5">
+                  <span className="flex items-center gap-1.5 text-[12px]">
                     <SpotifyIcon />
                     Spotify
                   </span>
@@ -625,7 +627,7 @@ export default function ArtistApplicationForm() {
                   />
                 </label>
                 <label className="grid gap-1.5">
-                  <span className="flex items-center gap-1.5">
+                  <span className="flex items-center gap-1.5 text-[12px]">
                     <InstagramIcon />
                     Instagram
                   </span>
@@ -649,7 +651,7 @@ export default function ArtistApplicationForm() {
           {step === 2 ? (
             <div className="grid gap-2 pb-2">
               <label className="grid gap-1.5">
-                <span className="flex items-baseline justify-between gap-4">
+                <span className="flex items-baseline justify-between gap-4 text-[12px]">
                   <span className="flex items-baseline gap-1.5">
                     <span>Intro Text</span>
                     <RequiredMark />
@@ -674,7 +676,7 @@ export default function ArtistApplicationForm() {
               </label>
 
               <div className="grid gap-1.5">
-                <span className="flex items-baseline justify-between gap-4">
+                <span className="flex items-baseline justify-between gap-4 text-[12px]">
                   <span>Designation</span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
                     {selectedDesignations.length} / {MAX_DESIGNATIONS}
@@ -748,7 +750,7 @@ export default function ArtistApplicationForm() {
               </div>
 
               <label className="grid gap-1.5">
-                <span className="flex items-baseline justify-between gap-4">
+                <span className="flex items-baseline justify-between gap-4 text-[12px]">
                   <span className="flex items-baseline gap-1.5">
                     <span>Description</span>
                     <RequiredMark />
