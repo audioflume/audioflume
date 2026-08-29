@@ -22,7 +22,7 @@ export default async function ArtistClaimPage() {
           {user?.id ? (
             <ArtistClaimPanel />
           ) : (
-            <section className="overflow-hidden rounded-[10px] bg-[var(--bg-primary)] p-[50px]">
+            <section className="overflow-hidden bg-[var(--bg-primary)] p-[50px]">
               <div className="flex w-full justify-center">
                 <SignIn
                   routing="hash"
