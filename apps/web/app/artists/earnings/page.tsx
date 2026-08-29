@@ -14,10 +14,10 @@ const earningModels = [
   {
     number: "01",
     title: "Subscription catalogue",
-    split: "Flexible Earnings",
+    split: "Shared Payout Pool",
     description:
-      "The subscription catalogue is the discovery layer of Audioflume. Membership revenue supports the platform and artist payouts, while giving filmmakers broad access to music. Because subscription revenue and catalogue activity change over time, there is no fixed per-download rate. The calculation that applies to your music is set out in the artist agreement before you opt in.",
-    example: "Recorded in your dashboard as subscription earnings.",
+      "Subscription earnings are paid from a shared artist payout pool rather than at a fixed rate per download. A portion of Audioflume’s membership revenue is allocated to that pool, then divided among participating artists according to the payout formula set out in the artist agreement. As subscription revenue changes, the amount available to artists changes with it.",
+    example: "Membership revenue → artist payout pool → your calculated share",
   },
   {
     number: "02",
