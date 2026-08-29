@@ -562,9 +562,9 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <section className="flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
+      <section className="flex min-h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
         <div
-          className="min-h-0 flex-1 overflow-y-auto pb-px"
+          className="flex-1 pb-px"
           style={{
             opacity: panelVisible ? 1 : 0,
             transition: `opacity ${
