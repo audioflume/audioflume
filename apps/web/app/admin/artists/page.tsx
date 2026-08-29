@@ -477,6 +477,21 @@ export default function AdminArtistsPage() {
   async function updateArtistStatus(artist: AdminArtist, status: ArtistStatus) {
     if (updatingArtistId) return;
 
+    let rejectionFeedback = "";
+    if (status === "rejected") {
+      const feedback = window.prompt(
+        `Feedback for ${artist.name}:`,
+        "",
+      );
+      if (feedback === null) return;
+
+      rejectionFeedback = feedback.trim();
+      if (!rejectionFeedback) {
+        showToast("Rejection feedback is required");
+        return;
+      }
+    }
+
     const actionLabel =
       status === "approved"
         ? artist.status === "suspended"
@@ -499,7 +514,12 @@ export default function AdminArtistsPage() {
       const response = await fetch(`/api/admin/artists/${artist.id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ status }),
+        body: JSON.stringify({
+          status,
+          ...(status === "rejected"
+            ? { rejection_feedback: rejectionFeedback }
+            : {}),
+        }),
       });
       const body = (await response.json().catch(() => ({}))) as ArtistsResponse;
 
