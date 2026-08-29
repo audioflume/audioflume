@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
+import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 
 export const metadata: Metadata = {
   title: "Artist Earnings | Audioflume",
@@ -137,7 +138,7 @@ export default function ArtistEarningsPage() {
             </div>
             <Link
               href="/artists/apply"
-              className="inline-flex h-10 shrink-0 items-center justify-center border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-xs font-medium text-[var(--bg-primary)] transition hover:opacity-80"
+              className={`${playlistDetailPrimaryActionButtonClass} hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
             >
               Artist signup
             </Link>
