@@ -145,14 +145,8 @@ export default function ArtistEarningsPage() {
         </div>
       </section>
 
-      <section
-        className="mx-auto max-w-[var(--filmwave-editorial-max-width)]"
-        style={{
-          width:
-            "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))",
-        }}
-      >
-        <Footer pageGutter={false} />
+      <section>
+        <Footer />
       </section>
     </main>
   );
