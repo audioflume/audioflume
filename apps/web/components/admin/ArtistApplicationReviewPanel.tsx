@@ -43,11 +43,11 @@ export default function ArtistApplicationReviewPanel({
 }: ArtistApplicationReviewPanelProps) {
   return (
     <section className="col-span-6 grid cursor-auto gap-4 pt-4 lg:grid-cols-[210px_minmax(0,1fr)_minmax(280px,0.9fr)]">
-      <div className="grid cursor-auto gap-3">
+      <div className="grid cursor-auto content-start">
         <div className="text-[11px] text-[var(--text-secondary)]">
           Profile images
         </div>
-        <div className="flex items-start gap-3">
+        <div className="mt-2 flex items-start gap-3">
           <div className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
             {profileImageUrl ? (
               <img
@@ -67,7 +67,7 @@ export default function ArtistApplicationReviewPanel({
             ) : null}
           </div>
         </div>
-        <div className="flex flex-wrap gap-x-3 gap-y-1">
+        <div className="mt-3 flex flex-wrap gap-x-3 gap-y-1">
           {websiteUrl ? <ReviewLink href={websiteUrl}>Website</ReviewLink> : null}
           {spotifyUrl ? <ReviewLink href={spotifyUrl}>Spotify</ReviewLink> : null}
           {instagramUrl ? <ReviewLink href={instagramUrl}>Instagram</ReviewLink> : null}
