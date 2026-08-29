@@ -19,6 +19,7 @@ type ArtistApplication = {
   website_url: string | null;
   instagram_url: string | null;
   spotify_url: string | null;
+  designation: string | null;
   intro_text: string | null;
   bio: string | null;
   profile_image_url: string | null;
@@ -37,6 +38,7 @@ const INTRO_WORD_LIMIT = 20;
 const DESCRIPTION_CHARACTER_LIMIT = 383;
 const DESCRIPTION_WORD_LIMIT = 70;
 const MAX_SAMPLE_FILES = 4;
+const MAX_DESIGNATIONS = 3;
 
 function slugifyArtistName(value: string) {
   const normalized = value
@@ -97,6 +99,25 @@ function cleanRequiredProfileText(
   }
 
   return { value: cleaned, error: null };
+}
+
+function cleanDesignation(value: unknown) {
+  const cleaned = cleanOptionalString(value, 160);
+  if (!cleaned) return { value: null, error: null };
+
+  const designations = cleaned
+    .split(/\s*\/\s*|\s*,\s*/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  if (designations.length > MAX_DESIGNATIONS) {
+    return {
+      value: null,
+      error: `Select no more than ${MAX_DESIGNATIONS} designations`,
+    };
+  }
+
+  return { value: designations.join(" / "), error: null };
 }
 
 function getUserKey(userId: string) {
@@ -204,7 +225,7 @@ async function getOwnedArtistApplications(clerkUserId: string) {
   const { data: artists, error: artistsError } = await supabaseServer
     .from("artists")
     .select(
-      "id, name, slug, status, location, website_url, instagram_url, spotify_url, intro_text, bio, profile_image_url, hero_image_url, created_at",
+      "id, name, slug, status, location, website_url, instagram_url, spotify_url, designation, intro_text, bio, profile_image_url, hero_image_url, created_at",
     )
     .in("id", artistIds)
     .order("created_at", { ascending: false });
@@ -263,6 +284,7 @@ export async function POST(request: Request) {
 
   const payload = body as Record<string, unknown>;
   const name = cleanOptionalString(payload.name, 160);
+  const designation = cleanDesignation(payload.designation);
   const introText = cleanRequiredProfileText(
     payload.intro_text,
     "Intro text",
@@ -295,6 +317,7 @@ export async function POST(request: Request) {
   }
 
   const validations = [
+    designation,
     introText,
     description,
     profileImage,
@@ -361,6 +384,7 @@ export async function POST(request: Request) {
       .insert({
         name,
         slug,
+        designation: designation.value,
         intro_text: introText.value,
         bio: description.value,
         website_url: website.value,
@@ -372,7 +396,7 @@ export async function POST(request: Request) {
         created_by_clerk_user_id: user.id,
       })
       .select(
-        "id, name, slug, status, location, website_url, instagram_url, spotify_url, intro_text, bio, profile_image_url, hero_image_url, created_at",
+        "id, name, slug, status, location, website_url, instagram_url, spotify_url, designation, intro_text, bio, profile_image_url, hero_image_url, created_at",
       )
       .single();
 
