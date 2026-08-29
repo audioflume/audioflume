@@ -95,7 +95,7 @@ export default function ArtistClaimPanel() {
   }
 
   return (
-    <section className="overflow-hidden rounded-[10px] bg-[var(--bg-primary)] p-[50px]">
+    <section className="overflow-hidden bg-[var(--bg-primary)] p-[50px]">
       <p className="m-0 max-w-[560px] text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
         Claiming connects this existing Audioflume artist profile to your account and gives you Owner access to its catalogue, profile and artist tools.
       </p>
@@ -113,10 +113,10 @@ export default function ArtistClaimPanel() {
           </div>
         ) : invitations.length === 0 ? (
           <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-6">
-            <div className="text-sm font-medium text-[var(--text-primary)]">
+            <div className="text-[12px] font-medium tracking-normal text-[var(--text-primary)]">
               No profile is waiting to be claimed.
             </div>
-            <p className="mt-2 text-[12px] font-light leading-[1.5] text-[var(--text-secondary)]">
+            <p className="mt-2 text-[12px] font-normal leading-[1.5] tracking-normal text-[var(--text-secondary)]">
               Make sure you are signed in with the same verified email address that received the artist invitation.
             </p>
             <a
