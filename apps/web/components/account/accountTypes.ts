@@ -1,4 +1,4 @@
-export type AccountSection = "profile" | "settings" | "membership" | "payment" | "security" | "support";
+export type AccountSection = "profile" | "settings" | "membership" | "payment" | "security" | "notifications" | "support";
 
 export type HeroConfig = {
   eyebrow: string;
