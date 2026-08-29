@@ -42,9 +42,9 @@ export default function ArtistApplicationReviewPanel({
   samples,
 }: ArtistApplicationReviewPanelProps) {
   return (
-    <section className="col-span-6 grid cursor-auto gap-4 border-t border-[var(--border-subtle)] pt-4 lg:grid-cols-[210px_minmax(0,1fr)_minmax(280px,0.9fr)]">
+    <section className="col-span-6 grid cursor-auto gap-4 pt-4 lg:grid-cols-[210px_minmax(0,1fr)_minmax(280px,0.9fr)]">
       <div className="grid cursor-auto gap-3">
-        <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+        <div className="text-[11px] text-[var(--text-secondary)]">
           Profile images
         </div>
         <div className="flex items-start gap-3">
@@ -76,7 +76,7 @@ export default function ArtistApplicationReviewPanel({
 
       <div className="grid cursor-auto content-start gap-4">
         <div>
-          <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+          <div className="text-[11px] text-[var(--text-secondary)]">
             Intro text
           </div>
           <p className="mt-2 max-w-[620px] text-xs leading-5 text-[var(--text-primary)]">
@@ -84,7 +84,7 @@ export default function ArtistApplicationReviewPanel({
           </p>
         </div>
         <div>
-          <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+          <div className="text-[11px] text-[var(--text-secondary)]">
             Description
           </div>
           <p className="mt-2 max-w-[620px] text-xs leading-5 text-[var(--text-secondary)]">
@@ -94,13 +94,13 @@ export default function ArtistApplicationReviewPanel({
       </div>
 
       <div className="grid cursor-auto content-start gap-2">
-        <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+        <div className="text-[11px] text-[var(--text-secondary)]">
           Sample music
         </div>
         {samples.length > 0 ? (
           samples.map((sample) => (
             <div key={sample.id} className="grid gap-1.5">
-              <div className="truncate text-[11px] text-[var(--text-secondary)]">
+              <div className="truncate font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-normal leading-[1.35] tracking-normal text-[var(--text-primary)]">
                 {sample.file_name}
               </div>
               <audio
