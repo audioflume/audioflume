@@ -771,7 +771,7 @@ export default function AdminArtistsPage() {
                         return next;
                       });
                     }}
-                    className={`grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-4 ${
+                    className={`grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-x-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-4 ${
                       artist.status === "pending" ? "cursor-pointer" : ""
                     }`}
                   >
@@ -942,18 +942,27 @@ export default function AdminArtistsPage() {
                       </button>
                     </div>
 
-                    {artist.status === "pending" && expanded ? (
-                      <div data-artist-application-details className="contents">
-                        <ArtistApplicationReviewPanel
-                          introText={artist.intro_text}
-                          description={artist.bio}
-                          websiteUrl={artist.website_url}
-                          spotifyUrl={artist.spotify_url}
-                          instagramUrl={artist.instagram_url}
-                          profileImageUrl={artist.profile_image_url}
-                          heroImageUrl={artist.hero_image_url}
-                          samples={artist.application_samples}
-                        />
+                    {artist.status === "pending" ? (
+                      <div
+                        data-artist-application-details
+                        className={`col-span-6 grid overflow-hidden transition-[grid-template-rows,opacity,margin-top] duration-200 ease-out ${
+                          expanded
+                            ? "mt-4 grid-rows-[1fr] opacity-100"
+                            : "pointer-events-none mt-0 grid-rows-[0fr] opacity-0"
+                        }`}
+                      >
+                        <div className="min-h-0 overflow-hidden">
+                          <ArtistApplicationReviewPanel
+                            introText={artist.intro_text}
+                            description={artist.bio}
+                            websiteUrl={artist.website_url}
+                            spotifyUrl={artist.spotify_url}
+                            instagramUrl={artist.instagram_url}
+                            profileImageUrl={artist.profile_image_url}
+                            heroImageUrl={artist.hero_image_url}
+                            samples={artist.application_samples}
+                          />
+                        </div>
                       </div>
                     ) : null}
                   </div>
