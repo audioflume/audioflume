@@ -366,21 +366,23 @@ export default function ArtistProfileEditor({
 
             <div className="block">
               <div className="relative">
-                <FieldLabel>Artist Designation</FieldLabel>
-                <span className="absolute right-0 top-0 text-[10px] font-normal leading-none text-[var(--text-muted)]">
+                <span className="block font-[family-name:var(--font-aktiv-grotesk)] text-[11px] font-normal leading-[1.2] tracking-normal text-[var(--text-secondary)]">
+                  Artist Designation
+                </span>
+                <span className="absolute right-0 top-0 text-[10px] font-normal leading-[1.2] text-[var(--text-muted)]">
                   {selectedDesignations.length} / {MAX_DESIGNATIONS}
                 </span>
               </div>
 
-              <div ref={designationFieldRef} className="relative">
-                <div className="flex h-10 min-w-0 items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-2 py-1">
+              <div ref={designationFieldRef} className="relative mt-[6px]">
+                <div className="flex h-10 min-w-0 cursor-pointer items-center gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1">
                   {selectedDesignations.map((option) => (
                     <button
                       key={option}
                       type="button"
                       disabled={!canEdit || saving}
                       onClick={() => removeDesignation(option)}
-                      className="inline-flex h-7 shrink-0 items-center gap-1 rounded-[5px] bg-[var(--bg-tertiary)] px-2.5 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-[5px] bg-[var(--bg-tertiary)] px-2.5 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
                     >
                       <span>{option}</span>
                       <span aria-hidden="true">×</span>
@@ -410,7 +412,7 @@ export default function ArtistProfileEditor({
                           ? "Add another"
                           : "Search designations"
                     }
-                    className="h-7 min-w-[90px] flex-1 bg-transparent px-1 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="h-7 min-w-[90px] flex-1 cursor-pointer bg-transparent px-1 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-50"
                   />
                   <button
                     type="button"
@@ -422,7 +424,7 @@ export default function ArtistProfileEditor({
                       saving ||
                       selectedDesignations.length >= MAX_DESIGNATIONS
                     }
-                    className="flex h-7 w-7 shrink-0 items-center justify-center text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
                     aria-label="Show designation options"
                   >
                     <ChevronDownIcon size={14} />
@@ -437,7 +439,7 @@ export default function ArtistProfileEditor({
                         type="button"
                         onMouseDown={(event) => event.preventDefault()}
                         onClick={() => selectDesignation(option)}
-                        className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        className="block w-full cursor-pointer px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                       >
                         {option}
                       </button>
