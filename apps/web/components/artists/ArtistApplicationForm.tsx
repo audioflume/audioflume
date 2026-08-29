@@ -562,7 +562,7 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <section className="filmwave-backend-section flex h-[420px] flex-col p-[50px]">
+      <section className="flex h-[420px] flex-col overflow-hidden rounded-[10px] bg-[var(--bg-primary)] p-[50px]">
         <div
           className="min-h-0 flex-1 overflow-y-auto pb-px"
           style={{
