@@ -1,14 +1,15 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { usePathname } from "next/navigation";
-import { Fragment } from "react";
+import { usePathname, useRouter } from "next/navigation";
+import { Fragment, useEffect, useState } from "react";
 import {
   BackendSidebarHeading,
   BackendSidebarNavItem,
   BackendSidebarScrollArea,
   BackendSidebarShell,
 } from "@/components/backend/BackendSidebar";
+import BackendSidebarGlyph from "@/components/backend/BackendSidebarGlyph";
 import GearIcon from "@/components/icons/GearIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useArtistInvites } from "@/context/ArtistInvitesContext";
@@ -19,7 +20,13 @@ import {
 import { navItems } from "./accountData";
 import type { AccountSection } from "./accountTypes";
 
-const iconBySection: Record<AccountSection, UserMenuGlyphName> = {
+const ACCOUNT_NOTIFICATIONS_CHANGED_EVENT =
+  "audioflume:account-notifications-changed";
+
+const iconBySection: Record<
+  Exclude<AccountSection, "notifications">,
+  UserMenuGlyphName
+> = {
   profile: "profile",
   settings: "settings",
   membership: "membership",
@@ -41,9 +48,11 @@ function InviteCountBadge({ count }: { count: number }) {
 
 export default function AccountSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const { currentSong } = usePlayer();
   const { user } = useUser();
   const { pendingInviteCount } = useArtistInvites();
+  const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
   const displayName =
     user?.fullName ||
     user?.username ||
@@ -51,10 +60,59 @@ export default function AccountSidebar() {
     "Audioflume Member";
   const email = user?.primaryEmailAddress?.emailAddress || "Audioflume Member";
 
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadNotificationCount() {
+      try {
+        const response = await fetch("/api/account/notifications", {
+          cache: "no-store",
+        });
+        const payload = (await response.json().catch(() => null)) as
+          | { unread_count?: number }
+          | null;
+
+        if (!response.ok || cancelled) return;
+
+        setNotificationUnreadCount(
+          typeof payload?.unread_count === "number" ? payload.unread_count : 0,
+        );
+      } catch {
+        if (!cancelled) setNotificationUnreadCount(0);
+      }
+    }
+
+    function handleNotificationCountChange(event: Event) {
+      const customEvent = event as CustomEvent<{ unreadCount?: number }>;
+      const unreadCount = customEvent.detail?.unreadCount;
+
+      if (typeof unreadCount === "number") {
+        setNotificationUnreadCount(unreadCount);
+        return;
+      }
+
+      void loadNotificationCount();
+    }
+
+    void loadNotificationCount();
+    window.addEventListener(
+      ACCOUNT_NOTIFICATIONS_CHANGED_EVENT,
+      handleNotificationCountChange,
+    );
+
+    return () => {
+      cancelled = true;
+      window.removeEventListener(
+        ACCOUNT_NOTIFICATIONS_CHANGED_EVENT,
+        handleNotificationCountChange,
+      );
+    };
+  }, [pathname]);
+
   return (
     <BackendSidebarShell bottom={currentSong ? "64px" : "0px"}>
       <BackendSidebarScrollArea>
-        <div className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3">
+        <div className="relative rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[14px] font-medium text-[var(--text-secondary)]">
               {user?.imageUrl ? (
@@ -76,6 +134,19 @@ export default function AccountSidebar() {
               </div>
             </div>
           </div>
+
+          {notificationUnreadCount > 0 ? (
+            <button
+              type="button"
+              onClick={() => router.push("/account/notifications")}
+              className="absolute -right-2 -top-2 z-10 flex h-5 min-w-5 cursor-pointer items-center justify-center rounded-full bg-[var(--danger)] px-1.5 text-[10px] font-medium leading-none text-[var(--danger-contrast)] ring-2 ring-[var(--bg-primary)]"
+              aria-label={`${notificationUnreadCount} unread ${
+                notificationUnreadCount === 1 ? "notification" : "notifications"
+              }`}
+            >
+              {notificationUnreadCount > 99 ? "99+" : notificationUnreadCount}
+            </button>
+          ) : null}
         </div>
 
         <div className="mt-8 pb-8">
@@ -87,7 +158,9 @@ export default function AccountSidebar() {
                   href={item.href}
                   active={pathname === item.href}
                   leading={
-                    item.section === "settings" ? (
+                    item.section === "notifications" ? (
+                      <BackendSidebarGlyph name="notifications" />
+                    ) : item.section === "settings" ? (
                       <GearIcon />
                     ) : (
                       <UserMenuGlyph name={iconBySection[item.section]} />
