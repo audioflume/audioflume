@@ -562,7 +562,7 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <section className="flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
+      <section className="relative flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
         <div
           className="flex-1 pb-px"
           style={{
@@ -904,7 +904,7 @@ export default function ArtistApplicationForm() {
           ) : null}
         </div>
 
-        <div className="relative mt-5 flex min-h-10 shrink-0 items-center justify-between gap-3">
+        <div className="mt-5 flex min-h-10 shrink-0 items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
             {step > 1 ? (
               <Button
@@ -922,7 +922,7 @@ export default function ArtistApplicationForm() {
           </div>
 
           <div
-            className="absolute bottom-[-28px] left-1/2 flex -translate-x-1/2 items-center gap-1"
+            className="absolute bottom-[22px] left-1/2 flex -translate-x-1/2 items-center gap-1"
             aria-label={`Step ${step} of ${TOTAL_STEPS}`}
           >
             {Array.from({ length: TOTAL_STEPS }, (_, index) => {
