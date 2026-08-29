@@ -90,7 +90,8 @@ export default function Footer({
   const isEditorialLandingPage =
     pathname === "/discover" ||
     pathname === "/curated-playlists" ||
-    pathname === "/artists/apply";
+    pathname === "/artists/apply" ||
+    pathname === "/artists/earnings";
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const isPublicArtistPage =
     /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
