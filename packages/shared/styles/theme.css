@@ -224,6 +224,7 @@
 
 :where(.discover-page-root),
 :where(.artist-apply-page-root),
+:where(.artist-earnings-page-root),
 :where(.playlist-detail-page),
 :where(.artist-public-page:not(.artist-public-page-embedded)),
 :where(body:has(.curated-playlists-page-root)) {
