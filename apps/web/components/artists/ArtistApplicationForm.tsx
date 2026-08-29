@@ -105,7 +105,7 @@ function SpotifyIcon() {
     <svg width="14" height="14" viewBox="0 0 64 64" fill="none" aria-hidden="true">
       <path
         fill="currentColor"
-        d="M32,0C14.3,0,0,14.34,0,32s14.34,32,32,32,32-14.34,32-32S49.66,0,32,0ZM46.68,46.18c-.57.96-1.8,1.22-2.75.65-7.53-4.59-16.98-5.62-28.14-3.1-1.07.23-2.14-.42-2.37-1.49s.42-2.14,1.49-2.37c12.2-2.79,22.67-1.61,31.08,3.56.95.57,1.26,1.79.69,2.74,0,0,0,0,0,.01h0ZM50.58,37.47c-.73,1.19-2.26,1.53-3.44.84-8.6-5.28-21.72-6.81-31.89-3.75-1.34.38-2.71-.34-3.1-1.64-.38-1.34.34-2.71,1.68-3.1,11.62-3.52,26.07-1.83,35.98,4.24,1.15.69,1.49,2.22.76,3.4h0ZM50.92,28.37c-10.32-6.12-27.34-6.69-37.2-3.71-1.57.5-3.25-.42-3.75-1.99s.42-3.25,1.99-3.75c11.32-3.44,30.13-2.75,41.98,4.28,1.42.84,1.87,2.68,1.03,4.09-.76,1.45-2.64,1.91-4.05,1.07h0Z"
+        d="M32,0C14.3,0,0,14.34,0,32s14.34,32,32,32,32-14.34,32-32S49.66,0,32,0ZM46.68,46.18c-.57.96-1.8,1.22-2.75.65-7.53-4.59-16.98-5.62-28.14-3.1-1.07.23-2.14-.42-2.37-1.49s.42-2.14,1.49-2.37c12.2-2.79,22.67-1.61,31.08,3.56.95.57,1.26,1.79.69,2.74,0,0,0,0,0,.01h0ZM50.58,37.47c-.73,1.19-2.26,1.53-3.44.84-8.6-5.28-21.72-6.81-31.89-3.75-1.34.38-2.71-.34-3.1-1.64-.38-1.34.34-2.71,1.68-3.1,11.62-3.52,26.07-1.83,35.98,4.24,1.15.69,1.49,2.22.76,3.4h0ZM50.92,28.37c-10.32-6.12-27.34-6.69-37.2-3.71-1.57.5-3.25-.42-3.75-1.99s.42-2.71,1.99-3.75c11.32-3.44,30.13-2.75,41.98,4.28,1.42.84,1.87,2.68,1.03,4.09-.76,1.45-2.64,1.91-4.05,1.07h0Z"
       />
     </svg>
   );
@@ -157,6 +157,8 @@ export default function ArtistApplicationForm() {
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
   const [sampleFiles, setSampleFiles] = useState<File[]>([]);
+  const [showSampleRequirementWarning, setShowSampleRequirementWarning] =
+    useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [message, setMessage] = useState<{
     tone: "success" | "error";
@@ -166,6 +168,11 @@ export default function ArtistApplicationForm() {
   const pendingApplication = useMemo(
     () => applications.find((application) => application.status === "pending") ?? null,
     [applications],
+  );
+  const hasMusicLink = Boolean(
+    form.website_url.trim() ||
+      form.spotify_url.trim() ||
+      form.instagram_url.trim(),
   );
   const profileImagePreviewUrl = useMemo(
     () => (profileImageFile ? URL.createObjectURL(profileImageFile) : null),
@@ -310,6 +317,12 @@ export default function ArtistApplicationForm() {
       return;
     }
 
+    if (!hasMusicLink && sampleFiles.length === 0) {
+      setShowSampleRequirementWarning(true);
+      return;
+    }
+
+    setShowSampleRequirementWarning(false);
     setSubmitting(true);
     setMessage(null);
     const imageKeys: string[] = [];
@@ -368,6 +381,7 @@ export default function ArtistApplicationForm() {
       setProfileImageFile(null);
       setHeroImageFile(null);
       setSampleFiles([]);
+      setShowSampleRequirementWarning(false);
       setStep(1);
       setMessage({
         tone: "success",
@@ -413,6 +427,7 @@ export default function ArtistApplicationForm() {
 
   function goBack() {
     if (step <= 1) return;
+    if (step === TOTAL_STEPS) setShowSampleRequirementWarning(false);
     transitionToStep(step - 1);
   }
 
@@ -439,6 +454,7 @@ export default function ArtistApplicationForm() {
     }
 
     setMessage(null);
+    setShowSampleRequirementWarning(false);
     setSampleFiles((current) => [...current, ...nextFiles]);
   }
 
@@ -742,7 +758,6 @@ export default function ArtistApplicationForm() {
             {step > 1 ? (
               <Button
                 type="button"
-                subtle
                 disabled={submitting || transitioning}
                 onClick={goBack}
               >
@@ -755,6 +770,14 @@ export default function ArtistApplicationForm() {
           </div>
 
           <div className="flex shrink-0 items-center gap-3">
+            {step === TOTAL_STEPS &&
+            showSampleRequirementWarning &&
+            !hasMusicLink &&
+            sampleFiles.length === 0 ? (
+              <span className="text-[10px] font-normal text-[var(--status-error)]">
+                Add a music link or at least one sample.
+              </span>
+            ) : null}
             <span className="text-[18px] font-[300] text-[var(--text-primary)]">
               {step}/{TOTAL_STEPS}
             </span>
