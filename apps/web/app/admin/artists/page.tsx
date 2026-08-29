@@ -183,6 +183,9 @@ export default function AdminArtistsPage() {
   const [newArtistEmail, setNewArtistEmail] = useState("");
   const [creatingArtist, setCreatingArtist] = useState(false);
   const [artistMenu, setArtistMenu] = useState<ArtistMenuState | null>(null);
+  const [expandedArtistIds, setExpandedArtistIds] = useState<Set<string>>(
+    () => new Set(),
+  );
 
   async function loadArtists() {
     try {
@@ -729,6 +732,7 @@ export default function AdminArtistsPage() {
           <div className="min-w-[1140px]">
             {visibleArtists.map((artist) => {
               const updating = updatingArtistId === artist.id;
+              const expanded = expandedArtistIds.has(artist.id);
               const pendingClaim =
                 !artist.owner && artist.claim_invitation?.status === "pending"
                   ? artist.claim_invitation
@@ -845,6 +849,35 @@ export default function AdminArtistsPage() {
                         >
                           Reject
                         </ActionButton>
+                        <button
+                          type="button"
+                          aria-label={`${expanded ? "Collapse" : "Expand"} application details for ${artist.name}`}
+                          aria-expanded={expanded}
+                          onClick={() =>
+                            setExpandedArtistIds((current) => {
+                              const next = new Set(current);
+                              if (next.has(artist.id)) next.delete(artist.id);
+                              else next.add(artist.id);
+                              return next;
+                            })
+                          }
+                          className="inline-flex h-8 w-6 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+                        >
+                          <svg
+                            viewBox="0 0 12 12"
+                            fill="none"
+                            aria-hidden="true"
+                            className={`h-3 w-3 transition-transform ${expanded ? "rotate-180" : ""}`}
+                          >
+                            <path
+                              d="M2.25 4.25L6 8L9.75 4.25"
+                              stroke="currentColor"
+                              strokeWidth="1.5"
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                            />
+                          </svg>
+                        </button>
                       </>
                     ) : null}
 
@@ -917,7 +950,7 @@ export default function AdminArtistsPage() {
                     </button>
                   </div>
 
-                  {artist.status === "pending" ? (
+                  {artist.status === "pending" && expanded ? (
                     <ArtistApplicationReviewPanel
                       introText={artist.intro_text}
                       description={artist.bio}
