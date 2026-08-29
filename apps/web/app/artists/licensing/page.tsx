@@ -94,7 +94,7 @@ export default function ArtistLicensingPage() {
                 Accepted against the exact version.
               </h2>
             </div>
-            <div className="border-t border-[var(--border)] md:border-t-0">
+            <div className="w-full max-w-[560px] border-t border-[var(--border)] md:justify-self-end md:border-t-0">
               {[
                 ["Published documents", "Required agreements and onboarding documents are presented in the artist dashboard when they are ready for review."],
                 ["Owner approval", "Only the artist owner can accept agreements on behalf of the artist."],
