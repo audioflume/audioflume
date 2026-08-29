@@ -336,7 +336,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
 
   if (!activeArtist) {
     return (
-      <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-8 xl:px-10">
+      <main className="min-h-screen bg-[var(--bg-primary)] px-5 pt-[112px] text-[var(--text-primary)] md:px-10">
         <div className="mx-auto max-w-[900px]">
           <div className="filmwave-backend-section px-6 py-10 text-center">
             <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.04em]">
@@ -565,7 +565,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         className={
           isMyPage
             ? "min-h-screen bg-[var(--bg-primary)] p-0"
-            : "min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-8 xl:px-10"
+            : "min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-10"
         }
       >
         <div
