@@ -9,7 +9,6 @@ import { usePlayer } from "@/context/PlayerContext";
 
 const companyLinks = [
   { href: "#", label: "Our story" },
-  { href: "#", label: "Artist applications" },
   { href: "mailto:hello@filmwave.io", label: "Contact" },
   { href: "/account/membership", label: "Pricing" },
   { href: "#", label: "Affiliate partnerships" },
@@ -23,7 +22,7 @@ const listenLinks = [
 ];
 
 const artistLinks = [
-  { href: "/artists/apply", label: "Artist signup" },
+  { href: "/artists/apply", label: "Artist applications" },
   { href: "/artists/claim", label: "Claim your profile" },
   { href: "/artists/dashboard", label: "Artist dashboard" },
   { href: "/artists/dashboard?section=agreements", label: "Licensing & agreements" },
