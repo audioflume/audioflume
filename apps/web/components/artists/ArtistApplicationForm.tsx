@@ -24,6 +24,7 @@ type ArtistApplication = {
   website_url: string | null;
   spotify_url: string | null;
   instagram_url: string | null;
+  designation: string | null;
   intro_text: string | null;
   bio: string | null;
   profile_image_url: string | null;
@@ -42,6 +43,7 @@ type ApplicationForm = {
   website_url: string;
   spotify_url: string;
   instagram_url: string;
+  designation: string;
   intro_text: string;
   bio: string;
 };
@@ -71,14 +73,28 @@ const TOTAL_STEPS = 4;
 const INTRO_CHARACTER_LIMIT = 114;
 const DESCRIPTION_CHARACTER_LIMIT = 383;
 const MAX_SAMPLE_FILES = 4;
+const MAX_DESIGNATIONS = 3;
 const PANEL_FADE_OUT_MS = 140;
 const PANEL_FADE_IN_MS = 160;
+const ARTIST_DESIGNATION_OPTIONS = [
+  "Musician",
+  "Producer",
+  "Composer",
+  "Songwriter",
+  "Vocalist",
+  "Instrumentalist",
+  "Beatmaker",
+  "DJ",
+  "Sound Designer",
+  "Engineer",
+] as const;
 
 const EMPTY_FORM: ApplicationForm = {
   name: "",
   website_url: "",
   spotify_url: "",
   instagram_url: "",
+  designation: "",
   intro_text: "",
   bio: "",
 };
@@ -98,6 +114,13 @@ function formatDate(value: string) {
     month: "short",
     day: "numeric",
   }).format(date);
+}
+
+function parseDesignationSelections(value: string) {
+  return value
+    .split(/\s*\/\s*|\s*,\s*/)
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function SpotifyIcon() {
@@ -173,6 +196,12 @@ export default function ArtistApplicationForm() {
     form.website_url.trim() ||
       form.spotify_url.trim() ||
       form.instagram_url.trim(),
+  );
+  const selectedDesignations = parseDesignationSelections(form.designation).filter(
+    (item) =>
+      ARTIST_DESIGNATION_OPTIONS.includes(
+        item as (typeof ARTIST_DESIGNATION_OPTIONS)[number],
+      ),
   );
   const profileImagePreviewUrl = useMemo(
     () => (profileImageFile ? URL.createObjectURL(profileImageFile) : null),
@@ -436,6 +465,20 @@ export default function ArtistApplicationForm() {
     transitionToStep(step + 1);
   }
 
+  function toggleDesignation(value: string) {
+    const selected = selectedDesignations.includes(value);
+    if (!selected && selectedDesignations.length >= MAX_DESIGNATIONS) return;
+
+    const nextDesignations = selected
+      ? selectedDesignations.filter((item) => item !== value)
+      : [...selectedDesignations, value];
+
+    setForm((current) => ({
+      ...current,
+      designation: nextDesignations.join(" / "),
+    }));
+  }
+
   function addSampleFiles(files: FileList | null) {
     if (!files) return;
     const nextFiles = Array.from(files);
@@ -597,6 +640,36 @@ export default function ArtistApplicationForm() {
                   className="filmwave-backend-textarea"
                 />
               </label>
+
+              <div className="grid gap-1.5">
+                <span className="flex items-center justify-between gap-4">
+                  <span>Designation</span>
+                  <span className="text-[10px] font-normal text-[var(--text-muted)]">
+                    {selectedDesignations.length} / {MAX_DESIGNATIONS}
+                  </span>
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {ARTIST_DESIGNATION_OPTIONS.map((option) => {
+                    const selected = selectedDesignations.includes(option);
+                    const disabled =
+                      !selected && selectedDesignations.length >= MAX_DESIGNATIONS;
+
+                    return (
+                      <button
+                        key={option}
+                        type="button"
+                        disabled={disabled}
+                        onClick={() => toggleDesignation(option)}
+                        className={`filmwave-backend-choice-button ${
+                          selected ? "is-active" : ""
+                        } disabled:cursor-not-allowed disabled:opacity-40`}
+                      >
+                        {option}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
 
               <label className="grid gap-1.5">
                 <span className="flex items-center justify-between gap-4">
