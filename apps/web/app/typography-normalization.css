@@ -1,0 +1,45 @@
+/*
+ * Site-wide small-type tracking normalization.
+ *
+ * Text below 16px should use normal letter spacing unless the element is
+ * intentionally styled as uppercase/all-caps. Larger display typography keeps
+ * its existing page/component-specific tracking.
+ */
+
+body {
+  letter-spacing: normal;
+}
+
+/* Tailwind-sized small text used across public, account, admin, and artist UI. */
+:where(
+  .text-xs,
+  .text-sm,
+  [class*="text-[8px]"],
+  [class*="text-[8.5px]"],
+  [class*="text-[9px]"],
+  [class*="text-[9.5px]"],
+  [class*="text-[10px]"],
+  [class*="text-[10.5px]"],
+  [class*="text-[11px]"],
+  [class*="text-[11.5px]"],
+  [class*="text-[12px]"],
+  [class*="text-[12.5px]"],
+  [class*="text-[13px]"],
+  [class*="text-[13.5px]"],
+  [class*="text-[14px]"],
+  [class*="text-[14.5px]"],
+  [class*="text-[15px]"],
+  [class*="text-[15.5px]"]
+):not(.uppercase):not([class*="uppercase"]) {
+  letter-spacing: normal !important;
+}
+
+/* Explicit small non-uppercase treatments that previously tightened tracking. */
+.discover-artist-shelf-heading h2,
+.discover-artist-card-overlay strong,
+.discover-artist-card-meta strong,
+.discover-artist-editorial-meta span:first-child,
+.artist-public-bio,
+.artist-public-bio-editor {
+  letter-spacing: normal !important;
+}
