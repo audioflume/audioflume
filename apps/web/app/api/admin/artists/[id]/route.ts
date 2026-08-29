@@ -180,7 +180,7 @@ export async function PATCH(request: Request, context: RouteContext) {
             await createAccountNotification({
               recipientClerkUserId: artist.created_by_clerk_user_id,
               kind: "artist_application_rejected",
-              title: `${artist.name} needs changes`,
+              title: `${artist.name} application rejected`,
               message: rejectionFeedback,
             });
           }
