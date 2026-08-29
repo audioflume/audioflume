@@ -39,7 +39,7 @@ const earningModels = [
 export default function ArtistEarningsPage() {
   return (
     <main className="artist-earnings-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <section className="px-5 pt-[112px] md:px-8 xl:px-10">
+      <section className="px-5 pt-16 md:px-8 xl:px-10">
         <div className="mx-auto max-w-[980px]">
           <section className="mb-16 grid gap-8 md:grid-cols-[minmax(0,0.9fr)_minmax(280px,1fr)] md:items-end">
             <div>
@@ -61,7 +61,7 @@ export default function ArtistEarningsPage() {
                 key={model.number}
                 className="grid gap-6 border-b border-[var(--border)] py-8 md:grid-cols-[70px_minmax(180px,0.7fr)_minmax(0,1.3fr)] md:gap-8 md:py-10"
               >
-                <div className="text-[11px] font-medium text-[var(--text-muted)]">
+                <div className="text-[90px] font-[200] leading-none text-[var(--text-muted)]">
                   {model.number}
                 </div>
                 <div>
