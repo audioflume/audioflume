@@ -752,7 +752,27 @@ export default function AdminArtistsPage() {
               return (
                 <div
                   key={artist.id}
-                  className="grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0"
+                  onClick={(event) => {
+                    if (artist.status !== "pending") return;
+
+                    const target = event.target;
+                    if (
+                      target instanceof Element &&
+                      target.closest("button, a, [data-artist-application-details]")
+                    ) {
+                      return;
+                    }
+
+                    setExpandedArtistIds((current) => {
+                      const next = new Set(current);
+                      if (next.has(artist.id)) next.delete(artist.id);
+                      else next.add(artist.id);
+                      return next;
+                    });
+                  }}
+                  className={`grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0 ${
+                    artist.status === "pending" ? "cursor-pointer" : ""
+                  }`}
                 >
                   <div className="min-w-0">
                     <div className="truncate text-sm font-medium text-[var(--text-primary)]">
@@ -849,35 +869,6 @@ export default function AdminArtistsPage() {
                         >
                           Reject
                         </ActionButton>
-                        <button
-                          type="button"
-                          aria-label={`${expanded ? "Collapse" : "Expand"} application details for ${artist.name}`}
-                          aria-expanded={expanded}
-                          onClick={() =>
-                            setExpandedArtistIds((current) => {
-                              const next = new Set(current);
-                              if (next.has(artist.id)) next.delete(artist.id);
-                              else next.add(artist.id);
-                              return next;
-                            })
-                          }
-                          className="inline-flex h-8 w-6 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
-                        >
-                          <svg
-                            viewBox="0 0 12 12"
-                            fill="none"
-                            aria-hidden="true"
-                            className={`h-3 w-3 transition-transform ${expanded ? "rotate-180" : ""}`}
-                          >
-                            <path
-                              d="M2.25 4.25L6 8L9.75 4.25"
-                              stroke="currentColor"
-                              strokeWidth="1.5"
-                              strokeLinecap="round"
-                              strokeLinejoin="round"
-                            />
-                          </svg>
-                        </button>
                       </>
                     ) : null}
 
@@ -951,16 +942,18 @@ export default function AdminArtistsPage() {
                   </div>
 
                   {artist.status === "pending" && expanded ? (
-                    <ArtistApplicationReviewPanel
-                      introText={artist.intro_text}
-                      description={artist.bio}
-                      websiteUrl={artist.website_url}
-                      spotifyUrl={artist.spotify_url}
-                      instagramUrl={artist.instagram_url}
-                      profileImageUrl={artist.profile_image_url}
-                      heroImageUrl={artist.hero_image_url}
-                      samples={artist.application_samples}
-                    />
+                    <div data-artist-application-details className="contents">
+                      <ArtistApplicationReviewPanel
+                        introText={artist.intro_text}
+                        description={artist.bio}
+                        websiteUrl={artist.website_url}
+                        spotifyUrl={artist.spotify_url}
+                        instagramUrl={artist.instagram_url}
+                        profileImageUrl={artist.profile_image_url}
+                        heroImageUrl={artist.hero_image_url}
+                        samples={artist.application_samples}
+                      />
+                    </div>
                   ) : null}
                 </div>
               );
