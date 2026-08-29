@@ -110,7 +110,7 @@ export default function ArtistEarningsPage() {
                 Clear numbers, before and after the license.
               </h2>
             </div>
-            <div className="border-t border-[var(--border)] md:border-t-0">
+            <div className="w-full max-w-[560px] border-t border-[var(--border)] md:justify-self-end md:border-t-0">
               {[
                 ["Before a deal", "The applicable split or commercial terms are made clear before a non-standard opportunity proceeds."],
                 ["After a deal", "Recorded earnings are broken out by source in the artist dashboard so subscription, premium, bespoke and other earnings stay identifiable."],
