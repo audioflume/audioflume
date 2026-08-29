@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 
+import { createAccountNotification } from "@/lib/accountNotifications";
 import { requireAdmin } from "@/lib/admin";
 import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -173,18 +174,24 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (updateError) throw updateError;
 
     if (existingArtist.status !== status) {
-      const notification = getArtistStatusNotification(
-        status,
-        artist.name,
-        status === "rejected" ? rejectionFeedback : null,
-      );
-
       try {
-        await createArtistNotificationForMembers({
-          artistId: id,
-          ...notification,
-          actionUrl: `/artists/dashboard?section=overview&artist=${id}`,
-        });
+        if (status === "rejected") {
+          if (artist.created_by_clerk_user_id) {
+            await createAccountNotification({
+              recipientClerkUserId: artist.created_by_clerk_user_id,
+              kind: "artist_application_rejected",
+              title: `${artist.name} needs changes`,
+              message: rejectionFeedback,
+            });
+          }
+        } else {
+          const notification = getArtistStatusNotification(status, artist.name);
+          await createArtistNotificationForMembers({
+            artistId: id,
+            ...notification,
+            actionUrl: `/artists/dashboard?section=overview&artist=${id}`,
+          });
+        }
       } catch (notificationError) {
         console.error("Failed to create artist status notification:", notificationError);
       }
