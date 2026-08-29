@@ -44,7 +44,7 @@ export default function ArtistEarningsPage() {
         <div className="mx-auto max-w-[980px]">
           <section className="mb-16 grid gap-8 md:grid-cols-[70px_minmax(180px,0.7fr)_minmax(0,1.3fr)] md:items-end">
             <div className="md:col-span-2">
-              <div className="mb-[18px] text-[14.5px] font-normal leading-none tracking-normal text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Artist earnings
               </div>
               <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,5vw,60px)] font-normal leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]">
@@ -87,7 +87,7 @@ export default function ArtistEarningsPage() {
 
           <section className="grid gap-8 border-b border-[var(--border)] py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
             <div>
-              <div className="mb-[18px] text-[14.5px] font-normal leading-none tracking-normal text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Larger opportunities
               </div>
               <h2 className="m-0 max-w-[300px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.035em] text-[var(--text-primary)]">
@@ -103,7 +103,7 @@ export default function ArtistEarningsPage() {
 
           <section className="grid gap-8 py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
             <div>
-              <div className="mb-[18px] text-[14.5px] font-normal leading-none tracking-normal text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Transparency
               </div>
               <h2 className="m-0 max-w-[320px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.035em] text-[var(--text-primary)]">
@@ -138,7 +138,7 @@ export default function ArtistEarningsPage() {
             </div>
             <Link
               href="/artists/apply"
-              className={`${playlistDetailPrimaryActionButtonClass} hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
+              className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
             >
               Artist signup
             </Link>
