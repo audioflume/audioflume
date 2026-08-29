@@ -755,7 +755,7 @@ export default function ArtistApplicationForm() {
           </div>
 
           <div className="flex shrink-0 items-center gap-3">
-            <span className="text-xs text-[var(--text-muted)]">
+            <span className="text-[18px] font-[300] text-[var(--text-primary)]">
               {step}/{TOTAL_STEPS}
             </span>
             {step < TOTAL_STEPS ? (
