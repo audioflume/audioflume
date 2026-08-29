@@ -8,6 +8,7 @@ import AccountSidebar from "./AccountSidebar";
 import { navItems } from "./accountData";
 import type { AccountSection } from "./accountTypes";
 import MembershipSection from "./sections/MembershipSection";
+import NotificationsSection from "./sections/NotificationsSection";
 import PaymentSection from "./sections/PaymentSection";
 import ProfileSection from "./sections/ProfileSection";
 import SecuritySection from "./sections/SecuritySection";
@@ -24,6 +25,7 @@ function AccountContent({ section }: { section: AccountSection }) {
   if (section === "membership") return <MembershipSection />;
   if (section === "payment") return <PaymentSection />;
   if (section === "security") return <SecuritySection />;
+  if (section === "notifications") return <NotificationsSection />;
   return <SupportSection />;
 }
 
