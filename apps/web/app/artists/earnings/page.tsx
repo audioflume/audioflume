@@ -41,28 +41,16 @@ export default function ArtistEarningsPage() {
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="px-5 pt-[112px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[980px]">
-          <div className="mb-8 flex items-center justify-between gap-4 border-b border-[var(--border)] pb-4">
-            <div className="text-xs text-[var(--text-muted)]">
-              Artists / <span className="text-[var(--text-secondary)]">Earnings</span>
-            </div>
-            <Link
-              href="/artists/apply"
-              className="inline-flex h-8 items-center justify-center border border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-xs font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
-            >
-              Apply as an artist
-            </Link>
-          </div>
-
           <section className="mb-16 grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.62fr)] md:items-end">
             <div>
-              <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Artist earnings
               </div>
-              <h1 className="max-w-[760px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-medium leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
+              <h1 className="max-w-[760px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-normal leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
                 More than one way to earn.
               </h1>
             </div>
-            <p className="max-w-[440px] text-sm leading-6 text-[var(--text-secondary)] md:justify-self-end">
+            <p className="m-0 max-w-[560px] text-[clamp(16px,1.45vw,20px)] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)] md:justify-self-end">
               Audioflume combines subscription discovery with direct licensing and custom work. The goal is to make music easy to find without flattening every use into the same royalty rate.
             </p>
           </section>
@@ -77,7 +65,7 @@ export default function ArtistEarningsPage() {
                   {model.number}
                 </div>
                 <div>
-                  <h2 className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-[1] tracking-[-0.04em] text-[var(--text-primary)]">
+                  <h2 className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal leading-[1] tracking-[-0.04em] text-[var(--text-primary)]">
                     {model.title}
                   </h2>
                   <div className="mt-3 text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--text-secondary)]">
@@ -98,10 +86,10 @@ export default function ArtistEarningsPage() {
 
           <section className="grid gap-8 border-b border-[var(--border)] py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
             <div>
-              <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Larger opportunities
               </div>
-              <h2 className="m-0 max-w-[300px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-medium leading-[0.96] tracking-[-0.05em] text-[var(--text-primary)]">
+              <h2 className="m-0 max-w-[300px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.05em] text-[var(--text-primary)]">
                 Enterprise licensing is deal-specific.
               </h2>
             </div>
@@ -114,10 +102,10 @@ export default function ArtistEarningsPage() {
 
           <section className="grid gap-8 py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
             <div>
-              <div className="mb-3 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Transparency
               </div>
-              <h2 className="m-0 max-w-[320px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-medium leading-[0.96] tracking-[-0.05em] text-[var(--text-primary)]">
+              <h2 className="m-0 max-w-[320px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.05em] text-[var(--text-primary)]">
                 Clear numbers, before and after the license.
               </h2>
             </div>
@@ -131,7 +119,7 @@ export default function ArtistEarningsPage() {
                   key={title}
                   className="grid gap-2 border-b border-[var(--border)] py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6"
                 >
-                  <div className="text-xs font-medium text-[var(--text-primary)]">{title}</div>
+                  <div className="text-xs font-normal text-[var(--text-primary)]">{title}</div>
                   <p className="m-0 text-xs leading-5 text-[var(--text-secondary)]">{copy}</p>
                 </div>
               ))}
@@ -140,7 +128,7 @@ export default function ArtistEarningsPage() {
 
           <section className="mb-16 flex flex-col items-start justify-between gap-6 border-y border-[var(--border)] py-8 sm:flex-row sm:items-center">
             <div>
-              <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium tracking-[-0.04em] text-[var(--text-primary)]">
+              <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal tracking-[-0.04em] text-[var(--text-primary)]">
                 Interested in joining the catalogue?
               </div>
               <p className="mb-0 mt-2 max-w-[560px] text-xs leading-5 text-[var(--text-secondary)]">
@@ -154,11 +142,11 @@ export default function ArtistEarningsPage() {
               Artist signup
             </Link>
           </section>
-
-          <div className="border-t border-[var(--border)] pt-8 pb-[72px]">
-            <Footer />
-          </div>
         </div>
+      </section>
+
+      <section className="mx-auto w-[calc(100%-var(--filmwave-editorial-inset)-var(--filmwave-editorial-inset))] max-w-[var(--filmwave-editorial-max-width)]">
+        <Footer pageGutter={false} />
       </section>
     </main>
   );
