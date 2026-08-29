@@ -682,7 +682,7 @@ export default function ArtistApplicationForm() {
                 </span>
 
                 <div ref={designationFieldRef} className="relative">
-                  <div className="flex min-h-10 min-w-0 cursor-pointer flex-wrap items-center gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1">
+                  <div className="flex min-h-10 min-w-0 cursor-pointer flex-wrap items-center gap-1 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1">
                     {selectedDesignations.map((option) => (
                       <button
                         key={option}

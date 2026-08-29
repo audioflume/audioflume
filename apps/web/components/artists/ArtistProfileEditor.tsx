@@ -375,7 +375,7 @@ export default function ArtistProfileEditor({
               </div>
 
               <div ref={designationFieldRef} className="relative mt-[6px]">
-                <div className="flex h-10 min-w-0 cursor-pointer items-center gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1">
+                <div className="flex h-10 min-w-0 cursor-pointer items-center gap-1 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1">
                   {selectedDesignations.map((option) => (
                     <button
                       key={option}
