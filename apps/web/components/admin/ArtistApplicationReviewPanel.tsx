@@ -94,13 +94,10 @@ export default function ArtistApplicationReviewPanel({
       </div>
 
       <div className="grid cursor-auto content-start gap-2">
-        <div className="text-[11px] text-[var(--text-secondary)]">
-          Sample music
-        </div>
         {samples.length > 0 ? (
           samples.map((sample) => (
             <div key={sample.id} className="grid gap-1.5">
-              <div className="truncate font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-normal leading-[1.35] tracking-normal text-[var(--text-primary)]">
+              <div className="truncate text-[11px] text-[var(--text-secondary)]">
                 {sample.file_name}
               </div>
               <audio
