@@ -8,6 +8,7 @@ const isPublicRoute = createRouteMatcher([
   "/artists/claim(.*)",
   "/artists/earnings",
   "/artists/licensing",
+  "/pricing",
 ]);
 
 const DESKTOP_API_ALLOWED_ORIGINS = new Set([
