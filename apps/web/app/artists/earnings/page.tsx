@@ -46,7 +46,7 @@ export default function ArtistEarningsPage() {
               <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Artist earnings
               </div>
-              <h1 className="max-w-[440px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-normal leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
+              <h1 className="max-w-[440px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-normal leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]">
                 More than one way to earn.
               </h1>
             </div>
@@ -65,7 +65,7 @@ export default function ArtistEarningsPage() {
                   {model.number}
                 </div>
                 <div>
-                  <h2 className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal leading-[1] tracking-[-0.04em] text-[var(--text-primary)]">
+                  <h2 className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal leading-[1] tracking-[-0.035em] text-[var(--text-primary)]">
                     {model.title}
                   </h2>
                   <div className="mt-3 text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--text-secondary)]">
@@ -89,7 +89,7 @@ export default function ArtistEarningsPage() {
               <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Larger opportunities
               </div>
-              <h2 className="m-0 max-w-[300px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.05em] text-[var(--text-primary)]">
+              <h2 className="m-0 max-w-[300px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.035em] text-[var(--text-primary)]">
                 Enterprise licensing is deal-specific.
               </h2>
             </div>
@@ -105,7 +105,7 @@ export default function ArtistEarningsPage() {
               <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Transparency
               </div>
-              <h2 className="m-0 max-w-[320px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.05em] text-[var(--text-primary)]">
+              <h2 className="m-0 max-w-[320px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.035em] text-[var(--text-primary)]">
                 Clear numbers, before and after the license.
               </h2>
             </div>
@@ -128,7 +128,7 @@ export default function ArtistEarningsPage() {
 
           <section className="mb-16 flex flex-col items-start justify-between gap-6 py-8 sm:flex-row sm:items-center">
             <div>
-              <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal tracking-[-0.04em] text-[var(--text-primary)]">
+              <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal tracking-[-0.035em] text-[var(--text-primary)]">
                 Interested in joining the catalogue?
               </div>
               <p className="mb-0 mt-2 max-w-[560px] text-xs leading-5 text-[var(--text-secondary)]">
