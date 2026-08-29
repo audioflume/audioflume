@@ -13,6 +13,7 @@ type RouteContext = {
 
 const ARTIST_INTRO_TEXT_MAX_LENGTH = 114;
 const ARTIST_BIO_MAX_LENGTH = 383;
+const MAX_DESIGNATIONS = 3;
 
 function cleanOptionalHttpUrl(value: unknown) {
   const cleaned = cleanOptionalString(value, 500);
@@ -28,6 +29,25 @@ function cleanOptionalHttpUrl(value: unknown) {
   } catch {
     return { value: null, error: "Enter a valid URL including https://" };
   }
+}
+
+function cleanDesignation(value: unknown) {
+  const cleaned = cleanOptionalString(value, 160);
+  if (!cleaned) return { value: null, error: null };
+
+  const designations = cleaned
+    .split(/\s*\/\s*|\s*,\s*/)
+    .map((item) => item.trim())
+    .filter(Boolean);
+
+  if (designations.length > MAX_DESIGNATIONS) {
+    return {
+      value: null,
+      error: `Select no more than ${MAX_DESIGNATIONS} designations`,
+    };
+  }
+
+  return { value: designations.join(" / "), error: null };
 }
 
 function normalizeArtistSlug(value: unknown) {
@@ -77,7 +97,7 @@ export async function PATCH(request: Request, context: RouteContext) {
 
   const name = cleanOptionalString(payload.name, 160);
   const slug = normalizeArtistSlug(payload.slug);
-  const designation = cleanOptionalString(payload.designation, 160);
+  const designation = cleanDesignation(payload.designation);
   const introText = cleanOptionalString(
     payload.intro_text,
     ARTIST_INTRO_TEXT_MAX_LENGTH,
@@ -91,6 +111,10 @@ export async function PATCH(request: Request, context: RouteContext) {
 
   if (!name) {
     return NextResponse.json({ error: "Artist name is required" }, { status: 400 });
+  }
+
+  if (designation.error) {
+    return NextResponse.json({ error: designation.error }, { status: 400 });
   }
 
   if (!introText) {
@@ -201,7 +225,7 @@ export async function PATCH(request: Request, context: RouteContext) {
       .update({
         name,
         slug,
-        designation,
+        designation: designation.value,
         intro_text: introText,
         bio,
         location,
