@@ -902,7 +902,7 @@ export default function ArtistApplicationForm() {
           ) : null}
         </div>
 
-        <div className="mt-5 flex min-h-10 shrink-0 items-center justify-between gap-3">
+        <div className="relative mt-5 flex min-h-10 shrink-0 items-center justify-between gap-3">
           <div className="flex min-w-0 items-center gap-3">
             {step > 1 ? (
               <Button
@@ -919,7 +919,29 @@ export default function ArtistApplicationForm() {
             </div>
           </div>
 
-          <div className="flex shrink-0 items-center gap-3">
+          <div
+            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2"
+            aria-label={`Step ${step} of ${TOTAL_STEPS}`}
+          >
+            {Array.from({ length: TOTAL_STEPS }, (_, index) => {
+              const indicatorStep = index + 1;
+              const active = indicatorStep === step;
+
+              return (
+                <span
+                  key={indicatorStep}
+                  aria-hidden="true"
+                  className={`h-1.5 rounded-full transition-all duration-300 ease-out ${
+                    active
+                      ? "w-6 bg-[var(--text-primary)]"
+                      : "w-1.5 bg-[var(--text-muted)]"
+                  }`}
+                />
+              );
+            })}
+          </div>
+
+          <div className="ml-auto flex shrink-0 items-center gap-3">
             {step === TOTAL_STEPS &&
             showSampleRequirementWarning &&
             !hasMusicLink &&
@@ -928,9 +950,6 @@ export default function ArtistApplicationForm() {
                 Add a music link or at least one sample.
               </span>
             ) : null}
-            <span className="text-[18px] font-[300] text-[var(--text-primary)]">
-              {step}/{TOTAL_STEPS}
-            </span>
             {step < TOTAL_STEPS ? (
               <Button
                 type="button"
