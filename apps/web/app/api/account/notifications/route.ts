@@ -13,7 +13,7 @@ export async function GET() {
 
   try {
     const { data: notifications, error } = await supabaseServer
-      .from("artist_notifications")
+      .from("account_notifications")
       .select("id, kind, title, message, action_url, read_at, created_at")
       .eq("recipient_clerk_user_id", user.id)
       .order("created_at", { ascending: false })
@@ -55,7 +55,7 @@ export async function PATCH(request: Request) {
 
     if (body.mark_all_read === true) {
       const { error } = await supabaseServer
-        .from("artist_notifications")
+        .from("account_notifications")
         .update({ read_at: readAt })
         .eq("recipient_clerk_user_id", user.id)
         .is("read_at", null);
@@ -76,7 +76,7 @@ export async function PATCH(request: Request) {
     }
 
     const { data: notification, error } = await supabaseServer
-      .from("artist_notifications")
+      .from("account_notifications")
       .update({ read_at: readAt })
       .eq("id", notificationId)
       .eq("recipient_clerk_user_id", user.id)
@@ -106,7 +106,7 @@ export async function DELETE() {
 
   try {
     const { error } = await supabaseServer
-      .from("artist_notifications")
+      .from("account_notifications")
       .delete()
       .eq("recipient_clerk_user_id", user.id);
 
