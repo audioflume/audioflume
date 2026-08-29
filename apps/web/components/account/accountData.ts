@@ -11,6 +11,7 @@ export const navItems: {
   { href: "/account/membership", section: "membership", label: "Membership", helper: "Plan and license" },
   { href: "/account/payment", section: "payment", label: "Payment", helper: "Billing method" },
   { href: "/account/security", section: "security", label: "Security", helper: "Access controls" },
+  { href: "/account/notifications", section: "notifications", label: "Notifications", helper: "Account updates" },
   { href: "/account/support", section: "support", label: "Support & FAQ", helper: "Help center" },
 ];
 
@@ -59,6 +60,15 @@ export const heroConfig: Record<AccountSection, HeroConfig> = {
     statA: "Verified email",
     statB: "Clerk security",
     statC: "Recovery ready",
+  },
+  notifications: {
+    eyebrow: "Account",
+    title: "Notifications",
+    description: "Review account updates and feedback from Audioflume.",
+    image: "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1400&q=80",
+    statA: "Account updates",
+    statB: "Review feedback",
+    statC: "Unread alerts",
   },
   support: {
     eyebrow: "Account",
