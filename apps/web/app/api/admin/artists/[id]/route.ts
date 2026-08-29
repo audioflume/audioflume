@@ -17,6 +17,8 @@ const ARTIST_STATUSES: ArtistStatus[] = [
   "suspended",
 ];
 
+const REJECTION_FEEDBACK_LIMIT = 2000;
+
 const PROTECTED_ARTIST_TABLES = [
   "artist_agreement_acceptances",
   "artist_earnings",
@@ -34,7 +36,11 @@ function normalizeArtistStatus(value: unknown): ArtistStatus | null {
     : null;
 }
 
-function getArtistStatusNotification(status: ArtistStatus, artistName: string) {
+function getArtistStatusNotification(
+  status: ArtistStatus,
+  artistName: string,
+  rejectionFeedback: string | null = null,
+) {
   if (status === "approved") {
     return {
       kind: "artist_approved",
@@ -48,7 +54,9 @@ function getArtistStatusNotification(status: ArtistStatus, artistName: string) {
     return {
       kind: "artist_rejected",
       title: `${artistName} needs changes`,
-      message: "Your artist profile needs changes before it can be approved.",
+      message:
+        rejectionFeedback ||
+        "Your artist profile needs changes before it can be approved.",
     };
   }
 
@@ -96,9 +104,33 @@ export async function PATCH(request: Request, context: RouteContext) {
     return NextResponse.json({ error: "Invalid request body" }, { status: 400 });
   }
 
-  const status = normalizeArtistStatus((body as Record<string, unknown>).status);
+  const payload = body as Record<string, unknown>;
+  const status = normalizeArtistStatus(payload.status);
   if (!status) {
     return NextResponse.json({ error: "Invalid artist status" }, { status: 400 });
+  }
+
+  const rejectionFeedback =
+    typeof payload.rejection_feedback === "string"
+      ? payload.rejection_feedback.trim()
+      : "";
+
+  if (status === "rejected") {
+    if (!rejectionFeedback) {
+      return NextResponse.json(
+        { error: "Rejection feedback is required" },
+        { status: 400 },
+      );
+    }
+
+    if (rejectionFeedback.length > REJECTION_FEEDBACK_LIMIT) {
+      return NextResponse.json(
+        {
+          error: `Rejection feedback must be ${REJECTION_FEEDBACK_LIMIT} characters or fewer`,
+        },
+        { status: 400 },
+      );
+    }
   }
 
   try {
@@ -141,7 +173,11 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (updateError) throw updateError;
 
     if (existingArtist.status !== status) {
-      const notification = getArtistStatusNotification(status, artist.name);
+      const notification = getArtistStatusNotification(
+        status,
+        artist.name,
+        status === "rejected" ? rejectionFeedback : null,
+      );
 
       try {
         await createArtistNotificationForMembers({
