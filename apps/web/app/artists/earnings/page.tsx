@@ -16,7 +16,7 @@ const earningModels = [
     title: "Subscription catalogue",
     split: "Shared Payout Pool",
     description:
-      "Subscription earnings are paid from a shared artist payout pool rather than at a fixed rate per download. A portion of Audioflume’s membership revenue is allocated to the pool each month. Your share is then calculated from your eligible downloads as a percentage of total eligible catalogue downloads for that month. If your music accounts for 5% of eligible downloads, you receive 5% of the artist payout pool. The exact calculation and eligibility rules are set out in the artist agreement.",
+      "Membership revenue helps run Audioflume and funds a shared artist payout pool. Each month, your share of that pool is based on your eligible downloads as a percentage of total eligible catalogue downloads. If your music accounts for 5% of eligible downloads, you receive 5% of the pool. Exact eligibility rules are set out in the artist agreement.",
     example: "Your eligible downloads ÷ total eligible downloads = your share of the monthly pool",
   },
   {
@@ -24,7 +24,7 @@ const earningModels = [
     title: "Premium licensing",
     split: "90% Artist / 10% Audioflume",
     description:
-      "Premium tracks create direct licensing opportunities outside the subscription catalogue. Audioflume handles the licensing transaction as the platform and agent, with 90% of the standard license amount going to the artist and 10% retained by Audioflume.",
+      "Premium tracks are licensed outside the subscription catalogue. Audioflume handles the transaction, with 90% of the standard license amount going to the artist and 10% retained by Audioflume.",
     example: "$500 license → $450 artist / $50 Audioflume",
   },
   {
@@ -32,7 +32,7 @@ const earningModels = [
     title: "Bespoke commissions",
     split: "85% Artist / 15% Audioflume",
     description:
-      "When a filmmaker or brand needs something made specifically for a project, Audioflume can connect the opportunity with an artist and help manage the commission. The artist receives 85% of the commission amount and Audioflume retains 15%.",
+      "For custom project work, Audioflume can connect artists with filmmakers or brands and help manage the commission. The artist receives 85% of the commission amount and Audioflume retains 15%.",
     example: "$2,000 commission → $1,700 artist / $300 Audioflume",
   },
 ];
