@@ -758,6 +758,7 @@ export default function ArtistApplicationForm() {
             {step > 1 ? (
               <Button
                 type="button"
+                subtle
                 disabled={submitting || transitioning}
                 onClick={goBack}
               >
