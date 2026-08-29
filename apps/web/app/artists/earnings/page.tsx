@@ -95,7 +95,7 @@ export default function ArtistEarningsPage() {
               </h2>
             </div>
             <div className="max-w-[560px] md:justify-self-end">
-              <p className="m-0 text-sm leading-6 text-[var(--text-secondary)]">
+              <p className="m-0 text-[14.5px] font-[300] leading-6 text-[var(--text-secondary)]">
                 National campaigns, large-scale commercial uses and unusual licensing requests do not always fit a standard rate. When an opportunity falls outside the normal premium structure, the commercial terms are presented before the deal moves forward rather than being hidden behind a generic royalty calculation.
               </p>
             </div>
