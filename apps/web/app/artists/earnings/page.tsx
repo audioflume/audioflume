@@ -62,7 +62,7 @@ export default function ArtistEarningsPage() {
                 key={model.number}
                 className="grid gap-6 border-b border-[var(--border)] py-8 md:grid-cols-[70px_minmax(180px,0.7fr)_minmax(0,1.3fr)] md:gap-8 md:py-10"
               >
-                <div className="grid w-[70px] self-start place-items-center bg-[#e4e4e4] py-[4px] text-center text-[56px] font-[200] leading-none text-[var(--filmwave-white)]">
+                <div className="grid w-[70px] self-start place-items-center bg-[color-mix(in_srgb,var(--text-primary)_10%,var(--bg-primary))] py-[4px] text-center text-[56px] font-[200] leading-none text-[var(--filmwave-white)]">
                   {model.number}
                 </div>
                 <div>
@@ -77,7 +77,7 @@ export default function ArtistEarningsPage() {
                   <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">
                     {model.description}
                   </p>
-                  <div className="mt-5 pt-4 font-[family-name:var(--font-roboto-mono)] text-[11px] leading-5 text-[var(--text-primary)]">
+                  <div className="mt-5 pt-4 font-[family-name:var(--font-roboto-mono)] text-[12px] leading-5 text-[var(--text-primary)]">
                     {model.example}
                   </div>
                 </div>
@@ -120,7 +120,7 @@ export default function ArtistEarningsPage() {
                   key={title}
                   className="grid gap-2 border-b border-[var(--border)] py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6"
                 >
-                  <div className="text-[12px] font-normal tracking-normal text-[var(--text-secondary)]">{title}</div>
+                  <div className="text-[12px] font-normal tracking-normal text-[var(--text-primary)]">{title}</div>
                   <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">{copy}</p>
                 </div>
               ))}
