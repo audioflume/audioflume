@@ -14,7 +14,7 @@ const earningModels = [
   {
     number: "01",
     title: "Subscription catalogue",
-    split: "Flexible earnings",
+    split: "Flexible Earnings",
     description:
       "The subscription catalogue is the discovery layer of Audioflume. Membership revenue supports the platform and artist payouts, while giving filmmakers broad access to music. Because subscription revenue and catalogue activity change over time, there is no fixed per-download rate. The calculation that applies to your music is set out in the artist agreement before you opt in.",
     example: "Recorded in your dashboard as subscription earnings.",
@@ -22,7 +22,7 @@ const earningModels = [
   {
     number: "02",
     title: "Premium licensing",
-    split: "90% artist / 10% Audioflume",
+    split: "90% Artist / 10% Audioflume",
     description:
       "Premium tracks create direct licensing opportunities outside the subscription catalogue. Audioflume handles the licensing transaction as the platform and agent, with 90% of the standard license amount going to the artist and 10% retained by Audioflume.",
     example: "$500 license → $450 artist / $50 Audioflume",
@@ -30,7 +30,7 @@ const earningModels = [
   {
     number: "03",
     title: "Bespoke commissions",
-    split: "85% artist / 15% Audioflume",
+    split: "85% Artist / 15% Audioflume",
     description:
       "When a filmmaker or brand needs something made specifically for a project, Audioflume can connect the opportunity with an artist and help manage the commission. The artist receives 85% of the commission amount and Audioflume retains 15%.",
     example: "$2,000 commission → $1,700 artist / $300 Audioflume",
@@ -44,7 +44,7 @@ export default function ArtistEarningsPage() {
         <div className="mx-auto max-w-[980px]">
           <section className="mb-16 grid gap-8 md:grid-cols-[70px_minmax(180px,0.7fr)_minmax(0,1.3fr)] md:items-end">
             <div className="md:col-span-2">
-              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-normal leading-none tracking-normal text-[var(--text-muted)]">
                 Artist earnings
               </div>
               <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,5vw,60px)] font-normal leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]">
@@ -69,7 +69,7 @@ export default function ArtistEarningsPage() {
                   <h2 className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal leading-[1] tracking-[-0.035em] text-[var(--text-primary)]">
                     {model.title}
                   </h2>
-                  <div className="mt-3 text-[11px] font-medium uppercase tracking-[0.06em] text-[var(--text-secondary)]">
+                  <div className="mt-3 text-[11px] font-normal tracking-normal text-[var(--text-secondary)]">
                     {model.split}
                   </div>
                 </div>
@@ -87,7 +87,7 @@ export default function ArtistEarningsPage() {
 
           <section className="grid gap-8 border-b border-[var(--border)] py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
             <div>
-              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-normal leading-none tracking-normal text-[var(--text-muted)]">
                 Larger opportunities
               </div>
               <h2 className="m-0 max-w-[300px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.035em] text-[var(--text-primary)]">
@@ -103,7 +103,7 @@ export default function ArtistEarningsPage() {
 
           <section className="grid gap-8 py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
             <div>
-              <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
+              <div className="mb-[18px] text-[14.5px] font-normal leading-none tracking-normal text-[var(--text-muted)]">
                 Transparency
               </div>
               <h2 className="m-0 max-w-[320px] font-[family-name:var(--font-aktiv-grotesk)] text-[32px] font-normal leading-[0.96] tracking-[-0.035em] text-[var(--text-primary)]">
