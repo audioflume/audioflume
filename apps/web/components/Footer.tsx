@@ -25,7 +25,7 @@ const artistLinks = [
   { href: "/artists/apply", label: "Artist applications" },
   { href: "/artists/claim", label: "Claim your profile" },
   { href: "/artists/dashboard", label: "Artist dashboard" },
-  { href: "/artists/dashboard?section=agreements", label: "Licensing & agreements" },
+  { href: "/artists/licensing", label: "Licensing & agreements" },
   { href: "/artists/earnings", label: "Artist earnings" },
 ];
 
@@ -90,6 +90,7 @@ export default function Footer({
     pathname === "/discover" ||
     pathname === "/curated-playlists" ||
     pathname === "/artists/apply" ||
+    pathname === "/artists/licensing" ||
     pathname === "/artists/earnings";
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const isPublicArtistPage =
