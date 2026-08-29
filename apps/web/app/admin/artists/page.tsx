@@ -699,163 +699,190 @@ export default function AdminArtistsPage() {
         </div>
       </section>
 
-      <div className="overflow-x-auto rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
-        <div className="grid min-w-[1140px] grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 border-b border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-          <span>Artist</span>
-          <span>Owner</span>
-          <span>Location</span>
-          <span>Submitted</span>
-          <span>Status</span>
-          <span className="text-right">Actions</span>
-        </div>
-
-        {loading ? (
-          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center text-xs text-[var(--text-muted)]">
-            Loading artists...
+      <div className="overflow-x-auto">
+        <div className="min-w-[1140px]">
+          <div className="grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+            <span>Artist</span>
+            <span>Owner</span>
+            <span>Location</span>
+            <span>Submitted</span>
+            <span>Status</span>
+            <span className="text-right">Actions</span>
           </div>
-        ) : error ? (
-          <div className="flex min-h-[180px] min-w-[1140px] flex-col items-center justify-center gap-3 px-5 text-center text-xs text-[var(--text-secondary)]">
-            <span>{error}</span>
-            <button
-              type="button"
-              onClick={() => void loadArtists()}
-              className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-primary)]"
-            >
-              Try again
-            </button>
-          </div>
-        ) : visibleArtists.length === 0 ? (
-          <div className="flex min-h-[180px] min-w-[1140px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
-            No artists match this view.
-          </div>
-        ) : (
-          <div className="min-w-[1140px]">
-            {visibleArtists.map((artist) => {
-              const updating = updatingArtistId === artist.id;
-              const expanded = expandedArtistIds.has(artist.id);
-              const pendingClaim =
-                !artist.owner && artist.claim_invitation?.status === "pending"
-                  ? artist.claim_invitation
-                  : null;
-              const pendingTransfer =
-                artist.owner &&
-                artist.claim_invitation?.status === "pending" &&
-                artist.claim_invitation.ownership_transfer
-                  ? artist.claim_invitation
-                  : null;
-              const ownerLabel = artist.owner
-                ? artist.owner.display_name || artist.owner.company_name || "Owner"
-                : pendingClaim
-                  ? "Invitation pending"
-                  : "Unclaimed";
 
-              return (
-                <div
-                  key={artist.id}
-                  onClick={(event) => {
-                    if (artist.status !== "pending") return;
+          {loading ? (
+            <div className="mt-2.5 flex min-h-[180px] items-center justify-center rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] text-xs text-[var(--text-muted)]">
+              Loading artists...
+            </div>
+          ) : error ? (
+            <div className="mt-2.5 flex min-h-[180px] flex-col items-center justify-center gap-3 rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-center text-xs text-[var(--text-secondary)]">
+              <span>{error}</span>
+              <button
+                type="button"
+                onClick={() => void loadArtists()}
+                className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-primary)]"
+              >
+                Try again
+              </button>
+            </div>
+          ) : visibleArtists.length === 0 ? (
+            <div className="mt-2.5 flex min-h-[180px] items-center justify-center rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs text-[var(--text-muted)]">
+              No artists match this view.
+            </div>
+          ) : (
+            <div className="mt-2.5 grid gap-2.5">
+              {visibleArtists.map((artist) => {
+                const updating = updatingArtistId === artist.id;
+                const expanded = expandedArtistIds.has(artist.id);
+                const pendingClaim =
+                  !artist.owner && artist.claim_invitation?.status === "pending"
+                    ? artist.claim_invitation
+                    : null;
+                const pendingTransfer =
+                  artist.owner &&
+                  artist.claim_invitation?.status === "pending" &&
+                  artist.claim_invitation.ownership_transfer
+                    ? artist.claim_invitation
+                    : null;
+                const ownerLabel = artist.owner
+                  ? artist.owner.display_name || artist.owner.company_name || "Owner"
+                  : pendingClaim
+                    ? "Invitation pending"
+                    : "Unclaimed";
 
-                    const target = event.target;
-                    if (
-                      target instanceof Element &&
-                      target.closest("button, a, [data-artist-application-details]")
-                    ) {
-                      return;
-                    }
+                return (
+                  <div
+                    key={artist.id}
+                    onClick={(event) => {
+                      if (artist.status !== "pending") return;
 
-                    setExpandedArtistIds((current) => {
-                      const next = new Set(current);
-                      if (next.has(artist.id)) next.delete(artist.id);
-                      else next.add(artist.id);
-                      return next;
-                    });
-                  }}
-                  className={`grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-4 border-b border-[var(--border)] px-5 py-4 last:border-b-0 ${
-                    artist.status === "pending" ? "cursor-pointer" : ""
-                  }`}
-                >
-                  <div className="min-w-0">
-                    <div className="truncate text-sm font-medium text-[var(--text-primary)]">
-                      {artist.name}
+                      const target = event.target;
+                      if (
+                        target instanceof Element &&
+                        target.closest("button, a, [data-artist-application-details]")
+                      ) {
+                        return;
+                      }
+
+                      setExpandedArtistIds((current) => {
+                        const next = new Set(current);
+                        if (next.has(artist.id)) next.delete(artist.id);
+                        else next.add(artist.id);
+                        return next;
+                      });
+                    }}
+                    className={`grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-4 ${
+                      artist.status === "pending" ? "cursor-pointer" : ""
+                    }`}
+                  >
+                    <div className="min-w-0">
+                      <div className="truncate text-sm font-medium text-[var(--text-primary)]">
+                        {artist.name}
+                      </div>
+                      <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--text-muted)]">
+                        <span>/{artist.slug}</span>
+                        {artist.website_url ? (
+                          <a
+                            href={artist.website_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="transition hover:text-[var(--text-primary)]"
+                          >
+                            Website
+                          </a>
+                        ) : null}
+                        {artist.instagram_url ? (
+                          <a
+                            href={artist.instagram_url}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="transition hover:text-[var(--text-primary)]"
+                          >
+                            Instagram
+                          </a>
+                        ) : null}
+                      </div>
                     </div>
-                    <div className="mt-1 flex flex-wrap gap-x-3 gap-y-1 text-[11px] text-[var(--text-muted)]">
-                      <span>/{artist.slug}</span>
-                      {artist.website_url ? (
-                        <a
-                          href={artist.website_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="transition hover:text-[var(--text-primary)]"
-                        >
-                          Website
-                        </a>
+
+                    <div className="min-w-0">
+                      <div className="truncate text-xs text-[var(--text-primary)]">
+                        {ownerLabel}
+                      </div>
+                      {pendingTransfer ? (
+                        <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                          Transfer pending · {pendingTransfer.email}
+                        </div>
+                      ) : artist.owner?.company_name &&
+                      artist.owner.company_name !== ownerLabel ? (
+                        <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                          {artist.owner.company_name}
+                        </div>
+                      ) : pendingClaim ? (
+                        <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
+                          {pendingClaim.email}
+                        </div>
                       ) : null}
-                      {artist.instagram_url ? (
-                        <a
-                          href={artist.instagram_url}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="transition hover:text-[var(--text-primary)]"
-                        >
-                          Instagram
-                        </a>
+                    </div>
+
+                    <div className="truncate text-xs text-[var(--text-secondary)]">
+                      {artist.location || "—"}
+                    </div>
+
+                    <div className="text-xs text-[var(--text-secondary)]">
+                      {formatDate(artist.created_at)}
+                    </div>
+
+                    <div>
+                      <StatusBadge status={artist.status} />
+                    </div>
+
+                    <div className="flex flex-nowrap justify-end gap-2">
+                      {!artist.owner ? (
+                        pendingClaim ? (
+                          <ActionButton
+                            disabled={Boolean(updatingArtistId)}
+                            onClick={() => void revokeArtistInvite(artist)}
+                          >
+                            {updating ? "Saving..." : "Revoke Invite"}
+                          </ActionButton>
+                        ) : (
+                          <ActionButton
+                            disabled={Boolean(updatingArtistId)}
+                            onClick={() => void inviteArtistOwner(artist)}
+                          >
+                            {updating ? "Saving..." : "Invite Owner"}
+                          </ActionButton>
+                        )
                       ) : null}
-                    </div>
-                  </div>
 
-                  <div className="min-w-0">
-                    <div className="truncate text-xs text-[var(--text-primary)]">
-                      {ownerLabel}
-                    </div>
-                    {pendingTransfer ? (
-                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
-                        Transfer pending · {pendingTransfer.email}
-                      </div>
-                    ) : artist.owner?.company_name &&
-                    artist.owner.company_name !== ownerLabel ? (
-                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
-                        {artist.owner.company_name}
-                      </div>
-                    ) : pendingClaim ? (
-                      <div className="mt-1 truncate text-[11px] text-[var(--text-muted)]">
-                        {pendingClaim.email}
-                      </div>
-                    ) : null}
-                  </div>
+                      {artist.status === "pending" ? (
+                        <>
+                          <ActionButton
+                            primary
+                            disabled={Boolean(updatingArtistId)}
+                            onClick={() => void updateArtistStatus(artist, "approved")}
+                          >
+                            {updating ? "Saving..." : "Approve"}
+                          </ActionButton>
+                          <ActionButton
+                            disabled={Boolean(updatingArtistId)}
+                            onClick={() => void updateArtistStatus(artist, "rejected")}
+                          >
+                            Reject
+                          </ActionButton>
+                        </>
+                      ) : null}
 
-                  <div className="truncate text-xs text-[var(--text-secondary)]">
-                    {artist.location || "—"}
-                  </div>
-
-                  <div className="text-xs text-[var(--text-secondary)]">
-                    {formatDate(artist.created_at)}
-                  </div>
-
-                  <div>
-                    <StatusBadge status={artist.status} />
-                  </div>
-
-                  <div className="flex flex-nowrap justify-end gap-2">
-                    {!artist.owner ? (
-                      pendingClaim ? (
+                      {artist.status === "approved" ? (
                         <ActionButton
                           disabled={Boolean(updatingArtistId)}
-                          onClick={() => void revokeArtistInvite(artist)}
+                          onClick={() => void updateArtistStatus(artist, "suspended")}
                         >
-                          {updating ? "Saving..." : "Revoke Invite"}
+                          {updating ? "Saving..." : "Suspend"}
                         </ActionButton>
-                      ) : (
-                        <ActionButton
-                          disabled={Boolean(updatingArtistId)}
-                          onClick={() => void inviteArtistOwner(artist)}
-                        >
-                          {updating ? "Saving..." : "Invite Owner"}
-                        </ActionButton>
-                      )
-                    ) : null}
+                      ) : null}
 
-                    {artist.status === "pending" ? (
-                      <>
+                      {artist.status === "rejected" ? (
                         <ActionButton
                           primary
                           disabled={Boolean(updatingArtistId)}
@@ -863,103 +890,78 @@ export default function AdminArtistsPage() {
                         >
                           {updating ? "Saving..." : "Approve"}
                         </ActionButton>
+                      ) : null}
+
+                      {artist.status === "suspended" ? (
                         <ActionButton
+                          primary
                           disabled={Boolean(updatingArtistId)}
-                          onClick={() => void updateArtistStatus(artist, "rejected")}
+                          onClick={() => void updateArtistStatus(artist, "approved")}
                         >
-                          Reject
+                          {updating ? "Saving..." : "Restore"}
                         </ActionButton>
-                      </>
-                    ) : null}
+                      ) : null}
 
-                    {artist.status === "approved" ? (
-                      <ActionButton
+                      <button
+                        type="button"
+                        data-artist-more-menu
+                        aria-label={`More actions for ${artist.name}`}
+                        aria-expanded={artistMenu?.artistId === artist.id}
                         disabled={Boolean(updatingArtistId)}
-                        onClick={() => void updateArtistStatus(artist, "suspended")}
+                        onClick={(event) => {
+                          const rect = event.currentTarget.getBoundingClientRect();
+                          const menuHeight = 72;
+                          const top =
+                            rect.bottom + 6 + menuHeight <= window.innerHeight - 12
+                              ? rect.bottom + 6
+                              : rect.top - menuHeight - 6;
+
+                          setArtistMenu((current) =>
+                            current?.artistId === artist.id
+                              ? null
+                              : {
+                                  artistId: artist.id,
+                                  top,
+                                  right: Math.max(12, window.innerWidth - rect.right),
+                                },
+                          );
+                        }}
+                        className="inline-flex h-8 w-6 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-45"
                       >
-                        {updating ? "Saving..." : "Suspend"}
-                      </ActionButton>
-                    ) : null}
-
-                    {artist.status === "rejected" ? (
-                      <ActionButton
-                        primary
-                        disabled={Boolean(updatingArtistId)}
-                        onClick={() => void updateArtistStatus(artist, "approved")}
-                      >
-                        {updating ? "Saving..." : "Approve"}
-                      </ActionButton>
-                    ) : null}
-
-                    {artist.status === "suspended" ? (
-                      <ActionButton
-                        primary
-                        disabled={Boolean(updatingArtistId)}
-                        onClick={() => void updateArtistStatus(artist, "approved")}
-                      >
-                        {updating ? "Saving..." : "Restore"}
-                      </ActionButton>
-                    ) : null}
-
-                    <button
-                      type="button"
-                      data-artist-more-menu
-                      aria-label={`More actions for ${artist.name}`}
-                      aria-expanded={artistMenu?.artistId === artist.id}
-                      disabled={Boolean(updatingArtistId)}
-                      onClick={(event) => {
-                        const rect = event.currentTarget.getBoundingClientRect();
-                        const menuHeight = 72;
-                        const top =
-                          rect.bottom + 6 + menuHeight <= window.innerHeight - 12
-                            ? rect.bottom + 6
-                            : rect.top - menuHeight - 6;
-
-                        setArtistMenu((current) =>
-                          current?.artistId === artist.id
-                            ? null
-                            : {
-                                artistId: artist.id,
-                                top,
-                                right: Math.max(12, window.innerWidth - rect.right),
-                              },
-                        );
-                      }}
-                      className="inline-flex h-8 w-6 shrink-0 cursor-pointer items-center justify-center border-0 bg-transparent p-0 text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-45"
-                    >
-                      <svg
-                        width="16"
-                        height="16"
-                        viewBox="0 0 16 16"
-                        fill="currentColor"
-                        aria-hidden="true"
-                      >
-                        <circle cx="8" cy="3" r="1.15" />
-                        <circle cx="8" cy="8" r="1.15" />
-                        <circle cx="8" cy="13" r="1.15" />
-                      </svg>
-                    </button>
-                  </div>
-
-                  {artist.status === "pending" && expanded ? (
-                    <div data-artist-application-details className="contents">
-                      <ArtistApplicationReviewPanel
-                        introText={artist.intro_text}
-                        description={artist.bio}
-                        websiteUrl={artist.website_url}
-                        spotifyUrl={artist.spotify_url}
-                        instagramUrl={artist.instagram_url}
-                        profileImageUrl={artist.profile_image_url}
-                        heroImageUrl={artist.hero_image_url}
-                        samples={artist.application_samples}
-                      />
+                        <svg
+                          width="16"
+                          height="16"
+                          viewBox="0 0 16 16"
+                          fill="currentColor"
+                          aria-hidden="true"
+                        >
+                          <circle cx="8" cy="3" r="1.15" />
+                          <circle cx="8" cy="8" r="1.15" />
+                          <circle cx="8" cy="13" r="1.15" />
+                        </svg>
+                      </button>
                     </div>
-                  ) : null}
-                </div>
-              );
-            })}
-          </div>
-        )}
+
+                    {artist.status === "pending" && expanded ? (
+                      <div data-artist-application-details className="contents">
+                        <ArtistApplicationReviewPanel
+                          introText={artist.intro_text}
+                          description={artist.bio}
+                          websiteUrl={artist.website_url}
+                          spotifyUrl={artist.spotify_url}
+                          instagramUrl={artist.instagram_url}
+                          profileImageUrl={artist.profile_image_url}
+                          heroImageUrl={artist.hero_image_url}
+                          samples={artist.application_samples}
+                        />
+                      </div>
+                    ) : null}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </div>
       </div>
 
       {artistMenu && menuArtist ? (
