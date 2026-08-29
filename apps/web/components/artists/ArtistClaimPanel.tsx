@@ -95,7 +95,7 @@ export default function ArtistClaimPanel() {
   }
 
   return (
-    <section className="filmwave-backend-section p-[50px]">
+    <section className="overflow-hidden rounded-[10px] bg-[var(--bg-primary)] p-[50px]">
       <p className="m-0 max-w-[560px] text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
         Claiming connects this existing Audioflume artist profile to your account and gives you Owner access to its catalogue, profile and artist tools.
       </p>
