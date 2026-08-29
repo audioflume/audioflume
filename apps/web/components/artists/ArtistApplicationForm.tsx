@@ -562,7 +562,7 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <section className="flex min-h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
+      <section className="flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
         <div
           className="flex-1 pb-px"
           style={{
@@ -663,7 +663,7 @@ export default function ArtistApplicationForm() {
                 <textarea
                   value={form.intro_text}
                   maxLength={INTRO_CHARACTER_LIMIT}
-                  rows={3}
+                  rows={2}
                   placeholder="A short introduction to the artist."
                   onChange={(event) =>
                     setForm((current) => ({
@@ -762,7 +762,7 @@ export default function ArtistApplicationForm() {
                 <textarea
                   value={form.bio}
                   maxLength={DESCRIPTION_CHARACTER_LIMIT}
-                  rows={4}
+                  rows={3}
                   placeholder="Tell us about the artist and the music you make."
                   onChange={(event) =>
                     setForm((current) => ({ ...current, bio: event.target.value }))
