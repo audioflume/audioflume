@@ -375,7 +375,20 @@ export default function ArtistProfileEditor({
               </div>
 
               <div ref={designationFieldRef} className="relative">
-                <div className="flex h-10 min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
+                <div className="flex min-h-10 min-w-0 flex-wrap items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-2 py-1">
+                  {selectedDesignations.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      disabled={!canEdit || saving}
+                      onClick={() => removeDesignation(option)}
+                      className="inline-flex h-7 shrink-0 items-center gap-1 rounded-[5px] bg-[var(--bg-tertiary)] px-2.5 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40"
+                    >
+                      <span>{option}</span>
+                      <span aria-hidden="true">×</span>
+                    </button>
+                  ))}
+
                   <input
                     type="text"
                     value={designationQuery}
@@ -394,10 +407,12 @@ export default function ArtistProfileEditor({
                     }
                     placeholder={
                       selectedDesignations.length >= MAX_DESIGNATIONS
-                        ? "3 designations selected"
-                        : "Search designations"
+                        ? ""
+                        : selectedDesignations.length > 0
+                          ? "Add another"
+                          : "Search designations"
                     }
-                    className="h-full w-full min-w-0 flex-1 bg-transparent px-3 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-50"
+                    className="h-7 min-w-[90px] flex-1 bg-transparent px-1 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-50"
                   />
                   <button
                     type="button"
@@ -409,7 +424,7 @@ export default function ArtistProfileEditor({
                       saving ||
                       selectedDesignations.length >= MAX_DESIGNATIONS
                     }
-                    className="flex h-full w-7 shrink-0 items-center justify-center text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
+                    className="flex h-7 w-7 shrink-0 items-center justify-center text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
                     aria-label="Show designation options"
                   >
                     <ChevronDownIcon size={14} />
@@ -432,22 +447,6 @@ export default function ArtistProfileEditor({
                   </div>
                 ) : null}
               </div>
-
-              {selectedDesignations.length > 0 ? (
-                <div className="mt-2 flex flex-wrap gap-2">
-                  {selectedDesignations.map((option) => (
-                    <button
-                      key={option}
-                      type="button"
-                      disabled={!canEdit || saving}
-                      onClick={() => removeDesignation(option)}
-                      className="filmwave-backend-choice-button is-active disabled:cursor-not-allowed disabled:opacity-40"
-                    >
-                      {option} ×
-                    </button>
-                  ))}
-                </div>
-              ) : null}
             </div>
           </div>
 
