@@ -21,6 +21,20 @@ type ArtistImageResponse = {
   error?: string;
 };
 
+const MAX_DESIGNATIONS = 3;
+const ARTIST_DESIGNATION_OPTIONS = [
+  "Musician",
+  "Producer",
+  "Composer",
+  "Songwriter",
+  "Vocalist",
+  "Instrumentalist",
+  "Beatmaker",
+  "DJ",
+  "Sound Designer",
+  "Engineer",
+] as const;
+
 function FieldLabel({ children }: { children: string }) {
   return (
     <span className="mb-2 block text-[11px] font-medium text-[var(--text-secondary)]">
@@ -41,6 +55,13 @@ function CharacterCount({
       {value.length} / {maxLength}
     </div>
   );
+}
+
+function parseDesignationSelections(value: string) {
+  return value
+    .split(/\s*\/\s*|\s*,\s*/)
+    .map((item) => item.trim())
+    .filter(Boolean);
 }
 
 function normalizeSlugInput(value: string) {
@@ -75,6 +96,12 @@ export default function ArtistProfileEditor({
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
   const preserveDraftOnNextArtistUpdateRef = useRef(false);
+  const selectedDesignations = parseDesignationSelections(designation).filter(
+    (item) =>
+      ARTIST_DESIGNATION_OPTIONS.includes(
+        item as (typeof ARTIST_DESIGNATION_OPTIONS)[number],
+      ),
+  );
 
   useEffect(() => {
     if (preserveDraftOnNextArtistUpdateRef.current) {
@@ -173,6 +200,19 @@ export default function ArtistProfileEditor({
     } finally {
       setUploadingImage(null);
     }
+  }
+
+  function toggleDesignation(value: string) {
+    if (!canEdit || saving) return;
+
+    const selected = selectedDesignations.includes(value);
+    if (!selected && selectedDesignations.length >= MAX_DESIGNATIONS) return;
+
+    const nextDesignations = selected
+      ? selectedDesignations.filter((item) => item !== value)
+      : [...selectedDesignations, value];
+
+    setDesignation(nextDesignations.join(" / "));
   }
 
   const slugChanged = slug.replace(/-+$/g, "") !== artist.slug;
@@ -293,19 +333,39 @@ export default function ArtistProfileEditor({
               <CharacterCount value={name} maxLength={160} />
             </label>
 
-            <label className="block">
-              <FieldLabel>Artist designation</FieldLabel>
-              <input
-                type="text"
-                value={designation}
-                onChange={(event) => setDesignation(event.target.value)}
-                maxLength={160}
-                disabled={!canEdit || saving}
-                placeholder="Musician / Composer"
-                className="filmwave-backend-input"
-              />
-              <CharacterCount value={designation} maxLength={160} />
-            </label>
+            <div className="block">
+              <div className="mb-2 flex items-center justify-between gap-4">
+                <span className="text-[11px] font-medium text-[var(--text-secondary)]">
+                  Artist Designation
+                </span>
+                <span className="text-[10px] font-normal text-[var(--text-muted)]">
+                  {selectedDesignations.length} / {MAX_DESIGNATIONS}
+                </span>
+              </div>
+              <div className="flex flex-wrap gap-2">
+                {ARTIST_DESIGNATION_OPTIONS.map((option) => {
+                  const selected = selectedDesignations.includes(option);
+                  const disabled =
+                    !canEdit ||
+                    saving ||
+                    (!selected && selectedDesignations.length >= MAX_DESIGNATIONS);
+
+                  return (
+                    <button
+                      key={option}
+                      type="button"
+                      disabled={disabled}
+                      onClick={() => toggleDesignation(option)}
+                      className={`filmwave-backend-choice-button ${
+                        selected ? "is-active" : ""
+                      } disabled:cursor-not-allowed disabled:opacity-40`}
+                    >
+                      {option}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
