@@ -16,7 +16,7 @@ export default function ArtistApplyPage() {
       >
         <div className="mx-auto max-w-[650px]">
           <section className="mb-8">
-            <h1 className="m-0 max-w-[650px] font-[family-name:var(--font-aktiv-grotesk)] text-[72px] font-normal leading-[0.98] tracking-[-0.035em] text-white">
+            <h1 className="m-0 max-w-[650px] font-[family-name:var(--font-aktiv-grotesk)] text-[80px] font-normal leading-[0.98] tracking-[-0.035em] text-white">
               Join Audioflume as an artist.
             </h1>
           </section>
