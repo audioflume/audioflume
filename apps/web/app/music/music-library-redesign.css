@@ -166,7 +166,7 @@ main
   width: min(845px, 100%) !important;
   min-width: 0 !important;
   height: 50px !important;
-  border-radius: 5px !important;
+  border-radius: 7px !important;
   margin: 0 !important;
 }
 
@@ -312,7 +312,7 @@ main
   width: auto !important;
   height: 50px !important;
   margin-right: 0 !important;
-  border-radius: 5px !important;
+  border-radius: 7px !important;
   animation: fw-music-search-slide-in 160ms ease-out;
 }
 
