@@ -163,8 +163,7 @@
 .audioflume-pricing-plan-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  gap: clamp(14px, 1.4vw, 22px);
 }
 
 .audioflume-pricing-plan {
@@ -172,11 +171,9 @@
   min-width: 0;
   min-height: 610px;
   flex-direction: column;
+  border: 1px solid var(--border);
+  background: var(--bg-secondary);
   padding: clamp(28px, 2.6vw, 40px);
-}
-
-.audioflume-pricing-plan + .audioflume-pricing-plan {
-  border-left: 1px solid var(--border);
 }
 
 .audioflume-pricing-plan-kicker {
@@ -390,11 +387,6 @@
     min-height: 0;
   }
 
-  .audioflume-pricing-plan + .audioflume-pricing-plan {
-    border-top: 1px solid var(--border);
-    border-left: 0;
-  }
-
   .audioflume-pricing-plan-description,
   .audioflume-pricing-plan-price {
     min-height: 0;
@@ -499,7 +491,11 @@
     width: 100%;
   }
 
+  .audioflume-pricing-plan-grid {
+    gap: 14px;
+  }
+
   .audioflume-pricing-plan {
-    padding: 28px 0;
+    padding: 28px 22px;
   }
 }
