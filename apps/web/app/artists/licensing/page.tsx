@@ -99,10 +99,12 @@ export default function ArtistLicensingPage() {
                 ["Published documents", "Required agreements and onboarding documents are presented in the artist dashboard when they are ready for review."],
                 ["Owner approval", "Only the artist owner can accept agreements on behalf of the artist."],
                 ["Recorded acceptance", "Acceptance is recorded against the specific document version, along with when it was accepted and who accepted it."],
-              ].map(([title, copy]) => (
+              ].map(([title, copy], index) => (
                 <div
                   key={title}
-                  className="grid gap-2 border-b border-[var(--border)] py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6"
+                  className={`grid gap-2 py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6 ${
+                    index < 2 ? "border-b border-[var(--border)]" : ""
+                  }`}
                 >
                   <div className="text-[12px] font-normal tracking-normal text-[var(--text-primary)]">{title}</div>
                   <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">{copy}</p>
