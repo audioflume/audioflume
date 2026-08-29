@@ -129,7 +129,7 @@ export default function ArtistLicensingPage() {
             </div>
           </section>
 
-          <section className="mb-16 flex flex-col items-start justify-between gap-6 py-8 sm:flex-row sm:items-center">
+          <section className="flex flex-col items-start justify-between gap-6 py-8 sm:flex-row sm:items-center">
             <div>
               <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal tracking-[-0.035em] text-[var(--text-primary)]">
                 Interested in joining the catalogue?
