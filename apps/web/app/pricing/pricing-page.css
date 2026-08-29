@@ -41,9 +41,14 @@
 }
 
 .audioflume-pricing-hero-eyebrow {
-  position: relative;
+  position: absolute;
+  top: calc(
+    var(--filmwave-header-height, 75px) + clamp(38px, 4vw, 60px) +
+      clamp(82px, 9vw, 132px) - 32.5px
+  );
+  left: 0;
   z-index: 4;
-  margin: 0 0 18px;
+  margin: 0;
   color: rgba(255, 255, 255, 0.62);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14.5px;
@@ -57,7 +62,7 @@
   position: relative;
   z-index: 3;
   width: 92%;
-  margin: 0;
+  margin: clamp(82px, 9vw, 132px) 0 0;
   color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(62px, 8.4vw, 145px);
@@ -411,8 +416,15 @@
     width: 76%;
   }
 
+  .audioflume-pricing-hero-eyebrow {
+    top: calc(
+      var(--filmwave-header-height, 75px) + clamp(38px, 4vw, 60px) + 92px -
+        32.5px
+    );
+  }
+
   .audioflume-pricing-hero-title {
-    margin-top: 0;
+    margin-top: 92px;
     font-size: clamp(50px, 14.6vw, 82px);
     line-height: 0.84;
   }
