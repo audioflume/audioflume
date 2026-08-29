@@ -107,7 +107,7 @@ export default function AccountSidebar() {
         handleNotificationCountChange,
       );
     };
-  }, [pathname]);
+  }, [pathname, user?.id]);
 
   return (
     <BackendSidebarShell bottom={currentSong ? "64px" : "0px"}>
