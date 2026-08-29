@@ -7,6 +7,7 @@ type AccountSection =
   | "membership"
   | "payment"
   | "security"
+  | "notifications"
   | "support";
 
 const validSections = new Set<AccountSection>([
@@ -15,6 +16,7 @@ const validSections = new Set<AccountSection>([
   "membership",
   "payment",
   "security",
+  "notifications",
   "support",
 ]);
 
