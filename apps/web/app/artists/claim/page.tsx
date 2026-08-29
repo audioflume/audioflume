@@ -11,7 +11,7 @@ export default async function ArtistClaimPage() {
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <section className="bg-[var(--bg-tertiary)] px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
+      <section className="bg-[var(--filmwave-admin-canvas)] px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[650px]">
           <section className="mb-8">
             <h1 className="m-0 max-w-[650px] text-center font-[family-name:var(--font-aktiv-grotesk)] text-[60px] font-normal leading-[0.98] tracking-[-0.035em] text-[var(--text-primary)]">
