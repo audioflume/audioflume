@@ -37,6 +37,7 @@ import "./music-filter-rail-order.css";
 import "../../../packages/shared/styles/music-shared-controls.css";
 import "./music-library-search-theme.css";
 import "./song-player-typography.css";
+import "./typography-normalization.css";
 
 const robotoMono = Roboto_Mono({
   subsets: ["latin"],
