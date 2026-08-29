@@ -66,6 +66,7 @@ export default function ArtistNotifications({
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [markingAll, setMarkingAll] = useState(false);
+  const [clearingAll, setClearingAll] = useState(false);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -170,7 +171,7 @@ export default function ArtistNotifications({
   }
 
   async function markAllRead() {
-    if (unreadCount === 0 || markingAll) return;
+    if (unreadCount === 0 || markingAll || clearingAll) return;
 
     setMarkingAll(true);
     setError("");
@@ -210,16 +211,57 @@ export default function ArtistNotifications({
     }
   }
 
+  async function clearAllNotifications() {
+    if (notifications.length === 0 || clearingAll || markingAll) return;
+
+    setClearingAll(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/artists/${artistId}/notifications`, {
+        method: "DELETE",
+      });
+      const payload = (await response.json().catch(() => null)) as
+        | { cleared?: boolean; error?: string }
+        | null;
+
+      if (!response.ok || !payload?.cleared) {
+        throw new Error(payload?.error || "Failed to clear notifications");
+      }
+
+      setNotifications([]);
+      setUnreadCount(0);
+      onUnreadCountChange?.(0);
+    } catch (clearError) {
+      setError(
+        clearError instanceof Error
+          ? clearError.message
+          : "Failed to clear notifications",
+      );
+    } finally {
+      setClearingAll(false);
+    }
+  }
+
   return (
     <div className="grid gap-3">
-      {unreadCount > 0 ? (
-        <div className="flex items-center justify-end">
+      {notifications.length > 0 ? (
+        <div className="flex items-center justify-end gap-2">
+          {unreadCount > 0 ? (
+            <BackendButton
+              type="button"
+              onClick={() => void markAllRead()}
+              disabled={markingAll || clearingAll}
+            >
+              {markingAll ? "Marking..." : "Mark all as read"}
+            </BackendButton>
+          ) : null}
           <BackendButton
             type="button"
-            onClick={() => void markAllRead()}
-            disabled={markingAll}
+            onClick={() => void clearAllNotifications()}
+            disabled={clearingAll || markingAll}
           >
-            {markingAll ? "Marking..." : "Mark all as read"}
+            {clearingAll ? "Clearing..." : "Clear all notifications"}
           </BackendButton>
         </div>
       ) : null}
