@@ -163,7 +163,7 @@ export default function AdminContentPage({
       `}</style>
 
       <section
-        className={`min-h-screen px-5 pt-[88px] ${resolvedContentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-8 xl:px-10 ${
+        className={`min-h-screen px-5 pt-[88px] ${resolvedContentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-10 ${
           usesAdminCanvas ? "bg-[var(--filmwave-admin-canvas)]" : ""
         } ${resolvedContentAreaClassName}`}
       >
