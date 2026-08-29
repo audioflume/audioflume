@@ -920,7 +920,7 @@ export default function ArtistApplicationForm() {
           </div>
 
           <div
-            className="absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center gap-2"
+            className="absolute bottom-[-28px] left-1/2 flex -translate-x-1/2 items-center gap-1"
             aria-label={`Step ${step} of ${TOTAL_STEPS}`}
           >
             {Array.from({ length: TOTAL_STEPS }, (_, index) => {
@@ -931,10 +931,10 @@ export default function ArtistApplicationForm() {
                 <span
                   key={indicatorStep}
                   aria-hidden="true"
-                  className={`h-1.5 rounded-full transition-all duration-300 ease-out ${
+                  className={`h-1 rounded-full transition-all duration-300 ease-out ${
                     active
-                      ? "w-6 bg-[var(--text-primary)]"
-                      : "w-1.5 bg-[var(--text-muted)]"
+                      ? "w-4 bg-[var(--text-muted)]"
+                      : "w-1 bg-[var(--border)]"
                   }`}
                 />
               );
