@@ -936,7 +936,7 @@ export default function ArtistApplicationForm() {
                   }`}
                   style={{
                     backgroundColor:
-                      "color-mix(in srgb, var(--border) 50%, var(--text-muted))",
+                      "color-mix(in srgb, var(--border) 75%, var(--text-muted))",
                   }}
                 />
               );
