@@ -16,8 +16,8 @@ const earningModels = [
     title: "Subscription catalogue",
     split: "Shared Payout Pool",
     description:
-      "Subscription earnings are paid from a shared artist payout pool rather than at a fixed rate per download. A portion of Audioflume’s membership revenue is allocated to that pool, then divided among participating artists according to the payout formula set out in the artist agreement. As subscription revenue changes, the amount available to artists changes with it.",
-    example: "Membership revenue → artist payout pool → your calculated share",
+      "Subscription earnings are paid from a shared artist payout pool rather than at a fixed rate per download. A portion of Audioflume’s membership revenue is allocated to the pool each month. Your share is then calculated from your eligible downloads as a percentage of total eligible catalogue downloads for that month. If your music accounts for 5% of eligible downloads, you receive 5% of the artist payout pool. The exact calculation and eligibility rules are set out in the artist agreement.",
+    example: "Your eligible downloads ÷ total eligible downloads = your share of the monthly pool",
   },
   {
     number: "02",
