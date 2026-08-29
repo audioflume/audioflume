@@ -41,16 +41,16 @@ export default function ArtistEarningsPage() {
     <main className="artist-earnings-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="px-5 pt-[158px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[980px]">
-          <section className="mb-16 grid gap-8 md:grid-cols-[minmax(0,0.9fr)_minmax(280px,1fr)] md:items-end">
-            <div>
+          <section className="mb-16 grid gap-8 md:grid-cols-[70px_minmax(180px,0.7fr)_minmax(0,1.3fr)] md:items-end">
+            <div className="md:col-span-2">
               <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Artist earnings
               </div>
-              <h1 className="max-w-[440px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-normal leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]">
+              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,5vw,60px)] font-normal leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]">
                 More than one way to earn.
               </h1>
             </div>
-            <p className="m-0 max-w-[560px] text-[clamp(16px,1.45vw,20px)] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)] md:justify-self-end">
+            <p className="m-0 text-[clamp(16px,1.45vw,20px)] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
               Audioflume combines subscription discovery with direct licensing and custom work. The goal is to make music easy to find without flattening every use into the same royalty rate.
             </p>
           </section>
@@ -61,7 +61,7 @@ export default function ArtistEarningsPage() {
                 key={model.number}
                 className="grid gap-6 border-b border-[var(--border)] py-8 md:grid-cols-[70px_minmax(180px,0.7fr)_minmax(0,1.3fr)] md:gap-8 md:py-10"
               >
-                <div className="grid w-[70px] self-start place-items-center bg-[var(--bg-tertiary-hover)] py-[4px] text-center text-[56px] font-[200] leading-none text-[var(--filmwave-white)]">
+                <div className="grid w-[70px] self-start place-items-center bg-[#e4e4e4] py-[4px] text-center text-[56px] font-[200] leading-none text-[var(--filmwave-white)]">
                   {model.number}
                 </div>
                 <div>
@@ -76,7 +76,7 @@ export default function ArtistEarningsPage() {
                   <p className="m-0 text-sm leading-6 text-[var(--text-secondary)]">
                     {model.description}
                   </p>
-                  <div className="mt-5 border-t border-[var(--border-subtle)] pt-4 font-[family-name:var(--font-roboto-mono)] text-[11px] leading-5 text-[var(--text-primary)]">
+                  <div className="mt-5 pt-4 font-[family-name:var(--font-roboto-mono)] text-[11px] leading-5 text-[var(--text-primary)]">
                     {model.example}
                   </div>
                 </div>
