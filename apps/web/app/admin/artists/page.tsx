@@ -701,15 +701,6 @@ export default function AdminArtistsPage() {
 
       <div>
         <div className="min-w-0">
-          <div className="grid overflow-x-auto grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
-            <span>Artist</span>
-            <span>Owner</span>
-            <span>Location</span>
-            <span>Submitted</span>
-            <span>Status</span>
-            <span className="text-right">Actions</span>
-          </div>
-
           {loading ? (
             <div className="mt-2.5 flex min-h-[180px] items-center justify-center rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] text-xs text-[var(--text-muted)]">
               Loading artists...
