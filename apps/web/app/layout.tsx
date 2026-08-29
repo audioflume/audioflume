@@ -20,6 +20,7 @@ import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior"
 import SideFilterPanelBehavior from "@/components/SideFilterPanelBehavior";
 import { getPendingArtistInviteCount } from "@/lib/pendingArtistInvites";
 import "./globals.css";
+import "./public-action-buttons.css";
 import "./interaction-defaults.css";
 import "./music-library-web-refinements.css";
 import "./discover/discover-page.css";
