@@ -931,10 +931,8 @@ export default function ArtistApplicationForm() {
                 <span
                   key={indicatorStep}
                   aria-hidden="true"
-                  className={`h-1 rounded-full transition-all duration-300 ease-out ${
-                    active
-                      ? "w-4 bg-[var(--text-muted)]"
-                      : "w-1 bg-[var(--border)]"
+                  className={`h-1 rounded-full bg-[var(--text-muted)] transition-all duration-300 ease-out ${
+                    active ? "w-6" : "w-1"
                   }`}
                 />
               );
