@@ -42,7 +42,7 @@ export default function ArtistApplicationReviewPanel({
   samples,
 }: ArtistApplicationReviewPanelProps) {
   return (
-    <section className="col-span-6 grid cursor-auto gap-4 pt-4 lg:grid-cols-[210px_minmax(0,1fr)_minmax(280px,0.9fr)]">
+    <section className="col-span-6 grid cursor-auto gap-4 pt-4 lg:grid-cols-[210px_minmax(0,1fr)_minmax(600px,1fr)]">
       <div className="grid cursor-auto content-start">
         <div className="text-[11px] text-[var(--text-secondary)]">
           Profile images
