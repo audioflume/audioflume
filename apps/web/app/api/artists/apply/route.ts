@@ -322,6 +322,21 @@ export async function POST(request: Request) {
     }
   }
 
+  if (
+    !website.value &&
+    !instagram.value &&
+    !spotify.value &&
+    samples.value.length === 0
+  ) {
+    return NextResponse.json(
+      {
+        error:
+          "Add a website, Spotify, or Instagram link, or upload at least one sample song",
+      },
+      { status: 400 },
+    );
+  }
+
   try {
     await ensureUserProfile(user.id, user);
 
