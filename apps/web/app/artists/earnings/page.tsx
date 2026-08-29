@@ -101,7 +101,7 @@ export default function ArtistEarningsPage() {
             </div>
           </section>
 
-          <section className="grid gap-8 py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
+          <section className="grid gap-8 border-b border-[var(--border)] py-12 md:grid-cols-[minmax(200px,0.7fr)_minmax(0,1.3fr)]">
             <div>
               <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Transparency
@@ -115,10 +115,12 @@ export default function ArtistEarningsPage() {
                 ["Before a deal", "The applicable split or commercial terms are made clear before a non-standard opportunity proceeds."],
                 ["After a deal", "Recorded earnings are broken out by source in the artist dashboard so subscription, premium, bespoke and other earnings stay identifiable."],
                 ["Your agreement", "This page explains Audioflume’s standard model. The artist agreement you accept is the source of truth for the exact terms that apply to your catalogue."],
-              ].map(([title, copy]) => (
+              ].map(([title, copy], index) => (
                 <div
                   key={title}
-                  className="grid gap-2 border-b border-[var(--border)] py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6"
+                  className={`grid gap-2 py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6 ${
+                    index < 2 ? "border-b border-[var(--border)]" : ""
+                  }`}
                 >
                   <div className="text-[12px] font-normal tracking-normal text-[var(--text-primary)]">{title}</div>
                   <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">{copy}</p>
