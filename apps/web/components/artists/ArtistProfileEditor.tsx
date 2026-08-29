@@ -365,17 +365,15 @@ export default function ArtistProfileEditor({
             </label>
 
             <div className="block">
-              <div className="mb-2 flex items-center justify-between gap-4">
-                <span className="text-[11px] font-medium text-[var(--text-secondary)]">
-                  Artist Designation
-                </span>
-                <span className="text-[10px] font-normal text-[var(--text-muted)]">
+              <div className="relative">
+                <FieldLabel>Artist Designation</FieldLabel>
+                <span className="absolute right-0 top-0 text-[10px] font-normal leading-none text-[var(--text-muted)]">
                   {selectedDesignations.length} / {MAX_DESIGNATIONS}
                 </span>
               </div>
 
               <div ref={designationFieldRef} className="relative">
-                <div className="flex min-h-10 min-w-0 flex-wrap items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-2 py-1">
+                <div className="flex h-10 min-w-0 items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-2 py-1">
                   {selectedDesignations.map((option) => (
                     <button
                       key={option}
