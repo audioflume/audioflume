@@ -674,7 +674,7 @@ export default function ArtistApplicationForm() {
               </label>
 
               <div className="grid gap-1.5">
-                <span className="flex items-center justify-between gap-4">
+                <span className="flex items-baseline justify-between gap-4">
                   <span>Designation</span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
                     {selectedDesignations.length} / {MAX_DESIGNATIONS}
@@ -682,13 +682,13 @@ export default function ArtistApplicationForm() {
                 </span>
 
                 <div ref={designationFieldRef} className="relative">
-                  <div className="flex min-h-10 min-w-0 flex-wrap items-center gap-1.5 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-2 py-1">
+                  <div className="flex min-h-10 min-w-0 cursor-pointer flex-wrap items-center gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1">
                     {selectedDesignations.map((option) => (
                       <button
                         key={option}
                         type="button"
                         onClick={() => removeDesignation(option)}
-                        className="inline-flex h-7 shrink-0 items-center gap-1 rounded-[5px] bg-[var(--bg-tertiary)] px-2.5 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+                        className="inline-flex h-7 shrink-0 cursor-pointer items-center gap-1 rounded-[5px] bg-[var(--bg-tertiary)] px-2.5 text-[11px] text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
                       >
                         <span>{option}</span>
                         <span aria-hidden="true">×</span>
@@ -714,7 +714,7 @@ export default function ArtistApplicationForm() {
                             ? "Add another"
                             : "Search designations"
                       }
-                      className="h-7 min-w-[90px] flex-1 bg-transparent px-1 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-50"
+                      className="h-7 min-w-[90px] flex-1 cursor-pointer bg-transparent px-1 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-50"
                     />
                     <button
                       type="button"
@@ -722,7 +722,7 @@ export default function ArtistApplicationForm() {
                         setDesignationDropdownOpen((current) => !current)
                       }
                       disabled={selectedDesignations.length >= MAX_DESIGNATIONS}
-                      className="flex h-7 w-7 shrink-0 items-center justify-center text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
+                      className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
                       aria-label="Show designation options"
                     >
                       <ChevronDownIcon size={14} />
@@ -737,7 +737,7 @@ export default function ArtistApplicationForm() {
                           type="button"
                           onMouseDown={(event) => event.preventDefault()}
                           onClick={() => selectDesignation(option)}
-                          className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                          className="block w-full cursor-pointer px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                         >
                           {option}
                         </button>
