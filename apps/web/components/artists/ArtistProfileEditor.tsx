@@ -279,7 +279,7 @@ export default function ArtistProfileEditor({
         <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
-              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={
                 artist.profile_image_url
                   ? { backgroundImage: `url(${artist.profile_image_url})` }
@@ -311,7 +311,7 @@ export default function ArtistProfileEditor({
 
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
-              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={
                 artist.hero_image_url
                   ? { backgroundImage: `url(${artist.hero_image_url})` }
