@@ -38,7 +38,7 @@ const earningModels = [
 
 export default function ArtistEarningsPage() {
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="artist-earnings-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="px-5 pt-[112px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[980px]">
           <section className="mb-16 grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.62fr)] md:items-end">
