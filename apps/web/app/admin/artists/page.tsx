@@ -699,9 +699,9 @@ export default function AdminArtistsPage() {
         </div>
       </section>
 
-      <div className="overflow-x-auto">
-        <div className="min-w-[1140px]">
-          <div className="grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+      <div>
+        <div className="min-w-0">
+          <div className="grid overflow-x-auto grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] px-5 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
             <span>Artist</span>
             <span>Owner</span>
             <span>Location</span>
@@ -771,7 +771,7 @@ export default function AdminArtistsPage() {
                         return next;
                       });
                     }}
-                    className={`grid grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-x-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-4 ${
+                    className={`grid overflow-x-auto grid-cols-[minmax(190px,1.35fr)_minmax(190px,1fr)_minmax(130px,0.8fr)_120px_130px_270px] items-center gap-x-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-4 ${
                       artist.status === "pending" ? "cursor-pointer" : ""
                     }`}
                   >
