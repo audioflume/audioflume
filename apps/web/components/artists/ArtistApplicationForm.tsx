@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import {
   Button,
@@ -9,6 +9,7 @@ import {
   Info,
   Input,
 } from "@/components/account/AccountUI";
+import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 
 type ArtistApplicationStatus =
   | "pending"
@@ -177,6 +178,8 @@ export default function ArtistApplicationForm() {
   const [step, setStep] = useState(1);
   const [panelVisible, setPanelVisible] = useState(true);
   const [transitioning, setTransitioning] = useState(false);
+  const [designationQuery, setDesignationQuery] = useState("");
+  const [designationDropdownOpen, setDesignationDropdownOpen] = useState(false);
   const [profileImageFile, setProfileImageFile] = useState<File | null>(null);
   const [heroImageFile, setHeroImageFile] = useState<File | null>(null);
   const [sampleFiles, setSampleFiles] = useState<File[]>([]);
@@ -187,6 +190,7 @@ export default function ArtistApplicationForm() {
     tone: "success" | "error";
     text: string;
   } | null>(null);
+  const designationFieldRef = useRef<HTMLDivElement>(null);
 
   const pendingApplication = useMemo(
     () => applications.find((application) => application.status === "pending") ?? null,
@@ -203,6 +207,13 @@ export default function ArtistApplicationForm() {
         item as (typeof ARTIST_DESIGNATION_OPTIONS)[number],
       ),
   );
+  const availableDesignations = ARTIST_DESIGNATION_OPTIONS.filter((option) => {
+    const query = designationQuery.trim().toLowerCase();
+    return (
+      !selectedDesignations.includes(option) &&
+      (!query || option.toLowerCase().includes(query))
+    );
+  });
   const profileImagePreviewUrl = useMemo(
     () => (profileImageFile ? URL.createObjectURL(profileImageFile) : null),
     [profileImageFile],
@@ -223,6 +234,19 @@ export default function ArtistApplicationForm() {
       if (heroImagePreviewUrl) URL.revokeObjectURL(heroImagePreviewUrl);
     };
   }, [heroImagePreviewUrl]);
+
+  useEffect(() => {
+    if (!designationDropdownOpen) return;
+
+    function handleOutsideClick(event: MouseEvent) {
+      if (designationFieldRef.current?.contains(event.target as Node)) return;
+      setDesignationDropdownOpen(false);
+      setDesignationQuery("");
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [designationDropdownOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -407,6 +431,8 @@ export default function ArtistApplicationForm() {
       setApplications((current) => [application, ...current]);
       setSubmittedApplication(application);
       setForm(EMPTY_FORM);
+      setDesignationQuery("");
+      setDesignationDropdownOpen(false);
       setProfileImageFile(null);
       setHeroImageFile(null);
       setSampleFiles([]);
@@ -465,17 +491,23 @@ export default function ArtistApplicationForm() {
     transitionToStep(step + 1);
   }
 
-  function toggleDesignation(value: string) {
-    const selected = selectedDesignations.includes(value);
-    if (!selected && selectedDesignations.length >= MAX_DESIGNATIONS) return;
-
-    const nextDesignations = selected
-      ? selectedDesignations.filter((item) => item !== value)
-      : [...selectedDesignations, value];
+  function selectDesignation(value: string) {
+    if (selectedDesignations.length >= MAX_DESIGNATIONS) return;
 
     setForm((current) => ({
       ...current,
-      designation: nextDesignations.join(" / "),
+      designation: [...selectedDesignations, value].join(" / "),
+    }));
+    setDesignationQuery("");
+    setDesignationDropdownOpen(selectedDesignations.length + 1 < MAX_DESIGNATIONS);
+  }
+
+  function removeDesignation(value: string) {
+    setForm((current) => ({
+      ...current,
+      designation: selectedDesignations
+        .filter((item) => item !== value)
+        .join(" / "),
     }));
   }
 
@@ -648,27 +680,72 @@ export default function ArtistApplicationForm() {
                     {selectedDesignations.length} / {MAX_DESIGNATIONS}
                   </span>
                 </span>
-                <div className="flex flex-wrap gap-2">
-                  {ARTIST_DESIGNATION_OPTIONS.map((option) => {
-                    const selected = selectedDesignations.includes(option);
-                    const disabled =
-                      !selected && selectedDesignations.length >= MAX_DESIGNATIONS;
 
-                    return (
+                <div ref={designationFieldRef} className="relative">
+                  <div className="flex h-10 min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]">
+                    <input
+                      type="text"
+                      value={designationQuery}
+                      onChange={(event) => {
+                        setDesignationQuery(event.target.value);
+                        setDesignationDropdownOpen(true);
+                      }}
+                      onFocus={() => setDesignationDropdownOpen(true)}
+                      onKeyDown={(event) => {
+                        if (event.key === "Enter") event.preventDefault();
+                      }}
+                      disabled={selectedDesignations.length >= MAX_DESIGNATIONS}
+                      placeholder={
+                        selectedDesignations.length >= MAX_DESIGNATIONS
+                          ? "3 designations selected"
+                          : "Search designations"
+                      }
+                      className="h-full w-full min-w-0 flex-1 bg-transparent px-3 py-0 text-xs text-[var(--text-secondary)] outline-none placeholder:text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setDesignationDropdownOpen((current) => !current)
+                      }
+                      disabled={selectedDesignations.length >= MAX_DESIGNATIONS}
+                      className="flex h-full w-7 shrink-0 items-center justify-center text-[var(--text-muted)] disabled:cursor-not-allowed disabled:opacity-40"
+                      aria-label="Show designation options"
+                    >
+                      <ChevronDownIcon size={14} />
+                    </button>
+                  </div>
+
+                  {designationDropdownOpen && availableDesignations.length > 0 ? (
+                    <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
+                      {availableDesignations.map((option) => (
+                        <button
+                          key={option}
+                          type="button"
+                          onMouseDown={(event) => event.preventDefault()}
+                          onClick={() => selectDesignation(option)}
+                          className="block w-full px-3 py-2 text-left text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                        >
+                          {option}
+                        </button>
+                      ))}
+                    </div>
+                  ) : null}
+                </div>
+
+                {selectedDesignations.length > 0 ? (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedDesignations.map((option) => (
                       <button
                         key={option}
                         type="button"
-                        disabled={disabled}
-                        onClick={() => toggleDesignation(option)}
-                        className={`filmwave-backend-choice-button ${
-                          selected ? "is-active" : ""
-                        } disabled:cursor-not-allowed disabled:opacity-40`}
+                        onClick={() => removeDesignation(option)}
+                        className="filmwave-backend-choice-button is-active"
                       >
-                        {option}
+                        {option} ×
                       </button>
-                    );
-                  })}
-                </div>
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <label className="grid gap-1.5">
