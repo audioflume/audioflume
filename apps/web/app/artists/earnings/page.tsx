@@ -69,12 +69,12 @@ export default function ArtistEarningsPage() {
                   <h2 className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal leading-[1] tracking-[-0.035em] text-[var(--text-primary)]">
                     {model.title}
                   </h2>
-                  <div className="mt-3 text-[11px] font-normal tracking-normal text-[var(--text-secondary)]">
+                  <div className="mt-3 text-[12px] font-normal tracking-normal text-[var(--text-secondary)]">
                     {model.split}
                   </div>
                 </div>
                 <div>
-                  <p className="m-0 text-sm leading-6 text-[var(--text-secondary)]">
+                  <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">
                     {model.description}
                   </p>
                   <div className="mt-5 pt-4 font-[family-name:var(--font-roboto-mono)] text-[11px] leading-5 text-[var(--text-primary)]">
@@ -120,8 +120,8 @@ export default function ArtistEarningsPage() {
                   key={title}
                   className="grid gap-2 border-b border-[var(--border)] py-5 sm:grid-cols-[150px_minmax(0,1fr)] sm:gap-6"
                 >
-                  <div className="text-xs font-normal text-[var(--text-primary)]">{title}</div>
-                  <p className="m-0 text-xs leading-5 text-[var(--text-secondary)]">{copy}</p>
+                  <div className="text-[12px] font-normal tracking-normal text-[var(--text-secondary)]">{title}</div>
+                  <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">{copy}</p>
                 </div>
               ))}
             </div>
