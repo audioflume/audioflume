@@ -247,6 +247,13 @@ export default function ArtistNotifications({
     <div className="grid gap-3">
       {notifications.length > 0 ? (
         <div className="flex items-center justify-end gap-2">
+          <BackendButton
+            type="button"
+            onClick={() => void clearAllNotifications()}
+            disabled={clearingAll || markingAll}
+          >
+            {clearingAll ? "Clearing..." : "Clear all"}
+          </BackendButton>
           {unreadCount > 0 ? (
             <BackendButton
               type="button"
@@ -256,13 +263,6 @@ export default function ArtistNotifications({
               {markingAll ? "Marking..." : "Mark all as read"}
             </BackendButton>
           ) : null}
-          <BackendButton
-            type="button"
-            onClick={() => void clearAllNotifications()}
-            disabled={clearingAll || markingAll}
-          >
-            {clearingAll ? "Clearing..." : "Clear all notifications"}
-          </BackendButton>
         </div>
       ) : null}
 
