@@ -74,7 +74,7 @@ export default function ArtistEarningsPage() {
                   </div>
                 </div>
                 <div>
-                  <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">
+                  <p className="m-0 text-[14.5px] font-[300] leading-6 text-[var(--text-secondary)]">
                     {model.description}
                   </p>
                   <div className="mt-5 pt-4 font-[family-name:var(--font-roboto-mono)] text-[12px] leading-5 text-[var(--text-primary)]">
@@ -123,7 +123,7 @@ export default function ArtistEarningsPage() {
                   }`}
                 >
                   <div className="text-[12px] font-normal tracking-normal text-[var(--text-primary)]">{title}</div>
-                  <p className="m-0 text-[14.5px] leading-6 text-[var(--text-secondary)]">{copy}</p>
+                  <p className="m-0 text-[14.5px] font-[300] leading-6 text-[var(--text-secondary)]">{copy}</p>
                 </div>
               ))}
             </div>
