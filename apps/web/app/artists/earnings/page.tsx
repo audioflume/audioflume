@@ -41,12 +41,12 @@ export default function ArtistEarningsPage() {
     <main className="artist-earnings-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <section className="px-5 pt-[112px] md:px-8 xl:px-10">
         <div className="mx-auto max-w-[980px]">
-          <section className="mb-16 grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(280px,0.62fr)] md:items-end">
+          <section className="mb-16 grid gap-8 md:grid-cols-[minmax(0,0.9fr)_minmax(280px,1fr)] md:items-end">
             <div>
               <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Artist earnings
               </div>
-              <h1 className="max-w-[760px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-normal leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
+              <h1 className="max-w-[440px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,6vw,72px)] font-normal leading-[0.9] tracking-[-0.07em] text-[var(--text-primary)]">
                 More than one way to earn.
               </h1>
             </div>
@@ -126,7 +126,7 @@ export default function ArtistEarningsPage() {
             </div>
           </section>
 
-          <section className="mb-16 flex flex-col items-start justify-between gap-6 border-y border-[var(--border)] py-8 sm:flex-row sm:items-center">
+          <section className="mb-16 flex flex-col items-start justify-between gap-6 py-8 sm:flex-row sm:items-center">
             <div>
               <div className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-normal tracking-[-0.04em] text-[var(--text-primary)]">
                 Interested in joining the catalogue?
