@@ -1,6 +1,7 @@
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
@@ -147,6 +148,7 @@ export default async function PricingPage() {
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
+  const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
 
   return (
     <main className="audioflume-pricing-page-root">
@@ -252,7 +254,16 @@ export default async function PricingPage() {
 
       <section className="audioflume-pricing-enterprise-band">
         <div className="audioflume-pricing-enterprise-section">
-          <div>
+          <div className="audioflume-pricing-enterprise-heading">
+            <div className="audioflume-pricing-enterprise-media" aria-hidden="true">
+              <Image
+                src={enterpriseImage}
+                alt=""
+                fill
+                sizes="(max-width: 760px) 76vw, 38vw"
+                className="audioflume-pricing-enterprise-image"
+              />
+            </div>
             <p className="audioflume-pricing-section-eyebrow">Enterprise</p>
             <h2 className="audioflume-pricing-enterprise-title">
               Bigger team. Different requirements.
