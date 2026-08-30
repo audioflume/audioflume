@@ -103,7 +103,7 @@ function cleanRequiredProfileText(
 
 function cleanDesignation(value: unknown) {
   const cleaned = cleanOptionalString(value, 160);
-  if (!cleaned) return { value: null, error: null };
+  if (!cleaned) return { value: null, error: "Designation is required" };
 
   const designations = cleaned
     .split(/\s*\/\s*|\s*,\s*/)
