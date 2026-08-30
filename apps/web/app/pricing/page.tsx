@@ -237,6 +237,11 @@ export default async function PricingPage() {
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
+  const heroAccentImages = [
+    pricingHeroImages[1] ?? pricingHeroImages[0],
+    pricingHeroImages[3] ?? pricingHeroImages[0],
+    pricingHeroImages[5] ?? pricingHeroImages[0],
+  ];
 
   return (
     <main className="audioflume-pricing-page-root">
@@ -244,14 +249,53 @@ export default async function PricingPage() {
         <div className="audioflume-pricing-hero-inner">
           <PricingHeroImageFlash
             images={pricingHeroImages}
-            mediaClassName="audioflume-pricing-hero-media"
+            mediaClassName="audioflume-pricing-hero-media !top-[calc(var(--filmwave-header-height,75px)+64px)] !right-auto !bottom-auto !left-[31%] !h-[54%] !w-[40.5%] max-[980px]:!left-[29%] max-[980px]:!w-[46%] max-[760px]:!top-[calc(var(--filmwave-header-height,75px)+112px)] max-[760px]:!left-[18%] max-[760px]:!h-[42%] max-[760px]:!w-[64%]"
           />
 
-          <p className="audioflume-pricing-hero-eyebrow">Plans &amp; Pricing</p>
+          <div
+            className="absolute left-[79%] top-[21.5%] z-[2] h-[23.5%] w-[15%] overflow-hidden max-[760px]:hidden"
+            aria-hidden="true"
+          >
+            <Image
+              src={heroAccentImages[0]}
+              alt=""
+              fill
+              sizes="15vw"
+              className="object-cover"
+            />
+          </div>
+          <div
+            className="absolute left-[76%] top-[54%] z-[2] h-[10%] w-[6.5%] overflow-hidden max-[760px]:hidden"
+            aria-hidden="true"
+          >
+            <Image
+              src={heroAccentImages[1]}
+              alt=""
+              fill
+              sizes="7vw"
+              className="object-cover"
+            />
+          </div>
+          <div
+            className="absolute right-[0.5%] top-[42%] z-[2] h-[15%] w-[9.5%] overflow-hidden max-[760px]:hidden"
+            aria-hidden="true"
+          >
+            <Image
+              src={heroAccentImages[2]}
+              alt=""
+              fill
+              sizes="10vw"
+              className="object-cover"
+            />
+          </div>
 
-          <h1 className="audioflume-pricing-hero-title">
+          <p className="audioflume-pricing-hero-eyebrow !top-[32%] !left-0">
+            Plans &amp; Pricing
+          </p>
+
+          <h1 className="audioflume-pricing-hero-title !absolute !top-[38%] !left-0 !m-0 !w-[48%] !text-[clamp(60px,5.9vw,96px)] max-[980px]:!w-[54%] max-[980px]:!text-[clamp(56px,7.2vw,78px)] max-[760px]:!top-[34%] max-[760px]:!w-[86%] max-[760px]:!text-[clamp(50px,13vw,74px)]">
             <span>One library.</span>
-            <span>Three ways</span>
+            <span>Three (3) ways</span>
             <span>to work.</span>
           </h1>
 
@@ -320,13 +364,14 @@ export default async function PricingPage() {
         </div>
 
         <div className="mt-[clamp(72px,7vw,108px)]">
-          <p className="audioflume-pricing-section-eyebrow mb-2">Plan comparison</p>
-
           <div className="overflow-x-auto">
             <table className="w-full min-w-[820px] border-collapse">
               <thead>
                 <tr className="border-b border-[var(--border)]">
                   <th className="w-[34%] pb-8 pr-8 text-left align-bottom" scope="col">
+                    <p className="audioflume-pricing-section-eyebrow mb-1">
+                      Plan comparison
+                    </p>
                     <h2 className="max-w-none whitespace-nowrap font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(28px,2.5vw,36px)] font-normal leading-[0.94] tracking-[-0.035em]">
                       Compare these plans.
                     </h2>
