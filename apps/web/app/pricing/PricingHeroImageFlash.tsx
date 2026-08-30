@@ -15,6 +15,7 @@ export default function PricingHeroImageFlash({
   mediaClassName = "audioflume-home-flash-hero-media",
 }: PricingHeroImageFlashProps) {
   const [activeIndex, setActiveIndex] = useState(0);
+  const [loadFullSequence, setLoadFullSequence] = useState(false);
   const [settledSources, setSettledSources] = useState<Set<string>>(
     () => new Set(),
   );
@@ -22,18 +23,29 @@ export default function PricingHeroImageFlash({
     () => new Set(),
   );
 
+  const firstSource = images[0] ?? null;
   const usableImages = useMemo(
     () => images.filter((src) => !failedSources.has(src)),
     [failedSources, images],
   );
+  const firstSourceSettled = firstSource
+    ? settledSources.has(firstSource)
+    : true;
   const allImagesSettled = images.every((src) => settledSources.has(src));
   const activeSource = usableImages[activeIndex] ?? usableImages[0] ?? null;
+  const renderedImages = loadFullSequence ? images : images.slice(0, 1);
 
   useEffect(() => {
     setActiveIndex(0);
+    setLoadFullSequence(false);
     setSettledSources(new Set());
     setFailedSources(new Set());
   }, [images]);
+
+  useEffect(() => {
+    if (!firstSourceSettled || images.length <= 1) return;
+    setLoadFullSequence(true);
+  }, [firstSourceSettled, images.length]);
 
   useEffect(() => {
     if (!allImagesSettled || usableImages.length <= 1) return;
@@ -70,7 +82,7 @@ export default function PricingHeroImageFlash({
 
   return (
     <div className={mediaClassName} aria-hidden="true">
-      {images.map((src, index) => (
+      {renderedImages.map((src, index) => (
         <Image
           key={src}
           src={src}
