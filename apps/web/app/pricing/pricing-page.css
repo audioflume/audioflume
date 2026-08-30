@@ -322,7 +322,7 @@
   display: grid;
   grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.28fr);
   gap: clamp(56px, 8vw, 130px);
-  padding: 0 0 clamp(90px, 9vw, 142px);
+  padding: clamp(72px, 7vw, 108px) 0 clamp(90px, 9vw, 142px);
 }
 
 .audioflume-pricing-includes-heading {
