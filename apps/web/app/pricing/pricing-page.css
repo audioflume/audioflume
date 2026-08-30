@@ -185,7 +185,7 @@
   max-width: 760px;
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(42px, 5vw, 72px);
+  font-size: clamp(26px, 2.2vw, 30px);
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.9;
@@ -212,7 +212,7 @@
   margin: 0 0 14px;
   color: var(--text-muted);
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: normal;
   line-height: 1.2;
@@ -267,6 +267,8 @@
 }
 
 .audioflume-pricing-plan:not(:last-child) .audioflume-pricing-plan-price span {
+  color: var(--filmwave-black);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 18px;
   font-weight: 500;
   letter-spacing: normal;
