@@ -39,9 +39,10 @@
       clamp(82px, 9vw, 132px)
   );
   right: 0;
-  bottom: 0;
+  bottom: auto;
   z-index: 1;
   width: 61%;
+  height: clamp(420px, 46vw, 620px);
   overflow: hidden;
 }
 
@@ -96,7 +97,7 @@
   margin: 0;
   color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(62px, 8.4vw, 145px);
+  font-size: clamp(58px, 7vw, 118px);
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.82;
@@ -526,6 +527,7 @@
   .audioflume-pricing-hero-media {
     top: calc(70px - clamp(38px, 4vw, 60px) - 92px);
     width: 76%;
+    height: clamp(320px, 76vw, 430px);
   }
 
   .audioflume-pricing-hero-eyebrow {
