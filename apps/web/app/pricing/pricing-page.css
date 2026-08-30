@@ -398,16 +398,18 @@
 .audioflume-pricing-enterprise-heading .audioflume-pricing-section-eyebrow {
   position: relative;
   z-index: 2;
+  margin-top: auto;
+  margin-bottom: 14px;
 }
 
 .audioflume-pricing-enterprise-title {
   position: relative;
   z-index: 2;
   max-width: 760px;
-  margin: auto 0 0;
+  margin: 0;
   color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(44px, 5.4vw, 82px);
+  font-size: 72px;
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.84;
