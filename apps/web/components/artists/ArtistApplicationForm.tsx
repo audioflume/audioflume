@@ -905,7 +905,7 @@ export default function ArtistApplicationForm() {
         </div>
 
         <div className="mt-5 flex min-h-10 shrink-0 items-center justify-between gap-3">
-          <div className="flex min-w-0 items-center gap-3">
+          <div className="absolute bottom-[50px] left-[50px] flex min-w-0 items-center gap-3">
             {step > 1 ? (
               <Button
                 type="button"
@@ -945,7 +945,7 @@ export default function ArtistApplicationForm() {
             })}
           </div>
 
-          <div className="ml-auto flex shrink-0 items-center gap-3">
+          <div className="absolute bottom-[50px] right-[50px] flex shrink-0 items-center gap-3">
             {step === TOTAL_STEPS &&
             showSampleRequirementWarning &&
             !hasMusicLink &&
