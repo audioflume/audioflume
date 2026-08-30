@@ -119,8 +119,9 @@ export default async function Home() {
 
           <div className="audioflume-pricing-hero-title-stage">
             <h1 className="audioflume-pricing-hero-title">
-              <span>More music.</span>
-              <span>Less noise.</span>
+              <span>Human curated</span>
+              <span>music &amp; SFX</span>
+              <span>for filmmakers</span>
             </h1>
           </div>
 
