@@ -374,6 +374,15 @@
     box-sizing: border-box;
     height: calc(100dvh - 72px);
     min-height: calc(100dvh - 72px);
+    padding-top: var(--filmwave-header-height, 75px);
+    padding-bottom: 0;
+  }
+
+  body:has(.filmwave-music-player) .audioflume-pricing-hero-eyebrow {
+    top: calc(
+      var(--filmwave-header-height, 75px) +
+        clamp(82px, 9vw, 132px) - 42px
+    );
   }
 }
 
