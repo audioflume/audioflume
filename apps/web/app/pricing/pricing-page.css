@@ -35,9 +35,32 @@
   z-index: 1;
   width: 61%;
   overflow: hidden;
-  background:
-    linear-gradient(180deg, rgba(17, 17, 17, 0.03), rgba(17, 17, 17, 0.12)),
-    url("https://images.filmwave.io/images/home/kyle-loftus-FtQE89f3EXA-unsplash.jpg") center center / cover no-repeat;
+}
+
+.audioflume-pricing-hero-frame {
+  position: absolute;
+  inset: 0;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 0;
+}
+
+.audioflume-pricing-hero-frame.is-active {
+  opacity: 1;
+}
+
+.audioflume-pricing-hero-media::after {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 17, 17, 0.03),
+    rgba(17, 17, 17, 0.12)
+  );
+  content: "";
+  pointer-events: none;
 }
 
 .audioflume-pricing-hero-eyebrow {
