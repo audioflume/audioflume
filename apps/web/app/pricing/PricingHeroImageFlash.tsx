@@ -7,10 +7,12 @@ const FLASH_INTERVAL_MS = 140;
 
 type PricingHeroImageFlashProps = {
   images: string[];
+  mediaClassName?: string;
 };
 
 export default function PricingHeroImageFlash({
   images,
+  mediaClassName = "audioflume-home-flash-hero-media",
 }: PricingHeroImageFlashProps) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [settledSources, setSettledSources] = useState<Set<string>>(
@@ -67,7 +69,7 @@ export default function PricingHeroImageFlash({
   }
 
   return (
-    <div className="audioflume-home-flash-hero-media" aria-hidden="true">
+    <div className={mediaClassName} aria-hidden="true">
       {images.map((src, index) => (
         <Image
           key={src}
