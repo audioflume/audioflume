@@ -414,6 +414,23 @@ export default async function PricingPage() {
         </div>
       </section>
 
+      <section className="bg-[#f2f2f2] text-[#111111]">
+        <div className="mx-auto w-[calc(100%-var(--filmwave-editorial-inset)-var(--filmwave-editorial-inset))] max-w-[var(--filmwave-editorial-max-width)] py-[clamp(84px,8vw,126px)]">
+          <p className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-light uppercase leading-none tracking-[0.04em] text-[#8f8f8f]">
+            Testimonials
+          </p>
+          <blockquote className="mt-8 max-w-[980px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(32px,3.6vw,56px)] font-light leading-[1.04] tracking-[-0.035em]">
+            “Add a filmmaker testimonial here. Keep it concise, specific, and focused on how Audioflume improves the edit.”
+          </blockquote>
+          <div className="mt-8">
+            <div className="text-[16px] font-medium leading-[1.2]">Filmmaker name</div>
+            <div className="mt-1 text-[13px] font-light leading-[1.35] text-[#777777]">
+              Role / Studio
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="audioflume-pricing-includes-section">
         <div>
           <p className="audioflume-home-eyebrow">Built into Audioflume</p>
