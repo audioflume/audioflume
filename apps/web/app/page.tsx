@@ -144,7 +144,7 @@ export default async function Home() {
         <div className="audioflume-pricing-hero-inner">
           <PricingHeroImageFlash images={homeHeroImages} />
 
-          <p className="audioflume-pricing-hero-eyebrow">Audioflume</p>
+          <p className="audioflume-pricing-hero-eyebrow">More music, less noise</p>
 
           <div className="audioflume-pricing-hero-title-stage">
             <h1 className="audioflume-home-flash-hero-title">
