@@ -302,7 +302,7 @@ export default async function PricingPage() {
 
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-section-intro">
-          <p className="audioflume-pricing-section-eyebrow">Membership</p>
+          <p className="audioflume-pricing-section-eyebrow !text-[clamp(24px,2.6vw,36px)]">Memberships</p>
           <h2 className="audioflume-pricing-section-heading">
             Choose the coverage that fits.
           </h2>
@@ -362,7 +362,7 @@ export default async function PricingPage() {
                     <p className="audioflume-pricing-section-eyebrow mb-1">
                       Plan comparison
                     </p>
-                    <h2 className="max-w-none whitespace-nowrap font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(28px,2.5vw,36px)] font-normal leading-[0.94] tracking-[-0.035em]">
+                    <h2 className="mt-[29px] max-w-none whitespace-nowrap font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(28px,2.5vw,36px)] font-normal leading-[0.94] tracking-[-0.035em]">
                       Compare these plans.
                     </h2>
                   </th>
@@ -386,7 +386,7 @@ export default async function PricingPage() {
               </thead>
               <tbody>
                 {planComparisonRows.map((row) => (
-                  <tr key={row.label} className="border-b border-[var(--border)]">
+                  <tr key={row.label} className="border-b border-[var(--border)] last:border-b-0">
                     <th className="py-6 pr-8 text-left" scope="row">
                       <div className="audioflume-pricing-include-title">
                         {row.label}
