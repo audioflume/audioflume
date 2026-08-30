@@ -249,7 +249,7 @@ export default async function PricingPage() {
         <div className="audioflume-pricing-hero-inner">
           <PricingHeroImageFlash
             images={pricingHeroImages}
-            mediaClassName="audioflume-pricing-hero-media !top-[calc(var(--filmwave-header-height,75px)+64px)] !right-auto !bottom-auto !left-[31%] !h-[54%] !w-[40.5%] max-[980px]:!left-[29%] max-[980px]:!w-[46%] max-[760px]:!top-[calc(var(--filmwave-header-height,75px)+112px)] max-[760px]:!left-[18%] max-[760px]:!h-[42%] max-[760px]:!w-[64%]"
+            mediaClassName="audioflume-pricing-hero-media !top-[calc(var(--filmwave-header-height,75px)+clamp(26px,3vw,44px))] !right-auto !bottom-auto !left-[31%] !h-[calc(54%+64px-clamp(26px,3vw,44px))] !w-[40.5%] max-[980px]:!left-[29%] max-[980px]:!w-[46%] max-[760px]:!top-[calc(var(--filmwave-header-height,75px)+70px)] max-[760px]:!left-[18%] max-[760px]:!h-[calc(42%+42px)] max-[760px]:!w-[64%]"
           />
 
           <div
