@@ -62,7 +62,7 @@ export default function ArtistEarningsPage() {
                 key={model.number}
                 className="grid gap-6 border-b border-[var(--border)] py-8 md:grid-cols-[70px_minmax(180px,0.7fr)_minmax(0,1.3fr)] md:gap-8 md:py-10"
               >
-                <div className="grid w-[70px] self-start place-items-center bg-[color-mix(in_srgb,var(--text-primary)_10%,var(--bg-primary))] py-[4px] text-center text-[56px] font-[200] leading-none text-[var(--filmwave-white)]">
+                <div className="grid h-[70px] w-[70px] self-start place-items-center bg-[color-mix(in_srgb,var(--text-primary)_10%,var(--bg-primary))] text-center font-[family-name:var(--font-roboto-mono-filmwave)] text-[28px] font-[300] leading-none text-[var(--filmwave-white)]">
                   {model.number}
                 </div>
                 <div>
