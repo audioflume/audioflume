@@ -8,7 +8,6 @@ import Footer from "@/components/Footer";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 
-import PricingHeroImageFlash from "./PricingHeroImageFlash";
 import "./pricing-page.css";
 
 export const metadata: Metadata = {
@@ -148,21 +147,34 @@ export default async function PricingPage() {
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
+  const heroImage = pricingHeroImages[0] ?? DEFAULT_PRICING_HERO_IMAGE;
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
 
   return (
     <main className="audioflume-pricing-page-root">
       <section className="audioflume-pricing-hero">
         <div className="audioflume-pricing-hero-inner">
-          <PricingHeroImageFlash images={pricingHeroImages} />
-
           <p className="audioflume-pricing-hero-eyebrow">Plans &amp; Pricing</p>
 
-          <h1 className="audioflume-pricing-hero-title">
-            <span>One library.</span>
-            <span>Three ways</span>
-            <span>to work.</span>
-          </h1>
+          <div className="audioflume-pricing-hero-title-stage">
+            <div className="audioflume-pricing-hero-media" aria-hidden="true">
+              <Image
+                src={heroImage}
+                alt=""
+                fill
+                priority
+                sizes="(max-width: 760px) 76vw, (max-width: 980px) 67vw, (max-width: 1968px) 61vw, 1200px"
+                className="audioflume-pricing-hero-frame is-active"
+                style={{ objectFit: "cover", objectPosition: "center center" }}
+              />
+            </div>
+
+            <h1 className="audioflume-pricing-hero-title">
+              <span>One library.</span>
+              <span>Three ways</span>
+              <span>to work.</span>
+            </h1>
+          </div>
 
           <div className="audioflume-pricing-hero-bottom">
             <p className="audioflume-pricing-hero-copy">
