@@ -151,7 +151,7 @@ export default async function Home() {
           }
 
           .audioflume-home-flash-hero-copy-stage {
-            bottom: calc(200px - 11vw);
+            bottom: calc(184px - 11vw);
           }
 
           .audioflume-home-flash-hero-title {
