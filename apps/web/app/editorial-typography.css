@@ -6,16 +6,7 @@
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
   font-weight: 400;
-}
-
-.audioflume-home-intro h1,
-.audioflume-editorial-display {
   line-height: 0.98;
-}
-
-.audioflume-home-statement h2,
-.audioflume-home-playlist-feature-copy h2 {
-  line-height: 0.82;
 }
 
 .audioflume-home-intro h1,
@@ -79,6 +70,5 @@
 }
 
 .audioflume-home-statement-copy > p {
-  padding-top: 10px;
   letter-spacing: normal;
 }
