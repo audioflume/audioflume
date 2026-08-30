@@ -73,10 +73,12 @@ export default async function Home() {
 
           <p className="audioflume-pricing-hero-eyebrow">Audioflume</p>
 
-          <h1 className="audioflume-pricing-hero-title">
-            <span>More music.</span>
-            <span>Less noise.</span>
-          </h1>
+          <div className="audioflume-pricing-hero-title-stage">
+            <h1 className="audioflume-pricing-hero-title">
+              <span>More music.</span>
+              <span>Less noise.</span>
+            </h1>
+          </div>
 
           <div className="audioflume-pricing-hero-bottom">
             <p className="audioflume-pricing-hero-copy">
