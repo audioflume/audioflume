@@ -91,6 +91,29 @@ export default async function Home() {
           pointer-events: none;
         }
 
+        .audioflume-home-flash-hero-copy-stage {
+          position: absolute;
+          top: var(--filmwave-header-height, 75px);
+          right: 0;
+          bottom: calc(clamp(34px, 4vw, 58px) + 35.55px);
+          left: 0;
+          z-index: 4;
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: center;
+        }
+
+        .audioflume-home-flash-hero-copy-stage .audioflume-pricing-hero-eyebrow {
+          position: static;
+          margin: 0 0 18px;
+        }
+
+        .audioflume-home-flash-hero-copy-stage .audioflume-pricing-hero-title-stage {
+          width: 100%;
+          margin: 0;
+        }
+
         .audioflume-home-flash-hero-title {
           position: relative;
           z-index: 3;
@@ -127,6 +150,20 @@ export default async function Home() {
             width: 76%;
           }
 
+          .audioflume-home-flash-hero-copy-stage {
+            display: contents;
+          }
+
+          .audioflume-home-flash-hero-copy-stage .audioflume-pricing-hero-eyebrow {
+            position: absolute;
+            margin: 0;
+          }
+
+          .audioflume-home-flash-hero-copy-stage .audioflume-pricing-hero-title-stage {
+            width: auto;
+            margin: 92px 0 0;
+          }
+
           .audioflume-home-flash-hero-title {
             font-size: clamp(50px, 14.6vw, 82px);
             line-height: 0.84;
@@ -144,14 +181,16 @@ export default async function Home() {
         <div className="audioflume-pricing-hero-inner">
           <PricingHeroImageFlash images={homeHeroImages} />
 
-          <p className="audioflume-pricing-hero-eyebrow">More music, less noise</p>
+          <div className="audioflume-home-flash-hero-copy-stage">
+            <p className="audioflume-pricing-hero-eyebrow">More music, less noise</p>
 
-          <div className="audioflume-pricing-hero-title-stage">
-            <h1 className="audioflume-home-flash-hero-title">
-              <span>Human curated</span>
-              <span>music &amp; SFX</span>
-              <span>for film.</span>
-            </h1>
+            <div className="audioflume-pricing-hero-title-stage">
+              <h1 className="audioflume-home-flash-hero-title">
+                <span>Human curated</span>
+                <span>music &amp; SFX</span>
+                <span>for film.</span>
+              </h1>
+            </div>
           </div>
 
           <div className="audioflume-pricing-hero-bottom">
