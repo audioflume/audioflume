@@ -327,7 +327,7 @@ export default async function PricingPage() {
               <thead>
                 <tr className="border-b border-[var(--border)]">
                   <th className="w-[34%] pb-8 pr-8 text-left align-bottom" scope="col">
-                    <h2 className="audioflume-pricing-includes-heading max-w-[360px]">
+                    <h2 className="audioflume-pricing-includes-heading max-w-none whitespace-nowrap">
                       Compare these plans.
                     </h2>
                   </th>
