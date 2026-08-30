@@ -336,7 +336,7 @@
   max-width: 660px;
 }
 
-.audioflume-home-statement-copy > p {
+.audioflume-home-statement > .audioflume-home-statement-copy > p {
   margin-top: 32px;
 }
 
