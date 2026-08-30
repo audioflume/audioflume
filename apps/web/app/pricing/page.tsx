@@ -154,7 +154,7 @@ export default async function PricingPage() {
         <div className="audioflume-pricing-hero-inner">
           <PricingHeroImageFlash images={pricingHeroImages} />
 
-          <p className="audioflume-pricing-hero-eyebrow">Pricing</p>
+          <p className="audioflume-pricing-hero-eyebrow">Plans &amp; Pricing</p>
 
           <h1 className="audioflume-pricing-hero-title">
             <span>One library.</span>
