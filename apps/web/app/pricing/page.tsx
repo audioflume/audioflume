@@ -106,7 +106,7 @@ const plans = [
     name: "Enterprise",
     kicker: "Larger teams",
     price: "Custom",
-    priceDetail: "Built around usage",
+    priceDetail: "",
     description:
       "For agencies, publishers, and teams with higher-volume licensing needs.",
     features: [
@@ -197,7 +197,7 @@ export default async function PricingPage() {
 
                 <div className="audioflume-pricing-plan-price">
                   <strong>{plan.price}</strong>
-                  <span>{plan.priceDetail}</span>
+                  {plan.priceDetail ? <span>{plan.priceDetail}</span> : null}
                 </div>
 
                 <div className="audioflume-pricing-plan-action-row">
