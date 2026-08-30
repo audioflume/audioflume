@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 
 const licensingModels = [
   {
-    number: "01",
+    number: "SU",
     title: "Subscription licensing",
     label: "Catalogue Access",
     description:
@@ -20,7 +20,7 @@ const licensingModels = [
     note: "Your artist agreement is the source of truth for catalogue participation.",
   },
   {
-    number: "02",
+    number: "PR",
     title: "Premium licensing",
     label: "Direct Licensing",
     description:
@@ -28,7 +28,7 @@ const licensingModels = [
     note: "Non-standard commercial terms are agreed before the license proceeds.",
   },
   {
-    number: "03",
+    number: "BE",
     title: "Bespoke commissions",
     label: "Custom Work",
     description:
