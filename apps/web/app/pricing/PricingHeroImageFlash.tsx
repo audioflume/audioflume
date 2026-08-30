@@ -67,7 +67,7 @@ export default function PricingHeroImageFlash({
   }
 
   return (
-    <div className="audioflume-pricing-hero-media" aria-hidden="true">
+    <div className="audioflume-home-flash-hero-media" aria-hidden="true">
       {images.map((src, index) => (
         <Image
           key={src}
