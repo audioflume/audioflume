@@ -15,46 +15,28 @@ export default function PricingHeroImageFlash({
   mediaClassName = "audioflume-home-flash-hero-media",
 }: PricingHeroImageFlashProps) {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [loadFullSequence, setLoadFullSequence] = useState(false);
   const [settledSources, setSettledSources] = useState<Set<string>>(
-    () => new Set(),
-  );
-  const [loadedSources, setLoadedSources] = useState<Set<string>>(
     () => new Set(),
   );
   const [failedSources, setFailedSources] = useState<Set<string>>(
     () => new Set(),
   );
 
-  const firstSource = images[0] ?? null;
-  const readyImages = useMemo(
-    () =>
-      images.filter(
-        (src) => loadedSources.has(src) && !failedSources.has(src),
-      ),
-    [failedSources, images, loadedSources],
+  const usableImages = useMemo(
+    () => images.filter((src) => !failedSources.has(src)),
+    [failedSources, images],
   );
-  const firstSourceSettled = firstSource
-    ? settledSources.has(firstSource)
-    : true;
-  const activeSource = readyImages[activeIndex] ?? readyImages[0] ?? firstSource;
-  const renderedImages = loadFullSequence ? images : images.slice(0, 1);
+  const allImagesSettled = images.every((src) => settledSources.has(src));
+  const activeSource = usableImages[activeIndex] ?? usableImages[0] ?? null;
 
   useEffect(() => {
     setActiveIndex(0);
-    setLoadFullSequence(false);
     setSettledSources(new Set());
-    setLoadedSources(new Set());
     setFailedSources(new Set());
   }, [images]);
 
   useEffect(() => {
-    if (!firstSourceSettled || images.length <= 1) return;
-    setLoadFullSequence(true);
-  }, [firstSourceSettled, images.length]);
-
-  useEffect(() => {
-    if (readyImages.length <= 1) return;
+    if (!allImagesSettled || usableImages.length <= 1) return;
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -62,16 +44,11 @@ export default function PricingHeroImageFlash({
     if (prefersReducedMotion) return;
 
     const interval = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % readyImages.length);
+      setActiveIndex((current) => (current + 1) % usableImages.length);
     }, FLASH_INTERVAL_MS);
 
     return () => window.clearInterval(interval);
-  }, [readyImages.length]);
-
-  useEffect(() => {
-    if (activeIndex < readyImages.length) return;
-    setActiveIndex(0);
-  }, [activeIndex, readyImages.length]);
+  }, [allImagesSettled, usableImages.length]);
 
   function markSettled(src: string) {
     setSettledSources((current) => {
@@ -82,16 +59,6 @@ export default function PricingHeroImageFlash({
     });
   }
 
-  function markLoaded(src: string) {
-    setLoadedSources((current) => {
-      if (current.has(src)) return current;
-      const next = new Set(current);
-      next.add(src);
-      return next;
-    });
-    markSettled(src);
-  }
-
   function markFailed(src: string) {
     setFailedSources((current) => {
       if (current.has(src)) return current;
@@ -99,12 +66,11 @@ export default function PricingHeroImageFlash({
       next.add(src);
       return next;
     });
-    markSettled(src);
   }
 
   return (
     <div className={mediaClassName} aria-hidden="true">
-      {renderedImages.map((src, index) => (
+      {images.map((src, index) => (
         <Image
           key={src}
           src={src}
@@ -113,8 +79,11 @@ export default function PricingHeroImageFlash({
           sizes="(max-width: 760px) 76vw, (max-width: 980px) 67vw, (max-width: 1968px) 61vw, 1200px"
           priority={index === 0}
           loading={index === 0 ? undefined : "eager"}
-          onLoad={() => markLoaded(src)}
-          onError={() => markFailed(src)}
+          onLoad={() => markSettled(src)}
+          onError={() => {
+            markFailed(src);
+            markSettled(src);
+          }}
           className={`audioflume-pricing-hero-frame${
             src === activeSource ? " is-active" : ""
           }`}
