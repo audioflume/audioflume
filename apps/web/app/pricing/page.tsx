@@ -358,7 +358,7 @@ export default async function PricingPage() {
             <table className="w-full min-w-[820px] border-collapse">
               <thead>
                 <tr className="border-b border-[var(--border)]">
-                  <th className="w-[34%] pb-8 pr-8 text-left align-bottom" scope="col">
+                  <th className="w-[34%] pb-8 pr-8 text-left align-top" scope="col">
                     <p className="audioflume-pricing-section-eyebrow mb-1">
                       Plan comparison
                     </p>
@@ -366,10 +366,10 @@ export default async function PricingPage() {
                       Compare these plans.
                     </h2>
                   </th>
-                  {plans.map((plan) => (
+                  {plans.map((plan, index) => (
                     <th
                       key={plan.name}
-                      className="w-[22%] px-5 pb-8 text-center align-bottom"
+                      className={`w-[22%] px-5 pb-8 text-center align-top${index > 0 ? " border-l border-[var(--border)]" : ""}`}
                       scope="col"
                     >
                       <p className="audioflume-pricing-plan-name">{plan.name}</p>
@@ -395,10 +395,10 @@ export default async function PricingPage() {
                     <td className="px-5 py-6 text-center">
                       <PlanStatus included={row.starter} />
                     </td>
-                    <td className="px-5 py-6 text-center">
+                    <td className="border-l border-[var(--border)] px-5 py-6 text-center">
                       <PlanStatus included={row.studio} />
                     </td>
-                    <td className="px-5 py-6 text-center">
+                    <td className="border-l border-[var(--border)] px-5 py-6 text-center">
                       <PlanStatus included={row.enterprise} />
                     </td>
                   </tr>
