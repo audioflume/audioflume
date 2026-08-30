@@ -428,7 +428,7 @@
   line-height: 0.84;
   text-transform: uppercase;
   mix-blend-mode: difference;
-  transform: translateY(6px);
+  transform: translateY(5px);
 }
 
 .audioflume-pricing-enterprise-copy {
