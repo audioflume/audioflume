@@ -1,6 +1,7 @@
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
@@ -147,6 +148,7 @@ export default async function PricingPage() {
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
+  const membershipImage = pricingHeroImages[1] ?? pricingHeroImages[0];
 
   return (
     <main className="audioflume-pricing-page-root">
@@ -175,10 +177,29 @@ export default async function PricingPage() {
 
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-section-intro">
-          <p className="audioflume-pricing-section-eyebrow">Membership</p>
-          <h2 className="audioflume-pricing-section-heading">
-            Choose the coverage that fits.
-          </h2>
+          <div className="audioflume-pricing-section-intro-meta">
+            <p className="audioflume-pricing-section-eyebrow">Membership</p>
+            <p className="audioflume-pricing-section-intro-count">03 plan options</p>
+          </div>
+
+          <div className="audioflume-pricing-section-intro-media">
+            <Image
+              src={membershipImage}
+              alt=""
+              fill
+              sizes="(max-width: 760px) 100vw, 30vw"
+              className="audioflume-pricing-section-intro-image"
+            />
+          </div>
+
+          <div className="audioflume-pricing-section-intro-copy">
+            <h2 className="audioflume-pricing-section-heading">
+              Choose the coverage that fits.
+            </h2>
+            <p>
+              From one-person edits to larger creative teams, the catalogue stays the same. The plan simply scales with how much work you need to cover.
+            </p>
+          </div>
         </div>
 
         <div className="audioflume-pricing-plan-grid">
