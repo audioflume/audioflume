@@ -185,7 +185,7 @@
   max-width: 760px;
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(26px, 2.2vw, 30px);
+  font-size: clamp(42px, 5vw, 72px);
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.9;
@@ -222,7 +222,7 @@
 .audioflume-pricing-plan-name {
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 34px;
+  font-size: clamp(26px, 2.2vw, 30px);
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.95;
