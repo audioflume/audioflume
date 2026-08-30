@@ -356,6 +356,7 @@ export default function ArtistApplicationForm() {
 
     if (
       !form.name.trim() ||
+      !form.designation.trim() ||
       !form.intro_text.trim() ||
       !form.bio.trim() ||
       form.intro_text.length > INTRO_CHARACTER_LIMIT ||
@@ -535,7 +536,8 @@ export default function ArtistApplicationForm() {
 
   const stepOneComplete = Boolean(form.name.trim());
   const stepTwoComplete = Boolean(
-    form.intro_text.trim() &&
+    form.designation.trim() &&
+      form.intro_text.trim() &&
       form.bio.trim() &&
       form.intro_text.length <= INTRO_CHARACTER_LIMIT &&
       form.bio.length <= DESCRIPTION_CHARACTER_LIMIT,
@@ -671,13 +673,17 @@ export default function ArtistApplicationForm() {
                       intro_text: event.target.value,
                     }))
                   }
-                  className="filmwave-backend-textarea h-10 resize-none overflow-y-auto py-[9px]"
+                  className="filmwave-backend-textarea h-10 overflow-y-auto py-[9px]"
+                  style={{ resize: "none" }}
                 />
               </label>
 
               <div className="grid gap-1.5">
                 <span className="flex items-baseline justify-between gap-4 text-[12px]">
-                  <span>Designation</span>
+                  <span className="flex items-baseline gap-1.5">
+                    <span>Designation</span>
+                    <RequiredMark />
+                  </span>
                   <span className="text-[10px] font-normal text-[var(--text-muted)]">
                     {selectedDesignations.length} / {MAX_DESIGNATIONS}
                   </span>
@@ -768,6 +774,7 @@ export default function ArtistApplicationForm() {
                     setForm((current) => ({ ...current, bio: event.target.value }))
                   }
                   className="filmwave-backend-textarea"
+                  style={{ resize: "none" }}
                 />
               </label>
             </div>
