@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-const FLASH_INTERVAL_MS = 180;
+const FLASH_INTERVAL_MS = 140;
 
 type PricingHeroImageFlashProps = {
   images: string[];
