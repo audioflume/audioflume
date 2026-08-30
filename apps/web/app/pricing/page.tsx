@@ -118,6 +118,45 @@ const plans = [
   },
 ] as const;
 
+const planComparisonRows = [
+  {
+    label: "Price",
+    starter: "$15 CAD / month",
+    studio: "$39 CAD / month",
+    enterprise: "Custom",
+  },
+  {
+    label: "Built for",
+    starter: "Solo creators",
+    studio: "Active filmmakers + small teams",
+    enterprise: "Agencies + larger teams",
+  },
+  {
+    label: "Music + SFX",
+    starter: "Full catalogue",
+    studio: "Full catalogue",
+    enterprise: "Larger-team access",
+  },
+  {
+    label: "Licensing",
+    starter: "Royalty-free commercial use",
+    studio: "Royalty-free commercial use",
+    enterprise: "Custom usage terms",
+  },
+  {
+    label: "Coverage",
+    starter: "Smaller project library",
+    studio: "More project coverage",
+    enterprise: "Higher-volume licensing",
+  },
+  {
+    label: "Direct support",
+    starter: "—",
+    studio: "—",
+    enterprise: "Included for complex projects",
+  },
+] as const;
+
 const includedFeatures = [
   {
     number: "01",
@@ -229,6 +268,56 @@ export default async function PricingPage() {
               </article>
             );
           })}
+        </div>
+
+        <div className="mt-[clamp(72px,7vw,108px)]">
+          <div className="mb-[clamp(34px,4vw,52px)] grid grid-cols-[minmax(180px,0.7fr)_minmax(0,1.3fr)] items-end gap-[clamp(48px,8vw,128px)] max-[760px]:grid-cols-1 max-[760px]:gap-5">
+            <p className="audioflume-pricing-section-eyebrow">Plan comparison</p>
+            <h2 className="audioflume-pricing-includes-heading">
+              Compare these plans.
+            </h2>
+          </div>
+
+          <div className="overflow-x-auto border-t border-[var(--border)]">
+            <table className="w-full min-w-[760px] border-collapse">
+              <thead>
+                <tr className="border-b border-[var(--border)]">
+                  <th className="w-[28%] py-5 pr-6 text-left" scope="col">
+                    <span className="audioflume-pricing-section-eyebrow">Coverage</span>
+                  </th>
+                  <th className="w-[24%] px-6 py-5 text-left" scope="col">
+                    <span className="audioflume-pricing-section-eyebrow">Starter</span>
+                  </th>
+                  <th className="w-[24%] px-6 py-5 text-left" scope="col">
+                    <span className="audioflume-pricing-section-eyebrow">Studio</span>
+                  </th>
+                  <th className="w-[24%] py-5 pl-6 text-left" scope="col">
+                    <span className="audioflume-pricing-section-eyebrow">Enterprise</span>
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {planComparisonRows.map((row) => (
+                  <tr key={row.label} className="border-b border-[var(--border)]">
+                    <th className="py-5 pr-6 text-left align-top" scope="row">
+                      <div className="audioflume-pricing-include-title">
+                        {row.label}
+                      </div>
+                    </th>
+                    <td className="px-6 py-5 align-top">
+                      <p className="audioflume-pricing-include-copy">{row.starter}</p>
+                    </td>
+                    <td className="px-6 py-5 align-top">
+                      <p className="audioflume-pricing-include-copy">{row.studio}</p>
+                    </td>
+                    <td className="py-5 pl-6 align-top">
+                      <p className="audioflume-pricing-include-copy">{row.enterprise}</p>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </section>
 
