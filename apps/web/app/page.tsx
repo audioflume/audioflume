@@ -91,9 +91,33 @@ export default async function Home() {
           pointer-events: none;
         }
 
+        .audioflume-home-flash-hero-title {
+          position: relative;
+          z-index: 3;
+          width: 92%;
+          margin: 0;
+          color: var(--filmwave-white);
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: clamp(62px, 8.4vw, 145px);
+          font-weight: 400;
+          letter-spacing: -0.055em;
+          line-height: 0.82;
+          text-transform: uppercase;
+          mix-blend-mode: difference;
+        }
+
+        .audioflume-home-flash-hero-title span {
+          display: block;
+        }
+
         @media (max-width: 980px) {
           .audioflume-home-flash-hero-media {
             width: 67%;
+          }
+
+          .audioflume-home-flash-hero-title {
+            width: 98%;
+            font-size: clamp(60px, 10vw, 102px);
           }
         }
 
@@ -101,6 +125,11 @@ export default async function Home() {
           .audioflume-home-flash-hero-media {
             top: calc(var(--filmwave-header-height, 75px) + 70px);
             width: 76%;
+          }
+
+          .audioflume-home-flash-hero-title {
+            font-size: clamp(50px, 14.6vw, 82px);
+            line-height: 0.84;
           }
         }
 
@@ -118,7 +147,7 @@ export default async function Home() {
           <p className="audioflume-pricing-hero-eyebrow">Audioflume</p>
 
           <div className="audioflume-pricing-hero-title-stage">
-            <h1 className="audioflume-pricing-hero-title">
+            <h1 className="audioflume-home-flash-hero-title">
               <span>Human curated</span>
               <span>music &amp; SFX</span>
               <span>for film.</span>
