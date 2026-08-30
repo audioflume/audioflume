@@ -9,7 +9,6 @@ import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 
 import PricingHeroAccentImage from "./PricingHeroAccentImage";
-import PricingHeroImageFlash from "./PricingHeroImageFlash";
 import "./pricing-page.css";
 
 export const metadata: Metadata = {
@@ -237,16 +236,27 @@ export default async function PricingPage() {
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
+  const pricingHeroStaticImage = pricingHeroImages[3] ?? pricingHeroImages[0];
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
 
   return (
     <main className="audioflume-pricing-page-root">
       <section className="audioflume-pricing-hero">
         <div className="audioflume-pricing-hero-inner">
-          <PricingHeroImageFlash
-            images={pricingHeroImages}
-            mediaClassName="audioflume-pricing-hero-media !top-[calc(var(--filmwave-header-height,75px)+clamp(26px,3vw,44px))] !right-auto !bottom-0 !left-[31%] !h-auto !w-[40.5%] max-[980px]:!left-[29%] max-[980px]:!w-[46%] max-[760px]:!top-[calc(var(--filmwave-header-height,75px)+70px)] max-[760px]:!left-[18%] max-[760px]:!w-[64%]"
-          />
+          <div
+            className="audioflume-pricing-hero-media !top-[calc(var(--filmwave-header-height,75px)+clamp(26px,3vw,44px))] !right-auto !bottom-0 !left-[31%] !h-auto !w-[40.5%] max-[980px]:!left-[29%] max-[980px]:!w-[46%] max-[760px]:!top-[calc(var(--filmwave-header-height,75px)+70px)] max-[760px]:!left-[18%] max-[760px]:!w-[64%]"
+            aria-hidden="true"
+          >
+            <Image
+              src={pricingHeroStaticImage}
+              alt=""
+              fill
+              sizes="(max-width: 760px) 76vw, (max-width: 980px) 67vw, (max-width: 1968px) 61vw, 1200px"
+              priority
+              className="audioflume-pricing-hero-frame is-active"
+              style={{ objectFit: "cover", objectPosition: "center center" }}
+            />
+          </div>
 
           <div
             className="absolute left-[79%] top-[21.5%] z-[2] h-[23.5%] w-[15%] overflow-hidden max-[760px]:hidden"
@@ -264,7 +274,7 @@ export default async function PricingPage() {
           >
             <PricingHeroAccentImage
               images={pricingHeroImages}
-              startIndex={3}
+              startIndex={4}
               sizes="7vw"
             />
           </div>
