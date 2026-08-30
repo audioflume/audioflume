@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 
 const FLASH_INTERVAL_MS = 220;
@@ -32,12 +33,17 @@ export default function PricingHeroImageFlash({
   return (
     <div className="audioflume-pricing-hero-media" aria-hidden="true">
       {images.map((src, index) => (
-        <div
+        <Image
           key={src}
+          src={src}
+          alt=""
+          fill
+          sizes="(max-width: 760px) 76vw, (max-width: 980px) 67vw, (max-width: 1968px) 61vw, 1200px"
+          priority={index === 0}
           className={`audioflume-pricing-hero-frame${
             index === activeIndex ? " is-active" : ""
           }`}
-          style={{ backgroundImage: `url("${src}")` }}
+          style={{ objectFit: "cover", objectPosition: "center center" }}
         />
       ))}
     </div>
