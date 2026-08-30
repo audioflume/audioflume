@@ -120,40 +120,58 @@ const plans = [
 
 const planComparisonRows = [
   {
-    label: "Price",
-    starter: "$15 CAD / month",
-    studio: "$39 CAD / month",
-    enterprise: "Custom",
+    label: "Full music catalogue",
+    starter: true,
+    studio: true,
+    enterprise: true,
   },
   {
-    label: "Built for",
-    starter: "Solo creators",
-    studio: "Active filmmakers + small teams",
-    enterprise: "Agencies + larger teams",
+    label: "Full SFX catalogue",
+    starter: true,
+    studio: true,
+    enterprise: true,
   },
   {
-    label: "Music + SFX",
-    starter: "Full catalogue",
-    studio: "Full catalogue",
-    enterprise: "Larger-team access",
+    label: "Royalty-free commercial use",
+    starter: true,
+    studio: true,
+    enterprise: true,
   },
   {
-    label: "Licensing",
-    starter: "Royalty-free commercial use",
-    studio: "Royalty-free commercial use",
-    enterprise: "Custom usage terms",
+    label: "Projects, playlists + favorites",
+    starter: true,
+    studio: true,
+    enterprise: true,
   },
   {
-    label: "Coverage",
-    starter: "Smaller project library",
-    studio: "More project coverage",
-    enterprise: "Higher-volume licensing",
+    label: "Desktop sync workflow",
+    starter: true,
+    studio: true,
+    enterprise: true,
   },
   {
-    label: "Direct support",
-    starter: "—",
-    studio: "—",
-    enterprise: "Included for complex projects",
+    label: "Expanded project coverage",
+    starter: false,
+    studio: true,
+    enterprise: true,
+  },
+  {
+    label: "Higher-volume licensing",
+    starter: false,
+    studio: false,
+    enterprise: true,
+  },
+  {
+    label: "Custom usage terms",
+    starter: false,
+    studio: false,
+    enterprise: true,
+  },
+  {
+    label: "Direct support for complex projects",
+    starter: false,
+    studio: false,
+    enterprise: true,
   },
 ] as const;
 
@@ -179,6 +197,37 @@ const includedFeatures = [
     copy: "Keep selected audio close to the edit with Audioflume's connected desktop workflow and local project organization.",
   },
 ] as const;
+
+function PlanStatus({ included }: { included: boolean }) {
+  return (
+    <span
+      className="inline-flex items-center justify-center"
+      style={{
+        color: included
+          ? "var(--text-primary)"
+          : "color-mix(in srgb, var(--text-primary) 22%, transparent)",
+      }}
+      aria-label={included ? "Included" : "Not included"}
+    >
+      <svg
+        width="20"
+        height="20"
+        viewBox="0 0 20 20"
+        fill="none"
+        aria-hidden="true"
+      >
+        <circle cx="10" cy="10" r="7.25" stroke="currentColor" strokeWidth="1.5" />
+        <path
+          d="M6.8 10.1 9 12.3l4.4-4.6"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    </span>
+  );
+}
 
 export default async function PricingPage() {
   const [{ userId }, pricingHeroImages] = await Promise.all([
@@ -271,47 +320,51 @@ export default async function PricingPage() {
         </div>
 
         <div className="mt-[clamp(72px,7vw,108px)]">
-          <div className="mb-[clamp(34px,4vw,52px)] grid grid-cols-[minmax(180px,0.7fr)_minmax(0,1.3fr)] items-end gap-[clamp(48px,8vw,128px)] max-[760px]:grid-cols-1 max-[760px]:gap-5">
-            <p className="audioflume-pricing-section-eyebrow">Plan comparison</p>
-            <h2 className="audioflume-pricing-includes-heading">
-              Compare these plans.
-            </h2>
-          </div>
+          <p className="audioflume-pricing-section-eyebrow mb-6">Plan comparison</p>
 
-          <div className="overflow-x-auto border-t border-[var(--border)]">
-            <table className="w-full min-w-[760px] border-collapse">
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[820px] border-collapse">
               <thead>
                 <tr className="border-b border-[var(--border)]">
-                  <th className="w-[28%] py-5 pr-6 text-left" scope="col">
-                    <span className="audioflume-pricing-section-eyebrow">Coverage</span>
+                  <th className="w-[34%] pb-8 pr-8 text-left align-bottom" scope="col">
+                    <h2 className="audioflume-pricing-includes-heading max-w-[360px]">
+                      Compare these plans.
+                    </h2>
                   </th>
-                  <th className="w-[24%] px-6 py-5 text-left" scope="col">
-                    <span className="audioflume-pricing-section-eyebrow">Starter</span>
-                  </th>
-                  <th className="w-[24%] px-6 py-5 text-left" scope="col">
-                    <span className="audioflume-pricing-section-eyebrow">Studio</span>
-                  </th>
-                  <th className="w-[24%] py-5 pl-6 text-left" scope="col">
-                    <span className="audioflume-pricing-section-eyebrow">Enterprise</span>
-                  </th>
+                  {plans.map((plan) => (
+                    <th
+                      key={plan.name}
+                      className="w-[22%] px-5 pb-8 text-center align-bottom"
+                      scope="col"
+                    >
+                      <p className="audioflume-pricing-plan-name">{plan.name}</p>
+                      <div className="mt-3 audioflume-pricing-include-title">
+                        {plan.price}
+                        {plan.priceDetail ? ` ${plan.priceDetail}` : ""}
+                      </div>
+                      <p className="audioflume-pricing-include-copy mx-auto mt-2 max-w-[190px]">
+                        {plan.kicker}
+                      </p>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
                 {planComparisonRows.map((row) => (
                   <tr key={row.label} className="border-b border-[var(--border)]">
-                    <th className="py-5 pr-6 text-left align-top" scope="row">
+                    <th className="py-6 pr-8 text-left" scope="row">
                       <div className="audioflume-pricing-include-title">
                         {row.label}
                       </div>
                     </th>
-                    <td className="px-6 py-5 align-top">
-                      <p className="audioflume-pricing-include-copy">{row.starter}</p>
+                    <td className="px-5 py-6 text-center">
+                      <PlanStatus included={row.starter} />
                     </td>
-                    <td className="px-6 py-5 align-top">
-                      <p className="audioflume-pricing-include-copy">{row.studio}</p>
+                    <td className="px-5 py-6 text-center">
+                      <PlanStatus included={row.studio} />
                     </td>
-                    <td className="py-5 pl-6 align-top">
-                      <p className="audioflume-pricing-include-copy">{row.enterprise}</p>
+                    <td className="px-5 py-6 text-center">
+                      <PlanStatus included={row.enterprise} />
                     </td>
                   </tr>
                 ))}
