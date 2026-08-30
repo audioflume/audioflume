@@ -222,10 +222,11 @@
 .audioflume-pricing-plan-name {
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(30px, 2.8vw, 42px);
+  font-size: 34px;
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.95;
+  text-transform: uppercase;
 }
 
 .audioflume-pricing-plan-description {
