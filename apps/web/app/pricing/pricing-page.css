@@ -116,6 +116,7 @@
   line-height: 1.35;
   text-align: left;
   text-transform: uppercase;
+  transform: translateY(-18px);
 }
 
 .audioflume-pricing-plans-section,
@@ -447,6 +448,7 @@
     grid-row: 1;
     grid-column: 1;
     width: 80%;
+    transform: none;
   }
 
   .audioflume-pricing-section-intro,
