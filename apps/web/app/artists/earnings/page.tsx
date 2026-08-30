@@ -47,7 +47,7 @@ export default function ArtistEarningsPage() {
               <div className="mb-[18px] text-[14.5px] font-[300] uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
                 Artist earnings
               </div>
-              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(42px,5vw,60px)] font-normal leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]">
+              <h1 className="font-[family-name:var(--font-aktiv-grotesk)] text-[48px] font-normal uppercase leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]">
                 More than one way to earn.
               </h1>
             </div>
