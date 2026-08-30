@@ -423,7 +423,12 @@ export default function CuratedPlaylistsPage() {
               <h1
                 id="curated-page-heading"
                 className="audioflume-editorial-display"
-                style={{ fontSize: "42px", maxWidth: "520px", letterSpacing: "-0.035em" }}
+                style={{
+                  fontSize: "42px",
+                  maxWidth: "520px",
+                  letterSpacing: "-0.035em",
+                  textTransform: "uppercase",
+                }}
               >
                 Human Curated Playlists Made by Real Filmmakers.
               </h1>
