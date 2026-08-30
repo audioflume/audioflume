@@ -105,7 +105,7 @@ export default async function PricingPage() {
               Straightforward access to Audioflume&apos;s curated music and SFX catalogue, with plans for solo filmmakers, active studios, and larger creative teams.
             </p>
             <p className="audioflume-pricing-hero-note">
-              Monthly plans from $15 CAD.
+              Pricing that scales with the work.
             </p>
           </div>
         </div>
