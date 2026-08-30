@@ -27,9 +27,17 @@
   padding-bottom: clamp(42px, 5vw, 70px);
 }
 
+.audioflume-pricing-hero-title-stage {
+  position: relative;
+  margin: clamp(82px, 9vw, 132px) 0 0;
+}
+
 .audioflume-pricing-hero-media {
   position: absolute;
-  top: calc(var(--filmwave-header-height, 75px) + clamp(26px, 3vw, 44px));
+  top: calc(
+    clamp(26px, 3vw, 44px) - clamp(38px, 4vw, 60px) -
+      clamp(82px, 9vw, 132px)
+  );
   right: 0;
   bottom: 0;
   z-index: 1;
@@ -85,7 +93,7 @@
   position: relative;
   z-index: 3;
   width: 92%;
-  margin: clamp(82px, 9vw, 132px) 0 0;
+  margin: 0;
   color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(62px, 8.4vw, 145px);
@@ -464,6 +472,12 @@
     padding-bottom: 0;
   }
 
+  body:has(.filmwave-music-player) .audioflume-pricing-hero-media {
+    top: calc(
+      clamp(26px, 3vw, 44px) - clamp(82px, 9vw, 132px)
+    );
+  }
+
   body:has(.filmwave-music-player) .audioflume-pricing-hero-eyebrow {
     top: calc(
       var(--filmwave-header-height, 75px) +
@@ -505,8 +519,12 @@
 }
 
 @media (max-width: 760px) {
+  .audioflume-pricing-hero-title-stage {
+    margin-top: 92px;
+  }
+
   .audioflume-pricing-hero-media {
-    top: calc(var(--filmwave-header-height, 75px) + 70px);
+    top: calc(70px - clamp(38px, 4vw, 60px) - 92px);
     width: 76%;
   }
 
@@ -518,7 +536,6 @@
   }
 
   .audioflume-pricing-hero-title {
-    margin-top: 92px;
     font-size: clamp(50px, 14.6vw, 82px);
     line-height: 0.84;
   }
