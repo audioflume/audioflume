@@ -732,7 +732,7 @@ export default function ArtistApplicationForm() {
                   </div>
 
                   {designationDropdownOpen && availableDesignations.length > 0 ? (
-                    <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
+                    <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-[120px] overflow-y-auto overscroll-contain rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
                       {availableDesignations.map((option) => (
                         <button
                           key={option}
