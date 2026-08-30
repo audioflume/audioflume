@@ -420,7 +420,7 @@ export default async function PricingPage() {
             <p className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-light uppercase leading-none tracking-[0.04em] text-[#8f8f8f]">
               Testimonials
             </p>
-            <blockquote className="mt-7 max-w-none font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(20px,1.7vw,24px)] font-light leading-[1.08] tracking-[-0.035em]">
+            <blockquote className="mt-7 max-w-none font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(16px,1.45vw,20px)] font-light leading-[1.35] tracking-normal">
               “Add a longer filmmaker testimonial here that speaks to the quality of the music, the speed of finding the right track, and how Audioflume helps keep the editing process focused, creative, and moving without unnecessary friction.”
             </blockquote>
             <div className="mt-7">
