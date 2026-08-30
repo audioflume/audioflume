@@ -67,6 +67,50 @@ export default async function Home() {
 
   return (
     <>
+      <style>{`
+        .audioflume-home-flash-hero-media {
+          position: absolute;
+          top: calc(var(--filmwave-header-height, 75px) + clamp(26px, 3vw, 44px));
+          right: 0;
+          bottom: 0;
+          z-index: 1;
+          width: 61%;
+          overflow: hidden;
+        }
+
+        .audioflume-home-flash-hero-media::after {
+          position: absolute;
+          inset: 0;
+          z-index: 2;
+          background: linear-gradient(
+            180deg,
+            rgba(17, 17, 17, 0.03),
+            rgba(17, 17, 17, 0.12)
+          );
+          content: "";
+          pointer-events: none;
+        }
+
+        @media (max-width: 980px) {
+          .audioflume-home-flash-hero-media {
+            width: 67%;
+          }
+        }
+
+        @media (max-width: 760px) {
+          .audioflume-home-flash-hero-media {
+            top: calc(var(--filmwave-header-height, 75px) + 70px);
+            width: 76%;
+          }
+        }
+
+        @media (max-width: 520px) {
+          .audioflume-home-flash-hero-media {
+            width: 82%;
+          }
+        }
+      `}</style>
+
       <section className="audioflume-pricing-hero">
         <div className="audioflume-pricing-hero-inner">
           <PricingHeroImageFlash images={homeHeroImages} />
