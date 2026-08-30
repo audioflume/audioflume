@@ -428,7 +428,6 @@ export default function CuratedPlaylistsPage() {
                   maxWidth: "520px",
                   letterSpacing: "-0.035em",
                   lineHeight: "0.82",
-                  textTransform: "uppercase",
                 }}
               >
                 Human Curated Playlists Made by Real Filmmakers.
