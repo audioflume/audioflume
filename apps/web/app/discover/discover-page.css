@@ -129,7 +129,8 @@
   font-size: clamp(66px, 6.8vw, 98px);
   font-weight: 400;
   letter-spacing: -0.035em;
-  line-height: 0.96;
+  line-height: 0.82;
+  text-transform: uppercase;
   transform: translateX(-7px);
 }
 
@@ -373,7 +374,8 @@
   font-size: clamp(29px, 2.65vw, 44px);
   font-weight: 400;
   letter-spacing: -0.035em;
-  line-height: 0.98;
+  line-height: 0.82;
+  text-transform: uppercase;
 }
 
 .discover-artist-feature-overlay p,
