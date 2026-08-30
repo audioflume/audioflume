@@ -285,7 +285,9 @@ export default async function PricingPage() {
 
           <h1 className="audioflume-pricing-hero-title !absolute !top-[38%] !left-0 !m-0 !w-[48%] !text-[clamp(60px,5.9vw,96px)] max-[980px]:!w-[54%] max-[980px]:!text-[clamp(56px,7.2vw,78px)] max-[760px]:!top-[34%] max-[760px]:!w-[86%] max-[760px]:!text-[clamp(50px,13vw,74px)]">
             <span>One library.</span>
-            <span>Three (3) ways</span>
+            <span>
+              Three <span style={{ display: "inline", fontWeight: 100 }}>(3)</span> ways
+            </span>
             <span>to work.</span>
           </h1>
 
@@ -301,13 +303,6 @@ export default async function PricingPage() {
       </section>
 
       <section className="audioflume-pricing-plans-section">
-        <div className="audioflume-pricing-section-intro">
-          <p className="audioflume-pricing-section-eyebrow !text-[clamp(24px,2.6vw,36px)]">Memberships</p>
-          <h2 className="audioflume-pricing-section-heading">
-            Choose the coverage that fits.
-          </h2>
-        </div>
-
         <div className="audioflume-pricing-plan-grid">
           {plans.map((plan) => {
             const isEnterprise = plan.name === "Enterprise";
