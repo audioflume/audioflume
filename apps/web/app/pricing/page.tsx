@@ -1,10 +1,13 @@
+import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { auth } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
+import { r2Client } from "@/lib/r2";
 
+import PricingHeroImageFlash from "./PricingHeroImageFlash";
 import "./pricing-page.css";
 
 export const metadata: Metadata = {
@@ -12,6 +15,62 @@ export const metadata: Metadata = {
   description:
     "Audioflume membership pricing for solo filmmakers, active studios, and larger creative teams.",
 };
+
+const DEFAULT_PRICING_HERO_IMAGE =
+  "https://images.filmwave.io/images/home/kyle-loftus-FtQE89f3EXA-unsplash.jpg";
+const PRICING_IMAGE_EXTENSIONS = /\.(avif|jpe?g|png|webp)$/i;
+
+async function listPricingImagesForPrefix(bucket: string, prefix: string) {
+  const result = await r2Client.send(
+    new ListObjectsV2Command({
+      Bucket: bucket,
+      Prefix: prefix,
+    }),
+  );
+
+  return (result.Contents ?? [])
+    .map((object) => object.Key)
+    .filter(
+      (key): key is string =>
+        Boolean(key) && PRICING_IMAGE_EXTENSIONS.test(key as string),
+    );
+}
+
+async function getPricingHeroImages() {
+  const bucket =
+    process.env.CLOUDFLARE_R2_IMAGES_BUCKET_NAME ||
+    process.env.CLOUDFLARE_R2_BUCKET_NAME ||
+    "";
+  const publicBaseUrl = (
+    process.env.CLOUDFLARE_R2_IMAGES_PUBLIC_URL ||
+    process.env.CLOUDFLARE_R2_PUBLIC_URL ||
+    ""
+  ).replace(/\/$/, "");
+
+  if (!bucket || !publicBaseUrl) return [DEFAULT_PRICING_HERO_IMAGE];
+
+  try {
+    let keys = await listPricingImagesForPrefix(bucket, "images/pricing/");
+    if (keys.length === 0) {
+      keys = await listPricingImagesForPrefix(bucket, "pricing/");
+    }
+
+    if (keys.length === 0) return [DEFAULT_PRICING_HERO_IMAGE];
+
+    return keys
+      .sort((a, b) => a.localeCompare(b))
+      .map(
+        (key) =>
+          `${publicBaseUrl}/${key
+            .split("/")
+            .map((segment) => encodeURIComponent(segment))
+            .join("/")}`,
+      );
+  } catch (error) {
+    console.error("Failed to load pricing hero images from R2:", error);
+    return [DEFAULT_PRICING_HERO_IMAGE];
+  }
+}
 
 const plans = [
   {
@@ -82,7 +141,10 @@ const includedFeatures = [
 ] as const;
 
 export default async function PricingPage() {
-  const { userId } = await auth();
+  const [{ userId }, pricingHeroImages] = await Promise.all([
+    auth(),
+    getPricingHeroImages(),
+  ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
 
@@ -90,7 +152,7 @@ export default async function PricingPage() {
     <main className="audioflume-pricing-page-root">
       <section className="audioflume-pricing-hero">
         <div className="audioflume-pricing-hero-inner">
-          <div className="audioflume-pricing-hero-media" aria-hidden="true" />
+          <PricingHeroImageFlash images={pricingHeroImages} />
 
           <p className="audioflume-pricing-hero-eyebrow">Pricing</p>
 
