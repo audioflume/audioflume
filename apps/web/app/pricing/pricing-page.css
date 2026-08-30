@@ -21,7 +21,7 @@
     100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
   max-width: var(--filmwave-editorial-max-width);
-  min-height: clamp(620px, 76vw, 850px);
+  min-height: 100svh;
   margin: 0 auto;
   padding-top: calc(var(--filmwave-header-height, 75px) + clamp(38px, 4vw, 60px));
   padding-bottom: clamp(42px, 5vw, 70px);
@@ -100,6 +100,7 @@
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
+  transform: translateY(-18px);
 }
 
 .audioflume-pricing-hero-note {
@@ -109,7 +110,7 @@
   margin: 0;
   color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 18px;
+  font-size: 12px;
   font-weight: 300;
   letter-spacing: 0.04em;
   line-height: 1.35;
@@ -367,11 +368,15 @@
   color: rgba(255, 255, 255, 0.5);
 }
 
-@media (max-width: 980px) {
-  .audioflume-pricing-hero-inner {
-    min-height: 720px;
+@media (min-width: 821px) {
+  body:has(.filmwave-music-player) .audioflume-pricing-hero-inner {
+    box-sizing: border-box;
+    height: calc(100dvh - 72px);
+    min-height: calc(100dvh - 72px);
   }
+}
 
+@media (max-width: 980px) {
   .audioflume-pricing-hero-media {
     width: 67%;
   }
@@ -404,10 +409,6 @@
 }
 
 @media (max-width: 760px) {
-  .audioflume-pricing-hero-inner {
-    min-height: 650px;
-  }
-
   .audioflume-pricing-hero-media {
     top: calc(var(--filmwave-header-height, 75px) + 70px);
     width: 76%;
@@ -439,6 +440,7 @@
     grid-column: 1;
     width: 76%;
     justify-self: end;
+    transform: none;
   }
 
   .audioflume-pricing-hero-note {
@@ -483,10 +485,6 @@
   .audioflume-pricing-includes-section,
   .audioflume-pricing-enterprise-section {
     width: calc(100% - 40px);
-  }
-
-  .audioflume-pricing-hero-inner {
-    min-height: 610px;
   }
 
   .audioflume-pricing-hero-media {
