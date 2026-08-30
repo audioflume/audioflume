@@ -10,6 +10,7 @@ import {
   Input,
 } from "@/components/account/AccountUI";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import { useTheme } from "@/context/ThemeContext";
 
 type ArtistApplicationStatus =
   | "pending"
@@ -168,6 +169,7 @@ function RequiredMark() {
 }
 
 export default function ArtistApplicationForm() {
+  const { theme } = useTheme();
   const [form, setForm] = useState<ApplicationForm>(EMPTY_FORM);
   const [applications, setApplications] = useState<ArtistApplication[]>([]);
   const [submittedApplication, setSubmittedApplication] =
@@ -566,7 +568,14 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <section className="relative flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
+      <section
+        className="relative flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]"
+        style={
+          theme === "dark"
+            ? { boxShadow: "0 0 100px rgba(0, 0, 0, 0.5)" }
+            : undefined
+        }
+      >
         <div
           className="flex-1 pb-px"
           style={{
@@ -658,32 +667,6 @@ export default function ArtistApplicationForm() {
                 Intro Text is a short descriptive blurb used when featuring artists across Audioflume.
               </div>
 
-              <label className="grid gap-1.5">
-                <span className="flex items-baseline justify-between gap-4 text-[12px]">
-                  <span className="flex items-baseline gap-1.5">
-                    <span>Intro Text</span>
-                    <RequiredMark />
-                  </span>
-                  <span className="text-[10px] font-normal text-[var(--text-muted)]">
-                    {form.intro_text.length} / {INTRO_CHARACTER_LIMIT}
-                  </span>
-                </span>
-                <textarea
-                  value={form.intro_text}
-                  maxLength={INTRO_CHARACTER_LIMIT}
-                  rows={3}
-                  placeholder="A short introduction to the artist."
-                  onChange={(event) =>
-                    setForm((current) => ({
-                      ...current,
-                      intro_text: event.target.value,
-                    }))
-                  }
-                  className="filmwave-backend-textarea h-[80px] overflow-y-auto"
-                  style={{ resize: "none" }}
-                />
-              </label>
-
               <div className="grid gap-1.5">
                 <span className="flex items-baseline justify-between gap-4 text-[12px]">
                   <span className="flex items-baseline gap-1.5">
@@ -744,7 +727,7 @@ export default function ArtistApplicationForm() {
                   </div>
 
                   {designationDropdownOpen && availableDesignations.length > 0 ? (
-                    <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-[120px] overflow-y-auto overscroll-contain rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
+                    <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-[180px] overflow-y-auto overscroll-contain rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
                       {availableDesignations.map((option) => (
                         <button
                           key={option}
@@ -760,6 +743,32 @@ export default function ArtistApplicationForm() {
                   ) : null}
                 </div>
               </div>
+
+              <label className="grid gap-1.5">
+                <span className="flex items-baseline justify-between gap-4 text-[12px]">
+                  <span className="flex items-baseline gap-1.5">
+                    <span>Intro Text</span>
+                    <RequiredMark />
+                  </span>
+                  <span className="text-[10px] font-normal text-[var(--text-muted)]">
+                    {form.intro_text.length} / {INTRO_CHARACTER_LIMIT}
+                  </span>
+                </span>
+                <textarea
+                  value={form.intro_text}
+                  maxLength={INTRO_CHARACTER_LIMIT}
+                  rows={3}
+                  placeholder="A short introduction to the artist."
+                  onChange={(event) =>
+                    setForm((current) => ({
+                      ...current,
+                      intro_text: event.target.value,
+                    }))
+                  }
+                  className="filmwave-backend-textarea h-[80px] overflow-y-auto"
+                  style={{ resize: "none" }}
+                />
+              </label>
             </div>
           ) : null}
 
