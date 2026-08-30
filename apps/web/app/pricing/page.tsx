@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 
+import PricingHeroAccentImage from "./PricingHeroAccentImage";
 import PricingHeroImageFlash from "./PricingHeroImageFlash";
 import "./pricing-page.css";
 
@@ -237,11 +238,6 @@ export default async function PricingPage() {
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
-  const heroAccentImages = [
-    pricingHeroImages[1] ?? pricingHeroImages[0],
-    pricingHeroImages[3] ?? pricingHeroImages[0],
-    pricingHeroImages[5] ?? pricingHeroImages[0],
-  ];
 
   return (
     <main className="audioflume-pricing-page-root">
@@ -256,36 +252,30 @@ export default async function PricingPage() {
             className="absolute left-[79%] top-[21.5%] z-[2] h-[23.5%] w-[15%] overflow-hidden max-[760px]:hidden"
             aria-hidden="true"
           >
-            <Image
-              src={heroAccentImages[0]}
-              alt=""
-              fill
+            <PricingHeroAccentImage
+              images={pricingHeroImages}
+              startIndex={1}
               sizes="15vw"
-              className="object-cover"
             />
           </div>
           <div
             className="absolute left-[76%] top-[54%] z-[2] h-[10%] w-[6.5%] overflow-hidden max-[760px]:hidden"
             aria-hidden="true"
           >
-            <Image
-              src={heroAccentImages[1]}
-              alt=""
-              fill
+            <PricingHeroAccentImage
+              images={pricingHeroImages}
+              startIndex={3}
               sizes="7vw"
-              className="object-cover"
             />
           </div>
           <div
             className="absolute right-[0.5%] top-[42%] z-[2] h-[15%] w-[9.5%] overflow-hidden max-[760px]:hidden"
             aria-hidden="true"
           >
-            <Image
-              src={heroAccentImages[2]}
-              alt=""
-              fill
+            <PricingHeroAccentImage
+              images={pricingHeroImages}
+              startIndex={5}
               sizes="10vw"
-              className="object-cover"
             />
           </div>
 
