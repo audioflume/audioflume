@@ -343,7 +343,8 @@ export default function PublicArtistPageView({
           font-size: clamp(72px, var(--artist-name-fit-size), 150px);
           font-weight: 400;
           letter-spacing: -0.045em;
-          line-height: 0.92;
+          line-height: 0.82;
+          text-transform: uppercase;
           white-space: nowrap;
           mix-blend-mode: difference;
         }
