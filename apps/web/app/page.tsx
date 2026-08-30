@@ -151,17 +151,7 @@ export default async function Home() {
           }
 
           .audioflume-home-flash-hero-copy-stage {
-            display: contents;
-          }
-
-          .audioflume-home-flash-hero-copy-stage .audioflume-pricing-hero-eyebrow {
-            position: absolute;
-            margin: 0;
-          }
-
-          .audioflume-home-flash-hero-copy-stage .audioflume-pricing-hero-title-stage {
-            width: auto;
-            margin: 92px 0 0;
+            bottom: calc(220px - 11vw);
           }
 
           .audioflume-home-flash-hero-title {
