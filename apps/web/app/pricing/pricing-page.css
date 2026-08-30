@@ -386,12 +386,14 @@
 }
 
 .audioflume-pricing-enterprise-copy p {
-  max-width: 500px;
+  max-width: 560px;
   margin: 0 0 28px;
   color: rgba(255, 255, 255, 0.72);
-  font-size: 14px;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(16px, 1.45vw, 20px);
   font-weight: 300;
-  line-height: 1.55;
+  letter-spacing: 0;
+  line-height: 1.35;
 }
 
 .audioflume-pricing-enterprise-band .audioflume-pricing-section-eyebrow {
