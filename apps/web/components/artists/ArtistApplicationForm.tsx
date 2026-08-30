@@ -663,7 +663,7 @@ export default function ArtistApplicationForm() {
                 <textarea
                   value={form.intro_text}
                   maxLength={INTRO_CHARACTER_LIMIT}
-                  rows={2}
+                  rows={1}
                   placeholder="A short introduction to the artist."
                   onChange={(event) =>
                     setForm((current) => ({
@@ -671,7 +671,7 @@ export default function ArtistApplicationForm() {
                       intro_text: event.target.value,
                     }))
                   }
-                  className="filmwave-backend-textarea"
+                  className="filmwave-backend-textarea h-10 resize-none overflow-y-auto py-[9px]"
                 />
               </label>
 
