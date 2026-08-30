@@ -42,7 +42,7 @@
   bottom: auto;
   z-index: 1;
   width: 61%;
-  height: clamp(420px, 46vw, 620px);
+  height: clamp(360px, 40vw, 540px);
   overflow: hidden;
 }
 
@@ -527,7 +527,7 @@
   .audioflume-pricing-hero-media {
     top: calc(70px - clamp(38px, 4vw, 60px) - 92px);
     width: 76%;
-    height: clamp(320px, 76vw, 430px);
+    height: clamp(280px, 64vw, 360px);
   }
 
   .audioflume-pricing-hero-eyebrow {
