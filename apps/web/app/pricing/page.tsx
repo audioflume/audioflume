@@ -175,37 +175,10 @@ export default async function PricingPage() {
 
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-section-intro">
-          <div className="audioflume-pricing-section-intro-copy">
-            <p className="audioflume-pricing-section-eyebrow">Membership</p>
-            <h2 className="audioflume-pricing-section-heading">
-              Choose the coverage that fits.
-            </h2>
-            <p className="audioflume-pricing-section-intro-support">
-              One catalogue, scaled from individual projects to higher-volume team use.
-            </p>
-          </div>
-
-          <div
-            className="audioflume-pricing-coverage-scale"
-            aria-label="Membership plans scale from solo creators to larger teams"
-          >
-            <div className="audioflume-pricing-coverage-line" aria-hidden="true" />
-            <div className="audioflume-pricing-coverage-stop">
-              <span className="audioflume-pricing-coverage-number">01</span>
-              <strong>Solo</strong>
-              <span>Starter</span>
-            </div>
-            <div className="audioflume-pricing-coverage-stop">
-              <span className="audioflume-pricing-coverage-number">02</span>
-              <strong>Studio</strong>
-              <span>Active filmmakers</span>
-            </div>
-            <div className="audioflume-pricing-coverage-stop">
-              <span className="audioflume-pricing-coverage-number">03</span>
-              <strong>Enterprise</strong>
-              <span>Larger teams</span>
-            </div>
-          </div>
+          <p className="audioflume-pricing-section-eyebrow">Membership</p>
+          <h2 className="audioflume-pricing-section-heading">
+            Choose the coverage that fits.
+          </h2>
         </div>
 
         <div className="audioflume-pricing-plan-grid">
