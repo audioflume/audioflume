@@ -70,7 +70,7 @@ type SampleUploadResponse = {
 
 type UploadedSample = NonNullable<SampleUploadResponse["upload"]>;
 
-const TOTAL_STEPS = 4;
+const TOTAL_STEPS = 5;
 const INTRO_CHARACTER_LIMIT = 114;
 const DESCRIPTION_CHARACTER_LIMIT = 383;
 const MAX_SAMPLE_FILES = 4;
@@ -538,16 +538,18 @@ export default function ArtistApplicationForm() {
   const stepTwoComplete = Boolean(
     form.designation.trim() &&
       form.intro_text.trim() &&
-      form.bio.trim() &&
-      form.intro_text.length <= INTRO_CHARACTER_LIMIT &&
-      form.bio.length <= DESCRIPTION_CHARACTER_LIMIT,
+      form.intro_text.length <= INTRO_CHARACTER_LIMIT,
   );
-  const stepThreeComplete = Boolean(profileImageFile && heroImageFile);
+  const stepThreeComplete = Boolean(
+    form.bio.trim() && form.bio.length <= DESCRIPTION_CHARACTER_LIMIT,
+  );
+  const stepFourComplete = Boolean(profileImageFile && heroImageFile);
   const nextDisabled =
     loadState === "loading" ||
     (step === 1 && !stepOneComplete) ||
     (step === 2 && !stepTwoComplete) ||
-    (step === 3 && !stepThreeComplete);
+    (step === 3 && !stepThreeComplete) ||
+    (step === 4 && !stepFourComplete);
 
   if (submittedApplication) {
     return (
@@ -651,7 +653,11 @@ export default function ArtistApplicationForm() {
           ) : null}
 
           {step === 2 ? (
-            <div className="grid gap-2 pb-2">
+            <div className="grid gap-4 pb-2">
+              <div className="text-[18px] font-[300] leading-[1.35] text-[var(--text-primary)]">
+                Intro Text is a short descriptive blurb used when featuring artists across Audioflume.
+              </div>
+
               <label className="grid gap-1.5">
                 <span className="flex items-baseline justify-between gap-4 text-[12px]">
                   <span className="flex items-baseline gap-1.5">
@@ -665,7 +671,7 @@ export default function ArtistApplicationForm() {
                 <textarea
                   value={form.intro_text}
                   maxLength={INTRO_CHARACTER_LIMIT}
-                  rows={1}
+                  rows={3}
                   placeholder="A short introduction to the artist."
                   onChange={(event) =>
                     setForm((current) => ({
@@ -673,7 +679,7 @@ export default function ArtistApplicationForm() {
                       intro_text: event.target.value,
                     }))
                   }
-                  className="filmwave-backend-textarea h-10 overflow-y-auto py-[9px]"
+                  className="filmwave-backend-textarea h-[80px] overflow-y-auto"
                   style={{ resize: "none" }}
                 />
               </label>
@@ -754,6 +760,14 @@ export default function ArtistApplicationForm() {
                   ) : null}
                 </div>
               </div>
+            </div>
+          ) : null}
+
+          {step === 3 ? (
+            <div className="grid gap-4 pb-2">
+              <div className="text-[18px] font-[300] leading-[1.35] text-[var(--text-primary)]">
+                Description is the artist bio shown on your public artist page.
+              </div>
 
               <label className="grid gap-1.5">
                 <span className="flex items-baseline justify-between gap-4 text-[12px]">
@@ -768,19 +782,19 @@ export default function ArtistApplicationForm() {
                 <textarea
                   value={form.bio}
                   maxLength={DESCRIPTION_CHARACTER_LIMIT}
-                  rows={3}
+                  rows={6}
                   placeholder="Tell us about the artist and the music you make."
                   onChange={(event) =>
                     setForm((current) => ({ ...current, bio: event.target.value }))
                   }
-                  className="filmwave-backend-textarea"
+                  className="filmwave-backend-textarea h-[120px] overflow-y-auto"
                   style={{ resize: "none" }}
                 />
               </label>
             </div>
           ) : null}
 
-          {step === 3 ? (
+          {step === 4 ? (
             <div className="grid gap-5">
               <div>
                 <div className="text-[18px] font-[300] leading-[1.35] text-[var(--text-primary)]">
@@ -853,7 +867,7 @@ export default function ArtistApplicationForm() {
             </div>
           ) : null}
 
-          {step === 4 ? (
+          {step === 5 ? (
             <div className="grid gap-4">
               <div>
                 <div className="text-[18px] font-[300] leading-[1.35] text-[var(--text-primary)]">
