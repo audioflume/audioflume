@@ -285,6 +285,11 @@
   margin-top: 26px;
 }
 
+.audioflume-pricing-plan-action-row > a {
+  width: 100%;
+  max-width: none;
+}
+
 .audioflume-pricing-plan-features {
   display: grid;
   gap: 0;
