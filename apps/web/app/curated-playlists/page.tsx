@@ -424,9 +424,10 @@ export default function CuratedPlaylistsPage() {
                 id="curated-page-heading"
                 className="audioflume-editorial-display"
                 style={{
-                  fontSize: "42px",
+                  fontSize: "56px",
                   maxWidth: "520px",
                   letterSpacing: "-0.035em",
+                  lineHeight: "0.82",
                   textTransform: "uppercase",
                 }}
               >
