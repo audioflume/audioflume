@@ -279,7 +279,7 @@ export default async function PricingPage() {
             />
           </div>
 
-          <p className="audioflume-pricing-hero-eyebrow !top-[32%] !left-0">
+          <p className="audioflume-pricing-hero-eyebrow !top-[32%] !left-0 max-[760px]:!top-[calc(34%-42px)]">
             Plans &amp; Pricing
           </p>
 
