@@ -502,9 +502,8 @@ export default function HomePageContent() {
 
       <div className="audioflume-home-content">
         <HomeSongs songs={recentSongs} loading={songsLoading} />
+        <HomeIncludedFeatures />
       </div>
-
-      <HomeIncludedFeatures />
 
       <Footer className="mt-16" />
     </main>
