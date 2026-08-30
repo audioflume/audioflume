@@ -562,16 +562,18 @@
 }
 
 .audioflume-home-content {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-top: clamp(56px, 5vw, 80px);
+}
+
+.audioflume-home-songs {
   width: calc(
     100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
   max-width: var(--filmwave-editorial-max-width);
   margin: 0 auto;
-  padding-top: clamp(56px, 5vw, 80px);
-}
-
-.audioflume-home-songs {
-  margin-top: 0;
 }
 
 @media (max-width: 1080px) {
