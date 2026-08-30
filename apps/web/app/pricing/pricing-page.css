@@ -42,7 +42,7 @@
   bottom: auto;
   z-index: 1;
   width: 61%;
-  height: clamp(360px, 40vw, 540px);
+  height: 365px;
   overflow: hidden;
 }
 
