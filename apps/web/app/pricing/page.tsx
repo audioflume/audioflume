@@ -231,7 +231,7 @@ export default async function PricingPage() {
 
       <section className="audioflume-pricing-includes-section">
         <div>
-          <p className="audioflume-pricing-section-eyebrow">Built into Audioflume</p>
+          <p className="audioflume-home-eyebrow">Built into Audioflume</p>
           <h2 className="audioflume-pricing-includes-heading">
             Less time managing audio. More time making the edit.
           </h2>
