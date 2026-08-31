@@ -153,7 +153,6 @@
   gap: clamp(60px, 8vw, 132px);
   margin-top: clamp(96px, 9vw, 148px);
   padding-top: clamp(68px, 6vw, 96px);
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
 }
 
 .audioflume-home-editorial-refresh-playlist-image-main {
