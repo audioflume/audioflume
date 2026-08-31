@@ -107,7 +107,7 @@ export default async function Home() {
           right: 0;
           bottom: calc(clamp(34px, 4vw, 58px) + 35.55px);
           left: 0;
-          z-index: 4;
+          z-index: auto;
           display: flex;
           flex-direction: column;
           align-items: flex-start;
