@@ -228,7 +228,7 @@ export default function AdminSongRow({
     <div
       data-admin-song-id={song.id}
       onClick={handleRowClick}
-      className={`admin-song-row group/admin-song-row grid ${largeRow ? "min-h-[72px]" : "min-h-[46px]"} cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
+      className={`admin-song-row group/admin-song-row grid ${largeRow ? "min-h-[76px]" : "min-h-[46px]"} cursor-pointer ${gridColumnsClass} items-center gap-3 px-6 text-xs transition ${
         rowHealth === "error" ? "is-error" : ""
       } ${rowHealth === "warning" ? "is-warning" : ""} ${
         isAnalyzingEditPoints ? "pointer-events-none opacity-45" : ""
