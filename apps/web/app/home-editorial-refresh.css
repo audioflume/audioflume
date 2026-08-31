@@ -57,7 +57,7 @@
 .audioflume-home-editorial-refresh-playlist-copy {
   max-width: 620px;
   margin: 24px 0 0;
-  color: rgba(255, 255,255, 0.72);
+  color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(16px, 1.45vw, 20px);
   font-weight: 300;
