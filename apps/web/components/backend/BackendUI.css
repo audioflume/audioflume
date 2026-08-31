@@ -10,7 +10,7 @@
   --filmwave-backend-control-height: 40px;
   --filmwave-backend-compact-control-height: 32px;
   --filmwave-backend-control-radius: 7px;
-  --filmwave-backend-section-radius: 10px;
+  --filmwave-backend-section-radius: 0px;
   --filmwave-backend-content-max-width: 1180px;
   --status-success: #48b571;
   --status-success-soft: color-mix(
@@ -379,34 +379,24 @@ main:has(> aside[class*="admin-sidebar-width"]):has(footer)
   padding-top: 64px;
 }
 
-/* Artist workspace content uses sharp blocks and media; sidebar/profile and controls stay rounded. */
-main:has(> aside[class*="admin-sidebar-width"]):has(
-    a[href*="/artists/dashboard?section=overview"]
-  )
+/* Backend content uses sharp blocks and media; sidebar/profile and controls stay rounded. */
+main:has(> aside[class*="admin-sidebar-width"])
   > section
   .filmwave-backend-section,
-main:has(> aside[class*="admin-sidebar-width"]):has(
-    a[href*="/artists/dashboard?section=overview"]
-  )
+main:has(> aside[class*="admin-sidebar-width"])
   > section
   section[class*="rounded-[10px]"],
-main:has(> aside[class*="admin-sidebar-width"]):has(
-    a[href*="/artists/dashboard?section=overview"]
-  )
+main:has(> aside[class*="admin-sidebar-width"])
   > section
   div[class*="rounded-[10px]"][class*="border"],
-main:has(> aside[class*="admin-sidebar-width"]):has(
-    a[href*="/artists/dashboard?section=overview"]
-  )
+main:has(> aside[class*="admin-sidebar-width"])
   > section
   div[class*="grid"][class*="rounded-[7px]"][class*="border"] {
   border-radius: 0;
 }
 
-main:has(> aside[class*="admin-sidebar-width"]):has(
-    a[href*="/artists/dashboard?section=overview"]
-  )
+main:has(> aside[class*="admin-sidebar-width"])
   > section
-  :is(button, div)[class*="overflow-hidden"]:has(> img) {
+  :is(button, div)[class*="overflow-hidden"]:has(img) {
   border-radius: 0;
 }
