@@ -1,4 +1,5 @@
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+import Image from "next/image";
 import Link from "next/link";
 
 import {
@@ -15,7 +16,8 @@ import "./home-editorial-refresh.css";
 
 const DEFAULT_HOME_FLASH_HERO_IMAGE =
   "https://images.filmwave.io/images/home/kyle-loftus-FtQE89f3EXA-unsplash.jpg";
-const HOME_FLASH_IMAGE_EXTENSIONS = /\.(avif|jpe?g|png|webp)$/i;
+const HOME_FLASH_IMAGE_EXTENSIONS = /\.(avif|gif|jpe?g|png|webp)$/i;
+const HOME_FLASH_GIF_EXTENSION = /\.gif$/i;
 
 async function listHomeFlashImagesForPrefix(bucket: string, prefix: string) {
   const result = await r2Client.send(
@@ -70,7 +72,12 @@ async function getHomeFlashHeroImages() {
 }
 
 export default async function Home() {
-  const homeHeroImages = await getHomeFlashHeroImages();
+  const homeHeroMedia = await getHomeFlashHeroImages();
+  const homeHeroGif =
+    homeHeroMedia.find((src) => HOME_FLASH_GIF_EXTENSION.test(src)) ?? null;
+  const homeHeroImages = homeHeroMedia.filter(
+    (src) => !HOME_FLASH_GIF_EXTENSION.test(src),
+  );
 
   return (
     <>
@@ -176,7 +183,21 @@ export default async function Home() {
 
       <section className="audioflume-pricing-hero">
         <div className="audioflume-pricing-hero-inner">
-          <PricingHeroImageFlash images={homeHeroImages} />
+          {homeHeroGif ? (
+            <div className="audioflume-home-flash-hero-media" aria-hidden="true">
+              <Image
+                src={homeHeroGif}
+                alt=""
+                fill
+                priority
+                unoptimized
+                sizes="(max-width: 760px) 76vw, (max-width: 980px) 67vw, (max-width: 1968px) 61vw, 1200px"
+                style={{ objectFit: "cover", objectPosition: "center center" }}
+              />
+            </div>
+          ) : (
+            <PricingHeroImageFlash images={homeHeroImages} />
+          )}
 
           <div className="audioflume-home-flash-hero-copy-stage">
             <p className="audioflume-pricing-hero-eyebrow">More music, less noise</p>
