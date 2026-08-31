@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import {
   createContext,
   useCallback,
@@ -24,9 +25,17 @@ export function ArtistInvitesProvider({
   initialPendingCount: number;
   children: ReactNode;
 }) {
+  const { isLoaded: isAuthLoaded, isSignedIn } = useUser();
   const [pendingInviteCount, setPendingInviteCount] = useState(initialPendingCount);
 
   const refreshPendingInvites = useCallback(async () => {
+    if (!isAuthLoaded) return;
+
+    if (!isSignedIn) {
+      setPendingInviteCount(0);
+      return;
+    }
+
     try {
       const response = await fetch("/api/artists/claim", { cache: "no-store" });
       const body = (await response.json().catch(() => ({}))) as {
@@ -37,11 +46,13 @@ export function ArtistInvitesProvider({
         setPendingInviteCount(
           Array.isArray(body.invitations) ? body.invitations.length : 0,
         );
+      } else if (response.status === 401) {
+        setPendingInviteCount(0);
       }
     } catch {
       // Keep the last known count if a background refresh fails.
     }
-  }, []);
+  }, [isAuthLoaded, isSignedIn]);
 
   useEffect(() => {
     window.addEventListener("focus", refreshPendingInvites);
