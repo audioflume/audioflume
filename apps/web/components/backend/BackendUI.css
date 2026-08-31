@@ -408,5 +408,5 @@ main:has(> aside[class*="admin-sidebar-width"]):has(
   )
   > section
   :is(button, div)[class*="overflow-hidden"]:has(> img) {
-  border-radius: 0 !important;
+  border-radius: 0;
 }
