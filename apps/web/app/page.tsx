@@ -1,10 +1,17 @@
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
+import Image from "next/image";
+import Link from "next/link";
 
+import {
+  playlistDetailActionButtonClass,
+  playlistDetailPrimaryActionButtonClass,
+} from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 
 import HomePageContent from "./HomePageContent";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import "./pricing/pricing-page.css";
+import "./home-editorial-refresh.css";
 
 const DEFAULT_HOME_FLASH_HERO_IMAGE =
   "https://images.filmwave.io/images/home/kyle-loftus-FtQE89f3EXA-unsplash.jpg";
@@ -64,6 +71,9 @@ async function getHomeFlashHeroImages() {
 
 export default async function Home() {
   const homeHeroImages = await getHomeFlashHeroImages();
+  const editorialImageMain = homeHeroImages[1] ?? homeHeroImages[0];
+  const editorialImageMedium = homeHeroImages[2] ?? homeHeroImages[0];
+  const editorialImageSmall = homeHeroImages[4] ?? homeHeroImages[3] ?? homeHeroImages[0];
 
   return (
     <>
@@ -190,6 +200,84 @@ export default async function Home() {
             <p className="audioflume-pricing-hero-note">
               Curated for picture, pacing &amp; story.
             </p>
+          </div>
+        </div>
+      </section>
+
+      <section className="audioflume-home-editorial-refresh">
+        <div className="audioflume-home-editorial-refresh-inner">
+          <div className="audioflume-home-editorial-refresh-main">
+            <div className="audioflume-home-editorial-refresh-copy">
+              <p className="audioflume-home-editorial-refresh-eyebrow">Built for editors</p>
+              <h2 className="audioflume-home-editorial-refresh-heading">
+                The right sound, without leaving the edit.
+              </h2>
+              <p className="audioflume-home-editorial-refresh-body">
+                Film-forward music and SFX, curated around picture, pacing, and feeling so finding the right audio stays part of the creative process.
+              </p>
+              <div className="audioflume-home-editorial-refresh-actions">
+                <Link
+                  href="/music"
+                  className={`${playlistDetailPrimaryActionButtonClass} audioflume-home-editorial-refresh-primary-action hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
+                >
+                  Explore Music
+                </Link>
+                <Link
+                  href="/curated-playlists"
+                  className={`${playlistDetailActionButtonClass} audioflume-home-editorial-refresh-secondary-action hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
+                >
+                  Explore Playlists
+                </Link>
+              </div>
+            </div>
+
+            <div className="audioflume-home-editorial-refresh-visual" aria-hidden="true">
+              <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-main">
+                <Image
+                  src={editorialImageMain}
+                  alt=""
+                  fill
+                  sizes="(max-width: 760px) 70vw, 42vw"
+                />
+              </div>
+              <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-medium">
+                <Image
+                  src={editorialImageMedium}
+                  alt=""
+                  fill
+                  sizes="(max-width: 760px) 30vw, 18vw"
+                />
+              </div>
+              <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-small">
+                <Image
+                  src={editorialImageSmall}
+                  alt=""
+                  fill
+                  sizes="(max-width: 760px) 24vw, 13vw"
+                />
+              </div>
+              <p className="audioflume-home-editorial-refresh-image-caption">
+                Music, SFX and playlists shaped around the cut.
+              </p>
+            </div>
+          </div>
+
+          <div className="audioflume-home-editorial-refresh-playlists">
+            <p className="audioflume-home-editorial-refresh-eyebrow">
+              Human curated playlists
+            </p>
+            <h3 className="audioflume-home-editorial-refresh-playlist-heading">
+              A better place to start.
+            </h3>
+            <p className="audioflume-home-editorial-refresh-playlist-copy">
+              Curated around scenes, pacing, and feeling — not just genre tags — so the first search gets closer to the final choice.
+            </p>
+            <Link
+              href="/curated-playlists"
+              className="audioflume-home-editorial-refresh-playlist-link"
+            >
+              View curated playlists →
+            </Link>
           </div>
         </div>
       </section>
