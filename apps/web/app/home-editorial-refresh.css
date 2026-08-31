@@ -57,7 +57,7 @@
 .audioflume-home-editorial-refresh-playlist-copy {
   max-width: 620px;
   margin: 24px 0 0;
-  color: rgba(255, 255, 255, 0.72);
+  color: rgba(255, 255,255, 0.72);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(16px, 1.45vw, 20px);
   font-weight: 300;
@@ -161,8 +161,8 @@
   grid-template-columns: minmax(340px, 0.9fr) minmax(0, 1.1fr);
   align-items: center;
   gap: clamp(60px, 8vw, 132px);
-  margin-top: clamp(96px, 9vw, 148px);
-  padding-top: clamp(68px, 6vw, 96px);
+  margin-top: clamp(64px, 6vw, 96px);
+  padding-top: clamp(36px, 3.5vw, 52px);
 }
 
 .audioflume-home-editorial-refresh-playlist-image-main {
