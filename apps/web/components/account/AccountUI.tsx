@@ -115,13 +115,10 @@ export function Card({ children, className = "" }: { children: React.ReactNode; 
   return <div className={`filmwave-backend-section ${className}`}>{children}</div>;
 }
 
-export function CardTitle({ title, description }: { title: string; description?: string }) {
+export function CardTitle({ title }: { title: string; description?: string }) {
   return (
     <div className="filmwave-backend-section-header-bordered">
-      <div className="min-w-0">
-        <h2 className="filmwave-backend-section-title">{title}</h2>
-        {description ? <p className="mt-1 max-w-[680px] text-xs leading-5 text-[var(--text-muted)]">{description}</p> : null}
-      </div>
+      <h2 className="filmwave-backend-section-title">{title}</h2>
     </div>
   );
 }
