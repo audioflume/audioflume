@@ -99,8 +99,8 @@
 .audioflume-home-editorial-refresh-visual,
 .audioflume-home-editorial-refresh-playlist-visual {
   position: relative;
-  width: min(100%, 760px);
-  height: clamp(430px, 42vw, 610px);
+  width: min(88%, 660px);
+  height: clamp(380px, 36vw, 540px);
 }
 
 .audioflume-home-editorial-refresh-visual {
@@ -130,24 +130,24 @@
 .audioflume-home-editorial-refresh-image-main {
   top: 0;
   left: 8%;
-  width: 64%;
-  height: 82%;
+  width: 60%;
+  height: 76%;
 }
 
 .audioflume-home-editorial-refresh-image-medium {
   top: 11%;
   right: 0;
   z-index: 2;
-  width: 29%;
-  height: 38%;
+  width: 26%;
+  height: 34%;
 }
 
 .audioflume-home-editorial-refresh-image-small {
   right: 9%;
   bottom: 0;
   z-index: 3;
-  width: 22%;
-  height: 27%;
+  width: 19%;
+  height: 24%;
 }
 
 .audioflume-home-editorial-refresh-playlists {
@@ -162,24 +162,24 @@
 .audioflume-home-editorial-refresh-playlist-image-main {
   top: 0;
   right: 8%;
-  width: 64%;
-  height: 82%;
+  width: 60%;
+  height: 76%;
 }
 
 .audioflume-home-editorial-refresh-playlist-image-medium {
   top: 11%;
   left: 0;
   z-index: 2;
-  width: 29%;
-  height: 38%;
+  width: 26%;
+  height: 34%;
 }
 
 .audioflume-home-editorial-refresh-playlist-image-small {
   bottom: 0;
   left: 9%;
   z-index: 3;
-  width: 22%;
-  height: 27%;
+  width: 19%;
+  height: 24%;
 }
 
 .audioflume-home-editorial-refresh-playlist-copy-block {
@@ -223,8 +223,8 @@
   .audioflume-home-editorial-refresh-visual,
   .audioflume-home-editorial-refresh-playlist-visual {
     order: 2;
-    width: min(100%, 620px);
-    height: clamp(390px, 82vw, 540px);
+    width: min(92%, 560px);
+    height: clamp(340px, 72vw, 470px);
     justify-self: center;
   }
 }
@@ -251,34 +251,34 @@
 
   .audioflume-home-editorial-refresh-visual,
   .audioflume-home-editorial-refresh-playlist-visual {
-    height: 390px;
+    height: 350px;
   }
 
   .audioflume-home-editorial-refresh-image-main {
     left: 0;
-    width: 70%;
+    width: 64%;
   }
 
   .audioflume-home-editorial-refresh-image-medium {
-    width: 33%;
+    width: 29%;
   }
 
   .audioflume-home-editorial-refresh-image-small {
     right: 4%;
-    width: 25%;
+    width: 22%;
   }
 
   .audioflume-home-editorial-refresh-playlist-image-main {
     right: 0;
-    width: 70%;
+    width: 64%;
   }
 
   .audioflume-home-editorial-refresh-playlist-image-medium {
-    width: 33%;
+    width: 29%;
   }
 
   .audioflume-home-editorial-refresh-playlist-image-small {
     left: 4%;
-    width: 25%;
+    width: 22%;
   }
 }
