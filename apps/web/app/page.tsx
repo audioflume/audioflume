@@ -207,7 +207,7 @@ export default async function Home() {
             <div className="audioflume-home-editorial-refresh-copy">
               <p className="audioflume-home-editorial-refresh-eyebrow">Built for editors</p>
               <h2 className="audioflume-home-editorial-refresh-heading">
-                The right sound. Built for the cut.
+                The right sound, without leaving the edit.
               </h2>
               <p className="audioflume-home-editorial-refresh-body">
                 Film-forward music and SFX, curated around picture, pacing, and feeling so finding the right audio stays part of the creative process.
@@ -220,10 +220,10 @@ export default async function Home() {
                   Explore Music
                 </Link>
                 <Link
-                  href="/sound-fx"
+                  href="/curated-playlists"
                   className={`${playlistDetailActionButtonClass} audioflume-home-editorial-refresh-secondary-action hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
                 >
-                  Explore SFX
+                  Explore Playlists
                 </Link>
               </div>
             </div>
@@ -233,28 +233,24 @@ export default async function Home() {
                 <HomeEditorialR2Image
                   images={homeHeroImages}
                   startIndex={1}
-                  sizes="(max-width: 760px) 78vw, 42vw"
+                  sizes="(max-width: 760px) 70vw, 42vw"
                 />
               </div>
               <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-medium">
                 <HomeEditorialR2Image
                   images={homeHeroImages}
-                  startIndex={4}
-                  sizes="(max-width: 760px) 30vw, 16vw"
+                  startIndex={2}
+                  sizes="(max-width: 760px) 30vw, 18vw"
                 />
               </div>
               <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-small">
                 <HomeEditorialR2Image
                   images={homeHeroImages}
-                  startIndex={5}
-                  sizes="(max-width: 760px) 25vw, 12vw"
+                  startIndex={4}
+                  sizes="(max-width: 760px) 24vw, 13vw"
                 />
               </div>
             </div>
-
-            <p className="audioflume-home-editorial-refresh-note">
-              Curated for picture, pacing &amp; story.
-            </p>
           </div>
 
           <div className="audioflume-home-editorial-refresh-playlists">
@@ -262,15 +258,22 @@ export default async function Home() {
               <div className="audioflume-home-editorial-refresh-playlist-image-main">
                 <HomeEditorialR2Image
                   images={homeHeroImages}
-                  startIndex={2}
-                  sizes="(max-width: 760px) 82vw, 42vw"
+                  startIndex={3}
+                  sizes="(max-width: 760px) 70vw, 42vw"
+                />
+              </div>
+              <div className="audioflume-home-editorial-refresh-playlist-image-medium">
+                <HomeEditorialR2Image
+                  images={homeHeroImages}
+                  startIndex={5}
+                  sizes="(max-width: 760px) 30vw, 18vw"
                 />
               </div>
               <div className="audioflume-home-editorial-refresh-playlist-image-small">
                 <HomeEditorialR2Image
                   images={homeHeroImages}
                   startIndex={6}
-                  sizes="(max-width: 760px) 30vw, 14vw"
+                  sizes="(max-width: 760px) 24vw, 13vw"
                 />
               </div>
             </div>
