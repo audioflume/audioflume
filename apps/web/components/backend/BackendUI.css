@@ -380,7 +380,9 @@ main:has(> aside[class*="admin-sidebar-width"])
   > section
   :is(section, article, div, a)[class*="border"][class*="rounded-"]:not(
     [class~="rounded-full"]
-  ):not(.filmwave-backend-button):not(:has(input[role="searchbox"])) {
+  ):not(.filmwave-backend-button):not(.admin-dashboard-quick-action):not(
+    :has(input[role="searchbox"])
+  ) {
   border-radius: 0;
 }
 
