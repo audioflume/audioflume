@@ -275,7 +275,7 @@ function RecentSongsCard({
         <div className="overflow-x-auto overflow-y-hidden lg:overflow-x-visible">
           <div className="admin-dashboard-song-list min-w-[680px] lg:min-w-0">
             {songsLoading && (
-              <div className="grid gap-0 border-t border-[var(--border-subtle)]">
+              <div className="grid gap-0">
                 {Array.from({ length: 6 }, (_, index) => (
                   <div
                     key={index}
@@ -300,13 +300,13 @@ function RecentSongsCard({
             )}
 
             {!songsLoading && songs.length === 0 && (
-              <div className="flex min-h-[180px] items-center justify-center border-t border-[var(--border-subtle)] px-8 text-xs text-[var(--text-secondary)]">
+              <div className="flex min-h-[180px] items-center justify-center px-8 text-xs text-[var(--text-secondary)]">
                 No songs uploaded yet.
               </div>
             )}
 
             {!songsLoading && songs.length > 0 && (
-              <div className="admin-song-row-group border-t border-[var(--border-subtle)]">
+              <div className="admin-song-row-group">
                 {songs.map((song, index) => (
                   <AdminSongRow
                     key={song.id}
