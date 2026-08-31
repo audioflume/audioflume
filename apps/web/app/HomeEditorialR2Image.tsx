@@ -34,6 +34,7 @@ export default function HomeEditorialR2Image({
       alt=""
       fill
       unoptimized
+      loading="eager"
       sizes={sizes}
       className={className}
       onError={() => {
