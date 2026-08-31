@@ -16,17 +16,20 @@
 
 .audioflume-home-editorial-refresh-main {
   display: grid;
-  grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
+  min-height: clamp(660px, 51vw, 820px);
+  grid-template-columns: minmax(0, 1.12fr) minmax(360px, 0.88fr);
   align-items: center;
-  gap: clamp(60px, 8vw, 132px);
+  gap: clamp(56px, 6vw, 104px);
 }
 
 .audioflume-home-editorial-refresh-copy {
   position: relative;
   z-index: 3;
   order: 2;
-  max-width: 660px;
+  width: 100%;
+  max-width: 650px;
   justify-self: end;
+  transform: translateY(36px);
 }
 
 .audioflume-home-editorial-refresh-eyebrow {
@@ -41,7 +44,41 @@
   text-transform: uppercase;
 }
 
-.audioflume-home-editorial-refresh-heading,
+.audioflume-home-editorial-refresh-visual > .audioflume-home-editorial-refresh-eyebrow {
+  position: absolute;
+  top: 31%;
+  left: 12%;
+  z-index: 4;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: clamp(16px, 1.45vw, 24px);
+  font-weight: 300;
+  letter-spacing: 0.01em;
+}
+
+.audioflume-home-editorial-refresh-heading {
+  position: absolute;
+  top: 40%;
+  left: 12%;
+  z-index: 4;
+  width: 104%;
+  max-width: none;
+  margin: 0;
+  color: var(--filmwave-white);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(46px, 4.4vw, 72px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.84;
+  text-transform: uppercase;
+  mix-blend-mode: difference;
+}
+
+.audioflume-home-editorial-refresh-heading span {
+  display: block;
+  white-space: nowrap;
+}
+
 .audioflume-home-editorial-refresh-playlist-heading {
   max-width: 680px;
   margin: 0;
@@ -65,18 +102,23 @@
   line-height: 1.35;
 }
 
+.audioflume-home-editorial-refresh-main .audioflume-home-editorial-refresh-body {
+  margin-top: 0;
+}
+
 .audioflume-home-editorial-refresh-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 30px;
+  margin-top: 36px;
 }
 
 .audioflume-home-editorial-refresh-actions > a {
-  min-width: 220px;
+  min-width: 252px;
+  height: 52px;
+  min-height: 52px;
 }
 
-.audioflume-home-editorial-refresh-actions > a,
 .audioflume-home-editorial-refresh-playlist-action {
   height: 44px;
   min-height: 44px;
@@ -105,17 +147,20 @@
 .audioflume-home-editorial-refresh-visual,
 .audioflume-home-editorial-refresh-playlist-visual {
   position: relative;
-  width: min(88%, 660px);
-  height: clamp(380px, 36vw, 540px);
 }
 
 .audioflume-home-editorial-refresh-visual {
   order: 1;
+  width: 100%;
+  max-width: 760px;
+  height: clamp(480px, 34vw, 590px);
   justify-self: start;
 }
 
 .audioflume-home-editorial-refresh-playlist-visual {
   order: 2;
+  width: min(88%, 660px);
+  height: clamp(380px, 36vw, 540px);
   justify-self: end;
 }
 
@@ -134,26 +179,29 @@
 }
 
 .audioflume-home-editorial-refresh-image-main {
-  top: 0;
-  left: 8%;
-  width: 60%;
-  height: 76%;
+  top: 7%;
+  left: 0;
+  width: 58%;
+  height: 84%;
 }
 
 .audioflume-home-editorial-refresh-image-medium {
-  top: 11%;
-  right: 0;
+  top: 7%;
+  right: 4%;
   z-index: 2;
-  width: 26%;
-  height: 34%;
+  width: 20.5%;
+  height: auto;
+  aspect-ratio: 1;
 }
 
 .audioflume-home-editorial-refresh-image-small {
-  right: 9%;
   bottom: 0;
+  left: 11%;
   z-index: 3;
-  width: 19%;
-  height: 24%;
+  width: 11.5%;
+  height: auto;
+  aspect-ratio: 1;
+  transform: translate(12px, 10px);
 }
 
 .audioflume-home-editorial-refresh-playlists {
@@ -206,6 +254,11 @@
     gap: 48px;
   }
 
+  .audioflume-home-editorial-refresh-heading {
+    width: 110%;
+    font-size: clamp(44px, 5.2vw, 62px);
+  }
+
   .audioflume-home-editorial-refresh-playlists {
     grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr);
     gap: 48px;
@@ -219,19 +272,45 @@
     gap: 54px;
   }
 
-  .audioflume-home-editorial-refresh-copy,
+  .audioflume-home-editorial-refresh-main {
+    min-height: 0;
+  }
+
+  .audioflume-home-editorial-refresh-copy {
+    order: 2;
+    max-width: 620px;
+    justify-self: start;
+    transform: none;
+  }
+
   .audioflume-home-editorial-refresh-playlist-copy-block {
     order: 1;
     max-width: 620px;
     justify-self: start;
   }
 
-  .audioflume-home-editorial-refresh-visual,
+  .audioflume-home-editorial-refresh-visual {
+    order: 1;
+    width: 100%;
+    max-width: 620px;
+    height: clamp(420px, 88vw, 560px);
+    justify-self: start;
+  }
+
   .audioflume-home-editorial-refresh-playlist-visual {
     order: 2;
     width: min(92%, 560px);
     height: clamp(340px, 72vw, 470px);
     justify-self: center;
+  }
+
+  .audioflume-home-editorial-refresh-heading {
+    width: 104%;
+    font-size: clamp(42px, 9vw, 64px);
+  }
+
+  .audioflume-home-editorial-refresh-actions {
+    margin-top: 28px;
   }
 }
 
@@ -240,7 +319,22 @@
     width: calc(100% - 40px);
   }
 
-  .audioflume-home-editorial-refresh-heading,
+  .audioflume-home-editorial-refresh-heading {
+    top: 41%;
+    left: 7%;
+    width: 108%;
+    font-size: clamp(36px, 10.5vw, 52px);
+  }
+
+  .audioflume-home-editorial-refresh-heading span {
+    white-space: normal;
+  }
+
+  .audioflume-home-editorial-refresh-visual > .audioflume-home-editorial-refresh-eyebrow {
+    left: 7%;
+    font-size: 14px;
+  }
+
   .audioflume-home-editorial-refresh-playlist-heading {
     font-size: clamp(38px, 11vw, 52px);
   }
@@ -255,23 +349,26 @@
     min-width: 0;
   }
 
-  .audioflume-home-editorial-refresh-visual,
+  .audioflume-home-editorial-refresh-visual {
+    height: 400px;
+  }
+
   .audioflume-home-editorial-refresh-playlist-visual {
     height: 350px;
   }
 
   .audioflume-home-editorial-refresh-image-main {
-    left: 0;
-    width: 64%;
+    width: 66%;
   }
 
   .audioflume-home-editorial-refresh-image-medium {
-    width: 29%;
+    right: 0;
+    width: 22%;
   }
 
   .audioflume-home-editorial-refresh-image-small {
-    right: 4%;
-    width: 22%;
+    left: 10%;
+    width: 13.5%;
   }
 
   .audioflume-home-editorial-refresh-playlist-image-main {
