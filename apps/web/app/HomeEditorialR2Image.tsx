@@ -1,7 +1,7 @@
 "use client";
 
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import Image, { getImageProps } from "next/image";
+import { useEffect, useRef, useState } from "react";
 
 type HomeEditorialR2ImageProps = {
   images: string[];
@@ -16,6 +16,7 @@ export default function HomeEditorialR2Image({
   sizes,
   className = "object-cover",
 }: HomeEditorialR2ImageProps) {
+  const imageRef = useRef<HTMLImageElement>(null);
   const [offset, setOffset] = useState(0);
   const [hasUsableImage, setHasUsableImage] = useState(true);
 
@@ -24,17 +25,58 @@ export default function HomeEditorialR2Image({
     setHasUsableImage(true);
   }, [images, startIndex]);
 
-  if (!hasUsableImage || images.length === 0) return null;
+  const source =
+    hasUsableImage && images.length > 0
+      ? images[(startIndex + offset) % images.length]
+      : null;
 
-  const source = images[(startIndex + offset) % images.length];
+  useEffect(() => {
+    const image = imageRef.current;
+    if (!image || !source || typeof IntersectionObserver === "undefined") return;
+
+    let preloader: HTMLImageElement | null = null;
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (!entry.isIntersecting) return;
+
+        const { props } = getImageProps({
+          src: source,
+          alt: "",
+          fill: true,
+          sizes,
+        });
+        preloader = new window.Image();
+
+        if (props.sizes) preloader.sizes = props.sizes;
+        if (props.srcSet) preloader.srcset = props.srcSet;
+        preloader.src = props.src;
+
+        observer.disconnect();
+      },
+      { rootMargin: "125% 0px" },
+    );
+
+    observer.observe(image);
+
+    return () => {
+      observer.disconnect();
+      if (preloader) {
+        preloader.onload = null;
+        preloader.onerror = null;
+      }
+    };
+  }, [sizes, source]);
+
+  if (!source) return null;
 
   return (
     <Image
+      ref={imageRef}
       src={source}
       alt=""
       fill
-      unoptimized
-      loading="eager"
+      loading="lazy"
+      decoding="async"
       sizes={sizes}
       className={className}
       onError={() => {
