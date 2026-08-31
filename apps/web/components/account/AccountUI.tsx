@@ -252,8 +252,8 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
-        <span className="absolute inset-0 overflow-hidden rounded-full">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
+      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
+        <span className="absolute inset-0 overflow-hidden rounded-[10px]">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
         {!value ? <span>{initials || "A"}</span> : null}
         <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
