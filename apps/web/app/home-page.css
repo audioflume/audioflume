@@ -21,6 +21,7 @@
 }
 
 .audioflume-home-page-root > .audioflume-home-hero-media {
+  display: none;
   order: 3;
 }
 
@@ -29,6 +30,7 @@
 }
 
 .audioflume-home-page-root > .audioflume-home-intro {
+  display: none;
   order: 5;
 }
 
