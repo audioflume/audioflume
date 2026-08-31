@@ -280,11 +280,12 @@ export default function ArtistProfileEditor({
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
               className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
-              style={
-                artist.profile_image_url
+              style={{
+                borderRadius: "7px",
+                ...(artist.profile_image_url
                   ? { backgroundImage: `url(${artist.profile_image_url})` }
-                  : undefined
-              }
+                  : {}),
+              }}
             />
             <div className="min-w-0 flex-1">
               <div className="text-xs font-medium text-[var(--text-primary)]">
@@ -312,11 +313,12 @@ export default function ArtistProfileEditor({
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
               className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
-              style={
-                artist.hero_image_url
+              style={{
+                borderRadius: "7px",
+                ...(artist.hero_image_url
                   ? { backgroundImage: `url(${artist.hero_image_url})` }
-                  : undefined
-              }
+                  : {}),
+              }}
             />
             <div className="min-w-0 flex-1">
               <div className="text-xs font-medium text-[var(--text-primary)]">
@@ -348,7 +350,7 @@ export default function ArtistProfileEditor({
           <h2 className="filmwave-backend-section-title">Artist profile</h2>
         </div>
 
-        <div className="grid gap-5 px-5 pb-5">
+        <div className="grid gap-5 px-5 pb-5 pt-4">
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
               <FieldLabel>Name (Required)</FieldLabel>
