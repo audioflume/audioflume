@@ -414,10 +414,10 @@ export default async function PricingPage() {
         </div>
       </section>
 
-      <section className="bg-[#f2f2f2] text-[#111111]">
+      <section className="bg-[var(--bg-tertiary)] text-[var(--text-primary)]">
         <div className="mx-auto w-[calc(100%-var(--filmwave-editorial-inset)-var(--filmwave-editorial-inset))] max-w-[var(--filmwave-editorial-max-width)] py-[clamp(84px,8vw,126px)]">
           <div className="mx-auto max-w-[900px] text-left">
-            <p className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-light uppercase leading-none tracking-[0.04em] text-[#8f8f8f]">
+            <p className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-light uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
               Testimonials
             </p>
             <blockquote className="mt-7 max-w-none font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(16px,1.45vw,20px)] font-light leading-[1.35] tracking-normal">
@@ -425,7 +425,7 @@ export default async function PricingPage() {
             </blockquote>
             <div className="mt-7">
               <div className="text-[16px] font-medium leading-[1.2]">Filmmaker name</div>
-              <div className="mt-1 text-[13px] font-light leading-[1.35] text-[#777777]">
+              <div className="mt-1 text-[13px] font-light leading-[1.35] text-[var(--text-secondary)]">
                 Role / Studio
               </div>
             </div>
