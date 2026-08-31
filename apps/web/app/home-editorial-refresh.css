@@ -198,10 +198,10 @@
   bottom: 0;
   left: 11%;
   z-index: 3;
-  width: 13.5%;
+  width: 11.5%;
   height: auto;
   aspect-ratio: 1;
-  transform: translateX(12px);
+  transform: translate(12px, 10px);
 }
 
 .audioflume-home-editorial-refresh-playlists {
@@ -368,7 +368,7 @@
 
   .audioflume-home-editorial-refresh-image-small {
     left: 10%;
-    width: 16%;
+    width: 13.5%;
   }
 
   .audioflume-home-editorial-refresh-playlist-image-main {
