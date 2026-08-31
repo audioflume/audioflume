@@ -11,10 +11,12 @@
 }
 
 .audioflume-home-page-root > .audioflume-home-statement {
+  display: none;
   order: 1;
 }
 
 .audioflume-home-page-root > .audioflume-home-playlist-feature {
+  display: none;
   order: 2;
 }
 
