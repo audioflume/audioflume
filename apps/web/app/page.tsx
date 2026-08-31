@@ -211,7 +211,7 @@ export default async function Home() {
               >
                 <HomeEditorialR2Image
                   images={homeHeroImages}
-                  startIndex={1}
+                  startIndex={3}
                   sizes="(max-width: 760px) 70vw, 42vw"
                 />
               </div>
