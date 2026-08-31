@@ -11,8 +11,38 @@ const isPublicRoute = createRouteMatcher([
   "/pricing",
   "/music",
   "/sound-fx",
+  "/discover",
   "/curated-playlists(.*)",
+  "/community-playlists(.*)",
 ]);
+
+const RESERVED_ARTIST_ROUTES = new Set([
+  "apply",
+  "claim",
+  "dashboard",
+  "earnings",
+  "licensing",
+]);
+
+function isPublicArtistContentRoute(pathname: string) {
+  const segments = pathname.split("/").filter(Boolean);
+
+  if (segments[0] !== "artists" || !segments[1]) return false;
+  if (RESERVED_ARTIST_ROUTES.has(segments[1])) return false;
+
+  if (segments.length === 2) return true;
+
+  return (
+    segments.length === 4 &&
+    segments[2] === "albums" &&
+    Boolean(segments[3])
+  );
+}
+
+function isPublicPlaylistDetailRoute(pathname: string) {
+  const segments = pathname.split("/").filter(Boolean);
+  return segments.length === 2 && segments[0] === "playlists";
+}
 
 const DESKTOP_API_ALLOWED_ORIGINS = new Set([
   "http://localhost:1420",
@@ -69,7 +99,12 @@ export default clerkMiddleware(async (auth, request) => {
     return NextResponse.next();
   }
 
-  if (!isPublicRoute(request)) {
+  const pathname = request.nextUrl.pathname;
+  const isPublicContentRoute =
+    isPublicArtistContentRoute(pathname) ||
+    isPublicPlaylistDetailRoute(pathname);
+
+  if (!isPublicRoute(request) && !isPublicContentRoute) {
     await auth.protect();
   }
 });
