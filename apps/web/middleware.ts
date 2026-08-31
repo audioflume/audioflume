@@ -9,6 +9,9 @@ const isPublicRoute = createRouteMatcher([
   "/artists/earnings",
   "/artists/licensing",
   "/pricing",
+  "/music",
+  "/sound-fx",
+  "/curated-playlists(.*)",
 ]);
 
 const DESKTOP_API_ALLOWED_ORIGINS = new Set([
