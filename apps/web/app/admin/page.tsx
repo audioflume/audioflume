@@ -236,12 +236,12 @@ function OverviewMetric({
   return (
     <Link
       href={href}
-      className="group flex min-h-[72px] flex-col justify-between rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3 transition hover:text-[var(--text-primary)]"
+      className="filmwave-backend-section group flex min-h-[104px] flex-col justify-between p-4 transition hover:text-[var(--text-primary)]"
     >
-      <span className="text-xs text-[var(--text-secondary)] transition group-hover:text-[var(--text-primary)]">
+      <span className="text-[11px] font-medium text-[var(--text-secondary)] transition group-hover:text-[var(--text-primary)]">
         {label}
       </span>
-      <span className="mt-3 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
+      <span className="font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-medium leading-none tracking-[-0.04em] text-[var(--text-primary)]">
         {value}
       </span>
     </Link>
@@ -517,45 +517,38 @@ export default function AdminDashboardPage() {
       />
 
       <div className="grid gap-3">
-        <DashboardCard>
-          <CardHeader
-            title="Library Overview"
-            action={<StatusIcon tone={healthTone} />}
+        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
+          <OverviewMetric
+            label="Total Songs"
+            value={songsLoading ? "—" : stats.totalSongs}
+            href="/admin/music-library"
           />
-
-          <div className="grid gap-2 px-5 pb-5 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6">
-            <OverviewMetric
-              label="Total Songs"
-              value={songsLoading ? "—" : stats.totalSongs}
-              href="/admin/music-library"
-            />
-            <OverviewMetric
-              label="Missing Cover"
-              value={songsLoading ? "—" : stats.missingCoverArt}
-              href="/admin/music-library?issue=coverArt"
-            />
-            <OverviewMetric
-              label="Missing Info"
-              value={songsLoading ? "—" : stats.missingSongInfo}
-              href="/admin/music-library?issue=songInfo"
-            />
-            <OverviewMetric
-              label="Missing Peaks"
-              value={songsLoading ? "—" : stats.missingWaveformPeaks}
-              href="/admin/music-library?issue=peakData"
-            />
-            <OverviewMetric
-              label="Missing Tags"
-              value={songsLoading ? "—" : stats.missingTags}
-              href="/admin/music-library?issue=tags"
-            />
-            <OverviewMetric
-              label="Missing Cues"
-              value={songsLoading ? "—" : stats.missingEditPoints}
-              href="/admin/music-library?issue=editPoints"
-            />
-          </div>
-        </DashboardCard>
+          <OverviewMetric
+            label="Missing Cover"
+            value={songsLoading ? "—" : stats.missingCoverArt}
+            href="/admin/music-library?issue=coverArt"
+          />
+          <OverviewMetric
+            label="Missing Info"
+            value={songsLoading ? "—" : stats.missingSongInfo}
+            href="/admin/music-library?issue=songInfo"
+          />
+          <OverviewMetric
+            label="Missing Peaks"
+            value={songsLoading ? "—" : stats.missingWaveformPeaks}
+            href="/admin/music-library?issue=peakData"
+          />
+          <OverviewMetric
+            label="Missing Tags"
+            value={songsLoading ? "—" : stats.missingTags}
+            href="/admin/music-library?issue=tags"
+          />
+          <OverviewMetric
+            label="Missing Cues"
+            value={songsLoading ? "—" : stats.missingEditPoints}
+            href="/admin/music-library?issue=editPoints"
+          />
+        </div>
 
         <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_320px]">
           <RecentSongsCard
