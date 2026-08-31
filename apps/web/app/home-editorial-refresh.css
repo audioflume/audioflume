@@ -90,7 +90,7 @@
 }
 
 .audioflume-home-editorial-refresh-secondary-action {
-  border: 1px solid var(--filmwave-white) !important;
+  border: 1px solid var(--filmwave-border-color) !important;
   background: transparent !important;
   color: var(--filmwave-white) !important;
 }
