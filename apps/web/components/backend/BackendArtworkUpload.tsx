@@ -211,6 +211,7 @@ export default function BackendArtworkUpload({
             {allowRemove && onRemove ? (
               <MediaImageRemoveButton
                 small
+                hoverOnly
                 disabled={disabled}
                 onClick={onRemove}
                 ariaLabel={`Remove ${title.toLowerCase()}`}
@@ -231,7 +232,7 @@ export default function BackendArtworkUpload({
                 alt={`${title} preview`}
                 className="h-full w-full object-cover"
               />
-              <MediaImageChangeOverlay />
+              <MediaImageChangeOverlay normalWeight />
             </button>
           </div>
 
