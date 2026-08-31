@@ -207,24 +207,33 @@ export default function BackendArtworkUpload({
 
       {previewUrl ? (
         <div className="flex items-start gap-[18px] max-[720px]:flex-col">
-          <button
-            type="button"
-            disabled={disabled}
-            onClick={() => inputRef.current?.click()}
-            onDrop={handleDrop}
-            onDragOver={(event) => event.preventDefault()}
-            className="group relative h-[180px] w-[180px] shrink-0 cursor-pointer overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
-            aria-label={`Change ${title.toLowerCase()}`}
-          >
-            <img
-              src={previewUrl}
-              alt={`${title} preview`}
-              className="h-full w-full object-cover"
-            />
-            <span className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)] text-[10px] font-medium text-[var(--media-overlay-contrast)] opacity-0 transition group-hover:opacity-100">
-              Change image
-            </span>
-          </button>
+          <div className="group relative h-[180px] w-[180px] shrink-0 overflow-visible">
+            {allowRemove && onRemove ? (
+              <MediaImageRemoveButton
+                small
+                disabled={disabled}
+                onClick={onRemove}
+                ariaLabel={`Remove ${title.toLowerCase()}`}
+              />
+            ) : null}
+
+            <button
+              type="button"
+              disabled={disabled}
+              onClick={() => inputRef.current?.click()}
+              onDrop={handleDrop}
+              onDragOver={(event) => event.preventDefault()}
+              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+              aria-label={`Change ${title.toLowerCase()}`}
+            >
+              <img
+                src={previewUrl}
+                alt={`${title} preview`}
+                className="h-full w-full object-cover"
+              />
+              <MediaImageChangeOverlay />
+            </button>
+          </div>
 
           <div className="flex min-h-[180px] min-w-0 flex-1 flex-col justify-between gap-5 py-1 max-[720px]:min-h-0 max-[720px]:w-full">
             <div>
