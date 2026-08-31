@@ -422,7 +422,7 @@ export default function CuratedPlaylistsPage() {
             <div>
               <h1
                 id="curated-page-heading"
-                className="m-0 max-w-[520px] font-[family-name:var(--font-aktiv-grotesk)] text-[48px] font-normal uppercase leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]"
+                className="m-0 max-w-[720px] font-[family-name:var(--font-aktiv-grotesk)] text-[48px] font-[400] uppercase leading-[0.9] tracking-[-0.035em] text-[var(--text-primary)]"
               >
                 Human Curated Playlists Made by Real Filmmakers.
               </h1>
