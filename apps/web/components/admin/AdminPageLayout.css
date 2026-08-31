@@ -192,6 +192,18 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   border-radius: 7px;
 }
 
+/* Audio and stems rows are file controls, not backend content containers. */
+main.filmwave-admin-content-page.admin-song-upload-content-page
+  > section
+  form
+  > div:first-child
+  > div:first-child
+  > section:has(> h2)
+  > [class~="grid"][class~="gap-2"]
+  > div[class*="rounded-"][class*="border"] {
+  border-radius: var(--filmwave-backend-control-radius, 7px);
+}
+
 .admin-song-upload-content-page
   form
   > div:first-child
