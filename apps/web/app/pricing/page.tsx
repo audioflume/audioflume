@@ -271,7 +271,7 @@ export default async function PricingPage() {
             />
           </div>
           <div
-            className="absolute left-[76%] top-[54%] z-[2] h-[10%] w-[6.5%] overflow-hidden max-[760px]:hidden"
+            className="absolute left-[76%] top-[54%] z-[2] aspect-square w-[6.5%] overflow-hidden max-[760px]:hidden"
             aria-hidden="true"
           >
             <PricingHeroAccentImage
