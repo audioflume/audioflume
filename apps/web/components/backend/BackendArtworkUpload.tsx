@@ -4,6 +4,7 @@ import { useEffect, useRef, type DragEvent, type ReactNode } from "react";
 import {
   MediaImageChangeOverlay,
   MediaImageRemoveButton,
+  MediaImageUploadOverlay,
 } from "@/components/MediaImageOverlayControls";
 import UploadIcon from "@/components/icons/UploadIcon";
 
@@ -208,16 +209,6 @@ export default function BackendArtworkUpload({
       {previewUrl ? (
         <div className="flex items-start gap-[18px] max-[720px]:flex-col">
           <div className="group relative h-[180px] w-[180px] shrink-0 overflow-visible">
-            {allowRemove && onRemove ? (
-              <MediaImageRemoveButton
-                small
-                hoverOnly
-                disabled={disabled}
-                onClick={onRemove}
-                ariaLabel={`Remove ${title.toLowerCase()}`}
-              />
-            ) : null}
-
             <button
               type="button"
               disabled={disabled}
@@ -225,14 +216,14 @@ export default function BackendArtworkUpload({
               onDrop={handleDrop}
               onDragOver={(event) => event.preventDefault()}
               className="relative h-full w-full cursor-pointer overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
-              aria-label={`Change ${title.toLowerCase()}`}
+              aria-label={`Replace ${title.toLowerCase()}`}
             >
               <img
                 src={previewUrl}
                 alt={`${title} preview`}
                 className="h-full w-full object-cover"
               />
-              <MediaImageChangeOverlay normalWeight />
+              <MediaImageUploadOverlay />
             </button>
           </div>
 
