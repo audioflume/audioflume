@@ -378,3 +378,35 @@ main:has(> aside[class*="admin-sidebar-width"]):has(footer)
   margin-top: auto;
   padding-top: 64px;
 }
+
+/* Artist workspace content uses sharp blocks and media; sidebar/profile and controls stay rounded. */
+main:has(> aside[class*="admin-sidebar-width"]):has(
+    a[href*="/artists/dashboard?section=overview"]
+  )
+  > section
+  .filmwave-backend-section,
+main:has(> aside[class*="admin-sidebar-width"]):has(
+    a[href*="/artists/dashboard?section=overview"]
+  )
+  > section
+  section[class*="rounded-[10px]"],
+main:has(> aside[class*="admin-sidebar-width"]):has(
+    a[href*="/artists/dashboard?section=overview"]
+  )
+  > section
+  div[class*="rounded-[10px]"][class*="border"],
+main:has(> aside[class*="admin-sidebar-width"]):has(
+    a[href*="/artists/dashboard?section=overview"]
+  )
+  > section
+  div[class*="grid"][class*="rounded-[7px]"][class*="border"] {
+  border-radius: 0;
+}
+
+main:has(> aside[class*="admin-sidebar-width"]):has(
+    a[href*="/artists/dashboard?section=overview"]
+  )
+  > section
+  :is(button, div)[class*="overflow-hidden"]:has(> img) {
+  border-radius: 0 !important;
+}
