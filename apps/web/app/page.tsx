@@ -204,52 +204,13 @@ export default async function Home() {
       <section className="audioflume-home-editorial-refresh">
         <div className="audioflume-home-editorial-refresh-inner">
           <div className="audioflume-home-editorial-refresh-main">
-            <div className="audioflume-home-editorial-refresh-visual">
-              <div
-                className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-main"
-                aria-hidden="true"
-              >
-                <HomeEditorialR2Image
-                  images={homeHeroImages}
-                  startIndex={3}
-                  sizes="(max-width: 760px) 70vw, 42vw"
-                />
-              </div>
-
-              <p className="audioflume-home-editorial-refresh-eyebrow">
-                Music &amp; SFX Library
-              </p>
-              <h2 className="audioflume-home-editorial-refresh-heading">
-                <span>Every track &amp;</span>
-                <span>sound effect</span>
-                <span>built for the edit</span>
-              </h2>
-
-              <div
-                className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-medium"
-                aria-hidden="true"
-              >
-                <HomeEditorialR2Image
-                  images={homeHeroImages}
-                  startIndex={2}
-                  sizes="(max-width: 760px) 30vw, 18vw"
-                />
-              </div>
-              <div
-                className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-small"
-                aria-hidden="true"
-              >
-                <HomeEditorialR2Image
-                  images={homeHeroImages}
-                  startIndex={4}
-                  sizes="(max-width: 760px) 24vw, 13vw"
-                />
-              </div>
-            </div>
-
             <div className="audioflume-home-editorial-refresh-copy">
+              <p className="audioflume-home-editorial-refresh-eyebrow">Built for editors</p>
+              <h2 className="audioflume-home-editorial-refresh-heading">
+                The right sound, without leaving the edit.
+              </h2>
               <p className="audioflume-home-editorial-refresh-body">
-                Straightforward access to Audioflume&apos;s curated music and SFX catalogue, with plans for solo filmmakers, active studios, and larger creative teams.
+                Film-forward music and SFX, curated around picture, pacing, and feeling so finding the right audio stays part of the creative process.
               </p>
               <div className="audioflume-home-editorial-refresh-actions">
                 <Link
@@ -264,6 +225,30 @@ export default async function Home() {
                 >
                   Explore Playlists
                 </Link>
+              </div>
+            </div>
+
+            <div className="audioflume-home-editorial-refresh-visual" aria-hidden="true">
+              <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-main">
+                <HomeEditorialR2Image
+                  images={homeHeroImages}
+                  startIndex={1}
+                  sizes="(max-width: 760px) 70vw, 42vw"
+                />
+              </div>
+              <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-medium">
+                <HomeEditorialR2Image
+                  images={homeHeroImages}
+                  startIndex={2}
+                  sizes="(max-width: 760px) 30vw, 18vw"
+                />
+              </div>
+              <div className="audioflume-home-editorial-refresh-image audioflume-home-editorial-refresh-image-small">
+                <HomeEditorialR2Image
+                  images={homeHeroImages}
+                  startIndex={4}
+                  sizes="(max-width: 760px) 24vw, 13vw"
+                />
               </div>
             </div>
           </div>
