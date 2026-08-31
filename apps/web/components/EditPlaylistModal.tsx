@@ -2,10 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import ModalShell from "@/components/ModalShell";
-import {
-  MediaImageChangeOverlay,
-  MediaImageRemoveButton,
-} from "@/components/MediaImageOverlayControls";
+import { MediaImageUploadOverlay } from "@/components/MediaImageOverlayControls";
 import {
   modalDeleteButtonClass,
   modalFieldLabelClass,
@@ -80,15 +77,6 @@ export default function EditPlaylistModal({
     }
 
     setLocalCoverPreview(null);
-  }
-
-  function removeCoverImage() {
-    if (busy) return;
-
-    releaseLocalCoverPreview();
-    setCoverUploadError(null);
-    onCoverPreviewChange(null);
-    clearFileInput();
   }
 
   async function handleCoverChange(file: File) {
@@ -212,18 +200,18 @@ export default function EditPlaylistModal({
 
           {visibleCoverPreview ? (
             <div className="group relative mt-2 h-[112px] w-[112px] overflow-visible">
-              <MediaImageRemoveButton
-                small
-                hoverOnly
-                disabled={busy}
-                onClick={removeCoverImage}
-                ariaLabel="Remove cover image"
-              />
-
               <div
                 onClick={() => {
                   if (!busy) fileInputRef.current?.click();
                 }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  if (busy) return;
+                  const file = e.dataTransfer.files?.[0];
+                  if (!file) return;
+                  void handleCoverChange(file);
+                }}
+                onDragOver={(e) => e.preventDefault()}
                 className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
               >
                 <img
@@ -232,7 +220,7 @@ export default function EditPlaylistModal({
                   className="h-full w-full object-cover"
                 />
 
-                <MediaImageChangeOverlay normalWeight />
+                <MediaImageUploadOverlay />
 
                 {isUploadingCover && (
                   <div className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)]">
