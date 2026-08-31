@@ -497,7 +497,7 @@ export default function AdminDashboardPage() {
           <Link
             key={action.href}
             href={action.href}
-            className={`inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border px-5 text-[12px] font-normal transition ${
+            className={`admin-dashboard-quick-action inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border px-5 text-[12px] font-normal transition ${
               index === 0
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
