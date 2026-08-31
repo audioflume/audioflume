@@ -495,7 +495,7 @@ export default function ArtistMusicUploader({
                   return (
                     <div
                       key={song.id}
-                      className="grid min-h-[72px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs"
+                      className="grid min-h-[76px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs"
                       style={{
                         borderBottom:
                           index === visibleSongs.length - 1
