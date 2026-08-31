@@ -213,6 +213,7 @@ export default function EditPlaylistModal({
           {visibleCoverPreview ? (
             <div className="group relative mt-2 h-[112px] w-[112px] overflow-visible">
               <MediaImageRemoveButton
+                small
                 disabled={busy}
                 onClick={removeCoverImage}
                 ariaLabel="Remove cover image"
