@@ -29,6 +29,7 @@
   width: 100%;
   max-width: 650px;
   justify-self: end;
+  transform: translateY(36px);
 }
 
 .audioflume-home-editorial-refresh-eyebrow {
@@ -189,7 +190,8 @@
   right: 4%;
   z-index: 2;
   width: 20.5%;
-  height: 22.5%;
+  height: auto;
+  aspect-ratio: 1;
 }
 
 .audioflume-home-editorial-refresh-image-small {
@@ -197,7 +199,9 @@
   left: 11%;
   z-index: 3;
   width: 13.5%;
-  height: 15.5%;
+  height: auto;
+  aspect-ratio: 1;
+  transform: translateX(12px);
 }
 
 .audioflume-home-editorial-refresh-playlists {
@@ -276,6 +280,7 @@
     order: 2;
     max-width: 620px;
     justify-self: start;
+    transform: none;
   }
 
   .audioflume-home-editorial-refresh-playlist-copy-block {
