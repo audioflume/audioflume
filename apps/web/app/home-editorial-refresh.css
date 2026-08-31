@@ -1,0 +1,281 @@
+.audioflume-home-editorial-refresh {
+  position: relative;
+  overflow: hidden;
+  background: var(--filmwave-black);
+  color: var(--filmwave-white);
+}
+
+.audioflume-home-editorial-refresh-inner {
+  width: calc(
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
+  );
+  max-width: var(--filmwave-editorial-max-width);
+  margin: 0 auto;
+  padding: clamp(88px, 8vw, 126px) 0 clamp(72px, 7vw, 108px);
+}
+
+.audioflume-home-editorial-refresh-main {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.22fr);
+  align-items: center;
+  gap: clamp(60px, 8vw, 132px);
+}
+
+.audioflume-home-editorial-refresh-copy {
+  position: relative;
+  z-index: 3;
+  max-width: 560px;
+}
+
+.audioflume-home-editorial-refresh-eyebrow {
+  display: block;
+  margin: 0 0 18px;
+  color: rgba(255, 255, 255, 0.58);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 14.5px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.audioflume-home-editorial-refresh-heading {
+  max-width: 600px;
+  margin: 0;
+  color: var(--filmwave-white);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(42px, 4.5vw, 68px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.94;
+}
+
+.audioflume-home-editorial-refresh-body {
+  max-width: 540px;
+  margin: 24px 0 0;
+  color: rgba(255, 255, 255, 0.72);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(16px, 1.45vw, 20px);
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.35;
+}
+
+.audioflume-home-editorial-refresh-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 30px;
+}
+
+.audioflume-home-editorial-refresh-actions > a {
+  min-width: 220px;
+}
+
+.audioflume-home-editorial-refresh-secondary-action {
+  border-color: rgba(255, 255, 255, 0.34) !important;
+  background: transparent !important;
+  color: var(--filmwave-white) !important;
+}
+
+.audioflume-home-editorial-refresh-secondary-action:hover,
+.audioflume-home-editorial-refresh-secondary-action:focus-visible {
+  border-color: var(--filmwave-white) !important;
+  background: var(--filmwave-white) !important;
+  color: var(--filmwave-black) !important;
+}
+
+.audioflume-home-editorial-refresh-visual {
+  position: relative;
+  width: min(100%, 760px);
+  height: clamp(430px, 42vw, 610px);
+  justify-self: end;
+}
+
+.audioflume-home-editorial-refresh-image {
+  position: absolute;
+  overflow: hidden;
+  background: #1a1a1a;
+}
+
+.audioflume-home-editorial-refresh-image img {
+  object-fit: cover;
+}
+
+.audioflume-home-editorial-refresh-image-main {
+  top: 0;
+  left: 8%;
+  width: 64%;
+  height: 82%;
+}
+
+.audioflume-home-editorial-refresh-image-medium {
+  top: 11%;
+  right: 0;
+  z-index: 2;
+  width: 29%;
+  height: 38%;
+}
+
+.audioflume-home-editorial-refresh-image-small {
+  right: 9%;
+  bottom: 0;
+  z-index: 3;
+  width: 22%;
+  height: 27%;
+}
+
+.audioflume-home-editorial-refresh-image-caption {
+  position: absolute;
+  right: 0;
+  bottom: 4%;
+  z-index: 4;
+  width: 36%;
+  color: rgba(255, 255, 255, 0.54);
+  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.45;
+  text-transform: uppercase;
+}
+
+.audioflume-home-editorial-refresh-playlists {
+  display: grid;
+  grid-template-columns: minmax(170px, 0.42fr) minmax(280px, 0.72fr) minmax(260px, 0.7fr) auto;
+  align-items: end;
+  gap: clamp(28px, 4vw, 64px);
+  margin-top: clamp(64px, 7vw, 104px);
+  padding-top: clamp(34px, 3.5vw, 50px);
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+
+.audioflume-home-editorial-refresh-playlists .audioflume-home-editorial-refresh-eyebrow {
+  margin: 0;
+  align-self: start;
+}
+
+.audioflume-home-editorial-refresh-playlist-heading {
+  margin: 0;
+  color: var(--filmwave-white);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(28px, 2.6vw, 40px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.audioflume-home-editorial-refresh-playlist-copy {
+  max-width: 430px;
+  margin: 0;
+  color: rgba(255, 255, 255, 0.62);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 14.5px;
+  font-weight: 300;
+  line-height: 1.45;
+}
+
+.audioflume-home-editorial-refresh-playlist-link {
+  align-self: end;
+  color: var(--filmwave-white);
+  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-size: 11px;
+  font-weight: 300;
+  letter-spacing: 0.04em;
+  line-height: 1.35;
+  text-decoration: none;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.audioflume-home-editorial-refresh-playlist-link:hover,
+.audioflume-home-editorial-refresh-playlist-link:focus-visible {
+  opacity: 0.68;
+  outline: none;
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-editorial-refresh-main {
+    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+    gap: 48px;
+  }
+
+  .audioflume-home-editorial-refresh-playlists {
+    grid-template-columns: minmax(160px, 0.45fr) minmax(260px, 0.8fr) minmax(0, 1fr);
+  }
+
+  .audioflume-home-editorial-refresh-playlist-link {
+    grid-column: 3;
+  }
+}
+
+@media (max-width: 760px) {
+  .audioflume-home-editorial-refresh-main {
+    grid-template-columns: 1fr;
+    gap: 54px;
+  }
+
+  .audioflume-home-editorial-refresh-copy {
+    max-width: 620px;
+  }
+
+  .audioflume-home-editorial-refresh-visual {
+    width: min(100%, 620px);
+    height: clamp(390px, 82vw, 540px);
+    justify-self: center;
+  }
+
+  .audioflume-home-editorial-refresh-playlists {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 18px;
+  }
+
+  .audioflume-home-editorial-refresh-playlist-link {
+    grid-column: auto;
+    margin-top: 8px;
+  }
+}
+
+@media (max-width: 520px) {
+  .audioflume-home-editorial-refresh-inner {
+    width: calc(100% - 40px);
+  }
+
+  .audioflume-home-editorial-refresh-heading {
+    font-size: clamp(38px, 11vw, 54px);
+  }
+
+  .audioflume-home-editorial-refresh-actions {
+    flex-direction: column;
+  }
+
+  .audioflume-home-editorial-refresh-actions > a {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .audioflume-home-editorial-refresh-visual {
+    height: 390px;
+  }
+
+  .audioflume-home-editorial-refresh-image-main {
+    left: 0;
+    width: 70%;
+  }
+
+  .audioflume-home-editorial-refresh-image-medium {
+    width: 33%;
+  }
+
+  .audioflume-home-editorial-refresh-image-small {
+    right: 4%;
+    width: 25%;
+  }
+
+  .audioflume-home-editorial-refresh-image-caption {
+    right: 0;
+    width: 42%;
+    font-size: 10px;
+  }
+}
