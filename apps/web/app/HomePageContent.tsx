@@ -425,7 +425,11 @@ function HomeIncludedFeatures() {
   return (
     <section
       className="audioflume-pricing-includes-section"
-      style={{ marginTop: "clamp(90px, 9vw, 142px)" }}
+      style={{
+        marginTop: "clamp(24px, 2.5vw, 40px)",
+        paddingTop: "clamp(32px, 3vw, 48px)",
+        paddingBottom: "clamp(40px, 4vw, 60px)",
+      }}
     >
       <div>
         <p className="audioflume-home-eyebrow">Built into Audioflume</p>
