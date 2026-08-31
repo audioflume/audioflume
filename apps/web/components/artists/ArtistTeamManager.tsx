@@ -271,7 +271,7 @@ export default function ArtistTeamManager({
 
           <form
             onSubmit={handleInvite}
-            className="grid gap-3 px-5 pb-5 md:grid-cols-[minmax(0,1fr)_170px_auto] md:items-end"
+            className="grid gap-3 px-5 pb-5 pt-4 md:grid-cols-[minmax(0,1fr)_170px_auto] md:items-end"
           >
             <label className="block">
               <span className="mb-2 block text-[11px] font-medium text-[var(--text-secondary)]">
@@ -346,7 +346,7 @@ export default function ArtistTeamManager({
             No team members found.
           </div>
         ) : (
-          <div>
+          <div className="pt-4">
             {members.map((member, index) => {
               const memberBusy = busyKey === `member:${member.clerk_user_id}`;
               const isOwner = member.role === "owner";
@@ -436,7 +436,7 @@ export default function ArtistTeamManager({
             <h2 className="filmwave-backend-section-title">Pending invitations</h2>
           </div>
 
-          <div>
+          <div className="pt-4">
             {invitations.map((invitation, index) => {
               const invitationBusy = busyKey === `invite:${invitation.id}`;
 
