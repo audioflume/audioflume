@@ -139,10 +139,8 @@ function CardHeader({
   action?: ReactNode;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4 px-5 pb-3 pt-5">
-      <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-        {title}
-      </h2>
+    <div className="filmwave-backend-section-header-bordered">
+      <h2 className="filmwave-backend-section-title">{title}</h2>
       {action ? <div className="shrink-0">{action}</div> : null}
     </div>
   );
