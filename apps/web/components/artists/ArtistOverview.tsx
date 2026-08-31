@@ -554,12 +554,12 @@ export default function ArtistOverview({
             {!cropEditing ? (
               <>
                 <div
-        className="pointer-events-none absolute inset-0"
-        style={{
-          background:
-            "linear-gradient(rgba(13, 13, 13, 0.2), rgba(13, 13, 13, 0.2)), linear-gradient(180deg, rgba(0, 0, 0, 0.115) 0%, rgba(0, 0, 0, 0.03) 46%, rgba(0, 0, 0, 0.06) 64%, transparent 80%)",
-        }}
-      />
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    background:
+                      "linear-gradient(rgba(13, 13, 13, 0.2), rgba(13, 13, 13, 0.2)), linear-gradient(180deg, rgba(0, 0, 0, 0.115) 0%, rgba(0, 0, 0, 0.03) 46%, rgba(0, 0, 0, 0.06) 64%, transparent 80%)",
+                  }}
+                />
                 <div className="pointer-events-none relative z-[2] flex min-h-[355px] flex-col justify-between p-5 md:p-6">
                   <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
                     <span
@@ -741,7 +741,7 @@ export default function ArtistOverview({
                     type="button"
                     onClick={() => handleRecentSongPlay(song)}
                     disabled={!playerSong?.audioUrl}
-                    className="group/artist-overview-thumb relative h-11 w-11 shrink-0 cursor-pointer overflow-hidden rounded-[5px] bg-[var(--bg-tertiary)] disabled:cursor-default"
+                    className="group/artist-overview-thumb relative h-[52px] w-[52px] shrink-0 cursor-pointer overflow-hidden rounded-[5px] bg-[var(--bg-tertiary)] disabled:cursor-default"
                     style={
                       { "--filmwave-song-card-play-size": "32px" } as CSSProperties
                     }
