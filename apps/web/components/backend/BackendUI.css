@@ -385,10 +385,6 @@ main:has(> aside[class*="admin-sidebar-width"])
   .filmwave-backend-section,
 main:has(> aside[class*="admin-sidebar-width"])
   > section
-  :is(section, article, div, a)[class*="border"][class*="rounded-"]
-    :not([class~="rounded-full"]),
-main:has(> aside[class*="admin-sidebar-width"])
-  > section
   :is(section, article, div, a)[class*="border"][class*="rounded-"]:not(
     [class~="rounded-full"]
   ):not(.filmwave-backend-button):not(:has(input[role="searchbox"])) {
