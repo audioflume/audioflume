@@ -755,11 +755,9 @@ export default function Header() {
 
             {isLoaded && (
               <div className="filmwave-header-right-actions">
-                {!user && (
-                  <Link href="/pricing" className="filmwave-header-utility-link">
-                    Pricing
-                  </Link>
-                )}
+                <Link href="/pricing" className="filmwave-header-utility-link">
+                  Pricing
+                </Link>
 
                 <a
                   href="mailto:hello@filmwave.io"
