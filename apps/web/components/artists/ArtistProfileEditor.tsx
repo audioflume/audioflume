@@ -350,7 +350,7 @@ export default function ArtistProfileEditor({
           <h2 className="filmwave-backend-section-title">Artist profile</h2>
         </div>
 
-        <div className="grid gap-5 px-5 pb-5 pt-4">
+        <div className="grid gap-[var(--spacing)] px-5 pb-5 pt-4">
           <div className="grid gap-4 md:grid-cols-2">
             <label className="block">
               <FieldLabel>Name (Required)</FieldLabel>
