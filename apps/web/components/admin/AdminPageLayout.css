@@ -109,8 +109,21 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 .admin-song-upload-content-page .admin-song-form-card-header {
   min-height: 56px;
   padding: 16px var(--admin-song-card-x);
-  border-bottom: 1px solid var(--border-subtle);
+  border-bottom: 0;
   background: var(--bg-primary);
+}
+
+.admin-song-upload-content-page
+  form
+  > aside
+  > .admin-song-form-card:first-child
+  > .admin-song-form-card-header,
+.admin-song-upload-content-page
+  form
+  > aside
+  > .admin-song-form-card:last-child
+  > .admin-song-form-card-header {
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .admin-song-upload-content-page .admin-song-form-kicker {
