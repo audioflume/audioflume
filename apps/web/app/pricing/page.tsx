@@ -5,6 +5,8 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
+import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 
@@ -414,7 +416,21 @@ export default async function PricingPage() {
         </div>
       </section>
 
-      <section className="bg-[var(--bg-tertiary)] text-[var(--text-primary)]">
+      <section className="group/pricing-testimonials relative overflow-hidden bg-[var(--bg-tertiary)] text-[var(--text-primary)]">
+        <div
+          className="pointer-events-none absolute left-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition group-hover/pricing-testimonials:opacity-100 sm:flex"
+          aria-hidden="true"
+        >
+          <ChevronLeftIcon size={18} />
+        </div>
+
+        <div
+          className="pointer-events-none absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition group-hover/pricing-testimonials:opacity-100 sm:flex"
+          aria-hidden="true"
+        >
+          <ChevronRightIcon size={18} />
+        </div>
+
         <div className="mx-auto w-[calc(100%-var(--filmwave-editorial-inset)-var(--filmwave-editorial-inset))] max-w-[var(--filmwave-editorial-max-width)] py-[clamp(84px,8vw,126px)]">
           <div className="mx-auto max-w-[900px] text-left">
             <p className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-light uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
