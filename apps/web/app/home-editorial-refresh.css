@@ -76,6 +76,12 @@
   min-width: 220px;
 }
 
+.audioflume-home-editorial-refresh-actions > a,
+.audioflume-home-editorial-refresh-playlist-action {
+  height: 44px;
+  min-height: 44px;
+}
+
 .audioflume-home-editorial-refresh-primary-action,
 .audioflume-home-editorial-refresh-playlist-action {
   border-color: var(--filmwave-white) !important;
