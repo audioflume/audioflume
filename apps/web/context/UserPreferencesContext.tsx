@@ -1,5 +1,6 @@
 "use client";
 
+import { useUser } from "@clerk/nextjs";
 import {
   createContext,
   useContext,
@@ -134,6 +135,7 @@ function suppressPlaylistViewTransition() {
 }
 
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
+  const { isLoaded: isAuthLoaded, isSignedIn } = useUser();
   const [playlistViewMode, setPlaylistViewModeState] =
     useState<PlaylistViewMode>("grid");
   const [playlistSortMode, setPlaylistSortModeState] =
@@ -236,6 +238,8 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
           setPreferencesLoaded(true);
         }
 
+        if (!isAuthLoaded || !isSignedIn) return;
+
         const res = await fetch("/api/user-preferences", {
           method: "GET",
           cache: "no-store",
@@ -304,11 +308,13 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [isAuthLoaded, isSignedIn]);
 
   const patchPreferences = async (
     updates: Partial<UserPreferencesResponse>,
   ) => {
+    if (!isAuthLoaded || !isSignedIn) return;
+
     try {
       const res = await fetch("/api/user-preferences", {
         method: "PATCH",
@@ -388,6 +394,8 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
       themeMode,
       showEditPointMarkers,
       preferencesLoaded,
+      isAuthLoaded,
+      isSignedIn,
     ],
   );
 
