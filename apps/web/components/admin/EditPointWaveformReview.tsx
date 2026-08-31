@@ -565,7 +565,7 @@ export default function EditPointWaveformReview({
   };
 
   return (
-    <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
+    <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-4">
       <style>{`
         .edit-point-play-button {
           background: transparent;
@@ -655,7 +655,6 @@ export default function EditPointWaveformReview({
 
         .cue-point-table-shell {
           container-type: inline-size;
-          clip-path: inset(0 round 0.75rem);
         }
 
         .cue-point-delete-button {
@@ -913,7 +912,7 @@ export default function EditPointWaveformReview({
         </div>
       </div>
 
-      <div className="cue-point-table-shell mt-4 overflow-hidden rounded-xl border border-[var(--border)]">
+      <div className="cue-point-table-shell mt-4 overflow-hidden border border-[var(--border)]">
         <div>
           <div className="cue-point-row-grid border-b border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
