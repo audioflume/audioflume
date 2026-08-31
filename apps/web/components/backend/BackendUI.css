@@ -385,18 +385,25 @@ main:has(> aside[class*="admin-sidebar-width"])
   .filmwave-backend-section,
 main:has(> aside[class*="admin-sidebar-width"])
   > section
-  section[class*="rounded-[10px]"],
+  :is(section, article, div, a)[class*="border"][class*="rounded-"]
+    :not([class~="rounded-full"]),
 main:has(> aside[class*="admin-sidebar-width"])
   > section
-  div[class*="rounded-[10px]"][class*="border"],
-main:has(> aside[class*="admin-sidebar-width"])
-  > section
-  div[class*="grid"][class*="rounded-[7px]"][class*="border"] {
+  :is(section, article, div, a)[class*="border"][class*="rounded-"]:not(
+    [class~="rounded-full"]
+  ):not(.filmwave-backend-button):not(:has(input[role="searchbox"])) {
   border-radius: 0;
 }
 
 main:has(> aside[class*="admin-sidebar-width"])
   > section
-  :is(button, div)[class*="overflow-hidden"]:has(img) {
+  :is(button, div)[class*="overflow-hidden"][class*="bg-[var(--bg-tertiary)]"]:not(
+    [class~="rounded-full"]
+  ),
+main:has(> aside[class*="admin-sidebar-width"])
+  > section
+  :is(button, div)[class*="overflow-hidden"]:has(img):not(
+    [class~="rounded-full"]
+  ) {
   border-radius: 0;
 }
