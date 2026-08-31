@@ -399,16 +399,6 @@ main:has(> aside[class*="admin-sidebar-width"])
   border-radius: 0;
 }
 
-/* Admin song file rows are controls, so keep their canonical rounded radius. */
-main:has(> aside[class*="admin-sidebar-width"]):has(.admin-song-form-card)
-  > section
-  form
-  section:has(> h2)
-  > [class~="grid"][class~="gap-2"]
-  > div[class*="rounded-"][class*="border"] {
-  border-radius: var(--filmwave-backend-control-radius);
-}
-
 /* Dashboard content spacing after canonical backend section headers. */
 .admin-dashboard-content-page
   .filmwave-backend-section-header-bordered
