@@ -396,3 +396,13 @@ main:has(> aside[class*="admin-sidebar-width"])
   ) {
   border-radius: 0;
 }
+
+/* Dashboard content spacing after canonical backend section headers. */
+.admin-dashboard-content-page
+  .filmwave-backend-section-header-bordered
+  + :is(
+    [class~="grid"][class~="px-5"][class~="pb-5"],
+    [class~="mb-5"][class~="overflow-hidden"]
+  ) {
+  padding-top: 16px;
+}
