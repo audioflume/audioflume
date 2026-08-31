@@ -8,6 +8,7 @@ type MediaImageRemoveButtonProps = {
   onClick: () => void;
   disabled?: boolean;
   ariaLabel: string;
+  small?: boolean;
 };
 
 export function MediaImageChangeOverlay({
@@ -26,6 +27,7 @@ export function MediaImageRemoveButton({
   onClick,
   disabled = false,
   ariaLabel,
+  small = false,
 }: MediaImageRemoveButtonProps) {
   return (
     <button
@@ -35,10 +37,28 @@ export function MediaImageRemoveButton({
         event.stopPropagation();
         onClick();
       }}
-      className="absolute right-1.5 top-1.5 z-20 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.58)] text-[13px] font-medium leading-none text-white backdrop-blur-[2px] transition hover:bg-[rgba(0,0,0,0.75)] disabled:cursor-default disabled:opacity-70"
+      className={`absolute right-1.5 top-1.5 z-20 flex ${
+        small ? "h-5 w-5" : "h-6 w-6"
+      } cursor-pointer items-center justify-center rounded-full bg-[rgba(0,0,0,0.58)] text-[13px] font-medium leading-none text-white backdrop-blur-[2px] transition hover:bg-[rgba(0,0,0,0.75)] disabled:cursor-default disabled:opacity-70`}
       aria-label={ariaLabel}
     >
-      ×
+      {small ? (
+        <svg
+          viewBox="0 0 12 12"
+          aria-hidden="true"
+          className="h-[9px] w-[9px]"
+          fill="none"
+        >
+          <path
+            d="M2.5 2.5 9.5 9.5M9.5 2.5 2.5 9.5"
+            stroke="currentColor"
+            strokeWidth="1.25"
+            strokeLinecap="round"
+          />
+        </svg>
+      ) : (
+        "×"
+      )}
     </button>
   );
 }
