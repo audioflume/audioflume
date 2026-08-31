@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 const FLASH_INTERVAL_MS = 140;
 
@@ -14,7 +14,9 @@ export default function PricingHeroImageFlash({
   images,
   mediaClassName = "audioflume-home-flash-hero-media",
 }: PricingHeroImageFlashProps) {
+  const mediaRef = useRef<HTMLDivElement>(null);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [isInViewport, setIsInViewport] = useState(true);
   const [settledSources, setSettledSources] = useState<Set<string>>(
     () => new Set(),
   );
@@ -36,7 +38,22 @@ export default function PricingHeroImageFlash({
   }, [images]);
 
   useEffect(() => {
-    if (!allImagesSettled || usableImages.length <= 1) return;
+    const media = mediaRef.current;
+    if (!media || typeof IntersectionObserver === "undefined") return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsInViewport(entry.isIntersecting);
+      },
+      { threshold: 0.01 },
+    );
+
+    observer.observe(media);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!allImagesSettled || usableImages.length <= 1 || !isInViewport) return;
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -48,7 +65,7 @@ export default function PricingHeroImageFlash({
     }, FLASH_INTERVAL_MS);
 
     return () => window.clearInterval(interval);
-  }, [allImagesSettled, usableImages.length]);
+  }, [allImagesSettled, isInViewport, usableImages.length]);
 
   function markSettled(src: string) {
     setSettledSources((current) => {
@@ -69,7 +86,7 @@ export default function PricingHeroImageFlash({
   }
 
   return (
-    <div className={mediaClassName} aria-hidden="true">
+    <div ref={mediaRef} className={mediaClassName} aria-hidden="true">
       {images.map((src, index) => (
         <Image
           key={src}
