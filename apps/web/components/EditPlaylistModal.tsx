@@ -214,6 +214,7 @@ export default function EditPlaylistModal({
             <div className="group relative mt-2 h-[112px] w-[112px] overflow-visible">
               <MediaImageRemoveButton
                 small
+                hoverOnly
                 disabled={busy}
                 onClick={removeCoverImage}
                 ariaLabel="Remove cover image"
@@ -231,7 +232,7 @@ export default function EditPlaylistModal({
                   className="h-full w-full object-cover"
                 />
 
-                <MediaImageChangeOverlay />
+                <MediaImageChangeOverlay normalWeight />
 
                 {isUploadingCover && (
                   <div className="absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-preview)]">
