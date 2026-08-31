@@ -11,6 +11,15 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   padding-top: calc(var(--filmwave-header-height, 75px) + 13px) !important;
 }
 
+.admin-dashboard-content-page
+  .filmwave-backend-section-header-bordered
+  + :is(
+    [class~="grid"][class~="px-5"][class~="pb-5"],
+    [class~="mb-5"][class~="overflow-hidden"]
+  ) {
+  padding-top: 16px;
+}
+
 /* Shared admin missing-content message treatment. */
 .filmwave-admin-content-page
   :is(
@@ -102,7 +111,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page .admin-song-form-card {
-  border-radius: 10px;
+  border-radius: 0;
   background: var(--bg-primary);
 }
 
@@ -326,7 +335,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > div[class*="md:grid-cols-2"]
   > div {
   border: 1px solid var(--border);
-  border-radius: 10px;
+  border-radius: 0;
   background: var(--bg-primary);
   padding: 20px var(--admin-song-card-x) var(--admin-song-card-bottom);
 }
