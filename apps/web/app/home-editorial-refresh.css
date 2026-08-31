@@ -16,7 +16,7 @@
 
 .audioflume-home-editorial-refresh-main {
   display: grid;
-  grid-template-columns: minmax(0, 1.22fr) minmax(300px, 0.78fr);
+  grid-template-columns: minmax(0, 1.1fr) minmax(340px, 0.9fr);
   align-items: center;
   gap: clamp(60px, 8vw, 132px);
 }
@@ -25,7 +25,7 @@
   position: relative;
   z-index: 3;
   order: 2;
-  max-width: 560px;
+  max-width: 660px;
   justify-self: end;
 }
 
@@ -43,7 +43,7 @@
 
 .audioflume-home-editorial-refresh-heading,
 .audioflume-home-editorial-refresh-playlist-heading {
-  max-width: 600px;
+  max-width: 680px;
   margin: 0;
   color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -55,7 +55,7 @@
 
 .audioflume-home-editorial-refresh-body,
 .audioflume-home-editorial-refresh-playlist-copy {
-  max-width: 540px;
+  max-width: 620px;
   margin: 24px 0 0;
   color: rgba(255, 255, 255, 0.72);
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -152,7 +152,7 @@
 
 .audioflume-home-editorial-refresh-playlists {
   display: grid;
-  grid-template-columns: minmax(300px, 0.78fr) minmax(0, 1.22fr);
+  grid-template-columns: minmax(340px, 0.9fr) minmax(0, 1.1fr);
   align-items: center;
   gap: clamp(60px, 8vw, 132px);
   margin-top: clamp(96px, 9vw, 148px);
@@ -185,7 +185,7 @@
 .audioflume-home-editorial-refresh-playlist-copy-block {
   order: 1;
   width: 100%;
-  max-width: 560px;
+  max-width: 660px;
   justify-self: start;
 }
 
@@ -196,12 +196,12 @@
 
 @media (max-width: 980px) {
   .audioflume-home-editorial-refresh-main {
-    grid-template-columns: minmax(0, 1.2fr) minmax(260px, 0.8fr);
+    grid-template-columns: minmax(0, 1.08fr) minmax(280px, 0.92fr);
     gap: 48px;
   }
 
   .audioflume-home-editorial-refresh-playlists {
-    grid-template-columns: minmax(260px, 0.8fr) minmax(0, 1.2fr);
+    grid-template-columns: minmax(280px, 0.92fr) minmax(0, 1.08fr);
     gap: 48px;
   }
 }
