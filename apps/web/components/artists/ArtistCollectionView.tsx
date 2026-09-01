@@ -1,7 +1,10 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 
+import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 
@@ -38,26 +41,48 @@ export function ArtistCollectionGrid({ children }: { children: ReactNode }) {
 }
 
 export function ArtistCollectionGridCard({
+  sortableId,
   artworkUrl,
   artworkShape,
   title,
   meta,
   status,
-  dragHandle,
+  canDrag,
+  dragDisabled,
   actionLabel = "Edit",
   onClick,
 }: {
+  sortableId: string;
   artworkUrl: string | null;
   artworkShape: "square" | "wide";
   title: string;
   meta: string;
   status?: ReactNode;
-  dragHandle?: ReactNode;
+  canDrag: boolean;
+  dragDisabled: boolean;
   actionLabel?: string;
   onClick: () => void;
 }) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: sortableId, disabled: !canDrag || dragDisabled });
+
   return (
-    <article className="group min-w-0 text-[var(--text-primary)]">
+    <article
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.45 : 1,
+        zIndex: isDragging ? 2 : "auto",
+      }}
+      className="group min-w-0 text-[var(--text-primary)]"
+    >
       <div
         className={`relative w-full overflow-hidden bg-[var(--bg-secondary)] ${
           artworkShape === "wide" ? "aspect-[16/9]" : "aspect-square"
@@ -83,8 +108,16 @@ export function ArtistCollectionGridCard({
           )}
         </button>
 
-        {dragHandle ? (
-          <div className="absolute left-2 top-2 z-20">{dragHandle}</div>
+        {canDrag ? (
+          <div className="absolute left-2 top-2 z-20">
+            <BackendDragHandle
+              variant="overlay"
+              disabled={dragDisabled}
+              aria-label={`Drag ${title} to reorder`}
+              {...attributes}
+              {...listeners}
+            />
+          </div>
         ) : null}
 
         <button
