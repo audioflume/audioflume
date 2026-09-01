@@ -121,7 +121,7 @@ export default function ArtistClaimPanel() {
             </p>
             <a
               href="/artists/dashboard"
-              className="mt-5 inline-flex h-11 items-center justify-center rounded-none border border-[var(--border)] px-4 text-[12px] font-normal text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+              className="mt-5 inline-flex h-10 items-center justify-center rounded-none border border-[var(--border)] px-4 text-[12px] font-normal text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
             >
               Go to Artist Dashboard
             </a>
@@ -164,7 +164,7 @@ export default function ArtistClaimPanel() {
                     type="button"
                     disabled={Boolean(claimingId)}
                     onClick={() => void claimArtist(invitation)}
-                    className="inline-flex h-11 shrink-0 cursor-pointer items-center justify-center rounded-none border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-normal text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
+                    className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-none border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-normal text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     {claiming
                       ? invitation.ownership_transfer
