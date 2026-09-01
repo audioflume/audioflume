@@ -5,10 +5,39 @@ import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
-import GridViewIcon from "@/components/icons/GridViewIcon";
-import ListViewIcon from "@/components/icons/ListViewIcon";
 
 export type ArtistCollectionViewMode = "list" | "grid";
+
+function ArtistCollectionViewModeIcon({
+  mode,
+}: {
+  mode: ArtistCollectionViewMode;
+}) {
+  if (mode === "list") {
+    return (
+      <span
+        className="flex h-[18px] w-[18px] shrink-0 flex-col justify-between py-[2px]"
+        aria-hidden="true"
+      >
+        <span className="block h-[2px] w-full rounded-full bg-current" />
+        <span className="block h-[2px] w-full rounded-full bg-current" />
+        <span className="block h-[2px] w-full rounded-full bg-current" />
+      </span>
+    );
+  }
+
+  return (
+    <span
+      className="grid h-[18px] w-[18px] shrink-0 grid-cols-2 grid-rows-2 gap-[3px]"
+      aria-hidden="true"
+    >
+      <span className="border border-current" />
+      <span className="border border-current" />
+      <span className="border border-current" />
+      <span className="border border-current" />
+    </span>
+  );
+}
 
 export function ArtistCollectionViewToggle({
   viewMode,
@@ -27,7 +56,7 @@ export function ArtistCollectionViewToggle({
       title={`Switch to ${nextViewMode} view`}
       className="filmwave-backend-button filmwave-backend-button-secondary w-10 px-0"
     >
-      {viewMode === "grid" ? <ListViewIcon size={24} /> : <GridViewIcon size={24} />}
+      <ArtistCollectionViewModeIcon mode={nextViewMode} />
     </button>
   );
 }
