@@ -125,6 +125,13 @@
 }
 
 .audioflume-home-editorial-refresh-primary-action,
+.audioflume-home-editorial-refresh-secondary-action,
+.audioflume-home-editorial-refresh-playlist-action {
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.audioflume-home-editorial-refresh-primary-action,
 .audioflume-home-editorial-refresh-playlist-action {
   border-color: var(--filmwave-white) !important;
   background: var(--filmwave-white) !important;
