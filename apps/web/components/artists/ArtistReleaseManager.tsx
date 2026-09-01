@@ -18,6 +18,12 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 import ArtistCollaboratorsEditor from "@/components/artists/ArtistCollaboratorsEditor";
+import {
+  ArtistCollectionGrid,
+  ArtistCollectionGridCard,
+  ArtistCollectionViewToggle,
+  type ArtistCollectionViewMode,
+} from "@/components/artists/ArtistCollectionView";
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
 import ArtistTrackOrderRow, {
   type ArtistTrackOrderSong,
@@ -196,6 +202,7 @@ export default function ArtistReleaseManager({
   const [creating, setCreating] = useState(false);
   const [reordering, setReordering] = useState(false);
   const [reorderError, setReorderError] = useState("");
+  const [viewMode, setViewMode] = useState<ArtistCollectionViewMode>("list");
 
   useEffect(() => {
     let cancelled = false;
@@ -330,7 +337,8 @@ export default function ArtistReleaseManager({
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-end">
+      <div className="mb-4 flex items-center justify-end gap-2">
+        <ArtistCollectionViewToggle viewMode={viewMode} onChange={setViewMode} />
         {canManage ? (
           <button
             type="button"
@@ -343,53 +351,103 @@ export default function ArtistReleaseManager({
         ) : null}
       </div>
 
-      <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header">
-          <h2 className="filmwave-backend-section-title">Releases</h2>
-        </div>
+      {viewMode === "grid" ? (
+        <div>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="filmwave-backend-section-title">Releases</h2>
+          </div>
 
-        {reorderError ? (
-          <div className="px-5 pb-3 text-xs text-[var(--danger)]">{reorderError}</div>
-        ) : null}
+          {reorderError ? (
+            <div className="pb-3 text-xs text-[var(--danger)]">{reorderError}</div>
+          ) : null}
 
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={(event) => void handleReleaseDragEnd(event)}
-        >
-          <SortableContext
-            items={releases.map((release) => release.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="divide-y divide-[var(--border-subtle)]">
-              {loadState === "loading" ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
-                  Loading releases...
-                </div>
-              ) : null}
-              {loadState === "error" ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
-                  {loadError || "Releases could not be loaded."}
-                </div>
-              ) : null}
-              {loadState === "ready" && releases.length === 0 ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
-                  No releases created yet.
-                </div>
-              ) : null}
-              {releases.map((release) => (
-                <SortableReleaseRow
-                  key={release.id}
-                  release={release}
-                  canManage={canManage}
-                  disabled={reordering}
-                  onEdit={() => setSelectedReleaseId(release.id)}
-                />
-              ))}
+          {loadState === "loading" ? (
+            <div className="flex min-h-[144px] items-center justify-center text-xs text-[var(--text-muted)]">
+              Loading releases...
             </div>
-          </SortableContext>
-        </DndContext>
-      </section>
+          ) : null}
+          {loadState === "error" ? (
+            <div className="flex min-h-[144px] items-center justify-center text-center text-xs text-[var(--danger)]">
+              {loadError || "Releases could not be loaded."}
+            </div>
+          ) : null}
+          {loadState === "ready" && releases.length === 0 ? (
+            <div className="flex min-h-[144px] items-center justify-center text-xs text-[var(--text-muted)]">
+              No releases created yet.
+            </div>
+          ) : null}
+          {loadState === "ready" && releases.length > 0 ? (
+            <ArtistCollectionGrid>
+              {releases.map((release) => {
+                const releaseYear = getReleaseYear(release.release_date);
+                return (
+                  <ArtistCollectionGridCard
+                    key={release.id}
+                    artworkUrl={release.cover_image_url}
+                    artworkShape="square"
+                    title={release.title}
+                    meta={`${formatReleaseType(release.release_type)} · ${
+                      release.track_ids.length
+                    } ${release.track_ids.length === 1 ? "track" : "tracks"}${
+                      releaseYear ? ` · ${releaseYear}` : ""
+                    }`}
+                    status={<ReleaseStatusBadge status={release.status} />}
+                    onClick={() => setSelectedReleaseId(release.id)}
+                  />
+                );
+              })}
+            </ArtistCollectionGrid>
+          ) : null}
+        </div>
+      ) : (
+        <section className="filmwave-backend-section">
+          <div className="filmwave-backend-section-header">
+            <h2 className="filmwave-backend-section-title">Releases</h2>
+          </div>
+
+          {reorderError ? (
+            <div className="px-5 pb-3 text-xs text-[var(--danger)]">{reorderError}</div>
+          ) : null}
+
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={(event) => void handleReleaseDragEnd(event)}
+          >
+            <SortableContext
+              items={releases.map((release) => release.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="divide-y divide-[var(--border-subtle)]">
+                {loadState === "loading" ? (
+                  <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                    Loading releases...
+                  </div>
+                ) : null}
+                {loadState === "error" ? (
+                  <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
+                    {loadError || "Releases could not be loaded."}
+                  </div>
+                ) : null}
+                {loadState === "ready" && releases.length === 0 ? (
+                  <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                    No releases created yet.
+                  </div>
+                ) : null}
+                {releases.map((release) => (
+                  <SortableReleaseRow
+                    key={release.id}
+                    release={release}
+                    canManage={canManage}
+                    disabled={reordering}
+                    onEdit={() => setSelectedReleaseId(release.id)}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        </section>
+      )}
     </div>
   );
 }
