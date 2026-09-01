@@ -22,7 +22,7 @@ export function ArtistCollectionViewToggle({
       onClick={() => onChange(nextViewMode)}
       aria-label={`Switch to ${nextViewMode} view`}
       title={`Switch to ${nextViewMode} view`}
-      className="filmwave-backend-button filmwave-backend-button-secondary"
+      className="filmwave-backend-button filmwave-backend-button-secondary w-10 px-0"
     >
       {viewMode === "grid" ? <ListViewIcon size={14} /> : <GridViewIcon size={14} />}
     </button>
