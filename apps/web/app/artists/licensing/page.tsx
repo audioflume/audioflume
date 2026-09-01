@@ -141,7 +141,7 @@ export default function ArtistLicensingPage() {
             <Link
               href="/artists/apply"
               className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
-              style={{ height: "44px", borderRadius: 0, fontSize: "14px", fontWeight: 400 }}
+              style={{ height: "52px", borderRadius: 0, fontSize: "14px", fontWeight: 400 }}
             >
               Artist applications
             </Link>
