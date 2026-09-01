@@ -38,7 +38,7 @@ export default function AdminPlaylistPageStyles() {
         form
         + section {
         border: 1px solid var(--border);
-        border-radius: 10px;
+        border-radius: 0;
         background: var(--bg-primary);
         padding: 20px;
       }
@@ -280,6 +280,64 @@ export default function AdminPlaylistPageStyles() {
           [class~="rounded-md"],
           [class~="rounded-lg"]
         ) {
+        border-radius: 7px;
+      }
+
+      /* Large create/edit surfaces stay sharp while controls keep their own radii. */
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ) .admin-playlist-section-card,
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ) form > section,
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ) form > aside > div,
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ) form + section {
+        border-radius: 0;
+      }
+
+      /* Browse-filter subcategory options remain rounded controls. */
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ) .admin-playlist-shelf-card > div.grid > :is(div, button) {
         border-radius: 7px;
       }
     `}</style>
