@@ -73,7 +73,9 @@ export default async function ArtistApplyPage() {
         .artist-apply-page-root form > section > div:last-child .filmwave-backend-button {
           height: 44px;
           border-radius: 0;
-          font-size: 14px;
+          padding-right: 24px;
+          padding-left: 24px;
+          font-size: 12px;
           font-weight: 400;
         }
       `}</style>
