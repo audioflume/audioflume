@@ -1,10 +1,11 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { useEffect, type ReactNode } from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
+import { useUserPreferences } from "@/context/UserPreferencesContext";
 
 export type ArtistCollectionViewMode = "list" | "grid";
 
@@ -115,7 +116,22 @@ export function ArtistCollectionViewToggle({
   viewMode: ArtistCollectionViewMode;
   onChange: (viewMode: ArtistCollectionViewMode) => void;
 }) {
+  const {
+    artistCollectionViewMode,
+    setArtistCollectionViewMode,
+    preferencesLoaded,
+  } = useUserPreferences();
   const nextViewMode = viewMode === "grid" ? "list" : "grid";
+
+  useEffect(() => {
+    if (!preferencesLoaded || artistCollectionViewMode === viewMode) return;
+    onChange(artistCollectionViewMode);
+  }, [artistCollectionViewMode, onChange, preferencesLoaded, viewMode]);
+
+  function handleViewModeChange() {
+    setArtistCollectionViewMode(nextViewMode);
+    onChange(nextViewMode);
+  }
 
   return (
     <>
@@ -149,7 +165,7 @@ export function ArtistCollectionViewToggle({
       `}</style>
       <button
         type="button"
-        onClick={() => onChange(nextViewMode)}
+        onClick={handleViewModeChange}
         aria-label={`Switch to ${nextViewMode} view`}
         title={`Switch to ${nextViewMode} view`}
         className="artist-collection-view-toggle filmwave-backend-button filmwave-backend-button-secondary w-10 px-0"
