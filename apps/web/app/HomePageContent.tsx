@@ -412,7 +412,7 @@ function HomeSongs({
       <div className="mt-5 flex justify-center">
         <Link
           href="/music"
-          className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--filmwave-neutral-surface)] px-10 text-[13px] font-medium text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
+          className="inline-flex h-11 min-w-[280px] items-center justify-center rounded-none bg-[var(--filmwave-neutral-surface)] px-10 text-[13px] font-normal text-[var(--text-primary)] transition-colors hover:bg-[var(--text-primary)] hover:text-[var(--bg-primary)] focus-visible:bg-[var(--text-primary)] focus-visible:text-[var(--bg-primary)] focus-visible:outline-none"
         >
           Explore music library
         </Link>
