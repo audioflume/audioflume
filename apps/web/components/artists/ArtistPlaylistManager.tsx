@@ -165,7 +165,7 @@ export default function ArtistPlaylistManager({
   const [creating, setCreating] = useState(false);
   const [reordering, setReordering] = useState(false);
   const [listError, setListError] = useState("");
-  const [viewMode, setViewMode] = useState<ArtistCollectionViewMode>("list");
+  const [viewMode, setViewMode] = useState<ArtistCollectionViewMode>("grid");
 
   useEffect(() => {
     let cancelled = false;
