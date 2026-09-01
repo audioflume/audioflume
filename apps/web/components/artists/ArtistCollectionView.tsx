@@ -14,37 +14,19 @@ export function ArtistCollectionViewToggle({
   viewMode: ArtistCollectionViewMode;
   onChange: (viewMode: ArtistCollectionViewMode) => void;
 }) {
+  const nextViewMode = viewMode === "grid" ? "list" : "grid";
+
   return (
-    <div className="flex items-center gap-1" aria-label="Collection view">
-      <button
-        type="button"
-        onClick={() => onChange("list")}
-        aria-label="List view"
-        aria-pressed={viewMode === "list"}
-        title="List view"
-        className={`filmwave-backend-button filmwave-backend-button-compact ${
-          viewMode === "list"
-            ? "filmwave-backend-button-primary"
-            : "filmwave-backend-button-secondary"
-        }`}
-      >
-        <ListViewIcon size={14} />
-      </button>
-      <button
-        type="button"
-        onClick={() => onChange("grid")}
-        aria-label="Grid view"
-        aria-pressed={viewMode === "grid"}
-        title="Grid view"
-        className={`filmwave-backend-button filmwave-backend-button-compact ${
-          viewMode === "grid"
-            ? "filmwave-backend-button-primary"
-            : "filmwave-backend-button-secondary"
-        }`}
-      >
-        <GridViewIcon size={14} />
-      </button>
-    </div>
+    <button
+      type="button"
+      onClick={() => onChange(nextViewMode)}
+      aria-label={`Switch to ${nextViewMode} view`}
+      title={`Switch to ${nextViewMode} view`}
+      className="filmwave-backend-button filmwave-backend-button-secondary"
+    >
+      {viewMode === "grid" ? <ListViewIcon size={14} /> : <GridViewIcon size={14} />}
+      {viewMode === "grid" ? "List View" : "Grid View"}
+    </button>
   );
 }
 
@@ -62,6 +44,7 @@ export function ArtistCollectionGridCard({
   title,
   meta,
   status,
+  actionLabel = "Edit",
   onClick,
 }: {
   artworkUrl: string | null;
@@ -69,41 +52,54 @@ export function ArtistCollectionGridCard({
   title: string;
   meta: string;
   status?: ReactNode;
+  actionLabel?: string;
   onClick: () => void;
 }) {
   return (
-    <button
-      type="button"
-      onClick={onClick}
-      className="group block min-w-0 border-0 bg-transparent p-0 text-left text-[var(--text-primary)]"
-    >
-      <span
-        className={`relative block w-full overflow-hidden bg-[var(--bg-secondary)] ${
-          artworkShape === "wide" ? "aspect-[16/9]" : "aspect-square"
-        }`}
+    <article className="group min-w-0 text-[var(--text-primary)]">
+      <button
+        type="button"
+        onClick={onClick}
+        className="block w-full border-0 bg-transparent p-0 text-left"
+        aria-label={`${actionLabel} ${title}`}
       >
-        {artworkUrl ? (
-          <img
-            src={artworkUrl}
-            alt=""
-            className="block h-full w-full object-cover transition-opacity group-hover:opacity-80"
-          />
-        ) : (
-          <span
-            className="block h-full w-full bg-[var(--bg-secondary)] transition-opacity group-hover:opacity-80"
-            aria-hidden="true"
-          />
-        )}
-      </span>
-      <span className="block pt-2.5">
-        <span className="block truncate text-[13px] font-medium leading-[1.35]">
-          {title}
+        <span
+          className={`relative block w-full overflow-hidden bg-[var(--bg-secondary)] ${
+            artworkShape === "wide" ? "aspect-[16/9]" : "aspect-square"
+          }`}
+        >
+          {artworkUrl ? (
+            <img
+              src={artworkUrl}
+              alt=""
+              className="block h-full w-full object-cover transition-opacity group-hover:opacity-80"
+            />
+          ) : (
+            <span
+              className="block h-full w-full bg-[var(--bg-secondary)] transition-opacity group-hover:opacity-80"
+              aria-hidden="true"
+            />
+          )}
         </span>
-        <span className="mt-1 block truncate text-[11px] leading-[1.45] text-[var(--text-muted)]">
-          {meta}
-        </span>
-        {status ? <span className="mt-2 block">{status}</span> : null}
-      </span>
-    </button>
+      </button>
+
+      <div className="flex items-start justify-between gap-3 pt-2.5">
+        <div className="min-w-0 flex-1">
+          <div className="truncate text-[13px] font-medium leading-[1.35]">{title}</div>
+          <div className="mt-1 truncate text-[11px] leading-[1.45] text-[var(--text-muted)]">
+            {meta}
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={onClick}
+          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0"
+        >
+          {actionLabel}
+        </button>
+      </div>
+
+      {status ? <div className="mt-2">{status}</div> : null}
+    </article>
   );
 }
