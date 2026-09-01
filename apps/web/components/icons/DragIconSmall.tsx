@@ -10,6 +10,7 @@ export default function DragIconSmall({ size = 13 }: DragIconSmallProps) {
       viewBox="0 0 24 24"
       fill="none"
       aria-hidden="true"
+      className="filmwave-drag-icon"
     >
       <path
         d="M8 7H16"
