@@ -69,6 +69,14 @@ export default async function ArtistApplyPage() {
 
   return (
     <main className="artist-apply-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <style>{`
+        .artist-apply-page-root form > section > div:last-child .filmwave-backend-button {
+          height: 44px;
+          border-radius: 0;
+          font-size: 14px;
+          font-weight: 400;
+        }
+      `}</style>
       <section className="relative isolate overflow-hidden bg-[#111111] px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
         <div
           aria-hidden="true"
