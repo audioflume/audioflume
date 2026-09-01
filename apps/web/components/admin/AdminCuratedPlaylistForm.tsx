@@ -94,6 +94,7 @@ function SortableSongRow({
         opacity: isDragging ? 0.3 : 1,
         position: "relative",
         zIndex: isDragging ? 1 : "auto",
+        borderRadius: 7,
       }}
       className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
     >
@@ -156,7 +157,10 @@ function SortableSongRow({
 
 function DragOverlaySongRow({ song }: { song: CuratedPlaylistSong }) {
   return (
-    <div className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 shadow-xl">
+    <div
+      style={{ borderRadius: 7 }}
+      className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2 shadow-xl"
+    >
       <div className="flex h-10 w-7 shrink-0 items-center justify-center text-[var(--text-muted)] opacity-40">
         <DragIconSmall />
       </div>
