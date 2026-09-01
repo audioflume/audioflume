@@ -205,7 +205,7 @@
 .audioflume-pricing-plan {
   display: flex;
   min-width: 0;
-  min-height: 610px;
+  min-height: 576px;
   flex-direction: column;
   border: 1px solid var(--border);
   background: var(--bg-secondary);
