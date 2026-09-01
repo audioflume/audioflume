@@ -218,7 +218,7 @@ export default function ArtistReleaseManager({
   const [creating, setCreating] = useState(false);
   const [reordering, setReordering] = useState(false);
   const [reorderError, setReorderError] = useState("");
-  const [viewMode, setViewMode] = useState<ArtistCollectionViewMode>("list");
+  const [viewMode, setViewMode] = useState<ArtistCollectionViewMode>("grid");
 
   useEffect(() => {
     let cancelled = false;
