@@ -107,7 +107,23 @@ function releaseYearToDate(value: string) {
 }
 
 function ReleaseStatusBadge({ status }: { status: string }) {
-  return <BackendStatusBadge>{formatStatus(status)}</BackendStatusBadge>;
+  const label = formatStatus(status);
+
+  if (status === "published") {
+    return (
+      <span
+        className="filmwave-backend-status-badge text-[var(--text-secondary)]"
+        style={{
+          background:
+            "color-mix(in srgb, var(--text-primary) 10%, var(--bg-tertiary))",
+        }}
+      >
+        {label}
+      </span>
+    );
+  }
+
+  return <BackendStatusBadge>{label}</BackendStatusBadge>;
 }
 
 function SortableReleaseRow({
@@ -392,6 +408,7 @@ export default function ArtistReleaseManager({
                       releaseYear ? ` · ${releaseYear}` : ""
                     }`}
                     status={<ReleaseStatusBadge status={release.status} />}
+                    actionLabel={canManage ? "Edit" : "View"}
                     onClick={() => setSelectedReleaseId(release.id)}
                   />
                 );
