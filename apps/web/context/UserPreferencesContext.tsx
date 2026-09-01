@@ -17,6 +17,7 @@ import {
 } from "@/lib/editPointMarkerVisibility";
 
 export type PlaylistViewMode = "grid" | "list";
+export type ArtistCollectionViewMode = "grid" | "list";
 export type PlaylistSortMode = "custom" | "alphabetical";
 export type SidebarProjectSortMode = "custom" | "alphabetical";
 export type ProjectAssetAddTarget = "root" | "media_folder";
@@ -25,6 +26,9 @@ export type ThemeMode = "light" | "dark";
 type UserPreferencesContextValue = {
   playlistViewMode: PlaylistViewMode;
   setPlaylistViewMode: (value: PlaylistViewMode) => void;
+
+  artistCollectionViewMode: ArtistCollectionViewMode;
+  setArtistCollectionViewMode: (value: ArtistCollectionViewMode) => void;
 
   playlistSortMode: PlaylistSortMode;
   setPlaylistSortMode: (value: PlaylistSortMode) => void;
@@ -46,6 +50,7 @@ type UserPreferencesContextValue = {
 
 type UserPreferencesResponse = {
   playlist_view_mode: PlaylistViewMode;
+  artist_collection_view_mode: ArtistCollectionViewMode;
   playlist_sort_mode: PlaylistSortMode;
   sidebar_project_sort_mode: SidebarProjectSortMode;
   project_asset_add_target: ProjectAssetAddTarget;
@@ -57,12 +62,20 @@ const UserPreferencesContext =
   createContext<UserPreferencesContextValue | null>(null);
 
 const LOCAL_PLAYLIST_VIEW_MODE_KEY = "filmwave-playlist-view-mode";
+const LOCAL_ARTIST_COLLECTION_VIEW_MODE_KEY =
+  "filmwave-artist-collection-view-mode";
 const LOCAL_PLAYLIST_SORT_MODE_KEY = "filmwave-playlist-sort-mode";
 const LOCAL_SIDEBAR_PROJECT_SORT_MODE_KEY = "filmwave-sidebar-project-sort";
 const LOCAL_PROJECT_ASSET_ADD_TARGET_KEY = "filmwave-project-asset-add-target";
 const LOCAL_THEME_MODE_KEY = "filmwave-theme-mode";
 
 function isPlaylistViewMode(value: unknown): value is PlaylistViewMode {
+  return value === "grid" || value === "list";
+}
+
+function isArtistCollectionViewMode(
+  value: unknown,
+): value is ArtistCollectionViewMode {
   return value === "grid" || value === "list";
 }
 
@@ -138,6 +151,8 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
   const { isLoaded: isAuthLoaded, isSignedIn } = useUser();
   const [playlistViewMode, setPlaylistViewModeState] =
     useState<PlaylistViewMode>("grid");
+  const [artistCollectionViewMode, setArtistCollectionViewModeState] =
+    useState<ArtistCollectionViewMode>("grid");
   const [playlistSortMode, setPlaylistSortModeState] =
     useState<PlaylistSortMode>("custom");
   const [sidebarProjectSortMode, setSidebarProjectSortModeState] =
@@ -193,6 +208,9 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
         const localPlaylistViewMode = window.localStorage.getItem(
           LOCAL_PLAYLIST_VIEW_MODE_KEY,
         );
+        const localArtistCollectionViewMode = window.localStorage.getItem(
+          LOCAL_ARTIST_COLLECTION_VIEW_MODE_KEY,
+        );
         const localPlaylistSortMode = window.localStorage.getItem(
           LOCAL_PLAYLIST_SORT_MODE_KEY,
         );
@@ -208,6 +226,13 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
 
         if (!cancelled && isPlaylistViewMode(localPlaylistViewMode)) {
           setPlaylistViewModeState(localPlaylistViewMode);
+        }
+
+        if (
+          !cancelled &&
+          isArtistCollectionViewMode(localArtistCollectionViewMode)
+        ) {
+          setArtistCollectionViewModeState(localArtistCollectionViewMode);
         }
 
         if (!cancelled && isPlaylistSortMode(localPlaylistSortMode)) {
@@ -254,6 +279,14 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
           window.localStorage.setItem(
             LOCAL_PLAYLIST_VIEW_MODE_KEY,
             data.playlist_view_mode,
+          );
+        }
+
+        if (isArtistCollectionViewMode(data.artist_collection_view_mode)) {
+          setArtistCollectionViewModeState(data.artist_collection_view_mode);
+          window.localStorage.setItem(
+            LOCAL_ARTIST_COLLECTION_VIEW_MODE_KEY,
+            data.artist_collection_view_mode,
           );
         }
 
@@ -339,6 +372,12 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     patchPreferences({ playlist_view_mode: value });
   };
 
+  const setArtistCollectionViewMode = (value: ArtistCollectionViewMode) => {
+    setArtistCollectionViewModeState(value);
+    window.localStorage.setItem(LOCAL_ARTIST_COLLECTION_VIEW_MODE_KEY, value);
+    patchPreferences({ artist_collection_view_mode: value });
+  };
+
   const setPlaylistSortMode = (value: PlaylistSortMode) => {
     setPlaylistSortModeState(value);
     window.localStorage.setItem(LOCAL_PLAYLIST_SORT_MODE_KEY, value);
@@ -374,6 +413,8 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     () => ({
       playlistViewMode,
       setPlaylistViewMode,
+      artistCollectionViewMode,
+      setArtistCollectionViewMode,
       playlistSortMode,
       setPlaylistSortMode,
       sidebarProjectSortMode,
@@ -388,6 +429,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     }),
     [
       playlistViewMode,
+      artistCollectionViewMode,
       playlistSortMode,
       sidebarProjectSortMode,
       projectAssetAddTarget,
