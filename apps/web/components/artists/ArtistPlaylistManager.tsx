@@ -12,6 +12,7 @@ import {
 import {
   SortableContext,
   arrayMove,
+  rectSortingStrategy,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -334,20 +335,35 @@ export default function ArtistPlaylistManager({
             </div>
           ) : null}
           {loadState === "ready" && playlists.length > 0 ? (
-            <ArtistCollectionGrid>
-              {playlists.map((playlist) => (
-                <ArtistCollectionGridCard
-                  key={playlist.id}
-                  artworkUrl={playlist.cover_image_url}
-                  artworkShape="wide"
-                  title={playlist.name}
-                  meta={`${playlist.song_ids.length} ${
-                    playlist.song_ids.length === 1 ? "track" : "tracks"
-                  } · ${playlist.is_public ? "Published" : "Private"}`}
-                  onClick={() => setSelectedPlaylistId(playlist.id)}
-                />
-              ))}
-            </ArtistCollectionGrid>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => void handlePlaylistDragEnd(event)}
+            >
+              <SortableContext
+                items={playlists.map((playlist) => playlist.id)}
+                strategy={rectSortingStrategy}
+              >
+                <ArtistCollectionGrid>
+                  {playlists.map((playlist) => (
+                    <ArtistCollectionGridCard
+                      key={playlist.id}
+                      sortableId={playlist.id}
+                      artworkUrl={playlist.cover_image_url}
+                      artworkShape="wide"
+                      title={playlist.name}
+                      meta={`${playlist.song_ids.length} ${
+                        playlist.song_ids.length === 1 ? "track" : "tracks"
+                      } · ${playlist.is_public ? "Published" : "Private"}`}
+                      canDrag={canManage}
+                      dragDisabled={reordering}
+                      actionLabel={canManage ? "Edit" : "View"}
+                      onClick={() => setSelectedPlaylistId(playlist.id)}
+                    />
+                  ))}
+                </ArtistCollectionGrid>
+              </SortableContext>
+            </DndContext>
           ) : null}
         </div>
       ) : (
