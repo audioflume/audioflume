@@ -337,7 +337,7 @@ export default async function PricingPage() {
                     <a
                       href="mailto:hello@filmwave.io?subject=Audioflume%20Enterprise"
                       className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
-                      style={{ fontSize: "13px", fontWeight: 400 }}
+                      style={{ fontSize: "14px", fontWeight: 400 }}
                     >
                       Contact us
                     </a>
@@ -345,7 +345,7 @@ export default async function PricingPage() {
                     <Link
                       href={membershipHref}
                       className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
-                      style={{ fontSize: "13px", fontWeight: 400 }}
+                      style={{ fontSize: "14px", fontWeight: 400 }}
                     >
                       {membershipLabel}
                     </Link>
@@ -498,7 +498,7 @@ export default async function PricingPage() {
             </p>
             <a
               href="mailto:hello@filmwave.io?subject=Audioflume%20Enterprise"
-              className="inline-flex h-[44px] min-w-[240px] items-center justify-center bg-white px-10 text-[13px] font-normal text-[#111111] transition hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none"
+              className="inline-flex h-[44px] min-w-[240px] items-center justify-center bg-white px-10 text-[14px] font-normal text-[#111111] transition hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none"
             >
               Talk about enterprise
             </a>
