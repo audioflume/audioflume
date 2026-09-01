@@ -288,6 +288,8 @@
 .audioflume-pricing-plan-action-row > a {
   width: 100%;
   max-width: none;
+  height: 52px;
+  min-height: 52px;
 }
 
 .audioflume-pricing-plan-features {
@@ -456,6 +458,11 @@
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
+}
+
+.audioflume-pricing-enterprise-copy > a {
+  height: 52px;
+  min-height: 52px;
 }
 
 .audioflume-pricing-enterprise-band .audioflume-pricing-section-eyebrow {
