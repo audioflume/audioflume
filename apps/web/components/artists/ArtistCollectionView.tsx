@@ -57,16 +57,16 @@ export function ArtistCollectionGridCard({
 }) {
   return (
     <article className="group min-w-0 text-[var(--text-primary)]">
-      <button
-        type="button"
-        onClick={onClick}
-        className="block w-full border-0 bg-transparent p-0 text-left"
-        aria-label={`${actionLabel} ${title}`}
+      <div
+        className={`relative w-full overflow-hidden bg-[var(--bg-secondary)] ${
+          artworkShape === "wide" ? "aspect-[16/9]" : "aspect-square"
+        }`}
       >
-        <span
-          className={`relative block w-full overflow-hidden bg-[var(--bg-secondary)] ${
-            artworkShape === "wide" ? "aspect-[16/9]" : "aspect-square"
-          }`}
+        <button
+          type="button"
+          onClick={onClick}
+          className="block h-full w-full border-0 bg-transparent p-0 text-left"
+          aria-label={`${actionLabel} ${title}`}
         >
           {artworkUrl ? (
             <img
@@ -80,23 +80,22 @@ export function ArtistCollectionGridCard({
               aria-hidden="true"
             />
           )}
-        </span>
-      </button>
+        </button>
 
-      <div className="flex items-start justify-between gap-3 pt-2.5">
-        <div className="min-w-0 flex-1">
-          <div className="truncate text-[13px] font-medium leading-[1.35]">{title}</div>
-          <div className="mt-1 truncate text-[11px] leading-[1.45] text-[var(--text-muted)]">
-            {meta}
-          </div>
-        </div>
         <button
           type="button"
           onClick={onClick}
-          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary shrink-0"
+          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary pointer-events-none absolute bottom-2 right-2 z-10 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
         >
           {actionLabel}
         </button>
+      </div>
+
+      <div className="pt-2.5">
+        <div className="truncate text-[13px] font-medium leading-[1.35]">{title}</div>
+        <div className="mt-1 truncate text-[11px] leading-[1.45] text-[var(--text-muted)]">
+          {meta}
+        </div>
       </div>
 
       {status ? <div className="mt-2">{status}</div> : null}
