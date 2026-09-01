@@ -15,27 +15,96 @@ function ArtistCollectionViewModeIcon({
 }) {
   if (mode === "list") {
     return (
-      <span
-        className="flex h-[18px] w-[18px] shrink-0 flex-col justify-between py-[2px]"
+      <svg
+        viewBox="0 0 24 24"
+        fill="none"
         aria-hidden="true"
+        style={{ width: 17, height: 17, flex: "0 0 17px" }}
       >
-        <span className="block h-[2px] w-full rounded-full bg-current" />
-        <span className="block h-[2px] w-full rounded-full bg-current" />
-        <span className="block h-[2px] w-full rounded-full bg-current" />
-      </span>
+        <path
+          d="M8 7H20"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        <path
+          d="M8 12H20"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        <path
+          d="M8 17H20"
+          stroke="currentColor"
+          strokeWidth="1.8"
+          strokeLinecap="round"
+        />
+        <path
+          d="M4 7H4.01"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        <path
+          d="M4 12H4.01"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+        <path
+          d="M4 17H4.01"
+          stroke="currentColor"
+          strokeWidth="3"
+          strokeLinecap="round"
+        />
+      </svg>
     );
   }
 
   return (
-    <span
-      className="grid h-[18px] w-[18px] shrink-0 grid-cols-2 grid-rows-2 gap-[3px]"
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
       aria-hidden="true"
+      style={{ width: 17, height: 17, flex: "0 0 17px" }}
     >
-      <span className="border border-current" />
-      <span className="border border-current" />
-      <span className="border border-current" />
-      <span className="border border-current" />
-    </span>
+      <rect
+        x="4"
+        y="4"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="13.5"
+        y="4"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="4"
+        y="13.5"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+      <rect
+        x="13.5"
+        y="13.5"
+        width="6.5"
+        height="6.5"
+        rx="1.5"
+        stroke="currentColor"
+        strokeWidth="1.8"
+      />
+    </svg>
   );
 }
 
@@ -63,9 +132,31 @@ export function ArtistCollectionViewToggle({
 
 export function ArtistCollectionGrid({ children }: { children: ReactNode }) {
   return (
-    <div className="grid grid-cols-1 gap-x-[22px] gap-y-8 min-[480px]:grid-cols-2 min-[760px]:grid-cols-3 min-[1100px]:grid-cols-4">
-      {children}
-    </div>
+    <>
+      <style>{`
+        main:has(> aside[class*="admin-sidebar-width"])
+          > section
+          div:has(> .artist-collection-grid) {
+          position: relative;
+        }
+
+        main:has(> aside[class*="admin-sidebar-width"])
+          > section
+          div:has(> .artist-collection-grid)
+          > div:first-child:has(> .filmwave-backend-section-title) {
+          position: absolute;
+          top: -56px;
+          left: 0;
+          z-index: 1;
+          height: 40px;
+          margin-bottom: 0;
+          align-items: center;
+        }
+      `}</style>
+      <div className="artist-collection-grid grid grid-cols-1 gap-x-[22px] gap-y-8 min-[480px]:grid-cols-2 min-[760px]:grid-cols-3 min-[1100px]:grid-cols-4">
+        {children}
+      </div>
+    </>
   );
 }
 
