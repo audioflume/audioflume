@@ -406,8 +406,7 @@ export default function ArtistReleaseManager({
                       release.track_ids.length
                     } ${release.track_ids.length === 1 ? "track" : "tracks"}${
                       releaseYear ? ` · ${releaseYear}` : ""
-                    }`}
-                    status={<ReleaseStatusBadge status={release.status} />}
+                    } · ${formatStatus(release.status)}`}
                     actionLabel={canManage ? "Edit" : "View"}
                     onClick={() => setSelectedReleaseId(release.id)}
                   />
