@@ -120,8 +120,13 @@
 }
 
 .audioflume-home-editorial-refresh-playlist-action {
-  height: 44px;
-  min-height: 44px;
+  height: 52px;
+  min-height: 52px;
+}
+
+.audioflume-home-page-root .audioflume-home-songs > .mt-5 > a {
+  height: 52px;
+  min-height: 52px;
 }
 
 .audioflume-home-editorial-refresh-primary-action,
