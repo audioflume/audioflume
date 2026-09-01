@@ -12,6 +12,7 @@ import {
 import {
   SortableContext,
   arrayMove,
+  rectSortingStrategy,
   useSortable,
   verticalListSortingStrategy,
 } from "@dnd-kit/sortable";
@@ -393,26 +394,40 @@ export default function ArtistReleaseManager({
             </div>
           ) : null}
           {loadState === "ready" && releases.length > 0 ? (
-            <ArtistCollectionGrid>
-              {releases.map((release) => {
-                const releaseYear = getReleaseYear(release.release_date);
-                return (
-                  <ArtistCollectionGridCard
-                    key={release.id}
-                    artworkUrl={release.cover_image_url}
-                    artworkShape="square"
-                    title={release.title}
-                    meta={`${formatReleaseType(release.release_type)} · ${
-                      release.track_ids.length
-                    } ${release.track_ids.length === 1 ? "track" : "tracks"}${
-                      releaseYear ? ` · ${releaseYear}` : ""
-                    } · ${formatStatus(release.status)}`}
-                    actionLabel={canManage ? "Edit" : "View"}
-                    onClick={() => setSelectedReleaseId(release.id)}
-                  />
-                );
-              })}
-            </ArtistCollectionGrid>
+            <DndContext
+              sensors={sensors}
+              collisionDetection={closestCenter}
+              onDragEnd={(event) => void handleReleaseDragEnd(event)}
+            >
+              <SortableContext
+                items={releases.map((release) => release.id)}
+                strategy={rectSortingStrategy}
+              >
+                <ArtistCollectionGrid>
+                  {releases.map((release) => {
+                    const releaseYear = getReleaseYear(release.release_date);
+                    return (
+                      <ArtistCollectionGridCard
+                        key={release.id}
+                        sortableId={release.id}
+                        artworkUrl={release.cover_image_url}
+                        artworkShape="square"
+                        title={release.title}
+                        meta={`${formatReleaseType(release.release_type)} · ${
+                          release.track_ids.length
+                        } ${release.track_ids.length === 1 ? "track" : "tracks"}${
+                          releaseYear ? ` · ${releaseYear}` : ""
+                        } · ${formatStatus(release.status)}`}
+                        canDrag={canManage}
+                        dragDisabled={reordering}
+                        actionLabel={canManage ? "Edit" : "View"}
+                        onClick={() => setSelectedReleaseId(release.id)}
+                      />
+                    );
+                  })}
+                </ArtistCollectionGrid>
+              </SortableContext>
+            </DndContext>
           ) : null}
         </div>
       ) : (
