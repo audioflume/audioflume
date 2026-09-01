@@ -343,8 +343,7 @@ export default function ArtistPlaylistManager({
                   title={playlist.name}
                   meta={`${playlist.song_ids.length} ${
                     playlist.song_ids.length === 1 ? "track" : "tracks"
-                  }`}
-                  status={<VisibilityBadge isPublic={playlist.is_public} />}
+                  } · ${playlist.is_public ? "Published" : "Private"}`}
                   onClick={() => setSelectedPlaylistId(playlist.id)}
                 />
               ))}
