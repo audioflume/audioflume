@@ -24,7 +24,7 @@ export function ArtistCollectionViewToggle({
       title={`Switch to ${nextViewMode} view`}
       className="filmwave-backend-button filmwave-backend-button-secondary w-10 px-0"
     >
-      {viewMode === "grid" ? <ListViewIcon size={14} /> : <GridViewIcon size={14} />}
+      {viewMode === "grid" ? <ListViewIcon size={18} /> : <GridViewIcon size={18} />}
     </button>
   );
 }
