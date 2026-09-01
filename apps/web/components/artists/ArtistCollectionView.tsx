@@ -118,31 +118,25 @@ export function ArtistCollectionViewToggle({
   const nextViewMode = viewMode === "grid" ? "list" : "grid";
 
   return (
-    <button
-      type="button"
-      onClick={() => onChange(nextViewMode)}
-      aria-label={`Switch to ${nextViewMode} view`}
-      title={`Switch to ${nextViewMode} view`}
-      className="filmwave-backend-button filmwave-backend-button-secondary w-10 px-0"
-    >
-      <ArtistCollectionViewModeIcon mode={nextViewMode} />
-    </button>
-  );
-}
-
-export function ArtistCollectionGrid({ children }: { children: ReactNode }) {
-  return (
     <>
       <style>{`
         main:has(> aside[class*="admin-sidebar-width"])
           > section
-          div:has(> .artist-collection-grid) {
+          div:has(
+            > div:first-child
+              > .artist-collection-view-toggle[aria-label="Switch to list view"]
+          )
+          > div:nth-child(2) {
           position: relative;
         }
 
         main:has(> aside[class*="admin-sidebar-width"])
           > section
-          div:has(> .artist-collection-grid)
+          div:has(
+            > div:first-child
+              > .artist-collection-view-toggle[aria-label="Switch to list view"]
+          )
+          > div:nth-child(2)
           > div:first-child:has(> .filmwave-backend-section-title) {
           position: absolute;
           top: -56px;
@@ -153,10 +147,24 @@ export function ArtistCollectionGrid({ children }: { children: ReactNode }) {
           align-items: center;
         }
       `}</style>
-      <div className="artist-collection-grid grid grid-cols-1 gap-x-[22px] gap-y-8 min-[480px]:grid-cols-2 min-[760px]:grid-cols-3 min-[1100px]:grid-cols-4">
-        {children}
-      </div>
+      <button
+        type="button"
+        onClick={() => onChange(nextViewMode)}
+        aria-label={`Switch to ${nextViewMode} view`}
+        title={`Switch to ${nextViewMode} view`}
+        className="artist-collection-view-toggle filmwave-backend-button filmwave-backend-button-secondary w-10 px-0"
+      >
+        <ArtistCollectionViewModeIcon mode={nextViewMode} />
+      </button>
     </>
+  );
+}
+
+export function ArtistCollectionGrid({ children }: { children: ReactNode }) {
+  return (
+    <div className="artist-collection-grid grid grid-cols-1 gap-x-[22px] gap-y-8 min-[480px]:grid-cols-2 min-[760px]:grid-cols-3 min-[1100px]:grid-cols-4">
+      {children}
+    </div>
   );
 }
 
