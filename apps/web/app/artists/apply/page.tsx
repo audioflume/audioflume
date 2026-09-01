@@ -71,7 +71,7 @@ export default async function ArtistApplyPage() {
     <main className="artist-apply-page-root min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
         .artist-apply-page-root form > section > div:last-child .filmwave-backend-button {
-          height: 44px;
+          height: 40px;
           border-radius: 0;
           padding-right: 24px;
           padding-left: 24px;
