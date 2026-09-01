@@ -440,6 +440,7 @@ export default function AdminDiscoverPlaylistForm({
               {songs.map((song) => (
                 <div
                   key={song.id}
+                  style={{ borderRadius: 7 }}
                   className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
                 >
                   <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
