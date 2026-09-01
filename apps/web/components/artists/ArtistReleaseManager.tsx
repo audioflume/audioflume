@@ -107,10 +107,16 @@ function releaseYearToDate(value: string) {
   return `${value}-01-01`;
 }
 
-function ReleaseStatusBadge({ status }: { status: string }) {
+function ReleaseStatusBadge({
+  status,
+  light = false,
+}: {
+  status: string;
+  light?: boolean;
+}) {
   const label = formatStatus(status);
 
-  if (status === "published") {
+  if (status === "published" && !light) {
     return (
       <span
         className="filmwave-backend-status-badge text-[var(--text-secondary)]"
@@ -185,7 +191,7 @@ function SortableReleaseRow({
         {formatReleaseYear(release.release_date)}
       </div>
       <div>
-        <ReleaseStatusBadge status={release.status} />
+        <ReleaseStatusBadge status={release.status} light />
       </div>
       <div className="flex justify-end">
         <button
