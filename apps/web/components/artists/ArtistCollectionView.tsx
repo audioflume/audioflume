@@ -25,7 +25,6 @@ export function ArtistCollectionViewToggle({
       className="filmwave-backend-button filmwave-backend-button-secondary"
     >
       {viewMode === "grid" ? <ListViewIcon size={14} /> : <GridViewIcon size={14} />}
-      {viewMode === "grid" ? "List View" : "Grid View"}
     </button>
   );
 }
