@@ -2,6 +2,7 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
+import Script from "next/script";
 import type { CSSProperties } from "react";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
@@ -121,7 +122,11 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <head>
-          <script dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }} />
+          <Script
+            id="audioflume-theme-boot"
+            strategy="beforeInteractive"
+            dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
+          />
           <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
