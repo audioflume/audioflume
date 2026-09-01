@@ -260,6 +260,22 @@ export default function AdminPlaylistPageStyles() {
         ):is(
           .admin-playlist-create-content-page,
           .admin-playlist-edit-content-page
+        )
+        form
+        + section
+        [class~="rounded-xl"] {
+        border-radius: 7px;
+      }
+
+      main.filmwave-admin-content-page:is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
+        ):is(
+          .admin-playlist-create-content-page,
+          .admin-playlist-edit-content-page
         ) :is(
           [class~="rounded-md"],
           [class~="rounded-lg"]
