@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type PlaylistViewMode = "grid" | "list";
+type ArtistCollectionViewMode = "grid" | "list";
 type PlaylistSortMode = "custom" | "alphabetical";
 type SidebarProjectSortMode = "custom" | "alphabetical";
 type ProjectAssetAddTarget = "root" | "media_folder";
@@ -10,6 +11,7 @@ type ThemeMode = "light" | "dark";
 
 type UserPreferencesPatch = {
   playlist_view_mode?: PlaylistViewMode;
+  artist_collection_view_mode?: ArtistCollectionViewMode;
   playlist_sort_mode?: PlaylistSortMode;
   sidebar_project_sort_mode?: SidebarProjectSortMode;
   project_asset_add_target?: ProjectAssetAddTarget;
@@ -18,10 +20,11 @@ type UserPreferencesPatch = {
 };
 
 const userPreferenceSelect =
-  "playlist_view_mode, playlist_sort_mode, sidebar_project_sort_mode, project_asset_add_target, theme_mode, show_edit_point_markers";
+  "playlist_view_mode, artist_collection_view_mode, playlist_sort_mode, sidebar_project_sort_mode, project_asset_add_target, theme_mode, show_edit_point_markers";
 
 const defaultPreferences = {
   playlist_view_mode: "grid" as PlaylistViewMode,
+  artist_collection_view_mode: "grid" as ArtistCollectionViewMode,
   playlist_sort_mode: "custom" as PlaylistSortMode,
   sidebar_project_sort_mode: "alphabetical" as SidebarProjectSortMode,
   project_asset_add_target: "media_folder" as ProjectAssetAddTarget,
@@ -30,6 +33,12 @@ const defaultPreferences = {
 };
 
 function isValidPlaylistViewMode(value: unknown): value is PlaylistViewMode {
+  return value === "grid" || value === "list";
+}
+
+function isValidArtistCollectionViewMode(
+  value: unknown,
+): value is ArtistCollectionViewMode {
   return value === "grid" || value === "list";
 }
 
@@ -125,6 +134,17 @@ export async function PATCH(request: Request) {
     }
 
     updates.playlist_view_mode = body.playlist_view_mode;
+  }
+
+  if ("artist_collection_view_mode" in body) {
+    if (!isValidArtistCollectionViewMode(body.artist_collection_view_mode)) {
+      return NextResponse.json(
+        { error: "Invalid artist_collection_view_mode" },
+        { status: 400 },
+      );
+    }
+
+    updates.artist_collection_view_mode = body.artist_collection_view_mode;
   }
 
   if ("playlist_sort_mode" in body) {
