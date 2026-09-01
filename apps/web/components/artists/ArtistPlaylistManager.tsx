@@ -17,6 +17,12 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 
+import {
+  ArtistCollectionGrid,
+  ArtistCollectionGridCard,
+  ArtistCollectionViewToggle,
+  type ArtistCollectionViewMode,
+} from "@/components/artists/ArtistCollectionView";
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
 import ArtistTrackOrderRow, {
   type ArtistTrackOrderSong,
@@ -159,6 +165,7 @@ export default function ArtistPlaylistManager({
   const [creating, setCreating] = useState(false);
   const [reordering, setReordering] = useState(false);
   const [listError, setListError] = useState("");
+  const [viewMode, setViewMode] = useState<ArtistCollectionViewMode>("list");
 
   useEffect(() => {
     let cancelled = false;
@@ -287,7 +294,8 @@ export default function ArtistPlaylistManager({
 
   return (
     <div>
-      <div className="mb-4 flex items-center justify-end">
+      <div className="mb-4 flex items-center justify-end gap-2">
+        <ArtistCollectionViewToggle viewMode={viewMode} onChange={setViewMode} />
         {canManage ? (
           <button
             type="button"
@@ -300,53 +308,98 @@ export default function ArtistPlaylistManager({
         ) : null}
       </div>
 
-      <section className="filmwave-backend-section">
-        <div className="filmwave-backend-section-header">
-          <h2 className="filmwave-backend-section-title">Playlists</h2>
-        </div>
+      {viewMode === "grid" ? (
+        <div>
+          <div className="mb-4 flex items-center justify-between gap-3">
+            <h2 className="filmwave-backend-section-title">Playlists</h2>
+          </div>
 
-        {listError ? (
-          <div className="px-5 pb-3 text-xs text-[var(--danger)]">{listError}</div>
-        ) : null}
+          {listError ? (
+            <div className="pb-3 text-xs text-[var(--danger)]">{listError}</div>
+          ) : null}
 
-        <DndContext
-          sensors={sensors}
-          collisionDetection={closestCenter}
-          onDragEnd={(event) => void handlePlaylistDragEnd(event)}
-        >
-          <SortableContext
-            items={playlists.map((playlist) => playlist.id)}
-            strategy={verticalListSortingStrategy}
-          >
-            <div className="divide-y divide-[var(--border-subtle)]">
-              {loadState === "loading" ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
-                  Loading playlists...
-                </div>
-              ) : null}
-              {loadState === "error" ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
-                  {loadError || "Playlists could not be loaded."}
-                </div>
-              ) : null}
-              {loadState === "ready" && playlists.length === 0 ? (
-                <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
-                  No playlists created yet.
-                </div>
-              ) : null}
+          {loadState === "loading" ? (
+            <div className="flex min-h-[144px] items-center justify-center text-xs text-[var(--text-muted)]">
+              Loading playlists...
+            </div>
+          ) : null}
+          {loadState === "error" ? (
+            <div className="flex min-h-[144px] items-center justify-center text-center text-xs text-[var(--danger)]">
+              {loadError || "Playlists could not be loaded."}
+            </div>
+          ) : null}
+          {loadState === "ready" && playlists.length === 0 ? (
+            <div className="flex min-h-[144px] items-center justify-center text-xs text-[var(--text-muted)]">
+              No playlists created yet.
+            </div>
+          ) : null}
+          {loadState === "ready" && playlists.length > 0 ? (
+            <ArtistCollectionGrid>
               {playlists.map((playlist) => (
-                <SortablePlaylistRow
+                <ArtistCollectionGridCard
                   key={playlist.id}
-                  playlist={playlist}
-                  canManage={canManage}
-                  disabled={reordering}
-                  onEdit={() => setSelectedPlaylistId(playlist.id)}
+                  artworkUrl={playlist.cover_image_url}
+                  artworkShape="wide"
+                  title={playlist.name}
+                  meta={`${playlist.song_ids.length} ${
+                    playlist.song_ids.length === 1 ? "track" : "tracks"
+                  }`}
+                  status={<VisibilityBadge isPublic={playlist.is_public} />}
+                  onClick={() => setSelectedPlaylistId(playlist.id)}
                 />
               ))}
-            </div>
-          </SortableContext>
-        </DndContext>
-      </section>
+            </ArtistCollectionGrid>
+          ) : null}
+        </div>
+      ) : (
+        <section className="filmwave-backend-section">
+          <div className="filmwave-backend-section-header">
+            <h2 className="filmwave-backend-section-title">Playlists</h2>
+          </div>
+
+          {listError ? (
+            <div className="px-5 pb-3 text-xs text-[var(--danger)]">{listError}</div>
+          ) : null}
+
+          <DndContext
+            sensors={sensors}
+            collisionDetection={closestCenter}
+            onDragEnd={(event) => void handlePlaylistDragEnd(event)}
+          >
+            <SortableContext
+              items={playlists.map((playlist) => playlist.id)}
+              strategy={verticalListSortingStrategy}
+            >
+              <div className="divide-y divide-[var(--border-subtle)]">
+                {loadState === "loading" ? (
+                  <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                    Loading playlists...
+                  </div>
+                ) : null}
+                {loadState === "error" ? (
+                  <div className="flex min-h-[144px] items-center justify-center px-5 text-center text-xs text-[var(--danger)]">
+                    {loadError || "Playlists could not be loaded."}
+                  </div>
+                ) : null}
+                {loadState === "ready" && playlists.length === 0 ? (
+                  <div className="flex min-h-[144px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
+                    No playlists created yet.
+                  </div>
+                ) : null}
+                {playlists.map((playlist) => (
+                  <SortablePlaylistRow
+                    key={playlist.id}
+                    playlist={playlist}
+                    canManage={canManage}
+                    disabled={reordering}
+                    onEdit={() => setSelectedPlaylistId(playlist.id)}
+                  />
+                ))}
+              </div>
+            </SortableContext>
+          </DndContext>
+        </section>
+      )}
     </div>
   );
 }
