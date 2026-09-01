@@ -249,7 +249,7 @@
   grid-template-columns: max-content max-content;
   align-items: baseline;
   column-gap: 8px;
-  margin-top: 36px;
+  margin-top: 24px;
 }
 
 .audioflume-pricing-plan-price strong {
@@ -282,7 +282,7 @@
 }
 
 .audioflume-pricing-plan-action-row {
-  margin-top: 26px;
+  margin-top: 18px;
 }
 
 .audioflume-pricing-plan-action-row > a {
