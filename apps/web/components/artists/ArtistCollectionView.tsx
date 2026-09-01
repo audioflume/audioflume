@@ -24,7 +24,7 @@ export function ArtistCollectionViewToggle({
       title={`Switch to ${nextViewMode} view`}
       className="filmwave-backend-button filmwave-backend-button-secondary w-10 px-0"
     >
-      {viewMode === "grid" ? <ListViewIcon size={18} /> : <GridViewIcon size={18} />}
+      {viewMode === "grid" ? <ListViewIcon size={24} /> : <GridViewIcon size={24} />}
     </button>
   );
 }
@@ -43,6 +43,7 @@ export function ArtistCollectionGridCard({
   title,
   meta,
   status,
+  dragHandle,
   actionLabel = "Edit",
   onClick,
 }: {
@@ -51,6 +52,7 @@ export function ArtistCollectionGridCard({
   title: string;
   meta: string;
   status?: ReactNode;
+  dragHandle?: ReactNode;
   actionLabel?: string;
   onClick: () => void;
 }) {
@@ -81,10 +83,14 @@ export function ArtistCollectionGridCard({
           )}
         </button>
 
+        {dragHandle ? (
+          <div className="absolute left-2 top-2 z-20">{dragHandle}</div>
+        ) : null}
+
         <button
           type="button"
           onClick={onClick}
-          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary pointer-events-none absolute bottom-2 right-2 z-10 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
+          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary pointer-events-none absolute left-1/2 top-1/2 z-10 -translate-x-1/2 -translate-y-1/2 opacity-0 transition-opacity group-hover:pointer-events-auto group-hover:opacity-100 group-focus-within:pointer-events-auto group-focus-within:opacity-100"
         >
           {actionLabel}
         </button>
