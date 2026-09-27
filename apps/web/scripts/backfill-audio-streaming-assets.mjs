@@ -15,7 +15,8 @@ const execFileAsync = promisify(execFile);
 const TARGET_INTEGRATED_LUFS = -14;
 const TARGET_TRUE_PEAK_DBTP = -1;
 const TARGET_LOUDNESS_RANGE = 11;
-const MAX_OUTPUT_LUFS_DEVIATION = 0.5;
+const LOUDNESS_TOLERANCE_LU = 0.25;
+const TRUE_PEAK_TOLERANCE_DB = 0.1;
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
 const supabaseServiceRoleKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
@@ -29,8 +30,10 @@ const dryRun = process.argv.includes("--dry-run");
 const force = process.argv.includes("--force");
 const limitArg = process.argv.find((arg) => arg.startsWith("--limit="));
 const onlyIdArg = process.argv.find((arg) => arg.startsWith("--id="));
+const statusArg = process.argv.find((arg) => arg.startsWith("--status="));
 const limit = limitArg ? Number(limitArg.replace("--limit=", "")) : 25;
 const onlyId = onlyIdArg ? onlyIdArg.replace("--id=", "").trim() : "";
+const status = statusArg ? statusArg.replace("--status=", "").trim() : "";
 const streamingVersion = `normalized-${Date.now()}`;
 
 if (!supabaseUrl) throw new Error("Missing NEXT_PUBLIC_SUPABASE_URL");
@@ -121,7 +124,7 @@ function parseLoudnessMeasurement(stderr) {
   return measurement;
 }
 
-async function getLoudnessNormalization(inputPath) {
+async function measureLoudness(inputPath) {
   const { stderr } = await runFfmpeg([
     "-hide_banner",
     "-i",
@@ -134,8 +137,11 @@ async function getLoudnessNormalization(inputPath) {
     "-",
   ]);
 
-  const measurement = parseLoudnessMeasurement(stderr);
-  const filter = [
+  return parseLoudnessMeasurement(stderr);
+}
+
+function makeLoudnessNormalizationFilter(measurement) {
+  return [
     `loudnorm=I=${TARGET_INTEGRATED_LUFS}`,
     `TP=${TARGET_TRUE_PEAK_DBTP}`,
     `LRA=${TARGET_LOUDNESS_RANGE}`,
@@ -146,19 +152,91 @@ async function getLoudnessNormalization(inputPath) {
     `offset=${measurement.targetOffset}`,
     "linear=true",
   ].join(":");
-
-  return { measurement, filter };
 }
 
-async function verifyNormalizedPreview(previewPath) {
-  const { measurement } = await getLoudnessNormalization(previewPath);
+async function getLoudnessNormalizationFilter(inputPath) {
+  const measurement = await measureLoudness(inputPath);
+  return {
+    measurement,
+    filter: makeLoudnessNormalizationFilter(measurement),
+  };
+}
+
+function isLoudnessWithinTolerance(measurement) {
+  const integratedDifference = Math.abs(
+    measurement.inputI - TARGET_INTEGRATED_LUFS,
+  );
+  const truePeakCeiling = TARGET_TRUE_PEAK_DBTP + TRUE_PEAK_TOLERANCE_DB;
+
+  return (
+    integratedDifference <= LOUDNESS_TOLERANCE_LU &&
+    measurement.inputTp <= truePeakCeiling
+  );
+}
+
+async function renderNormalizedIntermediate(inputPath, outputPath) {
+  const { measurement, filter } = await getLoudnessNormalizationFilter(inputPath);
+  console.log(
+    `measured ${measurement.inputI.toFixed(2)} LUFS / ${measurement.inputTp.toFixed(2)} dBTP; target ${TARGET_INTEGRATED_LUFS} LUFS / ${TARGET_TRUE_PEAK_DBTP} dBTP`,
+  );
+
+  await runFfmpeg([
+    "-y",
+    "-i",
+    inputPath,
+    "-vn",
+    "-af",
+    filter,
+    "-ar",
+    "48000",
+    "-codec:a",
+    "flac",
+    outputPath,
+  ]);
+}
+
+async function createVerifiedNormalizedSource(inputPath, tempDir) {
+  const normalizedPath = path.join(tempDir, "normalized.flac");
+  await renderNormalizedIntermediate(inputPath, normalizedPath);
+
+  const normalizedMeasurement = await measureLoudness(normalizedPath);
+  console.log(
+    `normalized source ${normalizedMeasurement.inputI.toFixed(2)} LUFS / ${normalizedMeasurement.inputTp.toFixed(2)} dBTP`,
+  );
+
+  if (isLoudnessWithinTolerance(normalizedMeasurement)) {
+    return normalizedPath;
+  }
+
+  console.log("normalized source outside tolerance; running corrective pass");
+  const correctedPath = path.join(tempDir, "normalized-corrected.flac");
+  await renderNormalizedIntermediate(normalizedPath, correctedPath);
+
+  const correctedMeasurement = await measureLoudness(correctedPath);
+  console.log(
+    `corrected source ${correctedMeasurement.inputI.toFixed(2)} LUFS / ${correctedMeasurement.inputTp.toFixed(2)} dBTP`,
+  );
+
+  if (!isLoudnessWithinTolerance(correctedMeasurement)) {
+    throw new Error(
+      `Normalized source remained outside tolerance at ${correctedMeasurement.inputI.toFixed(2)} LUFS / ${correctedMeasurement.inputTp.toFixed(2)} dBTP.`,
+    );
+  }
+
+  return correctedPath;
+}
+
+async function verifyNormalizedOutput(outputPath, label) {
+  const measurement = await measureLoudness(outputPath);
   const deviation = Math.abs(measurement.inputI - TARGET_INTEGRATED_LUFS);
 
-  console.log(`normalized preview ${measurement.inputI.toFixed(2)} LUFS`);
+  console.log(
+    `${label} ${measurement.inputI.toFixed(2)} LUFS / ${measurement.inputTp.toFixed(2)} dBTP`,
+  );
 
-  if (deviation > MAX_OUTPUT_LUFS_DEVIATION) {
+  if (deviation > LOUDNESS_TOLERANCE_LU) {
     throw new Error(
-      `Normalized preview missed target by ${deviation.toFixed(2)} LU (measured ${measurement.inputI.toFixed(2)} LUFS).`,
+      `${label} missed target by ${deviation.toFixed(2)} LU (measured ${measurement.inputI.toFixed(2)} LUFS).`,
     );
   }
 }
@@ -209,17 +287,13 @@ async function processSong(song) {
 
     if (!dryRun) {
       await downloadAudio(song.audio_url, inputPath);
-
-      const { measurement, filter } = await getLoudnessNormalization(inputPath);
-      console.log(`measured ${measurement.inputI.toFixed(2)} LUFS; target ${TARGET_INTEGRATED_LUFS} LUFS`);
+      const normalizedSourcePath = await createVerifiedNormalizedSource(inputPath, tempDir);
 
       await runFfmpeg([
         "-y",
         "-i",
-        inputPath,
+        normalizedSourcePath,
         "-vn",
-        "-af",
-        filter,
         "-ar",
         "48000",
         "-codec:a",
@@ -231,15 +305,13 @@ async function processSong(song) {
         previewPath,
       ]);
 
-      await verifyNormalizedPreview(previewPath);
+      await verifyNormalizedOutput(previewPath, "normalized preview");
 
       await runFfmpeg([
         "-y",
         "-i",
-        inputPath,
+        normalizedSourcePath,
         "-vn",
-        "-af",
-        filter,
         "-ar",
         "48000",
         "-codec:a",
@@ -258,6 +330,8 @@ async function processSong(song) {
         path.join(hlsDir, "segment_%03d.m4s"),
         hlsManifestPath,
       ]);
+
+      await verifyNormalizedOutput(hlsManifestPath, "normalized HLS");
     }
 
     const playbackKey = `${streamingBaseKey}/playback/preview.mp3`;
@@ -316,12 +390,16 @@ async function processSong(song) {
 
 let query = supabase
   .from("songs")
-  .select("id,title,audio_url,playback_url,hls_url")
+  .select("id,title,status,audio_url,playback_url,hls_url")
   .not("audio_url", "is", null)
   .order("created_at", { ascending: false });
 
 if (!force) {
   query = query.or("playback_url.is.null,hls_url.is.null");
+}
+
+if (status) {
+  query = query.eq("status", status);
 }
 
 if (onlyId) {
@@ -335,6 +413,7 @@ const { data: songs, error } = await query;
 if (error) throw error;
 
 console.log(`Found ${songs?.length || 0} song${songs?.length === 1 ? "" : "s"} to ${force ? "regenerate" : "backfill"}.`);
+if (status) console.log(`Status filter: ${status}`);
 console.log(`Streaming version: ${streamingVersion}`);
 
 let failed = 0;
