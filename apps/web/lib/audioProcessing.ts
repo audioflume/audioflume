@@ -11,6 +11,8 @@ const FFMPEG_EXECUTABLE_NAME = process.platform === "win32" ? "ffmpeg.exe" : "ff
 const TARGET_INTEGRATED_LUFS = -14;
 const TARGET_TRUE_PEAK_DBTP = -1;
 const TARGET_LOUDNESS_RANGE = 11;
+const LOUDNESS_TOLERANCE_LU = 0.25;
+const TRUE_PEAK_TOLERANCE_DB = 0.1;
 
 let resolvedFfmpegPath: string | null = null;
 
@@ -134,7 +136,7 @@ function parseLoudnessMeasurement(stderr: string): LoudnessMeasurement {
   return measurement;
 }
 
-async function getLoudnessNormalizationFilter(inputPath: string) {
+async function measureLoudness(inputPath: string) {
   const { stderr } = await runFfmpeg([
     "-hide_banner",
     "-i",
@@ -147,8 +149,10 @@ async function getLoudnessNormalizationFilter(inputPath: string) {
     "-",
   ]);
 
-  const measurement = parseLoudnessMeasurement(stderr);
+  return parseLoudnessMeasurement(stderr);
+}
 
+function makeLoudnessNormalizationFilter(measurement: LoudnessMeasurement) {
   return [
     `loudnorm=I=${TARGET_INTEGRATED_LUFS}`,
     `TP=${TARGET_TRUE_PEAK_DBTP}`,
@@ -160,6 +164,66 @@ async function getLoudnessNormalizationFilter(inputPath: string) {
     `offset=${measurement.targetOffset}`,
     "linear=true",
   ].join(":");
+}
+
+async function getLoudnessNormalizationFilter(inputPath: string) {
+  const measurement = await measureLoudness(inputPath);
+  return makeLoudnessNormalizationFilter(measurement);
+}
+
+function isLoudnessWithinTolerance(measurement: LoudnessMeasurement) {
+  const integratedDifference = Math.abs(
+    measurement.inputI - TARGET_INTEGRATED_LUFS,
+  );
+  const truePeakCeiling = TARGET_TRUE_PEAK_DBTP + TRUE_PEAK_TOLERANCE_DB;
+
+  return (
+    integratedDifference <= LOUDNESS_TOLERANCE_LU &&
+    measurement.inputTp <= truePeakCeiling
+  );
+}
+
+async function renderNormalizedIntermediate(inputPath: string, outputPath: string) {
+  const normalizationFilter = await getLoudnessNormalizationFilter(inputPath);
+
+  await runFfmpeg([
+    "-y",
+    "-i",
+    inputPath,
+    "-vn",
+    "-af",
+    normalizationFilter,
+    "-ar",
+    "48000",
+    "-codec:a",
+    "flac",
+    outputPath,
+  ]);
+}
+
+async function createVerifiedNormalizedSource(inputPath: string, tempDir: string) {
+  const normalizedPath = path.join(tempDir, "normalized.flac");
+  await renderNormalizedIntermediate(inputPath, normalizedPath);
+
+  const normalizedMeasurement = await measureLoudness(normalizedPath);
+  if (isLoudnessWithinTolerance(normalizedMeasurement)) {
+    return normalizedPath;
+  }
+
+  const correctedPath = path.join(tempDir, "normalized-corrected.flac");
+  await renderNormalizedIntermediate(normalizedPath, correctedPath);
+
+  const correctedMeasurement = await measureLoudness(correctedPath);
+  if (!isLoudnessWithinTolerance(correctedMeasurement)) {
+    console.warn("Audio loudness normalization remained outside tolerance", {
+      integratedLufs: correctedMeasurement.inputI,
+      truePeakDbtp: correctedMeasurement.inputTp,
+      targetIntegratedLufs: TARGET_INTEGRATED_LUFS,
+      targetTruePeakDbtp: TARGET_TRUE_PEAK_DBTP,
+    });
+  }
+
+  return correctedPath;
 }
 
 export async function processAudioForStreaming({
@@ -179,15 +243,13 @@ export async function processAudioForStreaming({
     await rm(hlsDir, { force: true, recursive: true });
     await import("node:fs/promises").then(({ mkdir }) => mkdir(hlsDir, { recursive: true }));
 
-    const loudnessNormalizationFilter = await getLoudnessNormalizationFilter(inputPath);
+    const normalizedSourcePath = await createVerifiedNormalizedSource(inputPath, tempDir);
 
     await runFfmpeg([
       "-y",
       "-i",
-      inputPath,
+      normalizedSourcePath,
       "-vn",
-      "-af",
-      loudnessNormalizationFilter,
       "-ar",
       "48000",
       "-codec:a",
@@ -202,10 +264,8 @@ export async function processAudioForStreaming({
     await runFfmpeg([
       "-y",
       "-i",
-      inputPath,
+      normalizedSourcePath,
       "-vn",
-      "-af",
-      loudnessNormalizationFilter,
       "-ar",
       "48000",
       "-codec:a",
