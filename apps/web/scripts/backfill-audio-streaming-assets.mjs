@@ -424,11 +424,11 @@ async function analyzePerceptualLoudness(inputPath, tempDir) {
 function getDensityAttenuationDb(densityScore) {
   const density = clamp(densityScore);
   const points = [
-    { density: 0, attenuationDb: -8 },
-    { density: 0.1, attenuationDb: -7 },
-    { density: 0.25, attenuationDb: -5 },
-    { density: 0.4, attenuationDb: -3 },
-    { density: 0.55, attenuationDb: -1.5 },
+    { density: 0, attenuationDb: -14 },
+    { density: 0.1, attenuationDb: -12 },
+    { density: 0.25, attenuationDb: -9 },
+    { density: 0.4, attenuationDb: -6 },
+    { density: 0.55, attenuationDb: -3 },
     { density: 0.7, attenuationDb: 0 },
     { density: 1, attenuationDb: 0 },
   ];
