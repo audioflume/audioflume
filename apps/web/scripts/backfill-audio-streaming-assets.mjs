@@ -431,10 +431,10 @@ function getDensityAttenuationDb(densityScore) {
     { density: 0.55, attenuationDb: -3 },
     { density: 0.65, attenuationDb: 0 },
     { density: 0.7, attenuationDb: 0 },
-    { density: 0.8, attenuationDb: -5 },
-    { density: 0.85, attenuationDb: -7.5 },
-    { density: 0.9, attenuationDb: -10 },
-    { density: 1, attenuationDb: -10 },
+    { density: 0.8, attenuationDb: -5.5 },
+    { density: 0.85, attenuationDb: -8.25 },
+    { density: 0.9, attenuationDb: -11 },
+    { density: 1, attenuationDb: -11 },
   ];
 
   for (let index = 1; index < points.length; index += 1) {
