@@ -78,6 +78,7 @@ type PerceptualLoudnessAnalysis = {
   truePeakDbtp: number;
   loudnessRangeLu: number;
   peakToLoudnessRatioDb: number;
+  medianDensityScore: number;
 };
 
 type DynamicsCompressionPlan = {
@@ -426,6 +427,29 @@ function getRepresentativeShortTermLufs(windows: AnalysisWindow[]) {
   return representativeShortTermLufs;
 }
 
+function getMedianDensityScore(windows: AnalysisWindow[]) {
+  const validWindows = windows.filter(
+    (window) =>
+      window.shortTermLufs >= MIN_SHORT_TERM_LUFS &&
+      window.rmsDbfs >= MIN_WINDOW_RMS_DBFS,
+  );
+
+  if (validWindows.length === 0) {
+    throw new Error("No usable 3-second analysis windows were found.");
+  }
+
+  const medianDensityScore = percentile(
+    validWindows.map((window) => window.densityScore),
+    50,
+  );
+
+  if (medianDensityScore === null || !Number.isFinite(medianDensityScore)) {
+    throw new Error("Could not determine median waveform density.");
+  }
+
+  return medianDensityScore;
+}
+
 async function analyzePerceptualLoudness(
   inputPath: string,
   tempDir: string,
@@ -453,7 +477,37 @@ async function analyzePerceptualLoudness(
     truePeakDbtp: measurement.inputTp,
     loudnessRangeLu: measurement.inputLra,
     peakToLoudnessRatioDb: measurement.inputTp - measurement.inputI,
+    medianDensityScore: getMedianDensityScore(windows),
   };
+}
+
+function getDensityAttenuationDb(densityScore: number) {
+  const density = clamp(densityScore);
+  const points = [
+    { density: 0, attenuationDb: -8 },
+    { density: 0.1, attenuationDb: -7 },
+    { density: 0.25, attenuationDb: -5 },
+    { density: 0.4, attenuationDb: -3 },
+    { density: 0.55, attenuationDb: -1.5 },
+    { density: 0.7, attenuationDb: 0 },
+    { density: 1, attenuationDb: 0 },
+  ];
+
+  for (let index = 1; index < points.length; index += 1) {
+    const lower = points[index - 1];
+    const upper = points[index];
+
+    if (density <= upper.density) {
+      const position =
+        (density - lower.density) / (upper.density - lower.density);
+      return (
+        lower.attenuationDb +
+        (upper.attenuationDb - lower.attenuationDb) * position
+      );
+    }
+  }
+
+  return 0;
 }
 
 function getDynamicsCompressionPlan(
@@ -578,6 +632,27 @@ async function renderNormalizedIntermediate(
   ]);
 }
 
+async function applyDensityAttenuation(
+  inputPath: string,
+  tempDir: string,
+  densityScore: number,
+) {
+  const attenuationDb = getDensityAttenuationDb(densityScore);
+
+  if (attenuationDb >= -0.001) {
+    return inputPath;
+  }
+
+  const densityAdjustedPath = path.join(tempDir, "density-adjusted.flac");
+  await renderNormalizedIntermediate(
+    inputPath,
+    densityAdjustedPath,
+    attenuationDb,
+    false,
+  );
+  return densityAdjustedPath;
+}
+
 async function createVerifiedNormalizedSource(inputPath: string, tempDir: string) {
   const sourceAnalysis = await analyzePerceptualLoudness(inputPath, tempDir);
   const dynamicsPlan = getDynamicsCompressionPlan(sourceAnalysis);
@@ -619,7 +694,11 @@ async function createVerifiedNormalizedSource(inputPath: string, tempDir: string
   const normalizedMeasurement = await measureLoudness(normalizedPath);
   const truePeakCeiling = TARGET_TRUE_PEAK_DBTP + TRUE_PEAK_TOLERANCE_DB;
   if (normalizedMeasurement.inputTp <= truePeakCeiling) {
-    return normalizedPath;
+    return applyDensityAttenuation(
+      normalizedPath,
+      tempDir,
+      sourceAnalysis.medianDensityScore,
+    );
   }
 
   const correctionGainDb = TARGET_TRUE_PEAK_DBTP - normalizedMeasurement.inputTp;
@@ -634,7 +713,11 @@ async function createVerifiedNormalizedSource(inputPath: string, tempDir: string
     });
   }
 
-  return correctedPath;
+  return applyDensityAttenuation(
+    correctedPath,
+    tempDir,
+    sourceAnalysis.medianDensityScore,
+  );
 }
 
 export async function processAudioForStreaming({
