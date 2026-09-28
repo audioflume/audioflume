@@ -16,9 +16,16 @@ const MIN_SHORT_TERM_LUFS = -45;
 const MIN_WINDOW_RMS_DBFS = -50;
 const DENSE_POOL_PERCENTILE = 70;
 const REPRESENTATIVE_LOUDNESS_PERCENTILE = 85;
-const TARGET_REPRESENTATIVE_SHORT_TERM_LUFS = -11.5;
+const TARGET_INTEGRATED_LUFS = -14;
+const MIN_REPRESENTATIVE_SHORT_TERM_LUFS = -14;
+const MAX_REPRESENTATIVE_SHORT_TERM_LUFS = -11.5;
 const TARGET_TRUE_PEAK_DBTP = -1;
+const LIMITER_CEILING_DBFS = -1.2;
+const MAX_LIMITER_REDUCTION_DB = 3;
+const LIMITER_ATTACK_MS = 5;
+const LIMITER_RELEASE_MS = 50;
 const TRUE_PEAK_TOLERANCE_DB = 0.1;
+const LIMITER_LIMIT_LINEAR = Math.pow(10, LIMITER_CEILING_DBFS / 20);
 
 let resolvedFfmpegPath: string | null = null;
 
@@ -59,14 +66,19 @@ type AnalysisWindow = {
 };
 
 type PerceptualLoudnessAnalysis = {
+  integratedLufs: number;
   representativeShortTermLufs: number;
   truePeakDbtp: number;
 };
 
 type PerceptualNormalizationPlan = PerceptualLoudnessAnalysis & {
+  baselineGainDb: number;
   requestedGainDb: number;
   appliedGainDb: number;
+  expectedLimiterReductionDb: number;
+  expectedIntegratedLufs: number;
   expectedRepresentativeShortTermLufs: number;
+  limiterCapped: boolean;
 };
 
 export type ProcessedAudioAssets = {
@@ -202,7 +214,7 @@ async function measureLoudness(inputPath: string) {
     inputPath,
     "-vn",
     "-af",
-    `loudnorm=I=-14:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=11:print_format=json`,
+    `loudnorm=I=${TARGET_INTEGRATED_LUFS}:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=11:print_format=json`,
     "-f",
     "null",
     "-",
@@ -419,6 +431,7 @@ async function analyzePerceptualLoudness(
   const windows = buildWindows(blocks, timeline);
 
   return {
+    integratedLufs: measurement.inputI,
     representativeShortTermLufs: getRepresentativeShortTermLufs(windows),
     truePeakDbtp: measurement.inputTp,
   };
@@ -429,17 +442,39 @@ async function getPerceptualNormalizationPlan(
   tempDir: string,
 ): Promise<PerceptualNormalizationPlan> {
   const analysis = await analyzePerceptualLoudness(inputPath, tempDir);
-  const requestedGainDb =
-    TARGET_REPRESENTATIVE_SHORT_TERM_LUFS - analysis.representativeShortTermLufs;
-  const truePeakLimitedGainDb = TARGET_TRUE_PEAK_DBTP - analysis.truePeakDbtp;
-  const appliedGainDb = Math.min(requestedGainDb, truePeakLimitedGainDb);
+  const baselineGainDb = TARGET_INTEGRATED_LUFS - analysis.integratedLufs;
+  const baselineRepresentativeShortTermLufs =
+    analysis.representativeShortTermLufs + baselineGainDb;
+
+  let requestedGainDb = baselineGainDb;
+
+  if (baselineRepresentativeShortTermLufs > MAX_REPRESENTATIVE_SHORT_TERM_LUFS) {
+    requestedGainDb -=
+      baselineRepresentativeShortTermLufs - MAX_REPRESENTATIVE_SHORT_TERM_LUFS;
+  } else if (baselineRepresentativeShortTermLufs < MIN_REPRESENTATIVE_SHORT_TERM_LUFS) {
+    requestedGainDb +=
+      MIN_REPRESENTATIVE_SHORT_TERM_LUFS - baselineRepresentativeShortTermLufs;
+  }
+
+  const maxGainWithLimiterDb =
+    TARGET_TRUE_PEAK_DBTP - analysis.truePeakDbtp + MAX_LIMITER_REDUCTION_DB;
+  const appliedGainDb = Math.min(requestedGainDb, maxGainWithLimiterDb);
+  const predictedPeakBeforeLimiterDbtp = analysis.truePeakDbtp + appliedGainDb;
+  const expectedLimiterReductionDb = Math.max(
+    0,
+    predictedPeakBeforeLimiterDbtp - TARGET_TRUE_PEAK_DBTP,
+  );
 
   return {
     ...analysis,
+    baselineGainDb,
     requestedGainDb,
     appliedGainDb,
+    expectedLimiterReductionDb,
+    expectedIntegratedLufs: analysis.integratedLufs + appliedGainDb,
     expectedRepresentativeShortTermLufs:
       analysis.representativeShortTermLufs + appliedGainDb,
+    limiterCapped: requestedGainDb > maxGainWithLimiterDb + 0.001,
   };
 }
 
@@ -447,14 +482,23 @@ async function renderNormalizedIntermediate(
   inputPath: string,
   outputPath: string,
   gainDb: number,
+  useLimiter: boolean,
 ) {
+  const filters = [`volume=${gainDb.toFixed(4)}dB`];
+
+  if (useLimiter) {
+    filters.push(
+      `alimiter=limit=${LIMITER_LIMIT_LINEAR.toFixed(6)}:attack=${LIMITER_ATTACK_MS}:release=${LIMITER_RELEASE_MS}:level=false:latency=true`,
+    );
+  }
+
   await runFfmpeg([
     "-y",
     "-i",
     inputPath,
     "-vn",
     "-af",
-    `volume=${gainDb.toFixed(4)}dB`,
+    filters.join(","),
     "-ar",
     String(SAMPLE_RATE),
     "-codec:a",
@@ -465,8 +509,25 @@ async function renderNormalizedIntermediate(
 
 async function createVerifiedNormalizedSource(inputPath: string, tempDir: string) {
   const plan = await getPerceptualNormalizationPlan(inputPath, tempDir);
+
+  if (plan.limiterCapped) {
+    console.warn("Audio normalization hit the limiter budget", {
+      integratedLufs: plan.integratedLufs,
+      representativeShortTermLufs: plan.representativeShortTermLufs,
+      truePeakDbtp: plan.truePeakDbtp,
+      requestedGainDb: plan.requestedGainDb,
+      appliedGainDb: plan.appliedGainDb,
+      maxLimiterReductionDb: MAX_LIMITER_REDUCTION_DB,
+    });
+  }
+
   const normalizedPath = path.join(tempDir, "normalized.flac");
-  await renderNormalizedIntermediate(inputPath, normalizedPath, plan.appliedGainDb);
+  await renderNormalizedIntermediate(
+    inputPath,
+    normalizedPath,
+    plan.appliedGainDb,
+    plan.expectedLimiterReductionDb > 0.01,
+  );
 
   const normalizedMeasurement = await measureLoudness(normalizedPath);
   const truePeakCeiling = TARGET_TRUE_PEAK_DBTP + TRUE_PEAK_TOLERANCE_DB;
@@ -476,11 +537,11 @@ async function createVerifiedNormalizedSource(inputPath: string, tempDir: string
 
   const correctionGainDb = TARGET_TRUE_PEAK_DBTP - normalizedMeasurement.inputTp;
   const correctedPath = path.join(tempDir, "normalized-corrected.flac");
-  await renderNormalizedIntermediate(normalizedPath, correctedPath, correctionGainDb);
+  await renderNormalizedIntermediate(normalizedPath, correctedPath, correctionGainDb, false);
 
   const correctedMeasurement = await measureLoudness(correctedPath);
   if (correctedMeasurement.inputTp > truePeakCeiling) {
-    console.warn("Audio perceptual loudness normalization exceeded true-peak tolerance", {
+    console.warn("Audio hybrid loudness normalization exceeded true-peak tolerance", {
       truePeakDbtp: correctedMeasurement.inputTp,
       targetTruePeakDbtp: TARGET_TRUE_PEAK_DBTP,
     });
