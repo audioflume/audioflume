@@ -28,6 +28,13 @@ const LIMITER_CEILING_DBFS = -1.2;
 const MAX_LIMITER_REDUCTION_DB = 3;
 const LIMITER_ATTACK_MS = 5;
 const LIMITER_RELEASE_MS = 50;
+const TARGET_MAX_PEAK_TO_LOUDNESS_DB = 13.5;
+const TARGET_MAX_LOUDNESS_RANGE_LU = 9;
+const MAX_COMPRESSOR_RATIO = 2.6;
+const COMPRESSOR_ATTACK_MS = 12;
+const COMPRESSOR_RELEASE_MS = 180;
+const COMPRESSOR_KNEE = 2.828;
+const COMPRESSOR_THRESHOLD_OFFSET_DB = 7.5;
 const TRUE_PEAK_TOLERANCE_DB = 0.1;
 const LIMITER_LIMIT_LINEAR = Math.pow(10, LIMITER_CEILING_DBFS / 20);
 
@@ -385,7 +392,55 @@ async function analyzePerceptualLoudness(inputPath, tempDir) {
     integratedLufs: measurement.inputI,
     representativeShortTermLufs: getRepresentativeShortTermLufs(windows),
     truePeakDbtp: measurement.inputTp,
+    loudnessRangeLu: measurement.inputLra,
+    peakToLoudnessRatioDb: measurement.inputTp - measurement.inputI,
   };
+}
+
+function getDynamicsCompressionPlan(analysis) {
+  const peakToLoudnessExcessDb = Math.max(
+    0,
+    analysis.peakToLoudnessRatioDb - TARGET_MAX_PEAK_TO_LOUDNESS_DB,
+  );
+  const loudnessRangeExcessLu = Math.max(
+    0,
+    analysis.loudnessRangeLu - TARGET_MAX_LOUDNESS_RANGE_LU,
+  );
+  const strength = clamp(
+    Math.max(peakToLoudnessExcessDb / 5, loudnessRangeExcessLu / 6),
+  );
+  const ratio = 1 + (MAX_COMPRESSOR_RATIO - 1) * strength;
+  const thresholdOffsetDb = COMPRESSOR_THRESHOLD_OFFSET_DB - 1.5 * strength;
+  const thresholdDbfs = clamp(
+    analysis.integratedLufs + thresholdOffsetDb,
+    -24,
+    -8,
+  );
+  const thresholdLinear = Math.pow(10, thresholdDbfs / 20);
+
+  return {
+    useCompression: strength >= 0.05,
+    strength,
+    thresholdDbfs,
+    thresholdLinear,
+    ratio,
+  };
+}
+
+async function renderDynamicsControlledIntermediate(inputPath, outputPath, plan) {
+  await runFfmpeg([
+    "-y",
+    "-i",
+    inputPath,
+    "-vn",
+    "-af",
+    `acompressor=threshold=${plan.thresholdLinear.toFixed(6)}:ratio=${plan.ratio.toFixed(3)}:attack=${COMPRESSOR_ATTACK_MS}:release=${COMPRESSOR_RELEASE_MS}:makeup=1:knee=${COMPRESSOR_KNEE}:link=average:detection=rms:mix=1`,
+    "-ar",
+    String(SAMPLE_RATE),
+    "-codec:a",
+    "flac",
+    outputPath,
+  ]);
 }
 
 async function getPerceptualNormalizationPlan(inputPath, tempDir) {
@@ -451,9 +506,32 @@ async function renderNormalizedIntermediate(inputPath, outputPath, gainDb, useLi
 }
 
 async function createVerifiedNormalizedSource(inputPath, tempDir) {
-  const plan = await getPerceptualNormalizationPlan(inputPath, tempDir);
+  const sourceAnalysis = await analyzePerceptualLoudness(inputPath, tempDir);
+  const dynamicsPlan = getDynamicsCompressionPlan(sourceAnalysis);
+  let normalizationInputPath = inputPath;
+
   console.log(
-    `integrated ${plan.integratedLufs.toFixed(2)} LUFS | representative ${plan.representativeShortTermLufs.toFixed(2)} LUFS | true peak ${plan.truePeakDbtp.toFixed(2)} dBTP`,
+    `source ${sourceAnalysis.integratedLufs.toFixed(2)} LUFS | ${sourceAnalysis.truePeakDbtp.toFixed(2)} dBTP | LRA ${sourceAnalysis.loudnessRangeLu.toFixed(2)} LU | PLR ${sourceAnalysis.peakToLoudnessRatioDb.toFixed(2)} dB`,
+  );
+
+  if (dynamicsPlan.useCompression) {
+    console.log(
+      `dynamics compression strength ${dynamicsPlan.strength.toFixed(2)} | threshold ${dynamicsPlan.thresholdDbfs.toFixed(2)} dBFS | ratio ${dynamicsPlan.ratio.toFixed(2)}:1`,
+    );
+    const dynamicsControlledPath = path.join(tempDir, "dynamics-controlled.flac");
+    await renderDynamicsControlledIntermediate(
+      inputPath,
+      dynamicsControlledPath,
+      dynamicsPlan,
+    );
+    normalizationInputPath = dynamicsControlledPath;
+  } else {
+    console.log("dynamics compression bypassed");
+  }
+
+  const plan = await getPerceptualNormalizationPlan(normalizationInputPath, tempDir);
+  console.log(
+    `post-dynamics ${plan.integratedLufs.toFixed(2)} LUFS | ${plan.truePeakDbtp.toFixed(2)} dBTP | LRA ${plan.loudnessRangeLu.toFixed(2)} LU | PLR ${plan.peakToLoudnessRatioDb.toFixed(2)} dB`,
   );
   console.log(
     `baseline ${plan.baselineGainDb.toFixed(2)} dB | requested ${plan.requestedGainDb.toFixed(2)} dB | applying ${plan.appliedGainDb.toFixed(2)} dB | expected limiter ${plan.expectedLimiterReductionDb.toFixed(2)} dB`,
@@ -467,7 +545,7 @@ async function createVerifiedNormalizedSource(inputPath, tempDir) {
 
   const normalizedPath = path.join(tempDir, "normalized.flac");
   await renderNormalizedIntermediate(
-    inputPath,
+    normalizationInputPath,
     normalizedPath,
     plan.appliedGainDb,
     plan.expectedLimiterReductionDb > 0.01,
