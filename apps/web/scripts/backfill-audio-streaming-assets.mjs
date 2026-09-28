@@ -12,10 +12,16 @@ dotenv.config({ path: ".env.local" });
 dotenv.config();
 
 const execFileAsync = promisify(execFile);
-const TARGET_INTEGRATED_LUFS = -14;
+const SAMPLE_RATE = 48000;
+const BLOCK_SECONDS = 0.1;
+const WINDOW_SECONDS = 3;
+const HOP_SECONDS = 1;
+const MIN_SHORT_TERM_LUFS = -45;
+const MIN_WINDOW_RMS_DBFS = -50;
+const DENSE_POOL_PERCENTILE = 70;
+const REPRESENTATIVE_LOUDNESS_PERCENTILE = 85;
+const TARGET_REPRESENTATIVE_SHORT_TERM_LUFS = -11.5;
 const TARGET_TRUE_PEAK_DBTP = -1;
-const TARGET_LOUDNESS_RANGE = 11;
-const LOUDNESS_TOLERANCE_LU = 0.25;
 const TRUE_PEAK_TOLERANCE_DB = 0.1;
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
@@ -95,10 +101,34 @@ function getBaseKeyFromAudioUrl(audioUrl) {
   return pathParts.slice(0, audioIndex).join("/");
 }
 
-async function runFfmpeg(args) {
+async function runFfmpeg(args, maxBuffer = 1024 * 1024 * 20) {
   return execFileAsync(ffmpegPath, args, {
-    maxBuffer: 1024 * 1024 * 20,
+    maxBuffer,
   });
+}
+
+function clamp(value, min = 0, max = 1) {
+  return Math.min(max, Math.max(min, value));
+}
+
+function linearToDb(value) {
+  if (!Number.isFinite(value) || value <= 0) return -Infinity;
+  return 20 * Math.log10(value);
+}
+
+function percentile(values, percentileValue) {
+  const finiteValues = values.filter(Number.isFinite).sort((a, b) => a - b);
+  if (finiteValues.length === 0) return null;
+  if (finiteValues.length === 1) return finiteValues[0];
+
+  const index = (percentileValue / 100) * (finiteValues.length - 1);
+  const lower = Math.floor(index);
+  const upper = Math.ceil(index);
+  const fraction = index - lower;
+
+  if (lower === upper) return finiteValues[lower];
+
+  return finiteValues[lower] + (finiteValues[upper] - finiteValues[lower]) * fraction;
 }
 
 function parseLoudnessMeasurement(stderr) {
@@ -131,7 +161,7 @@ async function measureLoudness(inputPath) {
     inputPath,
     "-vn",
     "-af",
-    `loudnorm=I=${TARGET_INTEGRATED_LUFS}:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=${TARGET_LOUDNESS_RANGE}:print_format=json`,
+    `loudnorm=I=-14:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=11:print_format=json`,
     "-f",
     "null",
     "-",
@@ -140,55 +170,242 @@ async function measureLoudness(inputPath) {
   return parseLoudnessMeasurement(stderr);
 }
 
-function makeLoudnessNormalizationFilter(measurement) {
-  return [
-    `loudnorm=I=${TARGET_INTEGRATED_LUFS}`,
-    `TP=${TARGET_TRUE_PEAK_DBTP}`,
-    `LRA=${TARGET_LOUDNESS_RANGE}`,
-    `measured_I=${measurement.inputI}`,
-    `measured_TP=${measurement.inputTp}`,
-    `measured_LRA=${measurement.inputLra}`,
-    `measured_thresh=${measurement.inputThresh}`,
-    `offset=${measurement.targetOffset}`,
-    "linear=true",
-  ].join(":");
+function parseShortTermTimeline(stderr) {
+  const timeline = [];
+
+  for (const line of stderr.split("\n")) {
+    const timeMatch = line.match(/\bt:\s*([0-9]+(?:\.[0-9]+)?)/);
+    const shortTermMatch = line.match(/\bS:\s*(-?(?:[0-9]+(?:\.[0-9]+)?|inf))/i);
+
+    if (!timeMatch || !shortTermMatch) continue;
+
+    const time = Number(timeMatch[1]);
+    const shortTermLufs = Number(shortTermMatch[1]);
+
+    if (!Number.isFinite(time) || !Number.isFinite(shortTermLufs)) continue;
+
+    timeline.push({ time, shortTermLufs });
+  }
+
+  if (timeline.length === 0) {
+    throw new Error("FFmpeg did not return a short-term LUFS timeline.");
+  }
+
+  return timeline;
 }
 
-async function getLoudnessNormalizationFilter(inputPath) {
-  const measurement = await measureLoudness(inputPath);
+async function measureShortTermTimeline(inputPath) {
+  const { stderr } = await runFfmpeg(
+    [
+      "-hide_banner",
+      "-loglevel",
+      "verbose",
+      "-i",
+      inputPath,
+      "-vn",
+      "-filter_complex",
+      "ebur128=framelog=verbose",
+      "-f",
+      "null",
+      "-",
+    ],
+    1024 * 1024 * 80,
+  );
+
+  return parseShortTermTimeline(stderr);
+}
+
+async function decodeMonoFloat32(inputPath, outputPath) {
+  await runFfmpeg([
+    "-y",
+    "-hide_banner",
+    "-i",
+    inputPath,
+    "-vn",
+    "-ac",
+    "1",
+    "-ar",
+    String(SAMPLE_RATE),
+    "-f",
+    "f32le",
+    outputPath,
+  ]);
+}
+
+function buildEnergyBlocks(samples) {
+  const samplesPerBlock = Math.round(SAMPLE_RATE * BLOCK_SECONDS);
+  const blocks = [];
+
+  for (let start = 0; start < samples.length; start += samplesPerBlock) {
+    const end = Math.min(samples.length, start + samplesPerBlock);
+    let sumSquares = 0;
+    let peak = 0;
+
+    for (let index = start; index < end; index += 1) {
+      const sample = samples[index];
+      sumSquares += sample * sample;
+      peak = Math.max(peak, Math.abs(sample));
+    }
+
+    const count = end - start;
+    const rms = count > 0 ? Math.sqrt(sumSquares / count) : 0;
+
+    blocks.push({
+      sumSquares,
+      count,
+      peak,
+      rmsDbfs: linearToDb(rms),
+    });
+  }
+
+  return blocks;
+}
+
+function nearestShortTermLufs(timeline, targetTime) {
+  let nearest = null;
+  let nearestDistance = Infinity;
+
+  for (const point of timeline) {
+    const distance = Math.abs(point.time - targetTime);
+    if (distance < nearestDistance) {
+      nearest = point;
+      nearestDistance = distance;
+    }
+  }
+
+  if (!nearest || nearestDistance > 0.75) return null;
+  return nearest.shortTermLufs;
+}
+
+function buildWindows(blocks, timeline) {
+  const blocksPerSecond = Math.round(1 / BLOCK_SECONDS);
+  const windowBlocks = Math.round(WINDOW_SECONDS / BLOCK_SECONDS);
+  const hopBlocks = Math.round(HOP_SECONDS / BLOCK_SECONDS);
+  const windows = [];
+
+  for (let endBlock = windowBlocks; endBlock <= blocks.length; endBlock += hopBlocks) {
+    const startBlock = endBlock - windowBlocks;
+    const window = blocks.slice(startBlock, endBlock);
+    if (window.length < windowBlocks) continue;
+
+    const totalSquares = window.reduce((sum, block) => sum + block.sumSquares, 0);
+    const totalSamples = window.reduce((sum, block) => sum + block.count, 0);
+    const peak = window.reduce((max, block) => Math.max(max, block.peak), 0);
+    const rms = totalSamples > 0 ? Math.sqrt(totalSquares / totalSamples) : 0;
+    const rmsDbfs = linearToDb(rms);
+    const crestDb = rms > 0 && peak > 0 ? 20 * Math.log10(peak / rms) : Infinity;
+
+    const blockDbValues = window.map((block) => block.rmsDbfs).filter(Number.isFinite);
+    const maxBlockDb = blockDbValues.length > 0 ? Math.max(...blockDbValues) : -Infinity;
+    const active12Ratio =
+      blockDbValues.length > 0
+        ? blockDbValues.filter((value) => value >= maxBlockDb - 12).length / blockDbValues.length
+        : 0;
+    const active6Ratio =
+      blockDbValues.length > 0
+        ? blockDbValues.filter((value) => value >= maxBlockDb - 6).length / blockDbValues.length
+        : 0;
+    const crestDensity = Number.isFinite(crestDb) ? clamp((18 - crestDb) / 15) : 0;
+    const densityScore = clamp(
+      active12Ratio * 0.45 + active6Ratio * 0.3 + crestDensity * 0.25,
+    );
+
+    const endTime = endBlock / blocksPerSecond;
+    const shortTermLufs = nearestShortTermLufs(timeline, endTime);
+
+    if (!Number.isFinite(shortTermLufs)) continue;
+
+    windows.push({
+      shortTermLufs,
+      rmsDbfs,
+      densityScore,
+    });
+  }
+
+  return windows;
+}
+
+function getRepresentativeShortTermLufs(windows) {
+  const validWindows = windows.filter(
+    (window) =>
+      window.shortTermLufs >= MIN_SHORT_TERM_LUFS &&
+      window.rmsDbfs >= MIN_WINDOW_RMS_DBFS,
+  );
+
+  if (validWindows.length === 0) {
+    throw new Error("No usable 3-second analysis windows were found.");
+  }
+
+  const densityThreshold =
+    percentile(
+      validWindows.map((window) => window.densityScore),
+      DENSE_POOL_PERCENTILE,
+    ) ?? 0;
+  const representativePool = validWindows.filter(
+    (window) => window.densityScore >= densityThreshold,
+  );
+  const representativeShortTermLufs = percentile(
+    representativePool.map((window) => window.shortTermLufs),
+    REPRESENTATIVE_LOUDNESS_PERCENTILE,
+  );
+
+  if (!Number.isFinite(representativeShortTermLufs)) {
+    throw new Error("Could not determine representative short-term loudness.");
+  }
+
+  return representativeShortTermLufs;
+}
+
+async function analyzePerceptualLoudness(inputPath, tempDir) {
+  const pcmPath = path.join(tempDir, "perceptual-analysis.f32");
+  const [measurement, timeline] = await Promise.all([
+    measureLoudness(inputPath),
+    measureShortTermTimeline(inputPath),
+  ]);
+
+  await decodeMonoFloat32(inputPath, pcmPath);
+  const pcmBuffer = await readFile(pcmPath);
+  const sampleCount = Math.floor(pcmBuffer.byteLength / 4);
+  const samples = new Float32Array(
+    pcmBuffer.buffer,
+    pcmBuffer.byteOffset,
+    sampleCount,
+  );
+  const blocks = buildEnergyBlocks(samples);
+  const windows = buildWindows(blocks, timeline);
+
   return {
-    measurement,
-    filter: makeLoudnessNormalizationFilter(measurement),
+    representativeShortTermLufs: getRepresentativeShortTermLufs(windows),
+    truePeakDbtp: measurement.inputTp,
   };
 }
 
-function isLoudnessWithinTolerance(measurement) {
-  const integratedDifference = Math.abs(
-    measurement.inputI - TARGET_INTEGRATED_LUFS,
-  );
-  const truePeakCeiling = TARGET_TRUE_PEAK_DBTP + TRUE_PEAK_TOLERANCE_DB;
+async function getPerceptualNormalizationPlan(inputPath, tempDir) {
+  const analysis = await analyzePerceptualLoudness(inputPath, tempDir);
+  const requestedGainDb =
+    TARGET_REPRESENTATIVE_SHORT_TERM_LUFS - analysis.representativeShortTermLufs;
+  const truePeakLimitedGainDb = TARGET_TRUE_PEAK_DBTP - analysis.truePeakDbtp;
+  const appliedGainDb = Math.min(requestedGainDb, truePeakLimitedGainDb);
 
-  return (
-    integratedDifference <= LOUDNESS_TOLERANCE_LU &&
-    measurement.inputTp <= truePeakCeiling
-  );
+  return {
+    ...analysis,
+    requestedGainDb,
+    appliedGainDb,
+    expectedRepresentativeShortTermLufs:
+      analysis.representativeShortTermLufs + appliedGainDb,
+  };
 }
 
-async function renderNormalizedIntermediate(inputPath, outputPath) {
-  const { measurement, filter } = await getLoudnessNormalizationFilter(inputPath);
-  console.log(
-    `measured ${measurement.inputI.toFixed(2)} LUFS / ${measurement.inputTp.toFixed(2)} dBTP; target ${TARGET_INTEGRATED_LUFS} LUFS / ${TARGET_TRUE_PEAK_DBTP} dBTP`,
-  );
-
+async function renderNormalizedIntermediate(inputPath, outputPath, gainDb) {
   await runFfmpeg([
     "-y",
     "-i",
     inputPath,
     "-vn",
     "-af",
-    filter,
+    `volume=${gainDb.toFixed(4)}dB`,
     "-ar",
-    "48000",
+    String(SAMPLE_RATE),
     "-codec:a",
     "flac",
     outputPath,
@@ -196,30 +413,38 @@ async function renderNormalizedIntermediate(inputPath, outputPath) {
 }
 
 async function createVerifiedNormalizedSource(inputPath, tempDir) {
-  const normalizedPath = path.join(tempDir, "normalized.flac");
-  await renderNormalizedIntermediate(inputPath, normalizedPath);
-
-  const normalizedMeasurement = await measureLoudness(normalizedPath);
+  const plan = await getPerceptualNormalizationPlan(inputPath, tempDir);
+  const peakLimited = plan.appliedGainDb < plan.requestedGainDb - 0.001;
   console.log(
-    `normalized source ${normalizedMeasurement.inputI.toFixed(2)} LUFS / ${normalizedMeasurement.inputTp.toFixed(2)} dBTP`,
+    `representative ${plan.representativeShortTermLufs.toFixed(2)} LUFS / ${plan.truePeakDbtp.toFixed(2)} dBTP; requested ${plan.requestedGainDb.toFixed(2)} dB; applying ${plan.appliedGainDb.toFixed(2)} dB${peakLimited ? " (true-peak limited)" : ""}`,
   );
 
-  if (isLoudnessWithinTolerance(normalizedMeasurement)) {
+  const normalizedPath = path.join(tempDir, "normalized.flac");
+  await renderNormalizedIntermediate(inputPath, normalizedPath, plan.appliedGainDb);
+
+  const normalizedMeasurement = await measureLoudness(normalizedPath);
+  const truePeakCeiling = TARGET_TRUE_PEAK_DBTP + TRUE_PEAK_TOLERANCE_DB;
+  console.log(
+    `normalized source expected ${plan.expectedRepresentativeShortTermLufs.toFixed(2)} short-term LUFS / ${normalizedMeasurement.inputTp.toFixed(2)} dBTP`,
+  );
+
+  if (normalizedMeasurement.inputTp <= truePeakCeiling) {
     return normalizedPath;
   }
 
-  console.log("normalized source outside tolerance; running corrective pass");
+  console.log("normalized source exceeded true-peak tolerance; running corrective gain pass");
+  const correctionGainDb = TARGET_TRUE_PEAK_DBTP - normalizedMeasurement.inputTp;
   const correctedPath = path.join(tempDir, "normalized-corrected.flac");
-  await renderNormalizedIntermediate(normalizedPath, correctedPath);
+  await renderNormalizedIntermediate(normalizedPath, correctedPath, correctionGainDb);
 
   const correctedMeasurement = await measureLoudness(correctedPath);
   console.log(
-    `corrected source ${correctedMeasurement.inputI.toFixed(2)} LUFS / ${correctedMeasurement.inputTp.toFixed(2)} dBTP`,
+    `corrected source ${correctedMeasurement.inputTp.toFixed(2)} dBTP`,
   );
 
-  if (!isLoudnessWithinTolerance(correctedMeasurement)) {
+  if (correctedMeasurement.inputTp > truePeakCeiling) {
     throw new Error(
-      `Normalized source remained outside tolerance at ${correctedMeasurement.inputI.toFixed(2)} LUFS / ${correctedMeasurement.inputTp.toFixed(2)} dBTP.`,
+      `Normalized source exceeded true-peak tolerance at ${correctedMeasurement.inputTp.toFixed(2)} dBTP.`,
     );
   }
 
@@ -228,17 +453,7 @@ async function createVerifiedNormalizedSource(inputPath, tempDir) {
 
 async function verifyNormalizedOutput(outputPath, label) {
   const measurement = await measureLoudness(outputPath);
-  const deviation = Math.abs(measurement.inputI - TARGET_INTEGRATED_LUFS);
-
-  console.log(
-    `${label} ${measurement.inputI.toFixed(2)} LUFS / ${measurement.inputTp.toFixed(2)} dBTP`,
-  );
-
-  if (deviation > LOUDNESS_TOLERANCE_LU) {
-    throw new Error(
-      `${label} missed target by ${deviation.toFixed(2)} LU (measured ${measurement.inputI.toFixed(2)} LUFS).`,
-    );
-  }
+  console.log(`${label} ${measurement.inputTp.toFixed(2)} dBTP`);
 }
 
 async function uploadBufferToR2({ key, buffer, contentType }) {
