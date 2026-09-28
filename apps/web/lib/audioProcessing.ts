@@ -24,6 +24,13 @@ const LIMITER_CEILING_DBFS = -1.2;
 const MAX_LIMITER_REDUCTION_DB = 3;
 const LIMITER_ATTACK_MS = 5;
 const LIMITER_RELEASE_MS = 50;
+const TARGET_MAX_PEAK_TO_LOUDNESS_DB = 13.5;
+const TARGET_MAX_LOUDNESS_RANGE_LU = 9;
+const MAX_COMPRESSOR_RATIO = 2.6;
+const COMPRESSOR_ATTACK_MS = 12;
+const COMPRESSOR_RELEASE_MS = 180;
+const COMPRESSOR_KNEE = 2.828;
+const COMPRESSOR_THRESHOLD_OFFSET_DB = 7.5;
 const TRUE_PEAK_TOLERANCE_DB = 0.1;
 const LIMITER_LIMIT_LINEAR = Math.pow(10, LIMITER_CEILING_DBFS / 20);
 
@@ -69,6 +76,16 @@ type PerceptualLoudnessAnalysis = {
   integratedLufs: number;
   representativeShortTermLufs: number;
   truePeakDbtp: number;
+  loudnessRangeLu: number;
+  peakToLoudnessRatioDb: number;
+};
+
+type DynamicsCompressionPlan = {
+  useCompression: boolean;
+  strength: number;
+  thresholdDbfs: number;
+  thresholdLinear: number;
+  ratio: number;
 };
 
 type PerceptualNormalizationPlan = PerceptualLoudnessAnalysis & {
@@ -434,7 +451,61 @@ async function analyzePerceptualLoudness(
     integratedLufs: measurement.inputI,
     representativeShortTermLufs: getRepresentativeShortTermLufs(windows),
     truePeakDbtp: measurement.inputTp,
+    loudnessRangeLu: measurement.inputLra,
+    peakToLoudnessRatioDb: measurement.inputTp - measurement.inputI,
   };
+}
+
+function getDynamicsCompressionPlan(
+  analysis: PerceptualLoudnessAnalysis,
+): DynamicsCompressionPlan {
+  const peakToLoudnessExcessDb = Math.max(
+    0,
+    analysis.peakToLoudnessRatioDb - TARGET_MAX_PEAK_TO_LOUDNESS_DB,
+  );
+  const loudnessRangeExcessLu = Math.max(
+    0,
+    analysis.loudnessRangeLu - TARGET_MAX_LOUDNESS_RANGE_LU,
+  );
+  const strength = clamp(
+    Math.max(peakToLoudnessExcessDb / 5, loudnessRangeExcessLu / 6),
+  );
+  const ratio = 1 + (MAX_COMPRESSOR_RATIO - 1) * strength;
+  const thresholdOffsetDb = COMPRESSOR_THRESHOLD_OFFSET_DB - 1.5 * strength;
+  const thresholdDbfs = clamp(
+    analysis.integratedLufs + thresholdOffsetDb,
+    -24,
+    -8,
+  );
+  const thresholdLinear = Math.pow(10, thresholdDbfs / 20);
+
+  return {
+    useCompression: strength >= 0.05,
+    strength,
+    thresholdDbfs,
+    thresholdLinear,
+    ratio,
+  };
+}
+
+async function renderDynamicsControlledIntermediate(
+  inputPath: string,
+  outputPath: string,
+  plan: DynamicsCompressionPlan,
+) {
+  await runFfmpeg([
+    "-y",
+    "-i",
+    inputPath,
+    "-vn",
+    "-af",
+    `acompressor=threshold=${plan.thresholdLinear.toFixed(6)}:ratio=${plan.ratio.toFixed(3)}:attack=${COMPRESSOR_ATTACK_MS}:release=${COMPRESSOR_RELEASE_MS}:makeup=1:knee=${COMPRESSOR_KNEE}:link=average:detection=rms:mix=1`,
+    "-ar",
+    String(SAMPLE_RATE),
+    "-codec:a",
+    "flac",
+    outputPath,
+  ]);
 }
 
 async function getPerceptualNormalizationPlan(
@@ -508,13 +579,29 @@ async function renderNormalizedIntermediate(
 }
 
 async function createVerifiedNormalizedSource(inputPath: string, tempDir: string) {
-  const plan = await getPerceptualNormalizationPlan(inputPath, tempDir);
+  const sourceAnalysis = await analyzePerceptualLoudness(inputPath, tempDir);
+  const dynamicsPlan = getDynamicsCompressionPlan(sourceAnalysis);
+  let normalizationInputPath = inputPath;
+
+  if (dynamicsPlan.useCompression) {
+    const dynamicsControlledPath = path.join(tempDir, "dynamics-controlled.flac");
+    await renderDynamicsControlledIntermediate(
+      inputPath,
+      dynamicsControlledPath,
+      dynamicsPlan,
+    );
+    normalizationInputPath = dynamicsControlledPath;
+  }
+
+  const plan = await getPerceptualNormalizationPlan(normalizationInputPath, tempDir);
 
   if (plan.limiterCapped) {
     console.warn("Audio normalization hit the limiter budget", {
       integratedLufs: plan.integratedLufs,
       representativeShortTermLufs: plan.representativeShortTermLufs,
       truePeakDbtp: plan.truePeakDbtp,
+      loudnessRangeLu: plan.loudnessRangeLu,
+      peakToLoudnessRatioDb: plan.peakToLoudnessRatioDb,
       requestedGainDb: plan.requestedGainDb,
       appliedGainDb: plan.appliedGainDb,
       maxLimiterReductionDb: MAX_LIMITER_REDUCTION_DB,
@@ -523,7 +610,7 @@ async function createVerifiedNormalizedSource(inputPath: string, tempDir: string
 
   const normalizedPath = path.join(tempDir, "normalized.flac");
   await renderNormalizedIntermediate(
-    inputPath,
+    normalizationInputPath,
     normalizedPath,
     plan.appliedGainDb,
     plan.expectedLimiterReductionDb > 0.01,
@@ -541,7 +628,7 @@ async function createVerifiedNormalizedSource(inputPath: string, tempDir: string
 
   const correctedMeasurement = await measureLoudness(correctedPath);
   if (correctedMeasurement.inputTp > truePeakCeiling) {
-    console.warn("Audio hybrid loudness normalization exceeded true-peak tolerance", {
+    console.warn("Audio dynamics-aware normalization exceeded true-peak tolerance", {
       truePeakDbtp: correctedMeasurement.inputTp,
       targetTruePeakDbtp: TARGET_TRUE_PEAK_DBTP,
     });
