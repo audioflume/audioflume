@@ -370,6 +370,29 @@ function getRepresentativeShortTermLufs(windows) {
   return representativeShortTermLufs;
 }
 
+function getMedianDensityScore(windows) {
+  const validWindows = windows.filter(
+    (window) =>
+      window.shortTermLufs >= MIN_SHORT_TERM_LUFS &&
+      window.rmsDbfs >= MIN_WINDOW_RMS_DBFS,
+  );
+
+  if (validWindows.length === 0) {
+    throw new Error("No usable 3-second analysis windows were found.");
+  }
+
+  const medianDensityScore = percentile(
+    validWindows.map((window) => window.densityScore),
+    50,
+  );
+
+  if (!Number.isFinite(medianDensityScore)) {
+    throw new Error("Could not determine median waveform density.");
+  }
+
+  return medianDensityScore;
+}
+
 async function analyzePerceptualLoudness(inputPath, tempDir) {
   const pcmPath = path.join(tempDir, "perceptual-analysis.f32");
   const [measurement, timeline] = await Promise.all([
@@ -394,7 +417,37 @@ async function analyzePerceptualLoudness(inputPath, tempDir) {
     truePeakDbtp: measurement.inputTp,
     loudnessRangeLu: measurement.inputLra,
     peakToLoudnessRatioDb: measurement.inputTp - measurement.inputI,
+    medianDensityScore: getMedianDensityScore(windows),
   };
+}
+
+function getDensityAttenuationDb(densityScore) {
+  const density = clamp(densityScore);
+  const points = [
+    { density: 0, attenuationDb: -8 },
+    { density: 0.1, attenuationDb: -7 },
+    { density: 0.25, attenuationDb: -5 },
+    { density: 0.4, attenuationDb: -3 },
+    { density: 0.55, attenuationDb: -1.5 },
+    { density: 0.7, attenuationDb: 0 },
+    { density: 1, attenuationDb: 0 },
+  ];
+
+  for (let index = 1; index < points.length; index += 1) {
+    const lower = points[index - 1];
+    const upper = points[index];
+
+    if (density <= upper.density) {
+      const position =
+        (density - lower.density) / (upper.density - lower.density);
+      return (
+        lower.attenuationDb +
+        (upper.attenuationDb - lower.attenuationDb) * position
+      );
+    }
+  }
+
+  return 0;
 }
 
 function getDynamicsCompressionPlan(analysis) {
@@ -505,13 +558,34 @@ async function renderNormalizedIntermediate(inputPath, outputPath, gainDb, useLi
   ]);
 }
 
+async function applyDensityAttenuation(inputPath, tempDir, densityScore) {
+  const attenuationDb = getDensityAttenuationDb(densityScore);
+
+  if (attenuationDb >= -0.001) {
+    return inputPath;
+  }
+
+  console.log(
+    `density ${densityScore.toFixed(3)} | post-normalization attenuation ${attenuationDb.toFixed(2)} dB`,
+  );
+
+  const densityAdjustedPath = path.join(tempDir, "density-adjusted.flac");
+  await renderNormalizedIntermediate(
+    inputPath,
+    densityAdjustedPath,
+    attenuationDb,
+    false,
+  );
+  return densityAdjustedPath;
+}
+
 async function createVerifiedNormalizedSource(inputPath, tempDir) {
   const sourceAnalysis = await analyzePerceptualLoudness(inputPath, tempDir);
   const dynamicsPlan = getDynamicsCompressionPlan(sourceAnalysis);
   let normalizationInputPath = inputPath;
 
   console.log(
-    `source ${sourceAnalysis.integratedLufs.toFixed(2)} LUFS | ${sourceAnalysis.truePeakDbtp.toFixed(2)} dBTP | LRA ${sourceAnalysis.loudnessRangeLu.toFixed(2)} LU | PLR ${sourceAnalysis.peakToLoudnessRatioDb.toFixed(2)} dB`,
+    `source ${sourceAnalysis.integratedLufs.toFixed(2)} LUFS | ${sourceAnalysis.truePeakDbtp.toFixed(2)} dBTP | LRA ${sourceAnalysis.loudnessRangeLu.toFixed(2)} LU | PLR ${sourceAnalysis.peakToLoudnessRatioDb.toFixed(2)} dB | density ${sourceAnalysis.medianDensityScore.toFixed(3)} | density offset ${getDensityAttenuationDb(sourceAnalysis.medianDensityScore).toFixed(2)} dB`,
   );
 
   if (dynamicsPlan.useCompression) {
@@ -558,7 +632,11 @@ async function createVerifiedNormalizedSource(inputPath, tempDir) {
   );
 
   if (normalizedMeasurement.inputTp <= truePeakCeiling) {
-    return normalizedPath;
+    return applyDensityAttenuation(
+      normalizedPath,
+      tempDir,
+      sourceAnalysis.medianDensityScore,
+    );
   }
 
   console.log("normalized source exceeded true-peak tolerance; running corrective gain pass");
@@ -577,7 +655,11 @@ async function createVerifiedNormalizedSource(inputPath, tempDir) {
     );
   }
 
-  return correctedPath;
+  return applyDensityAttenuation(
+    correctedPath,
+    tempDir,
+    sourceAnalysis.medianDensityScore,
+  );
 }
 
 async function verifyNormalizedOutput(outputPath, label) {
