@@ -8,31 +8,14 @@ import { uploadFileToR2 } from "@/lib/r2";
 
 const execFileAsync = promisify(execFile);
 const FFMPEG_EXECUTABLE_NAME = process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
-const SAMPLE_RATE = 48000;
-const BLOCK_SECONDS = 0.1;
-const WINDOW_SECONDS = 3;
-const HOP_SECONDS = 1;
-const MIN_SHORT_TERM_LUFS = -45;
-const MIN_WINDOW_RMS_DBFS = -50;
-const DENSE_POOL_PERCENTILE = 70;
-const REPRESENTATIVE_LOUDNESS_PERCENTILE = 85;
 const TARGET_INTEGRATED_LUFS = -14;
-const MIN_REPRESENTATIVE_SHORT_TERM_LUFS = -14;
-const MAX_REPRESENTATIVE_SHORT_TERM_LUFS = -11.5;
 const TARGET_TRUE_PEAK_DBTP = -1;
-const LIMITER_CEILING_DBFS = -1.2;
-const MAX_LIMITER_REDUCTION_DB = 3;
+const TARGET_LOUDNESS_RANGE = 11;
+const MAX_UPWARD_GAIN_DB = 4;
+const TRUE_PEAK_TOLERANCE_DB = 0.1;
 const LIMITER_ATTACK_MS = 5;
 const LIMITER_RELEASE_MS = 50;
-const TARGET_MAX_PEAK_TO_LOUDNESS_DB = 13.5;
-const TARGET_MAX_LOUDNESS_RANGE_LU = 9;
-const MAX_COMPRESSOR_RATIO = 2.6;
-const COMPRESSOR_ATTACK_MS = 12;
-const COMPRESSOR_RELEASE_MS = 180;
-const COMPRESSOR_KNEE = 2.828;
-const COMPRESSOR_THRESHOLD_OFFSET_DB = 7.5;
-const TRUE_PEAK_TOLERANCE_DB = 0.1;
-const LIMITER_LIMIT_LINEAR = Math.pow(10, LIMITER_CEILING_DBFS / 20);
+const LIMITER_LIMIT_LINEAR = Math.pow(10, TARGET_TRUE_PEAK_DBTP / 20);
 
 let resolvedFfmpegPath: string | null = null;
 
@@ -54,49 +37,13 @@ type LoudnessMeasurement = {
   targetOffset: number;
 };
 
-type ShortTermPoint = {
-  time: number;
-  shortTermLufs: number;
-};
-
-type EnergyBlock = {
-  sumSquares: number;
-  count: number;
-  peak: number;
-  rmsDbfs: number;
-};
-
-type AnalysisWindow = {
-  shortTermLufs: number;
-  rmsDbfs: number;
-  densityScore: number;
-};
-
-type PerceptualLoudnessAnalysis = {
-  integratedLufs: number;
-  representativeShortTermLufs: number;
-  truePeakDbtp: number;
-  loudnessRangeLu: number;
-  peakToLoudnessRatioDb: number;
-  medianDensityScore: number;
-};
-
-type DynamicsCompressionPlan = {
-  useCompression: boolean;
-  strength: number;
-  thresholdDbfs: number;
-  thresholdLinear: number;
-  ratio: number;
-};
-
-type PerceptualNormalizationPlan = PerceptualLoudnessAnalysis & {
-  baselineGainDb: number;
+type LoudnessNormalizationPlan = {
   requestedGainDb: number;
   appliedGainDb: number;
-  expectedLimiterReductionDb: number;
   expectedIntegratedLufs: number;
-  expectedRepresentativeShortTermLufs: number;
-  limiterCapped: boolean;
+  predictedTruePeakDbtp: number;
+  limiterRequired: boolean;
+  upwardGainCapped: boolean;
 };
 
 export type ProcessedAudioAssets = {
@@ -160,12 +107,12 @@ function getHlsContentType(fileName: string) {
   return "application/octet-stream";
 }
 
-async function runFfmpeg(args: string[], maxBuffer = 1024 * 1024 * 20) {
+async function runFfmpeg(args: string[]) {
   const ffmpegCommand = await resolveFfmpegPath();
 
   try {
     return await execFileAsync(ffmpegCommand, args, {
-      maxBuffer,
+      maxBuffer: 1024 * 1024 * 20,
     });
   } catch (error) {
     if (error && typeof error === "object" && "code" in error && error.code === "ENOENT") {
@@ -176,30 +123,6 @@ async function runFfmpeg(args: string[], maxBuffer = 1024 * 1024 * 20) {
 
     throw error;
   }
-}
-
-function clamp(value: number, min = 0, max = 1) {
-  return Math.min(max, Math.max(min, value));
-}
-
-function linearToDb(value: number) {
-  if (!Number.isFinite(value) || value <= 0) return -Infinity;
-  return 20 * Math.log10(value);
-}
-
-function percentile(values: number[], percentileValue: number) {
-  const finiteValues = values.filter(Number.isFinite).sort((a, b) => a - b);
-  if (finiteValues.length === 0) return null;
-  if (finiteValues.length === 1) return finiteValues[0];
-
-  const index = (percentileValue / 100) * (finiteValues.length - 1);
-  const lower = Math.floor(index);
-  const upper = Math.ceil(index);
-  const fraction = index - lower;
-
-  if (lower === upper) return finiteValues[lower];
-
-  return finiteValues[lower] + (finiteValues[upper] - finiteValues[lower]) * fraction;
 }
 
 function parseLoudnessMeasurement(stderr: string): LoudnessMeasurement {
@@ -232,7 +155,7 @@ async function measureLoudness(inputPath: string) {
     inputPath,
     "-vn",
     "-af",
-    `loudnorm=I=${TARGET_INTEGRATED_LUFS}:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=11:print_format=json`,
+    `loudnorm=I=${TARGET_INTEGRATED_LUFS}:TP=${TARGET_TRUE_PEAK_DBTP}:LRA=${TARGET_LOUDNESS_RANGE}:print_format=json`,
     "-f",
     "null",
     "-",
@@ -241,381 +164,31 @@ async function measureLoudness(inputPath: string) {
   return parseLoudnessMeasurement(stderr);
 }
 
-function parseShortTermTimeline(stderr: string): ShortTermPoint[] {
-  const timeline: ShortTermPoint[] = [];
-
-  for (const line of stderr.split("\n")) {
-    const timeMatch = line.match(/\bt:\s*([0-9]+(?:\.[0-9]+)?)/);
-    const shortTermMatch = line.match(/\bS:\s*(-?(?:[0-9]+(?:\.[0-9]+)?|inf))/i);
-
-    if (!timeMatch || !shortTermMatch) continue;
-
-    const time = Number(timeMatch[1]);
-    const shortTermLufs = Number(shortTermMatch[1]);
-
-    if (!Number.isFinite(time) || !Number.isFinite(shortTermLufs)) continue;
-
-    timeline.push({ time, shortTermLufs });
-  }
-
-  if (timeline.length === 0) {
-    throw new Error("FFmpeg did not return a short-term LUFS timeline.");
-  }
-
-  return timeline;
-}
-
-async function measureShortTermTimeline(inputPath: string) {
-  const { stderr } = await runFfmpeg(
-    [
-      "-hide_banner",
-      "-loglevel",
-      "verbose",
-      "-i",
-      inputPath,
-      "-vn",
-      "-filter_complex",
-      "ebur128=framelog=verbose",
-      "-f",
-      "null",
-      "-",
-    ],
-    1024 * 1024 * 80,
-  );
-
-  return parseShortTermTimeline(stderr);
-}
-
-async function decodeMonoFloat32(inputPath: string, outputPath: string) {
-  await runFfmpeg([
-    "-y",
-    "-hide_banner",
-    "-i",
-    inputPath,
-    "-vn",
-    "-ac",
-    "1",
-    "-ar",
-    String(SAMPLE_RATE),
-    "-f",
-    "f32le",
-    outputPath,
-  ]);
-}
-
-function buildEnergyBlocks(samples: Float32Array): EnergyBlock[] {
-  const samplesPerBlock = Math.round(SAMPLE_RATE * BLOCK_SECONDS);
-  const blocks: EnergyBlock[] = [];
-
-  for (let start = 0; start < samples.length; start += samplesPerBlock) {
-    const end = Math.min(samples.length, start + samplesPerBlock);
-    let sumSquares = 0;
-    let peak = 0;
-
-    for (let index = start; index < end; index += 1) {
-      const sample = samples[index];
-      sumSquares += sample * sample;
-      peak = Math.max(peak, Math.abs(sample));
-    }
-
-    const count = end - start;
-    const rms = count > 0 ? Math.sqrt(sumSquares / count) : 0;
-
-    blocks.push({
-      sumSquares,
-      count,
-      peak,
-      rmsDbfs: linearToDb(rms),
-    });
-  }
-
-  return blocks;
-}
-
-function nearestShortTermLufs(timeline: ShortTermPoint[], targetTime: number) {
-  let nearest: ShortTermPoint | null = null;
-  let nearestDistance = Infinity;
-
-  for (const point of timeline) {
-    const distance = Math.abs(point.time - targetTime);
-    if (distance < nearestDistance) {
-      nearest = point;
-      nearestDistance = distance;
-    }
-  }
-
-  if (!nearest || nearestDistance > 0.75) return null;
-  return nearest.shortTermLufs;
-}
-
-function buildWindows(blocks: EnergyBlock[], timeline: ShortTermPoint[]): AnalysisWindow[] {
-  const blocksPerSecond = Math.round(1 / BLOCK_SECONDS);
-  const windowBlocks = Math.round(WINDOW_SECONDS / BLOCK_SECONDS);
-  const hopBlocks = Math.round(HOP_SECONDS / BLOCK_SECONDS);
-  const windows: AnalysisWindow[] = [];
-
-  for (let endBlock = windowBlocks; endBlock <= blocks.length; endBlock += hopBlocks) {
-    const startBlock = endBlock - windowBlocks;
-    const window = blocks.slice(startBlock, endBlock);
-    if (window.length < windowBlocks) continue;
-
-    const totalSquares = window.reduce((sum, block) => sum + block.sumSquares, 0);
-    const totalSamples = window.reduce((sum, block) => sum + block.count, 0);
-    const peak = window.reduce((max, block) => Math.max(max, block.peak), 0);
-    const rms = totalSamples > 0 ? Math.sqrt(totalSquares / totalSamples) : 0;
-    const rmsDbfs = linearToDb(rms);
-    const crestDb = rms > 0 && peak > 0 ? 20 * Math.log10(peak / rms) : Infinity;
-
-    const blockDbValues = window.map((block) => block.rmsDbfs).filter(Number.isFinite);
-    const maxBlockDb = blockDbValues.length > 0 ? Math.max(...blockDbValues) : -Infinity;
-    const active12Ratio =
-      blockDbValues.length > 0
-        ? blockDbValues.filter((value) => value >= maxBlockDb - 12).length / blockDbValues.length
-        : 0;
-    const active6Ratio =
-      blockDbValues.length > 0
-        ? blockDbValues.filter((value) => value >= maxBlockDb - 6).length / blockDbValues.length
-        : 0;
-    const crestDensity = Number.isFinite(crestDb) ? clamp((18 - crestDb) / 15) : 0;
-    const densityScore = clamp(
-      active12Ratio * 0.45 + active6Ratio * 0.3 + crestDensity * 0.25,
-    );
-
-    const endTime = endBlock / blocksPerSecond;
-    const shortTermLufs = nearestShortTermLufs(timeline, endTime);
-
-    if (!Number.isFinite(shortTermLufs)) continue;
-
-    windows.push({
-      shortTermLufs,
-      rmsDbfs,
-      densityScore,
-    });
-  }
-
-  return windows;
-}
-
-function getRepresentativeShortTermLufs(windows: AnalysisWindow[]) {
-  const validWindows = windows.filter(
-    (window) =>
-      window.shortTermLufs >= MIN_SHORT_TERM_LUFS &&
-      window.rmsDbfs >= MIN_WINDOW_RMS_DBFS,
-  );
-
-  if (validWindows.length === 0) {
-    throw new Error("No usable 3-second analysis windows were found.");
-  }
-
-  const densityThreshold =
-    percentile(
-      validWindows.map((window) => window.densityScore),
-      DENSE_POOL_PERCENTILE,
-    ) ?? 0;
-  const representativePool = validWindows.filter(
-    (window) => window.densityScore >= densityThreshold,
-  );
-  const representativeShortTermLufs = percentile(
-    representativePool.map((window) => window.shortTermLufs),
-    REPRESENTATIVE_LOUDNESS_PERCENTILE,
-  );
-
-  if (!Number.isFinite(representativeShortTermLufs)) {
-    throw new Error("Could not determine representative short-term loudness.");
-  }
-
-  return representativeShortTermLufs;
-}
-
-function getMedianDensityScore(windows: AnalysisWindow[]) {
-  const validWindows = windows.filter(
-    (window) =>
-      window.shortTermLufs >= MIN_SHORT_TERM_LUFS &&
-      window.rmsDbfs >= MIN_WINDOW_RMS_DBFS,
-  );
-
-  if (validWindows.length === 0) {
-    throw new Error("No usable 3-second analysis windows were found.");
-  }
-
-  const medianDensityScore = percentile(
-    validWindows.map((window) => window.densityScore),
-    50,
-  );
-
-  if (medianDensityScore === null || !Number.isFinite(medianDensityScore)) {
-    throw new Error("Could not determine median waveform density.");
-  }
-
-  return medianDensityScore;
-}
-
-async function analyzePerceptualLoudness(
-  inputPath: string,
-  tempDir: string,
-): Promise<PerceptualLoudnessAnalysis> {
-  const pcmPath = path.join(tempDir, "perceptual-analysis.f32");
-  const [measurement, timeline] = await Promise.all([
-    measureLoudness(inputPath),
-    measureShortTermTimeline(inputPath),
-  ]);
-
-  await decodeMonoFloat32(inputPath, pcmPath);
-  const pcmBuffer = await readFile(pcmPath);
-  const sampleCount = Math.floor(pcmBuffer.byteLength / 4);
-  const samples = new Float32Array(
-    pcmBuffer.buffer,
-    pcmBuffer.byteOffset,
-    sampleCount,
-  );
-  const blocks = buildEnergyBlocks(samples);
-  const windows = buildWindows(blocks, timeline);
+function getLoudnessNormalizationPlan(
+  measurement: LoudnessMeasurement,
+): LoudnessNormalizationPlan {
+  const requestedGainDb = TARGET_INTEGRATED_LUFS - measurement.inputI;
+  const appliedGainDb = Math.min(requestedGainDb, MAX_UPWARD_GAIN_DB);
+  const predictedTruePeakDbtp = measurement.inputTp + appliedGainDb;
 
   return {
-    integratedLufs: measurement.inputI,
-    representativeShortTermLufs: getRepresentativeShortTermLufs(windows),
-    truePeakDbtp: measurement.inputTp,
-    loudnessRangeLu: measurement.inputLra,
-    peakToLoudnessRatioDb: measurement.inputTp - measurement.inputI,
-    medianDensityScore: getMedianDensityScore(windows),
-  };
-}
-
-function getDensityAttenuationDb(densityScore: number) {
-  const density = clamp(densityScore);
-  const points = [
-    { density: 0, attenuationDb: -14 },
-    { density: 0.1, attenuationDb: -12 },
-    { density: 0.25, attenuationDb: -9 },
-    { density: 0.4, attenuationDb: -6 },
-    { density: 0.55, attenuationDb: -3 },
-    { density: 0.65, attenuationDb: 0 },
-    { density: 0.7, attenuationDb: 0 },
-    { density: 0.8, attenuationDb: -5.5 },
-    { density: 0.85, attenuationDb: -8.25 },
-    { density: 0.9, attenuationDb: -11 },
-    { density: 1, attenuationDb: -11 },
-  ];
-
-  for (let index = 1; index < points.length; index += 1) {
-    const lower = points[index - 1];
-    const upper = points[index];
-
-    if (density <= upper.density) {
-      const position =
-        (density - lower.density) / (upper.density - lower.density);
-      return (
-        lower.attenuationDb +
-        (upper.attenuationDb - lower.attenuationDb) * position
-      );
-    }
-  }
-
-  return 0;
-}
-
-function getDynamicsCompressionPlan(
-  analysis: PerceptualLoudnessAnalysis,
-): DynamicsCompressionPlan {
-  const peakToLoudnessExcessDb = Math.max(
-    0,
-    analysis.peakToLoudnessRatioDb - TARGET_MAX_PEAK_TO_LOUDNESS_DB,
-  );
-  const loudnessRangeExcessLu = Math.max(
-    0,
-    analysis.loudnessRangeLu - TARGET_MAX_LOUDNESS_RANGE_LU,
-  );
-  const strength = clamp(
-    Math.max(peakToLoudnessExcessDb / 5, loudnessRangeExcessLu / 6),
-  );
-  const ratio = 1 + (MAX_COMPRESSOR_RATIO - 1) * strength;
-  const thresholdOffsetDb = COMPRESSOR_THRESHOLD_OFFSET_DB - 1.5 * strength;
-  const thresholdDbfs = clamp(
-    analysis.integratedLufs + thresholdOffsetDb,
-    -24,
-    -8,
-  );
-  const thresholdLinear = Math.pow(10, thresholdDbfs / 20);
-
-  return {
-    useCompression: strength >= 0.05,
-    strength,
-    thresholdDbfs,
-    thresholdLinear,
-    ratio,
-  };
-}
-
-async function renderDynamicsControlledIntermediate(
-  inputPath: string,
-  outputPath: string,
-  plan: DynamicsCompressionPlan,
-) {
-  await runFfmpeg([
-    "-y",
-    "-i",
-    inputPath,
-    "-vn",
-    "-af",
-    `acompressor=threshold=${plan.thresholdLinear.toFixed(6)}:ratio=${plan.ratio.toFixed(3)}:attack=${COMPRESSOR_ATTACK_MS}:release=${COMPRESSOR_RELEASE_MS}:makeup=1:knee=${COMPRESSOR_KNEE}:link=average:detection=rms:mix=1`,
-    "-ar",
-    String(SAMPLE_RATE),
-    "-codec:a",
-    "flac",
-    outputPath,
-  ]);
-}
-
-async function getPerceptualNormalizationPlan(
-  inputPath: string,
-  tempDir: string,
-): Promise<PerceptualNormalizationPlan> {
-  const analysis = await analyzePerceptualLoudness(inputPath, tempDir);
-  const baselineGainDb = TARGET_INTEGRATED_LUFS - analysis.integratedLufs;
-  const baselineRepresentativeShortTermLufs =
-    analysis.representativeShortTermLufs + baselineGainDb;
-
-  let requestedGainDb = baselineGainDb;
-
-  if (baselineRepresentativeShortTermLufs > MAX_REPRESENTATIVE_SHORT_TERM_LUFS) {
-    requestedGainDb -=
-      baselineRepresentativeShortTermLufs - MAX_REPRESENTATIVE_SHORT_TERM_LUFS;
-  } else if (baselineRepresentativeShortTermLufs < MIN_REPRESENTATIVE_SHORT_TERM_LUFS) {
-    requestedGainDb +=
-      MIN_REPRESENTATIVE_SHORT_TERM_LUFS - baselineRepresentativeShortTermLufs;
-  }
-
-  const maxGainWithLimiterDb =
-    TARGET_TRUE_PEAK_DBTP - analysis.truePeakDbtp + MAX_LIMITER_REDUCTION_DB;
-  const appliedGainDb = Math.min(requestedGainDb, maxGainWithLimiterDb);
-  const predictedPeakBeforeLimiterDbtp = analysis.truePeakDbtp + appliedGainDb;
-  const expectedLimiterReductionDb = Math.max(
-    0,
-    predictedPeakBeforeLimiterDbtp - TARGET_TRUE_PEAK_DBTP,
-  );
-
-  return {
-    ...analysis,
-    baselineGainDb,
     requestedGainDb,
     appliedGainDb,
-    expectedLimiterReductionDb,
-    expectedIntegratedLufs: analysis.integratedLufs + appliedGainDb,
-    expectedRepresentativeShortTermLufs:
-      analysis.representativeShortTermLufs + appliedGainDb,
-    limiterCapped: requestedGainDb > maxGainWithLimiterDb + 0.001,
+    expectedIntegratedLufs: measurement.inputI + appliedGainDb,
+    predictedTruePeakDbtp,
+    limiterRequired: predictedTruePeakDbtp > TARGET_TRUE_PEAK_DBTP,
+    upwardGainCapped: requestedGainDb > MAX_UPWARD_GAIN_DB,
   };
 }
 
 async function renderNormalizedIntermediate(
   inputPath: string,
   outputPath: string,
-  gainDb: number,
-  useLimiter: boolean,
+  plan: LoudnessNormalizationPlan,
 ) {
-  const filters = [`volume=${gainDb.toFixed(4)}dB`];
+  const filters = [`volume=${plan.appliedGainDb.toFixed(4)}dB`];
 
-  if (useLimiter) {
+  if (plan.limiterRequired) {
     filters.push(
       `alimiter=limit=${LIMITER_LIMIT_LINEAR.toFixed(6)}:attack=${LIMITER_ATTACK_MS}:release=${LIMITER_RELEASE_MS}:level=false:latency=true`,
     );
@@ -629,99 +202,69 @@ async function renderNormalizedIntermediate(
     "-af",
     filters.join(","),
     "-ar",
-    String(SAMPLE_RATE),
+    "48000",
     "-codec:a",
     "flac",
     outputPath,
   ]);
 }
 
-async function applyDensityAttenuation(
+async function renderGainCorrection(
   inputPath: string,
-  tempDir: string,
-  densityScore: number,
+  outputPath: string,
+  gainDb: number,
 ) {
-  const attenuationDb = getDensityAttenuationDb(densityScore);
-
-  if (attenuationDb >= -0.001) {
-    return inputPath;
-  }
-
-  const densityAdjustedPath = path.join(tempDir, "density-adjusted.flac");
-  await renderNormalizedIntermediate(
+  await runFfmpeg([
+    "-y",
+    "-i",
     inputPath,
-    densityAdjustedPath,
-    attenuationDb,
-    false,
-  );
-  return densityAdjustedPath;
+    "-vn",
+    "-af",
+    `volume=${gainDb.toFixed(4)}dB`,
+    "-ar",
+    "48000",
+    "-codec:a",
+    "flac",
+    outputPath,
+  ]);
 }
 
 async function createVerifiedNormalizedSource(inputPath: string, tempDir: string) {
-  const sourceAnalysis = await analyzePerceptualLoudness(inputPath, tempDir);
-  const dynamicsPlan = getDynamicsCompressionPlan(sourceAnalysis);
-  let normalizationInputPath = inputPath;
+  const sourceMeasurement = await measureLoudness(inputPath);
+  const plan = getLoudnessNormalizationPlan(sourceMeasurement);
 
-  if (dynamicsPlan.useCompression) {
-    const dynamicsControlledPath = path.join(tempDir, "dynamics-controlled.flac");
-    await renderDynamicsControlledIntermediate(
-      inputPath,
-      dynamicsControlledPath,
-      dynamicsPlan,
-    );
-    normalizationInputPath = dynamicsControlledPath;
-  }
-
-  const plan = await getPerceptualNormalizationPlan(normalizationInputPath, tempDir);
-
-  if (plan.limiterCapped) {
-    console.warn("Audio normalization hit the limiter budget", {
-      integratedLufs: plan.integratedLufs,
-      representativeShortTermLufs: plan.representativeShortTermLufs,
-      truePeakDbtp: plan.truePeakDbtp,
-      loudnessRangeLu: plan.loudnessRangeLu,
-      peakToLoudnessRatioDb: plan.peakToLoudnessRatioDb,
+  if (plan.upwardGainCapped) {
+    console.warn("Audio loudness QC: quiet master boost capped", {
+      integratedLufs: sourceMeasurement.inputI,
       requestedGainDb: plan.requestedGainDb,
       appliedGainDb: plan.appliedGainDb,
-      maxLimiterReductionDb: MAX_LIMITER_REDUCTION_DB,
+      maxUpwardGainDb: MAX_UPWARD_GAIN_DB,
     });
   }
 
   const normalizedPath = path.join(tempDir, "normalized.flac");
-  await renderNormalizedIntermediate(
-    normalizationInputPath,
-    normalizedPath,
-    plan.appliedGainDb,
-    plan.expectedLimiterReductionDb > 0.01,
-  );
+  await renderNormalizedIntermediate(inputPath, normalizedPath, plan);
 
   const normalizedMeasurement = await measureLoudness(normalizedPath);
   const truePeakCeiling = TARGET_TRUE_PEAK_DBTP + TRUE_PEAK_TOLERANCE_DB;
+
   if (normalizedMeasurement.inputTp <= truePeakCeiling) {
-    return applyDensityAttenuation(
-      normalizedPath,
-      tempDir,
-      sourceAnalysis.medianDensityScore,
-    );
+    return normalizedPath;
   }
 
-  const correctionGainDb = TARGET_TRUE_PEAK_DBTP - normalizedMeasurement.inputTp;
   const correctedPath = path.join(tempDir, "normalized-corrected.flac");
-  await renderNormalizedIntermediate(normalizedPath, correctedPath, correctionGainDb, false);
+  const correctionGainDb = TARGET_TRUE_PEAK_DBTP - normalizedMeasurement.inputTp;
+  await renderGainCorrection(normalizedPath, correctedPath, correctionGainDb);
 
   const correctedMeasurement = await measureLoudness(correctedPath);
   if (correctedMeasurement.inputTp > truePeakCeiling) {
-    console.warn("Audio dynamics-aware normalization exceeded true-peak tolerance", {
+    console.warn("Audio loudness normalization exceeded true-peak tolerance", {
       truePeakDbtp: correctedMeasurement.inputTp,
       targetTruePeakDbtp: TARGET_TRUE_PEAK_DBTP,
     });
   }
 
-  return applyDensityAttenuation(
-    correctedPath,
-    tempDir,
-    sourceAnalysis.medianDensityScore,
-  );
+  return correctedPath;
 }
 
 export async function processAudioForStreaming({
