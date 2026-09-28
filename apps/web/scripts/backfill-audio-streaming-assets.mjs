@@ -429,8 +429,12 @@ function getDensityAttenuationDb(densityScore) {
     { density: 0.25, attenuationDb: -9 },
     { density: 0.4, attenuationDb: -6 },
     { density: 0.55, attenuationDb: -3 },
+    { density: 0.65, attenuationDb: 0 },
     { density: 0.7, attenuationDb: 0 },
-    { density: 1, attenuationDb: 0 },
+    { density: 0.8, attenuationDb: -2.5 },
+    { density: 0.85, attenuationDb: -4 },
+    { density: 0.9, attenuationDb: -5 },
+    { density: 1, attenuationDb: -5 },
   ];
 
   for (let index = 1; index < points.length; index += 1) {
@@ -448,35 +452,6 @@ function getDensityAttenuationDb(densityScore) {
   }
 
   return 0;
-}
-
-function getHotMasterAttenuationDb(sourceIntegratedLufs) {
-  const points = [
-    { lufs: -18, attenuationDb: 0 },
-    { lufs: -16, attenuationDb: -1 },
-    { lufs: -14, attenuationDb: -2.5 },
-    { lufs: -12, attenuationDb: -4 },
-    { lufs: -10, attenuationDb: -6 },
-    { lufs: -8, attenuationDb: -8 },
-  ];
-
-  if (sourceIntegratedLufs <= points[0].lufs) return 0;
-
-  for (let index = 1; index < points.length; index += 1) {
-    const lower = points[index - 1];
-    const upper = points[index];
-
-    if (sourceIntegratedLufs <= upper.lufs) {
-      const position =
-        (sourceIntegratedLufs - lower.lufs) / (upper.lufs - lower.lufs);
-      return (
-        lower.attenuationDb +
-        (upper.attenuationDb - lower.attenuationDb) * position
-      );
-    }
-  }
-
-  return points[points.length - 1].attenuationDb;
 }
 
 function getDynamicsCompressionPlan(analysis) {
@@ -608,48 +583,13 @@ async function applyDensityAttenuation(inputPath, tempDir, densityScore) {
   return densityAdjustedPath;
 }
 
-async function applyHotMasterAttenuation(inputPath, tempDir, sourceIntegratedLufs) {
-  const attenuationDb = getHotMasterAttenuationDb(sourceIntegratedLufs);
-
-  if (attenuationDb >= -0.001) {
-    return inputPath;
-  }
-
-  console.log(
-    `source loudness ${sourceIntegratedLufs.toFixed(2)} LUFS | post-normalization hot-master attenuation ${attenuationDb.toFixed(2)} dB`,
-  );
-
-  const hotMasterAdjustedPath = path.join(tempDir, "hot-master-adjusted.flac");
-  await renderNormalizedIntermediate(
-    inputPath,
-    hotMasterAdjustedPath,
-    attenuationDb,
-    false,
-  );
-  return hotMasterAdjustedPath;
-}
-
-async function applyPostNormalizationAttenuation(inputPath, tempDir, sourceAnalysis) {
-  const densityAdjustedPath = await applyDensityAttenuation(
-    inputPath,
-    tempDir,
-    sourceAnalysis.medianDensityScore,
-  );
-
-  return applyHotMasterAttenuation(
-    densityAdjustedPath,
-    tempDir,
-    sourceAnalysis.integratedLufs,
-  );
-}
-
 async function createVerifiedNormalizedSource(inputPath, tempDir) {
   const sourceAnalysis = await analyzePerceptualLoudness(inputPath, tempDir);
   const dynamicsPlan = getDynamicsCompressionPlan(sourceAnalysis);
   let normalizationInputPath = inputPath;
 
   console.log(
-    `source ${sourceAnalysis.integratedLufs.toFixed(2)} LUFS | ${sourceAnalysis.truePeakDbtp.toFixed(2)} dBTP | LRA ${sourceAnalysis.loudnessRangeLu.toFixed(2)} LU | PLR ${sourceAnalysis.peakToLoudnessRatioDb.toFixed(2)} dB | density ${sourceAnalysis.medianDensityScore.toFixed(3)} | density offset ${getDensityAttenuationDb(sourceAnalysis.medianDensityScore).toFixed(2)} dB | hot-master offset ${getHotMasterAttenuationDb(sourceAnalysis.integratedLufs).toFixed(2)} dB`,
+    `source ${sourceAnalysis.integratedLufs.toFixed(2)} LUFS | ${sourceAnalysis.truePeakDbtp.toFixed(2)} dBTP | LRA ${sourceAnalysis.loudnessRangeLu.toFixed(2)} LU | PLR ${sourceAnalysis.peakToLoudnessRatioDb.toFixed(2)} dB | density ${sourceAnalysis.medianDensityScore.toFixed(3)} | density offset ${getDensityAttenuationDb(sourceAnalysis.medianDensityScore).toFixed(2)} dB`,
   );
 
   if (dynamicsPlan.useCompression) {
@@ -696,10 +636,10 @@ async function createVerifiedNormalizedSource(inputPath, tempDir) {
   );
 
   if (normalizedMeasurement.inputTp <= truePeakCeiling) {
-    return applyPostNormalizationAttenuation(
+    return applyDensityAttenuation(
       normalizedPath,
       tempDir,
-      sourceAnalysis,
+      sourceAnalysis.medianDensityScore,
     );
   }
 
@@ -719,10 +659,10 @@ async function createVerifiedNormalizedSource(inputPath, tempDir) {
     );
   }
 
-  return applyPostNormalizationAttenuation(
+  return applyDensityAttenuation(
     correctedPath,
     tempDir,
-    sourceAnalysis,
+    sourceAnalysis.medianDensityScore,
   );
 }
 
