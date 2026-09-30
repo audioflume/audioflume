@@ -77,7 +77,7 @@ const PlaybackStoreContext = createContext<PlaybackStore | null>(null);
 
 const PLAYER_STORAGE_KEY = "filmwave-player-state";
 const VOLUME_STORAGE_KEY = "filmwave-player-volume";
-const WEBSITE_VOLUME_SCALE = 0.5;
+const WEBSITE_VOLUME_SCALE = 0.75;
 const CLOSE_PLAYER_EVENT = "filmwave:close-player";
 const PLAYER_BROADCAST_CHANNEL = "filmwave-player";
 const STORAGE_WRITE_INTERVAL_MS = 5000;
