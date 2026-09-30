@@ -22,6 +22,7 @@ import Toast from "@/components/Toast";
 import {
   estimateBpmWithEssentia,
   estimateKeyWithEssentia,
+  getLastBpmAnalysisSource,
 } from "@/lib/essentiaAnalysis";
 import {
   MOOD_OPTIONS,
@@ -494,18 +495,22 @@ async function generateWaveformPeaksFromFile(file: File, targetLength = 1500) {
   const optimizedPeaks = downsamplePeaks(fullPeaks, targetLength);
 
   const essentiaBpm = await estimateBpmWithEssentia(audioBuffer, file);
+  const bpmAnalysisSource = getLastBpmAnalysisSource();
   const keyResult = await estimateKeyWithEssentia(audioBuffer);
   const normalizedEssentiaBpm = normalizeObviousDoubleTimeBpm(essentiaBpm);
   const onsetBpm = estimateBpmFromOnsets(audioBuffer);
   const autocorrResult = estimateBpmFromAutocorrelation(audioBuffer);
   const autocorrBpm = autocorrResult.bpm;
 
-  const bpm = chooseSuggestedBpm({
-    autocorrBpm,
-    normalizedEssentiaBpm,
-    onsetBpm,
-    audioBuffer,
-  });
+  const bpm =
+    bpmAnalysisSource === "logic_metadata"
+      ? essentiaBpm
+      : chooseSuggestedBpm({
+          autocorrBpm,
+          normalizedEssentiaBpm,
+          onsetBpm,
+          audioBuffer,
+        });
 
   await audioContext.close();
 
