@@ -127,10 +127,14 @@ function forceLegacyBpmVotingToBeatThis(audioBuffer: AudioBuffer, bpm: number) {
   }
 }
 
-async function estimateArtistBpm(audioBuffer: AudioBuffer, artistId: string) {
+async function estimateArtistBpm(
+  audioBuffer: AudioBuffer,
+  artistId: string,
+  sourceFile?: File,
+) {
   try {
     const formData = new FormData();
-    formData.append("file", audioBufferToWavFile(audioBuffer));
+    formData.append("file", sourceFile || audioBufferToWavFile(audioBuffer));
 
     const response = await fetch(`/api/artists/${artistId}/analyze-beats`, {
       method: "POST",
@@ -150,7 +154,7 @@ async function estimateArtistBpm(audioBuffer: AudioBuffer, artistId: string) {
     console.warn("[Artist BPM] Beat analyzer request failed.", error);
   }
 
-  return estimateBpmWithEssentia(audioBuffer);
+  return estimateBpmWithEssentia(audioBuffer, sourceFile);
 }
 
 function downsamplePeaks(peaks: number[], targetLength = 300) {
@@ -490,7 +494,7 @@ export async function analyzeArtistSongAudioFile(
   const fullPeaks = Array.from(channelData);
   const optimizedPeaks = downsamplePeaks(fullPeaks, targetLength);
 
-  const essentiaBpm = await estimateArtistBpm(audioBuffer, artistId);
+  const essentiaBpm = await estimateArtistBpm(audioBuffer, artistId, file);
   const keyResult = await estimateKeyWithEssentia(audioBuffer);
   const normalizedEssentiaBpm = normalizeObviousDoubleTimeBpm(essentiaBpm);
   const onsetBpm = estimateBpmFromOnsets(audioBuffer);

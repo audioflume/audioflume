@@ -48,12 +48,14 @@ type EssentiaConstructor = new (wasmModule: unknown) => EssentiaInstance
 
 type EssentiaWasmLoader = unknown | (() => Promise<unknown>)
 
+type BpmAnalysisSource = 'logic_metadata' | 'beat_this' | 'essentia' | 'fallback'
+
 declare global {
   interface Window {
     Essentia?: EssentiaConstructor
     EssentiaWASM?: EssentiaWasmLoader
     __FILMWAVE_LAST_BPM_ANALYSIS__?: {
-      source: 'beat_this' | 'essentia' | 'fallback'
+      source: BpmAnalysisSource
       bpm: number | null
       message: string
     }
@@ -64,7 +66,7 @@ let essentiaPromise: Promise<EssentiaInstance> | null = null
 let bypassForcedBeatAudio = false
 
 function setLastBpmAnalysis(
-  source: 'beat_this' | 'essentia' | 'fallback',
+  source: BpmAnalysisSource,
   bpm: number | null,
   message: string
 ) {
@@ -74,7 +76,9 @@ function setLastBpmAnalysis(
     message,
   }
 
-  if (source === 'beat_this') {
+  if (source === 'logic_metadata') {
+    console.info(`[Filmwave BPM] Logic metadata returned ${bpm} BPM.`)
+  } else if (source === 'beat_this') {
     console.info(`[Filmwave BPM] Beat-This returned ${bpm} BPM.`)
   } else {
     console.info(`[Filmwave BPM] ${message}`)
@@ -250,12 +254,12 @@ function getOriginalChannelData(audioBuffer: AudioBuffer, channel: number) {
   return audioBuffer.getChannelData(channel)
 }
 
-async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer) {
+async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer, sourceFile?: File) {
   try {
     console.info('[Filmwave BPM] Calling Beat-This analyzer...')
 
     const formData = new FormData()
-    formData.append('file', audioBufferToWavFile(audioBuffer))
+    formData.append('file', sourceFile || audioBufferToWavFile(audioBuffer))
 
     const response = await fetch('/api/admin/analyze-beats', {
       method: 'POST',
@@ -297,8 +301,17 @@ async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer) {
     }
 
     const roundedBpm = Math.round(bpm)
+    const source: BpmAnalysisSource =
+      data.source === 'logic_metadata' ? 'logic_metadata' : 'beat_this'
+
     forceLegacyBpmVotingToBeatThis(audioBuffer, roundedBpm)
-    setLastBpmAnalysis('beat_this', roundedBpm, `Beat-This returned ${roundedBpm} BPM.`)
+    setLastBpmAnalysis(
+      source,
+      roundedBpm,
+      source === 'logic_metadata'
+        ? `Logic metadata returned ${roundedBpm} BPM.`
+        : `Beat-This returned ${roundedBpm} BPM.`
+    )
 
     return roundedBpm
   } catch (error) {
@@ -329,8 +342,8 @@ function formatEssentiaKey(key: string, scale: string) {
   return null
 }
 
-export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer) {
-  const beatAnalyzerBpm = await estimateBpmWithBeatAnalyzer(audioBuffer)
+export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer, sourceFile?: File) {
+  const beatAnalyzerBpm = await estimateBpmWithBeatAnalyzer(audioBuffer, sourceFile)
 
   if (beatAnalyzerBpm) {
     return beatAnalyzerBpm

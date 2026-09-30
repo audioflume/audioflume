@@ -493,7 +493,7 @@ async function generateWaveformPeaksFromFile(file: File, targetLength = 1500) {
   const fullPeaks = Array.from(channelData);
   const optimizedPeaks = downsamplePeaks(fullPeaks, targetLength);
 
-  const essentiaBpm = await estimateBpmWithEssentia(audioBuffer);
+  const essentiaBpm = await estimateBpmWithEssentia(audioBuffer, file);
   const keyResult = await estimateKeyWithEssentia(audioBuffer);
   const normalizedEssentiaBpm = normalizeObviousDoubleTimeBpm(essentiaBpm);
   const onsetBpm = estimateBpmFromOnsets(audioBuffer);
