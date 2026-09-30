@@ -89,6 +89,123 @@ export function getLastBpmAnalysisSource() {
   return window.__FILMWAVE_LAST_BPM_ANALYSIS__?.source ?? null
 }
 
+function readAscii(bytes: Uint8Array, offset: number, length: number) {
+  let value = ''
+
+  for (let i = 0; i < length; i++) {
+    value += String.fromCharCode(bytes[offset + i] || 0)
+  }
+
+  return value
+}
+
+function coerceLogicTempo(value: unknown) {
+  const tempo = Number(value)
+
+  if (!Number.isFinite(tempo) || tempo < 20 || tempo > 400) {
+    return null
+  }
+
+  return tempo
+}
+
+function findLogicTempo(value: unknown): number | null {
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const tempo = findLogicTempo(item)
+      if (tempo !== null) return tempo
+    }
+
+    return null
+  }
+
+  if (!value || typeof value !== 'object') {
+    return null
+  }
+
+  for (const [key, item] of Object.entries(value)) {
+    const normalizedKey = key.toLowerCase().replace(/[^a-z0-9]/g, '')
+
+    if (
+      normalizedKey === 'tempo' ||
+      normalizedKey === 'bpm' ||
+      normalizedKey === 'projecttempo'
+    ) {
+      const tempo = coerceLogicTempo(item)
+      if (tempo !== null) return tempo
+    }
+
+    const nestedTempo = findLogicTempo(item)
+    if (nestedTempo !== null) return nestedTempo
+  }
+
+  return null
+}
+
+async function decompressLogicResU(payload: Uint8Array) {
+  if (typeof DecompressionStream === 'undefined') {
+    return null
+  }
+
+  try {
+    const input = new Blob([payload]).stream()
+    const decompressed = input.pipeThrough(new DecompressionStream('deflate'))
+    const buffer = await new Response(decompressed).arrayBuffer()
+    return new Uint8Array(buffer)
+  } catch {
+    return null
+  }
+}
+
+async function extractLogicTempoFromWav(sourceFile?: File) {
+  if (!sourceFile) return null
+
+  try {
+    const bytes = new Uint8Array(await sourceFile.arrayBuffer())
+
+    if (bytes.length < 12) return null
+
+    const containerId = readAscii(bytes, 0, 4)
+    const waveId = readAscii(bytes, 8, 4)
+
+    if (!['RIFF', 'RF64', 'BW64'].includes(containerId) || waveId !== 'WAVE') {
+      return null
+    }
+
+    const view = new DataView(bytes.buffer, bytes.byteOffset, bytes.byteLength)
+    let offset = 12
+
+    while (offset + 8 <= bytes.length) {
+      const chunkId = readAscii(bytes, offset, 4)
+      const chunkSize = view.getUint32(offset + 4, true)
+      const payloadStart = offset + 8
+      const payloadEnd = payloadStart + chunkSize
+
+      if (payloadEnd > bytes.length) {
+        break
+      }
+
+      if (chunkId === 'ResU') {
+        const compressed = bytes.slice(payloadStart, payloadEnd)
+        const decompressed = await decompressLogicResU(compressed)
+
+        if (!decompressed) {
+          return null
+        }
+
+        const metadata = JSON.parse(new TextDecoder().decode(decompressed)) as unknown
+        return findLogicTempo(metadata)
+      }
+
+      offset = payloadEnd + (chunkSize % 2)
+    }
+  } catch (error) {
+    console.warn('[Filmwave BPM] Could not read Logic tempo metadata in browser.', error)
+  }
+
+  return null
+}
+
 function loadScript(src: string) {
   return new Promise<void>((resolve, reject) => {
     const existingScript = document.querySelector(`script[src="${src}"]`)
@@ -350,6 +467,18 @@ function formatEssentiaKey(key: string, scale: string) {
 }
 
 export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer, sourceFile?: File) {
+  const embeddedLogicTempo = await extractLogicTempoFromWav(sourceFile)
+
+  if (embeddedLogicTempo !== null) {
+    const roundedBpm = Math.round(embeddedLogicTempo)
+    setLastBpmAnalysis(
+      'logic_metadata',
+      roundedBpm,
+      `Logic metadata returned ${roundedBpm} BPM in browser.`
+    )
+    return roundedBpm
+  }
+
   const beatAnalyzerBpm = await estimateBpmWithBeatAnalyzer(audioBuffer, sourceFile)
 
   if (beatAnalyzerBpm) {
