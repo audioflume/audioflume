@@ -48,7 +48,12 @@ type EssentiaConstructor = new (wasmModule: unknown) => EssentiaInstance
 
 type EssentiaWasmLoader = unknown | (() => Promise<unknown>)
 
-type BpmAnalysisSource = 'logic_metadata' | 'beat_this' | 'essentia' | 'fallback'
+export type BpmAnalysisSource = 'logic_metadata' | 'beat_this' | 'essentia' | 'fallback'
+
+export type BpmAnalysisResult = {
+  bpm: number | null
+  source: BpmAnalysisSource
+}
 
 declare global {
   interface Window {
@@ -254,7 +259,7 @@ function getOriginalChannelData(audioBuffer: AudioBuffer, channel: number) {
   return audioBuffer.getChannelData(channel)
 }
 
-async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer, sourceFile?: File) {
+async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer, sourceFile?: File): Promise<BpmAnalysisResult | null> {
   try {
     console.info('[Filmwave BPM] Calling Beat-This analyzer...')
 
@@ -304,7 +309,10 @@ async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer, sourceFile?
     const source: BpmAnalysisSource =
       data.source === 'logic_metadata' ? 'logic_metadata' : 'beat_this'
 
-    forceLegacyBpmVotingToBeatThis(audioBuffer, roundedBpm)
+    if (source !== 'logic_metadata') {
+      forceLegacyBpmVotingToBeatThis(audioBuffer, roundedBpm)
+    }
+
     setLastBpmAnalysis(
       source,
       roundedBpm,
@@ -313,7 +321,7 @@ async function estimateBpmWithBeatAnalyzer(audioBuffer: AudioBuffer, sourceFile?
         : `Beat-This returned ${roundedBpm} BPM.`
     )
 
-    return roundedBpm
+    return { bpm: roundedBpm, source }
   } catch (error) {
     console.warn('[Filmwave BPM] Beat-This request failed.', error)
     setLastBpmAnalysis(
@@ -342,11 +350,11 @@ function formatEssentiaKey(key: string, scale: string) {
   return null
 }
 
-export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer, sourceFile?: File) {
-  const beatAnalyzerBpm = await estimateBpmWithBeatAnalyzer(audioBuffer, sourceFile)
+export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer, sourceFile?: File): Promise<BpmAnalysisResult> {
+  const beatAnalyzerResult = await estimateBpmWithBeatAnalyzer(audioBuffer, sourceFile)
 
-  if (beatAnalyzerBpm) {
-    return beatAnalyzerBpm
+  if (beatAnalyzerResult) {
+    return beatAnalyzerResult
   }
 
   const essentia = await getEssentia()
@@ -357,13 +365,13 @@ export async function estimateBpmWithEssentia(audioBuffer: AudioBuffer, sourceFi
 
   if (!result?.bpm || !Number.isFinite(result.bpm)) {
     setLastBpmAnalysis('essentia', null, 'Essentia returned no usable BPM.')
-    return null
+    return { bpm: null, source: 'essentia' }
   }
 
   const roundedBpm = Math.round(result.bpm)
   setLastBpmAnalysis('essentia', roundedBpm, `Essentia returned ${roundedBpm} BPM.`)
 
-  return roundedBpm
+  return { bpm: roundedBpm, source: 'essentia' }
 }
 
 export async function estimateKeyWithEssentia(audioBuffer: AudioBuffer) {
