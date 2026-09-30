@@ -930,7 +930,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const isEditMode = mode === "edit";
 
   const [title, setTitle] = useState("");
-  const [artist, setArtist] = useState("");
+  const [artist, setArtist] = useState("Audioflume");
   const [bpm, setBpm] = useState("");
   const [songKey, setSongKey] = useState("");
   const [duration, setDuration] = useState("");
@@ -1065,7 +1065,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         const song = data as AdminSongRecord;
 
         setTitle(song.title || "");
-        setArtist(song.artist || "");
+        setArtist(song.artist || "Audioflume");
         setBpm(song.bpm || "");
         setSongKey(song.key || "");
         setDuration(song.duration || "");
@@ -1167,7 +1167,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     });
 
     setTitle("");
-    setArtist("");
+    setArtist("Audioflume");
     setBpm("");
     setSongKey("");
     setDuration("");
