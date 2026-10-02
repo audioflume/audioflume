@@ -1,0 +1,94 @@
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-pricing-hero,
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-page-root .audioflume-pricing-hero {
+  background: var(--filmwave-white);
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-pricing-hero-eyebrow,
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-page-root .audioflume-pricing-hero-eyebrow {
+  color: var(--text-secondary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-pricing-hero-copy,
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-page-root .audioflume-pricing-hero-copy {
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-pricing-hero-note,
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-page-root .audioflume-pricing-hero-note {
+  color: var(--text-secondary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-home-editorial-refresh {
+  background: var(--filmwave-white);
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-home-editorial-refresh-eyebrow {
+  color: var(--text-secondary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-home-editorial-refresh-visual > .audioflume-home-editorial-refresh-eyebrow {
+  color: rgba(255, 255, 255, 0.88);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-home-editorial-refresh-playlist-heading {
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) :is(.audioflume-home-editorial-refresh-body, .audioflume-home-editorial-refresh-playlist-copy) {
+  color: var(--text-secondary);
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) :is(.audioflume-home-editorial-refresh-primary-action, .audioflume-home-editorial-refresh-playlist-action) {
+  border-color: var(--filmwave-black) !important;
+  background: var(--filmwave-black) !important;
+  color: var(--filmwave-white) !important;
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-home-editorial-refresh-secondary-action {
+  border-color: var(--filmwave-black) !important;
+  background: transparent !important;
+  color: var(--filmwave-black) !important;
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-home-editorial-refresh-secondary-action:hover,
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .audioflume-home-editorial-refresh-secondary-action:focus-visible {
+  border-color: var(--filmwave-black) !important;
+  background: var(--filmwave-black) !important;
+  color: var(--filmwave-white) !important;
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .filmwave-web-header.is-transparent,
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-pricing-page-root) .filmwave-web-header.is-transparent {
+  --filmwave-chrome-surface: var(--bg-primary);
+  border-bottom-color: var(--border) !important;
+  background: var(--bg-primary) !important;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .filmwave-web-header.is-transparent :is(.filmwave-header-tonal-wordmark, .filmwave-header-logo-action, .filmwave-header-actions, .filmwave-header-nav-link),
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-pricing-page-root) .filmwave-web-header.is-transparent :is(.filmwave-header-tonal-wordmark, .filmwave-header-logo-action, .filmwave-header-actions, .filmwave-header-nav-link) {
+  color: var(--text-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .filmwave-web-header.is-transparent .filmwave-header-create-account,
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-pricing-page-root) .filmwave-web-header.is-transparent .filmwave-header-create-account {
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .filmwave-web-header.is-transparent:hover .filmwave-header-nav-link:not(.is-active):not(:hover),
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-pricing-page-root) .filmwave-web-header.is-transparent:hover .filmwave-header-nav-link:not(.is-active):not(:hover) {
+  color: var(--text-secondary) !important;
+}
+
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-editorial-refresh) .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active,
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-pricing-page-root) .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-pricing-page-root) .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
