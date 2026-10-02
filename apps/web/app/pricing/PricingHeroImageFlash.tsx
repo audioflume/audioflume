@@ -3,6 +3,8 @@
 import Image, { getImageProps } from "next/image";
 import { useEffect, useMemo, useRef, useState } from "react";
 
+import "./pricing-light-mode.css";
+
 const FLASH_INTERVAL_MS = 140;
 const HERO_IMAGE_SIZES =
   "(max-width: 760px) 76vw, (max-width: 980px) 67vw, (max-width: 1968px) 61vw, 1200px";
