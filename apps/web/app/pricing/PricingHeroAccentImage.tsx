@@ -3,8 +3,6 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 
-import "./pricing-light-mode.css";
-
 type PricingHeroAccentImageProps = {
   images: string[];
   startIndex: number;
