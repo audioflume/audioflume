@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   type CSSProperties,
   type ReactNode,
@@ -392,6 +393,7 @@ function ArtistShelf({
 }
 
 export default function DiscoverPage() {
+  const router = useRouter();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [featureCardArtists, setFeatureCardArtists] = useState<
@@ -615,7 +617,24 @@ export default function DiscoverPage() {
               );
 
               return (
-                <article key={artist?.id ?? index} className="discover-artist-feature-card">
+                <article
+                  key={artist?.id ?? index}
+                  className="discover-artist-feature-card"
+                  role={artist ? "link" : undefined}
+                  tabIndex={artist ? 0 : undefined}
+                  onClick={() => {
+                    if (artist) router.push(`/artists/${artist.slug}`);
+                  }}
+                  onKeyDown={(event) => {
+                    if (
+                      artist &&
+                      (event.key === "Enter" || event.key === " ")
+                    ) {
+                      event.preventDefault();
+                      router.push(`/artists/${artist.slug}`);
+                    }
+                  }}
+                >
                   <PlaceholderMedia
                     index={index}
                     imageSrc={artist?.hero_image_url || undefined}
@@ -635,7 +654,11 @@ export default function DiscoverPage() {
                         <button
                           type="button"
                           className="discover-artist-feature-play-button"
-                          onClick={() => playFeatureCardArtist(artist)}
+                          onClick={(event) => {
+                            event.stopPropagation();
+                            playFeatureCardArtist(artist);
+                          }}
+                          onKeyDown={(event) => event.stopPropagation()}
                           disabled={playableSongs.length === 0}
                           aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
                           aria-pressed={artistIsPlaying}
