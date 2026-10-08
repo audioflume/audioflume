@@ -217,7 +217,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-song-card-play::after {
   position: absolute;
   inset: 0;
-  background: var(--media-overlay-strong);
+  background: rgba(17, 17, 17, 0.62);
   content: "";
 }
 
@@ -365,7 +365,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-artist-media::after {
   position: absolute;
   inset: 0;
-  background: var(--media-overlay-strong);
+  background: rgba(17, 17, 17, 0.62);
   content: "";
 }
 
@@ -641,7 +641,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-play::after,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-media::after {
-  background: rgba(17, 17, 17, 0.46);
+  background: rgba(17, 17, 17, 0.62);
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-copy strong,
