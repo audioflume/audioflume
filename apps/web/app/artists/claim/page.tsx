@@ -124,7 +124,7 @@ export default async function ArtistClaimPage() {
 
         <div className="relative mx-auto max-w-[650px]">
           <section className="mb-8">
-            <h1 className="relative z-10 m-0 max-w-[650px] font-[family-name:var(--font-aktiv-grotesk)] text-[80px] font-normal uppercase leading-[0.82] tracking-[-0.035em] text-white mix-blend-difference">
+            <h1 className="relative z-10 m-0 max-w-[650px] font-[family-name:var(--font-aktiv-grotesk)] text-[80px] font-[300] leading-[0.82] tracking-[-0.035em] text-white mix-blend-difference">
               Claim your artist profile
             </h1>
           </section>
