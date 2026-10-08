@@ -388,7 +388,13 @@ export default function HomePageContent() {
               larger creative teams.
             </p>
           </div>
-          <div className="audioflume-home-reference-library-media-slot" aria-hidden="true" />
+          <div className="audioflume-home-reference-library-media-slot" aria-hidden="true">
+            <img
+              src="https://images.filmwave.io/images/home/Playlist%20Array.png"
+              alt=""
+              draggable={false}
+            />
+          </div>
         </div>
       </section>
 
