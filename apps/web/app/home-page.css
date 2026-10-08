@@ -421,9 +421,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-artist-copy strong {
   grid-column: 1;
   color: #ffffff;
-  font-size: 27px;
-  font-weight: 400;
-  letter-spacing: -0.035em;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
 }
 
 .audioflume-home-reference-artist-play {
