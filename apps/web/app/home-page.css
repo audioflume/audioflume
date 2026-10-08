@@ -339,6 +339,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-artist-card {
+  position: relative;
   width: min(43vw, 650px);
   min-width: min(43vw, 650px);
   height: 365px;
