@@ -28,7 +28,7 @@ import type { Song } from "@/lib/types";
 const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/discover/b7cb4a48-bd82-44d1-b02e-c104dac45339-gigapixel-low%20resolution%20v2-2x.jpeg";
+  "https://images.filmwave.io/images/discover/3a193bec-27ca-455c-902d-f653897eb37e.png";
 
 type HomeArtist = {
   id: string;
