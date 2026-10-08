@@ -393,8 +393,9 @@
   left: 22px;
   z-index: 2;
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr) 38px;
+  grid-template-columns: 58px minmax(0, 1fr);
   align-items: center;
+  padding-right: 52px;
   gap: 14px;
 }
 
@@ -431,6 +432,10 @@
 }
 
 .audioflume-home-reference-artist-play {
+  position: absolute;
+  right: 22px;
+  bottom: 30px;
+  z-index: 3;
   display: grid;
   width: 38px;
   height: 38px;
