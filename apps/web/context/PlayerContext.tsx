@@ -633,12 +633,18 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     (song: Song) => {
       const audio = getAudio();
       if (currentSongRef.current?.id === song.id) {
+        if (remoteOwnerTabIdRef.current) {
+          claimPlaybackOwnership();
+          safePause();
+          return;
+        }
+
         if (audio.paused) { safePlay(); } else { safePause(); }
         return;
       }
       playSongDirectly(song, true);
     },
-    [playSongDirectly, safePause, safePlay],
+    [claimPlaybackOwnership, playSongDirectly, safePause, safePlay],
   );
 
   const seekTo = useCallback(
