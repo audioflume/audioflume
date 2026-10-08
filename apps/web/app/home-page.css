@@ -211,12 +211,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller {
   padding-right: 8px;
-  padding-left: 50px;
+  padding-left: 40px;
 }
 
 .audioflume-home-reference-song-card {
-  width: 340px;
-  min-width: 340px;
+  width: 330px;
+  min-width: 330px;
   height: 198px;
 }
 
@@ -261,12 +261,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   left: 18px;
   z-index: 2;
   display: grid;
-  gap: 2px;
+  gap: 1px;
 }
 
 .audioflume-home-reference-song-card-copy strong {
   overflow: hidden;
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 500;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -275,7 +275,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-song-card-copy span {
   overflow: hidden;
   color: rgba(255, 255, 255, 0.24);
-  font-size: 9px;
+  font-size: 10px;
   font-weight: 300;
   text-overflow: ellipsis;
   white-space: nowrap;
