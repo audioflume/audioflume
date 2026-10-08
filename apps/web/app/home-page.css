@@ -298,18 +298,18 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-library-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
   align-items: center;
   gap: 78px;
 }
 
 .audioflume-home-reference-library-copy {
-  max-width: 500px;
+  max-width: 610px;
 }
 
 .audioflume-home-reference-library h2 {
-  font-size: clamp(38px, 3vw, 48px);
-  font-weight: 400;
+  font-size: clamp(40px, 3.2vw, 52px);
+  font-weight: 300;
   line-height: 1.04;
 }
 
