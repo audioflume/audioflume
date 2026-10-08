@@ -848,31 +848,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       setDurationState(nextDuration);
 
       writeStoredPlayerState({ currentSong: message.song, currentTime: safeTime, duration: nextDuration });
-
-      if (document.visibilityState === "visible") {
-        const resumeAtRemoteTime = () => {
-          try {
-            if (audio.duration && isFinite(audio.duration)) {
-              const elapsed = Math.max(0, (Date.now() - message.sentAt) / 1000);
-              const targetTime = Math.max(
-                0,
-                Math.min((message.currentTime || 0) + elapsed, audio.duration),
-              );
-              audio.currentTime = targetTime;
-              setCurrentTimeState(targetTime);
-              setDurationState(audio.duration);
-            }
-          } catch { /* ignore */ }
-
-          loadSongSource(audio, message.song, true);
-        };
-
-        if (audio.readyState >= 1) {
-          resumeAtRemoteTime();
-        } else {
-          audio.addEventListener("loadedmetadata", resumeAtRemoteTime, { once: true });
-        }
-      }
     };
 
     return () => {
@@ -890,14 +865,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const handleVisibilityChange = () => {
       if (document.visibilityState !== "visible" || !currentSongRef.current) return;
 
-      if (remoteOwnerTabIdRef.current) {
-        const audio = getAudio();
-        const current = currentSongRef.current;
-        if (!current) return;
-
-        loadSongSource(audio, current, true);
-        return;
-      }
+      if (remoteOwnerTabIdRef.current) return;
 
       const audio = audioRef.current;
       if (!audio) return;
@@ -908,7 +876,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [loadSongSource, setCurrentTimeState, setDurationState]);
+  }, [setCurrentTimeState, setDurationState]);
 
   useEffect(() => () => { destroyHls(); }, [destroyHls]);
 
