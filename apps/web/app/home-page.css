@@ -457,17 +457,17 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-artist-genres > span {
   display: inline-flex;
-  min-height: 24px;
+  min-height: 21px;
   align-items: center;
   justify-content: center;
   border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
-  padding: 0 12px;
+  background: #1b1b1b;
+  padding: 0 10px;
   color: color-mix(in srgb, var(--text-primary) 48%, transparent);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 300;
   line-height: 1;
 }
@@ -633,7 +633,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
-  background: rgba(17, 17, 17, 0.42);
+  background: #1b1b1b;
   color: rgba(255, 255, 255, 0.48);
 }
 
