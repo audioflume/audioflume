@@ -406,7 +406,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
-  gap: 3px;
+  gap: 6px;
 }
 
 .audioflume-home-reference-artist-copy small {
@@ -454,7 +454,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 9px;
+  margin-top: 12px;
 }
 
 .audioflume-home-reference-artist-genres > span {
