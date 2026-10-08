@@ -442,6 +442,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   background: var(--text-primary);
   color: var(--bg-primary);
   cursor: pointer;
+  transition: transform 160ms ease;
+  transform-origin: center;
+}
+
+.audioflume-home-reference-artist-play:hover:not(:disabled),
+.audioflume-home-reference-artist-play:focus-visible:not(:disabled) {
+  transform: scale(1.03);
 }
 
 .audioflume-home-reference-artist-play:disabled {
