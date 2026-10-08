@@ -446,6 +446,8 @@ export default function MusicPlayer() {
 
   if (!currentSong) return null;
 
+  const displayedIsPlaying = isPlaying || remotePlayingInAnotherTab;
+
   const handleWaveformClick = (e: React.MouseEvent<HTMLDivElement>) => {
     const rect = e.currentTarget.getBoundingClientRect();
     if (!rect.width) return;
@@ -579,9 +581,9 @@ export default function MusicPlayer() {
             type="button"
             onClick={() => togglePlayPause(currentSong)}
             className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
-            aria-label={isPlaying ? "Pause song" : "Play song"}
+            aria-label={displayedIsPlaying ? "Pause song" : "Play song"}
           >
-            {isPlaying ? <PauseIcon /> : <PlayIcon />}
+            {displayedIsPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>
 
           <button
