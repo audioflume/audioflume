@@ -2,7 +2,15 @@
 
 import { MusicListShell } from "@filmwave/shared";
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import {
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+  type CSSProperties,
+  type MouseEvent,
+  type ReactNode,
+} from "react";
 
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
@@ -161,7 +169,7 @@ function HomeArtistShelf({
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
-  function playArtist(event: React.MouseEvent, artist: HomeArtist) {
+  function playArtist(event: MouseEvent, artist: HomeArtist) {
     event.preventDefault();
     event.stopPropagation();
 
@@ -221,17 +229,17 @@ function HomeArtistShelf({
                   <small>{artist.designation || artist.custom_text || "Artist"}</small>
                   <strong>{artist.name}</strong>
                 </span>
-                <button
-                  type="button"
-                  className="audioflume-home-reference-artist-play"
-                  onClick={(event) => playArtist(event, artist)}
-                  disabled={!playable.length}
-                  aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
-                >
-                  {artistIsPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
-                </button>
               </div>
             </Link>
+            <button
+              type="button"
+              className="audioflume-home-reference-artist-play"
+              onClick={(event) => playArtist(event, artist)}
+              disabled={!playable.length}
+              aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
+            >
+              {artistIsPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+            </button>
           </article>
         );
       })}
@@ -256,7 +264,7 @@ function LayeredPlaylists({
           className="audioflume-home-reference-layered-card"
           style={{
             "--home-layer-index": index,
-          } as React.CSSProperties}
+          } as CSSProperties}
         >
           <Link
             href={`/curated-playlists/${playlist.id}`}
