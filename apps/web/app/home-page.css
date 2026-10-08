@@ -274,7 +274,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-song-card-copy span {
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.24);
+  color: #ffffff;
   font-size: 10px;
   font-weight: 300;
   text-overflow: ellipsis;
