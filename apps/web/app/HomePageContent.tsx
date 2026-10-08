@@ -14,8 +14,8 @@ import {
 
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
-import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import curatedCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -267,20 +267,24 @@ function LayeredPlaylists({
             "--home-layer-index": index,
           } as CSSProperties}
         >
-          <Link
-            href={`/curated-playlists/${playlist.id}`}
-            className="audioflume-home-reference-layered-card-link"
-            aria-label={playlist.name}
-          >
-            {playlist.cover_image_url ? (
-              <img src={playlist.cover_image_url} alt={playlist.name} draggable={false} />
-            ) : null}
-          </Link>
-          <CuratedPlaylistPlayButton
-            playlistId={playlist.id}
-            playlistName={playlist.name}
-            className="audioflume-home-reference-layered-play"
-          />
+          <div className={curatedCardStyles.card}>
+            <Link
+              href={`/curated-playlists/${playlist.id}`}
+              className={curatedCardStyles.imageLink}
+              aria-label={playlist.name}
+            >
+              <div className={curatedCardStyles.image}>
+                {playlist.cover_image_url ? (
+                  <img
+                    src={playlist.cover_image_url}
+                    alt={playlist.name}
+                    draggable={false}
+                    className={curatedCardStyles.media}
+                  />
+                ) : null}
+              </div>
+            </Link>
+          </div>
         </div>
       ))}
     </div>
