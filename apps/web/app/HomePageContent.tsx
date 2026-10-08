@@ -365,7 +365,7 @@ export default function HomePageContent() {
         </div>
 
         <div className="audioflume-home-reference-width audioflume-home-reference-trust">
-          <p>Filmmakers and production teams working across global brands.</p>
+          <p>Filmmakers working for these brands already use Audioflume.</p>
           <div className="audioflume-home-reference-logo-row" aria-label="Brand work">
             <span>DJI</span>
             <span>RED BULL</span>
