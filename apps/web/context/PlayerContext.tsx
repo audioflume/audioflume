@@ -856,6 +856,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState !== "visible" || !currentSongRef.current) return;
+
+      if (remoteOwnerTabIdRef.current) {
+        safePlay();
+        return;
+      }
+
       const audio = audioRef.current;
       if (!audio) return;
       setCurrentTimeState(audio.currentTime || currentTimeRef.current);
@@ -865,7 +871,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     };
     document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => document.removeEventListener("visibilitychange", handleVisibilityChange);
-  }, [setCurrentTimeState, setDurationState]);
+  }, [safePlay, setCurrentTimeState, setDurationState]);
 
   useEffect(() => () => { destroyHls(); }, [destroyHls]);
 
