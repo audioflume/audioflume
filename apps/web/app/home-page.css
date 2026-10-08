@@ -641,6 +641,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-intro-grid > p {
+  color: var(--text-muted);
+}
+
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
   background: #1b1b1b;
   color: rgba(255, 255, 255, 0.34);
