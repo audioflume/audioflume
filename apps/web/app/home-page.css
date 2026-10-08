@@ -6,8 +6,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference {
   --home-reference-width: min(1180px, calc(100vw - 80px));
   overflow-x: clip;
-  background: #111111;
-  color: #ffffff;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .audioflume-home-reference a {
@@ -25,7 +25,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   height: 100dvh;
   min-height: 730px;
   place-items: center;
-  background-color: #111111;
+  background-color: var(--bg-primary);
   background-position: center 48%;
   background-repeat: no-repeat;
   background-size: cover;
@@ -100,7 +100,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-trust > p {
   margin: 0 0 28px;
-  color: rgba(255, 255, 255, 0.18);
+  color: var(--text-muted);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 15px;
   font-weight: 300;
@@ -116,7 +116,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-logo-row span {
-  color: rgba(255, 255, 255, 0.88);
+  color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 13px;
   font-weight: 650;
@@ -168,8 +168,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   place-items: center;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
+  background: var(--text-primary);
+  color: var(--bg-primary);
   opacity: 0;
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
   cursor: pointer;
@@ -227,7 +227,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   height: 100%;
   overflow: hidden;
   border: 0;
-  background: #171717;
+  background: var(--bg-tertiary);
   color: #ffffff;
   padding: 0;
   text-align: left;
@@ -237,7 +237,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-song-card-play::after {
   position: absolute;
   inset: 0;
-  background: rgba(17, 17, 17, 0.46);
+  background: var(--media-overlay-strong);
   content: "";
 }
 
@@ -315,7 +315,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-library-copy > p {
   margin-top: 30px;
-  color: rgba(255, 255, 255, 0.30);
+  color: var(--text-muted);
 }
 
 .audioflume-home-reference-library-media-slot {
@@ -341,7 +341,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-section-heading a {
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 15px;
   font-weight: 300;
   text-decoration: none;
@@ -351,7 +351,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   width: min(43vw, 650px);
   min-width: min(43vw, 650px);
   height: 365px;
-  background: #161616;
+  background: var(--bg-tertiary);
 }
 
 .audioflume-home-reference-artist-link {
@@ -367,13 +367,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   position: absolute;
   inset: 0;
   overflow: hidden;
-  background: #191919;
+  background: var(--bg-tertiary);
 }
 
 .audioflume-home-reference-artist-media::after {
   position: absolute;
   inset: 0;
-  background: rgba(17, 17, 17, 0.48);
+  background: var(--media-overlay-strong);
   content: "";
 }
 
@@ -401,7 +401,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   width: 88px;
   height: 88px;
   overflow: hidden;
-  background: #202020;
+  background: var(--bg-tertiary);
 }
 
 .audioflume-home-reference-artist-thumb img {
@@ -419,7 +419,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-artist-copy small {
   grid-column: 1 / -1;
-  color: rgba(255, 255, 255, 0.24);
+  color: rgba(255, 255, 255, 0.52);
   font-size: 9px;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -428,6 +428,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-artist-copy strong {
   grid-column: 1;
+  color: #ffffff;
   font-size: 27px;
   font-weight: 400;
   letter-spacing: -0.035em;
@@ -444,8 +445,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   place-items: center;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
+  background: var(--text-primary);
+  color: var(--bg-primary);
   cursor: pointer;
 }
 
@@ -469,9 +470,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   justify-content: center;
   border: 0;
   border-radius: 999px;
-  background: rgba(17, 17, 17, 0.46);
+  background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
   padding: 0 12px;
-  color: rgba(255, 255, 255, 0.58);
+  color: var(--text-primary);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   font-size: 10px;
@@ -504,7 +505,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-feature-grid p {
   margin: 16px 0 0;
-  color: rgba(255, 255, 255, 0.26);
+  color: var(--text-muted);
   font-size: 15px;
   font-weight: 300;
   line-height: 1.55;
@@ -537,7 +538,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-song-row-skeleton {
   height: 64px;
   margin-bottom: 2px;
-  background: rgba(255, 255, 255, 0.035);
+  background: color-mix(in srgb, var(--text-primary) 3.5%, transparent);
 }
 
 .audioflume-home-reference-footer {
@@ -645,4 +646,27 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   .audioflume-home-reference-shelf-arrow {
     display: none;
   }
+}
+
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
+  background: rgba(17, 17, 17, 0.42);
+  color: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-play::after,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-media::after {
+  background: rgba(255, 255, 255, 0.34);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-copy strong,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-copy span,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-icon,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-play {
+  color: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-play {
+  background: rgba(17, 17, 17, 0.9);
 }
