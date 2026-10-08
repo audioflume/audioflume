@@ -18,7 +18,11 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import { useHasCurrentSong, usePlayer } from "@/context/PlayerContext";
+import {
+  useHasCurrentSong,
+  useIsCurrentSongPlaying,
+  usePlayer,
+} from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import type { Song } from "@/lib/types";
@@ -119,44 +123,45 @@ function Shelf({
   );
 }
 
+function HomeSongCard({ song }: { song: Song }) {
+  const { togglePlayPause } = usePlayer();
+  const playing = useIsCurrentSongPlaying(song.id);
+
+  return (
+    <article className="audioflume-home-reference-song-card">
+      <button
+        type="button"
+        className="audioflume-home-reference-song-card-play"
+        onClick={() => togglePlayPause(song)}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {song.coverArt ? (
+          <img src={song.coverArt} alt="" draggable={false} />
+        ) : (
+          <span className="audioflume-home-reference-song-card-fallback" />
+        )}
+        <span className="audioflume-home-reference-song-card-copy">
+          <strong>{song.title}</strong>
+          <span>{song.artist}</span>
+        </span>
+        <span className="audioflume-home-reference-song-card-icon">
+          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+        </span>
+      </button>
+    </article>
+  );
+}
+
 function HomeSongShelf({
   songs,
 }: {
   songs: Song[];
 }) {
-  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
-
   return (
     <Shelf label="featured tracks" className="audioflume-home-reference-song-shelf">
-      {songs.map((song) => {
-        const playing = Boolean(
-          currentSong?.id === song.id && isPlaying,
-        );
-
-        return (
-          <article key={song.id} className="audioflume-home-reference-song-card">
-            <button
-              type="button"
-              className="audioflume-home-reference-song-card-play"
-              onClick={() => togglePlayPause(song)}
-              aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-            >
-              {song.coverArt ? (
-                <img src={song.coverArt} alt="" draggable={false} />
-              ) : (
-                <span className="audioflume-home-reference-song-card-fallback" />
-              )}
-              <span className="audioflume-home-reference-song-card-copy">
-                <strong>{song.title}</strong>
-                <span>{song.artist}</span>
-              </span>
-              <span className="audioflume-home-reference-song-card-icon">
-                {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
-              </span>
-            </button>
-          </article>
-        );
-      })}
+      {songs.map((song) => (
+        <HomeSongCard key={song.id} song={song} />
+      ))}
     </Shelf>
   );
 }
