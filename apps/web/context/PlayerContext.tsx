@@ -245,7 +245,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const getPlaybackSongId = useCallback(() => currentSongRef.current?.id ?? null, []);
-  const getPlaybackIsPlaying = useCallback(() => isPlayingRef.current, []);
+  const getPlaybackIsPlaying = useCallback(
+    () => isPlayingRef.current || remoteOwnerTabIdRef.current !== null,
+    [],
+  );
 
   const playbackStore = useMemo<PlaybackStore>(
     () => ({
