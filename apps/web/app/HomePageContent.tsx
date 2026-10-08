@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -15,12 +14,11 @@ import {
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
-import curatedCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import { usePlayer } from "@/context/PlayerContext";
+import { useHasCurrentSong, usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import type { Song } from "@/lib/types";
@@ -262,49 +260,6 @@ function HomeArtistShelf({
   );
 }
 
-function LayeredPlaylists({
-  playlists,
-}: {
-  playlists: CuratedPlaylist[];
-}) {
-  const visualPlaylists = playlists
-    .filter((playlist) => Boolean(playlist.cover_image_url))
-    .slice(0, 5);
-
-  return (
-    <div className="audioflume-home-reference-layered-playlists">
-      {visualPlaylists.map((playlist, index) => (
-        <div
-          key={playlist.id}
-          className="audioflume-home-reference-layered-card"
-          style={{
-            "--home-layer-index": index,
-          } as CSSProperties}
-        >
-          <div className={curatedCardStyles.card}>
-            <Link
-              href={`/curated-playlists/${playlist.id}`}
-              className={curatedCardStyles.imageLink}
-              aria-label={playlist.name}
-            >
-              <div className={curatedCardStyles.image}>
-                {playlist.cover_image_url ? (
-                  <img
-                    src={playlist.cover_image_url}
-                    alt={playlist.name}
-                    draggable={false}
-                    className={curatedCardStyles.media}
-                  />
-                ) : null}
-              </div>
-            </Link>
-          </div>
-        </div>
-      ))}
-    </div>
-  );
-}
-
 function PlaylistGrid({
   playlists,
 }: {
@@ -326,6 +281,7 @@ function PlaylistGrid({
 export default function HomePageContent() {
   const { songs, loading: songsLoading } = useSongs();
   const { setQueue } = usePlayer();
+  const playerVisible = useHasCurrentSong();
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [artists, setArtists] = useState<HomeArtist[]>([]);
 
@@ -390,7 +346,7 @@ export default function HomePageContent() {
   }, []);
 
   return (
-    <main className="audioflume-home-reference">
+    <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
       <section
         className="audioflume-home-reference-hero"
         style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
@@ -435,7 +391,7 @@ export default function HomePageContent() {
               larger creative teams.
             </p>
           </div>
-          <LayeredPlaylists playlists={playlists} />
+          <div className="audioflume-home-reference-library-media-slot" aria-hidden="true" />
         </div>
       </section>
 
@@ -506,7 +462,9 @@ export default function HomePageContent() {
                     aria-hidden="true"
                   />
                 ))
-              : recentSongs.map((song) => <SongCard key={song.id} song={song} />)}
+              : recentSongs.map((song) => (
+                  <SongCard key={song.id} song={song} showDivider={false} />
+                ))}
           </MusicListShell>
         </div>
       </section>
