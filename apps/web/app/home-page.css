@@ -1,3 +1,8 @@
+/* Home-only transparent header: border returns with the existing solid/scrolled state. */
+body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
+  border-bottom-color: transparent !important;
+}
+
 .audioflume-home-reference {
   --home-reference-width: min(1180px, calc(100vw - 80px));
   overflow-x: clip;
@@ -47,7 +52,7 @@
 }
 
 .audioflume-home-reference-intro {
-  padding: 118px 0 62px;
+  padding: 150px 0 92px;
 }
 
 .audioflume-home-reference-intro-grid {
@@ -78,15 +83,16 @@
 }
 
 .audioflume-home-reference-trust {
-  margin-top: 112px;
+  margin-top: 138px;
 }
 
 .audioflume-home-reference-trust > p {
   margin: 0 0 28px;
   color: rgba(255, 255, 255, 0.3);
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 10px;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 12px;
   font-weight: 300;
+  letter-spacing: 0;
   line-height: 1.4;
 }
 
@@ -182,7 +188,7 @@
 }
 
 .audioflume-home-reference-song-shelf {
-  margin-top: 44px;
+  margin-top: 54px;
   border-top: 1px solid rgba(255, 255, 255, 0.035);
   border-bottom: 1px solid rgba(255, 255, 255, 0.035);
 }
@@ -267,7 +273,7 @@
 }
 
 .audioflume-home-reference-library {
-  padding: 145px 0 118px;
+  padding: 152px 0 132px;
 }
 
 .audioflume-home-reference-library-grid {
@@ -287,25 +293,25 @@
 
 .audioflume-home-reference-layered-playlists {
   position: relative;
-  height: 270px;
-  perspective: 900px;
+  height: 285px;
+  perspective: 1200px;
 }
 
 .audioflume-home-reference-layered-card {
   --home-layer-index: 0;
   position: absolute;
-  top: calc(16px + (var(--home-layer-index) * 8px));
-  left: calc(var(--home-layer-index) * 76px);
-  width: 250px;
-  aspect-ratio: 1.38;
+  top: calc(44px - (var(--home-layer-index) * 7px));
+  left: calc(var(--home-layer-index) * 70px);
+  width: 300px;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
   background: #181818;
   box-shadow: 0 14px 34px rgba(0, 0, 0, 0.24);
   transform:
-    rotateY(-22deg)
-    rotateZ(-1.5deg)
-    translateZ(calc(var(--home-layer-index) * 10px));
+    rotateY(-5deg)
+    rotateZ(-0.35deg)
+    translateZ(calc(var(--home-layer-index) * 6px));
   transform-origin: center center;
 }
 
@@ -328,7 +334,7 @@
 }
 
 .audioflume-home-reference-artists {
-  padding: 32px 0 112px;
+  padding: 48px 0 126px;
 }
 
 .audioflume-home-reference-section-heading {
@@ -338,13 +344,14 @@
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 24px;
-  font-size: 12px;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 16px;
   font-weight: 400;
 }
 
 .audioflume-home-reference-section-heading a {
   color: rgba(255, 255, 255, 0.82);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   text-decoration: none;
 }
@@ -352,7 +359,7 @@
 .audioflume-home-reference-artist-card {
   width: 390px;
   min-width: 390px;
-  height: 352px;
+  height: 248px;
   border-right: 1px solid rgba(255, 255, 255, 0.035);
   background: #161616;
 }
@@ -453,7 +460,7 @@
 }
 
 .audioflume-home-reference-features {
-  padding: 66px 0 118px;
+  padding: 82px 0 132px;
 }
 
 .audioflume-home-reference-feature-grid {
@@ -468,7 +475,7 @@
 
 .audioflume-home-reference-feature-grid h3 {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 400;
   letter-spacing: -0.025em;
 }
@@ -476,70 +483,24 @@
 .audioflume-home-reference-feature-grid p {
   margin: 16px 0 0;
   color: rgba(255, 255, 255, 0.38);
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 300;
   line-height: 1.55;
 }
 
 .audioflume-home-reference-playlists {
-  padding: 52px 0 118px;
+  padding: 66px 0 132px;
 }
 
 .audioflume-home-reference-playlist-grid {
+  --filmwave-curated-shelf-card-width: 100%;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 36px 4px;
-}
-
-.audioflume-home-reference-playlist-card {
-  position: relative;
-  min-width: 0;
-}
-
-.audioflume-home-reference-playlist-cover {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1.82;
-  overflow: hidden;
-  background: #191919;
-}
-
-.audioflume-home-reference-playlist-cover img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.audioflume-home-reference-playlist-corner {
-  position: absolute !important;
-  top: 12px !important;
-  right: 12px !important;
-  z-index: 3 !important;
-}
-
-.audioflume-home-reference-playlist-meta {
-  display: grid;
-  gap: 3px;
-  padding-top: 10px;
-}
-
-.audioflume-home-reference-playlist-meta strong {
-  overflow: hidden;
-  font-size: 10px;
-  font-weight: 400;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.audioflume-home-reference-playlist-meta span {
-  color: rgba(255, 255, 255, 0.36);
-  font-size: 8px;
-  font-weight: 300;
+  gap: 38px 12px;
 }
 
 .audioflume-home-reference-new-songs {
-  padding: 62px 0 144px;
+  padding: 76px 0 150px;
 }
 
 .audioflume-home-reference-new-songs .filmwave-music-list-shell {
