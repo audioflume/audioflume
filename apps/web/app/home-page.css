@@ -81,12 +81,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-intro-grid > p,
 .audioflume-home-reference-library-copy > p {
-  max-width: 500px;
+  max-width: 560px;
   margin: 2px 0 0;
-  color: #ffffff;
-  font-size: 19px;
+  color: var(--text-primary);
+  font-size: 18px;
   font-weight: 300;
-  line-height: 1.5;
+  letter-spacing: normal;
+  line-height: 1.35;
 }
 
 .audioflume-home-reference-trust {
@@ -311,9 +312,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-library-copy > p {
   margin-top: 30px;
-  color: #ffffff;
-  font-size: 19px;
-  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.42);
 }
 
 .audioflume-home-reference-library-media-slot {
@@ -332,8 +331,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   gap: 24px;
   margin-bottom: 24px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 23px;
-  font-weight: 500;
+  font-size: 26px;
+  font-weight: 400;
+  letter-spacing: -0.025em;
+  line-height: 1.1;
 }
 
 .audioflume-home-reference-section-heading a {
