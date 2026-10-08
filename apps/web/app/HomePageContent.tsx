@@ -367,14 +367,11 @@ export default function HomePageContent() {
         <div className="audioflume-home-reference-width audioflume-home-reference-trust">
           <p>Filmmakers working for these brands already use Audioflume.</p>
           <div className="audioflume-home-reference-logo-row" aria-label="Brand work">
-            <span>DJI</span>
-            <span>RED BULL</span>
-            <span>OAKLEY</span>
-            <span>LAMBORGHINI</span>
-            <span>NETFLIX</span>
-            <span>PORSCHE</span>
-            <span className="is-dot">●</span>
-            <span>HBO</span>
+            <img
+              src="https://images.filmwave.io/images/home/Screenshot%202026-10-08%20at%203.15.37%E2%80%AFPM.png"
+              alt="Brands using Audioflume"
+              draggable={false}
+            />
           </div>
         </div>
       </section>
