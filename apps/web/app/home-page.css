@@ -464,7 +464,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   border-radius: 999px;
   background: color-mix(in srgb, var(--bg-primary) 72%, transparent);
   padding: 0 12px;
-  color: color-mix(in srgb, var(--text-primary) 68%, transparent);
+  color: color-mix(in srgb, var(--text-primary) 48%, transparent);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   font-size: 10px;
@@ -634,7 +634,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
   background: rgba(17, 17, 17, 0.42);
-  color: rgba(255, 255, 255, 0.68);
+  color: rgba(255, 255, 255, 0.48);
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-play::after,
