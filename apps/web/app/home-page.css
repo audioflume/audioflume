@@ -390,7 +390,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   left: 28px;
   z-index: 2;
   display: grid;
-  grid-template-columns: 76px minmax(0, 1fr);
+  grid-template-columns: 88px minmax(0, 1fr);
   align-items: end;
   padding-right: 64px;
   gap: 16px;
@@ -398,8 +398,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-artist-thumb {
   display: block;
-  width: 76px;
-  height: 76px;
+  width: 88px;
+  height: 88px;
   overflow: hidden;
   background: #202020;
 }
@@ -414,13 +414,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   display: grid;
   grid-template-columns: 1fr;
   align-items: center;
-  gap: 5px;
+  gap: 3px;
 }
 
 .audioflume-home-reference-artist-copy small {
   grid-column: 1 / -1;
   color: rgba(255, 255, 255, 0.24);
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 400;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -428,8 +428,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-artist-copy strong {
   grid-column: 1;
-  font-size: 30px;
-  font-weight: 500;
+  font-size: 27px;
+  font-weight: 400;
   letter-spacing: -0.035em;
 }
 
@@ -459,7 +459,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
-  margin-top: 7px;
+  margin-top: 3px;
 }
 
 .audioflume-home-reference-artist-genres > span {
