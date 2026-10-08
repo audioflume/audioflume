@@ -197,6 +197,13 @@ function HomeArtistShelf({
       {artists.map((artist) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+        const genres = Array.from(
+          new Set(
+            artist.songs.flatMap((song) =>
+              Array.isArray(song.genres) ? song.genres.filter(Boolean) : [],
+            ),
+          ),
+        ).slice(0, 3);
         const artistIsPlaying = Boolean(
           isPlaying &&
             currentSong &&
@@ -227,8 +234,15 @@ function HomeArtistShelf({
                   ) : null}
                 </span>
                 <span className="audioflume-home-reference-artist-copy">
-                  <small>{artist.designation || artist.custom_text || "Artist"}</small>
+                  <small>Featured Artist</small>
                   <strong>{artist.name}</strong>
+                  {genres.length > 0 ? (
+                    <span className="audioflume-home-reference-artist-genres">
+                      {genres.map((genre) => (
+                        <span key={genre}>{genre}</span>
+                      ))}
+                    </span>
+                  ) : null}
                 </span>
               </div>
             </Link>
