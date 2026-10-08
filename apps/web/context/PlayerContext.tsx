@@ -653,8 +653,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const isSameSong = currentSongRef.current?.id === song.id;
       const seekRequestId = ++pendingSeekRequestIdRef.current;
       const safeProgress = Number.isFinite(progress) ? Math.max(0, Math.min(1, progress)) : 0;
-      const claimedRemotePlayback = claimPlaybackOwnership();
-      const shouldContinuePlaying = shouldPlay || claimedRemotePlayback;
+      const wasRemotePlayback = remoteOwnerTabIdRef.current !== null;
+      if (wasRemotePlayback) {
+        remoteOwnerTabIdRef.current = null;
+        setRemotePlayingInAnotherTab(false);
+      }
+      const shouldContinuePlaying = shouldPlay || wasRemotePlayback;
 
       if (!isSameSong) {
         playRequestIdRef.current += 1;
@@ -708,7 +712,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [claimPlaybackOwnership, emitPlaybackUpdate, loadSongSource, postPausedState, postPlayingState, setCurrentTimeState, setDurationState, setIsPlayingState],
+    [emitPlaybackUpdate, loadSongSource, postPausedState, postPlayingState, setCurrentTimeState, setDurationState, setIsPlayingState],
   );
 
   const registerWaveform = useCallback((songId: string, handle: WaveformHandle) => {
