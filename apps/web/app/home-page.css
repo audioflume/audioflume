@@ -215,8 +215,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-song-card {
-  width: 360px;
-  min-width: 360px;
+  width: 340px;
+  min-width: 340px;
   height: 198px;
 }
 
