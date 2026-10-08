@@ -300,6 +300,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-library-media-slot {
   min-height: 320px;
+  overflow: visible;
+}
+
+.audioflume-home-reference-library-media-slot img {
+  display: block;
+  width: calc(100% + max(0px, calc((100vw - var(--home-reference-width)) / 2)));
+  max-width: none;
+  height: auto;
 }
 
 .audioflume-home-reference-artists {
