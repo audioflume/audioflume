@@ -50,7 +50,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   margin: 20px 0 0;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(68px, 6.2vw, 96px);
+  font-size: clamp(60px, 5.4vw, 82px);
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.96;
@@ -73,7 +73,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-library h2 {
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(29px, 2.2vw, 36px);
+  font-size: clamp(27px, 1.95vw, 32px);
   font-weight: 400;
   letter-spacing: -0.04em;
   line-height: 1.06;
@@ -96,9 +96,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-trust > p {
   margin: 0 0 28px;
-  color: rgba(255, 255, 255, 0.24);
+  color: rgba(255, 255, 255, 0.18);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 12px;
+  font-size: 15px;
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.4;
@@ -271,7 +271,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-song-card-copy span {
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.48);
+  color: rgba(255, 255, 255, 0.24);
   font-size: 9px;
   font-weight: 300;
   text-overflow: ellipsis;
@@ -312,7 +312,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-library-copy > p {
   margin-top: 30px;
-  color: rgba(255, 255, 255, 0.42);
+  color: rgba(255, 255, 255, 0.30);
 }
 
 .audioflume-home-reference-library-media-slot {
@@ -330,15 +330,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 24px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 26px;
-  font-weight: 400;
-  letter-spacing: -0.025em;
-  line-height: 1.1;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
 }
 
 .audioflume-home-reference-section-heading a {
-  color: rgba(255, 255, 255, 0.82);
+  color: rgba(255, 255, 255, 0.68);
   font-size: 15px;
   font-weight: 500;
   text-decoration: none;
@@ -418,7 +418,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-artist-copy small {
   grid-column: 1 / -1;
-  color: rgba(255, 255, 255, 0.34);
+  color: rgba(255, 255, 255, 0.24);
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.02em;
@@ -470,7 +470,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   border-radius: 999px;
   background: rgba(17, 17, 17, 0.46);
   padding: 0 12px;
-  color: rgba(255, 255, 255, 0.74);
+  color: rgba(255, 255, 255, 0.58);
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
   font-size: 10px;
@@ -494,14 +494,16 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-feature-grid h3 {
   margin: 0;
-  font-size: 20px;
-  font-weight: 500;
-  letter-spacing: -0.025em;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
 }
 
 .audioflume-home-reference-feature-grid p {
   margin: 16px 0 0;
-  color: rgba(255, 255, 255, 0.36);
+  color: rgba(255, 255, 255, 0.26);
   font-size: 15px;
   font-weight: 300;
   line-height: 1.55;
