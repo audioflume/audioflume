@@ -25,6 +25,7 @@ type PlayerBroadcastMessage =
       song: Song;
       currentTime: number;
       duration: number;
+      sentAt: number;
     }
   | {
       type: "paused";
@@ -130,7 +131,8 @@ function isPlayerBroadcastMessage(
     return (
       isValidStoredSong(message.song) &&
       typeof message.currentTime === "number" &&
-      typeof message.duration === "number"
+      typeof message.duration === "number" &&
+      typeof message.sentAt === "number"
     );
   }
   return false;
@@ -290,6 +292,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       song: current,
       currentTime: currentTimeRef.current,
       duration: durationRef.current || current.duration || 0,
+      sentAt: Date.now(),
     });
   }, [postPlayerMessage]);
 
@@ -512,7 +515,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           });
         }
 
-        if (!audio.paused && now - lastBroadcastTimeRef.current > 1000) {
+        if (!audio.paused && now - lastBroadcastTimeRef.current > 250) {
           lastBroadcastTimeRef.current = now;
           postPlayingState();
         }
@@ -816,8 +819,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         emitPlaybackUpdate();
       }
 
-      const safeTime = Math.max(0, message.currentTime || 0);
       const nextDuration = message.duration || message.song.duration || 0;
+      const elapsedSinceBroadcast = Math.max(0, (Date.now() - message.sentAt) / 1000);
+      const projectedTime = (message.currentTime || 0) + elapsedSinceBroadcast;
+      const safeTime = Math.max(
+        0,
+        nextDuration > 0 ? Math.min(projectedTime, nextDuration) : projectedTime,
+      );
 
       const applyRemoteTime = () => {
         try {
@@ -840,6 +848,31 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       setDurationState(nextDuration);
 
       writeStoredPlayerState({ currentSong: message.song, currentTime: safeTime, duration: nextDuration });
+
+      if (document.visibilityState === "visible") {
+        const resumeAtRemoteTime = () => {
+          try {
+            if (audio.duration && isFinite(audio.duration)) {
+              const elapsed = Math.max(0, (Date.now() - message.sentAt) / 1000);
+              const targetTime = Math.max(
+                0,
+                Math.min((message.currentTime || 0) + elapsed, audio.duration),
+              );
+              audio.currentTime = targetTime;
+              setCurrentTimeState(targetTime);
+              setDurationState(audio.duration);
+            }
+          } catch { /* ignore */ }
+
+          loadSongSource(audio, message.song, true);
+        };
+
+        if (audio.readyState >= 1) {
+          resumeAtRemoteTime();
+        } else {
+          audio.addEventListener("loadedmetadata", resumeAtRemoteTime, { once: true });
+        }
+      }
     };
 
     return () => {
