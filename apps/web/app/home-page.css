@@ -321,8 +321,22 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   height: 180px;
   flex: 0 0 320px;
   overflow: hidden;
-  transform: skewY(14deg);
+  transform: skewY(20deg);
   transform-origin: center;
+}
+
+.audioflume-home-reference-library-playlist-card::after {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  background: linear-gradient(
+    180deg,
+    rgba(17, 17, 17, 0) 0%,
+    rgba(17, 17, 17, 0.08) 58%,
+    rgba(17, 17, 17, 0.38) 100%
+  );
+  content: "";
+  pointer-events: none;
 }
 
 .audioflume-home-reference-library-playlist-card + .audioflume-home-reference-library-playlist-card {
