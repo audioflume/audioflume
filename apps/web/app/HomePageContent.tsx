@@ -19,12 +19,8 @@ import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
 import CuratedPlaylistsIcon from "@/components/icons/CuratedPlaylistsIcon";
 import MusicIcon from "@/components/icons/MusicIcon";
-import CheckIcon from "@/components/icons/CheckIcon";
-import CuratedPlaylistsIcon from "@/components/icons/CuratedPlaylistsIcon";
-import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import UserIcon from "@/components/icons/UserIcon";
 import UserIcon from "@/components/icons/UserIcon";
 import {
   useHasCurrentSong,
