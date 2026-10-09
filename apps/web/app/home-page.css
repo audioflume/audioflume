@@ -299,18 +299,28 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-library-media-slot {
-  min-height: 320px;
+  min-height: 420px;
   overflow: visible;
   display: flex;
   align-items: center;
 }
 
-.audioflume-home-reference-library-media-slot img {
-  display: block;
-  width: calc(100% + max(0px, calc((100vw - var(--home-reference-width)) / 2)) + 115px);
-  max-width: none;
-  height: auto;
+.audioflume-home-reference-library-playlist-array {
+  --filmwave-curated-shelf-card-width: 320px;
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: 93px;
   margin-left: -115px;
+}
+
+.audioflume-home-reference-library-playlist-card {
+  width: 320px;
+  height: 180px;
+  flex: 0 0 320px;
+  overflow: hidden;
+  transform: skewY(14deg);
+  transform-origin: center;
 }
 
 .audioflume-home-reference-artists {
