@@ -16,8 +16,12 @@ import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import CheckIcon from "@/components/icons/CheckIcon";
+import CuratedPlaylistsIcon from "@/components/icons/CuratedPlaylistsIcon";
+import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import UserIcon from "@/components/icons/UserIcon";
 import {
   useHasCurrentSong,
   useIsCurrentSongPlaying,
@@ -414,28 +418,28 @@ export default function HomePageContent() {
       <section className="audioflume-home-reference-features">
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-grid">
           <div>
-            <h3>Human made music &amp; SFX.</h3>
+            <h3><MusicIcon size={18} /><span>Human made music &amp; SFX.</span></h3>
             <p>
               Original work created by independent artists and sound designers,
               built around picture, pacing and story.
             </p>
           </div>
           <div>
-            <h3>Playlists built around the scene.</h3>
+            <h3><CuratedPlaylistsIcon size={18} /><span>Playlists built around the scene.</span></h3>
             <p>
               Curated by people who understand how music works against picture,
               so the right track is easier to find.
             </p>
           </div>
           <div>
-            <h3>Support real world artists.</h3>
+            <h3><UserIcon size={18} /><span>Support real world artists.</span></h3>
             <p>
               Music comes from real artists and composers, with licensing built
               around sustainable creative work.
             </p>
           </div>
           <div>
-            <h3>Subscription, premium &amp; bespoke.</h3>
+            <h3><CheckIcon size={18} strokeWidth={2} /><span>Subscription, premium &amp; bespoke.</span></h3>
             <p>
               Flexible licensing for everyday edits, premium catalogue needs and
               custom commissioned work.
