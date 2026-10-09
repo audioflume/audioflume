@@ -393,12 +393,20 @@ export default function HomePageContent() {
               larger creative teams.
             </p>
           </div>
-          <div className="audioflume-home-reference-library-media-slot" aria-hidden="true">
-            <img
-              src="https://images.filmwave.io/images/home/Playlist%20Array.png"
-              alt=""
-              draggable={false}
-            />
+          <div className="audioflume-home-reference-library-media-slot">
+            <div className="audioflume-home-reference-library-playlist-array">
+              {playlists.slice(0, 7).map((playlist, index) => (
+                <div
+                  key={playlist.id}
+                  className="audioflume-home-reference-library-playlist-card"
+                >
+                  <CuratedPlaylistCard
+                    playlist={playlist}
+                    index={index}
+                  />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
