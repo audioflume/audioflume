@@ -409,14 +409,6 @@ export default function HomePageContent() {
         </div>
       </section>
 
-      <section className="audioflume-home-reference-artists">
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-          <span>In demand artists &amp; composers</span>
-          <Link href="/discover">Explore Artists</Link>
-        </div>
-        {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
-      </section>
-
       <section className="audioflume-home-reference-features">
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-grid">
           <div>
@@ -448,6 +440,14 @@ export default function HomePageContent() {
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="audioflume-home-reference-artists">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+          <span>In demand artists &amp; composers</span>
+          <Link href="/discover">Explore Artists</Link>
+        </div>
+        {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
       </section>
 
       <section className="audioflume-home-reference-playlists">
