@@ -310,7 +310,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   display: flex;
   width: max-content;
   align-items: center;
-  gap: -92px;
+  gap: -317px;
   margin-left: -115px;
   pointer-events: none;
 }
