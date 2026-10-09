@@ -398,14 +398,7 @@ export default function HomePageContent() {
           <div className="audioflume-home-reference-library-media-slot">
             <div className="audioflume-home-reference-library-playlist-array">
               {playlists.slice(0, 8).map((playlist, index, array) => {
-                const distance =
-                  hoveredPlaylistIndex === null
-                    ? null
-                    : Math.abs(index - hoveredPlaylistIndex);
-                const lift =
-                  distance === null
-                    ? 0
-                    : Math.round(-24 * Math.exp(-(distance * distance) / 1.8));
+                const lift = hoveredPlaylistIndex === index ? -24 : 0;
 
                 return (
                   <div
