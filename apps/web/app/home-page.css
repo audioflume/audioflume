@@ -317,6 +317,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   padding: 48px 0 126px;
 }
 
+.audioflume-home-reference-artists > .audioflume-home-reference-width,
+.audioflume-home-reference-playlists > .audioflume-home-reference-width,
+.audioflume-home-reference-new-songs > .audioflume-home-reference-width {
+  width: calc(100vw - 80px);
+  max-width: none;
+}
+
 .audioflume-home-reference-section-heading {
   display: flex;
   min-height: 28px;
