@@ -373,7 +373,7 @@ export default function HomePageContent() {
           <p>Filmmakers working for these brands already use Audioflume.</p>
           <div className="audioflume-home-reference-logo-row" aria-label="Brand work">
             <img
-              src="https://images.filmwave.io/images/home/Screenshot%202026-10-08%20at%203.15.37%E2%80%AFPM.png"
+              src="https://images.filmwave.io/images/home/logos.png"
               alt="Brands using Audioflume"
               draggable={false}
             />
