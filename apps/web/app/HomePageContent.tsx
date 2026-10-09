@@ -7,7 +7,6 @@ import {
   useMemo,
   useRef,
   useState,
-  type CSSProperties,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -290,7 +289,6 @@ export default function HomePageContent() {
   const playerVisible = useHasCurrentSong();
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [artists, setArtists] = useState<HomeArtist[]>([]);
-  const [hoveredPlaylistIndex, setHoveredPlaylistIndex] = useState<number | null>(null);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -397,35 +395,18 @@ export default function HomePageContent() {
           </div>
           <div className="audioflume-home-reference-library-media-slot">
             <div className="audioflume-home-reference-library-playlist-array">
-              {playlists.slice(0, 8).map((playlist, index, array) => {
-                const lift = hoveredPlaylistIndex === index ? -24 : 0;
-
-                return (
-                  <div
-                    key={playlist.id}
-                    className="audioflume-home-reference-library-playlist-card"
-                    style={
-                      {
-                        zIndex: array.length - index,
-                        "--home-playlist-lift": `${lift}px`,
-                      } as CSSProperties
-                    }
-                  >
-                    <div className="audioflume-home-reference-library-playlist-card-content">
-                      <CuratedPlaylistCard
-                        playlist={playlist}
-                        index={index}
-                      />
-                    </div>
-                    <div
-                      className="audioflume-home-reference-library-playlist-hover-target"
-                      onMouseEnter={() => setHoveredPlaylistIndex(index)}
-                      onMouseLeave={() => setHoveredPlaylistIndex(null)}
-                      aria-hidden="true"
-                    />
-                  </div>
-                );
-              })}
+              {playlists.slice(0, 8).map((playlist, index, array) => (
+                <div
+                  key={playlist.id}
+                  className="audioflume-home-reference-library-playlist-card"
+                  style={{ zIndex: array.length - index }}
+                >
+                  <CuratedPlaylistCard
+                    playlist={playlist}
+                    index={index}
+                  />
+                </div>
+              ))}
             </div>
           </div>
         </div>
