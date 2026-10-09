@@ -316,6 +316,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-library-playlist-card {
+  position: relative;
   width: 320px;
   height: 180px;
   flex: 0 0 320px;
