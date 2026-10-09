@@ -658,11 +658,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-copy strong,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-copy span,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-icon,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-play {
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong {
   color: #ffffff;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-play {
-  background: rgba(17, 17, 17, 0.9);
+  background: #ffffff;
+  color: #111111;
 }
