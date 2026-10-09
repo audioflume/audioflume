@@ -306,7 +306,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-library-playlist-array {
-  --filmwave-curated-shelf-card-width: 320px;
+  --filmwave-curated-shelf-card-width: 290px;
   display: flex;
   width: max-content;
   align-items: center;
@@ -317,9 +317,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-library-playlist-card {
   position: relative;
-  width: 320px;
-  height: 180px;
-  flex: 0 0 320px;
+  width: 290px;
+  height: 163px;
+  flex: 0 0 290px;
   overflow: hidden;
   transform: skewY(20deg);
   transform-origin: center;
@@ -340,7 +340,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-library-playlist-card + .audioflume-home-reference-library-playlist-card {
-  margin-left: -225px;
+  margin-left: -185px;
 }
 
 .audioflume-home-reference-artists {
