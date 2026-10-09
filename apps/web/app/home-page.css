@@ -310,7 +310,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   display: flex;
   width: max-content;
   align-items: center;
-  gap: -317px;
+  gap: 0;
   margin-left: -115px;
   pointer-events: none;
 }
@@ -322,6 +322,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   overflow: hidden;
   transform: skewY(14deg);
   transform-origin: center;
+}
+
+.audioflume-home-reference-library-playlist-card + .audioflume-home-reference-library-playlist-card {
+  margin-left: -225px;
 }
 
 .audioflume-home-reference-artists {
