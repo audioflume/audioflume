@@ -395,10 +395,11 @@ export default function HomePageContent() {
           </div>
           <div className="audioflume-home-reference-library-media-slot">
             <div className="audioflume-home-reference-library-playlist-array">
-              {playlists.slice(0, 7).map((playlist, index) => (
+              {playlists.slice(0, 7).map((playlist, index, array) => (
                 <div
                   key={playlist.id}
                   className="audioflume-home-reference-library-playlist-card"
+                  style={{ zIndex: array.length - index }}
                 >
                   <CuratedPlaylistCard
                     playlist={playlist}
