@@ -504,6 +504,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-feature-grid h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   margin: 0;
   font-family: var(--filmwave-section-title-font-family);
   font-size: var(--filmwave-section-title-font-size);
