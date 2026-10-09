@@ -325,7 +325,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   gap: 24px;
   margin-bottom: 24px;
   font-family: var(--filmwave-section-title-font-family);
-  font-size: 26px;
+  font-size: clamp(29px, 2.1vw, 34px);
   font-weight: var(--filmwave-section-title-font-weight);
   letter-spacing: var(--filmwave-section-title-letter-spacing);
   line-height: var(--filmwave-section-title-line-height);
