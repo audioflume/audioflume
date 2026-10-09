@@ -405,7 +405,7 @@ export default function HomePageContent() {
                 const lift =
                   distance === null
                     ? 0
-                    : Math.round(-24 * Math.exp(-(distance * distance) / 4.4));
+                    : Math.round(-24 * Math.exp(-(distance * distance) / 1.8));
 
                 return (
                   <div
