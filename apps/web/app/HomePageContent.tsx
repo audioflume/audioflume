@@ -29,8 +29,8 @@ import type { Song } from "@/lib/types";
 
 const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
-const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/naraa-in-ub-8xUx0HW_rWw-unsplash-web.jpg";
+const HOME_HERO_VIDEO =
+  "https://pub-cd585d75522a44bb9dad78b6f9974d03.r2.dev/Audioflume%20Banner.mov";
 
 type HomeArtist = {
   id: string;
@@ -352,10 +352,16 @@ export default function HomePageContent() {
 
   return (
     <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
-      <section
-        className="audioflume-home-reference-hero"
-        style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
-      >
+      <section className="audioflume-home-reference-hero">
+        <video
+          className="audioflume-home-reference-hero-video"
+          src={HOME_HERO_VIDEO}
+          autoPlay
+          loop
+          muted
+          playsInline
+          aria-hidden="true"
+        />
         <div className="audioflume-home-reference-hero-shade" />
         <h1>Human made music &amp; SFX for film.</h1>
       </section>
