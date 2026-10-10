@@ -686,6 +686,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-artists,
+.audioflume-home-reference-curated-playlists,
 .audioflume-home-reference-playlists,
 .audioflume-home-reference-new-songs,
 .audioflume-home-reference-library,
@@ -755,6 +756,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-artists > .audioflume-home-reference-width,
+.audioflume-home-reference-curated-playlists > .audioflume-home-reference-width,
 .audioflume-home-reference-playlists > .audioflume-home-reference-width,
 .audioflume-home-reference-new-songs > .audioflume-home-reference-width {
   width: calc(100vw - 100px);
@@ -909,6 +911,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font-size: 9px;
   font-weight: 300;
   line-height: 1;
+}
+
+.audioflume-home-reference-curated-playlists {
+  padding: 18px 0 76px;
 }
 
 .audioflume-home-reference-playlists {
@@ -1216,6 +1222,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artists,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-curated-playlists,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-playlists,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-new-songs,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-library,
