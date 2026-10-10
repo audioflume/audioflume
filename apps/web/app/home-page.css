@@ -43,7 +43,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   height: var(--filmwave-header-height, 75px);
   grid-template-columns:
-    var(--filmwave-side-filter-rail-width, 168px)
+    calc(
+      var(--filmwave-side-filter-rail-width, 168px) +
+        var(--fw-music-content-inset-right, 20px)
+    )
     minmax(0, 1fr)
     230px;
   align-items: stretch;
@@ -305,8 +308,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-scroller {
-  padding-right: 20px;
-  padding-left: 20px;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller {
