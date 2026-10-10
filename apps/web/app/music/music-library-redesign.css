@@ -63,7 +63,7 @@
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
   gap: 18px;
   padding: 0 34px;
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.14);
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field > svg {
