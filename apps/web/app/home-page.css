@@ -708,7 +708,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-section-heading {
   display: flex;
   min-height: 28px;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
   gap: 24px;
   margin-bottom: 26px;
