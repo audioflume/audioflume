@@ -405,7 +405,7 @@ export default function HomePageContent() {
           ref={searchBarRef}
           className="audioflume-home-reference-searchbar"
         >
-          <Link href="/music" className="audioflume-home-reference-searchbar-filters">
+          <Link href="/music?filters=open" className="audioflume-home-reference-searchbar-filters">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
             </svg>
