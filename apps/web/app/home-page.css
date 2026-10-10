@@ -786,6 +786,23 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference {
+  background: #090909;
+  color: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-library,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-library ~ section,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-library ~ footer {
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-arrow {
+  background: #ffffff;
+  color: #090909;
+}
+
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
   background: #1b1b1b;
   color: rgba(255, 255, 255, 0.34);
