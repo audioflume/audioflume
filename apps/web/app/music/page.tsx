@@ -26,6 +26,7 @@ import {
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
+import { useSearchParams } from "next/navigation";
 
 import type { BpmFilterValue, KeyFilterValue } from "@/lib/types";
 
@@ -174,6 +175,7 @@ function songIsLyrical(song: unknown) {
 
 export default function MusicPage() {
   const { userId, isLoaded } = useAuth();
+  const searchParams = useSearchParams();
   const musicFilterStorageKey = userId
     ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${userId}`
     : null;
@@ -197,7 +199,9 @@ export default function MusicPage() {
     useState<Record<string, Set<string>>>({});
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
-  const [filtersOpen, setFiltersOpen] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(
+    () => searchParams.get("filters") === "open",
+  );
   const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
