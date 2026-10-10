@@ -382,7 +382,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(22px, 1.55vw, 27px);
   font-weight: 300;
-  letter-spacing: -0.04em;
+  letter-spacing: normal;
   line-height: 1.05;
   white-space: nowrap;
 }
@@ -482,7 +482,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   font-family: var(--filmwave-section-title-font-family);
   font-size: var(--filmwave-section-title-font-size);
   font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  letter-spacing: normal;
   line-height: var(--filmwave-section-title-line-height);
 }
 
