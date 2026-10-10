@@ -943,6 +943,62 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 
+:where(html.light, html[data-theme="light"])
+  body:has(.audioflume-home-reference)
+  .filmwave-web-header.is-transparent {
+  --filmwave-chrome-surface: var(--bg-primary);
+  border-bottom-color: var(--border) !important;
+  background: var(--bg-primary) !important;
+  background-color: var(--bg-primary) !important;
+  color: var(--text-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  body:has(.audioflume-home-reference)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-tonal-wordmark,
+:where(html.light, html[data-theme="light"])
+  body:has(.audioflume-home-reference)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-logo-action,
+:where(html.light, html[data-theme="light"])
+  body:has(.audioflume-home-reference)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-actions,
+:where(html.light, html[data-theme="light"])
+  body:has(.audioflume-home-reference)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-nav-link {
+  color: var(--text-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar {
+  border-bottom-color: var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-filters {
+  border-right-color: var(--border);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-song {
+  border-left-color: var(--border);
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field {
+  color: var(--text-muted);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field input {
+  color: var(--text-primary);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field input::placeholder {
+  color: var(--text-muted);
+}
+
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference {
   background: #090909;
   color: #ffffff;
