@@ -136,6 +136,24 @@ function syncLicenseFilterBoxState(box: HTMLElement) {
       check.innerHTML = "";
     }
   });
+
+  const count = box.querySelector<HTMLElement>(".fw-license-filter-count");
+  if (count) {
+    const countValue = selectedFilters.size;
+    count.hidden = countValue === 0;
+    const number = count.querySelector<HTMLElement>(".fw-filter-advanced-count-num");
+    if (number) number.textContent = String(countValue);
+  }
+}
+
+function closeLicenseFilterBox(box: HTMLElement) {
+  const trigger = box.querySelector<HTMLButtonElement>(".fw-license-filter-trigger");
+  const detail = box.querySelector<HTMLElement>(".fw-license-filter-detail");
+  if (!trigger || !detail) return;
+
+  trigger.setAttribute("aria-expanded", "false");
+  detail.classList.remove("is-open");
+  detail.setAttribute("aria-hidden", "true");
 }
 
 function createLicenseFilterBox() {
@@ -145,6 +163,7 @@ function createLicenseFilterBox() {
   const trigger = document.createElement("button");
   trigger.type = "button";
   trigger.className = "fw-filter-rail-item fw-license-filter-trigger";
+  trigger.dataset.filterSectionId = "licenses";
   trigger.setAttribute("aria-expanded", "false");
 
   const title = document.createElement("span");
@@ -166,7 +185,17 @@ function createLicenseFilterBox() {
     </svg>
   `;
 
+  const count = document.createElement("span");
+  count.className = "fw-filter-advanced-count fw-license-filter-count";
+  count.hidden = true;
+  count.setAttribute("aria-hidden", "true");
+
+  const countNumber = document.createElement("span");
+  countNumber.className = "fw-filter-advanced-count-num";
+  count.appendChild(countNumber);
+
   trigger.appendChild(title);
+  trigger.appendChild(count);
   trigger.appendChild(chevron);
   box.appendChild(trigger);
 
@@ -233,6 +262,15 @@ function createLicenseFilterBox() {
 
   trigger.addEventListener("click", () => {
     const isOpen = trigger.getAttribute("aria-expanded") === "true";
+
+    if (!isOpen) {
+      const rail = trigger.closest<HTMLElement>(".fw-filter-rail");
+      const openTrigger = rail?.querySelector<HTMLButtonElement>(
+        '.fw-filter-rail-item[aria-expanded="true"]:not(.fw-license-filter-trigger)',
+      );
+      openTrigger?.click();
+    }
+
     trigger.setAttribute("aria-expanded", String(!isOpen));
     detail.classList.toggle("is-open", !isOpen);
     detail.setAttribute("aria-hidden", String(isOpen));
@@ -581,10 +619,32 @@ function syncWebMusicFilterEnhancements(playlists: PlaylistFilterDecoration[]) {
   syncPlaylistFilterOptionClasses(playlists);
 }
 
+function bindLicenseAccordionExclusivity() {
+  function handleRailClick(event: MouseEvent) {
+    const target = event.target;
+    if (!(target instanceof Element)) return;
+
+    const railItem = target.closest<HTMLElement>(".fw-filter-rail-item");
+    if (!railItem || railItem.classList.contains("fw-license-filter-trigger")) return;
+
+    const rail = railItem.closest<HTMLElement>(".fw-filter-rail");
+    if (!rail?.matches("main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-rail")) {
+      return;
+    }
+
+    const box = rail.querySelector<HTMLElement>(".fw-license-filter-box");
+    if (box) closeLicenseFilterBox(box);
+  }
+
+  document.addEventListener("click", handleRailClick, true);
+  return () => document.removeEventListener("click", handleRailClick, true);
+}
+
 export default function SideFilterPanelBehavior() {
   const { playlists } = usePlaylists();
 
   useLayoutEffect(() => {
+    const unbindLicenseAccordionExclusivity = bindLicenseAccordionExclusivity();
     let syncFrame = 0;
 
     function syncEnhancements() {
@@ -638,6 +698,7 @@ export default function SideFilterPanelBehavior() {
     document.addEventListener("click", handleClearAllClick, true);
 
     return () => {
+      unbindLicenseAccordionExclusivity();
       if (syncFrame) window.cancelAnimationFrame(syncFrame);
       observer.disconnect();
       window.removeEventListener(LICENSE_FILTER_CHANGE_EVENT, scheduleSync);
