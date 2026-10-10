@@ -17,6 +17,8 @@ import {
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
+  MusicLibrarySortControl,
+  type MusicLibrarySortValue,
   QUICK_FILTERS,
   REGION_OPTIONS,
   songMatchesEditPointFilter,
@@ -196,6 +198,7 @@ export default function MusicPage() {
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
   const [semanticSearchState, setSemanticSearchState] =
@@ -741,7 +744,17 @@ export default function MusicPage() {
     songs,
   ]);
 
-  const displayedSongs = filteredSongs;
+  const sortedSongs = useMemo(() => {
+    if (sortOrder !== "downloaded") return filteredSongs;
+
+    return [...filteredSongs].sort((a, b) => {
+      const aDownloads = Number(getSongField(a, "downloadCount") ?? 0);
+      const bDownloads = Number(getSongField(b, "downloadCount") ?? 0);
+      return bDownloads - aDownloads;
+    });
+  }, [filteredSongs, sortOrder]);
+
+  const displayedSongs = sortedSongs;
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -868,13 +881,12 @@ export default function MusicPage() {
           ) : null}
         </label>
 
-        <button
-          type="button"
-          className="audioflume-home-reference-searchbar-song"
-          aria-label="Search by song"
-        >
-          Search by song
-        </button>
+        <div className="audioflume-music-page-searchbar-sort">
+          <MusicLibrarySortControl
+            value={sortOrder}
+            onChange={setSortOrder}
+          />
+        </div>
       </div>
 
       <section
