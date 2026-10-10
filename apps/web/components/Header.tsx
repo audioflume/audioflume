@@ -331,11 +331,33 @@ export default function Header() {
           color: rgba(255, 255, 255, 0.72) !important;
         }
 
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-transparent:hover
+          .filmwave-header-nav-link:not(.is-active):not(:hover) {
+          color: var(--text-secondary) !important;
+        }
+
         .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
         .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
           color: #fff !important;
+        }
+
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-transparent
+          .filmwave-header-nav-link:hover,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-transparent
+          .filmwave-header-nav-link.is-active {
+          color: var(--text-primary) !important;
+        }
+
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header.is-transparent
+          .filmwave-header-create-account {
+          background: #111111 !important;
+          color: #ffffff !important;
         }
 
         .filmwave-web-header.is-solid,
