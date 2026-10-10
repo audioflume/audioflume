@@ -645,7 +645,17 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: #ffffff;
   color: #111111;
   padding: 0;
+  opacity: 0;
+  pointer-events: none;
   cursor: pointer;
+  transition: opacity 160ms ease;
+}
+
+.audioflume-home-reference-ui-showcase:hover
+  .audioflume-home-reference-ui-theme-toggle,
+.audioflume-home-reference-ui-theme-toggle:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .audioflume-home-reference-ui-theme-toggle svg {
