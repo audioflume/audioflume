@@ -185,7 +185,9 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
   const playing = useIsCurrentSongPlaying(song.id);
 
   return (
-    <article className="audioflume-home-reference-original-song-card">
+    <article
+      className={`audioflume-home-reference-original-song-card${playing ? " is-playing" : ""}`}
+    >
       <button
         type="button"
         className="audioflume-home-reference-original-song-card-play"
@@ -197,14 +199,14 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
         ) : (
           <span className="audioflume-home-reference-original-song-card-fallback" />
         )}
-        <span className="audioflume-home-reference-original-song-card-copy">
-          <strong>{song.title}</strong>
-          <span>{song.artist}</span>
-        </span>
         <span className="audioflume-home-reference-original-song-card-icon">
           {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
         </span>
       </button>
+      <span className="audioflume-home-reference-original-song-card-copy">
+        <strong>{song.title}</strong>
+        <span>{song.artist}</span>
+      </span>
     </article>
   );
 }
