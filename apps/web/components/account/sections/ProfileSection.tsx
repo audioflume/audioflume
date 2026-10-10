@@ -54,11 +54,6 @@ export default function ProfileSection() {
           <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Personal information
           </h2>
-          <p className="mt-1.5 max-w-[620px] text-[12.5px] leading-5 text-[var(--text-muted)]">
-            {loadState === "loading"
-              ? "Loading your saved profile..."
-              : "Manage the details attached to your Audioflume account."}
-          </p>
         </div>
 
         <form onSubmit={saveProfile}>
@@ -134,9 +129,6 @@ export default function ProfileSection() {
           <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Account details
           </h2>
-          <p className="mt-1.5 text-[12.5px] leading-5 text-[var(--text-muted)]">
-            Basic information about your Audioflume membership.
-          </p>
         </div>
 
         <dl className="border-t border-[var(--border)]">
