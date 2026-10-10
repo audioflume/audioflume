@@ -120,6 +120,12 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-rail-item
+  > :is(.fw-filter-rail-count, .fw-filter-advanced-count) {
+  margin-right: -4px !important;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   :is(.fw-filter-rail-item, .fw-filter-advanced-trigger)
   > :is(.fw-filter-rail-label, .fw-filter-advanced-trigger-label) {
   flex: 1 1 auto;
@@ -145,11 +151,17 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-accordion {
   width: 100%;
   max-width: none;
+  border-bottom: 1px solid var(--filmwave-border-color);
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-section {
   border-bottom: 1px solid var(--filmwave-border-color);
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-section:last-child {
+  border-bottom: 0;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
