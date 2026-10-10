@@ -144,14 +144,6 @@ export default function Footer({
           margin-left: calc(var(--filmwave-side-filter-rail-width) + 8px);
         }
 
-        .fw-toolbar-sticky:has(> .fw-filter-panel-wrap.has-selected-filter-section)
-          ~ .music-page-footer-wrap {
-          margin-left: calc(
-            var(--filmwave-side-filter-rail-width) +
-              var(--filmwave-side-filter-detail-width) + 8px
-          );
-        }
-
         .playlist-detail-footer-shell:has(> .playlist-detail-page-footer) {
           padding-top: 0;
         }
