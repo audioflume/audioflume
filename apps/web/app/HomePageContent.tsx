@@ -30,7 +30,9 @@ import type { Song } from "@/lib/types";
 const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/naraa-in-ub-8xUx0HW_rWw-unsplash-web.jpg";
+  "https://images.filmwave.io/images/home/mohammed-kara-3y66ymL7TC8-unsplash.jpg";
+const HOME_UI_GRAPHIC =
+  "https://images.filmwave.io/images/home/UI%20Graphic.jpg";
 
 type HomeArtist = {
   id: string;
@@ -136,16 +138,22 @@ function HomeSongCard({ song }: { song: Song }) {
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
         {song.coverArt ? (
-          <img src={song.coverArt} alt="" draggable={false} />
+          <>
+            <span
+              className="audioflume-home-reference-song-card-background"
+              style={{ backgroundImage: `url("${song.coverArt}")` }}
+              aria-hidden="true"
+            />
+            <span className="audioflume-home-reference-song-card-art">
+              <img src={song.coverArt} alt="" draggable={false} />
+            </span>
+          </>
         ) : (
           <span className="audioflume-home-reference-song-card-fallback" />
         )}
         <span className="audioflume-home-reference-song-card-copy">
           <strong>{song.title}</strong>
           <span>{song.artist}</span>
-        </span>
-        <span className="audioflume-home-reference-song-card-icon">
-          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
         </span>
       </button>
     </article>
@@ -265,21 +273,25 @@ function HomeArtistShelf({
   );
 }
 
-function PlaylistGrid({
+function HomePlaylistShelf({
   playlists,
 }: {
   playlists: CuratedPlaylist[];
 }) {
   return (
-    <div className="audioflume-home-reference-playlist-grid">
-      {playlists.slice(0, 6).map((playlist, index) => (
-        <CuratedPlaylistCard
+    <Shelf label="Audioflume originals" className="audioflume-home-reference-playlist-shelf">
+      {playlists.slice(0, 8).map((playlist, index) => (
+        <div
           key={playlist.id}
-          playlist={playlist}
-          index={index}
-        />
+          className="audioflume-home-reference-playlist-shelf-card"
+        >
+          <CuratedPlaylistCard
+            playlist={playlist}
+            index={index}
+          />
+        </div>
       ))}
-    </div>
+    </Shelf>
   );
 }
 
@@ -358,18 +370,8 @@ export default function HomePageContent() {
       >
         <div className="audioflume-home-reference-hero-shade" />
         <h1>Human made music &amp; SFX for film.</h1>
-      </section>
 
-      <section className="audioflume-home-reference-intro">
-        <div className="audioflume-home-reference-width audioflume-home-reference-intro-grid">
-          <h2>Every track &amp; sound effect built for the edit.</h2>
-          <p>
-            Human-curated music and SFX built for filmmakers, with a faster path
-            from the first search to the final edit.
-          </p>
-        </div>
-
-        <div className="audioflume-home-reference-width audioflume-home-reference-trust">
+        <div className="audioflume-home-reference-width audioflume-home-reference-hero-trust">
           <p>Filmmakers working for these brands already use Audioflume.</p>
           <div className="audioflume-home-reference-logo-row" aria-label="Brand work">
             <img
@@ -383,44 +385,30 @@ export default function HomePageContent() {
 
       {shelfSongs.length > 0 ? <HomeSongShelf songs={shelfSongs} /> : null}
 
+      <section className="audioflume-home-reference-ui-showcase">
+        <img
+          src={HOME_UI_GRAPHIC}
+          alt="Audioflume music library interface"
+          draggable={false}
+        />
+        <div className="audioflume-home-reference-width audioflume-home-reference-ui-overlay">
+          <h2>An extensive library of music curated for film.</h2>
+          <Link href="/sign-up">Create Free Account</Link>
+        </div>
+      </section>
+
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
             <h2>An extensive library of music curated for film.</h2>
-            <p>
-              Straightforward access to Audioflume&apos;s curated music and SFX
-              catalogue, with plans for solo filmmakers, active studios and
-              larger creative teams.
-            </p>
           </div>
-          <div className="audioflume-home-reference-library-media-slot">
-            <div className="audioflume-home-reference-library-playlist-array">
-              {playlists.slice(0, 8).map((playlist, index, array) => (
-                <div
-                  key={playlist.id}
-                  className="audioflume-home-reference-library-playlist-card"
-                  style={{ zIndex: array.length - index }}
-                >
-                  <CuratedPlaylistCard
-                    playlist={playlist}
-                    index={index}
-                  />
-                </div>
-              ))}
-            </div>
-          </div>
+          <p>
+            Straightforward access to Audioflume&apos;s curated music and SFX
+            catalogue, with plans for solo filmmakers, active studios and
+            larger creative teams.
+          </p>
         </div>
-      </section>
 
-      <section className="audioflume-home-reference-artists">
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-          <span>In demand artists &amp; composers</span>
-          <Link href="/discover">Explore Artists</Link>
-        </div>
-        {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
-      </section>
-
-      <section className="audioflume-home-reference-features">
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-grid">
           <div>
             <h3>Human made music &amp; SFX.</h3>
@@ -453,21 +441,27 @@ export default function HomePageContent() {
         </div>
       </section>
 
-      <section className="audioflume-home-reference-playlists">
-        <div className="audioflume-home-reference-width">
-          <div className="audioflume-home-reference-section-heading">
-            <span>Curated playlists for editors</span>
-            <Link href="/curated-playlists">Explore Playlists</Link>
-          </div>
-          <PlaylistGrid playlists={playlists} />
+      <section className="audioflume-home-reference-artists">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+          <span>In demand artists &amp; composers</span>
+          <Link href="/discover">Explore Artists</Link>
         </div>
+        {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
+      </section>
+
+      <section className="audioflume-home-reference-playlists">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+          <span>Audioflume originals</span>
+          <Link href="/curated-playlists">Explore Originals</Link>
+        </div>
+        {playlists.length > 0 ? <HomePlaylistShelf playlists={playlists} /> : null}
       </section>
 
       <section className="audioflume-home-reference-new-songs">
         <div className="audioflume-home-reference-width">
           <div className="audioflume-home-reference-section-heading">
-            <span>Newly Added Songs</span>
-            <Link href="/music">Explore Music Library</Link>
+            <span>New songs added daily</span>
+            <Link href="/music">Explore New Music</Link>
           </div>
 
           <MusicListShell title={null}>
