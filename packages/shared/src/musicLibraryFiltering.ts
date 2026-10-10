@@ -317,9 +317,12 @@ export function matchesKeyFilter(
   songKeyValue: unknown,
   keyValue: FilmwaveKeyFilterValue | null,
 ) {
-  // A key filter can specify a note, a scale, or both. An empty note with a
-  // scale (e.g. "any Major") filters by scale alone.
-  if (!keyValue || (!keyValue.note && !keyValue.scale)) return true;
+  // A key filter can specify an accidental mode, a note, a scale, or any
+  // combination. When a note is selected, that note is the key criterion and
+  // the accidental mode remains the display preference for the selector.
+  if (!keyValue || (!keyValue.accidental && !keyValue.note && !keyValue.scale)) {
+    return true;
+  }
 
   const songKey =
     typeof songKeyValue === "string"
@@ -331,11 +334,16 @@ export function matchesKeyFilter(
         : "";
   const normalizedSongKey = normalizeKeyText(songKey);
 
+  const songNote = normalizedSongKey.match(/^([a-g](?:#|b)?)/)?.[1] ?? "";
+
   if (keyValue.note) {
     const normalizedNote = normalizeKeyText(keyValue.note);
-    const songNote = normalizedSongKey.match(/^([a-g](?:#|b)?)/)?.[1];
 
     if (songNote !== normalizedNote) return false;
+  } else if (keyValue.accidental === "sharp" && !songNote.includes("#")) {
+    return false;
+  } else if (keyValue.accidental === "flat" && !songNote.includes("b")) {
+    return false;
   }
 
   if (!keyValue.scale) return true;
@@ -394,7 +402,11 @@ export function parseKeyFilterLabel(value: string): FilmwaveKeyFilterValue | nul
       ? "minor"
       : null;
 
-  return { note, scale };
+  return {
+    note,
+    scale,
+    accidental: note.includes("b") ? "flat" : note.includes("#") ? "sharp" : null,
+  };
 }
 
 export function getSongSearchText(song: MusicLibraryFilterSong) {
