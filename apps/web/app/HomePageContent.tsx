@@ -326,7 +326,6 @@ export default function HomePageContent() {
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const [homeSearch, setHomeSearch] = useState("");
-  const [searchBarPinned, setSearchBarPinned] = useState(true);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -374,19 +373,6 @@ export default function HomePageContent() {
   }, []);
 
   useEffect(() => {
-    const updatePinnedState = () => {
-      setSearchBarPinned(window.scrollY <= 0);
-    };
-
-    updatePinnedState();
-    window.addEventListener("scroll", updatePinnedState, { passive: true });
-
-    return () => {
-      window.removeEventListener("scroll", updatePinnedState);
-    };
-  }, []);
-
-  useEffect(() => {
     const searchBar = searchBarRef.current;
     if (!searchBar) return;
 
@@ -415,9 +401,7 @@ export default function HomePageContent() {
       <div className="audioflume-home-reference-searchbar-slot">
         <div
           ref={searchBarRef}
-          className={`audioflume-home-reference-searchbar${
-            searchBarPinned ? " is-pinned-at-top" : ""
-          }`}
+          className="audioflume-home-reference-searchbar"
         >
           <Link href="/music" className="audioflume-home-reference-searchbar-filters">
             <svg viewBox="0 0 24 24" aria-hidden="true">
