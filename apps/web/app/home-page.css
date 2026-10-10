@@ -586,6 +586,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   object-position: center top;
 }
 
+.audioflume-home-reference-ui-graphic.is-light {
+  display: none;
+}
+
 .audioflume-home-reference-ui-overlay {
   position: absolute;
   top: clamp(92px, 7vw, 116px);
@@ -1123,6 +1127,42 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference {
   background: #090909;
+  color: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-ui-showcase {
+  background: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-ui-showcase::before {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.72) 38%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-ui-graphic.is-dark {
+  display: none;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-ui-graphic.is-light {
+  display: block;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-ui-overlay h2 {
+  color: #111111;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-ui-overlay a {
+  background: #111111;
   color: #ffffff;
 }
 
