@@ -320,6 +320,8 @@ export default function HomePageContent() {
   const { setQueue } = usePlayer();
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
+  const searchBarRef = useRef<HTMLDivElement>(null);
+  const [homeSearch, setHomeSearch] = useState("");
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -366,9 +368,26 @@ export default function HomePageContent() {
     };
   }, []);
 
+  useEffect(() => {
+    const searchBar = searchBarRef.current;
+    if (!searchBar) return;
+
+    const preventScrollBounce = (event: WheelEvent | TouchEvent) => {
+      event.preventDefault();
+    };
+
+    searchBar.addEventListener("wheel", preventScrollBounce, { passive: false });
+    searchBar.addEventListener("touchmove", preventScrollBounce, { passive: false });
+
+    return () => {
+      searchBar.removeEventListener("wheel", preventScrollBounce);
+      searchBar.removeEventListener("touchmove", preventScrollBounce);
+    };
+  }, []);
+
   return (
     <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
-      <div className="audioflume-home-reference-searchbar">
+      <div ref={searchBarRef} className="audioflume-home-reference-searchbar">
         <Link href="/music" className="audioflume-home-reference-searchbar-filters">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
@@ -376,13 +395,19 @@ export default function HomePageContent() {
           <span>Filters</span>
         </Link>
 
-        <div className="audioflume-home-reference-searchbar-field">
+        <label className="audioflume-home-reference-searchbar-field">
           <svg viewBox="0 0 24 24" aria-hidden="true">
             <circle cx="11" cy="11" r="6.5" />
             <path d="m16 16 4.5 4.5" />
           </svg>
-          <span>Search by sound, mood, or scene</span>
-        </div>
+          <input
+            type="search"
+            value={homeSearch}
+            onChange={(event) => setHomeSearch(event.target.value)}
+            placeholder="Search by sound, mood, or scene"
+            aria-label="Search by sound, mood, or scene"
+          />
+        </label>
 
         <button
           type="button"
