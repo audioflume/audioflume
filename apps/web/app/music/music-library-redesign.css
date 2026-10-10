@@ -724,6 +724,7 @@ main
   width: 100% !important;
   padding-right: var(--audioflume-music-content-gap) !important;
   padding-left: var(--audioflume-music-content-gap) !important;
+  transition: padding-left 180ms ease;
 }
 
 .audioflume-music-page
