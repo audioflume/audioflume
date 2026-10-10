@@ -637,8 +637,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   bottom: 20px;
   z-index: 3;
   display: grid;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   place-items: center;
   border: 0;
   border-radius: 999px;
@@ -649,8 +649,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-ui-theme-toggle svg {
-  width: 13px;
-  height: 13px;
+  width: 10px;
+  height: 10px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
