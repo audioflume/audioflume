@@ -141,7 +141,7 @@ export default function Footer({
           box-sizing: border-box;
           width: auto;
           margin-top: auto;
-          margin-left: calc(var(--filmwave-side-filter-rail-width) + 8px);
+          margin-left: 0;
         }
 
         .playlist-detail-footer-shell:has(> .playlist-detail-page-footer) {
