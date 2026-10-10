@@ -1085,6 +1085,21 @@ main
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail.is-open
+  .fw-filter-accordion-detail-inner:has(.fw-filter-advanced-accordion) {
+  padding: 0;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  > .fw-filter-accordion-section:has(
+    > .fw-filter-rail-item[data-filter-section-id="advanced"][aria-expanded="true"]
+  ) {
+  border-bottom: 0;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
   .fw-filter-accordion-detail
   .fw-filter-option-list {
   width: 100% !important;
