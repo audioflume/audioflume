@@ -205,5 +205,11 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-panel-inner {
   min-height: 0;
   overflow: hidden;
+  padding: 0;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel.is-open
+  .fw-filter-advanced-panel-inner {
   padding: 14px 20px 18px;
 }
