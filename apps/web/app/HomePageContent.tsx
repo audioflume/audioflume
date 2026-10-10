@@ -482,6 +482,49 @@ export default function HomePageContent() {
         </div>
       </section>
 
+      <section className="audioflume-home-reference-artists">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+          <span>In demand artists &amp; composers</span>
+          <Link href="/discover">Explore Artists &amp; Composers</Link>
+        </div>
+        {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
+      </section>
+
+      <section className="audioflume-home-reference-playlists">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+          <span>Audioflume originals</span>
+          <Link href="/music">Explore Original Music</Link>
+        </div>
+        {(originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
+          <HomeOriginalSongGrid
+            songs={originalSongs.length > 0 ? originalSongs : shelfSongs}
+          />
+        ) : null}
+      </section>
+
+      <section className="audioflume-home-reference-new-songs">
+        <div className="audioflume-home-reference-width">
+          <div className="audioflume-home-reference-section-heading">
+            <span>New songs added daily</span>
+            <Link href="/music">Explore New Music</Link>
+          </div>
+
+          <MusicListShell title={null}>
+            {songsLoading
+              ? Array.from({ length: 8 }).map((_, index) => (
+                  <div
+                    key={index}
+                    className="audioflume-home-reference-song-row-skeleton"
+                    aria-hidden="true"
+                  />
+                ))
+              : recentSongs.map((song) => (
+                  <SongCard key={song.id} song={song} showDivider={false} />
+                ))}
+          </MusicListShell>
+        </div>
+      </section>
+
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
@@ -523,49 +566,6 @@ export default function HomePageContent() {
               custom commissioned work.
             </p>
           </div>
-        </div>
-      </section>
-
-      <section className="audioflume-home-reference-artists">
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-          <span>In demand artists &amp; composers</span>
-          <Link href="/discover">Explore Artists &amp; Composers</Link>
-        </div>
-        {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
-      </section>
-
-      <section className="audioflume-home-reference-playlists">
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-          <span>Audioflume originals</span>
-          <Link href="/music">Explore Original Music</Link>
-        </div>
-        {(originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
-          <HomeOriginalSongGrid
-            songs={originalSongs.length > 0 ? originalSongs : shelfSongs}
-          />
-        ) : null}
-      </section>
-
-      <section className="audioflume-home-reference-new-songs">
-        <div className="audioflume-home-reference-width">
-          <div className="audioflume-home-reference-section-heading">
-            <span>New songs added daily</span>
-            <Link href="/music">Explore New Music</Link>
-          </div>
-
-          <MusicListShell title={null}>
-            {songsLoading
-              ? Array.from({ length: 8 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="audioflume-home-reference-song-row-skeleton"
-                    aria-hidden="true"
-                  />
-                ))
-              : recentSongs.map((song) => (
-                  <SongCard key={song.id} song={song} showDivider={false} />
-                ))}
-          </MusicListShell>
         </div>
       </section>
 
