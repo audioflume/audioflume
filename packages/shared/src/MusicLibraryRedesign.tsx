@@ -73,6 +73,25 @@ function ClearXIcon() {
   );
 }
 
+function RailCountClearIcon() {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      width="11"
+      height="11"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M7 7L17 17M17 7L7 17"
+        stroke="currentColor"
+        strokeWidth="2.6"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 function OptionCheckIcon() {
   return (
     <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
@@ -899,8 +918,8 @@ function MusicAdvancedSection({
                   <span className="fw-filter-advanced-count-num">
                     {getSectionCount(sectionId)}
                   </span>
-                  <span className="fw-filter-advanced-count-clear" aria-hidden="true">
-                    <ClearXIcon />
+                  <span className="fw-filter-rail-count-clear" aria-hidden="true">
+                    <RailCountClearIcon />
                   </span>
                 </span>
               )}
@@ -1179,10 +1198,10 @@ export function MusicFilterPanel({
                               {section.count}
                             </span>
                             <span
-                              className="fw-filter-advanced-count-clear"
+                              className="fw-filter-rail-count-clear"
                               aria-hidden="true"
                             >
-                              <ClearXIcon />
+                              <RailCountClearIcon />
                             </span>
                           </span>
                         ) : (
