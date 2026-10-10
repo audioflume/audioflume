@@ -512,11 +512,3 @@ main > section:has(> .fw-music-content-column + footer) > footer {
   margin-left: calc(var(--filmwave-side-filter-rail-width) + var(--fw-music-content-inset-right, 28px));
 }
 
-main > section:has(> .fw-music-content-column + footer):has(.fw-filter-panel-wrap.has-selected-filter-section)
-  > footer {
-  margin-left: calc(
-    var(--filmwave-side-filter-rail-width) +
-      var(--filmwave-side-filter-detail-width) +
-      var(--fw-music-content-inset-right, 28px)
-  );
-}
