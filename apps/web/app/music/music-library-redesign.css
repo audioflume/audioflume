@@ -646,7 +646,10 @@ main
   > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
   > .fw-music-content-column
   > .fw-song-list {
-  margin-left: var(--fw-music-content-inset-right, 20px) !important;
+  position: relative !important;
+  left: var(--fw-music-content-inset-right, 20px) !important;
+  width: calc(100% - var(--fw-music-content-inset-right, 20px)) !important;
+  margin-left: 0 !important;
 }
 
 .audioflume-music-page
