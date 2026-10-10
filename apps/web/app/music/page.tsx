@@ -855,9 +855,18 @@ export default function MusicPage() {
           aria-expanded={filtersOpen}
           onClick={() => setFiltersOpen((open) => !open)}
         >
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
-          </svg>
+          <span className="audioflume-music-filter-button-icon" aria-hidden="true">
+            <svg
+              className="audioflume-music-filter-button-filter-icon"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+            </svg>
+            <XIcon
+              className="audioflume-music-filter-button-close-icon"
+              size={22}
+            />
+          </span>
           <span>Filters</span>
         </button>
 
