@@ -51,13 +51,42 @@
   cursor: pointer;
 }
 
-.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters svg {
+.audioflume-music-page-searchbar .audioflume-music-filter-button-icon {
+  position: relative;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-music-filter-button-icon
+  > svg {
+  position: absolute;
+  inset: 0;
   width: 22px;
   height: 22px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
   stroke-width: 1.4;
+  transition: opacity 120ms ease;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-music-filter-button-close-icon {
+  opacity: 0;
+}
+
+.audioflume-music-page-searchbar.is-filters-open
+  .audioflume-home-reference-searchbar-filters:hover
+  .audioflume-music-filter-button-filter-icon {
+  opacity: 0;
+}
+
+.audioflume-music-page-searchbar.is-filters-open
+  .audioflume-home-reference-searchbar-filters:hover
+  .audioflume-music-filter-button-close-icon {
+  opacity: 1;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
