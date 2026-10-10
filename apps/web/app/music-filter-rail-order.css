@@ -154,8 +154,9 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-section:last-child {
-  border-bottom: 0;
+  .fw-filter-advanced-accordion
+  > .fw-filter-advanced-section:last-child {
+  border-bottom: 0 !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
