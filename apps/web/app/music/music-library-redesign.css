@@ -646,7 +646,12 @@ main
   width: var(--filmwave-side-filter-rail-width) !important;
   max-width: var(--filmwave-side-filter-rail-width) !important;
   height: var(--audioflume-music-filter-height) !important;
-  margin: 0 0 calc(0px - var(--audioflume-music-filter-height)) 0 !important;
+  margin:
+    0
+    0
+    calc(0px - var(--audioflume-music-filter-height))
+    calc(0px - var(--filmwave-side-filter-rail-width)) !important;
+  background: var(--bg-primary) !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
@@ -678,6 +683,7 @@ main
     var(--filmwave-side-filter-rail-width) +
       var(--filmwave-side-filter-detail-width)
   ) !important;
+  background: var(--bg-primary) !important;
   max-width: calc(
     var(--filmwave-side-filter-rail-width) +
       var(--filmwave-side-filter-detail-width)
