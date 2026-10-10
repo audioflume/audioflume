@@ -989,7 +989,7 @@ main
   .fw-filter-option-check {
   flex: 0 0 auto;
   margin: 0 !important;
-  border-width: 0.5px !important;
+  border-width: 1px !important;
   border-radius: 2px !important;
 }
 
