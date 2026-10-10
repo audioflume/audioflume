@@ -2,8 +2,133 @@
 @import "../../../../packages/shared/styles/music-filter-column-controls.css";
 @import "./fw-hero.css";
 
-html body main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
-  padding-top: calc(var(--filmwave-header-height, 56px) + 18px) !important;
+.audioflume-music-page {
+  padding-top: var(--filmwave-header-height, 75px);
+}
+
+.audioflume-music-page-searchbar {
+  position: sticky;
+  top: var(--filmwave-header-height, 75px);
+  z-index: calc(var(--filmwave-z-search-filter, 60) + 3);
+  display: grid;
+  height: var(--filmwave-header-height, 75px);
+  grid-template-columns: 154px minmax(0, 1fr) 230px;
+  align-items: stretch;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  overscroll-behavior: none;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters,
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field,
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-song {
+  display: flex;
+  align-items: center;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters {
+  gap: 18px;
+  border: 0;
+  border-right: 1px solid var(--border);
+  background: transparent;
+  padding: 0 30px;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+  cursor: pointer;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
+  gap: 18px;
+  padding: 0 34px;
+  color: var(--text-muted);
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field > svg {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 16px;
+  font-weight: 300;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-home-reference-searchbar-field
+  input::-webkit-search-cancel-button,
+.audioflume-music-page-searchbar
+  .audioflume-home-reference-searchbar-field
+  input::-webkit-search-decoration {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-home-reference-searchbar-field
+  input::placeholder {
+  color: var(--text-muted);
+  font-size: 16px;
+  opacity: 1;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-clear {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  padding: 0;
+  cursor: pointer;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-clear svg {
+  width: 7px;
+  height: 7px;
+}
+
+.audioflume-music-page-searchbar .audioflume-home-reference-searchbar-song {
+  justify-content: center;
+  border: 0;
+  border-left: 1px solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 400;
+}
+
+html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
+  padding-top: 18px !important;
 }
 
 html
@@ -420,5 +545,73 @@ main
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.audioflume-music-page
+  > section
+  .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-toolbar-header-search-row {
+  display: none !important;
+}
+
+.audioflume-music-page
+  > section
+  .fw-music-content-column
+  > .fw-toolbar-sticky:not(.is-scroll-revealed) {
+  grid-template-columns: 1fr auto !important;
+}
+
+.audioflume-music-page
+  > section
+  .fw-music-content-column
+  > .fw-toolbar-sticky:not(.is-scroll-revealed)
+  > .fw-toolbar-header-actions {
+  grid-column: 2 !important;
+}
+
+.audioflume-music-page
+  > section
+  .fw-music-content-column
+  > .fw-toolbar-sticky.is-scroll-revealed
+  > .fw-toolbar-header-actions {
+  top: calc((var(--filmwave-header-height, 75px) * 2) + 8px) !important;
+}
+
+.audioflume-music-page
+  > section
+  .fw-music-content-column
+  > .fw-toolbar-sticky
+  > .fw-filter-panel-wrap {
+  top: calc(var(--filmwave-header-height, 75px) * 2) !important;
+}
+
+@media (max-width: 720px) {
+  .audioflume-music-page-searchbar {
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters {
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
+    gap: 12px;
+    padding: 0 18px;
+  }
+
+  .audioflume-music-page-searchbar
+    .audioflume-home-reference-searchbar-field
+    input,
+  .audioflume-music-page-searchbar
+    .audioflume-home-reference-searchbar-field
+    input::placeholder {
+    font-size: 14px;
+  }
+
+  .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-song {
+    display: none;
   }
 }
