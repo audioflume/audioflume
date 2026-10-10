@@ -33,12 +33,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-searchbar {
   display: grid;
-  height: 86px;
+  height: var(--filmwave-header-height, 75px);
   grid-template-columns: 154px minmax(0, 1fr) 230px;
   align-items: stretch;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: #111111;
   color: #ffffff;
+  overscroll-behavior: none;
+  touch-action: none;
 }
 
 .audioflume-home-reference-searchbar-filters,
@@ -70,8 +72,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   gap: 18px;
   padding: 0 34px;
   color: rgba(255, 255, 255, 0.14);
-  font-size: 18px;
-  font-weight: 300;
 }
 
 .audioflume-home-reference-searchbar-field svg {
@@ -82,6 +82,23 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   stroke: currentColor;
   stroke-linecap: round;
   stroke-width: 1.4;
+}
+
+.audioflume-home-reference-searchbar-field input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
+  font-size: 16px;
+  font-weight: 300;
+}
+
+.audioflume-home-reference-searchbar-field input::placeholder {
+  color: rgba(255, 255, 255, 0.14);
+  font-size: 16px;
+  opacity: 1;
 }
 
 .audioflume-home-reference-searchbar-song {
@@ -98,7 +115,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-hero {
   position: relative;
   display: grid;
-  height: calc(100dvh - var(--filmwave-header-height, 75px) - 86px);
+  height: calc(100dvh - (var(--filmwave-header-height, 75px) * 2));
   min-height: 560px;
   place-items: center;
   background-color: var(--bg-primary);
@@ -109,7 +126,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference.has-player .audioflume-home-reference-hero {
   height: calc(
-    100dvh - var(--filmwave-header-height, 75px) - 86px -
+    100dvh - (var(--filmwave-header-height, 75px) * 2) -
       var(--filmwave-player-height, 72px)
   );
 }
@@ -821,7 +838,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-reference-searchbar {
-    height: 68px;
+    height: var(--filmwave-header-height, 75px);
     grid-template-columns: 112px minmax(0, 1fr);
   }
 
@@ -833,6 +850,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-searchbar-field {
     gap: 12px;
     padding: 0 18px;
+  }
+
+  .audioflume-home-reference-searchbar-field input,
+  .audioflume-home-reference-searchbar-field input::placeholder {
     font-size: 14px;
   }
 
@@ -844,14 +865,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-reference-hero {
-    height: calc(100dvh - var(--filmwave-header-height, 75px) - 68px);
+    height: calc(100dvh - (var(--filmwave-header-height, 75px) * 2));
     min-height: 500px;
     background-position: 55% center;
   }
 
   .audioflume-home-reference.has-player .audioflume-home-reference-hero {
     height: calc(
-      100dvh - var(--filmwave-header-height, 75px) - 68px -
+      100dvh - (var(--filmwave-header-height, 75px) * 2) -
         var(--filmwave-player-height, 72px)
     );
   }
