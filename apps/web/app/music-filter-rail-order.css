@@ -302,3 +302,23 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   :is(.fw-segment, .fw-segment > button, .fw-filter-chip, .fw-filter-input) {
   border-radius: 4px;
 }
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-control-stack
+  > .fw-segment
+  + .fw-filter-chip-grid {
+  flex-wrap: nowrap;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-key-spacer {
+  display: none;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel.is-open
+  .fw-filter-advanced-panel-inner:has(.fw-duration-summary) {
+  padding-bottom: 26px;
+}
