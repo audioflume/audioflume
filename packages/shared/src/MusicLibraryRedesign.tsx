@@ -303,7 +303,6 @@ function MusicFilterOptionList({ group }: { group: MusicFilterChipGroup }) {
 
 const BPM_MIN = 1;
 const BPM_MAX = 300;
-const BPM_PRESETS = [80, 105, 120, 140];
 
 type BpmMode = "range" | "exact";
 
@@ -486,23 +485,6 @@ function MusicBpmSection({
         <div className="fw-range-labels"><span>{BPM_MIN}</span><span>{BPM_MAX}</span></div>
       </div>
 
-      <div className="fw-filter-chip-grid fw-filter-subrow">
-        {BPM_PRESETS.map((preset) => {
-          const isSelected = value?.mode === "exact" && value.exact === preset;
-          return (
-            <button key={preset} type="button" aria-pressed={isSelected}
-              className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
-              onClick={() => {
-                if (isSelected) { setExact(BPM_MIN); exactRef.current = BPM_MIN; onChange(null); return; }
-                setMode("exact"); modeRef.current = "exact";
-                setExact(preset); exactRef.current = preset;
-                emitChange("exact", lowRef.current, highRef.current, preset);
-              }}>
-              {preset}
-            </button>
-          );
-        })}
-      </div>
     </div>
   );
 }
@@ -636,7 +618,7 @@ function MusicDurationSection({
           const isSelected = low === intent.low && high === intent.high && hasActive;
           return (
             <button key={intent.title} type="button" aria-pressed={isSelected}
-              className={`fw-filter-chip fw-filter-chip-stacked${isSelected ? " is-selected" : ""}`}
+              className={`fw-filter-chip${isSelected ? " is-selected" : ""}`}
               onClick={() => {
                 if (isSelected) {
                   setLow(DURATION_MIN); setHigh(DURATION_MAX);
@@ -648,7 +630,7 @@ function MusicDurationSection({
                 lowRef.current = intent.low; highRef.current = intent.high;
                 emitChange(intent.low, intent.high);
               }}>
-              <span>{intent.title}</span><small>{intent.detail}</small>
+              {intent.detail}
             </button>
           );
         })}
