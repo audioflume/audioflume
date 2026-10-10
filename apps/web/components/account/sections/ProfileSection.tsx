@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { Button, CardTitle, Feedback, Info, Input, ProfileImageUploader } from "../AccountUI";
+import { Button, Feedback, Input, ProfileImageUploader } from "../AccountUI";
 import { useAccountProfile } from "../hooks/useAccountProfile";
 import { formatDate } from "../accountUtils";
 
@@ -30,47 +30,136 @@ export default function ProfileSection() {
     .toUpperCase();
 
   return (
-    <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-      <div>
-        <CardTitle
-          title="Personal information"
-          description={loadState === "loading" ? "Loading your saved profile..." : "Basic details shown across your account and future customer portal."}
+    <div className="max-w-[860px]">
+      <section className="flex items-center gap-5 border-b border-[var(--border)] pb-7">
+        <ProfileImageUploader
+          initials={initials}
+          value={form.avatar_url}
+          onChange={(value) =>
+            setForm((current) => ({ ...current, avatar_url: value }))
+          }
         />
-        <form onSubmit={saveProfile}>
-          <div className="grid gap-4 pt-4 sm:grid-cols-2">
-            <Input label="First name" value={form.first_name} placeholder="First name" onChange={(value) => setForm((current) => ({ ...current, first_name: value }))} />
-            <Input label="Last name" value={form.last_name} placeholder="Last name" onChange={(value) => setForm((current) => ({ ...current, last_name: value }))} />
-            <Input label="Display name" value={form.display_name} placeholder="Display name" onChange={(value) => setForm((current) => ({ ...current, display_name: value }))} />
-            <Input label="Email address" value={email} readOnly />
-            <Input label="Company / studio" value={form.company_name} placeholder="Add company name" onChange={(value) => setForm((current) => ({ ...current, company_name: value }))} />
-            <Input label="Primary use" value={form.primary_use} placeholder="Documentary, commercial, YouTube..." onChange={(value) => setForm((current) => ({ ...current, primary_use: value }))} />
+        <div className="min-w-0">
+          <div className="truncate font-[family-name:var(--font-aktiv-grotesk)] text-[20px] font-medium tracking-[-0.035em] text-[var(--text-primary)]">
+            {fullName}
           </div>
-          <div className="grid gap-3 pt-5">
-            {message ? <Feedback tone={message.tone} message={message.text} /> : null}
+          <div className="mt-1 truncate text-[13px] text-[var(--text-muted)]">
+            {email}
+          </div>
+        </div>
+      </section>
+
+      <section className="border-b border-[var(--border)] py-8">
+        <div className="mb-6">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+            Personal information
+          </h2>
+          <p className="mt-1.5 max-w-[620px] text-[12.5px] leading-5 text-[var(--text-muted)]">
+            {loadState === "loading"
+              ? "Loading your saved profile..."
+              : "Manage the details attached to your Audioflume account."}
+          </p>
+        </div>
+
+        <form onSubmit={saveProfile}>
+          <div className="grid gap-x-5 gap-y-5 sm:grid-cols-2">
+            <Input
+              label="First name"
+              value={form.first_name}
+              placeholder="First name"
+              onChange={(value) =>
+                setForm((current) => ({ ...current, first_name: value }))
+              }
+            />
+            <Input
+              label="Last name"
+              value={form.last_name}
+              placeholder="Last name"
+              onChange={(value) =>
+                setForm((current) => ({ ...current, last_name: value }))
+              }
+            />
+            <Input
+              label="Display name"
+              value={form.display_name}
+              placeholder="Display name"
+              onChange={(value) =>
+                setForm((current) => ({ ...current, display_name: value }))
+              }
+            />
+            <Input label="Email address" value={email} readOnly />
+            <Input
+              label="Company / studio"
+              value={form.company_name}
+              placeholder="Add company name"
+              onChange={(value) =>
+                setForm((current) => ({ ...current, company_name: value }))
+              }
+            />
+            <Input
+              label="Primary use"
+              value={form.primary_use}
+              placeholder="Documentary, commercial, YouTube..."
+              onChange={(value) =>
+                setForm((current) => ({ ...current, primary_use: value }))
+              }
+            />
+          </div>
+
+          <div className="mt-6 grid gap-3">
+            {message ? (
+              <Feedback tone={message.tone} message={message.text} />
+            ) : null}
             <div className="flex flex-wrap gap-2">
-              <Button type="submit" disabled={saving || !profileChanged || loadState === "loading"}>{saving ? "Saving..." : "Save changes"}</Button>
-              <Button subtle disabled={saving || !profileChanged} onClick={resetProfileForm}>Cancel</Button>
+              <Button
+                type="submit"
+                disabled={saving || !profileChanged || loadState === "loading"}
+              >
+                {saving ? "Saving..." : "Save changes"}
+              </Button>
+              <Button
+                subtle
+                disabled={saving || !profileChanged}
+                onClick={resetProfileForm}
+              >
+                Cancel
+              </Button>
             </div>
           </div>
         </form>
-      </div>
+      </section>
 
-      <div>
-        <div className="pb-5">
-          <div className="flex items-center gap-5">
-            <ProfileImageUploader initials={initials} value={form.avatar_url} onChange={(value) => setForm((current) => ({ ...current, avatar_url: value }))} />
-            <div className="min-w-0">
-              <div className="truncate text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">{fullName}</div>
-              <div className="mt-1 truncate text-xs text-[var(--text-muted)]">{email}</div>
-            </div>
+      <section className="pt-8">
+        <div className="mb-4">
+          <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
+            Account details
+          </h2>
+          <p className="mt-1.5 text-[12.5px] leading-5 text-[var(--text-muted)]">
+            Basic information about your Audioflume membership.
+          </p>
+        </div>
+
+        <dl className="border-t border-[var(--border)]">
+          <div className="grid gap-1 border-b border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
+            <dt className="text-[12px] text-[var(--text-muted)]">Account type</dt>
+            <dd className="text-[13px] font-medium text-[var(--text-primary)]">
+              Audioflume Member
+            </dd>
           </div>
-        </div>
-        <div className="grid gap-3">
-          <Info label="Account type" value="Audioflume Member" />
-          <Info label="Company / studio" value={form.company_name || "Not set"} />
-          <Info label="Member since" value={formatDate(profile?.created_at)} />
-        </div>
-      </div>
+          <div className="grid gap-1 border-b border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
+            <dt className="text-[12px] text-[var(--text-muted)]">Company / studio</dt>
+            <dd className="text-[13px] font-medium text-[var(--text-primary)]">
+              {form.company_name || "Not set"}
+            </dd>
+          </div>
+          <div className="grid gap-1 border-b border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
+            <dt className="text-[12px] text-[var(--text-muted)]">Member since</dt>
+            <dd className="text-[13px] font-medium text-[var(--text-primary)]">
+              {formatDate(profile?.created_at)}
+            </dd>
+          </div>
+        </dl>
+      </section>
     </div>
   );
 }
