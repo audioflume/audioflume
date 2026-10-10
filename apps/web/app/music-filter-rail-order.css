@@ -322,3 +322,18 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-panel-inner:has(.fw-duration-summary) {
   padding-bottom: 26px;
 }
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-control-stack
+  :is(.fw-filter-mini-field > span, .fw-duration-summary) {
+  font-weight: 400;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-duration-summary-mid {
+  font-weight: 400;
+  letter-spacing: normal;
+  text-transform: none;
+}
