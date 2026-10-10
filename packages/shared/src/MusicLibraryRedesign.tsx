@@ -657,7 +657,14 @@ function MusicKeySection({
   );
 
   useEffect(() => {
-    if (value?.note) setAccidental(value.note.includes("b") ? "flat" : "sharp");
+    if (value?.note?.includes("b")) {
+      setAccidental("flat");
+      return;
+    }
+
+    if (value?.note?.includes("#")) {
+      setAccidental("sharp");
+    }
   }, [value]);
 
   const note = value?.note ?? null;
