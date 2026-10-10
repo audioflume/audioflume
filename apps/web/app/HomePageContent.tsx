@@ -32,8 +32,10 @@ const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
 const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/mohammed-kara-3y66ymL7TC8-unsplash%20edited.jpg";
-const HOME_UI_GRAPHIC =
-  "https://images.filmwave.io/images/home/UI%20Graphic.jpg";
+const HOME_UI_GRAPHIC_DARK =
+  "https://images.filmwave.io/images/home/UI-Dark.png";
+const HOME_UI_GRAPHIC_LIGHT =
+  "https://images.filmwave.io/images/home/UI-Light.png";
 
 type HomeArtist = {
   id: string;
@@ -472,8 +474,16 @@ export default function HomePageContent() {
 
       <section className="audioflume-home-reference-ui-showcase">
         <img
-          src={HOME_UI_GRAPHIC}
+          className="audioflume-home-reference-ui-graphic is-dark"
+          src={HOME_UI_GRAPHIC_DARK}
           alt="Audioflume music library interface"
+          draggable={false}
+        />
+        <img
+          className="audioflume-home-reference-ui-graphic is-light"
+          src={HOME_UI_GRAPHIC_LIGHT}
+          alt=""
+          aria-hidden="true"
           draggable={false}
         />
         <div className="audioflume-home-reference-width audioflume-home-reference-ui-overlay">
