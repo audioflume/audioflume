@@ -806,11 +806,14 @@ function MusicAdvancedSection({
               </span>
             </button>
 
-            {isOpen && (
-              <div className="fw-filter-advanced-panel">
+            <div
+              className={`fw-filter-advanced-panel${isOpen ? " is-open" : ""}`}
+              aria-hidden={!isOpen}
+            >
+              <div className="fw-filter-advanced-panel-inner">
                 {renderSection(sectionId)}
               </div>
-            )}
+            </div>
           </div>
         );
       })}
@@ -951,14 +954,13 @@ export function MusicFilterPanel({
   }, [open, onClose]);
 
   const activeSection = sections.find((s) => s.id === activeSectionId);
-  const activeGroup = railGroups.find((g) => g.id === activeSectionId);
-
-  function renderDetail() {
-    if (activeGroup) return <MusicFilterOptionList group={activeGroup} />;
-    if (activeSectionId === "playlist" && onSelectPlaylist)
+  function renderDetail(sectionId = activeSectionId) {
+    const group = railGroups.find((item) => item.id === sectionId);
+    if (group) return <MusicFilterOptionList group={group} />;
+    if (sectionId === "playlist" && onSelectPlaylist)
       return <MusicPlaylistSection playlists={playlists ?? []} loading={playlistsLoading}
         selectedPlaylistId={selectedPlaylistId} onSelect={onSelectPlaylist} />;
-    if (activeSectionId === "advanced" && groupAdvancedControls)
+    if (sectionId === "advanced" && groupAdvancedControls)
       return (
         <MusicAdvancedSection
           bpmValue={bpmValue}
@@ -970,13 +972,13 @@ export function MusicFilterPanel({
           advancedGroups={advancedGroups}
         />
       );
-    if (activeSectionId === "duration" && onDurationsChange)
+    if (sectionId === "duration" && onDurationsChange)
       return <MusicDurationSection selected={selectedDurations} onChange={onDurationsChange} />;
-    if (activeSectionId === "bpm" && onBpmChange)
+    if (sectionId === "bpm" && onBpmChange)
       return <MusicBpmSection value={bpmValue} onChange={onBpmChange} />;
-    if (activeSectionId === "key" && onKeyChange)
+    if (sectionId === "key" && onKeyChange)
       return <MusicKeySection value={keyValue} onChange={onKeyChange} />;
-    if (activeSectionId === "display" && onToggleMarkers)
+    if (sectionId === "display" && onToggleMarkers)
       return (
         <div className="fw-filter-option-list">
           <button type="button" disabled={markersDisabled} aria-pressed={markersActive}
@@ -1026,9 +1028,14 @@ export function MusicFilterPanel({
                       </span>
                     </button>
 
-                    {accordion && isActive ? (
-                      <div className="fw-filter-accordion-detail">
-                        {renderDetail()}
+                    {accordion ? (
+                      <div
+                        className={`fw-filter-accordion-detail${isActive ? " is-open" : ""}`}
+                        aria-hidden={!isActive}
+                      >
+                        <div className="fw-filter-accordion-detail-inner">
+                          {renderDetail(section.id)}
+                        </div>
                       </div>
                     ) : null}
                   </div>
