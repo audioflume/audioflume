@@ -47,7 +47,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   position: relative;
   z-index: 1;
   width: min(1180px, calc(100vw - 80px));
-  margin: 8px 0 0;
+  margin: -28px 0 0;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(56px, 5vw, 76px);
