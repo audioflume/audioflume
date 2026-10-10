@@ -466,8 +466,6 @@ export default function HomePageContent() {
         </div>
       </section>
 
-      {shelfSongs.length > 0 ? <HomeSongShelf songs={shelfSongs} /> : null}
-
       <section className="audioflume-home-reference-ui-showcase">
         <img
           src={HOME_UI_GRAPHIC}
@@ -479,6 +477,8 @@ export default function HomePageContent() {
           <Link href="/sign-up">Create Free Account</Link>
         </div>
       </section>
+
+      {shelfSongs.length > 0 ? <HomeSongShelf songs={shelfSongs} /> : null}
 
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
