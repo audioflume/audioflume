@@ -59,9 +59,10 @@ export function UserMenuGlyph({ name }: { name: UserMenuGlyphName }) {
       )}
       {name === "support" && (
         <>
-          <circle {...common} cx="12" cy="12" r="8" />
-          <circle {...common} cx="12" cy="12" r="3" />
-          <path {...common} d="M7.1 7.1 9.9 9.9M14.1 14.1l2.8 2.8M16.9 7.1l-2.8 2.8M9.9 14.1l-2.8 2.8" />
+          <path {...common} d="M5 12a7 7 0 0 1 14 0" />
+          <path {...common} d="M5 12v3.5A1.5 1.5 0 0 0 6.5 17H8v-6H6.5A1.5 1.5 0 0 0 5 12Z" />
+          <path {...common} d="M19 12v3.5A1.5 1.5 0 0 1 17.5 17H16v-6h1.5A1.5 1.5 0 0 1 19 12Z" />
+          <path {...common} d="M16 18.5c-.8.7-1.9 1-3.2 1H12" />
         </>
       )}
       {name === "sync" && (
