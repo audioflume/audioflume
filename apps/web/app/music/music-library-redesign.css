@@ -782,7 +782,7 @@ main
   > .fw-filter-panel-wrap.is-open
   .fw-license-filter-option {
   padding-right: 8px !important;
-  padding-left: 12px !important;
+  padding-left: 20px !important;
 }
 
 /* Music-page filter internals use the widened web-only rail width. */
@@ -928,7 +928,8 @@ main
   .fw-filter-option-check {
   flex: 0 0 auto;
   margin: 0 !important;
-  border-radius: 3px !important;
+  border-width: 0.5px !important;
+  border-radius: 2px !important;
 }
 
 .audioflume-music-page
@@ -953,4 +954,21 @@ main
   > .fw-filter-panel-wrap.is-open.has-selected-filter-section {
   width: var(--audioflume-music-filter-width, 248px) !important;
   max-width: var(--audioflume-music-filter-width, 248px) !important;
+}
+
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-license-filter-title {
+  padding-left: 20px !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  button.fw-filter-rail-clear-all {
+  margin-left: 12px !important;
 }
