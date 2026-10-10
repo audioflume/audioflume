@@ -13,10 +13,7 @@
   display: grid;
   height: var(--filmwave-header-height, 75px);
   grid-template-columns:
-    calc(
-      var(--filmwave-side-filter-rail-width) +
-        var(--fw-music-content-inset-right, 20px)
-    )
+    208px
     minmax(0, 1fr)
     230px;
   align-items: stretch;
@@ -146,6 +143,15 @@ html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filt
   > .fw-music-content-column
   > .fw-song-list {
   margin-top: 18px !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-song-list {
+  box-sizing: border-box !important;
+  padding-right: var(--fw-music-content-inset-right, 20px) !important;
+  padding-left: var(--fw-music-content-inset-right, 20px) !important;
 }
 
 html
@@ -660,14 +666,14 @@ main
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2) !important;
   display: grid !important;
   grid-template-rows: 1fr !important;
-  width: var(--filmwave-side-filter-rail-width) !important;
-  max-width: var(--filmwave-side-filter-rail-width) !important;
+  width: 208px !important;
+  max-width: 208px !important;
   height: var(--audioflume-music-filter-height) !important;
   margin:
     0
     0
     calc(0px - var(--audioflume-music-filter-height))
-    calc(0px - var(--filmwave-side-filter-rail-width)) !important;
+    calc(0px - 188px) !important;
   background: var(--bg-primary) !important;
   opacity: 0 !important;
   visibility: hidden !important;
