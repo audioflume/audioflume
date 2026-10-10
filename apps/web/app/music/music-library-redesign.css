@@ -145,13 +145,6 @@ html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filt
   margin-top: 18px !important;
 }
 
-.audioflume-music-page
-  > section
-  > .fw-music-content-column
-  > .fw-song-list {
-  padding-left: var(--fw-music-content-inset-right, 20px) !important;
-}
-
 html
   body
   main
@@ -671,7 +664,10 @@ main
     0
     0
     calc(0px - var(--audioflume-music-filter-height))
-    calc(0px - var(--filmwave-side-filter-rail-width)) !important;
+    calc(
+      0px - var(--filmwave-side-filter-rail-width) -
+        var(--fw-music-content-inset-right, 20px)
+    ) !important;
   background: var(--bg-primary) !important;
   opacity: 0 !important;
   visibility: hidden !important;
