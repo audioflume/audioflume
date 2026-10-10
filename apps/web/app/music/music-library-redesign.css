@@ -928,6 +928,7 @@ main
   .fw-filter-option-check {
   flex: 0 0 auto;
   margin: 0 !important;
+  border-radius: 2px !important;
 }
 
 .audioflume-music-page
