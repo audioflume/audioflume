@@ -1073,6 +1073,13 @@ main
   .fw-filter-accordion-detail-inner {
   min-height: 0;
   overflow: hidden;
+  padding: 0;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail.is-open
+  .fw-filter-accordion-detail-inner {
   padding: 8px 0 14px;
 }
 
