@@ -13,14 +13,22 @@
   display: grid;
   height: var(--filmwave-header-height, 75px);
   grid-template-columns:
-    var(--audioflume-music-filter-width, 208px)
+    154px
     minmax(0, 1fr)
     230px;
   align-items: stretch;
+  transition: grid-template-columns 180ms ease;
   border-bottom: 1px solid var(--border);
   background: var(--bg-primary);
   color: var(--text-primary);
   overscroll-behavior: none;
+}
+
+.audioflume-music-page-searchbar.is-filters-open {
+  grid-template-columns:
+    var(--audioflume-music-filter-width, 208px)
+    minmax(0, 1fr)
+    230px;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters,
