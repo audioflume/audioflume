@@ -31,7 +31,7 @@ export default function ProfileSection() {
 
   return (
     <div className="max-w-[860px]">
-      <section className="flex items-center gap-5 border-b border-[var(--border)] pb-7">
+      <section className="flex items-center gap-5 rounded-[14px] bg-[var(--filmwave-white)] p-5">
         <ProfileImageUploader
           initials={initials}
           value={form.avatar_url}
@@ -49,7 +49,7 @@ export default function ProfileSection() {
         </div>
       </section>
 
-      <section className="border-b border-[var(--border)] py-8">
+      <section className="py-8">
         <div className="mb-6">
           <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Personal information
@@ -129,7 +129,7 @@ export default function ProfileSection() {
         </form>
       </section>
 
-      <section className="pt-8">
+      <section className="pt-2">
         <div className="mb-4">
           <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-[18px] font-medium tracking-[-0.03em] text-[var(--text-primary)]">
             Account details
