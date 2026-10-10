@@ -312,7 +312,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller {
   padding-right: 50px;
   padding-left: 50px;
-  gap: 20px;
+  gap: 12px;
 }
 
 .audioflume-home-reference-song-card {
