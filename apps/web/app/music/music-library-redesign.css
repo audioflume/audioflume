@@ -170,16 +170,16 @@
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-chevron {
-  width: 10px !important;
-  height: 10px !important;
+  width: 12px !important;
+  height: 12px !important;
   margin-left: 5px !important;
-  color: var(--text-muted) !important;
+  color: var(--text-primary) !important;
 }
 
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-chevron path {
-  stroke-width: 1.4 !important;
+  stroke-width: 1.6 !important;
 }
 
 html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
