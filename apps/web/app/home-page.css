@@ -43,10 +43,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   height: var(--filmwave-header-height, 75px);
   grid-template-columns:
-    calc(
-      var(--filmwave-side-filter-rail-width, 168px) +
-        var(--fw-music-content-inset-right, 20px)
-    )
+    208px
     minmax(0, 1fr)
     230px;
   align-items: stretch;
