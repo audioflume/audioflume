@@ -129,7 +129,7 @@
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort {
   justify-content: center;
-  gap: 28px;
+  gap: 32px;
 }
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-song {
@@ -213,7 +213,7 @@
   width: 14px !important;
   height: 14px !important;
   flex: 0 0 14px !important;
-  margin-left: 6px !important;
+  margin-left: 4px !important;
   color: var(--text-primary) !important;
 }
 
