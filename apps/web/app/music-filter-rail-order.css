@@ -295,3 +295,10 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   padding-right: 0;
   padding-left: 0;
 }
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-control-stack
+  :is(.fw-segment, .fw-segment > button, .fw-filter-chip, .fw-filter-input) {
+  border-radius: 4px;
+}
