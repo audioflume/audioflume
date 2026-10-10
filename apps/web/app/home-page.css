@@ -476,7 +476,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-original-song-card-play > img,
 .audioflume-home-reference-original-song-card:hover
   .audioflume-home-reference-original-song-card-fallback {
-  transform: scale(1.035);
+  transform: scale(1.018);
 }
 
 .audioflume-home-reference-original-song-card-fallback {
