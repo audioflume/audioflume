@@ -103,7 +103,7 @@
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field
   input::placeholder {
-  color: var(--text-muted);
+  color: rgba(255, 255, 255, 0.14);
   font-size: 16px;
   opacity: 1;
 }
