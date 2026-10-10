@@ -437,7 +437,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 58px 118px;
-  margin-top: 92px;
+  margin-top: 140px;
 }
 
 .audioflume-home-reference-feature-grid > div {
