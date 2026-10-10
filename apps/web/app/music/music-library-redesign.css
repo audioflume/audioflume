@@ -958,6 +958,12 @@ main
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
+  .fw-filter-rail-label {
+  color: var(--text-primary);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
   .fw-filter-accordion-detail {
   box-sizing: border-box;
   width: 100%;
