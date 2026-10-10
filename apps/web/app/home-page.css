@@ -632,8 +632,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: var(--bg-primary);
 }
 
-.audioflume-home-reference-library ~ section,
-.audioflume-home-reference-library ~ footer {
+.audioflume-home-reference-artists,
+.audioflume-home-reference-playlists,
+.audioflume-home-reference-new-songs,
+.audioflume-home-reference-library,
+.audioflume-home-reference-footer {
   background: var(--bg-primary);
 }
 
@@ -695,7 +698,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-artists {
-  padding: 28px 0 88px;
+  padding: 88px 0 88px;
 }
 
 .audioflume-home-reference-artists > .audioflume-home-reference-width,
@@ -1123,9 +1126,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: #ffffff;
 }
 
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artists,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-playlists,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-new-songs,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-library,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-library ~ section,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-library ~ footer {
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-footer {
   background: var(--bg-primary);
   color: var(--text-primary);
 }
