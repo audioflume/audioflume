@@ -117,6 +117,45 @@ export default function Header() {
   }, [transparentAtTop]);
 
   useEffect(() => {
+    let frame = 0;
+
+    function syncElasticScrollOffset() {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const scrollY = window.scrollY;
+        const maxScrollY = Math.max(
+          0,
+          document.documentElement.scrollHeight - window.innerHeight,
+        );
+        const elasticOffset =
+          scrollY < 0
+            ? -scrollY
+            : scrollY > maxScrollY
+              ? maxScrollY - scrollY
+              : 0;
+
+        document.documentElement.style.setProperty(
+          "--filmwave-elastic-scroll-offset",
+          `${elasticOffset}px`,
+        );
+      });
+    }
+
+    syncElasticScrollOffset();
+    window.addEventListener("scroll", syncElasticScrollOffset, { passive: true });
+    window.addEventListener("resize", syncElasticScrollOffset, { passive: true });
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", syncElasticScrollOffset);
+      window.removeEventListener("resize", syncElasticScrollOffset);
+      document.documentElement.style.removeProperty(
+        "--filmwave-elastic-scroll-offset",
+      );
+    };
+  }, []);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
@@ -212,6 +251,10 @@ export default function Header() {
           line-height: 1 !important;
           text-transform: lowercase !important;
           transform: translateY(-1px) !important;
+        }
+
+        .filmwave-web-header {
+          transform: translateY(var(--filmwave-elastic-scroll-offset, 0px)) !important;
         }
 
         .filmwave-web-header,
