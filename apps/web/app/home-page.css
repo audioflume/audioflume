@@ -82,7 +82,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-searchbar-field {
   gap: 18px;
   padding: 0 34px;
-  color: rgba(255, 255, 255, 0.14);
+  color: #323232;
 }
 
 .audioflume-home-reference-searchbar-field svg {
@@ -116,7 +116,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-searchbar-field input::placeholder {
-  color: rgba(255, 255, 255, 0.14);
+  color: #323232;
   font-size: 16px;
   opacity: 1;
 }
@@ -130,7 +130,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   justify-content: center;
   border: 0;
   background: transparent;
-  color: rgba(255, 255, 255, 0.58);
+  color: #9b9b9b;
   padding: 0;
   cursor: pointer;
 }
@@ -1161,7 +1161,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field {
-  color: var(--text-muted);
+  color: #949494;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field input {
@@ -1169,11 +1169,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field input::placeholder {
-  color: var(--text-muted);
+  color: #949494;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear {
-  color: var(--text-muted);
+  color: #949494;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear:hover,
