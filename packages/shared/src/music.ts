@@ -152,4 +152,5 @@ export type FilmwaveBpmFilterValue = {
 export type FilmwaveKeyFilterValue = {
   note: string;
   scale: "major" | "minor" | null;
+  accidental?: "sharp" | "flat" | null;
 };
