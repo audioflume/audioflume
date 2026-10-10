@@ -172,7 +172,7 @@ function createLicenseFilterBox() {
 
   const detail = document.createElement("div");
   detail.className = "fw-filter-accordion-detail fw-license-filter-detail";
-  detail.hidden = true;
+  detail.setAttribute("aria-hidden", "true");
 
   const options = document.createElement("div");
   options.className = "fw-license-filter-options";
@@ -225,13 +225,17 @@ function createLicenseFilterBox() {
     options.appendChild(label);
   });
 
-  detail.appendChild(options);
+  const detailInner = document.createElement("div");
+  detailInner.className = "fw-filter-accordion-detail-inner";
+  detailInner.appendChild(options);
+  detail.appendChild(detailInner);
   box.appendChild(detail);
 
   trigger.addEventListener("click", () => {
     const isOpen = trigger.getAttribute("aria-expanded") === "true";
     trigger.setAttribute("aria-expanded", String(!isOpen));
-    detail.hidden = isOpen;
+    detail.classList.toggle("is-open", !isOpen);
+    detail.setAttribute("aria-hidden", String(isOpen));
   });
 
   syncLicenseFilterBoxState(box);
