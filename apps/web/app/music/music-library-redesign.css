@@ -175,6 +175,7 @@
   min-width: max-content !important;
   max-width: none !important;
   height: auto !important;
+  gap: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -213,14 +214,14 @@
   width: 14px !important;
   height: 14px !important;
   flex: 0 0 14px !important;
-  margin-left: 4px !important;
+  margin-left: 3px !important;
   color: var(--text-primary) !important;
 }
 
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-button > svg {
-  margin-left: 4px !important;
+  margin-left: 3px !important;
 }
 
 .audioflume-music-page-searchbar
