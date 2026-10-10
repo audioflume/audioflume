@@ -1010,7 +1010,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
   .audioflume-home-reference-searchbar-filters {
     gap: 12px;
-    padding: 0 var(--filmwave-page-gutter);
+    padding: 0 20px;
   }
 
   .audioflume-home-reference-searchbar-field {
