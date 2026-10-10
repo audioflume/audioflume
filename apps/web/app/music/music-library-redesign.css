@@ -142,7 +142,8 @@
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-button {
   width: auto !important;
-  min-width: 0 !important;
+  min-width: max-content !important;
+  max-width: none !important;
   height: auto !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -154,6 +155,15 @@
   font-weight: 400 !important;
   line-height: 1 !important;
   box-shadow: none !important;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar-sort
+  .filmwave-music-sort-button > span {
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
 }
 
 .audioflume-music-page-searchbar
