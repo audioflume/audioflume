@@ -1031,6 +1031,7 @@ main
   .fw-filter-rail.is-accordion {
   width: 100% !important;
   max-width: 100% !important;
+  padding-top: 0 !important;
 }
 
 .audioflume-music-page
@@ -1111,6 +1112,19 @@ main
   .fw-filter-rail.is-accordion
   > .fw-filter-accordion-section {
   border-bottom: 1px solid var(--border);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  > .fw-filter-accordion-section:has(
+    .fw-filter-rail-item[data-filter-section-id="cuePoints"]
+  ),
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  > .fw-filter-accordion-section:has(
+    .fw-filter-rail-item[data-filter-section-id="display"]
+  ) {
+  display: none;
 }
 
 .audioflume-music-page
