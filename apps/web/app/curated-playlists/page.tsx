@@ -416,18 +416,15 @@ export default function CuratedPlaylistsPage() {
       <section className="curated-playlists-page-layer">
         <div className="px-8">
           <section
-            className="mt-[calc(clamp(56px,5vw,80px)-var(--filmwave-page-top-gap,22px))] mb-[clamp(56px,5vw,80px)] grid grid-cols-1 items-start gap-8 md:grid-cols-[minmax(0,1.05fr)_minmax(280px,0.95fr)] md:[align-items:last_baseline] md:gap-[clamp(64px,9vw,150px)]"
+            className="curated-page-intro"
             aria-labelledby="curated-page-heading"
           >
-            <div>
-              <h1
-                id="curated-page-heading"
-                className="m-0 max-w-[520px] font-[family-name:var(--font-aktiv-grotesk)] text-[48px] font-[300] leading-[1.04] tracking-[-0.035em] text-[var(--text-primary)]"
-              >
+            <div className="curated-page-intro-copy">
+              <h1 id="curated-page-heading">
                 Human curated playlists made by real filmmakers.
               </h1>
             </div>
-            <p className="audioflume-editorial-support" style={{ letterSpacing: "0" }}>
+            <p className="curated-page-intro-support">
               Playlists shaped by real working filmmakers that help find the right
               track faster and cut through the noise.
             </p>
