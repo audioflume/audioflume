@@ -653,10 +653,15 @@ function MusicKeySection({
   onChange: (value: FilmwaveKeyFilterValue | null) => void;
 }) {
   const [accidental, setAccidental] = useState<"sharp" | "flat">(
-    value?.note?.includes("b") ? "flat" : "sharp",
+    value?.accidental ?? (value?.note?.includes("b") ? "flat" : "sharp"),
   );
 
   useEffect(() => {
+    if (value?.accidental) {
+      setAccidental(value.accidental);
+      return;
+    }
+
     if (value?.note?.includes("b")) {
       setAccidental("flat");
       return;
@@ -670,9 +675,16 @@ function MusicKeySection({
   const note = value?.note ?? null;
   const scale = value?.scale ?? null;
 
-  function emit(nextNote: string | null, nextScale: "major" | "minor" | null) {
-    if (!nextNote && !nextScale) { onChange(null); return; }
-    onChange({ note: nextNote ?? "", scale: nextScale });
+  function emit(
+    nextNote: string | null,
+    nextScale: "major" | "minor" | null,
+    nextAccidental: "sharp" | "flat" = accidental,
+  ) {
+    onChange({
+      note: nextNote ?? "",
+      scale: nextScale,
+      accidental: nextAccidental,
+    });
   }
 
   const accidentals = accidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
@@ -682,7 +694,10 @@ function MusicKeySection({
       <div className="fw-segment">
         {(["sharp", "flat"] as const).map((m) => (
           <button key={m} type="button" className={accidental === m ? "is-active" : ""}
-            onClick={() => setAccidental(m)}>
+            onClick={() => {
+              setAccidental(m);
+              emit(note, scale, m);
+            }}>
             {m === "sharp" ? "Sharp" : "Flat"}
           </button>
         ))}
