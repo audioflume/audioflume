@@ -16,6 +16,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference {
   --home-reference-width: min(1180px, calc(100vw - 100px));
+  padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
   background: #090909;
   color: var(--text-primary);
@@ -97,8 +98,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-hero {
   position: relative;
   display: grid;
-  height: 100dvh;
-  min-height: 730px;
+  height: calc(100dvh - var(--filmwave-header-height, 75px) - 86px);
+  min-height: 560px;
   place-items: center;
   background-color: var(--bg-primary);
   background-position: center;
@@ -107,7 +108,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference.has-player .audioflume-home-reference-hero {
-  height: calc(100dvh - var(--filmwave-player-height, 72px));
+  height: calc(
+    100dvh - var(--filmwave-header-height, 75px) - 86px -
+      var(--filmwave-player-height, 72px)
+  );
 }
 
 .audioflume-home-reference-hero-shade {
@@ -826,13 +830,16 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-reference-hero {
-    height: 100dvh;
-    min-height: 560px;
+    height: calc(100dvh - var(--filmwave-header-height, 75px) - 68px);
+    min-height: 500px;
     background-position: 55% center;
   }
 
   .audioflume-home-reference.has-player .audioflume-home-reference-hero {
-    height: calc(100dvh - var(--filmwave-player-height, 72px));
+    height: calc(
+      100dvh - var(--filmwave-header-height, 75px) - 68px -
+        var(--filmwave-player-height, 72px)
+    );
   }
 
   .audioflume-home-reference-hero h1 {
