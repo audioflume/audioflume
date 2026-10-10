@@ -344,6 +344,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   filter: blur(34px);
   opacity: 0.78;
   transform: scale(1.16);
+  transition: transform 220ms ease;
+}
+
+.audioflume-home-reference-song-card:hover
+  .audioflume-home-reference-song-card-background {
+  transform: scale(1.19);
 }
 
 .audioflume-home-reference-song-card-play::after {
