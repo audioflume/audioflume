@@ -800,6 +800,7 @@ export default function MusicPage() {
       options: availableFilterOptions.regions,
       selected: selectedRegions,
       onToggle: toggleIn(selectedRegions, setSelectedRegions),
+      onClear: () => setSelectedRegions([]),
     },
     {
       id: "instruments",
@@ -821,6 +822,7 @@ export default function MusicPage() {
       options: availableFilterOptions.builds,
       selected: selectedBuilds,
       onToggle: toggleIn(selectedBuilds, setSelectedBuilds),
+      onClear: () => setSelectedBuilds([]),
     },
     {
       id: "cuePoints",
@@ -941,6 +943,7 @@ export default function MusicPage() {
             selectedDurations={selectedDurations}
             onDurationsChange={setSelectedDurations}
             groupAdvancedControls
+            advancedCountControls
             advancedGroupIds={["build", "region"]}
             markersActive={effectiveShowEditPointMarkers}
             markersDisabled={!filtersHydrated}
