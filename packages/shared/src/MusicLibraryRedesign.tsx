@@ -97,6 +97,7 @@ export type MusicFilterChipGroup = {
   options: string[];
   selected: string[];
   onToggle: (option: string) => void;
+  onClear?: () => void;
 };
 
 type MusicLibraryToolbarProps = {
@@ -757,6 +758,7 @@ function MusicAdvancedSection({
   selectedDurations,
   onDurationsChange,
   advancedGroups,
+  showCountControls = false,
 }: {
   bpmValue: FilmwaveBpmFilterValue | null;
   onBpmChange?: (value: FilmwaveBpmFilterValue | null) => void;
@@ -765,6 +767,7 @@ function MusicAdvancedSection({
   selectedDurations: string[];
   onDurationsChange?: (selected: string[]) => void;
   advancedGroups: MusicFilterChipGroup[];
+  showCountControls?: boolean;
 }) {
   const advancedGroupById = new Map(
     advancedGroups.map((group) => [group.id, group]),
@@ -801,6 +804,32 @@ function MusicAdvancedSection({
     return group ? <MusicFilterOptionList group={group} /> : null;
   }
 
+  function getSectionCount(sectionId: MusicAdvancedSectionId) {
+    if (sectionId === "key") return keyValue ? 1 : 0;
+    if (sectionId === "bpm") return bpmValue ? 1 : 0;
+    if (sectionId === "duration") return selectedDurations.length > 0 ? 1 : 0;
+    return advancedGroupById.get(sectionId)?.selected.length ?? 0;
+  }
+
+  function clearSection(sectionId: MusicAdvancedSectionId) {
+    if (sectionId === "key") {
+      onKeyChange?.(null);
+      return;
+    }
+
+    if (sectionId === "bpm") {
+      onBpmChange?.(null);
+      return;
+    }
+
+    if (sectionId === "duration") {
+      onDurationsChange?.([]);
+      return;
+    }
+
+    advancedGroupById.get(sectionId)?.onClear?.();
+  }
+
   return (
     <div className="fw-filter-advanced-accordion">
       {availableSectionIds.map((sectionId) => {
@@ -827,6 +856,33 @@ function MusicAdvancedSection({
               }
             >
               <span className="fw-filter-advanced-trigger-label">{label}</span>
+              {showCountControls && getSectionCount(sectionId) > 0 && (
+                <span
+                  className="fw-filter-advanced-count"
+                  role="button"
+                  tabIndex={0}
+                  aria-label={`Clear ${label} filters`}
+                  title={`Clear ${label} filters`}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    event.stopPropagation();
+                    clearSection(sectionId);
+                  }}
+                  onKeyDown={(event) => {
+                    if (event.key !== "Enter" && event.key !== " ") return;
+                    event.preventDefault();
+                    event.stopPropagation();
+                    clearSection(sectionId);
+                  }}
+                >
+                  <span className="fw-filter-advanced-count-num">
+                    {getSectionCount(sectionId)}
+                  </span>
+                  <span className="fw-filter-advanced-count-clear" aria-hidden="true">
+                    <ClearXIcon />
+                  </span>
+                </span>
+              )}
               <span
                 className="fw-filter-advanced-trigger-chevron"
                 aria-hidden="true"
@@ -911,6 +967,7 @@ type MusicFilterPanelProps = {
   onClearAll?: () => void;
   onClose: () => void;
   accordion?: boolean;
+  advancedCountControls?: boolean;
 };
 
 export function MusicFilterPanel({
@@ -935,6 +992,7 @@ export function MusicFilterPanel({
   onClearAll,
   onClose,
   accordion = false,
+  advancedCountControls = false,
 }: MusicFilterPanelProps) {
   const advancedGroupIdSet = new Set(advancedGroupIds);
   const advancedGroups = groupAdvancedControls
@@ -948,6 +1006,14 @@ export function MusicFilterPanel({
     (bpmValue ? 1 : 0) +
     (keyValue ? 1 : 0) +
     advancedGroups.reduce((count, group) => count + group.selected.length, 0);
+
+  function clearAdvancedFilters() {
+    onDurationsChange?.([]);
+    onBpmChange?.(null);
+    onKeyChange?.(null);
+    advancedGroups.forEach((group) => group.onClear?.());
+  }
+
   const hasAdvancedControls = Boolean(
     onDurationsChange || onBpmChange || onKeyChange || advancedGroups.length > 0,
   );
@@ -999,6 +1065,7 @@ export function MusicFilterPanel({
           selectedDurations={selectedDurations}
           onDurationsChange={onDurationsChange}
           advancedGroups={advancedGroups}
+          showCountControls={advancedCountControls}
         />
       );
     if (sectionId === "duration" && onDurationsChange)
@@ -1049,9 +1116,39 @@ export function MusicFilterPanel({
                       }
                     >
                       <span className="fw-filter-rail-label">{section.label}</span>
-                      {section.count > 0 && (
-                        <span className="fw-filter-rail-count">{section.count}</span>
-                      )}
+                      {section.count > 0 &&
+                        (advancedCountControls && section.id === "advanced" ? (
+                          <span
+                            className="fw-filter-advanced-count"
+                            role="button"
+                            tabIndex={0}
+                            aria-label="Clear all Advanced filters"
+                            title="Clear all Advanced filters"
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              clearAdvancedFilters();
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key !== "Enter" && event.key !== " ") return;
+                              event.preventDefault();
+                              event.stopPropagation();
+                              clearAdvancedFilters();
+                            }}
+                          >
+                            <span className="fw-filter-advanced-count-num">
+                              {section.count}
+                            </span>
+                            <span
+                              className="fw-filter-advanced-count-clear"
+                              aria-hidden="true"
+                            >
+                              <ClearXIcon />
+                            </span>
+                          </span>
+                        ) : (
+                          <span className="fw-filter-rail-count">{section.count}</span>
+                        ))}
                       <span className="fw-filter-rail-chevron" aria-hidden="true">
                         <ChevronRightIcon />
                       </span>
