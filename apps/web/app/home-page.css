@@ -371,20 +371,25 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-ui-showcase > img {
   display: block;
   width: 100%;
-  height: clamp(520px, 48vw, 760px);
+  height: clamp(390px, 32vw, 520px);
   object-fit: cover;
-  object-position: center;
+  object-position: center top;
 }
 
 .audioflume-home-reference-ui-overlay {
   position: absolute;
-  right: 0;
-  bottom: 42px;
-  left: 0;
+  top: clamp(72px, 6vw, 96px);
+  right: auto;
+  bottom: auto;
+  left: 50%;
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 40px;
+  width: max-content;
+  max-width: calc(100vw - 100px);
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  margin: 0;
+  transform: translateX(-50%);
 }
 
 .audioflume-home-reference-ui-overlay h2 {
@@ -758,14 +763,18 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   }
 
   .audioflume-home-reference-ui-showcase > img {
-    height: 390px;
+    height: 340px;
   }
 
   .audioflume-home-reference-ui-overlay {
-    bottom: 24px;
+    top: 48px;
+    bottom: auto;
+    width: calc(100vw - 40px);
+    max-width: none;
     align-items: flex-start;
     flex-direction: column;
     gap: 18px;
+    transform: translateX(-50%);
   }
 
   .audioflume-home-reference-library {
