@@ -1,6 +1,17 @@
-/* Home-only transparent header: border returns with the existing solid/scrolled state. */
+/* Home-only header treatment for the mockup layout. */
 body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
-  border-bottom-color: transparent !important;
+  --filmwave-chrome-surface: #111111;
+  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
+  background: #111111 !important;
+  background-color: #111111 !important;
+  color: #ffffff !important;
+}
+
+body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
+body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-logo-action,
+body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-actions,
+body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-nav-link {
+  color: #ffffff !important;
 }
 
 .audioflume-home-reference {
@@ -17,6 +28,70 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-width {
   width: var(--home-reference-width);
   margin: 0 auto;
+}
+
+.audioflume-home-reference-searchbar {
+  display: grid;
+  height: 86px;
+  grid-template-columns: 154px minmax(0, 1fr) 230px;
+  align-items: stretch;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: #111111;
+  color: #ffffff;
+}
+
+.audioflume-home-reference-searchbar-filters,
+.audioflume-home-reference-searchbar-field,
+.audioflume-home-reference-searchbar-song {
+  display: flex;
+  align-items: center;
+}
+
+.audioflume-home-reference-searchbar-filters {
+  gap: 18px;
+  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0 30px;
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.audioflume-home-reference-searchbar-filters svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+}
+
+.audioflume-home-reference-searchbar-field {
+  gap: 18px;
+  padding: 0 34px;
+  color: rgba(255, 255, 255, 0.14);
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.audioflume-home-reference-searchbar-field svg {
+  width: 28px;
+  height: 28px;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+}
+
+.audioflume-home-reference-searchbar-song {
+  justify-content: center;
+  border: 0;
+  border-left: 1px solid rgba(255, 255, 255, 0.08);
+  background: transparent;
+  color: #ffffff;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 400;
 }
 
 .audioflume-home-reference-hero {
@@ -727,6 +802,25 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 @media (max-width: 720px) {
+  .audioflume-home-reference-searchbar {
+    height: 68px;
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .audioflume-home-reference-searchbar-filters {
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  .audioflume-home-reference-searchbar-field {
+    gap: 12px;
+    padding: 0 18px;
+    font-size: 14px;
+  }
+
+  .audioflume-home-reference-searchbar-song {
+    display: none;
+  }
   .audioflume-home-reference {
     --home-reference-width: calc(100vw - 40px);
   }
