@@ -658,9 +658,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   stroke-width: 1.35;
 }
 
+.audioflume-home-reference-ui-theme-toggle svg:has(circle) {
+  width: 12px;
+  height: 12px;
+}
+
 .audioflume-home-reference-ui-theme-toggle svg path:only-child {
   fill: currentColor;
   stroke: none;
+  transform: translate(0.7px, -0.3px);
 }
 
 .audioflume-home-reference-library {
