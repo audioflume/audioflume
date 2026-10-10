@@ -368,6 +368,31 @@ export default function HomePageContent() {
 
   return (
     <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
+      <div className="audioflume-home-reference-searchbar">
+        <Link href="/music" className="audioflume-home-reference-searchbar-filters">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+          </svg>
+          <span>Filters</span>
+        </Link>
+
+        <div className="audioflume-home-reference-searchbar-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5" />
+            <path d="m16 16 4.5 4.5" />
+          </svg>
+          <span>Search by sound, mood, or scene</span>
+        </div>
+
+        <button
+          type="button"
+          className="audioflume-home-reference-searchbar-song"
+          aria-label="Search by song"
+        >
+          Search by song
+        </button>
+      </div>
+
       <section
         className="audioflume-home-reference-hero"
         style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
