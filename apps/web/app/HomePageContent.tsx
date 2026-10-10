@@ -432,7 +432,7 @@ export default function HomePageContent() {
                 onClick={() => setHomeSearch("")}
                 aria-label="Clear search"
               >
-                <XIcon size={10} />
+                <XIcon size={8} />
               </button>
             ) : null}
           </form>
