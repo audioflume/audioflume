@@ -509,7 +509,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-original-song-grid {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 20px;
+  column-gap: 20px;
+  row-gap: 32px;
   padding: 0 50px;
 }
 
