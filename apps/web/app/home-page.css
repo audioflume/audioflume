@@ -108,12 +108,40 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font: inherit;
   font-size: 16px;
   font-weight: 300;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.audioflume-home-reference-searchbar-field input::-webkit-search-cancel-button,
+.audioflume-home-reference-searchbar-field input::-webkit-search-decoration {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .audioflume-home-reference-searchbar-field input::placeholder {
   color: rgba(255, 255, 255, 0.14);
   font-size: 16px;
   opacity: 1;
+}
+
+.audioflume-home-reference-searchbar-clear {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.58);
+  padding: 0;
+  cursor: pointer;
+}
+
+.audioflume-home-reference-searchbar-clear:hover,
+.audioflume-home-reference-searchbar-clear:focus-visible {
+  color: #ffffff;
 }
 
 .audioflume-home-reference-searchbar-song {
@@ -1012,6 +1040,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field input::placeholder {
   color: var(--text-muted);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear {
+  color: var(--text-muted);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear:focus-visible {
+  color: var(--text-primary);
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference {
