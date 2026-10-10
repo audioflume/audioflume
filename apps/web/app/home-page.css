@@ -225,6 +225,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   object-fit: cover;
 }
 
+.audioflume-home-reference-song-card-art-icon {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  color: #ffffff;
+  pointer-events: none;
+}
+
 .audioflume-home-reference-song-card-fallback {
   position: absolute;
   inset: 0;
