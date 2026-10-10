@@ -132,6 +132,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   cursor: pointer;
 }
 
+.audioflume-home-reference-searchbar-clear svg {
+  width: 7px;
+  height: 7px;
+}
+
 .audioflume-home-reference-searchbar-clear:hover,
 .audioflume-home-reference-searchbar-clear:focus-visible {
   color: #ffffff;
