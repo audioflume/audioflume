@@ -30,7 +30,7 @@ function formatScaleLabel(scale: ScaleMode) {
 
 export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
   const [open, setOpen] = useState(false);
-  const [accidental, setAccidental] = useState<AccidentalMode>(
+  const [displayAccidental, setDisplayAccidental] = useState<AccidentalMode>(
     value?.accidental ?? getAccidentalModeFromNote(value?.note ?? null),
   );
   const [selectedNote, setSelectedNote] = useState<string | null>(
@@ -58,9 +58,9 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setScaleMode(value?.scale ?? null);
 
     if (value?.accidental) {
-      setAccidental(value.accidental);
+      setDisplayAccidental(value.accidental);
     } else if (value?.note) {
-      setAccidental(getAccidentalModeFromNote(value.note));
+      setDisplayAccidental(getAccidentalModeFromNote(value.note));
     }
   }, [value]);
 
@@ -70,7 +70,7 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setSelectedNote(nextNote);
 
     if (nextNote) {
-      onChange({ note: nextNote, scale: scaleMode, accidental });
+      onChange({ note: nextNote, scale: scaleMode, accidental: value?.accidental ?? null });
       return;
     }
 
@@ -83,7 +83,7 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setScaleMode(next);
 
     if (selectedNote) {
-      onChange({ note: selectedNote, scale: next, accidental });
+      onChange({ note: selectedNote, scale: next, accidental: value?.accidental ?? null });
     }
   }
 
@@ -93,8 +93,9 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     onChange(null);
   }
 
+  const accidental = value?.accidental ?? null;
   const accidentals =
-    accidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
+    displayAccidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
   const hasActive = value !== null;
   const keyActiveLabel = value
     ? [value.note, formatScaleLabel(value.scale)].filter(Boolean).join(" ")
@@ -129,11 +130,18 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
                 key={mode}
                 type="button"
                 onClick={() => {
-                  setAccidental(mode);
+                  setDisplayAccidental(mode);
+                  const nextAccidental = accidental === mode ? null : mode;
+
+                  if (!selectedNote && !scaleMode && !nextAccidental) {
+                    onChange(null);
+                    return;
+                  }
+
                   onChange({
                     note: selectedNote ?? "",
                     scale: scaleMode,
-                    accidental: mode,
+                    accidental: nextAccidental,
                   });
                 }}
                 className={`filmwave-filter-segment-button${
