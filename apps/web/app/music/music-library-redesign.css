@@ -214,14 +214,15 @@
   width: 14px !important;
   height: 14px !important;
   flex: 0 0 14px !important;
-  margin-left: 3px !important;
+  margin-left: 4px !important;
+  transform: translateY(1px);
   color: var(--text-primary) !important;
 }
 
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-button > svg {
-  margin-left: 3px !important;
+  margin-left: 4px !important;
 }
 
 .audioflume-music-page-searchbar
