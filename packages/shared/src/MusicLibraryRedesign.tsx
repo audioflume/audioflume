@@ -652,34 +652,40 @@ function MusicKeySection({
   value: FilmwaveKeyFilterValue | null;
   onChange: (value: FilmwaveKeyFilterValue | null) => void;
 }) {
-  const [accidental, setAccidental] = useState<"sharp" | "flat">(
+  const [displayAccidental, setDisplayAccidental] = useState<"sharp" | "flat">(
     value?.accidental ?? (value?.note?.includes("b") ? "flat" : "sharp"),
   );
 
   useEffect(() => {
     if (value?.accidental) {
-      setAccidental(value.accidental);
+      setDisplayAccidental(value.accidental);
       return;
     }
 
     if (value?.note?.includes("b")) {
-      setAccidental("flat");
+      setDisplayAccidental("flat");
       return;
     }
 
     if (value?.note?.includes("#")) {
-      setAccidental("sharp");
+      setDisplayAccidental("sharp");
     }
   }, [value]);
 
   const note = value?.note ?? null;
   const scale = value?.scale ?? null;
+  const accidental = value?.accidental ?? null;
 
   function emit(
     nextNote: string | null,
     nextScale: "major" | "minor" | null,
-    nextAccidental: "sharp" | "flat" = accidental,
+    nextAccidental: "sharp" | "flat" | null = accidental,
   ) {
+    if (!nextNote && !nextScale && !nextAccidental) {
+      onChange(null);
+      return;
+    }
+
     onChange({
       note: nextNote ?? "",
       scale: nextScale,
@@ -687,7 +693,8 @@ function MusicKeySection({
     });
   }
 
-  const accidentals = accidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
+  const accidentals =
+    displayAccidental === "sharp" ? SHARP_ACCIDENTALS : FLAT_ACCIDENTALS;
 
   return (
     <div className="fw-filter-control-stack">
@@ -695,8 +702,8 @@ function MusicKeySection({
         {(["sharp", "flat"] as const).map((m) => (
           <button key={m} type="button" className={accidental === m ? "is-active" : ""}
             onClick={() => {
-              setAccidental(m);
-              emit(note, scale, m);
+              setDisplayAccidental(m);
+              emit(note, scale, accidental === m ? null : m);
             }}>
             {m === "sharp" ? "Sharp" : "Flat"}
           </button>
