@@ -140,12 +140,39 @@ function syncLicenseFilterBoxState(box: HTMLElement) {
 
 function createLicenseFilterBox() {
   const box = document.createElement("div");
-  box.className = LICENSE_FILTER_BOX_CLASS;
+  box.className = `fw-filter-accordion-section ${LICENSE_FILTER_BOX_CLASS}`;
 
-  const title = document.createElement("div");
-  title.className = "fw-license-filter-title";
-  title.textContent = "LICENSES";
-  box.appendChild(title);
+  const trigger = document.createElement("button");
+  trigger.type = "button";
+  trigger.className = "fw-filter-rail-item fw-license-filter-trigger";
+  trigger.setAttribute("aria-expanded", "false");
+
+  const title = document.createElement("span");
+  title.className = "fw-filter-rail-label";
+  title.textContent = "Licenses";
+
+  const chevron = document.createElement("span");
+  chevron.className = "fw-filter-rail-chevron";
+  chevron.setAttribute("aria-hidden", "true");
+  chevron.innerHTML = `
+    <svg viewBox="0 0 24 24" width="12" height="12" fill="none">
+      <path
+        d="M9 6L15 12L9 18"
+        stroke="currentColor"
+        stroke-width="2"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  `;
+
+  trigger.appendChild(title);
+  trigger.appendChild(chevron);
+  box.appendChild(trigger);
+
+  const detail = document.createElement("div");
+  detail.className = "fw-filter-accordion-detail fw-license-filter-detail";
+  detail.hidden = true;
 
   const options = document.createElement("div");
   options.className = "fw-license-filter-options";
@@ -198,7 +225,15 @@ function createLicenseFilterBox() {
     options.appendChild(label);
   });
 
-  box.appendChild(options);
+  detail.appendChild(options);
+  box.appendChild(detail);
+
+  trigger.addEventListener("click", () => {
+    const isOpen = trigger.getAttribute("aria-expanded") === "true";
+    trigger.setAttribute("aria-expanded", String(!isOpen));
+    detail.hidden = isOpen;
+  });
+
   syncLicenseFilterBoxState(box);
   return box;
 }
