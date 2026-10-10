@@ -31,7 +31,7 @@ export default function ProfileSection() {
 
   return (
     <div className="max-w-[860px]">
-      <section className="flex items-center gap-5 rounded-[14px] bg-[var(--filmwave-white)] p-5">
+      <section className="flex items-center gap-5">
         <ProfileImageUploader
           initials={initials}
           value={form.avatar_url}
