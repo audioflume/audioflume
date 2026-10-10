@@ -402,6 +402,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-library {
   padding: 156px 0 166px;
+  background: var(--bg-primary);
+}
+
+.audioflume-home-reference-library ~ section,
+.audioflume-home-reference-library ~ footer {
+  background: var(--bg-primary);
 }
 
 .audioflume-home-reference-library-grid {
