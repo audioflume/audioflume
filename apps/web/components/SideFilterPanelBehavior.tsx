@@ -196,6 +196,28 @@ function createLicenseFilterBox() {
   countNumber.className = "fw-filter-advanced-count-num";
   count.appendChild(countNumber);
 
+  const countClear = document.createElement("span");
+  countClear.className = "fw-filter-rail-count-clear";
+  countClear.setAttribute("aria-hidden", "true");
+  countClear.innerHTML = `
+    <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
+      <path
+        d="M7 7L17 17M17 7L7 17"
+        stroke="currentColor"
+        stroke-width="2.6"
+        stroke-linecap="round"
+      />
+    </svg>
+  `;
+  count.appendChild(countClear);
+
+  count.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setStoredLicenseFilters([]);
+    syncLicenseFilterBoxes();
+  });
+
   trigger.appendChild(title);
   trigger.appendChild(count);
   trigger.appendChild(chevron);
