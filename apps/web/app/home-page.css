@@ -509,6 +509,23 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: #080808;
 }
 
+.audioflume-home-reference-ui-showcase::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  height: 110px;
+  background: linear-gradient(
+    180deg,
+    #090909 0%,
+    rgba(9, 9, 9, 0.72) 38%,
+    rgba(9, 9, 9, 0) 100%
+  );
+  pointer-events: none;
+}
+
 .audioflume-home-reference-ui-showcase > img {
   display: block;
   width: 100%;
