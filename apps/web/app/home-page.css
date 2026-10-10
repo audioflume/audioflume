@@ -556,6 +556,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-ui-showcase {
+  display: none;
   position: relative;
   overflow: hidden;
   background: #080808;
