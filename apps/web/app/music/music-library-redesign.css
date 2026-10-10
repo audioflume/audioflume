@@ -217,7 +217,7 @@ main
   .fw-filter-rail {
   box-sizing: border-box !important;
   gap: 1px !important;
-  padding: 10px 8px 40px !important;
+  padding: 10px 0 40px !important;
 }
 
 html.fw-display-exclude-ai-songs
@@ -274,7 +274,7 @@ main
   border-top: 0 !important;
   border-radius: 0 !important;
   margin: 0 !important;
-  padding: 0 8px 0 12px !important;
+  padding: 0 16px 0 20px !important;
 }
 
 main
@@ -900,7 +900,34 @@ main
   .fw-filter-accordion-detail {
   box-sizing: border-box;
   width: 100%;
-  padding: 8px 12px 14px;
+  padding: 8px 0 14px;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail
+  .fw-filter-option-list {
+  width: 100% !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail
+  .fw-filter-option {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  min-height: 38px !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  padding: 0 16px 0 20px !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail
+  .fw-filter-option-check {
+  flex: 0 0 auto;
+  margin: 0 !important;
 }
 
 .audioflume-music-page
