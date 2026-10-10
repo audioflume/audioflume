@@ -141,7 +141,45 @@
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-button {
+  width: auto !important;
+  min-width: 0 !important;
+  height: auto !important;
+  border: 0 !important;
   border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar-sort
+  .filmwave-music-sort-button:hover,
+.audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar-sort
+  .filmwave-music-sort-button.is-open {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar-sort
+  .filmwave-music-sort-chevron {
+  width: 10px !important;
+  height: 10px !important;
+  margin-left: 5px !important;
+  color: var(--text-muted) !important;
+}
+
+.audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar-sort
+  .filmwave-music-sort-chevron path {
+  stroke-width: 1.4 !important;
 }
 
 html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
