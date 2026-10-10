@@ -99,7 +99,6 @@ export default function Footer({
     );
   const removePageGutter =
     !pageGutter ||
-    isMusicPage ||
     isProjectDetailPage ||
     isEditorialLandingPage ||
     isInteriorDetailPage ||
