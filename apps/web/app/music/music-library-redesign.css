@@ -26,7 +26,7 @@
 
 .audioflume-music-page-searchbar.is-filters-open {
   grid-template-columns:
-    var(--audioflume-music-filter-width, 208px)
+    var(--audioflume-music-filter-width, 248px)
     minmax(0, 1fr)
     230px;
 }
@@ -646,7 +646,7 @@ main
 }
 
 .audioflume-music-page {
-  --audioflume-music-filter-width: 208px;
+  --audioflume-music-filter-width: 248px;
   --audioflume-music-content-gap: 20px;
 }
 
@@ -706,15 +706,15 @@ main
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2) !important;
   display: grid !important;
   grid-template-rows: 1fr !important;
-  width: var(--audioflume-music-filter-width, 208px) !important;
-  max-width: var(--audioflume-music-filter-width, 208px) !important;
+  width: var(--audioflume-music-filter-width, 248px) !important;
+  max-width: var(--audioflume-music-filter-width, 248px) !important;
   height: var(--audioflume-music-filter-height) !important;
   margin:
     0
     0
     calc(0px - var(--audioflume-music-filter-height))
     calc(
-      0px - var(--audioflume-music-filter-width, 208px) -
+      0px - var(--audioflume-music-filter-width, 248px) -
         var(--audioflume-music-content-gap, 20px)
     ) !important;
   background: var(--bg-primary) !important;
@@ -774,6 +774,32 @@ main
   height: 100% !important;
 }
 
+
+/* Open filter rail fills the full widened column. */
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-filter-rail {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  :is(
+    .fw-filter-rail-item,
+    .fw-license-filter-box,
+    .fw-license-filter-options,
+    .fw-license-filter-option
+  ) {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  max-width: 100% !important;
+}
 
 /* Web Music page no longer uses the legacy toolbar-owned filter layout. */
 .audioflume-music-page
