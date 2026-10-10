@@ -206,13 +206,13 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
   );
 }
 
-function HomeOriginalSongShelf({ songs }: { songs: Song[] }) {
+function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
   return (
-    <Shelf label="Audioflume originals" className="audioflume-home-reference-original-song-shelf">
-      {songs.map((song) => (
+    <div className="audioflume-home-reference-original-song-grid">
+      {songs.slice(0, 12).map((song) => (
         <HomeOriginalSongCard key={song.id} song={song} />
       ))}
-    </Shelf>
+    </div>
   );
 }
 
@@ -328,7 +328,7 @@ export default function HomePageContent() {
   const shelfSongs = playableSongs.slice(0, HOME_SHELF_SONG_COUNT);
   const originalSongs = playableSongs.slice(
     HOME_SHELF_SONG_COUNT,
-    HOME_SHELF_SONG_COUNT * 2,
+    HOME_SHELF_SONG_COUNT + 12,
   );
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
 
@@ -484,7 +484,7 @@ export default function HomePageContent() {
           <Link href="/music">Explore Originals</Link>
         </div>
         {(originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
-          <HomeOriginalSongShelf
+          <HomeOriginalSongGrid
             songs={originalSongs.length > 0 ? originalSongs : shelfSongs}
           />
         ) : null}
