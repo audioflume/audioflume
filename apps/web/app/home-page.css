@@ -371,14 +371,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-ui-showcase > img {
   display: block;
   width: 100%;
-  height: clamp(390px, 32vw, 520px);
+  height: clamp(450px, 38vw, 600px);
   object-fit: cover;
   object-position: center top;
 }
 
 .audioflume-home-reference-ui-overlay {
   position: absolute;
-  top: clamp(72px, 6vw, 96px);
+  top: clamp(92px, 7vw, 116px);
   right: auto;
   bottom: auto;
   left: 50%;
@@ -763,11 +763,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   }
 
   .audioflume-home-reference-ui-showcase > img {
-    height: 340px;
+    height: 390px;
   }
 
   .audioflume-home-reference-ui-overlay {
-    top: 48px;
+    top: 64px;
     bottom: auto;
     width: calc(100vw - 40px);
     max-width: none;
