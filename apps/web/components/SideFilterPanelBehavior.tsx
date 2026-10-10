@@ -10,6 +10,8 @@ const FILTERS_HEADING_CLASS = "fw-filter-section-heading";
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
+const MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT =
+  "filmwave:music-filter-close-all-accordions";
 const WEB_MUSIC_FILTER_PANEL_SELECTOR =
   "main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-panel-wrap";
 const WEB_MUSIC_FILTER_RAIL_SELECTOR =
@@ -619,6 +621,26 @@ function syncWebMusicFilterEnhancements(playlists: PlaylistFilterDecoration[]) {
   syncPlaylistFilterOptionClasses(playlists);
 }
 
+function bindLicenseCloseAllAccordions() {
+  function closeAllLicenseAccordions() {
+    document
+      .querySelectorAll<HTMLElement>(".fw-license-filter-box")
+      .forEach(closeLicenseFilterBox);
+  }
+
+  window.addEventListener(
+    MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT,
+    closeAllLicenseAccordions,
+  );
+
+  return () => {
+    window.removeEventListener(
+      MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT,
+      closeAllLicenseAccordions,
+    );
+  };
+}
+
 function bindLicenseAccordionExclusivity() {
   function handleRailClick(event: MouseEvent) {
     const target = event.target;
@@ -645,6 +667,7 @@ export default function SideFilterPanelBehavior() {
 
   useLayoutEffect(() => {
     const unbindLicenseAccordionExclusivity = bindLicenseAccordionExclusivity();
+    const unbindLicenseCloseAllAccordions = bindLicenseCloseAllAccordions();
     let syncFrame = 0;
 
     function syncEnhancements() {
@@ -699,6 +722,7 @@ export default function SideFilterPanelBehavior() {
 
     return () => {
       unbindLicenseAccordionExclusivity();
+      unbindLicenseCloseAllAccordions();
       if (syncFrame) window.cancelAnimationFrame(syncFrame);
       observer.disconnect();
       window.removeEventListener(LICENSE_FILTER_CHANGE_EVENT, scheduleSync);
