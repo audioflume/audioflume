@@ -1181,6 +1181,7 @@ main
   .fw-filter-accordion-detail
   .fw-filter-control-stack
   > .fw-segment {
+  width: 100%;
   gap: 10px !important;
   border-radius: 0 !important;
   background: transparent !important;
@@ -1193,7 +1194,8 @@ main
   .fw-filter-control-stack
   > .fw-segment
   > button {
-  min-width: 82px;
+  min-width: 0;
+  flex: 1 1 0;
   border-radius: 4px !important;
   background: var(--bg-control) !important;
   padding: 8px 16px !important;
