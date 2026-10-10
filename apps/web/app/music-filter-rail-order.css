@@ -76,17 +76,8 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.i
   background-color: var(--bg-hover) !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
-  display: none !important;
-  opacity: 0 !important;
-}
-
-main > section:has(.fw-filter-panel-wrap)
-  .fw-filter-rail-item:hover:not(:has(.fw-filter-rail-count))
-  .fw-filter-rail-chevron,
-main > section:has(.fw-filter-panel-wrap)
-  .fw-filter-panel-wrap[data-side-filter-active-key]
-  .fw-filter-rail-item[aria-current="true"]
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail-chevron {
   display: inline-flex !important;
   opacity: 1 !important;
