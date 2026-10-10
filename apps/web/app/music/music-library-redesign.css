@@ -785,6 +785,34 @@ main
   padding-left: 20px !important;
 }
 
+/* Music-page filter internals use the widened web-only rail width. */
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-filter-panel-body {
+  grid-template-columns:
+    var(--audioflume-music-filter-width, 248px) !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open.has-selected-filter-section
+  .fw-filter-panel-body {
+  grid-template-columns:
+    var(--audioflume-music-filter-width, 248px)
+    var(--filmwave-side-filter-detail-width) !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-filter-panel-body::before {
+  left: var(--audioflume-music-filter-width, 248px) !important;
+}
+
 /* Open filter rail fills the full widened column. */
 .audioflume-music-page
   > section
