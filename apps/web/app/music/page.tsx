@@ -40,6 +40,7 @@ import FilterTags from "@/components/FilterTags";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import XIcon from "@/components/icons/XIcon";
 
 import "./music-library-redesign.css";
 
@@ -913,7 +914,54 @@ export default function MusicPage() {
   ];
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+      <div className="audioflume-music-page-searchbar">
+        <button
+          type="button"
+          className="audioflume-home-reference-searchbar-filters"
+          aria-expanded={filtersOpen}
+          onClick={() => setFiltersOpen((open) => !open)}
+        >
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+          </svg>
+          <span>Filters</span>
+        </button>
+
+        <label className="audioflume-home-reference-searchbar-field">
+          <svg viewBox="0 0 24 24" aria-hidden="true">
+            <circle cx="11" cy="11" r="6.5" />
+            <path d="m16 16 4.5 4.5" />
+          </svg>
+          <input
+            ref={searchInputRef}
+            type="search"
+            value={search}
+            onChange={(event) => setSearch(event.target.value)}
+            placeholder={searchPlaceholder}
+            aria-label={searchPlaceholder}
+          />
+          {search.length > 0 ? (
+            <button
+              type="button"
+              className="audioflume-home-reference-searchbar-clear"
+              onClick={() => setSearch("")}
+              aria-label="Clear search"
+            >
+              <XIcon size={8} />
+            </button>
+          ) : null}
+        </label>
+
+        <button
+          type="button"
+          className="audioflume-home-reference-searchbar-song"
+          aria-label="Search by song"
+        >
+          Search by song
+        </button>
+      </div>
+
       <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
         <div className="fw-music-content-column">
           <MusicLibraryToolbar
