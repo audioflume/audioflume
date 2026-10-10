@@ -32,7 +32,7 @@ body:has(.curated-playlists-page-root) {
 
 .curated-page-intro {
   display: grid;
-  width: min(1180px, calc(100vw - 160px));
+  width: min(1180px, calc(100vw - 100px));
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: start;
   gap: 118px;
