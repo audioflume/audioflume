@@ -945,6 +945,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   margin-top: 0 !important;
 }
 
+.audioflume-home-reference-footer a {
+  color: var(--text-muted);
+}
+
+.audioflume-home-reference-footer a:hover,
+.audioflume-home-reference-footer a:focus-visible {
+  color: var(--text-primary);
+}
+
 @media (max-width: 980px) {
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
