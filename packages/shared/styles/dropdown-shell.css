@@ -1,5 +1,5 @@
 :root {
-  --filmwave-menu-shell-radius: 10px;
+  --filmwave-menu-shell-radius: 0;
   --filmwave-menu-item-radius: 0;
   --filmwave-menu-item-height: 36px;
   --filmwave-menu-item-padding-x: 16px;
