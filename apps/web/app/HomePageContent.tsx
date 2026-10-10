@@ -2,11 +2,13 @@
 
 import { MusicListShell } from "@filmwave/shared";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   useEffect,
   useMemo,
   useRef,
   useState,
+  type FormEvent,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -17,6 +19,7 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import XIcon from "@/components/icons/XIcon";
 import {
   useHasCurrentSong,
   useIsCurrentSongPlaying,
@@ -318,6 +321,7 @@ function HomeArtistShelf({
 export default function HomePageContent() {
   const { songs, loading: songsLoading } = useSongs();
   const { setQueue } = usePlayer();
+  const router = useRouter();
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const searchBarRef = useRef<HTMLDivElement>(null);
@@ -399,6 +403,13 @@ export default function HomePageContent() {
     };
   }, []);
 
+  function submitHomeSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const query = homeSearch.trim();
+    router.push(query ? `/music?search=${encodeURIComponent(query)}` : "/music");
+  }
+
   return (
     <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
       <div className="audioflume-home-reference-searchbar-slot">
@@ -415,7 +426,10 @@ export default function HomePageContent() {
             <span>Filters</span>
           </Link>
 
-          <label className="audioflume-home-reference-searchbar-field">
+          <form
+            className="audioflume-home-reference-searchbar-field"
+            onSubmit={submitHomeSearch}
+          >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="11" cy="11" r="6.5" />
               <path d="m16 16 4.5 4.5" />
@@ -427,7 +441,17 @@ export default function HomePageContent() {
               placeholder="Search by sound, mood, or scene"
               aria-label="Search by sound, mood, or scene"
             />
-          </label>
+            {homeSearch.length > 0 ? (
+              <button
+                type="button"
+                className="audioflume-home-reference-searchbar-clear"
+                onClick={() => setHomeSearch("")}
+                aria-label="Clear search"
+              >
+                <XIcon size={10} />
+              </button>
+            ) : null}
+          </form>
 
           <button
             type="button"
