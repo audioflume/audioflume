@@ -31,7 +31,17 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   margin: 0 auto;
 }
 
+.audioflume-home-reference-searchbar-slot {
+  position: relative;
+  height: var(--filmwave-header-height, 75px);
+}
+
 .audioflume-home-reference-searchbar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 20;
   display: grid;
   height: var(--filmwave-header-height, 75px);
   grid-template-columns: 154px minmax(0, 1fr) 230px;
@@ -41,6 +51,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: #ffffff;
   overscroll-behavior: none;
   touch-action: none;
+}
+
+.audioflume-home-reference-searchbar.is-pinned-at-top {
+  position: fixed;
+  top: var(--filmwave-header-height, 75px);
 }
 
 .audioflume-home-reference-searchbar-filters,
