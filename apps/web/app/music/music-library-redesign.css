@@ -13,7 +13,10 @@
   display: grid;
   height: var(--filmwave-header-height, 75px);
   grid-template-columns:
-    var(--filmwave-side-filter-rail-width)
+    calc(
+      var(--filmwave-side-filter-rail-width) +
+        var(--fw-music-content-inset-right, 20px)
+    )
     minmax(0, 1fr)
     230px;
   align-items: stretch;
@@ -664,10 +667,7 @@ main
     0
     0
     calc(0px - var(--audioflume-music-filter-height))
-    calc(
-      0px - var(--filmwave-side-filter-rail-width) -
-        var(--fw-music-content-inset-right, 20px)
-    ) !important;
+    calc(0px - var(--filmwave-side-filter-rail-width)) !important;
   background: var(--bg-primary) !important;
   opacity: 0 !important;
   visibility: hidden !important;
