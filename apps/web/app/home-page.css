@@ -4,9 +4,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference {
-  --home-reference-width: min(1180px, calc(100vw - 80px));
+  --home-reference-width: min(1180px, calc(100vw - 100px));
   overflow-x: clip;
-  background: var(--bg-primary);
+  background: #090909;
   color: var(--text-primary);
 }
 
@@ -161,8 +161,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-scroller,
 .audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller,
 .audioflume-home-reference-playlist-shelf .audioflume-home-reference-shelf-scroller {
-  padding-right: 80px;
-  padding-left: 80px;
+  padding-right: 50px;
+  padding-left: 50px;
 }
 
 .audioflume-home-reference-song-card {
@@ -375,7 +375,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 .audioflume-home-reference-artists > .audioflume-home-reference-width,
 .audioflume-home-reference-playlists > .audioflume-home-reference-width,
 .audioflume-home-reference-new-songs > .audioflume-home-reference-width {
-  width: calc(100vw - 160px);
+  width: calc(100vw - 100px);
   max-width: none;
 }
 
