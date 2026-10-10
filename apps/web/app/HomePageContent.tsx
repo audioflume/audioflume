@@ -13,7 +13,6 @@ import {
 
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
-import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -24,7 +23,6 @@ import {
   usePlayer,
 } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
-import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import type { Song } from "@/lib/types";
 
 const NEW_SONG_COUNT = 10;
@@ -162,11 +160,13 @@ function HomeSongCard({ song }: { song: Song }) {
 
 function HomeSongShelf({
   songs,
+  label = "featured tracks",
 }: {
   songs: Song[];
+  label?: string;
 }) {
   return (
-    <Shelf label="featured tracks" className="audioflume-home-reference-song-shelf">
+    <Shelf label={label} className="audioflume-home-reference-song-shelf">
       {songs.map((song) => (
         <HomeSongCard key={song.id} song={song} />
       ))}
@@ -273,33 +273,10 @@ function HomeArtistShelf({
   );
 }
 
-function HomePlaylistShelf({
-  playlists,
-}: {
-  playlists: CuratedPlaylist[];
-}) {
-  return (
-    <Shelf label="Audioflume originals" className="audioflume-home-reference-playlist-shelf">
-      {playlists.slice(0, 8).map((playlist, index) => (
-        <div
-          key={playlist.id}
-          className="audioflume-home-reference-playlist-shelf-card"
-        >
-          <CuratedPlaylistCard
-            playlist={playlist}
-            index={index}
-          />
-        </div>
-      ))}
-    </Shelf>
-  );
-}
-
 export default function HomePageContent() {
   const { songs, loading: songsLoading } = useSongs();
   const { setQueue } = usePlayer();
   const playerVisible = useHasCurrentSong();
-  const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const [artists, setArtists] = useState<HomeArtist[]>([]);
 
   const playableSongs = useMemo(
@@ -307,30 +284,15 @@ export default function HomePageContent() {
     [songs],
   );
   const shelfSongs = playableSongs.slice(0, HOME_SHELF_SONG_COUNT);
+  const originalSongs = playableSongs.slice(
+    HOME_SHELF_SONG_COUNT,
+    HOME_SHELF_SONG_COUNT * 2,
+  );
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
-
-  useEffect(() => {
-    let cancelled = false;
-
-    fetch("/api/curated-playlists")
-      .then((response) => response.json())
-      .then((data) => {
-        if (!cancelled && Array.isArray(data)) {
-          setPlaylists(data as CuratedPlaylist[]);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) setPlaylists([]);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -452,9 +414,14 @@ export default function HomePageContent() {
       <section className="audioflume-home-reference-playlists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
           <span>Audioflume originals</span>
-          <Link href="/curated-playlists">Explore Originals</Link>
+          <Link href="/music">Explore Originals</Link>
         </div>
-        {playlists.length > 0 ? <HomePlaylistShelf playlists={playlists} /> : null}
+        {(originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
+          <HomeSongShelf
+            songs={originalSongs.length > 0 ? originalSongs : shelfSongs}
+            label="Audioflume originals"
+          />
+        ) : null}
       </section>
 
       <section className="audioflume-home-reference-new-songs">
