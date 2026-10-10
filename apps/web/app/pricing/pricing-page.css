@@ -17,9 +17,7 @@
 
 .audioflume-pricing-hero-inner {
   position: relative;
-  width: calc(
-    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-  );
+  width: calc(100% - 160px);
   max-width: var(--filmwave-editorial-max-width);
   min-height: 100svh;
   margin: 0 auto;
@@ -150,9 +148,7 @@
 .audioflume-pricing-plans-section,
 .audioflume-pricing-includes-section,
 .audioflume-pricing-enterprise-section {
-  width: calc(
-    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-  );
+  width: calc(100% - 160px);
   max-width: var(--filmwave-editorial-max-width);
   margin: 0 auto;
 }
