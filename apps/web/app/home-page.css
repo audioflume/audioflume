@@ -147,12 +147,19 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-searchbar-song {
   justify-content: center;
+  gap: 8px;
   border: 0;
   background: transparent;
   color: #ffffff;
   font-family: inherit;
   font-size: 14px;
   font-weight: 400;
+}
+
+.audioflume-home-reference-searchbar-song svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
 }
 
 .audioflume-home-reference-hero {
