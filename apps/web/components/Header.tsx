@@ -303,6 +303,37 @@ export default function Header() {
           align-items: center;
         }
 
+        .filmwave-web-header ~ * .filmwave-user-menu-action-icon,
+        .filmwave-web-header ~ * .filmwave-user-menu-theme-icon,
+        .filmwave-header-menu-wrap .filmwave-user-menu-action-icon,
+        .filmwave-header-menu-wrap .filmwave-user-menu-theme-icon {
+          color: #777777;
+        }
+
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header ~ *
+          .filmwave-user-menu-action-icon,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-web-header ~ *
+          .filmwave-user-menu-theme-icon,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-header-menu-wrap
+          .filmwave-user-menu-action-icon,
+        :where(html.light, html[data-theme="light"])
+          .filmwave-header-menu-wrap
+          .filmwave-user-menu-theme-icon {
+          color: #8d8d8d;
+        }
+
+        .filmwave-user-menu-action:hover .filmwave-user-menu-action-icon,
+        .filmwave-user-menu-action:focus-visible .filmwave-user-menu-action-icon,
+        .filmwave-user-menu-theme-action:hover .filmwave-user-menu-theme-icon,
+        .filmwave-user-menu-theme-action:focus-visible .filmwave-user-menu-theme-icon,
+        .filmwave-user-menu-exit:hover .filmwave-user-menu-action-icon,
+        .filmwave-user-menu-exit:focus-visible .filmwave-user-menu-action-icon {
+          color: var(--text-primary);
+        }
+
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
           border-bottom-color: rgba(255, 255, 255, 0.12) !important;
