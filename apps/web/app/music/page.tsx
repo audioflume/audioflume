@@ -875,7 +875,11 @@ export default function MusicPage() {
         </button>
       </div>
 
-      <section className="min-h-screen pt-14 ml-[var(--sidebar-width)] transition-[margin-left] duration-200">
+      <section
+        className={`min-h-screen pt-14 transition-[margin-left] duration-200 ${
+          filtersOpen ? "ml-[var(--sidebar-width)]" : "ml-0"
+        }`}
+      >
         <div className="fw-music-content-column">
           <MusicFilterPanel
             open={filtersOpen}
