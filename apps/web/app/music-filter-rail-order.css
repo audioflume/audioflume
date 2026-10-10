@@ -286,5 +286,12 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-panel.is-open
   .fw-filter-advanced-panel-inner {
-  padding: 14px 0 18px;
+  padding: 14px 20px 18px;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel.is-open
+  .fw-filter-advanced-panel-inner:has(.fw-filter-option-list) {
+  padding-right: 0;
+  padding-left: 0;
 }
