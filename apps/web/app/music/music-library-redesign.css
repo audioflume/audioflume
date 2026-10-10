@@ -1049,8 +1049,30 @@ main
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-accordion-detail {
+  display: grid;
   box-sizing: border-box;
   width: 100%;
+  grid-template-rows: 0fr;
+  overflow: hidden;
+  opacity: 0;
+  padding: 0;
+  transition:
+    grid-template-rows 180ms ease,
+    opacity 160ms ease;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail-inner {
+  min-height: 0;
+  overflow: hidden;
   padding: 8px 0 14px;
 }
 
@@ -1139,15 +1161,6 @@ main
   transform: rotate(90deg);
 }
 
-.audioflume-music-page
-  .fw-license-filter-detail[hidden] {
-  display: none;
-}
-
-.audioflume-music-page
-  .fw-license-filter-detail {
-  padding: 8px 0 14px;
-}
 
 .audioflume-music-page
   > section
