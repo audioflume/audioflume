@@ -632,21 +632,24 @@ main
   > section
   > .fw-music-content-column
   > .fw-filter-panel-wrap {
-  position: fixed !important;
+  position: sticky !important;
   top: calc(var(--filmwave-header-height, 75px) * 2) !important;
-  bottom: var(--filmwave-sidebar-bottom-offset, 0px) !important;
-  left: 0 !important;
+  bottom: auto !important;
+  left: auto !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2) !important;
   display: grid !important;
   grid-template-rows: 1fr !important;
   width: var(--filmwave-side-filter-rail-width) !important;
   max-width: var(--filmwave-side-filter-rail-width) !important;
-  height: auto !important;
+  height: calc(
+    100dvh - (var(--filmwave-header-height, 75px) * 2) -
+      var(--filmwave-sidebar-bottom-offset, 0px)
+  ) !important;
   margin: 0 !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: translate(-100%, var(--filmwave-elastic-scroll-offset, 0px)) !important;
+  transform: translateX(-100%) !important;
   transition:
     transform 180ms ease,
     opacity 140ms ease,
@@ -660,7 +663,7 @@ main
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  transform: translate(0, var(--filmwave-elastic-scroll-offset, 0px)) !important;
+  transform: translateX(0) !important;
   transition:
     transform 180ms ease,
     opacity 140ms ease !important;
