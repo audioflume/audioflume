@@ -660,7 +660,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-library-grid > p {
   max-width: 560px;
   margin: 6px 0 0;
-  color: var(--text-muted);
+  color: var(--text-primary);
   font-size: 16px;
   font-weight: 300;
   line-height: 1.5;
