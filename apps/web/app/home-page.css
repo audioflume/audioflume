@@ -931,6 +931,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 38px 12px;
+  padding: 0 50px;
 }
 
 .audioflume-home-reference-new-songs {
