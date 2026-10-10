@@ -322,6 +322,7 @@ export default function HomePageContent() {
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const [homeSearch, setHomeSearch] = useState("");
+  const [searchBarPinned, setSearchBarPinned] = useState(true);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -369,6 +370,19 @@ export default function HomePageContent() {
   }, []);
 
   useEffect(() => {
+    const updatePinnedState = () => {
+      setSearchBarPinned(window.scrollY <= 0);
+    };
+
+    updatePinnedState();
+    window.addEventListener("scroll", updatePinnedState, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", updatePinnedState);
+    };
+  }, []);
+
+  useEffect(() => {
     const searchBar = searchBarRef.current;
     if (!searchBar) return;
 
@@ -387,35 +401,42 @@ export default function HomePageContent() {
 
   return (
     <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
-      <div ref={searchBarRef} className="audioflume-home-reference-searchbar">
-        <Link href="/music" className="audioflume-home-reference-searchbar-filters">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
-          </svg>
-          <span>Filters</span>
-        </Link>
-
-        <label className="audioflume-home-reference-searchbar-field">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="m16 16 4.5 4.5" />
-          </svg>
-          <input
-            type="search"
-            value={homeSearch}
-            onChange={(event) => setHomeSearch(event.target.value)}
-            placeholder="Search by sound, mood, or scene"
-            aria-label="Search by sound, mood, or scene"
-          />
-        </label>
-
-        <button
-          type="button"
-          className="audioflume-home-reference-searchbar-song"
-          aria-label="Search by song"
+      <div className="audioflume-home-reference-searchbar-slot">
+        <div
+          ref={searchBarRef}
+          className={`audioflume-home-reference-searchbar${
+            searchBarPinned ? " is-pinned-at-top" : ""
+          }`}
         >
-          Search by song
-        </button>
+          <Link href="/music" className="audioflume-home-reference-searchbar-filters">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+            </svg>
+            <span>Filters</span>
+          </Link>
+
+          <label className="audioflume-home-reference-searchbar-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="m16 16 4.5 4.5" />
+            </svg>
+            <input
+              type="search"
+              value={homeSearch}
+              onChange={(event) => setHomeSearch(event.target.value)}
+              placeholder="Search by sound, mood, or scene"
+              aria-label="Search by sound, mood, or scene"
+            />
+          </label>
+
+          <button
+            type="button"
+            className="audioflume-home-reference-searchbar-song"
+            aria-label="Search by song"
+          >
+            Search by song
+          </button>
+        </div>
       </div>
 
       <section
