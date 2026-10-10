@@ -1108,11 +1108,31 @@ main
 
 
 .audioflume-music-page
-  > section
-  > .fw-music-content-column
-  > .fw-filter-panel-wrap.is-open
-  .fw-license-filter-title {
-  padding-left: 20px !important;
+  .fw-filter-rail.is-accordion
+  > .fw-filter-accordion-section {
+  border-bottom: 1px solid var(--border);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-item {
+  height: 42px !important;
+}
+
+.audioflume-music-page
+  .fw-license-filter-trigger[aria-expanded="true"]
+  .fw-filter-rail-chevron {
+  transform: rotate(90deg);
+}
+
+.audioflume-music-page
+  .fw-license-filter-detail[hidden] {
+  display: none;
+}
+
+.audioflume-music-page
+  .fw-license-filter-detail {
+  padding: 8px 0 14px;
 }
 
 .audioflume-music-page
