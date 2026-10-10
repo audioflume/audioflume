@@ -878,6 +878,7 @@ type MusicFilterPanelProps = {
   hasActive?: boolean;
   onClearAll?: () => void;
   onClose: () => void;
+  accordion?: boolean;
 };
 
 export function MusicFilterPanel({
@@ -901,6 +902,7 @@ export function MusicFilterPanel({
   hasActive = false,
   onClearAll,
   onClose,
+  accordion = false,
 }: MusicFilterPanelProps) {
   const advancedGroupIdSet = new Set(advancedGroupIds);
   const advancedGroups = groupAdvancedControls
@@ -930,13 +932,16 @@ export function MusicFilterPanel({
     ...(onToggleMarkers ? [{ id: "display", label: "Display", count: markersActive ? 1 : 0 }] : []),
   ];
 
-  const [activeSectionId, setActiveSectionId] = useState(sections[0]?.id ?? "");
+  const [activeSectionId, setActiveSectionId] = useState(
+    accordion ? "" : sections[0]?.id ?? "",
+  );
 
   useEffect(() => {
+    if (!activeSectionId && accordion) return;
     if (sections.some((s) => s.id === activeSectionId)) return;
-    setActiveSectionId(sections[0]?.id ?? "");
+    setActiveSectionId(accordion ? "" : sections[0]?.id ?? "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [railGroups.length, activeSectionId]);
+  }, [railGroups.length, activeSectionId, accordion]);
 
   useEffect(() => {
     if (!open) return;
@@ -992,38 +997,58 @@ export function MusicFilterPanel({
       <div className="fw-filter-panel-reveal">
         <div className="fw-filter-panel">
           <div className="fw-filter-panel-body">
-            <nav className="fw-filter-rail" aria-label="Filter categories">
+            <nav
+              className={`fw-filter-rail${accordion ? " is-accordion" : ""}`}
+              aria-label="Filter categories"
+            >
               {sections.map((section) => {
                 const isActive = section.id === activeSectionId;
                 return (
-                  <button key={section.id} type="button"
-                    data-filter-section-id={section.id === "advanced" ? "advanced" : undefined}
-                    className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
-                    aria-current={isActive}
-                    onClick={() => setActiveSectionId(section.id)}>
-                    <span className="fw-filter-rail-label">{section.label}</span>
-                    {section.count > 0 && (
-                      <span className="fw-filter-rail-count">{section.count}</span>
-                    )}
-                    <span className="fw-filter-rail-chevron" aria-hidden="true">
-                      <ChevronRightIcon />
-                    </span>
-                  </button>
+                  <div key={section.id} className="fw-filter-accordion-section">
+                    <button
+                      type="button"
+                      data-filter-section-id={section.id === "advanced" ? "advanced" : undefined}
+                      className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
+                      aria-current={isActive}
+                      aria-expanded={accordion ? isActive : undefined}
+                      onClick={() =>
+                        setActiveSectionId(
+                          accordion && isActive ? "" : section.id,
+                        )
+                      }
+                    >
+                      <span className="fw-filter-rail-label">{section.label}</span>
+                      {section.count > 0 && (
+                        <span className="fw-filter-rail-count">{section.count}</span>
+                      )}
+                      <span className="fw-filter-rail-chevron" aria-hidden="true">
+                        <ChevronRightIcon />
+                      </span>
+                    </button>
+
+                    {accordion && isActive ? (
+                      <div className="fw-filter-accordion-detail">
+                        {renderDetail()}
+                      </div>
+                    ) : null}
+                  </div>
                 );
               })}
             </nav>
 
-            <div className="fw-filter-detail">
-              {activeSection && (
-                <h3 className="fw-filter-group-label">
-                  {activeSection.label}
-                  {activeSection.count > 0 && (
-                    <span className="fw-filter-group-count">{activeSection.count}</span>
-                  )}
-                </h3>
-              )}
-              {renderDetail()}
-            </div>
+            {!accordion ? (
+              <div className="fw-filter-detail">
+                {activeSection && (
+                  <h3 className="fw-filter-group-label">
+                    {activeSection.label}
+                    {activeSection.count > 0 && (
+                      <span className="fw-filter-group-count">{activeSection.count}</span>
+                    )}
+                  </h3>
+                )}
+                {renderDetail()}
+              </div>
+            ) : null}
           </div>
 
           <div className="fw-filter-panel-footer">
