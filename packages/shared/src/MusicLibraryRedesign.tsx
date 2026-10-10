@@ -748,6 +748,9 @@ function MusicKeySection({
 /* Advanced section                                                    */
 /* ------------------------------------------------------------------ */
 
+const MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT =
+  "filmwave:music-filter-close-all-accordions";
+
 type MusicAdvancedSectionId = "key" | "bpm" | "duration" | "build" | "region";
 
 function MusicAdvancedSection({
@@ -781,6 +784,24 @@ function MusicAdvancedSection({
 
   const [openSectionId, setOpenSectionId] =
     useState<MusicAdvancedSectionId | null>(null);
+
+  useEffect(() => {
+    function closeAllAccordions() {
+      setOpenSectionId(null);
+    }
+
+    window.addEventListener(
+      MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT,
+      closeAllAccordions,
+    );
+
+    return () => {
+      window.removeEventListener(
+        MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT,
+        closeAllAccordions,
+      );
+    };
+  }, []);
 
   function renderSection(sectionId: MusicAdvancedSectionId) {
     if (sectionId === "key" && onKeyChange) {
@@ -1035,6 +1056,24 @@ export function MusicFilterPanel({
   );
 
   useEffect(() => {
+    function closeAllAccordions() {
+      if (accordion) setActiveSectionId("");
+    }
+
+    window.addEventListener(
+      MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT,
+      closeAllAccordions,
+    );
+
+    return () => {
+      window.removeEventListener(
+        MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT,
+        closeAllAccordions,
+      );
+    };
+  }, [accordion]);
+
+  useEffect(() => {
     if (!activeSectionId && accordion) return;
     if (sections.some((s) => s.id === activeSectionId)) return;
     setActiveSectionId(accordion ? "" : sections[0]?.id ?? "");
@@ -1186,7 +1225,18 @@ export function MusicFilterPanel({
 
           <div className="fw-filter-panel-footer">
             {hasActive && onClearAll ? (
-              <button type="button" className="fw-filter-clear-all" onClick={onClearAll}>Clear all</button>
+              <button
+                type="button"
+                className="fw-filter-clear-all"
+                onClick={() => {
+                  onClearAll();
+                  window.dispatchEvent(
+                    new Event(MUSIC_FILTER_CLOSE_ALL_ACCORDIONS_EVENT),
+                  );
+                }}
+              >
+                Clear all
+              </button>
             ) : <span />}
             <button type="button" className="fw-filter-done" onClick={onClose}>Done</button>
           </div>
