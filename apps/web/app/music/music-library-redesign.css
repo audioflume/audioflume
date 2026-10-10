@@ -63,7 +63,7 @@
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
   gap: 18px;
   padding: 0 34px;
-  color: rgba(255, 255, 255, 0.14);
+  color: #323232;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field > svg {
@@ -103,7 +103,7 @@
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field
   input::placeholder {
-  color: rgba(255, 255, 255, 0.14);
+  color: #323232;
   font-size: 16px;
   opacity: 1;
 }
@@ -117,7 +117,7 @@
   justify-content: center;
   border: 0;
   background: transparent;
-  color: var(--text-muted);
+  color: #585858;
   padding: 0;
   cursor: pointer;
 }
@@ -699,6 +699,26 @@ main
   }
 }
 
+
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-music-page-searchbar
+  .audioflume-home-reference-searchbar-field {
+  color: #949494;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-music-page-searchbar
+  .audioflume-home-reference-searchbar-field
+  input::placeholder {
+  color: #949494;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-music-page-searchbar
+  .audioflume-home-reference-searchbar-clear {
+  color: #949494;
+}
 
 /* Web music page now uses the full-width search bar as the only search/filter chrome. */
 .audioflume-music-page
