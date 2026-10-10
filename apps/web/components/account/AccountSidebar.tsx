@@ -20,35 +20,6 @@ import {
 import { navItems } from "./accountData";
 import type { AccountSection } from "./accountTypes";
 
-function AccountProfileIcon() {
-  return (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <rect
-        x="4"
-        y="5"
-        width="16"
-        height="14"
-        rx="2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <circle
-        cx="9"
-        cy="10"
-        r="2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-      />
-      <path
-        d="M6.8 15c.35-1.6 1.1-2.5 2.2-2.5s1.85.9 2.2 2.5M14 9h3M14 12h3M14 15h2"
-        stroke="currentColor"
-        strokeWidth="1.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  );
-}
-
 const ACCOUNT_NOTIFICATIONS_CHANGED_EVENT =
   "audioflume:account-notifications-changed";
 
@@ -191,8 +162,6 @@ export default function AccountSidebar() {
                       <BackendSidebarGlyph name="notifications" />
                     ) : item.section === "settings" ? (
                       <GearIcon />
-                    ) : item.section === "profile" ? (
-                      <AccountProfileIcon />
                     ) : (
                       <UserMenuGlyph name={iconBySection[item.section]} />
                     )
