@@ -1130,7 +1130,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: var(--text-primary);
 }
 
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-arrow {
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-song-shelf
+  .audioflume-home-reference-shelf-arrow,
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-artist-shelf
+  .audioflume-home-reference-shelf-arrow {
   background: #ffffff;
   color: #090909;
 }
