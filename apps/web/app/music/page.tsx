@@ -885,6 +885,7 @@ export default function MusicPage() {
         <div className="fw-music-content-column">
           <MusicFilterPanel
             open={filtersOpen}
+            accordion
             groups={filterChipGroups}
             playlists={playlistChipOptions}
             selectedPlaylistId={
