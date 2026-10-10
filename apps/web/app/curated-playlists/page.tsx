@@ -415,21 +415,6 @@ export default function CuratedPlaylistsPage() {
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8">
-          <section
-            className="curated-page-intro"
-            aria-labelledby="curated-page-heading"
-          >
-            <div className="curated-page-intro-copy">
-              <h1 id="curated-page-heading">
-                Human curated playlists made by real filmmakers.
-              </h1>
-            </div>
-            <p className="curated-page-intro-support">
-              Playlists shaped by real working filmmakers that help find the right
-              track faster and cut through the noise.
-            </p>
-          </section>
-
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
