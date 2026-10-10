@@ -1194,7 +1194,7 @@ main
   > .fw-segment
   > button {
   min-width: 82px;
-  border-radius: 999px !important;
+  border-radius: 4px !important;
   background: var(--bg-control) !important;
   padding: 8px 16px !important;
 }
