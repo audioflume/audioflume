@@ -46,7 +46,6 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     .curated-playlists-page-layer
     > div
     > section[aria-labelledby="curated-page-heading"] {
-    width: 100%;
     margin-right: auto;
     margin-left: auto;
   }
