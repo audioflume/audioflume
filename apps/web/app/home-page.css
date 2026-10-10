@@ -220,7 +220,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   margin: 0;
   color: rgba(255, 255, 255, 0.34);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 11px;
+  font-size: 13px;
   font-weight: 300;
   line-height: 1.4;
 }
