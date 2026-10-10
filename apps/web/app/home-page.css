@@ -469,6 +469,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.audioflume-home-reference-original-song-card:hover
+  .audioflume-home-reference-original-song-card-play > img,
+.audioflume-home-reference-original-song-card:hover
+  .audioflume-home-reference-original-song-card-fallback {
+  transform: scale(1.035);
 }
 
 .audioflume-home-reference-original-song-card-fallback {
