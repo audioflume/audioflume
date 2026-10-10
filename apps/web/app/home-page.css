@@ -164,7 +164,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   margin: 0;
 }
 
-.audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-scroller,
+.audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-scroller {
+  padding-right: 0;
+  padding-left: 0;
+}
+
 .audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller,
 .audioflume-home-reference-original-song-shelf .audioflume-home-reference-shelf-scroller {
   padding-right: 50px;
