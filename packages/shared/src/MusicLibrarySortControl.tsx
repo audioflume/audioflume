@@ -21,9 +21,11 @@ export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
 export function MusicLibrarySortControl({
   value,
   onChange,
+  showSelectedCheck = false,
 }: {
   value: MusicLibrarySortValue;
   onChange: (value: MusicLibrarySortValue) => void;
+  showSelectedCheck?: boolean;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement | null>(null);
@@ -125,7 +127,24 @@ export function MusicLibrarySortControl({
               }`}
               onClick={(event) => selectOption(event, option.value)}
             >
-              {option.label}
+              <span>{option.label}</span>
+              {showSelectedCheck && value === option.value ? (
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 16 16"
+                  focusable="false"
+                  className="filmwave-music-sort-selected-check"
+                >
+                  <path
+                    d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.6"
+                  />
+                </svg>
+              ) : null}
             </button>
           ))}
         </div>
