@@ -171,9 +171,17 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   padding-left: 50px;
 }
 
+.audioflume-home-reference-original-song-shelf .audioflume-home-reference-shelf-scroller {
+  gap: 20px;
+}
+
+.audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller {
+  gap: 30px;
+}
+
 .audioflume-home-reference-song-card {
-  width: min(31vw, 480px);
-  min-width: min(31vw, 480px);
+  width: 25vw;
+  min-width: 25vw;
   height: 310px;
 }
 
@@ -273,8 +281,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-original-song-card {
-  width: 330px;
-  min-width: 330px;
+  width: 198px;
+  min-width: 198px;
   height: 198px;
 }
 
