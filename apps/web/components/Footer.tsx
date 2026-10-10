@@ -160,8 +160,16 @@ export default function Footer({
             : undefined,
           marginRight: isEditorialLandingPage ? "auto" : undefined,
           marginLeft: isEditorialLandingPage ? "auto" : undefined,
-          paddingRight: removePageGutter ? "0px" : undefined,
-          paddingLeft: removePageGutter ? "0px" : undefined,
+          paddingRight: isMusicPage
+            ? "30px"
+            : removePageGutter
+              ? "0px"
+              : undefined,
+          paddingLeft: isMusicPage
+            ? "30px"
+            : removePageGutter
+              ? "0px"
+              : undefined,
           paddingBottom: shouldUsePlayerPadding
             ? playerVisible
               ? "calc(72px + 8px)"
