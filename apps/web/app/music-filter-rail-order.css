@@ -61,19 +61,17 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   display: none !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active {
-  background: var(--bg-hover) !important;
-  background-color: var(--bg-hover) !important;
-}
-
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:hover {
   background: var(--bg-hover) !important;
   background-color: var(--bg-hover) !important;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item.is-active:hover {
-  background: var(--bg-hover) !important;
-  background-color: var(--bg-hover) !important;
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-item.is-active:not(:hover) {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 main
