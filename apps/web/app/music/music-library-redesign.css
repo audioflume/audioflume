@@ -362,20 +362,18 @@ html.fw-display-ai-songs-only
 main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail
-  .fw-filter-rail-item:hover,
-main
-  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-panel-wrap:not(.has-selected-filter-section)
-  .fw-filter-rail
-  .fw-filter-rail-item.is-active:hover,
-main
-  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-panel-wrap.has-selected-filter-section
-  .fw-filter-rail
-  .fw-filter-rail-item.is-active {
+  .fw-filter-rail-item:hover {
   background: var(--bg-hover) !important;
   background-color: var(--bg-hover) !important;
   color: var(--text-primary) !important;
+}
+
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-item.is-active:not(:hover) {
+  background: transparent !important;
+  background-color: transparent !important;
 }
 
 main
