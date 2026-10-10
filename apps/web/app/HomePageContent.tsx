@@ -26,6 +26,7 @@ import {
   usePlayer,
 } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
+import { useTheme } from "@/context/ThemeContext";
 import type { Song } from "@/lib/types";
 
 const NEW_SONG_COUNT = 10;
@@ -324,6 +325,7 @@ function HomeArtistShelf({
 
 export default function HomePageContent() {
   const { songs, loading: songsLoading } = useSongs();
+  const { theme, setTheme } = useTheme();
   const { setQueue } = usePlayer();
   const router = useRouter();
   const playerVisible = useHasCurrentSong();
@@ -489,6 +491,36 @@ export default function HomePageContent() {
         <div className="audioflume-home-reference-width audioflume-home-reference-ui-overlay">
           <h2>An extensive library of music curated for film.</h2>
           <Link href="/sign-up">Create Free Account</Link>
+        </div>
+
+        <div
+          className="audioflume-home-reference-ui-theme-toggle"
+          role="group"
+          aria-label="Appearance"
+        >
+          <button
+            type="button"
+            className={theme === "light" ? "is-active" : ""}
+            onClick={() => setTheme("light")}
+            aria-label="Use light mode"
+            aria-pressed={theme === "light"}
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <circle cx="10" cy="10" r="3.25" />
+              <path d="M10 2.25v2M10 15.75v2M2.25 10h2M15.75 10h2M4.52 4.52l1.42 1.42M14.06 14.06l1.42 1.42M15.48 4.52l-1.42 1.42M5.94 14.06l-1.42 1.42" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className={theme === "dark" ? "is-active" : ""}
+            onClick={() => setTheme("dark")}
+            aria-label="Use dark mode"
+            aria-pressed={theme === "dark"}
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <path d="M15.8 12.65A6.35 6.35 0 0 1 7.35 4.2 6.35 6.35 0 1 0 15.8 12.65Z" />
+            </svg>
+          </button>
         </div>
       </section>
 
