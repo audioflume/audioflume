@@ -37,7 +37,13 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
     <main className="filmwave-account-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AccountSidebar />
 
-      <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-10">
+      <section
+        className={`min-h-screen px-5 pb-0 pt-[88px] md:px-10 ${
+          section === "profile"
+            ? "bg-[var(--bg-primary)]"
+            : "bg-[var(--filmwave-admin-canvas)]"
+        }`}
+      >
         <div className="mx-auto flex min-h-full max-w-[1180px] flex-col">
           <BackendPageHeader
             section="Account"
