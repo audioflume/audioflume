@@ -217,7 +217,7 @@ main
   .fw-filter-rail {
   box-sizing: border-box !important;
   gap: 1px !important;
-  padding: 10px 0 40px !important;
+  padding: 10px 8px 40px !important;
 }
 
 html.fw-display-exclude-ai-songs
@@ -274,7 +274,7 @@ main
   border-top: 0 !important;
   border-radius: 0 !important;
   margin: 0 !important;
-  padding: 0 16px 0 20px !important;
+  padding: 0 8px 0 12px !important;
 }
 
 main
@@ -781,8 +781,8 @@ main
   > .fw-music-content-column
   > .fw-filter-panel-wrap.is-open
   .fw-license-filter-option {
-  padding-right: 16px !important;
-  padding-left: 20px !important;
+  padding-right: 8px !important;
+  padding-left: 12px !important;
 }
 
 /* Music-page filter internals use the widened web-only rail width. */
