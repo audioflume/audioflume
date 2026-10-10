@@ -15,6 +15,8 @@ import {
 
 import Footer from "@/components/Footer";
 import SongCard from "@/components/SongCard";
+import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -323,6 +325,7 @@ export default function HomePageContent() {
   const router = useRouter();
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
+  const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const [homeSearch, setHomeSearch] = useState("");
 
@@ -340,6 +343,29 @@ export default function HomePageContent() {
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/curated-playlists")
+      .then((response) => response.json())
+      .then((data) => {
+        if (cancelled) return;
+
+        setCuratedPlaylists(
+          Array.isArray(data)
+            ? data.filter((playlist) => !playlist.discover_section).slice(0, 6)
+            : [],
+        );
+      })
+      .catch(() => {
+        if (!cancelled) setCuratedPlaylists([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -512,6 +538,24 @@ export default function HomePageContent() {
         </div>
         {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
       </section>
+
+      {curatedPlaylists.length > 0 ? (
+        <section className="audioflume-home-reference-curated-playlists">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+            <span>Curated playlists</span>
+            <Link href="/curated-playlists">Explore Playlists</Link>
+          </div>
+          <div className="audioflume-home-reference-playlist-grid">
+            {curatedPlaylists.map((playlist, index) => (
+              <CuratedPlaylistCard
+                key={playlist.id}
+                playlist={playlist}
+                index={index}
+              />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       <section className="audioflume-home-reference-playlists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
