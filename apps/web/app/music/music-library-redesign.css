@@ -339,7 +339,7 @@ main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail {
   box-sizing: border-box !important;
-  gap: 1px !important;
+  gap: 0 !important;
   padding: 10px 0 40px !important;
 }
 
@@ -1116,7 +1116,7 @@ main
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item {
-  height: 42px !important;
+  height: 50px !important;
 }
 
 .audioflume-music-page
