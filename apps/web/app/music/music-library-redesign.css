@@ -842,7 +842,7 @@ main
   > .fw-music-content-column
   > .fw-filter-panel-wrap.is-open
   .fw-license-filter-option {
-  padding-right: 8px !important;
+  padding-right: 16px !important;
   padding-left: 20px !important;
 }
 
