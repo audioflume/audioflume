@@ -337,3 +337,34 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   letter-spacing: normal;
   text-transform: none;
 }
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-bpm-row {
+  width: 100%;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-bpm-row
+  .fw-filter-mini-field {
+  min-width: 0;
+  flex: 1 1 0;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-bpm-row
+  .fw-filter-input {
+  width: 100%;
+  box-sizing: border-box;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-control-stack
+  > .fw-filter-chip-grid:last-child
+  > .fw-filter-chip {
+  flex: 1 1 0;
+  justify-content: center;
+}
