@@ -255,10 +255,9 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
       <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
         <span className="absolute inset-0 overflow-hidden rounded-[10px]">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
         {!value ? <span>{initials || "A"}</span> : null}
-        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] shadow-sm transition group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
+        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] opacity-0 shadow-sm transition group-hover:opacity-100 group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
       </label>
-      {value ? <button type="button" onClick={removeImage} className="text-[11px] font-medium text-[var(--text-muted)] transition hover:text-[var(--text-primary)]">Remove photo</button> : null}
     </div>
   );
 }
