@@ -35,7 +35,7 @@ import type { Song } from "@/lib/types";
 const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/mohammed-kara-3y66ymL7TC8-unsplash.jpg";
+  "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg";
 const HOME_UI_GRAPHIC_DARK =
   "https://images.filmwave.io/images/home/UI-Dark.png";
 const HOME_UI_GRAPHIC_LIGHT =
