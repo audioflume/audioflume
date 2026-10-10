@@ -26,7 +26,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   min-height: 730px;
   place-items: center;
   background-color: var(--bg-primary);
-  background-position: center 48%;
+  background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -39,15 +39,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   position: absolute;
   inset: 0;
   background:
-    linear-gradient(180deg, rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.14)),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.08), transparent 55%);
+    linear-gradient(180deg, rgba(0, 0, 0, 0.12), rgba(0, 0, 0, 0.36)),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 58%);
 }
 
 .audioflume-home-reference-hero h1 {
   position: relative;
   z-index: 1;
   width: min(1180px, calc(100vw - 80px));
-  margin: 20px 0 0;
+  margin: 8px 0 0;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(56px, 5vw, 76px);
@@ -58,64 +58,36 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   mix-blend-mode: difference;
 }
 
-.audioflume-home-reference-intro {
-  padding: 190px 0 46px;
-}
-
-.audioflume-home-reference-intro-grid {
+.audioflume-home-reference-hero-trust {
+  position: absolute;
+  right: 0;
+  bottom: 38px;
+  left: 0;
+  z-index: 2;
   display: grid;
-  grid-template-columns: minmax(0, 1.16fr) minmax(420px, 0.84fr);
-  align-items: start;
-  gap: 44px;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  align-items: center;
+  gap: 72px;
 }
 
-.audioflume-home-reference-intro h2,
-.audioflume-home-reference-library h2 {
+.audioflume-home-reference-hero-trust > p {
   margin: 0;
+  color: rgba(255, 255, 255, 0.34);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(29px, 2.1vw, 34px);
+  font-size: 11px;
   font-weight: 300;
-  letter-spacing: -0.04em;
-  line-height: 1.06;
-}
-
-.audioflume-home-reference-intro h2 {
-  white-space: nowrap;
-}
-
-.audioflume-home-reference-intro-grid > p,
-.audioflume-home-reference-library-copy > p {
-  max-width: 560px;
-  margin: 2px 0 0;
-  color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 300;
-  letter-spacing: normal;
-  line-height: 1.35;
-}
-
-.audioflume-home-reference-trust {
-  margin-top: 190px;
-}
-
-.audioflume-home-reference-trust > p {
-  margin: 0 0 28px;
-  color: var(--text-muted);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 14px;
-  font-weight: 300;
-  letter-spacing: 0;
   line-height: 1.4;
 }
 
 .audioflume-home-reference-logo-row {
-  display: block;
+  min-width: 0;
 }
 
 .audioflume-home-reference-logo-row img {
   display: block;
   width: 100%;
   height: auto;
+  opacity: 0.86;
 }
 
 .audioflume-home-reference-shelf {
@@ -126,7 +98,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 .audioflume-home-reference-shelf-scroller {
   display: flex;
-  gap: 8px;
+  gap: 0;
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
@@ -180,171 +152,222 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   right: 28px;
 }
 
-.audioflume-home-reference-song-shelf {
-  margin-top: 54px;
+.audioflume-home-reference-song-shelf,
+.audioflume-home-reference-artist-shelf,
+.audioflume-home-reference-playlist-shelf {
+  margin: 0;
 }
 
-.audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-scroller {
-  padding-right: 8px;
-  padding-left: 8px;
-}
-
-.audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller {
-  padding-right: 8px;
-  padding-left: 8px;
+.audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-scroller,
+.audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller,
+.audioflume-home-reference-playlist-shelf .audioflume-home-reference-shelf-scroller {
+  padding: 0;
 }
 
 .audioflume-home-reference-song-card {
-  width: 330px;
-  min-width: 330px;
-  height: 198px;
+  width: min(31vw, 480px);
+  min-width: min(31vw, 480px);
+  height: 310px;
 }
 
 .audioflume-home-reference-song-card-play {
   position: relative;
-  display: block;
+  display: grid;
   width: 100%;
   height: 100%;
+  place-items: center;
   overflow: hidden;
   border: 0;
   background: var(--bg-tertiary);
   color: #ffffff;
   padding: 0;
-  text-align: left;
   cursor: pointer;
+}
+
+.audioflume-home-reference-song-card-background {
+  position: absolute;
+  inset: -36px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(34px);
+  opacity: 0.78;
+  transform: scale(1.16);
 }
 
 .audioflume-home-reference-song-card-play::after {
   position: absolute;
   inset: 0;
-  background: rgba(17, 17, 17, 0.72);
+  z-index: 1;
+  background: rgba(17, 17, 17, 0.28);
   content: "";
+  pointer-events: none;
 }
 
-.audioflume-home-reference-song-card-play > img,
-.audioflume-home-reference-song-card-fallback {
-  position: absolute;
-  inset: 0;
+.audioflume-home-reference-song-card-art {
+  position: relative;
+  z-index: 2;
+  display: block;
+  width: 132px;
+  height: 132px;
+  overflow: hidden;
+}
+
+.audioflume-home-reference-song-card-art img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
 }
 
 .audioflume-home-reference-song-card-fallback {
+  position: absolute;
+  inset: 0;
   background: linear-gradient(135deg, #242424, #111111);
 }
 
 .audioflume-home-reference-song-card-copy {
   position: absolute;
-  right: 42px;
-  bottom: 18px;
-  left: 18px;
+  bottom: 42px;
+  left: 50%;
   z-index: 2;
   display: grid;
-  gap: 1px;
+  width: calc(100% - 72px);
+  gap: 2px;
+  color: #ffffff;
+  text-align: center;
+  transform: translateX(-50%);
 }
 
 .audioflume-home-reference-song-card-copy strong {
   overflow: hidden;
-  font-size: 12px;
-  font-weight: 500;
+  font-size: 11px;
+  font-weight: 400;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .audioflume-home-reference-song-card-copy span {
   overflow: hidden;
-  color: #ffffff;
-  font-size: 10px;
+  color: rgba(255, 255, 255, 0.56);
+  font-size: 9px;
   font-weight: 300;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
-.audioflume-home-reference-song-card-icon {
+.audioflume-home-reference-ui-showcase {
+  position: relative;
+  overflow: hidden;
+  background: #080808;
+}
+
+.audioflume-home-reference-ui-showcase > img {
+  display: block;
+  width: 100%;
+  height: clamp(520px, 48vw, 760px);
+  object-fit: cover;
+  object-position: center;
+}
+
+.audioflume-home-reference-ui-overlay {
   position: absolute;
-  right: 16px;
-  bottom: 18px;
-  z-index: 2;
-  display: grid;
-  width: 20px;
-  height: 20px;
-  place-items: center;
+  right: 0;
+  bottom: 42px;
+  left: 0;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 40px;
+}
+
+.audioflume-home-reference-ui-overlay h2 {
+  max-width: 520px;
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(27px, 2.05vw, 34px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1.05;
+}
+
+.audioflume-home-reference-ui-overlay a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 0 18px;
+  color: #111111;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
 }
 
 .audioflume-home-reference-library {
-  padding: 132px 0 112px;
+  padding: 116px 0 126px;
 }
 
 .audioflume-home-reference-library-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
-  align-items: center;
-  gap: 78px;
+  grid-template-columns: minmax(0, 1fr) minmax(420px, 0.92fr);
+  align-items: start;
+  gap: 92px;
 }
 
 .audioflume-home-reference-library-copy {
-  max-width: 570px;
+  max-width: 560px;
 }
 
 .audioflume-home-reference-library h2 {
+  margin: 0;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(42px, 3.4vw, 55px);
   font-weight: 300;
+  letter-spacing: -0.04em;
   line-height: 1.04;
 }
 
-.audioflume-home-reference-library-copy > p {
-  margin-top: 30px;
+.audioflume-home-reference-library-grid > p {
+  max-width: 560px;
+  margin: 6px 0 0;
   color: var(--text-muted);
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
 }
 
-.audioflume-home-reference-library-media-slot {
-  min-height: 420px;
-  overflow: visible;
-  display: flex;
-  align-items: center;
+.audioflume-home-reference-feature-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 58px 118px;
+  margin-top: 92px;
 }
 
-.audioflume-home-reference-library-playlist-array {
-  --filmwave-curated-shelf-card-width: 250px;
-  display: flex;
-  width: max-content;
-  align-items: center;
-  gap: 0;
-  margin-left: -115px;
+.audioflume-home-reference-feature-grid > div {
+  max-width: 460px;
 }
 
-.audioflume-home-reference-library-playlist-card {
-  position: relative;
-  width: 250px;
-  height: 141px;
-  flex: 0 0 250px;
-  overflow: hidden;
-  transform: skewY(20deg);
-  transform-origin: center;
-  pointer-events: none;
+.audioflume-home-reference-feature-grid h3 {
+  margin: 0;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
 }
 
-.audioflume-home-reference-library-playlist-card::after {
-  position: absolute;
-  inset: 0;
-  z-index: 6;
-  background: linear-gradient(
-    180deg,
-    rgba(17, 17, 17, 0) 0%,
-    rgba(17, 17, 17, 0.16) 52%,
-    rgba(17, 17, 17, 0.58) 100%
-  );
-  content: "";
-  pointer-events: none;
-}
-
-.audioflume-home-reference-library-playlist-card + .audioflume-home-reference-library-playlist-card {
-  margin-left: -150px;
+.audioflume-home-reference-feature-grid p {
+  margin: 14px 0 0;
+  color: var(--text-muted);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
 }
 
 .audioflume-home-reference-artists {
-  padding: 48px 0 126px;
+  padding: 28px 0 88px;
 }
 
 .audioflume-home-reference-artists > .audioflume-home-reference-width,
@@ -519,39 +542,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   line-height: 1;
 }
 
-.audioflume-home-reference-features {
-  padding: 48px 0 132px;
-}
-
-.audioflume-home-reference-feature-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 92px 118px;
-}
-
-.audioflume-home-reference-feature-grid > div {
-  max-width: 460px;
-}
-
-.audioflume-home-reference-feature-grid h3 {
-  margin: 0;
-  font-family: var(--filmwave-section-title-font-family);
-  font-size: var(--filmwave-section-title-font-size);
-  font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
-  line-height: var(--filmwave-section-title-line-height);
-}
-
-.audioflume-home-reference-feature-grid p {
-  margin: 16px 0 0;
-  color: var(--text-muted);
-  font-size: 15px;
-  font-weight: 300;
-  line-height: 1.55;
-}
-
 .audioflume-home-reference-playlists {
-  padding: 66px 0 132px;
+  padding: 18px 0 76px;
+}
+
+.audioflume-home-reference-playlist-shelf-card {
+  --filmwave-curated-shelf-card-width: 278px;
+  width: 278px;
+  min-width: 278px;
+  flex: 0 0 278px;
 }
 
 .audioflume-home-reference-new-songs .filmwave-song-card-shell,
@@ -567,11 +566,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 }
 
 .audioflume-home-reference-new-songs {
-  padding: 40px 0 150px;
+  padding: 28px 0 180px;
 }
 
 .audioflume-home-reference-new-songs .filmwave-music-list-shell {
-  background: transparent;
+  background: var(--bg-secondary);
+  padding: 44px 72px 52px;
 }
 
 .audioflume-home-reference-song-row-skeleton {
@@ -593,10 +593,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
     min-height: 640px;
   }
 
-  .audioflume-home-reference-intro-grid,
   .audioflume-home-reference-library-grid {
     grid-template-columns: 1fr;
-    gap: 54px;
+    gap: 46px;
+  }
+
+  .audioflume-home-reference-hero-trust {
+    gap: 36px;
   }
 
   .audioflume-home-reference-layered-playlists {
@@ -632,25 +635,35 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
     font-size: clamp(48px, 13vw, 72px);
   }
 
-  .audioflume-home-reference-intro {
-    padding-top: 80px;
-  }
-
-  .audioflume-home-reference-intro-grid {
+  .audioflume-home-reference-hero-trust {
+    bottom: 26px;
     grid-template-columns: 1fr;
+    gap: 18px;
   }
 
-  .audioflume-home-reference-trust {
-    margin-top: 72px;
+  .audioflume-home-reference-hero-trust > p {
+    display: none;
   }
 
   .audioflume-home-reference-song-card {
-    width: 78vw;
-    min-width: 78vw;
+    width: 82vw;
+    min-width: 82vw;
+    height: 260px;
+  }
+
+  .audioflume-home-reference-ui-showcase > img {
+    height: 390px;
+  }
+
+  .audioflume-home-reference-ui-overlay {
+    bottom: 24px;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
   }
 
   .audioflume-home-reference-library {
-    padding-top: 96px;
+    padding-top: 82px;
   }
 
   .audioflume-home-reference-layered-playlists {
@@ -678,15 +691,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
   }
 }
 
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-intro-grid > p {
-  color: var(--text-muted);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-logo-row img {
-  filter: invert(1);
-  opacity: 0.3;
-}
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
   background: #1b1b1b;
