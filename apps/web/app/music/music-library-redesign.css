@@ -852,3 +852,77 @@ main
   width: 100% !important;
   margin-left: 0 !important;
 }
+
+
+/* Web Music page accordion filter layout. */
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-filter-panel-body {
+  display: block !important;
+  grid-template-columns: none !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-filter-panel-body::before {
+  display: none !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-filter-detail {
+  display: none !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-filter-rail.is-accordion {
+  width: 100% !important;
+  max-width: 100% !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-section {
+  width: 100%;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail {
+  box-sizing: border-box;
+  width: 100%;
+  padding: 8px 12px 14px;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-item[aria-expanded="true"]
+  .fw-filter-rail-chevron {
+  transform: rotate(90deg);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron {
+  transition:
+    opacity 160ms ease,
+    color 160ms ease,
+    transform 160ms ease !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open.has-selected-filter-section {
+  width: var(--audioflume-music-filter-width, 248px) !important;
+  max-width: var(--audioflume-music-filter-width, 248px) !important;
+}
