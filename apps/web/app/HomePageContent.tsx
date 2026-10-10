@@ -21,6 +21,7 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import {
   useHasCurrentSong,
@@ -467,7 +468,8 @@ export default function HomePageContent() {
             className="audioflume-home-reference-searchbar-song"
             aria-label="Search by song"
           >
-            Search by song
+            <WaveformIcon size={16} />
+            <span>Search by song</span>
           </button>
         </div>
       </div>
