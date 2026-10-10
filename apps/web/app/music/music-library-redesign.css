@@ -1185,6 +1185,39 @@ main
 }
 
 .audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail
+  .fw-filter-control-stack
+  > .fw-segment {
+  gap: 10px !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail
+  .fw-filter-control-stack
+  > .fw-segment
+  > button {
+  min-width: 82px;
+  border-radius: 999px !important;
+  background: var(--bg-control) !important;
+  padding: 8px 16px !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail
+  .fw-filter-control-stack
+  > .fw-segment
+  > button.is-active {
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
+}
+
+.audioflume-music-page
   .fw-license-filter-trigger[aria-expanded="true"]
   .fw-filter-rail-chevron {
   transform: rotate(90deg);
