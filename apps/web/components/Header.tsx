@@ -341,6 +341,13 @@ export default function Header() {
           height: 14px;
         }
 
+        .filmwave-user-menu-action[href="/account/support"]
+          .filmwave-user-menu-action-icon
+          svg {
+          width: 16px;
+          height: 16px;
+        }
+
         .filmwave-user-menu-exit .filmwave-user-menu-action-icon svg {
           width: 16px;
           height: 16px;
