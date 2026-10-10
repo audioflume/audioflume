@@ -287,13 +287,6 @@ function HomeArtistShelf({
                 ) : null}
               </div>
               <div className="audioflume-home-reference-artist-bar">
-                <span className="audioflume-home-reference-artist-thumb">
-                  {artist.profile_image_url ? (
-                    <img src={artist.profile_image_url} alt="" draggable={false} />
-                  ) : image ? (
-                    <img src={image} alt="" draggable={false} />
-                  ) : null}
-                </span>
                 <span className="audioflume-home-reference-artist-copy">
                   <small>Featured Artist</small>
                   <strong>{artist.name}</strong>
