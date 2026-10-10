@@ -334,6 +334,18 @@ export default function Header() {
           color: var(--text-primary);
         }
 
+        .filmwave-user-menu-action[href="/account/settings"]
+          .filmwave-user-menu-action-icon
+          svg {
+          width: 14px;
+          height: 14px;
+        }
+
+        .filmwave-user-menu-exit .filmwave-user-menu-action-icon svg {
+          width: 16px;
+          height: 16px;
+        }
+
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
           border-bottom-color: rgba(255, 255, 255, 0.12) !important;
