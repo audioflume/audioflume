@@ -1,7 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
-import { Button, Card, CardTitle, Feedback, Info, Input, ProfileImageUploader } from "../AccountUI";
+import { Button, CardTitle, Feedback, Info, Input, ProfileImageUploader } from "../AccountUI";
 import { useAccountProfile } from "../hooks/useAccountProfile";
 import { formatDate } from "../accountUtils";
 
@@ -31,13 +31,13 @@ export default function ProfileSection() {
 
   return (
     <div className="grid gap-4 lg:grid-cols-[1.1fr_0.9fr]">
-      <Card>
+      <div>
         <CardTitle
           title="Personal information"
           description={loadState === "loading" ? "Loading your saved profile..." : "Basic details shown across your account and future customer portal."}
         />
         <form onSubmit={saveProfile}>
-          <div className="grid gap-4 p-4 sm:grid-cols-2">
+          <div className="grid gap-4 pt-4 sm:grid-cols-2">
             <Input label="First name" value={form.first_name} placeholder="First name" onChange={(value) => setForm((current) => ({ ...current, first_name: value }))} />
             <Input label="Last name" value={form.last_name} placeholder="Last name" onChange={(value) => setForm((current) => ({ ...current, last_name: value }))} />
             <Input label="Display name" value={form.display_name} placeholder="Display name" onChange={(value) => setForm((current) => ({ ...current, display_name: value }))} />
@@ -45,7 +45,7 @@ export default function ProfileSection() {
             <Input label="Company / studio" value={form.company_name} placeholder="Add company name" onChange={(value) => setForm((current) => ({ ...current, company_name: value }))} />
             <Input label="Primary use" value={form.primary_use} placeholder="Documentary, commercial, YouTube..." onChange={(value) => setForm((current) => ({ ...current, primary_use: value }))} />
           </div>
-          <div className="grid gap-3 border-t border-[var(--border)] px-4 py-3.5">
+          <div className="grid gap-3 pt-5">
             {message ? <Feedback tone={message.tone} message={message.text} /> : null}
             <div className="flex flex-wrap gap-2">
               <Button type="submit" disabled={saving || !profileChanged || loadState === "loading"}>{saving ? "Saving..." : "Save changes"}</Button>
@@ -53,10 +53,10 @@ export default function ProfileSection() {
             </div>
           </div>
         </form>
-      </Card>
+      </div>
 
-      <Card>
-        <div className="border-b border-[var(--border)] p-4">
+      <div>
+        <div className="pb-5">
           <div className="flex items-center gap-5">
             <ProfileImageUploader initials={initials} value={form.avatar_url} onChange={(value) => setForm((current) => ({ ...current, avatar_url: value }))} />
             <div className="min-w-0">
@@ -65,12 +65,12 @@ export default function ProfileSection() {
             </div>
           </div>
         </div>
-        <div className="grid gap-3 p-4">
+        <div className="grid gap-3">
           <Info label="Account type" value="Audioflume Member" />
           <Info label="Company / studio" value={form.company_name || "Not set"} />
           <Info label="Member since" value={formatDate(profile?.created_at)} />
         </div>
-      </Card>
+      </div>
     </div>
   );
 }
