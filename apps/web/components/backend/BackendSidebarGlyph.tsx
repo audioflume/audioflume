@@ -131,10 +131,10 @@ export default function BackendSidebarGlyph({
         </>
       )}
       {name === "notifications" && (
-        <>
+        <g transform="translate(12 12) scale(1.08) translate(-12 -12)">
           <path {...common} d="M6.5 16.5h11l-1.2-1.8V11a4.3 4.3 0 0 0-8.6 0v3.7L6.5 16.5Z" />
           <path {...common} d="M10 18.2c.5.8 1.1 1.2 2 1.2s1.5-.4 2-1.2" />
-        </>
+        </g>
       )}
       {name === "agreements" && (
         <>
