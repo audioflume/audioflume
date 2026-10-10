@@ -1098,6 +1098,15 @@ main
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
+  > .fw-filter-accordion-section:has(
+    > .fw-filter-rail-item[data-filter-section-id="advanced"][aria-expanded="true"]
+  )
+  > .fw-filter-accordion-detail.is-open {
+  border-top: 1px solid var(--border);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
   .fw-filter-accordion-detail
   .fw-filter-option-list {
   width: 100% !important;
