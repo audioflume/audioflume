@@ -144,6 +144,9 @@ function HomeSongCard({ song }: { song: Song }) {
             />
             <span className="audioflume-home-reference-song-card-art">
               <img src={song.coverArt} alt="" draggable={false} />
+              <span className="audioflume-home-reference-song-card-art-icon">
+                {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+              </span>
             </span>
           </>
         ) : (
