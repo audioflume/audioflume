@@ -446,7 +446,6 @@ function MusicBpmSection({
                 onBlur={() => applyRangeLow(low)} onKeyDown={blurOnEnter}
                 className="fw-filter-input" />
             </label>
-            <span className="fw-filter-bpm-dash" aria-hidden="true">–</span>
             <label className="fw-filter-mini-field">
               <span>High</span>
               <input type="number" min={BPM_MIN} max={BPM_MAX} value={high}
