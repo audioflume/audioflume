@@ -145,7 +145,7 @@ function HomeSongCard({ song }: { song: Song }) {
             <span className="audioflume-home-reference-song-card-art">
               <img src={song.coverArt} alt="" draggable={false} />
               <span className="audioflume-home-reference-song-card-art-icon">
-                {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+                {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
               </span>
             </span>
           </>
@@ -172,6 +172,45 @@ function HomeSongShelf({
     <Shelf label={label} className="audioflume-home-reference-song-shelf">
       {songs.map((song) => (
         <HomeSongCard key={song.id} song={song} />
+      ))}
+    </Shelf>
+  );
+}
+
+function HomeOriginalSongCard({ song }: { song: Song }) {
+  const { togglePlayPause } = usePlayer();
+  const playing = useIsCurrentSongPlaying(song.id);
+
+  return (
+    <article className="audioflume-home-reference-original-song-card">
+      <button
+        type="button"
+        className="audioflume-home-reference-original-song-card-play"
+        onClick={() => togglePlayPause(song)}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {song.coverArt ? (
+          <img src={song.coverArt} alt="" draggable={false} />
+        ) : (
+          <span className="audioflume-home-reference-original-song-card-fallback" />
+        )}
+        <span className="audioflume-home-reference-original-song-card-copy">
+          <strong>{song.title}</strong>
+          <span>{song.artist}</span>
+        </span>
+        <span className="audioflume-home-reference-original-song-card-icon">
+          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+        </span>
+      </button>
+    </article>
+  );
+}
+
+function HomeOriginalSongShelf({ songs }: { songs: Song[] }) {
+  return (
+    <Shelf label="Audioflume originals" className="audioflume-home-reference-original-song-shelf">
+      {songs.map((song) => (
+        <HomeOriginalSongCard key={song.id} song={song} />
       ))}
     </Shelf>
   );
@@ -420,9 +459,8 @@ export default function HomePageContent() {
           <Link href="/music">Explore Originals</Link>
         </div>
         {(originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
-          <HomeSongShelf
+          <HomeOriginalSongShelf
             songs={originalSongs.length > 0 ? originalSongs : shelfSongs}
-            label="Audioflume originals"
           />
         ) : null}
       </section>
