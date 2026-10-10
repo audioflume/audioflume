@@ -39,6 +39,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 
 import "./music-library-redesign.css";
@@ -886,9 +887,18 @@ export default function MusicPage() {
         </label>
 
         <div className="audioflume-music-page-searchbar-sort">
+          <button
+            type="button"
+            className="audioflume-music-page-searchbar-song"
+            aria-label="Search by song"
+          >
+            <WaveformIcon size={16} />
+            <span>Search by song</span>
+          </button>
           <MusicLibrarySortControl
             value={sortOrder}
             onChange={setSortOrder}
+            showSelectedCheck
           />
         </div>
       </div>
