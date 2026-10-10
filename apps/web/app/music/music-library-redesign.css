@@ -646,7 +646,7 @@ main
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: translateX(-100%) !important;
+  transform: translate(-100%, var(--filmwave-elastic-scroll-offset, 0px)) !important;
   transition:
     transform 180ms ease,
     opacity 140ms ease,
@@ -660,7 +660,7 @@ main
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  transform: translateX(0) !important;
+  transform: translate(0, var(--filmwave-elastic-scroll-offset, 0px)) !important;
   transition:
     transform 180ms ease,
     opacity 140ms ease !important;
