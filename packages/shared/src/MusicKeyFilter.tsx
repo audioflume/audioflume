@@ -31,7 +31,7 @@ function formatScaleLabel(scale: ScaleMode) {
 export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
   const [open, setOpen] = useState(false);
   const [accidental, setAccidental] = useState<AccidentalMode>(
-    getAccidentalModeFromNote(value?.note ?? null),
+    value?.accidental ?? getAccidentalModeFromNote(value?.note ?? null),
   );
   const [selectedNote, setSelectedNote] = useState<string | null>(
     value?.note ?? null,
@@ -57,7 +57,9 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setSelectedNote(value?.note ?? null);
     setScaleMode(value?.scale ?? null);
 
-    if (value?.note) {
+    if (value?.accidental) {
+      setAccidental(value.accidental);
+    } else if (value?.note) {
       setAccidental(getAccidentalModeFromNote(value.note));
     }
   }, [value]);
@@ -68,7 +70,7 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setSelectedNote(nextNote);
 
     if (nextNote) {
-      onChange({ note: nextNote, scale: scaleMode });
+      onChange({ note: nextNote, scale: scaleMode, accidental });
       return;
     }
 
@@ -81,7 +83,7 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
     setScaleMode(next);
 
     if (selectedNote) {
-      onChange({ note: selectedNote, scale: next });
+      onChange({ note: selectedNote, scale: next, accidental });
     }
   }
 
@@ -126,7 +128,14 @@ export function MusicKeyFilter({ value, onChange }: MusicKeyFilterProps) {
               <button
                 key={mode}
                 type="button"
-                onClick={() => setAccidental(mode)}
+                onClick={() => {
+                  setAccidental(mode);
+                  onChange({
+                    note: selectedNote ?? "",
+                    scale: scaleMode,
+                    accidental: mode,
+                  });
+                }}
                 className={`filmwave-filter-segment-button${
                   accidental === mode ? " is-active" : ""
                 }`}
