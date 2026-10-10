@@ -30,15 +30,26 @@ export function BackendSidebarShell({
   bottom = "0px",
 }: BackendSidebarShellProps) {
   return (
-    <aside
-      className={joinClasses(
-        "fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col",
-        className,
-      )}
-      style={{ top: "var(--filmwave-header-height)", bottom }}
-    >
-      {children}
-    </aside>
+    <>
+      <style>{`
+        .backend-sidebar-nav-icon {
+          color: #585858;
+        }
+
+        :where(html.light, html[data-theme="light"]) .backend-sidebar-nav-icon {
+          color: #9b9b9b;
+        }
+      `}</style>
+      <aside
+        className={joinClasses(
+          "fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col",
+          className,
+        )}
+        style={{ top: "var(--filmwave-header-height)", bottom }}
+      >
+        {children}
+      </aside>
+    </>
   );
 }
 
@@ -124,10 +135,10 @@ export function BackendSidebarNavItem({
       {leading ? (
         <span
           className={joinClasses(
-            "flex h-4 w-4 shrink-0 items-center justify-center transition-colors",
+            "backend-sidebar-nav-icon flex h-4 w-4 shrink-0 items-center justify-center transition-colors",
             active
               ? "text-[var(--text-primary)]"
-              : "text-[var(--text-muted)] group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]",
+              : "group-hover:text-[var(--text-primary)] group-focus-visible:text-[var(--text-primary)]",
           )}
         >
           {leading}
@@ -138,7 +149,7 @@ export function BackendSidebarNavItem({
         {trailing ? <span className="shrink-0">{trailing}</span> : null}
         <span
           className={joinClasses(
-            "inline-flex shrink-0 text-[var(--text-muted)] transition-opacity duration-[130ms]",
+            "backend-sidebar-nav-icon inline-flex shrink-0 transition-opacity duration-[130ms]",
             active
               ? "opacity-100"
               : "opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100",
