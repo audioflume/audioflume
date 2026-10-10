@@ -210,19 +210,26 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-count-clear {
-  position: absolute;
-  inset: 0;
-  display: none;
-  align-items: center;
-  justify-content: center;
+  .fw-filter-advanced-count
+  > .fw-filter-rail-count-clear {
+  position: absolute !important;
+  inset: 0 !important;
+  display: none !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 100% !important;
+  height: 100% !important;
+  color: inherit !important;
+  pointer-events: none !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-count-clear
+  .fw-filter-advanced-count
+  > .fw-filter-rail-count-clear
   svg {
-  width: 10px;
-  height: 10px;
+  display: block !important;
+  width: 11px !important;
+  height: 11px !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -233,8 +240,8 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-count:hover
-  .fw-filter-advanced-count-clear {
-  display: inline-flex;
+  > .fw-filter-rail-count-clear {
+  display: inline-flex !important;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
