@@ -128,7 +128,18 @@
 }
 
 html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
-  padding-top: 18px !important;
+  padding-top: 0 !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-quick-row,
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-song-list {
+  margin-top: 18px !important;
 }
 
 html
