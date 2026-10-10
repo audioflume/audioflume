@@ -373,11 +373,28 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-song-card-art-icon {
   position: absolute;
-  inset: 0;
+  top: 50%;
+  left: 50%;
   display: grid;
+  width: 46px;
+  height: 46px;
   place-items: center;
+  border-radius: 50%;
+  background: transparent;
   color: #ffffff;
   pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition:
+    background-color 160ms ease,
+    color 160ms ease;
+}
+
+.audioflume-home-reference-song-card:hover
+  .audioflume-home-reference-song-card-art-icon,
+.audioflume-home-reference-song-card-play:focus-visible
+  .audioflume-home-reference-song-card-art-icon {
+  background: #ffffff;
+  color: #111111;
 }
 
 .audioflume-home-reference-song-card-fallback {
@@ -410,7 +427,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-song-card-copy span {
   overflow: hidden;
-  color: rgba(255, 255, 255, 0.56);
+  color: rgba(255, 255, 255, 0.3);
   font-size: 11.5px;
   font-weight: 400;
   line-height: 1.35;
