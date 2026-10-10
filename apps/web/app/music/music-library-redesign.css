@@ -217,7 +217,7 @@ main
   .fw-filter-rail {
   box-sizing: border-box !important;
   gap: 1px !important;
-  padding: 10px 8px 40px !important;
+  padding: 10px 0 40px !important;
 }
 
 html.fw-display-exclude-ai-songs
@@ -270,10 +270,11 @@ main
   .fw-filter-rail-item {
   position: relative !important;
   box-sizing: border-box !important;
+  width: 100% !important;
   border-top: 0 !important;
   border-radius: 0 !important;
   margin: 0 !important;
-  padding: 0 8px 0 12px !important;
+  padding: 0 16px 0 20px !important;
 }
 
 main
@@ -774,6 +775,15 @@ main
   height: 100% !important;
 }
 
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-license-filter-option {
+  padding-right: 16px !important;
+  padding-left: 20px !important;
+}
 
 /* Open filter rail fills the full widened column. */
 .audioflume-music-page
