@@ -81,8 +81,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-searchbar-field {
   gap: 18px;
+  margin: 12px 16px;
+  border-radius: 999px;
+  background: #1b1b1b;
   padding: 0 34px;
-  color: #323232;
+  color: #6f6f6f;
 }
 
 .audioflume-home-reference-searchbar-field svg {
@@ -1029,6 +1032,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
   .audioflume-home-reference-searchbar-field {
     gap: 12px;
+    margin: 12px 10px;
     padding: 0 18px;
   }
 
@@ -1192,6 +1196,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field {
+  background: #f3f3f3;
   color: #a3a3a3;
 }
 
