@@ -326,6 +326,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   gap: 30px;
 }
 
+.audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-arrow {
+  top: 200px;
+}
+
 .audioflume-home-reference-song-card {
   width: 25vw;
   min-width: 25vw;
