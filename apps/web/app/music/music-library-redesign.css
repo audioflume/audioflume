@@ -1248,7 +1248,7 @@ main
 
 
 .audioflume-music-page .audioflume-music-featured-songs {
-  --audioflume-featured-song-inset: 48px;
+  --audioflume-featured-song-inset: 36px;
   display: grid;
   width: calc(100% + 40px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1362,7 +1362,7 @@ main
 
 @media (max-width: 720px) {
   .audioflume-music-page .audioflume-music-featured-songs {
-    --audioflume-featured-song-inset: 32px;
+    --audioflume-featured-song-inset: 24px;
     width: calc(100% + 32px);
     grid-template-columns: 1fr;
     margin-right: -32px;
