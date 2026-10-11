@@ -2,10 +2,10 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import {
-  ensurePublishedSongSearchEmbeddings,
-  searchPublishedSongsSemantically,
-  type SemanticSongSearchMatch,
-} from "@/lib/songEmbeddings";
+  analyzeAudioUrl,
+  compareAudioFeatures,
+  type AudioSimilarityFeatures,
+} from "@/lib/audioSimilarity";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const MAX_RESULT_COUNT = 200;
-const MAX_RELATED_TRACKS = 12;
+const ANALYSIS_CONCURRENCY = 4;
 
 type DeezerArtist = {
   id?: number;
@@ -31,7 +31,7 @@ type DeezerTrack = {
   title_short?: string;
   duration?: number;
   bpm?: number;
-  gain?: number;
+  preview?: string;
   artist?: DeezerArtist;
   album?: DeezerAlbumSummary;
 };
@@ -48,26 +48,13 @@ type DeezerAlbum = {
   };
 };
 
-type DeezerRadioResponse = {
-  data?: DeezerTrack[];
-};
-
 type ReferenceCandidateSong = {
   id: string;
-  genres: string[] | null;
-  moods: string[] | null;
-  instruments: string[] | null;
-  builds: string[] | null;
-  vocals: string[] | null;
-  instrumental: boolean | null;
+  playback_url: string | null;
+  audio_url: string | null;
   bpm: number | null;
-  key: string | null;
-  duration: number | null;
+  genres: string[] | null;
 };
-
-function clamp01(value: number) {
-  return Math.min(1, Math.max(0, value));
-}
 
 function normalize(value: string) {
   return value
@@ -110,82 +97,27 @@ async function getReferenceProfile(trackId: number) {
     `https://api.deezer.com/track/${trackId}`,
   );
 
-  const albumId = Number(track.album?.id ?? 0);
+  const previewUrl = track.preview?.trim() ?? "";
+  if (!previewUrl) {
+    throw new Error("The selected reference track does not have an audio preview");
+  }
 
-  const [album, radio] = await Promise.all([
-    albumId
-      ? fetchDeezerJson<DeezerAlbum>(
-          `https://api.deezer.com/album/${albumId}`,
-        ).catch(() => null)
-      : Promise.resolve(null),
-    fetchDeezerJson<DeezerRadioResponse>(
-      `https://api.deezer.com/track/${trackId}/radio?limit=${MAX_RELATED_TRACKS}`,
-    ).catch(() => null),
-  ]);
+  const albumId = Number(track.album?.id ?? 0);
+  const album = albumId
+    ? await fetchDeezerJson<DeezerAlbum>(
+        `https://api.deezer.com/album/${albumId}`,
+      ).catch(() => null)
+    : null;
 
   const genres = (album?.genres?.data ?? [])
     .map((genre) => genre.name?.trim() ?? "")
     .filter(Boolean);
 
-  const relatedTracks = (radio?.data ?? [])
-    .map((related) => ({
-      title: getTrackName(related),
-      artist: related.artist?.name?.trim() ?? "",
-    }))
-    .filter((related) => related.title && related.artist)
-    .slice(0, MAX_RELATED_TRACKS);
-
   return {
     track,
+    previewUrl,
     genres,
-    relatedTracks,
   };
-}
-
-function buildReferenceSearchText(profile: Awaited<ReturnType<typeof getReferenceProfile>>) {
-  const trackName = getTrackName(profile.track);
-  const artist = profile.track.artist?.name?.trim() ?? "";
-  const album = profile.track.album?.title?.trim() ?? "";
-  const bpm = Number(profile.track.bpm ?? 0);
-
-  const parts = [
-    `Reference song: ${trackName} by ${artist}.`,
-    album ? `Album: ${album}.` : "",
-    profile.genres.length > 0
-      ? `Genres: ${profile.genres.join(", ")}.`
-      : "",
-    bpm > 0 ? `Tempo: ${Math.round(bpm)} BPM.` : "",
-    profile.relatedTracks.length > 0
-      ? `Sonically related tracks and artists: ${profile.relatedTracks
-          .map((track) => `${track.title} by ${track.artist}`)
-          .join("; ")}.`
-      : "",
-    "Find production music with a similar musical character, pacing, instrumentation, mood, and overall sonic feel.",
-  ];
-
-  return parts.filter(Boolean).join(" ");
-}
-
-function getBpmSimilarity(referenceBpm: number, candidateBpm: number | null) {
-  if (!referenceBpm || !candidateBpm) return null;
-
-  const distances = [
-    Math.abs(referenceBpm - candidateBpm),
-    Math.abs(referenceBpm * 2 - candidateBpm),
-    Math.abs(referenceBpm - candidateBpm * 2),
-  ];
-
-  const distance = Math.min(...distances);
-  return clamp01(1 - distance / 24);
-}
-
-function getDurationSimilarity(
-  referenceDuration: number,
-  candidateDuration: number | null,
-) {
-  if (!referenceDuration || !candidateDuration) return null;
-
-  return clamp01(1 - Math.abs(referenceDuration - candidateDuration) / 150);
 }
 
 function getGenreSimilarity(
@@ -199,57 +131,79 @@ function getGenreSimilarity(
 
   if (reference.length === 0 || candidate.length === 0) return null;
 
-  const matched = reference.some((referenceGenre) =>
+  return reference.some((referenceGenre) =>
     candidate.some(
       (candidateGenre) =>
         candidateGenre === referenceGenre ||
         candidateGenre.includes(referenceGenre) ||
         referenceGenre.includes(candidateGenre),
     ),
-  );
-
-  return matched ? 1 : 0;
+  )
+    ? 1
+    : 0;
 }
 
-function scoreCandidate(
-  match: SemanticSongSearchMatch,
-  song: ReferenceCandidateSong,
-  reference: {
-    bpm: number;
-    duration: number;
-    genres: string[];
-  },
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  mapper: (item: T) => Promise<R>,
 ) {
-  const semanticScore = clamp01(match.similarity);
-  const bpmScore = getBpmSimilarity(reference.bpm, song.bpm);
-  const durationScore = getDurationSimilarity(reference.duration, song.duration);
-  const genreScore = getGenreSimilarity(reference.genres, song.genres);
+  const results = new Array<R>(items.length);
+  let nextIndex = 0;
 
-  const weightedSignals = [
-    { score: semanticScore, weight: 0.68 },
-    ...(bpmScore === null ? [] : [{ score: bpmScore, weight: 0.22 }]),
-    ...(genreScore === null ? [] : [{ score: genreScore, weight: 0.07 }]),
-    ...(durationScore === null
-      ? []
-      : [{ score: durationScore, weight: 0.03 }]),
-  ];
+  async function worker() {
+    while (true) {
+      const index = nextIndex;
+      nextIndex += 1;
 
-  const weightTotal = weightedSignals.reduce(
-    (total, signal) => total + signal.weight,
-    0,
+      if (index >= items.length) return;
+      results[index] = await mapper(items[index]);
+    }
+  }
+
+  await Promise.all(
+    Array.from(
+      { length: Math.min(concurrency, Math.max(1, items.length)) },
+      () => worker(),
+    ),
   );
-  const total = weightedSignals.reduce(
-    (sum, signal) => sum + signal.score * signal.weight,
-    0,
-  );
+
+  return results;
+}
+
+function scoreCandidate({
+  referenceFeatures,
+  candidateFeatures,
+  referenceBpm,
+  candidateBpm,
+  referenceGenres,
+  candidateGenres,
+}: {
+  referenceFeatures: AudioSimilarityFeatures;
+  candidateFeatures: AudioSimilarityFeatures;
+  referenceBpm: number | null;
+  candidateBpm: number | null;
+  referenceGenres: string[];
+  candidateGenres: string[] | null;
+}) {
+  const audioScore = compareAudioFeatures(referenceFeatures, candidateFeatures, {
+    referenceBpm,
+    candidateBpm,
+  });
+  const genreScore = getGenreSimilarity(referenceGenres, candidateGenres);
+
+  if (genreScore === null) {
+    return {
+      score: audioScore,
+      audioScore,
+      genreScore: null,
+    };
+  }
 
   return {
-    songId: song.id,
-    score: weightTotal > 0 ? total / weightTotal : semanticScore,
-    semanticSimilarity: match.similarity,
-    bpmSimilarity: bpmScore,
-    genreSimilarity: genreScore,
-    durationSimilarity: durationScore,
+    score: audioScore * 0.95 + genreScore * 0.05,
+    audioScore,
+    genreScore,
   };
 }
 
@@ -281,85 +235,83 @@ export async function POST(request: Request) {
     }
 
     const profile = await getReferenceProfile(trackId);
-    const searchText = buildReferenceSearchText(profile);
+    const referenceFeatures = await analyzeAudioUrl(profile.previewUrl);
 
-    await ensurePublishedSongSearchEmbeddings();
-
-    const semanticMatches = await searchPublishedSongsSemantically(searchText, {
-      matchCount: MAX_RESULT_COUNT,
-      minSimilarity: -1,
-    });
-
-    if (semanticMatches.length === 0) {
-      return NextResponse.json({
-        matches: [],
-        reference: {
-          id: referenceId,
-          title: getTrackName(profile.track),
-          artist: profile.track.artist?.name?.trim() ?? "",
-          bpm: Number(profile.track.bpm ?? 0) || null,
-          duration: Number(profile.track.duration ?? 0) || null,
-          genres: profile.genres,
-        },
-      });
-    }
-
-    const ids = semanticMatches.map((semanticMatch) => semanticMatch.songId);
     const { data, error } = await supabaseServer
       .from("songs")
-      .select(
-        "id, genres, moods, instruments, builds, vocals, instrumental, bpm, key, duration",
-      )
-      .in("id", ids);
+      .select("id, playback_url, audio_url, bpm, genres")
+      .eq("status", "published");
 
     if (error) throw error;
 
-    const songsById = new Map(
-      ((data ?? []) as ReferenceCandidateSong[]).map((song) => [song.id, song]),
+    const candidateSongs = ((data ?? []) as ReferenceCandidateSong[]).filter(
+      (song) => Boolean(song.playback_url?.trim() || song.audio_url?.trim()),
     );
 
-    const reference = {
-      bpm: Number(profile.track.bpm ?? 0),
-      duration: Number(profile.track.duration ?? 0),
-      genres: profile.genres,
-    };
+    const analyzed = await mapWithConcurrency(
+      candidateSongs,
+      ANALYSIS_CONCURRENCY,
+      async (song) => {
+        const sourceUrl =
+          song.playback_url?.trim() || song.audio_url?.trim() || "";
 
-    const matches = semanticMatches
-      .flatMap((semanticMatch) => {
-        const song = songsById.get(semanticMatch.songId);
-        if (!song) return [];
+        try {
+          const candidateFeatures = await analyzeAudioUrl(sourceUrl);
+          const scored = scoreCandidate({
+            referenceFeatures,
+            candidateFeatures,
+            referenceBpm: Number(profile.track.bpm ?? 0) || null,
+            candidateBpm: Number(song.bpm ?? 0) || null,
+            referenceGenres: profile.genres,
+            candidateGenres: song.genres,
+          });
 
-        return [scoreCandidate(semanticMatch, song, reference)];
-      })
+          return {
+            songId: song.id,
+            ...scored,
+          };
+        } catch (candidateError) {
+          console.warn(
+            `Reference audio analysis skipped song ${song.id}:`,
+            candidateError,
+          );
+          return null;
+        }
+      },
+    );
+
+    const matches = analyzed
+      .filter(
+        (
+          result,
+        ): result is {
+          songId: string;
+          score: number;
+          audioScore: number;
+          genreScore: number | null;
+        } => result !== null,
+      )
       .sort((a, b) => b.score - a.score)
       .slice(0, MAX_RESULT_COUNT)
       .map((result) => ({
         songId: result.songId,
         score: Number(result.score.toFixed(6)),
-        similarity: Number(result.semanticSimilarity.toFixed(6)),
-        bpmSimilarity:
-          result.bpmSimilarity === null
-            ? null
-            : Number(result.bpmSimilarity.toFixed(6)),
-        genreSimilarity: result.genreSimilarity,
-        durationSimilarity:
-          result.durationSimilarity === null
-            ? null
-            : Number(result.durationSimilarity.toFixed(6)),
+        audioSimilarity: Number(result.audioScore.toFixed(6)),
+        genreSimilarity: result.genreScore,
       }));
 
     return NextResponse.json(
       {
         matches,
-        ranking: "reference-v1",
+        ranking: "audio-similarity-v1",
         reference: {
           id: referenceId,
           title: getTrackName(profile.track),
           artist: profile.track.artist?.name?.trim() ?? "",
-          bpm: reference.bpm || null,
-          duration: reference.duration || null,
-          genres: reference.genres,
-          relatedTracks: profile.relatedTracks,
+          bpm: Number(profile.track.bpm ?? 0) || referenceFeatures.estimatedBpm,
+          duration: Number(profile.track.duration ?? 0) || null,
+          genres: profile.genres,
+          audioAnalyzed: true,
         },
       },
       {
@@ -372,7 +324,12 @@ export async function POST(request: Request) {
     console.error("Reference music search failed:", error);
 
     return NextResponse.json(
-      { error: "Reference search is temporarily unavailable" },
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : "Reference search is temporarily unavailable",
+      },
       {
         status: 503,
         headers: {
