@@ -156,9 +156,7 @@
 
 .discover-artist-hero {
   --discover-artist-featured-intro-bottom: calc(clamp(190px, 13vw, 250px) + 30px);
-  --discover-artist-hero-height: calc(
-    100dvh - (var(--filmwave-header-height, 75px) * 2)
-  );
+  --discover-artist-hero-height: 75dvh;
   position: relative;
   height: var(--discover-artist-hero-height);
   min-height: 560px;
@@ -179,14 +177,6 @@
       var(--discover-artist-hero-position, center 42%) / cover no-repeat;
   background-color: #171717;
   color: #fff;
-}
-
-.discover-page-root.has-player .discover-artist-hero {
-  height: calc(
-    100dvh - (var(--filmwave-header-height, 75px) * 2) -
-      var(--filmwave-player-height, 72px)
-  );
-  min-height: 560px;
 }
 
 .discover-artist-hero-inner {
