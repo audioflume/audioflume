@@ -451,7 +451,7 @@ export default function AddToPlaylistModal({
         <SongPreview song={song} />
 
         <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5">
-          <label className="mb-3 flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
+          <label className="flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
             <svg
               width="16"
               height="16"
@@ -481,7 +481,7 @@ export default function AddToPlaylistModal({
                 }}
                 className="mb-1 flex w-full items-start gap-3 rounded-none p-2"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-white">
                   <PlusIcon size={18} />
                 </span>
 
