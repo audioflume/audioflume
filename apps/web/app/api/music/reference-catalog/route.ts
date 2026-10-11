@@ -48,10 +48,6 @@ type MusicBrainzRecording = {
   releases?: MusicBrainzRelease[];
 };
 
-type MusicBrainzArtistSearchResponse = {
-  artists?: MusicBrainzArtist[];
-};
-
 type MusicBrainzRecordingSearchResponse = {
   recordings?: MusicBrainzRecording[];
 };
@@ -256,46 +252,47 @@ async function fetchMusicBrainz<T>(url: URL) {
   return (await response.json()) as T;
 }
 
-async function findExactArtist(query: string) {
-  const searchUrl = new URL("https://musicbrainz.org/ws/2/artist");
-  searchUrl.searchParams.set("query", query);
-  searchUrl.searchParams.set("fmt", "json");
-  searchUrl.searchParams.set("limit", "5");
-
-  const data = await fetchMusicBrainz<MusicBrainzArtistSearchResponse>(searchUrl);
-  const normalizedQuery = normalize(query);
-
-  return (
-    (data.artists ?? []).find(
-      (artist) => normalize(artist.name ?? "") === normalizedQuery,
-    ) ?? null
-  );
-}
-
 function escapeMusicBrainzQuery(value: string) {
   return value.replace(/([+\-&|!(){}\[\]^"~*?:\\/])/g, "\\$1");
 }
 
-async function searchRecordings(query: string, artistId?: string) {
+async function searchRecordings(query: string) {
+  const escapedQuery = escapeMusicBrainzQuery(query);
   const searchUrl = new URL("https://musicbrainz.org/ws/2/recording");
   searchUrl.searchParams.set(
     "query",
-    artistId
-      ? `arid:${artistId}`
-      : `recording:"${escapeMusicBrainzQuery(query)}"`,
+    `artistname:"${escapedQuery}" OR recording:"${escapedQuery}"`,
   );
   searchUrl.searchParams.set("fmt", "json");
-  searchUrl.searchParams.set(
-    "limit",
-    String(
-      artistId ? MUSICBRAINZ_SEARCH_LIMIT : MUSICBRAINZ_TITLE_SEARCH_LIMIT,
-    ),
-  );
+  searchUrl.searchParams.set("limit", String(MUSICBRAINZ_TITLE_SEARCH_LIMIT));
 
   const data =
     await fetchMusicBrainz<MusicBrainzRecordingSearchResponse>(searchUrl);
 
   return data.recordings ?? [];
+}
+
+function findExactArtistInRecordings(
+  query: string,
+  recordings: MusicBrainzRecording[],
+) {
+  const normalizedQuery = normalize(query);
+
+  for (const recording of recordings) {
+    for (const credit of recording["artist-credit"] ?? []) {
+      const artist = credit.artist;
+      const name = artist?.name?.trim() || credit.name?.trim() || "";
+
+      if (artist?.id?.trim() && normalize(name) === normalizedQuery) {
+        return {
+          ...artist,
+          name,
+        };
+      }
+    }
+  }
+
+  return null;
 }
 
 function rankRecordingResults(
@@ -340,10 +337,18 @@ async function searchMusicBrainz(query: string) {
     return cached.results;
   }
 
-  const matchedArtist = await findExactArtist(query);
-  const recordings = await searchRecordings(query, matchedArtist?.id);
+  const recordings = await searchRecordings(query);
+  const matchedArtist = findExactArtistInRecordings(query, recordings);
   const rankedRecordings = matchedArtist
-    ? recordings
+    ? dedupeRecordingResults(
+        recordings.filter((recording) =>
+          (recording["artist-credit"] ?? []).some((credit) => {
+            const artistName =
+              credit.artist?.name?.trim() || credit.name?.trim() || "";
+            return normalize(artistName) === normalize(matchedArtist.name ?? "");
+          }),
+        ),
+      )
     : dedupeRecordingResults(rankRecordingResults(query, recordings));
 
   const tracks = rankedRecordings.flatMap((recording) => {
