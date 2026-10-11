@@ -410,6 +410,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-song-card:hover
   .audioflume-home-reference-song-card-art-icon,
+.audioflume-home-reference-song-card.is-playing
+  .audioflume-home-reference-song-card-art-icon,
 .audioflume-home-reference-song-card-play:focus-visible
   .audioflume-home-reference-song-card-art-icon {
   opacity: 1;
