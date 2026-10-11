@@ -1336,6 +1336,13 @@ main
   color: #111111;
   padding: 0;
   cursor: pointer;
+  transform-origin: center;
+  transition: transform 160ms ease;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-play:hover,
+.audioflume-music-page .audioflume-music-featured-song-play:focus-visible {
+  transform: scale(1.03);
 }
 
 @media (max-width: 720px) {
