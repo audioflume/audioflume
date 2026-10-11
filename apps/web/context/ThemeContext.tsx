@@ -17,14 +17,14 @@ const ThemeContext = createContext<{
   setTheme: (theme: Theme) => void;
   toggleTheme: () => void;
 }>({
-  theme: "dark",
+  theme: "light",
   setTheme: () => {},
   toggleTheme: () => {},
 });
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { themeMode, setThemeMode, preferencesLoaded } = useUserPreferences();
-  const [theme, setThemeState] = useState<Theme>("dark");
+  const [theme, setThemeState] = useState<Theme>("light");
 
   const applyTheme = (nextTheme: Theme) => {
     setThemeState(nextTheme);
