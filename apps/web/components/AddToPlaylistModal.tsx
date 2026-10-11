@@ -117,7 +117,7 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center" style={{ marginTop: "-14px" }}>
+    <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center" style={{ marginTop: "-8px" }}>
       <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
         <span
           className="relative block shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]"
@@ -486,7 +486,7 @@ export default function AddToPlaylistModal({
                 }}
                 className="group mb-1 flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-tertiary-hover)]">
                   <PlusIcon size={18} />
                 </span>
 
@@ -526,7 +526,7 @@ export default function AddToPlaylistModal({
               <button
                 type="button"
                 onClick={() => setNewPlaylistOpen(true)}
-                className="flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-hover)]"
+                className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
