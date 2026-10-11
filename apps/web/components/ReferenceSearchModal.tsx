@@ -24,7 +24,10 @@ type ReferenceSearchModalProps = {
   value: string;
   onChange: (value: string) => void;
   onClose: () => void;
-  onSubmit: (value: string, result?: ReferenceCatalogResult) => void;
+  onSubmit: (
+    value: string,
+    result?: ReferenceCatalogResult,
+  ) => void | Promise<void>;
 };
 
 function ReferenceArtwork({
@@ -83,12 +86,19 @@ export default function ReferenceSearchModal({
   const searchFormRef = useRef<HTMLFormElement | null>(null);
   const [results, setResults] = useState<ReferenceCatalogResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [selectedResult, setSelectedResult] =
+    useState<ReferenceCatalogResult | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   function closeModal() {
+    if (submitting) return;
+
     onChange("");
     setResults([]);
     setLoading(false);
+    setSubmitting(false);
+    setSelectedResult(null);
     setDropdownOpen(false);
     onClose();
   }
@@ -120,6 +130,8 @@ export default function ReferenceSearchModal({
     if (!open) {
       setResults([]);
       setLoading(false);
+      setSubmitting(false);
+      setSelectedResult(null);
       setDropdownOpen(false);
       return;
     }
@@ -189,7 +201,7 @@ export default function ReferenceSearchModal({
     result?: ReferenceCatalogResult,
   ) {
     const cleanQuery = query.trim();
-    if (!cleanQuery) return;
+    if (!cleanQuery || submitting) return;
 
     if (isMusicLink(cleanQuery) && !result) {
       setLoading(true);
@@ -219,18 +231,35 @@ export default function ReferenceSearchModal({
         }
 
         onChange(resolved.searchQuery);
-        onSubmit(resolved.searchQuery, resolved);
+
+        if (resolved.kind === "track") {
+          setSelectedResult(resolved);
+          setSubmitting(true);
+        }
+
+        await onSubmit(resolved.searchQuery, resolved);
       } catch (error) {
         console.error("Reference link resolution failed:", error);
       } finally {
         setLoading(false);
+        setSubmitting(false);
       }
 
       return;
     }
 
     onChange(cleanQuery);
-    onSubmit(cleanQuery, result);
+
+    if (result?.kind === "track") {
+      setSelectedResult(result);
+      setSubmitting(true);
+    }
+
+    try {
+      await onSubmit(cleanQuery, result);
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const showDropdown =
@@ -261,6 +290,7 @@ export default function ReferenceSearchModal({
           className={styles.close}
           aria-label="Close reference search"
           onClick={closeModal}
+          disabled={submitting}
         >
           <XIcon size={12} />
         </button>
@@ -275,6 +305,26 @@ export default function ReferenceSearchModal({
             Music link.
           </p>
 
+          {submitting && selectedResult ? (
+            <div
+              className={styles.searching}
+              role="status"
+              aria-live="polite"
+            >
+              <span className={styles.searchingArtwork} aria-hidden="true">
+                <ReferenceArtwork
+                  imageUrl={selectedResult.imageUrl}
+                  imageUrls={selectedResult.imageUrls}
+                />
+              </span>
+              <span className={styles.searchingCopy}>
+                <strong>{selectedResult.name}</strong>
+                <small>{selectedResult.artist}</small>
+                <span>Finding similar tracks…</span>
+              </span>
+              <span className={styles.searchingSpinner} aria-hidden="true" />
+            </div>
+          ) : (
           <form
             ref={searchFormRef}
             className={styles.searchForm}
@@ -346,6 +396,7 @@ export default function ReferenceSearchModal({
               </div>
             ) : null}
           </form>
+          )}
         </div>
       </section>
     </div>

@@ -78,6 +78,12 @@
   transform: scale(1.03);
 }
 
+.close:disabled {
+  cursor: default;
+  opacity: 0.45;
+  transform: none;
+}
+
 .content {
   position: relative;
   z-index: 1;
@@ -165,6 +171,92 @@
 
 .searchForm {
   position: relative;
+}
+
+.searching {
+  display: grid;
+  min-height: 68px;
+  grid-template-columns: 44px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 12px;
+  background: rgba(17, 17, 17, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  padding: 11px 14px;
+}
+
+.searchingArtwork {
+  display: block;
+  width: 44px;
+  height: 44px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.searchingArtwork img,
+.searchingArtwork .resultArtworkFallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.searchingArtwork img {
+  object-fit: cover;
+}
+
+.searchingArtwork .resultArtworkFallback {
+  display: grid;
+  place-items: center;
+  color: rgba(255, 255, 255, 0.58);
+}
+
+.searchingCopy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.searchingCopy strong,
+.searchingCopy small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.searchingCopy strong {
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.searchingCopy small {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 11px;
+  font-weight: 300;
+}
+
+.searchingCopy > span {
+  margin-top: 3px;
+  color: rgba(255, 255, 255, 0.58);
+  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.searchingSpinner {
+  width: 18px;
+  height: 18px;
+  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: referenceSearchSpin 700ms linear infinite;
+}
+
+@keyframes referenceSearchSpin {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .results {

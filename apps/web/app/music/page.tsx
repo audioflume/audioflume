@@ -1115,11 +1115,11 @@ export default function MusicPage() {
         value={searchBySongQuery}
         onChange={setSearchBySongQuery}
         onClose={() => setSearchBySongOpen(false)}
-        onSubmit={(query, result) => {
+        onSubmit={async (query, result) => {
           setSearchBySongQuery(query);
-          setSearchBySongOpen(false);
 
           if (result?.kind !== "track") {
+            setSearchBySongOpen(false);
             setSearch(query);
             return;
           }
@@ -1136,28 +1136,30 @@ export default function MusicPage() {
             songIds: [],
           });
 
-          void fetch("/api/music/reference-search", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ referenceId: result.id }),
-          })
-            .then(async (response) => {
-              if (!response.ok) {
-                throw new Error("Reference search request failed");
-              }
-
-              const data = await response.json();
-              setReferenceSearchState({
-                referenceId: result.id,
-                query,
-                status: "success",
-                songIds: getSearchMatchSongIds(data),
-              });
-            })
-            .catch((error) => {
-              console.error("Reference music search failed:", error);
-              setReferenceSearchState(null);
+          try {
+            const response = await fetch("/api/music/reference-search", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ referenceId: result.id }),
             });
+
+            if (!response.ok) {
+              throw new Error("Reference search request failed");
+            }
+
+            const data = await response.json();
+            setReferenceSearchState({
+              referenceId: result.id,
+              query,
+              status: "success",
+              songIds: getSearchMatchSongIds(data),
+            });
+            setSearchBySongOpen(false);
+          } catch (error) {
+            console.error("Reference music search failed:", error);
+            setReferenceSearchState(null);
+            throw error;
+          }
         }}
       />
 
