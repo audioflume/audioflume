@@ -37,6 +37,9 @@ export default function BackendModalShell({
       maxWidth={maxWidth}
       maxHeight={maxHeight}
       centerTitle
+      eyebrow="Audioflume"
+      headerHeight="88px"
+      bodyOverflow="hidden"
       inputCorners="rounded"
       contentCorners="rounded"
       background="var(--bg-primary)"

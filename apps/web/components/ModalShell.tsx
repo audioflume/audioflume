@@ -33,8 +33,8 @@ export default function ModalShell({
   onClose,
   children,
   footer,
-  maxWidth = "max-w-[420px]",
-  maxHeight = "520px",
+  maxWidth = "max-w-[600px]",
+  maxHeight = "506px",
   closeLabel = "Close modal",
   centerTitle = true,
   bodyScroll = false,
@@ -42,12 +42,12 @@ export default function ModalShell({
   contentClassName = "",
   footerClassName = "",
   headerContent,
-  inputCorners = "rounded",
-  contentCorners = "rounded",
+  inputCorners = "square",
+  contentCorners = "square",
   background = "var(--bg-primary)",
-  eyebrow = "Audioflume",
-  headerHeight = "88px",
-  bodyOverflow = "hidden",
+  eyebrow = "",
+  headerHeight = "96px",
+  bodyOverflow = "visible",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;

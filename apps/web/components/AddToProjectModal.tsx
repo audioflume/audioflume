@@ -74,15 +74,18 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
-      <div className="flex min-w-0 items-center justify-center gap-2">
-        <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
+    <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center">
+      <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
+        <span
+          className="relative block shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]"
+          style={{ width: "24px", height: "24px", minWidth: "24px", minHeight: "24px" }}
+        >
           {cover ? (
             // Use <img> instead of Next/Image so any URL source works (R2, Unsplash, etc.)
             <img
               src={cover}
               alt={song.title}
-              className="h-full w-full object-cover"
+              className="absolute inset-0 block h-full w-full object-cover"
             />
           ) : (
             <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
@@ -91,7 +94,7 @@ function SongPreview({ song }: { song: Song }) {
           )}
         </span>
 
-        <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+        <span className="block max-w-[300px] truncate text-[12px] font-normal tracking-[-0.015em] text-[var(--text-primary)]">
           {song.title} by {song.artist}
         </span>
       </div>
@@ -375,15 +378,13 @@ export default function AddToProjectModal({
         title="Add to Project"
         onClose={handleClose}
         closeLabel="Close add to project modal"
-        maxWidth="max-w-[430px]"
         maxHeight="420px"
-        centerTitle
-        bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
+        bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
         contentClassName="h-[420px] max-h-[calc(100vh-64px)]"
       >
         <SongPreview song={song} />
 
-        <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--filmwave-menu-sep)] bg-[var(--filmwave-menu-bg)]">
+        <div className="-mx-7 flex min-h-0 flex-1 flex-col border-t border-[var(--filmwave-menu-sep)] bg-[var(--filmwave-menu-bg)]">
           <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3">
             {newProjectOpen ? (
               <form
