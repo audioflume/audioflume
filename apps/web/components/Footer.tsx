@@ -22,9 +22,9 @@ const listenLinks = [
 ];
 
 const artistLinks = [
+  { href: "/artists/dashboard", label: "Artist dashboard" },
   { href: "/artists/apply", label: "Artist applications" },
   { href: "/artists/claim", label: "Claim your profile" },
-  { href: "/artists/dashboard", label: "Artist dashboard" },
   { href: "/artists/licensing", label: "Licensing & agreements" },
   { href: "/artists/earnings", label: "Artist earnings" },
 ];
