@@ -159,7 +159,7 @@ export function UserPreferencesProvider({ children }: { children: ReactNode }) {
     useState<SidebarProjectSortMode>("alphabetical");
   const [projectAssetAddTarget, setProjectAssetAddTargetState] =
     useState<ProjectAssetAddTarget>("media_folder");
-  const [themeMode, setThemeModeState] = useState<ThemeMode>("dark");
+  const [themeMode, setThemeModeState] = useState<ThemeMode>("light");
   const [showEditPointMarkers, setShowEditPointMarkersState] = useState(false);
   const [preferencesLoaded, setPreferencesLoaded] = useState(false);
 
