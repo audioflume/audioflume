@@ -1308,7 +1308,16 @@ main
   border-radius: 50%;
   background: #ffffff;
   color: #111111;
+  opacity: 0;
   transform: translate(-50%, -50%);
+  transition: opacity 160ms ease;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-cover:hover
+  .audioflume-music-featured-song-play,
+.audioflume-music-page .audioflume-music-featured-song-cover:focus-visible
+  .audioflume-music-featured-song-play {
+  opacity: 1;
 }
 
 .audioflume-music-page .audioflume-music-featured-song-copy {
