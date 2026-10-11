@@ -37,7 +37,6 @@ import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 
 import Footer from "@/components/Footer";
-import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -55,6 +54,50 @@ const VOCAL_FILTER_OPTIONS = [
 ];
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
+
+function MusicPageSkeleton() {
+  return (
+    <div className="audioflume-music-skeleton" aria-hidden="true">
+      <div className="audioflume-music-skeleton-feature-grid">
+        {[0, 1].map((index) => (
+          <div key={index} className="audioflume-music-skeleton-feature-card">
+            <div className="audioflume-music-skeleton-feature-copy">
+              <span className="audioflume-music-skeleton-block is-feature-title" />
+              <span className="audioflume-music-skeleton-block is-feature-artist" />
+              <div className="audioflume-music-skeleton-feature-pills">
+                <span className="audioflume-music-skeleton-block is-pill" />
+                <span className="audioflume-music-skeleton-block is-pill is-short" />
+                <span className="audioflume-music-skeleton-block is-pill" />
+                <span className="audioflume-music-skeleton-block is-pill is-short" />
+              </div>
+            </div>
+            <span className="audioflume-music-skeleton-block is-feature-play" />
+          </div>
+        ))}
+      </div>
+
+      <div className="audioflume-music-skeleton-rows">
+        {Array.from({ length: 6 }, (_, index) => (
+          <div key={index} className="audioflume-music-skeleton-row">
+            <span className="audioflume-music-skeleton-block is-cover" />
+            <span className="audioflume-music-skeleton-block is-vocal" />
+            <div className="audioflume-music-skeleton-row-copy">
+              <span className="audioflume-music-skeleton-block is-title" />
+              <span className="audioflume-music-skeleton-block is-artist" />
+            </div>
+            <span className="audioflume-music-skeleton-block is-waveform" />
+            <span className="audioflume-music-skeleton-block is-duration" />
+            <span className="audioflume-music-skeleton-block is-genre" />
+            <span className="audioflume-music-skeleton-block is-key" />
+            <span className="audioflume-music-skeleton-block is-bpm" />
+            <span className="audioflume-music-skeleton-block is-action" />
+            <span className="audioflume-music-skeleton-block is-license" />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 const LICENSE_FILTER_VALUES = ["standard", "premium"] as const;
 const SEMANTIC_SEARCH_DEBOUNCE_MS = 350;
 const MIN_SEMANTIC_SEARCH_LENGTH = 2;
@@ -990,7 +1033,7 @@ export default function MusicPage() {
             meta={`${displayedSongs.length} of ${songs.length} tracks`}
           >
             {showSongSkeleton ? (
-              <SkeletonSongList />
+              <MusicPageSkeleton />
             ) : (
               <>
                 {featuredSongs.length > 0 ? (
