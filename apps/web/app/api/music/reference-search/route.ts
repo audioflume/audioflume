@@ -1,11 +1,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-import {
-  analyzeAudioUrl,
-  compareAudioFeatures,
-  type AudioSimilarityFeatures,
-} from "@/lib/audioSimilarity";
+import { searchPublishedSongsByAudioSimilarity } from "@/lib/audioSemanticEmbeddings";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -13,7 +9,6 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const MAX_RESULT_COUNT = 200;
-const ANALYSIS_CONCURRENCY = 4;
 
 type DeezerArtist = {
   id?: number;
@@ -48,10 +43,8 @@ type DeezerAlbum = {
   };
 };
 
-type ReferenceCandidateSong = {
+type RankedSongRow = {
   id: string;
-  playback_url: string | null;
-  audio_url: string | null;
   bpm: number | null;
   genres: string[] | null;
 };
@@ -143,68 +136,50 @@ function getGenreSimilarity(
     : 0;
 }
 
-async function mapWithConcurrency<T, R>(
-  items: T[],
-  concurrency: number,
-  mapper: (item: T) => Promise<R>,
+function getTempoSimilarity(
+  referenceBpm: number | null,
+  candidateBpm: number | null,
 ) {
-  const results = new Array<R>(items.length);
-  let nextIndex = 0;
+  if (!referenceBpm || !candidateBpm) return null;
 
-  async function worker() {
-    while (true) {
-      const index = nextIndex;
-      nextIndex += 1;
+  const distances = [
+    Math.abs(referenceBpm - candidateBpm),
+    Math.abs(referenceBpm * 2 - candidateBpm),
+    Math.abs(referenceBpm - candidateBpm * 2),
+  ];
 
-      if (index >= items.length) return;
-      results[index] = await mapper(items[index]);
-    }
-  }
-
-  await Promise.all(
-    Array.from(
-      { length: Math.min(concurrency, Math.max(1, items.length)) },
-      () => worker(),
-    ),
-  );
-
-  return results;
+  return Math.max(0, 1 - Math.min(...distances) / 24);
 }
 
-function scoreCandidate({
-  referenceFeatures,
-  candidateFeatures,
-  referenceBpm,
-  candidateBpm,
-  referenceGenres,
-  candidateGenres,
+function scoreMatch({
+  semanticSimilarity,
+  tempoSimilarity,
+  genreSimilarity,
 }: {
-  referenceFeatures: AudioSimilarityFeatures;
-  candidateFeatures: AudioSimilarityFeatures;
-  referenceBpm: number | null;
-  candidateBpm: number | null;
-  referenceGenres: string[];
-  candidateGenres: string[] | null;
+  semanticSimilarity: number;
+  tempoSimilarity: number | null;
+  genreSimilarity: number | null;
 }) {
-  const audioScore = compareAudioFeatures(referenceFeatures, candidateFeatures, {
-    referenceBpm,
-    candidateBpm,
-  });
-  const genreScore = getGenreSimilarity(referenceGenres, candidateGenres);
+  const signals = [
+    { score: semanticSimilarity, weight: 0.95 },
+    ...(tempoSimilarity === null
+      ? []
+      : [{ score: tempoSimilarity, weight: 0.03 }]),
+    ...(genreSimilarity === null
+      ? []
+      : [{ score: genreSimilarity, weight: 0.02 }]),
+  ];
 
-  if (genreScore === null) {
-    return {
-      score: audioScore,
-      audioScore,
-      genreScore: null,
-    };
-  }
+  const totalWeight = signals.reduce(
+    (sum, signal) => sum + signal.weight,
+    0,
+  );
+  const score = signals.reduce(
+    (sum, signal) => sum + signal.score * signal.weight,
+    0,
+  );
 
-  return {
-    score: audioScore * 0.95 + genreScore * 0.05,
-    audioScore,
-    genreScore,
-  };
+  return totalWeight > 0 ? score / totalWeight : semanticSimilarity;
 }
 
 export async function POST(request: Request) {
@@ -235,80 +210,76 @@ export async function POST(request: Request) {
     }
 
     const profile = await getReferenceProfile(trackId);
-    const referenceFeatures = await analyzeAudioUrl(profile.previewUrl);
-
-    const { data, error } = await supabaseServer
-      .from("songs")
-      .select("id, playback_url, audio_url, bpm, genres")
-      .eq("status", "published");
-
-    if (error) throw error;
-
-    const candidateSongs = ((data ?? []) as ReferenceCandidateSong[]).filter(
-      (song) => Boolean(song.playback_url?.trim() || song.audio_url?.trim()),
-    );
-
-    const analyzed = await mapWithConcurrency(
-      candidateSongs,
-      ANALYSIS_CONCURRENCY,
-      async (song) => {
-        const sourceUrl =
-          song.playback_url?.trim() || song.audio_url?.trim() || "";
-
-        try {
-          const candidateFeatures = await analyzeAudioUrl(sourceUrl);
-          const scored = scoreCandidate({
-            referenceFeatures,
-            candidateFeatures,
-            referenceBpm: Number(profile.track.bpm ?? 0) || null,
-            candidateBpm: Number(song.bpm ?? 0) || null,
-            referenceGenres: profile.genres,
-            candidateGenres: song.genres,
-          });
-
-          return {
-            songId: song.id,
-            ...scored,
-          };
-        } catch (candidateError) {
-          console.warn(
-            `Reference audio analysis skipped song ${song.id}:`,
-            candidateError,
-          );
-          return null;
-        }
+    const audioSearch = await searchPublishedSongsByAudioSimilarity(
+      profile.previewUrl,
+      {
+        matchCount: MAX_RESULT_COUNT,
+        minSimilarity: -1,
       },
     );
 
-    const matches = analyzed
-      .filter(
-        (
-          result,
-        ): result is {
-          songId: string;
-          score: number;
-          audioScore: number;
-          genreScore: number | null;
-        } => result !== null,
-      )
+    const ids = audioSearch.matches.map((result) => result.songId);
+    const { data, error } =
+      ids.length === 0
+        ? { data: [], error: null }
+        : await supabaseServer
+            .from("songs")
+            .select("id, bpm, genres")
+            .in("id", ids);
+
+    if (error) throw error;
+
+    const songsById = new Map(
+      ((data ?? []) as RankedSongRow[]).map((song) => [song.id, song]),
+    );
+    const referenceBpm = Number(profile.track.bpm ?? 0) || null;
+
+    const matches = audioSearch.matches
+      .map((result) => {
+        const song = songsById.get(result.songId);
+        const tempoSimilarity = getTempoSimilarity(
+          referenceBpm,
+          Number(song?.bpm ?? 0) || null,
+        );
+        const genreSimilarity = getGenreSimilarity(
+          profile.genres,
+          song?.genres ?? null,
+        );
+
+        return {
+          songId: result.songId,
+          score: scoreMatch({
+            semanticSimilarity: result.similarity,
+            tempoSimilarity,
+            genreSimilarity,
+          }),
+          semanticSimilarity: result.similarity,
+          tempoSimilarity,
+          genreSimilarity,
+        };
+      })
       .sort((a, b) => b.score - a.score)
       .slice(0, MAX_RESULT_COUNT)
       .map((result) => ({
         songId: result.songId,
         score: Number(result.score.toFixed(6)),
-        audioSimilarity: Number(result.audioScore.toFixed(6)),
-        genreSimilarity: result.genreScore,
+        audioSimilarity: Number(result.semanticSimilarity.toFixed(6)),
+        tempoSimilarity:
+          result.tempoSimilarity === null
+            ? null
+            : Number(result.tempoSimilarity.toFixed(6)),
+        genreSimilarity: result.genreSimilarity,
       }));
 
     return NextResponse.json(
       {
         matches,
-        ranking: "audio-similarity-v1",
+        ranking: "audio-semantic-v2",
         reference: {
           id: referenceId,
           title: getTrackName(profile.track),
           artist: profile.track.artist?.name?.trim() ?? "",
-          bpm: Number(profile.track.bpm ?? 0) || referenceFeatures.estimatedBpm,
+          bpm: referenceBpm,
           duration: Number(profile.track.duration ?? 0) || null,
           genres: profile.genres,
           audioAnalyzed: true,

@@ -2,6 +2,14 @@ import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
 import {
+  ensurePublishedSongAudioSimilarityEmbeddings,
+  getSongAudioSimilarityEmbeddingStats,
+  refreshPublishedSongAudioSimilarityEmbedding,
+  SONG_AUDIO_ANALYSIS_MODEL,
+  SONG_AUDIO_EMBEDDING_DIMENSIONS,
+  SONG_AUDIO_EMBEDDING_MODEL,
+} from "@/lib/audioSemanticEmbeddings";
+import {
   backfillPublishedSongSearchEmbeddings,
   ensurePublishedSongSearchEmbeddings,
   getSongSearchEmbeddingStats,
@@ -111,12 +119,21 @@ export async function GET() {
   if (access.response) return access.response;
 
   try {
-    const stats = await getSongSearchEmbeddingStats();
+    const [stats, audioSimilarityStats] = await Promise.all([
+      getSongSearchEmbeddingStats(),
+      getSongAudioSimilarityEmbeddingStats(),
+    ]);
 
     return NextResponse.json({
       stats,
       model: SONG_SEARCH_EMBEDDING_MODEL,
       dimensions: SONG_SEARCH_EMBEDDING_DIMENSIONS,
+      audioSimilarity: {
+        stats: audioSimilarityStats,
+        analysisModel: SONG_AUDIO_ANALYSIS_MODEL,
+        embeddingModel: SONG_AUDIO_EMBEDDING_MODEL,
+        dimensions: SONG_AUDIO_EMBEDDING_DIMENSIONS,
+      },
     });
   } catch (error) {
     console.error("Failed to load semantic search status:", error);
@@ -138,6 +155,46 @@ export async function POST(request: Request) {
         ? (body as Record<string, unknown>)
         : {};
     const action = typeof payload.action === "string" ? payload.action : "";
+
+
+    if (action === "audio-backfill") {
+      const requestedBatchSize = Number(payload.batchSize);
+      const batchSize = Number.isFinite(requestedBatchSize)
+        ? Math.min(8, Math.max(1, Math.floor(requestedBatchSize)))
+        : 4;
+      const updated = await ensurePublishedSongAudioSimilarityEmbeddings(
+        batchSize,
+      );
+      const stats = await getSongAudioSimilarityEmbeddingStats();
+
+      return NextResponse.json({
+        action,
+        updated,
+        stats,
+        analysisModel: SONG_AUDIO_ANALYSIS_MODEL,
+        embeddingModel: SONG_AUDIO_EMBEDDING_MODEL,
+        dimensions: SONG_AUDIO_EMBEDDING_DIMENSIONS,
+      });
+    }
+
+    if (action === "audio-refresh") {
+      const songId =
+        typeof payload.songId === "string" ? payload.songId.trim() : "";
+
+      if (!songId) {
+        return NextResponse.json(
+          { error: "songId is required" },
+          { status: 400 },
+        );
+      }
+
+      const updated = await refreshPublishedSongAudioSimilarityEmbedding(
+        songId,
+      );
+      const stats = await getSongAudioSimilarityEmbeddingStats();
+
+      return NextResponse.json({ action, songId, updated, stats });
+    }
 
     if (action === "backfill") {
       const result = await backfillPublishedSongSearchEmbeddings();
@@ -209,7 +266,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: "action must be backfill, refresh, or search" },
+      { error: "action must be audio-backfill, audio-refresh, backfill, refresh, or search" },
       { status: 400 },
     );
   } catch (error) {
