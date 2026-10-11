@@ -447,7 +447,7 @@ export default function AddToPlaylistModal({
         maxHeight="506px"
         centerTitle
         eyebrow=""
-        headerHeight="104px"
+        headerHeight="96px"
         contentCorners="square"
         bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
         bodyOverflow="visible"
