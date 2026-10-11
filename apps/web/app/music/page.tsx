@@ -1114,7 +1114,9 @@ export default function MusicPage() {
                           className="audioflume-music-featured-song"
                           style={
                             song.coverArt
-                              ? { backgroundImage: `url("${song.coverArt}")` }
+                              ? ({
+                                  "--audioflume-featured-song-image": `url("${song.coverArt}")`,
+                                } as React.CSSProperties)
                               : undefined
                           }
                         >
