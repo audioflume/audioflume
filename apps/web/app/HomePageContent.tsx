@@ -790,37 +790,39 @@ export default function HomePageContent() {
         ) : null}
       </section>
 
-      <section className="audioflume-home-reference-song-search-block">
-        <div className="audioflume-home-reference-song-search-image" aria-hidden="true" />
-        <div className="audioflume-home-reference-song-search-overlay" aria-hidden="true" />
-        <div className="audioflume-home-reference-song-search-content">
-          <div className="audioflume-home-reference-song-search-eyebrow">
-            Reference search
+      <section className="audioflume-home-reference-song-search-section">
+        <div className="audioflume-home-reference-song-search-block">
+          <div className="audioflume-home-reference-song-search-image" aria-hidden="true" />
+          <div className="audioflume-home-reference-song-search-overlay" aria-hidden="true" />
+          <div className="audioflume-home-reference-song-search-content">
+            <div className="audioflume-home-reference-song-search-eyebrow">
+              Reference search
+            </div>
+            <h2>Find something similar.</h2>
+            <p>
+              Search by artist or track, or paste a Spotify, YouTube, or Apple Music link.
+            </p>
+            <form
+              className="audioflume-home-reference-song-search-form"
+              onSubmit={(event) => {
+                event.preventDefault();
+                setReferenceSearchOpen(true);
+              }}
+            >
+              <label className="audioflume-home-reference-song-search-field">
+                <WaveformIcon size={20} />
+                <input
+                  type="text"
+                  value={referenceSearchQuery}
+                  onChange={(event) => setReferenceSearchQuery(event.target.value)}
+                  placeholder="Song, artist, or music link"
+                  aria-label="Song, artist, or music link"
+                  autoComplete="off"
+                />
+                <span>Song / Link</span>
+              </label>
+            </form>
           </div>
-          <h2>Find something similar.</h2>
-          <p>
-            Search by artist or track, or paste a Spotify, YouTube, or Apple Music link.
-          </p>
-          <form
-            className="audioflume-home-reference-song-search-form"
-            onSubmit={(event) => {
-              event.preventDefault();
-              setReferenceSearchOpen(true);
-            }}
-          >
-            <label className="audioflume-home-reference-song-search-field">
-              <WaveformIcon size={20} />
-              <input
-                type="text"
-                value={referenceSearchQuery}
-                onChange={(event) => setReferenceSearchQuery(event.target.value)}
-                placeholder="Song, artist, or music link"
-                aria-label="Song, artist, or music link"
-                autoComplete="off"
-              />
-              <span>Song / Link</span>
-            </label>
-          </form>
         </div>
       </section>
 

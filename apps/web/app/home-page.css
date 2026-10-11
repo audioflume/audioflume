@@ -1018,6 +1018,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   aspect-ratio: 1;
 }
 
+.audioflume-home-reference-song-search-section {
+  padding: 0 0 76px;
+  background: var(--bg-primary);
+}
+
 .audioflume-home-reference-song-search-block {
   position: relative;
   width: calc(
@@ -1026,7 +1031,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   max-width: var(--filmwave-editorial-max-width);
   min-height: 420px;
   overflow: hidden;
-  margin: 0 auto 76px;
+  margin: 0 auto;
   background: #111111;
   color: #ffffff;
 }
