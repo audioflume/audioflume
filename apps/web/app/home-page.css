@@ -717,6 +717,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-artists,
+.audioflume-home-reference-featured-albums,
 .audioflume-home-reference-curated-playlists,
 .audioflume-home-reference-playlists,
 .audioflume-home-reference-new-songs,
@@ -945,12 +946,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-albums {
   padding: 48px 0 76px;
+  color: var(--text-primary);
 }
 
 .audioflume-home-reference-featured-album-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
+  column-gap: 20px;
+  row-gap: 32px;
   padding: 0 80px;
 }
 
