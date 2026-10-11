@@ -1239,7 +1239,7 @@ main
 
 
 .audioflume-music-page .audioflume-music-featured-songs {
-  --audioflume-featured-song-inset: 52px;
+  --audioflume-featured-song-inset: 44px;
   display: grid;
   width: calc(100% + 40px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
