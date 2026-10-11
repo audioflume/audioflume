@@ -55,7 +55,7 @@ const THEME_BOOT_SCRIPT = `
     var theme = window.localStorage.getItem("filmwave-theme-mode") || window.localStorage.getItem("filmwave-theme");
     if (theme !== "light" && theme !== "dark") {
       var cookieMatch = document.cookie.match(/(?:^|; )filmwave-theme-mode=(light|dark)/) || document.cookie.match(/(?:^|; )filmwave-theme=(light|dark)/);
-      theme = cookieMatch ? cookieMatch[1] : "dark";
+      theme = cookieMatch ? cookieMatch[1] : "light";
     }
 
     document.documentElement.dataset.theme = theme;
