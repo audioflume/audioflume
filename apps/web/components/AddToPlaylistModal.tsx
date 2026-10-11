@@ -599,10 +599,10 @@ export default function AddToPlaylistModal({
                     <PlaylistThumbnail playlist={playlist} index={index} />
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      <span className="block truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
                         {playlist.name}
                       </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                      <span className="mt-[2px] block truncate text-[11.5px] leading-[1.35] text-[var(--text-subtle)]">
                         {isSelected ? "Added" : "Click to add"}
                       </span>
                     </span>
