@@ -184,12 +184,51 @@ export default function ReferenceSearchModal({
 
   if (!open) return null;
 
-  function submitQuery(
+  async function submitQuery(
     query: string,
     result?: ReferenceCatalogResult,
   ) {
     const cleanQuery = query.trim();
     if (!cleanQuery) return;
+
+    if (isMusicLink(cleanQuery) && !result) {
+      setLoading(true);
+
+      try {
+        const response = await fetch("/api/music/reference-resolve", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url: cleanQuery }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Reference link resolution failed");
+        }
+
+        const data = await response.json();
+        const resolved =
+          data?.result &&
+          typeof data.result === "object" &&
+          typeof data.result.id === "string" &&
+          typeof data.result.searchQuery === "string"
+            ? (data.result as ReferenceCatalogResult)
+            : null;
+
+        if (!resolved) {
+          throw new Error("Reference link resolution returned no track");
+        }
+
+        onChange(resolved.searchQuery);
+        onSubmit(resolved.searchQuery, resolved);
+      } catch (error) {
+        console.error("Reference link resolution failed:", error);
+      } finally {
+        setLoading(false);
+      }
+
+      return;
+    }
+
     onChange(cleanQuery);
     onSubmit(cleanQuery, result);
   }
