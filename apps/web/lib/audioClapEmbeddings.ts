@@ -8,7 +8,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 
 export const SONG_CLAP_MODEL_ID = "Xenova/larger_clap_music_and_speech";
 export const SONG_CLAP_MODEL_KEY =
-  "Xenova/larger_clap_music_and_speech:q8:3x10s:concept-v2";
+  "Xenova/larger_clap_music_and_speech:q8:3x10s:segments-v3";
 export const SONG_CLAP_CONCEPT_VERSION = "clap-concepts-v2";
 export const SONG_CLAP_EMBEDDING_DIMENSIONS = 512;
 
@@ -32,6 +32,7 @@ type AudioEmbeddingCandidateRow = {
 type AudioEmbeddingMatchRow = {
   song_id?: string | null;
   similarity?: number | string | null;
+  segment_embeddings?: unknown;
   concept_profile?: unknown;
 };
 
@@ -147,6 +148,8 @@ export type ClapConceptSimilarity = {
 export type ClapSimilarityMatch = {
   songId: string;
   similarity: number;
+  bestSegmentSimilarity: number;
+  averageBestSegmentSimilarity: number;
   conceptProfile: ClapConceptProfile;
 };
 
@@ -161,6 +164,7 @@ const embeddingCache = new Map<
   {
     expiresAt: number;
     embedding: number[];
+    segmentEmbeddings: number[][];
     conceptProfile: ClapConceptProfile;
   }
 >();
@@ -457,6 +461,19 @@ function isConceptProfile(value: unknown): value is ClapConceptProfile {
   );
 }
 
+function isSegmentEmbeddings(value: unknown): value is number[][] {
+  return (
+    Array.isArray(value) &&
+    value.length > 0 &&
+    value.every(
+      (embedding) =>
+        Array.isArray(embedding) &&
+        embedding.length === SONG_CLAP_EMBEDDING_DIMENSIONS &&
+        embedding.every((item) => Number.isFinite(Number(item))),
+    )
+  );
+}
+
 function isConceptAnchors(value: unknown): value is ConceptAnchors {
   if (!value || typeof value !== "object") return false;
 
@@ -596,6 +613,31 @@ async function getConceptAnchors() {
   return createAndStoreConceptAnchors();
 }
 
+function getSegmentSimilarityMetrics(
+  referenceSegments: number[][],
+  candidateSegments: number[][],
+) {
+  const bestPerReference = referenceSegments.map((reference) => {
+    let best = -1;
+
+    for (const candidate of candidateSegments) {
+      best = Math.max(best, dotProduct(reference, candidate));
+    }
+
+    return best;
+  });
+
+  const bestSegmentSimilarity = Math.max(...bestPerReference);
+  const averageBestSegmentSimilarity =
+    bestPerReference.reduce((sum, value) => sum + value, 0) /
+    bestPerReference.length;
+
+  return {
+    bestSegmentSimilarity,
+    averageBestSegmentSimilarity,
+  };
+}
+
 function profileCloseness(left: number, right: number) {
   return clamp01(1 - Math.abs(left - right));
 }
@@ -690,6 +732,7 @@ export async function createClapAudioAnalysis(sourceUrl: string) {
   if (cached && cached.expiresAt > Date.now()) {
     return {
       embedding: cached.embedding,
+      segmentEmbeddings: cached.segmentEmbeddings,
       conceptProfile: cached.conceptProfile,
     };
   }
@@ -715,6 +758,7 @@ export async function createClapAudioAnalysis(sourceUrl: string) {
         0,
       ) / embeddings.length,
   );
+  const segmentEmbeddings = embeddings;
   const embedding = normalizeVector(averaged);
   const anchors = await getConceptAnchors();
   const conceptProfile = createConceptProfile(embedding, anchors);
@@ -722,10 +766,11 @@ export async function createClapAudioAnalysis(sourceUrl: string) {
   embeddingCache.set(cleanUrl, {
     expiresAt: Date.now() + CACHE_TTL_MS,
     embedding,
+    segmentEmbeddings,
     conceptProfile,
   });
 
-  return { embedding, conceptProfile };
+  return { embedding, segmentEmbeddings, conceptProfile };
 }
 
 export async function createClapAudioEmbedding(sourceUrl: string) {
@@ -745,7 +790,7 @@ async function upsertClapCandidate(candidate: {
   songId: string;
   sourceUrl: string;
 }) {
-  const { embedding, conceptProfile } =
+  const { embedding, segmentEmbeddings, conceptProfile } =
     await createClapAudioAnalysis(candidate.sourceUrl);
 
   const { error } = await supabaseServer.rpc(
@@ -753,6 +798,7 @@ async function upsertClapCandidate(candidate: {
     {
       p_song_id: candidate.songId,
       p_embedding: embedding,
+      p_segment_embeddings: segmentEmbeddings,
       p_concept_profile: conceptProfile,
       p_model: SONG_CLAP_MODEL_KEY,
       p_dimensions: SONG_CLAP_EMBEDDING_DIMENSIONS,
@@ -843,8 +889,11 @@ export async function searchPublishedSongsByClapSimilarity(
   referenceProfile: ClapConceptProfile;
   matches: ClapSimilarityMatch[];
 }> {
-  const { embedding, conceptProfile: referenceProfile } =
-    await createClapAudioAnalysis(sourceUrl);
+  const {
+    embedding,
+    segmentEmbeddings: referenceSegments,
+    conceptProfile: referenceProfile,
+  } = await createClapAudioAnalysis(sourceUrl);
 
   const matchCount = clampInteger(
     options.matchCount ?? DEFAULT_MATCH_COUNT,
@@ -872,20 +921,31 @@ export async function searchPublishedSongsByClapSimilarity(
     (row) => {
       const songId = String(row.song_id || "").trim();
       const similarity = Number(row.similarity);
+      const candidateSegments = row.segment_embeddings;
       const candidateProfile = row.concept_profile;
 
       if (
         !songId ||
         !Number.isFinite(similarity) ||
+        !isSegmentEmbeddings(candidateSegments) ||
         !isConceptProfile(candidateProfile)
       ) {
         return [];
       }
 
+      const segmentSimilarity = getSegmentSimilarityMetrics(
+        referenceSegments,
+        candidateSegments,
+      );
+
       return [
         {
           songId,
           similarity,
+          bestSegmentSimilarity:
+            segmentSimilarity.bestSegmentSimilarity,
+          averageBestSegmentSimilarity:
+            segmentSimilarity.averageBestSegmentSimilarity,
           conceptProfile: candidateProfile,
         },
       ];
