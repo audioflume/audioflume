@@ -381,6 +381,9 @@
   );
   max-width: var(--filmwave-editorial-max-width);
   margin: 0 auto;
+  padding-top: calc(
+    clamp(34px, 3vw, 48px) + 20px - clamp(24px, 2vw, 32px)
+  );
 }
 
 .discover-artist-featured {
