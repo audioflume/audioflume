@@ -595,6 +595,7 @@ export default function HomePageContent() {
             type="button"
             className="audioflume-home-reference-searchbar-song"
             aria-label="Search by song"
+            onClick={() => router.push("/music?referenceSearch=open")}
           >
             <WaveformIcon size={16} />
             <span>Search by song</span>
