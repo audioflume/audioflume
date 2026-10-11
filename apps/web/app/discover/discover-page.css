@@ -461,8 +461,8 @@
   place-items: center;
   border: 0;
   border-radius: 999px;
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  background: #ffffff;
+  color: #111111;
   opacity: 0;
   box-shadow: 0 12px 34px rgba(0, 0, 0, 0.28);
   cursor: pointer;
