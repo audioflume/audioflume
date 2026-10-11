@@ -35,6 +35,9 @@ type OpenAIChatCompletionResponse = {
   choices?: Array<{
     message?: {
       content?: string | Array<{ type?: string; text?: string }>;
+      audio?: {
+        transcript?: string;
+      };
     };
   }>;
   error?: {
@@ -259,6 +262,11 @@ async function analyzeAudioSemantics(wav: Buffer) {
     },
     body: JSON.stringify({
       model: SONG_AUDIO_ANALYSIS_MODEL,
+      modalities: ["text", "audio"],
+      audio: {
+        voice: "alloy",
+        format: "wav",
+      },
       messages: [
         {
           role: "user",
@@ -294,7 +302,11 @@ async function analyzeAudioSemantics(wav: Buffer) {
     );
   }
 
-  const descriptor = getTextContent(payload?.choices?.[0]?.message?.content);
+  const message = payload?.choices?.[0]?.message;
+  const descriptor =
+    getTextContent(message?.content) ||
+    message?.audio?.transcript?.trim() ||
+    "";
 
   if (!descriptor) {
     throw new Error("OpenAI audio analysis returned an empty descriptor");
