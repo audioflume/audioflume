@@ -88,7 +88,7 @@ function PlaylistThumbnail({
 
   return (
     <span
-      className="relative flex h-9 w-9 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]"
+      className="relative flex h-10 w-10 shrink-0 overflow-hidden rounded-none bg-[var(--bg-tertiary)]"
       style={{
         background: cover
           ? "var(--bg-tertiary)"
@@ -450,7 +450,7 @@ export default function AddToPlaylistModal({
       >
         <SongPreview song={song} />
 
-        <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5 pb-5">
+        <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5">
           <label className="mb-3 flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
             <svg
               width="16"
@@ -472,7 +472,7 @@ export default function AddToPlaylistModal({
             />
           </label>
 
-          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto">
+          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-0">
             {newPlaylistOpen ? (
               <form
                 onSubmit={(e) => {
@@ -541,7 +541,7 @@ export default function AddToPlaylistModal({
                     key={index}
                     className="flex min-h-[52px] items-center gap-3 rounded-none p-2"
                   >
-                    <div className="h-9 w-9 animate-pulse rounded-none bg-[var(--bg-primary)]" />
+                    <div className="h-10 w-10 animate-pulse rounded-none bg-[var(--bg-primary)]" />
                     <div className="space-y-2">
                       <div className="h-3 w-32 animate-pulse rounded-none bg-[var(--bg-primary)]" />
                       <div className="h-2.5 w-20 animate-pulse rounded-none bg-[var(--bg-primary)]" />
