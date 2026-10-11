@@ -42,6 +42,14 @@ const HOME_UI_GRAPHIC_DARK =
 const HOME_UI_GRAPHIC_LIGHT =
   "https://images.filmwave.io/images/home/UI-Light.png";
 
+type HomeFeaturedAlbum = {
+  id: string;
+  title: string;
+  cover_image_url: string | null;
+  artist_name: string;
+  artist_slug: string;
+};
+
 type HomeArtist = {
   id: string;
   name: string;
@@ -225,6 +233,48 @@ function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
     <div className="audioflume-home-reference-original-song-grid">
       {songs.slice(0, 12).map((song) => (
         <HomeOriginalSongCard key={song.id} song={song} />
+      ))}
+    </div>
+  );
+}
+
+function HomeFeaturedAlbumCard({ album }: { album: HomeFeaturedAlbum }) {
+  return (
+    <article className="audioflume-home-reference-featured-album-card">
+      <Link
+        href={`/artists/${album.artist_slug}/albums/${album.id}`}
+        className="audioflume-home-reference-featured-album-link"
+      >
+        <span className="audioflume-home-reference-featured-album-media">
+          {album.cover_image_url ? (
+            <img src={album.cover_image_url} alt="" draggable={false} />
+          ) : (
+            <span className="audioflume-home-reference-original-song-card-fallback" />
+          )}
+        </span>
+        <span className="audioflume-home-reference-featured-album-copy">
+          <strong>{album.title}</strong>
+          <span>{album.artist_name}</span>
+        </span>
+      </Link>
+    </article>
+  );
+}
+
+function HomeFeaturedAlbumsSkeleton() {
+  return (
+    <div className="audioflume-home-reference-featured-album-grid">
+      {Array.from({ length: 4 }, (_, index) => (
+        <article
+          key={index}
+          className="audioflume-home-reference-featured-album-card"
+        >
+          <HomeSkeletonBlock className="is-featured-album-media" />
+          <div className="audioflume-home-skeleton-original-copy">
+            <HomeSkeletonBlock className="is-original-title" />
+            <HomeSkeletonBlock className="is-original-artist" />
+          </div>
+        </article>
       ))}
     </div>
   );
@@ -452,6 +502,8 @@ export default function HomePageContent() {
   const [artistsLoading, setArtistsLoading] = useState(true);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
+  const [featuredAlbums, setFeaturedAlbums] = useState<HomeFeaturedAlbum[]>([]);
+  const [featuredAlbumsLoading, setFeaturedAlbumsLoading] = useState(true);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const [homeSearch, setHomeSearch] = useState("");
   const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
@@ -491,6 +543,27 @@ export default function HomePageContent() {
       })
       .finally(() => {
         if (!cancelled) setCuratedPlaylistsLoading(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    fetch("/api/featured-albums")
+      .then((response) => response.json())
+      .then((data) => {
+        if (cancelled) return;
+        setFeaturedAlbums(Array.isArray(data?.albums) ? data.albums.slice(0, 4) : []);
+      })
+      .catch(() => {
+        if (!cancelled) setFeaturedAlbums([]);
+      })
+      .finally(() => {
+        if (!cancelled) setFeaturedAlbumsLoading(false);
       });
 
     return () => {
@@ -700,6 +773,55 @@ export default function HomePageContent() {
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} />
         ) : null}
+      </section>
+
+      <section className="audioflume-home-reference-featured-albums">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+          <span>Featured albums</span>
+        </div>
+        {featuredAlbumsLoading ? (
+          <HomeFeaturedAlbumsSkeleton />
+        ) : featuredAlbums.length > 0 ? (
+          <div className="audioflume-home-reference-featured-album-grid">
+            {featuredAlbums.slice(0, 4).map((album) => (
+              <HomeFeaturedAlbumCard key={album.id} album={album} />
+            ))}
+          </div>
+        ) : null}
+      </section>
+
+      <section className="audioflume-home-reference-song-search-block">
+        <div className="audioflume-home-reference-song-search-image" aria-hidden="true" />
+        <div className="audioflume-home-reference-song-search-overlay" aria-hidden="true" />
+        <div className="audioflume-home-reference-song-search-content">
+          <div className="audioflume-home-reference-song-search-eyebrow">
+            Reference search
+          </div>
+          <h2>Find something similar.</h2>
+          <p>
+            Search by artist or track, or paste a Spotify, YouTube, or Apple Music link.
+          </p>
+          <form
+            className="audioflume-home-reference-song-search-form"
+            onSubmit={(event) => {
+              event.preventDefault();
+              setReferenceSearchOpen(true);
+            }}
+          >
+            <label className="audioflume-home-reference-song-search-field">
+              <WaveformIcon size={20} />
+              <input
+                type="text"
+                value={referenceSearchQuery}
+                onChange={(event) => setReferenceSearchQuery(event.target.value)}
+                placeholder="Song, artist, or music link"
+                aria-label="Song, artist, or music link"
+                autoComplete="off"
+              />
+              <span>Song / Link</span>
+            </label>
+          </form>
+        </div>
       </section>
 
       {curatedPlaylistsLoading || curatedPlaylists.length > 0 ? (
