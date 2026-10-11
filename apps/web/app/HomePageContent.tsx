@@ -614,9 +614,17 @@ export default function HomePageContent() {
         value={referenceSearchQuery}
         onChange={setReferenceSearchQuery}
         onClose={() => setReferenceSearchOpen(false)}
-        onSubmit={(query) => {
-          router.push(`/music?referenceSearch=${encodeURIComponent(query)}`);
-        }}
+        onSubmit={(query, result) => {
+          const params = new URLSearchParams({
+            referenceSearch: query,
+          });
+
+          if (result?.kind === "track") {
+            params.set("referenceTrackId", result.id);
+          }
+
+          router.push(`/music?${params.toString()}`);
+        }
       />
 
       <section
