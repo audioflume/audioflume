@@ -158,8 +158,13 @@
   --discover-artist-featured-intro-bottom: calc(clamp(190px, 13vw, 250px) + 30px);
   --discover-artist-hero-height: 60dvh;
   position: relative;
+  width: calc(
+    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
+  );
+  max-width: var(--filmwave-editorial-max-width);
   height: var(--discover-artist-hero-height);
   min-height: 0;
+  margin: clamp(24px, 2vw, 32px) auto 0;
   overflow: hidden;
   background:
     linear-gradient(rgba(13, 13, 13, 0.32), rgba(13, 13, 13, 0.32)),
@@ -182,10 +187,7 @@
 .discover-artist-hero-inner {
   position: relative;
   display: grid;
-  width: min(
-    calc(100% - (var(--discover-artist-gutter) * 2)),
-    var(--discover-artist-max-width)
-  );
+  width: 100%;
   height: 100%;
   min-height: 100%;
   grid-template-rows: 1fr;
@@ -339,16 +341,11 @@
 
 .discover-artist-hero-featured-intro {
   position: absolute;
-  right: 0;
+  right: clamp(24px, 2vw, 32px);
   bottom: 28px;
-  left: 0;
+  left: clamp(24px, 2vw, 32px);
   display: flex;
-  width: calc(
-    100vw - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-  );
-  max-width: var(--filmwave-editorial-max-width);
   justify-content: flex-end;
-  margin: 0 auto;
 }
 
 .discover-artist-hero-slider-marks {
