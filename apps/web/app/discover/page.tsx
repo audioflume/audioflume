@@ -637,13 +637,11 @@ export default function DiscoverPage() {
               <div className="discover-artist-hero-identity">
                 <span className="discover-artist-hero-eyebrow">Featured Artist</span>
                 <h1>{activeFeaturedArtist.name}</h1>
-                {featuredArtistGenres.length > 0 ? (
-                  <div className="discover-artist-hero-genres">
-                    {featuredArtistGenres.map((genre) => (
-                      <span key={genre}>{genre}</span>
-                    ))}
-                  </div>
-                ) : null}
+                <div className="discover-artist-hero-genres">
+                  {featuredArtistGenres.map((genre) => (
+                    <span key={genre}>{genre}</span>
+                  ))}
+                </div>
               </div>
 
               <div className="discover-artist-hero-detail">
