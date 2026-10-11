@@ -2,13 +2,13 @@ import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
 import {
-  ensurePublishedSongAudioSimilarityEmbeddings,
-  getSongAudioSimilarityEmbeddingStats,
-  refreshPublishedSongAudioSimilarityEmbedding,
-  SONG_AUDIO_ANALYSIS_MODEL,
-  SONG_AUDIO_EMBEDDING_DIMENSIONS,
-  SONG_AUDIO_EMBEDDING_MODEL,
-} from "@/lib/audioSemanticEmbeddings";
+  ensurePublishedSongClapEmbeddings,
+  getSongClapEmbeddingStats,
+  refreshPublishedSongClapEmbedding,
+  SONG_CLAP_EMBEDDING_DIMENSIONS,
+  SONG_CLAP_MODEL_ID,
+  SONG_CLAP_MODEL_KEY,
+} from "@/lib/audioClapEmbeddings";
 import {
   backfillPublishedSongSearchEmbeddings,
   ensurePublishedSongSearchEmbeddings,
@@ -121,7 +121,7 @@ export async function GET() {
   try {
     const [stats, audioSimilarityStats] = await Promise.all([
       getSongSearchEmbeddingStats(),
-      getSongAudioSimilarityEmbeddingStats(),
+      getSongClapEmbeddingStats(),
     ]);
 
     return NextResponse.json({
@@ -130,9 +130,9 @@ export async function GET() {
       dimensions: SONG_SEARCH_EMBEDDING_DIMENSIONS,
       audioSimilarity: {
         stats: audioSimilarityStats,
-        analysisModel: SONG_AUDIO_ANALYSIS_MODEL,
-        embeddingModel: SONG_AUDIO_EMBEDDING_MODEL,
-        dimensions: SONG_AUDIO_EMBEDDING_DIMENSIONS,
+        analysisModel: SONG_CLAP_MODEL_ID,
+        embeddingModel: SONG_CLAP_MODEL_KEY,
+        dimensions: SONG_CLAP_EMBEDDING_DIMENSIONS,
       },
     });
   } catch (error) {
@@ -160,20 +160,18 @@ export async function POST(request: Request) {
     if (action === "audio-backfill") {
       const requestedBatchSize = Number(payload.batchSize);
       const batchSize = Number.isFinite(requestedBatchSize)
-        ? Math.min(8, Math.max(1, Math.floor(requestedBatchSize)))
-        : 4;
-      const updated = await ensurePublishedSongAudioSimilarityEmbeddings(
-        batchSize,
-      );
-      const stats = await getSongAudioSimilarityEmbeddingStats();
+        ? Math.min(2, Math.max(1, Math.floor(requestedBatchSize)))
+        : 1;
+      const updated = await ensurePublishedSongClapEmbeddings(batchSize);
+      const stats = await getSongClapEmbeddingStats();
 
       return NextResponse.json({
         action,
         updated,
         stats,
-        analysisModel: SONG_AUDIO_ANALYSIS_MODEL,
-        embeddingModel: SONG_AUDIO_EMBEDDING_MODEL,
-        dimensions: SONG_AUDIO_EMBEDDING_DIMENSIONS,
+        analysisModel: SONG_CLAP_MODEL_ID,
+        embeddingModel: SONG_CLAP_MODEL_KEY,
+        dimensions: SONG_CLAP_EMBEDDING_DIMENSIONS,
       });
     }
 
@@ -188,10 +186,8 @@ export async function POST(request: Request) {
         );
       }
 
-      const updated = await refreshPublishedSongAudioSimilarityEmbedding(
-        songId,
-      );
-      const stats = await getSongAudioSimilarityEmbeddingStats();
+      const updated = await refreshPublishedSongClapEmbedding(songId);
+      const stats = await getSongClapEmbeddingStats();
 
       return NextResponse.json({ action, songId, updated, stats });
     }

@@ -2,9 +2,9 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import {
-  getSongAudioSimilarityEmbeddingStats,
-  searchPublishedSongsByAudioSimilarity,
-} from "@/lib/audioSemanticEmbeddings";
+  getSongClapEmbeddingStats,
+  searchPublishedSongsByClapSimilarity,
+} from "@/lib/audioClapEmbeddings";
 import {
   analyzeAudioUrl,
   compareAudioFeatures,
@@ -166,22 +166,22 @@ function getTempoSimilarity(
 }
 
 function scoreMatch({
-  semanticSimilarity,
+  audioSimilarity,
   tempoSimilarity,
   genreSimilarity,
 }: {
-  semanticSimilarity: number;
+  audioSimilarity: number;
   tempoSimilarity: number | null;
   genreSimilarity: number | null;
 }) {
   const signals = [
-    { score: semanticSimilarity, weight: 0.95 },
+    { score: audioSimilarity, weight: 0.98 },
     ...(tempoSimilarity === null
       ? []
-      : [{ score: tempoSimilarity, weight: 0.03 }]),
+      : [{ score: tempoSimilarity, weight: 0.015 }]),
     ...(genreSimilarity === null
       ? []
-      : [{ score: genreSimilarity, weight: 0.02 }]),
+      : [{ score: genreSimilarity, weight: 0.005 }]),
   ];
 
   const totalWeight = signals.reduce(
@@ -193,7 +193,7 @@ function scoreMatch({
     0,
   );
 
-  return totalWeight > 0 ? score / totalWeight : semanticSimilarity;
+  return totalWeight > 0 ? score / totalWeight : audioSimilarity;
 }
 
 
@@ -339,15 +339,15 @@ export async function POST(request: Request) {
 
     const profile = await getReferenceProfile(trackId);
     const referenceBpm = Number(profile.track.bpm ?? 0) || null;
-    const embeddingStats = await getSongAudioSimilarityEmbeddingStats();
-    const semanticReady =
+    const embeddingStats = await getSongClapEmbeddingStats();
+    const clapReady =
       embeddingStats.publishedSongs > 0 &&
       embeddingStats.embeddedSongs === embeddingStats.publishedSongs;
 
     let matches;
     let ranking;
 
-    if (!semanticReady) {
+    if (!clapReady) {
       matches = await getLegacyAudioMatches({
         previewUrl: profile.previewUrl,
         referenceBpm,
@@ -355,7 +355,7 @@ export async function POST(request: Request) {
       });
       ranking = "audio-similarity-v1-fallback";
     } else {
-      const audioSearch = await searchPublishedSongsByAudioSimilarity(
+      const audioSearch = await searchPublishedSongsByClapSimilarity(
         profile.previewUrl,
         {
           matchCount: MAX_RESULT_COUNT,
@@ -393,11 +393,11 @@ export async function POST(request: Request) {
           return {
             songId: result.songId,
             score: scoreMatch({
-              semanticSimilarity: result.similarity,
+              audioSimilarity: result.similarity,
               tempoSimilarity,
               genreSimilarity,
             }),
-            semanticSimilarity: result.similarity,
+            audioSimilarity: result.similarity,
             tempoSimilarity,
             genreSimilarity,
           };
@@ -407,14 +407,14 @@ export async function POST(request: Request) {
         .map((result) => ({
           songId: result.songId,
           score: Number(result.score.toFixed(6)),
-          audioSimilarity: Number(result.semanticSimilarity.toFixed(6)),
+          audioSimilarity: Number(result.audioSimilarity.toFixed(6)),
           tempoSimilarity:
             result.tempoSimilarity === null
               ? null
               : Number(result.tempoSimilarity.toFixed(6)),
           genreSimilarity: result.genreSimilarity,
         }));
-      ranking = "audio-semantic-v2";
+      ranking = "audio-clap-v3";
     }
 
     return NextResponse.json(

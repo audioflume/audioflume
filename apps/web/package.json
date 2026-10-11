@@ -24,6 +24,7 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@filmwave/shared": "file:../../packages/shared",
     "@floating-ui/react": "^0.27.19",
+    "@huggingface/transformers": "4.3.0",
     "@supabase/supabase-js": "^2.105.3",
     "airtable": "^0.12.2",
     "dotenv": "^17.2.3",
