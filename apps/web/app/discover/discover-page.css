@@ -188,6 +188,14 @@
   color: #fff;
 }
 
+.discover-page-root.has-player .discover-artist-hero {
+  --discover-artist-hero-height: calc(
+    100dvh - (var(--filmwave-header-height, 75px) * 2) -
+      var(--filmwave-player-height, 72px) -
+      (var(--discover-artist-hero-gap) * 2)
+  );
+}
+
 .discover-artist-hero-inner {
   position: relative;
   display: grid;
