@@ -87,7 +87,7 @@
 }
 
 .card:hover .media {
-  transform: scale(1.008);
+  transform: scale(1.015);
 }
 
 .details {
