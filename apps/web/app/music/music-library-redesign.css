@@ -1239,7 +1239,7 @@ main
 
 
 .audioflume-music-page .audioflume-music-featured-songs {
-  --audioflume-featured-song-inset: 44px;
+  --audioflume-featured-song-inset: 48px;
   display: grid;
   width: calc(100% + 40px);
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1287,7 +1287,7 @@ main
   font-size: 30px;
   font-weight: 300;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.12;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -1302,7 +1302,7 @@ main
   display: flex;
   flex-wrap: wrap;
   gap: 7px;
-  margin-top: 13px;
+  margin-top: 15px;
 }
 
 .audioflume-music-page .audioflume-music-featured-song-meta > span {
