@@ -39,6 +39,8 @@ import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
+import PauseIcon from "@/components/icons/PauseIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 
@@ -193,7 +195,7 @@ export default function MusicPage() {
   const { songs, loading: songsLoading, error: songsError } = useSongs();
   const { playlists } = usePlaylists();
 
-  const { currentSong, setQueue } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playerVisible = Boolean(currentSong);
 
   const [playlistSongIdsByPlaylistId, setPlaylistSongIdsByPlaylistId] =
@@ -760,6 +762,10 @@ export default function MusicPage() {
   }, [filteredSongs, sortOrder]);
 
   const displayedSongs = sortedSongs;
+  const featuredSong = displayedSongs[0] ?? null;
+  const featuredSongIsPlaying = Boolean(
+    featuredSong && currentSong?.id === featuredSong.id && isPlaying,
+  );
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -989,14 +995,79 @@ export default function MusicPage() {
             {showSongSkeleton ? (
               <SkeletonSongList />
             ) : (
-              displayedSongs.map((song, index) => (
-                <SongCard
-                  key={getMusicSongStableId(song, index)}
-                  song={song}
-                  highlightedEditPointTypes={highlightedEditPointTypes}
-                  showEditPointMarkers={effectiveShowEditPointMarkers}
-                />
-              ))
+              <>
+                {featuredSong ? (
+                  <article className="audioflume-music-featured-song">
+                    {featuredSong.coverArt ? (
+                      <span
+                        className="audioflume-music-featured-song-background"
+                        style={{ backgroundImage: `url("${featuredSong.coverArt}")` }}
+                        aria-hidden="true"
+                      />
+                    ) : null}
+                    <span
+                      className="audioflume-music-featured-song-overlay"
+                      aria-hidden="true"
+                    />
+
+                    <button
+                      type="button"
+                      className="audioflume-music-featured-song-cover"
+                      onClick={() => togglePlayPause(featuredSong)}
+                      aria-label={
+                        featuredSongIsPlaying
+                          ? `Pause ${featuredSong.title}`
+                          : `Play ${featuredSong.title}`
+                      }
+                    >
+                      {featuredSong.coverArt ? (
+                        <img
+                          src={featuredSong.coverArt}
+                          alt=""
+                          draggable={false}
+                        />
+                      ) : (
+                        <span className="audioflume-music-featured-song-cover-fallback" />
+                      )}
+                      <span className="audioflume-music-featured-song-play">
+                        {featuredSongIsPlaying ? (
+                          <PauseIcon size={16} />
+                        ) : (
+                          <PlayIconSmall size={16} />
+                        )}
+                      </span>
+                    </button>
+
+                    <div className="audioflume-music-featured-song-copy">
+                      <span className="audioflume-music-featured-song-label">
+                        Featured track
+                      </span>
+                      <strong>{featuredSong.title}</strong>
+                      <span className="audioflume-music-featured-song-artist">
+                        {featuredSong.artist}
+                      </span>
+                      <div className="audioflume-music-featured-song-meta">
+                        {featuredSong.genres.slice(0, 3).map((genre) => (
+                          <span key={genre}>{genre}</span>
+                        ))}
+                        {featuredSong.key ? <span>{featuredSong.key}</span> : null}
+                        {featuredSong.bpm ? (
+                          <span>{featuredSong.bpm} BPM</span>
+                        ) : null}
+                      </div>
+                    </div>
+                  </article>
+                ) : null}
+
+                {displayedSongs.map((song, index) => (
+                  <SongCard
+                    key={getMusicSongStableId(song, index)}
+                    song={song}
+                    highlightedEditPointTypes={highlightedEditPointTypes}
+                    showEditPointMarkers={effectiveShowEditPointMarkers}
+                  />
+                ))}
+              </>
             )}
           </MusicListShell>
         </div>
