@@ -1296,7 +1296,10 @@ main
 
 
 .audioflume-music-page .audioflume-music-featured-song-eyebrow {
-  margin-bottom: 4px;
+  position: absolute;
+  top: var(--audioflume-featured-song-inset);
+  left: var(--audioflume-featured-song-inset);
+  z-index: 1;
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
   font-weight: 400;
