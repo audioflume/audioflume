@@ -43,9 +43,6 @@ export default function ReferenceSearchModal({
   const inputRef = useRef<HTMLInputElement | null>(null);
   const [results, setResults] = useState<ReferenceCatalogResult[]>([]);
   const [loading, setLoading] = useState(false);
-  const [catalogConfigured, setCatalogConfigured] = useState<boolean | null>(
-    null,
-  );
 
   useEffect(() => {
     if (!open) return;
@@ -108,7 +105,6 @@ export default function ReferenceSearchModal({
             )
           : [];
 
-        setCatalogConfigured(data?.configured !== false);
         setResults(nextResults);
       } catch (error) {
         if (controller.signal.aborted) return;
@@ -137,7 +133,7 @@ export default function ReferenceSearchModal({
   const showDropdown =
     !isMusicLink(value) &&
     value.trim().length >= MIN_CATALOG_QUERY_LENGTH &&
-    (loading || results.length > 0 || catalogConfigured === false);
+    (loading || results.length > 0);
 
   return (
     <div
@@ -200,11 +196,6 @@ export default function ReferenceSearchModal({
               <div className={styles.results} role="listbox">
                 {loading ? (
                   <div className={styles.status}>Searching songs and artists…</div>
-                ) : catalogConfigured === false ? (
-                  <div className={styles.status}>
-                    Song suggestions need Spotify API credentials. You can still
-                    press Enter or paste a music link.
-                  </div>
                 ) : (
                   results.map((result) => (
                     <button
