@@ -1324,9 +1324,9 @@ main
   min-height: 23px;
   align-items: center;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
   padding: 0 10px;
   color: rgba(255, 255, 255, 0.72);
   font-size: 10px;
