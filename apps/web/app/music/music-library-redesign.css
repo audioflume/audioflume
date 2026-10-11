@@ -1255,14 +1255,28 @@ main
   width: 100%;
   min-width: 0;
   min-height: 330px;
+  overflow: hidden;
   background-color: #151515;
+  color: #ffffff;
+}
+
+.audioflume-music-page .audioflume-music-featured-song::before {
+  content: "";
+  position: absolute;
+  inset: 0;
   background-image:
     linear-gradient(rgba(17, 17, 17, 0.34), rgba(17, 17, 17, 0.34)),
     var(--audioflume-featured-song-image);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  color: #ffffff;
+  transform: scale(1);
+  transition: transform 320ms ease;
+}
+
+.audioflume-music-page .audioflume-music-featured-song:hover::before,
+.audioflume-music-page .audioflume-music-featured-song:focus-within::before {
+  transform: scale(1.012);
 }
 
 .audioflume-music-page .audioflume-music-featured-song-copy {
