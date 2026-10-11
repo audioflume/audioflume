@@ -484,9 +484,9 @@ export default function AddToPlaylistModal({
                   e.preventDefault();
                   handleCreatePlaylist();
                 }}
-                className="group mb-1 flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5"
+                className="mb-1 flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--bg-tertiary-hover)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-[filter] group-hover:brightness-[0.94]">
                   <PlusIcon size={18} />
                 </span>
 
