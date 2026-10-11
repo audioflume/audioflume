@@ -311,6 +311,12 @@ export default function MusicPage() {
   }, []);
 
   useEffect(() => {
+    if (searchParams.get("referenceSearch") === "open") {
+      setSearchBySongOpen(true);
+    }
+  }, [searchParams]);
+
+  useEffect(() => {
     if (!searchBySongOpen) return;
 
     searchBySongInputRef.current?.focus();
