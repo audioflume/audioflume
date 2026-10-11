@@ -122,6 +122,7 @@ async function decodeAudioToPcm(sourceUrl: string) {
 
     const timeout = setTimeout(() => {
       if (finished) return;
+      finished = true;
       child.kill("SIGKILL");
       reject(new Error("Audio analysis timed out"));
     }, 25_000);
@@ -414,7 +415,6 @@ function analyzePcm(samples: Float32Array): AudioSimilarityFeatures {
   const centroids: number[] = [];
   const rolloffs: number[] = [];
   const flatnessValues: number[] = [];
-  const rmsFrames: number[] = [];
   const nyquist = SAMPLE_RATE / 2;
 
   for (let frameIndex = 0; frameIndex < SPECTRAL_FRAME_COUNT; frameIndex++) {
@@ -450,14 +450,12 @@ function analyzePcm(samples: Float32Array): AudioSimilarityFeatures {
     let cumulativePower = 0;
     let rolloffFrequency = 0;
     let logMagnitudeSum = 0;
-    let rmsEnergy = 0;
 
     for (let bin = 1; bin < magnitudes.length; bin++) {
       const magnitude = magnitudes[bin];
       const frequency = (bin * SAMPLE_RATE) / FFT_SIZE;
       weightedFrequency += frequency * magnitude;
       logMagnitudeSum += Math.log(Math.max(magnitude, 1e-12));
-      rmsEnergy += magnitude * magnitude;
     }
 
     const centroid =
@@ -482,7 +480,6 @@ function analyzePcm(samples: Float32Array): AudioSimilarityFeatures {
       arithmeticMean > 0 ? clamp01(geometricMean / arithmeticMean) : 0,
     );
 
-    rmsFrames.push(Math.sqrt(rmsEnergy / Math.max(1, magnitudes.length)));
   }
 
   const spectralBands = Array.from({ length: MEL_BAND_COUNT }, (_, index) =>
