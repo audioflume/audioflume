@@ -159,7 +159,7 @@
   --discover-artist-hero-height: 50dvh;
   position: relative;
   height: var(--discover-artist-hero-height);
-  min-height: 560px;
+  min-height: 0;
   overflow: hidden;
   background:
     linear-gradient(rgba(13, 13, 13, 0.32), rgba(13, 13, 13, 0.32)),
