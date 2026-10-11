@@ -717,7 +717,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-artists,
-.audioflume-home-reference-featured-albums,
 .audioflume-home-reference-curated-playlists,
 .audioflume-home-reference-playlists,
 .audioflume-home-reference-new-songs,
@@ -944,80 +943,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   padding: 0;
 }
 
-.audioflume-home-reference-featured-albums {
-  padding: 48px 0 76px;
-  color: var(--text-primary);
-}
-
-.audioflume-home-reference-featured-album-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 20px;
-  row-gap: 32px;
-  padding: 0 80px;
-}
-
-.audioflume-home-reference-featured-album-card {
-  min-width: 0;
-}
-
-.audioflume-home-reference-featured-album-link {
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-.audioflume-home-reference-featured-album-media {
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  background: var(--bg-tertiary);
-}
-
-.audioflume-home-reference-featured-album-media img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 220ms ease;
-}
-
-.audioflume-home-reference-featured-album-card:hover
-  .audioflume-home-reference-featured-album-media img {
-  transform: scale(1.008);
-}
-
-.audioflume-home-reference-featured-album-copy {
-  display: grid;
-  gap: 4px;
-  margin-top: 10px;
-}
-
-.audioflume-home-reference-featured-album-copy strong {
-  overflow: hidden;
-  color: var(--text-primary);
-  font-size: 14.5px;
-  font-weight: 400;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.audioflume-home-reference-featured-album-copy > span {
-  overflow: hidden;
-  color: var(--text-subtle);
-  font-size: 11.5px;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.audioflume-home-skeleton-block.is-featured-album-media {
-  width: 100%;
-  aspect-ratio: 1;
-}
-
 .audioflume-home-reference-song-search-section {
   padding: 0 0 76px;
   background: var(--bg-primary);
@@ -1025,10 +950,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-song-search-block {
   position: relative;
-  width: calc(
-    100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
-  );
-  max-width: var(--filmwave-editorial-max-width);
+  width: var(--home-reference-width);
   min-height: 420px;
   overflow: hidden;
   margin: 0 auto;
