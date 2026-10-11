@@ -477,7 +477,7 @@ export default function DiscoverPage() {
 
         if (!cancelled) {
           setFeatureCardArtists(
-            Array.isArray(data?.artists) ? data.artists.slice(0, 2) : [],
+            Array.isArray(data?.artists) ? data.artists : [],
           );
         }
       } catch {
