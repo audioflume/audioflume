@@ -117,7 +117,7 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center">
+    <div className="flex flex-shrink-0 -translate-y-1 items-center justify-center px-7 pb-5 pt-0 text-center">
       <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
         <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
           {cover ? (
@@ -133,7 +133,7 @@ function SongPreview({ song }: { song: Song }) {
           )}
         </span>
 
-        <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+        <span className="block max-w-[300px] truncate text-[12px] font-normal tracking-[-0.015em] text-[var(--text-primary)]">
           {song.title} by {song.artist}
         </span>
       </div>
