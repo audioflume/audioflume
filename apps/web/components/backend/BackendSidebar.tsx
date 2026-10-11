@@ -42,10 +42,15 @@ export function BackendSidebarShell({
       `}</style>
       <aside
         className={joinClasses(
-          "fixed left-0 z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col",
+          "sticky z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col",
           className,
         )}
-        style={{ top: "var(--filmwave-header-height)", bottom }}
+        style={{
+          top: "var(--filmwave-header-height)",
+          height: `calc(100dvh - var(--filmwave-header-height) - ${bottom})`,
+          marginLeft: "calc(-1 * var(--admin-sidebar-width))",
+          marginBottom: `calc(-1 * (100dvh - var(--filmwave-header-height) - ${bottom}))`,
+        }}
       >
         {children}
       </aside>
