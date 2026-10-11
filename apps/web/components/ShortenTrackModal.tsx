@@ -728,7 +728,7 @@ export default function ShortenTrackModal({
     >
       <SongPreview song={song} />
 
-      <div className="-mx-7 flex min-h-0 flex-1 flex-col border-t border-[var(--filmwave-menu-sep)] bg-[var(--filmwave-menu-bg)]">
+      <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--filmwave-menu-bg)]">
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
             <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">

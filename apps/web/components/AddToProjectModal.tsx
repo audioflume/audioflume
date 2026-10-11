@@ -104,7 +104,7 @@ function SongPreview({ song }: { song: Song }) {
 
 function ProjectThumbnail() {
   return (
-    <span className="flex h-9 w-9 shrink-0 items-center justify-center overflow-visible">
+    <span className="flex h-10 w-10 shrink-0 items-center justify-center overflow-visible">
       <span className="-translate-y-1 scale-[0.56]">
         <FolderGlyph />
       </span>
@@ -135,6 +135,7 @@ export default function AddToProjectModal({
   const [creatingProject, setCreatingProject] = useState(false);
   const [newProjectName, setNewProjectName] = useState("");
   const [newProjectOpen, setNewProjectOpen] = useState(false);
+  const [projectSearch, setProjectSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -227,8 +228,15 @@ export default function AddToProjectModal({
         a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
       );
 
-    return [...recent, ...remaining];
-  }, [projects, recentProjectIds]);
+    const ordered = [...recent, ...remaining];
+    const query = projectSearch.trim().toLowerCase();
+
+    if (!query) return ordered;
+
+    return ordered.filter((project) =>
+      project.name.toLowerCase().includes(query),
+    );
+  }, [projects, recentProjectIds, projectSearch]);
 
   function updateRecentProjects(projectId: number) {
     const current = readRecentProjectIds();
@@ -247,6 +255,7 @@ export default function AddToProjectModal({
 
     setNewProjectOpen(false);
     setNewProjectName("");
+    setProjectSearch("");
     setError(null);
     onClose();
   }
@@ -378,27 +387,47 @@ export default function AddToProjectModal({
         title="Add to Project"
         onClose={handleClose}
         closeLabel="Close add to project modal"
-        maxHeight="420px"
         bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
-        contentClassName="h-[420px] max-h-[calc(100vh-64px)]"
+        contentClassName="h-[506px] max-h-[calc(100vh-64px)]"
       >
         <SongPreview song={song} />
 
-        <div className="-mx-7 flex min-h-0 flex-1 flex-col border-t border-[var(--filmwave-menu-sep)] bg-[var(--filmwave-menu-bg)]">
-          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3">
+        <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5">
+          <label className="flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              className="shrink-0"
+            >
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+              <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              type="search"
+              value={projectSearch}
+              onChange={(event) => setProjectSearch(event.target.value)}
+              placeholder="Search projects"
+              className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-sm text-[var(--text-primary)] !outline-none placeholder:text-[var(--text-muted)] focus:!border-0"
+            />
+          </label>
+
+          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-5 pt-2.5">
             {newProjectOpen ? (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   handleCreateProject();
                 }}
-                className="mb-1 flex w-full items-start gap-3 rounded-none p-2"
+                className="mb-1 flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
 
-                <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
                   <input
                     type="text"
                     value={newProjectName}
@@ -406,42 +435,40 @@ export default function AddToProjectModal({
                     onChange={(e) => setNewProjectName(e.target.value)}
                     placeholder="Name"
                     autoFocus
-                    className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:opacity-60"
+                    className="h-10 min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-0 disabled:opacity-60"
                   />
 
-                  <div className="mt-2 flex items-center gap-2">
-                    <button
+                  <button
                       type="button"
                       disabled={creatingProject}
                       onClick={() => {
                         setNewProjectOpen(false);
                         setNewProjectName("");
                       }}
-                      className="h-8 rounded-none border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                      className="h-10 shrink-0 rounded-none border-0 px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                     >
                       Cancel
                     </button>
 
-                    <button
+                  <button
                       type="submit"
                       disabled={creatingProject || !newProjectName.trim()}
-                      className="h-8 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                      className="h-10 shrink-0 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
                     >
                       Add
-                    </button>
-                  </div>
+                  </button>
                 </div>
               </form>
             ) : (
               <button
                 type="button"
                 onClick={() => setNewProjectOpen(true)}
-                className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
+                className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--icon-button-hover)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-[filter] group-hover:brightness-[0.90]">
                   <PlusIcon size={18} />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                <span className="min-w-0 flex-1 truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
                   New Project...
                 </span>
               </button>
@@ -452,9 +479,9 @@ export default function AddToProjectModal({
                 {Array.from({ length: projects.length || 4 }).map((_, index) => (
                   <div
                     key={index}
-                    className="flex min-h-[52px] items-center gap-3 rounded-none p-2"
+                    className="flex min-h-[58px] items-center gap-3 rounded-none p-2.5"
                   >
-                    <div className="h-9 w-9 animate-pulse rounded-none bg-[var(--bg-primary)]" />
+                    <div className="h-10 w-10 animate-pulse rounded-none bg-[var(--bg-primary)]" />
                     <div className="h-3 w-32 animate-pulse rounded-none bg-[var(--bg-primary)]" />
                   </div>
                 ))}
@@ -481,7 +508,9 @@ export default function AddToProjectModal({
 
             {!loading && !displayedError && displayedProjects.length === 0 && (
               <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
-                You don&apos;t have any projects yet.
+                {projectSearch.trim()
+                  ? "No projects match your search."
+                  : "You don’t have any projects yet."}
               </div>
             )}
 
@@ -498,19 +527,19 @@ export default function AddToProjectModal({
                     type="button"
                     onClick={() => handleProjectClick(project)}
                     disabled={isPending || creatingProject}
-                    className={`group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
+                    className={`group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
                       isSelected
-                        ? "bg-[var(--bg-primary)] hover:bg-[var(--bg-primary)]"
+                        ? "bg-[var(--bg-hover)] hover:bg-[var(--bg-hover)]"
                         : "hover:bg-[var(--bg-hover)]"
                     }`}
                   >
                     <ProjectThumbnail />
 
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                      <span className="block truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
                         {project.name}
                       </span>
-                      <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                      <span className="mt-[2px] block truncate text-[11.5px] leading-[1.35] text-[var(--text-subtle)]">
                         {isSelected ? "Added" : "Click to add"}
                       </span>
                     </span>

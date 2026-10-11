@@ -154,8 +154,6 @@ export default function CreatePlaylistModal({
       title="New Playlist"
       onClose={clearFormAndClose}
       closeLabel="Close new playlist modal"
-      maxWidth="max-w-[430px]"
-      maxHeight="460px"
       bodyClassName="px-5 py-5"
       footerClassName="justify-between"
       footer={
