@@ -23,6 +23,7 @@ type MusicBrainzArtistCredit = {
 };
 
 type MusicBrainzRelease = {
+  id?: string;
   title?: string;
 };
 
@@ -88,9 +89,15 @@ function getTrackResult(recording: MusicBrainzRecording) {
 
   if (!id || !name || !artist) return null;
 
-  const releaseTitle = recording.releases?.find(
-    (release) => typeof release.title === "string" && release.title.trim(),
-  )?.title?.trim();
+  const release = recording.releases?.find(
+    (item) =>
+      typeof item.id === "string" &&
+      item.id.trim() &&
+      typeof item.title === "string" &&
+      item.title.trim(),
+  );
+  const releaseId = release?.id?.trim() ?? "";
+  const releaseTitle = release?.title?.trim();
 
   return {
     id: `musicbrainz:recording:${id}`,
@@ -98,7 +105,9 @@ function getTrackResult(recording: MusicBrainzRecording) {
     name,
     artist,
     secondary: releaseTitle || "Track",
-    imageUrl: null,
+    imageUrl: releaseId
+      ? `https://coverartarchive.org/release/${releaseId}/front-250`
+      : null,
     externalUrl: `https://musicbrainz.org/recording/${id}`,
     searchQuery: `${name} by ${artist}`,
   };
@@ -168,11 +177,17 @@ async function findExactArtist(query: string) {
   );
 }
 
+function escapeMusicBrainzQuery(value: string) {
+  return value.replace(/([+\-&|!(){}\[\]^"~*?:\\/])/g, "\\$1");
+}
+
 async function searchRecordings(query: string, artistId?: string) {
   const searchUrl = new URL("https://musicbrainz.org/ws/2/recording");
   searchUrl.searchParams.set(
     "query",
-    artistId ? `arid:${artistId}` : query,
+    artistId
+      ? `arid:${artistId}`
+      : `recording:"${escapeMusicBrainzQuery(query)}"`,
   );
   searchUrl.searchParams.set("fmt", "json");
   searchUrl.searchParams.set("limit", String(MUSICBRAINZ_SEARCH_LIMIT));
