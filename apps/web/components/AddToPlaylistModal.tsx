@@ -472,16 +472,16 @@ export default function AddToPlaylistModal({
             />
           </label>
 
-          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-5">
+          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-5 pt-2.5">
             {newPlaylistOpen ? (
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
                   handleCreatePlaylist();
                 }}
-                className="mb-1 flex w-full items-start gap-3 rounded-none p-2"
+                className="group mb-1 flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-white">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-[#111111]">
                   <PlusIcon size={18} />
                 </span>
 
@@ -493,7 +493,7 @@ export default function AddToPlaylistModal({
                     onChange={(e) => setNewPlaylistName(toSmartTitleCaseInput(e.target.value))}
                     placeholder="Name"
                     autoFocus
-                    className="h-9 min-w-0 flex-1 rounded-none border-0 bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-0 disabled:opacity-60"
+                    className="h-10 min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-0 disabled:opacity-60"
                   />
 
                   <button
@@ -503,7 +503,7 @@ export default function AddToPlaylistModal({
                       setNewPlaylistOpen(false);
                       setNewPlaylistName("");
                     }}
-                    className="h-9 shrink-0 rounded-none border-0 px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                    className="h-10 shrink-0 rounded-none border-0 px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                   >
                     Cancel
                   </button>
@@ -511,7 +511,7 @@ export default function AddToPlaylistModal({
                   <button
                     type="submit"
                     disabled={creatingPlaylist || !newPlaylistName.trim()}
-                    className="h-9 shrink-0 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                    className="h-10 shrink-0 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
                   >
                     Add
                   </button>
@@ -523,7 +523,7 @@ export default function AddToPlaylistModal({
                 onClick={() => setNewPlaylistOpen(true)}
                 className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--text-primary)] text-[var(--bg-primary)] transition-colors group-hover:bg-white group-hover:text-[#111111]">
                   <PlusIcon size={18} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
