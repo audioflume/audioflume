@@ -90,9 +90,14 @@
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
+  box-sizing: border-box;
+  width: min(720px, calc(100% - 32px));
   gap: 18px;
+  margin: 12px 16px;
+  border-radius: 999px;
+  background: #1b1b1b;
   padding: 0 34px;
-  color: #323232;
+  color: #6f6f6f;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field > svg {
@@ -742,7 +747,9 @@ main
   }
 
   .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
+    width: calc(100% - 20px);
     gap: 12px;
+    margin: 12px 10px;
     padding: 0 18px;
   }
 
@@ -765,6 +772,7 @@ main
 :where(html.light, html[data-theme="light"])
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field {
+  background: #f3f3f3;
   color: #a3a3a3;
 }
 
