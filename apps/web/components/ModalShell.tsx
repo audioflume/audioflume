@@ -96,9 +96,11 @@ export default function ModalShell({
         >
           {headerContent || (
             <>
-              <span className="mb-2 font-[family-name:var(--font-roboto-mono-filmwave)] text-[9px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                {eyebrow}
-              </span>
+              {eyebrow && (
+                <span className="mb-2 font-[family-name:var(--font-roboto-mono-filmwave)] text-[9px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                  {eyebrow}
+                </span>
+              )}
               <h2 className="min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-light leading-none tracking-[-0.035em] text-[var(--text-primary)]">
                 {title}
               </h2>

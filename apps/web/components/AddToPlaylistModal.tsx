@@ -117,7 +117,7 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-center px-5 pb-4 pt-0 text-center">
+    <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center">
       <div className="flex min-w-0 items-center justify-center gap-2">
         <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
           {cover ? (
@@ -161,6 +161,7 @@ export default function AddToPlaylistModal({
   const [creatingPlaylist, setCreatingPlaylist] = useState(false);
   const [newPlaylistName, setNewPlaylistName] = useState("");
   const [newPlaylistOpen, setNewPlaylistOpen] = useState(false);
+  const [playlistSearch, setPlaylistSearch] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -253,8 +254,15 @@ export default function AddToPlaylistModal({
         a.name.localeCompare(b.name, undefined, { sensitivity: "base" }),
       );
 
-    return [...recent, ...remaining];
-  }, [playlists, recentPlaylistIds]);
+    const ordered = [...recent, ...remaining];
+    const query = playlistSearch.trim().toLowerCase();
+
+    if (!query) return ordered;
+
+    return ordered.filter((playlist) =>
+      playlist.name.toLowerCase().includes(query),
+    );
+  }, [playlists, recentPlaylistIds, playlistSearch]);
 
   function updateRecentPlaylists(playlistId: number) {
     const current = readRecentPlaylistIds();
@@ -285,6 +293,7 @@ export default function AddToPlaylistModal({
 
     setNewPlaylistOpen(false);
     setNewPlaylistName("");
+    setPlaylistSearch("");
     setError(null);
     onClose();
   }
@@ -431,16 +440,39 @@ export default function AddToPlaylistModal({
         title="Add to Playlist"
         onClose={handleClose}
         closeLabel="Close add to playlist modal"
-        maxWidth="max-w-[430px]"
-        maxHeight="420px"
+        maxWidth="max-w-[600px]"
+        maxHeight="540px"
         centerTitle
-        bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-        contentClassName="h-[420px] max-h-[calc(100vh-64px)]"
+        eyebrow=""
+        contentCorners="square"
+        bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
+        contentClassName="h-[540px] max-h-[calc(100vh-64px)]"
       >
         <SongPreview song={song} />
 
-        <div className="-mx-5 flex min-h-0 flex-1 flex-col border-t border-[var(--filmwave-menu-sep)] bg-[var(--filmwave-menu-bg)]">
-          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto p-3">
+        <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5 pb-5">
+          <label className="mb-3 flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-tertiary-hover)] px-4 text-[var(--text-muted)]">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              className="shrink-0"
+            >
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+              <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              type="search"
+              value={playlistSearch}
+              onChange={(event) => setPlaylistSearch(event.target.value)}
+              placeholder="Search playlists"
+              className="h-full min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+            />
+          </label>
+
+          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto">
             {newPlaylistOpen ? (
               <form
                 onSubmit={(e) => {
@@ -491,9 +523,9 @@ export default function AddToPlaylistModal({
               <button
                 type="button"
                 onClick={() => setNewPlaylistOpen(true)}
-                className="group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors hover:bg-[var(--bg-hover)]"
+                className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-tertiary-hover)]"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--icon-button-hover)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
@@ -539,7 +571,9 @@ export default function AddToPlaylistModal({
 
             {!loading && !displayedError && displayedPlaylists.length === 0 && (
               <div className="flex min-h-full items-center justify-center px-4 text-center text-xs text-[var(--text-secondary)]">
-                You don&apos;t have any playlists yet.
+                {playlistSearch.trim()
+                  ? "No playlists match your search."
+                  : "You don&apos;t have any playlists yet."}
               </div>
             )}
 
@@ -556,10 +590,10 @@ export default function AddToPlaylistModal({
                     type="button"
                     onClick={() => handlePlaylistClick(playlist)}
                     disabled={isPending || creatingPlaylist}
-                    className={`group flex min-h-[52px] w-full cursor-pointer items-center gap-3 rounded-none p-2 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
+                    className={`group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
                       isSelected
-                        ? "bg-[var(--bg-primary)] hover:bg-[var(--bg-primary)]"
-                        : "hover:bg-[var(--bg-hover)]"
+                        ? "bg-[var(--bg-tertiary-hover)] hover:bg-[var(--bg-tertiary-hover)]"
+                        : "hover:bg-[var(--bg-tertiary-hover)]"
                     }`}
                   >
                     <PlaylistThumbnail playlist={playlist} index={index} />
