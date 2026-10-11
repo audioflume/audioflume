@@ -787,8 +787,7 @@ export default function DiscoverPage() {
               ref={featureCardShelfRef}
               className="discover-artist-featured-scroller"
             >
-              {Array.from({ length: 2 }).map((_, index) => {
-              const artist = featureCardArtists[index];
+              {featureCardArtists.map((artist) => {
               const playableSongs = (artist?.songs ?? []).filter((song) =>
                 Boolean(song.audioUrl),
               );
@@ -813,11 +812,10 @@ export default function DiscoverPage() {
 
               return (
                 <article
-                  key={artist?.id ?? index}
+                  key={artist.id}
                   className="discover-artist-feature-card"
                 >
-                  {artist ? (
-                    <>
+                  <>
                       <Link
                         href={`/artists/${artist.slug}`}
                         className="discover-artist-feature-link"
@@ -870,9 +868,6 @@ export default function DiscoverPage() {
                         )}
                       </button>
                     </>
-                  ) : (
-                    <div className="discover-artist-feature-media-home" />
-                  )}
                 </article>
               );
               })}
