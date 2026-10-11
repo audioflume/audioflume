@@ -1280,6 +1280,22 @@ main
 .audioflume-music-page .audioflume-music-featured-song-overlay {
   position: absolute;
   inset: 0;
+  background: rgba(17, 17, 17, 0.18);
+  transition: background-color 220ms ease;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-music-page
+  .audioflume-music-featured-song-overlay {
+  background: rgba(17, 17, 17, 0.72);
+}
+
+.audioflume-music-page
+  .audioflume-music-featured-song:hover
+  .audioflume-music-featured-song-overlay,
+.audioflume-music-page
+  .audioflume-music-featured-song:focus-within
+  .audioflume-music-featured-song-overlay {
   background: rgba(17, 17, 17, 0.34);
 }
 
