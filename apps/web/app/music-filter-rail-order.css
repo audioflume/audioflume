@@ -347,6 +347,34 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-panel
+  .fw-filter-bpm-row {
+  gap: 10px;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-range-track {
+  height: 2px;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-range-handle {
+  width: 10px;
+  height: 10px;
+  border: 0;
+  background: var(--text-primary);
+  box-shadow: none;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-range-handle:hover {
+  box-shadow: none;
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
   .fw-filter-bpm-row
   .fw-filter-mini-field {
   min-width: 0;
