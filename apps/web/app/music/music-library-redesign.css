@@ -1274,7 +1274,7 @@ main
 
 .audioflume-music-page .audioflume-music-featured-song:hover::before,
 .audioflume-music-page .audioflume-music-featured-song:focus-within::before {
-  transform: scale(1.008);
+  transform: scale(1.012);
 }
 
 .audioflume-music-page .audioflume-music-featured-song-overlay {
