@@ -150,6 +150,7 @@ export type ClapSimilarityMatch = {
   similarity: number;
   bestSegmentSimilarity: number;
   averageBestSegmentSimilarity: number;
+  consistentSegmentSimilarity: number;
   conceptProfile: ClapConceptProfile;
 };
 
@@ -631,10 +632,16 @@ function getSegmentSimilarityMetrics(
   const averageBestSegmentSimilarity =
     bestPerReference.reduce((sum, value) => sum + value, 0) /
     bestPerReference.length;
+  const weakestBestSegmentSimilarity = Math.min(...bestPerReference);
+
+  const consistentSegmentSimilarity =
+    averageBestSegmentSimilarity * 0.7 +
+    weakestBestSegmentSimilarity * 0.3;
 
   return {
     bestSegmentSimilarity,
     averageBestSegmentSimilarity,
+    consistentSegmentSimilarity,
   };
 }
 
@@ -946,6 +953,8 @@ export async function searchPublishedSongsByClapSimilarity(
             segmentSimilarity.bestSegmentSimilarity,
           averageBestSegmentSimilarity:
             segmentSimilarity.averageBestSegmentSimilarity,
+          consistentSegmentSimilarity:
+            segmentSimilarity.consistentSegmentSimilarity,
           conceptProfile: candidateProfile,
         },
       ];
