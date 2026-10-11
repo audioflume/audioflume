@@ -800,14 +800,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-artist-card {
   position: relative;
-  width: min(32vw, 440px);
-  min-width: min(32vw, 440px);
+  width: min(50vw, 650px);
+  min-width: min(50vw, 650px);
   background: transparent;
-}
-
-.audioflume-home-reference-artist-card.is-featured {
-  width: min(56vw, 760px);
-  min-width: min(56vw, 760px);
 }
 
 .audioflume-home-reference-artist-link {
@@ -820,14 +815,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-artist-media {
   position: relative;
-  height: 320px;
+  height: 400px;
   overflow: hidden;
   background: var(--bg-tertiary);
-}
-
-.audioflume-home-reference-artist-card.is-featured
-  .audioflume-home-reference-artist-media {
-  height: 400px;
 }
 
 .audioflume-home-reference-artist-media::after {
@@ -1112,15 +1102,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     transform-origin: left center;
   }
 
-  .audioflume-home-reference-artist-card,
-  .audioflume-home-reference-artist-card.is-featured {
+  .audioflume-home-reference-artist-card {
     width: 82vw;
     min-width: 82vw;
   }
 
-  .audioflume-home-reference-artist-media,
-  .audioflume-home-reference-artist-card.is-featured
-    .audioflume-home-reference-artist-media {
+  .audioflume-home-reference-artist-media {
     height: 320px;
   }
 
