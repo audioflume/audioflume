@@ -6,170 +6,176 @@ export const revalidate = 0;
 
 const MIN_QUERY_LENGTH = 2;
 const MAX_QUERY_LENGTH = 120;
-const SPOTIFY_SEARCH_LIMIT = 5;
-const TOKEN_EXPIRY_BUFFER_MS = 60_000;
+const MUSICBRAINZ_SEARCH_LIMIT = 8;
+const MUSICBRAINZ_REQUEST_INTERVAL_MS = 1100;
+const CACHE_TTL_MS = 5 * 60 * 1000;
 
-type SpotifyImage = {
-  url?: string;
-};
-
-type SpotifyArtistSummary = {
+type MusicBrainzArtist = {
   id?: string;
   name?: string;
-  external_urls?: {
-    spotify?: string;
-  };
-  images?: SpotifyImage[];
 };
 
-type SpotifyTrackSummary = {
-  id?: string;
+type MusicBrainzArtistCredit = {
   name?: string;
-  artists?: Array<{ name?: string }>;
-  album?: {
-    name?: string;
-    images?: SpotifyImage[];
-  };
-  external_urls?: {
-    spotify?: string;
-  };
+  joinphrase?: string;
+  artist?: MusicBrainzArtist;
 };
 
-type SpotifySearchResponse = {
-  tracks?: {
-    items?: SpotifyTrackSummary[];
-  };
-  artists?: {
-    items?: SpotifyArtistSummary[];
-  };
+type MusicBrainzRelease = {
+  title?: string;
 };
 
-let cachedAccessToken = "";
-let cachedAccessTokenExpiresAt = 0;
+type MusicBrainzRecording = {
+  id?: string;
+  title?: string;
+  length?: number;
+  score?: number;
+  "artist-credit"?: MusicBrainzArtistCredit[];
+  releases?: MusicBrainzRelease[];
+};
 
-function getSpotifyCredentials() {
+type MusicBrainzSearchResponse = {
+  recordings?: MusicBrainzRecording[];
+};
+
+type ReferenceCatalogResult = {
+  id: string;
+  kind: "track" | "artist";
+  name: string;
+  artist: string;
+  secondary: string;
+  imageUrl: string | null;
+  externalUrl: string | null;
+  searchQuery: string;
+};
+
+const resultCache = new Map<
+  string,
+  {
+    expiresAt: number;
+    results: ReferenceCatalogResult[];
+  }
+>();
+
+let nextMusicBrainzRequestAt = 0;
+
+function getArtistLabel(credits: MusicBrainzArtistCredit[] | undefined) {
+  return (credits ?? [])
+    .map((credit) => {
+      const name = credit.name?.trim() || credit.artist?.name?.trim() || "";
+      return `${name}${credit.joinphrase ?? ""}`;
+    })
+    .join("")
+    .trim();
+}
+
+function getTrackResult(recording: MusicBrainzRecording) {
+  const id = recording.id?.trim();
+  const name = recording.title?.trim();
+  const artist = getArtistLabel(recording["artist-credit"]);
+
+  if (!id || !name || !artist) return null;
+
+  const releaseTitle = recording.releases?.find(
+    (release) => typeof release.title === "string" && release.title.trim(),
+  )?.title?.trim();
+
   return {
-    clientId: process.env.SPOTIFY_CLIENT_ID?.trim() ?? "",
-    clientSecret: process.env.SPOTIFY_CLIENT_SECRET?.trim() ?? "",
+    id: `musicbrainz:recording:${id}`,
+    kind: "track" as const,
+    name,
+    artist,
+    secondary: releaseTitle || "Track",
+    imageUrl: null,
+    externalUrl: `https://musicbrainz.org/recording/${id}`,
+    searchQuery: `${name} by ${artist}`,
   };
 }
 
-async function getSpotifyAccessToken() {
+function getArtistResults(recordings: MusicBrainzRecording[]) {
+  const artists = new Map<string, ReferenceCatalogResult>();
+
+  for (const recording of recordings) {
+    for (const credit of recording["artist-credit"] ?? []) {
+      const id = credit.artist?.id?.trim();
+      const name = credit.artist?.name?.trim() || credit.name?.trim();
+
+      if (!id || !name || artists.has(id)) continue;
+
+      artists.set(id, {
+        id: `musicbrainz:artist:${id}`,
+        kind: "artist",
+        name,
+        artist: "",
+        secondary: "Artist",
+        imageUrl: null,
+        externalUrl: `https://musicbrainz.org/artist/${id}`,
+        searchQuery: name,
+      });
+
+      if (artists.size >= 3) return [...artists.values()];
+    }
+  }
+
+  return [...artists.values()];
+}
+
+async function searchMusicBrainz(query: string) {
+  const normalizedQuery = query.toLowerCase();
+  const cached = resultCache.get(normalizedQuery);
+
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.results;
+  }
+
   const now = Date.now();
+  const requestAt = Math.max(now, nextMusicBrainzRequestAt);
+  nextMusicBrainzRequestAt = requestAt + MUSICBRAINZ_REQUEST_INTERVAL_MS;
 
-  if (
-    cachedAccessToken &&
-    cachedAccessTokenExpiresAt - TOKEN_EXPIRY_BUFFER_MS > now
-  ) {
-    return cachedAccessToken;
+  if (requestAt > now) {
+    await new Promise((resolve) => {
+      setTimeout(resolve, requestAt - now);
+    });
   }
 
-  const { clientId, clientSecret } = getSpotifyCredentials();
+  const searchUrl = new URL("https://musicbrainz.org/ws/2/recording");
+  searchUrl.searchParams.set("query", query);
+  searchUrl.searchParams.set("fmt", "json");
+  searchUrl.searchParams.set("limit", String(MUSICBRAINZ_SEARCH_LIMIT));
 
-  if (!clientId || !clientSecret) {
-    return null;
-  }
-
-  const encodedCredentials = Buffer.from(
-    `${clientId}:${clientSecret}`,
-  ).toString("base64");
-
-  const response = await fetch("https://accounts.spotify.com/api/token", {
-    method: "POST",
+  const response = await fetch(searchUrl, {
     headers: {
-      Authorization: `Basic ${encodedCredentials}`,
-      "Content-Type": "application/x-www-form-urlencoded",
+      Accept: "application/json",
+      "User-Agent": "Audioflume/1.0 (https://audioflume.com)",
     },
-    body: new URLSearchParams({
-      grant_type: "client_credentials",
-    }),
     cache: "no-store",
   });
 
   if (!response.ok) {
-    throw new Error(`Spotify token request failed with ${response.status}`);
+    throw new Error(`MusicBrainz search failed with ${response.status}`);
   }
 
-  const data = (await response.json()) as {
-    access_token?: string;
-    expires_in?: number;
-  };
+  const data = (await response.json()) as MusicBrainzSearchResponse;
+  const recordings = data.recordings ?? [];
+  const tracks = recordings.flatMap((recording) => {
+    const result = getTrackResult(recording);
+    return result ? [result] : [];
+  });
+  const artists = getArtistResults(recordings);
+  const results = [...tracks.slice(0, 5), ...artists];
 
-  if (!data.access_token) {
-    throw new Error("Spotify token response did not include an access token");
-  }
+  resultCache.set(normalizedQuery, {
+    expiresAt: Date.now() + CACHE_TTL_MS,
+    results,
+  });
 
-  cachedAccessToken = data.access_token;
-  cachedAccessTokenExpiresAt =
-    now + Math.max(60, Number(data.expires_in) || 3600) * 1000;
-
-  return cachedAccessToken;
-}
-
-function getArtwork(images: SpotifyImage[] | undefined) {
-  return images?.find((image) => typeof image.url === "string")?.url ?? null;
-}
-
-function mapTrack(track: SpotifyTrackSummary) {
-  const id = track.id?.trim();
-  const name = track.name?.trim();
-  const artists = (track.artists ?? [])
-    .map((artist) => artist.name?.trim() ?? "")
-    .filter(Boolean);
-
-  if (!id || !name || artists.length === 0) return null;
-
-  const artistLabel = artists.join(", ");
-
-  return {
-    id: `spotify:track:${id}`,
-    kind: "track" as const,
-    name,
-    artist: artistLabel,
-    secondary: track.album?.name?.trim() || "Track",
-    imageUrl: getArtwork(track.album?.images),
-    externalUrl: track.external_urls?.spotify ?? null,
-    searchQuery: `${name} by ${artistLabel}`,
-  };
-}
-
-function mapArtist(artist: SpotifyArtistSummary) {
-  const id = artist.id?.trim();
-  const name = artist.name?.trim();
-
-  if (!id || !name) return null;
-
-  return {
-    id: `spotify:artist:${id}`,
-    kind: "artist" as const,
-    name,
-    artist: "",
-    secondary: "Artist",
-    imageUrl: getArtwork(artist.images),
-    externalUrl: artist.external_urls?.spotify ?? null,
-    searchQuery: name,
-  };
+  return results;
 }
 
 export async function GET(request: Request) {
   try {
     const url = new URL(request.url);
     const query = (url.searchParams.get("q") ?? "").trim();
-    const { clientId, clientSecret } = getSpotifyCredentials();
-
-    if (!clientId || !clientSecret) {
-      return NextResponse.json(
-        {
-          configured: false,
-          results: [],
-        },
-        {
-          headers: {
-            "Cache-Control": "private, no-store, max-age=0",
-          },
-        },
-      );
-    }
 
     if (query.length < MIN_QUERY_LENGTH) {
       return NextResponse.json(
@@ -192,52 +198,13 @@ export async function GET(request: Request) {
       );
     }
 
-    const accessToken = await getSpotifyAccessToken();
-
-    if (!accessToken) {
-      return NextResponse.json(
-        {
-          configured: false,
-          results: [],
-        },
-        {
-          headers: {
-            "Cache-Control": "private, no-store, max-age=0",
-          },
-        },
-      );
-    }
-
-    const searchUrl = new URL("https://api.spotify.com/v1/search");
-    searchUrl.searchParams.set("q", query);
-    searchUrl.searchParams.set("type", "track,artist");
-    searchUrl.searchParams.set("limit", String(SPOTIFY_SEARCH_LIMIT));
-
-    const response = await fetch(searchUrl, {
-      headers: {
-        Authorization: `Bearer ${accessToken}`,
-      },
-      cache: "no-store",
-    });
-
-    if (!response.ok) {
-      throw new Error(`Spotify search failed with ${response.status}`);
-    }
-
-    const data = (await response.json()) as SpotifySearchResponse;
-    const tracks = (data.tracks?.items ?? []).flatMap((track) => {
-      const result = mapTrack(track);
-      return result ? [result] : [];
-    });
-    const artists = (data.artists?.items ?? []).flatMap((artist) => {
-      const result = mapArtist(artist);
-      return result ? [result] : [];
-    });
+    const results = await searchMusicBrainz(query);
 
     return NextResponse.json(
       {
         configured: true,
-        results: [...tracks, ...artists],
+        provider: "musicbrainz",
+        results,
       },
       {
         headers: {
