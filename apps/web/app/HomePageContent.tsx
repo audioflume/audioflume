@@ -295,13 +295,17 @@ function HomeArtistShelf({
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
                   <strong>{artist.name}</strong>
-                  {genres.length > 0 ? (
-                    <span className="audioflume-home-reference-artist-genres">
-                      {genres.map((genre) => (
-                        <span key={genre}>{genre}</span>
-                      ))}
-                    </span>
-                  ) : null}
+                  <span className="audioflume-home-reference-artist-genres">
+                    {genres.length > 0
+                      ? genres.map((genre) => <span key={genre}>{genre}</span>)
+                      : [0, 1, 2].map((placeholder) => (
+                          <span
+                            key={placeholder}
+                            className="is-placeholder"
+                            aria-hidden="true"
+                          />
+                        ))}
+                  </span>
                 </span>
               </div>
             </Link>
