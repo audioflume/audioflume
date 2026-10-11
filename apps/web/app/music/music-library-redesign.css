@@ -1146,6 +1146,15 @@ main
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
+  .fw-filter-rail-item[data-filter-section-id="advanced"][aria-expanded="true"]
+  .fw-filter-rail-chevron {
+  display: inline-flex !important;
+  opacity: 1 !important;
+  transform: rotate(90deg);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
   .fw-filter-rail-chevron {
   transition:
     opacity 160ms ease,
