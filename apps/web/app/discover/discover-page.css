@@ -406,7 +406,7 @@
 .discover-artist-featured-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 10px;
+  gap: 12px;
 }
 
 .discover-artist-feature-card {
@@ -499,8 +499,8 @@
 
 .discover-artist-feature-play {
   position: absolute;
-  top: calc(var(--discover-artist-feature-media-height) + 16px);
-  right: 0;
+  top: calc(var(--discover-artist-feature-media-height) - 56px);
+  right: 16px;
   z-index: 3;
   display: grid;
   width: 40px;
@@ -508,8 +508,8 @@
   place-items: center;
   border: 0;
   border-radius: 999px;
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  background: #ffffff;
+  color: #111111;
   cursor: pointer;
   transition: transform 160ms ease;
   transform-origin: center;
