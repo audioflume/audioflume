@@ -117,7 +117,7 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center" style={{ marginTop: "-6px" }}>
+    <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center" style={{ marginTop: "-14px" }}>
       <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
         <span
           className="relative block shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]"
@@ -450,6 +450,7 @@ export default function AddToPlaylistModal({
         headerHeight="104px"
         contentCorners="square"
         bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
+        bodyOverflow="visible"
         contentClassName="h-[506px] max-h-[calc(100vh-64px)]"
       >
         <SongPreview song={song} />

@@ -24,6 +24,7 @@ type ModalShellProps = {
   background?: string;
   eyebrow?: string;
   headerHeight?: string;
+  bodyOverflow?: "hidden" | "visible";
 };
 
 export default function ModalShell({
@@ -46,6 +47,7 @@ export default function ModalShell({
   background = "var(--bg-primary)",
   eyebrow = "Audioflume",
   headerHeight = "88px",
+  bodyOverflow = "hidden",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -134,7 +136,11 @@ export default function ModalShell({
 
         <div
           className={`min-h-0 flex-1 ${bodyClassName ?? defaultBodyClassName} ${
-            bodyScroll ? "overflow-y-auto" : "overflow-hidden"
+            bodyScroll
+              ? "overflow-y-auto"
+              : bodyOverflow === "visible"
+                ? "overflow-visible"
+                : "overflow-hidden"
           } [&_label]:text-[var(--text-secondary)] ${inputCornerClassName} [&_input:not([type=file])]:border-[var(--border)] [&_input:not([type=file])]:bg-[var(--filmwave-menu-bg)] [&_input:not([type=file])]:outline-none [&_input:not([type=file])]:focus:border-[var(--border)] [&_textarea]:rounded-none [&_textarea]:border-[var(--border)] [&_textarea]:bg-[var(--filmwave-menu-bg)] [&_textarea]:outline-none [&_textarea]:focus:border-[var(--border)]`}
         >
           {children}
