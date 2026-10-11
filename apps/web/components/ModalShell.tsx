@@ -22,6 +22,7 @@ type ModalShellProps = {
   inputCorners?: "square" | "rounded";
   contentCorners?: "square" | "rounded";
   background?: string;
+  eyebrow?: string;
 };
 
 export default function ModalShell({
@@ -42,6 +43,7 @@ export default function ModalShell({
   inputCorners = "rounded",
   contentCorners = "rounded",
   background = "var(--bg-primary)",
+  eyebrow = "Audioflume",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -63,7 +65,7 @@ export default function ModalShell({
       ? "[&_input:not([type=file])]:rounded-[7px]"
       : "[&_input:not([type=file])]:rounded-none";
   const contentCornerClassName =
-    contentCorners === "rounded" ? "rounded-[10px]" : "rounded-none";
+    contentCorners === "rounded" ? "rounded-[4px]" : "rounded-none";
 
   const modal = (
     <div
@@ -80,32 +82,37 @@ export default function ModalShell({
         style={{
           maxHeight: modalMaxHeight,
           background,
-          boxShadow: "var(--filmwave-menu-shadow)",
+          boxShadow: "0 28px 80px rgba(0, 0, 0, 0.24)",
         }}
       >
         <div
           className={
             headerContent
               ? "flex h-[60px] flex-shrink-0 items-center px-5 pr-14"
-              : centerTitle
-                ? "flex h-[60px] flex-shrink-0 items-center justify-center px-14 pt-1"
-                : "flex h-[60px] flex-shrink-0 items-center px-5 pr-14 pt-1"
+              : `flex h-[88px] flex-shrink-0 flex-col justify-center px-6 pr-16 ${
+                  centerTitle ? "items-center text-center" : "items-start text-left"
+                }`
           }
         >
           {headerContent || (
-            <h2 className="min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
-              {title}
-            </h2>
+            <>
+              <span className="mb-2 font-[family-name:var(--font-roboto-mono-filmwave)] text-[9px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]">
+                {eyebrow}
+              </span>
+              <h2 className="min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-light leading-none tracking-[-0.035em] text-[var(--text-primary)]">
+                {title}
+              </h2>
+            </>
           )}
         </div>
 
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-4 top-4 z-10 inline-flex h-6 w-6 items-center justify-center border-0 bg-transparent p-0 text-[var(--text-muted)] transition-colors duration-150 hover:text-[var(--text-primary)]"
+          className="absolute right-5 top-5 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border-0 bg-[var(--bg-tertiary)] p-0 text-[var(--text-secondary)] transition duration-150 hover:scale-[1.03] hover:bg-[var(--bg-tertiary-hover)] hover:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
-          <svg width="19" height="19" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <svg width="15" height="15" viewBox="0 0 12 12" fill="none" aria-hidden="true">
             <path
               d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5"
               stroke="currentColor"

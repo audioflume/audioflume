@@ -723,7 +723,7 @@ export default function ShortenTrackModal({
       maxHeight="520px"
       centerTitle
       bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-      contentClassName="max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
+      contentClassName="max-h-[calc(100vh-64px)]"
     >
       <SongPreview song={song} />
 

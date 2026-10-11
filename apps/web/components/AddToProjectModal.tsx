@@ -379,7 +379,7 @@ export default function AddToProjectModal({
         maxHeight="420px"
         centerTitle
         bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
-        contentClassName="h-[420px] max-h-[calc(100vh-64px)] [&>div:first-child]:h-[58px] [&>div:first-child]:items-end [&>div:first-child]:pb-2"
+        contentClassName="h-[420px] max-h-[calc(100vh-64px)]"
       >
         <SongPreview song={song} />
 
