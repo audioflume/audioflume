@@ -355,7 +355,7 @@ export async function POST(request: Request) {
       });
       ranking = "audio-similarity-v1-fallback";
     } else {
-      const audioSearch = await searchPublishedSongsByClapSimilarity(
+      const audioMatches = await searchPublishedSongsByClapSimilarity(
         profile.previewUrl,
         {
           matchCount: MAX_RESULT_COUNT,
@@ -363,7 +363,7 @@ export async function POST(request: Request) {
         },
       );
 
-      const ids = audioSearch.matches.map((result) => result.songId);
+      const ids = audioMatches.map((result) => result.songId);
       const { data, error } =
         ids.length === 0
           ? { data: [], error: null }
@@ -378,7 +378,7 @@ export async function POST(request: Request) {
         ((data ?? []) as RankedSongRow[]).map((song) => [song.id, song]),
       );
 
-      matches = audioSearch.matches
+      matches = audioMatches
         .map((result) => {
           const song = songsById.get(result.songId);
           const tempoSimilarity = getTempoSimilarity(

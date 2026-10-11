@@ -1,6 +1,7 @@
 import ffmpegPath from "ffmpeg-static";
 import { spawn } from "node:child_process";
 import { access } from "node:fs/promises";
+import { tmpdir } from "node:os";
 import path from "node:path";
 
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -258,6 +259,7 @@ async function getClapRuntime() {
     } = await import("@huggingface/transformers");
 
     env.allowRemoteModels = true;
+    env.cacheDir = path.join(tmpdir(), "audioflume-transformers-cache");
 
     const [processor, model] = await Promise.all([
       AutoProcessor.from_pretrained(SONG_CLAP_MODEL_ID),
