@@ -444,13 +444,13 @@ export default function AddToPlaylistModal({
         onClose={handleClose}
         closeLabel="Close add to playlist modal"
         maxWidth="max-w-[600px]"
-        maxHeight="540px"
+        maxHeight="526px"
         centerTitle
         eyebrow=""
-        headerHeight="76px"
+        headerHeight="84px"
         contentCorners="square"
         bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
-        contentClassName="h-[540px] max-h-[calc(100vh-64px)]"
+        contentClassName="h-[526px] max-h-[calc(100vh-64px)]"
       >
         <SongPreview song={song} />
 
