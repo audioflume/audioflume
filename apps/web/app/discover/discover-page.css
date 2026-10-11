@@ -414,7 +414,119 @@
 }
 
 .discover-artist-feature-card {
+  --discover-artist-feature-media-height: 400px;
+  position: relative;
   min-width: 0;
+  background: transparent;
+}
+
+.discover-artist-feature-link {
+  position: relative;
+  display: block;
+  width: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+.discover-artist-feature-media-home {
+  position: relative;
+  height: var(--discover-artist-feature-media-height);
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+
+.discover-artist-feature-media-home img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 320ms ease;
+}
+
+.discover-artist-feature-card:hover
+  .discover-artist-feature-media-home img {
+  transform: scale(1.008);
+}
+
+.discover-artist-feature-bar {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+  padding: 16px 58px 0 0;
+}
+
+.discover-artist-feature-copy {
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  gap: 5px;
+}
+
+.discover-artist-feature-copy strong {
+  grid-column: 1;
+  color: var(--text-primary);
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
+}
+
+.discover-artist-feature-genres {
+  grid-column: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.discover-artist-feature-genres > span {
+  display: inline-flex;
+  min-height: 21px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  padding: 0 10px;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.discover-artist-feature-genres > .is-placeholder {
+  width: 46px;
+  padding: 0;
+}
+
+.discover-artist-feature-play {
+  position: absolute;
+  top: calc(var(--discover-artist-feature-media-height) + 16px);
+  right: 0;
+  z-index: 3;
+  display: grid;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  cursor: pointer;
+  transition: transform 160ms ease;
+  transform-origin: center;
+}
+
+.discover-artist-feature-play:hover:not(:disabled),
+.discover-artist-feature-play:focus-visible:not(:disabled) {
+  transform: scale(1.03);
+}
+
+.discover-artist-feature-play:disabled {
+  cursor: default;
+  opacity: 0.4;
 }
 
 .discover-artist-placeholder {

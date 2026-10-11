@@ -720,58 +720,80 @@ export default function DiscoverPage() {
                   playableSongs.some((song) => song.id === currentSong.id),
               );
 
+              const genres = artist
+                ? Array.from(
+                    new Set(
+                      artist.songs.flatMap((song) =>
+                        Array.isArray(song.genres)
+                          ? song.genres.filter(Boolean)
+                          : [],
+                      ),
+                    ),
+                  ).slice(0, 3)
+                : [];
+
               return (
                 <article
                   key={artist?.id ?? index}
                   className="discover-artist-feature-card"
-                  role={artist ? "link" : undefined}
-                  tabIndex={artist ? 0 : undefined}
-                  onClick={() => {
-                    if (artist) router.push(`/artists/${artist.slug}`);
-                  }}
-                  onKeyDown={(event) => {
-                    if (
-                      artist &&
-                      (event.key === "Enter" || event.key === " ")
-                    ) {
-                      event.preventDefault();
-                      router.push(`/artists/${artist.slug}`);
-                    }
-                  }}
                 >
-                  <PlaceholderMedia
-                    index={index}
-                    imageSrc={artist?.hero_image_url || undefined}
-                    imagePosition={
-                      artist
-                        ? `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`
-                        : undefined
-                    }
-                    className="discover-artist-feature-media"
-                  >
-                    {artist ? (
-                      <div className="discover-artist-feature-overlay">
-                        <div>
-                          <h3>{artist.name}</h3>
-                          {artist.custom_text ? <p>{artist.custom_text}</p> : null}
+                  {artist ? (
+                    <>
+                      <Link
+                        href={`/artists/${artist.slug}`}
+                        className="discover-artist-feature-link"
+                      >
+                        <div className="discover-artist-feature-media-home">
+                          {artist.hero_image_url ? (
+                            <img
+                              src={artist.hero_image_url}
+                              alt=""
+                              draggable={false}
+                              style={{
+                                objectPosition: `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`,
+                              }}
+                            />
+                          ) : null}
                         </div>
-                        <button
-                          type="button"
-                          className="discover-artist-feature-play-button"
-                          onClick={(event) => {
-                            event.stopPropagation();
-                            playFeatureCardArtist(artist);
-                          }}
-                          onKeyDown={(event) => event.stopPropagation()}
-                          disabled={playableSongs.length === 0}
-                          aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
-                          aria-pressed={artistIsPlaying}
-                        >
-                          <PlayBadge isPlaying={artistIsPlaying} />
-                        </button>
-                      </div>
-                    ) : null}
-                  </PlaceholderMedia>
+
+                        <div className="discover-artist-feature-bar">
+                          <span className="discover-artist-feature-copy">
+                            <strong>{artist.name}</strong>
+                            <span className="discover-artist-feature-genres">
+                              {genres.length > 0
+                                ? genres.map((genre) => (
+                                    <span key={genre}>{genre}</span>
+                                  ))
+                                : [0, 1, 2].map((placeholder) => (
+                                    <span
+                                      key={placeholder}
+                                      className="is-placeholder"
+                                      aria-hidden="true"
+                                    />
+                                  ))}
+                            </span>
+                          </span>
+                        </div>
+                      </Link>
+
+                      <button
+                        type="button"
+                        className="discover-artist-feature-play"
+                        onClick={() => playFeatureCardArtist(artist)}
+                        disabled={playableSongs.length === 0}
+                        aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
+                        aria-pressed={artistIsPlaying}
+                      >
+                        {artistIsPlaying ? (
+                          <PauseIcon size={14} />
+                        ) : (
+                          <PlayIconSmall size={14} />
+                        )}
+                      </button>
+                    </>
+                  ) : (
+                    <div className="discover-artist-feature-media-home" />
+                  )}
                 </article>
               );
             })}
