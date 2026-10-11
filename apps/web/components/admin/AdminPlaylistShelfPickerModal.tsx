@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import AdminModalShell from "@/components/admin/AdminModalShell";
+import ModalShell from "@/components/ModalShell";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
 import { backendModalPrimaryButtonClass } from "@/components/backend/backendClasses";
 import CheckIcon from "@/components/icons/CheckIcon";
@@ -85,16 +85,19 @@ export default function AdminPlaylistShelfPickerModal({
     emptyMessage || `No ${pluralLabel.toLowerCase()} match your search.`;
 
   return (
-    <AdminModalShell
+    <ModalShell
       isOpen={isOpen}
       title={`Add to ${title}`}
       onClose={onClose}
       closeLabel={`Close ${title} ${itemLabel.toLowerCase()} picker`}
+      maxHeight="506px"
+      bodyClassName="flex min-h-0 flex-1 flex-col px-5 pb-0"
+      contentClassName="h-[506px] max-h-[calc(100vh-64px)]"
       footer={
         <button
           type="button"
           onClick={handleAdd}
-          className={backendModalPrimaryButtonClass}
+          className={`${backendModalPrimaryButtonClass} !rounded-none`}
           disabled={selectedCount === 0 || saving}
         >
           {saving
@@ -176,6 +179,6 @@ export default function AdminPlaylistShelfPickerModal({
           )}
         </div>
       </div>
-    </AdminModalShell>
+    </ModalShell>
   );
 }
