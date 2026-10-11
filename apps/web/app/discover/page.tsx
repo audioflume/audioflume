@@ -407,7 +407,10 @@ export default function DiscoverPage() {
   const [discoverSearch, setDiscoverSearch] = useState("");
   const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
   const [referenceSearchQuery, setReferenceSearchQuery] = useState("");
+  const [canScrollFeatureCardsPrev, setCanScrollFeatureCardsPrev] = useState(false);
+  const [canScrollFeatureCardsNext, setCanScrollFeatureCardsNext] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
+  const featureCardShelfRef = useRef<HTMLDivElement>(null);
   const playerVisible = Boolean(currentSong);
   const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
   const featuredArtistCount = featuredArtists.length;
@@ -488,6 +491,46 @@ export default function DiscoverPage() {
       cancelled = true;
     };
   }, []);
+
+  function updateFeatureCardShelfState() {
+    const scroller = featureCardShelfRef.current;
+    if (!scroller) return;
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    setCanScrollFeatureCardsPrev(scroller.scrollLeft > 4);
+    setCanScrollFeatureCardsNext(scroller.scrollLeft < maxScrollLeft - 4);
+  }
+
+  function scrollFeatureCardShelf(direction: "prev" | "next") {
+    const scroller = featureCardShelfRef.current;
+    if (!scroller) return;
+
+    const amount = Math.max(scroller.clientWidth * 0.8, 360);
+    scroller.scrollBy({
+      left: direction === "next" ? amount : -amount,
+      behavior: "smooth",
+    });
+  }
+
+  useEffect(() => {
+    const scroller = featureCardShelfRef.current;
+    if (!scroller) return;
+
+    updateFeatureCardShelfState();
+    scroller.addEventListener("scroll", updateFeatureCardShelfState, {
+      passive: true,
+    });
+    window.addEventListener("resize", updateFeatureCardShelfState);
+
+    const observer = new ResizeObserver(updateFeatureCardShelfState);
+    observer.observe(scroller);
+
+    return () => {
+      scroller.removeEventListener("scroll", updateFeatureCardShelfState);
+      window.removeEventListener("resize", updateFeatureCardShelfState);
+      observer.disconnect();
+    };
+  }, [featureCardArtists.length]);
 
   function moveFeaturedArtist(direction: "prev" | "next") {
     if (featuredArtists.length <= 1) return;
@@ -729,8 +772,22 @@ export default function DiscoverPage() {
               featured artists
             </div>
           ) : null}
-          <div className="discover-artist-featured-grid">
-            {Array.from({ length: 2 }).map((_, index) => {
+          <div className="discover-artist-featured-shelf">
+            <button
+              type="button"
+              className="discover-artist-featured-shelf-arrow is-left"
+              onClick={() => scrollFeatureCardShelf("prev")}
+              disabled={!canScrollFeatureCardsPrev}
+              aria-label="Scroll featured artists left"
+            >
+              <ChevronLeftIcon size={18} />
+            </button>
+
+            <div
+              ref={featureCardShelfRef}
+              className="discover-artist-featured-scroller"
+            >
+              {Array.from({ length: 2 }).map((_, index) => {
               const artist = featureCardArtists[index];
               const playableSongs = (artist?.songs ?? []).filter((song) =>
                 Boolean(song.audioUrl),
@@ -818,7 +875,18 @@ export default function DiscoverPage() {
                   )}
                 </article>
               );
-            })}
+              })}
+            </div>
+
+            <button
+              type="button"
+              className="discover-artist-featured-shelf-arrow is-right"
+              onClick={() => scrollFeatureCardShelf("next")}
+              disabled={!canScrollFeatureCardsNext}
+              aria-label="Scroll featured artists right"
+            >
+              <ChevronRightIcon size={18} />
+            </button>
           </div>
         </section>
 
