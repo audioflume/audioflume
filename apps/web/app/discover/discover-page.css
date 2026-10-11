@@ -191,7 +191,6 @@
 
 .discover-artist-hero-inner {
   position: relative;
-  z-index: 2;
   display: grid;
   width: min(
     calc(100% - (var(--discover-artist-gutter) * 2)),
@@ -244,6 +243,8 @@
 }
 
 .discover-artist-hero-identity h1 {
+  position: relative;
+  z-index: 1;
   grid-column: 1;
   grid-row: 2;
   min-width: 0;
