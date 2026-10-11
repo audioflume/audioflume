@@ -39,173 +39,53 @@ function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
   return b.id - a.id;
 }
 
-function SkeletonBlock({ className = "" }: { className?: string }) {
-  return <span className={`curated-playlist-skeleton-block ${className}`} />;
-}
-
-function CuratedPlaylistCardSkeleton() {
-  return (
-    <div className="curated-playlist-skeleton-card-shell">
-      <div className="curated-playlist-skeleton-card">
-        <div className="curated-playlist-skeleton-arrow" />
-      </div>
-    </div>
-  );
-}
-
-function CuratedPlaylistShelfSkeleton({ compact = false }: { compact?: boolean }) {
-  const cardCount = compact ? 4 : 5;
-
-  return (
-    <section className="curated-playlist-skeleton-shelf mt-10">
-      <div className="mb-4 flex items-end justify-between gap-4">
-        <div className="min-w-0">
-          <SkeletonBlock className="curated-playlist-skeleton-heading" />
-          <SkeletonBlock className="curated-playlist-skeleton-description" />
-        </div>
-
-        <div className="hidden items-center gap-2 sm:flex">
-          <SkeletonBlock className="curated-playlist-skeleton-control" />
-          <SkeletonBlock className="curated-playlist-skeleton-control" />
-        </div>
-      </div>
-
-      <div className="relative -mx-8 overflow-hidden">
-        <div className="flex gap-3 overflow-hidden pl-8 pr-20">
-          {Array.from({ length: cardCount }).map((_, index) => (
-            <CuratedPlaylistCardSkeleton key={index} />
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 function CuratedPlaylistsLoadingSkeleton() {
   return (
-    <>
-      <style>{`
-        .curated-playlist-skeleton-shelf {
-          animation: skeleton-fade-in 0.3s ease-out both;
-        }
-
-        .curated-playlist-skeleton-shelf:nth-child(2) {
-          animation-delay: 0.04s;
-        }
-
-        .curated-playlist-skeleton-shelf:nth-child(3) {
-          animation-delay: 0.08s;
-        }
-
-        .curated-playlist-skeleton-block {
-          position: relative;
-          display: block;
-          overflow: hidden;
-          background: var(--bg-tertiary);
-        }
-
-        .curated-playlist-skeleton-block::after,
-        .curated-playlist-skeleton-card::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          transform: translateX(-100%);
-          background: linear-gradient(
-            90deg,
-            transparent,
-            color-mix(in srgb, var(--bg-hover) 48%, transparent),
-            transparent
-          );
-          animation: curated-playlist-skeleton-shimmer 1.6s ease-in-out infinite;
-        }
-
-        @keyframes curated-playlist-skeleton-shimmer {
-          100% {
-            transform: translateX(100%);
-          }
-        }
-
-        .curated-playlist-skeleton-heading {
-          width: min(210px, 46vw);
-          height: 20px;
-          border-radius: 6px;
-        }
-
-        .curated-playlist-skeleton-description {
-          width: min(340px, 62vw);
-          height: 9px;
-          margin-top: 10px;
-          border-radius: 999px;
-        }
-
-        .curated-playlist-skeleton-control {
-          width: 32px;
-          height: 32px;
-          border-radius: 999px;
-        }
-
-        .curated-playlist-skeleton-card-shell {
-          flex: 0 0 250px;
-          min-width: 250px;
-          animation: skeleton-fade-in 0.3s ease-out both;
-        }
-
-        .curated-playlist-skeleton-card-shell:nth-child(2) {
-          animation-delay: 0.03s;
-        }
-
-        .curated-playlist-skeleton-card-shell:nth-child(3) {
-          animation-delay: 0.06s;
-        }
-
-        .curated-playlist-skeleton-card-shell:nth-child(4) {
-          animation-delay: 0.09s;
-        }
-
-        .curated-playlist-skeleton-card-shell:nth-child(5) {
-          animation-delay: 0.12s;
-        }
-
-        @media (min-width: 640px) {
-          .curated-playlist-skeleton-card-shell {
-            flex-basis: 285px;
-            min-width: 285px;
-          }
-        }
-
-        @media (min-width: 1024px) {
-          .curated-playlist-skeleton-card-shell {
-            flex-basis: 320px;
-            min-width: 320px;
-          }
-        }
-
-        .curated-playlist-skeleton-card {
-          position: relative;
-          min-height: 210px;
-          overflow: hidden;
-          border-radius: 18px;
-          border: 1px solid var(--border-subtle);
-          background: var(--bg-card);
-        }
-
-        .curated-playlist-skeleton-arrow {
-          position: absolute;
-          right: 16px;
-          top: 16px;
-          width: 32px;
-          height: 32px;
-          border-radius: 999px;
-          background: var(--bg-tertiary);
-        }
-      `}</style>
-
-      <div className="mt-8">
-        <CuratedPlaylistShelfSkeleton />
-        <CuratedPlaylistShelfSkeleton compact />
-        <CuratedPlaylistShelfSkeleton />
+    <div className="curated-page-skeleton" aria-hidden="true">
+      <div className="curated-page-skeleton-filters">
+        {Array.from({ length: 8 }, (_, index) => (
+          <div
+            key={index}
+            className="curated-page-skeleton-filter"
+          >
+            <span
+              className={`curated-page-skeleton-filter-icon is-${index % 3}`}
+            />
+            <span
+              className={`curated-page-skeleton-filter-label is-${index % 4}`}
+            />
+          </div>
+        ))}
       </div>
-    </>
+
+      {[0, 1, 2].map((shelfIndex) => (
+        <section key={shelfIndex} className="curated-page-skeleton-shelf">
+          <div className="curated-page-skeleton-shelf-head">
+            <div>
+              <span className="curated-page-skeleton-heading" />
+              <span className="curated-page-skeleton-description" />
+            </div>
+            <div className="curated-page-skeleton-controls">
+              <span />
+              <span />
+            </div>
+          </div>
+
+          <div className="curated-page-skeleton-cards">
+            {Array.from({ length: 4 }, (_, cardIndex) => (
+              <article
+                key={cardIndex}
+                className="curated-page-skeleton-card-shell"
+              >
+                <div className="curated-page-skeleton-card" />
+                <span className="curated-page-skeleton-card-title" />
+                <span className="curated-page-skeleton-card-meta" />
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+    </div>
   );
 }
 
