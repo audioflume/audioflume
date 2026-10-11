@@ -171,7 +171,7 @@ export default function CreatePlaylistModal({
             type="button"
             disabled={busy || !name.trim()}
             onClick={handleSubmit}
-            className={modalPrimaryButtonClass}
+            className={`${modalPrimaryButtonClass} !rounded-none`}
           >
             {busy ? (
               <LoadingSpinner size={18} stroke={9} color="var(--bg-primary)" />
@@ -264,9 +264,9 @@ export default function CreatePlaylistModal({
                 void handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="group mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-tertiary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-tertiary-hover)]"
+              className="group mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-[var(--bg-hover)] px-3 transition-[filter,border-color] hover:border-[var(--border-hover)] hover:brightness-[0.97]"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-muted)] transition group-hover:bg-[var(--icon-button-hover)] group-hover:text-[var(--text-secondary)]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-muted)] transition-[filter,color] group-hover:brightness-[0.90] group-hover:text-[var(--text-secondary)]">
                 {isUploadingCover ? (
                   <LoadingSpinner size={18} stroke={8} />
                 ) : (

@@ -731,11 +731,7 @@ export default function ShortenTrackModal({
       <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--filmwave-menu-bg)]">
         <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
           <div>
-            <p className="text-center text-xs leading-5 text-[var(--text-secondary)]">
-              Generate a shorter version by isolating one usable continuous section with a more deliberate start or ending.
-            </p>
-
-            <div className="mt-4 grid grid-cols-3 gap-2">
+            <div className="grid grid-cols-3 gap-2">
               {LENGTH_OPTIONS.map((option) => {
                 const isGenerating = generatingSeconds === option.seconds;
                 const disabled =
@@ -770,9 +766,9 @@ export default function ShortenTrackModal({
             </div>
           )}
 
-          <div className="border-t border-[var(--filmwave-menu-sep)] pt-4">
+          <div className="pt-4">
             <div className="mb-2 flex items-center justify-between gap-3">
-              <h3 className="text-xs font-semibold uppercase tracking-[0.08em] text-[var(--text-muted)]">
+              <h3 className="text-xs font-semibold text-[var(--text-muted)]">
                 Short Options
               </h3>
               {generatedTracks.length > 0 && (
