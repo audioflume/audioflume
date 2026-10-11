@@ -101,7 +101,13 @@ export default function ModalShell({
                   {eyebrow}
                 </span>
               )}
-              <h2 className="min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-light leading-none tracking-[-0.035em] text-[var(--text-primary)]">
+              <h2
+                className={`min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[24px] font-light leading-none tracking-[-0.035em] text-[var(--text-primary)] ${
+                  centerTitle
+                    ? "absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
+                    : ""
+                }`}
+              >
                 {title}
               </h2>
             </>
