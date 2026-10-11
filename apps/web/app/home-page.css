@@ -87,7 +87,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   border-radius: 999px;
   background: #1b1b1b;
   padding: 0 34px;
-  color: #6f6f6f;
+  color: #323232;
 }
 
 .audioflume-home-reference-searchbar-field svg {
@@ -135,7 +135,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   justify-content: center;
   border: 0;
   background: transparent;
-  color: #9b9b9b;
+  color: #323232;
   padding: 0;
   cursor: pointer;
 }
