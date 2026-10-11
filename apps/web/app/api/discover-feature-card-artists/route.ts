@@ -9,40 +9,24 @@ import { supabaseServer } from "@/lib/supabaseServer";
 
 export async function GET() {
   try {
-    const { data: featureRows, error: featureError } = await supabaseServer
-      .from("discover_feature_card_artists")
-      .select("artist_id, position, custom_text")
-      .order("position", { ascending: true })
-      .limit(2);
-
-    if (featureError) throw featureError;
-
-    const orderedArtistIds = (featureRows ?? [])
-      .map((row) => String(row.artist_id || ""))
-      .filter(Boolean);
-
-    if (orderedArtistIds.length === 0) {
-      return NextResponse.json({ artists: [] });
-    }
-
     const { data: artists, error: artistsError } = await supabaseServer
       .from("artists")
       .select(
         "id, name, slug, hero_image_url, hero_image_position_x, hero_image_position_y",
       )
-      .in("id", orderedArtistIds)
-      .eq("status", "approved");
+      .eq("status", "approved")
+      .order("name", { ascending: true });
 
     if (artistsError) throw artistsError;
 
-    const approvedArtistIds = (artists ?? []).map((artist) => String(artist.id));
+    const artistIds = (artists ?? []).map((artist) => String(artist.id));
 
     const { data: songLinks, error: songLinksError } =
-      approvedArtistIds.length > 0
+      artistIds.length > 0
         ? await supabaseServer
             .from("song_artists")
             .select("song_id, artist_id")
-            .in("artist_id", approvedArtistIds)
+            .in("artist_id", artistIds)
         : { data: [], error: null };
 
     if (songLinksError) throw songLinksError;
@@ -82,37 +66,23 @@ export async function GET() {
       songIdsByArtist.set(artistId, current);
     }
 
-    const artistById = new Map(
-      (artists ?? []).map((artist) => [String(artist.id), artist] as const),
-    );
-    const featureRowByArtistId = new Map(
-      (featureRows ?? []).map((row) => [String(row.artist_id), row] as const),
-    );
-
     return NextResponse.json({
-      artists: orderedArtistIds.flatMap((artistId) => {
-        const artist = artistById.get(artistId);
-        const featureRow = featureRowByArtistId.get(artistId);
-        if (!artist || !featureRow) return [];
-
+      artists: (artists ?? []).map((artist) => {
+        const artistId = String(artist.id);
         const linkedSongIds = songIdsByArtist.get(artistId) ?? new Set<string>();
 
-        return [
-          {
-            id: artistId,
-            name: String(artist.name || ""),
-            slug: String(artist.slug || ""),
-            custom_text: featureRow.custom_text
-              ? String(featureRow.custom_text)
-              : null,
-            hero_image_url: artist.hero_image_url
-              ? String(artist.hero_image_url)
-              : null,
-            hero_image_position_x: Number(artist.hero_image_position_x ?? 50),
-            hero_image_position_y: Number(artist.hero_image_position_y ?? 50),
-            songs: songs.filter((song) => linkedSongIds.has(song.id)),
-          },
-        ];
+        return {
+          id: artistId,
+          name: String(artist.name || ""),
+          slug: String(artist.slug || ""),
+          custom_text: null,
+          hero_image_url: artist.hero_image_url
+            ? String(artist.hero_image_url)
+            : null,
+          hero_image_position_x: Number(artist.hero_image_position_x ?? 50),
+          hero_image_position_y: Number(artist.hero_image_position_y ?? 50),
+          songs: songs.filter((song) => linkedSongIds.has(song.id)),
+        };
       }),
     });
   } catch (error) {
