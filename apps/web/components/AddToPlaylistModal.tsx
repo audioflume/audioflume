@@ -100,7 +100,7 @@ function PlaylistThumbnail({
         <img
           src={cover}
           alt={playlist.name}
-          className="h-full w-full object-cover"
+          className="absolute inset-0 block h-full w-full object-cover"
         />
       ) : (
         <span className="flex h-full w-full items-center justify-center text-[var(--text-secondary)]">
@@ -119,7 +119,10 @@ function SongPreview({ song }: { song: Song }) {
   return (
     <div className="-mt-2 flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center">
       <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
-        <span className="relative flex h-6 w-6 min-h-6 min-w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
+        <span
+          className="relative block shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]"
+          style={{ width: "24px", height: "24px", minWidth: "24px", minHeight: "24px" }}
+        >
           {cover ? (
             <img
               src={cover}
@@ -481,7 +484,7 @@ export default function AddToPlaylistModal({
                 }}
                 className="group mb-1 flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-white text-[#111111]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--text-primary)] text-[var(--bg-primary)]">
                   <PlusIcon size={18} />
                 </span>
 
@@ -523,7 +526,7 @@ export default function AddToPlaylistModal({
                 onClick={() => setNewPlaylistOpen(true)}
                 className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--text-primary)] text-[var(--bg-primary)] transition-colors group-hover:bg-white group-hover:text-[#111111]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-colors group-hover:bg-[var(--text-primary)] group-hover:text-[var(--bg-primary)]">
                   <PlusIcon size={18} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
