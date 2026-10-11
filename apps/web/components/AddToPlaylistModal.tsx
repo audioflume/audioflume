@@ -451,7 +451,7 @@ export default function AddToPlaylistModal({
         <SongPreview song={song} />
 
         <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5 pb-5">
-          <label className="mb-3 flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-tertiary-hover)] px-4 text-[var(--text-muted)]">
+          <label className="mb-3 flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
             <svg
               width="16"
               height="16"
@@ -468,7 +468,7 @@ export default function AddToPlaylistModal({
               value={playlistSearch}
               onChange={(event) => setPlaylistSearch(event.target.value)}
               placeholder="Search playlists"
-              className="h-full min-w-0 flex-1 rounded-none border-0 bg-transparent p-0 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+              className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-sm text-[var(--text-primary)] !outline-none placeholder:text-[var(--text-muted)] focus:!border-0"
             />
           </label>
 
@@ -481,7 +481,7 @@ export default function AddToPlaylistModal({
                 }}
                 className="mb-1 flex w-full items-start gap-3 rounded-none p-2"
               >
-                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)]">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
 
@@ -523,9 +523,9 @@ export default function AddToPlaylistModal({
               <button
                 type="button"
                 onClick={() => setNewPlaylistOpen(true)}
-                className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-tertiary-hover)]"
+                className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-tertiary-hover)] text-[var(--text-primary)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
@@ -592,8 +592,8 @@ export default function AddToPlaylistModal({
                     disabled={isPending || creatingPlaylist}
                     className={`group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors disabled:cursor-default disabled:opacity-60 ${
                       isSelected
-                        ? "bg-[var(--bg-tertiary-hover)] hover:bg-[var(--bg-tertiary-hover)]"
-                        : "hover:bg-[var(--bg-tertiary-hover)]"
+                        ? "bg-[var(--bg-hover)] hover:bg-[var(--bg-hover)]"
+                        : "hover:bg-[var(--bg-hover)]"
                     }`}
                   >
                     <PlaylistThumbnail playlist={playlist} index={index} />
