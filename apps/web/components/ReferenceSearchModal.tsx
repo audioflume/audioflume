@@ -26,6 +26,31 @@ type ReferenceSearchModalProps = {
   onSubmit: (value: string) => void;
 };
 
+function ReferenceArtwork({
+  imageUrl,
+}: {
+  imageUrl: string | null;
+}) {
+  const [failed, setFailed] = useState(false);
+
+  if (!imageUrl || failed) {
+    return (
+      <span className={styles.resultArtworkFallback}>
+        <WaveformIcon size={16} />
+      </span>
+    );
+  }
+
+  return (
+    <img
+      src={imageUrl}
+      alt=""
+      draggable={false}
+      onError={() => setFailed(true)}
+    />
+  );
+}
+
 const SEARCH_DEBOUNCE_MS = 600;
 const MIN_CATALOG_QUERY_LENGTH = 2;
 
@@ -207,13 +232,7 @@ export default function ReferenceSearchModal({
                       onClick={() => submitQuery(result.searchQuery)}
                     >
                       <span className={styles.resultArtwork} aria-hidden="true">
-                        {result.imageUrl ? (
-                          <img src={result.imageUrl} alt="" draggable={false} />
-                        ) : (
-                          <span className={styles.resultArtworkFallback}>
-                            <WaveformIcon size={16} />
-                          </span>
-                        )}
+                        <ReferenceArtwork imageUrl={result.imageUrl} />
                       </span>
                       <span className={styles.resultCopy}>
                         <strong>{result.name}</strong>
