@@ -2,6 +2,7 @@ import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import {
+  compareClapConceptProfiles,
   getSongClapEmbeddingStats,
   searchPublishedSongsByClapSimilarity,
 } from "@/lib/audioClapEmbeddings";
@@ -167,21 +168,28 @@ function getTempoSimilarity(
 
 function scoreMatch({
   audioSimilarity,
+  instrumentationSimilarity,
+  characterSimilarity,
+  rhythmSimilarity,
+  energyDensitySimilarity,
   tempoSimilarity,
-  genreSimilarity,
 }: {
   audioSimilarity: number;
+  instrumentationSimilarity: number;
+  characterSimilarity: number;
+  rhythmSimilarity: number;
+  energyDensitySimilarity: number;
   tempoSimilarity: number | null;
-  genreSimilarity: number | null;
 }) {
   const signals = [
-    { score: audioSimilarity, weight: 0.98 },
+    { score: audioSimilarity, weight: 0.55 },
+    { score: instrumentationSimilarity, weight: 0.2 },
+    { score: characterSimilarity, weight: 0.1 },
+    { score: rhythmSimilarity, weight: 0.075 },
+    { score: energyDensitySimilarity, weight: 0.05 },
     ...(tempoSimilarity === null
       ? []
-      : [{ score: tempoSimilarity, weight: 0.015 }]),
-    ...(genreSimilarity === null
-      ? []
-      : [{ score: genreSimilarity, weight: 0.005 }]),
+      : [{ score: tempoSimilarity, weight: 0.025 }]),
   ];
 
   const totalWeight = signals.reduce(
@@ -355,7 +363,7 @@ export async function POST(request: Request) {
       });
       ranking = "audio-similarity-v1-fallback";
     } else {
-      const audioMatches = await searchPublishedSongsByClapSimilarity(
+      const audioSearch = await searchPublishedSongsByClapSimilarity(
         profile.previewUrl,
         {
           matchCount: MAX_RESULT_COUNT,
@@ -363,7 +371,7 @@ export async function POST(request: Request) {
         },
       );
 
-      const ids = audioMatches.map((result) => result.songId);
+      const ids = audioSearch.matches.map((result) => result.songId);
       const { data, error } =
         ids.length === 0
           ? { data: [], error: null }
@@ -378,28 +386,38 @@ export async function POST(request: Request) {
         ((data ?? []) as RankedSongRow[]).map((song) => [song.id, song]),
       );
 
-      matches = audioMatches
+      matches = audioSearch.matches
         .map((result) => {
           const song = songsById.get(result.songId);
           const tempoSimilarity = getTempoSimilarity(
             referenceBpm,
             Number(song?.bpm ?? 0) || null,
           );
-          const genreSimilarity = getGenreSimilarity(
-            profile.genres,
-            song?.genres ?? null,
+          const conceptSimilarity = compareClapConceptProfiles(
+            audioSearch.referenceProfile,
+            result.conceptProfile,
           );
 
           return {
             songId: result.songId,
             score: scoreMatch({
               audioSimilarity: result.similarity,
+              instrumentationSimilarity:
+                conceptSimilarity.instrumentation,
+              characterSimilarity: conceptSimilarity.character,
+              rhythmSimilarity: conceptSimilarity.rhythm,
+              energyDensitySimilarity:
+                conceptSimilarity.energyDensity,
               tempoSimilarity,
-              genreSimilarity,
             }),
             audioSimilarity: result.similarity,
+            instrumentationSimilarity:
+              conceptSimilarity.instrumentation,
+            characterSimilarity: conceptSimilarity.character,
+            rhythmSimilarity: conceptSimilarity.rhythm,
+            energyDensitySimilarity:
+              conceptSimilarity.energyDensity,
             tempoSimilarity,
-            genreSimilarity,
           };
         })
         .sort((a, b) => b.score - a.score)
@@ -412,9 +430,20 @@ export async function POST(request: Request) {
             result.tempoSimilarity === null
               ? null
               : Number(result.tempoSimilarity.toFixed(6)),
-          genreSimilarity: result.genreSimilarity,
+          instrumentationSimilarity: Number(
+            result.instrumentationSimilarity.toFixed(6),
+          ),
+          characterSimilarity: Number(
+            result.characterSimilarity.toFixed(6),
+          ),
+          rhythmSimilarity: Number(
+            result.rhythmSimilarity.toFixed(6),
+          ),
+          energyDensitySimilarity: Number(
+            result.energyDensitySimilarity.toFixed(6),
+          ),
         }));
-      ranking = "audio-clap-v3";
+      ranking = "audio-clap-concepts-v4";
     }
 
     return NextResponse.json(
