@@ -1527,6 +1527,7 @@ main
 .audioflume-music-page .audioflume-music-skeleton-block.is-license {
   width: 82px;
   height: 34px;
+  border-radius: 0;
 }
 
 @keyframes audioflume-music-skeleton-pulse {
