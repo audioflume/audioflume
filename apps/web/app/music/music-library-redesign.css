@@ -1368,3 +1368,229 @@ main
 
 
 }
+
+
+.audioflume-music-page .audioflume-music-skeleton {
+  width: 100%;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block {
+  display: block;
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  animation: audioflume-music-skeleton-pulse 1.35s ease-in-out infinite;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-feature-grid {
+  display: grid;
+  width: calc(100% + 40px);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  margin-right: -20px;
+  margin-bottom: 18px;
+  margin-left: -20px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-feature-card {
+  position: relative;
+  min-height: 330px;
+  overflow: hidden;
+  background: color-mix(in srgb, var(--text-primary) 5%, var(--bg-primary));
+}
+
+.audioflume-music-page .audioflume-music-skeleton-feature-copy {
+  position: absolute;
+  right: 116px;
+  bottom: 48px;
+  left: 48px;
+  display: grid;
+  gap: 7px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-feature-title {
+  width: min(62%, 280px);
+  height: 32px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-feature-artist {
+  width: 86px;
+  height: 14px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-feature-pills {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-pill {
+  width: 76px;
+  height: 23px;
+  border-radius: 999px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-pill.is-short {
+  width: 54px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-feature-play {
+  position: absolute;
+  right: 48px;
+  bottom: 48px;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-rows {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-row {
+  display: grid;
+  min-height: 86px;
+  grid-template-columns:
+    62px
+    20px
+    minmax(160px, 220px)
+    minmax(220px, 1fr)
+    48px
+    minmax(130px, 180px)
+    52px
+    58px
+    26px
+    94px;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px 12px 12px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-cover {
+  width: 62px;
+  height: 62px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-vocal {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-row-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-title {
+  width: 72%;
+  max-width: 160px;
+  height: 14px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-artist {
+  width: 48%;
+  max-width: 100px;
+  height: 11px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-waveform {
+  width: 100%;
+  height: 22px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-duration {
+  width: 34px;
+  height: 11px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-genre {
+  width: 100%;
+  height: 11px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-key {
+  width: 34px;
+  height: 11px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-bpm {
+  width: 42px;
+  height: 11px;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-action {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+}
+
+.audioflume-music-page .audioflume-music-skeleton-block.is-license {
+  width: 82px;
+  height: 34px;
+}
+
+@keyframes audioflume-music-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+
+  50% {
+    opacity: 0.9;
+  }
+}
+
+@media (max-width: 1050px) {
+  .audioflume-music-page .audioflume-music-skeleton-row {
+    grid-template-columns:
+      62px
+      20px
+      minmax(150px, 210px)
+      minmax(180px, 1fr)
+      48px
+      70px
+      86px;
+  }
+
+  .audioflume-music-page .audioflume-music-skeleton-block.is-key,
+  .audioflume-music-page .audioflume-music-skeleton-block.is-bpm,
+  .audioflume-music-page .audioflume-music-skeleton-block.is-action {
+    display: none;
+  }
+}
+
+@media (max-width: 720px) {
+  .audioflume-music-page .audioflume-music-skeleton-feature-grid {
+    width: calc(100% + 32px);
+    grid-template-columns: 1fr;
+    margin-right: -32px;
+    margin-left: 0;
+  }
+
+  .audioflume-music-page .audioflume-music-skeleton-feature-card {
+    min-height: 280px;
+  }
+
+  .audioflume-music-page .audioflume-music-skeleton-feature-copy {
+    right: 94px;
+    bottom: 32px;
+    left: 32px;
+  }
+
+  .audioflume-music-page .audioflume-music-skeleton-block.is-feature-play {
+    right: 32px;
+    bottom: 32px;
+  }
+
+  .audioflume-music-page .audioflume-music-skeleton-row {
+    grid-template-columns: 62px minmax(0, 1fr) 82px;
+  }
+
+  .audioflume-music-page .audioflume-music-skeleton-block.is-vocal,
+  .audioflume-music-page .audioflume-music-skeleton-block.is-waveform,
+  .audioflume-music-page .audioflume-music-skeleton-block.is-duration,
+  .audioflume-music-page .audioflume-music-skeleton-block.is-genre,
+  .audioflume-music-page .audioflume-music-skeleton-block.is-license {
+    display: none;
+  }
+}
