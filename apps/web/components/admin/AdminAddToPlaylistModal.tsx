@@ -5,8 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Toast from "@/components/Toast";
 import { BackendButton } from "@/components/backend/BackendControls";
-import BackendModalShell from "@/components/backend/BackendModalShell";
-import BackendSearchBar from "@/components/backend/BackendSearchBar";
+import ModalShell from "@/components/ModalShell";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -253,55 +252,83 @@ export default function AdminAddToPlaylistModal({
 
   return (
     <>
-      <BackendModalShell
+      <ModalShell
         isOpen={isOpen}
-        title="Add to Curated Playlist"
+        title="Add to Playlist"
         onClose={onClose}
-        closeLabel="Close add to curated playlist modal"
+        closeLabel="Close add to playlist modal"
+        maxHeight="506px"
+        bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
+        contentClassName="h-[506px] max-h-[calc(100vh-64px)]"
         footer={
-          <BackendButton
+          <button
             type="button"
-            variant="primary"
             onClick={handleSave}
             disabled={saving || loading || selectedLoading || !hasChanges}
+            className="h-10 shrink-0 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
           >
             {saving ? "Saving..." : "Save"}
-          </BackendButton>
+          </button>
         }
       >
-        <div className="flex flex-shrink-0 items-center justify-center pb-4 text-center">
-          <div className="flex min-w-0 items-center justify-center gap-2">
-            <span className="relative flex h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
+        <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center">
+          <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
+            <span
+              className="relative block shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]"
+              style={{ width: "24px", height: "24px", minWidth: "24px", minHeight: "24px" }}
+            >
               {song.coverArt ? (
-                <Image src={song.coverArt} alt={song.title} fill sizes="24px" className="object-cover" />
-              ) : null}
+                <Image
+                  src={song.coverArt}
+                  alt={song.title}
+                  fill
+                  sizes="24px"
+                  className="object-cover"
+                />
+              ) : (
+                <span className="flex h-full w-full items-center justify-center text-[var(--text-muted)]">
+                  <PlaylistIcon size={10} />
+                </span>
+              )}
             </span>
-            <span className="block max-w-[300px] truncate text-[12px] font-medium tracking-[-0.015em] text-[var(--text-primary)]">
+            <span className="block max-w-[300px] truncate text-[12px] font-normal tracking-[-0.015em] text-[var(--text-primary)]">
               {song.title} by {song.artist}
             </span>
           </div>
         </div>
 
-        <div className="pb-4">
-          <BackendSearchBar
-            value={search}
-            onChange={setSearch}
-            placeholder="Search playlists"
-            variant="modal"
-          />
-        </div>
+        <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5">
+          <label className="flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
+            <svg
+              width="16"
+              height="16"
+              viewBox="0 0 24 24"
+              fill="none"
+              aria-hidden="true"
+              className="shrink-0"
+            >
+              <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.5" />
+              <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+            </svg>
+            <input
+              type="search"
+              value={search}
+              onChange={(event) => setSearch(event.target.value)}
+              placeholder="Search playlists"
+              className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-sm text-[var(--text-primary)] !outline-none placeholder:text-[var(--text-muted)] focus:!border-0"
+            />
+          </label>
 
-        <div className="-mx-5 flex min-h-0 flex-1 flex-col">
-          <div className="min-h-0 flex-1 overflow-y-auto p-3">
+          <div className="min-h-0 flex-1 overflow-y-auto pb-5 pt-2.5">
             {(loading || selectedLoading) ? (
               <div className="grid gap-1">
                 {Array.from({ length: playlists.length || 6 }).map((_, index) => (
-                  <div key={index} className="flex min-h-[52px] items-center justify-between gap-3 p-2">
+                  <div key={index} className="flex min-h-[58px] items-center justify-between gap-3 p-2.5">
                     <div className="flex items-center gap-3">
-                      <div className="h-9 w-9 bg-[var(--bg-tertiary)]" />
-                      <div className="h-3 w-32 bg-[var(--bg-tertiary)]" />
+                      <div className="h-10 w-10 bg-[var(--bg-hover)]" />
+                      <div className="h-3 w-32 bg-[var(--bg-hover)]" />
                     </div>
-                    <div className="h-5 w-5 bg-[var(--bg-tertiary)]" />
+                    <div className="h-5 w-5 bg-[var(--bg-hover)]" />
                   </div>
                 ))}
               </div>
@@ -336,19 +363,19 @@ export default function AdminAddToPlaylistModal({
                       type="button"
                       onClick={() => togglePlaylist(playlist.id)}
                       disabled={selectedLoading}
-                      className={`group flex min-h-[52px] w-full items-center gap-3 rounded-[7px] p-2 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
+                      className={`group flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
                         isSelected
-                          ? "bg-[var(--bg-primary)]"
+                          ? "bg-[var(--bg-hover)]"
                           : "cursor-pointer hover:bg-[var(--bg-hover)]"
                       }`}
                     >
-                      <span className="relative flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[var(--text-muted)]">
+                      <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-none bg-[var(--bg-hover)] text-[var(--text-muted)]">
                         {playlist.cover_image_url ? (
                           <Image
                             src={playlist.cover_image_url}
                             alt={playlist.name}
                             fill
-                            sizes="36px"
+                            sizes="40px"
                             className="object-cover"
                             unoptimized
                           />
@@ -357,10 +384,10 @@ export default function AdminAddToPlaylistModal({
                         )}
                       </span>
                       <span className="min-w-0 flex-1">
-                        <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                        <span className="block truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
                           {playlist.name}
                         </span>
-                        <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                        <span className="mt-[2px] block truncate text-[11.5px] leading-[1.35] text-[var(--text-subtle)]">
                           {isSelected ? "Added" : "Click to add"}
                         </span>
                       </span>
@@ -376,7 +403,7 @@ export default function AdminAddToPlaylistModal({
             ) : null}
           </div>
         </div>
-      </BackendModalShell>
+      </ModalShell>
 
       <Toast message={toastMessage} bottomOffset="96px" />
     </>
