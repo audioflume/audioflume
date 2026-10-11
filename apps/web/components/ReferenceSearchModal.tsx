@@ -7,7 +7,7 @@ import XIcon from "@/components/icons/XIcon";
 
 import styles from "./ReferenceSearchModal.module.css";
 
-type ReferenceCatalogResult = {
+export type ReferenceCatalogResult = {
   id: string;
   kind: "track" | "artist";
   name: string;
@@ -24,7 +24,7 @@ type ReferenceSearchModalProps = {
   value: string;
   onChange: (value: string) => void;
   onClose: () => void;
-  onSubmit: (value: string) => void;
+  onSubmit: (value: string, result?: ReferenceCatalogResult) => void;
 };
 
 function ReferenceArtwork({
@@ -184,11 +184,14 @@ export default function ReferenceSearchModal({
 
   if (!open) return null;
 
-  function submitQuery(query: string) {
+  function submitQuery(
+    query: string,
+    result?: ReferenceCatalogResult,
+  ) {
     const cleanQuery = query.trim();
     if (!cleanQuery) return;
     onChange(cleanQuery);
-    onSubmit(cleanQuery);
+    onSubmit(cleanQuery, result);
   }
 
   const showDropdown =
@@ -279,7 +282,7 @@ export default function ReferenceSearchModal({
                       className={styles.result}
                       role="option"
                       aria-selected="false"
-                      onClick={() => submitQuery(result.searchQuery)}
+                      onClick={() => submitQuery(result.searchQuery, result)}
                     >
                       <span className={styles.resultArtwork} aria-hidden="true">
                         <ReferenceArtwork
