@@ -397,14 +397,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   height: 46px;
   place-items: center;
   border-radius: 50%;
-  background: transparent;
-  color: #ffffff;
+  background: #ffffff;
+  color: #111111;
+  opacity: 0;
   pointer-events: auto;
   transform: translate(-50%, -50%);
   transform-origin: center;
   transition:
-    background-color 160ms ease,
-    color 160ms ease,
+    opacity 160ms ease,
     transform 160ms ease;
 }
 
@@ -412,8 +412,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-song-card-art-icon,
 .audioflume-home-reference-song-card-play:focus-visible
   .audioflume-home-reference-song-card-art-icon {
-  background: #ffffff;
-  color: #111111;
+  opacity: 1;
 }
 
 .audioflume-home-reference-song-card-art-icon:hover {
