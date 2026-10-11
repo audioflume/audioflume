@@ -456,7 +456,7 @@ body:has(.curated-playlists-page-root)
 
 .curated-playlist-card:hover .curated-playlist-image img,
 .curated-playlist-card.is-menu-open .curated-playlist-image img {
-  transform: scale(1.008);
+  transform: scale(1.015);
 }
 
 .curated-playlist-card-details {
