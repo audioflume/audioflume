@@ -81,7 +81,7 @@ export default function Header() {
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const transparentAtTop =
-    pathname === "/" || pathname === "/discover" || pathname === "/pricing";
+    pathname === "/" || pathname === "/pricing";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
   const headerClassName = [

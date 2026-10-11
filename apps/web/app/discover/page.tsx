@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
   type CSSProperties,
+  type FormEvent,
   type ReactNode,
   useEffect,
   useRef,
@@ -11,12 +12,15 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import WaveformIcon from "@/components/icons/WaveformIcon";
+import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
@@ -400,6 +404,10 @@ export default function DiscoverPage() {
     DiscoverFeatureCardArtist[]
   >([]);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
+  const [discoverSearch, setDiscoverSearch] = useState("");
+  const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
+  const [referenceSearchQuery, setReferenceSearchQuery] = useState("");
+  const searchBarRef = useRef<HTMLDivElement>(null);
   const playerVisible = Boolean(currentSong);
   const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
   const featuredArtistCount = featuredArtists.length;
@@ -513,8 +521,102 @@ export default function DiscoverPage() {
     togglePlayPause(firstSong);
   }
 
+  useEffect(() => {
+    const searchBar = searchBarRef.current;
+    if (!searchBar) return;
+
+    const preventScrollBounce = (event: WheelEvent | TouchEvent) => {
+      event.preventDefault();
+    };
+
+    searchBar.addEventListener("wheel", preventScrollBounce, { passive: false });
+    searchBar.addEventListener("touchmove", preventScrollBounce, { passive: false });
+
+    return () => {
+      searchBar.removeEventListener("wheel", preventScrollBounce);
+      searchBar.removeEventListener("touchmove", preventScrollBounce);
+    };
+  }, []);
+
+  function submitDiscoverSearch(event: FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const query = discoverSearch.trim();
+    router.push(query ? `/music?search=${encodeURIComponent(query)}` : "/music");
+  }
+
   return (
-    <main className="discover-page-root">
+    <main className={`discover-page-root${playerVisible ? " has-player" : ""}`}>
+      <div className="audioflume-home-reference-searchbar-slot">
+        <div
+          ref={searchBarRef}
+          className="audioflume-home-reference-searchbar"
+        >
+          <Link href="/music?filters=open" className="audioflume-home-reference-searchbar-filters">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+            </svg>
+            <span>Filters</span>
+          </Link>
+
+          <form
+            className="audioflume-home-reference-searchbar-field"
+            onSubmit={submitDiscoverSearch}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="m16 16 4.5 4.5" />
+            </svg>
+            <input
+              type="search"
+              value={discoverSearch}
+              onChange={(event) => setDiscoverSearch(event.target.value)}
+              placeholder="Search by sound, mood, or scene"
+              aria-label="Search by sound, mood, or scene"
+            />
+            {discoverSearch.length > 0 ? (
+              <button
+                type="button"
+                className="audioflume-home-reference-searchbar-clear"
+                onClick={() => setDiscoverSearch("")}
+                aria-label="Clear search"
+              >
+                <XIcon size={8} />
+              </button>
+            ) : null}
+          </form>
+
+          <button
+            type="button"
+            className="audioflume-home-reference-searchbar-song"
+            aria-label="Search by song"
+            aria-expanded={referenceSearchOpen}
+            onClick={() => setReferenceSearchOpen(true)}
+          >
+            <WaveformIcon size={16} />
+            <span>Search by song</span>
+          </button>
+        </div>
+      </div>
+
+      <ReferenceSearchModal
+        open={referenceSearchOpen}
+        value={referenceSearchQuery}
+        onChange={setReferenceSearchQuery}
+        onClose={() => setReferenceSearchOpen(false)}
+        onSubmit={(query, result) => {
+          const params = new URLSearchParams({
+            referenceSearch: query,
+          });
+
+          if (result?.kind === "track") {
+            params.set("referenceTrackId", result.id);
+          }
+
+          router.push(`/music?${params.toString()}`);
+        }}
+      />
+
       <section
         className="discover-artist-hero"
         aria-label="Featured artist"
