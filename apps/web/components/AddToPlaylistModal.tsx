@@ -485,7 +485,7 @@ export default function AddToPlaylistModal({
                   <PlusIcon size={18} />
                 </span>
 
-                <div className="min-w-0 flex-1">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
                   <input
                     type="text"
                     value={newPlaylistName}
@@ -493,30 +493,28 @@ export default function AddToPlaylistModal({
                     onChange={(e) => setNewPlaylistName(toSmartTitleCaseInput(e.target.value))}
                     placeholder="Name"
                     autoFocus
-                    className="h-9 w-full rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--border)] disabled:opacity-60"
+                    className="h-9 min-w-0 flex-1 rounded-none border-0 bg-[var(--bg-primary)] px-3 text-sm font-medium text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-0 disabled:opacity-60"
                   />
 
-                  <div className="mt-2 flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={creatingPlaylist}
-                      onClick={() => {
-                        setNewPlaylistOpen(false);
-                        setNewPlaylistName("");
-                      }}
-                      className="h-8 rounded-none border border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
-                    >
-                      Cancel
-                    </button>
+                  <button
+                    type="button"
+                    disabled={creatingPlaylist}
+                    onClick={() => {
+                      setNewPlaylistOpen(false);
+                      setNewPlaylistName("");
+                    }}
+                    className="h-9 shrink-0 rounded-none border-0 px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                  >
+                    Cancel
+                  </button>
 
-                    <button
-                      type="submit"
-                      disabled={creatingPlaylist || !newPlaylistName.trim()}
-                      className="h-8 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
-                    >
-                      Add
-                    </button>
-                  </div>
+                  <button
+                    type="submit"
+                    disabled={creatingPlaylist || !newPlaylistName.trim()}
+                    className="h-9 shrink-0 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
+                  >
+                    Add
+                  </button>
                 </div>
               </form>
             ) : (
