@@ -122,11 +122,6 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <head>
-          <Script
-            id="audioflume-theme-boot"
-            strategy="beforeInteractive"
-            dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
-          />
           <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
@@ -165,6 +160,11 @@ export default async function RootLayout({
             </UserPreferencesProvider>
           </ArtistInvitesProvider>
         </body>
+        <Script
+          id="audioflume-theme-boot"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
+        />
       </html>
     </ClerkProvider>
   );
