@@ -660,12 +660,7 @@ export default function DiscoverPage() {
 
           {featuredArtistCount > 0 ? (
             <div className="discover-artist-hero-featured-intro">
-              <span>
-                This month&apos;s
-                <br />
-                featured artists
-              </span>
-              <div className="col-start-3 flex w-[178px] justify-self-end flex-col items-end max-[720px]:hidden">
+              <div className="flex w-[178px] flex-col items-end max-[720px]:hidden">
                 <div className="mb-[10px] inline-flex h-[22px] items-center gap-0 text-white">
                   <button
                     type="button"
@@ -705,6 +700,13 @@ export default function DiscoverPage() {
 
       <div className="discover-artist-content">
         <section className="discover-artist-featured">
+          {featuredArtistCount > 0 ? (
+            <div className="discover-artist-featured-label">
+              This month&apos;s
+              <br />
+              featured artists
+            </div>
+          ) : null}
           <div className="discover-artist-featured-grid">
             {Array.from({ length: 2 }).map((_, index) => {
               const artist = featureCardArtists[index];

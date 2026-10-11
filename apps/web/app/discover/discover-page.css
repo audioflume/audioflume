@@ -34,9 +34,9 @@
   height: var(--filmwave-header-height, 75px);
   grid-template-columns: 154px minmax(0, 1fr) 230px;
   align-items: stretch;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: #111111;
-  color: #ffffff;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
   overscroll-behavior: none;
   touch-action: none;
 }
@@ -50,7 +50,7 @@
 
 .discover-page-root .audioflume-home-reference-searchbar-filters {
   gap: 18px;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--border);
   padding: 0 30px;
   font-size: 14px;
   font-weight: 400;
@@ -72,9 +72,9 @@
   gap: 18px;
   margin: 12px 16px;
   border-radius: 999px;
-  background: #1b1b1b;
+  background: var(--bg-hover);
   padding: 0 34px;
-  color: #5a5a5a;
+  color: var(--text-muted);
 }
 
 .discover-page-root .audioflume-home-reference-searchbar-field svg {
@@ -92,7 +92,7 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: #ffffff;
+  color: var(--text-primary);
   font: inherit;
   font-size: 16px;
   font-weight: 300;
@@ -108,7 +108,7 @@
 }
 
 .discover-page-root .audioflume-home-reference-searchbar-field input::placeholder {
-  color: #5a5a5a;
+  color: var(--text-muted);
   font-size: 16px;
   opacity: 1;
 }
@@ -122,7 +122,7 @@
   justify-content: center;
   border: 0;
   background: transparent;
-  color: #5a5a5a;
+  color: var(--text-muted);
   padding: 0;
   cursor: pointer;
 }
@@ -134,7 +134,7 @@
 
 .discover-page-root .audioflume-home-reference-searchbar-clear:hover,
 .discover-page-root .audioflume-home-reference-searchbar-clear:focus-visible {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .discover-page-root .audioflume-home-reference-searchbar-song {
@@ -142,7 +142,7 @@
   gap: 8px;
   border: 0;
   background: transparent;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: inherit;
   font-size: 14px;
   font-weight: 400;
@@ -348,34 +348,17 @@
 }
 
 .discover-artist-hero-featured-intro {
-  display: grid;
-  grid-row: 3;
+  position: absolute;
+  right: 0;
+  bottom: 28px;
+  left: 0;
+  display: flex;
   width: calc(
     100vw - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
   );
   max-width: var(--filmwave-editorial-max-width);
-  grid-template-columns: 18% minmax(300px, 40%) 1fr;
-  align-items: end;
-  justify-self: center;
-  gap: clamp(24px, 2.5vw, 44px);
-}
-
-.discover-artist-hero-featured-intro > span {
-  font-size: clamp(15px, 1.05vw, 18px);
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.15;
-  text-transform: uppercase;
-}
-
-.discover-artist-hero-featured-intro p {
-  max-width: 430px;
-  margin: 0;
-  color: #fff;
-  font-size: clamp(15px, 1vw, 18px);
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.35;
+  justify-content: flex-end;
+  margin: 0 auto;
 }
 
 .discover-artist-hero-slider-marks {
@@ -407,10 +390,21 @@
   );
   max-width: var(--filmwave-editorial-max-width);
   margin: 0 auto;
+  padding-top: clamp(42px, 4vw, 64px);
 }
 
 .discover-artist-featured {
   position: relative;
+}
+
+.discover-artist-featured-label {
+  margin: 0 0 16px;
+  color: var(--text-primary);
+  font-size: clamp(15px, 1.05vw, 18px);
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: uppercase;
 }
 
 .discover-artist-featured-grid {
@@ -859,7 +853,7 @@
   }
 
   .discover-artist-content {
-    margin-top: -217.5px;
+    margin-top: 0;
   }
 
   .discover-artist-editorial-grid {
@@ -961,19 +955,8 @@
   }
 
   .discover-artist-hero-featured-intro {
-    position: absolute;
-    right: 0;
-    bottom: var(--discover-artist-featured-intro-bottom);
-    left: 0;
+    bottom: 20px;
     width: auto;
-    grid-row: auto;
-    grid-template-columns: minmax(110px, 0.55fr) 1fr;
-    gap: 18px;
-  }
-
-  .discover-artist-hero-featured-intro > span,
-  .discover-artist-hero-featured-intro p {
-    font-size: 11px;
   }
 
   .discover-artist-hero-slider-marks {
@@ -981,7 +964,7 @@
   }
 
   .discover-artist-content {
-    margin-top: -187.5px;
+    margin-top: 0;
   }
 
   .discover-artist-featured-grid {
