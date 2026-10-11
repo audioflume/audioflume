@@ -307,8 +307,33 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-panel
   .fw-filter-control-stack
   > .fw-segment
+  + .fw-filter-chip-grid,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-control-stack
+  > .fw-segment
+  + .fw-filter-chip-grid
   + .fw-filter-chip-grid {
-  flex-wrap: nowrap;
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-control-stack
+  > .fw-segment
+  + .fw-filter-chip-grid
+  .fw-filter-chip,
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  .fw-filter-advanced-panel
+  .fw-filter-control-stack
+  > .fw-segment
+  + .fw-filter-chip-grid
+  + .fw-filter-chip-grid
+  .fw-filter-chip {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
