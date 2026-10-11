@@ -528,7 +528,7 @@ export default function AddToPlaylistModal({
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
-                <span className="min-w-0 flex-1 truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                <span className="min-w-0 flex-1 truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
                   New Playlist...
                 </span>
               </button>
