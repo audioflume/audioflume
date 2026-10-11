@@ -1088,6 +1088,39 @@ export function MusicFilterPanel({
   }, [open, onClose]);
 
   const activeSection = sections.find((s) => s.id === activeSectionId);
+
+  function clearRailSection(sectionId: string) {
+    const group = railGroups.find((item) => item.id === sectionId);
+    if (group?.onClear) {
+      group.onClear();
+      return;
+    }
+
+    if (sectionId === "playlist") {
+      onSelectPlaylist?.(null);
+      return;
+    }
+
+    if (sectionId === "duration") {
+      onDurationsChange?.([]);
+      return;
+    }
+
+    if (sectionId === "bpm") {
+      onBpmChange?.(null);
+      return;
+    }
+
+    if (sectionId === "key") {
+      onKeyChange?.(null);
+      return;
+    }
+
+    if (sectionId === "display" && markersActive) {
+      onToggleMarkers?.();
+    }
+  }
+
   function renderDetail(sectionId = activeSectionId) {
     const group = railGroups.find((item) => item.id === sectionId);
     if (group) return <MusicFilterOptionList group={group} />;
@@ -1186,7 +1219,26 @@ export function MusicFilterPanel({
                             </span>
                           </span>
                         ) : (
-                          <span className="fw-filter-rail-count">{section.count}</span>
+                          <span
+                            className="fw-filter-rail-count"
+                            role="button"
+                            tabIndex={0}
+                            aria-label={`Clear ${section.label} filters`}
+                            title={`Clear ${section.label} filters`}
+                            onClick={(event) => {
+                              event.preventDefault();
+                              event.stopPropagation();
+                              clearRailSection(section.id);
+                            }}
+                            onKeyDown={(event) => {
+                              if (event.key !== "Enter" && event.key !== " ") return;
+                              event.preventDefault();
+                              event.stopPropagation();
+                              clearRailSection(section.id);
+                            }}
+                          >
+                            {section.count}
+                          </span>
                         ))}
                       <span className="fw-filter-rail-chevron" aria-hidden="true">
                         <ChevronRightIcon />

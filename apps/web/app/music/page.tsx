@@ -973,6 +973,7 @@ export default function MusicPage() {
       options: availableFilterOptions.moods,
       selected: selectedMoods,
       onToggle: toggleIn(selectedMoods, setSelectedMoods),
+      onClear: () => setSelectedMoods([]),
     },
     {
       id: "genre",
@@ -980,6 +981,7 @@ export default function MusicPage() {
       options: availableFilterOptions.genres,
       selected: selectedGenres,
       onToggle: toggleIn(selectedGenres, setSelectedGenres),
+      onClear: () => setSelectedGenres([]),
     },
     {
       id: "artist",
@@ -987,6 +989,7 @@ export default function MusicPage() {
       options: availableFilterOptions.artists,
       selected: selectedArtists,
       onToggle: toggleIn(selectedArtists, setSelectedArtists),
+      onClear: () => setSelectedArtists([]),
     },
     {
       id: "region",
@@ -1002,6 +1005,7 @@ export default function MusicPage() {
       options: availableFilterOptions.instruments,
       selected: selectedInstruments,
       onToggle: toggleIn(selectedInstruments, setSelectedInstruments),
+      onClear: () => setSelectedInstruments([]),
     },
     {
       id: "vocals",
@@ -1009,6 +1013,12 @@ export default function MusicPage() {
       options: availableFilterOptions.vocals,
       selected: selectedVocalFilters,
       onToggle: toggleVocalFilter,
+      onClear: () =>
+        setFilters((current) => ({
+          ...current,
+          selectedVocals: [],
+          instrumental: false,
+        })),
     },
     {
       id: "build",
@@ -1025,6 +1035,7 @@ export default function MusicPage() {
       selected: availableFilterOptions.cuePoints
         .filter((option) => selectedEditPoints.includes(option.type))
         .map((option) => option.label),
+      onClear: () => setSelectedEditPoints([]),
       onToggle: (label: string) => {
         const option = availableFilterOptions.cuePoints.find(
           (item) => item.label === label,
