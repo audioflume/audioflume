@@ -13,6 +13,7 @@ const CACHE_TTL_MS = 5 * 60 * 1000;
 type MusicBrainzArtist = {
   id?: string;
   name?: string;
+  score?: number;
 };
 
 type MusicBrainzArtistCredit = {
@@ -34,7 +35,11 @@ type MusicBrainzRecording = {
   releases?: MusicBrainzRelease[];
 };
 
-type MusicBrainzSearchResponse = {
+type MusicBrainzArtistSearchResponse = {
+  artists?: MusicBrainzArtist[];
+};
+
+type MusicBrainzRecordingSearchResponse = {
   recordings?: MusicBrainzRecording[];
 };
 
@@ -58,6 +63,13 @@ const resultCache = new Map<
 >();
 
 let nextMusicBrainzRequestAt = 0;
+
+function normalize(value: string) {
+  return value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim();
+}
 
 function getArtistLabel(credits: MusicBrainzArtistCredit[] | undefined) {
   return (credits ?? [])
@@ -92,42 +104,25 @@ function getTrackResult(recording: MusicBrainzRecording) {
   };
 }
 
-function getArtistResults(recordings: MusicBrainzRecording[]) {
-  const artists = new Map<string, ReferenceCatalogResult>();
+function getArtistResult(artist: MusicBrainzArtist) {
+  const id = artist.id?.trim();
+  const name = artist.name?.trim();
 
-  for (const recording of recordings) {
-    for (const credit of recording["artist-credit"] ?? []) {
-      const id = credit.artist?.id?.trim();
-      const name = credit.artist?.name?.trim() || credit.name?.trim();
+  if (!id || !name) return null;
 
-      if (!id || !name || artists.has(id)) continue;
-
-      artists.set(id, {
-        id: `musicbrainz:artist:${id}`,
-        kind: "artist",
-        name,
-        artist: "",
-        secondary: "Artist",
-        imageUrl: null,
-        externalUrl: `https://musicbrainz.org/artist/${id}`,
-        searchQuery: name,
-      });
-
-      if (artists.size >= 3) return [...artists.values()];
-    }
-  }
-
-  return [...artists.values()];
+  return {
+    id: `musicbrainz:artist:${id}`,
+    kind: "artist" as const,
+    name,
+    artist: "",
+    secondary: "Artist",
+    imageUrl: null,
+    externalUrl: `https://musicbrainz.org/artist/${id}`,
+    searchQuery: name,
+  };
 }
 
-async function searchMusicBrainz(query: string) {
-  const normalizedQuery = query.toLowerCase();
-  const cached = resultCache.get(normalizedQuery);
-
-  if (cached && cached.expiresAt > Date.now()) {
-    return cached.results;
-  }
-
+async function waitForMusicBrainzSlot() {
   const now = Date.now();
   const requestAt = Math.max(now, nextMusicBrainzRequestAt);
   nextMusicBrainzRequestAt = requestAt + MUSICBRAINZ_REQUEST_INTERVAL_MS;
@@ -137,13 +132,12 @@ async function searchMusicBrainz(query: string) {
       setTimeout(resolve, requestAt - now);
     });
   }
+}
 
-  const searchUrl = new URL("https://musicbrainz.org/ws/2/recording");
-  searchUrl.searchParams.set("query", query);
-  searchUrl.searchParams.set("fmt", "json");
-  searchUrl.searchParams.set("limit", String(MUSICBRAINZ_SEARCH_LIMIT));
+async function fetchMusicBrainz<T>(url: URL) {
+  await waitForMusicBrainzSlot();
 
-  const response = await fetch(searchUrl, {
+  const response = await fetch(url, {
     headers: {
       Accept: "application/json",
       "User-Agent": "Audioflume/1.0 (https://audioflume.com)",
@@ -155,14 +149,60 @@ async function searchMusicBrainz(query: string) {
     throw new Error(`MusicBrainz search failed with ${response.status}`);
   }
 
-  const data = (await response.json()) as MusicBrainzSearchResponse;
-  const recordings = data.recordings ?? [];
+  return (await response.json()) as T;
+}
+
+async function findExactArtist(query: string) {
+  const searchUrl = new URL("https://musicbrainz.org/ws/2/artist");
+  searchUrl.searchParams.set("query", query);
+  searchUrl.searchParams.set("fmt", "json");
+  searchUrl.searchParams.set("limit", "5");
+
+  const data = await fetchMusicBrainz<MusicBrainzArtistSearchResponse>(searchUrl);
+  const normalizedQuery = normalize(query);
+
+  return (
+    (data.artists ?? []).find(
+      (artist) => normalize(artist.name ?? "") === normalizedQuery,
+    ) ?? null
+  );
+}
+
+async function searchRecordings(query: string, artistId?: string) {
+  const searchUrl = new URL("https://musicbrainz.org/ws/2/recording");
+  searchUrl.searchParams.set(
+    "query",
+    artistId ? `arid:${artistId}` : query,
+  );
+  searchUrl.searchParams.set("fmt", "json");
+  searchUrl.searchParams.set("limit", String(MUSICBRAINZ_SEARCH_LIMIT));
+
+  const data =
+    await fetchMusicBrainz<MusicBrainzRecordingSearchResponse>(searchUrl);
+
+  return data.recordings ?? [];
+}
+
+async function searchMusicBrainz(query: string) {
+  const normalizedQuery = normalize(query);
+  const cached = resultCache.get(normalizedQuery);
+
+  if (cached && cached.expiresAt > Date.now()) {
+    return cached.results;
+  }
+
+  const matchedArtist = await findExactArtist(query);
+  const recordings = await searchRecordings(query, matchedArtist?.id);
+
   const tracks = recordings.flatMap((recording) => {
     const result = getTrackResult(recording);
     return result ? [result] : [];
   });
-  const artists = getArtistResults(recordings);
-  const results = [...tracks.slice(0, 5), ...artists];
+
+  const artistResult = matchedArtist ? getArtistResult(matchedArtist) : null;
+  const results = artistResult
+    ? [artistResult, ...tracks.slice(0, 7)]
+    : tracks.slice(0, 8);
 
   resultCache.set(normalizedQuery, {
     expiresAt: Date.now() + CACHE_TTL_MS,
