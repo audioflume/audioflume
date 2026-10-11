@@ -1295,6 +1295,16 @@ main
 }
 
 
+.audioflume-music-page .audioflume-music-featured-song-eyebrow {
+  margin-bottom: 4px;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.58);
+}
+
 .audioflume-music-page .audioflume-music-featured-song-copy > strong {
   overflow: hidden;
   font-family: var(--filmwave-section-title-font-family);

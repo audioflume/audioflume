@@ -1268,6 +1268,9 @@ export default function MusicPage() {
                           />
 
                           <div className="audioflume-music-featured-song-copy">
+                            <span className="audioflume-music-featured-song-eyebrow">
+                              Featured Tracks
+                            </span>
                             <strong>{song.title}</strong>
                             <span className="audioflume-music-featured-song-artist">
                               {song.artist}
