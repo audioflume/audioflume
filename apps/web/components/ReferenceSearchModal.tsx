@@ -85,13 +85,21 @@ export default function ReferenceSearchModal({
   const [loading, setLoading] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  function closeModal() {
+    onChange("");
+    setResults([]);
+    setLoading(false);
+    setDropdownOpen(false);
+    onClose();
+  }
+
   useEffect(() => {
     if (!open) return;
 
     inputRef.current?.focus();
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") onClose();
+      if (event.key === "Escape") closeModal();
     }
 
     function handlePointerDown(event: MouseEvent) {
@@ -194,7 +202,7 @@ export default function ReferenceSearchModal({
       className={styles.backdrop}
       role="presentation"
       onMouseDown={(event) => {
-        if (event.target === event.currentTarget) onClose();
+        if (event.target === event.currentTarget) closeModal();
       }}
     >
       <section
@@ -210,7 +218,7 @@ export default function ReferenceSearchModal({
           type="button"
           className={styles.close}
           aria-label="Close reference search"
-          onClick={onClose}
+          onClick={closeModal}
         >
           <XIcon size={12} />
         </button>
