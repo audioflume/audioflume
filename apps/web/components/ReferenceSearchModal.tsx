@@ -124,7 +124,7 @@ export default function ReferenceSearchModal({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("mousedown", handlePointerDown);
     };
-  }, [onClose, open]);
+  }, [onClose, open, submitting]);
 
   useEffect(() => {
     if (!open) {
