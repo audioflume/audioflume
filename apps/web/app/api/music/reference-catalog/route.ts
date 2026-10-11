@@ -63,6 +63,7 @@ type ReferenceCatalogResult = {
   artist: string;
   secondary: string;
   imageUrl: string | null;
+  imageUrls: string[];
   externalUrl: string | null;
   searchQuery: string;
 };
@@ -135,7 +136,7 @@ function getReleaseScore(
   return score;
 }
 
-function getPreferredRelease(
+function getRankedReleases(
   releases: MusicBrainzRelease[] | undefined,
   recordingArtist: string,
   recordingTitle: string,
@@ -150,7 +151,34 @@ function getPreferredRelease(
       if (scoreDifference !== 0) return scoreDifference;
 
       return String(a.date ?? "").localeCompare(String(b.date ?? ""));
-    })[0];
+    });
+}
+
+function getArtworkCandidates(releases: MusicBrainzRelease[]) {
+  const urls: string[] = [];
+  const seen = new Set<string>();
+
+  for (const release of releases) {
+    const releaseGroupId = release["release-group"]?.id?.trim();
+    const releaseId = release.id?.trim();
+
+    for (const url of [
+      releaseGroupId
+        ? `https://coverartarchive.org/release-group/${releaseGroupId}/front-250`
+        : "",
+      releaseId
+        ? `https://coverartarchive.org/release/${releaseId}/front-250`
+        : "",
+    ]) {
+      if (!url || seen.has(url)) continue;
+      seen.add(url);
+      urls.push(url);
+    }
+
+    if (urls.length >= 8) break;
+  }
+
+  return urls;
 }
 
 function getTrackResult(recording: MusicBrainzRecording) {
@@ -160,11 +188,11 @@ function getTrackResult(recording: MusicBrainzRecording) {
 
   if (!id || !name || !artist) return null;
 
-  const release = getPreferredRelease(recording.releases, artist, name);
-  const releaseGroupId = release?.["release-group"]?.id?.trim() ?? "";
-  const releaseId = release?.id?.trim() ?? "";
+  const rankedReleases = getRankedReleases(recording.releases, artist, name);
+  const release = rankedReleases[0];
   const releaseTitle =
     release?.["release-group"]?.title?.trim() || release?.title?.trim();
+  const imageUrls = getArtworkCandidates(rankedReleases);
 
   return {
     id: `musicbrainz:recording:${id}`,
@@ -172,11 +200,8 @@ function getTrackResult(recording: MusicBrainzRecording) {
     name,
     artist,
     secondary: releaseTitle || "Track",
-    imageUrl: releaseGroupId
-      ? `https://coverartarchive.org/release-group/${releaseGroupId}/front-250`
-      : releaseId
-        ? `https://coverartarchive.org/release/${releaseId}/front-250`
-        : null,
+    imageUrl: imageUrls[0] ?? null,
+    imageUrls,
     externalUrl: `https://musicbrainz.org/recording/${id}`,
     searchQuery: `${name} by ${artist}`,
   };
@@ -195,6 +220,7 @@ function getArtistResult(artist: MusicBrainzArtist) {
     artist: "",
     secondary: "Artist",
     imageUrl: null,
+    imageUrls: [],
     externalUrl: `https://musicbrainz.org/artist/${id}`,
     searchQuery: name,
   };
