@@ -451,12 +451,12 @@ body:has(.curated-playlists-page-root)
 }
 
 .curated-playlist-image img {
-  transition: transform 500ms ease;
+  transition: transform 320ms ease;
 }
 
 .curated-playlist-card:hover .curated-playlist-image img,
 .curated-playlist-card.is-menu-open .curated-playlist-image img {
-  transform: scale(1.025);
+  transform: scale(1.008);
 }
 
 .curated-playlist-card-details {
