@@ -80,8 +80,10 @@ export default function ReferenceSearchModal({
   onSubmit,
 }: ReferenceSearchModalProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const searchFormRef = useRef<HTMLFormElement | null>(null);
   const [results, setResults] = useState<ReferenceCatalogResult[]>([]);
   const [loading, setLoading] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
 
   useEffect(() => {
     if (!open) return;
@@ -92,14 +94,25 @@ export default function ReferenceSearchModal({
       if (event.key === "Escape") onClose();
     }
 
+    function handlePointerDown(event: MouseEvent) {
+      const form = searchFormRef.current;
+      if (!form || !(event.target instanceof Node)) return;
+      if (!form.contains(event.target)) setDropdownOpen(false);
+    }
+
     window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
+    window.addEventListener("mousedown", handlePointerDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("mousedown", handlePointerDown);
+    };
   }, [onClose, open]);
 
   useEffect(() => {
     if (!open) {
       setResults([]);
       setLoading(false);
+      setDropdownOpen(false);
       return;
     }
 
@@ -145,6 +158,7 @@ export default function ReferenceSearchModal({
           : [];
 
         setResults(nextResults);
+        if (nextResults.length > 0) setDropdownOpen(true);
       } catch (error) {
         if (controller.signal.aborted) return;
         console.error("Reference catalog search failed:", error);
@@ -170,6 +184,7 @@ export default function ReferenceSearchModal({
   }
 
   const showDropdown =
+    dropdownOpen &&
     !isMusicLink(value) &&
     value.trim().length >= MIN_CATALOG_QUERY_LENGTH &&
     (loading || results.length > 0);
@@ -211,6 +226,7 @@ export default function ReferenceSearchModal({
           </p>
 
           <form
+            ref={searchFormRef}
             className={styles.searchForm}
             onSubmit={(event) => {
               event.preventDefault();
@@ -223,7 +239,19 @@ export default function ReferenceSearchModal({
                 ref={inputRef}
                 type="text"
                 value={value}
-                onChange={(event) => onChange(event.target.value)}
+                onChange={(event) => {
+                  onChange(event.target.value);
+                  setDropdownOpen(true);
+                }}
+                onFocus={() => {
+                  if (
+                    value.trim().length >= MIN_CATALOG_QUERY_LENGTH &&
+                    !isMusicLink(value) &&
+                    (loading || results.length > 0)
+                  ) {
+                    setDropdownOpen(true);
+                  }
+                }}
                 placeholder="Song, artist, or music link"
                 aria-label="Song, artist, or music link"
                 autoComplete="off"
