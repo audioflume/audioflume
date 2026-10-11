@@ -26,7 +26,7 @@ type ReferenceSearchModalProps = {
   onSubmit: (value: string) => void;
 };
 
-const SEARCH_DEBOUNCE_MS = 250;
+const SEARCH_DEBOUNCE_MS = 600;
 const MIN_CATALOG_QUERY_LENGTH = 2;
 
 function isMusicLink(value: string) {
