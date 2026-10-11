@@ -37,6 +37,7 @@ import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 
 import Footer from "@/components/Footer";
+import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import SongCard from "@/components/SongCard";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -295,7 +296,6 @@ export default function MusicPage() {
   const [searchBySongQuery, setSearchBySongQuery] = useState("");
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const searchBySongInputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     function syncLicenseFilters() {
@@ -311,23 +311,14 @@ export default function MusicPage() {
   }, []);
 
   useEffect(() => {
-    if (searchParams.get("referenceSearch") === "open") {
-      setSearchBySongOpen(true);
+    const referenceSearch = searchParams.get("referenceSearch");
+    if (!referenceSearch) return;
+
+    setSearchBySongOpen(true);
+    if (referenceSearch !== "open") {
+      setSearchBySongQuery(referenceSearch);
     }
   }, [searchParams]);
-
-  useEffect(() => {
-    if (!searchBySongOpen) return;
-
-    searchBySongInputRef.current?.focus();
-
-    function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") setSearchBySongOpen(false);
-    }
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [searchBySongOpen]);
 
   const search = filters.search;
   const directFilterSearch = isDirectFilterSearch(search);
@@ -1022,68 +1013,13 @@ export default function MusicPage() {
         </div>
       </div>
 
-      {searchBySongOpen ? (
-        <div
-          className="audioflume-reference-search-backdrop"
-          role="presentation"
-          onMouseDown={(event) => {
-            if (event.target === event.currentTarget) {
-              setSearchBySongOpen(false);
-            }
-          }}
-        >
-          <section
-            className="audioflume-reference-search-modal"
-            role="dialog"
-            aria-modal="true"
-            aria-labelledby="audioflume-reference-search-title"
-          >
-            <div
-              className="audioflume-reference-search-image"
-              aria-hidden="true"
-            />
-            <div
-              className="audioflume-reference-search-overlay"
-              aria-hidden="true"
-            />
-
-            <button
-              type="button"
-              className="audioflume-reference-search-close"
-              aria-label="Close reference search"
-              onClick={() => setSearchBySongOpen(false)}
-            >
-              <XIcon size={12} />
-            </button>
-
-            <div className="audioflume-reference-search-content">
-              <div className="audioflume-reference-search-eyebrow">
-                Reference search
-              </div>
-              <h2 id="audioflume-reference-search-title">
-                Find something similar.
-              </h2>
-              <p>
-                Search by artist or track, or paste a Spotify, YouTube, or Apple
-                Music link.
-              </p>
-
-              <label className="audioflume-reference-search-field">
-                <WaveformIcon size={20} />
-                <input
-                  ref={searchBySongInputRef}
-                  type="text"
-                  value={searchBySongQuery}
-                  onChange={(event) => setSearchBySongQuery(event.target.value)}
-                  placeholder="Song, artist, or music link"
-                  aria-label="Song, artist, or music link"
-                />
-                <span>Song / Link</span>
-              </label>
-            </div>
-          </section>
-        </div>
-      ) : null}
+      <ReferenceSearchModal
+        open={searchBySongOpen}
+        value={searchBySongQuery}
+        onChange={setSearchBySongQuery}
+        onClose={() => setSearchBySongOpen(false)}
+        onSubmit={(query) => setSearchBySongQuery(query)}
+      />
 
       <section
         className={`min-h-screen pt-14 transition-[margin-left] duration-200 ${
