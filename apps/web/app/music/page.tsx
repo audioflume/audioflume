@@ -154,6 +154,26 @@ type SemanticSearchState =
       songIds: [];
     };
 
+type ReferenceSearchState = {
+  referenceId: string;
+  query: string;
+  status: "loading" | "success";
+  songIds: string[];
+};
+
+function getSearchMatchSongIds(data: unknown) {
+  if (!data || typeof data !== "object") return [];
+
+  const matches = (data as { matches?: unknown }).matches;
+  if (!Array.isArray(matches)) return [];
+
+  return matches.flatMap((match) => {
+    if (!match || typeof match !== "object") return [];
+    const songId = (match as Record<string, unknown>).songId;
+    return typeof songId === "string" && songId ? [songId] : [];
+  });
+}
+
 function getStoredLicenseFilters(): LicenseFilterValue[] {
   if (typeof window === "undefined") return [];
 
@@ -292,6 +312,8 @@ export default function MusicPage() {
     useState<LicenseFilterValue[]>([]);
   const [semanticSearchState, setSemanticSearchState] =
     useState<SemanticSearchState | null>(null);
+  const [referenceSearchState, setReferenceSearchState] =
+    useState<ReferenceSearchState | null>(null);
   const [searchBySongOpen, setSearchBySongOpen] = useState(false);
   const [searchBySongQuery, setSearchBySongQuery] = useState("");
 
@@ -312,6 +334,7 @@ export default function MusicPage() {
 
   useEffect(() => {
     const referenceSearch = searchParams.get("referenceSearch");
+    const referenceTrackId = searchParams.get("referenceTrackId");
     if (!referenceSearch) return;
 
     if (referenceSearch === "open") {
@@ -331,7 +354,49 @@ export default function MusicPage() {
             search: referenceSearch,
           },
     );
-  }, [filtersHydrated, searchParams, setFilters]);
+
+    if (!referenceTrackId) {
+      setReferenceSearchState(null);
+      return;
+    }
+
+    if (!userId) return;
+
+    const controller = new AbortController();
+
+    setReferenceSearchState({
+      referenceId: referenceTrackId,
+      query: referenceSearch,
+      status: "loading",
+      songIds: [],
+    });
+
+    void fetch("/api/music/reference-search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ referenceId: referenceTrackId }),
+      signal: controller.signal,
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Reference search request failed");
+        const data = await response.json();
+        if (controller.signal.aborted) return;
+
+        setReferenceSearchState({
+          referenceId: referenceTrackId,
+          query: referenceSearch,
+          status: "success",
+          songIds: getSearchMatchSongIds(data),
+        });
+      })
+      .catch((error) => {
+        if (controller.signal.aborted) return;
+        console.error("Reference music search failed:", error);
+        setReferenceSearchState(null);
+      });
+
+    return () => controller.abort();
+  }, [filtersHydrated, searchParams, setFilters, userId]);
 
   const search = filters.search;
   const directFilterSearch = isDirectFilterSearch(search);
@@ -353,8 +418,10 @@ export default function MusicPage() {
   const highlightedEditPointTypes =
     selectedEditPoints.filter(isCoreEditPointType);
 
-  const setSearch = (value: string) =>
+  const setSearch = (value: string) => {
+    setReferenceSearchState(null);
     setFilters((current) => ({ ...current, search: value }));
+  };
   const setSelectedMoods = (values: string[]) =>
     setFilters((current) => ({ ...current, selectedMoods: values }));
   const setSelectedGenres = (values: string[]) =>
@@ -588,6 +655,8 @@ export default function MusicPage() {
       !userId ||
       !filtersHydrated ||
       directFilterSearch ||
+      (referenceSearchState !== null &&
+        referenceSearchState.query === query) ||
       query.length < MIN_SEMANTIC_SEARCH_LENGTH
     ) {
       setSemanticSearchState(null);
@@ -629,7 +698,13 @@ export default function MusicPage() {
       window.clearTimeout(timeoutId);
       controller.abort();
     };
-  }, [directFilterSearch, filtersHydrated, search, userId]);
+  }, [
+    directFilterSearch,
+    filtersHydrated,
+    referenceSearchState,
+    search,
+    userId,
+  ]);
 
   useEffect(() => {
     if (!userId || !selectedPlaylistId) return;
@@ -794,17 +869,25 @@ export default function MusicPage() {
       : artistSongs;
 
     const cleanSearch = search.trim();
+    const referenceSearchActive =
+      referenceSearchState !== null &&
+      referenceSearchState.query === cleanSearch;
+    const referenceSongIds =
+      referenceSearchActive && referenceSearchState.status === "success"
+        ? referenceSearchState.songIds
+        : null;
     const semanticSongIds =
       semanticSearchState?.status === "success" &&
       semanticSearchState.query === cleanSearch
         ? semanticSearchState.songIds
         : null;
-    const semanticOrder = semanticSongIds
-      ? new Map(semanticSongIds.map((songId, index) => [songId, index]))
+    const orderedSongIds = referenceSongIds ?? semanticSongIds;
+    const semanticOrder = orderedSongIds
+      ? new Map(orderedSongIds.map((songId, index) => [songId, index]))
       : null;
 
     const nextSongs = filterMusicLibrarySongs(vocalTypeSongs, {
-      search: semanticOrder ? "" : search,
+      search: semanticOrder || referenceSearchActive ? "" : search,
       selectedMoods,
       selectedGenres,
       selectedRegions,
@@ -854,6 +937,7 @@ export default function MusicPage() {
     selectedPlaylistSongIds,
     selectedRegions,
     selectedVocals,
+    referenceSearchState,
     semanticSearchState,
     songs,
   ]);
@@ -1031,10 +1115,49 @@ export default function MusicPage() {
         value={searchBySongQuery}
         onChange={setSearchBySongQuery}
         onClose={() => setSearchBySongOpen(false)}
-        onSubmit={(query) => {
+        onSubmit={(query, result) => {
           setSearchBySongQuery(query);
-          setSearch(query);
           setSearchBySongOpen(false);
+
+          if (result?.kind !== "track") {
+            setSearch(query);
+            return;
+          }
+
+          setFilters((current) => ({
+            ...current,
+            search: query,
+          }));
+          setSemanticSearchState(null);
+          setReferenceSearchState({
+            referenceId: result.id,
+            query,
+            status: "loading",
+            songIds: [],
+          });
+
+          void fetch("/api/music/reference-search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ referenceId: result.id }),
+          })
+            .then(async (response) => {
+              if (!response.ok) {
+                throw new Error("Reference search request failed");
+              }
+
+              const data = await response.json();
+              setReferenceSearchState({
+                referenceId: result.id,
+                query,
+                status: "success",
+                songIds: getSearchMatchSongIds(data),
+              });
+            })
+            .catch((error) => {
+              console.error("Reference music search failed:", error);
+              setReferenceSearchState(null);
+            });
         }}
       />
 
