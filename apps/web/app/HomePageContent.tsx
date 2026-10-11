@@ -14,6 +14,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -451,6 +452,8 @@ export default function HomePageContent() {
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const [homeSearch, setHomeSearch] = useState("");
+  const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
+  const [referenceSearchQuery, setReferenceSearchQuery] = useState("");
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -595,13 +598,24 @@ export default function HomePageContent() {
             type="button"
             className="audioflume-home-reference-searchbar-song"
             aria-label="Search by song"
-            onClick={() => router.push("/music?referenceSearch=open")}
+            aria-expanded={referenceSearchOpen}
+            onClick={() => setReferenceSearchOpen(true)}
           >
             <WaveformIcon size={16} />
             <span>Search by song</span>
           </button>
         </div>
       </div>
+
+      <ReferenceSearchModal
+        open={referenceSearchOpen}
+        value={referenceSearchQuery}
+        onChange={setReferenceSearchQuery}
+        onClose={() => setReferenceSearchOpen(false)}
+        onSubmit={(query) => {
+          router.push(`/music?referenceSearch=${encodeURIComponent(query)}`);
+        }}
+      />
 
       <section
         className="audioflume-home-reference-hero"
