@@ -1015,10 +1015,6 @@ export default function MusicPage() {
                             aria-hidden="true"
                           />
 
-                          <span className="audioflume-music-featured-song-label">
-                            Featured track
-                          </span>
-
                           <div className="audioflume-music-featured-song-copy">
                             <strong>{song.title}</strong>
                             <span className="audioflume-music-featured-song-artist">
