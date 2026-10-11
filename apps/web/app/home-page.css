@@ -889,12 +889,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-artist-play {
   position: absolute;
-  top: calc(var(--audioflume-home-artist-media-height) - 56px);
+  top: calc(var(--audioflume-home-artist-media-height) - 68px);
   right: 16px;
   z-index: 3;
   display: grid;
-  width: 40px;
-  height: 40px;
+  width: 52px;
+  height: 52px;
   place-items: center;
   border: 0;
   border-radius: 999px;
