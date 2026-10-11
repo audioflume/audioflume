@@ -294,6 +294,10 @@
   backdrop-filter: blur(10px);
 }
 
+.discover-artist-hero-genres > .is-placeholder {
+  visibility: hidden;
+}
+
 .discover-artist-hero-detail > p {
   width: 100%;
   max-width: 560px;
