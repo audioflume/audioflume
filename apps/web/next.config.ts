@@ -6,6 +6,7 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@filmwave/shared"],
   outputFileTracingIncludes: {
     "/api/admin/upload": ["./node_modules/ffmpeg-static/ffmpeg"],
+    "/api/music/reference-search": ["./node_modules/ffmpeg-static/ffmpeg"],
   },
   images: {
     remotePatterns: [
