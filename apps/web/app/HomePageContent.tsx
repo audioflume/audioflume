@@ -258,7 +258,7 @@ function HomeArtistShelf({
 
   return (
     <Shelf label="in demand artists" className="audioflume-home-reference-artist-shelf">
-      {artists.map((artist) => {
+      {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
         const genres = Array.from(
@@ -275,7 +275,10 @@ function HomeArtistShelf({
         );
 
         return (
-          <article key={artist.id} className="audioflume-home-reference-artist-card">
+          <article
+            key={artist.id}
+            className={`audioflume-home-reference-artist-card${index === 0 ? " is-featured" : ""}`}
+          >
             <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-link">
               <div className="audioflume-home-reference-artist-media">
                 {image ? (
