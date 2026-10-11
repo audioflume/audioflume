@@ -294,7 +294,6 @@ function HomeArtistShelf({
               </div>
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
-                  <small>Featured Artist</small>
                   <strong>{artist.name}</strong>
                   {genres.length > 0 ? (
                     <span className="audioflume-home-reference-artist-genres">
