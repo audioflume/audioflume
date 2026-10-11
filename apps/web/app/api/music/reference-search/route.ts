@@ -1,7 +1,15 @@
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
-import { searchPublishedSongsByAudioSimilarity } from "@/lib/audioSemanticEmbeddings";
+import {
+  getSongAudioSimilarityEmbeddingStats,
+  searchPublishedSongsByAudioSimilarity,
+} from "@/lib/audioSemanticEmbeddings";
+import {
+  analyzeAudioUrl,
+  compareAudioFeatures,
+  type AudioSimilarityFeatures,
+} from "@/lib/audioSimilarity";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -48,6 +56,13 @@ type RankedSongRow = {
   bpm: number | null;
   genres: string[] | null;
 };
+
+type LegacyCandidateSong = RankedSongRow & {
+  playback_url: string | null;
+  audio_url: string | null;
+};
+
+const LEGACY_ANALYSIS_CONCURRENCY = 4;
 
 function normalize(value: string) {
   return value
@@ -182,6 +197,120 @@ function scoreMatch({
   return totalWeight > 0 ? score / totalWeight : semanticSimilarity;
 }
 
+
+async function mapWithConcurrency<T, R>(
+  items: T[],
+  concurrency: number,
+  mapper: (item: T) => Promise<R>,
+) {
+  const results = new Array<R>(items.length);
+  let nextIndex = 0;
+
+  async function worker() {
+    while (true) {
+      const index = nextIndex;
+      nextIndex += 1;
+
+      if (index >= items.length) return;
+      results[index] = await mapper(items[index]);
+    }
+  }
+
+  await Promise.all(
+    Array.from(
+      { length: Math.min(concurrency, Math.max(1, items.length)) },
+      () => worker(),
+    ),
+  );
+
+  return results;
+}
+
+async function getLegacyAudioMatches({
+  previewUrl,
+  referenceBpm,
+  referenceGenres,
+}: {
+  previewUrl: string;
+  referenceBpm: number | null;
+  referenceGenres: string[];
+}) {
+  const referenceFeatures = await analyzeAudioUrl(previewUrl);
+
+  const { data, error } = await supabaseServer
+    .from("songs")
+    .select("id, playback_url, audio_url, bpm, genres")
+    .eq("status", "published");
+
+  if (error) throw error;
+
+  const candidateSongs = ((data ?? []) as LegacyCandidateSong[]).filter(
+    (song) => Boolean(song.playback_url?.trim() || song.audio_url?.trim()),
+  );
+
+  const analyzed = await mapWithConcurrency(
+    candidateSongs,
+    LEGACY_ANALYSIS_CONCURRENCY,
+    async (song) => {
+      const sourceUrl =
+        song.playback_url?.trim() || song.audio_url?.trim() || "";
+
+      try {
+        const candidateFeatures = await analyzeAudioUrl(sourceUrl);
+        const audioSimilarity = compareAudioFeatures(
+          referenceFeatures,
+          candidateFeatures,
+          {
+            referenceBpm,
+            candidateBpm: Number(song.bpm ?? 0) || null,
+          },
+        );
+        const genreSimilarity = getGenreSimilarity(
+          referenceGenres,
+          song.genres,
+        );
+
+        return {
+          songId: song.id,
+          score:
+            genreSimilarity === null
+              ? audioSimilarity
+              : audioSimilarity * 0.95 + genreSimilarity * 0.05,
+          audioSimilarity,
+          genreSimilarity,
+        };
+      } catch (candidateError) {
+        console.warn(
+          `Reference fallback audio analysis skipped song ${song.id}:`,
+          candidateError,
+        );
+        return null;
+      }
+    },
+  );
+
+  return analyzed
+    .filter(
+      (
+        result,
+      ): result is {
+        songId: string;
+        score: number;
+        audioSimilarity: number;
+        genreSimilarity: number | null;
+      } => result !== null,
+    )
+    .sort((a, b) => b.score - a.score)
+    .slice(0, MAX_RESULT_COUNT)
+    .map((result) => ({
+      songId: result.songId,
+      score: Number(result.score.toFixed(6)),
+      audioSimilarity: Number(result.audioSimilarity.toFixed(6)),
+      tempoSimilarity: null,
+      genreSimilarity: result.genreSimilarity,
+    }));
+}
+
 export async function POST(request: Request) {
   const { userId } = await auth();
 
@@ -210,71 +339,89 @@ export async function POST(request: Request) {
     }
 
     const profile = await getReferenceProfile(trackId);
-    const audioSearch = await searchPublishedSongsByAudioSimilarity(
-      profile.previewUrl,
-      {
-        matchCount: MAX_RESULT_COUNT,
-        minSimilarity: -1,
-      },
-    );
-
-    const ids = audioSearch.matches.map((result) => result.songId);
-    const { data, error } =
-      ids.length === 0
-        ? { data: [], error: null }
-        : await supabaseServer
-            .from("songs")
-            .select("id, bpm, genres")
-            .in("id", ids);
-
-    if (error) throw error;
-
-    const songsById = new Map(
-      ((data ?? []) as RankedSongRow[]).map((song) => [song.id, song]),
-    );
     const referenceBpm = Number(profile.track.bpm ?? 0) || null;
+    const embeddingStats = await getSongAudioSimilarityEmbeddingStats();
+    const semanticReady =
+      embeddingStats.publishedSongs > 0 &&
+      embeddingStats.embeddedSongs === embeddingStats.publishedSongs;
 
-    const matches = audioSearch.matches
-      .map((result) => {
-        const song = songsById.get(result.songId);
-        const tempoSimilarity = getTempoSimilarity(
-          referenceBpm,
-          Number(song?.bpm ?? 0) || null,
-        );
-        const genreSimilarity = getGenreSimilarity(
-          profile.genres,
-          song?.genres ?? null,
-        );
+    let matches;
+    let ranking;
 
-        return {
-          songId: result.songId,
-          score: scoreMatch({
+    if (!semanticReady) {
+      matches = await getLegacyAudioMatches({
+        previewUrl: profile.previewUrl,
+        referenceBpm,
+        referenceGenres: profile.genres,
+      });
+      ranking = "audio-similarity-v1-fallback";
+    } else {
+      const audioSearch = await searchPublishedSongsByAudioSimilarity(
+        profile.previewUrl,
+        {
+          matchCount: MAX_RESULT_COUNT,
+          minSimilarity: -1,
+        },
+      );
+
+      const ids = audioSearch.matches.map((result) => result.songId);
+      const { data, error } =
+        ids.length === 0
+          ? { data: [], error: null }
+          : await supabaseServer
+              .from("songs")
+              .select("id, bpm, genres")
+              .in("id", ids);
+
+      if (error) throw error;
+
+      const songsById = new Map(
+        ((data ?? []) as RankedSongRow[]).map((song) => [song.id, song]),
+      );
+
+      matches = audioSearch.matches
+        .map((result) => {
+          const song = songsById.get(result.songId);
+          const tempoSimilarity = getTempoSimilarity(
+            referenceBpm,
+            Number(song?.bpm ?? 0) || null,
+          );
+          const genreSimilarity = getGenreSimilarity(
+            profile.genres,
+            song?.genres ?? null,
+          );
+
+          return {
+            songId: result.songId,
+            score: scoreMatch({
+              semanticSimilarity: result.similarity,
+              tempoSimilarity,
+              genreSimilarity,
+            }),
             semanticSimilarity: result.similarity,
             tempoSimilarity,
             genreSimilarity,
-          }),
-          semanticSimilarity: result.similarity,
-          tempoSimilarity,
-          genreSimilarity,
-        };
-      })
-      .sort((a, b) => b.score - a.score)
-      .slice(0, MAX_RESULT_COUNT)
-      .map((result) => ({
-        songId: result.songId,
-        score: Number(result.score.toFixed(6)),
-        audioSimilarity: Number(result.semanticSimilarity.toFixed(6)),
-        tempoSimilarity:
-          result.tempoSimilarity === null
-            ? null
-            : Number(result.tempoSimilarity.toFixed(6)),
-        genreSimilarity: result.genreSimilarity,
-      }));
+          };
+        })
+        .sort((a, b) => b.score - a.score)
+        .slice(0, MAX_RESULT_COUNT)
+        .map((result) => ({
+          songId: result.songId,
+          score: Number(result.score.toFixed(6)),
+          audioSimilarity: Number(result.semanticSimilarity.toFixed(6)),
+          tempoSimilarity:
+            result.tempoSimilarity === null
+              ? null
+              : Number(result.tempoSimilarity.toFixed(6)),
+          genreSimilarity: result.genreSimilarity,
+        }));
+      ranking = "audio-semantic-v2";
+    }
 
     return NextResponse.json(
       {
         matches,
-        ranking: "audio-semantic-v2",
+        ranking,
         reference: {
           id: referenceId,
           title: getTrackName(profile.track),
