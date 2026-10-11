@@ -172,7 +172,7 @@
   right: 0;
   bottom: calc(100% + 8px);
   left: 0;
-  max-height: 300px;
+  max-height: 250px;
   overflow-x: hidden;
   overflow-y: auto;
   overscroll-behavior: contain;
