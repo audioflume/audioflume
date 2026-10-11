@@ -314,11 +314,18 @@ export default function MusicPage() {
     const referenceSearch = searchParams.get("referenceSearch");
     if (!referenceSearch) return;
 
-    setSearchBySongOpen(true);
-    if (referenceSearch !== "open") {
-      setSearchBySongQuery(referenceSearch);
+    if (referenceSearch === "open") {
+      setSearchBySongOpen(true);
+      return;
     }
-  }, [searchParams]);
+
+    setSearchBySongQuery(referenceSearch);
+    setSearchBySongOpen(false);
+    setFilters((current) => ({
+      ...current,
+      search: referenceSearch,
+    }));
+  }, [searchParams, setFilters]);
 
   const search = filters.search;
   const directFilterSearch = isDirectFilterSearch(search);
@@ -1018,7 +1025,11 @@ export default function MusicPage() {
         value={searchBySongQuery}
         onChange={setSearchBySongQuery}
         onClose={() => setSearchBySongOpen(false)}
-        onSubmit={(query) => setSearchBySongQuery(query)}
+        onSubmit={(query) => {
+          setSearchBySongQuery(query);
+          setSearch(query);
+          setSearchBySongOpen(false);
+        }}
       />
 
       <section
