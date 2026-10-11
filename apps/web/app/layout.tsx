@@ -2,7 +2,6 @@ import { ClerkProvider } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 import type { Metadata } from "next";
 import { Roboto_Mono } from "next/font/google";
-import Script from "next/script";
 import type { CSSProperties } from "react";
 import { cookies } from "next/headers";
 import { PlayerProvider } from "@/context/PlayerContext";
@@ -49,21 +48,6 @@ const robotoMono = Roboto_Mono({
 
 const TYPEKIT_STYLESHEET = "https://use.typekit.net/tjk0kys.css";
 const R2_CDN_ORIGIN = "https://pub-56e6a9dcaf364dd4bcde4a5fe65a5b9a.r2.dev";
-const THEME_BOOT_SCRIPT = `
-(function () {
-  try {
-    var theme = window.localStorage.getItem("filmwave-theme-mode") || window.localStorage.getItem("filmwave-theme");
-    if (theme !== "light" && theme !== "dark") {
-      var cookieMatch = document.cookie.match(/(?:^|; )filmwave-theme-mode=(light|dark)/) || document.cookie.match(/(?:^|; )filmwave-theme=(light|dark)/);
-      theme = cookieMatch ? cookieMatch[1] : "light";
-    }
-
-    document.documentElement.dataset.theme = theme;
-    document.documentElement.classList.toggle("light", theme === "light");
-  } catch (_) {}
-})();
-`;
-
 export const metadata: Metadata = {
   title: "Audioflume",
   description: "Royalty-free music for filmmakers",
@@ -160,11 +144,6 @@ export default async function RootLayout({
             </UserPreferencesProvider>
           </ArtistInvitesProvider>
         </body>
-        <Script
-          id="audioflume-theme-boot"
-          strategy="beforeInteractive"
-          dangerouslySetInnerHTML={{ __html: THEME_BOOT_SCRIPT }}
-        />
       </html>
     </ClerkProvider>
   );
