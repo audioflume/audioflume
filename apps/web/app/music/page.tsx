@@ -319,13 +319,19 @@ export default function MusicPage() {
       return;
     }
 
+    if (!filtersHydrated) return;
+
     setSearchBySongQuery(referenceSearch);
     setSearchBySongOpen(false);
-    setFilters((current) => ({
-      ...current,
-      search: referenceSearch,
-    }));
-  }, [searchParams, setFilters]);
+    setFilters((current) =>
+      current.search === referenceSearch
+        ? current
+        : {
+            ...current,
+            search: referenceSearch,
+          },
+    );
+  }, [filtersHydrated, searchParams, setFilters]);
 
   const search = filters.search;
   const directFilterSearch = isDirectFilterSearch(search);
