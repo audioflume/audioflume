@@ -167,24 +167,24 @@ function getTempoSimilarity(
 }
 
 function scoreMatch({
-  bestSegmentSimilarity,
-  averageBestSegmentSimilarity,
+  audioSimilarity,
   instrumentationSimilarity,
+  characterSimilarity,
   rhythmSimilarity,
   energyDensitySimilarity,
   tempoSimilarity,
 }: {
-  bestSegmentSimilarity: number;
-  averageBestSegmentSimilarity: number;
+  audioSimilarity: number;
   instrumentationSimilarity: number;
+  characterSimilarity: number;
   rhythmSimilarity: number;
   energyDensitySimilarity: number;
   tempoSimilarity: number | null;
 }) {
   const signals = [
-    { score: bestSegmentSimilarity, weight: 0.45 },
-    { score: averageBestSegmentSimilarity, weight: 0.25 },
-    { score: instrumentationSimilarity, weight: 0.15 },
+    { score: audioSimilarity, weight: 0.55 },
+    { score: instrumentationSimilarity, weight: 0.2 },
+    { score: characterSimilarity, weight: 0.1 },
     { score: rhythmSimilarity, weight: 0.075 },
     { score: energyDensitySimilarity, weight: 0.05 },
     ...(tempoSimilarity === null
@@ -201,9 +201,7 @@ function scoreMatch({
     0,
   );
 
-  return totalWeight > 0
-    ? score / totalWeight
-    : bestSegmentSimilarity;
+  return totalWeight > 0 ? score / totalWeight : audioSimilarity;
 }
 
 
@@ -403,12 +401,11 @@ export async function POST(request: Request) {
           return {
             songId: result.songId,
             score: scoreMatch({
-              bestSegmentSimilarity:
-                result.bestSegmentSimilarity,
-              averageBestSegmentSimilarity:
-                result.averageBestSegmentSimilarity,
+              audioSimilarity: result.similarity,
               instrumentationSimilarity:
                 conceptSimilarity.instrumentation,
+              characterSimilarity:
+                conceptSimilarity.character,
               rhythmSimilarity: conceptSimilarity.rhythm,
               energyDensitySimilarity:
                 conceptSimilarity.energyDensity,
@@ -419,8 +416,12 @@ export async function POST(request: Request) {
               result.bestSegmentSimilarity,
             averageBestSegmentSimilarity:
               result.averageBestSegmentSimilarity,
+            consistentSegmentSimilarity:
+              result.consistentSegmentSimilarity,
             instrumentationSimilarity:
               conceptSimilarity.instrumentation,
+            characterSimilarity:
+              conceptSimilarity.character,
             rhythmSimilarity: conceptSimilarity.rhythm,
             energyDensitySimilarity:
               conceptSimilarity.energyDensity,
@@ -439,12 +440,18 @@ export async function POST(request: Request) {
           averageBestSegmentSimilarity: Number(
             result.averageBestSegmentSimilarity.toFixed(6),
           ),
+          consistentSegmentSimilarity: Number(
+            result.consistentSegmentSimilarity.toFixed(6),
+          ),
           tempoSimilarity:
             result.tempoSimilarity === null
               ? null
               : Number(result.tempoSimilarity.toFixed(6)),
           instrumentationSimilarity: Number(
             result.instrumentationSimilarity.toFixed(6),
+          ),
+          characterSimilarity: Number(
+            result.characterSimilarity.toFixed(6),
           ),
           rhythmSimilarity: Number(
             result.rhythmSimilarity.toFixed(6),
@@ -453,7 +460,7 @@ export async function POST(request: Request) {
             result.energyDensitySimilarity.toFixed(6),
           ),
         }));
-      ranking = "audio-clap-segments-v5";
+      ranking = "audio-clap-concepts-v4-baseline";
     }
 
     return NextResponse.json(
