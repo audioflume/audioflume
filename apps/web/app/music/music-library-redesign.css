@@ -1243,6 +1243,7 @@ main
   align-items: center;
   gap: 32px;
   overflow: hidden;
+  margin-top: -10px;
   margin-right: -40px;
   margin-bottom: 18px;
   margin-left: -40px;
@@ -1364,6 +1365,7 @@ main
     min-height: 0;
     align-items: flex-start;
     gap: 18px;
+    margin-top: -10px;
     margin-right: -32px;
     margin-left: -32px;
     padding: 20px;
