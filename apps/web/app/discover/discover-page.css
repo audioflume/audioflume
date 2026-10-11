@@ -156,7 +156,11 @@
 
 .discover-artist-hero {
   --discover-artist-featured-intro-bottom: calc(clamp(190px, 13vw, 250px) + 30px);
-  --discover-artist-hero-height: 100dvh;
+  --discover-artist-hero-gap: clamp(24px, 2vw, 32px);
+  --discover-artist-hero-height: calc(
+    100dvh - (var(--filmwave-header-height, 75px) * 2) -
+      (var(--discover-artist-hero-gap) * 2)
+  );
   position: relative;
   width: calc(
     100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset)
@@ -164,7 +168,7 @@
   max-width: var(--filmwave-editorial-max-width);
   height: var(--discover-artist-hero-height);
   min-height: 0;
-  margin: clamp(24px, 2vw, 32px) auto;
+  margin: var(--discover-artist-hero-gap) auto;
   overflow: hidden;
   background:
     linear-gradient(rgba(13, 13, 13, 0.32), rgba(13, 13, 13, 0.32)),
