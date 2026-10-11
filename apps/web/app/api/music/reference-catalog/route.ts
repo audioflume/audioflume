@@ -7,6 +7,7 @@ export const revalidate = 0;
 const MIN_QUERY_LENGTH = 2;
 const MAX_QUERY_LENGTH = 120;
 const MUSICBRAINZ_SEARCH_LIMIT = 8;
+const MUSICBRAINZ_TITLE_SEARCH_LIMIT = 30;
 const MUSICBRAINZ_REQUEST_INTERVAL_MS = 1100;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
@@ -190,12 +191,51 @@ async function searchRecordings(query: string, artistId?: string) {
       : `recording:"${escapeMusicBrainzQuery(query)}"`,
   );
   searchUrl.searchParams.set("fmt", "json");
-  searchUrl.searchParams.set("limit", String(MUSICBRAINZ_SEARCH_LIMIT));
+  searchUrl.searchParams.set(
+    "limit",
+    String(
+      artistId ? MUSICBRAINZ_SEARCH_LIMIT : MUSICBRAINZ_TITLE_SEARCH_LIMIT,
+    ),
+  );
 
   const data =
     await fetchMusicBrainz<MusicBrainzRecordingSearchResponse>(searchUrl);
 
   return data.recordings ?? [];
+}
+
+function rankRecordingResults(
+  query: string,
+  recordings: MusicBrainzRecording[],
+) {
+  const normalizedQuery = normalize(query);
+
+  return [...recordings].sort((a, b) => {
+    const aExact = normalize(a.title ?? "") === normalizedQuery ? 1 : 0;
+    const bExact = normalize(b.title ?? "") === normalizedQuery ? 1 : 0;
+
+    if (aExact !== bExact) return bExact - aExact;
+
+    const scoreDifference = Number(b.score ?? 0) - Number(a.score ?? 0);
+    if (scoreDifference !== 0) return scoreDifference;
+
+    return (b.releases?.length ?? 0) - (a.releases?.length ?? 0);
+  });
+}
+
+function dedupeRecordingResults(recordings: MusicBrainzRecording[]) {
+  const seen = new Set<string>();
+
+  return recordings.filter((recording) => {
+    const title = normalize(recording.title ?? "");
+    const artist = normalize(getArtistLabel(recording["artist-credit"]));
+    const key = `${title}::${artist}`;
+
+    if (!title || !artist || seen.has(key)) return false;
+
+    seen.add(key);
+    return true;
+  });
 }
 
 async function searchMusicBrainz(query: string) {
@@ -208,8 +248,11 @@ async function searchMusicBrainz(query: string) {
 
   const matchedArtist = await findExactArtist(query);
   const recordings = await searchRecordings(query, matchedArtist?.id);
+  const rankedRecordings = matchedArtist
+    ? recordings
+    : dedupeRecordingResults(rankRecordingResults(query, recordings));
 
-  const tracks = recordings.flatMap((recording) => {
+  const tracks = rankedRecordings.flatMap((recording) => {
     const result = getTrackResult(recording);
     return result ? [result] : [];
   });
