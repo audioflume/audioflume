@@ -325,6 +325,120 @@ function HomeArtistShelf({
   );
 }
 
+function HomeSkeletonBlock({
+  className = "",
+}: {
+  className?: string;
+}) {
+  return (
+    <span
+      className={`audioflume-home-skeleton-block${className ? ` ${className}` : ""}`}
+      aria-hidden="true"
+    />
+  );
+}
+
+function HomeSongShelfSkeleton() {
+  return (
+    <div className="audioflume-home-reference-shelf audioflume-home-reference-song-shelf audioflume-home-skeleton-song-shelf">
+      <div className="audioflume-home-reference-shelf-scroller">
+        {Array.from({ length: 4 }, (_, index) => (
+          <article
+            key={index}
+            className="audioflume-home-reference-song-card audioflume-home-skeleton-song-card"
+          >
+            <HomeSkeletonBlock className="is-song-art" />
+            <div className="audioflume-home-skeleton-song-copy">
+              <HomeSkeletonBlock className="is-song-title" />
+              <HomeSkeletonBlock className="is-song-artist" />
+            </div>
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HomeArtistShelfSkeleton() {
+  return (
+    <div className="audioflume-home-reference-shelf audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf">
+      <div className="audioflume-home-reference-shelf-scroller">
+        {Array.from({ length: 3 }, (_, index) => (
+          <article
+            key={index}
+            className="audioflume-home-reference-artist-card audioflume-home-skeleton-artist-card"
+          >
+            <HomeSkeletonBlock className="is-artist-media" />
+            <div className="audioflume-home-skeleton-artist-meta">
+              <HomeSkeletonBlock className="is-artist-name" />
+              <div className="audioflume-home-skeleton-artist-pills">
+                <HomeSkeletonBlock className="is-artist-pill" />
+                <HomeSkeletonBlock className="is-artist-pill is-short" />
+                <HomeSkeletonBlock className="is-artist-pill" />
+              </div>
+            </div>
+            <HomeSkeletonBlock className="is-artist-play" />
+          </article>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+function HomeCuratedPlaylistSkeleton() {
+  return (
+    <div className="audioflume-home-reference-playlist-grid audioflume-home-skeleton-playlist-grid">
+      {Array.from({ length: 6 }, (_, index) => (
+        <article key={index} className="audioflume-home-skeleton-playlist-card">
+          <HomeSkeletonBlock className="is-playlist-media" />
+          <HomeSkeletonBlock className="is-playlist-title" />
+          <HomeSkeletonBlock className="is-playlist-meta" />
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function HomeOriginalsSkeleton() {
+  return (
+    <div className="audioflume-home-reference-original-song-grid audioflume-home-skeleton-original-grid">
+      {Array.from({ length: 12 }, (_, index) => (
+        <article key={index} className="audioflume-home-reference-original-song-card">
+          <HomeSkeletonBlock className="is-original-media" />
+          <div className="audioflume-home-skeleton-original-copy">
+            <HomeSkeletonBlock className="is-original-title" />
+            <HomeSkeletonBlock className="is-original-artist" />
+          </div>
+        </article>
+      ))}
+    </div>
+  );
+}
+
+function HomeSongRowsSkeleton() {
+  return (
+    <div className="audioflume-home-skeleton-song-rows">
+      {Array.from({ length: 8 }, (_, index) => (
+        <div key={index} className="audioflume-home-skeleton-song-row">
+          <HomeSkeletonBlock className="is-row-cover" />
+          <HomeSkeletonBlock className="is-row-vocal" />
+          <div className="audioflume-home-skeleton-row-copy">
+            <HomeSkeletonBlock className="is-row-title" />
+            <HomeSkeletonBlock className="is-row-artist" />
+          </div>
+          <HomeSkeletonBlock className="is-row-waveform" />
+          <HomeSkeletonBlock className="is-row-duration" />
+          <HomeSkeletonBlock className="is-row-genre" />
+          <HomeSkeletonBlock className="is-row-key" />
+          <HomeSkeletonBlock className="is-row-bpm" />
+          <HomeSkeletonBlock className="is-row-actions" />
+          <HomeSkeletonBlock className="is-row-license" />
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HomePageContent() {
   const { songs, loading: songsLoading } = useSongs();
   const { theme, setTheme } = useTheme();
@@ -332,7 +446,9 @@ export default function HomePageContent() {
   const router = useRouter();
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
+  const [artistsLoading, setArtistsLoading] = useState(true);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
+  const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const [homeSearch, setHomeSearch] = useState("");
 
@@ -367,6 +483,9 @@ export default function HomePageContent() {
       })
       .catch(() => {
         if (!cancelled) setCuratedPlaylists([]);
+      })
+      .finally(() => {
+        if (!cancelled) setCuratedPlaylistsLoading(false);
       });
 
     return () => {
@@ -397,6 +516,9 @@ export default function HomePageContent() {
       })
       .catch(() => {
         if (!cancelled) setArtists([]);
+      })
+      .finally(() => {
+        if (!cancelled) setArtistsLoading(false);
       });
 
     return () => {
@@ -499,7 +621,11 @@ export default function HomePageContent() {
         </div>
       </section>
 
-      {shelfSongs.length > 0 ? <HomeSongShelf songs={shelfSongs} /> : null}
+      {songsLoading ? (
+        <HomeSongShelfSkeleton />
+      ) : shelfSongs.length > 0 ? (
+        <HomeSongShelf songs={shelfSongs} />
+      ) : null}
 
       <section className="audioflume-home-reference-ui-showcase">
         <img
@@ -544,24 +670,32 @@ export default function HomePageContent() {
           <span>In demand artists &amp; composers</span>
           <Link href="/discover">Explore Artists &amp; Composers</Link>
         </div>
-        {artists.length > 0 ? <HomeArtistShelf artists={artists} /> : null}
+        {artistsLoading ? (
+          <HomeArtistShelfSkeleton />
+        ) : artists.length > 0 ? (
+          <HomeArtistShelf artists={artists} />
+        ) : null}
       </section>
 
-      {curatedPlaylists.length > 0 ? (
+      {curatedPlaylistsLoading || curatedPlaylists.length > 0 ? (
         <section className="audioflume-home-reference-curated-playlists">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
             <span>Curated playlists</span>
             <Link href="/curated-playlists">Explore Playlists</Link>
           </div>
-          <div className="audioflume-home-reference-playlist-grid">
-            {curatedPlaylists.map((playlist, index) => (
-              <CuratedPlaylistCard
-                key={playlist.id}
-                playlist={playlist}
-                index={index}
-              />
-            ))}
-          </div>
+          {curatedPlaylistsLoading ? (
+            <HomeCuratedPlaylistSkeleton />
+          ) : (
+            <div className="audioflume-home-reference-playlist-grid">
+              {curatedPlaylists.map((playlist, index) => (
+                <CuratedPlaylistCard
+                  key={playlist.id}
+                  playlist={playlist}
+                  index={index}
+                />
+              ))}
+            </div>
+          )}
         </section>
       ) : null}
 
@@ -570,7 +704,9 @@ export default function HomePageContent() {
           <span>Audioflume originals</span>
           <Link href="/music">Explore Original Music</Link>
         </div>
-        {(originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
+        {songsLoading ? (
+          <HomeOriginalsSkeleton />
+        ) : (originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
           <HomeOriginalSongGrid
             songs={originalSongs.length > 0 ? originalSongs : shelfSongs}
           />
@@ -585,17 +721,13 @@ export default function HomePageContent() {
           </div>
 
           <MusicListShell title={null}>
-            {songsLoading
-              ? Array.from({ length: 8 }).map((_, index) => (
-                  <div
-                    key={index}
-                    className="audioflume-home-reference-song-row-skeleton"
-                    aria-hidden="true"
-                  />
-                ))
-              : recentSongs.map((song) => (
-                  <SongCard key={song.id} song={song} showDivider={false} />
-                ))}
+            {songsLoading ? (
+              <HomeSongRowsSkeleton />
+            ) : (
+              recentSongs.map((song) => (
+                <SongCard key={song.id} song={song} showDivider={false} />
+              ))
+            )}
           </MusicListShell>
         </div>
       </section>
