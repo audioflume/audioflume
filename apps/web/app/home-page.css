@@ -919,6 +919,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   line-height: 1;
 }
 
+.audioflume-home-reference-artist-genres > .is-placeholder {
+  width: 46px;
+  padding: 0;
+}
+
 .audioflume-home-reference-curated-playlists {
   padding: 18px 0 76px;
 }
