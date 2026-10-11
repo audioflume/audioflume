@@ -55,6 +55,44 @@ const VOCAL_FILTER_OPTIONS = [
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
 
+function MusicFilterColumnSkeleton({ open }: { open: boolean }) {
+  if (!open) return null;
+
+  return (
+    <div
+      className="fw-filter-panel-wrap is-open audioflume-music-filter-skeleton-wrap"
+      aria-hidden="true"
+    >
+      <div className="fw-filter-panel-reveal">
+        <div className="fw-filter-panel">
+          <div className="audioflume-music-filter-skeleton">
+            {[
+              "Licenses",
+              "Scene",
+              "Genre",
+              "Artists",
+              "Instruments",
+              "Vocals",
+              "Playlists",
+              "Advanced",
+            ].map((label, index) => (
+              <div
+                key={label}
+                className="audioflume-music-filter-skeleton-row"
+              >
+                <span
+                  className={`audioflume-music-filter-skeleton-label is-${index % 3}`}
+                />
+                <span className="audioflume-music-filter-skeleton-chevron" />
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function MusicPageSkeleton() {
   return (
     <div className="audioflume-music-skeleton" aria-hidden="true">
@@ -966,40 +1004,44 @@ export default function MusicPage() {
         }`}
       >
         <div className="fw-music-content-column">
-          <MusicFilterPanel
-            open={filtersOpen}
-            accordion
-            groups={filterChipGroups}
-            playlists={playlistChipOptions}
-            selectedPlaylistId={
-              selectedPlaylistId ? String(selectedPlaylistId) : null
-            }
-            onSelectPlaylist={(playlist) =>
-              setFilters((current) => ({
-                ...current,
-                selectedPlaylist: playlist
-                  ? { id: playlist.id, name: playlist.name }
-                  : null,
-              }))
-            }
-            bpmValue={bpmValue}
-            onBpmChange={setBpmValue}
-            keyValue={keyValue}
-            onKeyChange={setKeyValue}
-            selectedDurations={selectedDurations}
-            onDurationsChange={setSelectedDurations}
-            groupAdvancedControls
-            advancedCountControls
-            advancedGroupIds={["build", "region"]}
-            markersActive={effectiveShowEditPointMarkers}
-            markersDisabled={!filtersHydrated}
-            onToggleMarkers={() =>
-              setShowEditPointMarkers(!effectiveShowEditPointMarkers)
-            }
-            hasActive={hasActiveClearableFilters}
-            onClearAll={clearAllFilters}
-            onClose={() => setFiltersOpen(false)}
-          />
+          {showSongSkeleton ? (
+            <MusicFilterColumnSkeleton open={filtersOpen} />
+          ) : (
+                      <MusicFilterPanel
+                        open={filtersOpen}
+                        accordion
+                        groups={filterChipGroups}
+                        playlists={playlistChipOptions}
+                        selectedPlaylistId={
+                          selectedPlaylistId ? String(selectedPlaylistId) : null
+                        }
+                        onSelectPlaylist={(playlist) =>
+                          setFilters((current) => ({
+                            ...current,
+                            selectedPlaylist: playlist
+                              ? { id: playlist.id, name: playlist.name }
+                              : null,
+                          }))
+                        }
+                        bpmValue={bpmValue}
+                        onBpmChange={setBpmValue}
+                        keyValue={keyValue}
+                        onKeyChange={setKeyValue}
+                        selectedDurations={selectedDurations}
+                        onDurationsChange={setSelectedDurations}
+                        groupAdvancedControls
+                        advancedCountControls
+                        advancedGroupIds={["build", "region"]}
+                        markersActive={effectiveShowEditPointMarkers}
+                        markersDisabled={!filtersHydrated}
+                        onToggleMarkers={() =>
+                          setShowEditPointMarkers(!effectiveShowEditPointMarkers)
+                        }
+                        hasActive={hasActiveClearableFilters}
+                        onClearAll={clearAllFilters}
+                        onClose={() => setFiltersOpen(false)}
+                      />
+          )}
           <MusicQuickChips>
             {availableFilterOptions.quickFilters.map((filter) => {
               const isActive = selectedGenres.includes(filter);
