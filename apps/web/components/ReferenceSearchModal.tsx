@@ -1,11 +1,22 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 
 import styles from "./ReferenceSearchModal.module.css";
+
+type ReferenceCatalogResult = {
+  id: string;
+  kind: "track" | "artist";
+  name: string;
+  artist: string;
+  secondary: string;
+  imageUrl: string | null;
+  externalUrl: string | null;
+  searchQuery: string;
+};
 
 type ReferenceSearchModalProps = {
   open: boolean;
@@ -15,6 +26,13 @@ type ReferenceSearchModalProps = {
   onSubmit: (value: string) => void;
 };
 
+const SEARCH_DEBOUNCE_MS = 250;
+const MIN_CATALOG_QUERY_LENGTH = 2;
+
+function isMusicLink(value: string) {
+  return /^https?:\/\//i.test(value.trim());
+}
+
 export default function ReferenceSearchModal({
   open,
   value,
@@ -23,6 +41,11 @@ export default function ReferenceSearchModal({
   onSubmit,
 }: ReferenceSearchModalProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
+  const [results, setResults] = useState<ReferenceCatalogResult[]>([]);
+  const [loading, setLoading] = useState(false);
+  const [catalogConfigured, setCatalogConfigured] = useState<boolean | null>(
+    null,
+  );
 
   useEffect(() => {
     if (!open) return;
@@ -37,7 +60,84 @@ export default function ReferenceSearchModal({
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [onClose, open]);
 
+  useEffect(() => {
+    if (!open) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    const query = value.trim();
+
+    if (
+      query.length < MIN_CATALOG_QUERY_LENGTH ||
+      isMusicLink(query)
+    ) {
+      setResults([]);
+      setLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const timeoutId = window.setTimeout(async () => {
+      setLoading(true);
+
+      try {
+        const response = await fetch(
+          `/api/music/reference-catalog?q=${encodeURIComponent(query)}`,
+          {
+            signal: controller.signal,
+          },
+        );
+
+        if (!response.ok) {
+          throw new Error("Reference catalog search failed");
+        }
+
+        const data = await response.json();
+        const nextResults = Array.isArray(data?.results)
+          ? data.results.filter(
+              (result: unknown): result is ReferenceCatalogResult =>
+                Boolean(
+                  result &&
+                    typeof result === "object" &&
+                    typeof (result as ReferenceCatalogResult).id === "string" &&
+                    typeof (result as ReferenceCatalogResult).searchQuery ===
+                      "string",
+                ),
+            )
+          : [];
+
+        setCatalogConfigured(data?.configured !== false);
+        setResults(nextResults);
+      } catch (error) {
+        if (controller.signal.aborted) return;
+        console.error("Reference catalog search failed:", error);
+        setResults([]);
+      } finally {
+        if (!controller.signal.aborted) setLoading(false);
+      }
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => {
+      window.clearTimeout(timeoutId);
+      controller.abort();
+    };
+  }, [open, value]);
+
   if (!open) return null;
+
+  function submitQuery(query: string) {
+    const cleanQuery = query.trim();
+    if (!cleanQuery) return;
+    onChange(cleanQuery);
+    onSubmit(cleanQuery);
+  }
+
+  const showDropdown =
+    !isMusicLink(value) &&
+    value.trim().length >= MIN_CATALOG_QUERY_LENGTH &&
+    (loading || results.length > 0 || catalogConfigured === false);
 
   return (
     <div
@@ -76,11 +176,10 @@ export default function ReferenceSearchModal({
           </p>
 
           <form
+            className={styles.searchForm}
             onSubmit={(event) => {
               event.preventDefault();
-              const query = value.trim();
-              if (!query) return;
-              onSubmit(query);
+              submitQuery(value);
             }}
           >
             <label className={styles.field}>
@@ -92,9 +191,55 @@ export default function ReferenceSearchModal({
                 onChange={(event) => onChange(event.target.value)}
                 placeholder="Song, artist, or music link"
                 aria-label="Song, artist, or music link"
+                autoComplete="off"
               />
               <span>Song / Link</span>
             </label>
+
+            {showDropdown ? (
+              <div className={styles.results} role="listbox">
+                {loading ? (
+                  <div className={styles.status}>Searching songs and artists…</div>
+                ) : catalogConfigured === false ? (
+                  <div className={styles.status}>
+                    Song suggestions need Spotify API credentials. You can still
+                    press Enter or paste a music link.
+                  </div>
+                ) : (
+                  results.map((result) => (
+                    <button
+                      key={result.id}
+                      type="button"
+                      className={styles.result}
+                      role="option"
+                      aria-selected="false"
+                      onClick={() => submitQuery(result.searchQuery)}
+                    >
+                      <span className={styles.resultArtwork} aria-hidden="true">
+                        {result.imageUrl ? (
+                          <img src={result.imageUrl} alt="" draggable={false} />
+                        ) : (
+                          <span className={styles.resultArtworkFallback}>
+                            <WaveformIcon size={16} />
+                          </span>
+                        )}
+                      </span>
+                      <span className={styles.resultCopy}>
+                        <strong>{result.name}</strong>
+                        <small>
+                          {result.kind === "track"
+                            ? result.artist
+                            : result.secondary}
+                        </small>
+                      </span>
+                      <span className={styles.resultKind}>
+                        {result.kind === "track" ? "Track" : "Artist"}
+                      </span>
+                    </button>
+                  ))
+                )}
+              </div>
+            ) : null}
           </form>
         </div>
       </section>
