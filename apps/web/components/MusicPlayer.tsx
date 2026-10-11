@@ -768,6 +768,9 @@ export default function MusicPlayer() {
               value={volume}
               aria-label="Player volume"
               className="filmwave-player-volume-slider"
+              style={{
+                "--filmwave-player-volume-progress": `${volume * 100}%`,
+              } as React.CSSProperties}
               onChange={(event) => setVolume(Number(event.currentTarget.value))}
             />
           </DropdownShell>
