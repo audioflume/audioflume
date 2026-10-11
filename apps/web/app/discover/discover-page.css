@@ -265,17 +265,31 @@
   transform: translateX(-7px);
 }
 
-.discover-artist-hero-identity p {
+.discover-artist-hero-genres {
   grid-column: 1;
   grid-row: 3;
+  display: flex;
   min-width: 0;
   max-width: 100%;
+  flex-wrap: wrap;
   align-self: baseline;
+  gap: 8px;
   margin: clamp(28px, 2vw, 36px) 0 0;
-  font-size: clamp(18px, 1.25vw, 24px);
+}
+
+.discover-artist-hero-genres > span {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 0 14px;
+  color: #ffffff;
+  font-size: 11px;
   font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.35;
+  line-height: 1;
 }
 
 .discover-artist-hero-detail > p {

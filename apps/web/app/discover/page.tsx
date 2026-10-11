@@ -411,6 +411,15 @@ export default function DiscoverPage() {
   const playerVisible = Boolean(currentSong);
   const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
   const featuredArtistCount = featuredArtists.length;
+  const featuredArtistGenres = activeFeaturedArtist
+    ? Array.from(
+        new Set(
+          activeFeaturedArtist.songs.flatMap((song) =>
+            Array.isArray(song.genres) ? song.genres.filter(Boolean) : [],
+          ),
+        ),
+      ).slice(0, 3)
+    : [];
   const playableFeaturedSongs = (activeFeaturedArtist?.songs ?? []).filter(
     (song) => Boolean(song.audioUrl),
   );
@@ -628,7 +637,13 @@ export default function DiscoverPage() {
               <div className="discover-artist-hero-identity">
                 <span className="discover-artist-hero-eyebrow">Featured Artist</span>
                 <h1>{activeFeaturedArtist.name}</h1>
-                <p>{activeFeaturedArtist.designation || ""}</p>
+                {featuredArtistGenres.length > 0 ? (
+                  <div className="discover-artist-hero-genres">
+                    {featuredArtistGenres.map((genre) => (
+                      <span key={genre}>{genre}</span>
+                    ))}
+                  </div>
+                ) : null}
               </div>
 
               <div className="discover-artist-hero-detail">
