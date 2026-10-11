@@ -499,8 +499,8 @@
 
 .discover-artist-feature-play {
   position: absolute;
-  top: calc(var(--discover-artist-feature-media-height) - 68px);
-  right: 16px;
+  top: calc(var(--discover-artist-feature-media-height) - 76px);
+  right: 24px;
   z-index: 3;
   display: grid;
   width: 52px;

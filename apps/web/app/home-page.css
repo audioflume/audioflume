@@ -889,8 +889,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-artist-play {
   position: absolute;
-  top: calc(var(--audioflume-home-artist-media-height) - 68px);
-  right: 16px;
+  top: calc(var(--audioflume-home-artist-media-height) - 76px);
+  right: 24px;
   z-index: 3;
   display: grid;
   width: 52px;
