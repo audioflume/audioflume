@@ -1262,11 +1262,6 @@ export default function MusicPage() {
                               : undefined
                           }
                         >
-                          <span
-                            className="audioflume-music-featured-song-overlay"
-                            aria-hidden="true"
-                          />
-
                           <div className="audioflume-music-featured-song-copy">
                             <strong>{song.title}</strong>
                             <span className="audioflume-music-featured-song-artist">
