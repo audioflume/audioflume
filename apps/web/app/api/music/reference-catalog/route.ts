@@ -92,27 +92,6 @@ function getTrackResult(track: DeezerTrack): ReferenceCatalogResult | null {
   };
 }
 
-function getArtistResult(artist: DeezerArtist): ReferenceCatalogResult | null {
-  const id = artist.id;
-  const name = artist.name?.trim();
-
-  if (!id || !name) return null;
-
-  const imageUrl = artist.picture_medium?.trim() || null;
-
-  return {
-    id: `deezer:artist:${id}`,
-    kind: "artist",
-    name,
-    artist: "",
-    secondary: "Artist",
-    imageUrl,
-    imageUrls: imageUrl ? [imageUrl] : [],
-    externalUrl: artist.link?.trim() || null,
-    searchQuery: name,
-  };
-}
-
 function findExactArtist(query: string, tracks: DeezerTrack[]) {
   const normalizedQuery = normalize(query);
 
@@ -208,10 +187,7 @@ async function searchDeezer(query: string) {
     return result ? [result] : [];
   });
 
-  const artistResult = exactArtist ? getArtistResult(exactArtist) : null;
-  const results = artistResult
-    ? [artistResult, ...trackResults.slice(0, RESULT_LIMIT - 1)]
-    : trackResults.slice(0, RESULT_LIMIT);
+  const results = trackResults.slice(0, RESULT_LIMIT);
 
   resultCache.set(normalizedQuery, {
     expiresAt: Date.now() + CACHE_TTL_MS,
