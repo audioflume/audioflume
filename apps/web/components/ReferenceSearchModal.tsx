@@ -14,6 +14,7 @@ type ReferenceCatalogResult = {
   artist: string;
   secondary: string;
   imageUrl: string | null;
+  imageUrls?: string[];
   externalUrl: string | null;
   searchQuery: string;
 };
@@ -28,12 +29,25 @@ type ReferenceSearchModalProps = {
 
 function ReferenceArtwork({
   imageUrl,
+  imageUrls,
 }: {
   imageUrl: string | null;
+  imageUrls?: string[];
 }) {
-  const [failed, setFailed] = useState(false);
+  const candidates = imageUrls?.length
+    ? imageUrls
+    : imageUrl
+      ? [imageUrl]
+      : [];
+  const [candidateIndex, setCandidateIndex] = useState(0);
 
-  if (!imageUrl || failed) {
+  useEffect(() => {
+    setCandidateIndex(0);
+  }, [imageUrl, imageUrls]);
+
+  const candidate = candidates[candidateIndex] ?? null;
+
+  if (!candidate) {
     return (
       <span className={styles.resultArtworkFallback}>
         <WaveformIcon size={16} />
@@ -43,10 +57,10 @@ function ReferenceArtwork({
 
   return (
     <img
-      src={imageUrl}
+      src={candidate}
       alt=""
       draggable={false}
-      onError={() => setFailed(true)}
+      onError={() => setCandidateIndex((index) => index + 1)}
     />
   );
 }
@@ -232,7 +246,10 @@ export default function ReferenceSearchModal({
                       onClick={() => submitQuery(result.searchQuery)}
                     >
                       <span className={styles.resultArtwork} aria-hidden="true">
-                        <ReferenceArtwork imageUrl={result.imageUrl} />
+                        <ReferenceArtwork
+                          imageUrl={result.imageUrl}
+                          imageUrls={result.imageUrls}
+                        />
                       </span>
                       <span className={styles.resultCopy}>
                         <strong>{result.name}</strong>
