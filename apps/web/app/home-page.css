@@ -1308,12 +1308,19 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-copy strong,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-copy span,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-icon,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong {
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-icon {
   color: #ffffff;
 }
 
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-play {
-  background: #ffffff;
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong {
   color: #111111;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy small {
+  color: rgba(17, 17, 17, 0.42);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-play {
+  background: #111111;
+  color: #ffffff;
 }
