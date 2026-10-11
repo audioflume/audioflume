@@ -53,10 +53,8 @@ export default function AdminAddToPlaylistModal({
     readRecentPlaylistIds(),
   );
   const [search, setSearch] = useState("");
-  const [initialSelectedIds, setInitialSelectedIds] = useState<Set<number>>(new Set());
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
   const [selectedLoading, setSelectedLoading] = useState(false);
-  const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
@@ -119,13 +117,11 @@ export default function AdminAddToPlaylistModal({
           const selected = new Set<number>(
             data.selected_playlist_ids.map((id: number | string) => Number(id)),
           );
-          setInitialSelectedIds(selected);
           setSelectedIds(new Set(selected));
         }
       } catch (err) {
         if (!cancelled) {
           setError(err instanceof Error ? err.message : "Failed to load playlist selections");
-          setInitialSelectedIds(new Set());
           setSelectedIds(new Set());
         }
       } finally {
@@ -157,91 +153,59 @@ export default function AdminAddToPlaylistModal({
     return [...recent, ...remaining];
   }, [playlists, recentPlaylistIds, search]);
 
-  const hasChanges = useMemo(() => {
-    if (initialSelectedIds.size !== selectedIds.size) return true;
-    for (const id of selectedIds) {
-      if (!initialSelectedIds.has(id)) return true;
-    }
-    return false;
-  }, [initialSelectedIds, selectedIds]);
-
-  function togglePlaylist(playlistId: number) {
-    if (selectedLoading) return;
-    setSelectedIds((prev) => {
-      const next = new Set(prev);
-      if (next.has(playlistId)) next.delete(playlistId);
-      else next.add(playlistId);
-      return next;
-    });
-  }
-
-  function updateRecentPlaylists(addedPlaylistIds: number[]) {
-    if (addedPlaylistIds.length === 0) return;
+  function updateRecentPlaylists(playlistId: number) {
     const current = readRecentPlaylistIds();
     const next = [
-      ...addedPlaylistIds,
-      ...current.filter((id) => !addedPlaylistIds.includes(id)),
+      playlistId,
+      ...current.filter((id) => id !== playlistId),
     ].slice(0, RECENT_PLAYLIST_LIMIT);
     writeRecentPlaylistIds(next);
     setRecentPlaylistIds(next);
   }
 
-  async function handleSave() {
-    if (!song || saving || selectedLoading) return;
+  async function togglePlaylist(playlist: CuratedPlaylist) {
+    if (!song || selectedLoading) return;
 
-    const activeSong = song;
-    setSaving(true);
+    const wasSelected = selectedIds.has(playlist.id);
+    const nextSelected = !wasSelected;
+
     setError(null);
+    setSelectedIds((prev) => {
+      const next = new Set(prev);
+      if (nextSelected) next.add(playlist.id);
+      else next.delete(playlist.id);
+      return next;
+    });
 
     try {
-      const addedPlaylistIds: number[] = [];
-      const addedPlaylistNames: string[] = [];
-      const removedPlaylistNames: string[] = [];
+      const res = await fetch(
+        `/api/admin/songs/${encodeURIComponent(song.id)}/curated-playlists`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            playlist_id: playlist.id,
+            selected: nextSelected,
+          }),
+        },
+      );
+      const data = await res.json();
+      if (!res.ok) throw new Error(data?.error || "Failed to update playlist");
 
-      const updates = playlists
-        .map((playlist) => {
-          const wasSelected = initialSelectedIds.has(playlist.id);
-          const isSelected = selectedIds.has(playlist.id);
-          if (wasSelected === isSelected) return null;
-          if (isSelected) {
-            addedPlaylistIds.push(playlist.id);
-            addedPlaylistNames.push(playlist.name);
-          } else {
-            removedPlaylistNames.push(playlist.name);
-          }
-          return { playlist_id: playlist.id, selected: isSelected };
-        })
-        .filter((update): update is { playlist_id: number; selected: boolean } => update !== null);
-
-      for (const update of updates) {
-        const res = await fetch(
-          `/api/admin/songs/${encodeURIComponent(activeSong.id)}/curated-playlists`,
-          {
-            method: "PATCH",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(update),
-          },
-        );
-        const data = await res.json();
-        if (!res.ok) throw new Error(data?.error || "Failed to update playlist");
+      if (nextSelected) {
+        updateRecentPlaylists(playlist.id);
+        setToastMessage(`Added to "${playlist.name}"`);
+      } else {
+        setToastMessage(`Removed from "${playlist.name}"`);
       }
-
-      setInitialSelectedIds(new Set(selectedIds));
-      updateRecentPlaylists(addedPlaylistIds);
-
-      if (addedPlaylistNames.length > 0 && removedPlaylistNames.length > 0) {
-        setToastMessage(`Added to ${formatPlaylistNames(addedPlaylistNames)} · Removed from ${formatPlaylistNames(removedPlaylistNames)}`);
-      } else if (addedPlaylistNames.length > 0) {
-        setToastMessage(`Added to ${formatPlaylistNames(addedPlaylistNames)}`);
-      } else if (removedPlaylistNames.length > 0) {
-        setToastMessage(`Removed from ${formatPlaylistNames(removedPlaylistNames)}`);
-      }
-
-      onClose();
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to save playlist changes");
-    } finally {
-      setSaving(false);
+      setSelectedIds((prev) => {
+        const next = new Set(prev);
+        if (wasSelected) next.add(playlist.id);
+        else next.delete(playlist.id);
+        return next;
+      });
+      setError(err instanceof Error ? err.message : "Failed to update playlist");
     }
   }
 
@@ -260,16 +224,6 @@ export default function AdminAddToPlaylistModal({
         maxHeight="506px"
         bodyClassName="flex min-h-0 flex-1 flex-col px-7 pb-0"
         contentClassName="h-[506px] max-h-[calc(100vh-64px)]"
-        footer={
-          <button
-            type="button"
-            onClick={handleSave}
-            disabled={saving || loading || selectedLoading || !hasChanges}
-            className="h-10 shrink-0 rounded-none bg-[var(--text-primary)] px-5 text-xs font-semibold text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-default disabled:opacity-40"
-          >
-            {saving ? "Saving..." : "Save"}
-          </button>
-        }
       >
         <div className="flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center">
           <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
@@ -361,7 +315,7 @@ export default function AdminAddToPlaylistModal({
                     <button
                       key={playlist.id}
                       type="button"
-                      onClick={() => togglePlaylist(playlist.id)}
+                      onClick={() => togglePlaylist(playlist)}
                       disabled={selectedLoading}
                       className={`group flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5 text-left transition-colors disabled:cursor-default disabled:opacity-70 ${
                         isSelected
