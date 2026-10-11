@@ -8,7 +8,6 @@ import {
 import {
   analyzeAudioUrl,
   compareAudioFeatures,
-  type AudioSimilarityFeatures,
 } from "@/lib/audioSimilarity";
 import { supabaseServer } from "@/lib/supabaseServer";
 
