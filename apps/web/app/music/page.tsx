@@ -898,14 +898,6 @@ export default function MusicPage() {
         </label>
 
         <div className="audioflume-music-page-searchbar-sort">
-          <MusicLibrarySortControl
-            value={sortOrder}
-            onChange={setSortOrder}
-            showSelectedCheck
-          />
-        </div>
-
-        <div className="audioflume-music-page-searchbar-utility">
           <button
             type="button"
             className="audioflume-music-page-searchbar-song"
@@ -914,6 +906,11 @@ export default function MusicPage() {
             <WaveformIcon size={16} />
             <span>Search by song</span>
           </button>
+          <MusicLibrarySortControl
+            value={sortOrder}
+            onChange={setSortOrder}
+            showSelectedCheck
+          />
         </div>
       </div>
 
