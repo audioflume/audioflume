@@ -1288,7 +1288,6 @@ main
   right: calc(var(--audioflume-featured-song-inset) + 72px);
   bottom: var(--audioflume-featured-song-inset);
   left: var(--audioflume-featured-song-inset);
-  z-index: 1;
   display: grid;
   min-width: 0;
   gap: 3px;
