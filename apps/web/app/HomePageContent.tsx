@@ -138,7 +138,9 @@ function HomeSongCard({ song }: { song: Song }) {
   const playing = useIsCurrentSongPlaying(song.id);
 
   return (
-    <article className="audioflume-home-reference-song-card">
+    <article
+      className={`audioflume-home-reference-song-card${playing ? " is-playing" : ""}`}
+    >
       <button
         type="button"
         className="audioflume-home-reference-song-card-play"
