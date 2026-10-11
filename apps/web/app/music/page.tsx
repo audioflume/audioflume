@@ -201,7 +201,7 @@ export default function MusicPage() {
   const [selectedPlaylistSongIds, setSelectedPlaylistSongIds] =
     useState<Set<string> | null>(null);
   const [filtersOpen, setFiltersOpen] = useState(
-    () => searchParams.get("filters") === "open",
+    () => searchParams.get("filters") !== "closed",
   );
   const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
