@@ -1233,3 +1233,154 @@ main
   button.fw-filter-rail-clear-all {
   margin-left: 20px !important;
 }
+
+
+.audioflume-music-page .audioflume-music-featured-song {
+  position: relative;
+  display: flex;
+  min-height: 230px;
+  align-items: center;
+  gap: 32px;
+  overflow: hidden;
+  margin-bottom: 18px;
+  background: #151515;
+  padding: 34px;
+  color: #ffffff;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-background {
+  position: absolute;
+  inset: -44px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(38px);
+  opacity: 0.72;
+  transform: scale(1.14);
+}
+
+.audioflume-music-page .audioflume-music-featured-song-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.48);
+}
+
+.audioflume-music-page .audioflume-music-featured-song-cover {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: 160px;
+  height: 160px;
+  flex: 0 0 160px;
+  overflow: hidden;
+  border: 0;
+  background: #202020;
+  padding: 0;
+  cursor: pointer;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-cover > img,
+.audioflume-music-page .audioflume-music-featured-song-cover-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-cover-fallback {
+  background: linear-gradient(135deg, #2a2a2a, #111111);
+}
+
+.audioflume-music-page .audioflume-music-featured-song-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(17, 17, 17, 0.08);
+  color: #ffffff;
+  opacity: 0;
+  transition:
+    background-color 160ms ease,
+    opacity 160ms ease;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-cover:hover
+  .audioflume-music-featured-song-play,
+.audioflume-music-page .audioflume-music-featured-song-cover:focus-visible
+  .audioflume-music-featured-song-play {
+  background: rgba(17, 17, 17, 0.24);
+  opacity: 1;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-copy {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  min-width: 0;
+  gap: 5px;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-label {
+  margin-bottom: 5px;
+  color: rgba(255, 255, 255, 0.46);
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-copy > strong {
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: 30px;
+  font-weight: 400;
+  letter-spacing: -0.03em;
+  line-height: 1.05;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-artist {
+  color: rgba(255, 255, 255, 0.58);
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-top: 16px;
+}
+
+.audioflume-music-page .audioflume-music-featured-song-meta > span {
+  display: inline-flex;
+  min-height: 23px;
+  align-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0 10px;
+  color: rgba(255, 255, 255, 0.66);
+  font-size: 10px;
+  font-weight: 400;
+}
+
+@media (max-width: 720px) {
+  .audioflume-music-page .audioflume-music-featured-song {
+    min-height: 0;
+    align-items: flex-start;
+    gap: 18px;
+    padding: 20px;
+  }
+
+  .audioflume-music-page .audioflume-music-featured-song-cover {
+    width: 112px;
+    height: 112px;
+    flex-basis: 112px;
+  }
+
+  .audioflume-music-page .audioflume-music-featured-song-copy > strong {
+    font-size: 22px;
+  }
+
+  .audioflume-music-page .audioflume-music-featured-song-meta {
+    margin-top: 10px;
+  }
+}
