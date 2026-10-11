@@ -23,6 +23,7 @@ type ModalShellProps = {
   contentCorners?: "square" | "rounded";
   background?: string;
   eyebrow?: string;
+  headerHeight?: string;
 };
 
 export default function ModalShell({
@@ -44,6 +45,7 @@ export default function ModalShell({
   contentCorners = "rounded",
   background = "var(--bg-primary)",
   eyebrow = "Audioflume",
+  headerHeight = "88px",
 }: ModalShellProps) {
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
@@ -89,10 +91,11 @@ export default function ModalShell({
           className={
             headerContent
               ? "flex h-[60px] flex-shrink-0 items-center px-5 pr-14"
-              : `flex h-[88px] flex-shrink-0 flex-col justify-center px-6 pr-16 ${
+              : `flex flex-shrink-0 flex-col justify-center px-6 pr-16 ${
                   centerTitle ? "items-center text-center" : "items-start text-left"
                 }`
           }
+          style={headerContent ? undefined : { height: headerHeight }}
         >
           {headerContent || (
             <>
