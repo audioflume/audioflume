@@ -23,9 +23,20 @@ type MusicBrainzArtistCredit = {
   artist?: MusicBrainzArtist;
 };
 
+type MusicBrainzReleaseGroup = {
+  id?: string;
+  title?: string;
+  "primary-type"?: string;
+  "secondary-types"?: string[];
+};
+
 type MusicBrainzRelease = {
   id?: string;
   title?: string;
+  date?: string;
+  status?: string;
+  "artist-credit"?: MusicBrainzArtistCredit[];
+  "release-group"?: MusicBrainzReleaseGroup;
 };
 
 type MusicBrainzRecording = {
@@ -83,6 +94,65 @@ function getArtistLabel(credits: MusicBrainzArtistCredit[] | undefined) {
     .trim();
 }
 
+function getReleaseScore(
+  release: MusicBrainzRelease,
+  recordingArtist: string,
+  recordingTitle: string,
+) {
+  let score = 0;
+
+  const releaseArtist = getArtistLabel(release["artist-credit"]);
+  if (
+    releaseArtist &&
+    normalize(releaseArtist) === normalize(recordingArtist)
+  ) {
+    score += 6;
+  }
+
+  if (release.status?.toLowerCase() === "official") {
+    score += 2;
+  }
+
+  const primaryType = release["release-group"]?.["primary-type"]?.toLowerCase();
+  if (primaryType === "album") score += 4;
+  if (primaryType === "single") score += 3;
+  if (primaryType === "ep") score += 3;
+
+  const secondaryTypes = (
+    release["release-group"]?.["secondary-types"] ?? []
+  ).map((type) => type.toLowerCase());
+
+  if (secondaryTypes.includes("compilation")) score -= 8;
+  if (secondaryTypes.includes("live")) score -= 5;
+  if (secondaryTypes.includes("remix")) score -= 4;
+  if (secondaryTypes.includes("dj-mix")) score -= 4;
+  if (secondaryTypes.includes("mixtape/street")) score -= 3;
+
+  if (normalize(release.title ?? "") === normalize(recordingTitle)) {
+    score += 1;
+  }
+
+  return score;
+}
+
+function getPreferredRelease(
+  releases: MusicBrainzRelease[] | undefined,
+  recordingArtist: string,
+  recordingTitle: string,
+) {
+  return [...(releases ?? [])]
+    .filter((release) => release.id?.trim())
+    .sort((a, b) => {
+      const scoreDifference =
+        getReleaseScore(b, recordingArtist, recordingTitle) -
+        getReleaseScore(a, recordingArtist, recordingTitle);
+
+      if (scoreDifference !== 0) return scoreDifference;
+
+      return String(a.date ?? "").localeCompare(String(b.date ?? ""));
+    })[0];
+}
+
 function getTrackResult(recording: MusicBrainzRecording) {
   const id = recording.id?.trim();
   const name = recording.title?.trim();
@@ -90,15 +160,11 @@ function getTrackResult(recording: MusicBrainzRecording) {
 
   if (!id || !name || !artist) return null;
 
-  const release = recording.releases?.find(
-    (item) =>
-      typeof item.id === "string" &&
-      item.id.trim() &&
-      typeof item.title === "string" &&
-      item.title.trim(),
-  );
+  const release = getPreferredRelease(recording.releases, artist, name);
+  const releaseGroupId = release?.["release-group"]?.id?.trim() ?? "";
   const releaseId = release?.id?.trim() ?? "";
-  const releaseTitle = release?.title?.trim();
+  const releaseTitle =
+    release?.["release-group"]?.title?.trim() || release?.title?.trim();
 
   return {
     id: `musicbrainz:recording:${id}`,
@@ -106,9 +172,11 @@ function getTrackResult(recording: MusicBrainzRecording) {
     name,
     artist,
     secondary: releaseTitle || "Track",
-    imageUrl: releaseId
-      ? `https://coverartarchive.org/release/${releaseId}/front-250`
-      : null,
+    imageUrl: releaseGroupId
+      ? `https://coverartarchive.org/release-group/${releaseGroupId}/front-250`
+      : releaseId
+        ? `https://coverartarchive.org/release/${releaseId}/front-250`
+        : null,
     externalUrl: `https://musicbrainz.org/recording/${id}`,
     searchQuery: `${name} by ${artist}`,
   };
