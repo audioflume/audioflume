@@ -624,7 +624,7 @@ export default function HomePageContent() {
           }
 
           router.push(`/music?${params.toString()}`);
-        }
+        }}
       />
 
       <section
