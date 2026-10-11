@@ -117,9 +117,9 @@ function SongPreview({ song }: { song: Song }) {
     : null;
 
   return (
-    <div className="flex flex-shrink-0 -translate-y-2 items-center justify-center px-7 pb-5 pt-0 text-center">
+    <div className="-mt-2 flex flex-shrink-0 items-center justify-center px-7 pb-5 pt-0 text-center">
       <div className="mx-auto flex min-w-0 items-center justify-center gap-2">
-        <span className="relative flex aspect-square h-6 w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
+        <span className="relative flex h-6 w-6 min-h-6 min-w-6 shrink-0 overflow-hidden rounded-none bg-[var(--bg-secondary)]">
           {cover ? (
             <img
               src={cover}
