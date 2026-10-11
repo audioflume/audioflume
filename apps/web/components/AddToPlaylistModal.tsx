@@ -472,7 +472,7 @@ export default function AddToPlaylistModal({
             />
           </label>
 
-          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-0">
+          <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-5">
             {newPlaylistOpen ? (
               <form
                 onSubmit={(e) => {
