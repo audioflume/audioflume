@@ -6,50 +6,37 @@ export const revalidate = 0;
 
 const MIN_QUERY_LENGTH = 2;
 const MAX_QUERY_LENGTH = 120;
-const MUSICBRAINZ_SEARCH_LIMIT = 8;
-const MUSICBRAINZ_TITLE_SEARCH_LIMIT = 30;
-const MUSICBRAINZ_REQUEST_INTERVAL_MS = 1100;
+const DEEZER_SEARCH_LIMIT = 25;
+const RESULT_LIMIT = 8;
 const CACHE_TTL_MS = 5 * 60 * 1000;
 
-type MusicBrainzArtist = {
-  id?: string;
+type DeezerArtist = {
+  id?: number;
   name?: string;
-  score?: number;
+  link?: string;
+  picture_medium?: string;
 };
 
-type MusicBrainzArtistCredit = {
-  name?: string;
-  joinphrase?: string;
-  artist?: MusicBrainzArtist;
-};
-
-type MusicBrainzReleaseGroup = {
-  id?: string;
+type DeezerAlbum = {
+  id?: number;
   title?: string;
-  "primary-type"?: string;
-  "secondary-types"?: string[];
+  cover_medium?: string;
 };
 
-type MusicBrainzRelease = {
-  id?: string;
+type DeezerTrack = {
+  id?: number;
   title?: string;
-  date?: string;
-  status?: string;
-  "artist-credit"?: MusicBrainzArtistCredit[];
-  "release-group"?: MusicBrainzReleaseGroup;
+  title_short?: string;
+  title_version?: string;
+  link?: string;
+  duration?: number;
+  rank?: number;
+  artist?: DeezerArtist;
+  album?: DeezerAlbum;
 };
 
-type MusicBrainzRecording = {
-  id?: string;
-  title?: string;
-  length?: number;
-  score?: number;
-  "artist-credit"?: MusicBrainzArtistCredit[];
-  releases?: MusicBrainzRelease[];
-};
-
-type MusicBrainzRecordingSearchResponse = {
-  recordings?: MusicBrainzRecording[];
+type DeezerSearchResponse = {
+  data?: DeezerTrack[];
 };
 
 type ReferenceCatalogResult = {
@@ -72,8 +59,6 @@ const resultCache = new Map<
   }
 >();
 
-let nextMusicBrainzRequestAt = 0;
-
 function normalize(value: string) {
   return value
     .toLowerCase()
@@ -81,245 +66,106 @@ function normalize(value: string) {
     .trim();
 }
 
-function getArtistLabel(credits: MusicBrainzArtistCredit[] | undefined) {
-  return (credits ?? [])
-    .map((credit) => {
-      const name = credit.name?.trim() || credit.artist?.name?.trim() || "";
-      return `${name}${credit.joinphrase ?? ""}`;
-    })
-    .join("")
-    .trim();
+function getTrackName(track: DeezerTrack) {
+  return track.title_short?.trim() || track.title?.trim() || "";
 }
 
-function getReleaseScore(
-  release: MusicBrainzRelease,
-  recordingArtist: string,
-  recordingTitle: string,
-) {
-  let score = 0;
-
-  const releaseArtist = getArtistLabel(release["artist-credit"]);
-  if (
-    releaseArtist &&
-    normalize(releaseArtist) === normalize(recordingArtist)
-  ) {
-    score += 6;
-  }
-
-  if (release.status?.toLowerCase() === "official") {
-    score += 2;
-  }
-
-  const primaryType = release["release-group"]?.["primary-type"]?.toLowerCase();
-  if (primaryType === "album") score += 4;
-  if (primaryType === "single") score += 3;
-  if (primaryType === "ep") score += 3;
-
-  const secondaryTypes = (
-    release["release-group"]?.["secondary-types"] ?? []
-  ).map((type) => type.toLowerCase());
-
-  if (secondaryTypes.includes("compilation")) score -= 8;
-  if (secondaryTypes.includes("live")) score -= 5;
-  if (secondaryTypes.includes("remix")) score -= 4;
-  if (secondaryTypes.includes("dj-mix")) score -= 4;
-  if (secondaryTypes.includes("mixtape/street")) score -= 3;
-
-  if (normalize(release.title ?? "") === normalize(recordingTitle)) {
-    score += 1;
-  }
-
-  return score;
-}
-
-function getRankedReleases(
-  releases: MusicBrainzRelease[] | undefined,
-  recordingArtist: string,
-  recordingTitle: string,
-) {
-  return [...(releases ?? [])]
-    .filter((release) => release.id?.trim())
-    .sort((a, b) => {
-      const scoreDifference =
-        getReleaseScore(b, recordingArtist, recordingTitle) -
-        getReleaseScore(a, recordingArtist, recordingTitle);
-
-      if (scoreDifference !== 0) return scoreDifference;
-
-      return String(a.date ?? "").localeCompare(String(b.date ?? ""));
-    });
-}
-
-function getArtworkCandidates(releases: MusicBrainzRelease[]) {
-  const urls: string[] = [];
-  const seen = new Set<string>();
-
-  for (const release of releases) {
-    const releaseGroupId = release["release-group"]?.id?.trim();
-    const releaseId = release.id?.trim();
-
-    for (const url of [
-      releaseGroupId
-        ? `https://coverartarchive.org/release-group/${releaseGroupId}/front-250`
-        : "",
-      releaseId
-        ? `https://coverartarchive.org/release/${releaseId}/front-250`
-        : "",
-    ]) {
-      if (!url || seen.has(url)) continue;
-      seen.add(url);
-      urls.push(url);
-    }
-
-    if (urls.length >= 8) break;
-  }
-
-  return urls;
-}
-
-function getTrackResult(recording: MusicBrainzRecording) {
-  const id = recording.id?.trim();
-  const name = recording.title?.trim();
-  const artist = getArtistLabel(recording["artist-credit"]);
+function getTrackResult(track: DeezerTrack): ReferenceCatalogResult | null {
+  const id = track.id;
+  const name = getTrackName(track);
+  const artist = track.artist?.name?.trim() ?? "";
 
   if (!id || !name || !artist) return null;
 
-  const rankedReleases = getRankedReleases(recording.releases, artist, name);
-  const release = rankedReleases[0];
-  const releaseTitle =
-    release?.["release-group"]?.title?.trim() || release?.title?.trim();
-  const imageUrls = getArtworkCandidates(rankedReleases);
+  const imageUrl = track.album?.cover_medium?.trim() || null;
 
   return {
-    id: `musicbrainz:recording:${id}`,
-    kind: "track" as const,
+    id: `deezer:track:${id}`,
+    kind: "track",
     name,
     artist,
-    secondary: releaseTitle || "Track",
-    imageUrl: imageUrls[0] ?? null,
-    imageUrls,
-    externalUrl: `https://musicbrainz.org/recording/${id}`,
+    secondary: track.album?.title?.trim() || "Track",
+    imageUrl,
+    imageUrls: imageUrl ? [imageUrl] : [],
+    externalUrl: track.link?.trim() || null,
     searchQuery: `${name} by ${artist}`,
   };
 }
 
-function getArtistResult(artist: MusicBrainzArtist) {
-  const id = artist.id?.trim();
+function getArtistResult(artist: DeezerArtist): ReferenceCatalogResult | null {
+  const id = artist.id;
   const name = artist.name?.trim();
 
   if (!id || !name) return null;
 
+  const imageUrl = artist.picture_medium?.trim() || null;
+
   return {
-    id: `musicbrainz:artist:${id}`,
-    kind: "artist" as const,
+    id: `deezer:artist:${id}`,
+    kind: "artist",
     name,
     artist: "",
     secondary: "Artist",
-    imageUrl: null,
-    imageUrls: [],
-    externalUrl: `https://musicbrainz.org/artist/${id}`,
+    imageUrl,
+    imageUrls: imageUrl ? [imageUrl] : [],
+    externalUrl: artist.link?.trim() || null,
     searchQuery: name,
   };
 }
 
-async function waitForMusicBrainzSlot() {
-  const now = Date.now();
-  const requestAt = Math.max(now, nextMusicBrainzRequestAt);
-  nextMusicBrainzRequestAt = requestAt + MUSICBRAINZ_REQUEST_INTERVAL_MS;
-
-  if (requestAt > now) {
-    await new Promise((resolve) => {
-      setTimeout(resolve, requestAt - now);
-    });
-  }
-}
-
-async function fetchMusicBrainz<T>(url: URL) {
-  await waitForMusicBrainzSlot();
-
-  const response = await fetch(url, {
-    headers: {
-      Accept: "application/json",
-      "User-Agent": "Audioflume/1.0 (https://audioflume.com)",
-    },
-    cache: "no-store",
-  });
-
-  if (!response.ok) {
-    throw new Error(`MusicBrainz search failed with ${response.status}`);
-  }
-
-  return (await response.json()) as T;
-}
-
-function escapeMusicBrainzQuery(value: string) {
-  return value.replace(/([+\-&|!(){}\[\]^"~*?:\\/])/g, "\\$1");
-}
-
-async function searchRecordings(query: string) {
-  const escapedQuery = escapeMusicBrainzQuery(query);
-  const searchUrl = new URL("https://musicbrainz.org/ws/2/recording");
-  searchUrl.searchParams.set(
-    "query",
-    `artistname:"${escapedQuery}" OR recording:"${escapedQuery}"`,
-  );
-  searchUrl.searchParams.set("fmt", "json");
-  searchUrl.searchParams.set("limit", String(MUSICBRAINZ_TITLE_SEARCH_LIMIT));
-
-  const data =
-    await fetchMusicBrainz<MusicBrainzRecordingSearchResponse>(searchUrl);
-
-  return data.recordings ?? [];
-}
-
-function findExactArtistInRecordings(
-  query: string,
-  recordings: MusicBrainzRecording[],
-) {
+function findExactArtist(query: string, tracks: DeezerTrack[]) {
   const normalizedQuery = normalize(query);
 
-  for (const recording of recordings) {
-    for (const credit of recording["artist-credit"] ?? []) {
-      const artist = credit.artist;
-      const name = artist?.name?.trim() || credit.name?.trim() || "";
+  for (const track of tracks) {
+    const artist = track.artist;
+    const name = artist?.name?.trim() ?? "";
 
-      if (artist?.id?.trim() && normalize(name) === normalizedQuery) {
-        return {
-          ...artist,
-          name,
-        };
-      }
+    if (artist?.id && normalize(name) === normalizedQuery) {
+      return artist;
     }
   }
 
   return null;
 }
 
-function rankRecordingResults(
+function rankTracks(
   query: string,
-  recordings: MusicBrainzRecording[],
+  tracks: DeezerTrack[],
+  exactArtist: DeezerArtist | null,
 ) {
   const normalizedQuery = normalize(query);
+  const exactArtistName = normalize(exactArtist?.name ?? "");
 
-  return [...recordings].sort((a, b) => {
-    const aExact = normalize(a.title ?? "") === normalizedQuery ? 1 : 0;
-    const bExact = normalize(b.title ?? "") === normalizedQuery ? 1 : 0;
+  return [...tracks].sort((a, b) => {
+    const aArtist = normalize(a.artist?.name ?? "");
+    const bArtist = normalize(b.artist?.name ?? "");
+    const aTitle = normalize(getTrackName(a));
+    const bTitle = normalize(getTrackName(b));
 
-    if (aExact !== bExact) return bExact - aExact;
+    const aArtistExact = exactArtistName && aArtist === exactArtistName ? 1 : 0;
+    const bArtistExact = exactArtistName && bArtist === exactArtistName ? 1 : 0;
 
-    const scoreDifference = Number(b.score ?? 0) - Number(a.score ?? 0);
-    if (scoreDifference !== 0) return scoreDifference;
+    if (aArtistExact !== bArtistExact) {
+      return bArtistExact - aArtistExact;
+    }
 
-    return (b.releases?.length ?? 0) - (a.releases?.length ?? 0);
+    const aTitleExact = aTitle === normalizedQuery ? 1 : 0;
+    const bTitleExact = bTitle === normalizedQuery ? 1 : 0;
+
+    if (aTitleExact !== bTitleExact) {
+      return bTitleExact - aTitleExact;
+    }
+
+    return Number(b.rank ?? 0) - Number(a.rank ?? 0);
   });
 }
 
-function dedupeRecordingResults(recordings: MusicBrainzRecording[]) {
+function dedupeTracks(tracks: DeezerTrack[]) {
   const seen = new Set<string>();
 
-  return recordings.filter((recording) => {
-    const title = normalize(recording.title ?? "");
-    const artist = normalize(getArtistLabel(recording["artist-credit"]));
+  return tracks.filter((track) => {
+    const title = normalize(getTrackName(track));
+    const artist = normalize(track.artist?.name ?? "");
     const key = `${title}::${artist}`;
 
     if (!title || !artist || seen.has(key)) return false;
@@ -329,7 +175,7 @@ function dedupeRecordingResults(recordings: MusicBrainzRecording[]) {
   });
 }
 
-async function searchMusicBrainz(query: string) {
+async function searchDeezer(query: string) {
   const normalizedQuery = normalize(query);
   const cached = resultCache.get(normalizedQuery);
 
@@ -337,29 +183,35 @@ async function searchMusicBrainz(query: string) {
     return cached.results;
   }
 
-  const recordings = await searchRecordings(query);
-  const matchedArtist = findExactArtistInRecordings(query, recordings);
-  const rankedRecordings = matchedArtist
-    ? dedupeRecordingResults(
-        recordings.filter((recording) =>
-          (recording["artist-credit"] ?? []).some((credit) => {
-            const artistName =
-              credit.artist?.name?.trim() || credit.name?.trim() || "";
-            return normalize(artistName) === normalize(matchedArtist.name ?? "");
-          }),
-        ),
-      )
-    : dedupeRecordingResults(rankRecordingResults(query, recordings));
+  const searchUrl = new URL("https://api.deezer.com/search");
+  searchUrl.searchParams.set("q", query);
+  searchUrl.searchParams.set("limit", String(DEEZER_SEARCH_LIMIT));
 
-  const tracks = rankedRecordings.flatMap((recording) => {
-    const result = getTrackResult(recording);
+  const response = await fetch(searchUrl, {
+    headers: {
+      Accept: "application/json",
+    },
+    cache: "no-store",
+  });
+
+  if (!response.ok) {
+    throw new Error(`Deezer search failed with ${response.status}`);
+  }
+
+  const data = (await response.json()) as DeezerSearchResponse;
+  const tracks = Array.isArray(data.data) ? data.data : [];
+  const exactArtist = findExactArtist(query, tracks);
+  const rankedTracks = dedupeTracks(rankTracks(query, tracks, exactArtist));
+
+  const trackResults = rankedTracks.flatMap((track) => {
+    const result = getTrackResult(track);
     return result ? [result] : [];
   });
 
-  const artistResult = matchedArtist ? getArtistResult(matchedArtist) : null;
+  const artistResult = exactArtist ? getArtistResult(exactArtist) : null;
   const results = artistResult
-    ? [artistResult, ...tracks.slice(0, 7)]
-    : tracks.slice(0, 8);
+    ? [artistResult, ...trackResults.slice(0, RESULT_LIMIT - 1)]
+    : trackResults.slice(0, RESULT_LIMIT);
 
   resultCache.set(normalizedQuery, {
     expiresAt: Date.now() + CACHE_TTL_MS,
@@ -395,12 +247,12 @@ export async function GET(request: Request) {
       );
     }
 
-    const results = await searchMusicBrainz(query);
+    const results = await searchDeezer(query);
 
     return NextResponse.json(
       {
         configured: true,
-        provider: "musicbrainz",
+        provider: "deezer",
         results,
       },
       {
