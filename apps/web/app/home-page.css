@@ -838,7 +838,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-artist-card:hover
   .audioflume-home-reference-artist-media img {
-  transform: scale(1.018);
+  transform: scale(1.008);
 }
 
 .audioflume-home-reference-artist-card:hover
