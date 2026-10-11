@@ -762,10 +762,7 @@ export default function MusicPage() {
   }, [filteredSongs, sortOrder]);
 
   const displayedSongs = sortedSongs;
-  const featuredSong = displayedSongs[0] ?? null;
-  const featuredSongIsPlaying = Boolean(
-    featuredSong && currentSong?.id === featuredSong.id && isPlaying,
-  );
+  const featuredSongs = displayedSongs.slice(0, 2);
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -996,67 +993,65 @@ export default function MusicPage() {
               <SkeletonSongList />
             ) : (
               <>
-                {featuredSong ? (
-                  <article className="audioflume-music-featured-song">
-                    {featuredSong.coverArt ? (
-                      <span
-                        className="audioflume-music-featured-song-background"
-                        style={{ backgroundImage: `url("${featuredSong.coverArt}")` }}
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <span
-                      className="audioflume-music-featured-song-overlay"
-                      aria-hidden="true"
-                    />
+                {featuredSongs.length > 0 ? (
+                  <div className="audioflume-music-featured-songs">
+                    {featuredSongs.map((song) => {
+                      const songIsPlaying = Boolean(
+                        currentSong?.id === song.id && isPlaying,
+                      );
 
-                    <button
-                      type="button"
-                      className="audioflume-music-featured-song-cover"
-                      onClick={() => togglePlayPause(featuredSong)}
-                      aria-label={
-                        featuredSongIsPlaying
-                          ? `Pause ${featuredSong.title}`
-                          : `Play ${featuredSong.title}`
-                      }
-                    >
-                      {featuredSong.coverArt ? (
-                        <img
-                          src={featuredSong.coverArt}
-                          alt=""
-                          draggable={false}
-                        />
-                      ) : (
-                        <span className="audioflume-music-featured-song-cover-fallback" />
-                      )}
-                      <span className="audioflume-music-featured-song-play">
-                        {featuredSongIsPlaying ? (
-                          <PauseIcon size={16} />
-                        ) : (
-                          <PlayIconSmall size={16} />
-                        )}
-                      </span>
-                    </button>
+                      return (
+                        <article
+                          key={song.id}
+                          className="audioflume-music-featured-song"
+                          style={
+                            song.coverArt
+                              ? { backgroundImage: `url("${song.coverArt}")` }
+                              : undefined
+                          }
+                        >
+                          <span
+                            className="audioflume-music-featured-song-overlay"
+                            aria-hidden="true"
+                          />
 
-                    <div className="audioflume-music-featured-song-copy">
-                      <span className="audioflume-music-featured-song-label">
-                        Featured track
-                      </span>
-                      <strong>{featuredSong.title}</strong>
-                      <span className="audioflume-music-featured-song-artist">
-                        {featuredSong.artist}
-                      </span>
-                      <div className="audioflume-music-featured-song-meta">
-                        {featuredSong.genres.slice(0, 3).map((genre) => (
-                          <span key={genre}>{genre}</span>
-                        ))}
-                        {featuredSong.key ? <span>{featuredSong.key}</span> : null}
-                        {featuredSong.bpm ? (
-                          <span>{featuredSong.bpm} BPM</span>
-                        ) : null}
-                      </div>
-                    </div>
-                  </article>
+                          <div className="audioflume-music-featured-song-copy">
+                            <span className="audioflume-music-featured-song-label">
+                              Featured track
+                            </span>
+                            <strong>{song.title}</strong>
+                            <span className="audioflume-music-featured-song-artist">
+                              {song.artist}
+                            </span>
+                            <div className="audioflume-music-featured-song-meta">
+                              {song.genres.slice(0, 3).map((genre) => (
+                                <span key={genre}>{genre}</span>
+                              ))}
+                              {song.key ? <span>{song.key}</span> : null}
+                              {song.bpm ? <span>{song.bpm} BPM</span> : null}
+                            </div>
+                          </div>
+
+                          <button
+                            type="button"
+                            className="audioflume-music-featured-song-play"
+                            onClick={() => togglePlayPause(song)}
+                            aria-label={
+                              songIsPlaying
+                                ? `Pause ${song.title}`
+                                : `Play ${song.title}`
+                            }
+                          >
+                            {songIsPlaying ? (
+                              <PauseIcon size={16} />
+                            ) : (
+                              <PlayIconSmall size={16} />
+                            )}
+                          </button>
+                        </article>
+                      );
+                    })}
+                  </div>
                 ) : null}
 
                 {displayedSongs.map((song, index) => (
