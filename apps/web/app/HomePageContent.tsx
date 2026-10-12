@@ -747,39 +747,6 @@ export default function HomePageContent() {
 
       {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
 
-      <section className="audioflume-home-reference-playlists">
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-          <span>Audioflume originals</span>
-          <Link href="/music">Explore Original Music</Link>
-        </div>
-        {songsLoading ? (
-          <HomeOriginalsSkeleton />
-        ) : (originalSongs.length > 0 ? originalSongs : shelfSongs).length > 0 ? (
-          <HomeOriginalSongGrid
-            songs={originalSongs.length > 0 ? originalSongs : shelfSongs}
-          />
-        ) : null}
-      </section>
-
-      <section className="audioflume-home-reference-new-songs">
-        <div className="audioflume-home-reference-width">
-          <div className="audioflume-home-reference-section-heading">
-            <span>New songs added daily</span>
-            <Link href="/music">Explore New Music</Link>
-          </div>
-
-          <MusicListShell title={null}>
-            {songsLoading ? (
-              <HomeSongRowsSkeleton />
-            ) : (
-              recentSongs.map((song) => (
-                <SongCard key={song.id} song={song} showDivider={false} />
-              ))
-            )}
-          </MusicListShell>
-        </div>
-      </section>
-
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
