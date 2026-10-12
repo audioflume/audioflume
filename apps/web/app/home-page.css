@@ -809,6 +809,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-section-heading > span {
+  color: var(--text-primary);
   font-size: 18px;
   font-weight: 300;
   letter-spacing: 0;
