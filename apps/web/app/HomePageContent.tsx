@@ -724,6 +724,17 @@ export default function HomePageContent() {
         </button>
       </section>
 
+      <section className="audioflume-home-reference-feature-pair">
+        <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
+          <div className="audioflume-home-reference-feature-pair-card is-artists">
+            <h2>In demand artists<br />&amp; composers.</h2>
+          </div>
+          <div className="audioflume-home-reference-feature-pair-card is-playlists">
+            <h2>Curated playlists<br />made for editors.</h2>
+          </div>
+        </div>
+      </section>
+
       {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
 
       <section className="audioflume-home-reference-artists">
