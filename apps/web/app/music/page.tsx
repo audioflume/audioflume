@@ -1403,27 +1403,32 @@ export default function MusicPage() {
                         <WaveformIcon size={18} />
                       </span>
                     )}
-                    <div className="audioflume-music-reference-summary-copy">
+
+                    <div className="audioflume-music-reference-summary-main">
                       <small>Reference match</small>
                       <strong>
                         {referenceSearchState.name || referenceSearchState.query}
                       </strong>
+                    </div>
+
+                    <div className="audioflume-music-reference-summary-meta">
+                      {referenceSearchState.artist ? (
+                        <span>{referenceSearchState.artist}</span>
+                      ) : null}
                       <span>
-                        {referenceSearchState.artist
-                          ? `${referenceSearchState.artist} · `
-                          : ""}
                         {referenceSearchState.status === "loading"
                           ? "Finding close matches…"
                           : `${referenceSearchState.songIds.length} close ${referenceSearchState.songIds.length === 1 ? "match" : "matches"}`}
                       </span>
                     </div>
+
                     <button
                       type="button"
                       onClick={clearReferenceSearch}
                       className="audioflume-music-reference-summary-remove"
                       aria-label="Remove reference search"
                     >
-                      <XIcon size={10} />
+                      <XIcon size={15} />
                     </button>
                   </div>
                 ) : featuredSongs.length > 0 ? (
