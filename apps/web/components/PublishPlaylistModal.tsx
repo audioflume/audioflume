@@ -164,14 +164,15 @@ export default function PublishPlaylistModal({
       closeLabel="Close publish playlist dialog"
       maxWidth="max-w-[600px]"
       maxHeight="650px"
-      bodyClassName="min-h-0 flex-1 overflow-y-auto px-5 pb-2"
+      bodyScroll
+      bodyClassName="min-h-0 flex-1 px-5 pb-2"
       footerClassName="justify-between"
       footer={
-        <div className="flex w-full items-center justify-between gap-5">
+        <div className="flex w-full items-center justify-between gap-5 max-[640px]:flex-col max-[640px]:items-stretch">
           <p className="m-0 text-[11px] text-[var(--text-muted)]">
             Public playlists can appear in a maximum of three categories.
           </p>
-          <div className="flex shrink-0 items-center gap-2">
+          <div className="flex shrink-0 items-center justify-end gap-2">
             <button
               type="button"
               disabled={isSaving}
