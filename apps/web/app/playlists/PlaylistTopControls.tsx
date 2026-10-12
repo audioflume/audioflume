@@ -644,8 +644,19 @@ export default function PlaylistTopControls() {
         }
 
         .playlist-scope-dropdown button.is-active {
-          background: var(--filmwave-menu-hover) !important;
+          background: transparent !important;
           color: var(--filmwave-menu-text) !important;
+        }
+
+        .playlist-scope-dropdown button.is-active:hover {
+          background: var(--filmwave-menu-hover) !important;
+        }
+
+        .playlist-scope-selected-check {
+          width: 14px;
+          height: 14px;
+          flex: 0 0 14px;
+          margin-left: auto;
         }
 
         .playlist-sort-selected-check {
@@ -841,7 +852,24 @@ export default function PlaylistTopControls() {
                 setPlaylistScopeOpen(false);
               }}
             >
-              {option}
+              <span>{option}</span>
+              {playlistScope === option ? (
+                <svg
+                  aria-hidden="true"
+                  viewBox="0 0 16 16"
+                  focusable="false"
+                  className="playlist-scope-selected-check"
+                >
+                  <path
+                    d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="1.6"
+                  />
+                </svg>
+              ) : null}
             </button>
           ))}
         </DropdownShell>
