@@ -30,7 +30,7 @@ body .playlists-tabs-row {
 .playlists-status-pill {
   display: inline-flex !important;
   width: auto !important;
-  min-width: 126px !important;
+  min-width: 0 !important;
   height: 51px !important;
   min-height: 51px !important;
   align-items: center !important;
@@ -39,8 +39,8 @@ body .playlists-tabs-row {
   border: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
-  padding: 0 12px !important;
-  color: var(--text-secondary) !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
   font-family: var(--font-aktiv-grotesk) !important;
   font-size: 14px !important;
   font-weight: 400 !important;
@@ -51,7 +51,7 @@ body .playlists-tabs-row {
 
 .playlists-status-pill:hover,
 .playlists-status-pill.is-open {
-  background: var(--bg-hover) !important;
+  background: transparent !important;
   color: var(--text-primary) !important;
 }
 
@@ -60,7 +60,7 @@ body .playlists-tabs-row {
   width: 14px !important;
   height: 14px !important;
   flex: 0 0 14px !important;
-  margin-left: auto !important;
+  margin-left: 0 !important;
 }
 
 .playlists-top-controls > .fw-toolbar-header-search-row {
@@ -114,7 +114,7 @@ body .playlists-tabs-row {
   justify-content: center !important;
   border: 0 !important;
   border-radius: 0 !important;
-  color: var(--text-secondary) !important;
+  color: var(--text-primary) !important;
   cursor: pointer !important;
   font-family: var(--font-aktiv-grotesk) !important;
   font-size: 14px !important;
@@ -160,7 +160,11 @@ body .playlists-tabs-row {
 }
 
 .playlists-sort-button:hover,
-.playlists-sort-button.is-open,
+.playlists-sort-button.is-open {
+  background: transparent !important;
+  color: var(--text-primary) !important;
+}
+
 .playlists-view-button:hover {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
@@ -176,6 +180,11 @@ body .playlists-tabs-row {
 .playlists-new-button:hover {
   background: var(--bg-hover) !important;
   color: var(--text-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"]) .playlists-new-button:hover {
+  background: var(--text-primary) !important;
+  color: var(--bg-primary) !important;
 }
 
 :where(html.dark, html[data-theme="dark"])
