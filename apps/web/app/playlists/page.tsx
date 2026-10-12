@@ -11,6 +11,7 @@ import EditPlaylistModal from "@/components/EditPlaylistModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import Toast from "@/components/Toast";
 import DropdownShell from "@/components/DropdownShell";
+import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
@@ -81,19 +82,6 @@ function formatSongCount(count: number) {
 
 function formatGenres(genres: string[]) {
   return genres.length > 0 ? genres.join(" · ") : "No genres yet";
-}
-
-function ReorderHandleIcon() {
-  return (
-    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden>
-      <circle cx="2" cy="2.5" r="1" fill="currentColor" />
-      <circle cx="8" cy="2.5" r="1" fill="currentColor" />
-      <circle cx="2" cy="8" r="1" fill="currentColor" />
-      <circle cx="8" cy="8" r="1" fill="currentColor" />
-      <circle cx="2" cy="13.5" r="1" fill="currentColor" />
-      <circle cx="8" cy="13.5" r="1" fill="currentColor" />
-    </svg>
-  );
 }
 
 function PlaylistArtwork({
@@ -363,7 +351,7 @@ function SortablePlaylistItem({
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.35 : 1,
-    cursor: isEditing ? "grab" : isRenaming ? "default" : "pointer",
+    cursor: isEditing ? "default" : isRenaming ? "default" : "pointer",
   };
 
   if (viewMode === "list") {
@@ -373,15 +361,12 @@ function SortablePlaylistItem({
           ref={setNodeRef}
           className="playlist-index-row is-reordering"
           style={style}
-          {...attributes}
-          {...listeners}
         >
-          <div className="playlist-row-handle">
-            <ReorderHandleIcon />
-          </div>
-          <div className="playlist-row-number">
-            {String(index + 1).padStart(2, "0")}
-          </div>
+          <BackendDragHandle
+            aria-label={`Drag ${playlist.name} to reorder`}
+            {...attributes}
+            {...listeners}
+          />
           <PlaylistArtwork
             playlist={playlist}
             index={index}
@@ -492,8 +477,6 @@ function SortablePlaylistItem({
         ref={setNodeRef}
         className="playlist-gallery-card is-reordering"
         style={style}
-        {...attributes}
-        {...listeners}
       >
         <div className="playlist-gallery-art-wrap">
           <PlaylistArtwork
@@ -506,11 +489,13 @@ function SortablePlaylistItem({
               {playlist.name.slice(0, 2).toUpperCase()}
             </div>
           )}
-          <div className="playlist-gallery-top-row">
-            <div className="playlist-gallery-handle">
-              <ReorderHandleIcon />
-            </div>
-          </div>
+          <BackendDragHandle
+            variant="overlay"
+            className="absolute right-2 top-2 z-20"
+            aria-label={`Drag ${playlist.name} to reorder`}
+            {...attributes}
+            {...listeners}
+          />
           <div className="playlist-gallery-content">
             <h3>{playlist.name}</h3>
             <p>{formatSongCount(stats?.songCount ?? 0)}</p>
