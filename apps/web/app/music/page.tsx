@@ -1371,11 +1371,6 @@ export default function MusicPage() {
                           }
                         >
                           <div className="audioflume-music-featured-song-copy">
-                            {song.coverArt ? (
-                              <span className="audioflume-music-featured-song-cover">
-                                <img src={song.coverArt} alt="" draggable={false} />
-                              </span>
-                            ) : null}
                             <strong>{song.title}</strong>
                             <span className="audioflume-music-featured-song-artist">
                               {song.artist}
