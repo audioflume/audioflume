@@ -62,7 +62,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-searchbar-filters {
-  gap: 18px;
+  gap: 16px;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   padding: 0 30px;
   font-size: 14px;
@@ -658,7 +658,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: #ffffff;
   padding: 0 18px;
   color: #111111;
-  font-size: 12px;
+  font-size: 13px;
   font-weight: 400;
   text-decoration: none;
 }
@@ -869,7 +869,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-trending-copy {
   position: absolute;
   left: 54px;
-  top: 43%;
+  top: 45%;
   z-index: 3;
   color: #ffffff;
 }
@@ -878,7 +878,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   gap: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(42px, 4vw, 66px);
+  font-size: clamp(52px, 4.8vw, 78px);
   font-weight: 300;
   letter-spacing: -0.045em;
   line-height: 0.92;
@@ -891,7 +891,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending-title-row > small {
-  width: min(190px, 16vw);
+  width: min(180px, 15vw);
   color: rgba(255, 255, 255, 0.76);
   font-size: 12px;
   font-weight: 300;
@@ -910,7 +910,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: absolute;
   display: block;
   overflow: hidden;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
 }
 
 .audioflume-home-reference-trending-artwork img {
@@ -921,45 +920,45 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending-artwork .is-1 {
-  top: 12%;
-  left: 22%;
-  width: 84px;
-  height: 84px;
+  top: 8%;
+  left: 21%;
+  width: 92px;
+  height: 92px;
 }
 
 .audioflume-home-reference-trending-artwork .is-2 {
-  top: 5%;
-  right: 17%;
-  width: 112px;
-  height: 112px;
+  top: -28px;
+  right: 15%;
+  width: 124px;
+  height: 124px;
 }
 
 .audioflume-home-reference-trending-artwork .is-3 {
-  top: 23%;
-  right: 7%;
-  width: 72px;
-  height: 72px;
-}
-
-.audioflume-home-reference-trending-artwork .is-4 {
-  right: 12%;
-  bottom: 14%;
-  width: 106px;
-  height: 106px;
-}
-
-.audioflume-home-reference-trending-artwork .is-5 {
-  bottom: 5%;
-  left: 44%;
+  top: 25%;
+  right: 9%;
   width: 76px;
   height: 76px;
 }
 
+.audioflume-home-reference-trending-artwork .is-4 {
+  right: 12%;
+  bottom: 12%;
+  width: 112px;
+  height: 112px;
+}
+
+.audioflume-home-reference-trending-artwork .is-5 {
+  bottom: -24px;
+  left: 42%;
+  width: 88px;
+  height: 88px;
+}
+
 .audioflume-home-reference-trending-artwork .is-6 {
-  bottom: 18%;
-  left: 23%;
-  width: 62px;
-  height: 62px;
+  bottom: 20%;
+  left: 20%;
+  width: 68px;
+  height: 68px;
 }
 
 .audioflume-home-reference-trending-list {
@@ -1055,21 +1054,21 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-reference-trending-copy {
-    top: 42%;
+    top: 44%;
     left: 28px;
   }
 
   .audioflume-home-reference-trending-title {
-    font-size: 44px;
+    font-size: 50px;
   }
 
   .audioflume-home-reference-trending-title-row {
-    gap: 14px;
+    gap: 12px;
   }
 
   .audioflume-home-reference-trending-title-row > small {
-    width: 160px;
-    font-size: 10px;
+    width: 154px;
+    font-size: 11px;
   }
 
   .audioflume-home-reference-trending-artwork .is-4,
