@@ -375,6 +375,37 @@ function HomeSkeletonBlock({
   );
 }
 
+
+function HomeTrendingSkeleton() {
+  return (
+    <section className="audioflume-home-reference-trending">
+      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+        <span>New &amp; Trending Music</span>
+        <Link href="/music">Explore New Music</Link>
+      </div>
+      <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
+        <div className="audioflume-home-skeleton-trending-visual">
+          <HomeSkeletonBlock className="is-trending-title" />
+          <HomeSkeletonBlock className="is-trending-copy" />
+        </div>
+        <div className="audioflume-home-reference-trending-list audioflume-home-skeleton-trending-list">
+          {Array.from({ length: 7 }, (_, index) => (
+            <div key={index} className="audioflume-home-skeleton-trending-row">
+              <HomeSkeletonBlock className="is-trending-cover" />
+              <div className="audioflume-home-skeleton-trending-row-copy">
+                <HomeSkeletonBlock className="is-trending-song-title" />
+                <HomeSkeletonBlock className="is-trending-artist" />
+              </div>
+              <HomeSkeletonBlock className="is-trending-action" />
+              <HomeSkeletonBlock className="is-trending-license" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HomeSongShelfSkeleton() {
   return (
     <div className="audioflume-home-reference-shelf audioflume-home-reference-song-shelf audioflume-home-skeleton-song-shelf">
@@ -739,7 +770,7 @@ export default function HomePageContent() {
         </div>
       </section>
 
-      {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
+      {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
 
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
