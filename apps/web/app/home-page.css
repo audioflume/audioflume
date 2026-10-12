@@ -872,13 +872,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   top: 16%;
   left: 11.5%;
   color: #ffffff;
-  mix-blend-mode: difference;
+  font-size: clamp(40px, 3.2vw, 58px);
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists h2 {
   bottom: 17%;
   left: 11.5%;
   color: #111111;
+  font-size: clamp(31px, 2.4vw, 44px);
 }
 
 .audioflume-home-reference-feature-pair-link {
