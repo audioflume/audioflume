@@ -1247,6 +1247,88 @@ main
 }
 
 
+.audioflume-music-page .audioflume-music-reference-summary {
+  box-sizing: border-box;
+  width: calc(100% + 40px);
+  margin-right: -20px;
+  margin-bottom: 18px;
+  margin-left: -20px;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-heading {
+  padding: 20px 36px 14px;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 16px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-track {
+  display: grid;
+  min-height: 112px;
+  grid-template-columns: 64px minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+  padding: 0 36px 24px;
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-track > img,
+.audioflume-music-page .audioflume-music-reference-summary-artwork {
+  display: grid;
+  width: 64px;
+  height: 64px;
+  place-items: center;
+  object-fit: cover;
+  background: var(--bg-hover);
+  color: var(--text-muted);
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-copy {
+  display: grid;
+  min-width: 0;
+  gap: 3px;
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-copy strong {
+  overflow: hidden;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 500;
+  line-height: 1.15;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-copy span {
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-copy small {
+  margin-top: 3px;
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-remove {
+  border: 0;
+  background: transparent;
+  padding: 8px 0 8px 16px;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+
+.audioflume-music-page .audioflume-music-reference-summary-remove:hover {
+  color: var(--text-primary);
+}
+
 .audioflume-music-page .audioflume-music-featured-songs {
   --audioflume-featured-song-inset: 36px;
   display: grid;

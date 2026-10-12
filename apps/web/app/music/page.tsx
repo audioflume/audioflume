@@ -182,6 +182,9 @@ type SemanticSearchState =
 type ReferenceSearchState = {
   referenceId: string;
   query: string;
+  name?: string;
+  artist?: string;
+  imageUrl?: string | null;
   status: "loading" | "success";
   songIds: string[];
 };
@@ -446,6 +449,12 @@ export default function MusicPage() {
   const setSearch = (value: string) => {
     setReferenceSearchState(null);
     setFilters((current) => ({ ...current, search: value }));
+  };
+
+  const clearReferenceSearch = () => {
+    setReferenceSearchState(null);
+    setSearchBySongQuery("");
+    setFilters((current) => ({ ...current, search: "" }));
   };
   const setSelectedMoods = (values: string[]) =>
     setFilters((current) => ({ ...current, selectedMoods: values }));
@@ -1264,6 +1273,9 @@ export default function MusicPage() {
           setReferenceSearchState({
             referenceId: result.id,
             query,
+            name: result.name,
+            artist: result.artist,
+            imageUrl: result.imageUrl,
             status: "loading",
             songIds: [],
           });
@@ -1283,6 +1295,9 @@ export default function MusicPage() {
             setReferenceSearchState({
               referenceId: result.id,
               query,
+              name: result.name,
+              artist: result.artist,
+              imageUrl: result.imageUrl,
               status: "success",
               songIds: getSearchMatchSongIds(data),
             });
@@ -1375,7 +1390,46 @@ export default function MusicPage() {
               <MusicPageSkeleton />
             ) : (
               <>
-                {featuredSongs.length > 0 ? (
+                {referenceSearchState ? (
+                  <div className="audioflume-music-reference-summary">
+                    <div className="audioflume-music-reference-summary-heading">
+                      Similar to
+                    </div>
+                    <div className="audioflume-music-reference-summary-track">
+                      {referenceSearchState.imageUrl ? (
+                        <img
+                          src={referenceSearchState.imageUrl}
+                          alt=""
+                          draggable={false}
+                        />
+                      ) : (
+                        <span className="audioflume-music-reference-summary-artwork">
+                          <WaveformIcon size={18} />
+                        </span>
+                      )}
+                      <div className="audioflume-music-reference-summary-copy">
+                        <strong>
+                          {referenceSearchState.name || referenceSearchState.query}
+                        </strong>
+                        {referenceSearchState.artist ? (
+                          <span>{referenceSearchState.artist}</span>
+                        ) : null}
+                        {referenceSearchState.status === "loading" ? (
+                          <small>Finding similar tracks…</small>
+                        ) : (
+                          <small>{referenceSearchState.songIds.length} similar tracks</small>
+                        )}
+                      </div>
+                      <button
+                        type="button"
+                        onClick={clearReferenceSearch}
+                        className="audioflume-music-reference-summary-remove"
+                      >
+                        Remove
+                      </button>
+                    </div>
+                  </div>
+                ) : featuredSongs.length > 0 ? (
                   <div className="audioflume-music-featured-songs">
                     {featuredSongs.map((song) => {
                       const songIsPlaying = Boolean(
