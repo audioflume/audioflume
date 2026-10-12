@@ -285,7 +285,7 @@ body .playlists-tabs-row {
 }
 
 .playlists-page .playlist-index .playlist-index-row.is-reordering {
-  grid-template-columns: 24px 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  grid-template-columns: 28px 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
   padding-right: 18px !important;
 }
 
