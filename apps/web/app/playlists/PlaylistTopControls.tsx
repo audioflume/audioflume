@@ -44,11 +44,21 @@ type PlaylistScopeOption = (typeof PLAYLIST_SCOPE_OPTIONS)[number];
 
 function SearchIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <circle
+        cx="11"
+        cy="11"
+        r="6.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
       <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M10.5 3a7.5 7.5 0 1 0 4.71 13.33l4.13 4.13a1.4 1.4 0 0 0 1.98-1.98l-4.13-4.13A7.5 7.5 0 0 0 10.5 3ZM5.8 10.5a4.7 4.7 0 1 1 9.4 0 4.7 4.7 0 0 1-9.4 0Z"
+        d="m16 16 4.5 4.5"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.4"
       />
     </svg>
   );
@@ -56,11 +66,11 @@ function SearchIcon() {
 
 function ChevronIcon() {
   return (
-    <svg width="10" height="10" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path
-        d="M4 6L8 10L12 6"
+        d="M4.5 6.25 8 9.75l3.5-3.5"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -839,6 +849,7 @@ export default function PlaylistTopControls() {
         <HeaderSearchBar
           variant="control"
           renderForm={false}
+          searchIcon={<SearchIcon />}
           searchValue={query}
           searchPlaceholder="Search playlists"
           searchAriaLabel="Search playlists"
