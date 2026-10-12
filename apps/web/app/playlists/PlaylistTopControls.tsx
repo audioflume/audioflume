@@ -141,15 +141,21 @@ function movePlaylist(
   playlists: Playlist[],
   activeId: number,
   overId: number,
+  placeAfter = false,
 ) {
   const fromIndex = playlists.findIndex((playlist) => playlist.id === activeId);
-  const toIndex = playlists.findIndex((playlist) => playlist.id === overId);
-
-  if (fromIndex < 0 || toIndex < 0 || fromIndex === toIndex) return playlists;
+  if (fromIndex < 0) return playlists;
 
   const next = [...playlists];
   const [moved] = next.splice(fromIndex, 1);
-  next.splice(toIndex, 0, moved);
+  const overIndex = next.findIndex((playlist) => playlist.id === overId);
+  if (overIndex < 0) return playlists;
+
+  const insertIndex = overIndex + (placeAfter ? 1 : 0);
+
+  if (insertIndex === fromIndex) return playlists;
+
+  next.splice(insertIndex, 0, moved);
   return next;
 }
 
@@ -290,7 +296,6 @@ export default function PlaylistTopControls() {
   const [countLabels, setCountLabels] = useState<Record<number, string>>({});
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const startReorderRef = useRef<() => void>(() => undefined);
-  const dragOverIdRef = useRef<number | null>(null);
 
   const playerVisible = Boolean(currentSong);
   const isMyPlaylistsPage = pathname === "/playlists";
@@ -412,10 +417,13 @@ export default function PlaylistTopControls() {
     setReorderTarget(null);
     setReorderItems([]);
     setDraggingId(null);
-    dragOverIdRef.current = null;
   }
 
-  function animateReorder(activeId: number, overId: number) {
+  function animateReorder(
+    activeId: number,
+    overId: number,
+    placeAfter: boolean,
+  ) {
     if (activeId === overId) return;
 
     const before = new Map<number, DOMRect>();
@@ -427,7 +435,9 @@ export default function PlaylistTopControls() {
       });
 
     flushSync(() => {
-      setReorderItems((current) => movePlaylist(current, activeId, overId));
+      setReorderItems((current) =>
+        movePlaylist(current, activeId, overId, placeAfter),
+      );
     });
 
     window.requestAnimationFrame(() => {
@@ -541,27 +551,24 @@ export default function PlaylistTopControls() {
                   onDragStart={(event) => {
                     event.dataTransfer.effectAllowed = "move";
                     event.dataTransfer.setData("text/plain", String(playlist.id));
-                    dragOverIdRef.current = null;
                     setDraggingId(playlist.id);
                   }}
                   onDragOver={(event) => {
                     event.preventDefault();
-                    if (
-                      draggingId == null ||
-                      draggingId === playlist.id ||
-                      dragOverIdRef.current === playlist.id
-                    ) {
-                      return;
-                    }
-                    dragOverIdRef.current = playlist.id;
-                    animateReorder(draggingId, playlist.id);
+                    if (draggingId == null || draggingId === playlist.id) return;
+
+                    const rect = event.currentTarget.getBoundingClientRect();
+                    const placeAfter =
+                      viewMode === "list"
+                        ? event.clientY >= rect.top + rect.height / 2
+                        : event.clientX >= rect.left + rect.width / 2;
+
+                    animateReorder(draggingId, playlist.id, placeAfter);
                   }}
                   onDrop={() => {
-                    dragOverIdRef.current = null;
                     setDraggingId(null);
                   }}
                   onDragEnd={() => {
-                    dragOverIdRef.current = null;
                     setDraggingId(null);
                   }}
                 />
