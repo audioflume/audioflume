@@ -727,11 +727,12 @@ export default function HomePageContent() {
       <section className="audioflume-home-reference-intro">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
-            <h2>Human made music, built for picture.</h2>
+            <h2>A growing library of cinematic sound</h2>
           </div>
           <p>
-            A growing library of music and SFX from real artists, curated for filmmakers with
-            flexible licensing for projects of every size.
+            A growing catalogue built around cinematic storytelling, featuring music and SFX
+            from in-demand artists and composers. Curated to make finding distinctive, usable
+            tracks faster across film, commercial and branded work.
           </p>
         </div>
       </section>
