@@ -318,24 +318,58 @@ function findBestContinuousExcerpt({
   }
 
   const rankedPlans = scoredPlans.sort((a, b) => b.score - a.score);
-  const minimumSeparation = Math.max(3, targetSeconds * 0.2);
-  const diversePlans: Array<ContinuousExcerptPlan & { score: number }> = [];
+  const bestPlan = rankedPlans[0];
+  const broadPlans: Array<ContinuousExcerptPlan & { score: number }> = [];
 
-  for (const plan of rankedPlans) {
-    const isDistinct = diversePlans.every(
-      (existing) => Math.abs(existing.start - plan.start) >= minimumSeparation,
+  if (bestPlan) {
+    broadPlans.push(bestPlan);
+
+    const maxStart = Math.max(0, duration - bestPlan.length);
+    const regionCount = maxStart > targetSeconds * 2 ? 5 : maxStart > targetSeconds ? 4 : 3;
+    const bestByRegion = new Map<number, ContinuousExcerptPlan & { score: number }>();
+
+    for (const plan of rankedPlans) {
+      const planMaxStart = Math.max(0, duration - plan.length);
+      const normalizedStart = planMaxStart > 0 ? plan.start / planMaxStart : 0;
+      const regionIndex = Math.min(
+        regionCount - 1,
+        Math.floor(normalizedStart * regionCount),
+      );
+      const currentBest = bestByRegion.get(regionIndex);
+
+      if (!currentBest || plan.score > currentBest.score) {
+        bestByRegion.set(regionIndex, plan);
+      }
+    }
+
+    const remainingRegionalPlans = Array.from(bestByRegion.values()).filter(
+      (plan) => Math.abs(plan.start - bestPlan.start) >= Math.max(4, targetSeconds * 0.35),
     );
 
-    if (isDistinct) diversePlans.push(plan);
-  }
+    while (remainingRegionalPlans.length > 0) {
+      let selectedIndex = 0;
+      let selectedDistance = -Infinity;
 
-  if (diversePlans.length === 0 && rankedPlans[0]) {
-    diversePlans.push(rankedPlans[0]);
+      for (let index = 0; index < remainingRegionalPlans.length; index += 1) {
+        const candidate = remainingRegionalPlans[index];
+        const distanceFromExisting = Math.min(
+          ...broadPlans.map((existing) => Math.abs(existing.start - candidate.start)),
+        );
+
+        if (distanceFromExisting > selectedDistance) {
+          selectedDistance = distanceFromExisting;
+          selectedIndex = index;
+        }
+      }
+
+      broadPlans.push(remainingRegionalPlans[selectedIndex]);
+      remainingRegionalPlans.splice(selectedIndex, 1);
+    }
   }
 
   const selectedPlan =
-    diversePlans[Math.max(0, variationIndex) % diversePlans.length] ??
-    rankedPlans[0] ?? {
+    broadPlans[Math.max(0, variationIndex) % broadPlans.length] ??
+    bestPlan ?? {
       start: 0,
       length: Math.min(targetSeconds, duration),
       score: 0,
