@@ -818,6 +818,16 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   text-decoration: none;
 }
 
+.audioflume-home-reference-artists
+  .audioflume-home-reference-section-heading
+  > span {
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
 .audioflume-home-reference-artist-card {
   --audioflume-home-artist-media-height: 400px;
   position: relative;
@@ -1706,7 +1716,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong {
-  color: #111111;
+  color: #ffffff;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy small {
