@@ -203,20 +203,19 @@ function PlaylistReorderCard({
     return (
       <div
         className="playlist-index-row is-reordering playlist-top-reorder-item"
+        draggable
         style={{ opacity: dragging ? 0.35 : 1 }}
+        onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDrop={onDrop}
+        onDragEnd={onDragEnd}
       >
-        <button
-          type="button"
-          draggable
+        <div
           className="playlist-row-handle playlist-top-reorder-list-handle"
-          aria-label={`Drag ${playlist.name} to reorder`}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
+          aria-hidden="true"
         >
           <BackendDragHandleGlyph />
-        </button>
+        </div>
         <div className="playlist-row-number">
           {String(index + 1).padStart(2, "0")}
         </div>
@@ -237,9 +236,12 @@ function PlaylistReorderCard({
   return (
     <div
       className="playlist-gallery-card is-reordering playlist-top-reorder-item"
+      draggable
       style={{ opacity: dragging ? 0.35 : 1 }}
+      onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
+      onDragEnd={onDragEnd}
     >
       <div className="playlist-gallery-art-wrap">
         <PlaylistReorderArtwork
@@ -247,16 +249,12 @@ function PlaylistReorderCard({
           index={index}
           className="playlist-gallery-art"
         />
-        <button
-          type="button"
-          draggable
+        <div
           className="playlist-top-reorder-grid-handle"
-          aria-label={`Drag ${playlist.name} to reorder`}
-          onDragStart={onDragStart}
-          onDragEnd={onDragEnd}
+          aria-hidden="true"
         >
           <BackendDragHandleGlyph />
-        </button>
+        </div>
         <div className="playlist-gallery-content">
           <h3>{playlist.name}</h3>
           <p>{countLabel}</p>
@@ -581,7 +579,6 @@ export default function PlaylistTopControls() {
         }
 
         .playlist-top-reorder-list-handle {
-          appearance: none !important;
           display: flex !important;
           width: 28px !important;
           height: 32px !important;
@@ -596,7 +593,6 @@ export default function PlaylistTopControls() {
         }
 
         .playlist-top-reorder-grid-handle {
-          appearance: none !important;
           position: absolute !important;
           top: 8px !important;
           left: 8px !important;
