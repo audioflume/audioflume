@@ -59,6 +59,8 @@ type ContinuousExcerptPlan = {
   length: number;
 };
 
+type ExcerptFocus = "any" | "start" | "finish";
+
 function formatDuration(seconds: number) {
   if (!Number.isFinite(seconds) || seconds <= 0) return "0:00";
 
@@ -157,7 +159,15 @@ function getFlexibleDurationMargin(targetSeconds: number) {
   return 5;
 }
 
-function getCandidateLengths(targetSeconds: number, duration: number) {
+function getCandidateLengths(
+  targetSeconds: number,
+  duration: number,
+  exactTime: boolean,
+) {
+  if (exactTime) {
+    return [Math.min(targetSeconds, duration)];
+  }
+
   const margin = getFlexibleDurationMargin(targetSeconds);
   const minLength = Math.max(4, Math.min(duration, targetSeconds - margin));
   const maxLength = Math.min(duration, targetSeconds + margin);
@@ -239,23 +249,44 @@ function findBestContinuousExcerpt({
   targetSeconds,
   beatGrid,
   variationIndex,
+  exactTime,
+  focus,
 }: {
   buffer: AudioBuffer;
   frames: EnergyFrame[];
   targetSeconds: number;
   beatGrid: BeatGrid | null;
   variationIndex: number;
+  exactTime: boolean;
+  focus: ExcerptFocus;
 }): ContinuousExcerptPlan {
   const duration = buffer.duration;
   const grid = getCutGrid(beatGrid);
-  const lengthCandidates = getCandidateLengths(targetSeconds, duration);
+  const lengthCandidates = getCandidateLengths(targetSeconds, duration, exactTime);
   const durationMargin = getFlexibleDurationMargin(targetSeconds);
   const scoredPlans: Array<ContinuousExcerptPlan & { score: number }> = [];
 
   for (const length of lengthCandidates) {
     const maxStart = Math.max(0, duration - length);
-    const searchMin = duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
-    const searchMax = duration > length + 12 ? Math.max(searchMin, duration - length - duration * 0.04) : maxStart;
+    const defaultSearchMin =
+      duration > length + 12 ? Math.min(maxStart, duration * 0.08) : 0;
+    const defaultSearchMax =
+      duration > length + 12
+        ? Math.max(defaultSearchMin, duration - length - duration * 0.04)
+        : maxStart;
+    const focusWindow = Math.max(targetSeconds * 0.9, duration * 0.3);
+    const searchMin =
+      focus === "start"
+        ? 0
+        : focus === "finish"
+          ? Math.max(0, maxStart - focusWindow)
+          : defaultSearchMin;
+    const searchMax =
+      focus === "start"
+        ? Math.min(maxStart, focusWindow)
+        : focus === "finish"
+          ? maxStart
+          : defaultSearchMax;
     const baseCandidates = getCandidateStarts(searchMin, searchMax, grid, 0.5);
     const phraseEndCandidates = grid
       .map((time) => time - length)
@@ -428,6 +459,8 @@ function renderNaturalShort(
   targetSeconds: number,
   song: Song,
   variationIndex: number,
+  exactTime: boolean,
+  focus: ExcerptFocus,
 ) {
   const frames = getEnergyFrames(buffer);
   const beatGrid = getBeatGridFromSong(song, buffer.duration);
@@ -437,6 +470,8 @@ function renderNaturalShort(
     targetSeconds,
     beatGrid,
     variationIndex,
+    exactTime,
+    focus,
   });
   const output = audioContext.createBuffer(
     buffer.numberOfChannels,
@@ -449,6 +484,8 @@ function renderNaturalShort(
     beatAware: Boolean(beatGrid),
     targetSeconds,
     variationIndex,
+    exactTime,
+    focus,
     start: plan.start,
     end: plan.start + plan.length,
     length: plan.length,
@@ -539,6 +576,8 @@ async function createShortenedTrack(
   song: Song,
   targetSeconds: number,
   variationIndex: number,
+  exactTime: boolean,
+  focus: ExcerptFocus,
 ) {
   const AudioContextConstructor =
     window.AudioContext || (window as BrowserAudioWindow).webkitAudioContext;
@@ -581,6 +620,8 @@ async function createShortenedTrack(
       targetSeconds,
       song,
       variationIndex,
+      exactTime,
+      focus,
     );
     const blob = audioBufferToWavBlob(shortenedBuffer);
 
@@ -689,6 +730,8 @@ export default function ShortenTrackModal({
   const { currentTime, duration } = usePlayerProgress();
   const [generatedTracks, setGeneratedTracks] = useState<ShortenedTrack[]>([]);
   const [generatingSeconds, setGeneratingSeconds] = useState<number | null>(null);
+  const [exactTime, setExactTime] = useState(false);
+  const [excerptFocus, setExcerptFocus] = useState<ExcerptFocus>("any");
   const [error, setError] = useState<string | null>(null);
   const [activePreviewTrackId, setActivePreviewTrackId] = useState<string | null>(null);
   const [completedPreviewTrackIds, setCompletedPreviewTrackIds] = useState<Set<string>>(() => new Set());
@@ -737,6 +780,8 @@ export default function ShortenTrackModal({
         song,
         targetSeconds,
         variationNumber - 1,
+        exactTime,
+        excerptFocus,
       );
       const url = URL.createObjectURL(blob);
       const lengthOption = LENGTH_OPTIONS.find((option) => option.seconds === targetSeconds);
@@ -827,6 +872,75 @@ export default function ShortenTrackModal({
                 </button>
               );
             })}
+          </div>
+
+          <div className="mt-3 flex items-center justify-center gap-4">
+            <button
+              type="button"
+              aria-pressed={exactTime}
+              onClick={() => setExactTime((current) => !current)}
+              className={`inline-flex items-center gap-1.5 text-[11px] font-normal transition-colors ${
+                exactTime
+                  ? "text-[var(--text-primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+              }`}
+            >
+              <span
+                className={`h-2 w-2 rounded-full border ${
+                  exactTime
+                    ? "border-[var(--text-primary)] bg-[var(--text-primary)]"
+                    : "border-[var(--text-muted)]"
+                }`}
+                aria-hidden="true"
+              />
+              Exact time
+            </button>
+
+            <button
+              type="button"
+              aria-pressed={excerptFocus === "start"}
+              onClick={() =>
+                setExcerptFocus((current) => (current === "start" ? "any" : "start"))
+              }
+              className={`inline-flex items-center gap-1.5 text-[11px] font-normal transition-colors ${
+                excerptFocus === "start"
+                  ? "text-[var(--text-primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+              }`}
+            >
+              <span
+                className={`h-2 w-2 rounded-full border ${
+                  excerptFocus === "start"
+                    ? "border-[var(--text-primary)] bg-[var(--text-primary)]"
+                    : "border-[var(--text-muted)]"
+                }`}
+                aria-hidden="true"
+              />
+              Song start
+            </button>
+
+            <button
+              type="button"
+              aria-pressed={excerptFocus === "finish"}
+              onClick={() =>
+                setExcerptFocus((current) => (current === "finish" ? "any" : "finish"))
+              }
+              className={`inline-flex items-center gap-1.5 text-[11px] font-normal transition-colors ${
+                excerptFocus === "finish"
+                  ? "text-[var(--text-primary)]"
+                  : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
+              }`}
+            >
+              <span
+                className={`h-2 w-2 rounded-full border ${
+                  excerptFocus === "finish"
+                    ? "border-[var(--text-primary)] bg-[var(--text-primary)]"
+                    : "border-[var(--text-muted)]"
+                }`}
+                aria-hidden="true"
+              />
+              Song finish
+            </button>
           </div>
 
           {error && (
