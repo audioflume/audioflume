@@ -850,13 +850,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-card.is-artists {
+  --audioflume-feature-artists-scale: 1;
+  container-type: inline-size;
   background-image: url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists {
-  --audioflume-feature-playlists-scale: 1;
   isolation: isolate;
-  container-type: inline-size;
   background-image: url("https://images.filmwave.io/images/home/Curated%20Playlists.png");
 }
 
@@ -873,28 +873,28 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-card.is-artists h2 {
   top: 16%;
   left: 11.5%;
+  width: max-content;
+  max-width: none;
   color: #ffffff;
   font-size: 72px;
   font-weight: 300;
   letter-spacing: -0.04em;
   line-height: 0.85em;
   text-transform: uppercase;
+  transform: scale(var(--audioflume-feature-artists-scale));
+  transform-origin: left top;
+}
+
+.audioflume-home-reference-feature-pair-card.is-artists h2 > span {
+  display: block;
+  white-space: nowrap;
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists h2 {
   bottom: 17%;
   left: 11.5%;
-  width: max-content;
-  max-width: none;
   color: #111111;
-  font-size: 44px;
-  transform: scale(var(--audioflume-feature-playlists-scale));
-  transform-origin: left bottom;
-}
-
-.audioflume-home-reference-feature-pair-card.is-playlists h2 > span {
-  display: block;
-  white-space: nowrap;
+  font-size: clamp(31px, 2.4vw, 44px);
 }
 
 .audioflume-home-reference-feature-pair-link {
@@ -1099,20 +1099,20 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 @container (max-width: 650px) {
-  .audioflume-home-reference-feature-pair-card.is-playlists {
-    --audioflume-feature-playlists-scale: 0.9;
+  .audioflume-home-reference-feature-pair-card.is-artists {
+    --audioflume-feature-artists-scale: 0.9;
   }
 }
 
 @container (max-width: 575px) {
-  .audioflume-home-reference-feature-pair-card.is-playlists {
-    --audioflume-feature-playlists-scale: 0.8;
+  .audioflume-home-reference-feature-pair-card.is-artists {
+    --audioflume-feature-artists-scale: 0.8;
   }
 }
 
 @container (max-width: 500px) {
-  .audioflume-home-reference-feature-pair-card.is-playlists {
-    --audioflume-feature-playlists-scale: 0.7;
+  .audioflume-home-reference-feature-pair-card.is-artists {
+    --audioflume-feature-artists-scale: 0.7;
   }
 }
 
