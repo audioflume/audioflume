@@ -603,6 +603,13 @@ export default function PlaylistTopControls() {
           color: var(--filmwave-menu-text) !important;
         }
 
+        .playlist-sort-selected-check {
+          width: 14px;
+          height: 14px;
+          flex: 0 0 14px;
+          margin-left: auto;
+        }
+
         .playlists-sort-button-icon,
         .playlists-new-button-icon {
           align-items: center;
@@ -840,22 +847,58 @@ export default function PlaylistTopControls() {
               <button
                 type="button"
                 className={sortMode === "custom" ? "is-active" : ""}
+                aria-checked={sortMode === "custom"}
                 onClick={() => {
                   setSortMode("custom");
                   setSortOpen(false);
                 }}
               >
-                Custom
+                <span>Custom</span>
+                {sortMode === "custom" ? (
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    focusable="false"
+                    className="playlist-sort-selected-check"
+                  >
+                    <path
+                      d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.6"
+                    />
+                  </svg>
+                ) : null}
               </button>
               <button
                 type="button"
                 className={sortMode === "alphabetical" ? "is-active" : ""}
+                aria-checked={sortMode === "alphabetical"}
                 onClick={() => {
                   setSortMode("alphabetical");
                   setSortOpen(false);
                 }}
               >
-                Alphabetical
+                <span>Alphabetical</span>
+                {sortMode === "alphabetical" ? (
+                  <svg
+                    aria-hidden="true"
+                    viewBox="0 0 16 16"
+                    focusable="false"
+                    className="playlist-sort-selected-check"
+                  >
+                    <path
+                      d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="1.6"
+                    />
+                  </svg>
+                ) : null}
               </button>
             </DropdownShell>
 
