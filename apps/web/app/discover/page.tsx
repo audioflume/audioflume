@@ -766,8 +766,9 @@ export default function DiscoverPage() {
       <div className="discover-artist-content">
         <section className="discover-artist-featured">
           {featuredArtistCount > 0 ? (
-            <div className="discover-artist-featured-label">
-              This month&apos;s featured artists
+            <div className="discover-artist-featured-heading">
+              <span>This month&apos;s featured artists</span>
+              <Link href="/discover">Explore Artists &amp; Composers</Link>
             </div>
           ) : null}
           <div className="discover-artist-featured-shelf">
