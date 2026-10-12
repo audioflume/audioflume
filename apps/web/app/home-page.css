@@ -1477,6 +1477,74 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   animation: audioflume-home-skeleton-pulse 1.35s ease-in-out infinite;
 }
 
+
+.audioflume-home-skeleton-trending-visual {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+
+.audioflume-home-skeleton-trending-visual .is-trending-title {
+  position: absolute;
+  bottom: 38%;
+  left: 12%;
+  width: 62%;
+  height: 58px;
+}
+
+.audioflume-home-skeleton-trending-visual .is-trending-copy {
+  position: absolute;
+  bottom: 30%;
+  left: 12%;
+  width: 34%;
+  height: 18px;
+}
+
+.audioflume-home-skeleton-trending-list {
+  gap: 0;
+}
+
+.audioflume-home-skeleton-trending-row {
+  display: grid;
+  min-height: 64px;
+  grid-template-columns: 42px minmax(0, 1fr) 18px 78px;
+  align-items: center;
+  gap: 18px;
+  padding: 9px 11px;
+}
+
+.audioflume-home-skeleton-trending-row-copy {
+  display: grid;
+  gap: 6px;
+}
+
+.audioflume-home-skeleton-block.is-trending-cover {
+  width: 42px;
+  height: 42px;
+}
+
+.audioflume-home-skeleton-block.is-trending-song-title {
+  width: min(150px, 70%);
+  height: 12px;
+}
+
+.audioflume-home-skeleton-block.is-trending-artist {
+  width: min(90px, 44%);
+  height: 9px;
+}
+
+.audioflume-home-skeleton-block.is-trending-action {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+}
+
+.audioflume-home-skeleton-block.is-trending-license {
+  width: 78px;
+  height: 34px;
+}
+
 .audioflume-home-skeleton-song-card {
   position: relative;
   display: grid;
