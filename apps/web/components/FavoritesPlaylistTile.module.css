@@ -32,7 +32,7 @@
   align-items: center;
   justify-content: center;
   background: var(--filmwave-neutral-surface);
-  transition: none;
+  transition: background 0.15s ease;
 }
 
 :global(.playlists-page .playlist-index-row-shell:hover) .rowCoverSurface {
