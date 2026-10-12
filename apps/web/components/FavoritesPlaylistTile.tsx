@@ -5,6 +5,7 @@ import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
 import { useFavorites } from "@/context/FavoritesContext";
 import type { PlaylistViewMode } from "@/context/UserPreferencesContext";
+import { useSongs } from "@/hooks/useSongs";
 import styles from "./FavoritesPlaylistTile.module.css";
 
 function formatTrackCount(count: number) {
@@ -17,7 +18,12 @@ export default function FavoritesPlaylistTile({
   viewMode: PlaylistViewMode;
 }) {
   const { favoriteIds } = useFavorites();
-  const trackCount = formatTrackCount(favoriteIds.length);
+  const { songs } = useSongs();
+  const activeSongIds = new Set(songs.map((song) => song.id));
+  const activeFavoriteCount = favoriteIds.filter((songId) =>
+    activeSongIds.has(songId),
+  ).length;
+  const trackCount = formatTrackCount(activeFavoriteCount);
 
   if (viewMode === "list") {
     return (
