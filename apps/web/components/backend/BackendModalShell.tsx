@@ -23,9 +23,9 @@ export default function BackendModalShell({
   closeLabel = "Close modal",
   children,
   footer,
-  maxWidth = "max-w-[540px]",
-  maxHeight = "560px",
-  heightClassName = "h-[560px]",
+  maxWidth = "max-w-[600px]",
+  maxHeight = "506px",
+  heightClassName = "h-[506px]",
   bodyClassName = "",
 }: BackendModalShellProps) {
   return (
@@ -37,11 +37,9 @@ export default function BackendModalShell({
       maxWidth={maxWidth}
       maxHeight={maxHeight}
       centerTitle
-      eyebrow="Audioflume"
-      headerHeight="88px"
       bodyOverflow="hidden"
-      inputCorners="rounded"
-      contentCorners="rounded"
+      inputCorners="square"
+      contentCorners="square"
       background="var(--bg-primary)"
       bodyClassName={`flex min-h-0 flex-1 flex-col px-5 pb-0${bodyClassName ? ` ${bodyClassName}` : ""}`}
       contentClassName={`${heightClassName} max-h-[calc(100vh-64px)] [&_.filmwave-backend-input]:!rounded-none [&_.filmwave-backend-select]:!rounded-none [&_.filmwave-backend-textarea]:!rounded-none [&_.filmwave-backend-button]:!rounded-none`}
