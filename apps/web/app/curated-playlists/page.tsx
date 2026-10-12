@@ -341,7 +341,11 @@ export default function CuratedPlaylistsPage() {
             !error &&
             groupedPlaylists.map(
               ({ name, description, playlists: groupPlaylists }) => (
-                <div key={name} id={getCuratedGroupId(name)} className="scroll-mt-28">
+                <div
+                  key={name}
+                  id={getCuratedGroupId(name)}
+                  className="curated-page-shelf-group scroll-mt-28"
+                >
                   <CuratedPlaylistShelf
                     title={name}
                     description={description ?? undefined}
