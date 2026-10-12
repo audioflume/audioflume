@@ -1238,7 +1238,10 @@ export default function MusicPage() {
             className="audioflume-music-page-searchbar-song"
             aria-label="Search by song"
             aria-expanded={searchBySongOpen}
-            onClick={() => setSearchBySongOpen(true)}
+            onClick={() => {
+              setSearchBySongQuery("");
+              setSearchBySongOpen(true);
+            }}
           >
             <WaveformIcon size={16} />
             <span>Search by song</span>
