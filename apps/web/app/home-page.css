@@ -854,7 +854,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   --audioflume-trending-copy-scale: 1;
   position: absolute;
   inset: 0;
-  z-index: 3;
   display: flex;
   align-items: center;
   justify-content: center;
