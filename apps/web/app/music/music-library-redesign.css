@@ -1335,6 +1335,12 @@ main
 
 .audioflume-music-page
   .audioflume-music-featured-song-waveform
+  .filmwave-song-waveform {
+  cursor: pointer;
+}
+
+.audioflume-music-page
+  .audioflume-music-featured-song-waveform
   .filmwave-song-waveform-canvas {
   opacity: 0.72;
   filter: brightness(0) invert(1);

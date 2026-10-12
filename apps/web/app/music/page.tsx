@@ -30,13 +30,13 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 
-import type { BpmFilterValue, KeyFilterValue } from "@/lib/types";
+import type { BpmFilterValue, KeyFilterValue, Song } from "@/lib/types";
 
 import { useFilterPersistence } from "@/hooks/useFilterPersistence";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { useSongs } from "@/hooks/useSongs";
 
-import { usePlayer } from "@/context/PlayerContext";
+import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 
 import Footer from "@/components/Footer";
 import ReferenceSearchModal from "@/components/ReferenceSearchModal";
@@ -58,6 +58,28 @@ const VOCAL_FILTER_OPTIONS = [
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
+
+function FeaturedSongWaveform({ song }: { song: Song }) {
+  const { currentSong, isPlaying, seekTo } = usePlayer();
+  const { currentTime, duration } = usePlayerProgress();
+
+  const progress =
+    currentSong?.id === song.id && duration > 0
+      ? Math.max(0, Math.min(1, currentTime / duration))
+      : 0;
+
+  return (
+    <SongCardWaveform
+      peaks={parseWaveformPeaks(song.waveformPeaks)}
+      progress={progress}
+      options={{ barWidth: 1.5, barGap: 1 }}
+      ariaLabel={`Seek ${song.title}`}
+      onSeek={(nextProgress) => {
+        seekTo(song, nextProgress, isPlaying);
+      }}
+    />
+  );
+}
 
 function MusicFilterColumnSkeleton({ open }: { open: boolean }) {
   if (!open) return null;
@@ -1378,11 +1400,7 @@ export default function MusicPage() {
                               {song.artist}
                             </span>
                             <div className="audioflume-music-featured-song-waveform">
-                              <SongCardWaveform
-                                peaks={parseWaveformPeaks(song.waveformPeaks)}
-                                progress={0}
-                                options={{ barWidth: 1.5, barGap: 1 }}
-                              />
+                              <FeaturedSongWaveform song={song} />
                             </div>
                             <div className="audioflume-music-featured-song-meta">
                               {song.genres.slice(0, 3).map((genre) => (
