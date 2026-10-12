@@ -680,12 +680,6 @@ export default function HomePageContent() {
         </div>
       </section>
 
-      {songsLoading ? (
-        <HomeSongShelfSkeleton />
-      ) : shelfSongs.length > 0 ? (
-        <HomeSongShelf songs={shelfSongs} />
-      ) : null}
-
       <section className="audioflume-home-reference-ui-showcase">
         <img
           className="audioflume-home-reference-ui-graphic is-dark"
