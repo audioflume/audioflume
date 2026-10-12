@@ -232,20 +232,13 @@ function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
 
 function HomeTrendingSection({ songs }: { songs: Song[] }) {
   const visibleSongs = songs.slice(0, 7);
-  const artworkSongs = songs.filter((song) => Boolean(song.coverArt)).slice(0, 6);
-  const backdrop = artworkSongs[1]?.coverArt || artworkSongs[0]?.coverArt || "";
 
   if (visibleSongs.length === 0) return null;
 
   return (
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
-        <div
-          className="audioflume-home-reference-trending-visual"
-          style={backdrop ? { backgroundImage: `url("${backdrop}")` } : undefined}
-        >
-          <div className="audioflume-home-reference-trending-shade" />
-
+        <div className="audioflume-home-reference-trending-visual">
           <div className="audioflume-home-reference-trending-copy">
             <div className="audioflume-home-reference-trending-title">
               <span>New &amp; Trending</span>
@@ -254,14 +247,6 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
                 <small>New music added daily.<br />120+ new songs this month.</small>
               </span>
             </div>
-          </div>
-
-          <div className="audioflume-home-reference-trending-artwork" aria-hidden="true">
-            {artworkSongs.map((song, index) => (
-              <span key={song.id} className={`is-${index + 1}`}>
-                <img src={song.coverArt || ""} alt="" draggable={false} />
-              </span>
-            ))}
           </div>
         </div>
 
