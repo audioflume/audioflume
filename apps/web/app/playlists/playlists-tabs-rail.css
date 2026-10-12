@@ -448,8 +448,12 @@ body .playlists-tabs-row {
 .playlists-page .playlist-index .playlist-create-row.playlist-index-row {
   grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
   width: 100% !important;
-  background: var(--filmwave-neutral-surface) !important;
+  background: transparent !important;
   text-align: left !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row.playlist-index-row:hover {
+  background: var(--bg-hover) !important;
 }
 
 .playlists-page .playlist-index .playlist-create-row .playlist-create-mark {
