@@ -137,6 +137,22 @@ function getPlaylistCountLabel(playlistId: number) {
   ).trim();
 }
 
+function getPlaylistDestinationIndex(
+  playlists: Playlist[],
+  activeId: number,
+  overId: number,
+  placeAfter: boolean,
+) {
+  const fromIndex = playlists.findIndex((playlist) => playlist.id === activeId);
+  if (fromIndex < 0) return -1;
+
+  const remaining = playlists.filter((playlist) => playlist.id !== activeId);
+  const overIndex = remaining.findIndex((playlist) => playlist.id === overId);
+  if (overIndex < 0) return fromIndex;
+
+  return overIndex + (placeAfter ? 1 : 0);
+}
+
 function movePlaylist(
   playlists: Playlist[],
   activeId: number,
@@ -453,6 +469,7 @@ export default function PlaylistTopControls() {
           const deltaY = previous.top - next.top;
           if (Math.abs(deltaX) < 0.5 && Math.abs(deltaY) < 0.5) return;
 
+          element.getAnimations().forEach((animation) => animation.cancel());
           element.animate(
             [
               { translate: `${deltaX}px ${deltaY}px` },
@@ -562,6 +579,23 @@ export default function PlaylistTopControls() {
                       viewMode === "list"
                         ? event.clientY >= rect.top + rect.height / 2
                         : event.clientX >= rect.left + rect.width / 2;
+                    const currentIndex = reorderItems.findIndex(
+                      (item) => item.id === draggingId,
+                    );
+                    const destinationIndex = getPlaylistDestinationIndex(
+                      reorderItems,
+                      draggingId,
+                      playlist.id,
+                      placeAfter,
+                    );
+
+                    if (
+                      currentIndex < 0 ||
+                      destinationIndex < 0 ||
+                      destinationIndex === currentIndex
+                    ) {
+                      return;
+                    }
 
                     animateReorder(draggingId, playlist.id, placeAfter);
                   }}
