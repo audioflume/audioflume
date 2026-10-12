@@ -731,8 +731,7 @@ export default function ShortenTrackModal({
     setError(null);
 
     try {
-      const variationNumber =
-        generatedTracks.filter((track) => track.durationSeconds === targetSeconds).length + 1;
+      const variationNumber = generatedTracks.length + 1;
       const { blob, actualDurationSeconds, waveformPeaks } = await createShortenedTrack(
         song,
         targetSeconds,
@@ -900,9 +899,6 @@ export default function ShortenTrackModal({
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                           {track.label} · Option {track.variationNumber}
-                        </span>
-                        <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                          {formatDuration(track.actualDurationSeconds)} deliberate excerpt · waveform ready
                         </span>
                       </span>
 
