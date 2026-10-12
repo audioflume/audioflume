@@ -24,6 +24,8 @@ type ShortenedTrack = {
   durationSeconds: number;
   actualDurationSeconds: number;
   variationNumber: number;
+  exactTime: boolean;
+  focus: ExcerptFocus;
   url: string;
   song: Song;
 };
@@ -314,6 +316,12 @@ function findBestContinuousExcerpt({
       const maxStartForLength = Math.max(0, duration - length);
       const timelinePosition = maxStartForLength > 0 ? safeStart / maxStartForLength : 0;
       const timelineBias = (1 - Math.abs(timelinePosition - 0.58)) * middleEnergy * 0.08;
+      const focusBias =
+        focus === "start"
+          ? (1 - timelinePosition) * middleEnergy * 0.65
+          : focus === "finish"
+            ? timelinePosition * middleEnergy * 0.65
+            : 0;
       const startGridDistance = getNearestGridDistance(safeStart, grid);
       const endGridDistance = getNearestGridDistance(end, grid);
       const startBoundaryBonus = Number.isFinite(startGridDistance)
@@ -336,7 +344,8 @@ function findBestContinuousExcerpt({
         startBoundaryBonus +
         endBoundaryBonus +
         realSongEndBonus +
-        timelineBias -
+        timelineBias +
+        focusBias -
         lengthPenalty -
         abruptStartPenalty -
         abruptEndPenalty;
@@ -776,10 +785,16 @@ export default function ShortenTrackModal({
 
     try {
       const variationNumber = generatedTracks.length + 1;
+      const variationIndex = generatedTracks.filter(
+        (track) =>
+          track.durationSeconds === targetSeconds &&
+          track.exactTime === exactTime &&
+          track.focus === excerptFocus,
+      ).length;
       const { blob, actualDurationSeconds, waveformPeaks } = await createShortenedTrack(
         song,
         targetSeconds,
-        variationNumber - 1,
+        variationIndex,
         exactTime,
         excerptFocus,
       );
@@ -808,6 +823,8 @@ export default function ShortenTrackModal({
         durationSeconds: targetSeconds,
         actualDurationSeconds,
         variationNumber,
+        exactTime,
+        focus: excerptFocus,
         url,
         song: shortenedSong,
       };
