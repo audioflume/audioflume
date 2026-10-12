@@ -823,6 +823,255 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   text-decoration: none;
 }
 
+.audioflume-home-reference-trending {
+  padding: 8px 0 88px;
+  background: var(--bg-primary);
+}
+
+.audioflume-home-reference-trending-grid {
+  display: grid;
+  width: calc(100vw - 160px);
+  max-width: none;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  min-height: 560px;
+}
+
+.audioflume-home-reference-trending-visual {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background-color: #222222;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.audioflume-home-reference-trending-visual::before {
+  position: absolute;
+  inset: -70px;
+  background: inherit;
+  background-position: center;
+  background-size: cover;
+  filter: blur(54px) saturate(0.72) brightness(0.48);
+  transform: scale(1.12);
+  content: "";
+}
+
+.audioflume-home-reference-trending-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background:
+    linear-gradient(90deg, rgba(18, 18, 18, 0.36), rgba(18, 18, 18, 0.08)),
+    linear-gradient(180deg, rgba(17, 17, 17, 0.08), rgba(17, 17, 17, 0.35));
+}
+
+.audioflume-home-reference-trending-copy {
+  position: absolute;
+  left: 54px;
+  bottom: 108px;
+  z-index: 3;
+  display: grid;
+  grid-template-columns: auto minmax(130px, 190px);
+  align-items: end;
+  gap: 30px;
+  color: #ffffff;
+}
+
+.audioflume-home-reference-trending-copy h2 {
+  margin: 0;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(42px, 4vw, 66px);
+  font-weight: 300;
+  letter-spacing: -0.045em;
+  line-height: 0.92;
+}
+
+.audioflume-home-reference-trending-copy p {
+  margin: 0 0 4px;
+  color: rgba(255, 255, 255, 0.76);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.35;
+}
+
+.audioflume-home-reference-trending-artwork {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.audioflume-home-reference-trending-artwork > span {
+  position: absolute;
+  display: block;
+  overflow: hidden;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.22);
+}
+
+.audioflume-home-reference-trending-artwork img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.audioflume-home-reference-trending-artwork .is-1 {
+  top: 58px;
+  left: 21%;
+  width: 84px;
+  height: 84px;
+}
+
+.audioflume-home-reference-trending-artwork .is-2 {
+  top: 34px;
+  right: 18%;
+  width: 112px;
+  height: 112px;
+}
+
+.audioflume-home-reference-trending-artwork .is-3 {
+  top: 36%;
+  left: 57%;
+  width: 72px;
+  height: 72px;
+}
+
+.audioflume-home-reference-trending-artwork .is-4 {
+  right: 10%;
+  bottom: 94px;
+  width: 106px;
+  height: 106px;
+}
+
+.audioflume-home-reference-trending-artwork .is-5 {
+  bottom: 38px;
+  left: 36%;
+  width: 76px;
+  height: 76px;
+}
+
+.audioflume-home-reference-trending-artwork .is-6 {
+  top: 48%;
+  left: 12%;
+  width: 62px;
+  height: 62px;
+}
+
+.audioflume-home-reference-trending-list {
+  --bg-primary: #111111;
+  --bg-hover: #1d1d1d;
+  --bg-hover-strong: #262626;
+  --bg-tertiary: #262626;
+  --text-primary: #ffffff;
+  --text-secondary: rgba(255, 255, 255, 0.66);
+  --text-subtle: rgba(255, 255, 255, 0.46);
+  --text-muted: rgba(255, 255, 255, 0.46);
+  --icon-color: rgba(255, 255, 255, 0.58);
+  --border-subtle: rgba(255, 255, 255, 0.08);
+  --waveform-color: rgba(255, 255, 255, 0.26);
+  --waveform-progress: rgba(255, 255, 255, 0.85);
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  background: #111111;
+  padding: 28px 34px;
+  color: #ffffff;
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-card {
+  --filmwave-song-card-cover-size: 42px;
+  --filmwave-song-card-min-height: 64px;
+  --filmwave-song-card-padding-left: 0;
+  --filmwave-song-card-padding-right: 0;
+  --filmwave-song-card-padding-y: 9px;
+  --filmwave-song-card-gap: 12px;
+  border-bottom: 0;
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-wave-wrap,
+.audioflume-home-reference-trending-list .filmwave-song-stems-slot,
+.audioflume-home-reference-trending-list .filmwave-song-genre-slot,
+.audioflume-home-reference-trending-list .filmwave-song-key-bpm {
+  display: none;
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-info {
+  max-width: none;
+  flex: 1 1 auto;
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-duration {
+  color: rgba(255, 255, 255, 0.46);
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-title {
+  color: #ffffff;
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-artist {
+  color: rgba(255, 255, 255, 0.48);
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-action-button {
+  color: rgba(255, 255, 255, 0.56);
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-card:hover,
+.audioflume-home-reference-trending-list .filmwave-song-card.is-current {
+  background: rgba(255, 255, 255, 0.045);
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-reference-trending-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .audioflume-home-reference-trending-visual {
+    min-height: 500px;
+  }
+
+  .audioflume-home-reference-trending-list {
+    padding: 24px 28px;
+  }
+}
+
+@media (max-width: 720px) {
+  .audioflume-home-reference-trending {
+    padding-bottom: 64px;
+  }
+
+  .audioflume-home-reference-trending-grid {
+    width: calc(100vw - 36px);
+  }
+
+  .audioflume-home-reference-trending-visual {
+    min-height: 430px;
+  }
+
+  .audioflume-home-reference-trending-copy {
+    left: 28px;
+    bottom: 42px;
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .audioflume-home-reference-trending-copy h2 {
+    font-size: 44px;
+  }
+
+  .audioflume-home-reference-trending-copy p {
+    max-width: 220px;
+  }
+
+  .audioflume-home-reference-trending-artwork .is-4,
+  .audioflume-home-reference-trending-artwork .is-5,
+  .audioflume-home-reference-trending-artwork .is-6 {
+    display: none;
+  }
+}
+
 .audioflume-home-reference-artist-card {
   --audioflume-home-artist-media-height: 400px;
   position: relative;
