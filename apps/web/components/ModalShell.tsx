@@ -150,7 +150,7 @@ export default function ModalShell({
           <div
             className={`flex flex-shrink-0 items-center gap-2 px-5 pb-5 pt-2 ${
               footerClassName || "justify-end"
-            } [&>button]:rounded-[7px]`}
+            } [&>button]:rounded-none`}
           >
             {footer}
           </div>
