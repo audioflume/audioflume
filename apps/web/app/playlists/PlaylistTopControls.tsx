@@ -194,7 +194,7 @@ function PlaylistReorderCard({
   viewMode: string;
   countLabel: string;
   dragging: boolean;
-  onDragStart: () => void;
+  onDragStart: (event: React.DragEvent<HTMLElement>) => void;
   onDragOver: (event: React.DragEvent<HTMLElement>) => void;
   onDrop: () => void;
   onDragEnd: () => void;
@@ -203,16 +203,20 @@ function PlaylistReorderCard({
     return (
       <div
         className="playlist-index-row is-reordering playlist-top-reorder-item"
-        draggable
         style={{ opacity: dragging ? 0.35 : 1 }}
-        onDragStart={onDragStart}
         onDragOver={onDragOver}
         onDrop={onDrop}
-        onDragEnd={onDragEnd}
       >
-        <div className="playlist-row-handle playlist-top-reorder-list-handle">
+        <button
+          type="button"
+          draggable
+          className="playlist-row-handle playlist-top-reorder-list-handle"
+          aria-label={`Drag ${playlist.name} to reorder`}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+        >
           <BackendDragHandleGlyph />
-        </div>
+        </button>
         <div className="playlist-row-number">
           {String(index + 1).padStart(2, "0")}
         </div>
@@ -233,12 +237,9 @@ function PlaylistReorderCard({
   return (
     <div
       className="playlist-gallery-card is-reordering playlist-top-reorder-item"
-      draggable
       style={{ opacity: dragging ? 0.35 : 1 }}
-      onDragStart={onDragStart}
       onDragOver={onDragOver}
       onDrop={onDrop}
-      onDragEnd={onDragEnd}
     >
       <div className="playlist-gallery-art-wrap">
         <PlaylistReorderArtwork
@@ -246,9 +247,16 @@ function PlaylistReorderCard({
           index={index}
           className="playlist-gallery-art"
         />
-        <div className="playlist-top-reorder-grid-handle" aria-hidden="true">
+        <button
+          type="button"
+          draggable
+          className="playlist-top-reorder-grid-handle"
+          aria-label={`Drag ${playlist.name} to reorder`}
+          onDragStart={onDragStart}
+          onDragEnd={onDragEnd}
+        >
           <BackendDragHandleGlyph />
-        </div>
+        </button>
         <div className="playlist-gallery-content">
           <h3>{playlist.name}</h3>
           <p>{countLabel}</p>
@@ -486,7 +494,11 @@ export default function PlaylistTopControls() {
                   viewMode={viewMode}
                   countLabel={countLabels[playlist.id] || ""}
                   dragging={draggingId === playlist.id}
-                  onDragStart={() => setDraggingId(playlist.id)}
+                  onDragStart={(event) => {
+                    event.dataTransfer.effectAllowed = "move";
+                    event.dataTransfer.setData("text/plain", String(playlist.id));
+                    setDraggingId(playlist.id);
+                  }}
                   onDragOver={(event) => event.preventDefault()}
                   onDrop={() => {
                     if (draggingId == null) return;
@@ -569,6 +581,7 @@ export default function PlaylistTopControls() {
         }
 
         .playlist-top-reorder-list-handle {
+          appearance: none !important;
           display: flex !important;
           width: 28px !important;
           height: 32px !important;
@@ -577,10 +590,13 @@ export default function PlaylistTopControls() {
           justify-content: center !important;
           margin: 0 !important;
           padding: 0 !important;
+          border: 0 !important;
+          background: transparent !important;
           color: var(--text-muted) !important;
         }
 
         .playlist-top-reorder-grid-handle {
+          appearance: none !important;
           position: absolute !important;
           top: 8px !important;
           left: 8px !important;
