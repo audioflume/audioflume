@@ -248,7 +248,7 @@ export default function ProjectFolderPickerModal({
       onClose={onClose}
       closeLabel="Close folder picker"
       maxWidth="max-w-[700px]"
-      maxHeight="460px"
+      maxHeight="506px"
       bodyClassName="flex flex-col px-0 pb-0"
       footerClassName="justify-between gap-4 px-5 pb-4 pt-3"
       headerContent={headerPreview}
