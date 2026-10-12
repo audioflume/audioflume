@@ -858,6 +858,41 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
 }
 
+.audioflume-home-feature-flash-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.audioflume-home-feature-flash-media .audioflume-pricing-hero-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+}
+
+.audioflume-home-feature-flash-media .audioflume-pricing-hero-frame.is-active {
+  opacity: 1;
+}
+
+.audioflume-home-reference-feature-pair-card.is-artists::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.32);
+  content: "";
+  pointer-events: none;
+}
+
+.audioflume-home-reference-feature-pair-card.is-artists h2,
+.audioflume-home-reference-feature-pair-card.is-artists .audioflume-home-reference-feature-pair-link {
+  z-index: 2;
+}
+
 .audioflume-home-reference-feature-pair-card.is-playlists {
   isolation: isolate;
   background-image: url("https://images.filmwave.io/images/home/Curated%20Playlists.png");
