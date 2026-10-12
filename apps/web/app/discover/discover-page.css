@@ -446,7 +446,7 @@
 
 .discover-artist-featured-shelf-arrow {
   position: absolute;
-  top: 200px;
+  top: 50%;
   z-index: 20;
   display: grid;
   width: 44px;
@@ -490,8 +490,8 @@
 .discover-artist-feature-card {
   --discover-artist-feature-media-height: 400px;
   position: relative;
-  width: min(50vw, 650px);
-  min-width: min(50vw, 650px);
+  width: min(44vw, 840px);
+  min-width: min(44vw, 840px);
   background: transparent;
 }
 
@@ -505,9 +505,18 @@
 
 .discover-artist-feature-media-home {
   position: relative;
-  height: var(--discover-artist-feature-media-height);
+  aspect-ratio: 1.63 / 1;
   overflow: hidden;
   background: var(--bg-tertiary);
+}
+
+.discover-artist-feature-media-home::after {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.5) 100%);
+  content: "";
+  pointer-events: none;
 }
 
 .discover-artist-feature-media-home img {
@@ -524,11 +533,16 @@
 }
 
 .discover-artist-feature-bar {
-  position: relative;
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 2;
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  align-items: start;
-  padding: 16px 58px 0 0;
+  align-items: end;
+  padding: 0 104px 28px 28px;
+  pointer-events: none;
 }
 
 .discover-artist-feature-copy {
@@ -540,20 +554,16 @@
 
 .discover-artist-feature-copy strong {
   grid-column: 1;
-  color: var(--text-primary);
-  font-family: var(--filmwave-section-title-font-family);
-  font-size: var(--filmwave-section-title-font-size);
-  font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
-  line-height: var(--filmwave-section-title-line-height);
+  color: #ffffff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(30px, 2.1vw, 40px);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1;
 }
 
 .discover-artist-feature-genres {
-  grid-column: 1;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
+  display: none;
 }
 
 .discover-artist-feature-genres > span {
@@ -578,12 +588,12 @@
 
 .discover-artist-feature-play {
   position: absolute;
-  top: calc(var(--discover-artist-feature-media-height) - 76px);
-  right: 24px;
+  right: 28px;
+  bottom: 28px;
   z-index: 3;
   display: grid;
-  width: 52px;
-  height: 52px;
+  width: 64px;
+  height: 64px;
   place-items: center;
   border: 0;
   border-radius: 999px;
