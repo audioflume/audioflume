@@ -809,8 +809,8 @@ export default function HomePageContent() {
           <div>
             <h3>Subscription, premium &amp; bespoke.</h3>
             <p>
-              Flexible licensing for everyday edits, premium catalogue needs and
-              custom commissioned work.
+              Flexible licensing for everyday edits, production needs, enterprise access,
+              and custom commissioned work.
             </p>
           </div>
         </div>
