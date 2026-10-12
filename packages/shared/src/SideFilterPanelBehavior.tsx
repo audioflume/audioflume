@@ -491,7 +491,9 @@ export default function SideFilterPanelBehavior() {
       const panel = railItem.closest(".fw-filter-panel-wrap");
       if (!(panel instanceof HTMLElement)) return;
 
-      if (target.closest(".fw-filter-rail-count")) {
+      if (
+        target.closest(".fw-filter-rail-count, .fw-filter-advanced-count")
+      ) {
         const sectionId = getRailItemSectionId(railItem);
 
         if (!sectionId) return;

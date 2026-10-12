@@ -879,7 +879,7 @@ function MusicAdvancedSection({
               <span className="fw-filter-advanced-trigger-label">{label}</span>
               {showCountControls && getSectionCount(sectionId) > 0 && (
                 <span
-                  className="fw-filter-rail-count fw-filter-advanced-count"
+                  className="fw-filter-advanced-count"
                   role="button"
                   tabIndex={0}
                   aria-label={`Clear ${label} filters`}
