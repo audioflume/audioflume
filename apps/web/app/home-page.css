@@ -836,7 +836,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: calc(100vw - 160px);
   max-width: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 16px;
+  gap: 12px;
 }
 
 .audioflume-home-reference-feature-pair-card {
