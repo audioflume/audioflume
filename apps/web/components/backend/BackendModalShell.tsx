@@ -44,8 +44,8 @@ export default function BackendModalShell({
       contentCorners="rounded"
       background="var(--bg-primary)"
       bodyClassName={`flex min-h-0 flex-1 flex-col px-5 pb-0${bodyClassName ? ` ${bodyClassName}` : ""}`}
-      contentClassName={`${heightClassName} max-h-[calc(100vh-64px)] [&>div:first-of-type>h2]:text-base [&>div:first-of-type>h2]:font-medium [&>div:first-of-type>h2]:tracking-[-0.03em]`}
-      footerClassName="justify-end [&>button]:rounded-[7px]"
+      contentClassName={`${heightClassName} max-h-[calc(100vh-64px)] [&_.filmwave-backend-input]:!rounded-none [&_.filmwave-backend-select]:!rounded-none [&_.filmwave-backend-textarea]:!rounded-none [&_.filmwave-backend-button]:!rounded-none`}
+      footerClassName="justify-end [&>button]:rounded-none"
       footer={footer}
     >
       {children}
