@@ -1279,7 +1279,7 @@ main
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  filter: blur(18px);
+  filter: blur(32px);
   transform: scale(1.06);
   transition: transform 320ms ease;
 }
@@ -1309,7 +1309,7 @@ main
   align-self: stretch;
   justify-self: start;
   overflow: hidden;
-  margin-bottom: 14px;
+  margin-bottom: 24px;
 }
 
 .audioflume-music-page .audioflume-music-featured-song-cover img {
