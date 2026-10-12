@@ -557,7 +557,7 @@
   grid-column: 1;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(34px, 2.4vw, 46px);
+  font-size: clamp(36px, 2.55vw, 50px);
   font-weight: 300;
   letter-spacing: -0.03em;
   line-height: 1;
