@@ -36,16 +36,18 @@ export default function BackendSearchBar({
         value={value}
         onChange={(event) => onChange(event.target.value)}
         placeholder={placeholder}
-        className={`filmwave-backend-input filmwave-backend-search-input${
-          modalVariant ? " focus:border-[var(--text-muted)]" : ""
-        }`}
+        className={
+          modalVariant
+            ? "h-12 w-full !rounded-none !border-0 !bg-[var(--bg-hover)] !pl-10 !pr-10 text-sm text-[var(--text-primary)] outline-none placeholder:text-[var(--text-muted)]"
+            : "filmwave-backend-input filmwave-backend-search-input"
+        }
       />
       {value ? (
         <button
           type="button"
           onClick={() => onChange("")}
-          className={`absolute right-0 top-0 flex h-10 w-10 items-center justify-center bg-transparent text-[var(--text-primary)]${
-            modalVariant ? " cursor-pointer" : ""
+          className={`absolute right-0 top-0 flex w-10 items-center justify-center bg-transparent text-[var(--text-primary)] ${
+            modalVariant ? "h-12 cursor-pointer" : "h-10"
           }`}
           aria-label={clearLabel}
         >
