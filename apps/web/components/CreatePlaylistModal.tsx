@@ -12,12 +12,42 @@ import {
   modalPrimaryButtonClass,
 } from "@/components/uiClasses";
 import LoadingSpinner from "@/components/LoadingSpinner";
-import SearchIconSmall from "@/components/icons/SearchIconSmall";
 import UploadIcon from "@/components/icons/UploadIcon";
 import {
   toSmartTitleCase,
   toSmartTitleCaseInput,
 } from "@/lib/smartTitleCase";
+
+function FreeImagesIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 16 16"
+      fill="none"
+      aria-hidden="true"
+      className="shrink-0"
+    >
+      <rect
+        x="2.25"
+        y="2.25"
+        width="11.5"
+        height="11.5"
+        rx="0.75"
+        stroke="currentColor"
+        strokeWidth="1.25"
+      />
+      <circle cx="5.25" cy="5.25" r="1" fill="currentColor" />
+      <path
+        d="M3.75 11.75 7 8.5l2.25 2.25 1.5-1.5 1.5 1.5"
+        stroke="currentColor"
+        strokeWidth="1.25"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
 
 type CreatePlaylistModalProps = {
   isOpen: boolean;
@@ -163,8 +193,8 @@ export default function CreatePlaylistModal({
             disabled={busy}
             className="flex h-8 cursor-pointer items-center gap-1.5 rounded-none px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
           >
-            Unsplash
-            <SearchIconSmall />
+            <FreeImagesIcon />
+            Free Images
           </button>
 
           <button
