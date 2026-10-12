@@ -840,30 +840,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: relative;
   min-width: 0;
   overflow: hidden;
-  background-color: #222222;
+  background-image: url("https://images.filmwave.io/images/home/New%20%26%20Trending.png");
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-}
-
-.audioflume-home-reference-trending-visual::before {
-  position: absolute;
-  inset: -70px;
-  background: inherit;
-  background-position: center;
-  background-size: cover;
-  filter: blur(54px) saturate(0.72) brightness(0.48);
-  transform: scale(1.12);
-  content: "";
-}
-
-.audioflume-home-reference-trending-shade {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background:
-    linear-gradient(90deg, rgba(18, 18, 18, 0.36), rgba(18, 18, 18, 0.08)),
-    linear-gradient(180deg, rgba(17, 17, 17, 0.08), rgba(17, 17, 17, 0.35));
 }
 
 .audioflume-home-reference-trending-copy {
@@ -897,68 +877,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
-}
-
-.audioflume-home-reference-trending-artwork {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  pointer-events: none;
-}
-
-.audioflume-home-reference-trending-artwork > span {
-  position: absolute;
-  display: block;
-  overflow: hidden;
-}
-
-.audioflume-home-reference-trending-artwork img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.audioflume-home-reference-trending-artwork .is-1 {
-  top: 8%;
-  left: 21%;
-  width: 92px;
-  height: 92px;
-}
-
-.audioflume-home-reference-trending-artwork .is-2 {
-  top: -28px;
-  right: 15%;
-  width: 124px;
-  height: 124px;
-}
-
-.audioflume-home-reference-trending-artwork .is-3 {
-  top: 25%;
-  right: 9%;
-  width: 76px;
-  height: 76px;
-}
-
-.audioflume-home-reference-trending-artwork .is-4 {
-  right: 12%;
-  bottom: 12%;
-  width: 112px;
-  height: 112px;
-}
-
-.audioflume-home-reference-trending-artwork .is-5 {
-  bottom: -24px;
-  left: 42%;
-  width: 88px;
-  height: 88px;
-}
-
-.audioflume-home-reference-trending-artwork .is-6 {
-  bottom: 20%;
-  left: 20%;
-  width: 68px;
-  height: 68px;
 }
 
 .audioflume-home-reference-trending-list {
@@ -1071,11 +989,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     font-size: 11px;
   }
 
-  .audioflume-home-reference-trending-artwork .is-4,
-  .audioflume-home-reference-trending-artwork .is-5,
-  .audioflume-home-reference-trending-artwork .is-6 {
-    display: none;
-  }
 }
 
 .audioflume-home-reference-artist-card {
