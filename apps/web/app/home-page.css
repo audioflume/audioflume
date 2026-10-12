@@ -849,6 +849,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background-size: cover;
 }
 
+
+html:not(.light) .audioflume-home-reference-feature-pair-card,
+html:not(.light) .audioflume-home-reference-trending-grid {
+  box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+}
+
 .audioflume-home-reference-feature-pair-card.is-artists {
   --audioflume-feature-artists-scale: 1;
   container-type: inline-size;
