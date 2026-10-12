@@ -319,56 +319,54 @@ function findBestContinuousExcerpt({
 
   const rankedPlans = scoredPlans.sort((a, b) => b.score - a.score);
   const bestPlan = rankedPlans[0];
-  const broadPlans: Array<ContinuousExcerptPlan & { score: number }> = [];
+  const variationPlans: Array<ContinuousExcerptPlan & { score: number }> = [];
 
   if (bestPlan) {
-    broadPlans.push(bestPlan);
+    variationPlans.push(bestPlan);
 
-    const maxStart = Math.max(0, duration - bestPlan.length);
-    const regionCount = maxStart > targetSeconds * 2 ? 5 : maxStart > targetSeconds ? 4 : 3;
-    const bestByRegion = new Map<number, ContinuousExcerptPlan & { score: number }>();
+    const candidatePlans = rankedPlans.filter((plan, index) => {
+      if (index === 0) return false;
 
-    for (const plan of rankedPlans) {
-      const planMaxStart = Math.max(0, duration - plan.length);
-      const normalizedStart = planMaxStart > 0 ? plan.start / planMaxStart : 0;
-      const regionIndex = Math.min(
-        regionCount - 1,
-        Math.floor(normalizedStart * regionCount),
-      );
-      const currentBest = bestByRegion.get(regionIndex);
+      return !rankedPlans
+        .slice(0, index)
+        .some(
+          (earlier) =>
+            Math.abs(earlier.start - plan.start) < 0.75 &&
+            Math.abs(earlier.length - plan.length) < 0.75,
+        );
+    });
 
-      if (!currentBest || plan.score > currentBest.score) {
-        bestByRegion.set(regionIndex, plan);
-      }
-    }
-
-    const remainingRegionalPlans = Array.from(bestByRegion.values()).filter(
-      (plan) => Math.abs(plan.start - bestPlan.start) >= Math.max(4, targetSeconds * 0.35),
-    );
-
-    while (remainingRegionalPlans.length > 0) {
+    while (candidatePlans.length > 0) {
       let selectedIndex = 0;
       let selectedDistance = -Infinity;
+      let selectedScore = -Infinity;
 
-      for (let index = 0; index < remainingRegionalPlans.length; index += 1) {
-        const candidate = remainingRegionalPlans[index];
+      for (let index = 0; index < candidatePlans.length; index += 1) {
+        const candidate = candidatePlans[index];
         const distanceFromExisting = Math.min(
-          ...broadPlans.map((existing) => Math.abs(existing.start - candidate.start)),
+          ...variationPlans.map((existing) => Math.abs(existing.start - candidate.start)),
         );
 
-        if (distanceFromExisting > selectedDistance) {
+        if (
+          distanceFromExisting > selectedDistance ||
+          (Math.abs(distanceFromExisting - selectedDistance) < 0.001 &&
+            candidate.score > selectedScore)
+        ) {
           selectedDistance = distanceFromExisting;
+          selectedScore = candidate.score;
           selectedIndex = index;
         }
       }
 
-      broadPlans.push(remainingRegionalPlans[selectedIndex]);
-      remainingRegionalPlans.splice(selectedIndex, 1);
+      variationPlans.push(candidatePlans[selectedIndex]);
+      candidatePlans.splice(selectedIndex, 1);
     }
   }
 
+  const safeVariationIndex = Math.max(0, variationIndex);
   const selectedPlan =
-    broadPlans[Math.max(0, variationIndex) % broadPlans.length] ??
+    variationPlans[safeVariationIndex] ??
+    variationPlans[variationPlans.length - 1] ??
     bestPlan ?? {
       start: 0,
       length: Math.min(targetSeconds, duration),
