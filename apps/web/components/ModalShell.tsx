@@ -22,7 +22,6 @@ type ModalShellProps = {
   inputCorners?: "square" | "rounded";
   contentCorners?: "square" | "rounded";
   background?: string;
-  eyebrow?: string;
   headerHeight?: string;
   bodyOverflow?: "hidden" | "visible";
 };
@@ -45,7 +44,6 @@ export default function ModalShell({
   inputCorners = "square",
   contentCorners = "square",
   background = "var(--bg-primary)",
-  eyebrow = "",
   headerHeight = "96px",
   bodyOverflow = "visible",
 }: ModalShellProps) {
@@ -100,22 +98,15 @@ export default function ModalShell({
           style={headerContent ? undefined : { height: headerHeight }}
         >
           {headerContent || (
-            <>
-              {eyebrow && (
-                <span className="mb-2 font-[family-name:var(--font-roboto-mono-filmwave)] text-[9px] font-normal uppercase tracking-[0.08em] text-[var(--text-muted)]">
-                  {eyebrow}
-                </span>
-              )}
-              <h2
-                className={`min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[28px] font-light leading-none tracking-[-0.035em] text-[var(--text-primary)] ${
-                  centerTitle
-                    ? "absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
-                    : ""
-                }`}
-              >
-                {title}
-              </h2>
-            </>
+            <h2
+              className={`min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[28px] font-light leading-none tracking-[-0.035em] text-[var(--text-primary)] ${
+                centerTitle
+                  ? "absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
+                  : ""
+              }`}
+            >
+              {title}
+            </h2>
           )}
         </div>
 
