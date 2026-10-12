@@ -926,16 +926,16 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-trending-list .filmwave-song-card {
   --filmwave-song-card-cover-size: 42px;
   --filmwave-song-card-min-height: 64px;
-  --filmwave-song-card-padding-left: 14px;
-  --filmwave-song-card-padding-right: 14px;
+  --filmwave-song-card-padding-left: 12px;
+  --filmwave-song-card-padding-right: 12px;
   --filmwave-song-card-padding-y: 9px;
   --filmwave-song-card-gap: 18px;
   box-sizing: border-box;
-  width: calc(100% + 28px);
-  margin-right: -14px;
-  margin-left: -14px;
+  width: calc(100% + 24px);
+  margin-right: -12px;
+  margin-left: -12px;
   border-bottom: 0;
-  padding: 9px 14px !important;
+  padding: 9px 12px !important;
 }
 
 .audioflume-home-reference-trending-list .filmwave-song-wave-wrap,
