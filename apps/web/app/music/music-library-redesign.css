@@ -282,6 +282,12 @@ html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filt
   > .fw-music-content-column
   > .fw-song-list {
   margin-top: 0 !important;
+}
+
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-song-list:not(:has(.audioflume-music-reference-summary)) {
   padding-top: 16px;
 }
 
