@@ -802,12 +802,17 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 26px;
+  margin-bottom: 14px;
   font-family: var(--filmwave-section-title-font-family);
-  font-size: var(--filmwave-section-title-font-size);
-  font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
   line-height: var(--filmwave-section-title-line-height);
+}
+
+.audioflume-home-reference-section-heading > span {
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: uppercase;
 }
 
 .audioflume-home-reference-section-heading a {
@@ -816,21 +821,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font-weight: 300;
   letter-spacing: normal;
   text-decoration: none;
-}
-
-.audioflume-home-reference-artists
-  .audioflume-home-reference-section-heading {
-  margin-bottom: 14px;
-}
-
-.audioflume-home-reference-artists
-  .audioflume-home-reference-section-heading
-  > span {
-  font-size: 18px;
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.15;
-  text-transform: uppercase;
 }
 
 .audioflume-home-reference-artist-card {
