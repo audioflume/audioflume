@@ -292,7 +292,7 @@ export default function AdminAddToPlaylistModal({
               <div className="flex min-h-full flex-col items-center justify-center gap-3 px-4 text-center">
                 <div className="text-xs font-medium text-[var(--danger)]">{displayedError}</div>
                 {playlistsError ? (
-                  <BackendButton type="button" compact onClick={refetchPlaylists}>
+                  <BackendButton type="button" compact className="!rounded-none" onClick={refetchPlaylists}>
                     Try Again
                   </BackendButton>
                 ) : null}
