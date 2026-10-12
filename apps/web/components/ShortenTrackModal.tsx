@@ -1032,20 +1032,16 @@ export default function ShortenTrackModal({
                         <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                           {track.label} · Option {track.variationNumber}
                         </span>
-                        {(track.exactTime || track.focus !== "any") && (
-                          <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                            {[
-                              track.exactTime ? "Exact time" : null,
-                              track.focus === "start"
-                                ? "Song start"
-                                : track.focus === "finish"
-                                  ? "Song finish"
-                                  : null,
-                            ]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </span>
-                        )}
+                        <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
+                          {[
+                            track.exactTime ? "Exact time" : null,
+                            track.focus === "start"
+                              ? "Song start"
+                              : track.focus === "finish"
+                                ? "Song finish"
+                                : null,
+                          ].filter(Boolean).join(" · ") || "Standard"}
+                        </span>
                       </span>
 
                       <a
