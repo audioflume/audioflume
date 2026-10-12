@@ -411,14 +411,32 @@
   margin-top: calc(clamp(34px, 3vw, 48px) + 20px);
 }
 
-.discover-artist-featured-label {
-  margin: 0 0 12px;
-  color: var(--text-primary);
+.discover-artist-featured-heading {
+  display: flex;
+  width: calc(100vw - 160px);
+  min-height: 28px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin: 0 0 14px calc(50% - 50vw + 80px);
+  font-family: var(--filmwave-section-title-font-family);
+  line-height: var(--filmwave-section-title-line-height);
+}
+
+.discover-artist-featured-heading > span {
   font-size: 18px;
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.15;
   text-transform: uppercase;
+}
+
+.discover-artist-featured-heading > a {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: normal;
+  text-decoration: none;
 }
 
 .discover-artist-featured-shelf {
@@ -433,8 +451,8 @@
   gap: 12px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-right: var(--discover-artist-content-inset);
-  padding-left: var(--discover-artist-content-inset);
+  padding-right: 80px;
+  padding-left: 80px;
   scroll-behavior: smooth;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
@@ -535,7 +553,7 @@
 .discover-artist-feature-bar {
   position: absolute;
   right: 0;
-  bottom: 28px;
+  bottom: 36px;
   left: 0;
   z-index: 2;
   display: grid;
@@ -596,6 +614,10 @@
 :where(html.light, html[data-theme="light"]) .discover-artist-feature-genres > span {
   background: rgba(255, 255, 255, 0.14);
   color: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"]) .discover-artist-feature-media-home::after {
+  background: rgba(17, 17, 17, 0.72);
 }
 
 .discover-artist-feature-play {
