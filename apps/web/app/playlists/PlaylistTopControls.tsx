@@ -4,7 +4,7 @@ import { HeaderSearchBar } from "@filmwave/shared";
 import DropdownShell from "@/components/DropdownShell";
 import Toast from "@/components/Toast";
 import GridViewIcon from "@/components/icons/GridViewIcon";
-import DragIconSmall from "@/components/icons/DragIconSmall";
+import { BackendDragHandleGlyph } from "@/components/backend/BackendDragHandle";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import SortIcon from "@/components/icons/SortIcon";
@@ -211,7 +211,7 @@ function PlaylistReorderCard({
         onDragEnd={onDragEnd}
       >
         <div className="playlist-row-handle playlist-top-reorder-list-handle">
-          <DragIconSmall />
+          <BackendDragHandleGlyph />
         </div>
         <div className="playlist-row-number">
           {String(index + 1).padStart(2, "0")}
@@ -247,7 +247,7 @@ function PlaylistReorderCard({
           className="playlist-gallery-art"
         />
         <div className="playlist-top-reorder-grid-handle" aria-hidden="true">
-          <DragIconSmall />
+          <BackendDragHandleGlyph />
         </div>
         <div className="playlist-gallery-content">
           <h3>{playlist.name}</h3>
@@ -564,12 +564,19 @@ export default function PlaylistTopControls() {
           cursor: grabbing !important;
         }
 
+        .playlist-top-reorder-root .playlist-index-row.is-reordering {
+          column-gap: 16px !important;
+        }
+
         .playlist-top-reorder-list-handle {
           display: flex !important;
           width: 28px !important;
           height: 32px !important;
+          min-width: 28px !important;
           align-items: center !important;
           justify-content: center !important;
+          margin: 0 !important;
+          padding: 0 !important;
           color: var(--text-muted) !important;
         }
 
@@ -581,8 +588,8 @@ export default function PlaylistTopControls() {
           bottom: auto !important;
           z-index: 20 !important;
           display: flex !important;
-          width: 28px !important;
-          height: 28px !important;
+          width: 32px !important;
+          height: 32px !important;
           align-items: center !important;
           justify-content: center !important;
           border: 0 !important;
@@ -590,12 +597,6 @@ export default function PlaylistTopControls() {
           background: transparent !important;
           color: #fff !important;
           box-shadow: none !important;
-        }
-
-        .playlist-top-reorder-grid-handle .filmwave-drag-icon,
-        .playlist-top-reorder-list-handle .filmwave-drag-icon {
-          width: 13px !important;
-          height: 13px !important;
         }
 
         .playlist-top-reorder-root .playlist-gallery-art img,
