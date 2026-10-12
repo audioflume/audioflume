@@ -891,7 +891,7 @@ export default function ShortenTrackModal({
             })}
           </div>
 
-          <div className="mt-3 flex items-center justify-center gap-5">
+          <div className="mt-3 flex items-center justify-center gap-6">
             <button
               type="button"
               aria-pressed={exactTime}
