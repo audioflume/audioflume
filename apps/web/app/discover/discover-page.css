@@ -408,6 +408,7 @@
 
 .discover-artist-featured {
   position: relative;
+  margin-top: calc(clamp(34px, 3vw, 48px) + 20px);
 }
 
 .discover-artist-featured-label {
