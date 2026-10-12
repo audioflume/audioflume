@@ -21,6 +21,8 @@ import {
   type MusicLibrarySortValue,
   QUICK_FILTERS,
   REGION_OPTIONS,
+  parseWaveformPeaks,
+  SongCardWaveform,
   songMatchesEditPointFilter,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
@@ -1375,6 +1377,13 @@ export default function MusicPage() {
                             <span className="audioflume-music-featured-song-artist">
                               {song.artist}
                             </span>
+                            <div className="audioflume-music-featured-song-waveform">
+                              <SongCardWaveform
+                                peaks={parseWaveformPeaks(song.waveformPeaks)}
+                                progress={0}
+                                options={{ barWidth: 1.5, barGap: 1 }}
+                              />
+                            </div>
                             <div className="audioflume-music-featured-song-meta">
                               {song.genres.slice(0, 3).map((genre) => (
                                 <span key={genre}>{genre}</span>

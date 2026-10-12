@@ -1316,6 +1316,30 @@ main
   font-weight: 300;
 }
 
+.audioflume-music-page .audioflume-music-featured-song-waveform {
+  width: min(72%, 360px);
+  height: 34px;
+  margin-top: 12px;
+  overflow: hidden;
+}
+
+.audioflume-music-page
+  .audioflume-music-featured-song-waveform
+  .filmwave-song-waveform,
+.audioflume-music-page
+  .audioflume-music-featured-song-waveform
+  .filmwave-song-waveform-canvas {
+  width: 100%;
+  height: 100%;
+}
+
+.audioflume-music-page
+  .audioflume-music-featured-song-waveform
+  .filmwave-song-waveform-canvas {
+  opacity: 0.72;
+  filter: brightness(0) invert(1);
+}
+
 .audioflume-music-page .audioflume-music-featured-song-meta {
   display: flex;
   flex-wrap: wrap;
