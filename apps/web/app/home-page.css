@@ -852,7 +852,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-card.is-artists {
   --audioflume-feature-artists-scale: 1;
   container-type: inline-size;
-  background-image: url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
+  background-image:
+    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
+    url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists {
