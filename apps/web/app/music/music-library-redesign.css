@@ -1336,13 +1336,14 @@ main
 .audioflume-music-page
   .audioflume-music-featured-song-waveform
   .filmwave-song-waveform {
+  --waveform-color: rgba(255, 255, 255, 0.82);
+  --waveform-progress: #ffffff;
   cursor: pointer;
 }
 
 .audioflume-music-page
   .audioflume-music-featured-song-waveform
   .filmwave-song-waveform-canvas {
-  opacity: 0.72;
   filter: brightness(0) invert(1);
 }
 

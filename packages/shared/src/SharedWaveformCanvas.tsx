@@ -24,8 +24,8 @@ import {
 const DEFAULT_BAR_WIDTH = 1.5;
 const DEFAULT_BAR_GAP = 1;
 
-function getWaveformColors(): WaveformColors {
-  const styles = getComputedStyle(document.documentElement);
+function getWaveformColors(element?: HTMLElement | null): WaveformColors {
+  const styles = getComputedStyle(element ?? document.documentElement);
 
   return {
     progressColor: styles.getPropertyValue("--waveform-progress").trim(),
@@ -98,7 +98,7 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
         bars,
         progress: waveformProgressRef.current,
         cache: drawCacheRef.current,
-        colors: getWaveformColors(),
+        colors: getWaveformColors(waveformRef.current),
         forceResize,
         options: { barWidth, barGap },
       });
