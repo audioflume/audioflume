@@ -769,15 +769,7 @@ export default function ShortenTrackModal({
         song: shortenedSong,
       };
 
-      setGeneratedTracks((current) =>
-        [...current, track].sort((a, b) => {
-          if (a.durationSeconds !== b.durationSeconds) {
-            return a.durationSeconds - b.durationSeconds;
-          }
-
-          return a.variationNumber - b.variationNumber;
-        }),
-      );
+      setGeneratedTracks((current) => [track, ...current]);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to shorten track.");
     } finally {
