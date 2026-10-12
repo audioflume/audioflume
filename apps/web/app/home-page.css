@@ -880,7 +880,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-artist-bar {
   position: absolute;
   right: 0;
-  bottom: 28px;
+  bottom: 36px;
   left: 0;
   z-index: 2;
   display: grid;
