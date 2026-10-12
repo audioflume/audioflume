@@ -1396,6 +1396,11 @@ main
 }
 
 
+.audioflume-music-page .audioflume-music-featured-songs,
+.audioflume-music-page .audioflume-music-skeleton-feature-grid {
+  display: none;
+}
+
 .audioflume-music-page .audioflume-music-featured-song-copy > strong {
   overflow: hidden;
   font-family: var(--filmwave-section-title-font-family);
