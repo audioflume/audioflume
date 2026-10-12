@@ -848,11 +848,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-trending-copy {
   position: absolute;
-  left: 54px;
+  left: 50%;
   top: 50%;
   z-index: 3;
   color: #ffffff;
-  transform: translateY(-50%);
+  transform: translate(-50%, -50%);
 }
 
 .audioflume-home-reference-trending-title {
@@ -980,8 +980,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
   .audioflume-home-reference-trending-copy {
     top: 50%;
-    left: 28px;
-    transform: translateY(-50%);
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   .audioflume-home-reference-trending-title {
