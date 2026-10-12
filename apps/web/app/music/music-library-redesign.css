@@ -92,11 +92,11 @@
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
   box-sizing: border-box;
   width: min(720px, calc(100% - 32px));
-  gap: 18px;
+  gap: 12px;
   margin: 12px 16px;
-  border-radius: 999px;
+  border-radius: 0;
   background: #1b1b1b;
-  padding: 0 34px;
+  padding: 0 16px;
   color: #5a5a5a;
 }
 
