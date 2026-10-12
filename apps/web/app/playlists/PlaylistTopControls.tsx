@@ -621,11 +621,12 @@ export default function PlaylistTopControls() {
         }
 
         .playlists-top-controls {
-          grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto) !important;
+          grid-template-columns: max-content minmax(320px, 1fr) max-content !important;
         }
 
         .playlists-status-pill {
-          width: 150px !important;
+          width: auto !important;
+          min-width: 126px !important;
         }
 
         .playlist-scope-dropdown {
@@ -736,13 +737,14 @@ export default function PlaylistTopControls() {
 
         @media (max-width: 940px) {
           .playlists-top-controls {
-            grid-template-columns: 150px minmax(0, 1fr) auto !important;
-            align-items: start !important;
-            gap: 12px !important;
+            grid-template-columns: 126px minmax(0, 1fr) auto !important;
+            align-items: center !important;
+            gap: 10px !important;
           }
 
           .playlists-status-pill {
-            width: 150px !important;
+            width: 126px !important;
+            min-width: 126px !important;
           }
 
           .playlists-control-right {
@@ -753,8 +755,8 @@ export default function PlaylistTopControls() {
 
           .playlists-sort-button,
           .playlists-new-button {
-            width: 42px !important;
-            min-width: 42px !important;
+            width: 44px !important;
+            min-width: 44px !important;
             padding: 0 !important;
           }
 
@@ -775,14 +777,15 @@ export default function PlaylistTopControls() {
 
         @media (max-width: 640px) {
           .playlists-top-controls {
-            grid-template-columns: 120px minmax(0, 1fr) auto !important;
+            grid-template-columns: 112px minmax(0, 1fr) auto !important;
             gap: 8px !important;
           }
 
           .playlists-status-pill {
-            width: 120px !important;
-            padding-right: 12px !important;
-            padding-left: 12px !important;
+            width: 112px !important;
+            min-width: 112px !important;
+            padding-right: 10px !important;
+            padding-left: 10px !important;
           }
 
           .playlists-control-right {
