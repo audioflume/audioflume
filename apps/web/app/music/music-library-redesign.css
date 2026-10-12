@@ -197,6 +197,19 @@
   flex: 0 0 14px;
 }
 
+
+.audioflume-music-page-searchbar
+  .filmwave-music-sort-menu
+  > button[aria-checked="true"] {
+  background: transparent !important;
+}
+
+.audioflume-music-page-searchbar
+  .filmwave-music-sort-menu
+  > button[aria-checked="true"]:hover {
+  background: var(--filmwave-menu-hover) !important;
+}
+
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-control {
