@@ -1533,12 +1533,7 @@ main
 }
 
 .audioflume-music-page .audioflume-music-skeleton-feature-grid {
-  display: grid;
-  width: calc(100% + 40px);
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  margin-right: -20px;
-  margin-bottom: 18px;
-  margin-left: -20px;
+  display: none;
 }
 
 .audioflume-music-page .audioflume-music-skeleton-feature-card {
