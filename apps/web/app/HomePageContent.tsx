@@ -15,6 +15,7 @@ import {
 
 import Footer from "@/components/Footer";
 import ReferenceSearchModal from "@/components/ReferenceSearchModal";
+import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -507,7 +508,11 @@ function HomeSongRowsSkeleton() {
   );
 }
 
-export default function HomePageContent() {
+export default function HomePageContent({
+  homeFlashImages,
+}: {
+  homeFlashImages: string[];
+}) {
   const { songs, loading: songsLoading } = useSongs();
   const { theme, setTheme } = useTheme();
   const { setQueue } = usePlayer();
@@ -752,6 +757,10 @@ export default function HomePageContent() {
       <section className="audioflume-home-reference-feature-pair">
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
           <div className="audioflume-home-reference-feature-pair-card is-artists">
+            <PricingHeroImageFlash
+              images={homeFlashImages}
+              mediaClassName="audioflume-home-feature-flash-media"
+            />
             <h2>
               <span>In demand</span>
               <span>artists</span>
