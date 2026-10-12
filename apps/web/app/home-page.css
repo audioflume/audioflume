@@ -824,7 +824,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending {
-  padding: 8px 0 88px;
+  padding: 88px 0 88px;
   background: var(--bg-primary);
 }
 
@@ -897,7 +897,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.3;
-  transform: translateY(-20px);
+  transform: translateY(-23px);
 }
 
 .audioflume-home-reference-trending-list {
@@ -1045,7 +1045,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-trending-title-row > small {
     width: 195px;
     font-size: 14px;
-    transform: translateY(-17px);
+    transform: translateY(-20px);
   }
 
 }
