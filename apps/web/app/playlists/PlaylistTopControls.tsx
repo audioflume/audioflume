@@ -4,6 +4,7 @@ import { HeaderSearchBar } from "@filmwave/shared";
 import DropdownShell from "@/components/DropdownShell";
 import Toast from "@/components/Toast";
 import GridViewIcon from "@/components/icons/GridViewIcon";
+import DragIconSmall from "@/components/icons/DragIconSmall";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
 import SortIcon from "@/components/icons/SortIcon";
@@ -63,19 +64,6 @@ function ChevronIcon() {
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-    </svg>
-  );
-}
-
-function ReorderHandleIcon() {
-  return (
-    <svg width="10" height="16" viewBox="0 0 10 16" fill="none" aria-hidden="true">
-      <circle cx="2" cy="2.5" r="1" fill="currentColor" />
-      <circle cx="8" cy="2.5" r="1" fill="currentColor" />
-      <circle cx="2" cy="8" r="1" fill="currentColor" />
-      <circle cx="8" cy="8" r="1" fill="currentColor" />
-      <circle cx="2" cy="13.5" r="1" fill="currentColor" />
-      <circle cx="8" cy="13.5" r="1" fill="currentColor" />
     </svg>
   );
 }
@@ -222,8 +210,8 @@ function PlaylistReorderCard({
         onDrop={onDrop}
         onDragEnd={onDragEnd}
       >
-        <div className="playlist-row-handle">
-          <ReorderHandleIcon />
+        <div className="playlist-row-handle playlist-top-reorder-list-handle">
+          <DragIconSmall />
         </div>
         <div className="playlist-row-number">
           {String(index + 1).padStart(2, "0")}
@@ -258,10 +246,8 @@ function PlaylistReorderCard({
           index={index}
           className="playlist-gallery-art"
         />
-        <div className="playlist-gallery-top-row">
-          <div className="playlist-gallery-handle">
-            <ReorderHandleIcon />
-          </div>
+        <div className="playlist-top-reorder-grid-handle" aria-hidden="true">
+          <DragIconSmall />
         </div>
         <div className="playlist-gallery-content">
           <h3>{playlist.name}</h3>
@@ -576,6 +562,40 @@ export default function PlaylistTopControls() {
 
         .playlist-top-reorder-item:active {
           cursor: grabbing !important;
+        }
+
+        .playlist-top-reorder-list-handle {
+          display: flex !important;
+          width: 28px !important;
+          height: 32px !important;
+          align-items: center !important;
+          justify-content: center !important;
+          color: var(--text-muted) !important;
+        }
+
+        .playlist-top-reorder-grid-handle {
+          position: absolute !important;
+          top: 8px !important;
+          left: 8px !important;
+          right: auto !important;
+          bottom: auto !important;
+          z-index: 20 !important;
+          display: flex !important;
+          width: 28px !important;
+          height: 28px !important;
+          align-items: center !important;
+          justify-content: center !important;
+          border: 0 !important;
+          border-radius: 0 !important;
+          background: transparent !important;
+          color: #fff !important;
+          box-shadow: none !important;
+        }
+
+        .playlist-top-reorder-grid-handle .filmwave-drag-icon,
+        .playlist-top-reorder-list-handle .filmwave-drag-icon {
+          width: 13px !important;
+          height: 13px !important;
         }
 
         .playlist-top-reorder-root .playlist-gallery-art img,
