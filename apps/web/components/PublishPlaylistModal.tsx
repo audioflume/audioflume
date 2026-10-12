@@ -159,7 +159,6 @@ export default function PublishPlaylistModal({
     <ModalShell
       isOpen={isOpen}
       title="Choose where this playlist belongs"
-      eyebrow="Community Playlist"
       onClose={isSaving ? () => {} : onClose}
       closeLabel="Close publish playlist dialog"
       maxWidth="max-w-[600px]"
