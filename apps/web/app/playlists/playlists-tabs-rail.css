@@ -273,7 +273,7 @@ body .playlists-tabs-row {
   gap: 0 !important;
   align-items: center !important;
   border: 0 !important;
-  border-bottom: 1px solid var(--border-subtle) !important;
+  border-bottom: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   color: inherit !important;
