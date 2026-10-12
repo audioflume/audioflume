@@ -881,6 +881,33 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: #111111;
 }
 
+.audioflume-home-reference-feature-pair-link {
+  position: absolute;
+  display: inline-flex;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 18px;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+}
+
+.audioflume-home-reference-feature-pair-card.is-artists .audioflume-home-reference-feature-pair-link {
+  top: 40%;
+  left: 11.5%;
+  background: #ffffff;
+  color: #111111;
+}
+
+.audioflume-home-reference-feature-pair-card.is-playlists .audioflume-home-reference-feature-pair-link {
+  bottom: 7%;
+  left: 11.5%;
+  background: #111111;
+  color: #ffffff;
+}
+
 .audioflume-home-reference-trending {
   padding: 88px 0 18px;
   background: var(--bg-primary);
