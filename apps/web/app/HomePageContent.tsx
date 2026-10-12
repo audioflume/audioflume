@@ -230,6 +230,46 @@ function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
   );
 }
 
+function HomeTrendingSection({ songs }: { songs: Song[] }) {
+  const visibleSongs = songs.slice(0, 7);
+  const artworkSongs = songs.filter((song) => Boolean(song.coverArt)).slice(0, 6);
+  const backdrop = artworkSongs[1]?.coverArt || artworkSongs[0]?.coverArt || "";
+
+  if (visibleSongs.length === 0) return null;
+
+  return (
+    <section className="audioflume-home-reference-trending">
+      <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
+        <div
+          className="audioflume-home-reference-trending-visual"
+          style={backdrop ? { backgroundImage: `url("${backdrop}")` } : undefined}
+        >
+          <div className="audioflume-home-reference-trending-shade" />
+
+          <div className="audioflume-home-reference-trending-copy">
+            <h2>New &amp; Trending<br />Music</h2>
+            <p>Fresh tracks picked for current edits, new releases and what&apos;s moving now.</p>
+          </div>
+
+          <div className="audioflume-home-reference-trending-artwork" aria-hidden="true">
+            {artworkSongs.map((song, index) => (
+              <span key={song.id} className={`is-${index + 1}`}>
+                <img src={song.coverArt || ""} alt="" draggable={false} />
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div className="audioflume-home-reference-trending-list">
+          {visibleSongs.map((song) => (
+            <SongCard key={song.id} song={song} showDivider={false} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function HomeArtistShelf({
   artists,
 }: {
@@ -701,6 +741,8 @@ export default function HomePageContent() {
           <HomeArtistShelf artists={artists} />
         ) : null}
       </section>
+
+      {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
 
       {curatedPlaylistsLoading || curatedPlaylists.length > 0 ? (
         <section className="audioflume-home-reference-curated-playlists">
