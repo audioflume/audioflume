@@ -1071,7 +1071,7 @@ export default function PlaylistsPage() {
         .playlist-edit-banner { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; margin-bottom: 24px; padding: 0 16px; border: 1px dashed var(--border); border-radius: 16px; background: var(--bg-secondary); }
         .playlist-edit-banner span { font-size: 13px; color: var(--text-secondary); }
         .playlist-edit-actions { display: flex; align-items: center; gap: 8px; }
-        .playlist-edit-actions button { height: 30px; border-radius: 999px; padding: 0 15px; border: none; font-size: 12px; font-weight: 600; cursor: pointer; transition: opacity 0.15s ease, background 0.15s ease; }
+        .playlist-edit-actions button { height: 30px; border-radius: 999px; padding: 0 15px; border: none; font-size: 12px; font-weight: 400; cursor: pointer; transition: opacity 0.15s ease, background 0.15s ease; }
         .playlist-edit-cancel { background: var(--bg-tertiary); color: var(--text-primary); }
         .playlist-edit-cancel:hover { background: var(--bg-hover); }
         .playlist-edit-save { background: var(--text-primary); color: var(--bg-primary); }
