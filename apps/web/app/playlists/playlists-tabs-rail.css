@@ -469,7 +469,7 @@ body .playlists-tabs-row {
 }
 
 .playlists-page .playlist-index > .playlist-create-row.playlist-index-row:hover .playlist-create-mark {
-  background: color-mix(in srgb, var(--filmwave-neutral-surface) 96%, var(--text-primary) 4%) !important;
+  background: color-mix(in srgb, var(--filmwave-neutral-surface) 88%, var(--text-primary) 12%) !important;
 }
 
 .playlists-page .playlist-index .playlist-create-row .playlist-create-copy {
