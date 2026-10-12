@@ -251,7 +251,7 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
               <span>New &amp; Trending</span>
               <span className="audioflume-home-reference-trending-title-row">
                 <span>Music</span>
-                <small>Fresh tracks picked for current edits, new releases and what&apos;s moving now.</small>
+                <small>New music added daily.<br />120+ new songs this month.</small>
               </span>
             </div>
           </div>
