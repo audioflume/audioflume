@@ -853,7 +853,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   --audioflume-feature-artists-scale: 1;
   container-type: inline-size;
   background-image:
-    linear-gradient(rgba(0, 0, 0, 0.18), rgba(0, 0, 0, 0.18)),
+    linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
     url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
 }
 
