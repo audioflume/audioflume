@@ -749,19 +749,6 @@ export default function HomePageContent() {
         </button>
       </section>
 
-      <section className="audioflume-home-reference-intro">
-        <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
-          <div className="audioflume-home-reference-library-copy">
-            <h2>A growing library of cinematic sound</h2>
-          </div>
-          <p>
-            A growing catalogue built around cinematic storytelling, featuring music and SFX
-            from in-demand artists and composers. Curated to make finding distinctive, usable
-            tracks faster across film, commercial and branded work.
-          </p>
-        </div>
-      </section>
-
       <section className="audioflume-home-reference-feature-pair">
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
           <div className="audioflume-home-reference-feature-pair-card is-artists">
@@ -791,9 +778,9 @@ export default function HomePageContent() {
             <h2>An extensive library of music curated for film.</h2>
           </div>
           <p>
-            Straightforward access to Audioflume&apos;s curated music and SFX
-            catalogue, with plans for solo filmmakers, active studios and
-            larger creative teams.
+            A growing catalogue built around cinematic storytelling, featuring music and SFX
+            from in-demand artists and composers. Curated to make finding distinctive, usable
+            tracks faster across film, commercial and branded work.
           </p>
         </div>
 
