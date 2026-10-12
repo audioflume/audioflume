@@ -1337,17 +1337,19 @@ main
   justify-content: center;
   border: 0;
   border-radius: 50%;
-  background: var(--bg-tertiary);
+  background: color-mix(in srgb, var(--text-primary) 12%, transparent);
   padding: 0;
-  color: var(--text-secondary);
+  color: color-mix(in srgb, var(--text-primary) 62%, transparent);
   cursor: pointer;
   transition:
     transform 150ms ease,
-    background-color 150ms ease;
+    background-color 150ms ease,
+    color 150ms ease;
 }
 
 .audioflume-music-page .audioflume-music-reference-summary-remove:hover {
-  background: var(--bg-tertiary-hover);
+  background: color-mix(in srgb, var(--text-primary) 18%, transparent);
+  color: var(--text-primary);
   transform: scale(1.03);
 }
 
