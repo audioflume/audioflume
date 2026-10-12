@@ -237,6 +237,10 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
 
   return (
     <section className="audioflume-home-reference-trending">
+      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+        <span>New &amp; Trending Music</span>
+        <Link href="/music">Explore New Music</Link>
+      </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-reference-trending-visual">
           <div className="audioflume-home-reference-trending-copy">
