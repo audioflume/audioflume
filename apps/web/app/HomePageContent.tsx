@@ -747,40 +747,6 @@ export default function HomePageContent() {
 
       {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
 
-      <section className="audioflume-home-reference-artists">
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-          <span>In demand artists &amp; composers</span>
-          <Link href="/discover">Explore Artists &amp; Composers</Link>
-        </div>
-        {artistsLoading ? (
-          <HomeArtistShelfSkeleton />
-        ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} />
-        ) : null}
-      </section>
-
-      {curatedPlaylistsLoading || curatedPlaylists.length > 0 ? (
-        <section className="audioflume-home-reference-curated-playlists">
-          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-            <span>Curated playlists</span>
-            <Link href="/curated-playlists">Explore Playlists</Link>
-          </div>
-          {curatedPlaylistsLoading ? (
-            <HomeCuratedPlaylistSkeleton />
-          ) : (
-            <div className="audioflume-home-reference-playlist-grid">
-              {curatedPlaylists.map((playlist, index) => (
-                <CuratedPlaylistCard
-                  key={playlist.id}
-                  playlist={playlist}
-                  index={index}
-                />
-              ))}
-            </div>
-          )}
-        </section>
-      ) : null}
-
       <section className="audioflume-home-reference-playlists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
           <span>Audioflume originals</span>
