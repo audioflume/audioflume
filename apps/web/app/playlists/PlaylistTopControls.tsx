@@ -644,6 +644,14 @@ export default function PlaylistTopControls() {
           margin-left: auto;
         }
 
+        .playlist-sort-dropdown button[aria-checked="true"] {
+          background: transparent !important;
+        }
+
+        .playlist-sort-dropdown button[aria-checked="true"]:hover {
+          background: var(--filmwave-menu-hover) !important;
+        }
+
         .playlists-sort-button-icon,
         .playlists-new-button-icon {
           align-items: center;
