@@ -17,6 +17,8 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const MAX_RESULT_COUNT = 200;
+const MIN_REFERENCE_MATCH_SCORE = 0.5;
+const MAX_REFERENCE_SCORE_DROP = 0.12;
 
 type DeezerArtist = {
   id?: number;
@@ -296,7 +298,7 @@ async function getLegacyAudioMatches({
     },
   );
 
-  return analyzed
+  const ranked = analyzed
     .filter(
       (
         result,
@@ -307,7 +309,16 @@ async function getLegacyAudioMatches({
         genreSimilarity: number | null;
       } => result !== null,
     )
-    .sort((a, b) => b.score - a.score)
+    .sort((a, b) => b.score - a.score);
+
+  const bestScore = ranked[0]?.score ?? 0;
+  const minimumScore = Math.max(
+    MIN_REFERENCE_MATCH_SCORE,
+    bestScore - MAX_REFERENCE_SCORE_DROP,
+  );
+
+  return ranked
+    .filter((result) => result.score >= minimumScore)
     .slice(0, MAX_RESULT_COUNT)
     .map((result) => ({
       songId: result.songId,
@@ -386,7 +397,7 @@ export async function POST(request: Request) {
         ((data ?? []) as RankedSongRow[]).map((song) => [song.id, song]),
       );
 
-      matches = audioSearch.matches
+      const rankedMatches = audioSearch.matches
         .map((result) => {
           const song = songsById.get(result.songId);
           const tempoSimilarity = getTempoSimilarity(
@@ -428,7 +439,16 @@ export async function POST(request: Request) {
             tempoSimilarity,
           };
         })
-        .sort((a, b) => b.score - a.score)
+        .sort((a, b) => b.score - a.score);
+
+      const bestScore = rankedMatches[0]?.score ?? 0;
+      const minimumScore = Math.max(
+        MIN_REFERENCE_MATCH_SCORE,
+        bestScore - MAX_REFERENCE_SCORE_DROP,
+      );
+
+      matches = rankedMatches
+        .filter((result) => result.score >= minimumScore)
         .slice(0, MAX_RESULT_COUNT)
         .map((result) => ({
           songId: result.songId,

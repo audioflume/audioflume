@@ -1392,42 +1392,39 @@ export default function MusicPage() {
               <>
                 {referenceSearchState ? (
                   <div className="audioflume-music-reference-summary">
-                    <div className="audioflume-music-reference-summary-heading">
-                      Similar to
+                    {referenceSearchState.imageUrl ? (
+                      <img
+                        src={referenceSearchState.imageUrl}
+                        alt=""
+                        draggable={false}
+                      />
+                    ) : (
+                      <span className="audioflume-music-reference-summary-artwork">
+                        <WaveformIcon size={18} />
+                      </span>
+                    )}
+                    <div className="audioflume-music-reference-summary-copy">
+                      <small>Reference match</small>
+                      <strong>
+                        {referenceSearchState.name || referenceSearchState.query}
+                      </strong>
+                      <span>
+                        {referenceSearchState.artist
+                          ? `${referenceSearchState.artist} · `
+                          : ""}
+                        {referenceSearchState.status === "loading"
+                          ? "Finding close matches…"
+                          : `${referenceSearchState.songIds.length} close ${referenceSearchState.songIds.length === 1 ? "match" : "matches"}`}
+                      </span>
                     </div>
-                    <div className="audioflume-music-reference-summary-track">
-                      {referenceSearchState.imageUrl ? (
-                        <img
-                          src={referenceSearchState.imageUrl}
-                          alt=""
-                          draggable={false}
-                        />
-                      ) : (
-                        <span className="audioflume-music-reference-summary-artwork">
-                          <WaveformIcon size={18} />
-                        </span>
-                      )}
-                      <div className="audioflume-music-reference-summary-copy">
-                        <strong>
-                          {referenceSearchState.name || referenceSearchState.query}
-                        </strong>
-                        {referenceSearchState.artist ? (
-                          <span>{referenceSearchState.artist}</span>
-                        ) : null}
-                        {referenceSearchState.status === "loading" ? (
-                          <small>Finding similar tracks…</small>
-                        ) : (
-                          <small>{referenceSearchState.songIds.length} similar tracks</small>
-                        )}
-                      </div>
-                      <button
-                        type="button"
-                        onClick={clearReferenceSearch}
-                        className="audioflume-music-reference-summary-remove"
-                      >
-                        Remove
-                      </button>
-                    </div>
+                    <button
+                      type="button"
+                      onClick={clearReferenceSearch}
+                      className="audioflume-music-reference-summary-remove"
+                      aria-label="Remove reference search"
+                    >
+                      <XIcon size={10} />
+                    </button>
                   </div>
                 ) : featuredSongs.length > 0 ? (
                   <div className="audioflume-music-featured-songs">
