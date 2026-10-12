@@ -776,43 +776,43 @@ export default function ShortenTrackModal({
       <SongPreview song={song} />
 
       <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--filmwave-menu-bg)]">
-        <div className="min-h-0 flex-1 space-y-4 overflow-y-auto p-4">
-          <div>
-            <div className="grid grid-cols-3 gap-2">
-              {LENGTH_OPTIONS.map((option) => {
-                const isGenerating = generatingSeconds === option.seconds;
-                const disabled =
-                  generatingSeconds !== null ||
-                  (Number.isFinite(song.duration) && song.duration > 0 && song.duration <= option.seconds);
+        <div className="flex-shrink-0 p-4 pb-0">
+          <div className="grid grid-cols-3 gap-2">
+            {LENGTH_OPTIONS.map((option) => {
+              const isGenerating = generatingSeconds === option.seconds;
+              const disabled =
+                generatingSeconds !== null ||
+                (Number.isFinite(song.duration) && song.duration > 0 && song.duration <= option.seconds);
 
-                return (
-                  <button
-                    key={option.seconds}
-                    type="button"
-                    disabled={disabled}
-                    onClick={() => handleGenerate(option.seconds)}
-                    className="flex h-12 items-center justify-center rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-semibold text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40"
-                  >
-                    {isGenerating ? (
-                      <span className="flex items-center gap-2">
-                        <LoadingSpinner />
-                        <span>Creating...</span>
-                      </span>
-                    ) : (
-                      option.shortLabel
-                    )}
-                  </button>
-                );
-              })}
-            </div>
+              return (
+                <button
+                  key={option.seconds}
+                  type="button"
+                  disabled={disabled}
+                  onClick={() => handleGenerate(option.seconds)}
+                  className="flex h-12 items-center justify-center rounded-none border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs font-semibold text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40"
+                >
+                  {isGenerating ? (
+                    <span className="flex items-center gap-2">
+                      <LoadingSpinner />
+                      <span>Creating...</span>
+                    </span>
+                  ) : (
+                    option.shortLabel
+                  )}
+                </button>
+              );
+            })}
           </div>
 
           {error && (
-            <div className="rounded-none border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-3 py-2 text-center text-xs font-medium text-[var(--danger)]">
+            <div className="mt-4 rounded-none border border-[var(--danger)]/30 bg-[var(--danger)]/10 px-3 py-2 text-center text-xs font-medium text-[var(--danger)]">
               {error}
             </div>
           )}
+        </div>
 
+        <div className="min-h-0 flex-1 overflow-y-auto p-4">
           <div className="pt-4">
             <div className="mb-2 flex items-center justify-between gap-3">
               <h3 className="text-xs font-semibold text-[var(--text-muted)]">
