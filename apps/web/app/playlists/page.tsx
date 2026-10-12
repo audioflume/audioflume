@@ -11,7 +11,7 @@ import EditPlaylistModal from "@/components/EditPlaylistModal";
 import CreatePlaylistModal from "@/components/CreatePlaylistModal";
 import Toast from "@/components/Toast";
 import DropdownShell from "@/components/DropdownShell";
-import BackendDragHandle from "@/components/backend/BackendDragHandle";
+import BackendDragHandle, { BackendDragHandleGlyph } from "@/components/backend/BackendDragHandle";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
@@ -616,10 +616,7 @@ function DragPreview({
     return (
       <div className="playlist-index-row is-reordering drag-preview-row">
         <div className="playlist-row-handle">
-          <ReorderHandleIcon />
-        </div>
-        <div className="playlist-row-number">
-          {String(index + 1).padStart(2, "0")}
+          <BackendDragHandleGlyph />
         </div>
         <PlaylistArtwork
           playlist={playlist}
