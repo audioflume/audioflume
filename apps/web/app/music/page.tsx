@@ -55,6 +55,7 @@ const VOCAL_FILTER_OPTIONS = [
 ];
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
+const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
 
 function MusicFilterColumnSkeleton({ open }: { open: boolean }) {
   if (!open) return null;
@@ -641,6 +642,102 @@ export default function MusicPage() {
     }));
     clearLicenseFilters();
   }
+
+  useEffect(() => {
+    function handleSideFilterSectionClear(event: Event) {
+      const customEvent = event as CustomEvent<{ sectionId?: string }>;
+      const sectionId = customEvent.detail?.sectionId;
+      if (!sectionId) return;
+
+      if (sectionId === "licenses") {
+        clearLicenseFilters();
+        return;
+      }
+
+      setFilters((current) => {
+        if (sectionId === "mood") {
+          return { ...current, selectedMoods: [] };
+        }
+
+        if (sectionId === "genre") {
+          return { ...current, selectedGenres: [] };
+        }
+
+        if (sectionId === "artist") {
+          return { ...current, selectedArtists: [] };
+        }
+
+        if (sectionId === "region") {
+          return { ...current, selectedRegions: [] };
+        }
+
+        if (sectionId === "instruments") {
+          return { ...current, selectedInstruments: [] };
+        }
+
+        if (sectionId === "vocals") {
+          return {
+            ...current,
+            selectedVocals: [],
+            instrumental: false,
+          };
+        }
+
+        if (sectionId === "build") {
+          return { ...current, selectedBuilds: [] };
+        }
+
+        if (sectionId === "cuePoints") {
+          return { ...current, selectedEditPoints: [] };
+        }
+
+        if (sectionId === "playlist") {
+          return { ...current, selectedPlaylist: null };
+        }
+
+        if (sectionId === "duration") {
+          return { ...current, selectedDurations: [] };
+        }
+
+        if (sectionId === "bpm") {
+          return { ...current, bpmValue: null };
+        }
+
+        if (sectionId === "key") {
+          return { ...current, keyValue: null };
+        }
+
+        if (sectionId === "advanced") {
+          return {
+            ...current,
+            selectedRegions: [],
+            selectedBuilds: [],
+            selectedDurations: [],
+            bpmValue: null,
+            keyValue: null,
+          };
+        }
+
+        if (sectionId === "display" && current.showEditPointMarkers) {
+          return { ...current, showEditPointMarkers: false };
+        }
+
+        return current;
+      });
+    }
+
+    window.addEventListener(
+      SIDE_FILTER_SECTION_CLEAR_EVENT,
+      handleSideFilterSectionClear,
+    );
+
+    return () => {
+      window.removeEventListener(
+        SIDE_FILTER_SECTION_CLEAR_EVENT,
+        handleSideFilterSectionClear,
+      );
+    };
+  }, [setFilters]);
 
   const searchPlaceholder = getMusicLibrarySearchPlaceholder(
     selectedPlaylist?.name,

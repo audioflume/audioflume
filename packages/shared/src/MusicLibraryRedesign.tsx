@@ -879,7 +879,7 @@ function MusicAdvancedSection({
               <span className="fw-filter-advanced-trigger-label">{label}</span>
               {showCountControls && getSectionCount(sectionId) > 0 && (
                 <span
-                  className="fw-filter-advanced-count"
+                  className="fw-filter-rail-count fw-filter-advanced-count"
                   role="button"
                   tabIndex={0}
                   aria-label={`Clear ${label} filters`}
@@ -1177,7 +1177,7 @@ export function MusicFilterPanel({
                   <div key={section.id} className="fw-filter-accordion-section">
                     <button
                       type="button"
-                      data-filter-section-id={section.id === "advanced" ? "advanced" : undefined}
+                      data-filter-section-id={section.id}
                       className={`fw-filter-rail-item${isActive ? " is-active" : ""}`}
                       aria-current={isActive}
                       aria-expanded={accordion ? isActive : undefined}

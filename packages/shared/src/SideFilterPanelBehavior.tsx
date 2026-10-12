@@ -437,6 +437,11 @@ function clearOpenRailSection(panel: HTMLElement, sectionId: string) {
 }
 
 function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: string) {
+  if (panel.dataset.sideFilterClearMode === "event") {
+    dispatchSideFilterSectionClear(sectionId);
+    return;
+  }
+
   if (sectionId === "advanced") {
     dispatchSideFilterSectionClear(sectionId);
     return;
@@ -449,11 +454,6 @@ function clearRailSection(panel: HTMLElement, railItem: Element, sectionId: stri
 
   if (isCurrentOpenSection) {
     clearOpenRailSection(panel, sectionId);
-    return;
-  }
-
-  if (panel.dataset.sideFilterClearMode === "event") {
-    dispatchSideFilterSectionClear(sectionId);
     return;
   }
 
