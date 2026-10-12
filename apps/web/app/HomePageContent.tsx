@@ -728,9 +728,15 @@ export default function HomePageContent() {
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
           <div className="audioflume-home-reference-feature-pair-card is-artists">
             <h2>In demand artists<br />&amp; composers.</h2>
+            <Link className="audioflume-home-reference-feature-pair-link" href="/discover">
+              Explore Artists
+            </Link>
           </div>
           <div className="audioflume-home-reference-feature-pair-card is-playlists">
             <h2>Curated playlists<br />made for editors.</h2>
+            <Link className="audioflume-home-reference-feature-pair-link" href="/curated-playlists">
+              Explore Playlists
+            </Link>
           </div>
         </div>
       </section>
