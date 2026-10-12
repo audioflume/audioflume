@@ -902,7 +902,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-link {
   position: absolute;
   display: inline-flex;
-  min-width: 138px;
+  min-width: 160px;
   height: 42px;
   align-items: center;
   justify-content: center;
