@@ -1712,8 +1712,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
-  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-play::after,
