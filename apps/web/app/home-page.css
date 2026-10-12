@@ -854,7 +854,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists {
+  --audioflume-feature-playlists-scale: 1;
   isolation: isolate;
+  container-type: inline-size;
   background-image: url("https://images.filmwave.io/images/home/Curated%20Playlists.png");
 }
 
@@ -882,8 +884,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-card.is-playlists h2 {
   bottom: 17%;
   left: 11.5%;
+  width: max-content;
+  max-width: none;
   color: #111111;
-  font-size: clamp(31px, 2.4vw, 44px);
+  font-size: 44px;
+  zoom: var(--audioflume-feature-playlists-scale);
 }
 
 .audioflume-home-reference-feature-pair-link {
@@ -1084,6 +1089,24 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 @container (max-width: 520px) {
   .audioflume-home-reference-trending-copy {
     --audioflume-trending-copy-scale: 0.62;
+  }
+}
+
+@container (max-width: 650px) {
+  .audioflume-home-reference-feature-pair-card.is-playlists {
+    --audioflume-feature-playlists-scale: 0.9;
+  }
+}
+
+@container (max-width: 575px) {
+  .audioflume-home-reference-feature-pair-card.is-playlists {
+    --audioflume-feature-playlists-scale: 0.8;
+  }
+}
+
+@container (max-width: 500px) {
+  .audioflume-home-reference-feature-pair-card.is-playlists {
+    --audioflume-feature-playlists-scale: 0.7;
   }
 }
 
