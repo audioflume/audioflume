@@ -1295,9 +1295,9 @@ main
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 25px;
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: -0.03em;
-  line-height: 1.05;
+  line-height: 1.12;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
