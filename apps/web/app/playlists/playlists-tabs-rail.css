@@ -265,6 +265,26 @@ body .playlists-tabs-row {
   cursor: pointer !important;
 }
 
+.playlists-page .playlist-index-row-shell {
+  border: 0 !important;
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.playlists-page .playlist-index-row-shell > .playlist-index-row,
+.playlists-page .playlist-index > .playlist-index-row {
+  border-top: 0 !important;
+  border-right: 0 !important;
+  border-bottom: 0 !important;
+  border-left: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
 .playlists-page .playlist-index .playlist-index-row {
   position: relative !important;
   display: grid !important;
