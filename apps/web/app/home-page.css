@@ -895,15 +895,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-card.is-artists .audioflume-home-reference-feature-pair-link {
-  top: 40%;
-  left: 11.5%;
+  right: 7%;
+  bottom: 7%;
   background: #ffffff;
   color: #111111;
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists .audioflume-home-reference-feature-pair-link {
+  right: 7%;
   bottom: 7%;
-  left: 11.5%;
   background: #111111;
   color: #ffffff;
 }
