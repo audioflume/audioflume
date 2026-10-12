@@ -874,7 +874,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-card.is-artists h2 {
   top: 16%;
-  left: 11.5%;
+  left: calc(11.5% - 10px);
   width: max-content;
   max-width: none;
   color: #ffffff;
