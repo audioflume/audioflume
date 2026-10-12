@@ -64,7 +64,6 @@ body .playlists-tabs-row {
 }
 
 .playlists-top-controls > .fw-toolbar-header-search-row {
-  --fw-header-search-muted-color: #5a5a5a;
   height: 51px !important;
   min-height: 51px !important;
   border: 0 !important;
@@ -72,6 +71,14 @@ body .playlists-tabs-row {
   background: var(--filmwave-neutral-surface) !important;
   background-color: var(--filmwave-neutral-surface) !important;
   padding: 0 16px !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  .playlists-top-controls
+  > .fw-toolbar-header-search-row {
+  --fw-header-search-muted-color: #a3a3a3;
+  background: #f3f3f3 !important;
+  background-color: #f3f3f3 !important;
 }
 
 .playlists-top-controls .fw-toolbar-search-static {
@@ -92,10 +99,15 @@ body .playlists-tabs-row {
 }
 
 .playlists-top-controls .fw-toolbar-search-static-input::placeholder {
-  color: #5a5a5a !important;
   font-size: 16px !important;
   font-weight: 300 !important;
   opacity: 1 !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  .playlists-top-controls
+  .fw-toolbar-search-static-input::placeholder {
+  color: #a3a3a3 !important;
 }
 
 .playlists-control-right {
