@@ -1041,7 +1041,8 @@ export default function ShortenTrackModal({
                               : track.focus === "finish"
                                 ? "Song finish"
                                 : null,
-                          ].filter(Boolean).join(" · ") || "Standard"}
+                            !track.exactTime && track.focus === "any" ? "Standard" : null,
+                          ].filter(Boolean).join(" · ")}
                         </span>
                       </span>
 
