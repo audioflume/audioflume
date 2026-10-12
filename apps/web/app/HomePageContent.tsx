@@ -733,7 +733,11 @@ export default function HomePageContent() {
             </Link>
           </div>
           <div className="audioflume-home-reference-feature-pair-card is-playlists">
-            <h2>Curated playlists<br />made for editors.</h2>
+            <h2>
+              <span>Curated playlists</span>
+              <span>made for</span>
+              <span>editors.</span>
+            </h2>
             <Link className="audioflume-home-reference-feature-pair-link" href="/curated-playlists">
               Explore Playlists
             </Link>
