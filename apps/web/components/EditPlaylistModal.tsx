@@ -129,8 +129,8 @@ export default function EditPlaylistModal({
       title="Edit Playlist"
       onClose={busy ? () => {} : onClose}
       closeLabel="Close edit playlist modal"
-      maxWidth="max-w-[430px]"
-      maxHeight="460px"
+      maxWidth="max-w-[600px]"
+      maxHeight="506px"
       bodyClassName="px-5 py-5"
       footerClassName="justify-between"
       footer={
