@@ -879,8 +879,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-trending-title > span:first-child,
 .audioflume-home-reference-trending-title-row > span {
-  color: #ffffff;
-  mix-blend-mode: difference;
+  background-image: url("https://images.filmwave.io/images/home/New%20%26%20Trending%20Clip.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  -webkit-text-fill-color: transparent;
 }
 
 .audioflume-home-reference-trending-title-row {
