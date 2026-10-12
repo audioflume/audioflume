@@ -1350,6 +1350,7 @@ export default function PlaylistsPage() {
                     {!isEditing && (
                       <>
                         <CreatePlaylistTile
+                          key={`create-playlist-${viewMode}`}
                           viewMode={viewMode}
                           onClick={() => setShowNewModal(true)}
                         />
