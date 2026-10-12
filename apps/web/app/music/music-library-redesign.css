@@ -1337,7 +1337,7 @@ main
   justify-content: center;
   border: 0;
   border-radius: 50%;
-  background: #e7e7e7;
+  background: var(--bg-tertiary);
   padding: 0;
   color: var(--text-secondary);
   cursor: pointer;
@@ -1347,7 +1347,7 @@ main
 }
 
 .audioflume-music-page .audioflume-music-reference-summary-remove:hover {
-  background: #dedede;
+  background: var(--bg-tertiary-hover);
   transform: scale(1.03);
 }
 
