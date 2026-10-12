@@ -39,7 +39,9 @@ export default function FavoritesPlaylistTile({
             <span>Favorites</span>
             <small>Saved tracks</small>
           </div>
-          <div className="playlist-row-count">{trackCount}</div>
+          <div className="playlist-row-count filmwave-list-row-count">
+            {trackCount}
+          </div>
         </Link>
       </div>
     );
