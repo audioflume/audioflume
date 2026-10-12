@@ -22,6 +22,7 @@ type ShortenedTrack = {
   label: string;
   durationSeconds: number;
   actualDurationSeconds: number;
+  variationNumber: number;
   url: string;
   song: Song;
 };
@@ -236,21 +237,19 @@ function findBestContinuousExcerpt({
   frames,
   targetSeconds,
   beatGrid,
+  variationIndex,
 }: {
   buffer: AudioBuffer;
   frames: EnergyFrame[];
   targetSeconds: number;
   beatGrid: BeatGrid | null;
+  variationIndex: number;
 }): ContinuousExcerptPlan {
   const duration = buffer.duration;
   const grid = getCutGrid(beatGrid);
   const lengthCandidates = getCandidateLengths(targetSeconds, duration);
   const durationMargin = getFlexibleDurationMargin(targetSeconds);
-  let bestPlan: ContinuousExcerptPlan = {
-    start: 0,
-    length: Math.min(targetSeconds, duration),
-  };
-  let bestScore = -Infinity;
+  const scoredPlans: Array<ContinuousExcerptPlan & { score: number }> = [];
 
   for (const length of lengthCandidates) {
     const maxStart = Math.max(0, duration - length);
@@ -310,19 +309,41 @@ function findBestContinuousExcerpt({
         abruptStartPenalty -
         abruptEndPenalty;
 
-      if (score > bestScore) {
-        bestScore = score;
-        bestPlan = {
-          start: safeStart,
-          length,
-        };
-      }
+      scoredPlans.push({
+        start: safeStart,
+        length,
+        score,
+      });
     }
   }
 
+  const rankedPlans = scoredPlans.sort((a, b) => b.score - a.score);
+  const minimumSeparation = Math.max(3, targetSeconds * 0.2);
+  const diversePlans: Array<ContinuousExcerptPlan & { score: number }> = [];
+
+  for (const plan of rankedPlans) {
+    const isDistinct = diversePlans.every(
+      (existing) => Math.abs(existing.start - plan.start) >= minimumSeparation,
+    );
+
+    if (isDistinct) diversePlans.push(plan);
+  }
+
+  if (diversePlans.length === 0 && rankedPlans[0]) {
+    diversePlans.push(rankedPlans[0]);
+  }
+
+  const selectedPlan =
+    diversePlans[Math.max(0, variationIndex) % diversePlans.length] ??
+    rankedPlans[0] ?? {
+      start: 0,
+      length: Math.min(targetSeconds, duration),
+      score: 0,
+    };
+
   return {
-    start: clamp(bestPlan.start, 0, Math.max(0, duration - bestPlan.length)),
-    length: Math.min(bestPlan.length, duration),
+    start: clamp(selectedPlan.start, 0, Math.max(0, duration - selectedPlan.length)),
+    length: Math.min(selectedPlan.length, duration),
   };
 }
 
@@ -368,7 +389,13 @@ function applyEdgeFades(buffer: AudioBuffer) {
   }
 }
 
-function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, targetSeconds: number, song: Song) {
+function renderNaturalShort(
+  buffer: AudioBuffer,
+  audioContext: AudioContext,
+  targetSeconds: number,
+  song: Song,
+  variationIndex: number,
+) {
   const frames = getEnergyFrames(buffer);
   const beatGrid = getBeatGridFromSong(song, buffer.duration);
   const plan = findBestContinuousExcerpt({
@@ -376,6 +403,7 @@ function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, tar
     frames,
     targetSeconds,
     beatGrid,
+    variationIndex,
   });
   const output = audioContext.createBuffer(
     buffer.numberOfChannels,
@@ -387,6 +415,7 @@ function renderNaturalShort(buffer: AudioBuffer, audioContext: AudioContext, tar
     mode: "flexible_continuous_excerpt_deliberate_end",
     beatAware: Boolean(beatGrid),
     targetSeconds,
+    variationIndex,
     start: plan.start,
     end: plan.start + plan.length,
     length: plan.length,
@@ -473,7 +502,11 @@ function createWaveformPeaks(buffer: AudioBuffer) {
   return peaks.map((peak) => Number((peak / maxPeak).toFixed(4)));
 }
 
-async function createShortenedTrack(song: Song, targetSeconds: number) {
+async function createShortenedTrack(
+  song: Song,
+  targetSeconds: number,
+  variationIndex: number,
+) {
   const AudioContextConstructor =
     window.AudioContext || (window as BrowserAudioWindow).webkitAudioContext;
 
@@ -509,7 +542,13 @@ async function createShortenedTrack(song: Song, targetSeconds: number) {
 
   try {
     const decodedAudio = await audioContext.decodeAudioData(encodedAudio.slice(0));
-    const shortenedBuffer = renderNaturalShort(decodedAudio, audioContext, targetSeconds, song);
+    const shortenedBuffer = renderNaturalShort(
+      decodedAudio,
+      audioContext,
+      targetSeconds,
+      song,
+      variationIndex,
+    );
     const blob = audioBufferToWavBlob(shortenedBuffer);
 
     return {
@@ -660,7 +699,13 @@ export default function ShortenTrackModal({
     setError(null);
 
     try {
-      const { blob, actualDurationSeconds, waveformPeaks } = await createShortenedTrack(song, targetSeconds);
+      const variationNumber =
+        generatedTracks.filter((track) => track.durationSeconds === targetSeconds).length + 1;
+      const { blob, actualDurationSeconds, waveformPeaks } = await createShortenedTrack(
+        song,
+        targetSeconds,
+        variationNumber - 1,
+      );
       const url = URL.createObjectURL(blob);
       const lengthOption = LENGTH_OPTIONS.find((option) => option.seconds === targetSeconds);
       const label = lengthOption?.label || formatDuration(targetSeconds);
@@ -685,18 +730,20 @@ export default function ShortenTrackModal({
         label,
         durationSeconds: targetSeconds,
         actualDurationSeconds,
+        variationNumber,
         url,
         song: shortenedSong,
       };
 
-      setGeneratedTracks((current) => {
-        const replaced = current.filter((existing) => existing.durationSeconds === targetSeconds);
-        const remaining = current.filter((existing) => existing.durationSeconds !== targetSeconds);
+      setGeneratedTracks((current) =>
+        [...current, track].sort((a, b) => {
+          if (a.durationSeconds !== b.durationSeconds) {
+            return a.durationSeconds - b.durationSeconds;
+          }
 
-        replaced.forEach((existing) => URL.revokeObjectURL(existing.url));
-
-        return [track, ...remaining].sort((a, b) => a.durationSeconds - b.durationSeconds);
-      });
+          return a.variationNumber - b.variationNumber;
+        }),
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to shorten track.");
     } finally {
@@ -798,7 +845,7 @@ export default function ShortenTrackModal({
                     : null;
                   const shortLabel = LENGTH_OPTIONS.find((option) => option.seconds === track.durationSeconds)?.shortLabel ||
                     formatDuration(track.durationSeconds);
-                  const downloadName = `${sanitizeFileName(song.title)}-${shortLabel}-short.wav`;
+                  const downloadName = `${sanitizeFileName(song.title)}-${shortLabel}-short-option-${track.variationNumber}.wav`;
 
                   return (
                     <div
@@ -828,7 +875,7 @@ export default function ShortenTrackModal({
 
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-medium tracking-[-0.02em] text-[var(--text-primary)]">
-                          {track.label} Version
+                          {track.label} · Option {track.variationNumber}
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
                           {formatDuration(track.actualDurationSeconds)} deliberate excerpt · waveform ready
