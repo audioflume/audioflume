@@ -446,8 +446,10 @@ body .playlists-tabs-row {
 }
 
 .playlists-page .playlist-index > .playlist-create-row.playlist-index-row {
-  grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) !important;
+  grid-template-columns: 50px minmax(0, 1fr) 12px 64px !important;
+  column-gap: 14px !important;
   width: 100% !important;
+  padding: 11px 68px 11px 13px !important;
   background: transparent !important;
   text-align: left !important;
 }
