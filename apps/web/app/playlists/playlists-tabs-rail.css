@@ -465,10 +465,11 @@ body .playlists-tabs-row {
   border: 0 !important;
   border-radius: 0 !important;
   background: var(--filmwave-neutral-surface) !important;
+  transition: none !important;
 }
 
 .playlists-page .playlist-index .playlist-create-row:hover .playlist-create-mark {
-  background: color-mix(in srgb, var(--bg-primary) 78%, var(--text-primary) 22%) !important;
+  background: color-mix(in srgb, var(--filmwave-neutral-surface) 88%, var(--text-primary) 12%) !important;
 }
 
 .playlists-page .playlist-index .playlist-create-row .playlist-create-copy {
