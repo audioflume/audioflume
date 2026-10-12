@@ -593,6 +593,11 @@
   padding: 0;
 }
 
+:where(html.light, html[data-theme="light"]) .discover-artist-feature-genres > span {
+  background: rgba(255, 255, 255, 0.14);
+  color: #ffffff;
+}
+
 .discover-artist-feature-play {
   position: absolute;
   right: 28px;
