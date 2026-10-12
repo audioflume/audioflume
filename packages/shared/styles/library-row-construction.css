@@ -119,6 +119,10 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
   transform: translateY(-50%) !important;
 }
 
+html body .playlists-route-shell .playlists-page .playlist-index-row-shell > .playlist-card-menu-wrap {
+  right: 18px !important;
+}
+
 @media (max-width: 520px) {
   html body .playlists-route-shell .playlists-page .playlist-index-row-shell > .playlist-index-row,
   html body .projects-route-shell .projects-page .projects-row:not(.projects-row-skeleton) {
