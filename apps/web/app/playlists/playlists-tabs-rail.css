@@ -94,20 +94,46 @@ body .playlists-tabs-row {
 
 .playlists-top-controls .fw-toolbar-search-static-input {
   color: var(--text-primary) !important;
+  font-family: inherit !important;
   font-size: 15px !important;
+  font-style: normal !important;
   font-weight: 300 !important;
+  letter-spacing: 0 !important;
+  line-height: normal !important;
 }
 
 .playlists-top-controls .fw-toolbar-search-static-input::placeholder {
+  font-family: inherit !important;
   font-size: 16px !important;
+  font-style: normal !important;
   font-weight: 300 !important;
+  letter-spacing: 0 !important;
+  line-height: normal !important;
   opacity: 1 !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  .playlists-top-controls
+  > .fw-toolbar-header-search-row {
+  --fw-header-search-muted-color: #a3a3a3;
+}
+
+:where(html.dark, html[data-theme="dark"])
+  .playlists-top-controls
+  > .fw-toolbar-header-search-row {
+  --fw-header-search-muted-color: #5a5a5a;
 }
 
 :where(html.light, html[data-theme="light"])
   .playlists-top-controls
   .fw-toolbar-search-static-input::placeholder {
   color: #a3a3a3 !important;
+}
+
+:where(html.dark, html[data-theme="dark"])
+  .playlists-top-controls
+  .fw-toolbar-search-static-input::placeholder {
+  color: #5a5a5a !important;
 }
 
 .playlists-control-right {
