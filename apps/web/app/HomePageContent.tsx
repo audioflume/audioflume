@@ -247,8 +247,13 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
           <div className="audioflume-home-reference-trending-shade" />
 
           <div className="audioflume-home-reference-trending-copy">
-            <h2>New &amp; Trending<br />Music</h2>
-            <p>Fresh tracks picked for current edits, new releases and what&apos;s moving now.</p>
+            <div className="audioflume-home-reference-trending-title">
+              <span>New &amp; Trending</span>
+              <span className="audioflume-home-reference-trending-title-row">
+                <span>Music</span>
+                <small>Fresh tracks picked for current edits, new releases and what&apos;s moving now.</small>
+              </span>
+            </div>
           </div>
 
           <div className="audioflume-home-reference-trending-artwork" aria-hidden="true">
