@@ -720,6 +720,8 @@ export default function HomePageContent() {
         </button>
       </section>
 
+      {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
+
       <section className="audioflume-home-reference-artists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
           <span>In demand artists &amp; composers</span>
@@ -731,8 +733,6 @@ export default function HomePageContent() {
           <HomeArtistShelf artists={artists} />
         ) : null}
       </section>
-
-      {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
 
       {curatedPlaylistsLoading || curatedPlaylists.length > 0 ? (
         <section className="audioflume-home-reference-curated-playlists">
