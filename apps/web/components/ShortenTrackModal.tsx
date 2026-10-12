@@ -896,7 +896,7 @@ export default function ShortenTrackModal({
               type="button"
               aria-pressed={exactTime}
               onClick={() => setExactTime((current) => !current)}
-              className={`inline-flex items-center gap-1.5 text-[11px] font-normal transition-colors ${
+              className={`inline-flex items-center gap-1 text-[11px] font-normal transition-colors ${
                 exactTime
                   ? "text-[var(--text-primary)]"
                   : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
@@ -919,7 +919,7 @@ export default function ShortenTrackModal({
               onClick={() =>
                 setExcerptFocus((current) => (current === "start" ? "any" : "start"))
               }
-              className={`inline-flex items-center gap-1.5 text-[11px] font-normal transition-colors ${
+              className={`inline-flex items-center gap-1 text-[11px] font-normal transition-colors ${
                 excerptFocus === "start"
                   ? "text-[var(--text-primary)]"
                   : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
@@ -942,7 +942,7 @@ export default function ShortenTrackModal({
               onClick={() =>
                 setExcerptFocus((current) => (current === "finish" ? "any" : "finish"))
               }
-              className={`inline-flex items-center gap-1.5 text-[11px] font-normal transition-colors ${
+              className={`inline-flex items-center gap-1 text-[11px] font-normal transition-colors ${
                 excerptFocus === "finish"
                   ? "text-[var(--text-primary)]"
                   : "text-[var(--text-muted)] hover:text-[var(--text-secondary)]"
