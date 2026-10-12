@@ -64,6 +64,7 @@ body .playlists-tabs-row {
 }
 
 .playlists-top-controls > .fw-toolbar-header-search-row {
+  --fw-header-search-muted-color: #5a5a5a;
   height: 51px !important;
   min-height: 51px !important;
   border: 0 !important;
@@ -85,6 +86,7 @@ body .playlists-tabs-row {
 }
 
 .playlists-top-controls .fw-toolbar-search-static-input {
+  color: var(--text-primary) !important;
   font-size: 15px !important;
   font-weight: 300 !important;
 }
