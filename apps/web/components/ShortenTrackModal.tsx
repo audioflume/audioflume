@@ -1034,6 +1034,7 @@ export default function ShortenTrackModal({
                         </span>
                         <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
                           {[
+                            formatDuration(track.actualDurationSeconds),
                             track.exactTime ? "Exact time" : null,
                             track.focus === "start"
                               ? "Song start"
