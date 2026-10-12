@@ -1336,7 +1336,7 @@ main
 .audioflume-music-page
   .audioflume-music-featured-song-waveform
   .filmwave-song-waveform {
-  --waveform-color: rgba(255, 255, 255, 0.82);
+  --waveform-color: rgba(255, 255, 255, 0.48);
   --waveform-progress: #ffffff;
   cursor: pointer;
 }
