@@ -458,11 +458,15 @@ body .playlists-tabs-row {
 
 .playlists-page .playlist-index .playlist-create-row .playlist-create-mark {
   grid-column: 1 !important;
-  width: 42px !important;
-  height: 42px !important;
+  width: 50px !important;
+  height: 50px !important;
   border: 0 !important;
   border-radius: 0 !important;
-  background: color-mix(in srgb, var(--bg-primary) 86%, var(--text-primary) 14%) !important;
+  background: var(--filmwave-neutral-surface) !important;
+}
+
+.playlists-page .playlist-index .playlist-create-row:hover .playlist-create-mark {
+  background: color-mix(in srgb, var(--bg-primary) 78%, var(--text-primary) 22%) !important;
 }
 
 .playlists-page .playlist-index .playlist-create-row .playlist-create-copy {
