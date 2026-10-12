@@ -391,6 +391,22 @@ body:has(.curated-playlists-page-root) {
   margin-bottom: 16px;
 }
 
+
+.curated-page-shelf-group h2 {
+  color: var(--text-primary);
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
+
+.curated-page-shelf-group section > div:first-child {
+  min-height: 28px;
+  margin-bottom: 14px;
+}
+
 .curated-playlist-shelf-heading p {
   margin: 4px 0 0;
   color: var(--text-muted);
