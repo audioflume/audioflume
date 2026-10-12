@@ -19,7 +19,7 @@ import {
   useRef,
   useState,
 } from "react";
-import { createPortal } from "react-dom";
+import { createPortal, flushSync } from "react-dom";
 
 const PLAYLIST_SKELETON_VIEW_MODE_KEY = "filmwave-playlist-skeleton-view-mode";
 const PLAYLIST_SCOPE_OPTIONS = [
@@ -203,6 +203,7 @@ function PlaylistReorderCard({
     return (
       <div
         className="playlist-index-row is-reordering playlist-top-reorder-item"
+        data-playlist-id={playlist.id}
         draggable
         style={{ opacity: dragging ? 0.35 : 1 }}
         onDragStart={onDragStart}
@@ -236,6 +237,7 @@ function PlaylistReorderCard({
   return (
     <div
       className="playlist-gallery-card is-reordering playlist-top-reorder-item"
+      data-playlist-id={playlist.id}
       draggable
       style={{ opacity: dragging ? 0.35 : 1 }}
       onDragStart={onDragStart}
@@ -288,6 +290,7 @@ export default function PlaylistTopControls() {
   const [countLabels, setCountLabels] = useState<Record<number, string>>({});
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const startReorderRef = useRef<() => void>(() => undefined);
+  const dragOverIdRef = useRef<number | null>(null);
 
   const playerVisible = Boolean(currentSong);
   const isMyPlaylistsPage = pathname === "/playlists";
@@ -409,6 +412,49 @@ export default function PlaylistTopControls() {
     setReorderTarget(null);
     setReorderItems([]);
     setDraggingId(null);
+    dragOverIdRef.current = null;
+  }
+
+  function animateReorder(activeId: number, overId: number) {
+    if (activeId === overId) return;
+
+    const before = new Map<number, DOMRect>();
+    document
+      .querySelectorAll<HTMLElement>(".playlist-top-reorder-item[data-playlist-id]")
+      .forEach((element) => {
+        const id = Number(element.dataset.playlistId);
+        if (Number.isFinite(id)) before.set(id, element.getBoundingClientRect());
+      });
+
+    flushSync(() => {
+      setReorderItems((current) => movePlaylist(current, activeId, overId));
+    });
+
+    window.requestAnimationFrame(() => {
+      document
+        .querySelectorAll<HTMLElement>(".playlist-top-reorder-item[data-playlist-id]")
+        .forEach((element) => {
+          const id = Number(element.dataset.playlistId);
+          const previous = before.get(id);
+          if (!previous) return;
+
+          const next = element.getBoundingClientRect();
+          const deltaX = previous.left - next.left;
+          const deltaY = previous.top - next.top;
+          if (Math.abs(deltaX) < 0.5 && Math.abs(deltaY) < 0.5) return;
+
+          element.animate(
+            [
+              { transform: `translate(${deltaX}px, ${deltaY}px)` },
+              { transform: "translate(0, 0)" },
+            ],
+            {
+              duration: 180,
+              easing: "cubic-bezier(0.2, 0, 0, 1)",
+            },
+          );
+        });
+    });
   }
 
   async function saveReorder() {
@@ -495,17 +541,29 @@ export default function PlaylistTopControls() {
                   onDragStart={(event) => {
                     event.dataTransfer.effectAllowed = "move";
                     event.dataTransfer.setData("text/plain", String(playlist.id));
+                    dragOverIdRef.current = null;
                     setDraggingId(playlist.id);
                   }}
-                  onDragOver={(event) => event.preventDefault()}
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    if (
+                      draggingId == null ||
+                      draggingId === playlist.id ||
+                      dragOverIdRef.current === playlist.id
+                    ) {
+                      return;
+                    }
+                    dragOverIdRef.current = playlist.id;
+                    animateReorder(draggingId, playlist.id);
+                  }}
                   onDrop={() => {
-                    if (draggingId == null) return;
-                    setReorderItems((current) =>
-                      movePlaylist(current, draggingId, playlist.id),
-                    );
+                    dragOverIdRef.current = null;
                     setDraggingId(null);
                   }}
-                  onDragEnd={() => setDraggingId(null)}
+                  onDragEnd={() => {
+                    dragOverIdRef.current = null;
+                    setDraggingId(null);
+                  }}
                 />
               ))}
             </div>
