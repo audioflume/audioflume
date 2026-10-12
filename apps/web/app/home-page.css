@@ -869,17 +869,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-trending-copy {
   position: absolute;
   left: 54px;
-  bottom: 108px;
+  top: 43%;
   z-index: 3;
-  display: grid;
-  grid-template-columns: auto minmax(130px, 190px);
-  align-items: end;
-  gap: 30px;
   color: #ffffff;
 }
 
-.audioflume-home-reference-trending-copy h2 {
-  margin: 0;
+.audioflume-home-reference-trending-title {
+  display: grid;
+  gap: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(42px, 4vw, 66px);
   font-weight: 300;
@@ -887,11 +884,18 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   line-height: 0.92;
 }
 
-.audioflume-home-reference-trending-copy p {
-  margin: 0 0 4px;
+.audioflume-home-reference-trending-title-row {
+  display: flex;
+  align-items: baseline;
+  gap: 18px;
+}
+
+.audioflume-home-reference-trending-title-row > small {
+  width: min(190px, 16vw);
   color: rgba(255, 255, 255, 0.76);
   font-size: 12px;
   font-weight: 300;
+  letter-spacing: 0;
   line-height: 1.35;
 }
 
@@ -917,43 +921,43 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending-artwork .is-1 {
-  top: 58px;
-  left: 21%;
+  top: 12%;
+  left: 22%;
   width: 84px;
   height: 84px;
 }
 
 .audioflume-home-reference-trending-artwork .is-2 {
-  top: 34px;
-  right: 18%;
+  top: 5%;
+  right: 17%;
   width: 112px;
   height: 112px;
 }
 
 .audioflume-home-reference-trending-artwork .is-3 {
-  top: 36%;
-  left: 57%;
+  top: 23%;
+  right: 7%;
   width: 72px;
   height: 72px;
 }
 
 .audioflume-home-reference-trending-artwork .is-4 {
-  right: 10%;
-  bottom: 94px;
+  right: 12%;
+  bottom: 14%;
   width: 106px;
   height: 106px;
 }
 
 .audioflume-home-reference-trending-artwork .is-5 {
-  bottom: 38px;
-  left: 36%;
+  bottom: 5%;
+  left: 44%;
   width: 76px;
   height: 76px;
 }
 
 .audioflume-home-reference-trending-artwork .is-6 {
-  top: 48%;
-  left: 12%;
+  bottom: 18%;
+  left: 23%;
   width: 62px;
   height: 62px;
 }
@@ -1051,18 +1055,21 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-reference-trending-copy {
+    top: 42%;
     left: 28px;
-    bottom: 42px;
-    grid-template-columns: 1fr;
-    gap: 16px;
   }
 
-  .audioflume-home-reference-trending-copy h2 {
+  .audioflume-home-reference-trending-title {
     font-size: 44px;
   }
 
-  .audioflume-home-reference-trending-copy p {
-    max-width: 220px;
+  .audioflume-home-reference-trending-title-row {
+    gap: 14px;
+  }
+
+  .audioflume-home-reference-trending-title-row > small {
+    width: 160px;
+    font-size: 10px;
   }
 
   .audioflume-home-reference-trending-artwork .is-4,
