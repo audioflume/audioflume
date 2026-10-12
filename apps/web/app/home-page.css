@@ -712,7 +712,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-library {
-  padding: 88px 0 166px;
+  padding: 166px 0;
   background: var(--bg-primary);
 }
 
@@ -1849,7 +1849,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-reference-library {
-    padding-top: 88px;
+    padding-top: 166px;
   }
 
   .audioflume-home-reference-layered-playlists {
