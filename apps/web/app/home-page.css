@@ -716,10 +716,20 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: var(--bg-primary);
 }
 
+.audioflume-home-reference-intro {
+  padding: 88px 0 0;
+  background: var(--bg-primary);
+}
+
+.audioflume-home-reference-intro + .audioflume-home-reference-trending {
+  padding-top: 88px;
+}
+
 .audioflume-home-reference-artists,
 .audioflume-home-reference-curated-playlists,
 .audioflume-home-reference-playlists,
 .audioflume-home-reference-new-songs,
+.audioflume-home-reference-intro,
 .audioflume-home-reference-library,
 .audioflume-home-reference-footer {
   background: var(--bg-primary);
