@@ -724,6 +724,18 @@ export default function HomePageContent() {
         </button>
       </section>
 
+      <section className="audioflume-home-reference-intro">
+        <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
+          <div className="audioflume-home-reference-library-copy">
+            <h2>Human made music, built for picture.</h2>
+          </div>
+          <p>
+            A growing library of music and SFX from real artists, curated for filmmakers with
+            flexible licensing for projects of every size.
+          </p>
+        </div>
+      </section>
+
       {songsLoading ? null : <HomeTrendingSection songs={recentSongs} />}
 
       <section className="audioflume-home-reference-artists">
