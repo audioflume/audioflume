@@ -445,8 +445,8 @@ export default function PlaylistTopControls() {
 
           element.animate(
             [
-              { transform: `translate(${deltaX}px, ${deltaY}px)` },
-              { transform: "translate(0, 0)" },
+              { translate: `${deltaX}px ${deltaY}px` },
+              { translate: "0 0" },
             ],
             {
               duration: 180,
