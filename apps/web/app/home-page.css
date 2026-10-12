@@ -789,6 +789,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-artists > .audioflume-home-reference-width,
+.audioflume-home-reference-trending > .audioflume-home-reference-width,
 .audioflume-home-reference-curated-playlists > .audioflume-home-reference-width,
 .audioflume-home-reference-playlists > .audioflume-home-reference-width,
 .audioflume-home-reference-new-songs > .audioflume-home-reference-width {
@@ -824,7 +825,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending {
-  padding: 88px 0 88px;
+  padding: 88px 0 18px;
   background: var(--bg-primary);
 }
 
