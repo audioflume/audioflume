@@ -5,6 +5,7 @@ import type { Song } from "@/lib/types";
 import ModalShell from "@/components/ModalShell";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
+import { modalFieldLabelClass } from "@/components/uiClasses";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 
 const LENGTH_OPTIONS = [
@@ -838,7 +839,7 @@ export default function ShortenTrackModal({
         <div className="min-h-0 flex-1 overflow-y-auto p-4">
           <div className="pt-4">
             <div className="mb-2 flex items-center justify-between gap-3">
-              <h3 className="text-xs font-semibold text-[var(--text-muted)]">
+              <h3 className={modalFieldLabelClass}>
                 Short Options
               </h3>
               {generatedTracks.length > 0 && (
