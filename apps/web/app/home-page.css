@@ -1099,19 +1099,19 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 @container (max-width: 650px) {
-  .audioflume-home-reference-feature-pair-card.is-artists {
+  .audioflume-home-reference-feature-pair-card.is-artists h2 {
     --audioflume-feature-artists-scale: 0.9;
   }
 }
 
 @container (max-width: 575px) {
-  .audioflume-home-reference-feature-pair-card.is-artists {
+  .audioflume-home-reference-feature-pair-card.is-artists h2 {
     --audioflume-feature-artists-scale: 0.8;
   }
 }
 
 @container (max-width: 500px) {
-  .audioflume-home-reference-feature-pair-card.is-artists {
+  .audioflume-home-reference-feature-pair-card.is-artists h2 {
     --audioflume-feature-artists-scale: 0.7;
   }
 }
