@@ -716,16 +716,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: var(--bg-primary);
 }
 
-.audioflume-home-reference-intro {
-  padding: 88px 0 0;
-  background: var(--bg-primary);
-}
-
 .audioflume-home-reference-artists,
 .audioflume-home-reference-curated-playlists,
 .audioflume-home-reference-playlists,
 .audioflume-home-reference-new-songs,
-.audioflume-home-reference-intro,
 .audioflume-home-reference-library,
 .audioflume-home-reference-footer {
   background: var(--bg-primary);
@@ -735,7 +729,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   width: min(1180px, calc(100vw - 100px));
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  align-items: start;
+  align-items: last baseline;
   gap: 118px;
 }
 
@@ -743,8 +737,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   max-width: 560px;
 }
 
-.audioflume-home-reference-library h2,
-.audioflume-home-reference-intro h2 {
+.audioflume-home-reference-library h2 {
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -756,7 +749,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-library-grid > p {
   max-width: 560px;
-  margin: 6px 0 0;
+  margin: 0;
   color: var(--text-primary);
   font-size: 16px;
   font-weight: 300;
