@@ -363,6 +363,7 @@ function SortablePlaylistItem({
           style={style}
         >
           <BackendDragHandle
+            className="playlist-reorder-handle-list"
             aria-label={`Drag ${playlist.name} to reorder`}
             {...attributes}
             {...listeners}
@@ -491,7 +492,7 @@ function SortablePlaylistItem({
           )}
           <BackendDragHandle
             variant="overlay"
-            className="absolute right-2 top-2 z-20"
+            className="playlist-reorder-handle-grid"
             aria-label={`Drag ${playlist.name} to reorder`}
             {...attributes}
             {...listeners}
