@@ -888,7 +888,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   max-width: none;
   color: #111111;
   font-size: 44px;
-  zoom: var(--audioflume-feature-playlists-scale);
+  transform: scale(var(--audioflume-feature-playlists-scale));
+  transform-origin: left bottom;
+}
+
+.audioflume-home-reference-feature-pair-card.is-playlists h2 > span {
+  display: block;
+  white-space: nowrap;
 }
 
 .audioflume-home-reference-feature-pair-link {
