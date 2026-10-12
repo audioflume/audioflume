@@ -902,14 +902,19 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-link {
   position: absolute;
   display: inline-flex;
+  min-width: 138px;
   height: 42px;
   align-items: center;
   justify-content: center;
-  padding: 0 18px;
+  padding: 0 22px;
   font-size: 13px;
   font-weight: 400;
   line-height: 1;
   text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    color 160ms ease,
+    transform 160ms ease;
 }
 
 .audioflume-home-reference-feature-pair-card.is-artists .audioflume-home-reference-feature-pair-link {
@@ -919,11 +924,23 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: #111111;
 }
 
+.audioflume-home-reference-feature-pair-card.is-artists .audioflume-home-reference-feature-pair-link:hover,
+.audioflume-home-reference-feature-pair-card.is-artists .audioflume-home-reference-feature-pair-link:focus-visible {
+  background: #e9e9e9;
+  transform: translateY(-1px);
+}
+
 .audioflume-home-reference-feature-pair-card.is-playlists .audioflume-home-reference-feature-pair-link {
   right: 4.73%;
   bottom: 7%;
   background: #111111;
   color: #ffffff;
+}
+
+.audioflume-home-reference-feature-pair-card.is-playlists .audioflume-home-reference-feature-pair-link:hover,
+.audioflume-home-reference-feature-pair-card.is-playlists .audioflume-home-reference-feature-pair-link:focus-visible {
+  background: #2a2a2a;
+  transform: translateY(-1px);
 }
 
 .audioflume-home-reference-trending {
