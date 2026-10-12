@@ -857,6 +857,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: flex;
   align-items: center;
   justify-content: center;
+  background-image: url("https://images.filmwave.io/images/home/New%20%26%20Trending%20Clip.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  -webkit-background-clip: text;
+  background-clip: text;
   color: #ffffff;
 }
 
@@ -879,12 +885,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-trending-title > span:first-child,
 .audioflume-home-reference-trending-title-row > span {
-  background-image: url("https://images.filmwave.io/images/home/New%20%26%20Trending%20Clip.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  -webkit-background-clip: text;
-  background-clip: text;
   color: transparent;
   -webkit-text-fill-color: transparent;
 }
@@ -901,6 +901,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-trending-title-row > small {
   width: 230px;
   color: #ffffff;
+  -webkit-text-fill-color: #ffffff;
   font-size: 18px;
   font-weight: 300;
   letter-spacing: 0;
