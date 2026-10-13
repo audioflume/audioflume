@@ -457,7 +457,7 @@ export default function MusicPlayer() {
     );
 
     waveformProgressRef.current = nextProgress;
-    seekTo(currentSong, nextProgress, isPlaying);
+    seekTo(currentSong, nextProgress, displayedIsPlaying);
     schedulePlayerCanvasDraw();
   };
 
@@ -468,7 +468,7 @@ export default function MusicPlayer() {
       Math.min(1, marker.time / currentSong.duration),
     );
     waveformProgressRef.current = nextProgress;
-    seekTo(currentSong, nextProgress, isPlaying);
+    seekTo(currentSong, nextProgress, displayedIsPlaying);
     schedulePlayerCanvasDraw();
   };
 
