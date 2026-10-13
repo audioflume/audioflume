@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 
 import CuratedBrowseFilters from "@/components/curated/CuratedBrowseFilters";
-import type { CuratedBrowseTaxonomy } from "@/lib/curatedBrowseTaxonomy";
 import {
   CURATED_BROWSE_FILTERS,
   type CuratedBrowseTag,
@@ -24,11 +23,9 @@ export function getCuratedGroupId(name: string) {
 export default function CuratedFeatureFilters({
   activeFilter,
   onFilterChange,
-  browseTaxonomy,
 }: {
   activeFilter: CuratedBrowseTag | null;
   onFilterChange: (filter: CuratedBrowseTag | null) => void;
-  browseTaxonomy: CuratedBrowseTaxonomy | null;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
 }) {
@@ -55,7 +52,6 @@ export default function CuratedFeatureFilters({
       <CuratedBrowseFilters
         activeFilter={activeFilter}
         onFilterChange={onFilterChange}
-        className="curated-page-browse-filters"
         variant="curated-page"
       />
     </div>
