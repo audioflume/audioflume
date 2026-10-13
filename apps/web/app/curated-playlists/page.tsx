@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
@@ -93,6 +94,7 @@ function CuratedPlaylistsLoadingSkeleton() {
 }
 
 export default function CuratedPlaylistsPage() {
+  const router = useRouter();
   const [playlists, setPlaylists] = useState<CuratedPlaylistWithBrowseAssignments[]>([]);
   const [browseTaxonomy, setBrowseTaxonomy] =
     useState<CuratedBrowseTaxonomy | null>(null);
@@ -312,7 +314,14 @@ export default function CuratedPlaylistsPage() {
 
           <form
             className="audioflume-home-reference-searchbar-field"
-            onSubmit={(event) => event.preventDefault()}
+            onSubmit={(event) => {
+              event.preventDefault();
+
+              const query = searchQuery.trim();
+              router.push(
+                query ? `/music?search=${encodeURIComponent(query)}` : "/music",
+              );
+            }}
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <circle cx="11" cy="11" r="6.5" />
@@ -322,8 +331,8 @@ export default function CuratedPlaylistsPage() {
               type="search"
               value={searchQuery}
               onChange={(event) => setSearchQuery(event.target.value)}
-              placeholder="Search by playlist, mood, or scene"
-              aria-label="Search curated playlists"
+              placeholder="Search by sound, mood, or scene"
+              aria-label="Search by sound, mood, or scene"
             />
             {searchQuery.length > 0 ? (
               <button
