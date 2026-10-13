@@ -853,10 +853,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         blockedOwnerTabIdRef.current = null;
 
         const audio = getAudio();
+        playRequestIdRef.current += 1;
+        pendingSeekRequestIdRef.current += 1;
+        pendingPlayAfterManifestRef.current = false;
+
         if (!audio.paused) {
-          playRequestIdRef.current += 1;
-          pendingSeekRequestIdRef.current += 1;
-          pendingPlayAfterManifestRef.current = false;
           audio.pause();
         }
 
@@ -880,10 +881,11 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const audio = getAudio();
       const existing = currentSongRef.current;
 
+      playRequestIdRef.current += 1;
+      pendingSeekRequestIdRef.current += 1;
+      pendingPlayAfterManifestRef.current = false;
+
       if (!audio.paused) {
-        playRequestIdRef.current += 1;
-        pendingSeekRequestIdRef.current += 1;
-        pendingPlayAfterManifestRef.current = false;
         audio.pause();
       }
 
