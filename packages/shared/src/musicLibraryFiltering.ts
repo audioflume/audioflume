@@ -342,11 +342,16 @@ export function matchesKeyFilter(
     if (songNote !== normalizedNote) return false;
   }
 
-  if (keyValue.accidental === "sharp" && !songNote.includes("#")) {
-    return false;
-  }
+  const songAccidental =
+    songNote.length === 2
+      ? songNote.endsWith("#")
+        ? "sharp"
+        : songNote.endsWith("b")
+          ? "flat"
+          : null
+      : null;
 
-  if (keyValue.accidental === "flat" && !songNote.includes("b")) {
+  if (keyValue.accidental && songAccidental !== keyValue.accidental) {
     return false;
   }
 
