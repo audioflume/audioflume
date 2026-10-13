@@ -191,7 +191,7 @@ export default function CreatePlaylistModal({
           <button
             type="button"
             disabled={busy}
-            className="flex h-8 cursor-pointer items-center gap-1.5 rounded-none px-2.5 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
+            className="flex h-8 cursor-pointer items-center gap-1.5 rounded-none px-2.5 text-xs font-normal text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-70"
           >
             <FreeImagesIcon />
             Free Images
