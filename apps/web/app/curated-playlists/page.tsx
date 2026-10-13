@@ -371,6 +371,15 @@ export default function CuratedPlaylistsPage() {
 
       <section className="curated-playlists-page-layer">
         <div className="px-8">
+          {!loading && !error && playlists.length > 0 && (
+            <CuratedFeatureFilters
+              activeFilter={activeBrowseFilter}
+              onFilterChange={setActiveBrowseFilter}
+              searchValue={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
+          )}
+
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
           {!loading && error && (
@@ -390,16 +399,6 @@ export default function CuratedPlaylistsPage() {
               </Link>
               .
             </div>
-          )}
-
-          {!loading && !error && playlists.length > 0 && (
-            <CuratedFeatureFilters
-              activeFilter={activeBrowseFilter}
-              onFilterChange={setActiveBrowseFilter}
-              browseTaxonomy={browseTaxonomy}
-              searchValue={searchQuery}
-              onSearchChange={setSearchQuery}
-            />
           )}
 
           {!loading &&
