@@ -804,7 +804,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 14px;
+  margin-bottom: 12px;
   font-family: var(--filmwave-section-title-font-family);
   line-height: var(--filmwave-section-title-line-height);
 }
