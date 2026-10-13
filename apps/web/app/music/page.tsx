@@ -29,6 +29,10 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 
+import {
+  getReferenceSearchMatchSongIds,
+  takeReferenceSearchHandoff,
+} from "@/lib/referenceSearchHandoff";
 import type { BpmFilterValue, KeyFilterValue, Song } from "@/lib/types";
 
 import { useFilterPersistence } from "@/hooks/useFilterPersistence";
@@ -188,19 +192,6 @@ type ReferenceSearchState = {
   status: "loading" | "success";
   songIds: string[];
 };
-
-function getSearchMatchSongIds(data: unknown) {
-  if (!data || typeof data !== "object") return [];
-
-  const matches = (data as { matches?: unknown }).matches;
-  if (!Array.isArray(matches)) return [];
-
-  return matches.flatMap((match) => {
-    if (!match || typeof match !== "object") return [];
-    const songId = (match as Record<string, unknown>).songId;
-    return typeof songId === "string" && songId ? [songId] : [];
-  });
-}
 
 function getStoredLicenseFilters(): LicenseFilterValue[] {
   if (typeof window === "undefined") return [];
@@ -390,6 +381,19 @@ export default function MusicPage() {
 
     if (!userId) return;
 
+    const handoff = takeReferenceSearchHandoff(
+      referenceTrackId,
+      referenceSearch,
+    );
+
+    if (handoff) {
+      setReferenceSearchState({
+        ...handoff,
+        status: "success",
+      });
+      return;
+    }
+
     const controller = new AbortController();
 
     setReferenceSearchState({
@@ -414,7 +418,7 @@ export default function MusicPage() {
           referenceId: referenceTrackId,
           query: referenceSearch,
           status: "success",
-          songIds: getSearchMatchSongIds(data),
+          songIds: getReferenceSearchMatchSongIds(data),
         });
       })
       .catch((error) => {
@@ -1280,7 +1284,7 @@ export default function MusicPage() {
               artist: result.artist,
               imageUrl: result.imageUrl,
               status: "success",
-              songIds: getSearchMatchSongIds(data),
+              songIds: getReferenceSearchMatchSongIds(data),
             });
             setSearchBySongOpen(false);
           } catch (error) {
