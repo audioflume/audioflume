@@ -2,19 +2,17 @@
 
 import { MusicListShell } from "@filmwave/shared";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   useEffect,
   useMemo,
   useRef,
   useState,
-  type FormEvent,
   type MouseEvent,
   type ReactNode,
 } from "react";
 
 import Footer from "@/components/Footer";
-import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
+import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
@@ -516,14 +514,12 @@ export default function HomePageContent({
   const { songs, loading: songsLoading } = useSongs();
   const { theme, setTheme } = useTheme();
   const { setQueue } = usePlayer();
-  const router = useRouter();
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const searchBarRef = useRef<HTMLDivElement>(null);
-  const [homeSearch, setHomeSearch] = useState("");
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -616,13 +612,6 @@ export default function HomePageContent({
     };
   }, []);
 
-  function submitHomeSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const query = homeSearch.trim();
-    router.push(query ? `/music?search=${encodeURIComponent(query)}` : "/music");
-  }
-
   return (
     <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
       <div className="audioflume-home-reference-searchbar-slot">
@@ -637,12 +626,7 @@ export default function HomePageContent({
             <span>Filters</span>
           </Link>
 
-          <GlobalMusicSearchField
-            value={homeSearch}
-            onChange={setHomeSearch}
-            onClear={() => setHomeSearch("")}
-            onSubmit={submitHomeSearch}
-          />
+          <GlobalMusicSearch />
 
           <GlobalReferenceSearch />
         </div>
