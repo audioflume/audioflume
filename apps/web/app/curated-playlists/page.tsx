@@ -7,8 +7,7 @@ import { useEffect, useMemo, useState } from "react";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
-import ReferenceSearchModal from "@/components/ReferenceSearchModal";
-import WaveformIcon from "@/components/icons/WaveformIcon";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import XIcon from "@/components/icons/XIcon";
 import type {
   CuratedBrowseTag,
@@ -108,8 +107,6 @@ export default function CuratedPlaylistsPage() {
   const [activeBrowseFilter, setActiveBrowseFilter] =
     useState<CuratedBrowseTag | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
-  const [referenceSearchQuery, setReferenceSearchQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -327,32 +324,9 @@ export default function CuratedPlaylistsPage() {
             }}
           />
 
-          <button
-            type="button"
-            className="audioflume-home-reference-searchbar-song"
-            aria-label="Search by song"
-            aria-expanded={referenceSearchOpen}
-            onClick={() => {
-              setReferenceSearchQuery("");
-              setReferenceSearchOpen(true);
-            }}
-          >
-            <WaveformIcon size={16} />
-            <span>Search by song</span>
-          </button>
+          <GlobalReferenceSearch />
         </div>
       </div>
-
-      <ReferenceSearchModal
-        open={referenceSearchOpen}
-        value={referenceSearchQuery}
-        onChange={setReferenceSearchQuery}
-        onClose={() => setReferenceSearchOpen(false)}
-        onSubmit={(query) => {
-          setReferenceSearchQuery(query);
-          setReferenceSearchOpen(false);
-        }}
-      />
 
       <section className="curated-playlists-page-layer">
         <div className="px-8">
