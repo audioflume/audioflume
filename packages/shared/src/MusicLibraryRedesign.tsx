@@ -699,12 +699,31 @@ function MusicKeySection({
 
   return (
     <div className="fw-filter-control-stack">
-      <div className="fw-segment">
+      <div className="fw-segment fw-key-scale-segment">
+        {(["major", "minor"] as const).map((s) => (
+          <button
+            key={s}
+            type="button"
+            className={scale === s ? "is-active" : ""}
+            onClick={() => emit(note, scale === s ? null : s)}
+          >
+            {s === "major" ? "Major" : "Minor"}
+          </button>
+        ))}
+      </div>
+
+      <div className="fw-segment fw-key-accidental-segment">
         {(["sharp", "flat"] as const).map((m) => (
           <button key={m} type="button" className={accidental === m ? "is-active" : ""}
             onClick={() => {
               setDisplayAccidental(m);
-              emit(note, scale, accidental === m ? null : m);
+              const nextAccidental = accidental === m ? null : m;
+              const noteMatchesMode =
+                note &&
+                ((m === "sharp" && note.includes("#")) ||
+                  (m === "flat" && note.includes("b")));
+
+              emit(noteMatchesMode ? note : null, scale, nextAccidental);
             }}>
             {m === "sharp" ? "Sharp" : "Flat"}
           </button>
@@ -728,16 +747,6 @@ function MusicKeySection({
           <button key={n} type="button" aria-pressed={note === n}
             className={`fw-filter-chip fw-filter-chip-compact${note === n ? " is-selected" : ""}`}
             onClick={() => emit(note === n ? null : n, scale)}>{n}</button>
-        ))}
-      </div>
-
-      <div className="fw-filter-chip-grid fw-filter-subrow">
-        {(["major", "minor"] as const).map((s) => (
-          <button key={s} type="button" aria-pressed={scale === s}
-            className={`fw-filter-chip${scale === s ? " is-selected" : ""}`}
-            onClick={() => emit(note, scale === s ? null : s)}>
-            {s === "major" ? "Major" : "Minor"}
-          </button>
         ))}
       </div>
     </div>
