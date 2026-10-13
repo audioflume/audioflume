@@ -6,14 +6,15 @@
 }
 
 .curated-page-filter-row {
+  display: flex;
   min-width: 0;
+  align-items: center;
 }
 
 .curated-page-filter-row .curated-feature-filters {
-  display: block;
   min-width: 0;
+  flex: 1 1 auto;
   margin-top: 0;
-  padding-top: 32px;
 }
 
 .curated-page-filter-row .curated-feature-filter-accordion {
