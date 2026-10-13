@@ -300,20 +300,15 @@ export default function CuratedPlaylistsPage() {
     <main className="curated-playlists-page-root">
       <div className="audioflume-home-reference-searchbar-slot">
         <div className="audioflume-home-reference-searchbar">
-          <button
-            type="button"
+          <Link
+            href="/music?filters=open"
             className="audioflume-home-reference-searchbar-filters"
-            onClick={() =>
-              document
-                .querySelector(".curated-page-filter-row")
-                ?.scrollIntoView({ behavior: "smooth", block: "start" })
-            }
           >
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
             </svg>
             <span>Filters</span>
-          </button>
+          </Link>
 
           <form
             className="audioflume-home-reference-searchbar-field"
