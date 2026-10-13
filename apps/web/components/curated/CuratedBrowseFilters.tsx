@@ -112,9 +112,18 @@ function FilterIcon({ icon }: { icon: FilterIconName }) {
   );
 }
 
+type CuratedBrowseSubcategoryItem = {
+  id: number;
+  label: string;
+};
+
 type CuratedBrowseFiltersProps = {
   activeFilter?: CuratedBrowseTag | null;
   onFilterChange?: (filter: CuratedBrowseTag | null) => void;
+  onSubcategoryClick?: (subcategory: CuratedBrowseSubcategoryItem) => void;
+  subcategoriesByFilter?: Partial<
+    Record<CuratedBrowseTag, CuratedBrowseSubcategoryItem[]>
+  >;
   hrefForFilter?: (filter: CuratedBrowseTag) => string;
   ariaLabel?: string;
   className?: string;
@@ -124,6 +133,8 @@ type CuratedBrowseFiltersProps = {
 export default function CuratedBrowseFilters({
   activeFilter = null,
   onFilterChange,
+  onSubcategoryClick,
+  subcategoriesByFilter,
   hrefForFilter,
   ariaLabel = "Filter curated playlists",
   className = "",
@@ -140,6 +151,24 @@ export default function CuratedBrowseFilters({
           <>
             <FilterIcon icon={FILTER_ICONS[filter.value]} />
             <span>{filter.label}</span>
+            {variant === "curated-page" && (
+              <svg
+                className="curated-feature-filter-chevron"
+                width="12"
+                height="12"
+                viewBox="0 0 12 12"
+                fill="none"
+                aria-hidden="true"
+              >
+                <path
+                  d="m4.5 2.5 3.5 3.5-3.5 3.5"
+                  stroke="currentColor"
+                  strokeWidth="1.25"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            )}
           </>
         );
         const sharedProps = {
@@ -155,6 +184,41 @@ export default function CuratedBrowseFilters({
             >
               {content}
             </Link>
+          );
+        }
+
+        if (variant === "curated-page") {
+          const subcategories = subcategoriesByFilter?.[filter.value] ?? [];
+
+          return (
+            <div
+              key={filter.value}
+              className={`curated-feature-filter-accordion${isActive ? " is-open" : ""}`}
+            >
+              <button
+                type="button"
+                aria-expanded={isActive}
+                {...sharedProps}
+                onClick={() => onFilterChange?.(isActive ? null : filter.value)}
+              >
+                {content}
+              </button>
+
+              {isActive && subcategories.length > 0 && (
+                <div className="curated-feature-filter-subcategories">
+                  {subcategories.map((subcategory) => (
+                    <button
+                      key={subcategory.id}
+                      type="button"
+                      className="curated-feature-filter-subcategory"
+                      onClick={() => onSubcategoryClick?.(subcategory)}
+                    >
+                      {subcategory.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           );
         }
 
