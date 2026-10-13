@@ -38,6 +38,7 @@ type PlayerBroadcastMessage =
       type: "claim";
       tabId: string;
       songId: string | null;
+      sentAt: number;
     }
   | {
       type: "closed";
@@ -126,7 +127,10 @@ function isPlayerBroadcastMessage(
   if (typeof message.tabId !== "string") return false;
   if (message.type === "closed") return true;
   if (message.type === "claim") {
-    return typeof message.songId === "string" || message.songId === null;
+    return (
+      (typeof message.songId === "string" || message.songId === null) &&
+      typeof message.sentAt === "number"
+    );
   }
   if (message.type === "paused") {
     return (
@@ -224,6 +228,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const tabIdRef = useRef(createTabId());
   const remoteOwnerTabIdRef = useRef<string | null>(null);
   const blockedOwnerTabIdRef = useRef<string | null>(null);
+  const latestOwnershipClaimRef = useRef({
+    sentAt: 0,
+    tabId: "",
+  });
   const lastBroadcastTimeRef = useRef(0);
   const lastStorageWriteTimeRef = useRef(0);
 
@@ -312,6 +320,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const remoteOwnerTabId = remoteOwnerTabIdRef.current;
     if (!remoteOwnerTabId) return false;
 
+    const sentAt = Date.now();
+    latestOwnershipClaimRef.current = {
+      sentAt,
+      tabId: tabIdRef.current,
+    };
+
     blockedOwnerTabIdRef.current = remoteOwnerTabId;
     remoteOwnerTabIdRef.current = null;
     setRemotePlayingInAnotherTab(false);
@@ -320,6 +334,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       type: "claim",
       tabId: tabIdRef.current,
       songId: currentSongRef.current?.id ?? null,
+      sentAt,
     });
 
     return true;
@@ -823,6 +838,18 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       }
 
       if (message.type === "claim") {
+        const latestClaim = latestOwnershipClaimRef.current;
+        const incomingIsNewer =
+          message.sentAt > latestClaim.sentAt ||
+          (message.sentAt === latestClaim.sentAt &&
+            message.tabId > latestClaim.tabId);
+
+        if (!incomingIsNewer) return;
+
+        latestOwnershipClaimRef.current = {
+          sentAt: message.sentAt,
+          tabId: message.tabId,
+        };
         blockedOwnerTabIdRef.current = null;
 
         const audio = getAudio();
