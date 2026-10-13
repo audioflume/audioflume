@@ -295,15 +295,6 @@ export default function CuratedPlaylistsPage() {
     <main className="curated-playlists-page-root">
       <section className="curated-playlists-page-layer">
         <div className="px-8">
-          {!loading && !error && playlists.length > 0 && (
-            <CuratedFeatureFilters
-              activeFilter={activeBrowseFilter}
-              onFilterChange={setActiveBrowseFilter}
-              searchValue={searchQuery}
-              onSearchChange={setSearchQuery}
-            />
-          )}
-
           {loading && <CuratedPlaylistsLoadingSkeleton />}
 
           {!loading && error && (
@@ -325,36 +316,45 @@ export default function CuratedPlaylistsPage() {
             </div>
           )}
 
-          {!loading &&
-            !error &&
-            playlists.length > 0 &&
-            (activeBrowseFilter || hasActiveSearch) &&
-            groupedPlaylists.length === 0 && (
-              <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
-                {hasActiveSearch
-                  ? "No curated playlists match your search."
-                  : "No playlists are assigned to this filter yet."}
-              </div>
-            )}
+          {!loading && !error && playlists.length > 0 && (
+            <div className="curated-page-browser-layout">
+              <CuratedFeatureFilters
+                activeFilter={activeBrowseFilter}
+                onFilterChange={setActiveBrowseFilter}
+                browseTaxonomy={browseTaxonomy}
+                searchValue={searchQuery}
+                onSearchChange={setSearchQuery}
+              />
 
-          {!loading &&
-            !error &&
-            groupedPlaylists.map(
-              ({ name, description, playlists: groupPlaylists }) => (
-                <div
-                  key={name}
-                  id={getCuratedGroupId(name)}
-                  className="curated-page-shelf-group scroll-mt-28"
-                >
-                  <CuratedPlaylistShelf
-                    title={name}
-                    description={description ?? undefined}
-                    playlists={groupPlaylists}
-                    className="mt-[calc(clamp(34px,3vw,48px)+20px)]"
-                  />
-                </div>
-              ),
-            )}
+              <div className="curated-page-browser-content">
+                {(activeBrowseFilter || hasActiveSearch) &&
+                  groupedPlaylists.length === 0 && (
+                    <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
+                      {hasActiveSearch
+                        ? "No curated playlists match your search."
+                        : "No playlists are assigned to this filter yet."}
+                    </div>
+                  )}
+
+                {groupedPlaylists.map(
+                  ({ name, description, playlists: groupPlaylists }) => (
+                    <div
+                      key={name}
+                      id={getCuratedGroupId(name)}
+                      className="curated-page-shelf-group scroll-mt-28"
+                    >
+                      <CuratedPlaylistShelf
+                        title={name}
+                        description={description ?? undefined}
+                        playlists={groupPlaylists}
+                        className="mt-[calc(clamp(34px,3vw,48px)+20px)]"
+                      />
+                    </div>
+                  ),
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </section>
       <Footer />
