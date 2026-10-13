@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 
 import CuratedBrowseFilters from "@/components/curated/CuratedBrowseFilters";
+import type { CuratedBrowseTaxonomy } from "@/lib/curatedBrowseTaxonomy";
 import {
   CURATED_BROWSE_FILTERS,
   type CuratedBrowseTag,
@@ -23,9 +24,11 @@ export function getCuratedGroupId(name: string) {
 export default function CuratedFeatureFilters({
   activeFilter,
   onFilterChange,
+  browseTaxonomy,
 }: {
   activeFilter: CuratedBrowseTag | null;
   onFilterChange: (filter: CuratedBrowseTag | null) => void;
+  browseTaxonomy: CuratedBrowseTaxonomy | null;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
 }) {
@@ -47,11 +50,27 @@ export default function CuratedFeatureFilters({
     }
   }, [activeFilter, onFilterChange]);
 
+  const subcategoriesByFilter = Object.fromEntries(
+    (browseTaxonomy?.filters ?? []).map((filter) => [
+      filter.value,
+      filter.subcategories.map((subcategory) => ({
+        id: subcategory.id,
+        label: subcategory.label,
+      })),
+    ]),
+  );
+
   return (
     <div className="curated-page-filter-row">
       <CuratedBrowseFilters
         activeFilter={activeFilter}
         onFilterChange={onFilterChange}
+        onSubcategoryClick={(subcategory) => {
+          document
+            .getElementById(getCuratedGroupId(subcategory.label))
+            ?.scrollIntoView({ behavior: "smooth", block: "start" });
+        }}
+        subcategoriesByFilter={subcategoriesByFilter}
         variant="curated-page"
       />
     </div>
