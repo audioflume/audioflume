@@ -183,7 +183,7 @@ export default function CuratedBrowseFilters({
           );
         }
 
-        if (variant === "curated-page") {
+        if (variant === "curated-page" && subcategoriesByFilter) {
           const subcategories = subcategoriesByFilter?.[filter.value] ?? [];
 
           return (
