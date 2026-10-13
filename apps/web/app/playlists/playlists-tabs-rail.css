@@ -213,7 +213,7 @@ body .playlists-tabs-row {
 .playlists-new-button {
   gap: 8px !important;
   background: var(--filmwave-neutral-surface) !important;
-  padding: 0 18px !important;
+  padding: 0 22px 0 18px !important;
   color: var(--text-primary) !important;
 }
 
