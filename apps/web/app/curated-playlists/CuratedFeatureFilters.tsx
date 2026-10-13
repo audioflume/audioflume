@@ -50,28 +50,12 @@ export default function CuratedFeatureFilters({
     }
   }, [activeFilter, onFilterChange]);
 
-  const subcategoriesByFilter = Object.fromEntries(
-    (browseTaxonomy?.filters ?? []).map((filter) => [
-      filter.value,
-      filter.subcategories.map((subcategory) => ({
-        id: subcategory.id,
-        label: subcategory.label,
-      })),
-    ]),
-  );
-
   return (
     <div className="curated-page-filter-row">
       <CuratedBrowseFilters
         activeFilter={activeFilter}
         onFilterChange={onFilterChange}
-        onSubcategoryClick={(subcategory) => {
-          document
-            .getElementById(getCuratedGroupId(subcategory.label))
-            ?.scrollIntoView({ behavior: "smooth", block: "start" });
-        }}
-        subcategoriesByFilter={subcategoriesByFilter}
-        variant="pill"
+        variant="curated-page"
       />
     </div>
   );
