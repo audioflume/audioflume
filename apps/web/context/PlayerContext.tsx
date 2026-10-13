@@ -35,6 +35,11 @@ type PlayerBroadcastMessage =
       duration: number;
     }
   | {
+      type: "claim";
+      tabId: string;
+      songId: string | null;
+    }
+  | {
       type: "closed";
       tabId: string;
     };
@@ -120,6 +125,9 @@ function isPlayerBroadcastMessage(
   const message = value as Partial<PlayerBroadcastMessage>;
   if (typeof message.tabId !== "string") return false;
   if (message.type === "closed") return true;
+  if (message.type === "claim") {
+    return typeof message.songId === "string" || message.songId === null;
+  }
   if (message.type === "paused") {
     return (
       (typeof message.songId === "string" || message.songId === null) &&
@@ -215,6 +223,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const channelRef = useRef<BroadcastChannel | null>(null);
   const tabIdRef = useRef(createTabId());
   const remoteOwnerTabIdRef = useRef<string | null>(null);
+  const blockedOwnerTabIdRef = useRef<string | null>(null);
   const lastBroadcastTimeRef = useRef(0);
   const lastStorageWriteTimeRef = useRef(0);
 
@@ -300,12 +309,21 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, [postPlayerMessage]);
 
   const claimPlaybackOwnership = useCallback(() => {
-    if (!remoteOwnerTabIdRef.current) return false;
+    const remoteOwnerTabId = remoteOwnerTabIdRef.current;
+    if (!remoteOwnerTabId) return false;
+
+    blockedOwnerTabIdRef.current = remoteOwnerTabId;
     remoteOwnerTabIdRef.current = null;
     setRemotePlayingInAnotherTab(false);
-    postPlayingState();
+
+    postPlayerMessage({
+      type: "claim",
+      tabId: tabIdRef.current,
+      songId: currentSongRef.current?.id ?? null,
+    });
+
     return true;
-  }, [postPlayingState]);
+  }, [postPlayerMessage]);
 
   const postPausedState = useCallback(() => {
     postPlayerMessage({
@@ -798,6 +816,26 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           remoteOwnerTabIdRef.current = null;
           setRemotePlayingInAnotherTab(false);
         }
+        if (blockedOwnerTabIdRef.current === message.tabId) {
+          blockedOwnerTabIdRef.current = null;
+        }
+        return;
+      }
+
+      if (message.type === "claim") {
+        blockedOwnerTabIdRef.current = null;
+
+        const audio = getAudio();
+        if (!audio.paused) {
+          playRequestIdRef.current += 1;
+          pendingSeekRequestIdRef.current += 1;
+          pendingPlayAfterManifestRef.current = false;
+          audio.pause();
+        }
+
+        remoteOwnerTabIdRef.current = message.tabId;
+        setRemotePlayingInAnotherTab(true);
+        setIsPlayingState(false);
         return;
       }
 
@@ -809,6 +847,8 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
         return;
       }
+
+      if (blockedOwnerTabIdRef.current === message.tabId) return;
 
       const audio = getAudio();
       const existing = currentSongRef.current;
