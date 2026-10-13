@@ -13,14 +13,13 @@ import {
 
 import Footer from "@/components/Footer";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
-import ReferenceSearchModal from "@/components/ReferenceSearchModal";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
@@ -406,8 +405,6 @@ export default function DiscoverPage() {
   >([]);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [discoverSearch, setDiscoverSearch] = useState("");
-  const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
-  const [referenceSearchQuery, setReferenceSearchQuery] = useState("");
   const [canScrollFeatureCardsPrev, setCanScrollFeatureCardsPrev] = useState(false);
   const [canScrollFeatureCardsNext, setCanScrollFeatureCardsNext] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
@@ -619,36 +616,9 @@ export default function DiscoverPage() {
             onSubmit={submitDiscoverSearch}
           />
 
-          <button
-            type="button"
-            className="audioflume-home-reference-searchbar-song"
-            aria-label="Search by song"
-            aria-expanded={referenceSearchOpen}
-            onClick={() => setReferenceSearchOpen(true)}
-          >
-            <WaveformIcon size={16} />
-            <span>Search by song</span>
-          </button>
+          <GlobalReferenceSearch />
         </div>
       </div>
-
-      <ReferenceSearchModal
-        open={referenceSearchOpen}
-        value={referenceSearchQuery}
-        onChange={setReferenceSearchQuery}
-        onClose={() => setReferenceSearchOpen(false)}
-        onSubmit={(query, result) => {
-          const params = new URLSearchParams({
-            referenceSearch: query,
-          });
-
-          if (result?.kind === "track") {
-            params.set("referenceTrackId", result.id);
-          }
-
-          router.push(`/music?${params.toString()}`);
-        }}
-      />
 
       <section
         className="discover-artist-hero"
