@@ -17,6 +17,22 @@
   margin-top: 0;
 }
 
+.curated-page-browse-filters {
+  display: grid;
+  width: calc(
+    100vw - var(--curated-feature-edge) - var(--curated-feature-edge)
+  );
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: 8px;
+  margin-left: calc(50% - 50vw + var(--curated-feature-edge));
+}
+
+.curated-page-browse-filters .curated-feature-filter-pill {
+  width: 100%;
+  height: 65px;
+  border-radius: 0;
+}
+
 .curated-page-filter-row .curated-feature-filter-accordion {
   margin-bottom: 1px;
 }
@@ -202,6 +218,15 @@
     .curated-feature-filter-pill {
     min-width: 132px;
     flex: 0 0 132px;
+  }
+
+  .curated-page-browse-filters {
+    box-sizing: border-box;
+    width: 100%;
+    gap: 8px;
+    margin-left: 0;
+    padding-right: var(--curated-page-gutter);
+    padding-left: var(--curated-page-gutter);
   }
 }
 
