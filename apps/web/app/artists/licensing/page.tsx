@@ -51,7 +51,7 @@ export default function ArtistLicensingPage() {
                 Clear terms from the start.
               </h1>
             </div>
-            <p className="m-0 text-[clamp(16px,1.45vw,20px)] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
+            <p className="m-0 text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
               Audioflume is built to make music straightforward to license while keeping artists clear on how their work can be used, how opportunities are handled, and which terms apply.
             </p>
           </section>
