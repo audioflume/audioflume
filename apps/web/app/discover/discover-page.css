@@ -418,7 +418,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin: 0 0 14px calc(50% - 50vw + 80px);
+  margin: 0 0 12px calc(50% - 50vw + 80px);
   font-family: var(--filmwave-section-title-font-family);
   line-height: var(--filmwave-section-title-line-height);
 }
