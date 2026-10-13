@@ -824,33 +824,6 @@ body:has(.curated-playlists-page-root)
 }
 
 @media (max-width: 720px) {
-  .curated-playlists-page-root .audioflume-home-reference-searchbar {
-    grid-template-columns: 112px minmax(0, 1fr);
-  }
-
-  .curated-playlists-page-root .audioflume-home-reference-searchbar-filters {
-    gap: 12px;
-    padding: 0 20px;
-  }
-
-  .curated-playlists-page-root .audioflume-home-reference-searchbar-field {
-    width: calc(100% - 20px);
-    gap: 12px;
-    margin: 12px 10px;
-    padding: 0 18px;
-  }
-
-  .curated-playlists-page-root .audioflume-home-reference-searchbar-field input,
-  .curated-playlists-page-root
-    .audioflume-home-reference-searchbar-field
-    input::placeholder {
-    font-size: 14px;
-  }
-
-  .curated-playlists-page-root .audioflume-home-reference-searchbar-song {
-    display: none;
-  }
-
   .curated-feature-hero-title-block,
   .curated-feature-hero-info {
     left: 24px;
@@ -925,5 +898,34 @@ body:has(.curated-playlists-page-root)
     transition-duration: 0.01ms !important;
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
+  }
+}
+
+@media (max-width: 720px) {
+  .curated-playlists-page-root .audioflume-home-reference-searchbar {
+    grid-template-columns: 112px minmax(0, 1fr);
+  }
+
+  .curated-playlists-page-root .audioflume-home-reference-searchbar-filters {
+    gap: 12px;
+    padding: 0 20px;
+  }
+
+  .curated-playlists-page-root .audioflume-home-reference-searchbar-field {
+    width: calc(100% - 20px);
+    gap: 12px;
+    margin: 12px 10px;
+    padding: 0 18px;
+  }
+
+  .curated-playlists-page-root .audioflume-home-reference-searchbar-field input,
+  .curated-playlists-page-root
+    .audioflume-home-reference-searchbar-field
+    input::placeholder {
+    font-size: 14px;
+  }
+
+  .curated-playlists-page-root .audioflume-home-reference-searchbar-song {
+    display: none;
   }
 }
