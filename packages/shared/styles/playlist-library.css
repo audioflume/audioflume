@@ -337,10 +337,8 @@
   text-transform: none !important;
 }
 
-/* Preserve the existing section-title styling for My Playlists. */
-.discover-song-section .fw-song-list-title,
-.playlists-page .playlists-hero .playlists-title,
-.playlists-page .playlists-hero .playlists-title::before {
+/* Preserve the existing Discover song-list title styling. */
+.discover-song-section .fw-song-list-title {
   margin: 0 !important;
   color: var(--text-primary) !important;
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
@@ -350,8 +348,24 @@
   line-height: 1.1 !important;
 }
 
+/* Use the canonical global section-title styling for My Playlists. */
+.playlists-page .playlists-hero .playlists-title,
+.playlists-page .playlists-hero .playlists-title::before {
+  margin: 0 !important;
+  font-family: var(--filmwave-section-title-font-family) !important;
+  font-size: var(--filmwave-section-title-font-size) !important;
+  font-weight: var(--filmwave-section-title-font-weight) !important;
+  letter-spacing: var(--filmwave-section-title-letter-spacing) !important;
+  line-height: var(--filmwave-section-title-line-height) !important;
+  text-transform: none !important;
+}
+
 .playlists-page .playlists-hero .playlists-title {
   color: transparent !important;
+}
+
+.playlists-page .playlists-hero .playlists-title::before {
+  color: var(--text-primary) !important;
 }
 
 /* Keep inline rename controls identical to the text they replace. */
