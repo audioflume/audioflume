@@ -5,7 +5,6 @@ import {
   EDIT_POINT_FILTER_OPTIONS,
   filterMusicLibrarySongs,
   GENRE_OPTIONS,
-  getMusicLibrarySearchPlaceholder,
   getMusicSongIdentityValues,
   getMusicSongStableId,
   getPlaylistSongIdsFromResponse,
@@ -39,6 +38,7 @@ import { useSongs } from "@/hooks/useSongs";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 
 import Footer from "@/components/Footer";
+import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import SongCard from "@/components/SongCard";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -772,8 +772,6 @@ export default function MusicPage() {
     };
   }, [setFilters]);
 
-  const searchPlaceholder = "Search by sound, mood, or scene";
-
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
   useEffect(() => {
@@ -1205,30 +1203,12 @@ export default function MusicPage() {
           <span>Filters</span>
         </button>
 
-        <label className="audioflume-home-reference-searchbar-field">
-          <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="m16 16 4.5 4.5" />
-          </svg>
-          <input
-            ref={searchInputRef}
-            type="search"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder={searchPlaceholder}
-            aria-label={searchPlaceholder}
-          />
-          {search.length > 0 ? (
-            <button
-              type="button"
-              className="audioflume-home-reference-searchbar-clear"
-              onClick={() => setSearch("")}
-              aria-label="Clear search"
-            >
-              <XIcon size={8} />
-            </button>
-          ) : null}
-        </label>
+        <GlobalMusicSearchField
+          value={search}
+          onChange={setSearch}
+          onClear={() => setSearch("")}
+          inputRef={searchInputRef}
+        />
 
         <div className="audioflume-music-page-searchbar-sort">
           <button
