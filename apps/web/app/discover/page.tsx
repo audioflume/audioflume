@@ -1,10 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import {
   type CSSProperties,
-  type FormEvent,
   type ReactNode,
   useEffect,
   useRef,
@@ -12,7 +10,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
+import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
@@ -397,14 +395,12 @@ function ArtistShelf({
 }
 
 export default function DiscoverPage() {
-  const router = useRouter();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [featureCardArtists, setFeatureCardArtists] = useState<
     DiscoverFeatureCardArtist[]
   >([]);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
-  const [discoverSearch, setDiscoverSearch] = useState("");
   const [canScrollFeatureCardsPrev, setCanScrollFeatureCardsPrev] = useState(false);
   const [canScrollFeatureCardsNext, setCanScrollFeatureCardsNext] = useState(false);
   const searchBarRef = useRef<HTMLDivElement>(null);
@@ -588,13 +584,6 @@ export default function DiscoverPage() {
     };
   }, []);
 
-  function submitDiscoverSearch(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault();
-
-    const query = discoverSearch.trim();
-    router.push(query ? `/music?search=${encodeURIComponent(query)}` : "/music");
-  }
-
   return (
     <main className={`discover-page-root${playerVisible ? " has-player" : ""}`}>
       <div className="audioflume-home-reference-searchbar-slot">
@@ -609,12 +598,7 @@ export default function DiscoverPage() {
             <span>Filters</span>
           </Link>
 
-          <GlobalMusicSearchField
-            value={discoverSearch}
-            onChange={setDiscoverSearch}
-            onClear={() => setDiscoverSearch("")}
-            onSubmit={submitDiscoverSearch}
-          />
+          <GlobalMusicSearch />
 
           <GlobalReferenceSearch />
         </div>
