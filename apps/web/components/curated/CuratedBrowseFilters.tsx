@@ -200,18 +200,24 @@ export default function CuratedBrowseFilters({
                 {content}
               </button>
 
-              {isActive && subcategories.length > 0 && (
-                <div className="curated-feature-filter-subcategories">
-                  {subcategories.map((subcategory) => (
-                    <button
-                      key={subcategory.id}
-                      type="button"
-                      className="curated-feature-filter-subcategory"
-                      onClick={() => onSubcategoryClick?.(subcategory)}
-                    >
-                      {subcategory.label}
-                    </button>
-                  ))}
+              {subcategories.length > 0 && (
+                <div
+                  className={`curated-feature-filter-subcategories${isActive ? " is-open" : ""}`}
+                  aria-hidden={!isActive}
+                >
+                  <div className="curated-feature-filter-subcategories-inner">
+                    {subcategories.map((subcategory) => (
+                      <button
+                        key={subcategory.id}
+                        type="button"
+                        className="curated-feature-filter-subcategory"
+                        tabIndex={isActive ? 0 : -1}
+                        onClick={() => onSubcategoryClick?.(subcategory)}
+                      >
+                        {subcategory.label}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               )}
             </div>
