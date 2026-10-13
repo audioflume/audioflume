@@ -1816,6 +1816,9 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-reference-footer {
+  position: relative;
+  box-shadow: 0 0 0 100vmax var(--bg-primary);
+  clip-path: inset(0 -100vmax);
   margin-top: 0 !important;
 }
 
