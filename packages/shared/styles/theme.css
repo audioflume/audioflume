@@ -82,6 +82,14 @@
   --filmwave-section-title-letter-spacing: -0.035em;
   --filmwave-section-title-line-height: 1;
 
+  /* Canonical smaller uppercase section-title typography. */
+  --filmwave-small-section-title-font-family: var(--font-aktiv-grotesk), sans-serif;
+  --filmwave-small-section-title-font-size: 18px;
+  --filmwave-small-section-title-font-weight: 300;
+  --filmwave-small-section-title-letter-spacing: 0;
+  --filmwave-small-section-title-line-height: 1.15;
+  --filmwave-small-section-title-text-transform: uppercase;
+
   /* Canonical Filmwave interface styling. */
   --filmwave-ui-radius-control: 0px;
   --filmwave-ui-radius-panel: 0px;
