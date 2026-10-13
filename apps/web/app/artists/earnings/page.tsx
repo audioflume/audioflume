@@ -51,7 +51,7 @@ export default function ArtistEarningsPage() {
                 More than one way to earn.
               </h1>
             </div>
-            <p className="m-0 text-[clamp(16px,1.45vw,20px)] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
+            <p className="m-0 text-[18px] font-[300] leading-[1.35] tracking-normal text-[var(--text-primary)]">
               Audioflume combines subscription discovery with direct licensing and custom work. The goal is to make music easy to find without flattening every use into the same royalty rate.
             </p>
           </section>
