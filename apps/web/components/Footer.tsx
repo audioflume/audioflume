@@ -94,6 +94,8 @@ export default function Footer({
     pathname === "/artists/apply" ||
     pathname === "/artists/licensing" ||
     pathname === "/artists/earnings";
+  const usesCuratedFooterGeometry =
+    pathname === "/" || pathname === "/pricing" || pathname === "/curated-playlists";
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const isPublicArtistPage =
     /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
@@ -155,7 +157,9 @@ export default function Footer({
         className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isInteriorDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
         style={{
           width: isEditorialLandingPage
-            ? "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))"
+            ? usesCuratedFooterGeometry
+              ? "calc(100% - var(--filmwave-editorial-inset-compact) - var(--filmwave-editorial-inset-compact))"
+              : "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))"
             : undefined,
           maxWidth: isEditorialLandingPage
             ? "var(--filmwave-editorial-max-width)"
