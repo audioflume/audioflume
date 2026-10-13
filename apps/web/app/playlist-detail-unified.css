@@ -639,11 +639,13 @@
 
 .playlist-detail-similar-heading h2 {
   margin: 0;
-  font-family: var(--filmwave-section-title-font-family);
-  font-size: var(--filmwave-section-title-font-size);
-  font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
-  line-height: var(--filmwave-section-title-line-height);
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 24px;
+  font-weight: 500;
+  letter-spacing: -0.035em;
+  line-height: 1;
+  text-transform: none;
 }
 
 .playlist-detail-similar-controls {
