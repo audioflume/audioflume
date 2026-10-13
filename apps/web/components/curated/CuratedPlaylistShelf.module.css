@@ -147,8 +147,8 @@
 }
 
 :global(.curated-page-browser-content) .viewport {
-  width: 100%;
-  margin-right: 0;
+  width: calc(100% + var(--curated-page-gutter));
+  margin-right: calc(0px - var(--curated-page-gutter));
   margin-left: 0;
 }
 
