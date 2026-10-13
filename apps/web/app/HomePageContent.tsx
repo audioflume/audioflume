@@ -825,10 +825,7 @@ export default function HomePageContent({
         </div>
       </section>
 
-      <Footer
-        className="audioflume-home-reference-footer"
-        showTopBorder={false}
-      />
+      <Footer className="audioflume-home-reference-footer" />
     </main>
   );
 }
