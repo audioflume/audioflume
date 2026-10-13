@@ -154,18 +154,14 @@ export default function CuratedBrowseFilters({
             {variant === "curated-page" && (
               <svg
                 className="curated-feature-filter-chevron"
-                width="12"
-                height="12"
-                viewBox="0 0 12 12"
-                fill="none"
+                viewBox="0 0 24 24"
+                width="11"
+                height="11"
                 aria-hidden="true"
               >
                 <path
-                  d="m4.5 2.5 3.5 3.5-3.5 3.5"
-                  stroke="currentColor"
-                  strokeWidth="1.25"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
+                  fill="currentColor"
+                  d="M8.6 5.3a1.3 1.3 0 0 1 1.84.04l5.5 5.76a1.3 1.3 0 0 1 0 1.8l-5.5 5.76a1.3 1.3 0 0 1-1.88-1.8L13.2 12 8.56 7.14a1.3 1.3 0 0 1 .04-1.84Z"
                 />
               </svg>
             )}
