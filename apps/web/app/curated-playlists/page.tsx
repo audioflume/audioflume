@@ -1,12 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
+import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import XIcon from "@/components/icons/XIcon";
 import type {
@@ -94,7 +93,6 @@ function CuratedPlaylistsLoadingSkeleton() {
 }
 
 export default function CuratedPlaylistsPage() {
-  const router = useRouter();
   const [playlists, setPlaylists] = useState<CuratedPlaylistWithBrowseAssignments[]>([]);
   const [browseTaxonomy, setBrowseTaxonomy] =
     useState<CuratedBrowseTaxonomy | null>(null);
@@ -107,7 +105,6 @@ export default function CuratedPlaylistsPage() {
   const [activeBrowseFilter, setActiveBrowseFilter] =
     useState<CuratedBrowseTag | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [musicSearchQuery, setMusicSearchQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -311,19 +308,7 @@ export default function CuratedPlaylistsPage() {
             <span>Filters</span>
           </Link>
 
-          <GlobalMusicSearchField
-            value={musicSearchQuery}
-            onChange={setMusicSearchQuery}
-            onClear={() => setMusicSearchQuery("")}
-            onSubmit={(event) => {
-              event.preventDefault();
-
-              const query = musicSearchQuery.trim();
-              router.push(
-                query ? `/music?search=${encodeURIComponent(query)}` : "/music",
-              );
-            }}
-          />
+          <GlobalMusicSearch />
 
           <GlobalReferenceSearch />
         </div>
