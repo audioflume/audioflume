@@ -712,24 +712,6 @@ function MusicKeySection({
         ))}
       </div>
 
-      <div className="fw-segment fw-key-accidental-segment">
-        {(["sharp", "flat"] as const).map((m) => (
-          <button key={m} type="button" className={accidental === m ? "is-active" : ""}
-            onClick={() => {
-              setDisplayAccidental(m);
-              const nextAccidental = accidental === m ? null : m;
-              const noteMatchesMode =
-                note &&
-                ((m === "sharp" && note.includes("#")) ||
-                  (m === "flat" && note.includes("b")));
-
-              emit(noteMatchesMode ? note : null, scale, nextAccidental);
-            }}>
-            {m === "sharp" ? "Sharp" : "Flat"}
-          </button>
-        ))}
-      </div>
-
       <div className="fw-filter-chip-grid fw-filter-subrow">
         {accidentals.map((n, i) =>
           n === null ? (
@@ -747,6 +729,24 @@ function MusicKeySection({
           <button key={n} type="button" aria-pressed={note === n}
             className={`fw-filter-chip fw-filter-chip-compact${note === n ? " is-selected" : ""}`}
             onClick={() => emit(note === n ? null : n, scale)}>{n}</button>
+        ))}
+      </div>
+
+      <div className="fw-segment fw-key-accidental-segment">
+        {(["sharp", "flat"] as const).map((m) => (
+          <button key={m} type="button" className={accidental === m ? "is-active" : ""}
+            onClick={() => {
+              setDisplayAccidental(m);
+              const nextAccidental = accidental === m ? null : m;
+              const noteMatchesMode =
+                note &&
+                ((m === "sharp" && note.includes("#")) ||
+                  (m === "flat" && note.includes("b")));
+
+              emit(noteMatchesMode ? note : null, scale, nextAccidental);
+            }}>
+            {m === "sharp" ? "Sharp" : "Flat"}
+          </button>
         ))}
       </div>
     </div>
