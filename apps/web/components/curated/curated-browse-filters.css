@@ -69,8 +69,37 @@
 
 .curated-feature-filter-subcategories {
   display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  transition:
+    grid-template-rows 180ms ease,
+    opacity 160ms ease;
+}
+
+.curated-feature-filter-subcategories.is-open {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+.curated-feature-filter-subcategories-inner {
+  display: grid;
+  min-height: 0;
   gap: 2px;
-  padding: 0 16px 12px 39px;
+  overflow: hidden;
+  padding: 0 16px 0 39px;
+  visibility: hidden;
+  transition:
+    padding-bottom 180ms ease,
+    visibility 0s linear 180ms;
+}
+
+.curated-feature-filter-subcategories.is-open
+  .curated-feature-filter-subcategories-inner {
+  padding-bottom: 12px;
+  visibility: visible;
+  transition:
+    padding-bottom 180ms ease,
+    visibility 0s linear 0s;
 }
 
 .curated-feature-filter-subcategory {
