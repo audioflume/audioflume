@@ -634,7 +634,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 18px;
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
 }
 
 .playlist-detail-similar-heading h2 {
