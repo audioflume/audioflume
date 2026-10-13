@@ -264,7 +264,7 @@ export default function CreatePlaylistModal({
                 onClick={() => {
                   if (!busy) fileInputRef.current?.click();
                 }}
-                className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
+                className="relative h-full w-full cursor-pointer overflow-hidden rounded-none border border-[var(--border)] bg-[var(--bg-primary)]"
               >
                 <img
                   src={visibleCoverPreview}
