@@ -1231,6 +1231,14 @@ main
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-accordion-detail
+  .fw-key-scale-segment
+  + .fw-key-accidental-segment {
+  margin-top: 8px !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-accordion-detail
   .fw-filter-control-stack
   > .fw-segment
   > button {
