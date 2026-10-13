@@ -125,3 +125,51 @@
     );
   }
 }
+
+
+:global(.curated-page-browser-content) .shelf {
+  --filmwave-curated-shelf-content-width: 100%;
+  --filmwave-curated-shelf-card-width: calc(
+    (
+        100% - var(--filmwave-curated-shelf-card-gap) -
+          var(--filmwave-curated-shelf-card-gap)
+      ) /
+      3
+  );
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+:global(.curated-page-browser-content) .heading {
+  width: 100%;
+  margin-left: 0;
+}
+
+:global(.curated-page-browser-content) .viewport {
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+:global(.curated-page-browser-content) .scroller {
+  padding-right: 0;
+  padding-left: 0;
+}
+
+@media (max-width: 900px) {
+  :global(.curated-page-browser-content) .shelf {
+    --filmwave-curated-shelf-card-width: calc(
+      (
+          100% - var(--filmwave-curated-shelf-card-gap)
+        ) /
+        2
+    );
+  }
+}
+
+@media (max-width: 560px) {
+  :global(.curated-page-browser-content) .shelf {
+    --filmwave-curated-shelf-card-width: 100%;
+  }
+}
