@@ -340,9 +340,13 @@ export function matchesKeyFilter(
     const normalizedNote = normalizeKeyText(keyValue.note);
 
     if (songNote !== normalizedNote) return false;
-  } else if (keyValue.accidental === "sharp" && !songNote.includes("#")) {
+  }
+
+  if (keyValue.accidental === "sharp" && !songNote.includes("#")) {
     return false;
-  } else if (keyValue.accidental === "flat" && !songNote.includes("b")) {
+  }
+
+  if (keyValue.accidental === "flat" && !songNote.includes("b")) {
     return false;
   }
 
