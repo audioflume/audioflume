@@ -7,7 +7,11 @@ body:has(.curated-playlists-page-root) {
 
 .curated-playlists-page-root {
   position: relative;
-  min-height: 100vh;
+  display: flex;
+  box-sizing: border-box;
+  height: 100dvh;
+  min-height: 0;
+  flex-direction: column;
   overflow: hidden;
   margin-top: 0 !important;
   padding-top: var(--filmwave-header-height, 75px);
@@ -30,7 +34,7 @@ body:has(.curated-playlists-page-root) {
   display: grid;
   height: var(--filmwave-header-height, 75px);
   grid-template-columns:
-    248px
+    154px
     minmax(0, 1fr)
     230px;
   align-items: stretch;
@@ -49,14 +53,14 @@ body:has(.curated-playlists-page-root) {
 }
 
 .curated-playlists-page-root .audioflume-home-reference-searchbar-filters {
-  gap: 16px;
+  gap: 18px;
   border: 0;
   border-right: 1px solid rgba(255, 255, 255, 0.08);
   background: transparent;
   padding: 0 30px;
   color: inherit;
   font-family: inherit;
-  font-size: 14px;
+  font-size: 13px;
   font-weight: 400;
   cursor: pointer;
 }
@@ -222,13 +226,17 @@ body:has(.curated-playlists-page-root) {
 }
 
 .curated-playlists-page-layer {
-  min-height: 100vh;
-  padding-top: var(--filmwave-page-top-gap, 22px);
+  min-height: 0;
+  flex: 1 1 auto;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  padding-top: 0;
   padding-bottom: 64px;
 }
 
 .curated-playlists-page-layer > div {
   position: relative;
+  min-height: 100%;
   padding-right: var(--curated-page-gutter) !important;
   padding-left: var(--curated-page-gutter) !important;
 }
@@ -244,11 +252,11 @@ body:has(.curated-playlists-page-root) {
 
 .curated-page-filter-row {
   position: sticky;
-  top: calc(var(--filmwave-header-height, 75px) * 2);
+  top: 0;
   box-sizing: border-box;
   height: calc(100dvh - (var(--filmwave-header-height, 75px) * 2));
   align-self: start;
-  margin-top: calc(0px - var(--filmwave-page-top-gap, 22px));
+  margin-top: 0;
   border-right: 1px solid var(--border);
 }
 
@@ -257,7 +265,7 @@ body:has(.curated-playlists-page-root) {
 }
 
 .curated-page-browser-section-title {
-  margin-top: calc(clamp(34px, 3vw, 48px) + 20px);
+  margin-top: 32px;
   font-family: var(--filmwave-small-section-title-font-family);
   font-size: var(--filmwave-small-section-title-font-size);
   font-weight: var(--filmwave-small-section-title-font-weight);
