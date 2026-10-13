@@ -811,11 +811,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-section-heading > span {
   color: var(--text-primary);
-  font-size: 18px;
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.15;
-  text-transform: uppercase;
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
 }
 
 .audioflume-home-reference-section-heading a {
