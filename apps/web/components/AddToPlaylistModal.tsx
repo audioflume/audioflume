@@ -502,7 +502,7 @@ export default function AddToPlaylistModal({
                       setNewPlaylistOpen(false);
                       setNewPlaylistName("");
                     }}
-                    className="h-10 shrink-0 rounded-none border-0 px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
+                    className="h-10 shrink-0 rounded-none border-0 px-4 text-xs font-normal text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-60"
                   >
                     Cancel
                   </button>
