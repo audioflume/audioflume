@@ -71,7 +71,7 @@ export default function CuratedFeatureFilters({
             ?.scrollIntoView({ behavior: "smooth", block: "start" });
         }}
         subcategoriesByFilter={subcategoriesByFilter}
-        variant="curated-page"
+        variant="pill"
       />
     </div>
   );
