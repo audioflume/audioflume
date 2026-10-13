@@ -563,6 +563,10 @@
   display: none;
 }
 
+.playlist-detail-page:has(.playlist-detail-rename-shell) .playlist-detail-kicker {
+  order: -2;
+}
+
 .playlist-detail-rename-shell {
   order: -1;
   width: min(520px, 100%);
