@@ -12,6 +12,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
@@ -611,32 +612,12 @@ export default function DiscoverPage() {
             <span>Filters</span>
           </Link>
 
-          <form
-            className="audioflume-home-reference-searchbar-field"
+          <GlobalMusicSearchField
+            value={discoverSearch}
+            onChange={setDiscoverSearch}
+            onClear={() => setDiscoverSearch("")}
             onSubmit={submitDiscoverSearch}
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <circle cx="11" cy="11" r="6.5" />
-              <path d="m16 16 4.5 4.5" />
-            </svg>
-            <input
-              type="search"
-              value={discoverSearch}
-              onChange={(event) => setDiscoverSearch(event.target.value)}
-              placeholder="Search by sound, mood, or scene"
-              aria-label="Search by sound, mood, or scene"
-            />
-            {discoverSearch.length > 0 ? (
-              <button
-                type="button"
-                className="audioflume-home-reference-searchbar-clear"
-                onClick={() => setDiscoverSearch("")}
-                aria-label="Clear search"
-              >
-                <XIcon size={8} />
-              </button>
-            ) : null}
-          </form>
+          />
 
           <button
             type="button"
