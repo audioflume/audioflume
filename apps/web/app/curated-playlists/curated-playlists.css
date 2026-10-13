@@ -7,11 +7,7 @@ body:has(.curated-playlists-page-root) {
 
 .curated-playlists-page-root {
   position: relative;
-  display: flex;
-  box-sizing: border-box;
-  height: 100dvh;
-  min-height: 0;
-  flex-direction: column;
+  min-height: 100vh;
   overflow: hidden;
   margin-top: 0 !important;
   padding-top: var(--filmwave-header-height, 75px);
@@ -226,70 +222,15 @@ body:has(.curated-playlists-page-root) {
 }
 
 .curated-playlists-page-layer {
-  min-height: 0;
-  flex: 1 1 auto;
-  overflow-y: auto;
-  overscroll-behavior-y: contain;
-  padding-top: 0;
+  min-height: 100vh;
+  padding-top: var(--filmwave-page-top-gap, 22px);
   padding-bottom: 64px;
 }
 
 .curated-playlists-page-layer > div {
   position: relative;
-  min-height: 100%;
   padding-right: var(--curated-page-gutter) !important;
   padding-left: var(--curated-page-gutter) !important;
-}
-
-.curated-page-browser-layout {
-  display: grid;
-  width: calc(100% + var(--curated-page-gutter));
-  grid-template-columns: 248px minmax(0, 1fr);
-  align-items: start;
-  gap: 40px;
-  margin-left: calc(0px - var(--curated-page-gutter));
-}
-
-.curated-page-filter-row {
-  position: sticky;
-  top: 0;
-  box-sizing: border-box;
-  height: calc(100dvh - (var(--filmwave-header-height, 75px) * 2));
-  align-self: start;
-  margin-top: 0;
-  border-right: 1px solid var(--border);
-}
-
-.curated-page-browser-content {
-  min-width: 0;
-}
-
-.curated-page-browser-section-title {
-  margin-top: 32px;
-  font-family: var(--filmwave-small-section-title-font-family);
-  font-size: var(--filmwave-small-section-title-font-size);
-  font-weight: var(--filmwave-small-section-title-font-weight);
-  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
-  line-height: var(--filmwave-small-section-title-line-height);
-  text-transform: var(--filmwave-small-section-title-text-transform);
-}
-
-.curated-page-browser-content .curated-playlist-shelf-viewport,
-.curated-page-browser-content .curated-playlist-skeleton-shelf > .relative {
-  margin-right: 0 !important;
-  margin-left: 0 !important;
-}
-
-body:has(.curated-playlists-page-root)
-  .curated-page-browser-content
-  .curated-playlist-shelf-scroller,
-body:has(.curated-playlists-page-root)
-  .curated-page-browser-content
-  .curated-playlist-skeleton-shelf
-  > .relative
-  > .flex {
-  padding-right: 0 !important;
-  padding-left: 0 !important;
 }
 
 .curated-page-intro {
@@ -852,11 +793,6 @@ body:has(.curated-playlists-page-root)
 }
 
 @media (max-width: 980px) {
-  .curated-page-browser-layout {
-    grid-template-columns: 248px minmax(0, 1fr);
-    gap: 40px;
-  }
-
   .curated-page-intro {
     width: calc(100vw - 48px);
     grid-template-columns: 1fr;
@@ -913,20 +849,6 @@ body:has(.curated-playlists-page-root)
 
   .curated-playlists-page-root .audioflume-home-reference-searchbar-song {
     display: none;
-  }
-
-  .curated-page-browser-layout {
-    width: 100%;
-    grid-template-columns: 1fr;
-    gap: 28px;
-    margin-left: 0;
-  }
-
-  .curated-page-filter-row {
-    position: static;
-    height: auto;
-    margin-top: 0;
-    border-right: 0;
   }
 
   .curated-feature-hero-title-block,
