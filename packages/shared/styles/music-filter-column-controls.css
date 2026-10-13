@@ -33,6 +33,10 @@
   height: 32px;
 }
 
+.fw-filter-detail .fw-key-scale-segment + .fw-key-accidental-segment {
+  margin-top: 8px;
+}
+
 .fw-filter-detail .fw-filter-bpm-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
