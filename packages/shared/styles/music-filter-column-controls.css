@@ -23,6 +23,16 @@
   text-align: center;
 }
 
+.fw-filter-detail .fw-key-scale-segment,
+.fw-filter-detail .fw-key-accidental-segment {
+  min-height: 40px;
+}
+
+.fw-filter-detail .fw-key-scale-segment button,
+.fw-filter-detail .fw-key-accidental-segment button {
+  height: 32px;
+}
+
 .fw-filter-detail .fw-filter-bpm-row {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
