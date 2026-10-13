@@ -1,17 +1,16 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
+import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
-import {
-  CURATED_BROWSE_FILTERS,
-  type CuratedBrowseTag,
-  type CuratedPlaylist,
+import type {
+  CuratedBrowseTag,
+  CuratedPlaylist,
 } from "@/lib/curatedPlaylists";
 import type {
   CuratedBrowseAssignment,
@@ -94,7 +93,6 @@ function CuratedPlaylistsLoadingSkeleton() {
 }
 
 export default function CuratedPlaylistsPage() {
-  const router = useRouter();
   const [playlists, setPlaylists] = useState<CuratedPlaylistWithBrowseAssignments[]>([]);
   const [browseTaxonomy, setBrowseTaxonomy] =
     useState<CuratedBrowseTaxonomy | null>(null);
@@ -107,6 +105,8 @@ export default function CuratedPlaylistsPage() {
   const [activeBrowseFilter, setActiveBrowseFilter] =
     useState<CuratedBrowseTag | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
+  const [referenceSearchQuery, setReferenceSearchQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -295,9 +295,6 @@ export default function CuratedPlaylistsPage() {
   }, [activeBrowseFilter, browseTaxonomy, manualShelfIds, playlists, searchQuery]);
 
   const hasActiveSearch = searchQuery.trim().length > 0;
-  const activeBrowseLabel =
-    CURATED_BROWSE_FILTERS.find((filter) => filter.value === activeBrowseFilter)
-      ?.label ?? "All Playlists";
 
   return (
     <main className="curated-playlists-page-root">
@@ -348,13 +345,29 @@ export default function CuratedPlaylistsPage() {
           <button
             type="button"
             className="audioflume-home-reference-searchbar-song"
-            onClick={() => router.push("/music?referenceSearch=open")}
+            aria-label="Search by song"
+            aria-expanded={referenceSearchOpen}
+            onClick={() => {
+              setReferenceSearchQuery("");
+              setReferenceSearchOpen(true);
+            }}
           >
             <WaveformIcon size={16} />
             <span>Search by song</span>
           </button>
         </div>
       </div>
+
+      <ReferenceSearchModal
+        open={referenceSearchOpen}
+        value={referenceSearchQuery}
+        onChange={setReferenceSearchQuery}
+        onClose={() => setReferenceSearchOpen(false)}
+        onSubmit={(query) => {
+          setReferenceSearchQuery(query);
+          setReferenceSearchOpen(false);
+        }}
+      />
 
       <section className="curated-playlists-page-layer">
         <div className="px-8">
@@ -380,56 +393,48 @@ export default function CuratedPlaylistsPage() {
           )}
 
           {!loading && !error && playlists.length > 0 && (
-            <div className="curated-page-browser-layout">
-              <CuratedFeatureFilters
-                activeFilter={activeBrowseFilter}
-                onFilterChange={setActiveBrowseFilter}
-                browseTaxonomy={browseTaxonomy}
-                searchValue={searchQuery}
-                onSearchChange={setSearchQuery}
-              />
-
-              <div className="curated-page-browser-content">
-                <div className="curated-page-browser-section-title">
-                  {activeBrowseLabel}
-                </div>
-
-                {(activeBrowseFilter || hasActiveSearch) &&
-                  groupedPlaylists.length === 0 && (
-                    <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
-                      {hasActiveSearch
-                        ? "No curated playlists match your search."
-                        : "No playlists are assigned to this filter yet."}
-                    </div>
-                  )}
-
-                {groupedPlaylists.map(
-                  ({ name, description, playlists: groupPlaylists }, index) => (
-                    <div
-                      key={name}
-                      id={getCuratedGroupId(name)}
-                      className="curated-page-shelf-group scroll-mt-28"
-                    >
-                      <CuratedPlaylistShelf
-                        title={name}
-                        description={description ?? undefined}
-                        playlists={groupPlaylists}
-                        className={
-                          index === 0
-                            ? "mt-[28px]"
-                            : "mt-[calc(clamp(34px,3vw,48px)+20px)]"
-                        }
-                      />
-                    </div>
-                  ),
-                )}
-              </div>
-            </div>
+            <CuratedFeatureFilters
+              activeFilter={activeBrowseFilter}
+              onFilterChange={setActiveBrowseFilter}
+              browseTaxonomy={browseTaxonomy}
+              searchValue={searchQuery}
+              onSearchChange={setSearchQuery}
+            />
           )}
 
-          <Footer />
+          {!loading &&
+            !error &&
+            playlists.length > 0 &&
+            (activeBrowseFilter || hasActiveSearch) &&
+            groupedPlaylists.length === 0 && (
+              <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
+                {hasActiveSearch
+                  ? "No curated playlists match your search."
+                  : "No playlists are assigned to this filter yet."}
+              </div>
+            )}
+
+          {!loading &&
+            !error &&
+            groupedPlaylists.map(
+              ({ name, description, playlists: groupPlaylists }) => (
+                <div
+                  key={name}
+                  id={getCuratedGroupId(name)}
+                  className="curated-page-shelf-group scroll-mt-28"
+                >
+                  <CuratedPlaylistShelf
+                    title={name}
+                    description={description ?? undefined}
+                    playlists={groupPlaylists}
+                    className="mt-[calc(clamp(34px,3vw,48px)+20px)]"
+                  />
+                </div>
+              ),
+            )}
         </div>
       </section>
+      <Footer />
     </main>
   );
 }
