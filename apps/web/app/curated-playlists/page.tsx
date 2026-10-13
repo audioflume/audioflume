@@ -107,6 +107,7 @@ export default function CuratedPlaylistsPage() {
   const [activeBrowseFilter, setActiveBrowseFilter] =
     useState<CuratedBrowseTag | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [musicSearchQuery, setMusicSearchQuery] = useState("");
 
   useEffect(() => {
     let cancelled = false;
@@ -311,13 +312,13 @@ export default function CuratedPlaylistsPage() {
           </Link>
 
           <GlobalMusicSearchField
-            value={searchQuery}
-            onChange={setSearchQuery}
-            onClear={() => setSearchQuery("")}
+            value={musicSearchQuery}
+            onChange={setMusicSearchQuery}
+            onClear={() => setMusicSearchQuery("")}
             onSubmit={(event) => {
               event.preventDefault();
 
-              const query = searchQuery.trim();
+              const query = musicSearchQuery.trim();
               router.push(
                 query ? `/music?search=${encodeURIComponent(query)}` : "/music",
               );
