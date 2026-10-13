@@ -242,7 +242,7 @@ export default function EditPlaylistModal({
                 void handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="group mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-transparent px-3 transition-[border-color] hover:border-[color-mix(in_srgb,var(--text-primary)_24%,transparent)]"
+              className="group mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-transparent px-3 transition-[border-color] hover:border-[color-mix(in_srgb,var(--border)_75%,var(--text-primary)_25%)]"
             >
               <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[#8f8f8f]">
                 {isUploadingCover ? (
