@@ -15,7 +15,7 @@ import {
 
 import Footer from "@/components/Footer";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
-import ReferenceSearchModal from "@/components/ReferenceSearchModal";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
@@ -24,7 +24,6 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
-import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import {
   useHasCurrentSong,
@@ -525,8 +524,6 @@ export default function HomePageContent({
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const [homeSearch, setHomeSearch] = useState("");
-  const [referenceSearchOpen, setReferenceSearchOpen] = useState(false);
-  const [referenceSearchQuery, setReferenceSearchQuery] = useState("");
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -647,36 +644,9 @@ export default function HomePageContent({
             onSubmit={submitHomeSearch}
           />
 
-          <button
-            type="button"
-            className="audioflume-home-reference-searchbar-song"
-            aria-label="Search by song"
-            aria-expanded={referenceSearchOpen}
-            onClick={() => setReferenceSearchOpen(true)}
-          >
-            <WaveformIcon size={16} />
-            <span>Search by song</span>
-          </button>
+          <GlobalReferenceSearch />
         </div>
       </div>
-
-      <ReferenceSearchModal
-        open={referenceSearchOpen}
-        value={referenceSearchQuery}
-        onChange={setReferenceSearchQuery}
-        onClose={() => setReferenceSearchOpen(false)}
-        onSubmit={(query, result) => {
-          const params = new URLSearchParams({
-            referenceSearch: query,
-          });
-
-          if (result?.kind === "track") {
-            params.set("referenceTrackId", result.id);
-          }
-
-          router.push(`/music?${params.toString()}`);
-        }}
-      />
 
       <section
         className="audioflume-home-reference-hero"
