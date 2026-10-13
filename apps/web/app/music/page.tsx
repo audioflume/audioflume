@@ -772,9 +772,7 @@ export default function MusicPage() {
     };
   }, [setFilters]);
 
-  const searchPlaceholder = getMusicLibrarySearchPlaceholder(
-    selectedPlaylist?.name,
-  );
+  const searchPlaceholder = "Search by sound, mood, or scene";
 
   const effectiveShowEditPointMarkers = filters.showEditPointMarkers;
 
