@@ -35,12 +35,6 @@ type PlayerBroadcastMessage =
       duration: number;
     }
   | {
-      type: "claim";
-      tabId: string;
-      songId: string | null;
-      sentAt: number;
-    }
-  | {
       type: "closed";
       tabId: string;
     };
@@ -126,12 +120,6 @@ function isPlayerBroadcastMessage(
   const message = value as Partial<PlayerBroadcastMessage>;
   if (typeof message.tabId !== "string") return false;
   if (message.type === "closed") return true;
-  if (message.type === "claim") {
-    return (
-      (typeof message.songId === "string" || message.songId === null) &&
-      typeof message.sentAt === "number"
-    );
-  }
   if (message.type === "paused") {
     return (
       (typeof message.songId === "string" || message.songId === null) &&
@@ -227,11 +215,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const channelRef = useRef<BroadcastChannel | null>(null);
   const tabIdRef = useRef(createTabId());
   const remoteOwnerTabIdRef = useRef<string | null>(null);
-  const blockedOwnerTabIdRef = useRef<string | null>(null);
-  const latestOwnershipClaimRef = useRef({
-    sentAt: 0,
-    tabId: "",
-  });
+  const takingPlaybackOwnershipRef = useRef(false);
   const lastBroadcastTimeRef = useRef(0);
   const lastStorageWriteTimeRef = useRef(0);
 
@@ -314,30 +298,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       duration: durationRef.current || current.duration || 0,
       sentAt: Date.now(),
     });
-  }, [postPlayerMessage]);
-
-  const claimPlaybackOwnership = useCallback(() => {
-    const remoteOwnerTabId = remoteOwnerTabIdRef.current;
-    if (!remoteOwnerTabId) return false;
-
-    const sentAt = Date.now();
-    latestOwnershipClaimRef.current = {
-      sentAt,
-      tabId: tabIdRef.current,
-    };
-
-    blockedOwnerTabIdRef.current = remoteOwnerTabId;
-    remoteOwnerTabIdRef.current = null;
-    setRemotePlayingInAnotherTab(false);
-
-    postPlayerMessage({
-      type: "claim",
-      tabId: tabIdRef.current,
-      songId: currentSongRef.current?.id ?? null,
-      sentAt,
-    });
-
-    return true;
   }, [postPlayerMessage]);
 
   const postPausedState = useCallback(() => {
@@ -473,6 +433,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       audio.volume = volumeRef.current * WEBSITE_VOLUME_SCALE;
 
       audio.addEventListener("play", () => {
+        takingPlaybackOwnershipRef.current = false;
         remoteOwnerTabIdRef.current = null;
         setRemotePlayingInAnotherTab(false);
         setIsPlayingState(true);
@@ -576,12 +537,16 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }
 
   const safePlay = useCallback(() => {
-    claimPlaybackOwnership();
     const audio = getAudio();
     const current = currentSongRef.current;
     if (!current) return;
+
+    if (remoteOwnerTabIdRef.current) {
+      takingPlaybackOwnershipRef.current = true;
+    }
+
     loadSongSource(audio, current, true);
-  }, [claimPlaybackOwnership, loadSongSource]);
+  }, [loadSongSource]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
@@ -618,6 +583,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     durationRef.current = 0;
     progressSnapshotRef.current = { currentTime: 0, duration: 0 };
     remoteOwnerTabIdRef.current = null;
+    takingPlaybackOwnershipRef.current = false;
 
     setCurrentSong(null);
     setIsPlayingState(false);
@@ -632,10 +598,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   const playSongDirectly = useCallback(
     (song: Song, shouldPlay?: boolean) => {
       const audio = getAudio();
-      const claimedRemotePlayback = claimPlaybackOwnership();
+      const remotePlaybackActive = remoteOwnerTabIdRef.current !== null;
       const wasPlaying = shouldPlay !== undefined
         ? shouldPlay
-        : claimedRemotePlayback || !audio.paused;
+        : remotePlaybackActive || !audio.paused;
+
+      if (remotePlaybackActive && wasPlaying) {
+        takingPlaybackOwnershipRef.current = true;
+      }
 
       playRequestIdRef.current += 1;
       pendingSeekRequestIdRef.current += 1;
@@ -657,7 +627,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       loadSongSource(audio, song, wasPlaying);
     },
-    [claimPlaybackOwnership, emitPlaybackUpdate, loadSongSource, setCurrentTimeState, setDurationState],
+    [emitPlaybackUpdate, loadSongSource, setCurrentTimeState, setDurationState],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -667,8 +637,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const audio = getAudio();
       if (currentSongRef.current?.id === song.id) {
         if (remoteOwnerTabIdRef.current) {
-          claimPlaybackOwnership();
-          safePause();
+          safePlay();
           return;
         }
 
@@ -677,7 +646,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       }
       playSongDirectly(song, true);
     },
-    [claimPlaybackOwnership, playSongDirectly, safePause, safePlay],
+    [playSongDirectly, safePause, safePlay],
   );
 
   const seekTo = useCallback(
@@ -686,8 +655,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
       const isSameSong = currentSongRef.current?.id === song.id;
       const seekRequestId = ++pendingSeekRequestIdRef.current;
       const safeProgress = Number.isFinite(progress) ? Math.max(0, Math.min(1, progress)) : 0;
-      const claimedRemotePlayback = claimPlaybackOwnership();
-      const shouldContinuePlaying = shouldPlay || claimedRemotePlayback;
+      const remotePlaybackActive = remoteOwnerTabIdRef.current !== null;
+      const shouldContinuePlaying = shouldPlay || remotePlaybackActive;
+
+      if (remotePlaybackActive && shouldContinuePlaying) {
+        takingPlaybackOwnershipRef.current = true;
+      }
 
       if (!isSameSong) {
         playRequestIdRef.current += 1;
@@ -727,6 +700,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         if (shouldContinuePlaying) {
           if (!audio.paused) { postPlayingState(); } else {
             audio.play().catch((err) => {
+              takingPlaybackOwnershipRef.current = false;
               if (!isInterruptedPlayError(err)) console.warn("[Player] play() rejected after seek:", err);
             });
           }
@@ -741,7 +715,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
       }
     },
-    [claimPlaybackOwnership, emitPlaybackUpdate, loadSongSource, postPausedState, postPlayingState, setCurrentTimeState, setDurationState, setIsPlayingState],
+    [emitPlaybackUpdate, loadSongSource, postPausedState, postPlayingState, setCurrentTimeState, setDurationState, setIsPlayingState],
   );
 
   const registerWaveform = useCallback((songId: string, handle: WaveformHandle) => {
@@ -831,39 +805,6 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
           remoteOwnerTabIdRef.current = null;
           setRemotePlayingInAnotherTab(false);
         }
-        if (blockedOwnerTabIdRef.current === message.tabId) {
-          blockedOwnerTabIdRef.current = null;
-        }
-        return;
-      }
-
-      if (message.type === "claim") {
-        const latestClaim = latestOwnershipClaimRef.current;
-        const incomingIsNewer =
-          message.sentAt > latestClaim.sentAt ||
-          (message.sentAt === latestClaim.sentAt &&
-            message.tabId > latestClaim.tabId);
-
-        if (!incomingIsNewer) return;
-
-        latestOwnershipClaimRef.current = {
-          sentAt: message.sentAt,
-          tabId: message.tabId,
-        };
-        blockedOwnerTabIdRef.current = null;
-
-        const audio = getAudio();
-        playRequestIdRef.current += 1;
-        pendingSeekRequestIdRef.current += 1;
-        pendingPlayAfterManifestRef.current = false;
-
-        if (!audio.paused) {
-          audio.pause();
-        }
-
-        remoteOwnerTabIdRef.current = message.tabId;
-        setRemotePlayingInAnotherTab(true);
-        setIsPlayingState(false);
         return;
       }
 
@@ -876,7 +817,12 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      if (blockedOwnerTabIdRef.current === message.tabId) return;
+      if (
+        takingPlaybackOwnershipRef.current &&
+        remoteOwnerTabIdRef.current === message.tabId
+      ) {
+        return;
+      }
 
       const audio = getAudio();
       const existing = currentSongRef.current;
