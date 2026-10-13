@@ -323,6 +323,25 @@
   color: var(--filmwave-black);
 }
 
+:where(:root:not(.light):not([data-theme="light"]))
+  .playlist-detail-actions
+  > button {
+  border-color: var(--filmwave-white);
+  background: var(--filmwave-white);
+  color: var(--filmwave-black);
+}
+
+:where(:root:not(.light):not([data-theme="light"]))
+  .playlist-detail-actions
+  > button:hover,
+:where(:root:not(.light):not([data-theme="light"]))
+  .playlist-detail-actions
+  > button:focus-visible {
+  border-color: var(--filmwave-white);
+  background: var(--filmwave-white);
+  color: var(--filmwave-black);
+}
+
 .playlist-detail-hero-secondary-actions {
   position: absolute;
   top: 16px;
