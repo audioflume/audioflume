@@ -294,9 +294,9 @@ export default function CreatePlaylistModal({
                 void handleCoverChange(file);
               }}
               onDragOver={(e) => e.preventDefault()}
-              className="group mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-transparent px-3 transition-[border-color] hover:border-[var(--border-hover)]"
+              className="group mt-2 flex h-[112px] cursor-pointer items-center justify-center gap-3 rounded-none border border-dashed border-[var(--border)] bg-transparent px-3 transition-[border-color] hover:border-[color-mix(in_srgb,var(--text-primary)_24%,transparent)]"
             >
-              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-secondary)]">
+              <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[#8f8f8f]">
                 {isUploadingCover ? (
                   <LoadingSpinner size={18} stroke={8} />
                 ) : (
