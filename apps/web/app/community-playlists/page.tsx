@@ -125,15 +125,14 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Urban":
       return (
         <svg {...commonProps}>
-          <path d="M3 16.5h14M4.5 16.5V8.5l3-2v10M9 16.5V4.5l3-1.5v13.5M13.5 16.5v-6l2-1.2v7.2" {...strokeProps} />
-          <path d="M6 10.5h.01M10.5 7.5h.01M10.5 10.5h.01M15 12.5h.01" {...strokeProps} />
+          <path d="M3 17V8h5v9M8 17V4h5v13M13 17v-6h4v6" {...strokeProps} />
         </svg>
       );
     case "Commercial":
       return (
         <svg {...commonProps}>
-          <path d="M3 9v3l9 3V6L3 9Z" {...strokeProps} />
-          <path d="M12 8.2c1.4.5 2.2 1.4 2.2 2.3s-.8 1.8-2.2 2.3M5 12.7l1 3.3h2" {...strokeProps} />
+          <rect x="3.5" y="6.5" width="13" height="9" rx="1.5" {...strokeProps} />
+          <path d="M7.5 6.5V5c0-.8.7-1.5 1.5-1.5h2c.8 0 1.5.7 1.5 1.5v1.5M3.5 10h13M8.5 10v1.5h3V10" {...strokeProps} />
         </svg>
       );
     case "Background":
@@ -152,9 +151,9 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Acoustic":
       return (
         <svg {...commonProps}>
-          <path d="M12.8 3.2 10.6 5.4l1.2 1.2-3.3 3.3c-1.1-.5-2.4-.3-3.3.6-1.2 1.2-1.2 3.1 0 4.3s3.1 1.2 4.3 0c.9-.9 1.1-2.2.6-3.3l3.3-3.3 1.2 1.2 2.2-2.2" {...strokeProps} />
-          <circle cx="7.2" cy="12.8" r="1.1" {...strokeProps} />
-          <path d="m13.8 4.2 2 2" {...strokeProps} />
+          <path d="M12.8 3.2 9.9 6.1l1.1 1.1-2.3 2.3c-1.1-.6-2.5-.5-3.5.5-1.4 1.4-1.4 3.7 0 5.1s3.7 1.4 5.1 0c1-1 1.1-2.4.5-3.5l2.3-2.3 1.1 1.1 2.9-2.9" {...strokeProps} />
+          <circle cx="7.2" cy="13" r="1.35" {...strokeProps} />
+          <path d="m13.4 4.6 2 2M14.5 3.5l2 2M9.9 9.9l2.2 2.2" {...strokeProps} />
         </svg>
       );
     case "Hip-Hop":
@@ -167,9 +166,9 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Sports":
       return (
         <svg {...commonProps}>
-          <circle cx="10" cy="10" r="6.8" {...strokeProps} />
-          <path d="m10 6.2 2.4 1.7-.9 2.8H8.5l-.9-2.8L10 6.2Z" {...strokeProps} />
-          <path d="M10 3.2v3M4.2 8.1l3.4-.2M15.8 8.1l-3.4-.2M6.3 14.8l2.2-4.1M13.7 14.8l-2.2-4.1" {...strokeProps} />
+          <circle cx="11.8" cy="4.2" r="1.5" {...strokeProps} />
+          <path d="m10.8 6.2-2.3 2.3 2 1.8 1.7-1.3 1.8 2.1" {...strokeProps} />
+          <path d="m8.5 8.5-2.3 2.2M10.5 10.3 8.2 14l-3.1 2M12.2 9l2.2 3.2 2.5 1.3" {...strokeProps} />
         </svg>
       );
     case "Emotional":
