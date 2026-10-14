@@ -533,7 +533,15 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: linear-gradient(180deg, transparent 58%, rgba(0, 0, 0, 0.28) 100%);
+  background:
+    linear-gradient(rgba(13, 13, 13, 0.32), rgba(13, 13, 13, 0.32)),
+    linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0.115) 0%,
+      rgba(0, 0, 0, 0.03) 46%,
+      rgba(0, 0, 0, 0.06) 64%,
+      transparent 80%
+    );
   content: "";
   pointer-events: none;
 }
@@ -615,10 +623,6 @@
 :where(html.light, html[data-theme="light"]) .discover-artist-feature-genres > span {
   background: rgba(255, 255, 255, 0.08);
   color: #ffffff;
-}
-
-:where(html.light, html[data-theme="light"]) .discover-artist-feature-media-home::after {
-  background: rgba(17, 17, 17, 0.72);
 }
 
 .discover-artist-feature-play {
