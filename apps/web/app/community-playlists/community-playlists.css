@@ -914,6 +914,10 @@
   grid-auto-columns: 29%;
 }
 
+.community-shelf:not(:first-child) .community-shelf-row {
+  gap: 38px;
+}
+
 .community-shelf-row::-webkit-scrollbar {
   display: none;
 }
@@ -1104,6 +1108,10 @@
 
 .community-skeleton-shelf.is-trending .community-skeleton-row {
   grid-auto-columns: 29%;
+}
+
+.community-skeleton-shelf:not(.is-trending) .community-skeleton-row {
+  gap: 38px;
 }
 
 .community-skeleton-card {
