@@ -777,7 +777,11 @@ body:has(.curated-playlists-page-root)
 }
 
 .curated-community-cta-copy {
-  max-width: 620px;
+  max-width: 920px;
+}
+
+.curated-community-cta-copy h2 {
+  white-space: nowrap;
 }
 
 .curated-community-cta-copy h2 {
@@ -848,6 +852,10 @@ body:has(.curated-playlists-page-root)
 }
 
 @media (max-width: 760px) {
+  .curated-community-cta-copy h2 {
+    white-space: normal;
+  }
+
   .curated-community-cta {
     grid-template-columns: 1fr;
     align-items: start;
