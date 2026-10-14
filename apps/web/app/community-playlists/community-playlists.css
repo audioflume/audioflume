@@ -383,9 +383,6 @@
   outline: none;
 }
 
-.community-feed-tab.is-active::after {
-  background: currentColor;
-}
 
 .community-grid {
   display: grid;
