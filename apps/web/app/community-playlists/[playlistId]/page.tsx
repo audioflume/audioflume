@@ -222,6 +222,19 @@ function formatSongCount(count: number) {
   return `${count} song${count === 1 ? "" : "s"}`;
 }
 
+function recordCommunityPlaylistPlay(playlistId: number, songId: string) {
+  void fetch(
+    `/api/community-playlists/${encodeURIComponent(String(playlistId))}/play`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ song_id: songId }),
+    },
+  ).catch((error) => {
+    console.warn("Community playlist play tracking failed", error);
+  });
+}
+
 export default function CommunityPlaylistDetailPage() {
   const params = useParams();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
@@ -355,6 +368,11 @@ export default function CommunityPlaylistDetailPage() {
   }, [filteredSongs, setQueue]);
 
   function playFirstSong() {
+    const firstPlayableSong = filteredSongs.find((song) => Boolean(song.audioUrl));
+    if (!currentSongInPlaylist && playlist && firstPlayableSong) {
+      recordCommunityPlaylistPlay(playlist.id, firstPlayableSong.id);
+    }
+
     const firstSongButton = document.querySelector<HTMLButtonElement>(
       '[aria-label="Play song"], [aria-label="Pause song"]',
     );
