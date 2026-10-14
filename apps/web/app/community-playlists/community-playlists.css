@@ -764,7 +764,7 @@
   box-sizing: border-box;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 22.5%;
+  grid-auto-columns: 18%;
   gap: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -772,6 +772,10 @@
   padding-right: 36px;
   padding-left: 36px;
   scrollbar-width: none;
+}
+
+.community-shelf:first-child .community-shelf-row {
+  grid-auto-columns: 29%;
 }
 
 .community-shelf-row::-webkit-scrollbar {
