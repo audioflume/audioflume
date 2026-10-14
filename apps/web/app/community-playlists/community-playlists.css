@@ -693,8 +693,8 @@
 .community-shelf-heading-row {
   display: flex;
   align-items: center;
-  margin-bottom: 18px;
-  padding-bottom: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 0;
 }
 
 .community-shelf-heading-row h2 {
@@ -764,7 +764,7 @@
   box-sizing: border-box;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 28.5%;
+  grid-auto-columns: 22.5%;
   gap: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
@@ -821,7 +821,7 @@
   }
 
   .community-shelf-row {
-    grid-auto-columns: 31%;
+    grid-auto-columns: 26%;
   }
 }
 
@@ -844,7 +844,7 @@
   }
 
   .community-shelf-row {
-    grid-auto-columns: 38%;
+    grid-auto-columns: 31%;
   }
 }
 
