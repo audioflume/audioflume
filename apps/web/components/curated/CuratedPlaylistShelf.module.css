@@ -25,15 +25,6 @@
   margin-left: auto;
 }
 
-.smallSectionTitle {
-  font-family: var(--filmwave-small-section-title-font-family);
-  font-size: var(--filmwave-small-section-title-font-size);
-  font-weight: var(--filmwave-small-section-title-font-weight);
-  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
-  line-height: var(--filmwave-small-section-title-line-height);
-  text-transform: var(--filmwave-small-section-title-text-transform);
-}
-
 .heading {
   display: flex;
   width: var(--filmwave-curated-shelf-content-width);
@@ -41,7 +32,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 12px;
+  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
   margin-left: calc(
     50% - 50vw + var(--filmwave-curated-shelf-edge)
   );
