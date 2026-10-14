@@ -364,6 +364,7 @@
   font-size: 12px;
   font-weight: 400;
   cursor: pointer;
+  transition: color 150ms ease;
 }
 
 .community-feed-tab::after {
