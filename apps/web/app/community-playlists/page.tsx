@@ -344,7 +344,14 @@ export default function CommunityPlaylistsPage() {
   const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [communityShelfState, setCommunityShelfState] = useState<
-    Record<string, { canScrollPrev: boolean; canScrollNext: boolean }>
+    Record<
+      string,
+      {
+        canScrollPrev: boolean;
+        canScrollNext: boolean;
+        imageCenterY: number | null;
+      }
+    >
   >({});
   const playerVisible = !!currentSong;
 
@@ -636,11 +643,16 @@ export default function CommunityPlaylistsPage() {
       const shelfKey = scroller.dataset.communityShelf;
       if (!shelfKey) return;
 
+      const visual = scroller.querySelector<HTMLElement>(
+        ".community-cover-wrap, .community-contributor-image-frame",
+      );
+
       const updateShelfState = () => {
         const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
         const nextState = {
           canScrollPrev: scroller.scrollLeft > 4,
           canScrollNext: scroller.scrollLeft < maxScrollLeft - 4,
+          imageCenterY: visual ? visual.getBoundingClientRect().height / 2 : null,
         };
 
         setCommunityShelfState((current) => {
@@ -648,7 +660,8 @@ export default function CommunityPlaylistsPage() {
           if (
             previous &&
             previous.canScrollPrev === nextState.canScrollPrev &&
-            previous.canScrollNext === nextState.canScrollNext
+            previous.canScrollNext === nextState.canScrollNext &&
+            previous.imageCenterY === nextState.imageCenterY
           ) {
             return current;
           }
@@ -661,9 +674,13 @@ export default function CommunityPlaylistsPage() {
       scroller.addEventListener("scroll", updateShelfState, { passive: true });
       window.addEventListener("resize", updateShelfState);
 
+      const resizeObserver = visual ? new ResizeObserver(updateShelfState) : null;
+      if (visual && resizeObserver) resizeObserver.observe(visual);
+
       cleanups.push(() => {
         scroller.removeEventListener("scroll", updateShelfState);
         window.removeEventListener("resize", updateShelfState);
+        resizeObserver?.disconnect();
       });
     });
 
@@ -1442,29 +1459,40 @@ export default function CommunityPlaylistsPage() {
                 <section className="community-shelf" key={shelf.key}>
                   <div className="community-shelf-heading-row">
                     <h2>{shelf.title}</h2>
-                    <div
-                      className="community-shelf-controls"
-                      aria-label={`${shelf.title} carousel controls`}
-                    >
-                      <button
-                        type="button"
-                        aria-label={`Scroll ${shelf.title} left`}
-                        disabled={!communityShelfState[shelf.key]?.canScrollPrev}
-                        onClick={() => scrollCommunityShelf(shelf.key, -1)}
-                      >
-                        <ChevronLeftIcon size={14} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label={`Scroll ${shelf.title} right`}
-                        disabled={!communityShelfState[shelf.key]?.canScrollNext}
-                        onClick={() => scrollCommunityShelf(shelf.key, 1)}
-                      >
-                        <ChevronRightIcon size={14} />
-                      </button>
-                    </div>
                   </div>
                   <div className="community-shelf-viewport">
+                    {communityShelfState[shelf.key]?.imageCenterY !== null && (
+                      <>
+                        <button
+                          type="button"
+                          className="community-shelf-arrow is-left"
+                          aria-label={`Scroll ${shelf.title} left`}
+                          disabled={!communityShelfState[shelf.key]?.canScrollPrev}
+                          style={{
+                            top:
+                              communityShelfState[shelf.key]?.imageCenterY ??
+                              undefined,
+                          }}
+                          onClick={() => scrollCommunityShelf(shelf.key, -1)}
+                        >
+                          <ChevronLeftIcon size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          className="community-shelf-arrow is-right"
+                          aria-label={`Scroll ${shelf.title} right`}
+                          disabled={!communityShelfState[shelf.key]?.canScrollNext}
+                          style={{
+                            top:
+                              communityShelfState[shelf.key]?.imageCenterY ??
+                              undefined,
+                          }}
+                          onClick={() => scrollCommunityShelf(shelf.key, 1)}
+                        >
+                          <ChevronRightIcon size={18} />
+                        </button>
+                      </>
+                    )}
                     <div
                       className="community-shelf-row"
                       data-community-shelf={shelf.key}
@@ -1481,29 +1509,40 @@ export default function CommunityPlaylistsPage() {
                 <section className="community-shelf community-contributor-shelf">
                   <div className="community-shelf-heading-row">
                     <h2>Top Contributors</h2>
-                    <div
-                      className="community-shelf-controls"
-                      aria-label="Top Contributors carousel controls"
-                    >
-                      <button
-                        type="button"
-                        aria-label="Scroll Top Contributors left"
-                        disabled={!communityShelfState.contributors?.canScrollPrev}
-                        onClick={() => scrollCommunityShelf("contributors", -1)}
-                      >
-                        <ChevronLeftIcon size={14} />
-                      </button>
-                      <button
-                        type="button"
-                        aria-label="Scroll Top Contributors right"
-                        disabled={!communityShelfState.contributors?.canScrollNext}
-                        onClick={() => scrollCommunityShelf("contributors", 1)}
-                      >
-                        <ChevronRightIcon size={14} />
-                      </button>
-                    </div>
                   </div>
                   <div className="community-shelf-viewport community-contributor-viewport">
+                    {communityShelfState.contributors?.imageCenterY !== null && (
+                      <>
+                        <button
+                          type="button"
+                          className="community-shelf-arrow is-left"
+                          aria-label="Scroll Top Contributors left"
+                          disabled={!communityShelfState.contributors?.canScrollPrev}
+                          style={{
+                            top:
+                              communityShelfState.contributors?.imageCenterY ??
+                              undefined,
+                          }}
+                          onClick={() => scrollCommunityShelf("contributors", -1)}
+                        >
+                          <ChevronLeftIcon size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          className="community-shelf-arrow is-right"
+                          aria-label="Scroll Top Contributors right"
+                          disabled={!communityShelfState.contributors?.canScrollNext}
+                          style={{
+                            top:
+                              communityShelfState.contributors?.imageCenterY ??
+                              undefined,
+                          }}
+                          onClick={() => scrollCommunityShelf("contributors", 1)}
+                        >
+                          <ChevronRightIcon size={18} />
+                        </button>
+                      </>
+                    )}
                     <div
                       className="community-contributor-row"
                       data-community-shelf="contributors"
@@ -1515,18 +1554,20 @@ export default function CommunityPlaylistsPage() {
                           key={contributor.id}
                           onClick={() => setSelectedCreatorId(contributor.id)}
                         >
-                          {contributor.imageUrl ? (
-                            <img
-                              className="community-contributor-image"
-                              src={contributor.imageUrl}
-                              alt=""
-                            />
-                          ) : (
-                            <span
-                              className="community-contributor-image community-contributor-image-placeholder"
-                              aria-hidden="true"
-                            />
-                          )}
+                          <span className="community-contributor-image-frame">
+                            {contributor.imageUrl ? (
+                              <img
+                                className="community-contributor-image"
+                                src={contributor.imageUrl}
+                                alt=""
+                              />
+                            ) : (
+                              <span
+                                className="community-contributor-image community-contributor-image-placeholder"
+                                aria-hidden="true"
+                              />
+                            )}
+                          </span>
                           <span className="community-contributor-name">
                             {contributor.name}
                           </span>
