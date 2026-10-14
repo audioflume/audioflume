@@ -18,7 +18,6 @@ type CommunityPlaylistRow = {
   published_at: string | null;
   primary_category: string | null;
   secondary_categories: string[] | null;
-  play_count: number | string | null;
 };
 
 function getDisplayName(user: {
@@ -38,7 +37,7 @@ export async function GET() {
     const { data: playlists, error: playlistsError } = await supabaseServer
       .from("playlists")
       .select(
-        "id, clerk_user_id, name, cover_image_url, published_at, primary_category, secondary_categories, play_count",
+        "id, clerk_user_id, name, cover_image_url, published_at, primary_category, secondary_categories",
       )
       .eq("is_public", true)
       .order("published_at", { ascending: false, nullsFirst: false });
@@ -54,24 +53,62 @@ export async function GET() {
     }
 
     const playlistIds = rows.map((playlist) => playlist.id);
-    const [playlistSongsResult, favoritesResult] = await Promise.all([
-      supabaseServer
-        .from("playlist_songs")
-        .select("playlist_id")
-        .in("playlist_id", playlistIds),
-      supabaseServer
-        .from("community_playlist_favorites")
-        .select("playlist_id, created_at")
-        .in("playlist_id", playlistIds),
-    ]);
+    const [playlistSongsResult, favoritesResult, playEventsResult] =
+      await Promise.all([
+        supabaseServer
+          .from("playlist_songs")
+          .select("playlist_id, song_id")
+          .in("playlist_id", playlistIds),
+        supabaseServer
+          .from("community_playlist_favorites")
+          .select("playlist_id, created_at")
+          .in("playlist_id", playlistIds),
+        supabaseServer
+          .from("community_playlist_play_events")
+          .select("playlist_id, song_id")
+          .in("playlist_id", playlistIds),
+      ]);
 
     if (playlistSongsResult.error) throw playlistSongsResult.error;
     if (favoritesResult.error) throw favoritesResult.error;
+    if (playEventsResult.error) throw playEventsResult.error;
+
+    const referencedSongIds = [
+      ...new Set(
+        (playlistSongsResult.data ?? [])
+          .map((item) => String(item.song_id || ""))
+          .filter(Boolean),
+      ),
+    ];
+
+    const activeSongIds = new Set<string>();
+    if (referencedSongIds.length > 0) {
+      const { data: activeSongs, error: activeSongsError } = await supabaseServer
+        .from("songs")
+        .select("id")
+        .in("id", referencedSongIds)
+        .eq("status", "published");
+
+      if (activeSongsError) throw activeSongsError;
+      for (const song of activeSongs ?? []) {
+        activeSongIds.add(String(song.id));
+      }
+    }
 
     const songCounts = new Map<number, number>();
     for (const item of playlistSongsResult.data ?? []) {
+      const songId = String(item.song_id || "");
+      if (!activeSongIds.has(songId)) continue;
       const playlistId = Number(item.playlist_id);
       songCounts.set(playlistId, (songCounts.get(playlistId) ?? 0) + 1);
+    }
+
+    const playCounts = new Map<number, number>();
+    for (const item of playEventsResult.data ?? []) {
+      const songId = String(item.song_id || "");
+      if (!activeSongIds.has(songId)) continue;
+      const playlistId = Number(item.playlist_id);
+      playCounts.set(playlistId, (playCounts.get(playlistId) ?? 0) + 1);
     }
 
     const likeCounts = new Map<number, number>();
@@ -130,7 +167,7 @@ export async function GET() {
             playlist.secondary_categories,
           ),
           song_count: songCounts.get(playlist.id) ?? 0,
-          play_count: Math.max(0, Number(playlist.play_count) || 0),
+          play_count: playCounts.get(playlist.id) ?? 0,
           like_count: likeCounts.get(playlist.id) ?? 0,
           seven_day_like_count: sevenDayLikeCounts.get(playlist.id) ?? 0,
           creator: usersById.get(playlist.clerk_user_id) ?? {
