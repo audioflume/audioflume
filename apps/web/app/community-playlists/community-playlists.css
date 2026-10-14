@@ -840,6 +840,18 @@
   overflow: hidden;
 }
 
+.community-page:not(.is-sidebar-open) .community-shelf-viewport {
+  width: calc(100% + 160px);
+  margin-right: -80px;
+  margin-left: -80px;
+}
+
+.community-page:not(.is-sidebar-open) .community-shelf-row,
+.community-page:not(.is-sidebar-open) .community-contributor-row {
+  padding-right: 80px;
+  padding-left: 80px;
+}
+
 .community-shelf-arrow {
   position: absolute;
   z-index: 20;
