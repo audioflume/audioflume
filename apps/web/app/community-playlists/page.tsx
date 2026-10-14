@@ -301,6 +301,19 @@ function getPublishedTime(value: string | null) {
   return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
+function recordCommunityPlaylistPlay(playlistId: number, songId: string) {
+  void fetch(
+    `/api/community-playlists/${encodeURIComponent(String(playlistId))}/play`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ song_id: songId }),
+    },
+  ).catch((error) => {
+    console.warn("Community playlist play tracking failed", error);
+  });
+}
+
 export default function CommunityPlaylistsPage() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playlistPlaybackCacheRef = useRef(new Map<number, Song[]>());
@@ -662,6 +675,7 @@ export default function CommunityPlaylistsPage() {
 
       setQueue(playableSongs);
       setActivePlaybackPlaylistId(playlist.id);
+      recordCommunityPlaylistPlay(playlist.id, firstSong.id);
       togglePlayPause(firstSong);
     } catch (error) {
       console.warn("Community playlist card playback failed", error);
