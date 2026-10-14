@@ -454,27 +454,46 @@
   opacity: 1;
 }
 
-.community-card-creator-name {
+.community-card-creator-overlay {
   position: absolute;
-  right: 42px;
-  bottom: 16px;
+  left: 10px;
+  bottom: 10px;
   z-index: 5;
-  max-width: calc(100% - 86px);
-  overflow: hidden;
+  display: inline-flex;
+  max-width: calc(100% - 54px);
+  align-items: center;
+  gap: 7px;
   color: #ffffff;
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1;
-  text-align: right;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 150ms ease;
 }
 
-.community-cover-wrap:hover .community-card-creator-name,
-.community-cover-wrap:focus-within .community-card-creator-name {
+.community-card-creator-avatar {
+  display: block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.community-card-creator-avatar-placeholder {
+  background: #808080;
+}
+
+.community-card-creator-name {
+  min-width: 0;
+  overflow: hidden;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.community-cover-wrap:hover .community-card-creator-overlay,
+.community-cover-wrap:focus-within .community-card-creator-overlay {
   opacity: 1;
 }
 
