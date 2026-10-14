@@ -52,6 +52,22 @@
   margin-top: 1px !important;
 }
 
+.community-category-icon {
+  display: inline-flex;
+  width: 15px;
+  height: 15px;
+  flex: 0 0 15px;
+  align-items: center;
+  justify-content: center;
+  color: currentColor;
+}
+
+.community-category-icon svg {
+  display: block;
+  width: 15px;
+  height: 15px;
+}
+
 .community-categories a {
   width: fit-content;
   color: var(--text-primary);
