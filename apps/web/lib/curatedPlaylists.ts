@@ -341,6 +341,7 @@ export type CuratedPlaylist = {
   name: string;
   kicker: string;
   cover_image_url: string | null;
+  feature_cover_image_url?: string | null;
   cover_video_url?: string | null;
   playlist_group: string;
   browse_tags: CuratedBrowseTag[];
@@ -370,6 +371,7 @@ type CuratedPlaylistRow = {
   name: string | null;
   kicker: string | null;
   cover_image_url: string | null;
+  feature_cover_image_url?: string | null;
   cover_video_url?: string | null;
   playlist_group: string | null;
   browse_tags?: unknown;
@@ -427,6 +429,9 @@ export function normalizeCuratedPlaylist(
     name: String(row.name || "Untitled playlist"),
     kicker: String(row.kicker || "Curated selection"),
     cover_image_url: row.cover_image_url ? String(row.cover_image_url) : null,
+    feature_cover_image_url: row.feature_cover_image_url
+      ? String(row.feature_cover_image_url)
+      : null,
     cover_video_url: row.cover_video_url ? String(row.cover_video_url) : null,
     playlist_group: String(
       row.playlist_group || DEFAULT_CURATED_PLAYLIST_GROUP,
@@ -488,6 +493,19 @@ export function getCuratedPlaylistError(err: unknown, fallback: string) {
     return {
       error:
         "Curated browse filters require the Supabase migration apps/web/supabase/migrations/20260808104000_add_curated_playlist_browse_tags.sql. Apply that migration, then save the playlist again.",
+    };
+  }
+
+  if (
+    normalizedMessage.includes("feature_cover_image_url") &&
+    (normalizedMessage.includes("column") ||
+      normalizedMessage.includes("schema cache") ||
+      normalizedMessage.includes("pgrst204") ||
+      normalizedMessage.includes("42703"))
+  ) {
+    return {
+      error:
+        "Curated feature artwork requires the Supabase migration apps/web/supabase/migrations/20261013224000_add_curated_feature_shelf_artwork.sql.",
     };
   }
 
