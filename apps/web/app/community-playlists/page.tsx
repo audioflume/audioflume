@@ -6,7 +6,6 @@ import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import Toast from "@/components/Toast";
-import MoreIcon from "@/components/icons/MoreIcon";
 import XIcon from "@/components/icons/XIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -1060,6 +1059,9 @@ export default function CommunityPlaylistsPage() {
                         <PlayIconSmall size={18} />
                       )}
                     </button>
+                    <span className="community-card-creator-name">
+                      {playlist.creator.name}
+                    </span>
                   </div>
                   <div className="community-card-title-row">
                     <h2>
@@ -1070,28 +1072,8 @@ export default function CommunityPlaylistsPage() {
                         {playlist.name}
                       </Link>
                     </h2>
-                    <button
-                      className="community-more playlist-menu-btn-grid"
-                      type="button"
-                      aria-label={`More options for ${playlist.name}`}
-                    >
-                      <MoreIcon />
-                    </button>
                   </div>
                   <div className="community-card-meta">
-                    <div className="community-creator">
-                      {playlist.creator.imageUrl ? (
-                        <img
-                          className="community-avatar-image"
-                          src={playlist.creator.imageUrl}
-                          alt=""
-                        />
-                      ) : (
-                        <span className="community-avatar" aria-hidden="true" />
-                      )}
-                      <span>{playlist.creator.name}</span>
-                    </div>
-
                     <div
                       className="community-engagement"
                       aria-label="Playlist engagement"
