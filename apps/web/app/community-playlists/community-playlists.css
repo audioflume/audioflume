@@ -914,6 +914,10 @@
   grid-auto-columns: 29%;
 }
 
+.community-shelf:first-child .community-cover-wrap {
+  aspect-ratio: 16 / 9;
+}
+
 .community-shelf:not(:first-child) .community-shelf-row {
   gap: 38px;
 }
@@ -1108,6 +1112,10 @@
 
 .community-skeleton-shelf.is-trending .community-skeleton-row {
   grid-auto-columns: 29%;
+}
+
+.community-skeleton-shelf.is-trending .community-skeleton-card-image {
+  aspect-ratio: 16 / 9;
 }
 
 .community-skeleton-shelf:not(.is-trending) .community-skeleton-row {
