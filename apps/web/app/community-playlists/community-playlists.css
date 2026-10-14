@@ -841,6 +841,7 @@
   grid-auto-columns: 160px;
   gap: 36px;
   overflow-x: auto;
+  overflow-y: hidden;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
   padding-right: 36px;
