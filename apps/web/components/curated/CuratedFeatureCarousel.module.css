@@ -18,7 +18,6 @@
   overflow-x: auto;
   overflow-y: hidden;
   scroll-behavior: smooth;
-  scroll-snap-type: x mandatory;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
 }
@@ -31,7 +30,6 @@
   width: var(--curated-feature-carousel-card-width);
   min-width: var(--curated-feature-carousel-card-width);
   flex: 0 0 var(--curated-feature-carousel-card-width);
-  scroll-snap-align: center;
   color: inherit;
   text-decoration: none;
 }
