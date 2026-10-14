@@ -49,9 +49,15 @@ type CommunityPlaylistPlaybackResponse = {
 };
 
 type CategoryFilter = "All" | CommunityPlaylistCategory;
-type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Favorites";
+type CommunityTab =
+  | "Featured"
+  | "Trending"
+  | "Recent"
+  | "Most Liked"
+  | "Favorites";
 
 const COMMUNITY_TABS: CommunityTab[] = [
+  "Featured",
   "Trending",
   "Recent",
   "Most Liked",
@@ -324,7 +330,7 @@ export default function CommunityPlaylistsPage() {
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
   const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<CommunityTab>("Trending");
+  const [activeTab, setActiveTab] = useState<CommunityTab>("Featured");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
   const [rankingSnapshot, setRankingSnapshot] = useState<
     Record<number, CommunityPlaylistRanking>
@@ -490,7 +496,7 @@ export default function CommunityPlaylistsPage() {
       );
     });
 
-    if (activeTab === "Trending") {
+    if (activeTab === "Featured" || activeTab === "Trending") {
       return [...filtered].sort((a, b) => {
         const aRanking = rankingSnapshot[a.id] ?? a;
         const bRanking = rankingSnapshot[b.id] ?? b;
@@ -542,7 +548,7 @@ export default function CommunityPlaylistsPage() {
 
   const communityShelves = useMemo(() => {
     if (
-      activeTab !== "Trending" ||
+      activeTab !== "Featured" ||
       selectedCategory !== "All" ||
       selectedCreatorId ||
       query.trim()
@@ -863,6 +869,13 @@ export default function CommunityPlaylistsPage() {
       left: amount * direction,
       behavior: "smooth",
     });
+  }
+
+  function showFeaturedView() {
+    setActiveTab("Featured");
+    setSelectedCategory("All");
+    setSelectedCreatorId(null);
+    setQuery("");
   }
 
   function filterByCreator(creator: CommunityPlaylist["creator"]) {
@@ -1356,14 +1369,16 @@ export default function CommunityPlaylistsPage() {
             <nav aria-label="Community playlist categories">
               <button
                 type="button"
-                className={`fw-filter-rail-item${selectedCategory === "All" ? " is-active" : ""}`}
-                aria-pressed={selectedCategory === "All"}
-                onClick={() => setSelectedCategory("All")}
+                className={`fw-filter-rail-item${selectedCategory === "All" && activeTab === "Featured" ? " is-active" : ""}`}
+                aria-pressed={
+                  selectedCategory === "All" && activeTab === "Featured"
+                }
+                onClick={showFeaturedView}
               >
                 <span className="community-category-icon" aria-hidden="true">
                   <CommunityCategoryIcon category="All" />
                 </span>
-                <span className="fw-filter-rail-label">All</span>
+                <span className="fw-filter-rail-label">Featured</span>
                 <span className="community-category-count">{playlists.length}</span>
                 <span className="community-filter-rail-chevron" aria-hidden="true">
                   <FilterRailChevron />
@@ -1437,7 +1452,9 @@ export default function CommunityPlaylistsPage() {
                   key={tab}
                   className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
                   aria-selected={activeTab === tab}
-                  onClick={() => setActiveTab(tab)}
+                  onClick={() =>
+                    tab === "Featured" ? showFeaturedView() : setActiveTab(tab)
+                  }
                 >
                   {tab}
                 </button>
