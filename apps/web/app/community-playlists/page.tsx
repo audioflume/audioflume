@@ -32,6 +32,7 @@ type CommunityPlaylist = {
   like_count: number;
   seven_day_like_count: number;
   creator: {
+    id: string;
     name: string;
     imageUrl: string | null;
   };
@@ -322,6 +323,7 @@ export default function CommunityPlaylistsPage() {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
+  const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState<CommunityTab>("Trending");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
   const [rankingSnapshot, setRankingSnapshot] = useState<
@@ -342,7 +344,7 @@ export default function CommunityPlaylistsPage() {
   const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
   const [communityShelfState, setCommunityShelfState] = useState<
-    Record<string, { canScrollPrev: boolean; canScrollNext: boolean; imageCenterY: number | null }>
+    Record<string, { canScrollPrev: boolean; canScrollNext: boolean }>
   >({});
   const playerVisible = !!currentSong;
 
@@ -460,6 +462,9 @@ export default function CommunityPlaylistsPage() {
         playlist.secondary_categories.includes(selectedCategory);
 
       if (!categoryMatches) return false;
+      if (selectedCreatorId && playlist.creator.id !== selectedCreatorId) {
+        return false;
+      }
       if (
         activeTab === "Favorites" &&
         !favoritePlaylistIds.has(playlist.id)
@@ -525,12 +530,14 @@ export default function CommunityPlaylistsPage() {
     query,
     rankingSnapshot,
     selectedCategory,
+    selectedCreatorId,
   ]);
 
   const communityShelves = useMemo(() => {
     if (
       activeTab !== "Trending" ||
       selectedCategory !== "All" ||
+      selectedCreatorId ||
       query.trim()
     ) {
       return [];
@@ -577,39 +584,76 @@ export default function CommunityPlaylistsPage() {
       { key: "recent", title: "Recently Added", playlists: recent },
       { key: "most-liked", title: "Most Liked", playlists: mostLiked },
     ];
-  }, [activeTab, playlists, query, rankingSnapshot, selectedCategory]);
+  }, [
+    activeTab,
+    playlists,
+    query,
+    rankingSnapshot,
+    selectedCategory,
+    selectedCreatorId,
+  ]);
+
+  const topContributors = useMemo(() => {
+    const contributors = new Map<
+      string,
+      {
+        id: string;
+        name: string;
+        imageUrl: string | null;
+        playlistCount: number;
+      }
+    >();
+
+    for (const playlist of playlists) {
+      const existing = contributors.get(playlist.creator.id);
+      if (existing) {
+        existing.playlistCount += 1;
+        continue;
+      }
+
+      contributors.set(playlist.creator.id, {
+        id: playlist.creator.id,
+        name: playlist.creator.name,
+        imageUrl: playlist.creator.imageUrl,
+        playlistCount: 1,
+      });
+    }
+
+    return [...contributors.values()].sort((a, b) => {
+      const countDifference = b.playlistCount - a.playlistCount;
+      if (countDifference !== 0) return countDifference;
+      return a.name.localeCompare(b.name);
+    });
+  }, [playlists]);
 
   useEffect(() => {
     const cleanups: Array<() => void> = [];
+    const scrollers = document.querySelectorAll<HTMLElement>(
+      "[data-community-shelf]",
+    );
 
-    for (const shelf of communityShelves) {
-      const scroller = document.querySelector<HTMLElement>(
-        `[data-community-shelf="${shelf.key}"]`,
-      );
-      if (!scroller) continue;
-
-      const cover = scroller.querySelector<HTMLElement>(".community-cover-wrap");
+    scrollers.forEach((scroller) => {
+      const shelfKey = scroller.dataset.communityShelf;
+      if (!shelfKey) return;
 
       const updateShelfState = () => {
         const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
         const nextState = {
           canScrollPrev: scroller.scrollLeft > 4,
           canScrollNext: scroller.scrollLeft < maxScrollLeft - 4,
-          imageCenterY: cover ? cover.getBoundingClientRect().height / 2 : null,
         };
 
         setCommunityShelfState((current) => {
-          const previous = current[shelf.key];
+          const previous = current[shelfKey];
           if (
             previous &&
             previous.canScrollPrev === nextState.canScrollPrev &&
-            previous.canScrollNext === nextState.canScrollNext &&
-            previous.imageCenterY === nextState.imageCenterY
+            previous.canScrollNext === nextState.canScrollNext
           ) {
             return current;
           }
 
-          return { ...current, [shelf.key]: nextState };
+          return { ...current, [shelfKey]: nextState };
         });
       };
 
@@ -617,20 +661,16 @@ export default function CommunityPlaylistsPage() {
       scroller.addEventListener("scroll", updateShelfState, { passive: true });
       window.addEventListener("resize", updateShelfState);
 
-      const resizeObserver = cover ? new ResizeObserver(updateShelfState) : null;
-      if (cover && resizeObserver) resizeObserver.observe(cover);
-
       cleanups.push(() => {
         scroller.removeEventListener("scroll", updateShelfState);
         window.removeEventListener("resize", updateShelfState);
-        resizeObserver?.disconnect();
       });
-    }
+    });
 
     return () => {
       cleanups.forEach((cleanup) => cleanup());
     };
-  }, [communityShelves]);
+  }, [communityShelves, topContributors]);
 
   const recentPlaylists = useMemo(
     () =>
@@ -906,7 +946,16 @@ export default function CommunityPlaylistsPage() {
           </h2>
         </div>
         <div className="community-card-meta">
-          <div className="community-card-creator">
+          <button
+            type="button"
+            className={`community-card-creator${selectedCreatorId === playlist.creator.id ? " is-active" : ""}`}
+            aria-pressed={selectedCreatorId === playlist.creator.id}
+            onClick={() =>
+              setSelectedCreatorId((current) =>
+                current === playlist.creator.id ? null : playlist.creator.id,
+              )
+            }
+          >
             {playlist.creator.imageUrl ? (
               <img
                 className="community-card-creator-meta-avatar"
@@ -922,7 +971,7 @@ export default function CommunityPlaylistsPage() {
             <span className="community-card-creator-meta-name">
               {playlist.creator.name}
             </span>
-          </div>
+          </button>
         </div>
       </article>
     );
@@ -1393,32 +1442,29 @@ export default function CommunityPlaylistsPage() {
                 <section className="community-shelf" key={shelf.key}>
                   <div className="community-shelf-heading-row">
                     <h2>{shelf.title}</h2>
+                    <div
+                      className="community-shelf-controls"
+                      aria-label={`${shelf.title} carousel controls`}
+                    >
+                      <button
+                        type="button"
+                        aria-label={`Scroll ${shelf.title} left`}
+                        disabled={!communityShelfState[shelf.key]?.canScrollPrev}
+                        onClick={() => scrollCommunityShelf(shelf.key, -1)}
+                      >
+                        <ChevronLeftIcon size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label={`Scroll ${shelf.title} right`}
+                        disabled={!communityShelfState[shelf.key]?.canScrollNext}
+                        onClick={() => scrollCommunityShelf(shelf.key, 1)}
+                      >
+                        <ChevronRightIcon size={14} />
+                      </button>
+                    </div>
                   </div>
                   <div className="community-shelf-viewport">
-                    {communityShelfState[shelf.key]?.imageCenterY !== null && (
-                      <>
-                        <button
-                          type="button"
-                          className="community-shelf-arrow is-left"
-                          aria-label={`Scroll ${shelf.title} left`}
-                          disabled={!communityShelfState[shelf.key]?.canScrollPrev}
-                          style={{ top: communityShelfState[shelf.key]?.imageCenterY ?? undefined }}
-                          onClick={() => scrollCommunityShelf(shelf.key, -1)}
-                        >
-                          <ChevronLeftIcon size={18} />
-                        </button>
-                        <button
-                          type="button"
-                          className="community-shelf-arrow is-right"
-                          aria-label={`Scroll ${shelf.title} right`}
-                          disabled={!communityShelfState[shelf.key]?.canScrollNext}
-                          style={{ top: communityShelfState[shelf.key]?.imageCenterY ?? undefined }}
-                          onClick={() => scrollCommunityShelf(shelf.key, 1)}
-                        >
-                          <ChevronRightIcon size={18} />
-                        </button>
-                      </>
-                    )}
                     <div
                       className="community-shelf-row"
                       data-community-shelf={shelf.key}
@@ -1430,6 +1476,69 @@ export default function CommunityPlaylistsPage() {
                   </div>
                 </section>
               ))}
+
+              {topContributors.length > 0 && (
+                <section className="community-shelf community-contributor-shelf">
+                  <div className="community-shelf-heading-row">
+                    <h2>Top Contributors</h2>
+                    <div
+                      className="community-shelf-controls"
+                      aria-label="Top Contributors carousel controls"
+                    >
+                      <button
+                        type="button"
+                        aria-label="Scroll Top Contributors left"
+                        disabled={!communityShelfState.contributors?.canScrollPrev}
+                        onClick={() => scrollCommunityShelf("contributors", -1)}
+                      >
+                        <ChevronLeftIcon size={14} />
+                      </button>
+                      <button
+                        type="button"
+                        aria-label="Scroll Top Contributors right"
+                        disabled={!communityShelfState.contributors?.canScrollNext}
+                        onClick={() => scrollCommunityShelf("contributors", 1)}
+                      >
+                        <ChevronRightIcon size={14} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="community-shelf-viewport community-contributor-viewport">
+                    <div
+                      className="community-contributor-row"
+                      data-community-shelf="contributors"
+                    >
+                      {topContributors.map((contributor) => (
+                        <button
+                          type="button"
+                          className="community-contributor-card"
+                          key={contributor.id}
+                          onClick={() => setSelectedCreatorId(contributor.id)}
+                        >
+                          {contributor.imageUrl ? (
+                            <img
+                              className="community-contributor-image"
+                              src={contributor.imageUrl}
+                              alt=""
+                            />
+                          ) : (
+                            <span
+                              className="community-contributor-image community-contributor-image-placeholder"
+                              aria-hidden="true"
+                            />
+                          )}
+                          <span className="community-contributor-name">
+                            {contributor.name}
+                          </span>
+                          <span className="community-contributor-count">
+                            {contributor.playlistCount} {contributor.playlistCount === 1 ? "playlist" : "playlists"}
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </section>
+              )}
             </div>
           ) : (
             <div className="community-grid" id="community-grid">
