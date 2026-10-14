@@ -310,6 +310,52 @@ function getPublishedTime(value: string | null) {
   return Number.isFinite(timestamp) ? timestamp : 0;
 }
 
+function CommunityPlaylistsLoadingSkeleton() {
+  const shelfCards = (count: number) =>
+    Array.from({ length: count }, (_, index) => (
+      <div className="community-skeleton-card" key={index}>
+        <div className="community-skeleton-card-image" />
+        <div className="community-skeleton-card-title" />
+        <div className="community-skeleton-card-creator">
+          <span />
+          <i />
+        </div>
+      </div>
+    ));
+
+  return (
+    <div className="community-skeleton-shelves" aria-hidden="true">
+      <section className="community-skeleton-shelf is-trending">
+        <div className="community-skeleton-section-title" />
+        <div className="community-skeleton-row">{shelfCards(4)}</div>
+      </section>
+
+      <section className="community-skeleton-shelf">
+        <div className="community-skeleton-section-title" />
+        <div className="community-skeleton-row">{shelfCards(7)}</div>
+      </section>
+
+      <section className="community-skeleton-shelf">
+        <div className="community-skeleton-section-title" />
+        <div className="community-skeleton-row">{shelfCards(7)}</div>
+      </section>
+
+      <section className="community-skeleton-shelf">
+        <div className="community-skeleton-section-title" />
+        <div className="community-skeleton-contributors">
+          {Array.from({ length: 6 }, (_, index) => (
+            <div className="community-skeleton-contributor" key={index}>
+              <span />
+              <i />
+              <b />
+            </div>
+          ))}
+        </div>
+      </section>
+    </div>
+  );
+}
+
 function recordCommunityPlaylistPlay(playlistId: number, songId: string) {
   void fetch(
     `/api/community-playlists/${encodeURIComponent(String(playlistId))}/play`,
@@ -1493,7 +1539,9 @@ export default function CommunityPlaylistsPage() {
             </section>
           )}
 
-          {communityShelves.length > 0 ? (
+          {loading ? (
+            <CommunityPlaylistsLoadingSkeleton />
+          ) : communityShelves.length > 0 ? (
             <div className="community-shelves" id="community-grid">
               {communityShelves.map((shelf) => (
                 <section className="community-shelf" key={shelf.key}>
@@ -1633,7 +1681,7 @@ export default function CommunityPlaylistsPage() {
                 <h2>{filteredSectionTitle}</h2>
               </div>
               <div className="community-grid" id="community-grid">
-                {!loading && filteredPlaylists.length === 0 && (
+                {filteredPlaylists.length === 0 && (
                   <div className="community-empty-state">{getEmptyStateMessage()}</div>
                 )}
 
