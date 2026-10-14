@@ -1101,7 +1101,7 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-page.is-sidebar-open {
-          grid-template-columns: 168px minmax(0, 1fr);
+          grid-template-columns: 248px minmax(0, 1fr);
         }
 
         .community-page.is-player-visible {
