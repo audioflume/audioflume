@@ -137,8 +137,10 @@ function SkeletonLibrary({ viewMode }: { viewMode: PlaylistViewMode }) {
     <div className="playlist-skeleton-grid">
       {Array.from({ length: 18 }, (_, index) => (
         <div key={index} className="playlist-skeleton-gallery-card">
-          <div className="playlist-skeleton-gallery-art">
-            <div className="playlist-skeleton-gallery-arrow" />
+          <div className="playlist-skeleton-gallery-art" />
+          <div className="playlist-skeleton-gallery-copy">
+            <SkeletonBlock className="playlist-skeleton-gallery-title" />
+            <SkeletonBlock className="playlist-skeleton-gallery-meta" />
           </div>
         </div>
       ))}
@@ -1145,15 +1147,17 @@ export default function PlaylistsPage() {
         .playlist-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .playlist-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: playlist-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes playlist-skeleton-shimmer { 100% { transform: translateX(100%); } }
-        .playlist-skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+        .playlist-skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px 16px; }
         .playlist-skeleton-gallery-card { min-width: 0; animation: skeleton-fade-in 0.3s ease-out both; }
-        .playlist-skeleton-gallery-art { position: relative; min-height: 210px; border-radius: 18px; border: 1px solid var(--border-subtle); background: var(--bg-card); overflow: hidden; }
+        .playlist-skeleton-gallery-art { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 0; border: 0; background: var(--bg-tertiary); overflow: hidden; }
         .playlist-skeleton-gallery-art::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 48%, transparent), transparent); animation: playlist-skeleton-shimmer 1.6s ease-in-out infinite; }
-        .playlist-skeleton-gallery-arrow { position: absolute; right: 16px; top: 16px; width: 32px; height: 32px; border-radius: 999px; background: var(--bg-tertiary); }
-        .playlist-skeleton-list { display: flex; flex-direction: column; gap: 8px; }
-        .playlist-skeleton-index-row { position: relative; min-height: 76px; display: grid; grid-template-columns: 40px 50px minmax(0, 1fr) minmax(84px, 120px) 28px; gap: 14px; align-items: center; border: 1px solid var(--border-subtle); border-radius: 16px; background: transparent; padding: 11px 13px; animation: skeleton-fade-in 0.3s ease-out both; }
-        .playlist-skeleton-number { width: 22px; height: 8px; }
-        .playlist-skeleton-row-cover { width: 50px; height: 50px; border-radius: 10px; }
+        .playlist-skeleton-gallery-copy { margin-top: 12px; }
+        .playlist-skeleton-gallery-title { width: 58%; height: 10px; }
+        .playlist-skeleton-gallery-meta { width: 28%; height: 7px; margin-top: 7px; }
+        .playlist-skeleton-list { display: flex; flex-direction: column; gap: 0; }
+        .playlist-skeleton-index-row { position: relative; min-height: 72px; display: grid; grid-template-columns: 62px minmax(180px, 1fr) minmax(84px, 120px) 28px; gap: 0; align-items: center; border: 0; border-radius: 0; background: transparent; padding: 0 13px 0 18px; animation: skeleton-fade-in 0.3s ease-out both; }
+        .playlist-skeleton-number { display: none; }
+        .playlist-skeleton-row-cover { width: 42px; height: 42px; border-radius: 0; }
         .playlist-skeleton-row-copy { display: flex; min-width: 0; flex-direction: column; gap: 9px; }
         .playlist-skeleton-row-title { width: min(220px, 58%); height: 9px; }
         .playlist-skeleton-row-meta { width: min(300px, 42%); height: 8px; }
@@ -1163,8 +1167,8 @@ export default function PlaylistsPage() {
         @media (max-width: 720px) {
           .playlists-hero { padding-top: 88px; }
           .playlists-control-bar { margin-top: -34px; margin-bottom: 32px; }
-          .playlist-gallery, .playlist-skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 14px; }
-          .playlist-gallery-art-wrap, .playlist-create-card, .playlist-skeleton-gallery-art { min-height: 188px; }
+          .playlist-gallery, .playlist-skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px 14px; }
+          .playlist-gallery-art-wrap, .playlist-create-card { min-height: 188px; }
           .playlist-gallery-content h3 { font-size: 23px; }
           .drag-preview-row { width: calc(100vw - var(--sidebar-width) - 36px); }
         }
@@ -1175,7 +1179,7 @@ export default function PlaylistsPage() {
           .playlist-create-row .playlist-create-mark { grid-column: 1; }
           .playlist-create-row .playlist-create-copy { grid-column: 2; align-items: center; text-align: center; }
           .playlist-create-row .playlist-create-copy span, .playlist-create-row .playlist-create-copy small { white-space: normal; }
-          .playlist-skeleton-index-row { grid-template-columns: 18px 50px minmax(0, 1fr) minmax(70px, 96px) 28px; gap: 12px; padding: 11px 13px; }
+          .playlist-skeleton-index-row { grid-template-columns: 62px minmax(0, 1fr) minmax(70px, 96px) 28px; gap: 0; padding: 0 13px 0 18px; }
           .playlist-skeleton-row-title { width: 68%; }
           .playlist-skeleton-row-meta { width: 50%; }
         }
