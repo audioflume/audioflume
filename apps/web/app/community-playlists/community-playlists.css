@@ -887,7 +887,7 @@
 
 .community-contributor-card:hover .community-contributor-image,
 .community-contributor-card:focus-visible .community-contributor-image {
-  transform: scale(1.035);
+  transform: scale(1.012);
 }
 
 .community-contributor-card:focus-visible {
