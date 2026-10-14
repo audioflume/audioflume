@@ -89,10 +89,10 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "All":
       return (
         <svg {...commonProps}>
-          <rect x="3" y="3" width="5" height="5" {...strokeProps} />
-          <rect x="12" y="3" width="5" height="5" {...strokeProps} />
-          <rect x="3" y="12" width="5" height="5" {...strokeProps} />
-          <rect x="12" y="12" width="5" height="5" {...strokeProps} />
+          <rect x="3.5" y="3.5" width="5.5" height="5.5" {...strokeProps} />
+          <rect x="11" y="3.5" width="5.5" height="5.5" {...strokeProps} />
+          <rect x="3.5" y="11" width="5.5" height="5.5" {...strokeProps} />
+          <rect x="11" y="11" width="5.5" height="5.5" {...strokeProps} />
         </svg>
       );
     case "Documentary":
@@ -125,8 +125,8 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Urban":
       return (
         <svg {...commonProps}>
-          <path d="M3 17V8h5v9M8 17V4h5v13M13 17v-6h4v6" {...strokeProps} />
-          <path d="M5 11h1M10 7h1M10 10h1M15 14h1" {...strokeProps} />
+          <path d="M3 16.5h14M4.5 16.5V8.5l3-2v10M9 16.5V4.5l3-1.5v13.5M13.5 16.5v-6l2-1.2v7.2" {...strokeProps} />
+          <path d="M6 10.5h.01M10.5 7.5h.01M10.5 10.5h.01M15 12.5h.01" {...strokeProps} />
         </svg>
       );
     case "Commercial":
@@ -152,8 +152,9 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Acoustic":
       return (
         <svg {...commonProps}>
-          <path d="M11.8 3.5c-1.7 1.4-2 3-.9 4.2l-4.8 4.8c-1.5-.5-3 .2-3.5 1.5-.6 1.5.5 3 2.1 3.3 1.5.3 2.9-.6 3.2-2l4.8-4.8c1.2 1.1 2.8.8 4.2-.9" {...strokeProps} />
-          <circle cx="6.2" cy="13.8" r="1.2" {...strokeProps} />
+          <path d="M12.8 3.2 10.6 5.4l1.2 1.2-3.3 3.3c-1.1-.5-2.4-.3-3.3.6-1.2 1.2-1.2 3.1 0 4.3s3.1 1.2 4.3 0c.9-.9 1.1-2.2.6-3.3l3.3-3.3 1.2 1.2 2.2-2.2" {...strokeProps} />
+          <circle cx="7.2" cy="12.8" r="1.1" {...strokeProps} />
+          <path d="m13.8 4.2 2 2" {...strokeProps} />
         </svg>
       );
     case "Hip-Hop":
@@ -166,8 +167,9 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Sports":
       return (
         <svg {...commonProps}>
-          <path d="M6 3h8v3.5c0 3-1.6 5.2-4 5.2S6 9.5 6 6.5V3Z" {...strokeProps} />
-          <path d="M6 5H3.5c0 2.6 1.2 4 3.2 4M14 5h2.5c0 2.6-1.2 4-3.2 4M10 11.7V15M7 17h6" {...strokeProps} />
+          <circle cx="10" cy="10" r="6.8" {...strokeProps} />
+          <path d="m10 6.2 2.4 1.7-.9 2.8H8.5l-.9-2.8L10 6.2Z" {...strokeProps} />
+          <path d="M10 3.2v3M4.2 8.1l3.4-.2M15.8 8.1l-3.4-.2M6.3 14.8l2.2-4.1M13.7 14.8l-2.2-4.1" {...strokeProps} />
         </svg>
       );
     case "Emotional":
@@ -179,8 +181,8 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Tension":
       return (
         <svg {...commonProps}>
-          <path d="M10 3 17 16H3Z" {...strokeProps} />
-          <path d="M10 7v4.5M10 14h.01" {...strokeProps} />
+          <path d="M3 13.5 6.5 10l2 2 4-5 4.5 6.5" {...strokeProps} />
+          <path d="M3 16.5h14M10 3.5v2.2" {...strokeProps} />
         </svg>
       );
     case "Uplifting":
@@ -1116,9 +1118,8 @@ export default function CommunityPlaylistsPage() {
           {recentPlaylists.length > 0 && (
             <section
               className="community-jump-back"
-              aria-labelledby="community-jump-back-heading"
+              aria-label="Jump Back In"
             >
-              <h2 id="community-jump-back-heading">Jump Back In</h2>
               <RecentPlaylistCards
                 playlists={recentPlaylists.slice(0, 4).map((playlist) => ({
                   key: `community:${playlist.id}`,
