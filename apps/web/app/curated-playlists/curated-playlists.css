@@ -767,6 +767,46 @@ body:has(.curated-playlists-page-root)
   margin-left: calc(0px - var(--curated-page-gutter)) !important;
 }
 
+.curated-page-grid-group {
+  width: min(100%, var(--filmwave-editorial-max-width));
+  margin: 75px auto 0;
+}
+
+.curated-page-grid-heading {
+  margin-bottom: 12px;
+}
+
+.curated-page-grid-heading p {
+  margin: 4px 0 0;
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.45;
+}
+
+.curated-page-playlist-grid {
+  --filmwave-curated-shelf-card-width: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 32px 12px;
+}
+
+@media (max-width: 900px) {
+  .curated-page-playlist-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .curated-page-grid-group {
+    margin-top: 58px;
+  }
+
+  .curated-page-playlist-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .curated-community-cta {
   display: grid;
   width: min(100%, var(--filmwave-editorial-max-width));
