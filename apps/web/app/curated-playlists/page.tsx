@@ -31,6 +31,7 @@ type CuratedShelfGroup = {
 };
 
 type ManualShelfIds = {
+  featured: number[];
   popular: number[];
   trending: number[];
 };
@@ -98,6 +99,7 @@ export default function CuratedPlaylistsPage() {
   const [browseTaxonomy, setBrowseTaxonomy] =
     useState<CuratedBrowseTaxonomy | null>(null);
   const [manualShelfIds, setManualShelfIds] = useState<ManualShelfIds>({
+    featured: [],
     popular: [],
     trending: [],
   });
@@ -154,6 +156,9 @@ export default function CuratedPlaylistsPage() {
           setPlaylists(visiblePlaylists);
           setBrowseTaxonomy(taxonomyData);
           setManualShelfIds({
+            featured: Array.isArray(shelfData?.featured)
+              ? shelfData.featured.map((item) => Number(item.playlist_id))
+              : [],
             popular: Array.isArray(shelfData?.popular)
               ? shelfData.popular.map((item) => Number(item.playlist_id))
               : [],
@@ -181,6 +186,19 @@ export default function CuratedPlaylistsPage() {
       cancelled = true;
     };
   }, []);
+
+  const featurePlaylists = useMemo(() => {
+    const playlistById = new Map(
+      playlists.map((playlist) => [playlist.id, playlist]),
+    );
+
+    return manualShelfIds.featured
+      .map((id) => playlistById.get(id))
+      .filter(
+        (playlist): playlist is CuratedPlaylistWithBrowseAssignments =>
+          Boolean(playlist),
+      );
+  }, [manualShelfIds.featured, playlists]);
 
   const groupedPlaylists = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
@@ -318,7 +336,7 @@ export default function CuratedPlaylistsPage() {
       <section className="curated-playlists-page-layer">
         <div className="px-8">
           {!loading && !error && playlists.length > 0 && (
-            <CuratedFeatureCarousel playlists={playlists} />
+            <CuratedFeatureCarousel playlists={featurePlaylists} />
           )}
 
           {!loading && !error && playlists.length > 0 && (
