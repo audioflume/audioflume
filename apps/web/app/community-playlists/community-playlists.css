@@ -460,8 +460,8 @@
 
 .community-play {
   position: absolute;
-  right: 10px;
-  bottom: 10px;
+  right: 16px;
+  bottom: 16px;
   z-index: 5;
   display: inline-flex;
   width: 24px;
@@ -491,11 +491,11 @@
 
 .community-card-count-overlay {
   position: absolute;
-  left: 10px;
-  bottom: 10px;
+  left: 16px;
+  bottom: 16px;
   z-index: 5;
   display: inline-flex;
-  max-width: calc(100% - 54px);
+  max-width: calc(100% - 64px);
   align-items: center;
   gap: 14px;
   color: #ffffff;
