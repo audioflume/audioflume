@@ -767,6 +767,100 @@ body:has(.curated-playlists-page-root)
   margin-left: calc(0px - var(--curated-page-gutter)) !important;
 }
 
+.curated-community-cta {
+  display: grid;
+  width: min(100%, var(--filmwave-editorial-max-width));
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 48px;
+  margin: 90px auto 0;
+  border-top: 1px solid var(--border);
+  padding-top: 30px;
+}
+
+.curated-community-cta-copy {
+  max-width: 620px;
+}
+
+.curated-community-cta-copy h2 {
+  margin: 0;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: clamp(28px, 2.8vw, 42px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 1;
+}
+
+.curated-community-cta-copy p {
+  max-width: 520px;
+  margin: 12px 0 0;
+  color: var(--text-secondary);
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.curated-community-cta-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.curated-community-cta-primary,
+.curated-community-cta-secondary {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--border);
+  padding: 0 18px;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  transition:
+    background-color 150ms ease,
+    border-color 150ms ease,
+    color 150ms ease;
+}
+
+.curated-community-cta-primary {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.curated-community-cta-secondary {
+  background: transparent;
+  color: var(--text-primary);
+}
+
+.curated-community-cta-primary:hover,
+.curated-community-cta-primary:focus-visible {
+  border-color: var(--text-secondary);
+  background: var(--text-secondary);
+  outline: none;
+}
+
+.curated-community-cta-secondary:hover,
+.curated-community-cta-secondary:focus-visible {
+  border-color: var(--text-muted);
+  background: var(--bg-secondary);
+  outline: none;
+}
+
+@media (max-width: 760px) {
+  .curated-community-cta {
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 24px;
+    margin-top: 64px;
+  }
+
+  .curated-community-cta-actions {
+    flex-wrap: wrap;
+  }
+}
+
 @media (max-width: 1280px) {
   .curated-playlist-card-shell,
   .curated-playlist-skeleton-card-shell {
