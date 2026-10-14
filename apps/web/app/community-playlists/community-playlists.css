@@ -417,12 +417,12 @@
 .community-filtered-section-heading h2 {
   margin: 0;
   color: var(--text-primary);
-  font-family: var(--filmwave-section-title-font-family);
-  font-size: var(--filmwave-section-title-font-size);
-  font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
-  line-height: var(--filmwave-section-title-line-height);
-  text-transform: none;
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
 }
 
 .community-grid {
@@ -727,12 +727,12 @@
 .community-shelf-heading-row h2 {
   margin: 0;
   color: var(--text-primary);
-  font-family: var(--filmwave-section-title-font-family);
-  font-size: var(--filmwave-section-title-font-size);
-  font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
-  line-height: var(--filmwave-section-title-line-height);
-  text-transform: none;
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
 }
 
 .community-shelf-viewport {
