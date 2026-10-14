@@ -154,7 +154,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-card {
     width: 100%;
-    aspect-ratio: 1;
+    aspect-ratio: 16 / 9;
   }
 
   body:has(.curated-playlists-page-root)
