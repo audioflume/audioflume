@@ -454,6 +454,30 @@ export default function CuratedPlaylistsPage() {
                 </div>
               ),
             )}
+
+          {!loading && !error && playlists.length > 0 && (
+            <section className="curated-community-cta">
+              <div className="curated-community-cta-copy">
+                <h2>Made something worth sharing?</h2>
+                <p>
+                  Publish your playlist and help other filmmakers find their
+                  next track.
+                </p>
+              </div>
+
+              <div className="curated-community-cta-actions">
+                <Link href="/playlists" className="curated-community-cta-primary">
+                  Share a Playlist
+                </Link>
+                <Link
+                  href="/community-playlists"
+                  className="curated-community-cta-secondary"
+                >
+                  Explore Community Playlists
+                </Link>
+              </div>
+            </section>
+          )}
         </div>
       </section>
       <Footer />
