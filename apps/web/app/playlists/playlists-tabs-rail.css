@@ -212,7 +212,7 @@ body .playlists-tabs-row {
 
 .playlists-new-button {
   gap: 8px !important;
-  background: var(--filmwave-neutral-surface) !important;
+  background: transparent !important;
   padding: 0 22px 0 18px !important;
   color: var(--text-primary) !important;
 }
@@ -675,6 +675,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 }
 
 .playlists-page .playlist-create-card {
+  border-radius: 0 !important;
   background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%) !important;
 }
 
