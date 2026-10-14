@@ -385,8 +385,7 @@
 .community-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  column-gap: clamp(10px, 1.25vw, 18px);
-  row-gap: 34px;
+  gap: 12px;
   margin-top: 24px;
 }
 
