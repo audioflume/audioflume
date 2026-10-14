@@ -479,6 +479,14 @@
   color: var(--text-muted);
   cursor: pointer;
   padding: 0;
+  opacity: 0;
+}
+
+.community-card:hover .community-like,
+.community-card:focus-within .community-like,
+.community-like:focus-visible,
+.community-like[aria-pressed="true"] {
+  opacity: 1;
 }
 
 .community-like svg {
