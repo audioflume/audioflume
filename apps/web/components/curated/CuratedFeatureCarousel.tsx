@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -87,20 +87,26 @@ export default function CuratedFeatureCarousel({
     });
   }
 
+  useLayoutEffect(() => {
+    const scroller = scrollerRef.current;
+    if (!scroller || visiblePlaylists.length === 0) return;
+
+    const metrics = getLoopMetrics();
+    if (!metrics) return;
+
+    const previousScrollBehavior = scroller.style.scrollBehavior;
+    scroller.style.scrollBehavior = "auto";
+    centerOn(metrics.middleCopy);
+    scroller.style.scrollBehavior = previousScrollBehavior;
+  }, [visiblePlaylists]);
+
   useEffect(() => {
     const scroller = scrollerRef.current;
     if (!scroller || visiblePlaylists.length === 0) return;
 
-    const frame = requestAnimationFrame(() => {
-      const metrics = getLoopMetrics();
-      if (metrics) centerOn(metrics.middleCopy);
-    });
+    let scrollEndTimer: number | null = null;
 
-    let adjusting = false;
-
-    const keepLoopCentered = () => {
-      if (adjusting) return;
-
+    const normalizeLoopPosition = () => {
       const metrics = getLoopMetrics();
       if (!metrics || metrics.setWidth <= 0) return;
 
@@ -111,26 +117,36 @@ export default function CuratedFeatureCarousel({
         metrics.finalCopy.offsetLeft -
         (scroller.clientWidth - metrics.finalCopy.offsetWidth) / 2;
 
-      if (scroller.scrollLeft < middleStart - metrics.setWidth / 2) {
-        adjusting = true;
+      const previousScrollBehavior = scroller.style.scrollBehavior;
+      scroller.style.scrollBehavior = "auto";
+
+      if (scroller.scrollLeft < middleStart) {
         scroller.scrollLeft += metrics.setWidth;
-        requestAnimationFrame(() => {
-          adjusting = false;
-        });
-      } else if (scroller.scrollLeft > finalStart - metrics.setWidth / 2) {
-        adjusting = true;
+      } else if (scroller.scrollLeft >= finalStart) {
         scroller.scrollLeft -= metrics.setWidth;
-        requestAnimationFrame(() => {
-          adjusting = false;
-        });
       }
+
+      scroller.style.scrollBehavior = previousScrollBehavior;
     };
 
-    scroller.addEventListener("scroll", keepLoopCentered, { passive: true });
+    const handleScroll = () => {
+      if (scrollEndTimer !== null) {
+        window.clearTimeout(scrollEndTimer);
+      }
+
+      scrollEndTimer = window.setTimeout(() => {
+        normalizeLoopPosition();
+        scrollEndTimer = null;
+      }, 140);
+    };
+
+    scroller.addEventListener("scroll", handleScroll, { passive: true });
 
     return () => {
-      cancelAnimationFrame(frame);
-      scroller.removeEventListener("scroll", keepLoopCentered);
+      if (scrollEndTimer !== null) {
+        window.clearTimeout(scrollEndTimer);
+      }
+      scroller.removeEventListener("scroll", handleScroll);
     };
   }, [visiblePlaylists]);
 
