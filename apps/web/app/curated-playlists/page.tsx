@@ -300,7 +300,7 @@ export default function CuratedPlaylistsPage() {
 
     if (popular.length > 0) {
       groups.push({
-        name: "Popular Right Now",
+        name: "Staff Picks",
         description: null,
         playlists: popular,
       });
