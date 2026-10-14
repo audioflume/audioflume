@@ -618,7 +618,7 @@
 }
 
 .community-jump-back .recent-playlist-card {
-  min-height: 72px;
+  min-height: 0;
   gap: 12px;
   border: 1px solid var(--border);
   border-radius: 7px;
