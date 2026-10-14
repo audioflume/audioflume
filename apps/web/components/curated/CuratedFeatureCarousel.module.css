@@ -58,6 +58,34 @@
   transform: scale(1.015);
 }
 
+.bookmarkButton {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #ffffff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.bookmarkButton:disabled {
+  cursor: default;
+}
+
+.card:hover .bookmarkButton,
+.card:focus-within .bookmarkButton {
+  opacity: 1;
+}
+
 .playButton {
   position: absolute;
   right: 16px;
