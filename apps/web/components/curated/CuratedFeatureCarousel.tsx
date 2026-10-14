@@ -20,7 +20,13 @@ export default function CuratedFeatureCarousel({
   const scrollerRef = useRef<HTMLDivElement>(null);
   const visiblePlaylists = useMemo(
     () =>
-      playlists.filter((playlist) => Boolean(playlist.cover_image_url)).slice(0, 8),
+      playlists
+        .filter((playlist) =>
+          Boolean(
+            playlist.feature_cover_image_url || playlist.cover_image_url,
+          ),
+        )
+        .slice(0, 8),
     [playlists],
   );
 
@@ -179,21 +185,21 @@ export default function CuratedFeatureCarousel({
                 data-carousel-index={playlistIndex}
               >
                 <div className={styles.media}>
-                  {playlist.cover_image_url ? (
+                  {playlist.feature_cover_image_url ||
+                  playlist.cover_image_url ? (
                     <Image
-                      src={playlist.cover_image_url}
-                      alt=""
+                      src={
+                        playlist.feature_cover_image_url ||
+                        playlist.cover_image_url ||
+                        ""
+                      }
+                      alt={playlist.name}
                       fill
                       sizes="(min-width: 900px) 56vw, 82vw"
                       className={styles.image}
                       unoptimized
                     />
                   ) : null}
-                  <div className={styles.overlay} />
-                  <div className={styles.copy}>
-                    {playlist.kicker ? <span>{playlist.kicker}</span> : null}
-                    <strong>{playlist.name}</strong>
-                  </div>
                 </div>
               </Link>
             );
