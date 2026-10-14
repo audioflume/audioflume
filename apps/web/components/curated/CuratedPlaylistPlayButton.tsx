@@ -17,7 +17,6 @@ type CuratedPlaylistPlayButtonProps = {
   playlistId: number;
   playlistName: string;
   className?: string;
-  variant?: "default" | "feature";
 };
 
 const playlistSongCache = new Map<string, CuratedPlaylistSong[]>();
@@ -81,7 +80,6 @@ export default function CuratedPlaylistPlayButton({
   playlistId,
   playlistName,
   className = "",
-  variant = "default",
 }: CuratedPlaylistPlayButtonProps) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [loading, setLoading] = useState(false);
@@ -133,7 +131,7 @@ export default function CuratedPlaylistPlayButton({
   return (
     <button
       type="button"
-      className={`${styles.button}${variant === "feature" ? ` ${styles.feature}` : ""} curated-playlist-play-button ${className}`.trim()}
+      className={`${styles.button} curated-playlist-play-button ${className}`.trim()}
       onClick={handleClick}
       disabled={loading}
       data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
