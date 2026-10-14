@@ -988,24 +988,27 @@
 .discover-track-section-heading {
   display: flex;
   min-height: 28px;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 20px;
+  gap: 24px;
   margin-bottom: 12px;
 }
 
-.discover-track-section-heading > a {
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: color 150ms ease;
+.discover-track-section-title {
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
 }
 
-.discover-track-section-heading > a:hover,
-.discover-track-section-heading > a:focus-visible {
+.discover-track-section-heading > a {
   color: var(--text-primary);
-  outline: none;
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: normal;
+  text-decoration: none;
 }
 
 .discover-fast-tracks-panel {
