@@ -692,19 +692,23 @@
 
 .community-shelf-heading-row {
   display: flex;
-  align-items: center;
+  min-height: 28px;
+  align-items: baseline;
   margin-bottom: var(--filmwave-small-section-title-margin-bottom);
   padding-bottom: 0;
+  font-family: var(--filmwave-section-title-font-family);
+  line-height: var(--filmwave-section-title-line-height);
 }
 
 .community-shelf-heading-row h2 {
   margin: 0;
   color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(18px, 1.65vw, 26px);
-  font-weight: 300;
-  letter-spacing: -0.035em;
-  line-height: 1;
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
 }
 
 .community-shelf-viewport {
