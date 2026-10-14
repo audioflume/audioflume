@@ -2,7 +2,7 @@
   height: calc(100vh - var(--filmwave-header-height, 56px));
   margin-top: var(--filmwave-header-height, 56px) !important;
   display: grid;
-  grid-template-columns: 276px minmax(0, 1fr);
+  grid-template-columns: 232px minmax(0, 1fr);
   overflow: hidden;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -21,7 +21,7 @@
 }
 
 .community-sidebar-section {
-  padding: 34px 28px 32px;
+  padding: 30px 22px 28px;
 }
 
 .community-sidebar-section + .community-sidebar-section {
@@ -210,15 +210,17 @@
   flex-wrap: wrap;
   align-items: center;
   gap: 8px;
-  margin-top: 22px;
+  margin-top: 0;
+  padding-bottom: 18px;
+  border-bottom: 1px solid var(--border);
 }
 
 .community-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   column-gap: clamp(10px, 1.25vw, 18px);
-  row-gap: calc(clamp(10px, 1.25vw, 18px) + 8px);
-  margin-top: 30px;
+  row-gap: 34px;
+  margin-top: 24px;
 }
 
 .community-card {
@@ -228,7 +230,7 @@
 .community-cover-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   border-radius: 0 !important;
   background: var(--bg-secondary);
@@ -242,54 +244,6 @@
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
-}
-
-.community-cover-link::before,
-.community-cover-link::after {
-  content: "";
-  position: absolute;
-  z-index: 4;
-  pointer-events: none;
-  transition:
-    background-color 150ms ease,
-    color 150ms ease;
-}
-
-.community-cover-link::before {
-  top: 16px;
-  right: 16px;
-  width: 32px;
-  height: 32px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.12);
-  -webkit-backdrop-filter: blur(12px);
-  backdrop-filter: blur(12px);
-}
-
-.community-cover-link::after {
-  top: 25.5px;
-  right: 25.5px;
-  width: 13px;
-  height: 13px;
-  background: var(--filmwave-white);
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  -webkit-mask-position: center;
-  -webkit-mask-repeat: no-repeat;
-  -webkit-mask-size: contain;
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none'%3E%3Cpath d='M7 17L17 7' stroke='black' stroke-width='2.2' stroke-linecap='round'/%3E%3Cpath d='M9 7H17V15' stroke='black' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-  mask-position: center;
-  mask-repeat: no-repeat;
-  mask-size: contain;
-}
-
-.community-card:hover .community-cover-link::before,
-.community-card:focus-within .community-cover-link::before {
-  background: var(--filmwave-white);
-}
-
-.community-card:hover .community-cover-link::after,
-.community-card:focus-within .community-cover-link::after {
-  background: var(--filmwave-black);
 }
 
 .community-play,
@@ -362,10 +316,10 @@
 
 .community-card-title-row {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 24px 26px;
+  grid-template-columns: minmax(0, 1fr) 24px;
   align-items: center;
   gap: 8px;
-  margin-top: 12px;
+  margin-top: 11px;
 }
 
 .community-card-title-row h2 {
@@ -419,14 +373,29 @@
   height: 15px;
 }
 
+.community-card-meta-row {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 8px;
+}
+
 .community-creator {
   display: flex;
+  min-width: 0;
   align-items: center;
-  gap: 8px;
-  margin-top: 9px;
+  gap: 7px;
   color: var(--text-muted);
   font-size: 11px;
   line-height: 1;
+}
+
+.community-creator > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .community-avatar {
@@ -457,37 +426,34 @@
   backdrop-filter: none !important;
 }
 
-.community-jump-back-heading {
-  display: none !important;
+.community-sidebar-last-viewed .recent-playlist-card-list.is-sidebar {
+  gap: 14px;
 }
 
-.community-jump-back-list {
-  margin-top: 0 !important;
+.community-sidebar-last-viewed .recent-playlist-card-list.is-sidebar .recent-playlist-card {
+  min-height: 44px;
+  gap: 10px;
 }
 
-.community-page:has(
-  .community-categories nav > .fw-filter-rail-item.is-active:not(:first-child)
-) .community-jump-back {
-  display: none;
+.community-sidebar-last-viewed .recent-playlist-card-cover,
+.community-sidebar-last-viewed .recent-playlist-card-placeholder {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  border-radius: 0;
 }
 
-.community-jump-back-item {
-  min-height: 66px !important;
-  border-radius: 0 !important;
-  padding: 7px !important;
+.community-sidebar-last-viewed .recent-playlist-card-copy {
+  gap: 4px;
 }
 
-.community-jump-back-item:hover,
-.community-jump-back-item:focus-visible {
-  transform: none !important;
+.community-sidebar-last-viewed .recent-playlist-card-copy strong {
+  font-size: 12px;
+  font-weight: 500;
 }
 
-.community-jump-back-cover,
-.community-jump-back-placeholder {
-  width: 50px !important;
-  height: 50px !important;
-  flex: 0 0 50px !important;
-  border-radius: 0 !important;
+.community-sidebar-last-viewed .recent-playlist-card-copy small {
+  font-size: 10px;
 }
 
 @media (max-width: 1320px) {
@@ -498,7 +464,7 @@
 
 @media (max-width: 1040px) {
   .community-page.playlists-page {
-    grid-template-columns: 220px minmax(0, 1fr);
+    grid-template-columns: 200px minmax(0, 1fr);
   }
 
   .community-sidebar-section {
