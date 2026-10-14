@@ -7,6 +7,7 @@ import {
   CURATED_BROWSE_FILTERS,
   type CuratedBrowseTag,
 } from "@/lib/curatedPlaylists";
+import type { CuratedBrowseTaxonomy } from "@/lib/curatedBrowseTaxonomy";
 
 import "@/components/curated/curated-browse-filters.css";
 
@@ -22,10 +23,16 @@ export function getCuratedGroupId(name: string) {
 
 export default function CuratedFeatureFilters({
   activeFilter,
+  activeSubcategoryId,
+  browseTaxonomy,
   onFilterChange,
+  onSubcategoryChange,
 }: {
   activeFilter: CuratedBrowseTag | null;
+  activeSubcategoryId: number | null;
+  browseTaxonomy: CuratedBrowseTaxonomy | null;
   onFilterChange: (filter: CuratedBrowseTag | null) => void;
+  onSubcategoryChange: (subcategoryId: number | null) => void;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
 }) {
@@ -47,13 +54,44 @@ export default function CuratedFeatureFilters({
     }
   }, [activeFilter, onFilterChange]);
 
+  const activeSubcategories =
+    browseTaxonomy?.filters.find((filter) => filter.value === activeFilter)
+      ?.subcategories ?? [];
+
   return (
-    <div className="curated-page-filter-row">
-      <CuratedBrowseFilters
-        activeFilter={activeFilter}
-        onFilterChange={onFilterChange}
-        variant="curated-page"
-      />
+    <div className="curated-page-filter-stack">
+      <div className="curated-page-filter-row">
+        <CuratedBrowseFilters
+          activeFilter={activeFilter}
+          onFilterChange={onFilterChange}
+          variant="curated-page"
+        />
+      </div>
+
+      {activeFilter && activeSubcategories.length > 0 && (
+        <nav
+          className="curated-page-subcategory-row"
+          aria-label="Filter by subcategory"
+        >
+          {activeSubcategories.map((subcategory) => {
+            const isActive = activeSubcategoryId === subcategory.id;
+
+            return (
+              <button
+                key={subcategory.id}
+                type="button"
+                className={`curated-page-subcategory-button${isActive ? " is-active" : ""}`}
+                aria-pressed={isActive}
+                onClick={() =>
+                  onSubcategoryChange(isActive ? null : subcategory.id)
+                }
+              >
+                {subcategory.label}
+              </button>
+            );
+          })}
+        </nav>
+      )}
     </div>
   );
 }
