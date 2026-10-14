@@ -390,9 +390,9 @@
 .community-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  column-gap: 12px;
-  row-gap: 34px;
-  margin-top: 24px;
+  column-gap: 38px;
+  row-gap: 38px;
+  margin-top: 38px;
 }
 
 .community-card {
