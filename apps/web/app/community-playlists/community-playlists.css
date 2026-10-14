@@ -68,6 +68,28 @@
   outline: none;
 }
 
+.community-category-chevron {
+  display: inline-flex;
+  width: 11px;
+  height: 11px;
+  flex: 0 0 11px;
+  align-items: center;
+  justify-content: center;
+  margin-left: 8px;
+  opacity: 0;
+}
+
+.community-category-chevron.is-visible {
+  opacity: 1;
+}
+
+.community-category-chevron svg {
+  display: block;
+  width: 11px;
+  height: 11px;
+}
+
+
 .community-featured {
   min-height: 220px;
   height: clamp(220px, 44vh, 460px);
