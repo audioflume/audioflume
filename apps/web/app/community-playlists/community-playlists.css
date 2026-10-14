@@ -460,8 +460,8 @@
 
 .community-play {
   position: absolute;
-  right: 16px;
-  bottom: 16px;
+  right: 10px;
+  bottom: 10px;
   z-index: 5;
   display: inline-flex;
   width: 24px;
