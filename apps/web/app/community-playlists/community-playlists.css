@@ -548,7 +548,7 @@
   font-family: var(--font-aktiv-grotesk);
   font-size: 13px;
   font-weight: 500;
-  letter-spacing: -0.035em;
+  letter-spacing: normal;
   line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
