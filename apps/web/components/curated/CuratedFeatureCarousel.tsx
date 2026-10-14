@@ -77,19 +77,31 @@ export default function CuratedFeatureCarousel({
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
-    const firstCard = scroller.querySelector<HTMLElement>(
-      "[data-curated-feature-card]",
+    const cards = Array.from(
+      scroller.querySelectorAll<HTMLElement>("[data-curated-feature-card]"),
     );
-    if (!firstCard) return;
+    if (cards.length === 0) return;
 
-    const style = window.getComputedStyle(scroller);
-    const gap = Number.parseFloat(style.columnGap || style.gap || "0") || 0;
-    const stride = firstCard.getBoundingClientRect().width + gap;
+    const viewportCenter = scroller.scrollLeft + scroller.clientWidth / 2;
+    let currentIndex = 0;
+    let smallestDistance = Number.POSITIVE_INFINITY;
 
-    scroller.scrollBy({
-      left: direction === "next" ? stride : -stride,
-      behavior: "smooth",
+    cards.forEach((card, index) => {
+      const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+      const distance = Math.abs(cardCenter - viewportCenter);
+
+      if (distance < smallestDistance) {
+        smallestDistance = distance;
+        currentIndex = index;
+      }
     });
+
+    const targetIndex =
+      direction === "next"
+        ? Math.min(currentIndex + 1, cards.length - 1)
+        : Math.max(currentIndex - 1, 0);
+
+    centerOn(cards[targetIndex], "smooth");
   }
 
   useLayoutEffect(() => {
