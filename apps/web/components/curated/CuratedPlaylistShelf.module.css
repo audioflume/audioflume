@@ -38,6 +38,11 @@
   );
 }
 
+.heading > :last-child {
+  height: 0 !important;
+  align-self: baseline;
+}
+
 .viewport {
   width: 100vw;
   margin-right: calc(50% - 50vw);
