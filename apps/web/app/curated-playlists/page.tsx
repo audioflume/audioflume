@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
 import CuratedFeatureCarousel from "@/components/curated/CuratedFeatureCarousel";
-import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
+import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
+import SectionTitle from "@/components/SectionTitle";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import XIcon from "@/components/icons/XIcon";
@@ -75,24 +76,17 @@ function CuratedPlaylistsLoadingSkeleton() {
         ))}
       </div>
 
-      {[0, 1, 2].map((shelfIndex) => (
-        <section key={shelfIndex} className="curated-page-skeleton-shelf">
-          <div className="curated-page-skeleton-shelf-head">
-            <div>
-              <span className="curated-page-skeleton-heading" />
-              <span className="curated-page-skeleton-description" />
-            </div>
-            <div className="curated-page-skeleton-controls">
-              <span />
-              <span />
-            </div>
+      {[0, 1, 2].map((groupIndex) => (
+        <section key={groupIndex} className="curated-page-skeleton-grid-group">
+          <div className="curated-page-skeleton-grid-head">
+            <span className="curated-page-skeleton-heading" />
           </div>
 
-          <div className="curated-page-skeleton-cards">
-            {Array.from({ length: 4 }, (_, cardIndex) => (
+          <div className="curated-page-skeleton-grid">
+            {Array.from({ length: 6 }, (_, cardIndex) => (
               <article
                 key={cardIndex}
-                className="curated-page-skeleton-card-shell"
+                className="curated-page-skeleton-grid-card"
               >
                 <div className="curated-page-skeleton-card" />
                 <span className="curated-page-skeleton-card-title" />
@@ -265,40 +259,19 @@ export default function CuratedPlaylistsPage() {
           : [];
       }
 
-      const subcategoryGroups: CuratedShelfGroup[] = activeFilter.subcategories
-        .map((subcategory) => ({
-          name: subcategory.label,
-          description: null,
-          playlists: filteredPlaylists
-            .filter((playlist) =>
-              (playlist.browse_assignments ?? []).some(
-                (assignment) =>
-                  assignment.browse_filter === activeBrowseFilter &&
-                  assignment.subcategory_id === subcategory.id,
-              ),
-            )
-            .sort((a, b) => a.position - b.position),
-        }))
-        .filter((group) => group.playlists.length > 0);
+      const categoryPlaylists = [...filteredPlaylists].sort(
+        (a, b) => a.position - b.position,
+      );
 
-      const uncategorizedPlaylists = filteredPlaylists
-        .filter(
-          (playlist) =>
-            !(playlist.browse_assignments ?? []).some(
-              (assignment) => assignment.browse_filter === activeBrowseFilter,
-            ),
-        )
-        .sort((a, b) => a.position - b.position);
-
-      if (uncategorizedPlaylists.length > 0) {
-        subcategoryGroups.push({
-          name: "More",
-          description: null,
-          playlists: uncategorizedPlaylists,
-        });
-      }
-
-      return subcategoryGroups;
+      return categoryPlaylists.length > 0
+        ? [
+            {
+              name: activeFilter.label,
+              description: null,
+              playlists: categoryPlaylists,
+            },
+          ]
+        : [];
     }
 
     if (normalizedSearchQuery) {
@@ -440,18 +413,26 @@ export default function CuratedPlaylistsPage() {
             !error &&
             groupedPlaylists.map(
               ({ name, description, playlists: groupPlaylists }) => (
-                <div
+                <section
                   key={name}
                   id={getCuratedGroupId(name)}
-                  className="curated-page-shelf-group scroll-mt-28"
+                  className="curated-page-grid-group scroll-mt-28"
                 >
-                  <CuratedPlaylistShelf
-                    title={name}
-                    description={description ?? undefined}
-                    playlists={groupPlaylists}
-                    className="mt-[calc(clamp(34px,3vw,48px)+20px)]"
-                  />
-                </div>
+                  <div className="curated-page-grid-heading">
+                    <SectionTitle variant="small">{name}</SectionTitle>
+                    {description && <p>{description}</p>}
+                  </div>
+
+                  <div className="curated-page-playlist-grid">
+                    {groupPlaylists.map((playlist, index) => (
+                      <CuratedPlaylistCard
+                        key={playlist.id}
+                        playlist={playlist}
+                        index={index}
+                      />
+                    ))}
+                  </div>
+                </section>
               ),
             )}
 
