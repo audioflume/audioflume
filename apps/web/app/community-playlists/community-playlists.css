@@ -2,7 +2,7 @@
   height: calc(100vh - var(--filmwave-header-height, 56px));
   margin-top: var(--filmwave-header-height, 56px) !important;
   display: grid;
-  grid-template-columns: 248px minmax(0, 1fr);
+  grid-template-columns: 168px minmax(0, 1fr);
   overflow: hidden;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -977,10 +977,17 @@
 }
 
 .community-skeleton-row {
+  box-sizing: border-box;
   display: grid;
+  width: calc(100% + 72px);
   grid-auto-flow: column;
   grid-auto-columns: 15.5%;
   gap: 38px;
+  margin-right: -36px;
+  margin-left: -36px;
+  overflow: hidden;
+  padding-right: 36px;
+  padding-left: 36px;
 }
 
 .community-skeleton-shelf.is-trending .community-skeleton-row {
@@ -1086,7 +1093,7 @@
   }
 
   .community-page.playlists-page {
-    grid-template-columns: 248px minmax(0, 1fr);
+    grid-template-columns: 168px minmax(0, 1fr);
   }
 
   .community-sidebar-section {
@@ -1172,6 +1179,14 @@
 
   .community-shelf-row,
   .community-contributor-row {
+    padding-right: 20px;
+    padding-left: 20px;
+  }
+
+  .community-skeleton-row {
+    width: calc(100% + 40px);
+    margin-right: -20px;
+    margin-left: -20px;
     padding-right: 20px;
     padding-left: 20px;
   }
