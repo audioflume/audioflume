@@ -1010,7 +1010,7 @@ export default function CommunityPlaylistsPage() {
               <div className="community-empty-state">{getEmptyStateMessage()}</div>
             )}
 
-            {filteredPlaylists.map((playlist, playlistIndex) => {
+            {filteredPlaylists.map((playlist) => {
               const isFavorite = favoritePlaylistIds.has(playlist.id);
               const isPending = pendingFavoriteIds.has(playlist.id);
               const cachedPlaylistSongs =
@@ -1024,10 +1024,7 @@ export default function CommunityPlaylistsPage() {
               const isPlaylistLoading = loadingPlaybackPlaylistId === playlist.id;
 
               return (
-                <article
-                  className={`community-card${playlistIndex % 8 === 0 ? " is-grid-featured" : ""}`}
-                  key={playlist.id}
-                >
+                <article className="community-card" key={playlist.id}>
                   <div
                     className="community-cover-wrap"
                     style={{ borderRadius: "6px" }}
