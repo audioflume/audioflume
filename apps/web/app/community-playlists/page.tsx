@@ -911,20 +911,17 @@ export default function CommunityPlaylistsPage() {
             </nav>
           </section>
 
+        </aside>
+
+        <section className="community-content">
           {recentPlaylists.length > 0 && (
             <section
-              className="community-sidebar-section community-featured community-sidebar-last-viewed"
-              aria-labelledby="community-sidebar-last-viewed-heading"
+              className="community-jump-back"
+              aria-labelledby="community-jump-back-heading"
             >
-              <p
-                className="community-sidebar-heading"
-                id="community-sidebar-last-viewed-heading"
-              >
-                Jump Back In
-              </p>
+              <h2 id="community-jump-back-heading">Jump Back In</h2>
               <RecentPlaylistCards
-                variant="sidebar"
-                playlists={recentPlaylists.map((playlist) => ({
+                playlists={recentPlaylists.slice(0, 4).map((playlist) => ({
                   key: `community:${playlist.id}`,
                   href: `/community-playlists/${playlist.id}`,
                   name: playlist.name,
@@ -934,9 +931,7 @@ export default function CommunityPlaylistsPage() {
               />
             </section>
           )}
-        </aside>
 
-        <section className="community-content">
           <div className="community-feed-toolbar">
             <div className="community-feed-search">
               <label className="audioflume-home-reference-searchbar-field">
