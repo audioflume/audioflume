@@ -773,7 +773,10 @@ body:has(.curated-playlists-page-root)
 }
 
 .curated-page-grid-heading {
-  margin-bottom: 12px;
+  display: flex;
+  min-height: 28px;
+  align-items: baseline;
+  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
 }
 
 .curated-page-grid-heading p {
