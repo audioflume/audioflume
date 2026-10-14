@@ -7,7 +7,18 @@ alter table public.curated_playlist_shelf_items
 
 alter table public.curated_playlist_shelf_items
   add constraint curated_playlist_shelf_items_shelf_key_check
-  check (shelf_key in ('featured', 'popular', 'trending'));
+  check (
+    shelf_key = any (
+      array[
+        'featured'::text,
+        'popular'::text,
+        'trending'::text,
+        'discover_moods'::text,
+        'discover_curated'::text,
+        'discover_production'::text
+      ]
+    )
+  );
 
 -- Seed the managed feature shelf from the legacy featured flag so existing
 -- selections remain available after this migration.
