@@ -45,9 +45,6 @@ export async function GET() {
     const { data: legacyData, error: legacyError } = await supabaseServer
       .from("curated_playlists")
       .select("id, playlist_group, position, show_on_curated_feature")
-      .or(
-        "playlist_group.in.(Popular Right Now,Trending Playlists),show_on_curated_feature.eq.true",
-      )
       .order("position", { ascending: true });
 
     if (legacyError) throw error;
