@@ -701,8 +701,6 @@
 .community-shelf-heading-row {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 16px;
   margin-bottom: 18px;
   padding-bottom: 12px;
   border-bottom: 1px solid var(--border-subtle);
@@ -718,53 +716,60 @@
   line-height: 1.1;
 }
 
-.community-shelf-controls {
-  display: inline-flex;
-  flex: 0 0 auto;
-  align-items: center;
+.community-shelf-viewport {
+  position: relative;
+  min-width: 0;
 }
 
-.community-shelf-control {
-  display: inline-flex;
-  width: 31px;
-  height: 31px;
+.community-shelf-arrow {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  width: 44px;
+  height: 44px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
-  background: var(--bg-primary);
-  color: var(--text-muted);
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111111;
   padding: 0;
+  opacity: 0;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.25);
   cursor: pointer;
-  transition: background-color 150ms ease, color 150ms ease;
+  transform: translateY(-50%);
+  transition: opacity 160ms ease, transform 160ms ease;
 }
 
-.community-shelf-control + .community-shelf-control {
-  border-left: 0;
+.community-shelf-viewport:hover .community-shelf-arrow:not(:disabled) {
+  opacity: 1;
 }
 
-.community-shelf-control:hover,
-.community-shelf-control:focus-visible {
-  background: var(--bg-hover);
-  color: var(--text-primary);
+.community-shelf-arrow:hover:not(:disabled),
+.community-shelf-arrow:focus-visible:not(:disabled) {
+  opacity: 1;
   outline: none;
+  transform: translateY(-50%) scale(1.05);
 }
 
-.community-shelf-control svg {
-  display: block;
-  width: 13px;
-  height: 13px;
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 1.35;
-  stroke-linecap: round;
-  stroke-linejoin: round;
+.community-shelf-arrow:disabled {
+  pointer-events: none;
+  opacity: 0;
+}
+
+.community-shelf-arrow.is-left {
+  left: 32px;
+}
+
+.community-shelf-arrow.is-right {
+  right: 32px;
 }
 
 .community-shelf-row {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 100px) / 6);
-  gap: 20px;
+  grid-auto-columns: calc((100% - 48px) / 5);
+  gap: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
@@ -817,7 +822,7 @@
   }
 
   .community-shelf-row {
-    grid-auto-columns: calc((100% - 60px) / 4);
+    grid-auto-columns: calc((100% - 36px) / 4);
   }
 }
 
@@ -840,7 +845,7 @@
   }
 
   .community-shelf-row {
-    grid-auto-columns: calc((100% - 40px) / 3);
+    grid-auto-columns: calc((100% - 24px) / 3);
   }
 }
 
@@ -905,7 +910,7 @@
   }
 
   .community-shelf-row {
-    grid-auto-columns: calc((100% - 20px) / 2);
+    grid-auto-columns: calc((100% - 12px) / 2);
   }
 
   .community-shelves {
