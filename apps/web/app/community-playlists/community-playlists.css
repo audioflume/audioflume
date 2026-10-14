@@ -71,13 +71,7 @@
 }
 
 .community-category-icon {
-  display: inline-flex;
-  width: 15px;
-  height: 15px;
-  flex: 0 0 15px;
-  align-items: center;
-  justify-content: center;
-  color: currentColor;
+  display: none;
 }
 
 .community-category-icon svg {
