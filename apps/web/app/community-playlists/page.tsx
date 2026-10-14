@@ -522,6 +522,61 @@ export default function CommunityPlaylistsPage() {
     selectedCategory,
   ]);
 
+  const communityShelves = useMemo(() => {
+    if (
+      activeTab !== "Trending" ||
+      selectedCategory !== "All" ||
+      query.trim()
+    ) {
+      return [];
+    }
+
+    const trending = [...playlists]
+      .sort((a, b) => {
+        const aRanking = rankingSnapshot[a.id] ?? a;
+        const bRanking = rankingSnapshot[b.id] ?? b;
+        const recentLikeDifference =
+          bRanking.seven_day_like_count - aRanking.seven_day_like_count;
+        if (recentLikeDifference !== 0) return recentLikeDifference;
+
+        const playDifference = bRanking.play_count - aRanking.play_count;
+        if (playDifference !== 0) return playDifference;
+
+        const publishedDifference =
+          getPublishedTime(bRanking.published_at) -
+          getPublishedTime(aRanking.published_at);
+        if (publishedDifference !== 0) return publishedDifference;
+
+        return b.id - a.id;
+      })
+      .slice(0, 5);
+
+    const recent = [...playlists]
+      .sort((a, b) => {
+        const publishedDifference =
+          getPublishedTime(b.published_at) - getPublishedTime(a.published_at);
+        if (publishedDifference !== 0) return publishedDifference;
+        return b.id - a.id;
+      })
+      .slice(0, 5);
+
+    const mostLiked = [...playlists]
+      .sort((a, b) => {
+        const aRanking = rankingSnapshot[a.id] ?? a;
+        const bRanking = rankingSnapshot[b.id] ?? b;
+        const likeDifference = bRanking.like_count - aRanking.like_count;
+        if (likeDifference !== 0) return likeDifference;
+        return bRanking.play_count - aRanking.play_count;
+      })
+      .slice(0, 5);
+
+    return [
+      { key: "trending", title: "Trending", playlists: trending },
+      { key: "recent", title: "Recently Added", playlists: recent },
+      { key: "most-liked", title: "Most Liked", playlists: mostLiked },
+    ];
+  }, [activeTab, playlists, query, rankingSnapshot, selectedCategory]);
+
   const recentPlaylists = useMemo(
     () =>
       recentPlaylistIds
@@ -682,6 +737,126 @@ export default function CommunityPlaylistsPage() {
     } finally {
       setLoadingPlaybackPlaylistId(null);
     }
+  }
+
+  function renderPlaylistCard(playlist: CommunityPlaylist) {
+    const isFavorite = favoritePlaylistIds.has(playlist.id);
+    const isPending = pendingFavoriteIds.has(playlist.id);
+    const cachedPlaylistSongs =
+      playlistPlaybackCacheRef.current.get(playlist.id) ?? [];
+    const isCurrentPlaylist = Boolean(
+      activePlaybackPlaylistId === playlist.id &&
+        currentSong &&
+        cachedPlaylistSongs.some((song) => song.id === currentSong.id),
+    );
+    const isPlaylistPlaying = isCurrentPlaylist && isPlaying;
+    const isPlaylistLoading = loadingPlaybackPlaylistId === playlist.id;
+
+    return (
+      <article className="community-card" key={playlist.id}>
+        <div
+          className="community-cover-wrap"
+          style={{ borderRadius: "6px" }}
+        >
+          <Link
+            className="community-cover-link"
+            href={`/community-playlists/${playlist.id}`}
+            aria-label={`Open ${playlist.name}`}
+          >
+            {playlist.cover_image_url && (
+              <img className="community-cover" src={playlist.cover_image_url} alt="" />
+            )}
+          </Link>
+          <button
+            className={`community-like${isFavorite ? " is-liked" : ""}`}
+            type="button"
+            aria-label={`${isFavorite ? "Remove from saved" : "Save"}: ${playlist.name}`}
+            aria-pressed={isFavorite}
+            disabled={isPending}
+            onClick={(event) => {
+              event.stopPropagation();
+              void togglePlaylistFavorite(playlist.id);
+            }}
+          >
+            <BookmarkGlyph filled={isFavorite} />
+          </button>
+          <button
+            className="community-play"
+            type="button"
+            aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
+            aria-pressed={isPlaylistPlaying}
+            aria-busy={isPlaylistLoading}
+            data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
+            disabled={isPlaylistLoading}
+            onClick={(event) => {
+              event.stopPropagation();
+              void togglePlaylistPlayback(playlist);
+            }}
+          >
+            {isPlaylistPlaying ? (
+              <PauseIcon size={18} />
+            ) : (
+              <PlayIconSmall size={18} />
+            )}
+          </button>
+          <div className="community-card-creator-overlay">
+            {playlist.creator.imageUrl ? (
+              <img
+                className="community-card-creator-avatar"
+                src={playlist.creator.imageUrl}
+                alt=""
+              />
+            ) : (
+              <span
+                className="community-card-creator-avatar community-card-creator-avatar-placeholder"
+                aria-hidden="true"
+              />
+            )}
+            <span className="community-card-creator-name">
+              {playlist.creator.name}
+            </span>
+          </div>
+        </div>
+        <div className="community-card-title-row">
+          <h2>
+            <Link
+              className="community-title-link"
+              href={`/community-playlists/${playlist.id}`}
+            >
+              {playlist.name}
+            </Link>
+          </h2>
+        </div>
+        <div className="community-card-meta">
+          <div
+            className="community-engagement"
+            aria-label="Playlist engagement"
+          >
+            <span
+              className="community-engagement-item"
+              title={`${playlist.play_count} plays`}
+            >
+              <PlayCountIcon />
+              <span>{formatCompactCount(playlist.play_count)}</span>
+            </span>
+            <span
+              className="community-engagement-item"
+              title={`${playlist.like_count} likes`}
+            >
+              <LikeCountIcon />
+              <span>{formatCompactCount(playlist.like_count)}</span>
+            </span>
+            <span
+              className="community-engagement-item"
+              title={`${playlist.song_count} songs`}
+            >
+              <SongCountIcon />
+              <span>{formatCompactCount(playlist.song_count)}</span>
+            </span>
+          </div>
+        </div>
+      </article>
+    );
   }
 
   function getEmptyStateMessage() {
@@ -1143,131 +1318,32 @@ export default function CommunityPlaylistsPage() {
             </section>
           )}
 
-          <div className="community-grid" id="community-grid">
-            {!loading && filteredPlaylists.length === 0 && (
-              <div className="community-empty-state">{getEmptyStateMessage()}</div>
-            )}
+          {communityShelves.length > 0 ? (
+            <div className="community-shelves" id="community-grid">
+              {communityShelves.map((shelf) => (
+                <section className="community-shelf" key={shelf.key}>
+                  <div className="community-shelf-heading-row">
+                    <h2>{shelf.title}</h2>
+                  </div>
+                  <div className="community-shelf-row">
+                    {shelf.playlists.map((playlist) =>
+                      renderPlaylistCard(playlist),
+                    )}
+                  </div>
+                </section>
+              ))}
+            </div>
+          ) : (
+            <div className="community-grid" id="community-grid">
+              {!loading && filteredPlaylists.length === 0 && (
+                <div className="community-empty-state">{getEmptyStateMessage()}</div>
+              )}
 
-            {filteredPlaylists.map((playlist) => {
-              const isFavorite = favoritePlaylistIds.has(playlist.id);
-              const isPending = pendingFavoriteIds.has(playlist.id);
-              const cachedPlaylistSongs =
-                playlistPlaybackCacheRef.current.get(playlist.id) ?? [];
-              const isCurrentPlaylist = Boolean(
-                activePlaybackPlaylistId === playlist.id &&
-                  currentSong &&
-                  cachedPlaylistSongs.some((song) => song.id === currentSong.id),
-              );
-              const isPlaylistPlaying = isCurrentPlaylist && isPlaying;
-              const isPlaylistLoading = loadingPlaybackPlaylistId === playlist.id;
-
-              return (
-                <article className="community-card" key={playlist.id}>
-                  <div
-                    className="community-cover-wrap"
-                    style={{ borderRadius: "6px" }}
-                  >
-                    <Link
-                      className="community-cover-link"
-                      href={`/community-playlists/${playlist.id}`}
-                      aria-label={`Open ${playlist.name}`}
-                    >
-                      {playlist.cover_image_url && (
-                        <img className="community-cover" src={playlist.cover_image_url} alt="" />
-                      )}
-                    </Link>
-                    <button
-                      className={`community-like${isFavorite ? " is-liked" : ""}`}
-                      type="button"
-                      aria-label={`${isFavorite ? "Remove from saved" : "Save"}: ${playlist.name}`}
-                      aria-pressed={isFavorite}
-                      disabled={isPending}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        void togglePlaylistFavorite(playlist.id);
-                      }}
-                    >
-                      <BookmarkGlyph filled={isFavorite} />
-                    </button>
-                    <button
-                      className="community-play"
-                      type="button"
-                      aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
-                      aria-pressed={isPlaylistPlaying}
-                      aria-busy={isPlaylistLoading}
-                      data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
-                      disabled={isPlaylistLoading}
-                      onClick={(event) => {
-                        event.stopPropagation();
-                        void togglePlaylistPlayback(playlist);
-                      }}
-                    >
-                      {isPlaylistPlaying ? (
-                        <PauseIcon size={18} />
-                      ) : (
-                        <PlayIconSmall size={18} />
-                      )}
-                    </button>
-                    <div className="community-card-creator-overlay">
-                      {playlist.creator.imageUrl ? (
-                        <img
-                          className="community-card-creator-avatar"
-                          src={playlist.creator.imageUrl}
-                          alt=""
-                        />
-                      ) : (
-                        <span
-                          className="community-card-creator-avatar community-card-creator-avatar-placeholder"
-                          aria-hidden="true"
-                        />
-                      )}
-                      <span className="community-card-creator-name">
-                        {playlist.creator.name}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="community-card-title-row">
-                    <h2>
-                      <Link
-                        className="community-title-link"
-                        href={`/community-playlists/${playlist.id}`}
-                      >
-                        {playlist.name}
-                      </Link>
-                    </h2>
-                  </div>
-                  <div className="community-card-meta">
-                    <div
-                      className="community-engagement"
-                      aria-label="Playlist engagement"
-                    >
-                      <span
-                        className="community-engagement-item"
-                        title={`${playlist.play_count} plays`}
-                      >
-                        <PlayCountIcon />
-                        <span>{formatCompactCount(playlist.play_count)}</span>
-                      </span>
-                      <span
-                        className="community-engagement-item"
-                        title={`${playlist.like_count} likes`}
-                      >
-                        <LikeCountIcon />
-                        <span>{formatCompactCount(playlist.like_count)}</span>
-                      </span>
-                      <span
-                        className="community-engagement-item"
-                        title={`${playlist.song_count} songs`}
-                      >
-                        <SongCountIcon />
-                        <span>{formatCompactCount(playlist.song_count)}</span>
-                      </span>
-                    </div>
-                  </div>
-                </article>
-              );
-            })}
-          </div>
+              {filteredPlaylists.map((playlist) =>
+                renderPlaylistCard(playlist),
+              )}
+            </div>
+          )}
 
           <div className="community-footer-wrap">
             <Footer playerPadding={false} />
