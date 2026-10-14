@@ -385,7 +385,9 @@ function ReadyToCutTracks({ songs }: { songs: Song[] }) {
   return (
     <section className="discover-track-section">
       <div className="discover-track-section-heading">
-        <SectionTitle>Ready-to-cut tracks</SectionTitle>
+        <SectionTitle className="discover-track-section-title">
+          Ready-to-cut tracks
+        </SectionTitle>
         <Link href="/music">Explore more tracks</Link>
       </div>
 
@@ -991,8 +993,6 @@ export default function DiscoverPage() {
           footerCopy="1500+ artists trending online"
         />
 
-        <ReadyToCutTracks songs={readyToCutSongs} />
-
         <section className="discover-artist-editorial-grid">
           {EDITORIAL_FEATURES.map((feature, index) => (
             <article key={feature.eyebrow} className="discover-artist-editorial-card">
@@ -1023,6 +1023,8 @@ export default function DiscoverPage() {
           items={SUPPORT_NEW_ARTISTS}
           footerCopy="1500+ artists trending online"
         />
+
+        <ReadyToCutTracks songs={readyToCutSongs} />
 
         <div
           className="discover-artist-footer"
