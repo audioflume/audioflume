@@ -914,24 +914,6 @@ export default function CommunityPlaylistsPage() {
         </aside>
 
         <section className="community-content">
-          {recentPlaylists.length > 0 && (
-            <section
-              className="community-jump-back"
-              aria-labelledby="community-jump-back-heading"
-            >
-              <h2 id="community-jump-back-heading">Jump Back In</h2>
-              <RecentPlaylistCards
-                playlists={recentPlaylists.slice(0, 4).map((playlist) => ({
-                  key: `community:${playlist.id}`,
-                  href: `/community-playlists/${playlist.id}`,
-                  name: playlist.name,
-                  coverImageUrl: playlist.cover_image_url,
-                  metadata: `${playlist.creator.name} · ${playlist.song_count} songs`,
-                }))}
-              />
-            </section>
-          )}
-
           <div className="community-feed-toolbar">
             <div className="community-feed-search">
               <label className="audioflume-home-reference-searchbar-field">
@@ -978,6 +960,24 @@ export default function CommunityPlaylistsPage() {
               ))}
             </div>
           </div>
+
+          {recentPlaylists.length > 0 && (
+            <section
+              className="community-jump-back"
+              aria-labelledby="community-jump-back-heading"
+            >
+              <h2 id="community-jump-back-heading">Jump Back In</h2>
+              <RecentPlaylistCards
+                playlists={recentPlaylists.slice(0, 4).map((playlist) => ({
+                  key: `community:${playlist.id}`,
+                  href: `/community-playlists/${playlist.id}`,
+                  name: playlist.name,
+                  coverImageUrl: playlist.cover_image_url,
+                  metadata: `${playlist.creator.name} · ${playlist.song_count} songs`,
+                }))}
+              />
+            </section>
+          )}
 
           <div className="community-grid" id="community-grid">
             {!loading && filteredPlaylists.length === 0 && (
