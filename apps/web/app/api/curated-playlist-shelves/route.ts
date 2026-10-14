@@ -7,6 +7,7 @@ import type {
 
 function emptyShelves(): CuratedPlaylistShelfState {
   return {
+    featured: [],
     popular: [],
     trending: [],
   };
@@ -23,7 +24,11 @@ export async function GET() {
       const shelves = emptyShelves();
 
       for (const row of data ?? []) {
-        if (row.shelf_key !== "popular" && row.shelf_key !== "trending") {
+        if (
+          row.shelf_key !== "featured" &&
+          row.shelf_key !== "popular" &&
+          row.shelf_key !== "trending"
+        ) {
           continue;
         }
 
@@ -39,8 +44,10 @@ export async function GET() {
     // Keep the existing shelves readable until the shelf migration is applied.
     const { data: legacyData, error: legacyError } = await supabaseServer
       .from("curated_playlists")
-      .select("id, playlist_group, position")
-      .in("playlist_group", ["Popular Right Now", "Trending Playlists"])
+      .select("id, playlist_group, position, show_on_curated_feature")
+      .or(
+        "playlist_group.in.(Popular Right Now,Trending Playlists),show_on_curated_feature.eq.true",
+      )
       .order("position", { ascending: true });
 
     if (legacyError) throw error;
@@ -53,6 +60,9 @@ export async function GET() {
         position: Number(row.position || 0),
       };
 
+      if (row.show_on_curated_feature) {
+        shelves.featured.push(item);
+      }
       if (row.playlist_group === "Popular Right Now") {
         shelves.popular.push(item);
       } else if (row.playlist_group === "Trending Playlists") {
