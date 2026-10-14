@@ -211,6 +211,7 @@ export default function CuratedFeatureCarousel({
                       unoptimized
                     />
                   ) : null}
+                  <div className={styles.title}>{playlist.name}</div>
                 </div>
               </Link>
             );
