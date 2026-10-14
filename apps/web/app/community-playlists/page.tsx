@@ -156,9 +156,12 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Acoustic":
       return (
         <svg {...commonProps}>
-          <circle cx="8" cy="11.5" r="3.2" {...strokeProps} />
-          <circle cx="8" cy="11.5" r="0.9" {...strokeProps} />
-          <path d="M10.5 9 15.5 4M14.5 3l2.5 2.5M11.7 7.8l1.7 1.7" {...strokeProps} />
+          <path
+            d="M11.8 3.4 8.9 6.3l1 1-2.2 2.2c-1.7-.8-3.7-.2-4.7 1.4-1.1 1.8-.5 4.2 1.3 5.3 1.8 1.1 4.2.5 5.3-1.3.9-1.4.7-3.2-.4-4.4l2.2-2.2 1 1 2.9-2.9"
+            {...strokeProps}
+          />
+          <circle cx="6.4" cy="13.1" r="1.35" {...strokeProps} />
+          <path d="m12.9 4.4 2 2M14 3.3l2 2M9.1 9.1l2.3 2.3" {...strokeProps} />
         </svg>
       );
     case "Hip-Hop":
@@ -171,9 +174,11 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Sports":
       return (
         <svg {...commonProps}>
-          <circle cx="11.5" cy="4.2" r="1.35" {...strokeProps} />
-          <path d="M10.8 6.2 9 9l2.2 1.6 1.8-1.8" {...strokeProps} />
-          <path d="M9.3 8.4 6.7 9.8M11.2 10.6 9 14l-3 2M12 9.8l2.2 2.8 2.8 1" {...strokeProps} />
+          <circle cx="11.5" cy="4.1" r="1.3" {...strokeProps} />
+          <path d="M10.9 6.1 9.6 8.2 12 9.6 13.9 8.4" {...strokeProps} />
+          <path d="M9.8 8.2 7.2 9.7" {...strokeProps} />
+          <path d="M11.2 9.3 9.4 13.3 6.8 15.7" {...strokeProps} />
+          <path d="M12.1 9.8 14.4 12.4 17 13.1" {...strokeProps} />
         </svg>
       );
     case "Emotional":
