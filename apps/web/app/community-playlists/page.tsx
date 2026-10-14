@@ -903,7 +903,7 @@ export default function CommunityPlaylistsPage() {
               >
                 <span className="fw-filter-rail-label">All</span>
                 <span className="community-category-count">{playlists.length}</span>
-                <span className="fw-filter-rail-chevron" aria-hidden="true">
+                <span className="community-filter-rail-chevron" aria-hidden="true">
                   <FilterRailChevron />
                 </span>
               </button>
@@ -919,7 +919,7 @@ export default function CommunityPlaylistsPage() {
                   <span className="community-category-count">
                     {categoryCounts.get(category) ?? 0}
                   </span>
-                  <span className="fw-filter-rail-chevron" aria-hidden="true">
+                  <span className="community-filter-rail-chevron" aria-hidden="true">
                     <FilterRailChevron />
                   </span>
                 </button>
