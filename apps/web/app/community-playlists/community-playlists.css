@@ -682,12 +682,8 @@
 .community-shelves {
   display: flex;
   flex-direction: column;
-  gap: 42px;
+  gap: 50px;
   margin-top: 34px;
-}
-
-.community-shelf:first-child {
-  margin-bottom: 8px;
 }
 
 .community-shelf {
@@ -1038,12 +1034,8 @@
   }
 
   .community-shelves {
-    gap: 32px;
+    gap: 36px;
     margin-top: 30px;
-  }
-
-  .community-shelf:first-child {
-    margin-bottom: 4px;
   }
 }
 
