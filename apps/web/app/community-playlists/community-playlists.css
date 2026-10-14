@@ -218,78 +218,104 @@
   flex: 0 1 420px;
 }
 
-.community-feed-search > .filmwave-header-search-wrap {
+.community-feed-search .audioflume-home-reference-searchbar-field {
+  box-sizing: border-box;
+  display: flex;
   width: 100%;
-  margin-left: 0;
-}
-
-.community-feed-search > .filmwave-header-search-wrap .filmwave-header-search {
-  width: 100%;
-}
-
-.community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-base {
-  width: 100%;
-  min-height: 48px;
-  height: 48px;
+  height: 51px;
+  align-items: center;
   gap: 12px;
-  border: 0;
+  margin: 0;
   border-radius: 0;
   background: #1b1b1b;
   padding: 0 16px;
   color: #5a5a5a;
 }
 
-.community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-lead {
-  width: 22px;
-  margin-left: 0;
-}
-
-.community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-icon {
+.community-feed-search .audioflume-home-reference-searchbar-field > svg {
   width: 22px;
   height: 22px;
+  flex: 0 0 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
 }
 
-.community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-input {
+.community-feed-search .audioflume-home-reference-searchbar-field input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #ffffff;
+  font: inherit;
   font-size: 16px;
   font-weight: 300;
-  color: #ffffff;
+  -webkit-appearance: none;
+  appearance: none;
 }
 
 .community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-input::placeholder {
+  .audioflume-home-reference-searchbar-field
+  input::-webkit-search-cancel-button,
+.community-feed-search
+  .audioflume-home-reference-searchbar-field
+  input::-webkit-search-decoration {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.community-feed-search
+  .audioflume-home-reference-searchbar-field
+  input::placeholder {
   color: #5a5a5a;
   font-size: 16px;
+  font-weight: 300;
   opacity: 1;
+}
+
+.community-feed-search .audioflume-home-reference-searchbar-clear {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  color: #5a5a5a;
+  padding: 0;
+  cursor: pointer;
+}
+
+.community-feed-search .audioflume-home-reference-searchbar-clear svg {
+  width: 21px;
+  height: 21px;
 }
 
 :where(html.light, html[data-theme="light"])
   .community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-base {
+  .audioflume-home-reference-searchbar-field {
   background: #f3f3f3;
   color: #a3a3a3;
 }
 
 :where(html.light, html[data-theme="light"])
   .community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-input {
+  .audioflume-home-reference-searchbar-field
+  input {
   color: var(--text-primary);
 }
 
 :where(html.light, html[data-theme="light"])
   .community-feed-search
-  > .filmwave-header-search-wrap
-  .filmwave-header-search-input::placeholder {
+  .audioflume-home-reference-searchbar-field
+  input::placeholder,
+:where(html.light, html[data-theme="light"])
+  .community-feed-search
+  .audioflume-home-reference-searchbar-clear {
   color: #a3a3a3;
 }
 
