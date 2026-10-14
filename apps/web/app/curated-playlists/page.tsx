@@ -119,6 +119,8 @@ export default function CuratedPlaylistsPage() {
   const [error, setError] = useState("");
   const [activeBrowseFilter, setActiveBrowseFilter] =
     useState<CuratedBrowseTag | null>(null);
+  const [activeBrowseSubcategoryId, setActiveBrowseSubcategoryId] =
+    useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
 
   useEffect(() => {
@@ -235,6 +237,34 @@ export default function CuratedPlaylistsPage() {
         playlist.browse_tags.includes(activeBrowseFilter),
       );
 
+      if (activeBrowseSubcategoryId !== null) {
+        const activeSubcategory = activeFilter.subcategories.find(
+          (subcategory) => subcategory.id === activeBrowseSubcategoryId,
+        );
+
+        if (!activeSubcategory) return [];
+
+        const subcategoryPlaylists = filteredPlaylists
+          .filter((playlist) =>
+            (playlist.browse_assignments ?? []).some(
+              (assignment) =>
+                assignment.browse_filter === activeBrowseFilter &&
+                assignment.subcategory_id === activeBrowseSubcategoryId,
+            ),
+          )
+          .sort((a, b) => a.position - b.position);
+
+        return subcategoryPlaylists.length > 0
+          ? [
+              {
+                name: activeSubcategory.label,
+                description: null,
+                playlists: subcategoryPlaylists,
+              },
+            ]
+          : [];
+      }
+
       const subcategoryGroups: CuratedShelfGroup[] = activeFilter.subcategories
         .map((subcategory) => ({
           name: subcategory.label,
@@ -321,7 +351,14 @@ export default function CuratedPlaylistsPage() {
     }
 
     return groups;
-  }, [activeBrowseFilter, browseTaxonomy, manualShelfIds, playlists, searchQuery]);
+  }, [
+    activeBrowseFilter,
+    activeBrowseSubcategoryId,
+    browseTaxonomy,
+    manualShelfIds,
+    playlists,
+    searchQuery,
+  ]);
 
   const hasActiveSearch = searchQuery.trim().length > 0;
 
@@ -354,7 +391,13 @@ export default function CuratedPlaylistsPage() {
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
-              onFilterChange={setActiveBrowseFilter}
+              activeSubcategoryId={activeBrowseSubcategoryId}
+              browseTaxonomy={browseTaxonomy}
+              onFilterChange={(filter) => {
+                setActiveBrowseFilter(filter);
+                setActiveBrowseSubcategoryId(null);
+              }}
+              onSubcategoryChange={setActiveBrowseSubcategoryId}
               searchValue={searchQuery}
               onSearchChange={setSearchQuery}
             />
