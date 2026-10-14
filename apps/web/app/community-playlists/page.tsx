@@ -548,8 +548,7 @@ export default function CommunityPlaylistsPage() {
         if (publishedDifference !== 0) return publishedDifference;
 
         return b.id - a.id;
-      })
-      .slice(0, 5);
+      });
 
     const recent = [...playlists]
       .sort((a, b) => {
@@ -557,8 +556,7 @@ export default function CommunityPlaylistsPage() {
           getPublishedTime(b.published_at) - getPublishedTime(a.published_at);
         if (publishedDifference !== 0) return publishedDifference;
         return b.id - a.id;
-      })
-      .slice(0, 5);
+      });
 
     const mostLiked = [...playlists]
       .sort((a, b) => {
@@ -567,8 +565,7 @@ export default function CommunityPlaylistsPage() {
         const likeDifference = bRanking.like_count - aRanking.like_count;
         if (likeDifference !== 0) return likeDifference;
         return bRanking.play_count - aRanking.play_count;
-      })
-      .slice(0, 5);
+      });
 
     return [
       { key: "trending", title: "Trending", playlists: trending },
@@ -739,6 +736,18 @@ export default function CommunityPlaylistsPage() {
     }
   }
 
+  function scrollCommunityShelf(shelfKey: string, direction: -1 | 1) {
+    const shelf = document.querySelector<HTMLElement>(
+      `[data-community-shelf="${shelfKey}"]`,
+    );
+    if (!shelf) return;
+
+    shelf.scrollBy({
+      left: shelf.clientWidth * 0.9 * direction,
+      behavior: "smooth",
+    });
+  }
+
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
     const isPending = pendingFavoriteIds.has(playlist.id);
@@ -828,30 +837,21 @@ export default function CommunityPlaylistsPage() {
           </h2>
         </div>
         <div className="community-card-meta">
-          <div
-            className="community-engagement"
-            aria-label="Playlist engagement"
-          >
-            <span
-              className="community-engagement-item"
-              title={`${playlist.play_count} plays`}
-            >
-              <PlayCountIcon />
-              <span>{formatCompactCount(playlist.play_count)}</span>
-            </span>
-            <span
-              className="community-engagement-item"
-              title={`${playlist.like_count} likes`}
-            >
-              <LikeCountIcon />
-              <span>{formatCompactCount(playlist.like_count)}</span>
-            </span>
-            <span
-              className="community-engagement-item"
-              title={`${playlist.song_count} songs`}
-            >
-              <SongCountIcon />
-              <span>{formatCompactCount(playlist.song_count)}</span>
+          <div className="community-card-creator">
+            {playlist.creator.imageUrl ? (
+              <img
+                className="community-card-creator-meta-avatar"
+                src={playlist.creator.imageUrl}
+                alt=""
+              />
+            ) : (
+              <span
+                className="community-card-creator-meta-avatar community-card-creator-meta-avatar-placeholder"
+                aria-hidden="true"
+              />
+            )}
+            <span className="community-card-creator-meta-name">
+              {playlist.creator.name}
             </span>
           </div>
         </div>
@@ -1324,8 +1324,33 @@ export default function CommunityPlaylistsPage() {
                 <section className="community-shelf" key={shelf.key}>
                   <div className="community-shelf-heading-row">
                     <h2>{shelf.title}</h2>
+                    <div className="community-shelf-controls" aria-label={`${shelf.title} carousel controls`}>
+                      <button
+                        type="button"
+                        className="community-shelf-control"
+                        aria-label={`Scroll ${shelf.title} left`}
+                        onClick={() => scrollCommunityShelf(shelf.key, -1)}
+                      >
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                          <path d="m12 5-5 5 5 5" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        className="community-shelf-control"
+                        aria-label={`Scroll ${shelf.title} right`}
+                        onClick={() => scrollCommunityShelf(shelf.key, 1)}
+                      >
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                          <path d="m8 5 5 5-5 5" />
+                        </svg>
+                      </button>
+                    </div>
                   </div>
-                  <div className="community-shelf-row">
+                  <div
+                    className="community-shelf-row"
+                    data-community-shelf={shelf.key}
+                  >
                     {shelf.playlists.map((playlist) =>
                       renderPlaylistCard(playlist),
                     )}
