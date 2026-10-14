@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
@@ -218,6 +219,11 @@ export default function CuratedFeatureCarousel({
                     <div className={styles.title}>{playlist.name}</div>
                   </div>
                 </Link>
+
+                <CuratedPlaylistBookmarkButton
+                  playlist={playlist}
+                  className={styles.bookmarkButton}
+                />
 
                 <CuratedPlaylistPlayButton
                   playlistId={playlist.id}
