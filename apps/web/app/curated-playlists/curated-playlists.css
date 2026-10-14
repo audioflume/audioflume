@@ -648,7 +648,7 @@ body:has(.curated-playlists-page-root)
   width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
-  aspect-ratio: 1;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--bg-secondary);
 }
