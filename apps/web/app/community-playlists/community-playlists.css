@@ -31,11 +31,11 @@
 
 .community-sidebar-heading {
   margin: 0 0 17px;
-  color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 500;
-  letter-spacing: 0.02em;
-  text-transform: uppercase;
+  color: var(--text-primary);
+  font-size: 16px;
+  font-weight: 400;
+  letter-spacing: -0.02em;
+  text-transform: none;
 }
 
 .community-categories {
@@ -489,7 +489,7 @@
   opacity: 1;
 }
 
-.community-card-creator-overlay {
+.community-card-count-overlay {
   position: absolute;
   left: 10px;
   bottom: 10px;
@@ -497,38 +497,30 @@
   display: inline-flex;
   max-width: calc(100% - 54px);
   align-items: center;
-  gap: 7px;
+  gap: 14px;
   color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
   opacity: 0;
   pointer-events: none;
   transition: opacity 150ms ease;
 }
 
-.community-card-creator-avatar {
+.community-card-count-overlay .community-engagement-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.community-card-count-overlay .community-engagement-item svg {
   display: block;
-  width: 20px;
-  height: 20px;
-  flex: 0 0 20px;
-  border-radius: 50%;
-  object-fit: cover;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
 }
 
-.community-card-creator-avatar-placeholder {
-  background: #808080;
-}
-
-.community-card-creator-name {
-  min-width: 0;
-  overflow: hidden;
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.community-cover-wrap:hover .community-card-creator-overlay,
-.community-cover-wrap:focus-within .community-card-creator-overlay {
+.community-cover-wrap:hover .community-card-count-overlay,
+.community-cover-wrap:focus-within .community-card-count-overlay {
   opacity: 1;
 }
 
@@ -768,7 +760,7 @@
 .community-shelf-row {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: calc((100% - 48px) / 5);
+  grid-auto-columns: calc((100% - 24px) / 3);
   gap: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
