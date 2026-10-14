@@ -161,11 +161,7 @@ export default function CuratedPlaylistsPage() {
 
         const visiblePlaylists: CuratedPlaylistWithBrowseAssignments[] =
           Array.isArray(playlistData)
-            ? playlistData.filter(
-                (playlist) =>
-                  !playlist.discover_section &&
-                  Number(playlist.song_count || 0) > 0,
-              )
+            ? playlistData.filter((playlist) => !playlist.discover_section)
             : [];
 
         if (!cancelled) {
@@ -318,7 +314,7 @@ export default function CuratedPlaylistsPage() {
     }
     if (trending.length > 0) {
       groups.push({
-        name: "Staff Picks",
+        name: "Trending Playlists",
         description: null,
         playlists: trending,
       });
@@ -414,32 +410,6 @@ export default function CuratedPlaylistsPage() {
                   />
                 </div>
               ),
-            )}
-
-          {!loading &&
-            !error &&
-            playlists.length > 0 &&
-            !activeBrowseFilter &&
-            !hasActiveSearch && (
-              <div className="curated-page-continuation">
-                <button
-                  type="button"
-                  onClick={() => {
-                    setActiveBrowseFilter("mood");
-                    window.requestAnimationFrame(() => {
-                      document
-                        .querySelector(".curated-page-filter-row")
-                        ?.scrollIntoView({
-                          behavior: "smooth",
-                          block: "start",
-                        });
-                    });
-                  }}
-                >
-                  <span>Explore by Mood</span>
-                  <span aria-hidden="true">→</span>
-                </button>
-              </div>
             )}
         </div>
       </section>
