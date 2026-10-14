@@ -37,11 +37,11 @@
 .heading {
   display: flex;
   width: var(--filmwave-curated-shelf-content-width);
-  min-height: 34px;
-  align-items: center;
+  min-height: 28px;
+  align-items: baseline;
   justify-content: space-between;
-  gap: 20px;
-  margin-bottom: var(--filmwave-section-title-margin-bottom);
+  gap: 24px;
+  margin-bottom: 12px;
   margin-left: calc(
     50% - 50vw + var(--filmwave-curated-shelf-edge)
   );
