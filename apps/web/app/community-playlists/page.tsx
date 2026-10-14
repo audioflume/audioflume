@@ -88,11 +88,16 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
   switch (category) {
     case "All":
       return (
-        <svg {...commonProps}>
-          <rect x="3.5" y="3.5" width="5.5" height="5.5" {...strokeProps} />
-          <rect x="11" y="3.5" width="5.5" height="5.5" {...strokeProps} />
-          <rect x="3.5" y="11" width="5.5" height="5.5" {...strokeProps} />
-          <rect x="11" y="11" width="5.5" height="5.5" {...strokeProps} />
+        <svg
+          {...commonProps}
+          width={14}
+          height={14}
+          style={{ width: 14, height: 14 }}
+        >
+          <rect x="3" y="3" width="5" height="5" {...strokeProps} />
+          <rect x="12" y="3" width="5" height="5" {...strokeProps} />
+          <rect x="3" y="12" width="5" height="5" {...strokeProps} />
+          <rect x="12" y="12" width="5" height="5" {...strokeProps} />
         </svg>
       );
     case "Documentary":
@@ -151,9 +156,7 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Acoustic":
       return (
         <svg {...commonProps}>
-          <path d="M12.8 3.2 9.9 6.1l1.1 1.1-2.3 2.3c-1.1-.6-2.5-.5-3.5.5-1.4 1.4-1.4 3.7 0 5.1s3.7 1.4 5.1 0c1-1 1.1-2.4.5-3.5l2.3-2.3 1.1 1.1 2.9-2.9" {...strokeProps} />
-          <circle cx="7.2" cy="13" r="1.35" {...strokeProps} />
-          <path d="m13.4 4.6 2 2M14.5 3.5l2 2M9.9 9.9l2.2 2.2" {...strokeProps} />
+          <path d="M11 4v8.5a2.5 2.5 0 1 1-1.5-2.3V6.2l6-1.4v6.7a2.5 2.5 0 1 1-1.5-2.3V3.5Z" {...strokeProps} />
         </svg>
       );
     case "Hip-Hop":
@@ -180,8 +183,7 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
     case "Tension":
       return (
         <svg {...commonProps}>
-          <path d="M3 13.5 6.5 10l2 2 4-5 4.5 6.5" {...strokeProps} />
-          <path d="M3 16.5h14M10 3.5v2.2" {...strokeProps} />
+          <path d="M11.5 2.8 5.8 10h4l-1.3 7.2 5.7-7.2h-4Z" {...strokeProps} />
         </svg>
       );
     case "Uplifting":
