@@ -883,7 +883,7 @@
   display: grid;
   grid-auto-flow: column;
   grid-auto-columns: 15.5%;
-  gap: 38px;
+  gap: 12px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
@@ -1074,7 +1074,7 @@
   width: calc(100% + 72px);
   grid-auto-flow: column;
   grid-auto-columns: 15.5%;
-  gap: 38px;
+  gap: 12px;
   margin-right: -36px;
   margin-left: -36px;
   overflow: hidden;
