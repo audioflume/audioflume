@@ -60,6 +60,26 @@ function getPlaylistSourceReference(req: Request): PlaylistSourceReference {
   return { sourceType: "user", sourcePlaylistId: null };
 }
 
+function getRequestedSourceReference(
+  body: Record<string, unknown>,
+): PlaylistSourceReference | null {
+  const sourceType = body.source_type;
+  const sourcePlaylistId = Number(body.source_playlist_id);
+
+  if (sourceType !== "curated" && sourceType !== "community") {
+    return null;
+  }
+
+  if (!Number.isInteger(sourcePlaylistId) || sourcePlaylistId <= 0) {
+    return null;
+  }
+
+  return {
+    sourceType,
+    sourcePlaylistId,
+  };
+}
+
 function getSourceKey(value: {
   source_type?: unknown;
   source_playlist_id?: unknown;
@@ -292,7 +312,8 @@ export async function POST(req: Request) {
       );
     }
 
-    const sourceReference = getPlaylistSourceReference(req);
+    const sourceReference =
+      getRequestedSourceReference(body) ?? getPlaylistSourceReference(req);
 
     if (
       sourceReference.sourceType !== "user" &&
