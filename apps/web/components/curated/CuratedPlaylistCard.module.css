@@ -2,6 +2,7 @@
   width: var(--filmwave-curated-shelf-card-width);
   min-width: 0;
   flex: 0 0 var(--filmwave-curated-shelf-card-width);
+  scroll-snap-align: start;
 }
 
 .card {
@@ -50,7 +51,7 @@
   min-width: 0;
   grid-column: 1;
   grid-row: 2;
-  margin-top: 12px;
+  margin-top: 9px;
   color: inherit;
   text-decoration: none;
 }
