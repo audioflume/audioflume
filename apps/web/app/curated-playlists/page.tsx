@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import CuratedFeatureCarousel from "@/components/curated/CuratedFeatureCarousel";
 import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
@@ -316,6 +317,10 @@ export default function CuratedPlaylistsPage() {
 
       <section className="curated-playlists-page-layer">
         <div className="px-8">
+          {!loading && !error && playlists.length > 0 && (
+            <CuratedFeatureCarousel playlists={playlists} />
+          )}
+
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
