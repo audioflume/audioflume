@@ -693,7 +693,7 @@
 .community-shelf-heading-row {
   display: flex;
   align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
   padding-bottom: 0;
 }
 
