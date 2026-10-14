@@ -22,7 +22,6 @@ type CommunityPlaylistRow = {
   published_at: string | null;
   primary_category: string | null;
   secondary_categories: string[] | null;
-  play_count: number | string | null;
 };
 
 type PlaylistSongRow = {
@@ -175,7 +174,7 @@ export async function GET(_request: Request, context: RouteContext) {
     const { data: playlistData, error: playlistError } = await supabaseServer
       .from("playlists")
       .select(
-        "id, clerk_user_id, name, cover_image_url, published_at, primary_category, secondary_categories, play_count",
+        "id, clerk_user_id, name, cover_image_url, published_at, primary_category, secondary_categories",
       )
       .eq("id", numericPlaylistId)
       .eq("is_public", true)
@@ -220,7 +219,8 @@ export async function GET(_request: Request, context: RouteContext) {
           "id",
           "in",
           `(${songIds.map((songId) => `"${songId}"`).join(",")})`,
-        );
+        )
+        .eq("status", "published");
 
       if (songsError) throw songsError;
 
@@ -238,6 +238,19 @@ export async function GET(_request: Request, context: RouteContext) {
           return song ? mergePlaylistSong(playlistSong, song) : null;
         })
         .filter((song): song is CommunityPlaylistSong => Boolean(song));
+    }
+
+    let playCount = 0;
+    if (songs.length > 0) {
+      const activeSongIds = songs.map((song) => song.id);
+      const { count, error: playCountError } = await supabaseServer
+        .from("community_playlist_play_events")
+        .select("id", { count: "exact", head: true })
+        .eq("playlist_id", numericPlaylistId)
+        .in("song_id", activeSongIds);
+
+      if (playCountError) throw playCountError;
+      playCount = count ?? 0;
     }
 
     let creator = { name: "Audioflume member", imageUrl: null as string | null };
@@ -268,7 +281,7 @@ export async function GET(_request: Request, context: RouteContext) {
             playlist.secondary_categories,
           ),
           song_count: songs.length,
-          play_count: Math.max(0, Number(playlist.play_count) || 0),
+          play_count: playCount,
           like_count: favoritesResult.count ?? 0,
           creator,
         },
