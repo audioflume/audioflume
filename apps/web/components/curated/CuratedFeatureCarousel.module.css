@@ -1,0 +1,163 @@
+.carousel {
+  width: 100vw;
+  margin-left: calc(50% - 50vw);
+  margin-bottom: 22px;
+}
+
+.viewport {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+}
+
+.scroller {
+  --curated-feature-carousel-card-width: min(720px, 52vw);
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.scroller::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  width: var(--curated-feature-carousel-card-width);
+  min-width: var(--curated-feature-carousel-card-width);
+  flex: 0 0 var(--curated-feature-carousel-card-width);
+  scroll-snap-align: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.media {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 1;
+  overflow: hidden;
+  background: var(--filmwave-neutral-surface, var(--bg-secondary));
+}
+
+.image {
+  object-fit: cover;
+  transition: transform 420ms ease;
+}
+
+.card:hover .image,
+.card:focus-visible .image {
+  transform: scale(1.015);
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    transparent 44%,
+    rgba(0, 0, 0, 0.08) 62%,
+    rgba(0, 0, 0, 0.58) 100%
+  );
+}
+
+.copy {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  left: 24px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  color: #ffffff;
+}
+
+.copy span {
+  margin-bottom: 6px;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.copy strong {
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
+.arrow {
+  position: absolute;
+  top: 50%;
+  z-index: 20;
+  display: none;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #000000;
+  padding: 0;
+  opacity: 0;
+  box-shadow: 0 12px 34px rgba(0, 0, 0, 0.25);
+  transform: translateY(-50%);
+  transition:
+    opacity 150ms ease,
+    transform 150ms ease;
+}
+
+.viewport:hover .arrow,
+.viewport:focus-within .arrow {
+  opacity: 1;
+}
+
+.arrow:hover {
+  transform: translateY(-50%) scale(1.05);
+}
+
+.arrowLeft {
+  left: 32px;
+}
+
+.arrowRight {
+  right: 32px;
+}
+
+@media (min-width: 640px) {
+  .arrow {
+    display: flex;
+  }
+}
+
+@media (max-width: 900px) {
+  .scroller {
+    --curated-feature-carousel-card-width: 72vw;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 620px) {
+  .carousel {
+    margin-bottom: 16px;
+  }
+
+  .scroller {
+    --curated-feature-carousel-card-width: 82vw;
+    gap: 10px;
+  }
+
+  .copy {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
+  }
+}
