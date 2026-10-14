@@ -103,10 +103,10 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
           height={14}
           style={{ width: 14, height: 14 }}
         >
-          <rect x="3" y="3" width="5" height="5" {...strokeProps} />
-          <rect x="12" y="3" width="5" height="5" {...strokeProps} />
-          <rect x="3" y="12" width="5" height="5" {...strokeProps} />
-          <rect x="12" y="12" width="5" height="5" {...strokeProps} />
+          <path
+            d="m10 2.8 2.1 4.25 4.7.68-3.4 3.32.8 4.68-4.2-2.2-4.2 2.2.8-4.68-3.4-3.32 4.7-.68Z"
+            {...strokeProps}
+          />
         </svg>
       );
     case "Documentary":
