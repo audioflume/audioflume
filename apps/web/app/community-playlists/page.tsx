@@ -373,6 +373,7 @@ export default function CommunityPlaylistsPage() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playlistPlaybackCacheRef = useRef(new Map<number, Song[]>());
   const [query, setQuery] = useState("");
+  const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
   const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
@@ -1091,10 +1092,16 @@ export default function CommunityPlaylistsPage() {
           height: calc(100vh - var(--filmwave-header-height, 56px));
           margin-top: var(--filmwave-header-height, 56px);
           display: grid;
-          grid-template-columns: 260px minmax(0, 1fr);
+          grid-template-columns: 0 minmax(0, 1fr);
+          grid-template-rows: var(--filmwave-header-height, 75px) minmax(0, 1fr);
           overflow: hidden;
           background: var(--bg-primary);
           color: var(--text-primary);
+          transition: grid-template-columns 180ms ease;
+        }
+
+        .community-page.is-sidebar-open {
+          grid-template-columns: 168px minmax(0, 1fr);
         }
 
         .community-page.is-player-visible {
@@ -1404,12 +1411,6 @@ export default function CommunityPlaylistsPage() {
         }
 
 
-        @media (max-width: 1040px) {
-          .community-page {
-            grid-template-columns: 220px minmax(0, 1fr);
-          }
-        }
-
         @media (max-width: 760px) {
           .community-page,
           .community-page.is-player-visible {
@@ -1422,10 +1423,90 @@ export default function CommunityPlaylistsPage() {
 
       `}</style>
 
-      <main className={`community-page${playerVisible ? " is-player-visible" : ""}`}>
-        <aside className="community-sidebar" aria-label="Community playlist discovery">
+      <main
+        className={`community-page${sidebarOpen ? " is-sidebar-open" : ""}${playerVisible ? " is-player-visible" : ""}`}
+      >
+        <div
+          className={`community-searchbar-row${sidebarOpen ? " is-filters-open" : ""}`}
+        >
+          <button
+            type="button"
+            className="community-searchbar-filter-button"
+            aria-expanded={sidebarOpen}
+            onClick={() => setSidebarOpen((open) => !open)}
+          >
+            <span className="community-searchbar-filter-icon" aria-hidden="true">
+              <svg
+                className="community-searchbar-filter-open-icon"
+                viewBox="0 0 24 24"
+              >
+                <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+              </svg>
+              <XIcon
+                className="community-searchbar-filter-close-icon"
+                size={22}
+              />
+            </span>
+            <span>Filters</span>
+          </button>
+
+          <div className="community-searchbar-search">
+            <label className="audioflume-home-reference-searchbar-field">
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="m16 16 4.5 4.5" />
+              </svg>
+              <input
+                type="search"
+                value={query}
+                onChange={(event) => {
+                  setQuery(event.target.value);
+                  setSelectedCreatorId(null);
+                }}
+                placeholder="Search playlists or creators"
+                aria-label="Search community playlists"
+              />
+              {query.length > 0 ? (
+                <button
+                  type="button"
+                  className="audioflume-home-reference-searchbar-clear"
+                  onClick={clearCommunitySearch}
+                  aria-label="Clear community playlist search"
+                >
+                  <XIcon size={8} />
+                </button>
+              ) : null}
+            </label>
+          </div>
+
+          <div
+            className="community-tabs community-searchbar-tabs"
+            role="tablist"
+            aria-label="Community playlist sorting"
+          >
+            {COMMUNITY_TABS.map((tab) => (
+              <button
+                type="button"
+                role="tab"
+                key={tab}
+                className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
+                aria-selected={activeTab === tab}
+                onClick={() =>
+                  tab === "Featured" ? showFeaturedView() : setActiveTab(tab)
+                }
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <aside
+          className="community-sidebar"
+          aria-label="Community playlist discovery"
+          aria-hidden={!sidebarOpen}
+        >
           <section className="community-sidebar-section community-categories">
-            <p className="community-sidebar-heading">Community Playlists</p>
             <nav aria-label="Community playlist categories">
               <button
                 type="button"
@@ -1470,57 +1551,6 @@ export default function CommunityPlaylistsPage() {
         </aside>
 
         <section className="community-content">
-          <div className="community-feed-toolbar">
-            <div className="community-feed-search">
-              <label className="audioflume-home-reference-searchbar-field">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <circle cx="11" cy="11" r="6.5" />
-                  <path d="m16 16 4.5 4.5" />
-                </svg>
-                <input
-                  type="search"
-                  value={query}
-                  onChange={(event) => {
-                    setQuery(event.target.value);
-                    setSelectedCreatorId(null);
-                  }}
-                  placeholder="Search playlists or creators"
-                  aria-label="Search community playlists"
-                />
-                {query.length > 0 ? (
-                  <button
-                    type="button"
-                    className="audioflume-home-reference-searchbar-clear"
-                    onClick={clearCommunitySearch}
-                    aria-label="Clear community playlist search"
-                  >
-                    <XIcon size={8} />
-                  </button>
-                ) : null}
-              </label>
-            </div>
-
-            <div
-              className="community-tabs"
-              role="tablist"
-              aria-label="Community playlist sorting"
-            >
-              {COMMUNITY_TABS.map((tab) => (
-                <button
-                  type="button"
-                  role="tab"
-                  key={tab}
-                  className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
-                  aria-selected={activeTab === tab}
-                  onClick={() =>
-                    tab === "Featured" ? showFeaturedView() : setActiveTab(tab)
-                  }
-                >
-                  {tab}
-                </button>
-              ))}
-            </div>
-          </div>
 
           {recentPlaylists.length > 0 && (
             <section
