@@ -1,4 +1,4 @@
-export const CURATED_PLAYLIST_SHELF_KEYS = ["popular", "trending"] as const;
+export const CURATED_PLAYLIST_SHELF_KEYS = ["featured", "popular", "trending"] as const;
 
 export type CuratedPlaylistShelfKey =
   (typeof CURATED_PLAYLIST_SHELF_KEYS)[number];
@@ -14,6 +14,7 @@ export type CuratedPlaylistShelfState = Record<
 >;
 
 export const EMPTY_CURATED_PLAYLIST_SHELVES: CuratedPlaylistShelfState = {
+  featured: [],
   popular: [],
   trending: [],
 };
@@ -22,11 +23,13 @@ export const CURATED_PLAYLIST_SHELF_LABELS: Record<
   CuratedPlaylistShelfKey,
   string
 > = {
+  featured: "Featured Playlists",
   popular: "Popular Right Now",
   trending: "Trending Playlists",
 };
 
 export const CURATED_PLAYLIST_SPECIAL_GROUPS = [
+  "Featured Playlists",
   "Popular Right Now",
   "Newly Added",
   "Trending Playlists",
