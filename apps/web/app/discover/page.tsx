@@ -385,9 +385,7 @@ function ReadyToCutTracks({ songs }: { songs: Song[] }) {
   return (
     <section className="discover-track-section">
       <div className="discover-track-section-heading">
-        <SectionTitle className="discover-track-section-title">
-          Ready-to-cut tracks
-        </SectionTitle>
+        <SectionTitle variant="small">Ready-to-cut tracks</SectionTitle>
         <Link href="/music">Explore more tracks</Link>
       </div>
 
