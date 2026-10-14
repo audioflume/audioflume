@@ -608,7 +608,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 
 .playlists-page .playlist-gallery-content h3 {
   font-size: 13px !important;
-  letter-spacing: -0.035em !important;
+  letter-spacing: normal !important;
 }
 
 .playlists-page .playlist-gallery-content p {
