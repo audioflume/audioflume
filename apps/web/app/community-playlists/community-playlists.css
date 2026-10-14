@@ -401,12 +401,36 @@
 }
 
 
+.community-filtered-section {
+  margin-top: 38px;
+}
+
+.community-filtered-section-heading {
+  display: flex;
+  min-height: 28px;
+  align-items: baseline;
+  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
+  font-family: var(--filmwave-section-title-font-family);
+  line-height: var(--filmwave-section-title-line-height);
+}
+
+.community-filtered-section-heading h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
+}
+
 .community-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   column-gap: 38px;
   row-gap: 38px;
-  margin-top: 38px;
+  margin-top: 0;
 }
 
 .community-card {
