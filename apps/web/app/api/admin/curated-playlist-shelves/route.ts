@@ -22,7 +22,7 @@ function shelfError(err: unknown) {
       : "";
 
   if (message.toLowerCase().includes("curated_playlist_shelf_items")) {
-    return "Playlist shelves require the Supabase migration apps/web/supabase/migrations/20260815015320_create_curated_playlist_shelf_items.sql.";
+    return "Playlist shelves require the Supabase migrations through apps/web/supabase/migrations/20261013224000_add_curated_feature_shelf_artwork.sql.";
   }
 
   return message || "Failed to update playlist shelf";
