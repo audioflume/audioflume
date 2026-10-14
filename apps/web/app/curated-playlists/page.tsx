@@ -48,17 +48,30 @@ function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
 function CuratedPlaylistsLoadingSkeleton() {
   return (
     <div className="curated-page-skeleton" aria-hidden="true">
-      <div className="curated-page-skeleton-feature-card">
-        <div className="curated-page-skeleton-feature-copy">
-          <span className="curated-page-skeleton-feature-kicker" />
-          <span className="curated-page-skeleton-feature-title" />
-        </div>
-        <div className="curated-page-skeleton-feature-info">
-          <span className="curated-page-skeleton-feature-play" />
-          <div>
-            <span className="curated-page-skeleton-feature-track-title" />
-            <span className="curated-page-skeleton-feature-track-meta" />
+      <div className="curated-page-skeleton-feature-carousel">
+        <div className="curated-page-skeleton-feature-viewport">
+          <div className="curated-page-skeleton-feature-track">
+            {Array.from({ length: 3 }, (_, index) => (
+              <div
+                key={index}
+                className="curated-page-skeleton-feature-card"
+              >
+                <div className="curated-page-skeleton-feature-media">
+                  <span
+                    className={`curated-page-skeleton-feature-title is-${index}`}
+                  />
+                </div>
+                {index === 1 && (
+                  <>
+                    <span className="curated-page-skeleton-feature-bookmark" />
+                    <span className="curated-page-skeleton-feature-play" />
+                  </>
+                )}
+              </div>
+            ))}
           </div>
+          <span className="curated-page-skeleton-feature-arrow is-left" />
+          <span className="curated-page-skeleton-feature-arrow is-right" />
         </div>
       </div>
 
