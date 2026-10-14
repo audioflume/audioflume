@@ -3,8 +3,11 @@
 import Link from "next/link";
 import {
   type CSSProperties,
+  type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
   useEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -20,6 +23,8 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
+import { useSongs } from "@/hooks/useSongs";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import type { Song } from "@/lib/types";
 
 type ShelfItem = {
@@ -187,6 +192,42 @@ const EDITORIAL_FEATURES = [
 const MOCKUP_LOREM =
   "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.";
 
+const READY_TO_CUT_SONG_COUNT = 12;
+const FAST_TRACK_SONG_COUNT = 24;
+
+function formatDuration(seconds: number) {
+  if (!seconds || !Number.isFinite(seconds)) return "0:00";
+
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+
+  return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
+}
+
+function getTrackFallbackGradient(index: number) {
+  const gradients = [
+    "linear-gradient(135deg, #372f4f 0%, #111111 48%, #75649a 100%)",
+    "linear-gradient(135deg, #1f3d3a 0%, #111111 52%, #4d8c7b 100%)",
+    "linear-gradient(135deg, #4f3529 0%, #111111 50%, #b66c45 100%)",
+    "linear-gradient(135deg, #25364f 0%, #111111 52%, #6287c4 100%)",
+    "linear-gradient(135deg, #45233d 0%, #111111 52%, #b75d91 100%)",
+  ];
+
+  return gradients[index % gradients.length];
+}
+
+function stopTrackMouseEvent(event: MouseEvent<HTMLElement>) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.nativeEvent.stopImmediatePropagation();
+}
+
+function stopTrackKeyEvent(event: KeyboardEvent<HTMLElement>) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.nativeEvent.stopImmediatePropagation();
+}
+
 function PlayBadge({ isPlaying = false }: { isPlaying?: boolean }) {
   return (
     <span className="discover-artist-play-badge" aria-hidden="true">
@@ -240,6 +281,251 @@ function PlaceholderMedia({
       ) : null}
       {children}
     </div>
+  );
+}
+
+function ReadyToCutCoverImage({
+  song,
+  index,
+}: {
+  song: Song;
+  index: number;
+}) {
+  return (
+    <div
+      className="relative h-9 w-9 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
+      style={{
+        background: song.coverArt
+          ? undefined
+          : getTrackFallbackGradient(index),
+      }}
+    >
+      {song.coverArt ? (
+        <img
+          src={song.coverArt}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center text-[var(--text-muted)]">
+          <WaveformIcon size={20} />
+        </div>
+      )}
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+    </div>
+  );
+}
+
+function ReadyToCutSongCard({
+  song,
+  index,
+  queue,
+}: {
+  song: Song;
+  index: number;
+  queue: Song[];
+}) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const active = currentSong?.id === song.id;
+  const playing = active && isPlaying;
+
+  function playSong() {
+    if (!song.audioUrl) return;
+    setQueue(queue);
+    togglePlayPause(song);
+  }
+
+  return (
+    <article
+      role="button"
+      tabIndex={song.audioUrl ? 0 : -1}
+      onClick={(event) => {
+        stopTrackMouseEvent(event);
+        playSong();
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        stopTrackKeyEvent(event);
+        if (!event.repeat) playSong();
+      }}
+      onKeyUp={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        stopTrackKeyEvent(event);
+      }}
+      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
+      aria-label={`Play ${song.title} by ${song.artist}`}
+    >
+      <ReadyToCutCoverImage song={song} index={index} />
+
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
+          {song.title}
+        </h3>
+
+        <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
+          <span className="truncate">{song.artist}</span>
+          <span>•</span>
+          <span>{song.key || "—"}</span>
+          <span>•</span>
+          <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={(event) => {
+          stopTrackMouseEvent(event);
+          playSong();
+        }}
+        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(0,0,0,0.22)] transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
+        disabled={!song.audioUrl}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {playing ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+      </button>
+    </article>
+  );
+}
+
+function ReadyToCutTracks({ songs }: { songs: Song[] }) {
+  if (songs.length === 0) return null;
+
+  return (
+    <section className="discover-track-section">
+      <div className="discover-track-section-heading">
+        <SectionTitle>Ready-to-cut tracks</SectionTitle>
+        <Link href="/music">Explore more tracks</Link>
+      </div>
+
+      <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {songs.map((song, index) => (
+          <ReadyToCutSongCard
+            key={song.id}
+            song={song}
+            index={index + 30}
+            queue={songs}
+          />
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FastTrackPlayIcon({ song }: { song: Song }) {
+  const { currentSong, isPlaying } = usePlayer();
+  const active = currentSong?.id === song.id;
+  const playing = active && isPlaying;
+
+  return (
+    <span
+      className={`flex h-5 w-5 items-center justify-center rounded-full transition ${
+        active
+          ? "bg-white text-black opacity-100"
+          : "bg-transparent text-[var(--text-muted)] opacity-0 group-hover:bg-white group-hover:text-black group-hover:opacity-100"
+      }`}
+    >
+      {playing ? <PauseIcon size={9} /> : <PlayIconSmall size={9} />}
+    </span>
+  );
+}
+
+function FastTrackSongCard({
+  song,
+  index,
+  queue,
+}: {
+  song: Song;
+  index: number;
+  queue: Song[];
+}) {
+  const { currentSong, setQueue, togglePlayPause } = usePlayer();
+  const active = currentSong?.id === song.id;
+  const number = String(index + 1).padStart(2, "0");
+
+  function playSong() {
+    if (!song.audioUrl) return;
+    setQueue(queue);
+    togglePlayPause(song);
+  }
+
+  return (
+    <article
+      role="button"
+      tabIndex={song.audioUrl ? 0 : -1}
+      onClick={(event) => {
+        stopTrackMouseEvent(event);
+        playSong();
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        stopTrackKeyEvent(event);
+        if (!event.repeat) playSong();
+      }}
+      onKeyUp={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        stopTrackKeyEvent(event);
+      }}
+      className={`discover-fast-track-row group ${
+        active ? "is-active" : ""
+      }`}
+      aria-label={`Play ${song.title} by ${song.artist}`}
+    >
+      <span className="text-[9px] font-medium tabular-nums text-[var(--text-muted)] transition group-hover:text-[var(--text-secondary)]">
+        {number}
+      </span>
+
+      <div className="min-w-0">
+        <div className="flex min-w-0 items-center gap-2">
+          <h3 className="truncate text-[12px] font-medium leading-none text-[var(--text-primary)]">
+            {song.title}
+          </h3>
+          <span className="hidden shrink-0 text-[9px] text-[var(--text-muted)] sm:inline">
+            {song.key || "—"}
+          </span>
+        </div>
+
+        <div className="mt-1 truncate text-[9px] leading-none text-[var(--text-muted)]">
+          {song.artist}
+        </div>
+      </div>
+
+      <div className="flex items-center gap-2">
+        <span className="hidden text-[9px] tabular-nums text-[var(--text-muted)] sm:inline">
+          {song.bpm ? song.bpm : "—"}
+        </span>
+        <span className="text-[9px] tabular-nums text-[var(--text-muted)]">
+          {formatDuration(song.duration)}
+        </span>
+        <FastTrackPlayIcon song={song} />
+      </div>
+    </article>
+  );
+}
+
+function FastTracks({ songs }: { songs: Song[] }) {
+  if (songs.length === 0) return null;
+
+  return (
+    <section className="discover-track-section">
+      <div className="discover-track-section-heading">
+        <SectionTitle>Fast tracks</SectionTitle>
+        <Link href="/music">Browse all</Link>
+      </div>
+
+      <div className="discover-fast-tracks-panel">
+        {songs.map((song, index) => (
+          <FastTrackSongCard
+            key={song.id}
+            song={song}
+            index={index}
+            queue={songs}
+          />
+        ))}
+      </div>
+    </section>
   );
 }
 
@@ -395,6 +681,7 @@ function ArtistShelf({
 }
 
 export default function DiscoverPage() {
+  const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
   const [featureCardArtists, setFeatureCardArtists] = useState<
@@ -406,6 +693,15 @@ export default function DiscoverPage() {
   const searchBarRef = useRef<HTMLDivElement>(null);
   const featureCardShelfRef = useRef<HTMLDivElement>(null);
   const playerVisible = Boolean(currentSong);
+  const playableSongs = useMemo(
+    () => songs.filter((song) => Boolean(song.audioUrl)),
+    [songs],
+  );
+  const readyToCutSongs = playableSongs.slice(0, READY_TO_CUT_SONG_COUNT);
+  const fastTrackSongs = playableSongs.slice(
+    READY_TO_CUT_SONG_COUNT,
+    READY_TO_CUT_SONG_COUNT + FAST_TRACK_SONG_COUNT,
+  );
   const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
   const featuredArtistCount = featuredArtists.length;
   const featuredArtistGenres = activeFeaturedArtist
@@ -825,6 +1121,8 @@ export default function DiscoverPage() {
           footerCopy="1500+ artists trending online"
         />
 
+        <ReadyToCutTracks songs={readyToCutSongs} />
+
         <section className="discover-artist-editorial-grid">
           {EDITORIAL_FEATURES.map((feature, index) => (
             <article key={feature.eyebrow} className="discover-artist-editorial-card">
@@ -855,6 +1153,8 @@ export default function DiscoverPage() {
           items={SUPPORT_NEW_ARTISTS}
           footerCopy="1500+ artists trending online"
         />
+
+        <FastTracks songs={fastTrackSongs} />
 
         <div
           className="discover-artist-footer"
