@@ -834,10 +834,6 @@
   white-space: nowrap;
 }
 
-.community-contributor-shelf .community-shelf-heading-row {
-  margin-bottom: 24px;
-}
-
 .community-contributor-row {
   box-sizing: border-box;
   display: grid;
