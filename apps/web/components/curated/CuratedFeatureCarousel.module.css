@@ -37,7 +37,7 @@
 .media {
   position: relative;
   width: 100%;
-  aspect-ratio: 2 / 1;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--filmwave-neutral-surface, var(--bg-secondary));
 }
