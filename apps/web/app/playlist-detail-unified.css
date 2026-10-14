@@ -264,6 +264,20 @@
   text-transform: uppercase;
 }
 
+.playlist-detail-kicker-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.playlist-detail-kicker-icon {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+}
+
+
 .playlist-detail-title {
   margin: 0;
   color: var(--text-primary);
