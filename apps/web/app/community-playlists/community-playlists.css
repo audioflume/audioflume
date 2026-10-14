@@ -637,8 +637,10 @@
 }
 
 .community-jump-back .recent-playlist-card .recent-playlist-card-copy > strong {
-  font-size: 14px;
+  font-family: var(--font-aktiv-grotesk);
+  font-size: 13px;
   font-weight: 500;
+  letter-spacing: normal;
   line-height: 1.1;
 }
 
