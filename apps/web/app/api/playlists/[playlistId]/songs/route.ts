@@ -248,10 +248,35 @@ export async function POST(req: Request, context: RouteContext) {
     const { playlistId } = await context.params;
     const body = await req.json();
 
+    const requestedSongs = Array.isArray(body.songs)
+      ? body.songs
+          .map((item: unknown, index: number) => {
+            if (!item || typeof item !== "object") return null;
+            const songId = (item as { song_id?: unknown }).song_id;
+            if (typeof songId !== "string" || !songId.trim()) return null;
+
+            const requestedPosition = Number(
+              (item as { position?: unknown }).position,
+            );
+
+            return {
+              song_id: decodeURIComponent(songId),
+              position: Number.isFinite(requestedPosition)
+                ? requestedPosition
+                : index,
+            };
+          })
+          .filter(
+            (
+              item: { song_id: string; position: number } | null,
+            ): item is { song_id: string; position: number } => Boolean(item),
+          )
+      : null;
+
     const songId =
       typeof body.song_id === "string" ? decodeURIComponent(body.song_id) : "";
 
-    if (!songId) {
+    if ((!requestedSongs || requestedSongs.length === 0) && !songId) {
       return NextResponse.json({ error: "Missing song_id" }, { status: 400 });
     }
 
@@ -259,6 +284,74 @@ export async function POST(req: Request, context: RouteContext) {
 
     if (!isOwner) {
       return NextResponse.json({ error: "Playlist not found" }, { status: 404 });
+    }
+
+    if (requestedSongs && requestedSongs.length > 0) {
+      const uniqueSongs = [
+        ...new Map(
+          requestedSongs.map((item) => [item.song_id, item]),
+        ).values(),
+      ];
+      const requestedSongIds = uniqueSongs.map((item) => item.song_id);
+
+      const { data: existingSongs, error: existingSongsError } =
+        await supabaseServer
+          .from("songs")
+          .select("id")
+          .filter(
+            "id",
+            "in",
+            `(${requestedSongIds.map((id) => `"${id}"`).join(",")})`,
+          );
+
+      if (existingSongsError) throw existingSongsError;
+
+      const existingSongIds = new Set(
+        (existingSongs ?? []).map((song) => String(song.id)),
+      );
+      const validSongs = uniqueSongs.filter((item) =>
+        existingSongIds.has(item.song_id),
+      );
+
+      if (validSongs.length !== uniqueSongs.length) {
+        return NextResponse.json(
+          { error: "One or more songs were not found" },
+          { status: 404 },
+        );
+      }
+
+      const { data: alreadyAdded, error: alreadyAddedError } =
+        await supabaseServer
+          .from("playlist_songs")
+          .select("song_id")
+          .eq("playlist_id", playlistId)
+          .in("song_id", requestedSongIds);
+
+      if (alreadyAddedError) throw alreadyAddedError;
+
+      const alreadyAddedIds = new Set(
+        (alreadyAdded ?? []).map((item) => String(item.song_id)),
+      );
+      const rowsToInsert = validSongs
+        .filter((item) => !alreadyAddedIds.has(item.song_id))
+        .map((item) => ({
+          playlist_id: Number(playlistId),
+          song_id: item.song_id,
+          position: item.position,
+        }));
+
+      if (rowsToInsert.length === 0) {
+        return NextResponse.json([]);
+      }
+
+      const { data, error } = await supabaseServer
+        .from("playlist_songs")
+        .insert(rowsToInsert)
+        .select();
+
+      if (error) throw error;
+
+      return NextResponse.json(data ?? []);
     }
 
     const songExists = await verifySongExists(songId);
