@@ -82,27 +82,27 @@ export default function CuratedPlaylistBookmarkButton({
         return;
       }
 
-      const songsRes = await fetch(
-        `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/songs`,
-      );
-      const songs = await songsRes.json().catch(() => null);
-
-      if (!songsRes.ok || !Array.isArray(songs)) {
-        throw new Error(songs?.error || "Failed to load playlist songs");
-      }
-
-      const createRes = await fetch("/api/playlists", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: playlist.name,
-          cover_image_url: playlist.cover_image_url ?? null,
-          position: 0,
-          source_type: "curated",
-          source_playlist_id: playlist.id,
+      const [songsRes, createRes] = await Promise.all([
+        fetch(
+          `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/songs`,
+        ),
+        fetch("/api/playlists", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            name: playlist.name,
+            cover_image_url: playlist.cover_image_url ?? null,
+            position: 0,
+            source_type: "curated",
+            source_playlist_id: playlist.id,
+          }),
         }),
-      });
-      const newPlaylist = await createRes.json().catch(() => null);
+      ]);
+
+      const [songs, newPlaylist] = await Promise.all([
+        songsRes.json().catch(() => null),
+        createRes.json().catch(() => null),
+      ]);
 
       if (createRes.status === 409) {
         await refetchPlaylists();
@@ -114,19 +114,32 @@ export default function CuratedPlaylistBookmarkButton({
         throw new Error(newPlaylist?.error || "Failed to create playlist");
       }
 
-      for (let index = 0; index < songs.length; index += 1) {
-        const song = songs[index];
-        const songId = song.song_id ?? song.id;
-        if (!songId) continue;
+      if (!songsRes.ok || !Array.isArray(songs)) {
+        throw new Error(songs?.error || "Failed to load playlist songs");
+      }
 
-        try {
-          await fetch(`/api/playlists/${newPlaylist.id}/songs`, {
+      const playlistSongs = songs
+        .map((song, index) => ({
+          song_id: song.song_id ?? song.id,
+          position: index,
+        }))
+        .filter((song) => Boolean(song.song_id));
+
+      if (playlistSongs.length > 0) {
+        const songsSaveRes = await fetch(
+          `/api/playlists/${newPlaylist.id}/songs`,
+          {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ song_id: songId, position: index }),
-          });
-        } catch (error) {
-          console.warn(`Error adding song ${songId}:`, error);
+            body: JSON.stringify({ songs: playlistSongs }),
+          },
+        );
+        const songsSaveData = await songsSaveRes.json().catch(() => null);
+
+        if (!songsSaveRes.ok) {
+          throw new Error(
+            songsSaveData?.error || "Failed to add playlist songs",
+          );
         }
       }
 
