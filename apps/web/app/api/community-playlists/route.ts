@@ -137,6 +137,7 @@ export async function GET() {
           return [
             userId,
             {
+              id: userId,
               name: getDisplayName(user),
               imageUrl: user.imageUrl ?? null,
             },
@@ -144,7 +145,7 @@ export async function GET() {
         } catch {
           return [
             userId,
-            { name: "Audioflume member", imageUrl: null },
+            { id: userId, name: "Audioflume member", imageUrl: null },
           ] as const;
         }
       }),
@@ -171,6 +172,7 @@ export async function GET() {
           like_count: likeCounts.get(playlist.id) ?? 0,
           seven_day_like_count: sevenDayLikeCounts.get(playlist.id) ?? 0,
           creator: usersById.get(playlist.clerk_user_id) ?? {
+            id: playlist.clerk_user_id,
             name: "Audioflume member",
             imageUrl: null,
           },
