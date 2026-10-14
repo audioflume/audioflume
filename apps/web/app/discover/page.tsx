@@ -397,7 +397,7 @@ function ReadyToCutSongCard({
           stopTrackMouseEvent(event);
           playSong();
         }}
-        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black shadow-[0_8px_24px_rgba(0,0,0,0.22)] transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
+        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
@@ -715,7 +715,6 @@ export default function DiscoverPage() {
     [songs],
   );
   const readyToCutSongs = playableSongs.slice(0, READY_TO_CUT_SONG_COUNT);
-  const fastTrackSongs = getFastTrackSongs(playableSongs);
   const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
   const featuredArtistCount = featuredArtists.length;
   const featuredArtistGenres = activeFeaturedArtist
@@ -1167,8 +1166,6 @@ export default function DiscoverPage() {
           items={SUPPORT_NEW_ARTISTS}
           footerCopy="1500+ artists trending online"
         />
-
-        <FastTracks songs={fastTrackSongs} />
 
         <div
           className="discover-artist-footer"
