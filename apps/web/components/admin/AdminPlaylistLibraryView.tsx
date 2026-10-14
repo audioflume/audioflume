@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 import {
   DndContext,
@@ -13,7 +15,10 @@ import {
   SortableContext,
   arrayMove,
   rectSortingStrategy,
+  useSortable,
 } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
+import AdminImageUpload from "@/components/admin/AdminImageUpload";
 import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelfPickerModal";
 import {
   PLAYLIST_MANAGER_GRID_CLASS,
@@ -24,6 +29,7 @@ import {
   sortPlaylistNewestFirst,
 } from "@/components/admin/AdminPlaylistManagerShared";
 import { BackendButton } from "@/components/backend/BackendControls";
+import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import Toast from "@/components/Toast";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -43,9 +49,107 @@ type ShelfIds = Record<CuratedPlaylistShelfKey, number[]>;
 type CollapsiblePlaylistSection = CuratedPlaylistShelfKey | "newlyAdded";
 
 const EMPTY_SHELF_IDS: ShelfIds = {
+  featured: [],
   popular: [],
   trending: [],
 };
+
+function FeaturedPlaylistSortableCard({
+  playlist,
+  featureCoverUrl,
+  onFeatureCoverChange,
+  onRemove,
+}: {
+  playlist: CuratedPlaylist;
+  featureCoverUrl: string;
+  onFeatureCoverChange: (url: string) => void;
+  onRemove: () => void;
+}) {
+  const {
+    attributes,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+    isDragging,
+  } = useSortable({ id: playlist.id });
+  const displayCover = featureCoverUrl || playlist.cover_image_url || "";
+
+  return (
+    <article
+      ref={setNodeRef}
+      style={{
+        transform: CSS.Transform.toString(transform),
+        transition,
+        opacity: isDragging ? 0.45 : 1,
+        zIndex: isDragging ? 2 : "auto",
+      }}
+      className="group relative min-w-0"
+    >
+      <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
+        <Link
+          href={`/admin/playlist-manager/${playlist.id}/edit`}
+          className="absolute inset-0 block"
+        >
+          {displayCover ? (
+            <Image
+              src={displayCover}
+              alt={playlist.name}
+              fill
+              sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
+              className="object-cover"
+              unoptimized
+            />
+          ) : null}
+        </Link>
+
+        <BackendDragHandle
+          variant="overlay"
+          className="absolute left-2 top-2 z-10 opacity-0 group-hover:opacity-100"
+          aria-label={`Drag ${playlist.name} to reorder`}
+          {...attributes}
+          {...listeners}
+        />
+
+        <button
+          type="button"
+          onClick={onRemove}
+          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_90%,var(--danger)_10%)] hover:text-[var(--danger)] group-hover:opacity-100"
+          aria-label={`Remove ${playlist.name} from featured playlists`}
+          title="Remove from featured playlists"
+        >
+          ×
+        </button>
+      </div>
+
+      <Link
+        href={`/admin/playlist-manager/${playlist.id}/edit`}
+        className="mt-2.5 block min-w-0"
+      >
+        <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+          {playlist.name}
+        </h4>
+        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
+          {featureCoverUrl ? "Custom feature artwork" : "Using playlist cover"}
+        </p>
+      </Link>
+
+      <div className="mt-3">
+        <AdminImageUpload
+          currentUrl={featureCoverUrl}
+          onUploaded={onFeatureCoverChange}
+          target="playlist"
+          slug={`${playlist.name}-feature`}
+          variant="hero"
+          allowRemove
+          showUrlInput={false}
+          title="Feature artwork"
+          dropDescription="Optional artwork used only in the Curated feature carousel."
+        />
+      </div>
+    </article>
+  );
+}
 
 export default function AdminPlaylistLibraryView({
   playlists,
@@ -60,9 +164,13 @@ export default function AdminPlaylistLibraryView({
   const [addingShelf, setAddingShelf] =
     useState<CuratedPlaylistShelfKey | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+  const [featureCoverOverrides, setFeatureCoverOverrides] = useState<
+    Record<number, string>
+  >({});
   const [collapsedSections, setCollapsedSections] = useState<
     Record<CollapsiblePlaylistSection, boolean>
   >({
+    featured: false,
     popular: false,
     newlyAdded: false,
     trending: false,
@@ -88,6 +196,9 @@ export default function AdminPlaylistLibraryView({
         if (cancelled) return;
 
         setShelfIds({
+          featured: Array.isArray(data.featured)
+            ? data.featured.map((item) => Number(item.playlist_id))
+            : [],
           popular: Array.isArray(data.popular)
             ? data.popular.map((item) => Number(item.playlist_id))
             : [],
@@ -131,6 +242,9 @@ export default function AdminPlaylistLibraryView({
 
   const shelfPlaylists = useMemo(
     () => ({
+      featured: shelfIds.featured
+        .map((id) => playlistById.get(id))
+        .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
       popular: shelfIds.popular
         .map((id) => playlistById.get(id))
         .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist)),
@@ -140,6 +254,34 @@ export default function AdminPlaylistLibraryView({
     }),
     [playlistById, shelfIds],
   );
+
+  async function saveFeatureCover(playlistId: number, url: string) {
+    try {
+      const res = await fetch(
+        `/api/admin/curated-playlists/${playlistId}/feature-cover`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ feature_cover_image_url: url }),
+        },
+      );
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data?.error || "Failed to save feature artwork");
+      }
+
+      setFeatureCoverOverrides((current) => ({
+        ...current,
+        [playlistId]: url,
+      }));
+      setToastMessage(url ? "Feature artwork updated" : "Feature artwork removed");
+    } catch (err) {
+      setToastMessage(
+        err instanceof Error ? err.message : "Failed to save feature artwork",
+      );
+    }
+  }
 
   function toggleSection(section: CollapsiblePlaylistSection) {
     setCollapsedSections((current) => ({
@@ -279,11 +421,11 @@ export default function AdminPlaylistLibraryView({
       )}
 
       <div className="grid gap-3">
-        {(["popular", "trending"] as CuratedPlaylistShelfKey[]).map(
+        {(["featured", "popular", "trending"] as CuratedPlaylistShelfKey[]).map(
           (shelfKey, shelfIndex) => {
             const title = CURATED_PLAYLIST_SHELF_LABELS[shelfKey];
             const items = shelfPlaylists[shelfKey];
-            const renderNewlyAddedAfterTrending = shelfIndex === 1;
+            const renderNewlyAddedAfterTrending = shelfIndex === 2;
             const shelfCollapsed = collapsedSections[shelfKey];
 
             return (
@@ -327,23 +469,46 @@ export default function AdminPlaylistLibraryView({
                         strategy={rectSortingStrategy}
                       >
                         <div className={PLAYLIST_MANAGER_GRID_CLASS}>
-                          {items.map((playlist) => (
-                            <PlaylistManagerSortableCard
-                              key={playlist.id}
-                              playlist={playlist}
-                              editHref={`/admin/playlist-manager/${playlist.id}/edit`}
-                              meta={`${playlist.song_count || 0} songs`}
-                              removeAriaLabel={`Remove ${playlist.name} from shelf`}
-                              removeTitle="Remove from shelf"
-                              onRemove={() => {
-                                const confirmed = window.confirm(
-                                  `Remove "${playlist.name}" from ${title}?`,
-                                );
-                                if (!confirmed) return;
-                                void removeFromShelf(shelfKey, playlist.id);
-                              }}
-                            />
-                          ))}
+                          {items.map((playlist) => {
+                            const removePlaylist = () => {
+                              const confirmed = window.confirm(
+                                `Remove "${playlist.name}" from ${title}?`,
+                              );
+                              if (!confirmed) return;
+                              void removeFromShelf(shelfKey, playlist.id);
+                            };
+
+                            if (shelfKey === "featured") {
+                              const featureCoverUrl =
+                                featureCoverOverrides[playlist.id] ??
+                                playlist.feature_cover_image_url ??
+                                "";
+
+                              return (
+                                <FeaturedPlaylistSortableCard
+                                  key={playlist.id}
+                                  playlist={playlist}
+                                  featureCoverUrl={featureCoverUrl}
+                                  onFeatureCoverChange={(url) =>
+                                    void saveFeatureCover(playlist.id, url)
+                                  }
+                                  onRemove={removePlaylist}
+                                />
+                              );
+                            }
+
+                            return (
+                              <PlaylistManagerSortableCard
+                                key={playlist.id}
+                                playlist={playlist}
+                                editHref={`/admin/playlist-manager/${playlist.id}/edit`}
+                                meta={`${playlist.song_count || 0} songs`}
+                                removeAriaLabel={`Remove ${playlist.name} from shelf`}
+                                removeTitle="Remove from shelf"
+                                onRemove={removePlaylist}
+                              />
+                            );
+                          })}
                         </div>
                       </SortableContext>
                     </DndContext>
