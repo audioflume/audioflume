@@ -81,6 +81,36 @@
   white-space: nowrap;
 }
 
+.bookmarkButton {
+  z-index: 5;
+  align-self: start;
+  justify-self: end;
+  grid-column: 1;
+  grid-row: 1;
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  margin: 16px 16px 0 0;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #ffffff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.bookmarkButton:disabled {
+  cursor: default;
+}
+
+.card:hover .bookmarkButton,
+.card:focus-within .bookmarkButton {
+  opacity: 1;
+}
+
 .playButton {
   z-index: 5;
   align-self: end;
