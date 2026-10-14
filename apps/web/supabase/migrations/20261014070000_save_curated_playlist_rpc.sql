@@ -3,19 +3,7 @@ create or replace function public.save_curated_playlist_to_user(
   p_clerk_user_id text,
   p_curated_playlist_id bigint
 )
-returns table (
-  id bigint,
-  clerk_user_id text,
-  name text,
-  cover_image_url text,
-  position integer,
-  is_public boolean,
-  published_at timestamptz,
-  primary_category text,
-  secondary_categories text[],
-  source_type text,
-  source_playlist_id bigint
-)
+returns setof public.playlists
 language plpgsql
 security definer
 set search_path = public
@@ -44,19 +32,7 @@ begin
   limit 1;
 
   if found then
-    return query
-    select
-      v_saved.id,
-      v_saved.clerk_user_id,
-      v_saved.name,
-      v_saved.cover_image_url,
-      v_saved.position,
-      v_saved.is_public,
-      v_saved.published_at,
-      v_saved.primary_category,
-      v_saved.secondary_categories,
-      v_saved.source_type,
-      v_saved.source_playlist_id;
+    return next v_saved;
     return;
   end if;
 
@@ -97,19 +73,7 @@ begin
   where curated_playlist_songs.curated_playlist_id = p_curated_playlist_id
   order by curated_playlist_songs.position asc;
 
-  return query
-  select
-    v_saved.id,
-    v_saved.clerk_user_id,
-    v_saved.name,
-    v_saved.cover_image_url,
-    v_saved.position,
-    v_saved.is_public,
-    v_saved.published_at,
-    v_saved.primary_category,
-    v_saved.secondary_categories,
-    v_saved.source_type,
-    v_saved.source_playlist_id;
+  return next v_saved;
 end;
 $$;
 
