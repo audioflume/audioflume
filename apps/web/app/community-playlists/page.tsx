@@ -682,11 +682,6 @@ export default function CommunityPlaylistsPage() {
     return "No public playlists yet.";
   }
 
-  const gridHeading =
-    selectedCategory === "All"
-      ? "All Playlists"
-      : `${selectedCategory} Playlists`;
-
   return (
     <>
       <style>{`
@@ -1133,12 +1128,6 @@ export default function CommunityPlaylistsPage() {
                 }))}
               />
             </section>
-          )}
-
-          {!loading && filteredPlaylists.length > 0 && (
-            <div className="community-grid-heading">
-              <span>{gridHeading}</span>
-            </div>
           )}
 
           <div className="community-grid" id="community-grid">
