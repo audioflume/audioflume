@@ -69,6 +69,132 @@ function FilterRailChevron() {
   );
 }
 
+function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
+  const commonProps = {
+    viewBox: "0 0 20 20",
+    width: 15,
+    height: 15,
+    fill: "none",
+    "aria-hidden": true,
+  } as const;
+
+  const strokeProps = {
+    stroke: "currentColor",
+    strokeWidth: 1.45,
+    strokeLinecap: "round" as const,
+    strokeLinejoin: "round" as const,
+  };
+
+  switch (category) {
+    case "All":
+      return (
+        <svg {...commonProps}>
+          <rect x="3" y="3" width="5" height="5" {...strokeProps} />
+          <rect x="12" y="3" width="5" height="5" {...strokeProps} />
+          <rect x="3" y="12" width="5" height="5" {...strokeProps} />
+          <rect x="12" y="12" width="5" height="5" {...strokeProps} />
+        </svg>
+      );
+    case "Documentary":
+      return (
+        <svg {...commonProps}>
+          <path d="M5 2.75h6l4 4v10.5H5Z" {...strokeProps} />
+          <path d="M11 2.75v4h4M7.5 10h5M7.5 13h5" {...strokeProps} />
+        </svg>
+      );
+    case "Travel":
+      return (
+        <svg {...commonProps}>
+          <circle cx="10" cy="10" r="7" {...strokeProps} />
+          <path d="m12.8 7.2-1.9 3.7-3.7 1.9 1.9-3.7Z" {...strokeProps} />
+        </svg>
+      );
+    case "Ambient":
+      return (
+        <svg {...commonProps}>
+          <path d="M3 8.2c2-2 4-2 6 0s4 2 8 0M3 11.8c2-2 4-2 6 0s4 2 8 0" {...strokeProps} />
+        </svg>
+      );
+    case "Cinematic":
+      return (
+        <svg {...commonProps}>
+          <path d="M3 6.5h14v10H3Z" {...strokeProps} />
+          <path d="m4 3.5 2.2 3M8 3.5l2.2 3M12 3.5l2.2 3M16 3.5l1 1.4" {...strokeProps} />
+        </svg>
+      );
+    case "Urban":
+      return (
+        <svg {...commonProps}>
+          <path d="M3 17V8h5v9M8 17V4h5v13M13 17v-6h4v6" {...strokeProps} />
+          <path d="M5 11h1M10 7h1M10 10h1M15 14h1" {...strokeProps} />
+        </svg>
+      );
+    case "Commercial":
+      return (
+        <svg {...commonProps}>
+          <path d="M3 9v3l9 3V6L3 9Z" {...strokeProps} />
+          <path d="M12 8.2c1.4.5 2.2 1.4 2.2 2.3s-.8 1.8-2.2 2.3M5 12.7l1 3.3h2" {...strokeProps} />
+        </svg>
+      );
+    case "Background":
+      return (
+        <svg {...commonProps}>
+          <path d="m10 3 7 4-7 4-7-4 7-4Z" {...strokeProps} />
+          <path d="m4.5 10 5.5 3 5.5-3M4.5 13.5l5.5 3 5.5-3" {...strokeProps} />
+        </svg>
+      );
+    case "Electronic":
+      return (
+        <svg {...commonProps}>
+          <path d="M3 10h2l1.5-4 2.5 8 2-6 1.5 4H17" {...strokeProps} />
+        </svg>
+      );
+    case "Acoustic":
+      return (
+        <svg {...commonProps}>
+          <path d="M11.8 3.5c-1.7 1.4-2 3-.9 4.2l-4.8 4.8c-1.5-.5-3 .2-3.5 1.5-.6 1.5.5 3 2.1 3.3 1.5.3 2.9-.6 3.2-2l4.8-4.8c1.2 1.1 2.8.8 4.2-.9" {...strokeProps} />
+          <circle cx="6.2" cy="13.8" r="1.2" {...strokeProps} />
+        </svg>
+      );
+    case "Hip-Hop":
+      return (
+        <svg {...commonProps}>
+          <rect x="7" y="3" width="6" height="9" rx="3" {...strokeProps} />
+          <path d="M5 9.5a5 5 0 0 0 10 0M10 14.5V17M7.5 17h5" {...strokeProps} />
+        </svg>
+      );
+    case "Sports":
+      return (
+        <svg {...commonProps}>
+          <path d="M6 3h8v3.5c0 3-1.6 5.2-4 5.2S6 9.5 6 6.5V3Z" {...strokeProps} />
+          <path d="M6 5H3.5c0 2.6 1.2 4 3.2 4M14 5h2.5c0 2.6-1.2 4-3.2 4M10 11.7V15M7 17h6" {...strokeProps} />
+        </svg>
+      );
+    case "Emotional":
+      return (
+        <svg {...commonProps}>
+          <path d="M10 16.5 4.7 11.4C2.8 9.6 3 6.6 5 5.2c1.7-1.2 3.9-.6 5 1 1.1-1.6 3.3-2.2 5-1 2 1.4 2.2 4.4.3 6.2Z" {...strokeProps} />
+        </svg>
+      );
+    case "Tension":
+      return (
+        <svg {...commonProps}>
+          <path d="M10 3 17 16H3Z" {...strokeProps} />
+          <path d="M10 7v4.5M10 14h.01" {...strokeProps} />
+        </svg>
+      );
+    case "Uplifting":
+      return (
+        <svg {...commonProps}>
+          <circle cx="10" cy="10" r="3.2" {...strokeProps} />
+          <path d="M10 2.5V5M10 15v2.5M2.5 10H5M15 10h2.5M4.7 4.7l1.8 1.8M13.5 13.5l1.8 1.8M15.3 4.7l-1.8 1.8M6.5 13.5l-1.8 1.8" {...strokeProps} />
+        </svg>
+      );
+    default:
+      return null;
+  }
+}
+
 function BookmarkGlyph({ filled }: { filled: boolean }) {
   return (
     <svg
@@ -905,6 +1031,9 @@ export default function CommunityPlaylistsPage() {
                 aria-pressed={selectedCategory === "All"}
                 onClick={() => setSelectedCategory("All")}
               >
+                <span className="community-category-icon" aria-hidden="true">
+                  <CommunityCategoryIcon category="All" />
+                </span>
                 <span className="fw-filter-rail-label">All</span>
                 <span className="community-category-count">{playlists.length}</span>
                 <span className="community-filter-rail-chevron" aria-hidden="true">
@@ -919,6 +1048,9 @@ export default function CommunityPlaylistsPage() {
                   aria-pressed={selectedCategory === category}
                   onClick={() => setSelectedCategory(category)}
                 >
+                  <span className="community-category-icon" aria-hidden="true">
+                    <CommunityCategoryIcon category={category} />
+                  </span>
                   <span className="fw-filter-rail-label">{category}</span>
                   <span className="community-category-count">
                     {categoryCounts.get(category) ?? 0}
