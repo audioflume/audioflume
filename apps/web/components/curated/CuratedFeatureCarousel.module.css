@@ -52,6 +52,20 @@
   transform: scale(1.015);
 }
 
+.title {
+  position: absolute;
+  right: 24px;
+  bottom: 22px;
+  left: 24px;
+  z-index: 2;
+  color: #ffffff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(20px, 2vw, 30px);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1;
+}
+
 .arrow {
   position: absolute;
   top: 50%;
@@ -113,5 +127,11 @@
   .scroller {
     --curated-feature-carousel-card-width: 82vw;
     gap: 10px;
+  }
+
+  .title {
+    right: 16px;
+    bottom: 16px;
+    left: 16px;
   }
 }
