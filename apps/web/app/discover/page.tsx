@@ -204,6 +204,23 @@ function formatDuration(seconds: number) {
   return `${minutes}:${remainingSeconds.toString().padStart(2, "0")}`;
 }
 
+function getFastTrackSongs(playableSongs: Song[]) {
+  if (playableSongs.length === 0) return [];
+
+  const nextBatch = playableSongs.slice(
+    READY_TO_CUT_SONG_COUNT,
+    READY_TO_CUT_SONG_COUNT + FAST_TRACK_SONG_COUNT,
+  );
+
+  if (nextBatch.length >= FAST_TRACK_SONG_COUNT) return nextBatch;
+
+  const fallbackBatch = playableSongs
+    .filter((song) => !nextBatch.some((nextSong) => nextSong.id === song.id))
+    .slice(0, FAST_TRACK_SONG_COUNT - nextBatch.length);
+
+  return [...nextBatch, ...fallbackBatch].slice(0, FAST_TRACK_SONG_COUNT);
+}
+
 function getTrackFallbackGradient(index: number) {
   const gradients = [
     "linear-gradient(135deg, #372f4f 0%, #111111 48%, #75649a 100%)",
@@ -698,10 +715,7 @@ export default function DiscoverPage() {
     [songs],
   );
   const readyToCutSongs = playableSongs.slice(0, READY_TO_CUT_SONG_COUNT);
-  const fastTrackSongs = playableSongs.slice(
-    READY_TO_CUT_SONG_COUNT,
-    READY_TO_CUT_SONG_COUNT + FAST_TRACK_SONG_COUNT,
-  );
+  const fastTrackSongs = getFastTrackSongs(playableSongs);
   const activeFeaturedArtist = featuredArtists[activeFeaturedIndex] ?? null;
   const featuredArtistCount = featuredArtists.length;
   const featuredArtistGenres = activeFeaturedArtist
