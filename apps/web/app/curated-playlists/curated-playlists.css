@@ -767,41 +767,6 @@ body:has(.curated-playlists-page-root)
   margin-left: calc(0px - var(--curated-page-gutter)) !important;
 }
 
-.curated-page-filter-row {
-  scroll-margin-top: calc(var(--filmwave-header-height, 75px) * 2);
-}
-
-.curated-page-continuation {
-  width: min(100%, var(--filmwave-editorial-max-width));
-  margin: 75px auto 0;
-  border-top: 1px solid var(--border);
-  padding-top: 24px;
-}
-
-.curated-page-continuation button {
-  display: flex;
-  width: 100%;
-  align-items: center;
-  justify-content: space-between;
-  gap: 24px;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 18px;
-  font-weight: 300;
-  line-height: 1.15;
-  text-align: left;
-  cursor: pointer;
-}
-
-.curated-page-continuation button:hover,
-.curated-page-continuation button:focus-visible {
-  color: var(--text-secondary);
-  outline: none;
-}
-
 @media (max-width: 1280px) {
   .curated-playlist-card-shell,
   .curated-playlist-skeleton-card-shell {
