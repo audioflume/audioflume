@@ -47,6 +47,18 @@ function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
 function CuratedPlaylistsLoadingSkeleton() {
   return (
     <div className="curated-page-skeleton" aria-hidden="true">
+      <div className="curated-page-skeleton-feature-viewport">
+        <div className="curated-page-skeleton-feature-track">
+          {Array.from({ length: 3 }, (_, index) => (
+            <div key={index} className="curated-page-skeleton-feature-card">
+              <span
+                className={`curated-page-skeleton-feature-title is-${index}`}
+              />
+            </div>
+          ))}
+        </div>
+      </div>
+
       <div className="curated-page-skeleton-filters">
         {Array.from({ length: 8 }, (_, index) => (
           <div
