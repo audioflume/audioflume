@@ -82,8 +82,7 @@
 }
 
 .card:hover .bookmarkButton,
-.card:focus-within .bookmarkButton,
-.bookmarkButton[aria-pressed="true"] {
+.card:focus-within .bookmarkButton {
   opacity: 1;
 }
 
