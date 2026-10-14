@@ -952,8 +952,8 @@
   box-sizing: border-box;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 160px;
-  gap: 36px;
+  grid-auto-columns: 15.5%;
+  gap: 12px;
   overflow-x: auto;
   overflow-y: hidden;
   overscroll-behavior-x: contain;
@@ -1015,21 +1015,23 @@
 
 .community-contributor-name {
   width: 100%;
-  margin-top: 9px;
+  margin-top: 12px;
   overflow: hidden;
   color: var(--text-primary);
-  font-size: 12px;
+  font-family: var(--font-aktiv-grotesk);
+  font-size: 13px;
   font-weight: 500;
-  line-height: 1.15;
+  letter-spacing: normal;
+  line-height: 1.1;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .community-contributor-count {
   width: 100%;
-  margin-top: 3px;
+  margin-top: 7px;
   color: var(--text-muted);
-  font-size: 10.5px;
+  font-size: 11px;
   font-weight: 400;
   line-height: 1;
   text-align: left;
@@ -1123,8 +1125,8 @@
 .community-skeleton-contributors {
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 160px;
-  gap: 36px;
+  grid-auto-columns: 15.5%;
+  gap: 12px;
 }
 
 .community-skeleton-contributor {
@@ -1140,15 +1142,15 @@
 }
 
 .community-skeleton-contributor i {
-  width: 86px;
-  height: 8px;
-  margin-top: 9px;
+  width: 64%;
+  height: 9px;
+  margin-top: 12px;
 }
 
 .community-skeleton-contributor b {
-  width: 52px;
-  height: 6px;
-  margin-top: 3px;
+  width: 44%;
+  height: 7px;
+  margin-top: 7px;
 }
 
 @keyframes community-skeleton-pulse {
@@ -1174,7 +1176,9 @@
   }
 
   .community-shelf-row,
-  .community-skeleton-row {
+  .community-contributor-row,
+  .community-skeleton-row,
+  .community-skeleton-contributors {
     grid-auto-columns: 26%;
   }
 }
@@ -1194,7 +1198,9 @@
   }
 
   .community-shelf-row,
-  .community-skeleton-row {
+  .community-contributor-row,
+  .community-skeleton-row,
+  .community-skeleton-contributors {
     grid-auto-columns: 31%;
   }
 }
@@ -1312,7 +1318,9 @@
   }
 
   .community-shelf-row,
-  .community-skeleton-row {
+  .community-contributor-row,
+  .community-skeleton-row,
+  .community-skeleton-contributors {
     grid-auto-columns: 58%;
   }
 
@@ -1329,7 +1337,9 @@
   }
 
   .community-shelf-row,
-  .community-skeleton-row {
+  .community-contributor-row,
+  .community-skeleton-row,
+  .community-skeleton-contributors {
     grid-auto-columns: 82%;
   }
 }
