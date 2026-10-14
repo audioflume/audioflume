@@ -90,6 +90,7 @@
   --filmwave-small-section-title-letter-spacing: 0;
   --filmwave-small-section-title-line-height: 1.15;
   --filmwave-small-section-title-text-transform: uppercase;
+  --filmwave-small-section-title-margin-bottom: 12px;
 
   /* Canonical Filmwave interface styling. */
   --filmwave-ui-radius-control: 0px;
