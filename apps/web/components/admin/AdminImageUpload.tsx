@@ -14,6 +14,8 @@ type Props = {
   uploadFile?: (file: File) => Promise<string>;
   allowRemove?: boolean;
   showUrlInput?: boolean;
+  title?: string;
+  dropDescription?: string;
 };
 
 function extractImageKey(url: string): string | null {
@@ -36,6 +38,8 @@ export default function AdminImageUpload({
   uploadFile,
   allowRemove = true,
   showUrlInput = true,
+  title = "Cover image",
+  dropDescription = "Click to upload a playlist cover.",
 }: Props) {
   const localPreviewRef = useRef<string | null>(null);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -155,9 +159,9 @@ export default function AdminImageUpload({
         onFileChange={(file) => void handleFile(file)}
         onRemove={allowRemove ? () => void handleDelete() : undefined}
         disabled={uploading || deleting}
-        title="Cover image"
+        title={title}
         dropTitle={uploading ? "Uploading…" : "Drop image here"}
-        dropDescription="Click to upload a playlist cover."
+        dropDescription={dropDescription}
         variant="compact"
         allowRemove={allowRemove}
         footer={
