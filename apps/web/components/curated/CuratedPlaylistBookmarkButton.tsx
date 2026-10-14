@@ -2,6 +2,8 @@
 
 import { type MouseEvent, useMemo, useState } from "react";
 
+import Toast from "@/components/Toast";
+import { usePlayer } from "@/context/PlayerContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import type {
   CuratedPlaylistCardItem,
@@ -37,7 +39,9 @@ export default function CuratedPlaylistBookmarkButton({
   className = "",
 }: CuratedPlaylistBookmarkButtonProps) {
   const { playlists, refetchPlaylists } = usePlaylists();
+  const { currentSong } = usePlayer();
   const [saving, setSaving] = useState(false);
+  const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   const savedPlaylist = useMemo(
     () =>
@@ -48,6 +52,11 @@ export default function CuratedPlaylistBookmarkButton({
       ) ?? null,
     [playlist.id, playlists],
   );
+
+  function showToast(message: string) {
+    setToastMessage(message);
+    window.setTimeout(() => setToastMessage(null), 1800);
+  }
 
   async function handleClick(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -69,6 +78,7 @@ export default function CuratedPlaylistBookmarkButton({
         }
 
         await refetchPlaylists();
+        showToast(`"${playlist.name}" removed from My Playlists`);
         return;
       }
 
@@ -96,6 +106,7 @@ export default function CuratedPlaylistBookmarkButton({
 
       if (createRes.status === 409) {
         await refetchPlaylists();
+        showToast(`"${playlist.name}" added to My Playlists`);
         return;
       }
 
@@ -120,8 +131,12 @@ export default function CuratedPlaylistBookmarkButton({
       }
 
       await refetchPlaylists();
+      showToast(`"${playlist.name}" added to My Playlists`);
     } catch (error) {
       console.warn("Curated playlist bookmark failed", error);
+      showToast(
+        error instanceof Error ? error.message : "Failed to update playlist",
+      );
     } finally {
       setSaving(false);
     }
@@ -130,20 +145,27 @@ export default function CuratedPlaylistBookmarkButton({
   const saved = Boolean(savedPlaylist);
 
   return (
-    <button
-      type="button"
-      className={className}
-      onClick={handleClick}
-      disabled={saving}
-      aria-label={
-        saved
-          ? `Remove ${playlist.name} from My Playlists`
-          : `Save ${playlist.name} to My Playlists`
-      }
-      aria-pressed={saved}
-      title={saved ? "Remove from My Playlists" : "Add to My Playlists"}
-    >
-      <BookmarkGlyph filled={saved} />
-    </button>
+    <>
+      <button
+        type="button"
+        className={className}
+        onClick={handleClick}
+        disabled={saving}
+        aria-label={
+          saved
+            ? `Remove ${playlist.name} from My Playlists`
+            : `Save ${playlist.name} to My Playlists`
+        }
+        aria-pressed={saved}
+        title={saved ? "Remove from My Playlists" : "Add to My Playlists"}
+      >
+        <BookmarkGlyph filled={saved} />
+      </button>
+
+      <Toast
+        message={toastMessage}
+        bottomOffset={currentSong ? "88px" : "24px"}
+      />
+    </>
   );
 }
