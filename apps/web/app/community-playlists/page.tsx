@@ -522,7 +522,7 @@ export default function CommunityPlaylistsPage() {
           height: calc(100vh - var(--filmwave-header-height, 56px));
           margin-top: var(--filmwave-header-height, 56px);
           display: grid;
-          grid-template-columns: 276px minmax(0, 1fr);
+          grid-template-columns: 232px minmax(0, 1fr);
           overflow: hidden;
           background: var(--bg-primary);
           color: var(--text-primary);
@@ -840,7 +840,7 @@ export default function CommunityPlaylistsPage() {
 
         @media (max-width: 1040px) {
           .community-page {
-            grid-template-columns: 220px minmax(0, 1fr);
+            grid-template-columns: 200px minmax(0, 1fr);
           }
         }
 
@@ -976,14 +976,6 @@ export default function CommunityPlaylistsPage() {
                       {playlist.cover_image_url && (
                         <img className="community-cover" src={playlist.cover_image_url} alt="" />
                       )}
-                      <div className="community-creator-overlay">
-                        {playlist.creator.imageUrl ? (
-                          <img className="community-avatar-image" src={playlist.creator.imageUrl} alt="" />
-                        ) : (
-                          <span className="community-avatar" aria-hidden="true" />
-                        )}
-                        <span>{playlist.creator.name}</span>
-                      </div>
                     </Link>
                     <button
                       className={`community-like${isFavorite ? " is-liked" : ""}`}
@@ -1035,19 +1027,46 @@ export default function CommunityPlaylistsPage() {
                       <MoreIcon />
                     </button>
                   </div>
-                  <div className="community-engagement" aria-label="Playlist engagement">
-                    <span className="community-engagement-item" title={`${playlist.play_count} plays`}>
-                      <PlayCountIcon />
-                      <span>{formatCompactCount(playlist.play_count)}</span>
-                    </span>
-                    <span className="community-engagement-item" title={`${playlist.like_count} likes`}>
-                      <LikeCountIcon />
-                      <span>{formatCompactCount(playlist.like_count)}</span>
-                    </span>
-                    <span className="community-engagement-item" title={`${playlist.song_count} songs`}>
-                      <MusicIcon />
-                      <span>{formatCompactCount(playlist.song_count)}</span>
-                    </span>
+                  <div className="community-card-meta-row">
+                    <div className="community-creator">
+                      {playlist.creator.imageUrl ? (
+                        <img
+                          className="community-avatar-image"
+                          src={playlist.creator.imageUrl}
+                          alt=""
+                        />
+                      ) : (
+                        <span className="community-avatar" aria-hidden="true" />
+                      )}
+                      <span>{playlist.creator.name}</span>
+                    </div>
+
+                    <div
+                      className="community-engagement"
+                      aria-label="Playlist engagement"
+                    >
+                      <span
+                        className="community-engagement-item"
+                        title={`${playlist.play_count} plays`}
+                      >
+                        <PlayCountIcon />
+                        <span>{formatCompactCount(playlist.play_count)}</span>
+                      </span>
+                      <span
+                        className="community-engagement-item"
+                        title={`${playlist.like_count} likes`}
+                      >
+                        <LikeCountIcon />
+                        <span>{formatCompactCount(playlist.like_count)}</span>
+                      </span>
+                      <span
+                        className="community-engagement-item"
+                        title={`${playlist.song_count} songs`}
+                      >
+                        <MusicIcon />
+                        <span>{formatCompactCount(playlist.song_count)}</span>
+                      </span>
+                    </div>
                   </div>
                 </article>
               );
