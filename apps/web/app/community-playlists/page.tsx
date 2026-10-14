@@ -847,8 +847,8 @@ export default function CommunityPlaylistsPage() {
 
         .community-like {
           position: absolute;
-          top: 16px;
-          right: 16px;
+          top: 10px;
+          right: 10px;
           left: auto;
           z-index: 5;
           grid-column: auto;
