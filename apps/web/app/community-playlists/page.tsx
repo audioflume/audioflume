@@ -606,6 +606,20 @@ export default function CommunityPlaylistsPage() {
     selectedCreatorId,
   ]);
 
+  const filteredSectionTitle = useMemo(() => {
+    if (selectedCreatorId) {
+      return (
+        playlists.find((playlist) => playlist.creator.id === selectedCreatorId)
+          ?.creator.name ?? "Playlists"
+      );
+    }
+
+    if (query.trim()) return "Search Results";
+    if (selectedCategory !== "All") return selectedCategory;
+    if (activeTab === "Recent") return "Recently Added";
+    return activeTab;
+  }, [activeTab, playlists, query, selectedCategory, selectedCreatorId]);
+
   const topContributors = useMemo(() => {
     const contributors = new Map<
       string,
@@ -1614,15 +1628,20 @@ export default function CommunityPlaylistsPage() {
               )}
             </div>
           ) : (
-            <div className="community-grid" id="community-grid">
-              {!loading && filteredPlaylists.length === 0 && (
-                <div className="community-empty-state">{getEmptyStateMessage()}</div>
-              )}
+            <section className="community-filtered-section">
+              <div className="community-filtered-section-heading">
+                <h2>{filteredSectionTitle}</h2>
+              </div>
+              <div className="community-grid" id="community-grid">
+                {!loading && filteredPlaylists.length === 0 && (
+                  <div className="community-empty-state">{getEmptyStateMessage()}</div>
+                )}
 
-              {filteredPlaylists.map((playlist) =>
-                renderPlaylistCard(playlist),
-              )}
-            </div>
+                {filteredPlaylists.map((playlist) =>
+                  renderPlaylistCard(playlist),
+                )}
+              </div>
+            </section>
           )}
 
           <div className="community-footer-wrap">
