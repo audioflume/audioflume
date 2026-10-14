@@ -546,7 +546,7 @@
   overflow: hidden;
   color: var(--text-primary);
   font-family: var(--discover-playlist-card-title-font-family, inherit);
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 300;
   letter-spacing: var(--discover-playlist-card-title-letter-spacing, normal);
   line-height: 1.15;
