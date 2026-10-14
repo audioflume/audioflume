@@ -551,6 +551,19 @@ export default function CommunityPlaylistsPage() {
     return "No public playlists yet.";
   }
 
+  const featuredPlaylist = filteredPlaylists[0] ?? null;
+  const regularPlaylists = featuredPlaylist
+    ? filteredPlaylists.slice(1)
+    : filteredPlaylists;
+  const gridHeading =
+    activeTab === "Trending"
+      ? "Trending Playlists"
+      : activeTab === "Recent"
+        ? "Recent Playlists"
+        : activeTab === "Most Liked"
+          ? "Most Liked Playlists"
+          : "Favorite Playlists";
+
   return (
     <>
       <style>{`
@@ -994,12 +1007,58 @@ export default function CommunityPlaylistsPage() {
             </section>
           )}
 
+          {!loading && featuredPlaylist && (
+            <section
+              className="community-feature-row"
+              aria-labelledby="community-feature-heading"
+            >
+              <Link
+                className="community-feature-card"
+                href={`/community-playlists/${featuredPlaylist.id}`}
+                aria-label={`Open featured playlist ${featuredPlaylist.name}`}
+              >
+                {featuredPlaylist.cover_image_url && (
+                  <img
+                    className="community-feature-image"
+                    src={featuredPlaylist.cover_image_url}
+                    alt=""
+                  />
+                )}
+                <div className="community-feature-gradient" aria-hidden="true" />
+                <div className="community-feature-copy">
+                  <span
+                    className="community-feature-eyebrow"
+                    id="community-feature-heading"
+                  >
+                    Featured Community Playlist
+                  </span>
+                  <h2>{featuredPlaylist.name}</h2>
+                  <div className="community-feature-creator">
+                    {featuredPlaylist.creator.imageUrl ? (
+                      <img src={featuredPlaylist.creator.imageUrl} alt="" />
+                    ) : (
+                      <span
+                        className="community-feature-creator-placeholder"
+                        aria-hidden="true"
+                      />
+                    )}
+                    <span>{featuredPlaylist.creator.name}</span>
+                  </div>
+                </div>
+              </Link>
+            </section>
+          )}
+
+          {!loading && regularPlaylists.length > 0 && (
+            <h2 className="community-grid-heading">{gridHeading}</h2>
+          )}
+
           <div className="community-grid" id="community-grid">
             {!loading && filteredPlaylists.length === 0 && (
               <div className="community-empty-state">{getEmptyStateMessage()}</div>
             )}
 
-            {filteredPlaylists.map((playlist) => {
+            {regularPlaylists.map((playlist) => {
               const isFavorite = favoritePlaylistIds.has(playlist.id);
               const isPending = pendingFavoriteIds.has(playlist.id);
               const cachedPlaylistSongs =
