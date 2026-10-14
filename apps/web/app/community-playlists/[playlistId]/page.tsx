@@ -7,6 +7,7 @@ import SkeletonSongList from "@/components/SkeletonSongCard";
 import SongCard from "@/components/SongCard";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PublicPlaylistIcon from "@/components/icons/PublicPlaylistIcon";
 import SearchIcon from "@/components/icons/SearchIcon";
 import {
   quickFilterButtonActiveClass,
@@ -440,7 +441,14 @@ export default function CommunityPlaylistDetailPage() {
                 </div>
 
                 <div className="min-w-0">
-                  <span className="playlist-detail-kicker">Community Playlist</span>
+                  <span className="playlist-detail-kicker playlist-detail-kicker-with-icon">
+                    <PublicPlaylistIcon
+                      className="playlist-detail-kicker-icon"
+                      size={11}
+                      title="Community playlist"
+                    />
+                    <span>Community Playlist</span>
+                  </span>
                   <h1 className="playlist-detail-title">
                     {playlist?.name || "Playlist"}
                   </h1>
