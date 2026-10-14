@@ -1284,7 +1284,7 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-jump-back {
-          margin-top: 30px;
+          margin-top: 14px;
         }
 
         .community-jump-back-heading {
