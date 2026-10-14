@@ -868,21 +868,30 @@ export default function CommunityPlaylistsPage() {
               <PlayIconSmall size={18} />
             )}
           </button>
-          <div className="community-card-creator-overlay">
-            {playlist.creator.imageUrl ? (
-              <img
-                className="community-card-creator-avatar"
-                src={playlist.creator.imageUrl}
-                alt=""
-              />
-            ) : (
-              <span
-                className="community-card-creator-avatar community-card-creator-avatar-placeholder"
-                aria-hidden="true"
-              />
-            )}
-            <span className="community-card-creator-name">
-              {playlist.creator.name}
+          <div
+            className="community-card-count-overlay"
+            aria-label="Playlist engagement"
+          >
+            <span
+              className="community-engagement-item"
+              title={`${playlist.play_count} plays`}
+            >
+              <PlayCountIcon />
+              <span>{formatCompactCount(playlist.play_count)}</span>
+            </span>
+            <span
+              className="community-engagement-item"
+              title={`${playlist.like_count} likes`}
+            >
+              <LikeCountIcon />
+              <span>{formatCompactCount(playlist.like_count)}</span>
+            </span>
+            <span
+              className="community-engagement-item"
+              title={`${playlist.song_count} songs`}
+            >
+              <SongCountIcon />
+              <span>{formatCompactCount(playlist.song_count)}</span>
             </span>
           </div>
         </div>
@@ -1271,7 +1280,7 @@ export default function CommunityPlaylistsPage() {
       <main className={`community-page${playerVisible ? " is-player-visible" : ""}`}>
         <aside className="community-sidebar" aria-label="Community playlist discovery">
           <section className="community-sidebar-section community-categories">
-            <p className="community-sidebar-heading">Categories</p>
+            <p className="community-sidebar-heading">Community Playlists</p>
             <nav aria-label="Community playlist categories">
               <button
                 type="button"
