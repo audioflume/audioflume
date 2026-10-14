@@ -85,7 +85,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     .curated-page-skeleton-filter {
     display: flex;
     box-sizing: border-box;
-    height: 65px;
+    height: 52px;
     align-items: center;
     justify-content: center;
     gap: 8px;
