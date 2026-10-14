@@ -1119,7 +1119,7 @@ export default function CommunityPlaylistsPage() {
         .community-sidebar-heading {
           color: #fff !important;
           font-family: var(--font-aktiv-grotesk), sans-serif !important;
-          font-size: 13px !important;
+          font-size: 14px !important;
           font-weight: 400 !important;
           font-kerning: normal !important;
           letter-spacing: 0 !important;
