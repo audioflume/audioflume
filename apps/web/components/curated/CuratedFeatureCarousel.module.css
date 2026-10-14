@@ -51,7 +51,7 @@
 .card:focus-visible .image {
   transform: scale(1.015);
 }
-\n
+
 .arrow {
   position: absolute;
   top: 50%;
@@ -114,4 +114,4 @@
     --curated-feature-carousel-card-width: 82vw;
     gap: 10px;
   }
-\n}
+}
