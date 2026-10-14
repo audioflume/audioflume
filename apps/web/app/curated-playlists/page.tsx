@@ -157,7 +157,11 @@ export default function CuratedPlaylistsPage() {
 
         const visiblePlaylists: CuratedPlaylistWithBrowseAssignments[] =
           Array.isArray(playlistData)
-            ? playlistData.filter((playlist) => !playlist.discover_section)
+            ? playlistData.filter(
+                (playlist) =>
+                  !playlist.discover_section &&
+                  Number(playlist.song_count || 0) > 0,
+              )
             : [];
 
         if (!cancelled) {
@@ -419,7 +423,13 @@ export default function CuratedPlaylistsPage() {
                   className="curated-page-grid-group scroll-mt-28"
                 >
                   <div className="curated-page-grid-heading">
-                    <SectionTitle variant="small">{name}</SectionTitle>
+                    <div className="curated-page-grid-heading-row">
+                      <SectionTitle variant="small">{name}</SectionTitle>
+                      <span className="curated-page-grid-count">
+                        {groupPlaylists.length}{" "}
+                        {groupPlaylists.length === 1 ? "playlist" : "playlists"}
+                      </span>
+                    </div>
                     {description && <p>{description}</p>}
                   </div>
 
