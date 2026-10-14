@@ -1059,9 +1059,23 @@ export default function CommunityPlaylistsPage() {
                         <PlayIconSmall size={18} />
                       )}
                     </button>
-                    <span className="community-card-creator-name">
-                      {playlist.creator.name}
-                    </span>
+                    <div className="community-card-creator-overlay">
+                      {playlist.creator.imageUrl ? (
+                        <img
+                          className="community-card-creator-avatar"
+                          src={playlist.creator.imageUrl}
+                          alt=""
+                        />
+                      ) : (
+                        <span
+                          className="community-card-creator-avatar community-card-creator-avatar-placeholder"
+                          aria-hidden="true"
+                        />
+                      )}
+                      <span className="community-card-creator-name">
+                        {playlist.creator.name}
+                      </span>
+                    </div>
                   </div>
                   <div className="community-card-title-row">
                     <h2>
