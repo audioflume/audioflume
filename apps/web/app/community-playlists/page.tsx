@@ -373,7 +373,7 @@ export default function CommunityPlaylistsPage() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playlistPlaybackCacheRef = useRef(new Map<number, Song[]>());
   const [query, setQuery] = useState("");
-  const [sidebarOpen, setSidebarOpen] = useState(true);
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
   const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
