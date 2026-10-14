@@ -9,6 +9,7 @@ import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import CuratedPlaylistBookmarkButton from "./CuratedPlaylistBookmarkButton";
 import CuratedPlaylistPlayButton from "./CuratedPlaylistPlayButton";
 import cardStyles from "./CuratedPlaylistCard.module.css";
 import shelfStyles from "./CuratedPlaylistShelf.module.css";
@@ -82,6 +83,11 @@ export function CuratedPlaylistCard({
             )}
           </div>
         </Link>
+
+        <CuratedPlaylistBookmarkButton
+          playlist={playlist}
+          className={cardStyles.bookmarkButton}
+        />
 
         <div className={cardStyles.details}>
           <Link href={href} className={cardStyles.copy}>
