@@ -38,7 +38,7 @@ export default function CuratedPlaylistBookmarkButton({
   playlist,
   className = "",
 }: CuratedPlaylistBookmarkButtonProps) {
-  const { playlists, refetchPlaylists } = usePlaylists();
+  const { playlists, setPlaylists } = usePlaylists();
   const { currentSong } = usePlayer();
   const [saving, setSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
@@ -77,73 +77,35 @@ export default function CuratedPlaylistBookmarkButton({
           throw new Error(removeData?.error || "Failed to remove playlist");
         }
 
-        await refetchPlaylists();
+        setPlaylists((current) =>
+          current.filter((item) => item.id !== savedPlaylist.id),
+        );
         showToast(`"${playlist.name}" removed from My Playlists`);
         return;
       }
 
-      const [songsRes, createRes] = await Promise.all([
-        fetch(
-          `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/songs`,
-        ),
-        fetch("/api/playlists", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: playlist.name,
-            cover_image_url: playlist.cover_image_url ?? null,
-            position: 0,
-            source_type: "curated",
-            source_playlist_id: playlist.id,
-          }),
-        }),
-      ]);
+      const saveRes = await fetch(
+        `/api/curated-playlists/${encodeURIComponent(String(playlist.id))}/save`,
+        { method: "POST" },
+      );
+      const savedPlaylistData = await saveRes.json().catch(() => null);
 
-      const [songs, newPlaylist] = await Promise.all([
-        songsRes.json().catch(() => null),
-        createRes.json().catch(() => null),
-      ]);
-
-      if (createRes.status === 409) {
-        await refetchPlaylists();
-        showToast(`"${playlist.name}" added to My Playlists`);
-        return;
-      }
-
-      if (!createRes.ok || !newPlaylist?.id) {
-        throw new Error(newPlaylist?.error || "Failed to create playlist");
-      }
-
-      if (!songsRes.ok || !Array.isArray(songs)) {
-        throw new Error(songs?.error || "Failed to load playlist songs");
-      }
-
-      const playlistSongs = songs
-        .map((song, index) => ({
-          song_id: song.song_id ?? song.id,
-          position: index,
-        }))
-        .filter((song) => Boolean(song.song_id));
-
-      if (playlistSongs.length > 0) {
-        const songsSaveRes = await fetch(
-          `/api/playlists/${newPlaylist.id}/songs`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ songs: playlistSongs }),
-          },
+      if (!saveRes.ok || !savedPlaylistData?.id) {
+        throw new Error(
+          savedPlaylistData?.error || "Failed to save playlist",
         );
-        const songsSaveData = await songsSaveRes.json().catch(() => null);
-
-        if (!songsSaveRes.ok) {
-          throw new Error(
-            songsSaveData?.error || "Failed to add playlist songs",
-          );
-        }
       }
 
-      await refetchPlaylists();
+      setPlaylists((current) => {
+        const alreadySaved = current.some(
+          (item) =>
+            item.source_type === "curated" &&
+            Number(item.source_playlist_id) === playlist.id,
+        );
+
+        return alreadySaved ? current : [...current, savedPlaylistData];
+      });
+
       showToast(`"${playlist.name}" added to My Playlists`);
     } catch (error) {
       console.warn("Curated playlist bookmark failed", error);
