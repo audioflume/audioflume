@@ -144,7 +144,7 @@ function CommunityCategoryIcon({ category }: { category: CategoryFilter }) {
       return (
         <svg {...commonProps}>
           <path d="m10 3 7 4-7 4-7-4 7-4Z" {...strokeProps} />
-          <path d="m4.5 10 5.5 3 5.5-3M4.5 13.5l5.5 3 5.5-3" {...strokeProps} />
+          <path d="m4.5 10.75 5.5 3 5.5-3M4.5 13.5l5.5 3 5.5-3" {...strokeProps} />
         </svg>
       );
     case "Electronic":
