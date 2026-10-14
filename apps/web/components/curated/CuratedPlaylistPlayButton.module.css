@@ -32,27 +32,3 @@
 .button:disabled {
   cursor: default;
 }
-
-
-.feature {
-  width: 52px;
-  min-width: 52px;
-  height: 52px;
-  border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
-  opacity: 1;
-  transition: transform 160ms ease;
-  transform-origin: center;
-}
-
-.feature:hover,
-.feature:focus-visible {
-  background: #ffffff;
-  opacity: 1;
-  transform: scale(1.03);
-}
-
-.feature:disabled {
-  opacity: 0.4;
-}
