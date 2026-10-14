@@ -1119,12 +1119,12 @@ export default function CommunityPlaylistsPage() {
         .community-sidebar-heading {
           color: #fff !important;
           font-family: var(--font-aktiv-grotesk), sans-serif !important;
-          font-size: 11px !important;
-          font-weight: 500 !important;
+          font-size: 13px !important;
+          font-weight: 400 !important;
           font-kerning: normal !important;
-          letter-spacing: 0.02em !important;
-          line-height: 1 !important;
-          text-transform: uppercase !important;
+          letter-spacing: 0 !important;
+          line-height: 1.1 !important;
+          text-transform: none !important;
         }
 
         :where(html.light, html[data-theme="light"]) .community-sidebar-heading {
