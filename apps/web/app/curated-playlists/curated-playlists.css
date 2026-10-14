@@ -776,6 +776,19 @@ body:has(.curated-playlists-page-root)
   margin-bottom: 12px;
 }
 
+.curated-page-grid-heading-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+}
+
+.curated-page-grid-count {
+  color: var(--text-muted);
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1;
+}
+
 .curated-page-grid-heading p {
   margin: 4px 0 0;
   color: var(--text-muted);
