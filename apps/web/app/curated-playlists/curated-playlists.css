@@ -782,20 +782,21 @@ body:has(.curated-playlists-page-root)
 
 .curated-community-cta-copy h2 {
   margin: 0;
-  font-family: var(--filmwave-section-title-font-family);
-  font-size: clamp(28px, 2.8vw, 42px);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(48px, 5vw, 76px);
   font-weight: 300;
-  letter-spacing: -0.04em;
-  line-height: 1;
+  letter-spacing: -0.045em;
+  line-height: 1.02;
 }
 
 .curated-community-cta-copy p {
-  max-width: 520px;
-  margin: 12px 0 0;
-  color: var(--text-secondary);
-  font-size: 14px;
+  max-width: 760px;
+  margin: 18px 0 0;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(18px, 1.45vw, 26px);
   font-weight: 300;
-  line-height: 1.5;
+  line-height: 1.45;
 }
 
 .curated-community-cta-actions {
