@@ -865,6 +865,16 @@ export default function CommunityPlaylistsPage() {
     });
   }
 
+  function filterByCreator(creator: CommunityPlaylist["creator"]) {
+    setSelectedCreatorId(creator.id);
+    setQuery(creator.name);
+  }
+
+  function clearCommunitySearch() {
+    setQuery("");
+    setSelectedCreatorId(null);
+  }
+
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
     const isPending = pendingFavoriteIds.has(playlist.id);
@@ -967,11 +977,7 @@ export default function CommunityPlaylistsPage() {
             type="button"
             className={`community-card-creator${selectedCreatorId === playlist.creator.id ? " is-active" : ""}`}
             aria-pressed={selectedCreatorId === playlist.creator.id}
-            onClick={() =>
-              setSelectedCreatorId((current) =>
-                current === playlist.creator.id ? null : playlist.creator.id,
-              )
-            }
+            onClick={() => filterByCreator(playlist.creator)}
           >
             {playlist.creator.imageUrl ? (
               <img
@@ -1399,7 +1405,10 @@ export default function CommunityPlaylistsPage() {
                 <input
                   type="search"
                   value={query}
-                  onChange={(event) => setQuery(event.target.value)}
+                  onChange={(event) => {
+                    setQuery(event.target.value);
+                    setSelectedCreatorId(null);
+                  }}
                   placeholder="Search playlists or creators"
                   aria-label="Search community playlists"
                 />
@@ -1407,7 +1416,7 @@ export default function CommunityPlaylistsPage() {
                   <button
                     type="button"
                     className="audioflume-home-reference-searchbar-clear"
-                    onClick={() => setQuery("")}
+                    onClick={clearCommunitySearch}
                     aria-label="Clear community playlist search"
                   >
                     <XIcon size={8} />
@@ -1552,7 +1561,13 @@ export default function CommunityPlaylistsPage() {
                           type="button"
                           className="community-contributor-card"
                           key={contributor.id}
-                          onClick={() => setSelectedCreatorId(contributor.id)}
+                          onClick={() =>
+                            filterByCreator({
+                              id: contributor.id,
+                              name: contributor.name,
+                              imageUrl: contributor.imageUrl,
+                            })
+                          }
                         >
                           <span className="community-contributor-image-frame">
                             {contributor.imageUrl ? (
