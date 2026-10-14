@@ -1,6 +1,5 @@
 "use client";
 
-import { HeaderSearchBar } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
 import { usePlayer } from "@/context/PlayerContext";
@@ -9,6 +8,7 @@ import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import Toast from "@/components/Toast";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
+import XIcon from "@/components/icons/XIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import {
@@ -939,14 +939,29 @@ export default function CommunityPlaylistsPage() {
         <section className="community-content">
           <div className="community-feed-toolbar">
             <div className="community-feed-search">
-              <HeaderSearchBar
-                renderForm={false}
-                searchValue={query}
-                searchPlaceholder="Search playlists or creators"
-                searchAriaLabel="Search community playlists"
-                clearAriaLabel="Clear community playlist search"
-                onSearchChange={setQuery}
-              />
+              <label className="audioflume-home-reference-searchbar-field">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="6.5" />
+                  <path d="m16 16 4.5 4.5" />
+                </svg>
+                <input
+                  type="search"
+                  value={query}
+                  onChange={(event) => setQuery(event.target.value)}
+                  placeholder="Search playlists or creators"
+                  aria-label="Search community playlists"
+                />
+                {query.length > 0 ? (
+                  <button
+                    type="button"
+                    className="audioflume-home-reference-searchbar-clear"
+                    onClick={() => setQuery("")}
+                    aria-label="Clear community playlist search"
+                  >
+                    <XIcon size={8} />
+                  </button>
+                ) : null}
+              </label>
             </div>
 
             <div
