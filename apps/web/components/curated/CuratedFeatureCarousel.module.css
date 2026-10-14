@@ -13,7 +13,7 @@
 .scroller {
   --curated-feature-carousel-card-width: min(720px, 52vw);
   display: flex;
-  gap: 30px;
+  gap: 0;
   width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
@@ -161,7 +161,7 @@
 @media (max-width: 900px) {
   .scroller {
     --curated-feature-carousel-card-width: 72vw;
-    gap: 30px;
+    gap: 0;
   }
 }
 
@@ -172,7 +172,7 @@
 
   .scroller {
     --curated-feature-carousel-card-width: 82vw;
-    gap: 30px;
+    gap: 0;
   }
 
   .title {
