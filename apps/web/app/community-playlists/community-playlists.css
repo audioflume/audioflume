@@ -647,18 +647,18 @@
 
 .community-jump-back .recent-playlist-card {
   min-height: 0;
-  gap: 12px;
+  gap: 10px;
   border: 1px solid var(--border);
   border-radius: 7px;
   background: transparent;
-  padding: 11px;
+  padding: 9px;
 }
 
 .community-jump-back .recent-playlist-card-cover,
 .community-jump-back .recent-playlist-card-placeholder {
-  width: 44px;
-  height: 44px;
-  flex: 0 0 44px;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
   border-radius: 0;
 }
 
@@ -682,8 +682,12 @@
 .community-shelves {
   display: flex;
   flex-direction: column;
-  gap: 50px;
+  gap: 42px;
   margin-top: 34px;
+}
+
+.community-shelf:first-child {
+  margin-bottom: 8px;
 }
 
 .community-shelf {
@@ -838,8 +842,8 @@
   box-sizing: border-box;
   display: grid;
   grid-auto-flow: column;
-  grid-auto-columns: 126px;
-  gap: 28px;
+  grid-auto-columns: 160px;
+  gap: 36px;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-behavior: smooth;
@@ -868,8 +872,8 @@
 
 .community-contributor-image-frame {
   display: block;
-  width: 112px;
-  height: 112px;
+  width: 144px;
+  height: 144px;
   overflow: hidden;
   border-radius: 50%;
   background: var(--bg-secondary);
@@ -900,7 +904,7 @@
 
 .community-contributor-name {
   width: 100%;
-  margin-top: 11px;
+  margin-top: 9px;
   overflow: hidden;
   color: var(--text-primary);
   font-size: 12px;
@@ -911,7 +915,7 @@
 }
 
 .community-contributor-count {
-  margin-top: 5px;
+  margin-top: 3px;
   color: var(--text-muted);
   font-size: 10.5px;
   font-weight: 400;
@@ -1034,8 +1038,12 @@
   }
 
   .community-shelves {
-    gap: 36px;
+    gap: 32px;
     margin-top: 30px;
+  }
+
+  .community-shelf:first-child {
+    margin-bottom: 4px;
   }
 }
 
