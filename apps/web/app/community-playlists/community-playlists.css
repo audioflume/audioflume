@@ -68,6 +68,22 @@
   outline: none;
 }
 
+.community-categories .fw-filter-rail-chevron {
+  color: var(--text-muted);
+  opacity: 0;
+  transition: opacity 160ms ease, color 160ms ease;
+}
+
+.community-categories .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
+  opacity: 1;
+}
+
+.community-categories .fw-filter-rail-item:not(.is-active):hover .fw-filter-rail-chevron,
+.community-categories .fw-filter-rail-item:not(.is-active):focus-visible .fw-filter-rail-chevron {
+  opacity: 0.65;
+}
+
+
 
 .community-featured {
   min-height: 220px;
