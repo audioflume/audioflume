@@ -911,7 +911,7 @@
 }
 
 .community-shelf:first-child .community-shelf-row {
-  grid-auto-columns: 43%;
+  grid-auto-columns: 45%;
 }
 
 .community-shelf:first-child .community-cover-wrap {
@@ -1111,7 +1111,7 @@
 }
 
 .community-skeleton-shelf.is-trending .community-skeleton-row {
-  grid-auto-columns: 43%;
+  grid-auto-columns: 45%;
 }
 
 .community-skeleton-shelf.is-trending .community-skeleton-card-image {
