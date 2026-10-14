@@ -6,7 +6,6 @@ import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import Toast from "@/components/Toast";
-import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import XIcon from "@/components/icons/XIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -48,13 +47,13 @@ type CommunityPlaylistPlaybackResponse = {
 };
 
 type CategoryFilter = "All" | CommunityPlaylistCategory;
-type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Favorites";
+type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Saved";
 
 const COMMUNITY_TABS: CommunityTab[] = [
   "Trending",
   "Recent",
   "Most Liked",
-  "Favorites",
+  "Saved",
 ];
 
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
@@ -66,6 +65,26 @@ function FilterRailChevron() {
       <path
         fill="currentColor"
         d="M8.6 5.3a1.3 1.3 0 0 1 1.84.04l5.5 5.76a1.3 1.3 0 0 1 0 1.8l-5.5 5.76a1.3 1.3 0 0 1-1.88-1.8L13.2 12 8.56 7.14a1.3 1.3 0 0 1 .04-1.84Z"
+      />
+    </svg>
+  );
+}
+
+function BookmarkGlyph({ filled }: { filled: boolean }) {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 20 20"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M5.5 3.25h9v13.5L10 14l-4.5 2.75V3.25Z"
+        fill={filled ? "currentColor" : "none"}
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="round"
       />
     </svg>
   );
@@ -295,7 +314,7 @@ export default function CommunityPlaylistsPage() {
 
       if (!categoryMatches) return false;
       if (
-        activeTab === "Favorites" &&
+        activeTab === "Saved" &&
         !favoritePlaylistIds.has(playlist.id)
       ) {
         return false;
@@ -524,8 +543,8 @@ export default function CommunityPlaylistsPage() {
 
   function getEmptyStateMessage() {
     if (query.trim()) return "No public playlists match your search.";
-    if (activeTab === "Favorites") {
-      return "You have not favorited any community playlists yet.";
+    if (activeTab === "Saved") {
+      return "You have not saved any community playlists yet.";
     }
     if (selectedCategory !== "All") {
       return `No public playlists are assigned to ${selectedCategory} yet.`;
@@ -829,7 +848,8 @@ export default function CommunityPlaylistsPage() {
         .community-like {
           position: absolute;
           top: 16px;
-          left: 16px;
+          right: 16px;
+          left: auto;
           z-index: 5;
           grid-column: auto;
           grid-row: auto;
@@ -841,10 +861,6 @@ export default function CommunityPlaylistsPage() {
         .community-like:focus-visible {
           transform: scale(1.08);
           outline: none;
-        }
-
-        .community-like.is-liked {
-          --favorite-icon-color: #fff;
         }
 
         .community-like:disabled {
@@ -1015,7 +1031,7 @@ export default function CommunityPlaylistsPage() {
                     <button
                       className={`community-like${isFavorite ? " is-liked" : ""}`}
                       type="button"
-                      aria-label={`${isFavorite ? "Remove from favorites" : "Add to favorites"}: ${playlist.name}`}
+                      aria-label={`${isFavorite ? "Remove from saved" : "Save"}: ${playlist.name}`}
                       aria-pressed={isFavorite}
                       disabled={isPending}
                       onClick={(event) => {
@@ -1023,7 +1039,7 @@ export default function CommunityPlaylistsPage() {
                         void togglePlaylistFavorite(playlist.id);
                       }}
                     >
-                      <HeartIcon filled={isFavorite} />
+                      <BookmarkGlyph filled={isFavorite} />
                     </button>
                     <button
                       className="community-play"
