@@ -25,8 +25,7 @@ export default function CuratedFeatureCarousel({
           Boolean(
             playlist.feature_cover_image_url || playlist.cover_image_url,
           ),
-        )
-        .slice(0, 8),
+        ),
     [playlists],
   );
 
