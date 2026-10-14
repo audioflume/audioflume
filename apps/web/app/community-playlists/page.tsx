@@ -9,6 +9,8 @@ import Toast from "@/components/Toast";
 import XIcon from "@/components/icons/XIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import {
   COMMUNITY_PLAYLIST_CATEGORIES,
   type CommunityPlaylistCategory,
@@ -339,6 +341,9 @@ export default function CommunityPlaylistsPage() {
   const [loadingPlaybackPlaylistId, setLoadingPlaybackPlaylistId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
+  const [communityShelfState, setCommunityShelfState] = useState<
+    Record<string, { canScrollPrev: boolean; canScrollNext: boolean; imageCenterY: number | null }>
+  >({});
   const playerVisible = !!currentSong;
 
   function showToast(message: string) {
@@ -574,6 +579,59 @@ export default function CommunityPlaylistsPage() {
     ];
   }, [activeTab, playlists, query, rankingSnapshot, selectedCategory]);
 
+  useEffect(() => {
+    const cleanups: Array<() => void> = [];
+
+    for (const shelf of communityShelves) {
+      const scroller = document.querySelector<HTMLElement>(
+        `[data-community-shelf="${shelf.key}"]`,
+      );
+      if (!scroller) continue;
+
+      const cover = scroller.querySelector<HTMLElement>(".community-cover-wrap");
+
+      const updateShelfState = () => {
+        const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+        const nextState = {
+          canScrollPrev: scroller.scrollLeft > 4,
+          canScrollNext: scroller.scrollLeft < maxScrollLeft - 4,
+          imageCenterY: cover ? cover.getBoundingClientRect().height / 2 : null,
+        };
+
+        setCommunityShelfState((current) => {
+          const previous = current[shelf.key];
+          if (
+            previous &&
+            previous.canScrollPrev === nextState.canScrollPrev &&
+            previous.canScrollNext === nextState.canScrollNext &&
+            previous.imageCenterY === nextState.imageCenterY
+          ) {
+            return current;
+          }
+
+          return { ...current, [shelf.key]: nextState };
+        });
+      };
+
+      updateShelfState();
+      scroller.addEventListener("scroll", updateShelfState, { passive: true });
+      window.addEventListener("resize", updateShelfState);
+
+      const resizeObserver = cover ? new ResizeObserver(updateShelfState) : null;
+      if (cover && resizeObserver) resizeObserver.observe(cover);
+
+      cleanups.push(() => {
+        scroller.removeEventListener("scroll", updateShelfState);
+        window.removeEventListener("resize", updateShelfState);
+        resizeObserver?.disconnect();
+      });
+    }
+
+    return () => {
+      cleanups.forEach((cleanup) => cleanup());
+    };
+  }, [communityShelves]);
+
   const recentPlaylists = useMemo(
     () =>
       recentPlaylistIds
@@ -742,8 +800,10 @@ export default function CommunityPlaylistsPage() {
     );
     if (!shelf) return;
 
+    const amount = Math.max(shelf.clientWidth * 0.82, 320);
+
     shelf.scrollBy({
-      left: shelf.clientWidth * 0.9 * direction,
+      left: amount * direction,
       behavior: "smooth",
     });
   }
@@ -1324,36 +1384,40 @@ export default function CommunityPlaylistsPage() {
                 <section className="community-shelf" key={shelf.key}>
                   <div className="community-shelf-heading-row">
                     <h2>{shelf.title}</h2>
-                    <div className="community-shelf-controls" aria-label={`${shelf.title} carousel controls`}>
-                      <button
-                        type="button"
-                        className="community-shelf-control"
-                        aria-label={`Scroll ${shelf.title} left`}
-                        onClick={() => scrollCommunityShelf(shelf.key, -1)}
-                      >
-                        <svg viewBox="0 0 20 20" aria-hidden="true">
-                          <path d="m12 5-5 5 5 5" />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        className="community-shelf-control"
-                        aria-label={`Scroll ${shelf.title} right`}
-                        onClick={() => scrollCommunityShelf(shelf.key, 1)}
-                      >
-                        <svg viewBox="0 0 20 20" aria-hidden="true">
-                          <path d="m8 5 5 5-5 5" />
-                        </svg>
-                      </button>
-                    </div>
                   </div>
-                  <div
-                    className="community-shelf-row"
-                    data-community-shelf={shelf.key}
-                  >
-                    {shelf.playlists.map((playlist) =>
-                      renderPlaylistCard(playlist),
+                  <div className="community-shelf-viewport">
+                    {communityShelfState[shelf.key]?.imageCenterY !== null && (
+                      <>
+                        <button
+                          type="button"
+                          className="community-shelf-arrow is-left"
+                          aria-label={`Scroll ${shelf.title} left`}
+                          disabled={!communityShelfState[shelf.key]?.canScrollPrev}
+                          style={{ top: communityShelfState[shelf.key]?.imageCenterY ?? undefined }}
+                          onClick={() => scrollCommunityShelf(shelf.key, -1)}
+                        >
+                          <ChevronLeftIcon size={18} />
+                        </button>
+                        <button
+                          type="button"
+                          className="community-shelf-arrow is-right"
+                          aria-label={`Scroll ${shelf.title} right`}
+                          disabled={!communityShelfState[shelf.key]?.canScrollNext}
+                          style={{ top: communityShelfState[shelf.key]?.imageCenterY ?? undefined }}
+                          onClick={() => scrollCommunityShelf(shelf.key, 1)}
+                        >
+                          <ChevronRightIcon size={18} />
+                        </button>
+                      </>
                     )}
+                    <div
+                      className="community-shelf-row"
+                      data-community-shelf={shelf.key}
+                    >
+                      {shelf.playlists.map((playlist) =>
+                        renderPlaylistCard(playlist),
+                      )}
+                    </div>
                   </div>
                 </section>
               ))}
