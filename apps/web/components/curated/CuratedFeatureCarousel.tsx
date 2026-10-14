@@ -6,6 +6,7 @@ import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
 import styles from "./CuratedFeatureCarousel.module.css";
@@ -187,33 +188,44 @@ export default function CuratedFeatureCarousel({
             const playlistIndex = loopIndex % visiblePlaylists.length;
 
             return (
-              <Link
+              <div
                 key={String(copyIndex) + "-" + String(playlist.id)}
-                href={"/curated-playlists/" + playlist.id}
                 className={styles.card}
                 data-curated-feature-card
                 data-carousel-copy={copyIndex}
                 data-carousel-index={playlistIndex}
               >
-                <div className={styles.media}>
-                  {playlist.feature_cover_image_url ||
-                  playlist.cover_image_url ? (
-                    <Image
-                      src={
-                        playlist.feature_cover_image_url ||
-                        playlist.cover_image_url ||
-                        ""
-                      }
-                      alt={playlist.name}
-                      fill
-                      sizes="(min-width: 900px) 56vw, 82vw"
-                      className={styles.image}
-                      unoptimized
-                    />
-                  ) : null}
-                  <div className={styles.title}>{playlist.name}</div>
-                </div>
-              </Link>
+                <Link
+                  href={"/curated-playlists/" + playlist.id}
+                  className={styles.cardLink}
+                >
+                  <div className={styles.media}>
+                    {playlist.feature_cover_image_url ||
+                    playlist.cover_image_url ? (
+                      <Image
+                        src={
+                          playlist.feature_cover_image_url ||
+                          playlist.cover_image_url ||
+                          ""
+                        }
+                        alt={playlist.name}
+                        fill
+                        sizes="(min-width: 900px) 56vw, 82vw"
+                        className={styles.image}
+                        unoptimized
+                      />
+                    ) : null}
+                    <div className={styles.title}>{playlist.name}</div>
+                  </div>
+                </Link>
+
+                <CuratedPlaylistPlayButton
+                  playlistId={playlist.id}
+                  playlistName={playlist.name}
+                  variant="feature"
+                  className={styles.playButton}
+                />
+              </div>
             );
           })}
         </div>
