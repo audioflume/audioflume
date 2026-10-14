@@ -13,10 +13,6 @@ import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import {
-  quickFilterButtonActiveClass,
-  quickFilterButtonClass,
-} from "@/components/uiClasses";
-import {
   COMMUNITY_PLAYLIST_CATEGORIES,
   type CommunityPlaylistCategory,
 } from "@/lib/communityPlaylistCategories";
@@ -522,7 +518,7 @@ export default function CommunityPlaylistsPage() {
           height: calc(100vh - var(--filmwave-header-height, 56px));
           margin-top: var(--filmwave-header-height, 56px);
           display: grid;
-          grid-template-columns: 232px minmax(0, 1fr);
+          grid-template-columns: 260px minmax(0, 1fr);
           overflow: hidden;
           background: var(--bg-primary);
           color: var(--text-primary);
@@ -840,7 +836,7 @@ export default function CommunityPlaylistsPage() {
 
         @media (max-width: 1040px) {
           .community-page {
-            grid-template-columns: 200px minmax(0, 1fr);
+            grid-template-columns: 220px minmax(0, 1fr);
           }
         }
 
@@ -859,16 +855,6 @@ export default function CommunityPlaylistsPage() {
       <main className={`community-page${playerVisible ? " is-player-visible" : ""}`}>
         <aside className="community-sidebar" aria-label="Community playlist discovery">
           <section className="community-sidebar-section community-categories">
-            <div className="community-sidebar-search">
-              <HeaderSearchBar
-                renderForm={false}
-                searchValue={query}
-                searchPlaceholder="Search playlists"
-                searchAriaLabel="Search community playlists"
-                clearAriaLabel="Clear community playlist search"
-                onSearchChange={setQuery}
-              />
-            </div>
             <p className="community-sidebar-heading">Categories</p>
             <nav aria-label="Community playlist categories">
               <button
@@ -929,19 +915,36 @@ export default function CommunityPlaylistsPage() {
         </aside>
 
         <section className="community-content">
-          <div className="community-tabs" role="tablist" aria-label="Community playlist sorting">
-            {COMMUNITY_TABS.map((tab) => (
-              <button
-                type="button"
-                role="tab"
-                key={tab}
-                className={`${quickFilterButtonClass} ${activeTab === tab ? quickFilterButtonActiveClass : ""}`}
-                aria-selected={activeTab === tab}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="community-feed-toolbar">
+            <div className="community-feed-search">
+              <HeaderSearchBar
+                renderForm={false}
+                searchValue={query}
+                searchPlaceholder="Search playlists or creators"
+                searchAriaLabel="Search community playlists"
+                clearAriaLabel="Clear community playlist search"
+                onSearchChange={setQuery}
+              />
+            </div>
+
+            <div
+              className="community-tabs"
+              role="tablist"
+              aria-label="Community playlist sorting"
+            >
+              {COMMUNITY_TABS.map((tab) => (
+                <button
+                  type="button"
+                  role="tab"
+                  key={tab}
+                  className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
+                  aria-selected={activeTab === tab}
+                  onClick={() => setActiveTab(tab)}
+                >
+                  {tab}
+                </button>
+              ))}
+            </div>
           </div>
 
           <div className="community-grid" id="community-grid">
@@ -1027,7 +1030,7 @@ export default function CommunityPlaylistsPage() {
                       <MoreIcon />
                     </button>
                   </div>
-                  <div className="community-card-meta-row">
+                  <div className="community-card-meta">
                     <div className="community-creator">
                       {playlist.creator.imageUrl ? (
                         <img
