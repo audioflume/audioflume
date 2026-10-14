@@ -11,7 +11,7 @@
 }
 
 .community-page.is-sidebar-open {
-  grid-template-columns: 168px minmax(0, 1fr);
+  grid-template-columns: 248px minmax(0, 1fr);
 }
 
 .community-sidebar {
@@ -283,7 +283,7 @@
 }
 
 .community-searchbar-row.is-filters-open {
-  grid-template-columns: 168px minmax(0, 1fr) auto;
+  grid-template-columns: 248px minmax(0, 1fr) auto;
 }
 
 .community-searchbar-filter-button,
