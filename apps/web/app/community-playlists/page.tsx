@@ -46,13 +46,13 @@ type CommunityPlaylistPlaybackResponse = {
 };
 
 type CategoryFilter = "All" | CommunityPlaylistCategory;
-type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Saved";
+type CommunityTab = "Trending" | "Recent" | "Most Liked" | "Favorites";
 
 const COMMUNITY_TABS: CommunityTab[] = [
   "Trending",
   "Recent",
   "Most Liked",
-  "Saved",
+  "Favorites",
 ];
 
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
@@ -313,7 +313,7 @@ export default function CommunityPlaylistsPage() {
 
       if (!categoryMatches) return false;
       if (
-        activeTab === "Saved" &&
+        activeTab === "Favorites" &&
         !favoritePlaylistIds.has(playlist.id)
       ) {
         return false;
@@ -542,8 +542,8 @@ export default function CommunityPlaylistsPage() {
 
   function getEmptyStateMessage() {
     if (query.trim()) return "No public playlists match your search.";
-    if (activeTab === "Saved") {
-      return "You have not saved any community playlists yet.";
+    if (activeTab === "Favorites") {
+      return "You have not favorited any community playlists yet.";
     }
     if (selectedCategory !== "All") {
       return `No public playlists are assigned to ${selectedCategory} yet.`;
