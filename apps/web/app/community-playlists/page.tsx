@@ -9,7 +9,6 @@ import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import Toast from "@/components/Toast";
 import HeartIcon from "@/components/icons/HeartIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
-import MusicIcon from "@/components/icons/MusicIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import {
@@ -75,7 +74,13 @@ function FilterRailChevron() {
 function PlayCountIcon() {
   return (
     <svg viewBox="0 0 20 20" aria-hidden="true">
-      <path fill="currentColor" d="M5.25 3.4a1 1 0 0 1 1.53-.84l8.4 6.1a1.65 1.65 0 0 1 0 2.68l-8.4 6.1a1 1 0 0 1-1.53-.84V3.4Z" />
+      <path
+        d="M6 4.5 14.5 10 6 15.5Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+        strokeLinejoin="miter"
+      />
     </svg>
   );
 }
@@ -84,8 +89,25 @@ function LikeCountIcon() {
   return (
     <svg viewBox="0 0 20 20" aria-hidden="true">
       <path
-        fill="currentColor"
-        d="M7.2 17.1H4.55a1.35 1.35 0 0 1-1.35-1.35V9.4c0-.75.6-1.35 1.35-1.35H7.2v9.05Zm1.4 0V8.02l2.28-4.23c.35-.66 1.12-.98 1.83-.77.78.23 1.25 1.02 1.08 1.82l-.65 3.02h2.1c1.2 0 2.08 1.12 1.8 2.29l-1.25 5.35a2.08 2.08 0 0 1-2.03 1.6H8.6Z"
+        d="M10 16.25 4.45 10.9C2.8 9.3 2.7 6.75 4.2 5.25c1.45-1.45 3.8-1.4 5.2.1L10 6l.6-.65c1.4-1.5 3.75-1.55 5.2-.1 1.5 1.5 1.4 4.05-.25 5.65Z"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinejoin="miter"
+      />
+    </svg>
+  );
+}
+
+function SongCountIcon() {
+  return (
+    <svg viewBox="0 0 20 20" aria-hidden="true">
+      <path
+        d="M4 8v4M7 5.5v9M10 3.5v13M13 6.5v7M16 8v4"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.35"
+        strokeLinecap="square"
       />
     </svg>
   );
@@ -1066,7 +1088,7 @@ export default function CommunityPlaylistsPage() {
                         className="community-engagement-item"
                         title={`${playlist.song_count} songs`}
                       >
-                        <MusicIcon />
+                        <SongCountIcon />
                         <span>{formatCompactCount(playlist.song_count)}</span>
                       </span>
                     </div>
