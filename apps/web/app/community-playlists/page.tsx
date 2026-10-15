@@ -65,7 +65,7 @@ const COMMUNITY_TABS: CommunityTab[] = [
 ];
 
 const COMMUNITY_FEATURE_BANNER_IMAGE =
-  "https://images.filmwave.io/images/community-playlists/Community%20Banner.png";
+  "https://images.filmwave.io/images/community-playlists/nik-shuliahin-Lg_oC6gDCjU-unsplash.jpg";
 
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
   "filmwave-recent-community-playlists";
