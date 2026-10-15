@@ -1116,7 +1116,8 @@ export default function CommunityPlaylistsPage() {
           padding-bottom: 0 !important;
         }
 
-        .community-content.has-feature-banner {
+        .community-content.has-feature-banner,
+        .community-content.has-creator-banner {
           padding-top: 0 !important;
         }
 
@@ -1548,7 +1549,7 @@ export default function CommunityPlaylistsPage() {
         </aside>
 
         <section
-          className={`community-content${showAllBanner ? " has-feature-banner" : ""}`}
+          className={`community-content${showAllBanner ? " has-feature-banner" : ""}${selectedCreator ? " has-creator-banner" : ""}`}
         >
           {showAllBanner && (
             <section
