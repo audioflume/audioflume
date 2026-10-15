@@ -58,7 +58,6 @@ type CommunityTab =
   | "Favorites";
 
 const COMMUNITY_TABS: CommunityTab[] = [
-  "Featured",
   "All",
   "Trending",
   "Recent",
@@ -382,7 +381,7 @@ export default function CommunityPlaylistsPage() {
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
   const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<CommunityTab>("Featured");
+  const [activeTab, setActiveTab] = useState<CommunityTab>("All");
   const [playlists, setPlaylists] = useState<CommunityPlaylist[]>([]);
   const [rankingSnapshot, setRankingSnapshot] = useState<
     Record<number, CommunityPlaylistRanking>
@@ -658,18 +657,19 @@ export default function CommunityPlaylistsPage() {
     selectedCreatorId,
   ]);
 
-  const filteredSectionTitle = useMemo(() => {
+  const activeFilterLabel = useMemo(() => {
     if (selectedCreatorId) {
       return (
         playlists.find((playlist) => playlist.creator.id === selectedCreatorId)
-          ?.creator.name ?? "Playlists"
+          ?.creator.name ?? "Creator"
       );
     }
 
     if (query.trim()) return "Search Results";
     if (selectedCategory !== "All") return selectedCategory;
     if (activeTab === "Recent") return "Recently Added";
-    return activeTab;
+    if (activeTab !== "All") return activeTab;
+    return null;
   }, [activeTab, playlists, query, selectedCategory, selectedCreatorId]);
 
   const topContributors = useMemo(() => {
@@ -953,7 +953,6 @@ export default function CommunityPlaylistsPage() {
 
   function filterByCreator(creator: CommunityPlaylist["creator"]) {
     setSelectedCreatorId(creator.id);
-    setQuery(creator.name);
   }
 
   function clearCommunitySearch() {
@@ -961,11 +960,11 @@ export default function CommunityPlaylistsPage() {
     setSelectedCreatorId(null);
   }
 
-  const showFeaturedBanner =
-    activeTab === "Featured" &&
-    selectedCategory === "All" &&
-    !selectedCreatorId &&
-    !query.trim();
+  function clearCommunityFilters() {
+    showAllView();
+  }
+
+  const showFeaturedBanner = false;
 
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
@@ -1514,10 +1513,6 @@ export default function CommunityPlaylistsPage() {
                 className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
                 aria-selected={activeTab === tab}
                 onClick={() => {
-                  if (tab === "Featured") {
-                    showFeaturedView();
-                    return;
-                  }
                   if (tab === "All") {
                     showAllView();
                     return;
@@ -1538,23 +1533,6 @@ export default function CommunityPlaylistsPage() {
         >
           <section className="community-sidebar-section community-categories">
             <nav aria-label="Community playlist categories">
-              <button
-                type="button"
-                className={`fw-filter-rail-item${selectedCategory === "All" && activeTab === "Featured" ? " is-active" : ""}`}
-                aria-pressed={
-                  selectedCategory === "All" && activeTab === "Featured"
-                }
-                onClick={showFeaturedView}
-              >
-                <span className="community-category-icon" aria-hidden="true">
-                  <CommunityCategoryIcon category="All" />
-                </span>
-                <span className="fw-filter-rail-label">Featured</span>
-                <span className="community-category-count">{playlists.length}</span>
-                <span className="community-filter-rail-chevron" aria-hidden="true">
-                  <FilterRailChevron />
-                </span>
-              </button>
               <button
                 type="button"
                 className={`fw-filter-rail-item${selectedCategory === "All" && activeTab === "All" ? " is-active" : ""}`}
@@ -1761,9 +1739,19 @@ export default function CommunityPlaylistsPage() {
             </div>
           ) : (
             <section className="community-filtered-section">
-              <div className="community-filtered-section-heading">
-                <h2>{filteredSectionTitle}</h2>
-              </div>
+              {activeFilterLabel ? (
+                <div className="community-filtered-section-heading">
+                  <button
+                    type="button"
+                    className="community-filter-pill"
+                    onClick={clearCommunityFilters}
+                    aria-label={`Clear ${activeFilterLabel} filter`}
+                  >
+                    <span>{activeFilterLabel}</span>
+                    <XIcon size={13} />
+                  </button>
+                </div>
+              ) : null}
               <div className="community-grid" id="community-grid">
                 {filteredPlaylists.length === 0 && (
                   <div className="community-empty-state">{getEmptyStateMessage()}</div>
