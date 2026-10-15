@@ -251,7 +251,8 @@
   mix-blend-mode: difference;
 }
 
-.community-content.has-feature-banner .community-jump-back {
+.community-content.has-feature-banner .community-jump-back,
+.community-content.has-creator-banner .community-jump-back {
   margin-top: 36px;
 }
 
