@@ -626,20 +626,23 @@ export default function CommunityPlaylistsPage() {
     selectedCreatorId,
   ]);
 
-  const activeFilterLabel = useMemo(() => {
-    if (selectedCreatorId) {
-      return (
-        playlists.find((playlist) => playlist.creator.id === selectedCreatorId)
-          ?.creator.name ?? "Creator"
-      );
-    }
+  const selectedCreator = useMemo(
+    () =>
+      selectedCreatorId
+        ? playlists.find((playlist) => playlist.creator.id === selectedCreatorId)
+            ?.creator ?? null
+        : null,
+    [playlists, selectedCreatorId],
+  );
 
+  const activeFilterLabel = useMemo(() => {
+    if (selectedCreator) return selectedCreator.name;
     if (selectedCategory !== "All") return selectedCategory;
     if (activeTab === "Recent") return "Recently Added";
     if (activeTab !== "All") return activeTab;
     if (query.trim()) return "Search Results";
     return null;
-  }, [activeTab, playlists, query, selectedCategory, selectedCreatorId]);
+  }, [activeTab, query, selectedCategory, selectedCreator]);
 
   const topContributors = useMemo(() => {
     const contributors = new Map<
@@ -1696,6 +1699,18 @@ export default function CommunityPlaylistsPage() {
                     onClick={clearCommunityFilters}
                     aria-label={`Clear ${activeFilterLabel} filter`}
                   >
+                    {selectedCreator?.imageUrl ? (
+                      <img
+                        className="community-filter-pill-avatar"
+                        src={selectedCreator.imageUrl}
+                        alt=""
+                      />
+                    ) : selectedCreator ? (
+                      <span
+                        className="community-filter-pill-avatar community-filter-pill-avatar-placeholder"
+                        aria-hidden="true"
+                      />
+                    ) : null}
                     <span>{activeFilterLabel}</span>
                     <XIcon size={13} />
                   </button>
