@@ -266,6 +266,14 @@
 .audioflume-pricing-plan .audioflume-public-action-button {
   background: #ffffff !important;
   color: #111111 !important;
+  opacity: 1 !important;
+}
+
+.audioflume-pricing-plan .audioflume-public-action-button:hover,
+.audioflume-pricing-plan .audioflume-public-action-button:focus-visible {
+  background: #111111 !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
 }
 
 .audioflume-pricing-comparison-section {
