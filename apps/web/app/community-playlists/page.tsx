@@ -65,7 +65,7 @@ const COMMUNITY_TABS: CommunityTab[] = [
 ];
 
 const COMMUNITY_FEATURE_BANNER_IMAGE =
-  "https://images.filmwave.io/images/playlists/road-trip-vol-1/card-1791936434887.webp";
+  "https://images.filmwave.io/images/community-playlists/nik-shuliahin-Lg_oC6gDCjU-unsplash.jpg";
 
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
   "filmwave-recent-community-playlists";
