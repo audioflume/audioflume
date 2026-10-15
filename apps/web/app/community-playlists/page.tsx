@@ -58,7 +58,6 @@ type CommunityTab =
   | "Favorites";
 
 const COMMUNITY_TABS: CommunityTab[] = [
-  "All",
   "Trending",
   "Recent",
   "Most Liked",
