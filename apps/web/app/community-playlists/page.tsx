@@ -665,10 +665,10 @@ export default function CommunityPlaylistsPage() {
       );
     }
 
-    if (query.trim()) return "Search Results";
     if (selectedCategory !== "All") return selectedCategory;
     if (activeTab === "Recent") return "Recently Added";
     if (activeTab !== "All") return activeTab;
+    if (query.trim()) return "Search Results";
     return null;
   }, [activeTab, playlists, query, selectedCategory, selectedCreatorId]);
 
@@ -957,7 +957,6 @@ export default function CommunityPlaylistsPage() {
 
   function clearCommunitySearch() {
     setQuery("");
-    setSelectedCreatorId(null);
   }
 
   function clearCommunityFilters() {
@@ -1482,7 +1481,6 @@ export default function CommunityPlaylistsPage() {
                 value={query}
                 onChange={(event) => {
                   setQuery(event.target.value);
-                  setSelectedCreatorId(null);
                 }}
                 placeholder="Search playlists or creators"
                 aria-label="Search community playlists"
