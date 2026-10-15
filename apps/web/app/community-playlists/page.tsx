@@ -962,7 +962,11 @@ export default function CommunityPlaylistsPage() {
     showAllView();
   }
 
-  const showFeaturedBanner = false;
+  const showAllBanner =
+    activeTab === "All" &&
+    selectedCategory === "All" &&
+    !selectedCreatorId &&
+    !query.trim();
 
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
@@ -1568,16 +1572,16 @@ export default function CommunityPlaylistsPage() {
         </aside>
 
         <section
-          className={`community-content${showFeaturedBanner ? " has-feature-banner" : ""}`}
+          className={`community-content${showAllBanner ? " has-feature-banner" : ""}`}
         >
-          {showFeaturedBanner && (
+          {showAllBanner && (
             <section
               className="community-feature-banner"
               style={{ backgroundImage: `url("${COMMUNITY_FEATURE_BANNER_IMAGE}")` }}
-              aria-label="Made by you"
+              aria-label="Playlists made by you"
             >
               <div className="community-feature-banner-shade" />
-              <h1>Made by you.</h1>
+              <h1>Playlists made by you.</h1>
             </section>
           )}
 
