@@ -929,8 +929,6 @@ export default function CommunityPlaylistsPage() {
 
   function filterByCreator(creator: CommunityPlaylist["creator"]) {
     setSelectedCreatorId(creator.id);
-    communityContentRef.current?.scrollTo({ top: 0, behavior: "auto" });
-    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function clearCommunitySearch() {
@@ -946,6 +944,11 @@ export default function CommunityPlaylistsPage() {
     selectedCategory === "All" &&
     !selectedCreatorId &&
     !query.trim();
+
+  useEffect(() => {
+    communityContentRef.current?.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, behavior: "auto" });
+  }, [activeTab, query, selectedCategory, selectedCreatorId]);
 
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
