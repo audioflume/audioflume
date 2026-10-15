@@ -550,22 +550,42 @@
 
 .community-filtered-section-heading {
   display: flex;
-  min-height: 28px;
-  align-items: baseline;
+  align-items: center;
   margin-bottom: var(--filmwave-small-section-title-margin-bottom);
-  font-family: var(--filmwave-section-title-font-family);
-  line-height: var(--filmwave-section-title-line-height);
 }
 
-.community-filtered-section-heading h2 {
-  margin: 0;
+.community-filter-pill {
+  display: inline-flex;
+  height: 30px;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  border: 1px solid var(--filmwave-browse-filter-border-color, var(--border));
+  border-radius: 999px;
+  background: transparent;
+  padding: 0 10px;
   color: var(--text-primary);
-  font-family: var(--filmwave-small-section-title-font-family);
-  font-size: var(--filmwave-small-section-title-font-size);
-  font-weight: var(--filmwave-small-section-title-font-weight);
-  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
-  line-height: var(--filmwave-small-section-title-line-height);
-  text-transform: var(--filmwave-small-section-title-text-transform);
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 150ms ease, background-color 150ms ease;
+}
+
+.community-filter-pill:hover,
+.community-filter-pill:focus-visible {
+  border-color: var(--text-muted);
+  background: var(--bg-secondary);
+  outline: none;
+}
+
+.community-filter-pill svg {
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+  color: var(--text-secondary);
 }
 
 .community-grid {
