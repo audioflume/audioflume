@@ -379,6 +379,7 @@ export default async function PricingPage() {
         <section className="audioflume-pricing-comparison-section">
           <div className="audioflume-pricing-comparison-heading">
             <span>Plan Comparison</span>
+            <Link href="/artists/licensing">View licensing details</Link>
           </div>
           <div className="audioflume-pricing-comparison-block">
             <div className="overflow-x-auto">
