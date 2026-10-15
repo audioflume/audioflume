@@ -213,13 +213,55 @@
 }
 
 .audioflume-pricing-plan {
+  position: relative;
   display: flex;
   min-width: 0;
   min-height: 576px;
   flex-direction: column;
+  overflow: hidden;
   border: 0;
-  background: #ffffff;
+  background: #111111;
+  color: #ffffff;
   padding: clamp(28px, 2.6vw, 40px);
+}
+
+.audioflume-pricing-plan-background {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.audioflume-pricing-plan-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.58);
+  pointer-events: none;
+}
+
+.audioflume-pricing-plan > :not(.audioflume-pricing-plan-background):not(.audioflume-pricing-plan-overlay) {
+  position: relative;
+  z-index: 2;
+}
+
+.audioflume-pricing-plan .audioflume-pricing-plan-kicker,
+.audioflume-pricing-plan .audioflume-pricing-plan-description,
+.audioflume-pricing-plan .audioflume-pricing-plan-price span,
+.audioflume-pricing-plan .audioflume-pricing-plan-features li {
+  color: rgba(255, 255, 255, 0.78);
+}
+
+.audioflume-pricing-plan .audioflume-pricing-plan-features li {
+  border-top-color: rgba(255, 255, 255, 0.24);
+}
+
+.audioflume-pricing-plan .audioflume-pricing-plan-features li::before {
+  background: #ffffff;
+}
+
+.audioflume-pricing-plan .audioflume-public-action-button {
+  background: #ffffff !important;
+  color: #111111 !important;
 }
 
 .audioflume-pricing-comparison-block {
