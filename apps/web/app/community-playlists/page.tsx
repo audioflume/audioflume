@@ -51,6 +51,7 @@ type CommunityPlaylistPlaybackResponse = {
 type CategoryFilter = "All" | CommunityPlaylistCategory;
 type CommunityTab =
   | "Featured"
+  | "All"
   | "Trending"
   | "Recent"
   | "Most Liked"
@@ -58,11 +59,15 @@ type CommunityTab =
 
 const COMMUNITY_TABS: CommunityTab[] = [
   "Featured",
+  "All",
   "Trending",
   "Recent",
   "Most Liked",
   "Favorites",
 ];
+
+const COMMUNITY_FEATURE_BANNER_IMAGE =
+  "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg";
 
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
   "filmwave-recent-community-playlists";
@@ -939,6 +944,13 @@ export default function CommunityPlaylistsPage() {
     setQuery("");
   }
 
+  function showAllView() {
+    setActiveTab("All");
+    setSelectedCategory("All");
+    setSelectedCreatorId(null);
+    setQuery("");
+  }
+
   function filterByCreator(creator: CommunityPlaylist["creator"]) {
     setSelectedCreatorId(creator.id);
     setQuery(creator.name);
@@ -948,6 +960,12 @@ export default function CommunityPlaylistsPage() {
     setQuery("");
     setSelectedCreatorId(null);
   }
+
+  const showFeaturedBanner =
+    activeTab === "Featured" &&
+    selectedCategory === "All" &&
+    !selectedCreatorId &&
+    !query.trim();
 
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
@@ -1119,6 +1137,10 @@ export default function CommunityPlaylistsPage() {
         .community-content {
           padding-top: 22px !important;
           padding-bottom: 0 !important;
+        }
+
+        .community-content.has-feature-banner {
+          padding-top: 0 !important;
         }
 
         .community-heading-row {
@@ -1491,9 +1513,17 @@ export default function CommunityPlaylistsPage() {
                 key={tab}
                 className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
                 aria-selected={activeTab === tab}
-                onClick={() =>
-                  tab === "Featured" ? showFeaturedView() : setActiveTab(tab)
-                }
+                onClick={() => {
+                  if (tab === "Featured") {
+                    showFeaturedView();
+                    return;
+                  }
+                  if (tab === "All") {
+                    showAllView();
+                    return;
+                  }
+                  setActiveTab(tab);
+                }}
               >
                 {tab}
               </button>
@@ -1525,6 +1555,18 @@ export default function CommunityPlaylistsPage() {
                   <FilterRailChevron />
                 </span>
               </button>
+              <button
+                type="button"
+                className={`fw-filter-rail-item${selectedCategory === "All" && activeTab === "All" ? " is-active" : ""}`}
+                aria-pressed={selectedCategory === "All" && activeTab === "All"}
+                onClick={showAllView}
+              >
+                <span className="fw-filter-rail-label">All</span>
+                <span className="community-category-count">{playlists.length}</span>
+                <span className="community-filter-rail-chevron" aria-hidden="true">
+                  <FilterRailChevron />
+                </span>
+              </button>
               {COMMUNITY_PLAYLIST_CATEGORIES.map((category) => (
                 <button
                   type="button"
@@ -1550,7 +1592,19 @@ export default function CommunityPlaylistsPage() {
 
         </aside>
 
-        <section className="community-content">
+        <section
+          className={`community-content${showFeaturedBanner ? " has-feature-banner" : ""}`}
+        >
+          {showFeaturedBanner && (
+            <section
+              className="community-feature-banner"
+              style={{ backgroundImage: `url("${COMMUNITY_FEATURE_BANNER_IMAGE}")` }}
+              aria-label="Made by you"
+            >
+              <div className="community-feature-banner-shade" />
+              <h1>Made by you.</h1>
+            </section>
+          )}
 
           {recentPlaylists.length > 0 && (
             <section
