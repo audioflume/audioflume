@@ -331,10 +331,10 @@ function CommunityPlaylistsLoadingSkeleton() {
   return (
     <section className="community-skeleton-grid-wrap" aria-hidden="true">
       <div className="community-skeleton-featured-row">
-        {Array.from({ length: 2 }, (_, index) => skeletonCard(index, true))}
+        {Array.from({ length: 3 }, (_, index) => skeletonCard(index, true))}
       </div>
       <div className="community-skeleton-grid">
-        {Array.from({ length: 8 }, (_, index) => skeletonCard(index + 2))}
+        {Array.from({ length: 7 }, (_, index) => skeletonCard(index + 3))}
       </div>
     </section>
   );
@@ -1793,12 +1793,12 @@ export default function CommunityPlaylistsPage() {
                 <>
                   <div className="community-featured-playlists">
                     {filteredPlaylists
-                      .slice(0, 2)
+                      .slice(0, 3)
                       .map((playlist) => renderPlaylistCard(playlist))}
                   </div>
                   <div className="community-grid" id="community-grid">
                     {filteredPlaylists
-                      .slice(2)
+                      .slice(3)
                       .map((playlist) => renderPlaylistCard(playlist))}
                   </div>
                 </>
