@@ -314,27 +314,19 @@ function getPublishedTime(value: string | null) {
 }
 
 function CommunityPlaylistsLoadingSkeleton() {
-  const skeletonCard = (index: number, featured = false) => (
-    <div
-      className={`community-skeleton-card${featured ? " is-featured" : ""}`}
-      key={index}
-    >
-      <div className="community-skeleton-card-image" />
-      <div className="community-skeleton-card-title" />
-      <div className="community-skeleton-card-creator">
-        <span />
-        <i />
-      </div>
-    </div>
-  );
-
   return (
     <section className="community-skeleton-grid-wrap" aria-hidden="true">
-      <div className="community-skeleton-featured-row">
-        {Array.from({ length: 3 }, (_, index) => skeletonCard(index, true))}
-      </div>
       <div className="community-skeleton-grid">
-        {Array.from({ length: 7 }, (_, index) => skeletonCard(index + 3))}
+        {Array.from({ length: 10 }, (_, index) => (
+          <div className="community-skeleton-card" key={index}>
+            <div className="community-skeleton-card-image" />
+            <div className="community-skeleton-card-title" />
+            <div className="community-skeleton-card-creator">
+              <span />
+              <i />
+            </div>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -1788,32 +1780,15 @@ export default function CommunityPlaylistsPage() {
                   </button>
                 </div>
               ) : null}
-              {showAllBanner && filteredPlaylists.length > 0 ? (
-                <>
-                  <div className="community-featured-playlists">
-                    {filteredPlaylists
-                      .slice(0, 3)
-                      .map((playlist) => renderPlaylistCard(playlist))}
-                  </div>
-                  {filteredPlaylists.length > 3 ? (
-                    <div className="community-grid" id="community-grid">
-                      {filteredPlaylists
-                        .slice(3)
-                        .map((playlist) => renderPlaylistCard(playlist))}
-                    </div>
-                  ) : null}
-                </>
-              ) : (
-                <div className="community-grid" id="community-grid">
-                  {filteredPlaylists.length === 0 && (
-                    <div className="community-empty-state">{getEmptyStateMessage()}</div>
-                  )}
+              <div className="community-grid" id="community-grid">
+                {filteredPlaylists.length === 0 && (
+                  <div className="community-empty-state">{getEmptyStateMessage()}</div>
+                )}
 
-                  {filteredPlaylists.map((playlist) =>
-                    renderPlaylistCard(playlist),
-                  )}
-                </div>
-              )}
+                {filteredPlaylists.map((playlist) =>
+                  renderPlaylistCard(playlist),
+                )}
+              </div>
             </section>
           )}
 
