@@ -1561,6 +1561,37 @@ export default function CommunityPlaylistsPage() {
             </section>
           )}
 
+          {selectedCreator && (
+            <section
+              className="community-creator-banner"
+              aria-label={`Playlists made by ${selectedCreator.name}`}
+            >
+              {selectedCreator.imageUrl ? (
+                <div
+                  className="community-creator-banner-background"
+                  style={{ backgroundImage: `url("${selectedCreator.imageUrl}")` }}
+                  aria-hidden="true"
+                />
+              ) : null}
+              <div className="community-creator-banner-shade" />
+              <div className="community-creator-banner-content">
+                {selectedCreator.imageUrl ? (
+                  <img
+                    className="community-creator-banner-avatar"
+                    src={selectedCreator.imageUrl}
+                    alt=""
+                  />
+                ) : (
+                  <span
+                    className="community-creator-banner-avatar community-creator-banner-avatar-placeholder"
+                    aria-hidden="true"
+                  />
+                )}
+                <h1>{`Playlists made by ${selectedCreator.name}`}</h1>
+              </div>
+            </section>
+          )}
+
           {recentPlaylists.length > 0 && (
             <section
               className="community-jump-back"
