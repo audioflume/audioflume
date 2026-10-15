@@ -235,7 +235,7 @@
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(0, 0, 0, 0.58);
+  background: rgba(0, 0, 0, 0.7);
   pointer-events: none;
 }
 
@@ -248,7 +248,7 @@
 .audioflume-pricing-plan .audioflume-pricing-plan-description,
 .audioflume-pricing-plan .audioflume-pricing-plan-price span,
 .audioflume-pricing-plan .audioflume-pricing-plan-features li {
-  color: rgba(255, 255, 255, 0.78);
+  color: rgba(255, 255, 255, 0.78) !important;
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-features li {
