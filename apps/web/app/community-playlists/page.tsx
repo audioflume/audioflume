@@ -348,6 +348,7 @@ function recordCommunityPlaylistPlay(playlistId: number, songId: string) {
 export default function CommunityPlaylistsPage() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playlistPlaybackCacheRef = useRef(new Map<number, Song[]>());
+  const communityContentRef = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [selectedCategory, setSelectedCategory] =
@@ -928,6 +929,8 @@ export default function CommunityPlaylistsPage() {
 
   function filterByCreator(creator: CommunityPlaylist["creator"]) {
     setSelectedCreatorId(creator.id);
+    communityContentRef.current?.scrollTo({ top: 0, behavior: "auto" });
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function clearCommunitySearch() {
@@ -1549,6 +1552,7 @@ export default function CommunityPlaylistsPage() {
         </aside>
 
         <section
+          ref={communityContentRef}
           className={`community-content${showAllBanner ? " has-feature-banner" : ""}${selectedCreator ? " has-creator-banner" : ""}`}
         >
           {showAllBanner && (
