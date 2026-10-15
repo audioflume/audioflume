@@ -246,9 +246,13 @@
 
 .audioflume-pricing-plan .audioflume-pricing-plan-kicker,
 .audioflume-pricing-plan .audioflume-pricing-plan-description,
-.audioflume-pricing-plan .audioflume-pricing-plan-price span,
 .audioflume-pricing-plan .audioflume-pricing-plan-features li {
   color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.audioflume-pricing-plan .audioflume-pricing-plan-price span {
+  color: #ffffff !important;
+  font-weight: 400;
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-features li {
@@ -342,7 +346,7 @@
 
 .audioflume-pricing-plan-price span {
   max-width: none;
-  color: var(--text-muted);
+  color: #ffffff;
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 9.5px;
   font-weight: 400;
