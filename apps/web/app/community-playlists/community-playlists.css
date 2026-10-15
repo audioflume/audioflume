@@ -528,6 +528,20 @@
   outline: none;
 }
 
+.community-filter-pill-avatar {
+  display: block;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-tertiary);
+}
+
+.community-filter-pill-avatar-placeholder {
+  background: var(--bg-tertiary);
+}
+
 .community-filter-pill svg {
   width: 13px;
   height: 13px;
