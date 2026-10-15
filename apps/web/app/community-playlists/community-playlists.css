@@ -551,7 +551,7 @@
 .community-filtered-section-heading {
   display: flex;
   align-items: center;
-  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
+  margin-bottom: calc(var(--filmwave-small-section-title-margin-bottom) + 10px);
 }
 
 .community-filter-pill {
