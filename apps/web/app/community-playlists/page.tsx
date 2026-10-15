@@ -1376,7 +1376,6 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-footer-wrap {
-          border-top: 1px solid var(--border-subtle);
           padding-top: 48px;
           padding-bottom: 0;
         }
@@ -1796,11 +1795,18 @@ export default function CommunityPlaylistsPage() {
                       .slice(0, 3)
                       .map((playlist) => renderPlaylistCard(playlist))}
                   </div>
-                  <div className="community-grid" id="community-grid">
-                    {filteredPlaylists
-                      .slice(3)
-                      .map((playlist) => renderPlaylistCard(playlist))}
-                  </div>
+                  {filteredPlaylists.length > 3 ? (
+                    <>
+                      <div className="community-all-playlists-heading">
+                        <span>All Playlists</span>
+                      </div>
+                      <div className="community-grid" id="community-grid">
+                        {filteredPlaylists
+                          .slice(3)
+                          .map((playlist) => renderPlaylistCard(playlist))}
+                      </div>
+                    </>
+                  ) : null}
                 </>
               ) : (
                 <div className="community-grid" id="community-grid">
