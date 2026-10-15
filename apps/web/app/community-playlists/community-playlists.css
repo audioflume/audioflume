@@ -678,7 +678,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 38px;
-  margin-bottom: 76px;
+  margin-bottom: 38px;
 }
 
 .community-all-playlists-heading {
@@ -1255,7 +1255,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 38px;
-  margin-bottom: 76px;
+  margin-bottom: 38px;
 }
 
 .community-skeleton-card.is-featured .community-skeleton-card-image {
