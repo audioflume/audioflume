@@ -259,7 +259,7 @@
   position: relative;
   display: grid;
   width: calc(100% + 72px);
-  min-height: 250px;
+  height: 350px;
   place-items: center;
   margin-right: -36px;
   margin-left: -36px;
@@ -314,6 +314,7 @@
   font-weight: 400;
   letter-spacing: -0.045em;
   line-height: 1;
+  mix-blend-mode: difference;
 }
 
 .community-heading-row {
