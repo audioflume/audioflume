@@ -316,11 +316,25 @@ export default async function PricingPage() {
 
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-plan-grid">
-          {plans.map((plan) => {
+          {plans.map((plan, index) => {
             const isEnterprise = plan.name === "Enterprise";
+            const planImage =
+              pricingHeroImages[index] ?? pricingHeroImages[0] ?? DEFAULT_PRICING_HERO_IMAGE;
 
             return (
               <article key={plan.name} className="audioflume-pricing-plan">
+                <Image
+                  src={planImage}
+                  alt=""
+                  fill
+                  sizes="(max-width: 980px) 100vw, 33vw"
+                  className="audioflume-pricing-plan-background"
+                  aria-hidden="true"
+                />
+                <span
+                  className="audioflume-pricing-plan-overlay"
+                  aria-hidden="true"
+                />
                 <p className="audioflume-pricing-plan-kicker">{plan.kicker}</p>
                 <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
                 <p className="audioflume-pricing-plan-description">
