@@ -206,7 +206,7 @@
   position: relative;
   display: grid;
   width: calc(100% + 160px);
-  height: clamp(260px, 30vw, 430px);
+  height: 350px;
   place-items: center;
   margin-right: -80px;
   margin-left: -80px;
