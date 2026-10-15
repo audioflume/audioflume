@@ -5,12 +5,13 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
+import GlobalMusicSearch from "@/components/GlobalMusicSearch";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 
-import PricingHeroAccentImage from "./PricingHeroAccentImage";
 import "./pricing-page.css";
 
 export const metadata: Metadata = {
@@ -238,77 +239,44 @@ export default async function PricingPage() {
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
-  const pricingHeroStaticImage = pricingHeroImages[3] ?? pricingHeroImages[0];
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
 
   return (
     <main className="audioflume-pricing-page-root">
-      <section className="audioflume-pricing-hero">
-        <div className="audioflume-pricing-hero-inner">
-          <div
-            className="audioflume-pricing-hero-media !top-[calc(var(--filmwave-header-height,75px)+clamp(26px,3vw,44px))] !right-auto !bottom-0 !left-[31%] !h-auto !w-[40.5%] max-[980px]:!left-[29%] max-[980px]:!w-[46%] max-[760px]:!top-[calc(var(--filmwave-header-height,75px)+70px)] max-[760px]:!left-[18%] max-[760px]:!w-[64%]"
-            aria-hidden="true"
+      <div className="audioflume-pricing-searchbar-slot">
+        <div className="audioflume-pricing-searchbar">
+          <Link
+            href="/music?filters=open"
+            className="audioflume-pricing-searchbar-filters"
           >
-            <Image
-              src={pricingHeroStaticImage}
-              alt=""
-              fill
-              sizes="(max-width: 760px) 76vw, (max-width: 980px) 67vw, (max-width: 1968px) 61vw, 1200px"
-              priority
-              className="audioflume-pricing-hero-frame is-active"
-              style={{ objectFit: "cover", objectPosition: "center center" }}
-            />
-          </div>
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+            </svg>
+            <span>Filters</span>
+          </Link>
 
-          <div
-            className="absolute left-[79%] top-[21.5%] z-[2] h-[23.5%] w-[15%] overflow-hidden max-[760px]:hidden"
-            aria-hidden="true"
-          >
-            <PricingHeroAccentImage
-              images={pricingHeroImages}
-              startIndex={1}
-              sizes="15vw"
-            />
-          </div>
-          <div
-            className="absolute left-[76%] top-[54%] z-[2] aspect-square w-[6.5%] overflow-hidden max-[760px]:hidden"
-            aria-hidden="true"
-          >
-            <PricingHeroAccentImage
-              images={pricingHeroImages}
-              startIndex={4}
-              sizes="7vw"
-            />
-          </div>
-          <div
-            className="absolute right-[0.5%] top-[42%] z-[2] h-[15%] w-[9.5%] overflow-hidden max-[760px]:hidden"
-            aria-hidden="true"
-          >
-            <PricingHeroAccentImage
-              images={pricingHeroImages}
-              startIndex={5}
-              sizes="10vw"
-            />
-          </div>
+          <GlobalMusicSearch />
 
-          <p className="audioflume-pricing-hero-eyebrow !top-[32%] !left-0 max-[760px]:!top-[calc(34%-42px)]">
-            Plans &amp; Pricing
-          </p>
+          <GlobalReferenceSearch className="audioflume-pricing-searchbar-song" />
+        </div>
+      </div>
 
-          <h1 className="audioflume-pricing-hero-title !absolute !top-[38%] !left-0 !m-0 !w-[48%] !text-[clamp(60px,5.9vw,96px)] max-[980px]:!w-[54%] max-[980px]:!text-[clamp(56px,7.2vw,78px)] max-[760px]:!top-[34%] max-[760px]:!w-[86%] max-[760px]:!text-[clamp(50px,13vw,74px)]">
-            <span>One library.</span>
-            <span>
-              Three <span style={{ display: "inline", fontWeight: 100 }}>(3)</span> ways
-            </span>
-            <span>to work.</span>
+      <section className="audioflume-pricing-intro">
+        <div className="audioflume-pricing-intro-inner">
+          <p className="audioflume-pricing-intro-eyebrow">Plans &amp; Pricing</p>
+
+          <h1 className="audioflume-pricing-intro-title">
+            One library. Three ways to work.
           </h1>
 
-          <div className="audioflume-pricing-hero-bottom">
-            <p className="audioflume-pricing-hero-copy">
-              Straightforward access to Audioflume&apos;s curated music and SFX catalogue, with plans for solo filmmakers, active studios, and larger creative teams.
-            </p>
-            <p className="audioflume-pricing-hero-note">
+          <div className="audioflume-pricing-intro-support">
+            <p className="audioflume-pricing-intro-note">
               Pricing that scales with the work.
+            </p>
+            <p className="audioflume-pricing-intro-copy">
+              Straightforward access to Audioflume&apos;s curated music and SFX
+              catalogue, with plans for solo filmmakers, active studios, and
+              larger creative teams.
             </p>
           </div>
         </div>
