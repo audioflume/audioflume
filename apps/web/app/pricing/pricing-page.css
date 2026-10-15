@@ -217,14 +217,14 @@
   min-width: 0;
   min-height: 576px;
   flex-direction: column;
-  border: 1px solid var(--border);
+  border: 0;
   background: #ffffff;
   padding: clamp(28px, 2.6vw, 40px);
 }
 
 .audioflume-pricing-comparison-block {
   background: #ffffff;
-  padding: clamp(28px, 3vw, 44px);
+  padding: clamp(44px, 4.5vw, 72px);
 }
 
 .audioflume-pricing-plan-kicker {
