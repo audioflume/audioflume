@@ -1406,7 +1406,9 @@
   }
 
   .community-content.has-feature-banner,
-  .community-page.is-sidebar-open .community-content.has-feature-banner {
+  .community-page.is-sidebar-open .community-content.has-feature-banner,
+  .community-content.has-creator-banner,
+  .community-page.is-sidebar-open .community-content.has-creator-banner {
     padding-top: 0;
   }
 
