@@ -255,6 +255,67 @@
   margin-top: 36px;
 }
 
+.community-creator-banner {
+  position: relative;
+  display: grid;
+  width: calc(100% + 72px);
+  min-height: 250px;
+  place-items: center;
+  margin-right: -36px;
+  margin-left: -36px;
+  overflow: hidden;
+  background: var(--bg-secondary);
+}
+
+.community-creator-banner-background {
+  position: absolute;
+  inset: -40px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(34px);
+  transform: scale(1.08);
+}
+
+.community-creator-banner-shade {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.34);
+}
+
+.community-creator-banner-content {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 34px;
+}
+
+.community-creator-banner-avatar {
+  display: block;
+  width: 112px;
+  height: 112px;
+  flex: 0 0 112px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-tertiary);
+}
+
+.community-creator-banner-avatar-placeholder {
+  background: var(--bg-tertiary);
+}
+
+.community-creator-banner h1 {
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(32px, 3vw, 48px);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
 .community-heading-row {
   width: min(480px, 100%);
   display: block;
@@ -1359,6 +1420,28 @@
   .community-feature-banner h1 {
     width: calc(100vw - 40px);
     font-size: clamp(42px, 12vw, 60px);
+  }
+
+  .community-creator-banner {
+    width: calc(100% + 40px);
+    min-height: 220px;
+    margin-right: -20px;
+    margin-left: -20px;
+  }
+
+  .community-creator-banner-content {
+    gap: 16px;
+    padding: 28px 20px;
+  }
+
+  .community-creator-banner-avatar {
+    width: 82px;
+    height: 82px;
+    flex-basis: 82px;
+  }
+
+  .community-creator-banner h1 {
+    font-size: clamp(28px, 8vw, 40px);
   }
 
   .community-search {
