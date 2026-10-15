@@ -311,48 +311,21 @@ function getPublishedTime(value: string | null) {
 }
 
 function CommunityPlaylistsLoadingSkeleton() {
-  const shelfCards = (count: number) =>
-    Array.from({ length: count }, (_, index) => (
-      <div className="community-skeleton-card" key={index}>
-        <div className="community-skeleton-card-image" />
-        <div className="community-skeleton-card-title" />
-        <div className="community-skeleton-card-creator">
-          <span />
-          <i />
-        </div>
-      </div>
-    ));
-
   return (
-    <div className="community-skeleton-shelves" aria-hidden="true">
-      <section className="community-skeleton-shelf is-trending">
-        <div className="community-skeleton-section-title" />
-        <div className="community-skeleton-row">{shelfCards(4)}</div>
-      </section>
-
-      <section className="community-skeleton-shelf">
-        <div className="community-skeleton-section-title" />
-        <div className="community-skeleton-row">{shelfCards(7)}</div>
-      </section>
-
-      <section className="community-skeleton-shelf">
-        <div className="community-skeleton-section-title" />
-        <div className="community-skeleton-row">{shelfCards(7)}</div>
-      </section>
-
-      <section className="community-skeleton-shelf">
-        <div className="community-skeleton-section-title" />
-        <div className="community-skeleton-contributors">
-          {Array.from({ length: 6 }, (_, index) => (
-            <div className="community-skeleton-contributor" key={index}>
+    <section className="community-skeleton-grid-wrap" aria-hidden="true">
+      <div className="community-skeleton-grid">
+        {Array.from({ length: 10 }, (_, index) => (
+          <div className="community-skeleton-card" key={index}>
+            <div className="community-skeleton-card-image" />
+            <div className="community-skeleton-card-title" />
+            <div className="community-skeleton-card-creator">
               <span />
               <i />
-              <b />
             </div>
-          ))}
-        </div>
-      </section>
-    </div>
+          </div>
+        ))}
+      </div>
+    </section>
   );
 }
 
