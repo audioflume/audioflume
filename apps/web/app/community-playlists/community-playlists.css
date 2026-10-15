@@ -259,13 +259,19 @@
 .community-creator-banner {
   position: relative;
   display: grid;
-  width: calc(100% + 72px);
+  width: calc(100% + 160px);
   height: 350px;
   place-items: center;
-  margin-right: -36px;
-  margin-left: -36px;
+  margin-right: -80px;
+  margin-left: -80px;
   overflow: hidden;
   background: var(--bg-secondary);
+}
+
+.community-page.is-sidebar-open .community-creator-banner {
+  width: calc(100% + 72px);
+  margin-right: -36px;
+  margin-left: -36px;
 }
 
 .community-creator-banner-background {
