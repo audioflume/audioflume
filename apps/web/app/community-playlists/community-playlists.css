@@ -528,11 +528,15 @@
   outline: none;
 }
 
+.community-filter-pill.is-creator {
+  padding-left: 5px;
+}
+
 .community-filter-pill-avatar {
   display: block;
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-tertiary);
