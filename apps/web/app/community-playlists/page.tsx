@@ -1368,6 +1368,7 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-footer-wrap {
+          border-top: 1px solid var(--border-subtle);
           padding-top: 48px;
           padding-bottom: 0;
         }
