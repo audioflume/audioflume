@@ -287,7 +287,11 @@ export default async function PricingPage() {
           {plans.map((plan, index) => {
             const isEnterprise = plan.name === "Enterprise";
             const planImage =
-              pricingHeroImages[index] ?? pricingHeroImages[0] ?? DEFAULT_PRICING_HERO_IMAGE;
+              plan.name === "Enterprise"
+                ? "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg"
+                : pricingHeroImages[index] ??
+                  pricingHeroImages[0] ??
+                  DEFAULT_PRICING_HERO_IMAGE;
 
             return (
               <article key={plan.name} className="audioflume-pricing-plan">
