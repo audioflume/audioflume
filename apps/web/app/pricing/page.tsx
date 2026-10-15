@@ -362,7 +362,7 @@ export default async function PricingPage() {
           })}
         </div>
 
-        <div className="mt-[clamp(72px,7vw,108px)]">
+        <div className="audioflume-pricing-comparison-block mt-[clamp(72px,7vw,108px)]">
           <div className="overflow-x-auto">
             <table className="w-full min-w-[820px] border-collapse">
               <thead>
