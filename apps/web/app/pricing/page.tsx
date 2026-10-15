@@ -376,8 +376,12 @@ export default async function PricingPage() {
           })}
         </div>
 
-        <div className="audioflume-pricing-comparison-block mt-[clamp(72px,7vw,108px)]">
-          <div className="overflow-x-auto">
+        <section className="audioflume-pricing-comparison-section">
+          <div className="audioflume-pricing-comparison-heading">
+            <span>Plan Comparison</span>
+          </div>
+          <div className="audioflume-pricing-comparison-block">
+            <div className="overflow-x-auto">
             <table className="w-full min-w-[820px] border-collapse">
               <thead>
                 <tr className="border-b border-[var(--border)]">
@@ -428,8 +432,9 @@ export default async function PricingPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           </div>
-        </div>
+        </section>
       </section>
 
       <section className="group/pricing-testimonials relative overflow-hidden bg-[var(--bg-tertiary)] text-[var(--text-primary)]">
