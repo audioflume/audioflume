@@ -154,7 +154,21 @@
 }
 
 .audioflume-pricing-plans-section {
+  position: relative;
+  isolation: isolate;
   padding: clamp(84px, 8vw, 126px) 0 clamp(92px, 9vw, 138px);
+}
+
+.audioflume-pricing-plans-section::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: -1;
+  width: 100vw;
+  background: #e5e5dd;
+  transform: translateX(-50%);
 }
 
 .audioflume-pricing-section-intro {
@@ -204,8 +218,13 @@
   min-height: 576px;
   flex-direction: column;
   border: 1px solid var(--border);
-  background: var(--bg-secondary);
+  background: #ffffff;
   padding: clamp(28px, 2.6vw, 40px);
+}
+
+.audioflume-pricing-comparison-block {
+  background: #ffffff;
+  padding: clamp(28px, 3vw, 44px);
 }
 
 .audioflume-pricing-plan-kicker {
