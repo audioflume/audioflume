@@ -64,6 +64,9 @@ const COMMUNITY_TABS: CommunityTab[] = [
   "Favorites",
 ];
 
+const COMMUNITY_FEATURE_BANNER_IMAGE =
+  "https://images.filmwave.io/images/community-playlists/nik-shuliahin-Lg_oC6gDCjU-unsplash.jpg";
+
 const RECENT_COMMUNITY_PLAYLISTS_KEY =
   "filmwave-recent-community-playlists";
 
@@ -935,6 +938,12 @@ export default function CommunityPlaylistsPage() {
     showAllView();
   }
 
+  const showAllBanner =
+    activeTab === "All" &&
+    selectedCategory === "All" &&
+    !selectedCreatorId &&
+    !query.trim();
+
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
     const isPending = pendingFavoriteIds.has(playlist.id);
@@ -1105,6 +1114,10 @@ export default function CommunityPlaylistsPage() {
         .community-content {
           padding-top: 22px !important;
           padding-bottom: 0 !important;
+        }
+
+        .community-content.has-feature-banner {
+          padding-top: 0 !important;
         }
 
         .community-heading-row {
@@ -1534,7 +1547,19 @@ export default function CommunityPlaylistsPage() {
 
         </aside>
 
-        <section className="community-content">
+        <section
+          className={`community-content${showAllBanner ? " has-feature-banner" : ""}`}
+        >
+          {showAllBanner && (
+            <section
+              className="community-feature-banner"
+              style={{ backgroundImage: `url("${COMMUNITY_FEATURE_BANNER_IMAGE}")` }}
+              aria-label="Playlists made by you"
+            >
+              <div className="community-feature-banner-shade" />
+              <h1>Playlists made by you.</h1>
+            </section>
+          )}
 
           {recentPlaylists.length > 0 && (
             <section
