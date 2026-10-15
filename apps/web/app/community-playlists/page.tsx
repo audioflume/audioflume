@@ -1695,7 +1695,7 @@ export default function CommunityPlaylistsPage() {
                 <div className="community-filtered-section-heading">
                   <button
                     type="button"
-                    className="community-filter-pill"
+                    className={`community-filter-pill${selectedCreator ? " is-creator" : ""}`}
                     onClick={clearCommunityFilters}
                     aria-label={`Clear ${activeFilterLabel} filter`}
                   >
