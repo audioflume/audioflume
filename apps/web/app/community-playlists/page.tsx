@@ -1796,16 +1796,11 @@ export default function CommunityPlaylistsPage() {
                       .map((playlist) => renderPlaylistCard(playlist))}
                   </div>
                   {filteredPlaylists.length > 3 ? (
-                    <>
-                      <div className="community-all-playlists-heading">
-                        <span>All Playlists</span>
-                      </div>
-                      <div className="community-grid" id="community-grid">
-                        {filteredPlaylists
-                          .slice(3)
-                          .map((playlist) => renderPlaylistCard(playlist))}
-                      </div>
-                    </>
+                    <div className="community-grid" id="community-grid">
+                      {filteredPlaylists
+                        .slice(3)
+                        .map((playlist) => renderPlaylistCard(playlist))}
+                    </div>
                   ) : null}
                 </>
               ) : (
