@@ -276,9 +276,11 @@
   display: flex;
   min-height: 28px;
   align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: var(--filmwave-small-section-title-margin-bottom);
   font-family: var(--filmwave-section-title-font-family);
-  line-height: var(--filmwave-section-title-line-height);
+  line-height: var(--filmwave-small-section-title-line-height);
 }
 
 .audioflume-pricing-comparison-heading > span {
@@ -289,6 +291,14 @@
   letter-spacing: var(--filmwave-small-section-title-letter-spacing);
   line-height: var(--filmwave-small-section-title-line-height);
   text-transform: var(--filmwave-small-section-title-text-transform);
+}
+
+.audioflume-pricing-comparison-heading a {
+  color: var(--text-primary);
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: normal;
+  text-decoration: none;
 }
 
 .audioflume-pricing-comparison-block {
