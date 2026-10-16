@@ -16,6 +16,8 @@ type GlobalMusicSearchFieldProps = {
   onClear: () => void;
   onSubmit?: FormEventHandler<HTMLFormElement>;
   inputRef?: Ref<HTMLInputElement>;
+  className?: string;
+  clearButtonClassName?: string;
 };
 
 function SearchFieldContent({
@@ -23,7 +25,8 @@ function SearchFieldContent({
   onChange,
   onClear,
   inputRef,
-}: Omit<GlobalMusicSearchFieldProps, "onSubmit">) {
+  clearButtonClassName = "audioflume-home-reference-searchbar-clear",
+}: Omit<GlobalMusicSearchFieldProps, "onSubmit" | "className">) {
   return (
     <>
       <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -41,7 +44,7 @@ function SearchFieldContent({
       {value.length > 0 ? (
         <button
           type="button"
-          className="audioflume-home-reference-searchbar-clear"
+          className={clearButtonClassName}
           onClick={onClear}
           aria-label="Clear search"
         >
@@ -58,11 +61,13 @@ export default function GlobalMusicSearchField({
   onClear,
   onSubmit,
   inputRef,
+  className = "audioflume-home-reference-searchbar-field",
+  clearButtonClassName = "audioflume-home-reference-searchbar-clear",
 }: GlobalMusicSearchFieldProps) {
   if (onSubmit) {
     return (
       <form
-        className="audioflume-home-reference-searchbar-field"
+        className={className}
         onSubmit={onSubmit}
       >
         <SearchFieldContent
@@ -70,18 +75,20 @@ export default function GlobalMusicSearchField({
           onChange={onChange}
           onClear={onClear}
           inputRef={inputRef}
+          clearButtonClassName={clearButtonClassName}
         />
       </form>
     );
   }
 
   return (
-    <label className="audioflume-home-reference-searchbar-field">
+    <label className={className}>
       <SearchFieldContent
         value={value}
         onChange={onChange}
         onClear={onClear}
         inputRef={inputRef}
+        clearButtonClassName={clearButtonClassName}
       />
     </label>
   );
