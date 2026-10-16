@@ -261,28 +261,16 @@ export default async function PricingPage() {
         </div>
       </div>
 
-      <section className="audioflume-pricing-intro">
-        <div className="audioflume-pricing-intro-inner">
-          <p className="audioflume-pricing-intro-eyebrow">Plans &amp; Pricing</p>
-
-          <h1 className="audioflume-pricing-intro-title">
-            One library. Three ways to work.
-          </h1>
-
-          <div className="audioflume-pricing-intro-support">
-            <p className="audioflume-pricing-intro-note">
-              Pricing that scales with the work.
-            </p>
-            <p className="audioflume-pricing-intro-copy">
-              Straightforward access to Audioflume&apos;s curated music and SFX
-              catalogue, with plans for solo filmmakers, active studios, and
-              larger creative teams.
-            </p>
-          </div>
-        </div>
-      </section>
-
       <section className="audioflume-pricing-plans-section">
+        <div className="audioflume-pricing-overview">
+          <h1>Plans &amp; Pricing</h1>
+          <p>
+            Straightforward access to Audioflume&apos;s curated music and SFX
+            catalogue, with plans for solo filmmakers, active studios, and
+            larger creative teams.
+          </p>
+        </div>
+
         <div className="audioflume-pricing-plan-grid">
           {plans.map((plan, index) => {
             const isEnterprise = plan.name === "Enterprise";
