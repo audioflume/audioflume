@@ -24,7 +24,7 @@ export default function PaymentSection() {
         <Card>
           <CardTitle title="Payment method" description="Card data should be handled through Stripe, not stored in Supabase." />
           <div className="p-4">
-            <div className="rounded-[var(--filmwave-backend-control-radius)] border border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
+            <div className="rounded-[var(--filmwave-backend-control-radius)] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3.5">
               <div className="flex flex-wrap items-center justify-between gap-4">
                 <div>
                   <div className="text-sm font-medium text-[var(--text-primary)]">Stripe customer portal not connected yet</div>
@@ -32,7 +32,7 @@ export default function PaymentSection() {
                     Customer ID: {billingProfile?.stripe_customer_id || "Not created"}
                   </div>
                 </div>
-                <div className="rounded-[var(--filmwave-backend-control-radius)] border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]">
+                <div className="rounded-[var(--filmwave-backend-control-radius)] border-[1.5px] border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--text-muted)]">
                   Stripe-ready
                 </div>
               </div>
@@ -56,7 +56,7 @@ export default function PaymentSection() {
               <Input label="Country" value={form.country} placeholder="Canada" onChange={(value) => setForm((current) => ({ ...current, country: value }))} />
               <Input label="Province / state" value={form.province_state} placeholder="British Columbia" onChange={(value) => setForm((current) => ({ ...current, province_state: value }))} />
             </div>
-            <div className="grid gap-3 border-t border-[var(--border)] px-4 py-3.5">
+            <div className="grid gap-3 border-t-[1.5px] border-[var(--border)] px-4 py-3.5">
               {message ? <Feedback tone={message.tone} message={message.text} /> : null}
               <div className="flex flex-wrap gap-2">
                 <Button type="submit" disabled={saving || !billingChanged || loadState === "loading"}>{saving ? "Saving..." : "Save billing details"}</Button>

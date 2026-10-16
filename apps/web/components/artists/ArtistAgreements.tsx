@@ -252,7 +252,7 @@ export default function ArtistAgreements({ artistId }: { artistId: string }) {
                     This document is being prepared and cannot be accepted yet.
                   </div>
                 ) : (
-                  <div className="mt-5 border-t border-[var(--border-subtle)] pt-5">
+                  <div className="mt-5 border-t-[1.5px] border-[var(--border-subtle)] pt-5">
                     <div className="flex flex-wrap items-center gap-2">
                       {document.document_url ? (
                         <a
