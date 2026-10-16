@@ -26,7 +26,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
-  border-right: 1px solid var(--border);
+  border-right: 1.5px solid var(--border);
   background: var(--bg-primary);
   opacity: 0;
   pointer-events: none;
@@ -343,7 +343,7 @@
   height: 42px;
   align-items: center;
   gap: 12px;
-  border: 1px solid var(--filmwave-border-color);
+  border: 1.5px solid var(--filmwave-border-color);
   border-radius: 0;
   background: var(--bg-primary);
   padding: 0 14px;
@@ -402,7 +402,7 @@
   height: var(--filmwave-searchbar-height, 75px);
   grid-template-columns: 154px minmax(0, 1fr) auto;
   align-items: stretch;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1.5px solid var(--border);
   background: var(--bg-primary);
   color: var(--text-primary);
   transition: grid-template-columns 180ms ease;
@@ -422,7 +422,7 @@
 .community-searchbar-filter-button {
   gap: 18px;
   border: 0;
-  border-right: 1px solid var(--border);
+  border-right: 1.5px solid var(--border);
   background: transparent;
   padding: 0 30px;
   color: var(--text-primary);
@@ -633,7 +633,7 @@
   align-items: center;
   justify-content: center;
   gap: 6px;
-  border: 1px solid var(--filmwave-browse-filter-border-color, var(--border));
+  border: 1.5px solid var(--filmwave-browse-filter-border-color, var(--border));
   border-radius: 999px;
   background: transparent;
   padding: 0 10px;
@@ -926,7 +926,7 @@
 .community-jump-back .recent-playlist-card {
   min-height: 0;
   gap: 10px;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: 7px;
   background: transparent;
   padding: 9px;
@@ -1398,7 +1398,7 @@
     min-height: 0;
     overflow: visible;
     border-right: 0;
-    border-bottom: 1px solid var(--border-subtle);
+    border-bottom: 1.5px solid var(--border-subtle);
   }
 
   .community-categories nav {

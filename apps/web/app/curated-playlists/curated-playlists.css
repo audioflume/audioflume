@@ -652,7 +652,7 @@ body:has(.curated-playlists-page-root)
   min-height: 42px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   padding: 0 18px;
   font-size: 12px;
   font-weight: 400;

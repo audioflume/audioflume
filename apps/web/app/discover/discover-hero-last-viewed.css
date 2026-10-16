@@ -276,7 +276,7 @@ body:has(.discover-page-root)
   .discover-ready-to-cut-section
   article[role="button"]
   > button:last-child {
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   box-shadow: none;
 }
 

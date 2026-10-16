@@ -144,7 +144,7 @@
 }
 
 .audioflume-home-editorial-refresh-secondary-action {
-  border: 1px solid color-mix(in srgb, var(--filmwave-white) 5%, transparent) !important;
+  border: 1.5px solid color-mix(in srgb, var(--filmwave-white) 5%, transparent) !important;
   background: transparent !important;
   color: var(--filmwave-white) !important;
 }
