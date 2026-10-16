@@ -354,14 +354,37 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-original-song-card-play::after {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background: rgba(17, 17, 17, 0.28);
   content: "";
+  pointer-events: none;
 }
 
-.audioflume-home-reference-original-song-card-play > img,
-.audioflume-home-reference-original-song-card-fallback {
+.audioflume-home-reference-original-song-card-background {
   position: absolute;
-  inset: 0;
+  inset: -36px;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  filter: blur(34px);
+  opacity: 0.78;
+  transform: scale(1.16);
+}
+
+.audioflume-home-reference-original-song-card-art {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: block;
+  width: 62%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  transform: translate(-50%, -50%);
+}
+
+.audioflume-home-reference-original-song-card-art img {
+  display: block;
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -369,13 +392,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-original-song-card:hover
-  .audioflume-home-reference-original-song-card-play > img,
-.audioflume-home-reference-original-song-card:hover
-  .audioflume-home-reference-original-song-card-fallback {
+  .audioflume-home-reference-original-song-card-art img {
   transform: scale(1.018);
 }
 
 .audioflume-home-reference-original-song-card-fallback {
+  position: absolute;
+  inset: 0;
   background: linear-gradient(135deg, #242424, #111111);
 }
 
