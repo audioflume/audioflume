@@ -42,23 +42,6 @@ function PlanSkeleton() {
 export default function Loading() {
   return (
     <main className="audioflume-pricing-page-root audioflume-pricing-loading" aria-hidden="true">
-      <div className="audioflume-pricing-searchbar-slot">
-        <div className="audioflume-pricing-searchbar audioflume-pricing-searchbar-skeleton">
-          <div className="audioflume-pricing-searchbar-filters">
-            <SkeletonBlock className="is-filter-icon" />
-            <SkeletonBlock className="is-filter-label" />
-          </div>
-          <div className="audioflume-pricing-searchbar-skeleton-field">
-            <SkeletonBlock className="is-search-icon" />
-            <SkeletonBlock className="is-search-copy" />
-          </div>
-          <div className="audioflume-pricing-searchbar-actions">
-            <SkeletonBlock className="is-search-song" />
-            <SkeletonBlock className="is-sort" />
-          </div>
-        </div>
-      </div>
-
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-overview">
           <div className="audioflume-pricing-overview-heading">
