@@ -160,7 +160,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled}
           onClick={() => audioInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <AudioActionIcon />
           <span>Choose Audio</span>
@@ -169,7 +169,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled || artworkDisabled}
           onClick={() => artworkActionInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <ArtworkActionIcon />
           <span>{artworkActionLabel}</span>
@@ -178,7 +178,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled}
           onClick={() => stemsInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <StemsActionIcon />
           <span>Choose Stems</span>
@@ -186,7 +186,7 @@ export default function BackendSongFileUpload({
         {topAction ? <div className="ml-auto">{topAction}</div> : null}
       </div>
 
-      <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
+      <section className="rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-5">
         <h2 className="mb-3 font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
           Files
         </h2>
@@ -210,7 +210,7 @@ export default function BackendSongFileUpload({
         />
 
         <div className="grid gap-2">
-          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${audioStatusBusy || (audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus)) ? "py-2" : ""}`}>
+          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border-[1.5px] border-[var(--border)] px-3 ${audioStatusBusy || (audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus)) ? "py-2" : ""}`}>
             <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
               Audio
             </div>
@@ -239,7 +239,7 @@ export default function BackendSongFileUpload({
             ) : null}
           </div>
 
-          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border border-[var(--border)] px-3 ${visibleStemLabels.length > 0 ? "py-2" : ""}`}>
+          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[7px] border-[1.5px] border-[var(--border)] px-3 ${visibleStemLabels.length > 0 ? "py-2" : ""}`}>
             <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
               Stems
             </div>

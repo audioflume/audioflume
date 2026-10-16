@@ -125,7 +125,7 @@ function getIsAdmin(
 
 function DashboardCard({ children }: { children: ReactNode }) {
   return (
-    <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+    <section className="overflow-hidden rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]">
       {children}
     </section>
   );
@@ -191,7 +191,7 @@ function AdminHero({
 
   return (
     <section className="mb-4">
-      <div className="group relative min-h-[355px] overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-secondary)]">
+      <div className="group relative min-h-[355px] overflow-hidden rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)]">
         <img
           src={ADMIN_HERO_IMAGE}
           alt=""
@@ -199,18 +199,18 @@ function AdminHero({
         />
         <div className="absolute inset-0 bg-gradient-to-r from-black/82 via-black/46 to-black/10" />
         <div className="relative z-10 flex min-h-[355px] flex-col justify-between p-5 md:p-6">
-          <div className="inline-flex w-fit max-w-full items-center rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
+          <div className="inline-flex w-fit max-w-full items-center rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
             <span className="truncate">Audioflume admin</span>
           </div>
 
           <div className="grid gap-2 sm:grid-cols-3">
-            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+            <div className="rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
               {songsLoading ? "Scanning library" : `${stats.totalSongs} songs scanned`}
             </div>
-            <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+            <div className="rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
               Library health · {songsLoading ? "—" : `${progress}%`}
             </div>
-            <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+            <div className="flex items-center gap-2 rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
               <span
                 className="h-1.5 w-1.5 rounded-full"
                 style={{ backgroundColor: STATUS_COLORS[healthTone] }}
@@ -284,7 +284,7 @@ function RecentSongsCard({
                       borderBottom:
                         index === 5
                           ? "none"
-                          : "1px solid var(--border-subtle)",
+                          : "1.5px solid var(--border-subtle)",
                     }}
                   >
                     <div className="h-[52px] w-[52px] bg-[var(--bg-tertiary)]" />
@@ -421,7 +421,7 @@ export default function AdminDashboardPage() {
         contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
         contentAreaBottomPadding={false}
       >
-        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+        <section className="rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           Loading...
         </section>
         <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
@@ -438,7 +438,7 @@ export default function AdminDashboardPage() {
         contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
         contentAreaBottomPadding={false}
       >
-        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+        <section className="rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           You do not have access to this page.
         </section>
         <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
@@ -497,7 +497,7 @@ export default function AdminDashboardPage() {
           <Link
             key={action.href}
             href={action.href}
-            className={`admin-dashboard-quick-action inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border px-5 text-[12px] font-normal transition ${
+            className={`admin-dashboard-quick-action inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border-[1.5px] px-5 text-[12px] font-normal transition ${
               index === 0
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -569,7 +569,7 @@ export default function AdminDashboardPage() {
                   <div
                     key={status.key}
                     title={status.message}
-                    className="flex min-h-10 items-center gap-2.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)]"
+                    className="flex min-h-10 items-center gap-2.5 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)]"
                   >
                     <StatusIcon tone={status.tone} />
                     <span>{status.label}</span>
@@ -582,7 +582,7 @@ export default function AdminDashboardPage() {
       </div>
 
       {songsError ? (
-        <section className="mt-3 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+        <section className="mt-3 rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           {songsError}
         </section>
       ) : null}

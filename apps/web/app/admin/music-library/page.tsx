@@ -475,14 +475,14 @@ export default function AdminMusicLibraryPage() {
 
           <Link
             href="/admin/songs/new"
-            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
+            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border-[1.5px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
           >
             <UploadIcon size={13} />
             <span>Upload Song</span>
           </Link>
         </div>
 
-        <section className="overflow-hidden rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)]">
+        <section className="overflow-hidden rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]">
           <div className="flex flex-col gap-3 px-5 py-5 lg:flex-row lg:items-center lg:justify-between">
             <div>
               <div className="text-base font-medium text-[var(--text-primary)]">
@@ -512,7 +512,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={clearSelection}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-4 text-[12px] font-normal text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
+                    className="inline-flex h-10 items-center justify-center rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-4 text-[12px] font-normal text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -522,7 +522,7 @@ export default function AdminMusicLibraryPage() {
               <button
                 type="button"
                 onClick={() => setFiltersOpen((open) => !open)}
-                className={`flex h-10 items-center gap-2 rounded-[7px] border px-4 text-[12px] font-normal transition-colors ${
+                className={`flex h-10 items-center gap-2 rounded-[7px] border-[1.5px] px-4 text-[12px] font-normal transition-colors ${
                   filtersOpen || activeFilterCount > 0
                     ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
                     : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -544,7 +544,7 @@ export default function AdminMusicLibraryPage() {
           </div>
 
           {filtersOpen && (
-            <div className="mx-5 mb-4 rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] p-3">
+            <div className="mx-5 mb-4 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-3">
               <div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between">
                 <div className="flex items-center gap-3">
                   {songsLoading ? (
@@ -611,7 +611,7 @@ export default function AdminMusicLibraryPage() {
             <div className="overflow-x-auto overflow-y-hidden">
               <div className="admin-music-library-song-list min-w-[920px]">
                 {showSkeleton && (
-                  <div className="grid gap-0 border-t border-[var(--border-subtle)]">
+                  <div className="grid gap-0 border-t-[1.5px] border-[var(--border-subtle)]">
                     {Array.from({ length: 10 }, (_, index) => (
                       <div
                         key={index}
@@ -663,7 +663,7 @@ export default function AdminMusicLibraryPage() {
                 )}
 
                 {!songsError && !showSkeleton && visibleSongs.length > 0 && (
-                  <div className="admin-song-row-group border-t border-[var(--border-subtle)]">
+                  <div className="admin-song-row-group border-t-[1.5px] border-[var(--border-subtle)]">
                     {visibleSongs.map((song, index) => (
                       <AdminSongRow
                         key={song.id}
