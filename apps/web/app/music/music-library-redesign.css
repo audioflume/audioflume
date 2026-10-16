@@ -751,13 +751,20 @@ main
   top: calc((var(--filmwave-header-height, 75px) * 2) + 8px) !important;
 }
 
-.audioflume-music-page
-  > section
-  .fw-music-content-column
+html
+  body
+  .audioflume-music-page
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  > .fw-music-content-column
   > .fw-toolbar-sticky
   > .fw-filter-panel-wrap {
   top: calc(
     var(--filmwave-header-height, 60px) + var(--filmwave-searchbar-height, 75px)
+  ) !important;
+  height: calc(
+    100dvh - var(--filmwave-header-height, 60px) -
+      var(--filmwave-searchbar-height, 75px) -
+      var(--filmwave-sidebar-bottom-offset, 0px)
   ) !important;
 }
 
