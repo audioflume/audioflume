@@ -860,8 +860,20 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   gap: 12px;
 }
 
+.audioflume-home-reference-tools-secondary-grid {
+  margin-top: 12px;
+}
+
 .audioflume-home-reference-tools-column {
   min-width: 0;
+}
+
+.audioflume-home-reference-section-heading-spacer {
+  visibility: hidden;
+}
+
+.audioflume-home-reference-blank-card {
+  background: var(--bg-tertiary);
 }
 
 .audioflume-home-reference-tool-card {
