@@ -81,7 +81,7 @@
   --filmwave-section-title-font-weight: 300;
   --filmwave-section-title-letter-spacing: -0.035em;
   --filmwave-section-title-line-height: 1;
-  --filmwave-section-title-margin-bottom: 24px;
+  --filmwave-section-title-margin-bottom: 20px;
 
   /* Canonical compact section-title typography. */
   --filmwave-small-section-title-font-family: var(--filmwave-section-title-font-family);
