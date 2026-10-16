@@ -267,7 +267,7 @@ export default function CuePointManager({
           margin-top: 0 !important;
           overflow: visible !important;
           border: 0 !important;
-          border-top: 1px solid var(--border-subtle) !important;
+          border-top: 1.5px solid var(--border-subtle) !important;
           border-radius: 0 !important;
           clip-path: none !important;
         }
@@ -291,7 +291,7 @@ export default function CuePointManager({
           > div
           > .cue-point-row-grid:first-child {
           min-height: 34px;
-          border-bottom: 1px solid var(--border-subtle) !important;
+          border-bottom: 1.5px solid var(--border-subtle) !important;
           background: transparent !important;
           padding-top: 0 !important;
           padding-bottom: 0 !important;

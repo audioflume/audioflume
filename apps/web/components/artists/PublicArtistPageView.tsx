@@ -596,7 +596,7 @@ export default function PublicArtistPageView({
           content: "";
           position: absolute;
           inset: 10px;
-          border: 1px dashed rgba(255, 255, 255, 0.82);
+          border: 1.5px dashed rgba(255, 255, 255, 0.82);
           pointer-events: none;
         }
 

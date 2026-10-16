@@ -569,7 +569,7 @@ export default function EditPointWaveformReview({
       <style>{`
         .edit-point-play-button {
           background: transparent;
-          border: 1px solid var(--border);
+          border: 1.5px solid var(--border);
           color: var(--text-secondary);
         }
 
