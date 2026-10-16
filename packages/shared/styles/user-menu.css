@@ -1,7 +1,7 @@
 /* ── User menu ── shared dropdown shell + identity/theme sections ── */
 
 .filmwave-dropdown-shell.filmwave-user-menu {
-  width: 260px;
+  width: 280px;
   border-radius: 0;
   --filmwave-menu-item-radius: 0;
 }
@@ -313,6 +313,10 @@ html[data-theme="light"] {
   border-bottom: 1px solid var(--filmwave-menu-sep);
 }
 
+.filmwave-web-user-menu .filmwave-web-user-menu-account-section {
+  border-top: 1px solid var(--filmwave-menu-sep);
+}
+
 .filmwave-web-user-menu > .filmwave-user-menu-profile-link:hover,
 .filmwave-web-user-menu .filmwave-web-user-menu-new-project-button:hover {
   background: var(--filmwave-menu-hover);
@@ -325,7 +329,7 @@ html[data-theme="light"] {
 .filmwave-web-user-menu-theme-current {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 4px;
   margin-left: auto;
 }
 
