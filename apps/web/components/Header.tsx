@@ -115,38 +115,6 @@ export default function Header() {
   }, [transparentAtTop]);
 
   useEffect(() => {
-    if (!transparentAtTop) return;
-
-    const headerElement = document.querySelector<HTMLElement>(".filmwave-web-header");
-    if (!headerElement) return;
-
-    const navLinks = Array.from(
-      headerElement.querySelectorAll<HTMLElement>(".filmwave-header-nav-link"),
-    );
-
-    function dimPrimaryNav() {
-      navLinks.forEach((link) => {
-        link.style.setProperty("color", "#8d8d8d", "important");
-      });
-    }
-
-    function restorePrimaryNav() {
-      navLinks.forEach((link) => {
-        link.style.removeProperty("color");
-      });
-    }
-
-    headerElement.addEventListener("mouseenter", dimPrimaryNav);
-    headerElement.addEventListener("mouseleave", restorePrimaryNav);
-
-    return () => {
-      headerElement.removeEventListener("mouseenter", dimPrimaryNav);
-      headerElement.removeEventListener("mouseleave", restorePrimaryNav);
-      restorePrimaryNav();
-    };
-  }, [transparentAtTop]);
-
-  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
@@ -520,14 +488,15 @@ export default function Header() {
         }
 
         .filmwave-web-header.is-transparent:hover
-          .filmwave-header-nav-link {
-          color: rgba(255, 255, 255, 0.58) !important;
+          .filmwave-header-nav-link:not(.is-active):not(:hover) {
+          color: var(--text-secondary) !important;
         }
 
         .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
         .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
+          color: var(--text-primary) !important;
         }
 
         .filmwave-web-header.is-solid,
