@@ -24,7 +24,7 @@
 .discover-artist-hero {
   --discover-artist-featured-intro-bottom: calc(clamp(190px, 13vw, 250px) + 30px);
   --discover-artist-hero-height: calc(
-    100dvh - (var(--filmwave-header-height, 75px) * 2)
+    100dvh - (var(--filmwave-header-height, 75px) * 2) - 28px
   );
   position: relative;
   width: 100%;
@@ -161,7 +161,7 @@
 
 .discover-page-root.has-player .discover-artist-hero {
   --discover-artist-hero-height: calc(
-    100dvh - (var(--filmwave-header-height, 75px) * 2) -
+    100dvh - (var(--filmwave-header-height, 75px) * 2) - 28px -
       var(--filmwave-player-height, 72px)
   );
 }
