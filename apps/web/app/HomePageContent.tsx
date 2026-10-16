@@ -664,25 +664,36 @@ export default function HomePageContent({
 
       <section className="audioflume-home-reference-feature-pair">
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
-          <div className="audioflume-home-reference-feature-pair-card is-artists">
-            <PricingHeroImageFlash
-              images={homeFlashImages}
-              mediaClassName="audioflume-home-feature-flash-media"
-            />
-            <h2>
-              <span>In demand</span>
-              <span>artists</span>
-              <span>&amp; composers.</span>
-            </h2>
-            <Link className="audioflume-home-reference-feature-pair-link" href="/discover">
-              Explore Artists
-            </Link>
+          <div className="audioflume-home-reference-feature-pair-column">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Featured Artists</span>
+            </div>
+            <div className="audioflume-home-reference-feature-pair-card is-artists">
+              <PricingHeroImageFlash
+                images={homeFlashImages}
+                mediaClassName="audioflume-home-feature-flash-media"
+              />
+              <h2>
+                <span>In demand</span>
+                <span>artists</span>
+                <span>&amp; composers.</span>
+              </h2>
+              <Link className="audioflume-home-reference-feature-pair-link" href="/discover">
+                Explore Artists
+              </Link>
+            </div>
           </div>
-          <div className="audioflume-home-reference-feature-pair-card is-playlists">
-            <h2>Curated playlists<br />made for editors.</h2>
-            <Link className="audioflume-home-reference-feature-pair-link" href="/curated-playlists">
-              Explore Playlists
-            </Link>
+
+          <div className="audioflume-home-reference-feature-pair-column">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Curated Playlists</span>
+            </div>
+            <div className="audioflume-home-reference-feature-pair-card is-playlists">
+              <h2>Curated playlists<br />made for editors.</h2>
+              <Link className="audioflume-home-reference-feature-pair-link" href="/curated-playlists">
+                Explore Playlists
+              </Link>
+            </div>
           </div>
         </div>
       </section>
