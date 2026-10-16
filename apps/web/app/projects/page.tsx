@@ -702,9 +702,17 @@ export default function ProjectsPage() {
           text-align: left;
           transition: background 0.15s ease;
         }
-        .project-grid-card:hover,
-        .project-grid-create-card:hover {
+        .project-grid-card:hover {
           background: var(--bg-hover);
+        }
+        .project-grid-create-card {
+          border: 1px dashed var(--border);
+          border-radius: 0;
+          background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%);
+        }
+        .project-grid-create-card:hover {
+          border-color: var(--border-hover);
+          background: color-mix(in srgb, var(--bg-primary) 93%, var(--text-primary) 7%);
         }
         .project-grid-card-link,
         .project-grid-create-card {
