@@ -114,7 +114,7 @@ html[data-theme="light"] .fw-toolbar-filters.is-open {
 
 .fw-toolbar-clear-all,
 .fw-filter-clear-all {
-  border: 1px solid transparent !important;
+  border: 1.5px solid transparent !important;
   background: transparent !important;
   background-color: transparent !important;
   color: var(--text-primary) !important;
@@ -135,7 +135,7 @@ html[data-theme="light"] .fw-toolbar-filters.is-open {
 .fw-toolbar-filters.is-done,
 .fw-filter-done {
   gap: 0 !important;
-  border: 1px solid var(--filmwave-border-color) !important;
+  border: 1.5px solid var(--filmwave-border-color) !important;
   background: var(--filmwave-white) !important;
   background-color: var(--filmwave-white) !important;
   color: var(--filmwave-black) !important;
@@ -307,7 +307,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   height: var(--fw-music-secondary-row-height) !important;
   margin-right: calc(var(--fw-music-content-inset-right) * -1) !important;
   margin-left: calc(var(--fw-music-content-inset-right) * -1) !important;
-  border-bottom: 1px solid var(--border) !important;
+  border-bottom: 1.5px solid var(--border) !important;
   background: var(--bg-primary) !important;
   padding: 0 !important;
   transform: none !important;
@@ -326,7 +326,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   height: 100% !important;
   min-height: 0 !important;
   border: 0 !important;
-  border-right: 1px solid var(--border) !important;
+  border-right: 1.5px solid var(--border) !important;
   border-radius: 0 !important;
   background: transparent !important;
   background-color: transparent !important;
