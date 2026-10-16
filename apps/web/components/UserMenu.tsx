@@ -1,55 +1,36 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useTheme } from "@/context/ThemeContext";
 import { useArtistInvites } from "@/context/ArtistInvitesContext";
-import GearIcon from "@/components/icons/GearIcon";
+import { useProjectsContext } from "@/context/ProjectsContext";
+import CreateProjectModal from "@/components/CreateProjectModal";
 import {
-  UserMenuAction,
   UserMenuActions,
   UserMenuGlyph,
   UserMenuHeader,
   UserMenuPanel,
-  UserMenuThemeToggle,
-  type UserMenuGlyphName,
 } from "@filmwave/shared";
 
 function MenuLink({
   href,
   label,
-  icon,
   onClose,
 }: {
   href: string;
   label: string;
-  icon: UserMenuGlyphName;
   onClose?: () => void;
 }) {
-  if (icon === "settings") {
-    return (
-      <Link
-        href={href}
-        className="filmwave-dropdown-item filmwave-user-menu-action"
-        onClick={onClose}
-      >
-        <span className="filmwave-user-menu-action-icon" aria-hidden="true">
-          <GearIcon />
-        </span>
-        <span className="filmwave-user-menu-action-label">{label}</span>
-      </Link>
-    );
-  }
-
   return (
-    <UserMenuAction
-      as={Link}
+    <Link
       href={href}
-      label={label}
-      icon={icon}
-      helper=""
+      className="filmwave-dropdown-item filmwave-user-menu-action"
       onClick={onClose}
-    />
+    >
+      <span className="filmwave-user-menu-action-label">{label}</span>
+    </Link>
   );
 }
 
@@ -69,6 +50,8 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
   const { user } = useUser();
   const { theme, setTheme } = useTheme();
   const { pendingInviteCount } = useArtistInvites();
+  const { refetchProjects } = useProjectsContext();
+  const [createProjectOpen, setCreateProjectOpen] = useState(false);
   const displayName =
     user?.fullName ||
     user?.username ||
@@ -76,7 +59,8 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
     "Audioflume account";
 
   return (
-    <UserMenuPanel>
+    <>
+      <UserMenuPanel className="filmwave-web-user-menu">
       <Link
         href="/account/profile"
         className="filmwave-user-menu-profile-link"
@@ -89,6 +73,21 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
         />
       </Link>
 
+      <div className="filmwave-web-user-menu-new-project">
+        <button
+          type="button"
+          className="filmwave-dropdown-item filmwave-user-menu-action filmwave-web-user-menu-new-project-button"
+          onClick={() => setCreateProjectOpen(true)}
+        >
+          <span className="filmwave-web-user-menu-new-project-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path d="M12 6v12M6 12h12" />
+            </svg>
+          </span>
+          <span className="filmwave-user-menu-action-label">New Project</span>
+        </button>
+      </div>
+
       <UserMenuActions>
         {pendingInviteCount > 0 ? (
           <Link
@@ -96,9 +95,6 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
             className="filmwave-dropdown-item filmwave-user-menu-action"
             onClick={onClose}
           >
-            <span className="filmwave-user-menu-action-icon" aria-hidden="true">
-              <UserMenuGlyph name="profile" />
-            </span>
             <span className="filmwave-user-menu-action-label">
               Artist Invitation
             </span>
@@ -108,34 +104,44 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
         <MenuLink
           href="/account/settings"
           label="Settings"
-          icon="settings"
           onClose={onClose}
         />
         <MenuLink
           href="/account/membership"
           label="Membership"
-          icon="membership"
           onClose={onClose}
         />
         <MenuLink
           href="/account/payment"
           label="Payment"
-          icon="payment"
           onClose={onClose}
         />
         <MenuLink
           href="/account/security"
           label="Security"
-          icon="security"
           onClose={onClose}
         />
         <MenuLink
           href="/account/support"
           label="Support & FAQ"
-          icon="support"
           onClose={onClose}
         />
-        <UserMenuThemeToggle theme={theme} onThemeChange={setTheme} />
+        <button
+          type="button"
+          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+          className="filmwave-dropdown-item filmwave-user-menu-theme-action"
+          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
+        >
+          <span className="filmwave-user-menu-action-label">Appearance</span>
+          <span className="filmwave-web-user-menu-theme-current">
+            <span className="filmwave-user-menu-theme-value">
+              {theme === "dark" ? "Dark" : "Light"}
+            </span>
+            <span className="filmwave-user-menu-theme-icon" aria-hidden="true">
+              <UserMenuGlyph name="appearance" />
+            </span>
+          </span>
+        </button>
       </UserMenuActions>
 
       <UserMenuActions className="filmwave-user-menu-signout">
@@ -154,6 +160,15 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
           <span>Sign Out</span>
         </button>
       </UserMenuActions>
-    </UserMenuPanel>
+      </UserMenuPanel>
+
+      <CreateProjectModal
+        isOpen={createProjectOpen}
+        onClose={() => setCreateProjectOpen(false)}
+        onProjectCreated={() => {
+          void refetchProjects();
+        }}
+      />
+    </>
   );
 }
