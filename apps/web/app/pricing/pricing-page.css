@@ -117,6 +117,25 @@
   color: var(--text-primary);
 }
 
+:where(html.light, html[data-theme="light"])
+  .audioflume-pricing-searchbar
+  .audioflume-home-reference-searchbar-field {
+  background: #f3f3f3;
+  color: #a3a3a3;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-pricing-searchbar
+  .audioflume-home-reference-searchbar-field input::placeholder {
+  color: #a3a3a3;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-pricing-searchbar
+  .audioflume-home-reference-searchbar-clear {
+  color: #a3a3a3;
+}
+
 .audioflume-pricing-searchbar-actions {
   display: flex;
   align-items: center;
