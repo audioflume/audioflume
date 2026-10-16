@@ -258,7 +258,7 @@
 
 .community-jump-back .recent-playlist-card:hover,
 .community-jump-back .recent-playlist-card:focus-visible {
-  border-color: var(--text-primary);
+  border-color: var(--text-muted);
 }
 
 .community-creator-banner {
