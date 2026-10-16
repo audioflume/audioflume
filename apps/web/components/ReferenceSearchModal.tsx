@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
@@ -268,7 +269,7 @@ export default function ReferenceSearchModal({
     value.trim().length >= MIN_CATALOG_QUERY_LENGTH &&
     (loading || results.length > 0);
 
-  return (
+  return createPortal(
     <div
       className={styles.backdrop}
       role="presentation"
@@ -399,6 +400,7 @@ export default function ReferenceSearchModal({
           )}
         </div>
       </section>
-    </div>
+    </div>,
+    document.body,
   );
 }
