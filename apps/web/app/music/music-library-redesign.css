@@ -879,11 +879,11 @@ html
   > .fw-music-content-column
   > .fw-filter-panel-wrap {
   --audioflume-music-filter-height: calc(
-    100dvh - (var(--filmwave-header-height, 75px) * 2) -
+    100dvh - var(--filmwave-header-height, 60px) - 75px -
       var(--filmwave-sidebar-bottom-offset, 0px)
   );
   position: sticky !important;
-  top: calc(var(--filmwave-header-height, 75px) * 2) !important;
+  top: calc(var(--filmwave-header-height, 60px) + 75px) !important;
   bottom: auto !important;
   left: auto !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2) !important;
