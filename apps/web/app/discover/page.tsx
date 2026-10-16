@@ -595,7 +595,7 @@ export default function DiscoverPage() {
   const heroStyle = ({
     "--discover-artist-hero-image": activeFeaturedArtist?.hero_image_url
       ? `url("${activeFeaturedArtist.hero_image_url.replaceAll('"', '\\"')}")`
-      : "linear-gradient(#171717, #171717)",
+      : "linear-gradient(var(--bg-tertiary), var(--bg-tertiary))",
     "--discover-artist-hero-position": activeFeaturedArtist
       ? `${activeFeaturedArtist.hero_image_position_x}% ${activeFeaturedArtist.hero_image_position_y}%`
       : "center 42%",
