@@ -521,7 +521,20 @@ export default function ProjectsPage() {
           margin-left: 0 !important;
         }
         .projects-status-dropdown { min-width: 150px; }
-        .projects-status-dropdown button.is-active { background: var(--filmwave-menu-hover); color: var(--filmwave-menu-text); }
+        .projects-status-dropdown button.is-active {
+          background: transparent !important;
+          color: var(--filmwave-menu-text) !important;
+        }
+        .projects-status-dropdown button.is-active:hover {
+          background: var(--filmwave-menu-hover) !important;
+        }
+        .projects-status-selected-check,
+        .projects-sort-selected-check {
+          width: 14px;
+          height: 14px;
+          flex: 0 0 14px;
+          margin-left: auto;
+        }
         .projects-control-bar > .fw-toolbar-header-search-row {
           height: 51px !important;
           min-height: 51px !important;
@@ -616,7 +629,13 @@ export default function ProjectsPage() {
           color: var(--text-primary) !important;
         }
         .projects-sort-dropdown { min-width: 154px; }
-        .projects-sort-dropdown button.is-active { background: var(--bg-hover); color: var(--text-primary); }
+        .projects-sort-dropdown button.is-active {
+          background: transparent !important;
+          color: var(--filmwave-menu-text) !important;
+        }
+        .projects-sort-dropdown button.is-active:hover {
+          background: var(--filmwave-menu-hover) !important;
+        }
         .projects-new-button {
           gap: 8px !important;
           background: transparent !important;
@@ -636,7 +655,20 @@ export default function ProjectsPage() {
           align-items: center !important;
           justify-content: center !important;
         }
-        .projects-title { margin: 36px 0 20px; max-width: 640px; font-size: 1.6em; font-weight: 500; line-height: 1; letter-spacing: -0.035em; color: var(--text-primary); }
+        .projects-title {
+          margin-top: 36px;
+          margin-right: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
+          margin-bottom: 20px;
+          margin-left: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
+          max-width: 640px;
+          color: var(--text-primary);
+          font-family: var(--filmwave-section-title-font-family);
+          font-size: var(--filmwave-section-title-font-size);
+          font-weight: var(--filmwave-section-title-font-weight);
+          letter-spacing: var(--filmwave-section-title-letter-spacing);
+          line-height: var(--filmwave-section-title-line-height);
+          text-transform: none;
+        }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
         .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 12px; border-top: 1px solid var(--border-subtle); }
         .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) 12px minmax(84px, 120px) 32px; column-gap: 14px; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
@@ -730,7 +762,24 @@ export default function ProjectsPage() {
                     setStatusOpen(false);
                   }}
                 >
-                  {option.label}
+                  <span>{option.label}</span>
+                  {projectStatusMode === option.value ? (
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      focusable="false"
+                      className="projects-status-selected-check"
+                    >
+                      <path
+                        d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.6"
+                      />
+                    </svg>
+                  ) : null}
                 </button>
               ))}
             </DropdownShell>
@@ -777,32 +826,86 @@ export default function ProjectsPage() {
                 <button
                   type="button"
                   className={sortMode === "newest" ? "is-active" : ""}
+                  aria-checked={sortMode === "newest"}
                   onClick={() => {
                     setSortMode("newest");
                     setSortOpen(false);
                   }}
                 >
-                  Newest first
+                  <span>Newest first</span>
+                  {sortMode === "newest" ? (
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      focusable="false"
+                      className="projects-sort-selected-check"
+                    >
+                      <path
+                        d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.6"
+                      />
+                    </svg>
+                  ) : null}
                 </button>
                 <button
                   type="button"
                   className={sortMode === "oldest" ? "is-active" : ""}
+                  aria-checked={sortMode === "oldest"}
                   onClick={() => {
                     setSortMode("oldest");
                     setSortOpen(false);
                   }}
                 >
-                  Oldest first
+                  <span>Oldest first</span>
+                  {sortMode === "oldest" ? (
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      focusable="false"
+                      className="projects-sort-selected-check"
+                    >
+                      <path
+                        d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.6"
+                      />
+                    </svg>
+                  ) : null}
                 </button>
                 <button
                   type="button"
                   className={sortMode === "alphabetical" ? "is-active" : ""}
+                  aria-checked={sortMode === "alphabetical"}
                   onClick={() => {
                     setSortMode("alphabetical");
                     setSortOpen(false);
                   }}
                 >
-                  Alphabetical
+                  <span>Alphabetical</span>
+                  {sortMode === "alphabetical" ? (
+                    <svg
+                      aria-hidden="true"
+                      viewBox="0 0 16 16"
+                      focusable="false"
+                      className="projects-sort-selected-check"
+                    >
+                      <path
+                        d="m3.5 8.2 2.8 2.8 6.2-6.2"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.6"
+                      />
+                    </svg>
+                  ) : null}
                 </button>
               </DropdownShell>
 
@@ -819,7 +922,7 @@ export default function ProjectsPage() {
             </div>
           </section>
 
-          <h1 className="projects-title">Projects</h1>
+          <h1 className="projects-title">My Projects</h1>
 
           {error && !loading ? (
             <div className="projects-empty-space">
