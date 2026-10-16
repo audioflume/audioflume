@@ -9,8 +9,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
 
 body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
 body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-logo-action,
-body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-actions,
-body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-nav-link {
+body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-actions {
   color: #ffffff !important;
 }
 
