@@ -355,7 +355,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(17, 17, 17, 0.28);
+  background: rgba(17, 17, 17, 0.38);
   content: "";
   pointer-events: none;
 }
@@ -377,8 +377,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   left: 50%;
   z-index: 2;
   display: block;
-  width: 62%;
-  aspect-ratio: 1;
+  width: 132px;
+  height: 132px;
   overflow: hidden;
   transform: translate(-50%, -50%);
 }
