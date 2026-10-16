@@ -686,7 +686,7 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid">
           <div className="audioflume-home-reference-tools-column is-exclusives">
             <div className="audioflume-home-reference-section-heading">
-              <span>Audioflume Exclusives</span>
+              <span>Audioflume Originals</span>
             </div>
             <div className="audioflume-home-reference-tool-card audioflume-home-reference-exclusives-card" />
           </div>
