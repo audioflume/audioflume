@@ -821,10 +821,10 @@
   overflow-x: auto;
   overflow-y: hidden;
   gap: 10px;
-  padding-right: 0;
+  padding-right: var(--discover-artist-content-inset);
   padding-left: var(--discover-artist-content-inset);
   scroll-behavior: smooth;
-  scroll-padding-right: 0;
+  scroll-padding-right: var(--discover-artist-content-inset);
   scroll-padding-left: var(--discover-artist-content-inset);
   scroll-snap-type: x proximity;
   scrollbar-width: none;
