@@ -356,12 +356,12 @@ export default function ArtistTeamManager({
                   key={member.clerk_user_id}
                   className={`flex min-h-[72px] flex-wrap items-center gap-4 px-5 py-3 ${
                     index < members.length - 1
-                      ? "border-b border-[var(--border)]"
+                      ? "border-b-[1.5px] border-[var(--border)]"
                       : ""
                   }`}
                 >
                   <div
-                    className="h-10 w-10 shrink-0 overflow-hidden rounded-[6px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
+                    className="h-10 w-10 shrink-0 overflow-hidden rounded-[6px] border-[1.5px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center"
                     style={
                       member.avatar_url
                         ? { backgroundImage: `url(${member.avatar_url})` }
@@ -445,7 +445,7 @@ export default function ArtistTeamManager({
                   key={invitation.id}
                   className={`flex min-h-[62px] flex-wrap items-center gap-4 px-5 py-3 ${
                     index < invitations.length - 1
-                      ? "border-b border-[var(--border)]"
+                      ? "border-b-[1.5px] border-[var(--border)]"
                       : ""
                   }`}
                 >

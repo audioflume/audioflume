@@ -279,7 +279,7 @@ export default function ArtistProfileEditor({
         <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
-              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={{
                 borderRadius: "7px",
                 ...(artist.profile_image_url
@@ -312,7 +312,7 @@ export default function ArtistProfileEditor({
 
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
-              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
+              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={{
                 borderRadius: "7px",
                 ...(artist.hero_image_url
@@ -377,7 +377,7 @@ export default function ArtistProfileEditor({
               </div>
 
               <div ref={designationFieldRef} className="relative mt-[6px]">
-                <div className="flex h-10 min-w-0 cursor-pointer items-center gap-1 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-1">
+                <div className="flex h-10 min-w-0 cursor-pointer items-center gap-1 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-1">
                   {selectedDesignations.map((option) => (
                     <button
                       key={option}
@@ -434,7 +434,7 @@ export default function ArtistProfileEditor({
                 </div>
 
                 {designationDropdownOpen && availableDesignations.length > 0 ? (
-                  <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
+                  <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
                     {availableDesignations.map((option) => (
                       <button
                         key={option}
