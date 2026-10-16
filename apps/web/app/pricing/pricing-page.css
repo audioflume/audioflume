@@ -37,7 +37,7 @@
   left: 50%;
   z-index: -1;
   width: 100vw;
-  background: #ffffff;
+  background: #e5e5dd;
   transform: translateX(-50%);
 }
 
@@ -228,7 +228,7 @@
 }
 
 .audioflume-pricing-comparison-block {
-  background: #e5e5dd;
+  background: #ffffff;
   padding: clamp(44px, 4.5vw, 72px);
 }
 
