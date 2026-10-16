@@ -5,7 +5,15 @@ import { useState } from "react";
 
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 
-export default function GlobalMusicSearch() {
+type GlobalMusicSearchProps = {
+  fieldClassName?: string;
+  clearButtonClassName?: string;
+};
+
+export default function GlobalMusicSearch({
+  fieldClassName,
+  clearButtonClassName,
+}: GlobalMusicSearchProps = {}) {
   const router = useRouter();
   const [query, setQuery] = useState("");
 
@@ -14,6 +22,8 @@ export default function GlobalMusicSearch() {
       value={query}
       onChange={setQuery}
       onClear={() => setQuery("")}
+      className={fieldClassName}
+      clearButtonClassName={clearButtonClassName}
       onSubmit={(event) => {
         event.preventDefault();
 
