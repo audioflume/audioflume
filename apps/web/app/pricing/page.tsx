@@ -271,7 +271,12 @@ export default async function PricingPage() {
 
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-overview">
-          <h1>Plans &amp; Pricing</h1>
+          <div className="audioflume-pricing-overview-heading">
+            <span className="audioflume-pricing-overview-eyebrow">
+              Choose your plan
+            </span>
+            <h1>Plans &amp; Pricing</h1>
+          </div>
           <p>
             Straightforward access to Audioflume&apos;s curated music and SFX
             catalogue, with plans for solo filmmakers, active studios, and
