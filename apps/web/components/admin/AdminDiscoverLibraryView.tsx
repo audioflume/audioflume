@@ -541,7 +541,7 @@ export default function AdminDiscoverLibraryView({
           }
         >
           {featuredArtists.length === 0 ? (
-            <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+            <div className="flex min-h-[120px] items-center justify-center border-[1.5px] border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
               Add an artist to the Discover feature banner.
             </div>
           ) : (
@@ -596,7 +596,7 @@ export default function AdminDiscoverLibraryView({
               }
             >
               {sectionPlaylists.length === 0 ? (
-                <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+                <div className="flex min-h-[120px] items-center justify-center border-[1.5px] border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
                   Add a playlist to this section.
                 </div>
               ) : (

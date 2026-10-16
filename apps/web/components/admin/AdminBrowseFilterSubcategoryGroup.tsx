@@ -387,7 +387,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
             <div
               key={subcategory.id}
               style={{ borderRadius: 7 }}
-              className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
+              className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border-[1.5px] border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
             >
               <BackendCheckbox
                 checked={checked}
@@ -443,7 +443,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               setNewDropdownOpen(true);
             }}
             style={{ borderRadius: 7 }}
-            className="flex h-10 items-center rounded-lg border border-dashed border-[var(--border)] px-3 py-0 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
+            className="flex h-10 items-center rounded-lg border-[1.5px] border-dashed border-[var(--border)] px-3 py-0 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
           >
             New
           </button>
@@ -453,7 +453,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
           <div ref={newCategoryRef} className="relative h-10 min-w-[140px]">
             <div
               style={{ borderRadius: 7 }}
-              className="flex h-10 min-w-0 items-center rounded-lg border border-[var(--border)] bg-[var(--bg-primary)]"
+              className="flex h-10 min-w-0 items-center rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]"
             >
               <input
                 value={newValue}
@@ -483,7 +483,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
             </div>
 
             {newDropdownOpen && availableExisting.length > 0 && (
-              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
+              <div className="absolute left-0 right-0 top-full z-20 mt-1 max-h-56 overflow-y-auto rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] py-1 shadow-lg">
                 {availableExisting.map((subcategory) => (
                   <button
                     key={subcategory.id}

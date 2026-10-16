@@ -400,11 +400,11 @@ export default function AdminDiscoverFeatureCardArtists() {
             ))}
           </div>
         ) : error ? (
-          <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--danger)]">
+          <div className="flex min-h-[120px] items-center justify-center border-[1.5px] border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--danger)]">
             {error}
           </div>
         ) : items.length === 0 ? (
-          <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+          <div className="flex min-h-[120px] items-center justify-center border-[1.5px] border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
             Add up to two artists to the Discover feature cards.
           </div>
         ) : (
