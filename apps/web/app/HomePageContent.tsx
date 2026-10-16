@@ -540,7 +540,7 @@ export default function HomePageContent({
           sensitivity: "base",
         }) === 0,
     )
-    .slice(0, 6);
+    .slice(0, 8);
   const originalSongs = playableSongs.slice(
     HOME_SHELF_SONG_COUNT,
     HOME_SHELF_SONG_COUNT + 12,
