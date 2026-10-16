@@ -88,8 +88,8 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
         </button>
       </div>
 
-      <UserMenuActions className="filmwave-web-user-menu-invite-section">
-        {pendingInviteCount > 0 ? (
+      {pendingInviteCount > 0 ? (
+        <UserMenuActions className="filmwave-web-user-menu-invite-section">
           <Link
             href="/artists/claim"
             className="filmwave-dropdown-item filmwave-user-menu-action"
@@ -100,8 +100,8 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
             </span>
             <InviteCountBadge count={pendingInviteCount} />
           </Link>
-        ) : null}
-      </UserMenuActions>
+        </UserMenuActions>
+      ) : null}
 
       <UserMenuActions className="filmwave-web-user-menu-library-section">
         <MenuLink
