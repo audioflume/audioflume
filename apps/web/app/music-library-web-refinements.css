@@ -177,7 +177,7 @@
   gap: 0 !important;
   break-inside: auto !important;
   -webkit-column-break-inside: auto !important;
-  border: 1px solid var(--border) !important;
+  border: 1.5px solid var(--border) !important;
   border-radius: 999px !important;
   background: transparent !important;
   padding: 0 10px !important;

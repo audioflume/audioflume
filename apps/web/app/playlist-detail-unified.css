@@ -32,7 +32,7 @@
   min-height: 42px;
   align-items: center;
   gap: 12px;
-  border: 1px solid var(--filmwave-border-color);
+  border: 1.5px solid var(--filmwave-border-color);
   border-radius: 0;
   background: var(--bg-primary);
   padding: 0 14px;
@@ -372,7 +372,7 @@
   height: 32px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.24);
+  border: 1.5px solid rgba(255, 255, 255, 0.24);
   border-radius: 5px;
   background: transparent;
   background-color: transparent;
@@ -528,7 +528,7 @@
   height: 42px;
   align-items: center;
   justify-content: center;
-  border: 1px solid rgba(255, 255, 255, 0.36);
+  border: 1.5px solid rgba(255, 255, 255, 0.36);
   border-radius: 999px;
   background: rgba(255, 255, 255, 0.08);
   padding: 0;
@@ -675,7 +675,7 @@
   height: 28px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--border);
+  border: 1.5px solid var(--border);
   border-radius: 999px;
   background: transparent;
   padding: 0;

@@ -1057,7 +1057,7 @@ export default function PlaylistsPage() {
           align-items: center;
           justify-content: center;
           border-radius: 9px;
-          border: 1px solid var(--border);
+          border: 1.5px solid var(--border);
           background: var(--bg-secondary);
           color: var(--icon-color);
           cursor: pointer;
@@ -1071,7 +1071,7 @@ export default function PlaylistsPage() {
           color: var(--text-primary);
         }
 
-        .playlist-edit-banner { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; margin-bottom: 24px; padding: 0 16px; border: 1px dashed var(--border); border-radius: 16px; background: var(--bg-secondary); }
+        .playlist-edit-banner { min-height: 54px; display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 16px; margin-bottom: 24px; padding: 0 16px; border: 1.5px dashed var(--border); border-radius: 16px; background: var(--bg-secondary); }
         .playlist-edit-banner span { font-size: 13px; color: var(--text-secondary); }
         .playlist-edit-actions { display: flex; align-items: center; gap: 8px; }
         .playlist-edit-actions button { height: 30px; border-radius: 999px; padding: 0 15px; border: none; font-size: 12px; font-weight: 400; cursor: pointer; transition: opacity 0.15s ease, background 0.15s ease; }
@@ -1084,7 +1084,7 @@ export default function PlaylistsPage() {
         .playlist-gallery-card { position: relative; min-width: 0; cursor: pointer; }
         .playlist-gallery-link { display: block; color: inherit; text-decoration: none; }
         .playlist-gallery-link-static, .playlist-index-row-static { cursor: default !important; }
-        .playlist-gallery-art-wrap { position: relative; min-height: 210px; border-radius: 18px; overflow: hidden; background: var(--bg-secondary); border: 1px solid var(--border-subtle); transition: none; }
+        .playlist-gallery-art-wrap { position: relative; min-height: 210px; border-radius: 18px; overflow: hidden; background: var(--bg-secondary); border: 1.5px solid var(--border-subtle); transition: none; }
         .playlist-gallery-card:hover .playlist-gallery-art-wrap, .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap { border-color: var(--border); }
         .playlist-gallery-art { position: absolute; inset: 0; }
         .playlist-gallery-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.18) 58%, transparent); pointer-events: none; }
@@ -1103,12 +1103,12 @@ export default function PlaylistsPage() {
         .playlist-rename-input:focus { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
         .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-aktiv-grotesk); font-size: 13px; font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
         .playlist-row-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; letter-spacing: normal; }
-        .playlist-gallery-handle { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 999px; border: 1px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); }
+        .playlist-gallery-handle { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 999px; border: 1.5px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); }
         .playlist-gallery-card.is-reordering .playlist-gallery-art-wrap { border-style: dashed; }
         .playlist-index { display: flex; flex-direction: column; gap: 8px; }
         .playlist-index-row-shell { position: relative; cursor: pointer; }
         .playlist-index-row-shell.is-renaming { cursor: default; }
-        .playlist-index-row { position: relative; min-height: 76px; display: grid; grid-template-columns: 40px 50px minmax(0, 1fr) minmax(84px, 120px); gap: 14px; align-items: center; border: 1px solid var(--border-subtle); border-radius: 16px; background: var(--bg-card); padding: 11px 50px 11px 13px; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; }
+        .playlist-index-row { position: relative; min-height: 76px; display: grid; grid-template-columns: 40px 50px minmax(0, 1fr) minmax(84px, 120px); gap: 14px; align-items: center; border: 1.5px solid var(--border-subtle); border-radius: 16px; background: var(--bg-card); padding: 11px 50px 11px 13px; color: inherit; text-decoration: none; cursor: pointer; transition: background 0.15s ease, transform 0.15s ease; }
         .playlist-index-row.is-reordering { grid-template-columns: 16px 40px 50px minmax(0, 1fr) minmax(84px, 120px); padding-right: 18px; }
         .playlist-index-row:hover, .playlist-index-row-shell:hover .playlist-index-row { background: var(--bg-hover); border-color: var(--border); transform: translateY(-1px); }
         .playlist-row-handle { width: 16px; display: flex; align-items: center; justify-content: center; color: var(--text-muted); }
@@ -1121,16 +1121,16 @@ export default function PlaylistsPage() {
         .playlist-card-menu-wrap { position: absolute; z-index: 12; top: 16px; left: 16px; }
         .playlist-index-row-shell .playlist-card-menu-wrap { top: 50%; left: auto; right: 12px; transform: translateY(-50%); }
         .playlist-menu-btn { opacity: 0; transition: opacity 0.15s ease, background-color 0.15s ease, color 0.15s ease, box-shadow 0.15s ease; }
-        .playlist-menu-btn-grid { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1px solid rgba(255, 255, 255, 0.14); border-radius: 999px; background-color: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); cursor: pointer; backdrop-filter: blur(12px); }
+        .playlist-menu-btn-grid { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border: 1.5px solid rgba(255, 255, 255, 0.14); border-radius: 999px; background-color: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); cursor: pointer; backdrop-filter: blur(12px); }
         .playlist-gallery-card:hover .playlist-menu-btn-grid, .playlist-menu-btn-grid.is-open { opacity: 1; }
         .playlist-gallery-card:hover .playlist-menu-btn-grid:not(:hover):not(.is-open) { background-color: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); box-shadow: none; }
         .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid:hover, .playlist-gallery-card [data-playlist-menu] .playlist-menu-btn-grid.is-open { background-color: white; color: black; }
         .playlist-index-row-shell .playlist-menu-btn { background: transparent; color: var(--icon-color); backdrop-filter: none; }
         .playlist-index-row-shell:hover .playlist-menu-btn, .playlist-index-row-shell .playlist-menu-btn.is-open { opacity: 1; }
         .playlist-index-row-shell .playlist-menu-btn:hover, .playlist-index-row-shell .playlist-menu-btn.is-open { background: var(--icon-button-hover); color: var(--text-primary); }
-        .playlist-create-card { position: relative; min-height: 210px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; border-radius: 18px; border: 1px dashed var(--border); background: var(--bg-card); padding: 16px; cursor: pointer; text-align: left; transition: background 0.15s ease, border-color 0.15s ease; }
+        .playlist-create-card { position: relative; min-height: 210px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; border-radius: 18px; border: 1.5px dashed var(--border); background: var(--bg-card); padding: 16px; cursor: pointer; text-align: left; transition: background 0.15s ease, border-color 0.15s ease; }
         .playlist-create-card:hover { border-color: var(--border-hover); background: var(--bg-hover); }
-        .playlist-create-row { grid-template-columns: 34px minmax(0, 1fr) 34px; padding: 11px 46px 11px 18px; border: 1px dashed var(--border); background: var(--bg-card); }
+        .playlist-create-row { grid-template-columns: 34px minmax(0, 1fr) 34px; padding: 11px 46px 11px 18px; border: 1.5px dashed var(--border); background: var(--bg-card); }
         .playlist-create-row .playlist-create-mark { width: 34px; height: 34px; grid-column: 1; }
         .playlist-create-row .playlist-create-copy { grid-column: 2; align-items: center; text-align: center; }
         .playlist-create-row:hover { border-color: var(--border-hover); background: var(--bg-hover); transform: translateY(-1px); }

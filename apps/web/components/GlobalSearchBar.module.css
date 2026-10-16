@@ -11,7 +11,7 @@
   height: var(--filmwave-searchbar-height, 75px);
   grid-template-columns: 154px minmax(0, 1fr) 230px;
   align-items: stretch;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
   background: #111111;
   color: #ffffff;
   overscroll-behavior: none;
@@ -40,7 +40,7 @@
 
 .filters {
   gap: 18px;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1.5px solid rgba(255, 255, 255, 0.08);
   padding: 0 30px;
   color: inherit;
   font-size: 13px;
