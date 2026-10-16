@@ -212,7 +212,7 @@ export default function AdminSongEditPresentationInjector() {
         align-items: center;
         justify-content: center;
         gap: 7px;
-        border: 1px solid var(--border);
+        border: 1.5px solid var(--border);
         border-radius: 7px;
         background: var(--bg-secondary);
         padding: 0 20px;
@@ -246,7 +246,7 @@ export default function AdminSongEditPresentationInjector() {
         .admin-song-edit-files-bin
         > .admin-song-form-card-header {
         min-height: 0;
-        border-bottom: 1px solid var(--border-subtle);
+        border-bottom: 1.5px solid var(--border-subtle);
         border-radius: 9px 9px 0 0;
         padding: 18px 20px 14px;
       }
@@ -259,7 +259,7 @@ export default function AdminSongEditPresentationInjector() {
         grid-template-columns: 92px minmax(0, 1fr) auto !important;
         align-items: center !important;
         gap: 16px !important;
-        border-top: 1px solid var(--border-subtle) !important;
+        border-top: 1.5px solid var(--border-subtle) !important;
         padding: 10px 20px !important;
       }
 
@@ -391,14 +391,14 @@ export default function AdminSongEditPresentationInjector() {
       .admin-song-edit-content-page .admin-song-edit-stem-list {
         overflow: hidden;
         gap: 0 !important;
-        border: 1px solid var(--border-subtle);
+        border: 1.5px solid var(--border-subtle);
         border-radius: 7px;
         background: var(--bg-secondary);
       }
 
       .admin-song-edit-content-page .admin-song-edit-stem-list > * {
         min-height: 34px;
-        border-top: 1px solid var(--border-subtle);
+        border-top: 1.5px solid var(--border-subtle);
         padding: 8px 10px;
       }
 

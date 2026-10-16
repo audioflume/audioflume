@@ -217,7 +217,7 @@ function createLicenseFilterBox() {
       const premiumTag = document.createElement("span");
       premiumTag.className = "fw-license-filter-premium-tag";
       premiumTag.style.cssText =
-        "box-sizing:border-box;display:inline-flex;height:18px;align-items:center;justify-content:center;border:1px solid var(--border);padding:0 6px;font-family:var(--font-roboto-mono),monospace;font-size:8px;font-weight:400;line-height:1;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-secondary);";
+        "box-sizing:border-box;display:inline-flex;height:18px;align-items:center;justify-content:center;border:1.5px solid var(--border);padding:0 6px;font-family:var(--font-roboto-mono),monospace;font-size:8px;font-weight:400;line-height:1;letter-spacing:0.04em;text-transform:uppercase;color:var(--text-secondary);";
       premiumTag.setAttribute("aria-hidden", "true");
 
       const premiumText = document.createElement("span");

@@ -37,7 +37,7 @@ export default function AdminPlaylistPageStyles() {
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
         form
         + section {
-        border: 1px solid var(--border);
+        border: 1.5px solid var(--border);
         border-radius: 0;
         background: var(--bg-primary);
         padding: 20px;

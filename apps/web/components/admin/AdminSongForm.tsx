@@ -1620,7 +1620,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         .admin-song-form-card {
           overflow: hidden;
           border-radius: 0.75rem;
-          border: 1px solid var(--border);
+          border: 1.5px solid var(--border);
           background: var(--bg-secondary);
         }
 
@@ -1630,7 +1630,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           align-items: center;
           justify-content: space-between;
           gap: 1rem;
-          border-bottom: 1px solid var(--border);
+          border-bottom: 1.5px solid var(--border);
           padding: 0 1rem;
         }
 
