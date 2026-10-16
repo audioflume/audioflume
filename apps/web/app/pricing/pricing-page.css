@@ -18,7 +18,7 @@
   z-index: 20;
   display: grid;
   height: var(--filmwave-header-height, 75px);
-  grid-template-columns: 154px minmax(0, 1fr) 230px;
+  grid-template-columns: 154px minmax(0, 1fr) auto;
   align-items: stretch;
   border-bottom: 1px solid var(--border);
   background: var(--bg-primary);
@@ -117,7 +117,16 @@
   color: var(--text-primary);
 }
 
+.audioflume-pricing-searchbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 42px;
+  padding: 0 28px 0 24px;
+}
+
 .audioflume-pricing-searchbar-song {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
   gap: 8px;
   border: 0;
@@ -127,6 +136,28 @@
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
+  white-space: nowrap;
+}
+
+.audioflume-pricing-searchbar-sort {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--text-primary);
+  font-size: 14px;
+  font-weight: 400;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.audioflume-pricing-searchbar-sort svg {
+  width: 12px;
+  height: 12px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .audioflume-pricing-plans-section,
@@ -192,31 +223,33 @@
 
 .audioflume-pricing-overview {
   display: grid;
-  grid-template-columns: minmax(0, 0.46fr) minmax(0, 0.54fr);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: end;
-  gap: clamp(56px, 7vw, 118px);
+  gap: clamp(14px, 1.4vw, 22px);
   margin-bottom: clamp(52px, 5vw, 72px);
 }
 
 .audioflume-pricing-overview h1 {
+  grid-column: 1;
   margin: 0;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(54px, 5vw, 76px);
+  font-size: clamp(56px, 5vw, 76px);
   font-weight: 400;
   letter-spacing: -0.055em;
-  line-height: 0.95;
+  line-height: 0.96;
 }
 
 .audioflume-pricing-overview p {
-  max-width: 780px;
+  grid-column: 2 / span 2;
+  max-width: none;
   margin: 0;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(25px, 2.35vw, 38px);
+  font-size: clamp(21px, 1.8vw, 29px);
   font-weight: 400;
-  letter-spacing: -0.045em;
-  line-height: 1.14;
+  letter-spacing: -0.035em;
+  line-height: 1.18;
 }
 
 .audioflume-pricing-plan-grid {
@@ -661,7 +694,7 @@
     font-size: 14px;
   }
 
-  .audioflume-pricing-searchbar-song {
+  .audioflume-pricing-searchbar-actions {
     display: none;
   }
 
@@ -669,6 +702,11 @@
     grid-template-columns: 1fr;
     gap: 28px;
     margin-bottom: 44px;
+  }
+
+  .audioflume-pricing-overview h1,
+  .audioflume-pricing-overview p {
+    grid-column: 1;
   }
 
   .audioflume-pricing-overview h1 {
