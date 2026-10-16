@@ -476,10 +476,13 @@ export default function ProjectsPage() {
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 22px 32px 0 32px; }
         .projects-control-bar {
           --fw-header-search-row-height: 51px;
+          --projects-control-gutter: clamp(28px, 5.2vw, 82px);
           box-sizing: border-box !important;
           display: grid !important;
-          width: 100% !important;
+          width: auto !important;
           min-height: 51px !important;
+          margin-right: calc(var(--projects-control-gutter) - 32px) !important;
+          margin-left: calc(var(--projects-control-gutter) - 32px) !important;
           grid-template-columns: max-content minmax(320px, 1fr) max-content !important;
           align-items: center !important;
           gap: 18px !important;
