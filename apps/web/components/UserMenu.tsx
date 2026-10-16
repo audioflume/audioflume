@@ -88,7 +88,7 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
         </button>
       </div>
 
-      <UserMenuActions>
+      <UserMenuActions className="filmwave-web-user-menu-invite-section">
         {pendingInviteCount > 0 ? (
           <Link
             href="/artists/claim"
@@ -101,11 +101,23 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
             <InviteCountBadge count={pendingInviteCount} />
           </Link>
         ) : null}
+      </UserMenuActions>
+
+      <UserMenuActions className="filmwave-web-user-menu-library-section">
         <MenuLink
           href="/projects"
           label="My Projects"
           onClose={onClose}
         />
+        <button
+          type="button"
+          className="filmwave-dropdown-item filmwave-user-menu-action"
+        >
+          <span className="filmwave-user-menu-action-label">My Licenses</span>
+        </button>
+      </UserMenuActions>
+
+      <UserMenuActions className="filmwave-web-user-menu-account-section">
         <MenuLink
           href="/account/settings"
           label="Settings"
