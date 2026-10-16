@@ -34,7 +34,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-hero {
   position: relative;
   display: grid;
-  height: calc(100dvh - (var(--filmwave-header-height, 75px) * 2) - 28px);
+  height: calc(
+    100dvh - 28px - var(--filmwave-header-height, 60px) -
+      var(--filmwave-searchbar-height, 75px)
+  );
   min-height: 560px;
   place-items: center;
   background-color: var(--bg-primary);
@@ -45,7 +48,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference.has-player .audioflume-home-reference-hero {
   height: calc(
-    100dvh - (var(--filmwave-header-height, 75px) * 2) - 28px -
+    100dvh - 28px - var(--filmwave-header-height, 60px) -
+      var(--filmwave-searchbar-height, 75px) -
       var(--filmwave-player-height, 72px)
   );
 }
@@ -1767,7 +1771,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-hero {
-    height: calc(100dvh - (var(--filmwave-header-height, 75px) * 2) - 28px);
+    height: calc(
+    100dvh - 28px - var(--filmwave-header-height, 60px) -
+      var(--filmwave-searchbar-height, 75px)
+  );
     min-height: 500px;
     background-position: 55% center;
   }
