@@ -50,7 +50,7 @@ export function FolderGlyph({ small = false, className, style }: GlyphProps) {
     >
       <path
         d="M0 10 a4 4 0 0 1 4 -4 h20 a5 5 0 0 1 5 5 v3 H0 Z"
-        fill="#151515"
+        fill="#242424"
       />
       <rect
         x="0"
