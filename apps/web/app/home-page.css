@@ -1762,31 +1762,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     padding: 0 20px;
   }
 
-  .audioflume-home-reference-searchbar {
-    height: var(--filmwave-header-height, 75px);
-    grid-template-columns: 112px minmax(0, 1fr);
-  }
-
-  .audioflume-home-reference-searchbar-filters {
-    gap: 12px;
-    padding: 0 20px;
-  }
-
-  .audioflume-home-reference-searchbar-field {
-    width: calc(100% - 20px);
-    gap: 12px;
-    margin: 12px 10px;
-    padding: 0 18px;
-  }
-
-  .audioflume-home-reference-searchbar-field input,
-  .audioflume-home-reference-searchbar-field input::placeholder {
-    font-size: 14px;
-  }
-
-  .audioflume-home-reference-searchbar-song {
-    display: none;
-  }
   .audioflume-home-reference {
     --home-reference-width: calc(100vw - 40px);
   }
@@ -1934,43 +1909,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .filmwave-header-create-account {
   background: #111111 !important;
   color: #ffffff !important;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar {
-  border-bottom-color: var(--border);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-filters {
-  border-right-color: var(--border);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-song {
-  border-left-color: var(--border);
-  color: var(--text-primary);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field {
-  background: #f3f3f3;
-  color: #a3a3a3;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field input {
-  color: var(--text-primary);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-field input::placeholder {
-  color: #a3a3a3;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear {
-  color: #a3a3a3;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear:hover,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-searchbar-clear:focus-visible {
-  color: var(--text-primary);
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference {
