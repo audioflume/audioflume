@@ -159,7 +159,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body::before {
   top: 0;
   bottom: 0;
   left: var(--filmwave-side-filter-rail-width);
-  width: 1px;
+  width: 1.5px;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2);
   background: var(--filmwave-side-filter-divider-color);
   pointer-events: none;
