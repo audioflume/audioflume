@@ -858,3 +858,454 @@
     left: 18%;
   }
 }
+
+
+/* Pricing route loading state */
+.audioflume-pricing-skeleton-block {
+  display: block;
+  background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  animation: audioflume-pricing-skeleton-pulse 1.35s ease-in-out infinite;
+}
+
+@keyframes audioflume-pricing-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
+.audioflume-pricing-searchbar-skeleton .audioflume-pricing-searchbar-filters {
+  pointer-events: none;
+}
+
+.audioflume-pricing-searchbar-skeleton .is-filter-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.audioflume-pricing-searchbar-skeleton .is-filter-label {
+  width: 48px;
+  height: 13px;
+}
+
+.audioflume-pricing-searchbar-skeleton-field {
+  display: flex;
+  box-sizing: border-box;
+  width: min(860px, calc(100% - 32px));
+  height: calc(100% - 24px);
+  align-items: center;
+  gap: 12px;
+  margin: 12px;
+  background: var(--bg-secondary);
+  padding: 0 16px;
+}
+
+.audioflume-pricing-searchbar-skeleton-field .is-search-icon {
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+}
+
+.audioflume-pricing-searchbar-skeleton-field .is-search-copy {
+  width: min(42%, 330px);
+  height: 14px;
+}
+
+.audioflume-pricing-searchbar-skeleton .is-search-song {
+  width: 112px;
+  height: 14px;
+}
+
+.audioflume-pricing-searchbar-skeleton .is-sort {
+  width: 86px;
+  height: 14px;
+}
+
+.audioflume-pricing-loading .audioflume-pricing-overview .is-overview-eyebrow {
+  width: 126px;
+  height: 12px;
+  background: rgba(17, 17, 17, 0.11);
+}
+
+.audioflume-pricing-loading .audioflume-pricing-overview .is-overview-title {
+  width: min(560px, 38vw);
+  height: clamp(54px, 5vw, 73px);
+  background: rgba(17, 17, 17, 0.11);
+}
+
+.audioflume-pricing-overview-skeleton-copy {
+  display: grid;
+  width: min(100%, 760px);
+  gap: 10px;
+  margin-left: auto;
+}
+
+.audioflume-pricing-overview-skeleton-copy .audioflume-pricing-skeleton-block {
+  width: 100%;
+  height: clamp(20px, 1.65vw, 27px);
+  background: rgba(17, 17, 17, 0.11);
+}
+
+.audioflume-pricing-overview-skeleton-copy .audioflume-pricing-skeleton-block:nth-child(2) {
+  width: 94%;
+}
+
+.audioflume-pricing-overview-skeleton-copy .audioflume-pricing-skeleton-block:nth-child(3) {
+  width: 70%;
+}
+
+.audioflume-pricing-plan-skeleton {
+  background: #111111;
+}
+
+.audioflume-pricing-plan-skeleton .audioflume-pricing-skeleton-block,
+.audioflume-pricing-plan-skeleton-description .audioflume-pricing-skeleton-block,
+.audioflume-pricing-plan-skeleton-price .audioflume-pricing-skeleton-block,
+.audioflume-pricing-plan-skeleton-features .audioflume-pricing-skeleton-block {
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.audioflume-pricing-plan-skeleton .is-plan-kicker {
+  width: 126px;
+  height: 14px;
+  margin-bottom: 14px;
+}
+
+.audioflume-pricing-plan-skeleton .is-plan-name {
+  width: 42%;
+  height: 29px;
+}
+
+.audioflume-pricing-plan-skeleton-description {
+  display: grid;
+  min-height: 66px;
+  gap: 9px;
+  margin-top: 18px;
+  align-content: start;
+}
+
+.audioflume-pricing-plan-skeleton-description .audioflume-pricing-skeleton-block {
+  width: 92%;
+  height: 14px;
+}
+
+.audioflume-pricing-plan-skeleton-description .audioflume-pricing-skeleton-block:last-child {
+  width: 66%;
+}
+
+.audioflume-pricing-plan-skeleton-price {
+  display: flex;
+  min-height: 92px;
+  align-items: baseline;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.audioflume-pricing-plan-skeleton-price .is-price {
+  width: 118px;
+  height: 62px;
+}
+
+.audioflume-pricing-plan-skeleton-price .is-price-detail {
+  width: 92px;
+  height: 17px;
+}
+
+.audioflume-pricing-plan-skeleton .is-plan-button {
+  width: 100%;
+  height: 52px;
+  margin-top: 12px;
+  background: rgba(255, 255, 255, 0.86);
+}
+
+.audioflume-pricing-plan-skeleton-features {
+  display: grid;
+  margin-top: auto;
+  padding-top: 34px;
+}
+
+.audioflume-pricing-plan-skeleton-features > div {
+  display: grid;
+  grid-template-columns: 13px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+  min-height: 39px;
+  border-top: 1px solid rgba(255, 255, 255, 0.24);
+}
+
+.audioflume-pricing-plan-skeleton-features .is-dot {
+  width: 5px;
+  height: 5px;
+}
+
+.audioflume-pricing-plan-skeleton-features .is-feature-line {
+  width: 68%;
+  height: 10px;
+}
+
+.audioflume-pricing-loading .is-comparison-label {
+  width: 118px;
+  height: 12px;
+}
+
+.audioflume-pricing-loading .is-comparison-link {
+  width: 132px;
+  height: 13px;
+}
+
+.audioflume-pricing-comparison-skeleton {
+  overflow: hidden;
+}
+
+.audioflume-pricing-comparison-skeleton .audioflume-pricing-skeleton-block {
+  background: rgba(17, 17, 17, 0.09);
+}
+
+.audioflume-pricing-comparison-skeleton-head {
+  display: grid;
+  grid-template-columns: 34% repeat(3, 22%);
+  min-width: 820px;
+  border-bottom: 1px solid var(--border);
+}
+
+.audioflume-pricing-comparison-skeleton-head > div {
+  min-height: 136px;
+  padding: 0 20px 32px;
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-intro {
+  padding-left: 0;
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-plan-head + .is-plan-head {
+  border-left: 1px solid var(--border);
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-plan-head {
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  gap: 10px;
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-small-label {
+  width: 178px;
+  height: 12px;
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-compare-title {
+  width: min(92%, 270px);
+  height: 34px;
+  margin-top: 29px;
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-table-plan {
+  width: 126px;
+  height: 29px;
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-table-price {
+  width: 106px;
+  height: 13px;
+}
+
+.audioflume-pricing-comparison-skeleton-head .is-table-kicker {
+  width: 116px;
+  height: 12px;
+}
+
+.audioflume-pricing-comparison-skeleton-rows {
+  min-width: 820px;
+}
+
+.audioflume-pricing-comparison-skeleton-rows .is-row {
+  display: grid;
+  grid-template-columns: 34% repeat(3, 22%);
+  min-height: 74px;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.audioflume-pricing-comparison-skeleton-rows .is-row:last-child {
+  border-bottom: 0;
+}
+
+.audioflume-pricing-comparison-skeleton-rows .is-row-label {
+  width: 54%;
+  height: 12px;
+}
+
+.audioflume-pricing-comparison-skeleton-rows .is-check {
+  width: 20px;
+  height: 20px;
+  justify-self: center;
+  border-radius: 999px;
+}
+
+.audioflume-pricing-testimonial-skeleton {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.audioflume-pricing-testimonial-skeleton > div {
+  width: min(calc(100% - 160px), 900px);
+  margin: 0 auto;
+  padding: clamp(84px, 8vw, 126px) 0;
+}
+
+.audioflume-pricing-testimonial-skeleton .is-testimonial-eyebrow {
+  width: 92px;
+  height: 12px;
+}
+
+.audioflume-pricing-testimonial-skeleton .is-quote {
+  display: grid;
+  gap: 9px;
+  margin-top: 28px;
+}
+
+.audioflume-pricing-testimonial-skeleton .is-quote .audioflume-pricing-skeleton-block {
+  width: 100%;
+  height: 18px;
+}
+
+.audioflume-pricing-testimonial-skeleton .is-quote .audioflume-pricing-skeleton-block:nth-child(2) {
+  width: 94%;
+}
+
+.audioflume-pricing-testimonial-skeleton .is-quote .audioflume-pricing-skeleton-block:nth-child(3) {
+  width: 74%;
+}
+
+.audioflume-pricing-testimonial-skeleton .is-person {
+  width: 120px;
+  height: 15px;
+  margin-top: 28px;
+}
+
+.audioflume-pricing-testimonial-skeleton .is-role {
+  width: 82px;
+  height: 11px;
+  margin-top: 6px;
+}
+
+.audioflume-pricing-includes-skeleton .is-includes-eyebrow {
+  width: 142px;
+  height: 12px;
+}
+
+.audioflume-pricing-includes-skeleton .is-includes-title {
+  width: 92%;
+  height: 42px;
+  margin-top: 24px;
+}
+
+.audioflume-pricing-includes-skeleton .is-includes-title.is-short {
+  width: 66%;
+  margin-top: 8px;
+}
+
+.audioflume-pricing-includes-skeleton .is-number {
+  width: 40px;
+  height: 40px;
+}
+
+.audioflume-pricing-includes-skeleton .is-include-title {
+  width: 72%;
+  height: 13px;
+  margin-top: 3px;
+}
+
+.audioflume-pricing-includes-skeleton .is-include-copy {
+  display: grid;
+  gap: 8px;
+}
+
+.audioflume-pricing-includes-skeleton .is-include-copy .audioflume-pricing-skeleton-block {
+  width: 100%;
+  height: 11px;
+}
+
+.audioflume-pricing-includes-skeleton .is-include-copy .audioflume-pricing-skeleton-block:last-child {
+  width: 76%;
+}
+
+.audioflume-pricing-enterprise-skeleton .audioflume-pricing-skeleton-block {
+  background: rgba(255, 255, 255, 0.14);
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-eyebrow {
+  position: relative;
+  z-index: 1;
+  width: 88px;
+  height: 12px;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-title {
+  position: relative;
+  z-index: 1;
+  width: 88%;
+  height: clamp(40px, 5vw, 66px);
+  margin-top: 26px;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-title.is-short {
+  width: 62%;
+  margin-top: 10px;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-copy-lines {
+  display: grid;
+  gap: 9px;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-copy-lines .audioflume-pricing-skeleton-block {
+  width: 100%;
+  height: 13px;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-copy-lines .audioflume-pricing-skeleton-block:nth-child(2) {
+  width: 92%;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-copy-lines .audioflume-pricing-skeleton-block:nth-child(3) {
+  width: 68%;
+}
+
+.audioflume-pricing-enterprise-skeleton .is-enterprise-button {
+  width: 240px;
+  height: 44px;
+  margin-top: 30px;
+  background: rgba(255, 255, 255, 0.84);
+}
+
+@media (max-width: 760px) {
+  .audioflume-pricing-searchbar-skeleton-field {
+    width: calc(100% - 20px);
+    margin: 12px 10px;
+  }
+
+  .audioflume-pricing-loading .audioflume-pricing-overview .is-overview-title {
+    width: min(88vw, 470px);
+  }
+
+  .audioflume-pricing-overview-skeleton-copy {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .audioflume-pricing-testimonial-skeleton > div {
+    width: calc(100% - 40px);
+  }
+}
