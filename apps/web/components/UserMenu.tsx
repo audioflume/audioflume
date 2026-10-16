@@ -102,6 +102,11 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
           </Link>
         ) : null}
         <MenuLink
+          href="/projects"
+          label="My Projects"
+          onClose={onClose}
+        />
+        <MenuLink
           href="/account/settings"
           label="Settings"
           onClose={onClose}
@@ -150,13 +155,6 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
           onClick={() => signOut()}
           className="filmwave-dropdown-item filmwave-user-menu-exit"
         >
-          <span
-            className="filmwave-user-menu-action-icon"
-            aria-hidden="true"
-            style={{ transform: "scaleX(-1)" }}
-          >
-            <UserMenuGlyph name="sign-out" />
-          </span>
           <span>Sign Out</span>
         </button>
       </UserMenuActions>
