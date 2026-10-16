@@ -137,7 +137,7 @@ type ProjectRowProps = {
   onToggleArchive: (project: Project) => void;
 };
 
-function ProjectRow({
+function ProjectCard({
   project,
   isRenaming,
   renameName,
@@ -150,77 +150,70 @@ function ProjectRow({
   onDeleteProject,
   onToggleArchive,
 }: ProjectRowProps) {
-  const projectCopy = (
-    <>
-      <div className="projects-row-icon" aria-hidden="true">
-        <span className="projects-row-icon-inner">
-          <FolderGlyph />
-        </span>
-      </div>
-
-      <div className="projects-row-main">
-        {isRenaming ? (
-          <div className="projects-row-rename">
-            <input
-              className="projects-row-rename-input"
-              type="text"
-              value={renameName}
-              autoFocus
-              aria-label={`Rename ${project.name}`}
-              onFocus={(event) => event.currentTarget.select()}
-              onBlur={(event) => {
-                if (event.currentTarget.dataset.cancelRename === "true") {
-                  delete event.currentTarget.dataset.cancelRename;
-                  onCancelRename();
-                  return;
-                }
-
-                onSaveRename(project);
-              }}
-              onChange={(event) => onRenameNameChange(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Enter") {
-                  event.preventDefault();
-                  event.currentTarget.blur();
-                }
-
-                if (event.key === "Escape") {
-                  event.preventDefault();
-                  event.currentTarget.dataset.cancelRename = "true";
-                  event.currentTarget.blur();
-                }
-              }}
-            />
-          </div>
-        ) : (
-          <span>{project.name}</span>
-        )}
-        <small>{project.description?.trim() || "No description"}</small>
-      </div>
-    </>
-  );
+  const fileCount = formatFileCount(getProjectFileCount(project));
 
   return (
-    <div className={`projects-row${isRenaming ? " is-renaming" : ""}`}>
+    <article className={`project-grid-card${isRenaming ? " is-renaming" : ""}`}>
       {isRenaming ? (
-        <div className="projects-row-link projects-row-link-static">
-          {projectCopy}
+        <div className="project-grid-card-link project-grid-card-link-static">
+          <div className="project-grid-card-icon" aria-hidden="true">
+            <FolderGlyph />
+          </div>
+          <div className="project-grid-card-copy">
+            <div className="project-grid-card-rename">
+              <input
+                className="project-grid-card-rename-input"
+                type="text"
+                value={renameName}
+                autoFocus
+                aria-label={`Rename ${project.name}`}
+                onFocus={(event) => event.currentTarget.select()}
+                onBlur={(event) => {
+                  if (event.currentTarget.dataset.cancelRename === "true") {
+                    delete event.currentTarget.dataset.cancelRename;
+                    onCancelRename();
+                    return;
+                  }
+
+                  onSaveRename(project);
+                }}
+                onChange={(event) => onRenameNameChange(event.target.value)}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    event.currentTarget.blur();
+                  }
+
+                  if (event.key === "Escape") {
+                    event.preventDefault();
+                    event.currentTarget.dataset.cancelRename = "true";
+                    event.currentTarget.blur();
+                  }
+                }}
+              />
+            </div>
+            <span className="project-grid-card-meta">{fileCount}</span>
+          </div>
         </div>
       ) : (
-        <Link href={`/projects/${project.id}`} className="projects-row-link">
-          {projectCopy}
+        <Link href={`/projects/${project.id}`} className="project-grid-card-link">
+          <div className="project-grid-card-icon" aria-hidden="true">
+            <FolderGlyph />
+          </div>
+          <div className="project-grid-card-copy">
+            <span className="project-grid-card-title">{project.name}</span>
+            <span className="project-grid-card-meta">{fileCount}</span>
+          </div>
         </Link>
       )}
 
-      <ListRowStatusCount
-        status={project.is_archived ? <ArchiveIcon /> : undefined}
-        statusLabel="Archived project"
-        count={formatFileCount(getProjectFileCount(project))}
-        statusClassName="projects-row-archive-status"
-        countClassName="projects-row-count"
-      />
+      {project.is_archived ? (
+        <span className="project-grid-card-status" aria-label="Archived project">
+          <ArchiveIcon />
+        </span>
+      ) : null}
 
-      <div className="projects-row-actions">
+      <div className="project-grid-card-actions">
         <DropdownShell
           open={menuOpen}
           onOpenChange={onMenuOpenChange}
@@ -277,25 +270,44 @@ function ProjectRow({
           </button>
         </DropdownShell>
       </div>
-    </div>
+    </article>
+  );
+}
+
+function NewProjectCard({ onClick }: { onClick: () => void }) {
+  return (
+    <button type="button" className="project-grid-create-card" onClick={onClick}>
+      <span className="project-grid-create-icon" aria-hidden="true">
+        <PlusIcon size={20} />
+      </span>
+      <span className="project-grid-create-copy">
+        <strong>New Project</strong>
+        <span>Create a workspace</span>
+      </span>
+    </button>
   );
 }
 
 function ProjectSkeletonList() {
   return (
-    <div className="projects-list">
-      {Array.from({ length: 9 }, (_, index) => (
-        <div key={index} className="projects-row projects-row-skeleton">
-          <div className="projects-skeleton-block projects-skeleton-icon" />
-          <div className="projects-skeleton-copy">
-            <div className="projects-skeleton-block projects-skeleton-title" />
-            <div className="projects-skeleton-block projects-skeleton-line" />
+    <section className="projects-grid" aria-label="Loading projects">
+      <div className="project-grid-create-card project-grid-card-skeleton">
+        <div className="projects-skeleton-block project-grid-skeleton-icon" />
+        <div className="project-grid-create-copy">
+          <div className="projects-skeleton-block project-grid-skeleton-title" />
+          <div className="projects-skeleton-block project-grid-skeleton-meta" />
+        </div>
+      </div>
+      {Array.from({ length: 7 }, (_, index) => (
+        <div key={index} className="project-grid-card project-grid-card-skeleton">
+          <div className="projects-skeleton-block project-grid-skeleton-folder" />
+          <div className="project-grid-card-copy">
+            <div className="projects-skeleton-block project-grid-skeleton-title" />
+            <div className="projects-skeleton-block project-grid-skeleton-meta" />
           </div>
-          <div className="projects-skeleton-block projects-skeleton-count" />
-          <div className="projects-skeleton-block projects-skeleton-button" />
         </div>
       ))}
-    </div>
+    </section>
   );
 }
 
@@ -669,6 +681,181 @@ export default function ProjectsPage() {
           line-height: var(--filmwave-section-title-line-height);
           text-transform: none;
         }
+        .projects-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+          gap: 16px;
+          margin-top: 28px;
+          margin-right: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
+          margin-left: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
+        }
+        .project-grid-card,
+        .project-grid-create-card {
+          position: relative;
+          box-sizing: border-box;
+          min-width: 0;
+          min-height: 184px;
+          border: 0;
+          border-radius: 0;
+          background: var(--bg-secondary);
+          color: var(--text-primary);
+          text-align: left;
+          transition: background 0.15s ease;
+        }
+        .project-grid-card:hover,
+        .project-grid-create-card:hover {
+          background: var(--bg-hover);
+        }
+        .project-grid-card-link,
+        .project-grid-create-card {
+          display: flex;
+          width: 100%;
+          min-height: 184px;
+          flex-direction: column;
+          align-items: flex-start;
+          justify-content: space-between;
+          padding: 22px;
+          color: inherit;
+          text-decoration: none;
+        }
+        .project-grid-card-link-static {
+          cursor: default;
+        }
+        .project-grid-card-icon {
+          display: flex;
+          width: 74px;
+          height: 64px;
+          align-items: center;
+          justify-content: flex-start;
+          color: var(--text-primary);
+        }
+        .project-grid-card-icon > svg {
+          width: 74px;
+          height: auto;
+        }
+        .project-grid-card-copy,
+        .project-grid-create-copy {
+          display: flex;
+          min-width: 0;
+          flex-direction: column;
+          gap: 3px;
+        }
+        .project-grid-card-title,
+        .project-grid-create-copy strong {
+          overflow: hidden;
+          color: var(--text-primary);
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 1.25;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+        .project-grid-card-meta,
+        .project-grid-create-copy span {
+          color: var(--text-muted);
+          font-size: 11.5px;
+          font-weight: 400;
+          line-height: 1.4;
+        }
+        .project-grid-card-actions {
+          position: absolute;
+          top: 12px;
+          right: 12px;
+          z-index: 3;
+          display: inline-flex;
+        }
+        .project-grid-card-actions .project-toolbar-icon-button {
+          display: inline-flex;
+          width: 32px;
+          min-width: 32px;
+          height: 32px;
+          align-items: center;
+          justify-content: center;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          padding: 0;
+          color: var(--icon-color);
+          cursor: pointer;
+        }
+        .project-grid-card-actions .project-toolbar-icon-button:hover,
+        .project-grid-card-actions .project-toolbar-icon-button.is-active {
+          background: var(--icon-button-hover);
+          color: var(--text-primary);
+        }
+        .project-grid-card-status {
+          position: absolute;
+          right: 52px;
+          bottom: 22px;
+          display: inline-flex;
+          width: 14px;
+          height: 14px;
+          align-items: center;
+          justify-content: center;
+          color: var(--text-muted);
+        }
+        .project-grid-card-rename {
+          min-width: 0;
+        }
+        .project-grid-card-rename-input {
+          box-sizing: border-box;
+          width: 100%;
+          height: 24px;
+          border: 0;
+          border-radius: 0;
+          outline: 0;
+          background: transparent;
+          padding: 0;
+          color: var(--text-primary);
+          font-family: var(--font-aktiv-grotesk), sans-serif;
+          font-size: 14px;
+          font-weight: 500;
+          line-height: 1.25;
+        }
+        .project-grid-create-card {
+          cursor: pointer;
+          font-family: inherit;
+        }
+        .project-grid-create-icon {
+          display: inline-flex;
+          width: 54px;
+          height: 54px;
+          align-items: center;
+          justify-content: center;
+          background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+          color: var(--text-primary);
+        }
+        .project-grid-card-skeleton {
+          pointer-events: none;
+        }
+        .project-grid-skeleton-folder {
+          width: 74px;
+          height: 58px;
+        }
+        .project-grid-skeleton-icon {
+          width: 54px;
+          height: 54px;
+        }
+        .project-grid-skeleton-title {
+          width: 120px;
+          height: 10px;
+        }
+        .project-grid-skeleton-meta {
+          width: 58px;
+          height: 8px;
+        }
+        @media (max-width: 760px) {
+          .projects-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 12px;
+          }
+        }
+        @media (max-width: 520px) {
+          .projects-grid {
+            grid-template-columns: 1fr;
+          }
+        }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
         .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 12px; border-top: 1px solid var(--border-subtle); }
         .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) 12px minmax(84px, 120px) 32px; column-gap: 14px; align-items: center; border-bottom: 1px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
@@ -940,10 +1127,13 @@ export default function ProjectsPage() {
             </div>
           ) : loading ? (
             <ProjectSkeletonList />
-          ) : displayedProjects.length > 0 ? (
-            <section className="projects-list" aria-label="Projects">
+          ) : displayedProjects.length > 0 || !cleanQuery ? (
+            <section className="projects-grid" aria-label="Projects">
+              {!cleanQuery ? (
+                <NewProjectCard onClick={() => setCreateProjectOpen(true)} />
+              ) : null}
               {displayedProjects.map((project) => (
-                <ProjectRow
+                <ProjectCard
                   key={project.id}
                   project={project}
                   isRenaming={renamingProjectId === project.id}
@@ -972,12 +1162,8 @@ export default function ProjectsPage() {
           ) : (
             <div className="projects-empty-space">
               <div className="projects-empty">
-                <h2>{cleanQuery ? "No matching projects" : "Stay organized with Projects"}</h2>
-                <p>
-                  {cleanQuery
-                    ? "Try searching for a different project name."
-                    : "Save songs, organize files, and keep every project workspace in one place."}
-                </p>
+                <h2>No matching projects</h2>
+                <p>Try searching for a different project name.</p>
               </div>
             </div>
           )}
