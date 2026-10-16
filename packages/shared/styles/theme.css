@@ -83,13 +83,13 @@
   --filmwave-section-title-line-height: 1;
   --filmwave-section-title-margin-bottom: 16px;
 
-  /* Canonical smaller uppercase section-title typography. */
-  --filmwave-small-section-title-font-family: var(--font-aktiv-grotesk), sans-serif;
-  --filmwave-small-section-title-font-size: 18px;
-  --filmwave-small-section-title-font-weight: 300;
-  --filmwave-small-section-title-letter-spacing: 0;
-  --filmwave-small-section-title-line-height: 1.15;
-  --filmwave-small-section-title-text-transform: uppercase;
+  /* Canonical compact section-title typography. */
+  --filmwave-small-section-title-font-family: var(--filmwave-section-title-font-family);
+  --filmwave-small-section-title-font-size: var(--filmwave-section-title-font-size);
+  --filmwave-small-section-title-font-weight: var(--filmwave-section-title-font-weight);
+  --filmwave-small-section-title-letter-spacing: var(--filmwave-section-title-letter-spacing);
+  --filmwave-small-section-title-line-height: var(--filmwave-section-title-line-height);
+  --filmwave-small-section-title-text-transform: none;
   --filmwave-small-section-title-margin-bottom: 12px;
 
   /* Canonical Filmwave interface styling. */

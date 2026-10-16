@@ -784,11 +784,12 @@
 
 .discover-artist-shelf-section h2 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.15;
-  text-transform: uppercase;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
+  text-transform: none;
 }
 
 .discover-artist-shelf-controls {
