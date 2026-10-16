@@ -466,7 +466,7 @@ export default function AdminMusicReviewPage() {
           ) : song ? (
             <>
               <section className="filmwave-backend-section">
-                <div className="flex flex-wrap items-start justify-between gap-4 border-b border-[var(--border-subtle)] px-5 py-4">
+                <div className="flex flex-wrap items-start justify-between gap-4 border-b-[1.5px] border-[var(--border-subtle)] px-5 py-4">
                   <div>
                     <div className="text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       {artist?.name || song.artist}
@@ -521,7 +521,7 @@ export default function AdminMusicReviewPage() {
                       {credits.map((credit, index) => (
                         <div
                           key={credit.id ? `credit-${credit.id}` : `pending-credit-${index}`}
-                          className="flex items-center justify-between gap-4 border-b border-[var(--border-subtle)] py-2.5 last:border-b-0"
+                          className="flex items-center justify-between gap-4 border-b-[1.5px] border-[var(--border-subtle)] py-2.5 last:border-b-0"
                         >
                           <span className="text-xs text-[var(--text-primary)]">
                             {credit.credit_name}
@@ -559,8 +559,8 @@ export default function AdminMusicReviewPage() {
                     <DetailValue label="ISWC" value={rights?.iswc ?? "—"} />
                   </div>
 
-                  <div className="overflow-x-auto rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)]">
-                    <div className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
+                  <div className="overflow-x-auto rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]">
+                    <div className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b-[1.5px] border-[var(--border-subtle)] px-4 py-3 text-[10px] font-medium uppercase tracking-[0.05em] text-[var(--text-muted)]">
                       <span>Rights holder</span>
                       <span>Rights</span>
                       <span>Share</span>
@@ -575,7 +575,7 @@ export default function AdminMusicReviewPage() {
                       rightsHolders.map((holder, index) => (
                         <div
                           key={holder.id ? `holder-${holder.id}` : `pending-holder-${index}`}
-                          className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
+                          className="grid min-w-[760px] grid-cols-[minmax(180px,1fr)_150px_100px_150px_150px] gap-3 border-b-[1.5px] border-[var(--border-subtle)] px-4 py-3 text-xs last:border-b-0"
                         >
                           <span className="text-[var(--text-primary)]">{holder.holder_name}</span>
                           <span className="text-[var(--text-secondary)]">
@@ -717,7 +717,7 @@ export default function AdminMusicReviewPage() {
                     key={filter.value}
                     type="button"
                     onClick={() => setStatusFilter(filter.value)}
-                    className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border px-3 text-[11px] font-medium transition ${
+                    className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border-[1.5px] px-3 text-[11px] font-medium transition ${
                       active
                         ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                         : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
@@ -745,7 +745,7 @@ export default function AdminMusicReviewPage() {
               </div>
             </div>
 
-            <div className="overflow-x-auto overflow-y-hidden border-t border-[var(--border-subtle)]">
+            <div className="overflow-x-auto overflow-y-hidden border-t-[1.5px] border-[var(--border-subtle)]">
               <div className="min-w-[980px]">
                 {loading ? (
                   <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">

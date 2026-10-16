@@ -71,7 +71,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
         compactHeader
         contentAreaBottomPadding={false}
       >
-        <section className="rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
+        <section className="rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           You do not have access to this admin page.
         </section>
         <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
@@ -126,14 +126,14 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
       <div className="mb-4 flex items-center gap-2">
         <Link
           href={`/admin/songs/${id}/edit`}
-          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           Edit Details
         </Link>
       </div>
 
       <div className="grid gap-3">
-        <section className="flex min-h-[80px] items-center gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-5">
+        <section className="flex min-h-[80px] items-center gap-4 rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-5">
           <div className="h-12 w-12 flex-shrink-0 overflow-hidden rounded-[7px] bg-[var(--bg-secondary)]">
             {typedSong.cover_url ? (
               <img
