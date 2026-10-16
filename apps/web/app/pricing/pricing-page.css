@@ -171,7 +171,7 @@
 .audioflume-pricing-plans-section {
   position: relative;
   isolation: isolate;
-  padding: clamp(72px, 6.5vw, 96px) 0 clamp(92px, 9vw, 138px);
+  padding: clamp(58px, 5vw, 76px) 0 clamp(92px, 9vw, 138px);
 }
 
 .audioflume-pricing-plans-section::before {
