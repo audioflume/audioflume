@@ -94,11 +94,12 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
 
         .projects-page .projects-title {
           color: var(--text-primary) !important;
-          font-family: var(--filmwave-ui-title-font-family) !important;
-          font-size: var(--filmwave-ui-title-font-size) !important;
-          font-weight: var(--filmwave-ui-title-font-weight) !important;
-          letter-spacing: var(--filmwave-ui-title-letter-spacing) !important;
-          line-height: var(--filmwave-ui-title-line-height) !important;
+          font-family: var(--filmwave-section-title-font-family) !important;
+          font-size: var(--filmwave-section-title-font-size) !important;
+          font-weight: var(--filmwave-section-title-font-weight) !important;
+          letter-spacing: var(--filmwave-section-title-letter-spacing) !important;
+          line-height: var(--filmwave-section-title-line-height) !important;
+          text-transform: none !important;
         }
 
         .projects-page .projects-row-actions .project-toolbar-icon-button {
