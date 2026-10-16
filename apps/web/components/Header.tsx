@@ -816,10 +816,6 @@ export default function Header() {
 
                 {user ? (
                   <>
-                    <Link href="/account" className="filmwave-header-utility-link">
-                      My Account
-                    </Link>
-
                     <div className="filmwave-header-account-wrap" ref={menuRef}>
                       <button
                         type="button"
