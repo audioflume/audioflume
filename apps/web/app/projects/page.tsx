@@ -4,6 +4,7 @@ import { HeaderSearchBar } from "@filmwave/shared";
 import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
 import MoreIcon from "@/components/icons/MoreIcon";
+import PlusIcon from "@/components/icons/PlusIcon";
 import ListRowStatusCount from "@/components/ListRowStatusCount";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
 import Toast from "@/components/Toast";
@@ -78,11 +79,21 @@ function StatusLabel({ statusMode }: { statusMode: ProjectStatusMode }) {
 
 function SearchIcon() {
   return (
-    <svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+      <circle
+        cx="11"
+        cy="11"
+        r="6.5"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.4"
+      />
       <path
-        fill="currentColor"
-        fillRule="evenodd"
-        d="M10.5 3a7.5 7.5 0 1 0 4.71 13.33l4.13 4.13a1.4 1.4 0 0 0 1.98-1.98l-4.13-4.13A7.5 7.5 0 0 0 10.5 3ZM5.8 10.5a4.7 4.7 0 1 1 9.4 0 4.7 4.7 0 0 1-9.4 0Z"
+        d="m16 16 4.5 4.5"
+        fill="none"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeWidth="1.4"
       />
     </svg>
   );
@@ -90,11 +101,11 @@ function SearchIcon() {
 
 function ChevronIcon() {
   return (
-    <svg width="11" height="11" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" aria-hidden="true">
       <path
-        d="M4 6L8 10L12 6"
+        d="M4.5 6.25 8 9.75l3.5-3.5"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -463,23 +474,31 @@ export default function ProjectsPage() {
       <style>{`
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 22px 32px 0 32px; }
-        .projects-control-bar { display: grid; min-height: 54px; grid-template-columns: 160px minmax(300px, 640px) minmax(270px, auto); align-items: start; gap: 24px; }
-        .projects-status-pill { display: inline-flex; width: 150px; height: 35px; align-items: center; justify-content: center; gap: 5px; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 10px 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-aktiv-grotesk); font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .projects-status-pill:hover, .projects-status-pill.is-open { background: var(--bg-hover); border-color: var(--filmwave-border-color); color: var(--text-primary); }
+        .projects-control-bar { --fw-header-search-row-height: 51px; display: grid; min-height: 51px; grid-template-columns: max-content minmax(320px, 1fr) max-content; align-items: center; gap: 18px; }
+        .projects-status-pill { display: inline-flex; width: auto; min-width: 0; height: 51px; min-height: 51px; align-items: center; justify-content: flex-start; gap: 6px; border: 0; border-radius: 0; background: transparent; padding: 0; color: var(--text-primary); cursor: pointer; font-family: var(--font-aktiv-grotesk); font-size: 14px; font-weight: 400; letter-spacing: normal; line-height: 1; }
+        .projects-status-pill:hover, .projects-status-pill.is-open { background: transparent; color: var(--text-primary); }
+        .projects-status-pill > svg { display: block; width: 14px; height: 14px; flex: 0 0 14px; }
         .projects-status-dropdown { min-width: 150px; }
         .projects-status-dropdown button.is-active { background: var(--filmwave-menu-hover); color: var(--filmwave-menu-text); }
-        .projects-search { display: flex; width: 100%; height: 42px; align-items: center; gap: 12px; border: 1px solid var(--filmwave-border-color); border-radius: 0; background: var(--bg-primary); padding: 0 14px; color: var(--text-muted); box-shadow: none; }
-        .projects-search input { min-width: 0; flex: 1 1 auto; border: 0; outline: 0; background: transparent; color: var(--text-primary); font-family: inherit; font-size: 12px; font-style: italic; }
-        .projects-search input::placeholder { color: var(--text-muted); }
-        .projects-search-clear { display: inline-flex; width: 20px; height: 20px; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-muted); cursor: pointer; font-size: 15px; line-height: 1; }
-        .projects-search-clear:hover { background: var(--bg-hover); color: var(--text-primary); }
-        .projects-control-right { display: flex; justify-content: flex-end; align-items: center; gap: 6px; }
-        .projects-sort-button { height: 35px; display: inline-flex; align-items: center; gap: 5px; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 10px 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-aktiv-grotesk); font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .projects-sort-button:hover, .projects-sort-button.is-open { background: var(--bg-hover); border-color: var(--filmwave-border-color); color: var(--text-primary); }
+        .projects-control-bar > .fw-toolbar-header-search-row { height: 51px; min-height: 51px; border: 0; border-radius: 0; background: var(--filmwave-neutral-surface); background-color: var(--filmwave-neutral-surface); padding: 0 16px; }
+        :where(html.light, html[data-theme="light"]) .projects-control-bar > .fw-toolbar-header-search-row { --fw-header-search-muted-color: #a3a3a3; background: #f3f3f3; background-color: #f3f3f3; }
+        :where(html.dark, html[data-theme="dark"]) .projects-control-bar > .fw-toolbar-header-search-row { --fw-header-search-muted-color: #5a5a5a; }
+        .projects-control-bar .fw-toolbar-search-static { gap: 12px; }
+        .projects-control-bar .fw-toolbar-search-static-icon, .projects-control-bar .fw-toolbar-search-static-icon svg { width: 22px; height: 22px; flex-basis: 22px; }
+        .projects-control-bar .fw-toolbar-search-static-input { color: var(--text-primary); font-family: inherit; font-size: 15px; font-style: normal; font-weight: 300; letter-spacing: 0; line-height: normal; }
+        .projects-control-bar .fw-toolbar-search-static-input::placeholder { font-family: inherit; font-size: 16px; font-style: normal; font-weight: 300; letter-spacing: 0; line-height: normal; opacity: 1; }
+        :where(html.light, html[data-theme="light"]) .projects-control-bar .fw-toolbar-search-static-input::placeholder { color: #a3a3a3; }
+        :where(html.dark, html[data-theme="dark"]) .projects-control-bar .fw-toolbar-search-static-input::placeholder { color: #5a5a5a; }
+        .projects-control-right { display: flex; justify-content: flex-end; align-items: center; gap: 4px; }
+        .projects-sort-button, .projects-new-button { box-sizing: border-box; height: 51px; min-height: 51px; display: inline-flex; align-items: center; justify-content: center; border: 0; border-radius: 0; background: transparent; color: var(--text-primary); cursor: pointer; font-family: var(--font-aktiv-grotesk); font-size: 14px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, color 0.15s ease; }
+        .projects-sort-button { gap: 6px; padding: 0 12px; }
+        .projects-sort-button:hover, .projects-sort-button.is-open { background: transparent; color: var(--text-primary); }
         .projects-sort-dropdown { min-width: 154px; }
         .projects-sort-dropdown button.is-active { background: var(--bg-hover); color: var(--text-primary); }
-        .projects-new-button { height: 35px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--filmwave-border-color); border-radius: 5px; background: var(--bg-primary); padding: 0 14px; color: var(--text-secondary); cursor: pointer; font-family: var(--font-aktiv-grotesk); font-size: 12px; font-weight: 400; letter-spacing: normal; line-height: 1; transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease; }
-        .projects-new-button:hover { background: var(--bg-hover); border-color: var(--filmwave-border-color); color: var(--text-primary); }
+        .projects-new-button { gap: 8px; padding: 0 22px 0 18px; }
+        .projects-new-button:hover { background: var(--bg-hover); color: var(--text-primary); }
+        :where(html.light, html[data-theme="light"]) .projects-new-button:hover { background: var(--text-primary); color: var(--bg-primary); }
+        .projects-new-button-icon { display: inline-flex; align-items: center; justify-content: center; }
         .projects-title { margin: 36px 0 20px; max-width: 640px; font-size: 1.6em; font-weight: 500; line-height: 1; letter-spacing: -0.035em; color: var(--text-primary); }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
         .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 12px; border-top: 1px solid var(--border-subtle); }
@@ -516,9 +535,11 @@ export default function ProjectsPage() {
         .projects-skeleton-button { justify-self: end; width: 32px; height: 32px; }
         @media (max-width: 940px) {
           .projects-shell { padding-left: 32px; padding-right: 32px; }
-          .projects-control-bar { grid-template-columns: 1fr; gap: 12px; }
-          .projects-status-pill { width: 100%; }
-          .projects-control-right { justify-content: space-between; }
+          .projects-control-bar { grid-template-columns: 126px minmax(0, 1fr) auto; align-items: center; gap: 10px; }
+          .projects-status-pill { width: 126px; min-width: 126px; }
+          .projects-control-right { justify-content: flex-end; flex-wrap: nowrap; gap: 8px; }
+          .projects-sort-button, .projects-new-button { width: 44px; min-width: 44px; padding: 0; }
+          .projects-sort-button > span:first-child, .projects-sort-button > svg, .projects-new-button > span:last-child { display: none; }
           .projects-title { margin-top: 36px; }
           .projects-list { margin-top: 12px; }
         }
@@ -580,6 +601,7 @@ export default function ProjectsPage() {
             <HeaderSearchBar
               variant="control"
               renderForm={false}
+              searchIcon={<SearchIcon />}
               searchValue={query}
               searchPlaceholder="Search projects"
               searchAriaLabel="Search projects"
@@ -652,7 +674,10 @@ export default function ProjectsPage() {
                 className="projects-new-button"
                 onClick={() => setCreateProjectOpen(true)}
               >
-                + New Project
+                <span className="projects-new-button-icon" aria-hidden="true">
+                  <PlusIcon size={16} />
+                </span>
+                <span>New Project</span>
               </button>
             </div>
           </section>
