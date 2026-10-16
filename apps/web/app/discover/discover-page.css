@@ -817,15 +817,15 @@
 
 .discover-artist-shelf-scroller {
   display: flex;
-  width: calc(100vw - var(--discover-artist-content-inset));
+  width: 100%;
   overflow-x: auto;
   overflow-y: hidden;
   gap: 10px;
-  padding-right: var(--discover-artist-content-inset);
-  padding-left: 0;
+  padding-right: 0;
+  padding-left: var(--discover-artist-content-inset);
   scroll-behavior: smooth;
-  scroll-padding-right: var(--discover-artist-content-inset);
-  scroll-padding-left: 0;
+  scroll-padding-right: 0;
+  scroll-padding-left: var(--discover-artist-content-inset);
   scroll-snap-type: x proximity;
   scrollbar-width: none;
 }
