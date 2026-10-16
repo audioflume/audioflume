@@ -351,7 +351,7 @@ export default async function PricingPage() {
 
         <section className="audioflume-pricing-comparison-section">
           <div className="audioflume-pricing-comparison-heading">
-            <span>Flexible Licensing Options</span>
+            <span>Plan Comparison</span>
             <Link href="/artists/licensing">View licensing details</Link>
           </div>
           <div className="audioflume-pricing-comparison-block">
@@ -361,7 +361,7 @@ export default async function PricingPage() {
                 <tr className="border-b border-[var(--border)]">
                   <th className="w-[34%] pb-8 pr-8 text-left align-top" scope="col">
                     <p className="audioflume-pricing-section-eyebrow mb-1">
-                      Plan comparison
+                      Flexible Licensing Options
                     </p>
                     <h2 className="mt-[29px] max-w-none whitespace-nowrap font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(28px,2.5vw,36px)] font-normal leading-[0.94] tracking-[-0.035em]">
                       Compare these plans.
