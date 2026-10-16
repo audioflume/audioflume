@@ -344,7 +344,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   aspect-ratio: 1;
   overflow: hidden;
   border: 0;
-  background: var(--bg-tertiary);
+  background: #111111;
   color: #111111;
   padding: 0;
   text-align: left;
@@ -355,7 +355,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(17, 17, 17, 0.38);
+  background: rgba(17, 17, 17, 0.28);
   content: "";
   pointer-events: none;
 }
@@ -377,8 +377,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   left: 50%;
   z-index: 2;
   display: block;
-  width: 132px;
-  height: 132px;
+  width: 110px;
+  height: 110px;
   overflow: hidden;
   transform: translate(-50%, -50%);
 }
