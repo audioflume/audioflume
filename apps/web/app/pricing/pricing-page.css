@@ -160,9 +160,12 @@
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-kicker,
-.audioflume-pricing-plan .audioflume-pricing-plan-description,
-.audioflume-pricing-plan .audioflume-pricing-plan-features li {
+.audioflume-pricing-plan .audioflume-pricing-plan-description {
   color: rgba(255, 255, 255, 0.78) !important;
+}
+
+.audioflume-pricing-plan .audioflume-pricing-plan-features li {
+  color: #ffffff !important;
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-price span {
