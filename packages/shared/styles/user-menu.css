@@ -1,7 +1,7 @@
 /* ── User menu ── shared dropdown shell + identity/theme sections ── */
 
 .filmwave-dropdown-shell.filmwave-user-menu {
-  width: 280px;
+  width: 300px;
   border-radius: 0;
   --filmwave-menu-item-radius: 0;
 }
