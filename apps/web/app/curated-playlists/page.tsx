@@ -7,8 +7,7 @@ import CuratedFeatureCarousel from "@/components/curated/CuratedFeatureCarousel"
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
-import GlobalMusicSearch from "@/components/GlobalMusicSearch";
-import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
+import GlobalSearchBar from "@/components/GlobalSearchBar";
 import XIcon from "@/components/icons/XIcon";
 import type {
   CuratedBrowseTag,
@@ -352,23 +351,7 @@ export default function CuratedPlaylistsPage() {
 
   return (
     <main className="curated-playlists-page-root">
-      <div className="audioflume-home-reference-searchbar-slot">
-        <div className="audioflume-home-reference-searchbar">
-          <Link
-            href="/music?filters=open"
-            className="audioflume-home-reference-searchbar-filters"
-          >
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
-            </svg>
-            <span>Filters</span>
-          </Link>
-
-          <GlobalMusicSearch />
-
-          <GlobalReferenceSearch />
-        </div>
-      </div>
+      <GlobalSearchBar layer="high" />
 
       <section className="curated-playlists-page-layer">
         <div className="px-8">
