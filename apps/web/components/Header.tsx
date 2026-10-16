@@ -188,6 +188,39 @@ export default function Header() {
     setAvatarImageFailed(false);
   }, [avatarImage]);
 
+  useLayoutEffect(() => {
+    const headerElement = document.querySelector<HTMLElement>(".filmwave-web-header");
+    if (!headerElement) return;
+
+    let frame = 0;
+
+    function syncHeaderBottom() {
+      window.cancelAnimationFrame(frame);
+      frame = window.requestAnimationFrame(() => {
+        const bottom = headerElement.getBoundingClientRect().bottom;
+        document.documentElement.style.setProperty(
+          "--filmwave-web-header-bottom",
+          `${Math.max(0, Math.round(bottom))}px`,
+        );
+      });
+    }
+
+    const resizeObserver = new ResizeObserver(syncHeaderBottom);
+
+    syncHeaderBottom();
+    resizeObserver.observe(headerElement);
+    window.addEventListener("scroll", syncHeaderBottom, { passive: true });
+    window.addEventListener("resize", syncHeaderBottom);
+
+    return () => {
+      window.cancelAnimationFrame(frame);
+      resizeObserver.disconnect();
+      window.removeEventListener("scroll", syncHeaderBottom);
+      window.removeEventListener("resize", syncHeaderBottom);
+      document.documentElement.style.removeProperty("--filmwave-web-header-bottom");
+    };
+  }, []);
+
   function openPlaylistsMenu() {
     setPlaylistsMenuOpen(true);
   }
