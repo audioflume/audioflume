@@ -527,7 +527,7 @@ export default function HomePageContent({
   const audioflumeOriginalSongs = playableSongs
     .filter(
       (song) =>
-        song.artist.trim().localeCompare("Audioflume Originals", undefined, {
+        song.artist.trim().localeCompare("Audioflume", undefined, {
           sensitivity: "base",
         }) === 0,
     )
