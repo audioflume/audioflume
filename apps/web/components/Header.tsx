@@ -199,6 +199,78 @@ export default function Header() {
   return (
     <>
       <style>{`
+        .audioflume-artist-cta-bar {
+          position: relative;
+          z-index: var(--filmwave-z-header);
+          display: flex;
+          box-sizing: border-box;
+          width: 100%;
+          height: 34px;
+          align-items: center;
+          justify-content: space-between;
+          gap: 24px;
+          background: #111111;
+          padding: 0 24px;
+          color: #ffffff;
+          font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
+        }
+
+        .audioflume-artist-cta-copy {
+          display: inline-flex;
+          min-width: 0;
+          align-items: center;
+          gap: 8px;
+          font-size: 11px;
+          font-weight: 400;
+          letter-spacing: 0.01em;
+          line-height: 1;
+          white-space: nowrap;
+        }
+
+        .audioflume-artist-cta-copy strong {
+          font-weight: 500;
+        }
+
+        .audioflume-artist-cta-link {
+          display: inline-flex;
+          flex: 0 0 auto;
+          align-items: center;
+          color: inherit;
+          font-family: var(--font-roboto-mono-filmwave), ui-monospace, monospace;
+          font-size: 9px;
+          font-weight: 400;
+          letter-spacing: 0.06em;
+          line-height: 1;
+          text-decoration: none;
+          text-transform: uppercase;
+          white-space: nowrap;
+          transition: opacity 150ms ease;
+        }
+
+        .audioflume-artist-cta-link:hover,
+        .audioflume-artist-cta-link:focus-visible {
+          opacity: 0.65;
+        }
+
+        :where(html.dark, html[data-theme="dark"]) .audioflume-artist-cta-bar {
+          background: #e5e5dd;
+          color: #111111;
+        }
+
+        @media (max-width: 640px) {
+          .audioflume-artist-cta-bar {
+            padding: 0 16px;
+          }
+
+          .audioflume-artist-cta-copy span {
+            display: none;
+          }
+
+          .audioflume-artist-cta-link {
+            font-size: 8px;
+          }
+        }
+
         .filmwave-header-tonal-wordmark {
           display: inline-flex !important;
           align-items: center !important;
@@ -633,6 +705,16 @@ export default function Header() {
           }
         }
       `}</style>
+
+      <div className="audioflume-artist-cta-bar">
+        <div className="audioflume-artist-cta-copy">
+          <strong>Artists &amp; composers</strong>
+          <span>— make music for picture.</span>
+        </div>
+        <Link href="/artists/apply" className="audioflume-artist-cta-link">
+          Apply to Audioflume ↗
+        </Link>
+      </div>
 
       <HeaderShell
         className={headerClassName}
