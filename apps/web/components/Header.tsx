@@ -233,7 +233,8 @@ export default function Header() {
     <>
       <style>{`
         .audioflume-artist-cta-bar {
-          position: relative;
+          position: sticky;
+          top: 0;
           z-index: var(--filmwave-z-header);
           display: flex;
           box-sizing: border-box;
