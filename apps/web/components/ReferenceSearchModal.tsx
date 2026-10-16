@@ -29,6 +29,7 @@ type ReferenceSearchModalProps = {
     value: string,
     result?: ReferenceCatalogResult,
   ) => void | Promise<void>;
+  embedded?: boolean;
 };
 
 function ReferenceArtwork({
@@ -82,6 +83,7 @@ export default function ReferenceSearchModal({
   onChange,
   onClose,
   onSubmit,
+  embedded = false,
 }: ReferenceSearchModalProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const searchFormRef = useRef<HTMLFormElement | null>(null);
@@ -107,10 +109,15 @@ export default function ReferenceSearchModal({
   useEffect(() => {
     if (!open) return;
 
-    inputRef.current?.focus();
+    if (!embedded) inputRef.current?.focus();
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") closeModal();
+      if (event.key !== "Escape") return;
+      if (embedded) {
+        setDropdownOpen(false);
+        return;
+      }
+      closeModal();
     }
 
     function handlePointerDown(event: MouseEvent) {
@@ -125,7 +132,7 @@ export default function ReferenceSearchModal({
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("mousedown", handlePointerDown);
     };
-  }, [onClose, open, submitting]);
+  }, [embedded, onClose, open, submitting]);
 
   useEffect(() => {
     if (!open) {
@@ -269,38 +276,35 @@ export default function ReferenceSearchModal({
     value.trim().length >= MIN_CATALOG_QUERY_LENGTH &&
     (loading || results.length > 0);
 
-  return createPortal(
-    <div
-      className={styles.backdrop}
-      role="presentation"
-      onMouseDown={(event) => {
-        if (event.target === event.currentTarget) closeModal();
-      }}
-    >
+  const titleId = embedded
+    ? "audioflume-reference-search-embedded-title"
+    : "audioflume-reference-search-title";
+
+  const modal = (
       <section
-        className={styles.modal}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="audioflume-reference-search-title"
+        className={`${styles.modal}${embedded ? ` ${styles.embedded}` : ""}`}
+        role={embedded ? "region" : "dialog"}
+        aria-modal={embedded ? undefined : true}
+        aria-labelledby={titleId}
       >
         <div className={styles.image} aria-hidden="true" />
         <div className={styles.overlay} aria-hidden="true" />
 
-        <button
-          type="button"
-          className={styles.close}
-          aria-label="Close reference search"
-          onClick={closeModal}
-          disabled={submitting}
-        >
-          <XIcon size={12} />
-        </button>
+        {!embedded ? (
+          <button
+            type="button"
+            className={styles.close}
+            aria-label="Close reference search"
+            onClick={closeModal}
+            disabled={submitting}
+          >
+            <XIcon size={12} />
+          </button>
+        ) : null}
 
         <div className={styles.content}>
           <div className={styles.eyebrow}>Reference search</div>
-          <h2 id="audioflume-reference-search-title">
-            Find something similar.
-          </h2>
+          <h2 id={titleId}>Find something similar.</h2>
           <p>
             Search by artist or track, or paste a Spotify, YouTube, or Apple
             Music link.
@@ -400,6 +404,19 @@ export default function ReferenceSearchModal({
           )}
         </div>
       </section>
+  );
+
+  if (embedded) return modal;
+
+  return createPortal(
+    <div
+      className={styles.backdrop}
+      role="presentation"
+      onMouseDown={(event) => {
+        if (event.target === event.currentTarget) closeModal();
+      }}
+    >
+      {modal}
     </div>,
     document.body,
   );

@@ -14,10 +14,12 @@ import {
 
 type GlobalReferenceSearchProps = {
   className?: string;
+  embedded?: boolean;
 };
 
 export default function GlobalReferenceSearch({
   className = "audioflume-home-reference-searchbar-song",
+  embedded = false,
 }: GlobalReferenceSearchProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
@@ -63,6 +65,19 @@ export default function GlobalReferenceSearch({
     setQuery(value);
     setOpen(false);
     router.push(`/music?${params.toString()}`);
+  }
+
+  if (embedded) {
+    return (
+      <ReferenceSearchModal
+        open
+        embedded
+        value={query}
+        onChange={setQuery}
+        onClose={() => undefined}
+        onSubmit={handleSubmit}
+      />
+    );
   }
 
   return (

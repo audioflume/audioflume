@@ -13,6 +13,7 @@ import {
 
 import Footer from "@/components/Footer";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
@@ -680,6 +681,26 @@ export default function HomePageContent({
       </section>
 
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
+
+      <section className="audioflume-home-reference-tools">
+        <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid">
+          <div className="audioflume-home-reference-tools-column is-exclusives">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Audioflume Exclusives</span>
+            </div>
+            <div className="audioflume-home-reference-tool-card audioflume-home-reference-exclusives-card" />
+          </div>
+
+          <div className="audioflume-home-reference-tools-column is-reference-search">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Search by Song</span>
+            </div>
+            <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
+              <GlobalReferenceSearch embedded />
+            </div>
+          </div>
+        </div>
+      </section>
 
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
