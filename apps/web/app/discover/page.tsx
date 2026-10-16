@@ -558,6 +558,7 @@ export default function DiscoverPage() {
   const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
+  const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
   const [featureCardArtists, setFeatureCardArtists] = useState<
     DiscoverFeatureCardArtist[]
   >([]);
@@ -616,6 +617,8 @@ export default function DiscoverPage() {
         }
       } catch {
         // Leave the managed feature empty if featured artist data is unavailable.
+      } finally {
+        if (!cancelled) setFeaturedArtistsLoading(false);
       }
     }
 
@@ -771,12 +774,34 @@ export default function DiscoverPage() {
       </div>
 
       <section
-        className="discover-artist-hero"
+        className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
         aria-label="Featured artist"
         style={heroStyle}
       >
         <div className="discover-artist-hero-inner">
-          {activeFeaturedArtist ? (
+          {featuredArtistsLoading ? (
+            <div
+              className="discover-artist-hero-feature discover-artist-hero-skeleton"
+              aria-hidden="true"
+            >
+              <span className="discover-artist-hero-skeleton-block is-eyebrow" />
+              <span className="discover-artist-hero-skeleton-block is-title" />
+              <div className="discover-artist-hero-skeleton-genres">
+                <span className="discover-artist-hero-skeleton-block" />
+                <span className="discover-artist-hero-skeleton-block" />
+                <span className="discover-artist-hero-skeleton-block" />
+              </div>
+              <div className="discover-artist-hero-skeleton-copy">
+                <span className="discover-artist-hero-skeleton-block" />
+                <span className="discover-artist-hero-skeleton-block" />
+                <span className="discover-artist-hero-skeleton-block" />
+              </div>
+              <div className="discover-artist-hero-skeleton-actions">
+                <span className="discover-artist-hero-skeleton-block is-play" />
+                <span className="discover-artist-hero-skeleton-block is-link" />
+              </div>
+            </div>
+          ) : activeFeaturedArtist ? (
             <div className="discover-artist-hero-feature">
               <div className="discover-artist-hero-identity">
                 <span className="discover-artist-hero-eyebrow">Featured Artist</span>
