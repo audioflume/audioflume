@@ -1,5 +1,5 @@
 .filmwave-settings-side-nav {
-  border-right: 1px solid var(--border);
+  border-right: 1.5px solid var(--border);
   background: var(--bg-primary);
   padding: 88px 16px 96px;
 }

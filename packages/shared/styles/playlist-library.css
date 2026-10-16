@@ -255,7 +255,7 @@
   min-height: 0 !important;
   align-items: center !important;
   justify-content: center !important;
-  border: 1px dashed var(--border) !important;
+  border: 1.5px dashed var(--border) !important;
   border-radius: 7px !important;
   background: var(--filmwave-neutral-surface) !important;
   padding: 16px !important;
@@ -280,7 +280,7 @@
 .playlists-page .playlist-create-card .playlist-create-mark {
   width: 42px !important;
   height: 42px !important;
-  border: 1px solid var(--border) !important;
+  border: 1.5px solid var(--border) !important;
   border-radius: 0 !important;
   background: var(--bg-secondary) !important;
 }

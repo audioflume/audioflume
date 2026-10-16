@@ -27,7 +27,7 @@
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--filmwave-project-toolbar-button-border);
+  border: 1.5px solid var(--filmwave-project-toolbar-button-border);
   border-radius: var(--filmwave-project-toolbar-button-radius);
   background: var(--filmwave-project-toolbar-button-bg);
   padding: 0;
