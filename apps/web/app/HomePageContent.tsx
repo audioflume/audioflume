@@ -12,8 +12,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import GlobalMusicSearch from "@/components/GlobalMusicSearch";
-import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
+import GlobalSearchBar from "@/components/GlobalSearchBar";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
@@ -519,7 +518,6 @@ export default function HomePageContent({
   const [artistsLoading, setArtistsLoading] = useState(true);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
-  const searchBarRef = useRef<HTMLDivElement>(null);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -595,42 +593,9 @@ export default function HomePageContent({
     };
   }, []);
 
-  useEffect(() => {
-    const searchBar = searchBarRef.current;
-    if (!searchBar) return;
-
-    const preventScrollBounce = (event: WheelEvent | TouchEvent) => {
-      event.preventDefault();
-    };
-
-    searchBar.addEventListener("wheel", preventScrollBounce, { passive: false });
-    searchBar.addEventListener("touchmove", preventScrollBounce, { passive: false });
-
-    return () => {
-      searchBar.removeEventListener("wheel", preventScrollBounce);
-      searchBar.removeEventListener("touchmove", preventScrollBounce);
-    };
-  }, []);
-
   return (
     <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
-      <div className="audioflume-home-reference-searchbar-slot">
-        <div
-          ref={searchBarRef}
-          className="audioflume-home-reference-searchbar"
-        >
-          <Link href="/music?filters=open" className="audioflume-home-reference-searchbar-filters">
-            <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
-            </svg>
-            <span>Filters</span>
-          </Link>
-
-          <GlobalMusicSearch />
-
-          <GlobalReferenceSearch />
-        </div>
-      </div>
+      <GlobalSearchBar />
 
       <section
         className="audioflume-home-reference-hero"
