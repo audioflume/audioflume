@@ -10,7 +10,7 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
   column-gap: 14px !important;
   align-items: center !important;
   border: 0 !important;
-  border-bottom: 1px solid var(--border-subtle) !important;
+  border-bottom: 0 !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 11px 68px 11px 13px !important;
@@ -22,16 +22,9 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
 
 html body .playlists-route-shell .playlists-page .playlist-index-row-shell:hover > .playlist-index-row,
 html body .projects-route-shell .projects-page .projects-row:not(.projects-row-skeleton):hover {
-  border-bottom-color: var(--border-subtle) !important;
+  border-bottom-color: transparent !important;
   background: var(--bg-hover) !important;
   transform: none !important;
-}
-
-/* My Playlists list rows intentionally have no divider lines. */
-html body .playlists-route-shell .playlists-page .playlist-index-row-shell > .playlist-index-row,
-html body .playlists-route-shell .playlists-page .playlist-index-row-shell:hover > .playlist-index-row {
-  border-bottom: 0 !important;
-  border-bottom-color: transparent !important;
 }
 
 /* Let the project folder and text participate in the same parent grid as playlists. */
@@ -107,7 +100,7 @@ html body .playlists-route-shell .playlists-page .playlist-index-row-shell > .pl
 html body .projects-route-shell .projects-page .projects-row:not(.projects-row-skeleton) > .projects-row-actions {
   position: absolute !important;
   top: 50% !important;
-  right: 40px !important;
+  right: 18px !important;
   left: auto !important;
   z-index: 12 !important;
   display: inline-flex !important;
@@ -117,10 +110,6 @@ html body .projects-route-shell .projects-page .projects-row:not(.projects-row-s
   justify-self: auto !important;
   padding: 0 !important;
   transform: translateY(-50%) !important;
-}
-
-html body .playlists-route-shell .playlists-page .playlist-index-row-shell > .playlist-card-menu-wrap {
-  right: 18px !important;
 }
 
 @media (max-width: 520px) {
