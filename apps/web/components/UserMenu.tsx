@@ -68,7 +68,7 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
       >
         <UserMenuHeader
           title={displayName}
-          detail="View Profile"
+          detail="My Account"
           imageSrc={user?.imageUrl}
         />
       </Link>
