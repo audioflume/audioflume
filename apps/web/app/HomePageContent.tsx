@@ -203,16 +203,7 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
         {song.coverArt ? (
-          <>
-            <span
-              className="audioflume-home-reference-original-song-card-background"
-              style={{ backgroundImage: `url("${song.coverArt}")` }}
-              aria-hidden="true"
-            />
-            <span className="audioflume-home-reference-original-song-card-art">
-              <img src={song.coverArt} alt="" draggable={false} />
-            </span>
-          </>
+          <img src={song.coverArt} alt="" draggable={false} />
         ) : (
           <span className="audioflume-home-reference-original-song-card-fallback" />
         )}
