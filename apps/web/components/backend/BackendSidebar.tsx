@@ -42,7 +42,7 @@ export function BackendSidebarShell({
       `}</style>
       <aside
         className={joinClasses(
-          "sticky z-30 hidden w-[var(--admin-sidebar-width)] border-r border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col",
+          "sticky z-30 hidden w-[var(--admin-sidebar-width)] border-r-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] md:flex md:flex-col",
           className,
         )}
         style={{
