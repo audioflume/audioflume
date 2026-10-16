@@ -625,7 +625,7 @@ body > header > div {
 /* Web header stays pinned during normal scrolling but participates in browser elastic overscroll. */
 .filmwave-header.filmwave-web-header {
   position: sticky;
-  top: 28px;
+  top: 0;
   right: auto;
   left: auto;
   width: 100%;
