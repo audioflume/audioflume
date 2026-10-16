@@ -217,7 +217,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
 
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-grid-head {
-    margin-bottom: 12px;
+    margin-bottom: var(--filmwave-section-title-margin-bottom);
   }
 
   body:has(.curated-playlists-page-root)

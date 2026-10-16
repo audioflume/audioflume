@@ -774,7 +774,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  margin-bottom: 12px;
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
 }
 
 .discover-artist-shelf-section h2 {

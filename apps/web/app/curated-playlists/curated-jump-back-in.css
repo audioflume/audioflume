@@ -14,7 +14,7 @@ body:has(.curated-playlists-page-root) .curated-last-viewed-section:empty {
 
 body:has(.curated-playlists-page-root)
   .discover-hero-last-viewed-heading {
-  margin-bottom: 26px;
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
 }
 
 :where(html.light, html[data-theme="light"])
