@@ -273,19 +273,25 @@ export default function CuratedPlaylistsPage() {
           : [];
       }
 
-      const categoryPlaylists = [...filteredPlaylists].sort(
-        (a, b) => a.position - b.position,
-      );
+      return activeFilter.subcategories
+        .map((subcategory) => {
+          const subcategoryPlaylists = filteredPlaylists
+            .filter((playlist) =>
+              (playlist.browse_assignments ?? []).some(
+                (assignment) =>
+                  assignment.browse_filter === activeBrowseFilter &&
+                  assignment.subcategory_id === subcategory.id,
+              ),
+            )
+            .sort((a, b) => a.position - b.position);
 
-      return categoryPlaylists.length > 0
-        ? [
-            {
-              name: activeFilter.label,
-              description: null,
-              playlists: categoryPlaylists,
-            },
-          ]
-        : [];
+          return {
+            name: subcategory.label,
+            description: null,
+            playlists: subcategoryPlaylists,
+          };
+        })
+        .filter((group) => group.playlists.length > 0);
     }
 
     if (normalizedSearchQuery) {
