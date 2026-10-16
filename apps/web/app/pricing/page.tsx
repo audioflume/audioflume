@@ -257,7 +257,15 @@ export default async function PricingPage() {
 
           <GlobalMusicSearch />
 
-          <GlobalReferenceSearch className="audioflume-pricing-searchbar-song" />
+          <div className="audioflume-pricing-searchbar-actions">
+            <GlobalReferenceSearch className="audioflume-pricing-searchbar-song" />
+            <Link href="/music?sort=recent" className="audioflume-pricing-searchbar-sort">
+              Most Recent
+              <svg viewBox="0 0 12 12" aria-hidden="true">
+                <path d="m3 4.5 3 3 3-3" />
+              </svg>
+            </Link>
+          </div>
         </div>
       </div>
 
