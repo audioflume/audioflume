@@ -1090,12 +1090,13 @@ export default function CommunityPlaylistsPage() {
     <>
       <style>{`
         .community-page {
-          height: calc(100vh - var(--filmwave-header-height, 56px));
-          margin-top: var(--filmwave-header-height, 56px);
+          height: auto;
+          min-height: calc(100vh - var(--filmwave-header-height, 60px));
+          margin-top: var(--filmwave-header-height, 60px);
           display: grid;
           grid-template-columns: 0 minmax(0, 1fr);
-          grid-template-rows: var(--filmwave-header-height, 75px) minmax(0, 1fr);
-          overflow: hidden;
+          grid-template-rows: var(--filmwave-searchbar-height, 75px) auto;
+          overflow: visible;
           background: var(--bg-primary);
           color: var(--text-primary);
           transition: grid-template-columns 180ms ease;
@@ -1106,11 +1107,31 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-page.is-player-visible {
-          height: calc(100vh - var(--filmwave-header-height, 56px) - 72px);
+          height: auto;
+          min-height: calc(
+            100vh - var(--filmwave-header-height, 60px) - 72px
+          );
         }
 
         .community-sidebar {
+          position: sticky;
+          top: calc(
+            var(--filmwave-header-height, 60px) +
+              var(--filmwave-searchbar-height, 75px)
+          );
+          align-self: start;
+          height: calc(
+            100dvh - var(--filmwave-header-height, 60px) -
+              var(--filmwave-searchbar-height, 75px)
+          );
           border-right-color: var(--border) !important;
+        }
+
+        .community-page.is-player-visible .community-sidebar {
+          height: calc(
+            100dvh - var(--filmwave-header-height, 60px) -
+              var(--filmwave-searchbar-height, 75px) - 72px
+          );
         }
 
         .community-sidebar-section + .community-sidebar-section {
@@ -1118,8 +1139,16 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-content {
+          height: auto !important;
+          overflow-y: visible !important;
+          overscroll-behavior: auto !important;
           padding-top: 22px !important;
           padding-bottom: 0 !important;
+        }
+
+        .community-searchbar-row {
+          position: sticky;
+          top: var(--filmwave-header-height, 60px);
         }
 
         .community-content.has-feature-banner,
