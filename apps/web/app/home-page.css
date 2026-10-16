@@ -1892,10 +1892,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .filmwave-header-nav-link,
 :where(html.light, html[data-theme="light"])
   body:has(.audioflume-home-reference)
-  .filmwave-web-header.is-transparent:hover
-  .filmwave-header-nav-link:not(.is-active):not(:hover),
-:where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
   .filmwave-web-header.is-transparent
   .filmwave-header-nav-link:hover,
 :where(html.light, html[data-theme="light"])
@@ -1907,6 +1903,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .filmwave-web-header.is-transparent
   .filmwave-header-utility-link {
   color: var(--text-primary) !important;
+}
+
+:where(html.light, html[data-theme="light"])
+  body:has(.audioflume-home-reference)
+  .filmwave-web-header.is-transparent:hover
+  .filmwave-header-nav-link:not(.is-active):not(:hover) {
+  color: var(--text-secondary) !important;
 }
 
 :where(html.light, html[data-theme="light"])
