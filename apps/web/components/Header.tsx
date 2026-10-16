@@ -115,6 +115,38 @@ export default function Header() {
   }, [transparentAtTop]);
 
   useEffect(() => {
+    if (!transparentAtTop) return;
+
+    const headerElement = document.querySelector<HTMLElement>(".filmwave-web-header");
+    if (!headerElement) return;
+
+    const navLinks = Array.from(
+      headerElement.querySelectorAll<HTMLElement>(".filmwave-header-nav-link"),
+    );
+
+    function dimPrimaryNav() {
+      navLinks.forEach((link) => {
+        link.style.setProperty("color", "rgba(255, 255, 255, 0.58)", "important");
+      });
+    }
+
+    function restorePrimaryNav() {
+      navLinks.forEach((link) => {
+        link.style.removeProperty("color");
+      });
+    }
+
+    headerElement.addEventListener("mouseenter", dimPrimaryNav);
+    headerElement.addEventListener("mouseleave", restorePrimaryNav);
+
+    return () => {
+      headerElement.removeEventListener("mouseenter", dimPrimaryNav);
+      headerElement.removeEventListener("mouseleave", restorePrimaryNav);
+      restorePrimaryNav();
+    };
+  }, [transparentAtTop]);
+
+  useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
         setMenuOpen(false);
