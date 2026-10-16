@@ -543,30 +543,6 @@
 }
 
 @media (max-width: 760px) {
-  .audioflume-pricing-searchbar {
-    grid-template-columns: 112px minmax(0, 1fr);
-  }
-
-  .audioflume-pricing-searchbar-filters {
-    gap: 12px;
-    padding: 0 20px;
-  }
-
-  .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-field {
-    width: calc(100% - 20px);
-    margin: 12px 10px;
-    padding: 0 18px;
-  }
-
-  .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-field input,
-  .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-field input::placeholder {
-    font-size: 14px;
-  }
-
-  .audioflume-pricing-searchbar-actions {
-    display: none;
-  }
-
   .audioflume-pricing-overview {
     grid-template-columns: 1fr;
     gap: 28px;
