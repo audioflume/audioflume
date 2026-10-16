@@ -256,6 +256,11 @@
   margin-top: 36px;
 }
 
+.community-jump-back .recent-playlist-card:hover,
+.community-jump-back .recent-playlist-card:focus-visible {
+  background: #eeeeee;
+}
+
 .community-creator-banner {
   position: relative;
   display: grid;
