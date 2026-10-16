@@ -250,7 +250,7 @@ function CheckboxInput({
       onChange={onChange}
       label={label}
       disabled={disabled}
-      className="h-10 w-full self-end rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] px-3"
+      className="h-10 w-full self-end rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3"
     />
   );
 }
@@ -1145,7 +1145,7 @@ export default function ArtistSongUploadForm({
             </div>
             <div className="grid gap-5 px-5 pb-5">
               {!canEditRights ? (
-                <div className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]">
+                <div className="rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]">
                   Your role cannot edit ownership. You can upload the draft, and a manager or owner can complete rights before submission.
                 </div>
               ) : null}
@@ -1206,7 +1206,7 @@ export default function ArtistSongUploadForm({
                     </div>
                   ) : null}
                   {rightsHolders.map((holder, index) => (
-                    <div key={index} className="rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3">
+                    <div key={index} className="rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3">
                       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
                         <BackendInput value={holder.holder_name} onChange={(event) => updateHolder(index, { holder_name: event.target.value })} placeholder="Rights holder" disabled={!canEditRights || busy || uploadComplete} />
                         <SelectInput value={holder.rights_type} onChange={(value) => updateHolder(index, { rights_type: value as RightsHolder["rights_type"] })} disabled={!canEditRights || busy || uploadComplete}>
@@ -1271,7 +1271,7 @@ export default function ArtistSongUploadForm({
                     ) : null}
                   </div>
                   {warningsOpen && uploadWarnings.length > 1 ? (
-                    <ul className="grid gap-1.5 rounded-[7px] border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <ul className="grid gap-1.5 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
                       {uploadWarnings.map((warning) => (
                         <li key={warning}>{warning}</li>
                       ))}

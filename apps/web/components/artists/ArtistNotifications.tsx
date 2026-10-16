@@ -296,7 +296,7 @@ export default function ArtistNotifications({
             return (
               <div
                 key={notification.id}
-                className="relative flex w-full items-start gap-4 rounded-[10px] border border-[var(--border)] bg-[var(--bg-primary)] p-4"
+                className="relative flex w-full items-start gap-4 rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4"
               >
                 <span
                   className="mt-[7px] h-2.5 w-2.5 shrink-0 rounded-full"
