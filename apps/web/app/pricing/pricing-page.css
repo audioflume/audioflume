@@ -5,17 +5,16 @@
   overflow-x: clip;
   background: var(--bg-primary);
   color: var(--text-primary);
+  padding-top: var(--filmwave-header-height, 75px);
 }
 
 .audioflume-pricing-searchbar-slot {
   position: relative;
   height: var(--filmwave-header-height, 75px);
-  margin-top: var(--filmwave-header-height, 75px);
 }
 
 .audioflume-pricing-searchbar {
-  position: sticky;
-  top: var(--filmwave-header-height, 75px);
+  position: relative;
   z-index: 20;
   display: grid;
   height: var(--filmwave-header-height, 75px);
@@ -242,19 +241,14 @@
 }
 
 .audioflume-pricing-overview p {
-  width: min(100%, calc(((100% + clamp(14px, 1.4vw, 22px)) / 3 * 2) - clamp(14px, 1.4vw, 22px)));
-  max-width: 980px;
+  width: min(100%, 760px);
   margin: 0 0 2px auto;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(19px, 1.55vw, 25px);
+  font-size: clamp(19px, 1.5vw, 24px);
   font-weight: 400;
   letter-spacing: -0.03em;
-  line-height: 1.2;
-}
-
-.audioflume-pricing-overview p > span {
-  display: block;
+  line-height: 1.22;
 }
 
 .audioflume-pricing-plan-grid {
@@ -721,10 +715,6 @@
   .audioflume-pricing-overview p {
     width: 100%;
     margin-left: 0;
-  }
-
-  .audioflume-pricing-overview p > span {
-    display: inline;
   }
 
   .audioflume-pricing-overview h1 {
