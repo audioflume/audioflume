@@ -217,3 +217,87 @@ html[data-theme="light"] {
   color: var(--filmwave-menu-muted);
   font-size: 11px;
 }
+
+/* Web header user menu refinements */
+.filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.filmwave-web-user-menu > .filmwave-user-menu-profile-link {
+  border-bottom: 1px solid var(--filmwave-menu-sep);
+}
+
+.filmwave-web-user-menu .filmwave-user-menu-profile {
+  padding: 16px 6px;
+}
+
+.filmwave-web-user-menu-new-project {
+  border-bottom: 1px solid var(--filmwave-menu-sep);
+  padding: 8px 0;
+}
+
+.filmwave-web-user-menu .filmwave-web-user-menu-new-project-button {
+  gap: 10px;
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.filmwave-web-user-menu-new-project-icon {
+  display: inline-flex;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+  color: var(--text-primary);
+}
+
+.filmwave-web-user-menu-new-project-icon svg {
+  display: block;
+  width: 13px;
+  height: 13px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.6;
+}
+
+:where(html.light, html[data-theme="light"])
+  .filmwave-web-user-menu-new-project-icon {
+  background: #eeeeee;
+  color: #4d4d4d;
+}
+
+.filmwave-web-user-menu .filmwave-user-menu-actions {
+  padding: 8px 0;
+}
+
+.filmwave-web-user-menu .filmwave-dropdown-item {
+  padding-right: 6px;
+  padding-left: 6px;
+}
+
+.filmwave-web-user-menu .filmwave-user-menu-signout {
+  border-top: 1px solid var(--filmwave-menu-sep);
+  padding-bottom: 0;
+}
+
+.filmwave-web-user-menu-theme-current {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+}
+
+.filmwave-web-user-menu .filmwave-user-menu-theme-value {
+  margin-left: 0;
+}
+
+.filmwave-web-user-menu .filmwave-user-menu-theme-icon {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 16px;
+}
