@@ -20,9 +20,9 @@
   height: var(--filmwave-header-height, 75px);
   grid-template-columns: 154px minmax(0, 1fr) 230px;
   align-items: stretch;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: #111111;
-  color: #ffffff;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .audioflume-pricing-searchbar-filters,
@@ -34,9 +34,9 @@
 
 .audioflume-pricing-searchbar-filters {
   gap: 16px;
-  border-right: 1px solid rgba(255, 255, 255, 0.08);
+  border-right: 1px solid var(--border);
   padding: 0 30px;
-  color: #ffffff;
+  color: var(--text-primary);
   font-size: 14px;
   font-weight: 400;
   text-decoration: none;
@@ -53,13 +53,13 @@
 
 .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-field {
   box-sizing: border-box;
-  width: min(720px, calc(100% - 32px));
+  width: min(860px, calc(100% - 32px));
   gap: 12px;
   margin: 12px;
   border-radius: 0;
-  background: #1b1b1b;
+  background: var(--bg-secondary);
   padding: 0 16px;
-  color: #5a5a5a;
+  color: var(--text-muted);
 }
 
 .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-field svg {
@@ -77,7 +77,7 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: #ffffff;
+  color: var(--text-primary);
   font: inherit;
   font-size: 16px;
   font-weight: 300;
@@ -93,7 +93,7 @@
 }
 
 .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-field input::placeholder {
-  color: #5a5a5a;
+  color: var(--text-muted);
   font-size: 16px;
   opacity: 1;
 }
@@ -107,14 +107,14 @@
   justify-content: center;
   border: 0;
   background: transparent;
-  color: #5a5a5a;
+  color: var(--text-muted);
   padding: 0;
   cursor: pointer;
 }
 
 .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-clear:hover,
 .audioflume-pricing-searchbar .audioflume-home-reference-searchbar-clear:focus-visible {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .audioflume-pricing-searchbar-song {
@@ -122,79 +122,11 @@
   gap: 8px;
   border: 0;
   background: transparent;
-  color: #ffffff;
+  color: var(--text-primary);
   font-family: inherit;
   font-size: 14px;
   font-weight: 400;
   cursor: pointer;
-}
-
-.audioflume-pricing-intro {
-  background: var(--bg-primary);
-  color: var(--text-primary);
-}
-
-.audioflume-pricing-intro-inner {
-  width: calc(100% - 160px);
-  max-width: var(--filmwave-editorial-max-width);
-  margin: 0 auto;
-  padding: clamp(62px, 6vw, 92px) 0 clamp(60px, 6vw, 88px);
-}
-
-.audioflume-pricing-intro-eyebrow {
-  margin: 0 0 28px;
-  color: var(--text-muted);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 24px;
-  font-weight: 200;
-  letter-spacing: 0;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.audioflume-pricing-intro-title {
-  max-width: 980px;
-  margin: 0;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(54px, 6.8vw, 104px);
-  font-weight: 400;
-  letter-spacing: -0.055em;
-  line-height: 0.92;
-  text-transform: none;
-}
-
-.audioflume-pricing-intro-support {
-  display: grid;
-  grid-template-columns: minmax(220px, 0.42fr) minmax(0, 0.58fr);
-  align-items: end;
-  gap: clamp(48px, 8vw, 128px);
-  margin-top: clamp(38px, 4vw, 58px);
-}
-
-.audioflume-pricing-intro-note,
-.audioflume-pricing-intro-copy {
-  margin: 0;
-}
-
-.audioflume-pricing-intro-note {
-  max-width: 360px;
-  color: var(--text-muted);
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 13px;
-  font-weight: 300;
-  letter-spacing: 0.04em;
-  line-height: 1.35;
-  text-transform: uppercase;
-}
-
-.audioflume-pricing-intro-copy {
-  max-width: 620px;
-  color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(17px, 1.5vw, 21px);
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.4;
 }
 
 .audioflume-pricing-plans-section,
@@ -208,7 +140,7 @@
 .audioflume-pricing-plans-section {
   position: relative;
   isolation: isolate;
-  padding: clamp(84px, 8vw, 126px) 0 clamp(92px, 9vw, 138px);
+  padding: clamp(72px, 6.5vw, 96px) 0 clamp(92px, 9vw, 138px);
 }
 
 .audioflume-pricing-plans-section::before {
@@ -256,6 +188,35 @@
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.9;
+}
+
+.audioflume-pricing-overview {
+  display: grid;
+  grid-template-columns: minmax(0, 0.46fr) minmax(0, 0.54fr);
+  align-items: end;
+  gap: clamp(56px, 7vw, 118px);
+  margin-bottom: clamp(52px, 5vw, 72px);
+}
+
+.audioflume-pricing-overview h1 {
+  margin: 0;
+  color: #111111;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(54px, 5vw, 76px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.95;
+}
+
+.audioflume-pricing-overview p {
+  max-width: 780px;
+  margin: 0;
+  color: #111111;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(25px, 2.35vw, 38px);
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 1.14;
 }
 
 .audioflume-pricing-plan-grid {
@@ -704,20 +665,18 @@
     display: none;
   }
 
-  .audioflume-pricing-intro-inner {
-    width: calc(100% - 40px);
-    padding-top: 54px;
-    padding-bottom: 54px;
-  }
-
-  .audioflume-pricing-intro-title {
-    font-size: clamp(48px, 13vw, 72px);
-  }
-
-  .audioflume-pricing-intro-support {
+  .audioflume-pricing-overview {
     grid-template-columns: 1fr;
     gap: 28px;
-    margin-top: 34px;
+    margin-bottom: 44px;
+  }
+
+  .audioflume-pricing-overview h1 {
+    font-size: clamp(46px, 12vw, 64px);
+  }
+
+  .audioflume-pricing-overview p {
+    font-size: clamp(22px, 6vw, 30px);
   }
 
 
