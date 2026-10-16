@@ -860,16 +860,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   gap: 12px;
 }
 
-.audioflume-home-reference-tools-secondary-grid {
-  margin-top: 12px;
-}
-
 .audioflume-home-reference-tools-column {
   min-width: 0;
 }
 
-.audioflume-home-reference-section-heading-spacer {
-  visibility: hidden;
+.audioflume-home-reference-tools-originals {
+  margin-top: 72px;
 }
 
 .audioflume-home-reference-blank-card {
@@ -884,6 +880,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-exclusives-card {
   position: relative;
+  width: 100vw;
   background: var(--bg-tertiary);
 }
 

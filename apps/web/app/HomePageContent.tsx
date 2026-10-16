@@ -683,33 +683,30 @@ export default function HomePageContent({
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
 
       <section className="audioflume-home-reference-tools">
-        <div className="audioflume-home-reference-width">
-          <div className="audioflume-home-reference-tools-column is-exclusives">
+        <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid">
+          <div className="audioflume-home-reference-tools-column is-blank">
             <div className="audioflume-home-reference-section-heading">
-              <span>Audioflume Originals</span>
+              <span>Section Title</span>
             </div>
-            <div className="audioflume-home-reference-tool-card audioflume-home-reference-exclusives-card">
-              <HomeSongShelf songs={shelfSongs} label="Audioflume Originals" />
-            </div>
+            <div className="audioflume-home-reference-tool-card audioflume-home-reference-blank-card" />
           </div>
 
-          <div className="audioflume-home-reference-tools-grid audioflume-home-reference-tools-secondary-grid">
-            <div className="audioflume-home-reference-tools-column is-blank">
-              <div
-                className="audioflume-home-reference-section-heading audioflume-home-reference-section-heading-spacer"
-                aria-hidden="true"
-              />
-              <div className="audioflume-home-reference-tool-card audioflume-home-reference-blank-card" />
+          <div className="audioflume-home-reference-tools-column is-reference-search">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Search by Song</span>
             </div>
+            <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
+              <GlobalReferenceSearch embedded />
+            </div>
+          </div>
+        </div>
 
-            <div className="audioflume-home-reference-tools-column is-reference-search">
-              <div className="audioflume-home-reference-section-heading">
-                <span>Search by Song</span>
-              </div>
-              <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
-                <GlobalReferenceSearch embedded />
-              </div>
-            </div>
+        <div className="audioflume-home-reference-tools-originals">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+            <span>Audioflume Originals</span>
+          </div>
+          <div className="audioflume-home-reference-tool-card audioflume-home-reference-exclusives-card">
+            <HomeSongShelf songs={shelfSongs} label="Audioflume Originals" />
           </div>
         </div>
       </section>
