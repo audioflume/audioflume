@@ -205,7 +205,7 @@ body > header > div {
 
 .filmwave-playlists-mega-menu {
   position: fixed;
-  top: var(--filmwave-header-height);
+  top: var(--filmwave-web-header-bottom, var(--filmwave-header-height));
   right: 0;
   left: 0;
   z-index: calc(var(--filmwave-z-header) - 1);
