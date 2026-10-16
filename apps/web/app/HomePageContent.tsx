@@ -222,7 +222,7 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
 function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
   return (
     <div className="audioflume-home-reference-original-song-grid">
-      {songs.slice(0, 12).map((song) => (
+      {songs.map((song) => (
         <HomeOriginalSongCard key={song.id} song={song} />
       ))}
     </div>
@@ -524,7 +524,14 @@ export default function HomePageContent({
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
   );
-  const shelfSongs = playableSongs.slice(0, HOME_SHELF_SONG_COUNT);
+  const audioflumeOriginalSongs = playableSongs
+    .filter(
+      (song) =>
+        song.artist.trim().localeCompare("Audioflume Originals", undefined, {
+          sensitivity: "base",
+        }) === 0,
+    )
+    .slice(0, 6);
   const originalSongs = playableSongs.slice(
     HOME_SHELF_SONG_COUNT,
     HOME_SHELF_SONG_COUNT + 12,
@@ -706,7 +713,7 @@ export default function HomePageContent({
             <span>Audioflume Originals</span>
           </div>
           <div className="audioflume-home-reference-tool-card audioflume-home-reference-exclusives-card">
-            <HomeSongShelf songs={shelfSongs} label="Audioflume Originals" />
+            <HomeOriginalSongGrid songs={audioflumeOriginalSongs} />
           </div>
         </div>
       </section>
