@@ -695,9 +695,9 @@ export default function ProjectsPage() {
           box-sizing: border-box;
           min-width: 0;
           min-height: 184px;
-          border: 1px solid var(--border-subtle);
-          border-radius: 6px;
-          background: var(--bg-secondary);
+          border: 0;
+          border-radius: 0;
+          background: #e5e5dd;
           color: var(--text-primary);
           text-align: left;
           transition: background 0.15s ease;
