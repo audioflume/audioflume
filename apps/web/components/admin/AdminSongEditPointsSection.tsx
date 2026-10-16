@@ -323,7 +323,7 @@ export default function AdminSongEditPointsSection({
 
   if (!songId) {
     return (
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
+      <div className="rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4">
         <div className="text-xs font-medium text-[var(--text-primary)]">
           Save the song first to review cue points.
         </div>
@@ -337,7 +337,7 @@ export default function AdminSongEditPointsSection({
 
   if (loading) {
     return (
-      <div className="flex min-h-[160px] items-center justify-center rounded-xl border border-[var(--border)] bg-[var(--bg-primary)]">
+      <div className="flex min-h-[160px] items-center justify-center rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]">
         <LoadingSpinner size={24} stroke={8} color="var(--text-primary)" />
       </div>
     );
@@ -345,7 +345,7 @@ export default function AdminSongEditPointsSection({
 
   if (error && !canReview) {
     return (
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
+      <div className="rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4">
         <div className="text-xs font-medium text-[var(--status-error,#dc584f)]">
           {error}
         </div>
@@ -355,7 +355,7 @@ export default function AdminSongEditPointsSection({
 
   if (!canReview) {
     return (
-      <div className="rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-4">
+      <div className="rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4">
         <div className="text-xs font-medium text-[var(--text-primary)]">
           Audio and waveform data required
         </div>
@@ -374,7 +374,7 @@ export default function AdminSongEditPointsSection({
       onKeyDownCapture={stopGlobalPlayer}
     >
       {error && (
-        <div className="mb-3 rounded-lg border border-[var(--border)] bg-[var(--status-error-soft,rgba(220,88,79,0.12))] px-3 py-2 text-xs text-[var(--status-error,#dc584f)]">
+        <div className="mb-3 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--status-error-soft,rgba(220,88,79,0.12))] px-3 py-2 text-xs text-[var(--status-error,#dc584f)]">
           {error}
         </div>
       )}

@@ -415,7 +415,7 @@ export default function AdminPlaylistLibraryView({
   return (
     <>
       {shelfError && (
-        <div className="border border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs text-[var(--danger)]">
+        <div className="border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4 text-xs text-[var(--danger)]">
           {shelfError}
         </div>
       )}
@@ -454,7 +454,7 @@ export default function AdminPlaylistLibraryView({
                     <button
                       type="button"
                       onClick={() => setPickerShelf(shelfKey)}
-                      className="flex min-h-[120px] w-full items-center justify-center border border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
+                      className="flex min-h-[120px] w-full items-center justify-center border-[1.5px] border-dashed border-[var(--border)] text-xs text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)]"
                     >
                       Add playlists from All Playlists
                     </button>
@@ -523,7 +523,7 @@ export default function AdminPlaylistLibraryView({
                     onToggle={() => toggleSection("newlyAdded")}
                   >
                     {newlyAdded.length === 0 ? (
-                      <div className="flex min-h-[120px] items-center justify-center border border-dashed border-[var(--border)]">
+                      <div className="flex min-h-[120px] items-center justify-center border-[1.5px] border-dashed border-[var(--border)]">
                         No playlists yet.
                       </div>
                     ) : (

@@ -255,7 +255,7 @@ export default function AdminDiscoverPlaylistForm({
         onSubmit={handleSubmit}
         className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]"
       >
-        <section className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+        <section className="rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-5">
             <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
               Discover content details
@@ -275,7 +275,7 @@ export default function AdminDiscoverPlaylistForm({
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Quiet documentary beds"
                   required
                 />
@@ -286,7 +286,7 @@ export default function AdminDiscoverPlaylistForm({
                 <input
                   value={kicker}
                   onChange={(e) => setKicker(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Human / Minimal / Warm"
                 />
               </label>
@@ -296,7 +296,7 @@ export default function AdminDiscoverPlaylistForm({
                 <textarea
                   value={description}
                   onChange={(e) => setDescription(e.target.value)}
-                  className="min-h-24 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="min-h-24 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 py-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Describe what this Discover content is for."
                 />
               </label>
@@ -305,7 +305,7 @@ export default function AdminDiscoverPlaylistForm({
                 checked={buttonEnabled}
                 onChange={setButtonEnabled}
                 size="sm"
-                className="items-start gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]"
+                className="items-start gap-3 rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-sm text-[var(--text-secondary)]"
                 label={
                   <span>
                     <span className="block font-medium text-[var(--text-primary)]">
@@ -323,7 +323,7 @@ export default function AdminDiscoverPlaylistForm({
                 <input
                   value={buttonText}
                   onChange={(e) => setButtonText(e.target.value)}
-                  className="h-11 rounded-lg border border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)] disabled:opacity-50"
+                  className="h-11 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)] disabled:opacity-50"
                   placeholder={DEFAULT_DISCOVER_BUTTON_TEXT}
                   disabled={!buttonEnabled}
                 />
@@ -364,7 +364,7 @@ export default function AdminDiscoverPlaylistForm({
         </section>
 
         <aside className="grid gap-6">
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+          <div className="rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <AdminImageUpload
               currentUrl={coverImageUrl}
               onUploaded={setCoverImageUrl}
@@ -374,11 +374,11 @@ export default function AdminDiscoverPlaylistForm({
             />
           </div>
 
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+          <div className="rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <h3 className="font-[family-name:var(--font-aktiv-grotesk)] text-xl font-medium tracking-[-0.05em]">
               Card preview
             </h3>
-            <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border border-[var(--border)] bg-[var(--bg-tertiary)]">
+            <div className="relative mt-4 min-h-[320px] overflow-hidden rounded-[18px] border-[1.5px] border-[var(--border)] bg-[var(--bg-tertiary)]">
               {coverImageUrl && (
                 <Image
                   src={coverImageUrl}
@@ -414,7 +414,7 @@ export default function AdminDiscoverPlaylistForm({
       </form>
 
       {mode === "edit" && (
-        <section className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+        <section className="mt-6 rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
               <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
@@ -431,7 +431,7 @@ export default function AdminDiscoverPlaylistForm({
           </div>
 
           {songs.length === 0 ? (
-            <div className="rounded-xl border border-dashed border-[var(--border)] p-6 text-sm text-[var(--text-secondary)]">
+            <div className="rounded-xl border-[1.5px] border-dashed border-[var(--border)] p-6 text-sm text-[var(--text-secondary)]">
               No songs yet. Open a song in the admin music player and choose Add
               to Playlist.
             </div>
@@ -441,7 +441,7 @@ export default function AdminDiscoverPlaylistForm({
                 <div
                   key={song.id}
                   style={{ borderRadius: 7 }}
-                  className="flex items-center gap-3 rounded-xl border border-[var(--border)] bg-[var(--bg-primary)] p-2"
+                  className="flex items-center gap-3 rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-2"
                 >
                   <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-[var(--bg-tertiary)]">
                     {song.coverArt && (
