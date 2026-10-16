@@ -184,6 +184,114 @@
   color: #fff;
 }
 
+.discover-artist-hero.is-loading {
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  background-color: color-mix(in srgb, var(--text-primary) 7%, var(--bg-primary));
+  color: transparent;
+}
+
+.discover-artist-hero-skeleton {
+  pointer-events: none;
+}
+
+.discover-artist-hero-skeleton-block {
+  display: block;
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
+  animation: discover-artist-hero-skeleton-pulse 1.35s ease-in-out infinite;
+}
+
+.discover-artist-hero-skeleton .is-eyebrow {
+  width: 126px;
+  height: 14px;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: end;
+  margin-bottom: 22px;
+}
+
+.discover-artist-hero-skeleton .is-title {
+  width: min(520px, 42vw);
+  height: clamp(54px, 5vw, 74px);
+  grid-column: 1;
+  grid-row: 2;
+  align-self: last baseline;
+}
+
+.discover-artist-hero-skeleton-genres {
+  display: flex;
+  grid-column: 1;
+  grid-row: 3;
+  align-self: baseline;
+  gap: 8px;
+  margin-top: clamp(28px, 2vw, 36px);
+}
+
+.discover-artist-hero-skeleton-genres .discover-artist-hero-skeleton-block {
+  width: 72px;
+  height: 28px;
+  border-radius: 999px;
+}
+
+.discover-artist-hero-skeleton-genres .discover-artist-hero-skeleton-block:nth-child(2) {
+  width: 94px;
+}
+
+.discover-artist-hero-skeleton-genres .discover-artist-hero-skeleton-block:nth-child(3) {
+  width: 64px;
+}
+
+.discover-artist-hero-skeleton-copy {
+  display: grid;
+  width: min(100%, 500px);
+  grid-column: 2;
+  grid-row: 2;
+  align-self: last baseline;
+  gap: 10px;
+}
+
+.discover-artist-hero-skeleton-copy .discover-artist-hero-skeleton-block {
+  width: 100%;
+  height: 18px;
+}
+
+.discover-artist-hero-skeleton-copy .discover-artist-hero-skeleton-block:nth-child(2) {
+  width: 92%;
+}
+
+.discover-artist-hero-skeleton-copy .discover-artist-hero-skeleton-block:nth-child(3) {
+  width: 68%;
+}
+
+.discover-artist-hero-skeleton-actions {
+  display: flex;
+  grid-column: 2;
+  grid-row: 3;
+  align-self: baseline;
+  gap: clamp(42px, 4vw, 72px);
+}
+
+.discover-artist-hero-skeleton-actions .is-play {
+  width: 116px;
+  height: 20px;
+}
+
+.discover-artist-hero-skeleton-actions .is-link {
+  width: 142px;
+  height: 12px;
+  align-self: center;
+}
+
+@keyframes discover-artist-hero-skeleton-pulse {
+  0%,
+  100% {
+    opacity: 0.72;
+  }
+
+  50% {
+    opacity: 1;
+  }
+}
+
 .discover-page-root.has-player .discover-artist-hero {
   --discover-artist-hero-height: calc(
     100dvh - (var(--filmwave-header-height, 75px) * 2) -
@@ -1173,6 +1281,16 @@
 }
 
 @media (max-width: 720px) {
+  .discover-artist-hero-skeleton-copy,
+  .discover-artist-hero-skeleton-actions {
+    grid-column: 1;
+  }
+
+  .discover-artist-hero-skeleton .is-title {
+    width: min(78vw, 460px);
+  }
+
+
   .discover-page-root {
     --discover-artist-gutter: var(--filmwave-page-gutter);
   }
