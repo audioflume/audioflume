@@ -126,7 +126,7 @@ export default function Header() {
 
     function dimPrimaryNav() {
       navLinks.forEach((link) => {
-        link.style.setProperty("color", "rgba(255, 255, 255, 0.58)", "important");
+        link.style.setProperty("color", "#8d8d8d", "important");
       });
     }
 
