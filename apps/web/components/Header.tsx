@@ -716,8 +716,7 @@ export default function Header() {
 
       <div className="audioflume-artist-cta-bar">
         <div className="audioflume-artist-cta-copy">
-          <strong>Join Audioflume as a founding artist</strong>
-          <span>— apply today</span>
+          <span>Join Audioflume as a founding artist — sign up today</span>
         </div>
         <Link href="/artists/apply" className="audioflume-artist-cta-link">
           <span>Apply to Audioflume</span>
