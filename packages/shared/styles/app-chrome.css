@@ -588,6 +588,11 @@ body > header > div {
   width: min(280px, calc(100vw - 24px));
 }
 
+.filmwave-web-header .filmwave-header-menu-wrap {
+  right: 2px;
+  width: min(300px, calc(100vw - 24px));
+}
+
 /* Shared trailing status/count geometry for playlist and project list rows. */
 .filmwave-list-row-status {
   display: inline-flex;
