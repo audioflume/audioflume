@@ -20,7 +20,6 @@ const TOP_NAV_LINKS = [
   { href: "/discover", label: "Discover" },
   { href: "/music", label: "Music" },
   { href: "/playlists", label: "Playlists" },
-  { href: "/projects", label: "Projects" },
   { href: "/sound-fx", label: "Sound FX" },
 ];
 
