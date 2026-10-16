@@ -1088,3 +1088,18 @@
     width: calc(100% - 40px);
   }
 }
+
+
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-plans-section::before {
+  background: var(--bg-primary);
+}
+
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-comparison-block {
+  background: #151515;
+}
+
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-overview-eyebrow,
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-overview h1,
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-overview p {
+  color: var(--text-primary);
+}
