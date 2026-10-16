@@ -561,7 +561,7 @@ export default function ArtistOverview({
                   }}
                 />
                 <div className="pointer-events-none relative z-[2] flex min-h-[355px] flex-col justify-between p-5 md:p-6">
-                  <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
+                  <div className="inline-flex w-fit max-w-full items-center gap-2 rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-1 text-[11px] font-medium leading-none text-white/75 backdrop-blur">
                     <span
                       className="h-1.5 w-1.5 shrink-0 rounded-full"
                       style={{
@@ -591,20 +591,20 @@ export default function ArtistOverview({
                       </div>
                       <Link
                         href={getArtistDashboardHref("my-page", artist.id)}
-                        className="pointer-events-auto shrink-0 rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur transition-colors hover:bg-white/15 hover:text-white"
+                        className="pointer-events-auto shrink-0 rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur transition-colors hover:bg-white/15 hover:text-white"
                       >
                         View my page
                       </Link>
                     </div>
 
                     <div className="grid gap-2 sm:grid-cols-3">
-                      <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+                      <div className="rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
                         {formatNumber(artist.stats.tracks)} approved tracks
                       </div>
-                      <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+                      <div className="rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
                         {formatNumber(artist.stats.releases)} releases
                       </div>
-                      <div className="rounded-full border border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
+                      <div className="rounded-full border-[1.5px] border-white/15 bg-white/10 px-3 py-2 text-[11px] font-medium text-white/80 backdrop-blur">
                         {formatNumber(artist.stats.playlists)} playlists
                       </div>
                     </div>
@@ -633,7 +633,7 @@ export default function ArtistOverview({
                 disabled={cropSaving}
                 aria-label={cropEditing ? "Save crop" : "Adjust crop"}
                 title={cropEditing ? "Save crop" : "Adjust crop"}
-                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-[7px] border border-white/25 bg-black/55 text-white transition-colors hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-60"
+                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-[7px] border-[1.5px] border-white/25 bg-black/55 text-white transition-colors hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {cropEditing ? (
                   <svg
@@ -681,7 +681,7 @@ export default function ArtistOverview({
           </div>
 
           {cropError ? (
-            <div className="border-t border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--status-error)]">
+            <div className="border-t-[1.5px] border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--status-error)]">
               {cropError}
             </div>
           ) : null}
@@ -733,7 +733,7 @@ export default function ArtistOverview({
                   key={song.id}
                   className={`flex items-center gap-3 px-4 py-3 ${
                     index < recentSongs.length - 1
-                      ? "border-b border-[var(--border-subtle)]"
+                      ? "border-b-[1.5px] border-[var(--border-subtle)]"
                       : ""
                   }`}
                 >
@@ -816,7 +816,7 @@ export default function ArtistOverview({
             </div>
           </div>
 
-          <div className="grid grid-cols-3 border-t border-[var(--border-subtle)]">
+          <div className="grid grid-cols-3 border-t-[1.5px] border-[var(--border-subtle)]">
             {[
               { label: "Saves", value: period.saves },
               { label: "Playlist adds", value: period.playlist_adds },
@@ -825,7 +825,7 @@ export default function ArtistOverview({
               <div
                 key={metric.label}
                 className={`px-4 py-4 ${
-                  index < 2 ? "border-r border-[var(--border-subtle)]" : ""
+                  index < 2 ? "border-r-[1.5px] border-[var(--border-subtle)]" : ""
                 }`}
               >
                 <div className="text-[9px] text-[var(--text-muted)]">
@@ -838,7 +838,7 @@ export default function ArtistOverview({
             ))}
           </div>
 
-          <div className="flex items-center justify-between border-t border-[var(--border-subtle)] px-5 py-4 text-[11px] text-[var(--text-secondary)]">
+          <div className="flex items-center justify-between border-t-[1.5px] border-[var(--border-subtle)] px-5 py-4 text-[11px] text-[var(--text-secondary)]">
             <span>All-time downloads</span>
             <span className="font-medium text-[var(--text-primary)]">
               {loading ? "—" : formatNumber(totals.downloads)}
@@ -889,7 +889,7 @@ export default function ArtistOverview({
                   <div
                     key={metric.label}
                     className={`px-4 py-6 ${
-                      index < 2 ? "border-r border-[var(--border-subtle)]" : ""
+                      index < 2 ? "border-r-[1.5px] border-[var(--border-subtle)]" : ""
                     }`}
                   >
                     <div className="text-[9px] text-[var(--text-muted)]">
@@ -910,7 +910,7 @@ export default function ArtistOverview({
                   key={summary.currency}
                   className={`flex items-center justify-between gap-4 px-5 py-4 ${
                     index < Math.min(currencies.length, 3) - 1
-                      ? "border-b border-[var(--border-subtle)]"
+                      ? "border-b-[1.5px] border-[var(--border-subtle)]"
                       : ""
                   }`}
                 >
@@ -955,7 +955,7 @@ export default function ArtistOverview({
                 key={notification.id}
                 className={`flex items-start gap-3 px-5 py-4 ${
                   index < recentNotifications.length - 1
-                    ? "border-b border-[var(--border-subtle)]"
+                    ? "border-b-[1.5px] border-[var(--border-subtle)]"
                     : ""
                 }`}
               >
