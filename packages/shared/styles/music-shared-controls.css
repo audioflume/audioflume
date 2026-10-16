@@ -366,7 +366,7 @@ html[data-theme="light"] .filmwave-music-shuffle-button[aria-pressed="true"] {
   position: absolute;
   top: 50%;
   right: -8px;
-  width: 1px;
+  width: 1.5px;
   height: 16px;
   background: var(--border);
   transform: translateY(-50%);
