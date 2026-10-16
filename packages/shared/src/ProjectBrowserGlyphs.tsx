@@ -48,17 +48,59 @@ export function FolderGlyph({ small = false, className, style }: GlyphProps) {
       aria-hidden="true"
       focusable="false"
     >
+      <defs>
+        {/* Tab gradient: #3b3b3b -> #252525 */}
+        <linearGradient id="fw-folder-tab" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3b3b3b" />
+          <stop offset="1" stopColor="#252525" />
+        </linearGradient>
+        {/* Body gradient: #3a3a3a -> #242424 (48%) -> #151515 */}
+        <linearGradient id="fw-folder-body" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#3a3a3a" />
+          <stop offset="0.48" stopColor="#242424" />
+          <stop offset="1" stopColor="#151515" />
+        </linearGradient>
+      </defs>
+
+      {/* Tab */}
       <path
         d="M0 10 a4 4 0 0 1 4 -4 h20 a5 5 0 0 1 5 5 v3 H0 Z"
-        fill="#242424"
+        fill="url(#fw-folder-tab)"
       />
+      {/* Tab top highlight */}
+      <path
+        d="M4 6.5 h20"
+        stroke="rgba(255,255,255,0.18)"
+        strokeWidth="1"
+        strokeLinecap="round"
+      />
+
+      {/* Body */}
       <rect
         x="0"
         y="11"
         width="62"
         height="43"
         rx="5"
-        fill="#111111"
+        fill="url(#fw-folder-body)"
+      />
+      {/* Body top highlight (approximates inset top white lines) */}
+      <rect
+        x="1"
+        y="12"
+        width="60"
+        height="1.4"
+        rx="0.7"
+        fill="rgba(255,255,255,0.22)"
+      />
+      {/* Body bottom shade (approximates inset dark bottom line) */}
+      <rect
+        x="1"
+        y="52.4"
+        width="60"
+        height="1"
+        rx="0.5"
+        fill="rgba(0,0,0,0.72)"
       />
     </svg>
   );
