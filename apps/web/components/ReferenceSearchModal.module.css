@@ -408,8 +408,11 @@
 }
 
 .embedded .content h2 {
-  font-size: clamp(40px, 3.75vw, 56px);
-  line-height: clamp(40px, 3.2vw, 48px);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(31px, 2.4vw, 44px);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1.02;
 }
 
 .embedded .content > p {
@@ -442,11 +445,6 @@
 
   .embedded .content {
     padding: 28px 22px 22px;
-  }
-
-  .embedded .content h2 {
-    font-size: 40px;
-    line-height: 38px;
   }
 
   .embedded .field {
