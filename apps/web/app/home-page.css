@@ -890,6 +890,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-exclusives-card
   .audioflume-home-reference-song-card {
+  width: 350px;
+  min-width: 350px;
   height: 350px;
 }
 
