@@ -695,8 +695,8 @@ export default function ProjectsPage() {
           box-sizing: border-box;
           min-width: 0;
           min-height: 184px;
-          border: 0;
-          border-radius: 0;
+          border: 1px solid var(--border-subtle);
+          border-radius: 6px;
           background: var(--bg-secondary);
           color: var(--text-primary);
           text-align: left;
@@ -786,8 +786,8 @@ export default function ProjectsPage() {
         }
         .project-grid-card-status {
           position: absolute;
-          right: 52px;
-          bottom: 22px;
+          right: 21px;
+          bottom: 18px;
           display: inline-flex;
           width: 14px;
           height: 14px;
