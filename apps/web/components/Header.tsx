@@ -235,6 +235,7 @@ export default function Header() {
           display: inline-flex;
           flex: 0 0 auto;
           align-items: center;
+          gap: 6px;
           color: inherit;
           font-family: var(--font-roboto-mono-filmwave), ui-monospace, monospace;
           font-size: 9px;
@@ -245,6 +246,13 @@ export default function Header() {
           text-transform: uppercase;
           white-space: nowrap;
           transition: opacity 150ms ease;
+        }
+
+        .audioflume-artist-cta-arrow {
+          display: inline-block;
+          font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
+          font-size: 1em;
+          line-height: 1;
         }
 
         .audioflume-artist-cta-link:hover,
@@ -708,11 +716,12 @@ export default function Header() {
 
       <div className="audioflume-artist-cta-bar">
         <div className="audioflume-artist-cta-copy">
-          <strong>Artists &amp; composers</strong>
-          <span>— make music for picture.</span>
+          <strong>Join Audioflume as a founding artist</strong>
+          <span>— apply today</span>
         </div>
         <Link href="/artists/apply" className="audioflume-artist-cta-link">
-          Apply to Audioflume ↗
+          <span>Apply to Audioflume</span>
+          <span className="audioflume-artist-cta-arrow" aria-hidden="true">↗</span>
         </Link>
       </div>
 
