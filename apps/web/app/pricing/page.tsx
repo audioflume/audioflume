@@ -273,9 +273,9 @@ export default async function PricingPage() {
         <div className="audioflume-pricing-overview">
           <h1>Plans &amp; Pricing</h1>
           <p>
-            Straightforward access to Audioflume&apos;s curated music and SFX
-            catalogue, with plans for solo filmmakers, active studios, and
-            larger creative teams.
+            <span>Straightforward access to Audioflume&apos;s curated music and SFX</span>
+            <span>catalogue, with plans for solo filmmakers, active studios,</span>
+            <span>and larger creative teams.</span>
           </p>
         </div>
 
