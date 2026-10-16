@@ -722,6 +722,7 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
             <span>Audioflume Originals</span>
+            <Link href="/music?artist=Audioflume">Explore Original Music</Link>
           </div>
           <div className="audioflume-home-reference-tool-card audioflume-home-reference-exclusives-card">
             <HomeOriginalSongGrid songs={audioflumeOriginalSongs} />

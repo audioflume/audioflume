@@ -51,6 +51,7 @@ type LocationFilterOverrides = {
   search: string;
   selectedGenres: string[];
   selectedMoods: string[];
+  selectedArtists: string[];
 };
 
 const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
@@ -158,22 +159,25 @@ function getLocationFilterValues(searchParams: URLSearchParams, key: string) {
 
 function consumeLocationFilters(): LocationFilterOverrides {
   if (typeof window === "undefined") {
-    return { search: "", selectedGenres: [], selectedMoods: [] };
+    return { search: "", selectedGenres: [], selectedMoods: [], selectedArtists: [] };
   }
 
   const url = new URL(window.location.href);
   const search = url.searchParams.get("search")?.trim() ?? "";
   const selectedGenres = getLocationFilterValues(url.searchParams, "genre");
   const selectedMoods = getLocationFilterValues(url.searchParams, "mood");
+  const selectedArtists = getLocationFilterValues(url.searchParams, "artist");
 
   if (
     url.searchParams.has("search") ||
     url.searchParams.has("genre") ||
-    url.searchParams.has("mood")
+    url.searchParams.has("mood") ||
+    url.searchParams.has("artist")
   ) {
     url.searchParams.delete("search");
     url.searchParams.delete("genre");
     url.searchParams.delete("mood");
+    url.searchParams.delete("artist");
     window.history.replaceState(
       window.history.state,
       "",
@@ -181,7 +185,7 @@ function consumeLocationFilters(): LocationFilterOverrides {
     );
   }
 
-  return { search, selectedGenres, selectedMoods };
+  return { search, selectedGenres, selectedMoods, selectedArtists };
 }
 
 function getEditPointMarkerVisibilityFromEvent(event: Event) {
@@ -237,6 +241,14 @@ export function useFilterPersistence(
       : getLocationFilterValues(
           new URLSearchParams(window.location.search),
           "mood",
+        ),
+  );
+  const pendingLocationArtistsRef = useRef<string[]>(
+    typeof window === "undefined"
+      ? []
+      : getLocationFilterValues(
+          new URLSearchParams(window.location.search),
+          "artist",
         ),
   );
   const [hydrated, setHydrated] = useState(false);
@@ -420,6 +432,9 @@ export function useFilterPersistence(
     if (locationFilters.selectedMoods.length > 0) {
       pendingLocationMoodsRef.current = locationFilters.selectedMoods;
     }
+    if (locationFilters.selectedArtists.length > 0) {
+      pendingLocationArtistsRef.current = locationFilters.selectedArtists;
+    }
 
     const hydrationSearch =
       locationFilters.search || pendingLocationSearchRef.current || "";
@@ -431,8 +446,14 @@ export function useFilterPersistence(
       locationFilters.selectedMoods.length > 0
         ? locationFilters.selectedMoods
         : pendingLocationMoodsRef.current;
+    const hydrationArtists =
+      locationFilters.selectedArtists.length > 0
+        ? locationFilters.selectedArtists
+        : pendingLocationArtistsRef.current;
     const hasExploreFilters =
-      hydrationGenres.length > 0 || hydrationMoods.length > 0;
+      hydrationGenres.length > 0 ||
+      hydrationMoods.length > 0 ||
+      hydrationArtists.length > 0;
     const withLocationFilters = (state: MusicFilterState): MusicFilterState =>
       hasExploreFilters
         ? {
@@ -440,6 +461,7 @@ export function useFilterPersistence(
             search: hydrationSearch,
             selectedGenres: hydrationGenres,
             selectedMoods: hydrationMoods,
+            selectedArtists: hydrationArtists,
             showEditPointMarkers: getStoredEditPointMarkerVisibility(),
           }
         : {
@@ -499,6 +521,7 @@ export function useFilterPersistence(
     pendingLocationSearchRef.current = null;
     pendingLocationGenresRef.current = [];
     pendingLocationMoodsRef.current = [];
+    pendingLocationArtistsRef.current = [];
   }, [hydrated, hydratedKey, storageKey]);
 
   useEffect(() => {
