@@ -38,18 +38,12 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         .projects-page .projects-list {
-          border-top-color: var(--border-subtle) !important;
-        }
-
-        .projects-page .projects-row {
-          border-bottom-color: var(--border-subtle) !important;
+          border-top: 0 !important;
         }
 
         .projects-page .projects-row:not(.projects-row-skeleton) {
-          position: relative;
-          grid-template-columns: minmax(0, 1fr) 12px 64px !important;
-          column-gap: 14px !important;
-          padding-right: 68px !important;
+          border-bottom: 0 !important;
+          border-bottom-color: transparent !important;
         }
 
         .projects-page .projects-row.is-renaming .projects-row-rename,
@@ -61,35 +55,17 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           line-height: 1.35 !important;
         }
 
-        .projects-page .projects-row-archive-status {
-          grid-column: 2;
+        .projects-page .projects-row:not(.projects-row-skeleton) > .projects-row-actions {
+          right: 18px !important;
         }
 
-        .projects-page .projects-row-count {
-          grid-column: 3;
-          font-size: 11.5px;
-          font-weight: 400;
-          line-height: 1.35;
-          color: var(--text-subtle);
-        }
-
-        .projects-page .projects-row-actions {
-          position: absolute;
-          top: 50%;
-          right: 12px;
-          width: 32px;
-          justify-self: auto !important;
-          padding-left: 0 !important;
-          transform: translateY(-50%);
-        }
-
-        .projects-page .projects-row-main small,
-        .projects-page .projects-skeleton-line {
-          display: none !important;
-        }
-
-        .projects-page .projects-skeleton-copy {
-          gap: 0 !important;
+        .projects-page .projects-row-main small {
+          display: block !important;
+          margin-top: 2px !important;
+          color: var(--text-muted) !important;
+          font-size: 11.5px !important;
+          font-weight: 400 !important;
+          line-height: 1.45 !important;
         }
 
         .projects-page .projects-title {
@@ -281,11 +257,6 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
             gap: 6px !important;
           }
 
-          .projects-page .projects-row:not(.projects-row-skeleton) {
-            grid-template-columns: minmax(0, 1fr) 12px 64px !important;
-            column-gap: 14px !important;
-            padding: 0 68px 0 18px !important;
-          }
         }
 
         @media (max-width: 520px) {
