@@ -1,11 +1,18 @@
 @import "../editorial-typography.css";
 
-.audioflume-pricing-page-root {
+.audioflume-pricing-route-shell {
   min-height: 100vh;
   overflow-x: clip;
   background: var(--bg-primary);
   color: var(--text-primary);
   padding-top: var(--filmwave-header-height, 75px);
+}
+
+.audioflume-pricing-page-root {
+  min-height: 100vh;
+  overflow-x: clip;
+  background: var(--bg-primary);
+  color: var(--text-primary);
 }
 
 .audioflume-pricing-searchbar-slot {
