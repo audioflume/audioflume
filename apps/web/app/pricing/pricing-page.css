@@ -229,6 +229,21 @@
   margin-bottom: clamp(52px, 5vw, 72px);
 }
 
+.audioflume-pricing-overview-heading {
+  display: grid;
+  gap: 18px;
+}
+
+.audioflume-pricing-overview-eyebrow {
+  color: #111111;
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: uppercase;
+}
+
 .audioflume-pricing-overview h1 {
   margin: 0;
   color: #111111;
