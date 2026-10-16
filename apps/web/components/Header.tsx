@@ -489,7 +489,7 @@ export default function Header() {
 
         .filmwave-web-header.is-transparent:hover
           .filmwave-header-nav-link:not(.is-active):not(:hover) {
-          color: rgba(255, 255, 255, 0.72) !important;
+          color: var(--text-secondary) !important;
         }
 
         .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
