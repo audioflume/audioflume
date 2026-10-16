@@ -730,6 +730,20 @@ export default function HomePageContent({
         </div>
       </section>
 
+      <section className="audioflume-home-reference-new-songs">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+          <span>Newly Added Songs</span>
+          <Link href="/music">Explore New Music</Link>
+        </div>
+        <div className="audioflume-home-reference-width">
+          <MusicListShell title={null}>
+            {recentSongs.map((song) => (
+              <SongCard key={song.id} song={song} />
+            ))}
+          </MusicListShell>
+        </div>
+      </section>
+
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
