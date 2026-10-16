@@ -205,7 +205,7 @@ export default function Header() {
           display: flex;
           box-sizing: border-box;
           width: 100%;
-          height: 34px;
+          height: 28px;
           align-items: center;
           justify-content: space-between;
           gap: 24px;
