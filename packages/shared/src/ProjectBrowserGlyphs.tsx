@@ -50,7 +50,7 @@ export function FolderGlyph({ small = false, className, style }: GlyphProps) {
     >
       <path
         d="M0 10 a4 4 0 0 1 4 -4 h20 a5 5 0 0 1 5 5 v3 H0 Z"
-        fill="currentColor"
+        fill="#151515"
       />
       <rect
         x="0"
@@ -58,7 +58,7 @@ export function FolderGlyph({ small = false, className, style }: GlyphProps) {
         width="62"
         height="43"
         rx="5"
-        fill="currentColor"
+        fill="#111111"
       />
     </svg>
   );
