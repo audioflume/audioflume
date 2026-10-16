@@ -10,6 +10,7 @@
 .audioflume-pricing-searchbar-slot {
   position: relative;
   height: var(--filmwave-header-height, 75px);
+  margin-top: var(--filmwave-header-height, 75px);
 }
 
 .audioflume-pricing-searchbar {
@@ -223,14 +224,13 @@
 
 .audioflume-pricing-overview {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: max-content minmax(0, 1fr);
   align-items: end;
-  gap: clamp(14px, 1.4vw, 22px);
+  gap: clamp(72px, 8vw, 138px);
   margin-bottom: clamp(52px, 5vw, 72px);
 }
 
 .audioflume-pricing-overview h1 {
-  grid-column: 1;
   margin: 0;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -238,18 +238,23 @@
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.96;
+  white-space: nowrap;
 }
 
 .audioflume-pricing-overview p {
-  grid-column: 2 / span 2;
-  max-width: none;
-  margin: 0;
+  width: min(100%, calc(((100% + clamp(14px, 1.4vw, 22px)) / 3 * 2) - clamp(14px, 1.4vw, 22px)));
+  max-width: 980px;
+  margin: 0 0 2px auto;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(21px, 1.8vw, 29px);
+  font-size: clamp(19px, 1.55vw, 25px);
   font-weight: 400;
-  letter-spacing: -0.035em;
-  line-height: 1.18;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.audioflume-pricing-overview p > span {
+  display: block;
 }
 
 .audioflume-pricing-plan-grid {
@@ -707,6 +712,19 @@
   .audioflume-pricing-overview h1,
   .audioflume-pricing-overview p {
     grid-column: 1;
+  }
+
+  .audioflume-pricing-overview h1 {
+    white-space: normal;
+  }
+
+  .audioflume-pricing-overview p {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .audioflume-pricing-overview p > span {
+    display: inline;
   }
 
   .audioflume-pricing-overview h1 {
