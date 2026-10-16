@@ -697,10 +697,14 @@ export default function ProjectsPage() {
           min-height: 184px;
           border: 0;
           border-radius: 0;
-          background: #e5e5dd;
+          background: transparent;
           color: var(--text-primary);
           text-align: left;
           transition: background 0.15s ease;
+        }
+
+        .project-grid-card {
+          border: 1px solid var(--border);
         }
         .project-grid-card:hover {
           background: var(--bg-hover);
