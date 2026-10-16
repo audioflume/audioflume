@@ -897,53 +897,6 @@
   }
 }
 
-.audioflume-pricing-searchbar-skeleton .audioflume-pricing-searchbar-filters {
-  pointer-events: none;
-}
-
-.audioflume-pricing-searchbar-skeleton .is-filter-icon {
-  width: 22px;
-  height: 22px;
-}
-
-.audioflume-pricing-searchbar-skeleton .is-filter-label {
-  width: 48px;
-  height: 13px;
-}
-
-.audioflume-pricing-searchbar-skeleton-field {
-  display: flex;
-  box-sizing: border-box;
-  width: min(860px, calc(100% - 32px));
-  height: calc(100% - 24px);
-  align-items: center;
-  gap: 12px;
-  margin: 12px;
-  background: var(--bg-secondary);
-  padding: 0 16px;
-}
-
-.audioflume-pricing-searchbar-skeleton-field .is-search-icon {
-  width: 22px;
-  height: 22px;
-  flex: 0 0 22px;
-}
-
-.audioflume-pricing-searchbar-skeleton-field .is-search-copy {
-  width: min(42%, 330px);
-  height: 14px;
-}
-
-.audioflume-pricing-searchbar-skeleton .is-search-song {
-  width: 112px;
-  height: 14px;
-}
-
-.audioflume-pricing-searchbar-skeleton .is-sort {
-  width: 86px;
-  height: 14px;
-}
-
 .audioflume-pricing-loading .audioflume-pricing-overview .is-overview-eyebrow {
   width: 126px;
   height: 12px;
@@ -1310,11 +1263,6 @@
 }
 
 @media (max-width: 760px) {
-  .audioflume-pricing-searchbar-skeleton-field {
-    width: calc(100% - 20px);
-    margin: 12px 10px;
-  }
-
   .audioflume-pricing-loading .audioflume-pricing-overview .is-overview-title {
     width: min(88vw, 470px);
   }
