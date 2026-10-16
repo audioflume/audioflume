@@ -330,7 +330,7 @@ export default async function PricingPage() {
             <div className="overflow-x-auto">
             <table className="w-full min-w-[820px] border-collapse">
               <thead>
-                <tr className="border-b border-[var(--border)]">
+                <tr className="border-b-[1.5px] border-[var(--border)]">
                   <th className="w-[34%] pb-8 pr-8 text-left align-top" scope="col">
                     <p className="audioflume-pricing-section-eyebrow mb-1">
                       Flexible Licensing Options
@@ -342,7 +342,7 @@ export default async function PricingPage() {
                   {plans.map((plan, index) => (
                     <th
                       key={plan.name}
-                      className={`w-[22%] px-5 pb-8 text-center align-top${index > 0 ? " border-l border-[var(--border)]" : ""}`}
+                      className={`w-[22%] px-5 pb-8 text-center align-top${index > 0 ? " border-l-[1.5px] border-[var(--border)]" : ""}`}
                       scope="col"
                     >
                       <p className="audioflume-pricing-plan-name">{plan.name}</p>
@@ -359,7 +359,7 @@ export default async function PricingPage() {
               </thead>
               <tbody>
                 {planComparisonRows.map((row) => (
-                  <tr key={row.label} className="border-b border-[var(--border)] last:border-b-0">
+                  <tr key={row.label} className="border-b-[1.5px] border-[var(--border)] last:border-b-0">
                     <th className="py-6 pr-8 text-left" scope="row">
                       <div className="audioflume-pricing-include-title">
                         {row.label}
@@ -368,10 +368,10 @@ export default async function PricingPage() {
                     <td className="px-5 py-6 text-center">
                       <PlanStatus included={row.starter} />
                     </td>
-                    <td className="border-l border-[var(--border)] px-5 py-6 text-center">
+                    <td className="border-l-[1.5px] border-[var(--border)] px-5 py-6 text-center">
                       <PlanStatus included={row.studio} />
                     </td>
-                    <td className="border-l border-[var(--border)] px-5 py-6 text-center">
+                    <td className="border-l-[1.5px] border-[var(--border)] px-5 py-6 text-center">
                       <PlanStatus included={row.enterprise} />
                     </td>
                   </tr>
