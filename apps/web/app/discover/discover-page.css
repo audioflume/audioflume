@@ -481,8 +481,8 @@
 .discover-artist-feature-card {
   --discover-artist-feature-media-height: 400px;
   position: relative;
-  width: min(44vw, 840px);
-  min-width: min(44vw, 840px);
+  width: min(40vw, 840px);
+  min-width: min(40vw, 840px);
   background: transparent;
 }
 
