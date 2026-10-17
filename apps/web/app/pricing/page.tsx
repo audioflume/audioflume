@@ -95,7 +95,7 @@ const plans = [
     price: "$39",
     priceDetail: "CAD / month",
     description:
-      "For active filmmakers and small teams who need more project coverage.",
+      "Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees. project coverage.",
     features: [
       "Full music + SFX catalogue",
       "Royalty-free commercial use",
