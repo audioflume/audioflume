@@ -6,7 +6,7 @@ const premiumLabelStyle: CSSProperties = {
   flexShrink: 0,
   alignItems: "center",
   justifyContent: "center",
-  border: "1.5px solid var(--border)",
+  border: "1.25px solid var(--border)",
   padding: "0 6px",
   fontFamily: "var(--font-roboto-mono)",
   fontSize: 8,
