@@ -13,6 +13,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import FeaturedArtistShelf from "@/components/discover/FeaturedArtistShelf";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
@@ -855,125 +856,10 @@ export default function DiscoverPage() {
       </section>
 
       <div className="discover-artist-content">
-        <section className="discover-artist-featured">
-          {featuredArtistCount > 0 ? (
-            <div className="discover-artist-featured-heading">
-              <span>This month&apos;s featured artists</span>
-              <Link href="/discover">Explore Artists &amp; Composers</Link>
-            </div>
-          ) : null}
-          <div className="discover-artist-featured-shelf">
-            <button
-              type="button"
-              className="discover-artist-featured-shelf-arrow is-left"
-              onClick={() => scrollFeatureCardShelf("prev")}
-              disabled={!canScrollFeatureCardsPrev}
-              aria-label="Scroll featured artists left"
-            >
-              <ChevronLeftIcon size={18} />
-            </button>
-
-            <div
-              ref={featureCardShelfRef}
-              className="discover-artist-featured-scroller"
-            >
-              {featureCardArtists.map((artist) => {
-              const playableSongs = (artist?.songs ?? []).filter((song) =>
-                Boolean(song.audioUrl),
-              );
-              const artistIsPlaying = Boolean(
-                artist &&
-                  isPlaying &&
-                  currentSong &&
-                  playableSongs.some((song) => song.id === currentSong.id),
-              );
-
-              const genres = artist
-                ? Array.from(
-                    new Set(
-                      artist.songs.flatMap((song) =>
-                        Array.isArray(song.genres)
-                          ? song.genres.filter(Boolean)
-                          : [],
-                      ),
-                    ),
-                  ).slice(0, 3)
-                : [];
-
-              return (
-                <article
-                  key={artist.id}
-                  className="discover-artist-feature-card"
-                >
-                  <>
-                      <Link
-                        href={`/artists/${artist.slug}`}
-                        className="discover-artist-feature-link"
-                      >
-                        <div className="discover-artist-feature-media-home">
-                          {artist.hero_image_url ? (
-                            <img
-                              src={artist.hero_image_url}
-                              alt=""
-                              draggable={false}
-                              style={{
-                                objectPosition: `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`,
-                              }}
-                            />
-                          ) : null}
-                        </div>
-
-                        <div className="discover-artist-feature-bar">
-                          <span className="discover-artist-feature-copy">
-                            <strong>{artist.name}</strong>
-                            <span className="discover-artist-feature-genres">
-                              {genres.length > 0
-                                ? genres.map((genre) => (
-                                    <span key={genre}>{genre}</span>
-                                  ))
-                                : [0, 1, 2].map((placeholder) => (
-                                    <span
-                                      key={placeholder}
-                                      className="is-placeholder"
-                                      aria-hidden="true"
-                                    />
-                                  ))}
-                            </span>
-                          </span>
-                        </div>
-                      </Link>
-
-                      <button
-                        type="button"
-                        className="discover-artist-feature-play"
-                        onClick={() => playFeatureCardArtist(artist)}
-                        disabled={playableSongs.length === 0}
-                        aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
-                        aria-pressed={artistIsPlaying}
-                      >
-                        {artistIsPlaying ? (
-                          <PauseIcon size={14} />
-                        ) : (
-                          <PlayIconSmall size={14} />
-                        )}
-                      </button>
-                    </>
-                </article>
-              );
-              })}
-            </div>
-
-            <button
-              type="button"
-              className="discover-artist-featured-shelf-arrow is-right"
-              onClick={() => scrollFeatureCardShelf("next")}
-              disabled={!canScrollFeatureCardsNext}
-              aria-label="Scroll featured artists right"
-            >
-              <ChevronRightIcon size={18} />
-            </button>
-          </div>
-        </section>
+        <FeaturedArtistShelf
+          artists={featureCardArtists}
+          showHeading={featuredArtistCount > 0}
+        />
 
         <ArtistShelf
           title="Artists We're Watching"
