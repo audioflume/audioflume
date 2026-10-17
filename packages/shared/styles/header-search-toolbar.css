@@ -660,7 +660,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
   --fw-music-secondary-row-height: 50px !important;
-  grid-template-columns: calc(var(--filmwave-side-filter-rail-width) + 1.5px) minmax(0, 1fr) !important;
+  grid-template-columns: calc(var(--filmwave-side-filter-rail-width) + 1.25px) minmax(0, 1fr) !important;
   height: 50px !important;
 }
 
