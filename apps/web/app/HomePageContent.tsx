@@ -12,9 +12,6 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import FeaturedArtistShelf, {
-  type DiscoverFeatureCardArtist,
-} from "@/components/discover/FeaturedArtistShelf";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
@@ -520,9 +517,6 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
-  const [featureCardArtists, setFeatureCardArtists] = useState<
-    DiscoverFeatureCardArtist[]
-  >([]);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
 
@@ -584,12 +578,9 @@ export default function HomePageContent({
       .then(([featured, cards]) => {
         if (cancelled) return;
 
-        const featureCards = Array.isArray(cards?.artists) ? cards.artists : [];
-        setFeatureCardArtists(featureCards);
-
         const combined = [
           ...(Array.isArray(featured?.artists) ? featured.artists : []),
-          ...featureCards,
+          ...(Array.isArray(cards?.artists) ? cards.artists : []),
         ] as HomeArtist[];
 
         const unique = Array.from(
@@ -599,10 +590,7 @@ export default function HomePageContent({
         setArtists(unique);
       })
       .catch(() => {
-        if (!cancelled) {
-          setArtists([]);
-          setFeatureCardArtists([]);
-        }
+        if (!cancelled) setArtists([]);
       })
       .finally(() => {
         if (!cancelled) setArtistsLoading(false);
@@ -635,8 +623,6 @@ export default function HomePageContent({
           </div>
         </div>
       </section>
-
-      <FeaturedArtistShelf artists={featureCardArtists} />
 
       <section className="audioflume-home-reference-ui-showcase">
         <img
