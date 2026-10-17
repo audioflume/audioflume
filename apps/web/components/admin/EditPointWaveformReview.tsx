@@ -565,11 +565,11 @@ export default function EditPointWaveformReview({
   };
 
   return (
-    <div className="border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4">
+    <div className="border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-4">
       <style>{`
         .edit-point-play-button {
           background: transparent;
-          border: 1.5px solid var(--border);
+          border: 1.25px solid var(--border);
           color: var(--text-secondary);
         }
 
@@ -760,7 +760,7 @@ export default function EditPointWaveformReview({
                 type="button"
                 onClick={() => onReAnalyze()}
                 disabled={isReAnalyzing || isSaving}
-                className="flex h-8 items-center gap-2 rounded-full border-[1.5px] border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+                className="flex h-8 items-center gap-2 rounded-full border-[1.25px] border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
               >
                 {isReAnalyzing ? (
                   <span className="h-3 w-3 animate-spin rounded-full border border-[var(--border)] border-t-[var(--text-primary)]" />
@@ -776,7 +776,7 @@ export default function EditPointWaveformReview({
                 type="button"
                 onClick={saveEditPoints}
                 disabled={isSaving || !hasChanges}
-                className="h-8 rounded-full border-[1.5px] border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
+                className="h-8 rounded-full border-[1.25px] border-[var(--border)] px-4 text-xs font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)] disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent"
               >
                 {isSaving ? "Saving..." : "Save Cue Points"}
               </button>
@@ -793,7 +793,7 @@ export default function EditPointWaveformReview({
               type="button"
               onClick={() => addEditPoint(option.type, option.label)}
               title={getMarkerDescription(option.type)}
-              className="h-8 rounded-full border-[1.5px] border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+              className="h-8 rounded-full border-[1.25px] border-[var(--border)] px-3 text-xs font-medium text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
             >
               + {option.label}
             </button>
@@ -818,7 +818,7 @@ export default function EditPointWaveformReview({
             onClick={() => setSpacebarStartsFromSelected((value) => !value)}
             aria-pressed={spacebarStartsFromSelected}
             aria-label="Toggle spacebar start from selected marker"
-            className={`flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] transition ${
+            className={`flex h-6 w-6 items-center justify-center rounded-full border-[1.25px] transition ${
               spacebarStartsFromSelected
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -837,7 +837,7 @@ export default function EditPointWaveformReview({
             dragStateRef.current = { mode: "playhead" };
             seekToTime(getTimeFromClientX(event.clientX));
           }}
-          className="relative h-28 cursor-ew-resize overflow-hidden rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] outline-none transition focus:border-[var(--border)] focus-visible:outline-none focus-visible:ring-0"
+          className="relative h-28 cursor-ew-resize overflow-hidden rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] outline-none transition focus:border-[var(--border)] focus-visible:outline-none focus-visible:ring-0"
         >
           <div className="absolute inset-x-0 top-1/2 h-px bg-[var(--border)]" />
 
@@ -912,9 +912,9 @@ export default function EditPointWaveformReview({
         </div>
       </div>
 
-      <div className="cue-point-table-shell mt-4 overflow-hidden border-[1.5px] border-[var(--border)]">
+      <div className="cue-point-table-shell mt-4 overflow-hidden border-[1.25px] border-[var(--border)]">
         <div>
-          <div className="cue-point-row-grid border-b-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
+          <div className="cue-point-row-grid border-b-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2 text-[11px] font-medium uppercase tracking-[0.08em] text-[var(--text-muted)]">
             <div>Marker</div>
             <div>Play</div>
             <div>Set</div>
@@ -938,7 +938,7 @@ export default function EditPointWaveformReview({
                 <div
                   key={marker.id}
                   onClick={() => toggleMarkerRow(marker.id)}
-                  className={`cue-point-row-grid cursor-pointer select-none border-b-[1.5px] border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 ${
+                  className={`cue-point-row-grid cursor-pointer select-none border-b-[1.25px] border-[var(--border-subtle)] px-3 py-2 text-xs outline-none transition last:border-b-0 ${
                     selected ? "bg-[var(--bg-hover)]" : ""
                   }`}
                 >
@@ -962,7 +962,7 @@ export default function EditPointWaveformReview({
                       playFromTime(marker.time);
                     }}
                     aria-label={`Play from ${marker.label}`}
-                    className="flex h-7 w-7 items-center justify-center rounded-full border-[1.5px] border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="flex h-7 w-7 items-center justify-center rounded-full border-[1.25px] border-[var(--border)] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
                     <PlayIconSmall size={12} />
                   </button>
@@ -973,7 +973,7 @@ export default function EditPointWaveformReview({
                       event.stopPropagation();
                       setMarkerToPlayhead(marker.id);
                     }}
-                    className="h-7 w-fit rounded-full border-[1.5px] border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                    className="h-7 w-fit rounded-full border-[1.25px] border-[var(--border)] px-2 text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                   >
                     Set
                     <span className="cue-point-set-full-label">
@@ -994,7 +994,7 @@ export default function EditPointWaveformReview({
 
                       updatePointTime(marker.id, parsed);
                     }}
-                    className="h-8 w-full rounded-md border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
+                    className="h-8 w-full rounded-md border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-2 font-mono text-[12px] text-[var(--text-primary)] outline-none focus:border-[var(--text-secondary)]"
                   />
 
                   <div
@@ -1004,14 +1004,14 @@ export default function EditPointWaveformReview({
                     <button
                       type="button"
                       onClick={() => nudgeMarker(marker.id, -0.1)}
-                      className="flex h-7 w-7 items-center justify-center rounded-full border-[1.5px] border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                      className="flex h-7 w-7 items-center justify-center rounded-full border-[1.25px] border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                     >
                       -
                     </button>
                     <button
                       type="button"
                       onClick={() => nudgeMarker(marker.id, 0.1)}
-                      className="flex h-7 w-7 items-center justify-center rounded-full border-[1.5px] border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
+                      className="flex h-7 w-7 items-center justify-center rounded-full border-[1.25px] border-[var(--border)] text-[11px] text-[var(--text-secondary)] transition hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
                     >
                       +
                     </button>

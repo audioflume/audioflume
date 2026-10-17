@@ -48,7 +48,7 @@ export default function ArtistApplicationReviewPanel({
           Profile images
         </div>
         <div className="mt-2 flex items-start gap-3">
-          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-tertiary)]">
+          <div className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)]">
             {profileImageUrl ? (
               <img
                 src={profileImageUrl}
@@ -57,7 +57,7 @@ export default function ArtistApplicationReviewPanel({
               />
             ) : null}
           </div>
-          <div className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-tertiary)]">
+          <div className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)]">
             {heroImageUrl ? (
               <img
                 src={heroImageUrl}

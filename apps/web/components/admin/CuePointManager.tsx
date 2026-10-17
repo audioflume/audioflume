@@ -267,7 +267,7 @@ export default function CuePointManager({
           margin-top: 0 !important;
           overflow: visible !important;
           border: 0 !important;
-          border-top: 1.5px solid var(--border-subtle) !important;
+          border-top: 1.25px solid var(--border-subtle) !important;
           border-radius: 0 !important;
           clip-path: none !important;
         }
@@ -291,7 +291,7 @@ export default function CuePointManager({
           > div
           > .cue-point-row-grid:first-child {
           min-height: 34px;
-          border-bottom: 1.5px solid var(--border-subtle) !important;
+          border-bottom: 1.25px solid var(--border-subtle) !important;
           background: transparent !important;
           padding-top: 0 !important;
           padding-bottom: 0 !important;
@@ -380,7 +380,7 @@ export default function CuePointManager({
 
       {reAnalyzeMessage && (
         <div
-          className={`rounded-[7px] border-[1.5px] px-3 py-2 text-xs leading-5 ${
+          className={`rounded-[7px] border-[1.25px] px-3 py-2 text-xs leading-5 ${
             reAnalyzeFailed
               ? "border-[var(--status-error-soft)] bg-[var(--status-error-soft)] text-[var(--status-error)]"
               : "border-[var(--status-success-soft)] bg-[var(--status-success-soft)] text-[var(--status-success)]"
