@@ -123,19 +123,18 @@
 
 .audioflume-pricing-decision-guide {
   display: grid;
-  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
-  align-items: end;
-  gap: clamp(36px, 5vw, 80px);
+  grid-template-columns: 1fr;
+  gap: 14px;
   margin-bottom: 26px;
   padding: 18px 0;
-  border-top: 1px solid rgba(17, 17, 17, 0.18);
-  border-bottom: 1px solid rgba(17, 17, 17, 0.18);
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
 }
 
 .audioflume-pricing-decision-guide > p {
   max-width: 460px;
   margin: 0;
-  color: #111111;
+  color: var(--text-primary);
   font-size: 13px;
   font-weight: 300;
   line-height: 1.45;
@@ -148,7 +147,7 @@
 }
 
 .audioflume-pricing-decision-options span {
-  color: #111111;
+  color: var(--text-primary);
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
   font-weight: 400;
@@ -630,7 +629,7 @@
 }
 
 .audioflume-pricing-plan-followup a {
-  color: #111111;
+  color: var(--text-primary);
   font-size: 13px;
   font-weight: 300;
   text-decoration: underline;
