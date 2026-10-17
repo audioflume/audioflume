@@ -19,11 +19,20 @@ export default function ArtistApplyPage() {
           box-shadow: none;
         }
 
-        html:not(.light):not([data-theme="light"]) .artist-onboarding-left-image {
-          display: block;
+        .artist-onboarding-hero {
+          background: #e5e5dd;
+        }
+
+        .artist-onboarding-left {
+          background: #e5e5dd;
+        }
+
+        html:not(.light):not([data-theme="light"]) .artist-onboarding-hero,
+        html:not(.light):not([data-theme="light"]) .artist-onboarding-left {
+          background: #111111;
         }
       `}</style>
-      <section className="relative isolate overflow-hidden bg-[#111111] px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
+      <section className="artist-onboarding-hero relative isolate overflow-hidden px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
         <div
           aria-hidden="true"
           className="absolute inset-y-0 right-0 w-1/2 bg-cover bg-center bg-no-repeat"
@@ -35,16 +44,12 @@ export default function ArtistApplyPage() {
 
         <div
           aria-hidden="true"
-          className="absolute inset-y-0 left-0 hidden w-1/2 bg-[#e5e5dd] md:block"
-        >
-          <div
-            className="artist-onboarding-left-image absolute inset-0 hidden bg-cover bg-center bg-no-repeat"
-            style={{
-              backgroundImage:
-                'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup.png?v=20261016-2")',
-            }}
-          />
-        </div>
+          className="artist-onboarding-left absolute inset-y-0 left-0 hidden w-1/2 bg-cover bg-center bg-no-repeat md:block"
+          style={{
+            backgroundImage:
+              'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup.png?v=20261016-2")',
+          }}
+        />
 
         <div className="relative mx-auto max-w-[650px]">
           <section className="mb-8">
