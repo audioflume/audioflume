@@ -157,7 +157,7 @@ export default function DiscoverHeaderScrollState() {
           min-height: 58px !important;
           max-height: 58px !important;
           grid-template-columns: minmax(0, 1fr) !important;
-          border: 1.5px solid rgba(255, 255, 255, 0.7) !important;
+          border: 1.25px solid rgba(255, 255, 255, 0.7) !important;
           background: var(--filmwave-white) !important;
           background-color: var(--filmwave-white) !important;
           box-shadow: 0 16px 45px rgba(0, 0, 0, 0.18) !important;

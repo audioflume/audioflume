@@ -151,7 +151,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     align-items: center;
     justify-content: center;
     gap: 8px;
-    border: 1.5px solid var(--border);
+    border: 1.25px solid var(--border);
     background: transparent;
   }
 
