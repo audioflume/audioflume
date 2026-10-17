@@ -283,7 +283,7 @@
 
 .audioflume-pricing-lifetime-price-group.is-regular .audioflume-pricing-plan-price strong {
   position: relative;
-  color: var(--text-secondary);
+  color: #7f7f78;
   text-decoration: none;
 }
 
@@ -293,7 +293,7 @@
   right: -8px;
   left: -8px;
   height: 2px;
-  background: var(--text-secondary);
+  background: #7f7f78;
   content: "";
   transform: translateY(-50%);
   pointer-events: none;
@@ -312,8 +312,8 @@
 
 .audioflume-pricing-lifetime-action {
   display: flex;
-  align-self: center;
-  align-items: center;
+  align-self: stretch;
+  align-items: flex-end;
   justify-content: flex-end;
   width: 100%;
 }
