@@ -28,7 +28,7 @@
   height: 32px;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--filmwave-browse-filter-border-color);
+  border: 1.25px solid var(--filmwave-browse-filter-border-color);
   background: transparent;
   padding: 0 12px;
   color: var(--text-secondary);
@@ -71,7 +71,7 @@
   gap: 6px;
   overflow: hidden;
   cursor: pointer;
-  border: 1.5px solid var(--filmwave-browse-filter-border-color);
+  border: 1.25px solid var(--filmwave-browse-filter-border-color);
   background: transparent;
   color: var(--text-primary);
   padding: 0 10px;

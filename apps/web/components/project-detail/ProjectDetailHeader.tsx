@@ -167,7 +167,7 @@ export default function ProjectDetailHeader({
           width: min(360px, 100%);
           min-width: 0;
           height: 32px;
-          border: 1.5px solid var(--border);
+          border: 1.25px solid var(--border);
           border-radius: 0;
           background: var(--bg-primary);
           padding: 0 10px;

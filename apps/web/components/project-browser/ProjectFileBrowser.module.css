@@ -28,7 +28,7 @@
   align-items: center !important;
   justify-content: space-between !important;
   gap: 16px !important;
-  border-bottom: 1.5px solid var(--border) !important;
+  border-bottom: 1.25px solid var(--border) !important;
   background: var(--bg-primary) !important;
 }
 
@@ -81,7 +81,7 @@
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--filmwave-project-toolbar-button-border, transparent);
+  border: 1.25px solid var(--filmwave-project-toolbar-button-border, transparent);
   border-radius: var(--filmwave-project-toolbar-button-radius, 9px);
   background: var(--filmwave-project-toolbar-button-bg, transparent);
   color: var(--filmwave-project-toolbar-button-color, var(--icon-color));
@@ -237,7 +237,7 @@
 
 :global(.project-browser-list) {
   overflow: hidden;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 14px;
   background: var(--bg-secondary);
 }
@@ -253,7 +253,7 @@
 :global(.project-browser-list-head) {
   min-height: 34px;
   padding: 0 14px;
-  border-bottom: 1.5px solid var(--border);
+  border-bottom: 1.25px solid var(--border);
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -265,7 +265,7 @@
   width: 100%;
   min-height: 34px !important;
   border: 0 !important;
-  border-bottom: 1.5px solid var(--border-subtle) !important;
+  border-bottom: 1.25px solid var(--border-subtle) !important;
   border-radius: 0 !important;
   background: transparent !important;
   padding: 0 14px !important;
