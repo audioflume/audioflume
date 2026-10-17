@@ -50,7 +50,7 @@
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  border: 1.5px solid transparent;
+  border: 1.25px solid transparent;
   border-radius: 999px !important;
   background: var(--bg-control);
   padding: 0 8px !important;

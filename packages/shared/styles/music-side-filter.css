@@ -139,7 +139,7 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body {
   gap: 0 !important;
   overflow: hidden !important;
   border: 0 !important;
-  border-right: 1.5px solid var(--filmwave-side-filter-divider-color) !important;
+  border-right: 1.25px solid var(--filmwave-side-filter-divider-color) !important;
   border-radius: 0 !important;
   background: transparent !important;
   -webkit-backdrop-filter: none !important;

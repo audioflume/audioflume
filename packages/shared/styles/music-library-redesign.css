@@ -17,7 +17,7 @@
 
 /* Floating filter block — solid subtle grey, rounded, no blur. */
 .fw-toolbar-float {
-  border: 1.5px solid var(--border-subtle);
+  border: 1.25px solid var(--border-subtle);
   border-radius: 18px;
   background: var(--bg-tertiary);
   box-shadow: 0 10px 34px rgba(0, 0, 0, 0.16);
@@ -39,7 +39,7 @@
   height: 38px;
   align-items: center;
   gap: 9px;
-  border: 1.5px solid transparent;
+  border: 1.25px solid transparent;
   border-radius: 999px;
   background: var(--bg-control);
   padding: 0 10px 0 6px;
@@ -118,7 +118,7 @@
   flex-shrink: 0;
   align-items: center;
   gap: 8px;
-  border: 1.5px solid transparent;
+  border: 1.25px solid transparent;
   border-radius: 999px;
   background: var(--bg-control);
   padding: 0 14px;
@@ -261,7 +261,7 @@
 .fw-filter-panel {
   display: flex;
   flex-direction: column;
-  border: 1.5px solid var(--border-subtle);
+  border: 1.25px solid var(--border-subtle);
   border-radius: 18px;
   background: color-mix(in srgb, var(--bg-tertiary) 86%, transparent);
   -webkit-backdrop-filter: blur(16px);
@@ -283,7 +283,7 @@
   gap: 2px;
   overflow-y: auto;
   overscroll-behavior: contain;
-  border-right: 1.5px solid var(--border-subtle);
+  border-right: 1.25px solid var(--border-subtle);
   padding: 10px 8px;
 }
 
@@ -437,7 +437,7 @@
   flex-shrink: 0;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--border-strong);
+  border: 1.25px solid var(--border-strong);
   border-radius: 5px;
   background: transparent;
   color: var(--accent-contrast, #111111);
@@ -477,7 +477,7 @@
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  border: 1.5px solid transparent;
+  border: 1.25px solid transparent;
   border-radius: 999px;
   background: var(--bg-control);
   padding: 4px 11px;
@@ -668,7 +668,7 @@
 .fw-filter-input {
   width: 70px;
   height: 30px;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 10px;
   background: var(--bg-control);
   padding: 0 10px;
@@ -694,7 +694,7 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-  border-top: 1.5px solid var(--border-subtle);
+  border-top: 1.25px solid var(--border-subtle);
   padding: 10px 18px;
 }
 
@@ -752,7 +752,7 @@
   height: auto;
   align-items: center;
   gap: 6px;
-  border: 1.5px solid transparent;
+  border: 1.25px solid transparent;
   border-radius: 999px;
   background: var(--bg-control);
   padding: 4px 11px;
@@ -856,7 +856,7 @@
     overflow-x: auto;
     overflow-y: hidden;
     border-right: 0;
-    border-bottom: 1.5px solid var(--border-subtle);
+    border-bottom: 1.25px solid var(--border-subtle);
     padding: 8px;
   }
 

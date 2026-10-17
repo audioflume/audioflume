@@ -46,7 +46,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   gap: 0;
   margin: 0 -28px;
   padding: 0 28px;
-  border-bottom: 1.5px solid var(--border);
+  border-bottom: 1.25px solid var(--border);
   overflow-x: auto;
   overflow-y: visible;
   overscroll-behavior-y: none;
@@ -93,7 +93,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
   overflow-x: auto;
   overflow-y: visible;
   overscroll-behavior-y: none;
-  border-bottom: 1.5px solid var(--border);
+  border-bottom: 1.25px solid var(--border);
   padding: 0 28px;
   white-space: nowrap;
   scrollbar-width: none;
@@ -362,7 +362,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 .filmwave-filter-menu,
 .desktop-filter-menu {
   overflow: hidden;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 12px;
   background: var(--bg-secondary);
   box-shadow: var(--shadow-ui);
@@ -576,7 +576,7 @@ body.sidebar-collapsed .filmwave-music-library-frame,
 .filmwave-filter-panel {
   box-sizing: border-box;
   overflow: hidden;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 12px;
   background: var(--bg-secondary);
   box-shadow: var(--shadow-ui);
