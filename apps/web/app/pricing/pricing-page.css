@@ -81,7 +81,7 @@
   grid-template-columns: max-content minmax(0, 1fr);
   align-items: end;
   gap: clamp(72px, 8vw, 138px);
-  margin-bottom: clamp(44px, 4vw, 58px);
+  margin-bottom: clamp(52px, 5vw, 72px);
 }
 
 .audioflume-pricing-overview-heading {
