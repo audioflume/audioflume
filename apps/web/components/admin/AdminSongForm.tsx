@@ -702,7 +702,7 @@ function TextInput({
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="h-9 w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
+          className="h-9 w-full rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
         />
 
         <div className="absolute right-2 top-1/2 flex -translate-y-1/2 flex-col">
@@ -734,7 +734,7 @@ function TextInput({
       value={value}
       onChange={(e) => onChange(e.target.value)}
       placeholder={placeholder}
-      className="h-9 w-full rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
+      className="h-9 w-full rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)]"
     />
   );
 }
@@ -753,7 +753,7 @@ function SelectInput({
       <select
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={`h-9 w-full appearance-none rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs outline-none transition focus:border-[var(--text-secondary)] ${
+        className={`h-9 w-full appearance-none rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 pr-10 text-xs outline-none transition focus:border-[var(--text-secondary)] ${
           value ? "text-[var(--text-primary)]" : "text-[var(--text-muted)]"
         }`}
       >
@@ -779,7 +779,7 @@ function CheckboxInput({
 }) {
   return (
     <label
-      className={`group flex h-9 cursor-pointer items-center gap-2.5 self-end rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition hover:text-[var(--text-primary)] ${
+      className={`group flex h-9 cursor-pointer items-center gap-2.5 self-end rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs transition hover:text-[var(--text-primary)] ${
         checked ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"
       }`}
     >
@@ -790,7 +790,7 @@ function CheckboxInput({
         className="peer sr-only"
       />
 
-      <span className="flex h-3.5 w-3.5 items-center justify-center rounded-[4px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
+      <span className="flex h-3.5 w-3.5 items-center justify-center rounded-[4px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] transition group-hover:border-[var(--text-secondary)] peer-checked:border-[var(--text-primary)] peer-checked:bg-[var(--text-primary)] peer-checked:[&>svg]:opacity-100">
         <CheckMarkIcon
           size={10}
           strokeWidth={3}
@@ -823,7 +823,7 @@ function TextArea({
       placeholder={placeholder}
       rows={rows}
       readOnly={readOnly}
-      className="w-full resize-none rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] read-only:text-[var(--text-secondary)]"
+      className="w-full resize-none rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] read-only:text-[var(--text-secondary)]"
     />
   );
 }
@@ -853,7 +853,7 @@ function MultiSelectPills({
                   : [...selected, option],
               );
             }}
-            className={`h-7 rounded-full border-[1.5px] px-2.5 text-[11px] font-normal transition ${
+            className={`h-7 rounded-full border-[1.25px] px-2.5 text-[11px] font-normal transition ${
               active
                 ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                 : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
@@ -1620,7 +1620,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         .admin-song-form-card {
           overflow: hidden;
           border-radius: 0.75rem;
-          border: 1.5px solid var(--border);
+          border: 1.25px solid var(--border);
           background: var(--bg-secondary);
         }
 
@@ -1630,7 +1630,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           align-items: center;
           justify-content: space-between;
           gap: 1rem;
-          border-bottom: 1.5px solid var(--border);
+          border-bottom: 1.25px solid var(--border);
           padding: 0 1rem;
         }
 
@@ -2012,7 +2012,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     </div>
 
                     {warningsOpen && uploadWarnings.length > 1 && (
-                      <ul className="grid gap-1.5 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                      <ul className="grid gap-1.5 rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
                         {uploadWarnings.map((warning) => (
                           <li key={warning}>{warning}</li>
                         ))}

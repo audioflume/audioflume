@@ -250,7 +250,7 @@ export function PlaylistManagerCollapsibleSection({
   children,
 }: CollapsibleSectionProps) {
   return (
-    <section className="rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
+    <section className="rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-4 sm:p-5">
       <div
         className={`${wrapHeader ? "flex flex-wrap" : "flex"} items-center justify-between gap-4`}
       >
@@ -350,7 +350,7 @@ export function PlaylistManagerLibrarySection({
       </div>
 
       {playlists.length === 0 ? (
-        <div className="flex min-h-[180px] items-center justify-center border-[1.5px] border-[var(--border)] text-sm text-[var(--text-secondary)]">
+        <div className="flex min-h-[180px] items-center justify-center border-[1.25px] border-[var(--border)] text-sm text-[var(--text-secondary)]">
           {emptyMessage}
         </div>
       ) : (

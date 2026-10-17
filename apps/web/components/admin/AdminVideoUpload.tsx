@@ -379,7 +379,7 @@ export default function AdminVideoUpload({
             }}
             onDrop={handleDrop}
             onDragOver={(event) => event.preventDefault()}
-            className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
+            className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)]"
           >
             <video
               src={preview}
@@ -412,7 +412,7 @@ export default function AdminVideoUpload({
           }}
           onDrop={handleDrop}
           onDragOver={(event) => event.preventDefault()}
-          className="group mt-1 flex min-h-[112px] cursor-pointer items-center justify-center gap-3 rounded-[14px] border-[1.5px] border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)]"
+          className="group mt-1 flex min-h-[112px] cursor-pointer items-center justify-center gap-3 rounded-[14px] border-[1.25px] border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)]"
         >
           <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-hover:bg-[var(--bg-primary)]">
             <UploadIcon />
@@ -444,7 +444,7 @@ export default function AdminVideoUpload({
             onUploaded(event.target.value);
           }}
           placeholder="https://…"
-          className="h-9 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+          className="h-9 rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-xs text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
         />
       </label>
     </div>

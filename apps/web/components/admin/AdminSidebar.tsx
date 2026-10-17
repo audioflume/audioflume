@@ -141,7 +141,7 @@ function SystemStatusConsole({
   lastChecked: string;
 }) {
   return (
-    <div className="border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5">
+    <div className="border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 py-2.5">
       <div className="mb-1.5 flex items-center justify-between font-mono text-[8px] uppercase tracking-[0.08em] text-[var(--text-muted)]">
         <span>Console</span>
         <span>{loading ? "Check" : "Live"}</span>
@@ -171,7 +171,7 @@ function SystemStatusConsole({
           </div>
         ))}
 
-        <div className="border-t-[1.5px] border-[var(--border)] pt-1.5 font-mono text-[8px] uppercase tracking-[0.06em] text-[var(--text-muted)]">
+        <div className="border-t-[1.25px] border-[var(--border)] pt-1.5 font-mono text-[8px] uppercase tracking-[0.06em] text-[var(--text-muted)]">
           Check: {lastChecked}
         </div>
       </div>
