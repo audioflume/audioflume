@@ -1,78 +1,13 @@
-import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 import { SignIn } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
 
 import Footer from "@/components/Footer";
 import ArtistClaimPanel from "@/components/artists/ArtistClaimPanel";
-import { r2Client } from "@/lib/r2";
 
 export const dynamic = "force-dynamic";
 
-const DEFAULT_ARTIST_CLAIM_COLLAGE_IMAGE =
-  "https://images.filmwave.io/images/home/kyle-loftus-FtQE89f3EXA-unsplash.jpg";
-const ARTIST_CLAIM_IMAGE_EXTENSIONS = /\.(avif|jpe?g|png|webp)$/i;
-
-async function listArtistClaimImagesForPrefix(bucket: string, prefix: string) {
-  const result = await r2Client.send(
-    new ListObjectsV2Command({
-      Bucket: bucket,
-      Prefix: prefix,
-    }),
-  );
-
-  return (result.Contents ?? [])
-    .map((object) => object.Key)
-    .filter(
-      (key): key is string =>
-        Boolean(key) && ARTIST_CLAIM_IMAGE_EXTENSIONS.test(key as string),
-    );
-}
-
-async function getArtistClaimCollageImages() {
-  const bucket =
-    process.env.CLOUDFLARE_R2_IMAGES_BUCKET_NAME ||
-    process.env.CLOUDFLARE_R2_BUCKET_NAME ||
-    "";
-  const publicBaseUrl = (
-    process.env.CLOUDFLARE_R2_IMAGES_PUBLIC_URL ||
-    process.env.CLOUDFLARE_R2_PUBLIC_URL ||
-    ""
-  ).replace(/\/$/, "");
-
-  if (!bucket || !publicBaseUrl) return [DEFAULT_ARTIST_CLAIM_COLLAGE_IMAGE];
-
-  try {
-    let keys = await listArtistClaimImagesForPrefix(bucket, "images/pricing/");
-    if (keys.length === 0) {
-      keys = await listArtistClaimImagesForPrefix(bucket, "pricing/");
-    }
-
-    if (keys.length === 0) return [DEFAULT_ARTIST_CLAIM_COLLAGE_IMAGE];
-
-    return keys
-      .sort((a, b) => a.localeCompare(b))
-      .map(
-        (key) =>
-          `${publicBaseUrl}/${key
-            .split("/")
-            .map((segment) => encodeURIComponent(segment))
-            .join("/")}`,
-      );
-  } catch (error) {
-    console.error("Failed to load artist claim collage images from R2:", error);
-    return [DEFAULT_ARTIST_CLAIM_COLLAGE_IMAGE];
-  }
-}
-
 export default async function ArtistClaimPage() {
-  const [user, pricingImages] = await Promise.all([
-    currentUser(),
-    getArtistClaimCollageImages(),
-  ]);
-  const collageImages = Array.from(
-    { length: 6 },
-    (_, index) => pricingImages[index % pricingImages.length],
-  );
+  const user = await currentUser();
 
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -94,37 +29,16 @@ export default async function ArtistClaimPage() {
 
         <div
           aria-hidden="true"
-          className="pointer-events-none absolute inset-y-0 left-0 hidden w-1/2 overflow-hidden md:block"
-        >
-          <div
-            className="absolute left-[4%] top-[7%] h-[12%] w-[16%] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${collageImages[0]}")` }}
-          />
-          <div
-            className="absolute left-[27%] top-[18%] h-[9%] w-[12%] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${collageImages[1]}")` }}
-          />
-          <div
-            className="absolute left-[6%] top-[34%] h-[27%] w-[30%] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${collageImages[2]}")` }}
-          />
-          <div
-            className="absolute left-[40%] top-[53%] h-[11%] w-[14%] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${collageImages[3]}")` }}
-          />
-          <div
-            className="absolute bottom-[9%] left-[13%] h-[14%] w-[18%] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${collageImages[4]}")` }}
-          />
-          <div
-            className="absolute bottom-[4%] left-[42%] h-[8%] w-[10%] bg-cover bg-center bg-no-repeat"
-            style={{ backgroundImage: `url("${collageImages[5]}")` }}
-          />
-        </div>
+          className="absolute inset-y-0 left-0 hidden w-1/2 bg-cover bg-center bg-no-repeat md:block"
+          style={{
+            backgroundImage:
+              'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup.png")',
+          }}
+        />
 
         <div className="relative mx-auto max-w-[650px]">
           <section className="mb-8">
-            <h1 className="relative z-10 m-0 max-w-[650px] font-[family-name:var(--font-aktiv-grotesk)] text-[80px] font-[300] leading-[0.82] tracking-[-0.035em] text-white mix-blend-difference">
+            <h1 className="relative z-10 m-0 max-w-[650px] font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(56px,5vw,76px)] font-[400] leading-[0.96] tracking-[-0.055em] text-left text-white mix-blend-difference">
               Claim your artist profile
             </h1>
           </section>
