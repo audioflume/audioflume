@@ -470,7 +470,7 @@ function ArtistShelf({
 
   return (
     <section className="discover-artist-shelf-section">
-      <div className="mb-[12px] flex min-h-[28px] items-center justify-between gap-[20px]">
+      <div className="discover-artist-shelf-heading">
         <div className="min-w-0">
           <SectionTitle>{title}</SectionTitle>
         </div>
