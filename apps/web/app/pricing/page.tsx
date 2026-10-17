@@ -95,7 +95,7 @@ const plans = [
     price: "$39",
     priceDetail: "CAD / month",
     description:
-      "Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees. project coverage.",
+      "For active filmmakers and small teams who need more project coverage.",
     features: [
       "Full music + SFX catalogue",
       "Royalty-free commercial use",
@@ -346,7 +346,7 @@ export default async function PricingPage() {
               <strong>Audioflume Originals</strong>
             </div>
             <p className="audioflume-pricing-plan-description">
-              For active filmmakers and small teams who need more
+              Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees.
             </p>
           </div>
 
