@@ -12,10 +12,8 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import FeaturedArtistShelf, {
-  type DiscoverFeatureCardArtist,
-} from "@/components/discover/FeaturedArtistShelf";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
@@ -519,9 +517,6 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
-  const [featureCardArtists, setFeatureCardArtists] = useState<
-    DiscoverFeatureCardArtist[]
-  >([]);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
 
@@ -583,12 +578,9 @@ export default function HomePageContent({
       .then(([featured, cards]) => {
         if (cancelled) return;
 
-        const featureCards = Array.isArray(cards?.artists) ? cards.artists : [];
-        setFeatureCardArtists(featureCards);
-
         const combined = [
           ...(Array.isArray(featured?.artists) ? featured.artists : []),
-          ...featureCards,
+          ...(Array.isArray(cards?.artists) ? cards.artists : []),
         ] as HomeArtist[];
 
         const unique = Array.from(
@@ -598,10 +590,7 @@ export default function HomePageContent({
         setArtists(unique);
       })
       .catch(() => {
-        if (!cancelled) {
-          setArtists([]);
-          setFeatureCardArtists([]);
-        }
+        if (!cancelled) setArtists([]);
       })
       .finally(() => {
         if (!cancelled) setArtistsLoading(false);
@@ -715,7 +704,23 @@ export default function HomePageContent({
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
 
       <section className="audioflume-home-reference-tools">
-        <FeaturedArtistShelf artists={featureCardArtists} />
+        <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid">
+          <div className="audioflume-home-reference-tools-column is-blank">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Section Title</span>
+            </div>
+            <div className="audioflume-home-reference-tool-card audioflume-home-reference-blank-card" />
+          </div>
+
+          <div className="audioflume-home-reference-tools-column is-reference-search">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Search by Song</span>
+            </div>
+            <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
+              <GlobalReferenceSearch embedded />
+            </div>
+          </div>
+        </div>
 
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
