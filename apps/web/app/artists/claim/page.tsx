@@ -12,8 +12,12 @@ export default async function ArtistClaimPage() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
-        html:not(.light) .artist-claim-panel-shell {
-          box-shadow: 0 0 100px rgba(0, 0, 0, 0.5);
+        html:not(.light):not([data-theme="light"]) .artist-claim-panel-shell {
+          box-shadow: none;
+        }
+
+        html:not(.light):not([data-theme="light"]) .artist-claim-panel-surface {
+          background: #151515;
         }
       `}</style>
 
@@ -23,7 +27,7 @@ export default async function ArtistClaimPage() {
           className="absolute inset-y-0 right-0 w-1/2 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
-              'url("https://images.filmwave.io/images/artist-signup/soundtrap-7pAguituFGo-unsplash-web.jpg")',
+              'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup%202.png")',
           }}
         />
 
@@ -47,7 +51,7 @@ export default async function ArtistClaimPage() {
             {user?.id ? (
               <ArtistClaimPanel />
             ) : (
-              <section className="overflow-hidden bg-[var(--bg-primary)] p-[50px]">
+              <section className="artist-claim-panel-surface overflow-hidden bg-[var(--bg-primary)] p-[50px]">
                 <div className="flex w-full justify-center">
                   <SignIn
                     routing="hash"

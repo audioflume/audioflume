@@ -13,6 +13,11 @@ export default function ArtistApplyPage() {
           font-size: 12px;
           font-weight: 400;
         }
+
+        html:not(.light):not([data-theme="light"]) .artist-application-form-panel {
+          background: #151515;
+          box-shadow: none;
+        }
       `}</style>
       <section className="relative isolate overflow-hidden bg-[#111111] px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
         <div
@@ -20,7 +25,7 @@ export default function ArtistApplyPage() {
           className="absolute inset-y-0 right-0 w-1/2 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
-              'url("https://images.filmwave.io/images/artist-signup/soundtrap-7pAguituFGo-unsplash-web.jpg")',
+              'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup%202.png")',
           }}
         />
 

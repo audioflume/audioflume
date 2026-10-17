@@ -10,7 +10,6 @@ import {
   Input,
 } from "@/components/account/AccountUI";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
-import { useTheme } from "@/context/ThemeContext";
 
 type ArtistApplicationStatus =
   | "pending"
@@ -169,7 +168,6 @@ function RequiredMark() {
 }
 
 export default function ArtistApplicationForm() {
-  const { theme } = useTheme();
   const [form, setForm] = useState<ApplicationForm>(EMPTY_FORM);
   const [applications, setApplications] = useState<ArtistApplication[]>([]);
   const [submittedApplication, setSubmittedApplication] =
@@ -568,14 +566,7 @@ export default function ArtistApplicationForm() {
 
   return (
     <form onSubmit={(event) => event.preventDefault()}>
-      <section
-        className="relative flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]"
-        style={
-          theme === "dark"
-            ? { boxShadow: "0 0 100px rgba(0, 0, 0, 0.5)" }
-            : undefined
-        }
-      >
+      <section className="artist-application-form-panel relative flex h-[420px] flex-col overflow-hidden bg-[var(--bg-primary)] p-[50px]">
         <div
           className="flex-1 pb-px"
           style={{
