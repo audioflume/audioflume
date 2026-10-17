@@ -17,7 +17,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   --home-reference-width: calc(100vw - 160px);
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
-  background: #090909;
+  background: var(--bg-primary);
   color: var(--text-primary);
 }
 
@@ -1448,7 +1448,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   padding: 88px 0 0;
 }
 
-.audioflume-home-reference-new-songs .filmwave-music-list-shell {
+.audioflume-home-reference-new-songs .fw-song-list {
   background: var(--bg-secondary);
   padding: 44px 72px 52px;
 }
@@ -1978,11 +1978,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .filmwave-header-create-account {
   background: #111111 !important;
   color: #ffffff !important;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference {
-  background: #090909;
-  color: #ffffff;
 }
 
 :where(html.light, html[data-theme="light"])
