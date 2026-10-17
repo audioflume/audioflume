@@ -34,7 +34,7 @@ export default function ArtistApplyPage() {
           className="absolute inset-y-0 left-0 hidden w-1/2 bg-cover bg-center bg-no-repeat md:block"
           style={{
             backgroundImage:
-              'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup.png")',
+              'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup.png?v=20261016-2")',
           }}
         />
 
