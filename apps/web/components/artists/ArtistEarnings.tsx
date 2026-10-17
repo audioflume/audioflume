@@ -243,7 +243,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
             <div
               key={summary.currency}
               className={`grid gap-4 px-5 py-4 sm:grid-cols-4 ${
-                index < currencies.length - 1 ? "border-b-[1.5px] border-[var(--border-subtle)]" : ""
+                index < currencies.length - 1 ? "border-b-[1.25px] border-[var(--border-subtle)]" : ""
               }`}
             >
               <div className="text-xs font-medium text-[var(--text-primary)]">
@@ -276,7 +276,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
             <div
               key={`${item.source}-${item.currency}`}
               className={`flex items-center justify-between gap-4 px-5 py-4 ${
-                index < sourceBreakdown.length - 1 ? "border-b-[1.5px] border-[var(--border-subtle)]" : ""
+                index < sourceBreakdown.length - 1 ? "border-b-[1.25px] border-[var(--border-subtle)]" : ""
               }`}
             >
               <span className="text-xs text-[var(--text-primary)]">
@@ -301,7 +301,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
         ) : (
           <div className="overflow-x-auto">
             <div className="min-w-[720px]">
-              <div className="grid grid-cols-[120px_minmax(220px,1fr)_130px_130px] gap-4 border-b-[1.5px] border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--text-muted)]">
+              <div className="grid grid-cols-[120px_minmax(220px,1fr)_130px_130px] gap-4 border-b-[1.25px] border-[var(--border-subtle)] px-5 py-3 text-[10px] text-[var(--text-muted)]">
                 <span>Date</span>
                 <span>Source</span>
                 <span>Status</span>
@@ -311,7 +311,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
                 <div
                   key={earning.id}
                   className={`grid min-h-[58px] grid-cols-[120px_minmax(220px,1fr)_130px_130px] items-center gap-4 px-5 py-3 ${
-                    index < earnings.length - 1 ? "border-b-[1.5px] border-[var(--border-subtle)]" : ""
+                    index < earnings.length - 1 ? "border-b-[1.25px] border-[var(--border-subtle)]" : ""
                   }`}
                 >
                   <span className="text-[11px] text-[var(--text-secondary)]">
@@ -353,7 +353,7 @@ export default function ArtistEarnings({ artistId }: { artistId: string }) {
             <div
               key={payout.id}
               className={`grid gap-3 px-5 py-4 sm:grid-cols-[140px_minmax(0,1fr)_120px_120px] sm:items-center ${
-                index < payouts.length - 1 ? "border-b-[1.5px] border-[var(--border-subtle)]" : ""
+                index < payouts.length - 1 ? "border-b-[1.25px] border-[var(--border-subtle)]" : ""
               }`}
             >
               <span className="text-[11px] text-[var(--text-secondary)]">

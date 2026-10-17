@@ -523,7 +523,7 @@ function CreatePlaylist({
             onChange={setIsPublic}
             disabled={!canManage || saving}
             label="Public"
-            className="h-10 w-full rounded-[7px] border-[1.5px] border-[var(--border)] px-3"
+            className="h-10 w-full rounded-[7px] border-[1.25px] border-[var(--border)] px-3"
           />
         </div>
       </section>
@@ -790,7 +790,7 @@ function PlaylistEditor({
         </div>
 
         {canManage ? (
-          <div className="flex border-b-[1.5px] border-[var(--border-subtle)] p-5">
+          <div className="flex border-b-[1.25px] border-[var(--border-subtle)] p-5">
             <ArtistReleaseTrackPicker
               artistId={artist.id}
               releaseType="playlist"

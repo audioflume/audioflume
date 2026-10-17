@@ -747,7 +747,7 @@ function CreateRelease({
         </div>
 
         {canManage ? (
-          <div className="flex border-b-[1.5px] border-[var(--border-subtle)] p-5">
+          <div className="flex border-b-[1.25px] border-[var(--border-subtle)] p-5">
             <ArtistReleaseTrackPicker
               artistId={artist.id}
               releaseType={releaseType}
@@ -1181,7 +1181,7 @@ function ReleaseEditor({
         </div>
 
         {canManage ? (
-          <div className="flex border-b-[1.5px] border-[var(--border-subtle)] p-5">
+          <div className="flex border-b-[1.25px] border-[var(--border-subtle)] p-5">
             <ArtistReleaseTrackPicker
               artistId={artist.id}
               releaseType={releaseType}

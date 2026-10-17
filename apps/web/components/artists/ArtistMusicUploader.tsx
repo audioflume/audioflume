@@ -425,7 +425,7 @@ export default function ArtistMusicUploader({
         </div>
 
         {!canUpload ? (
-          <div className="border-b-[1.5px] border-[var(--border-subtle)] px-5 py-3 text-xs text-[var(--text-muted)]">
+          <div className="border-b-[1.25px] border-[var(--border-subtle)] px-5 py-3 text-xs text-[var(--text-muted)]">
             {artist.status !== "approved"
               ? "Your artist profile must be approved before music can be uploaded."
               : "Your artist role does not include music upload access."}
