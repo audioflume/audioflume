@@ -234,7 +234,7 @@ function CheckboxInput({
       onChange={onChange}
       label={label}
       disabled={disabled}
-      className="h-10 w-full self-end rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3"
+      className="h-10 w-full self-end rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3"
     />
   );
 }
@@ -566,7 +566,7 @@ export default function ArtistSongEditor({
           {beforeContent}
 
           {reviewFeedback?.notes ? (
-            <section className="rounded-[10px] border-[1.5px] border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
+            <section className="rounded-[10px] border-[1.25px] border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
               <div className="text-xs font-medium text-[var(--status-warning,var(--text-primary))]">
                 Review feedback
               </div>
@@ -737,7 +737,7 @@ export default function ArtistSongEditor({
 
             <div className="grid gap-5 px-5 pb-5">
               {!canEditRights ? (
-                <div className="rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]">
+                <div className="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]">
                   Your artist role can view rights information but cannot edit
                   ownership details.
                 </div>
@@ -833,7 +833,7 @@ export default function ArtistSongEditor({
                   {rightsHolders.map((holder, index) => (
                     <div
                       key={index}
-                      className="rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3"
+                      className="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3"
                     >
                       <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
                         <BackendInput
@@ -960,7 +960,7 @@ export default function ArtistSongEditor({
                     ) : null}
                   </div>
                   {warningsOpen && editWarnings.length > 1 ? (
-                    <ul className="grid gap-1.5 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <ul className="grid gap-1.5 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
                       {editWarnings.map((warning) => (
                         <li key={warning}>{warning}</li>
                       ))}

@@ -73,7 +73,7 @@ export default function ArtistTrackOrderRow({
         zIndex: isDragging ? 2 : "auto",
         borderRadius: 7,
       }}
-      className={`grid gap-3 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
+      className={`grid gap-3 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
         canManage
           ? "sm:grid-cols-[28px_44px_minmax(0,1fr)_70px_70px_70px_auto]"
           : "sm:grid-cols-[44px_minmax(0,1fr)_70px_70px_70px]"

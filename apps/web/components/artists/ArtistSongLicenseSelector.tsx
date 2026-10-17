@@ -49,7 +49,7 @@ export default function ArtistSongLicenseSelector({
               aria-pressed={selected}
               disabled={disabled}
               onClick={() => onChange(option.value)}
-              className={`flex min-h-[92px] items-start justify-between gap-4 rounded-[7px] border-[1.5px] bg-[var(--bg-primary)] p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-50 ${
+              className={`flex min-h-[92px] items-start justify-between gap-4 rounded-[7px] border-[1.25px] bg-[var(--bg-primary)] p-4 text-left transition disabled:cursor-not-allowed disabled:opacity-50 ${
                 selected
                   ? "border-[var(--text-primary)]"
                   : "border-[var(--border)] hover:border-[var(--text-secondary)]"
@@ -66,7 +66,7 @@ export default function ArtistSongLicenseSelector({
 
               <span
                 aria-hidden="true"
-                className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-[1.5px] ${
+                className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border-[1.25px] ${
                   selected
                     ? "border-[var(--text-primary)]"
                     : "border-[var(--border)]"

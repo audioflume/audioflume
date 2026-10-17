@@ -120,7 +120,7 @@
   align-items: center;
   justify-content: center;
   padding: 0;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 999px;
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -169,7 +169,7 @@
   align-items: center;
   justify-content: center;
   gap: 7px;
-  border: 1.5px solid var(--text-primary);
+  border: 1.25px solid var(--text-primary);
   border-radius: 5px;
   background: transparent;
   padding: 0 13px;
