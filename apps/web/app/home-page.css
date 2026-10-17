@@ -813,18 +813,18 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-card.is-artists h2 {
-  top: 16%;
+  bottom: 16%;
   left: calc(11.5% - 10px);
   width: max-content;
   max-width: none;
   color: #ffffff;
-  font-size: 64px;
+  font-size: clamp(42px, 3.8vw, 56px);
   font-weight: 300;
   letter-spacing: -0.04em;
-  line-height: 0.85em;
+  line-height: 0.9em;
   text-transform: uppercase;
   transform: scale(var(--audioflume-feature-artists-scale));
-  transform-origin: left top;
+  transform-origin: left bottom;
 }
 
 .audioflume-home-reference-feature-pair-card.is-artists h2 > span {
