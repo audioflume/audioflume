@@ -322,6 +322,18 @@ export default async function PricingPage() {
         </div>
 
         <section className="audioflume-pricing-lifetime">
+          <Image
+            src="https://images.filmwave.io/images/pricing/andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"
+            alt=""
+            fill
+            sizes="(max-width: 980px) 100vw, 100vw"
+            className="audioflume-pricing-lifetime-background"
+            aria-hidden="true"
+          />
+          <span
+            className="audioflume-pricing-lifetime-overlay"
+            aria-hidden="true"
+          />
           <div className="audioflume-pricing-lifetime-copy">
             <div className="audioflume-pricing-lifetime-title">
               <span>Lifetime Access to</span>

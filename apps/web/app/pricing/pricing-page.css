@@ -195,15 +195,36 @@
 }
 
 .audioflume-pricing-lifetime {
+  position: relative;
   display: grid;
   grid-template-columns: minmax(280px, 1.05fr) minmax(430px, 1.15fr) minmax(220px, 0.72fr);
   align-items: center;
   gap: clamp(36px, 4vw, 72px);
   min-height: 225px;
   margin-top: 20px;
+  overflow: hidden;
   background: #111111;
   padding: clamp(34px, 3.4vw, 52px);
   color: #ffffff;
+}
+
+.audioflume-pricing-lifetime-background {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.audioflume-pricing-lifetime-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(17, 17, 17, 0.58);
+  pointer-events: none;
+}
+
+.audioflume-pricing-lifetime > :not(.audioflume-pricing-lifetime-background):not(.audioflume-pricing-lifetime-overlay) {
+  position: relative;
+  z-index: 2;
 }
 
 .audioflume-pricing-lifetime-copy {
