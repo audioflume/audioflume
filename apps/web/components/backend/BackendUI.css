@@ -81,7 +81,7 @@ main:has(> aside[class*="admin-sidebar-width"])
 
 .filmwave-backend-section {
   overflow: hidden;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: var(--filmwave-backend-section-radius);
   background: var(--bg-primary);
 }
@@ -92,7 +92,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  border-bottom: 1.5px solid var(--border-subtle);
+  border-bottom: 1.25px solid var(--border-subtle);
   padding: 16px 20px;
 }
 
@@ -126,7 +126,7 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-backend-button-primary {
-  border: 1.5px solid var(--text-primary);
+  border: 1.25px solid var(--text-primary);
   background: var(--text-primary);
   color: var(--bg-primary);
 }
@@ -136,7 +136,7 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-backend-button-secondary {
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   background: var(--bg-primary);
   color: var(--text-secondary);
 }
@@ -146,7 +146,7 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-backend-button-secondary-danger {
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   background: var(--bg-primary);
   color: var(--danger);
 }
@@ -158,7 +158,7 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-backend-button-danger {
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   background: var(--bg-primary);
   color: var(--danger);
 }
@@ -192,7 +192,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   box-sizing: border-box;
   width: 100%;
   height: var(--filmwave-backend-control-height);
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: var(--filmwave-backend-control-radius);
   background: var(--bg-primary);
   padding: 0 12px;
@@ -251,7 +251,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   box-sizing: border-box;
   width: 100%;
   resize: vertical;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: var(--filmwave-backend-control-radius);
   background: var(--bg-primary);
   padding: 10px 12px;
@@ -269,7 +269,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 999px;
   background: transparent;
   padding: 0 10px;

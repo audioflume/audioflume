@@ -16,7 +16,7 @@ export default function BackendPageHeader({
   return (
     <div
       className={`flex min-h-12 items-center justify-between gap-4 ${
-        compact ? "mb-3" : "mb-8 border-b-[1.5px] border-[var(--border)] pb-4"
+        compact ? "mb-3" : "mb-8 border-b-[1.25px] border-[var(--border)] pb-4"
       }`}
     >
       <div className="text-xs text-[var(--text-muted)]">

@@ -111,7 +111,7 @@ export default function BackendArtworkUpload({
             type="button"
             disabled={disabled}
             onClick={() => inputRef.current?.click()}
-            className="mt-1 h-9 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
+            className="mt-1 h-9 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50"
             style={{ width: compactSize }}
           >
             Choose image
@@ -154,7 +154,7 @@ export default function BackendArtworkUpload({
               onClick={() => inputRef.current?.click()}
               onDrop={handleDrop}
               onDragOver={(event) => event.preventDefault()}
-              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[14px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] transition hover:border-[var(--border-hover)] disabled:cursor-not-allowed disabled:opacity-60"
             >
               <img
                 src={previewUrl}
@@ -171,7 +171,7 @@ export default function BackendArtworkUpload({
             onClick={() => inputRef.current?.click()}
             onDrop={handleDrop}
             onDragOver={(event) => event.preventDefault()}
-            className="group mt-1 flex cursor-pointer items-center justify-center gap-3 rounded-[14px] border-[1.5px] border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+            className="group mt-1 flex cursor-pointer items-center justify-center gap-3 rounded-[14px] border-[1.25px] border-dashed border-[var(--border)] bg-[var(--bg-primary)] px-3 transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
             style={{ minHeight: compactSize }}
           >
             <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-hover:bg-[var(--bg-primary)]">
@@ -194,7 +194,7 @@ export default function BackendArtworkUpload({
   }
 
   return (
-    <section className="w-full rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-5">
+    <section className="w-full rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-5">
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
           {title}
@@ -215,7 +215,7 @@ export default function BackendArtworkUpload({
               onClick={() => inputRef.current?.click()}
               onDrop={handleDrop}
               onDragOver={(event) => event.preventDefault()}
-              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
               aria-label={`Replace ${title.toLowerCase()}`}
             >
               <img
@@ -242,7 +242,7 @@ export default function BackendArtworkUpload({
                 type="button"
                 disabled={disabled}
                 onClick={() => inputRef.current?.click()}
-                className="h-9 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                className="h-9 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
               >
                 Change image
               </button>
@@ -251,7 +251,7 @@ export default function BackendArtworkUpload({
                   type="button"
                   disabled={disabled}
                   onClick={onRemove}
-                  className="h-9 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
+                  className="h-9 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 text-[11px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)] disabled:opacity-50"
                 >
                   Remove image
                 </button>
@@ -266,7 +266,7 @@ export default function BackendArtworkUpload({
           onClick={() => inputRef.current?.click()}
           onDrop={handleDrop}
           onDragOver={(event) => event.preventDefault()}
-          className="group flex min-h-[180px] w-full cursor-pointer items-center justify-center gap-4 rounded-[10px] border-[1.5px] border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-5 text-left transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="group flex min-h-[180px] w-full cursor-pointer items-center justify-center gap-4 rounded-[10px] border-[1.25px] border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-5 text-left transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[10px] bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-hover:bg-[var(--bg-primary)]">
             <UploadIcon size={18} />
