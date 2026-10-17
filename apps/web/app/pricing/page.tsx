@@ -321,8 +321,14 @@ export default async function PricingPage() {
           })}
         </div>
 
-        <section className="audioflume-pricing-lifetime">
-          <Image
+        <section className="audioflume-pricing-lifetime-section">
+          <div className="audioflume-pricing-comparison-heading">
+            <span>Lifetime Originals</span>
+            <Link href="/music?artist=Audioflume">Explore Original Music</Link>
+          </div>
+
+          <div className="audioflume-pricing-lifetime">
+            <Image
             src="https://images.filmwave.io/images/pricing/andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"
             alt=""
             fill
@@ -371,6 +377,7 @@ export default async function PricingPage() {
             >
               {membershipLabel}
             </Link>
+          </div>
           </div>
         </section>
 

@@ -194,6 +194,10 @@
   opacity: 1 !important;
 }
 
+.audioflume-pricing-lifetime-section {
+  margin-top: 72px;
+}
+
 .audioflume-pricing-lifetime {
   position: relative;
   display: grid;
@@ -201,7 +205,7 @@
   align-items: center;
   gap: clamp(36px, 4vw, 72px);
   min-height: 225px;
-  margin-top: 20px;
+  margin-top: 0;
   overflow: hidden;
   background: #111111;
   padding: clamp(34px, 3.4vw, 52px);
