@@ -307,7 +307,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   height: var(--fw-music-secondary-row-height) !important;
   margin-right: calc(var(--fw-music-content-inset-right) * -1) !important;
   margin-left: calc(var(--fw-music-content-inset-right) * -1) !important;
-  border-bottom: 1.25px solid var(--border) !important;
+  border-bottom: var(--filmwave-border-width) solid var(--border) !important;
   background: var(--bg-primary) !important;
   padding: 0 !important;
   transform: none !important;
@@ -326,7 +326,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   height: 100% !important;
   min-height: 0 !important;
   border: 0 !important;
-  border-right: 1.25px solid var(--border) !important;
+  border-right: var(--filmwave-border-width) solid var(--border) !important;
   border-radius: 0 !important;
   background: transparent !important;
   background-color: transparent !important;
@@ -660,7 +660,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   > .fw-music-content-column
   > .fw-toolbar-sticky {
   --fw-music-secondary-row-height: 50px !important;
-  grid-template-columns: calc(var(--filmwave-side-filter-rail-width) + 1.25px) minmax(0, 1fr) !important;
+  grid-template-columns: calc(var(--filmwave-side-filter-rail-width) + var(--filmwave-border-width)) minmax(0, 1fr) !important;
   height: 50px !important;
 }
 

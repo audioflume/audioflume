@@ -17,7 +17,7 @@
   height: var(--fw-header-search-shell-height) !important;
   min-height: var(--fw-header-search-shell-height) !important;
   margin: 0 !important;
-  border-bottom: 1.25px solid var(--border) !important;
+  border-bottom: var(--filmwave-border-width) solid var(--border) !important;
   background: var(--bg-primary) !important;
   padding: 0 var(--fw-header-search-shell-padding-right) 0 var(--fw-header-search-shell-padding-left) !important;
   transform: none !important;

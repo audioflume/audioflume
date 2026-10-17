@@ -32,6 +32,7 @@
   --filmwave-square-icon-hover-bg: var(--filmwave-neutral-surface);
   --icon-button-hover: var(--filmwave-neutral-surface);
 
+  --filmwave-border-width: 1.25px;
   --divider: var(--filmwave-border-color);
   --border: var(--filmwave-border-color);
   --border-subtle: var(--filmwave-border-color);

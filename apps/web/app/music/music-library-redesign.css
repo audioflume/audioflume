@@ -18,7 +18,7 @@
     300px;
   align-items: stretch;
   transition: grid-template-columns 180ms ease;
-  border-bottom: 1.25px solid var(--border);
+  border-bottom: var(--filmwave-border-width) solid var(--border);
   background: var(--bg-primary);
   color: var(--text-primary);
   overscroll-behavior: none;
@@ -41,7 +41,7 @@
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters {
   gap: 18px;
   border: 0;
-  border-right: 1.25px solid var(--border);
+  border-right: var(--filmwave-border-width) solid var(--border);
   background: transparent;
   padding: 0 30px;
   color: var(--text-primary);
