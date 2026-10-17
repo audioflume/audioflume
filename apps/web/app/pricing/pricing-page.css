@@ -216,14 +216,14 @@
 .audioflume-pricing-lifetime-title {
   display: grid;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(26px, 2.2vw, 30px);
-  font-weight: 300;
+  font-size: clamp(29px, 2.45vw, 34px);
+  font-weight: 200;
   letter-spacing: -0.035em;
   line-height: 0.95;
 }
 
 .audioflume-pricing-lifetime-title strong {
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-description {
@@ -278,9 +278,21 @@
 }
 
 .audioflume-pricing-lifetime-price-group.is-regular .audioflume-pricing-plan-price strong {
-  color: rgba(255, 255, 255, 0.82);
-  text-decoration: line-through;
-  text-decoration-thickness: 2px;
+  position: relative;
+  color: #e5e5dd;
+  text-decoration: none;
+}
+
+.audioflume-pricing-lifetime-price-group.is-regular .audioflume-pricing-plan-price strong::after {
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  left: -8px;
+  height: 2px;
+  background: #e5e5dd;
+  content: "";
+  transform: translateY(-50%);
+  pointer-events: none;
 }
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-price span {
@@ -296,6 +308,8 @@
 
 .audioflume-pricing-lifetime-action {
   display: flex;
+  align-self: stretch;
+  align-items: flex-end;
   justify-content: flex-end;
 }
 
