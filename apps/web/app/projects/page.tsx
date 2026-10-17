@@ -704,13 +704,13 @@ export default function ProjectsPage() {
         }
 
         .project-grid-card {
-          border: 1.5px solid var(--border);
+          border: 1.25px solid var(--border);
         }
         .project-grid-card:hover {
           background: var(--bg-hover);
         }
         .project-grid-create-card {
-          border: 1.5px dashed var(--border);
+          border: 1.25px dashed var(--border);
           border-radius: 0;
           background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%);
         }
@@ -869,8 +869,8 @@ export default function ProjectsPage() {
           }
         }
         .projects-empty-space { flex: 1 1 auto; display: flex; min-height: 340px; align-items: center; justify-content: center; }
-        .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 12px; border-top: 1.5px solid var(--border-subtle); }
-        .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) 12px minmax(84px, 120px) 32px; column-gap: 14px; align-items: center; border-bottom: 1.5px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
+        .projects-list { display: flex; flex: 0 0 auto; flex-direction: column; margin-top: 12px; border-top: 1.25px solid var(--border-subtle); }
+        .projects-row { display: grid; min-height: 72px; grid-template-columns: minmax(0, 1fr) 12px minmax(84px, 120px) 32px; column-gap: 14px; align-items: center; border-bottom: 1.25px solid var(--border-subtle); background: transparent; color: inherit; padding: 0 18px; transition: background 0.15s ease, color 0.15s ease; }
         .projects-row:hover { background: var(--bg-hover); }
         .projects-row-link { display: grid; min-width: 0; min-height: 72px; grid-template-columns: 62px minmax(180px, 1fr); align-items: center; color: inherit; text-decoration: none; }
         .projects-row-link-static { cursor: default; }
@@ -880,7 +880,7 @@ export default function ProjectsPage() {
         .projects-row-main > span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; color: var(--text-primary); }
         .projects-row-main small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin: 2px 0 0; font-size: 11.5px; line-height: 1.35; color: var(--text-subtle); }
         .projects-row-rename { display: flex; min-width: 0; align-items: center; }
-        .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1.5px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 500; outline: none; }
+        .projects-row-rename-input { box-sizing: border-box; width: min(360px, 100%); min-width: 0; height: 32px; border: 1.25px solid var(--border); border-radius: 0; background: var(--bg-primary); padding: 0 10px; color: var(--text-primary); font-family: inherit; font-size: 13.5px; font-weight: 500; outline: none; }
         .projects-row-rename-input:focus { border-color: var(--text-primary); }
         .projects-row-archive-status { display: inline-flex; width: 12px; justify-self: end; align-items: center; justify-content: center; transform: translateX(12px); color: var(--text-muted); line-height: 0; }
         .projects-row-archive-icon { display: inline-flex; width: 12px; height: 13px; align-items: center; justify-content: center; color: inherit; line-height: 0; }
@@ -890,7 +890,7 @@ export default function ProjectsPage() {
         .projects-empty, .projects-error { display: flex; min-height: 280px; flex-direction: column; align-items: center; justify-content: center; gap: 8px; text-align: center; color: var(--text-secondary); }
         .projects-empty h2, .projects-error h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); }
         .projects-empty p, .projects-error p { max-width: 360px; font-size: 13px; line-height: 1.5; color: var(--text-muted); }
-        .projects-retry-button { height: 36px; border: 1.5px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 14px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; }
+        .projects-retry-button { height: 36px; border: 1.25px solid var(--text-primary); border-radius: 0; background: var(--text-primary); padding: 0 14px; color: var(--bg-primary); cursor: pointer; font-family: inherit; font-size: 12px; font-weight: 500; }
         .projects-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .projects-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: projects-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes projects-skeleton-shimmer { 100% { transform: translateX(100%); } }

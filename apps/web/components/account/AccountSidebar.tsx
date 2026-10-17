@@ -112,7 +112,7 @@ export default function AccountSidebar() {
   return (
     <BackendSidebarShell bottom={currentSong ? "64px" : "0px"}>
       <BackendSidebarScrollArea>
-        <div className="relative rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-3">
+        <div className="relative rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] p-3">
           <div className="flex items-center gap-3">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] bg-[var(--bg-tertiary)] text-[14px] font-medium text-[var(--text-secondary)]">
               {user?.imageUrl ? (

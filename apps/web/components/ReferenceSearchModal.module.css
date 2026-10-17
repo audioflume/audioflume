@@ -180,7 +180,7 @@
   align-items: center;
   gap: 12px;
   background: rgba(17, 17, 17, 0.94);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border: 1.25px solid rgba(255, 255, 255, 0.12);
   padding: 11px 14px;
 }
 
@@ -247,7 +247,7 @@
 .searchingSpinner {
   width: 18px;
   height: 18px;
-  border: 1.5px solid rgba(255, 255, 255, 0.22);
+  border: 1.25px solid rgba(255, 255, 255, 0.22);
   border-top-color: #ffffff;
   border-radius: 50%;
   animation: referenceSearchSpin 700ms linear infinite;
@@ -269,7 +269,7 @@
   overflow-y: auto;
   overscroll-behavior: contain;
   background: rgba(17, 17, 17, 0.98);
-  border: 1.5px solid rgba(255, 255, 255, 0.12);
+  border: 1.25px solid rgba(255, 255, 255, 0.12);
   box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
 }
 
@@ -288,7 +288,7 @@
   align-items: center;
   gap: 12px;
   border: 0;
-  border-bottom: 1.5px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1.25px solid rgba(255, 255, 255, 0.08);
   background: transparent;
   padding: 9px 12px;
   color: #ffffff;

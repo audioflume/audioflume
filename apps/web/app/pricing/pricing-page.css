@@ -325,7 +325,7 @@
   grid-template-columns: 13px minmax(0, 1fr);
   gap: 10px;
   padding: 11px 0;
-  border-top: 1.5px solid var(--border);
+  border-top: 1.25px solid var(--border);
   color: var(--text-secondary);
   font-size: 12px;
   font-weight: 300;
@@ -357,7 +357,7 @@
 }
 
 .audioflume-pricing-includes-list {
-  border-top: 1.5px solid var(--border);
+  border-top: 1.25px solid var(--border);
 }
 
 .audioflume-pricing-include-row {
@@ -365,7 +365,7 @@
   grid-template-columns: 40px minmax(150px, 0.45fr) minmax(0, 1fr);
   gap: 22px;
   padding: 24px 0;
-  border-bottom: 1.5px solid var(--border);
+  border-bottom: 1.25px solid var(--border);
 }
 
 .audioflume-pricing-include-number {
@@ -821,7 +821,7 @@
   align-items: center;
   gap: 10px;
   min-height: 39px;
-  border-top: 1.5px solid rgba(255, 255, 255, 0.24);
+  border-top: 1.25px solid rgba(255, 255, 255, 0.24);
 }
 
 .audioflume-pricing-plan-skeleton-features .is-dot {
@@ -856,7 +856,7 @@
   display: grid;
   grid-template-columns: 34% repeat(3, 22%);
   min-width: 820px;
-  border-bottom: 1.5px solid var(--border);
+  border-bottom: 1.25px solid var(--border);
 }
 
 .audioflume-pricing-comparison-skeleton-head > div {
@@ -869,7 +869,7 @@
 }
 
 .audioflume-pricing-comparison-skeleton-head .is-plan-head + .is-plan-head {
-  border-left: 1.5px solid var(--border);
+  border-left: 1.25px solid var(--border);
 }
 
 .audioflume-pricing-comparison-skeleton-head .is-plan-head {
@@ -914,7 +914,7 @@
   grid-template-columns: 34% repeat(3, 22%);
   min-height: 74px;
   align-items: center;
-  border-bottom: 1.5px solid var(--border);
+  border-bottom: 1.25px solid var(--border);
 }
 
 .audioflume-pricing-comparison-skeleton-rows .is-row:last-child {

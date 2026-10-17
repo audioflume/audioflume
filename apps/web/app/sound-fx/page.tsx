@@ -147,7 +147,7 @@ export default function SoundFxPage() {
           justify-content: center;
           padding: 2px 10px;
           cursor: pointer;
-          border: 1.5px solid transparent;
+          border: 1.25px solid transparent;
           border-radius: 999px;
           background: var(--filmwave-neutral-surface);
           color: rgba(255, 255, 255, 0.82);
