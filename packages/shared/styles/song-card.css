@@ -36,7 +36,7 @@
   align-items: center;
   gap: var(--filmwave-song-card-gap);
   overflow: visible;
-  border-bottom: 1.5px solid var(--border-subtle);
+  border-bottom: 1.25px solid var(--border-subtle);
   padding: var(--filmwave-song-card-padding-y)
     var(--filmwave-song-card-padding-right) var(--filmwave-song-card-padding-y)
     var(--filmwave-song-card-padding-left);
@@ -65,7 +65,7 @@ html[data-theme="light"]
 .filmwave-song-card.has-expanded-content {
   flex-wrap: wrap;
   row-gap: 0;
-  border: 1.5px solid var(--border-subtle);
+  border: 1.25px solid var(--border-subtle);
   padding-bottom: 0;
 }
 
@@ -212,7 +212,7 @@ html[data-theme="light"]
   cursor: pointer;
   align-items: center;
   justify-content: center;
-  border: 1.5px solid transparent;
+  border: 1.25px solid transparent;
   border-radius: var(--filmwave-song-card-action-radius);
   background: transparent;
   padding: 0;
@@ -351,7 +351,7 @@ html[data-theme="light"]
   min-width: 0;
   flex: 0 0 100%;
   margin-top: 10px;
-  border-top: 1.5px solid var(--border-subtle);
+  border-top: 1.25px solid var(--border-subtle);
 }
 
 .filmwave-song-stem-list {
@@ -365,7 +365,7 @@ html[data-theme="light"]
   min-height: 56px;
   align-items: center;
   gap: var(--filmwave-song-card-gap);
-  border-bottom: 1.5px solid var(--border-subtle);
+  border-bottom: 1.25px solid var(--border-subtle);
   padding: 8px 0;
   transition: background 140ms ease;
 }
@@ -486,7 +486,7 @@ html[data-theme="light"]
   align-items: center;
   white-space: nowrap;
   transform: translate(-50%, 4px);
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 999px;
   background: var(--bg-primary);
   padding: 4px 10px;

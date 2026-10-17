@@ -140,7 +140,7 @@ html:not(.light):not([data-theme="light"]) .fw-toolbar-sticky > .fw-toolbar-floa
 
 .desktop-app-sidebar-inner > .desktop-sidebar-section:first-child {
   padding-bottom: var(--filmwave-sidebar-section-gap);
-  border-bottom: 1.5px solid var(--border-subtle);
+  border-bottom: 1.25px solid var(--border-subtle);
 }
 
 /* Remove the filter trigger from the header searchbar while filters live in the side layout. */

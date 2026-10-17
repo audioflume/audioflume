@@ -62,7 +62,7 @@
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  border-right: 1.5px solid var(--filmwave-border-color);
+  border-right: 1.25px solid var(--filmwave-border-color);
   border-radius: 0;
   background: var(--bg-primary);
   background-image: none;
@@ -496,7 +496,7 @@ body.sidebar-collapsed .desktop-sidebar-empty-projects {
 }
 
 .desktop-sidebar-tooltip-inner {
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 999px;
   background: var(--bg-secondary);
   color: var(--text-primary);
