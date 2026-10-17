@@ -356,7 +356,7 @@ export default async function PricingPage() {
               <strong>Audioflume Originals</strong>
             </div>
             <p className="audioflume-pricing-plan-description">
-              One payment for lifetime access to Audioflume Originals — not the full subscription catalogue. Licensed for commercial work and clients up to 100 employees.
+              Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees.
             </p>
           </div>
 
