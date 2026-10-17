@@ -195,7 +195,7 @@
 }
 
 .audioflume-pricing-lifetime-section {
-  margin-top: 72px;
+  margin-top: 48px;
 }
 
 .audioflume-pricing-lifetime {
@@ -204,17 +204,16 @@
   grid-template-columns: minmax(280px, 1.05fr) minmax(430px, 1.15fr) minmax(220px, 0.72fr);
   align-items: center;
   gap: clamp(36px, 4vw, 72px);
-  min-height: 225px;
+  min-height: 0;
   margin-top: 0;
-  padding: clamp(34px, 3.4vw, 52px) 0;
+  padding: clamp(22px, 2.2vw, 34px) 0;
   color: var(--text-primary);
 }
 
 .audioflume-pricing-lifetime-copy {
-  align-self: stretch;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  justify-content: center;
 }
 
 .audioflume-pricing-lifetime-title {
@@ -232,12 +231,13 @@
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-description {
   min-height: 0;
-  margin: 28px 0 0;
+  margin: 22px 0 0;
   color: var(--text-secondary);
 }
 
 .audioflume-pricing-lifetime-offer {
   min-width: 0;
+  align-self: center;
 }
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-name {
@@ -312,9 +312,10 @@
 
 .audioflume-pricing-lifetime-action {
   display: flex;
-  align-self: stretch;
-  align-items: flex-end;
+  align-self: center;
+  align-items: center;
   justify-content: flex-end;
+  width: 100%;
 }
 
 .audioflume-pricing-lifetime-action > a {
@@ -335,7 +336,7 @@
 }
 
 .audioflume-pricing-comparison-section {
-  margin-top: 72px;
+  margin-top: 48px;
 }
 
 .audioflume-pricing-comparison-heading {
