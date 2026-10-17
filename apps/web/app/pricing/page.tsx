@@ -238,6 +238,10 @@ export default async function PricingPage() {
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get started";
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
+  const pricingPlanImages = pricingHeroImages.filter(
+    (image) =>
+      !image.includes("andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"),
+  );
 
   return (
     <main className="audioflume-pricing-page-root">
@@ -262,8 +266,8 @@ export default async function PricingPage() {
             const planImage =
               plan.name === "Enterprise"
                 ? "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg"
-                : pricingHeroImages[index] ??
-                  pricingHeroImages[0] ??
+                : pricingPlanImages[index] ??
+                  pricingPlanImages[0] ??
                   DEFAULT_PRICING_HERO_IMAGE;
 
             return (
