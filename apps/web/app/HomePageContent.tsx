@@ -741,7 +741,7 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-width">
           <MusicListShell title={null}>
             {recentSongs.map((song) => (
-              <SongCard key={song.id} song={song} />
+              <SongCard key={song.id} song={song} showDivider={false} />
             ))}
           </MusicListShell>
         </div>
