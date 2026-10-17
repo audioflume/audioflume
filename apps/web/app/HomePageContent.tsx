@@ -664,7 +664,12 @@ export default function HomePageContent({
 
       <section className="audioflume-home-reference-feature-pair">
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-intro">
-          A growing catalogue built around cinematic storytelling
+          <div className="audioflume-home-reference-feature-pair-intro-copy">
+            A growing catalogue built around cinematic storytelling
+          </div>
+          <div className="audioflume-home-reference-feature-pair-intro-meta">
+            1500+ ARTISTS TRENDING ONLINE
+          </div>
         </div>
 
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">

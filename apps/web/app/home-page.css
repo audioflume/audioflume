@@ -701,15 +701,34 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-intro {
-  width: 450px;
-  max-width: calc(100vw - 160px);
+  display: flex;
+  width: calc(100vw - 160px);
+  max-width: none;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
   margin-bottom: 32px;
   color: var(--text-primary);
+}
+
+.audioflume-home-reference-feature-pair-intro-copy {
+  width: 450px;
+  max-width: 100%;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 36px;
   font-weight: 300;
   letter-spacing: -0.035em;
   line-height: 1.04;
+}
+
+.audioflume-home-reference-feature-pair-intro-meta {
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-align: right;
+  text-transform: uppercase;
 }
 
 .audioflume-home-reference-feature-pair-grid {
