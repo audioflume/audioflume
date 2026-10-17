@@ -96,7 +96,7 @@ function SortableSongRow({
         zIndex: isDragging ? 1 : "auto",
         borderRadius: 7,
       }}
-      className="flex items-center gap-3 rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-2"
+      className="flex items-center gap-3 rounded-xl border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-2"
     >
       <BackendDragHandle
         aria-label={`Drag to reorder ${song.title}`}
@@ -159,7 +159,7 @@ function DragOverlaySongRow({ song }: { song: CuratedPlaylistSong }) {
   return (
     <div
       style={{ borderRadius: 7 }}
-      className="flex items-center gap-3 rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-2 shadow-xl"
+      className="flex items-center gap-3 rounded-xl border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-2 shadow-xl"
     >
       <div className="flex h-10 w-7 shrink-0 items-center justify-center text-[var(--text-muted)] opacity-40">
         <DragIconSmall />
@@ -550,7 +550,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   onChange={(e) =>
                     setName(toSmartTitleCaseInput(e.target.value))
                   }
-                  className="h-11 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Playlist Name"
                   required
                 />
@@ -559,7 +559,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                   aria-label="Kicker text"
                   value={kicker}
                   onChange={(e) => setKicker(e.target.value)}
-                  className="h-11 rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
+                  className="h-11 rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-sm text-[var(--text-primary)] outline-none transition focus:border-[var(--text-muted)]"
                   placeholder="Kicker Text"
                 />
               </div>
@@ -581,7 +581,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
                       onChange={() => toggleBrowseTag(filter.value)}
                       label={filter.label}
                       size="sm"
-                      className="w-full rounded-lg border-[1.5px] border-[var(--border)] px-3 text-[var(--text-secondary)]"
+                      className="w-full rounded-lg border-[1.25px] border-[var(--border)] px-3 text-[var(--text-secondary)]"
                     />
                   ))}
                 </div>
@@ -655,7 +655,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
         </div>
 
         <aside className="grid gap-6">
-          <div className="rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+          <div className="rounded-2xl border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <AdminImageUpload
               currentUrl={coverImageUrl}
               onUploaded={setCoverImageUrl}
@@ -665,7 +665,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
             />
           </div>
 
-          <div className="rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+          <div className="rounded-2xl border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
             <AdminVideoUpload
               currentUrl={coverVideoUrl}
               onUploaded={(url) => {
@@ -682,7 +682,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
       </form>
 
       {mode === "edit" && (
-        <section className="mt-6 rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+        <section className="mt-6 rounded-2xl border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
           <div className="mb-4 flex items-end justify-between gap-4">
             <div>
               <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-2xl font-medium tracking-[-0.05em]">
@@ -695,7 +695,7 @@ export default function AdminCuratedPlaylistForm({ mode, playlistId }: Props) {
           </div>
 
           {songs.length === 0 ? (
-            <div className="rounded-xl border-[1.5px] border-dashed border-[var(--border)] p-6 text-sm font-normal leading-5 text-[var(--text-secondary)]">
+            <div className="rounded-xl border-[1.25px] border-dashed border-[var(--border)] p-6 text-sm font-normal leading-5 text-[var(--text-secondary)]">
               No songs yet. Open a song in the admin music player and choose Add
               to Playlist.
             </div>

@@ -219,7 +219,7 @@ function SortableGroupRow({
 
 function GroupDragOverlayRow({ group }: { group: CuratedPlaylistGroup }) {
   return (
-    <div className="flex items-center rounded-lg border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] shadow-xl">
+    <div className="flex items-center rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] shadow-xl">
       <div className="flex items-center px-3 py-2.5 text-[var(--text-muted)] opacity-40">
         <DragIconSmall />
       </div>
@@ -430,8 +430,8 @@ export default function AdminPlaylistGroupManager({
   if (embedded) {
     return (
       <>
-        <div className="overflow-hidden rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)]">
-          <div className="flex h-[58px] items-center justify-between border-b-[1.5px] border-[var(--border)] px-4">
+        <div className="overflow-hidden rounded-xl border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)]">
+          <div className="flex h-[58px] items-center justify-between border-b-[1.25px] border-[var(--border)] px-4">
             <div>
               <h2 className="text-sm font-medium text-[var(--text-primary)]">Playlist Groups</h2>
               <p className="mt-0.5 text-[11px] text-[var(--text-secondary)]">
@@ -514,7 +514,7 @@ export default function AdminPlaylistGroupManager({
 
   return (
     <>
-      <section className="rounded-2xl border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
+      <section className="rounded-2xl border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] p-5">
         <div className="mb-5 flex items-start justify-between gap-4">
           <div>
             <div className="text-[11px] font-medium uppercase tracking-[0.12em] text-[var(--text-muted)]">Groups</div>
@@ -536,11 +536,11 @@ export default function AdminPlaylistGroupManager({
         )}
 
         {!loading && error && (
-          <div className="rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--danger)]">{error}</div>
+          <div className="rounded-xl border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--danger)]">{error}</div>
         )}
 
         {!loading && !error && sortedGroups.length === 0 && (
-          <div className="rounded-xl border-[1.5px] border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--text-secondary)]">No groups yet.</div>
+          <div className="rounded-xl border-[1.25px] border-dashed border-[var(--border)] bg-[var(--bg-primary)] p-4 text-sm text-[var(--text-secondary)]">No groups yet.</div>
         )}
 
         {!loading && !error && sortedGroups.length > 0 && (
@@ -549,7 +549,7 @@ export default function AdminPlaylistGroupManager({
               const saving = savingGroupId === group.id;
               const isDefaultGroup = group.name === DEFAULT_CURATED_PLAYLIST_GROUP;
               return (
-                <div key={group.id} className="flex items-center gap-3 rounded-xl border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] p-2">
+                <div key={group.id} className="flex items-center gap-3 rounded-xl border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-2">
                   <div className="min-w-0 flex-1">
                     <div className="truncate text-sm font-medium text-[var(--text-primary)]">{group.name}</div>
                     <div className="mt-0.5 text-xs text-[var(--text-muted)]">

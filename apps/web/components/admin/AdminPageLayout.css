@@ -123,7 +123,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   > aside
   > .admin-song-form-card:last-child
   > .admin-song-form-card-header {
-  border-bottom: 1.5px solid var(--border-subtle);
+  border-bottom: 1.25px solid var(--border-subtle);
 }
 
 .admin-song-upload-content-page .admin-song-form-kicker {
@@ -241,7 +241,7 @@ main.filmwave-admin-content-page.admin-song-upload-content-page
   width: 16px;
   height: 16px;
   flex: 0 0 16px;
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 4px;
   background: var(--bg-secondary);
   color: var(--bg-primary);
@@ -350,7 +350,7 @@ main.filmwave-admin-content-page.admin-song-upload-content-page
   + div
   > div[class*="md:grid-cols-2"]
   > div {
-  border: 1.5px solid var(--border);
+  border: 1.25px solid var(--border);
   border-radius: 0;
   background: var(--bg-primary);
   padding: 20px var(--admin-song-card-x) var(--admin-song-card-bottom);
