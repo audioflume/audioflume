@@ -25,7 +25,7 @@ export default function ArtistApplyPage() {
           className="absolute inset-y-0 right-0 w-1/2 bg-cover bg-center bg-no-repeat"
           style={{
             backgroundImage:
-              'url("https://images.filmwave.io/images/artist-applications/user_3DEgyNMhV52UyLDrFfXqO4BBTPS/Artist%20Signup%202.png")',
+              'url("https://images.filmwave.io/images/artist-signup/soundtrap-7pAguituFGo-unsplash-web.jpg")',
           }}
         />
 
