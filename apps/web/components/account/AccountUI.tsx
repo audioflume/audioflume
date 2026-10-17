@@ -141,7 +141,7 @@ export function Input({ label, value, placeholder, onChange, readOnly = false, t
 
 export function Info({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-[var(--filmwave-backend-control-radius)] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 py-3">
+    <div className="rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-3.5 py-3">
       <div className="text-[11px] font-normal text-[var(--text-secondary)]">{label}</div>
       <div className="mt-1 truncate text-[12px] font-medium text-[var(--text-primary)]">{value}</div>
     </div>
@@ -184,9 +184,9 @@ export function Option<T extends string>({ label, value, active, onClick }: { la
 
 export function Row({ title, description, icon, children }: { title: string; description: string; icon?: React.ReactNode; children: React.ReactNode }) {
   return (
-    <div className="grid gap-4 border-b-[1.5px] border-[var(--border-subtle)] px-5 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
+    <div className="grid gap-4 border-b-[1.25px] border-[var(--border-subtle)] px-5 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
       <div className="flex gap-3">
-        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)]">{icon}</div> : null}
+        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)]">{icon}</div> : null}
         <div>
           <div className="text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</div>
           <p className="mt-1 max-w-xl text-xs leading-5 text-[var(--text-muted)]">{description}</p>
@@ -199,7 +199,7 @@ export function Row({ title, description, icon, children }: { title: string; des
 
 export function Feedback({ message, tone }: { message: string; tone: "success" | "error" }) {
   return (
-    <div className={`rounded-[7px] border-[1.5px] px-3 py-2 text-xs ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
+    <div className={`rounded-[7px] border-[1.25px] px-3 py-2 text-xs ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
       {message}
     </div>
   );
@@ -223,7 +223,7 @@ export function AccountHero({ config }: { config: HeroConfig }) {
 export function VisualPanel({ image, index }: { image?: string; index?: number }) {
   const src = image || supportImages[(index || 0) % supportImages.length];
   return (
-    <div className="relative h-32 overflow-hidden border-b-[1.5px] border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
+    <div className="relative h-32 overflow-hidden border-b-[1.25px] border-[var(--border-subtle)] bg-[var(--bg-secondary)]">
       <img src={src} alt="" className="h-full w-full object-cover opacity-80 transition duration-500 group-hover:opacity-100" />
       <div className="absolute inset-0 bg-[linear-gradient(180deg,transparent,rgba(0,0,0,0.16))]" />
     </div>
@@ -252,10 +252,10 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
 
   return (
     <div className="flex flex-col items-start gap-2">
-      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
+      <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
         <span className="absolute inset-0 overflow-hidden rounded-[10px]">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
         {!value ? <span>{initials || "A"}</span> : null}
-        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] opacity-0 shadow-sm transition group-hover:opacity-100 group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
+        <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] opacity-0 shadow-sm transition group-hover:opacity-100 group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
       </label>
     </div>

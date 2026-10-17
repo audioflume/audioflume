@@ -106,14 +106,14 @@ function ActivityChart({ timeline }: { timeline: ArtistAnalyticsTimelinePoint[] 
 
   if (!hasActivity) {
     return (
-      <div className="flex h-[220px] items-center justify-center border-t-[1.5px] border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
+      <div className="flex h-[220px] items-center justify-center border-t-[1.25px] border-[var(--border-subtle)] text-xs text-[var(--text-muted)]">
         No engagement activity in this period yet.
       </div>
     );
   }
 
   return (
-    <div className="border-t-[1.5px] border-[var(--border-subtle)] px-5 pb-4 pt-5">
+    <div className="border-t-[1.25px] border-[var(--border-subtle)] px-5 pb-4 pt-5">
       <div className="h-[200px] w-full text-[var(--text-primary)]">
         <svg
           viewBox="0 0 1000 210"
@@ -308,7 +308,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
               key={metric.label}
               className={`px-5 py-4 ${
                 index < periodMetrics.length - 1
-                  ? "border-b-[1.5px] border-[var(--border-subtle)] sm:border-b-0 sm:border-r-[1.5px]"
+                  ? "border-b-[1.25px] border-[var(--border-subtle)] sm:border-b-0 sm:border-r-[1.25px]"
                   : ""
               }`}
             >
@@ -324,7 +324,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
 
         <ActivityChart timeline={timeline} />
 
-        <div className="border-t-[1.5px] border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
+        <div className="border-t-[1.25px] border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
           Downloads are currently reported as all-time totals. The activity chart
           uses timestamped saves, playlist adds, and project adds.
         </div>
@@ -345,7 +345,7 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
         ) : (
           <div className="overflow-x-auto">
             <div className="min-w-[720px]">
-              <div className="grid grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center border-b-[1.5px] border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
+              <div className="grid grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center border-b-[1.25px] border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
                 <span>Track</span>
                 <span className="text-right">Downloads</span>
                 <span className="text-right">Saves</span>
@@ -358,12 +358,12 @@ export default function ArtistAnalytics({ artistId }: { artistId: string }) {
                   key={track.id}
                   className={`grid min-h-[68px] grid-cols-[minmax(250px,1fr)_90px_90px_110px_110px] items-center px-5 py-2 ${
                     index < tracks.length - 1
-                      ? "border-b-[1.5px] border-[var(--border-subtle)]"
+                      ? "border-b-[1.25px] border-[var(--border-subtle)]"
                       : ""
                   }`}
                 >
                   <div className="flex min-w-0 items-center gap-3 pr-4">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border-[1.5px] border-[var(--border)] bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-muted)]">
+                    <div className="flex h-11 w-11 shrink-0 items-center justify-center overflow-hidden rounded-[6px] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)] text-[11px] text-[var(--text-muted)]">
                       {track.cover_url ? (
                         <img
                           src={track.cover_url}

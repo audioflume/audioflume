@@ -131,20 +131,20 @@ export default function ProfileSection() {
           </h2>
         </div>
 
-        <dl className="border-t-[1.5px] border-[var(--border)]">
-          <div className="grid gap-1 border-b-[1.5px] border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
+        <dl className="border-t-[1.25px] border-[var(--border)]">
+          <div className="grid gap-1 border-b-[1.25px] border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
             <dt className="text-[12px] text-[var(--text-muted)]">Account type</dt>
             <dd className="text-[13px] font-medium text-[var(--text-primary)]">
               Audioflume Member
             </dd>
           </div>
-          <div className="grid gap-1 border-b-[1.5px] border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
+          <div className="grid gap-1 border-b-[1.25px] border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
             <dt className="text-[12px] text-[var(--text-muted)]">Company / studio</dt>
             <dd className="text-[13px] font-medium text-[var(--text-primary)]">
               {form.company_name || "Not set"}
             </dd>
           </div>
-          <div className="grid gap-1 border-b-[1.5px] border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
+          <div className="grid gap-1 border-b-[1.25px] border-[var(--border)] py-4 sm:grid-cols-[180px_1fr] sm:items-center">
             <dt className="text-[12px] text-[var(--text-muted)]">Member since</dt>
             <dd className="text-[13px] font-medium text-[var(--text-primary)]">
               {formatDate(profile?.created_at)}

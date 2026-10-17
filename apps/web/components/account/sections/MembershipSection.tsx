@@ -25,7 +25,7 @@ function PlanDetail({ label, value }: { label: string; value: string }) {
 
 function ActivePill() {
   return (
-    <div className="inline-flex items-center rounded-full border-[1.5px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
+    <div className="inline-flex items-center rounded-full border-[1.25px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
       Active
     </div>
   );
@@ -33,7 +33,7 @@ function ActivePill() {
 
 function CurrentPlanButton() {
   return (
-    <div className="filmwave-backend-button min-w-[122px] border-[1.5px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]">
+    <div className="filmwave-backend-button min-w-[122px] border-[1.25px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]">
       Current plan
     </div>
   );
@@ -68,12 +68,12 @@ export default function MembershipSection() {
               <div className="mt-1 text-xl font-medium tracking-[-0.02em] text-[var(--text-primary)]">
                 {currentPlanLabel}
               </div>
-              <div className="mt-3 inline-flex rounded-full border-[1.5px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
+              <div className="mt-3 inline-flex rounded-full border-[1.25px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
                 {display?.status_label || "Active"}
               </div>
             </div>
 
-            <div className="border-t-[1.5px] border-[var(--border)] pt-4 md:border-l-[1.5px] md:border-t-0 md:pl-4 md:pt-0">
+            <div className="border-t-[1.25px] border-[var(--border)] pt-4 md:border-l-[1.25px] md:border-t-0 md:pl-4 md:pt-0">
               <div className="text-xs font-medium text-[var(--text-muted)]">License</div>
               <div className="mt-1 text-sm font-medium leading-5 text-[var(--text-primary)]">{licenseLabel}</div>
               <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">
@@ -82,7 +82,7 @@ export default function MembershipSection() {
             </div>
           </div>
 
-          <div className="grid gap-4 border-t-[1.5px] border-[var(--border)] p-4 sm:grid-cols-2">
+          <div className="grid gap-4 border-t-[1.25px] border-[var(--border)] p-4 sm:grid-cols-2">
             <PlanDetail label="Renewal" value={display?.renewal_label || "Loading"} />
             <PlanDetail label="Downloads" value={display?.downloads_label || "Loading"} />
           </div>

@@ -102,7 +102,7 @@ export default function ArtistClaimPanel() {
 
       <div className="mt-5">
         {error ? (
-          <div className="mb-5 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3 text-[12px] text-[var(--text-primary)]">
+          <div className="mb-5 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-4 py-3 text-[12px] text-[var(--text-primary)]">
             {error}
           </div>
         ) : null}
@@ -112,7 +112,7 @@ export default function ArtistClaimPanel() {
             Loading artist invitation...
           </div>
         ) : invitations.length === 0 ? (
-          <div className="rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-6">
+          <div className="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 py-6">
             <div className="text-[12px] font-medium tracking-normal text-[var(--text-primary)]">
               No profile is waiting to be claimed.
             </div>
@@ -121,7 +121,7 @@ export default function ArtistClaimPanel() {
             </p>
             <a
               href="/artists/dashboard"
-              className="mt-5 inline-flex h-10 items-center justify-center rounded-none border-[1.5px] border-[var(--border)] px-4 text-[12px] font-normal text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
+              className="mt-5 inline-flex h-10 items-center justify-center rounded-none border-[1.25px] border-[var(--border)] px-4 text-[12px] font-normal text-[var(--text-primary)] transition hover:border-[var(--text-muted)]"
             >
               Go to Artist Dashboard
             </a>
@@ -134,7 +134,7 @@ export default function ArtistClaimPanel() {
               return (
                 <div
                   key={invitation.id}
-                  className="flex items-center gap-4 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] p-4"
+                  className="flex items-center gap-4 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] p-4"
                 >
                   <div className="h-16 w-16 shrink-0 overflow-hidden rounded-[7px] bg-[var(--bg-tertiary)]">
                     {invitation.artist.profile_image_url ? (
@@ -164,7 +164,7 @@ export default function ArtistClaimPanel() {
                     type="button"
                     disabled={Boolean(claimingId)}
                     onClick={() => void claimArtist(invitation)}
-                    className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-none border-[1.5px] border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-normal text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
+                    className="inline-flex h-10 shrink-0 cursor-pointer items-center justify-center rounded-none border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-normal text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
                   >
                     {claiming
                       ? invitation.ownership_transfer
