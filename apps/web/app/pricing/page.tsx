@@ -321,6 +321,47 @@ export default async function PricingPage() {
           })}
         </div>
 
+        <section className="audioflume-pricing-lifetime">
+          <div className="audioflume-pricing-lifetime-copy">
+            <div className="audioflume-pricing-lifetime-title">
+              <span>Lifetime Access to</span>
+              <strong>Audioflume Originals</strong>
+            </div>
+            <p className="audioflume-pricing-plan-description">
+              For active filmmakers and small teams who need more
+            </p>
+          </div>
+
+          <div className="audioflume-pricing-lifetime-offer">
+            <h2 className="audioflume-pricing-plan-name">Lifetime Access</h2>
+            <div className="audioflume-pricing-lifetime-pricing">
+              <div className="audioflume-pricing-lifetime-price-group is-regular">
+                <span className="audioflume-pricing-lifetime-badge">Regular price</span>
+                <div className="audioflume-pricing-plan-price">
+                  <strong>$199</strong>
+                </div>
+              </div>
+              <div className="audioflume-pricing-lifetime-price-group">
+                <span className="audioflume-pricing-lifetime-badge is-light">Limited time</span>
+                <div className="audioflume-pricing-plan-price">
+                  <strong>$99</strong>
+                  <span>One time payment</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="audioflume-pricing-lifetime-action">
+            <Link
+              href={membershipHref}
+              className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
+              style={{ fontSize: "14px", fontWeight: 400 }}
+            >
+              {membershipLabel}
+            </Link>
+          </div>
+        </section>
+
         <section className="audioflume-pricing-comparison-section">
           <div className="audioflume-pricing-comparison-heading">
             <span>Plan Comparison</span>
