@@ -78,27 +78,35 @@ const plans = [
   {
     name: "Starter",
     kicker: "Solo creators",
+    decisionLabel: "Occasional",
+    positioning: "For independent filmmakers.",
     price: "$15",
     priceDetail: "CAD / month",
     description:
       "For solo filmmakers licensing music and SFX for their own client work.",
-    features: [
-      "Full music + SFX catalogue",
+    primaryFeatures: [
       "Royalty-free commercial use",
       "Projects, playlists + favorites",
+    ],
+    includedFeatures: [
+      "Full music + SFX catalogue",
       "Desktop sync workflow",
     ],
   },
   {
     name: "Studio",
     kicker: "Active filmmakers",
+    decisionLabel: "Frequent",
+    positioning: "For frequent client work.",
     price: "$39",
     priceDetail: "CAD / month",
     description:
       "For active filmmakers and small teams handling more projects and client work.",
-    features: [
+    primaryFeatures: [
       "Expanded project coverage",
       "Small-team commercial licensing",
+    ],
+    includedFeatures: [
       "Full music + SFX catalogue",
       "Desktop sync workflow",
     ],
@@ -106,13 +114,17 @@ const plans = [
   {
     name: "Enterprise",
     kicker: "Larger teams",
+    decisionLabel: "Custom",
+    positioning: "For larger teams and custom licensing.",
     price: "Custom",
     priceDetail: "",
     description:
       "For agencies, publishers, and larger teams with high-volume or custom licensing needs.",
-    features: [
+    primaryFeatures: [
       "Higher-volume licensing",
       "Custom usage terms",
+    ],
+    includedFeatures: [
       "Larger team coverage",
       "Direct licensing support",
     ],
@@ -260,6 +272,18 @@ export default async function PricingPage() {
           </p>
         </div>
 
+        <div className="audioflume-pricing-decision-guide">
+          <p>
+            Choose based on how often you license music and how many people
+            you&apos;re licensing for.
+          </p>
+          <div className="audioflume-pricing-decision-options" aria-hidden="true">
+            {plans.map((plan) => (
+              <span key={plan.name}>{plan.decisionLabel}</span>
+            ))}
+          </div>
+        </div>
+
         <div className="audioflume-pricing-plan-grid">
           {plans.map((plan, index) => {
             const isEnterprise = plan.name === "Enterprise";
@@ -275,7 +299,10 @@ export default async function PricingPage() {
                   DEFAULT_PRICING_HERO_IMAGE;
 
             return (
-              <article key={plan.name} className="audioflume-pricing-plan">
+              <article
+                key={plan.name}
+                className={`audioflume-pricing-plan${isRecommended ? " is-recommended" : ""}${isEnterprise ? " is-enterprise" : ""}`}
+              >
                 <Image
                   src={planImage}
                   alt=""
@@ -297,6 +324,9 @@ export default async function PricingPage() {
                   ) : null}
                 </div>
                 <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
+                <p className="audioflume-pricing-plan-positioning">
+                  {plan.positioning}
+                </p>
                 <p className="audioflume-pricing-plan-description">
                   {plan.description}
                 </p>
@@ -326,14 +356,35 @@ export default async function PricingPage() {
                   )}
                 </div>
 
-                <ul className="audioflume-pricing-plan-features">
-                  {plan.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
+                <div className="audioflume-pricing-plan-benefits">
+                  <div>
+                    <span className="audioflume-pricing-plan-benefits-label">
+                      Why choose this
+                    </span>
+                    <ul className="audioflume-pricing-plan-features is-primary">
+                      {plan.primaryFeatures.map((feature) => (
+                        <li key={feature}>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                  <div>
+                    <span className="audioflume-pricing-plan-benefits-label">
+                      Plan includes
+                    </span>
+                    <ul className="audioflume-pricing-plan-features">
+                      {plan.includedFeatures.map((feature) => (
+                        <li key={feature}>{feature}</li>
+                      ))}
+                    </ul>
+                  </div>
+                </div>
               </article>
             );
           })}
+        </div>
+
+        <div className="audioflume-pricing-plan-followup">
+          <a href="#plan-comparison">Compare plan details</a>
         </div>
 
         <section className="audioflume-pricing-lifetime-section">
@@ -351,6 +402,9 @@ export default async function PricingPage() {
             aria-hidden="true"
           />
           <div className="audioflume-pricing-lifetime-copy">
+            <span className="audioflume-pricing-lifetime-eyebrow">
+              Alternative purchase option
+            </span>
             <div className="audioflume-pricing-lifetime-title">
               <span>Lifetime Access to</span>
               <strong>Audioflume Originals</strong>
@@ -361,7 +415,7 @@ export default async function PricingPage() {
           </div>
 
           <div className="audioflume-pricing-lifetime-offer">
-            <h2 className="audioflume-pricing-plan-name">Lifetime Access</h2>
+            <h2 className="audioflume-pricing-plan-name">One-time purchase</h2>
             <div className="audioflume-pricing-lifetime-pricing">
               <div className="audioflume-pricing-lifetime-price-group is-regular">
                 <span className="audioflume-pricing-lifetime-badge">Regular price</span>
@@ -391,7 +445,10 @@ export default async function PricingPage() {
           </div>
         </section>
 
-        <section className="audioflume-pricing-comparison-section">
+        <section
+          id="plan-comparison"
+          className="audioflume-pricing-comparison-section"
+        >
           <div className="audioflume-pricing-comparison-heading">
             <span>Plan Comparison</span>
             <Link href="/artists/licensing">View licensing details</Link>
