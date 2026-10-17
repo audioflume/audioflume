@@ -1483,6 +1483,15 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   background: var(--bg-secondary);
 }
 
+.audioflume-home-reference-new-songs .filmwave-song-card {
+  width: calc(
+    100% + var(--filmwave-song-card-padding-left) +
+      var(--filmwave-song-card-padding-right)
+  );
+  margin-right: calc(-1 * var(--filmwave-song-card-padding-right));
+  margin-left: calc(-1 * var(--filmwave-song-card-padding-left));
+}
+
 .audioflume-home-skeleton-block {
   display: block;
   background: color-mix(in srgb, var(--text-primary) 7%, transparent);
