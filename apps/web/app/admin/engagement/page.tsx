@@ -340,7 +340,7 @@ function ActivityChart({ data }: { data: ActivityPoint[] }) {
   });
 
   return (
-    <div className="border-t-[1.5px] border-[var(--border-subtle)] px-5 pb-4 pt-5">
+    <div className="border-t-[1.25px] border-[var(--border-subtle)] px-5 pb-4 pt-5">
       <div className="relative h-[220px] w-full text-[var(--text-primary)]">
         <svg
           viewBox={`0 0 ${width} ${height}`}
@@ -434,7 +434,7 @@ function CompactListCard({
             key={item.label}
             className={`flex min-h-10 items-center justify-between gap-3 py-2 text-xs ${
               index < items.length - 1
-                ? "border-b-[1.5px] border-[var(--border-subtle)]"
+                ? "border-b-[1.25px] border-[var(--border-subtle)]"
                 : ""
             }`}
           >
@@ -469,7 +469,7 @@ function TopSongsCard({ songs }: { songs: SongRow[] }) {
 
       <div className="overflow-x-auto">
         <div className="min-w-[640px]">
-          <div className="grid grid-cols-[minmax(280px,1fr)_90px_100px_90px] items-center border-b-[1.5px] border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
+          <div className="grid grid-cols-[minmax(280px,1fr)_90px_100px_90px] items-center border-b-[1.25px] border-[var(--border-subtle)] px-5 py-3 text-[10px] font-medium text-[var(--text-secondary)]">
             <span>Track</span>
             <span className="text-right">Plays</span>
             <span className="text-right">Downloads</span>
@@ -481,7 +481,7 @@ function TopSongsCard({ songs }: { songs: SongRow[] }) {
               key={song.title}
               className={`grid min-h-[60px] grid-cols-[minmax(280px,1fr)_90px_100px_90px] items-center px-5 py-2 ${
                 index < songs.length - 1
-                  ? "border-b-[1.5px] border-[var(--border-subtle)]"
+                  ? "border-b-[1.25px] border-[var(--border-subtle)]"
                   : ""
               }`}
             >
@@ -565,7 +565,7 @@ export default function AdminEngagementPage() {
                 key={item.label}
                 className={`px-5 py-4 ${
                   index < data.funnel.length - 1
-                    ? "border-b-[1.5px] border-[var(--border-subtle)] sm:border-b-0 sm:border-r-[1.5px]"
+                    ? "border-b-[1.25px] border-[var(--border-subtle)] sm:border-b-0 sm:border-r-[1.25px]"
                     : ""
                 }`}
               >
@@ -581,7 +581,7 @@ export default function AdminEngagementPage() {
 
           <ActivityChart data={data.activity} />
 
-          <div className="border-t-[1.5px] border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
+          <div className="border-t-[1.25px] border-[var(--border-subtle)] px-5 py-3 text-[11px] leading-5 text-[var(--text-muted)]">
             Activity follows the same selected period as the summary metrics above.
           </div>
         </section>

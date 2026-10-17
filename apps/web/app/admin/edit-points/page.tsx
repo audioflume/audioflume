@@ -101,7 +101,7 @@ function SummaryRow({
   value: number | string;
 }) {
   return (
-    <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)]">
+    <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs text-[var(--text-secondary)]">
       <span>{label}</span>
       <span className="font-medium text-[var(--text-primary)]">{value}</span>
     </div>
@@ -231,7 +231,7 @@ export default function AdminEditPointsPage() {
           type="button"
           onClick={analyzeMissingEditPoints}
           disabled={isAnalyzing}
-          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border-[1.5px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition disabled:cursor-default disabled:opacity-50"
+          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition disabled:cursor-default disabled:opacity-50"
         >
           {isAnalyzing && (
             <LoadingSpinner size={13} stroke={11} color="currentColor" />
@@ -241,7 +241,7 @@ export default function AdminEditPointsPage() {
 
         <Link
           href="/admin/music-library?issue=editPoints"
-          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+          className="inline-flex h-10 min-w-[104px] items-center justify-center rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
         >
           View Missing
         </Link>
@@ -249,7 +249,7 @@ export default function AdminEditPointsPage() {
 
       <div className="grid gap-3 lg:grid-cols-[minmax(0,1fr)_320px]">
         <div className="grid content-start gap-3">
-          <section className="overflow-hidden rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]">
+          <section className="overflow-hidden rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)]">
             <div className="flex items-center justify-between gap-4 px-5 pb-3 pt-5">
               <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                 Batch Analyzer
@@ -262,7 +262,7 @@ export default function AdminEditPointsPage() {
             </div>
 
             <div className="px-5 pb-5">
-              <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border-[1.5px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs">
+              <div className="flex min-h-10 items-center justify-between gap-3 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-3 text-xs">
                 <span className="min-w-0 truncate text-[var(--text-secondary)]">
                   {isAnalyzing
                     ? currentSongTitle
@@ -301,7 +301,7 @@ export default function AdminEditPointsPage() {
           </section>
 
           {result && (
-            <section className="overflow-hidden rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]">
+            <section className="overflow-hidden rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)]">
               <div className="flex items-center justify-between gap-4 px-5 pb-3 pt-5">
                 <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
                   Recently Analyzed
@@ -312,11 +312,11 @@ export default function AdminEditPointsPage() {
               </div>
 
               {result.results.length === 0 ? (
-                <div className="flex min-h-[120px] items-center justify-center border-t-[1.5px] border-[var(--border-subtle)] px-5 text-xs text-[var(--text-secondary)]">
+                <div className="flex min-h-[120px] items-center justify-center border-t-[1.25px] border-[var(--border-subtle)] px-5 text-xs text-[var(--text-secondary)]">
                   No songs are missing cue points.
                 </div>
               ) : (
-                <div className="border-t-[1.5px] border-[var(--border-subtle)]">
+                <div className="border-t-[1.25px] border-[var(--border-subtle)]">
                   {result.results.map((item, index) => (
                     <div
                       key={item.songId}
@@ -350,7 +350,7 @@ export default function AdminEditPointsPage() {
 
                       <Link
                         href={`/admin/songs/${item.songId}/edit-points?from=edit-points`}
-                        className="inline-flex h-8 items-center justify-center rounded-[7px] border-[1.5px] border-[var(--border)] px-3 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
+                        className="inline-flex h-8 items-center justify-center rounded-[7px] border-[1.25px] border-[var(--border)] px-3 text-[12px] font-normal text-[var(--text-secondary)] transition hover:text-[var(--text-primary)]"
                       >
                         Review
                       </Link>
@@ -362,7 +362,7 @@ export default function AdminEditPointsPage() {
           )}
         </div>
 
-        <section className="h-fit overflow-hidden rounded-[10px] border-[1.5px] border-[var(--border)] bg-[var(--bg-primary)]">
+        <section className="h-fit overflow-hidden rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)]">
           <div className="px-5 pb-3 pt-5">
             <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium tracking-[-0.03em] text-[var(--text-primary)]">
               Run Summary
