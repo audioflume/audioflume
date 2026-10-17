@@ -390,7 +390,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin: 0 0 12px calc(50% - 50vw + 80px);
+  margin: 0 0 var(--filmwave-section-title-margin-bottom) calc(50% - 50vw + 80px);
   font-family: var(--filmwave-section-title-font-family);
   line-height: var(--filmwave-section-title-line-height);
 }
@@ -968,7 +968,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
 }
 
 .discover-track-section-heading > a {
