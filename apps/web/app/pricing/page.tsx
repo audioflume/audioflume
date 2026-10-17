@@ -81,7 +81,7 @@ const plans = [
     price: "$15",
     priceDetail: "CAD / month",
     description:
-      "Solo creators building a smaller library of client projects.",
+      "For solo filmmakers licensing music and SFX for their own client work.",
     features: [
       "Full music + SFX catalogue",
       "Royalty-free commercial use",
@@ -95,12 +95,12 @@ const plans = [
     price: "$39",
     priceDetail: "CAD / month",
     description:
-      "For active filmmakers and small teams who need more project coverage.",
+      "For active filmmakers and small teams handling more projects and client work.",
     features: [
+      "Expanded project coverage",
+      "Small-team commercial licensing",
       "Full music + SFX catalogue",
-      "Royalty-free commercial use",
-      "More project coverage",
-      "Built for active filmmakers + small teams",
+      "Desktop sync workflow",
     ],
   },
   {
@@ -109,12 +109,12 @@ const plans = [
     price: "Custom",
     priceDetail: "",
     description:
-      "For agencies, publishers, and teams with higher-volume licensing needs.",
+      "For agencies, publishers, and larger teams with high-volume or custom licensing needs.",
     features: [
-      "Music + SFX for larger teams",
-      "Higher-volume licensing needs",
+      "Higher-volume licensing",
       "Custom usage terms",
-      "Direct support for complex projects",
+      "Larger team coverage",
+      "Direct licensing support",
     ],
   },
 ] as const;
@@ -236,7 +236,7 @@ export default async function PricingPage() {
     getPricingHeroImages(),
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
-  const membershipLabel = userId ? "Manage membership" : "Get started";
+  const membershipLabel = userId ? "Manage membership" : "Get Lifetime Access";
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
   const pricingPlanImages = pricingHeroImages.filter(
     (image) =>
@@ -263,6 +263,10 @@ export default async function PricingPage() {
         <div className="audioflume-pricing-plan-grid">
           {plans.map((plan, index) => {
             const isEnterprise = plan.name === "Enterprise";
+            const isRecommended = plan.name === "Studio";
+            const planActionLabel = userId
+              ? "Manage membership"
+              : `Choose ${plan.name}`;
             const planImage =
               plan.name === "Enterprise"
                 ? "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg"
@@ -284,7 +288,14 @@ export default async function PricingPage() {
                   className="audioflume-pricing-plan-overlay"
                   aria-hidden="true"
                 />
-                <p className="audioflume-pricing-plan-kicker">{plan.kicker}</p>
+                <div className="audioflume-pricing-plan-meta">
+                  <p className="audioflume-pricing-plan-kicker">{plan.kicker}</p>
+                  {isRecommended ? (
+                    <span className="audioflume-pricing-plan-recommended">
+                      Best for most filmmakers
+                    </span>
+                  ) : null}
+                </div>
                 <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
                 <p className="audioflume-pricing-plan-description">
                   {plan.description}
@@ -310,7 +321,7 @@ export default async function PricingPage() {
                       className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`}
                       style={{ fontSize: "14px", fontWeight: 400 }}
                     >
-                      {membershipLabel}
+                      {planActionLabel}
                     </Link>
                   )}
                 </div>
@@ -345,7 +356,7 @@ export default async function PricingPage() {
               <strong>Audioflume Originals</strong>
             </div>
             <p className="audioflume-pricing-plan-description">
-              Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees.
+              One payment for lifetime access to Audioflume Originals — not the full subscription catalogue. Licensed for commercial work and clients up to 100 employees.
             </p>
           </div>
 
