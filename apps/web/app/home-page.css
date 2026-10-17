@@ -894,45 +894,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   margin-top: 0;
 }
 
-.audioflume-home-reference-tools .discover-artist-featured-shelf::before,
-.audioflume-home-reference-tools .discover-artist-featured-shelf::after {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  z-index: 10;
-  width: 96px;
-  content: "";
-  pointer-events: none;
-}
-
-.audioflume-home-reference-tools .discover-artist-featured-shelf::before {
-  left: 0;
-  background: linear-gradient(
-    90deg,
-    var(--bg-primary) 0%,
-    color-mix(in srgb, var(--bg-primary) 96%, transparent) 8%,
-    color-mix(in srgb, var(--bg-primary) 82%, transparent) 22%,
-    color-mix(in srgb, var(--bg-primary) 58%, transparent) 42%,
-    color-mix(in srgb, var(--bg-primary) 34%, transparent) 62%,
-    color-mix(in srgb, var(--bg-primary) 14%, transparent) 82%,
-    transparent 100%
-  );
-}
-
-.audioflume-home-reference-tools .discover-artist-featured-shelf::after {
-  right: 0;
-  background: linear-gradient(
-    270deg,
-    var(--bg-primary) 0%,
-    color-mix(in srgb, var(--bg-primary) 96%, transparent) 8%,
-    color-mix(in srgb, var(--bg-primary) 82%, transparent) 22%,
-    color-mix(in srgb, var(--bg-primary) 58%, transparent) 42%,
-    color-mix(in srgb, var(--bg-primary) 34%, transparent) 62%,
-    color-mix(in srgb, var(--bg-primary) 14%, transparent) 82%,
-    transparent 100%
-  );
-}
-
 .audioflume-home-reference-tools-grid {
   display: grid;
   grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
