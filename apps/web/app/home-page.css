@@ -700,6 +700,18 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: var(--bg-primary);
 }
 
+.audioflume-home-reference-feature-pair-intro {
+  width: 450px;
+  max-width: calc(100vw - 160px);
+  margin-bottom: 32px;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 36px;
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1.04;
+}
+
 .audioflume-home-reference-feature-pair-grid {
   display: grid;
   width: calc(100vw - 160px);

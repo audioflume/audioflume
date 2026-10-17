@@ -663,11 +663,12 @@ export default function HomePageContent({
       </section>
 
       <section className="audioflume-home-reference-feature-pair">
+        <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-intro">
+          A growing catalogue built around cinematic storytelling
+        </div>
+
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
           <div className="audioflume-home-reference-feature-pair-column">
-            <div className="audioflume-home-reference-section-heading">
-              <span>Featured Artists</span>
-            </div>
             <div className="audioflume-home-reference-feature-pair-card is-artists">
               <PricingHeroImageFlash
                 images={homeFlashImages}
@@ -685,9 +686,6 @@ export default function HomePageContent({
           </div>
 
           <div className="audioflume-home-reference-feature-pair-column">
-            <div className="audioflume-home-reference-section-heading">
-              <span>Curated Playlists</span>
-            </div>
             <div className="audioflume-home-reference-feature-pair-card is-playlists">
               <h2>Curated playlists<br />made for editors.</h2>
               <Link className="audioflume-home-reference-feature-pair-link" href="/curated-playlists">
