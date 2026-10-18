@@ -196,6 +196,22 @@
   padding: clamp(28px, 2.6vw, 40px);
 }
 
+.audioflume-pricing-plan-body::before {
+  position: absolute;
+  top: calc(
+    clamp(28px, 2.6vw, 40px) + 66px + 16px + 72px + 8px + 26px
+  );
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: rgba(17, 17, 17, 0.08);
+  content: "";
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  pointer-events: none;
+}
+
 .audioflume-pricing-plan .audioflume-pricing-plan-kicker {
   color: rgba(255, 255, 255, 0.78) !important;
 }
