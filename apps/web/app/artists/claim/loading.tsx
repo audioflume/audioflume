@@ -14,7 +14,16 @@ function SkeletonBlock({
 export default function Loading() {
   return (
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <section className="relative isolate overflow-hidden bg-[#111111] px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
+      <style>{`
+        .artist-onboarding-loading-hero {
+          background: #e5e5dd;
+        }
+
+        html:not(.light):not([data-theme="light"]) .artist-onboarding-loading-hero {
+          background: #111111;
+        }
+      `}</style>
+      <section className="artist-onboarding-loading-hero relative isolate overflow-hidden px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
         <div
           aria-hidden="true"
           className="absolute inset-y-0 right-0 w-1/2 bg-[rgba(255,255,255,0.035)]"
