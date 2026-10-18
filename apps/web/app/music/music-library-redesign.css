@@ -856,6 +856,10 @@ html
   width: 100% !important;
   margin-right: 0 !important;
   margin-left: 0 !important;
+  transition:
+    width 180ms ease,
+    margin-right 180ms ease,
+    margin-left 180ms ease;
 }
 
 .audioflume-music-page
