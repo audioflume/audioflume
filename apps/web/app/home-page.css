@@ -1809,8 +1809,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 @media (max-width: 980px) {
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    padding-right: 24px;
-    padding-left: 24px;
+    padding-right: var(--filmwave-page-gutter);
+    padding-left: var(--filmwave-page-gutter);
   }
 
   .audioflume-home-reference-hero {
