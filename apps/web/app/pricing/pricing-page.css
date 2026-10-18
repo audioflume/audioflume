@@ -812,8 +812,8 @@
   }
 
   .audioflume-pricing-plan-grid {
-    grid-template-columns: minmax(0, 437px);
-    justify-content: center;
+    grid-template-columns: minmax(0, 1fr);
+    justify-content: stretch;
   }
 
   .audioflume-pricing-plan {
