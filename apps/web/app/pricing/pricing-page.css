@@ -994,12 +994,15 @@
     grid-template-areas:
       "brand"
       "heading"
-      "meta"
-      "description"
       "pricing"
+      "description"
       "action";
     gap: 26px;
     padding: 28px 24px;
+  }
+
+  .audioflume-pricing-lifetime-meta {
+    display: none;
   }
 
   .audioflume-pricing-lifetime-logo {
