@@ -1567,6 +1567,10 @@ main
   }
 }
 
+.audioflume-music-page .fw-filter-mobile-close {
+  display: none;
+}
+
 @media (max-width: 536px) {
   .audioflume-music-page
     > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
