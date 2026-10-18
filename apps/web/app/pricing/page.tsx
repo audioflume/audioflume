@@ -112,7 +112,7 @@ async function getPricingHeroImages() {
 
 const plans = [
   {
-    name: "Starter",
+    name: "Standard",
     kicker: "Solo creators",
     price: "$15",
     priceDetail: "CAD / month",
@@ -126,7 +126,7 @@ const plans = [
     ],
   },
   {
-    name: "Studio",
+    name: "Pro Studio+",
     kicker: "Active filmmakers",
     price: "$39",
     priceDetail: "CAD / month",
