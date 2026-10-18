@@ -423,7 +423,7 @@ main
   border-top: 0 !important;
   border-radius: 0 !important;
   margin: 0 !important;
-  padding: 0 16px 0 20px !important;
+  padding: 0 20px !important;
 }
 
 main
@@ -1233,7 +1233,7 @@ html
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item {
-  height: 58px !important;
+  height: 60px !important;
 }
 
 .audioflume-music-page
