@@ -215,6 +215,16 @@
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
+  transition:
+    width 180ms ease,
+    margin-right 180ms ease,
+    margin-left 180ms ease;
+}
+
+.community-page.is-sidebar-open .community-feature-banner {
+  width: calc(100% + 72px);
+  margin-right: -36px;
+  margin-left: -36px;
 }
 
 .community-feature-banner-shade {
@@ -265,6 +275,16 @@
   margin-left: -80px;
   overflow: hidden;
   background: var(--bg-secondary);
+  transition:
+    width 180ms ease,
+    margin-right 180ms ease,
+    margin-left 180ms ease;
+}
+
+.community-page.is-sidebar-open .community-creator-banner {
+  width: calc(100% + 72px);
+  margin-right: -36px;
+  margin-left: -36px;
 }
 
 .community-creator-banner-background {
