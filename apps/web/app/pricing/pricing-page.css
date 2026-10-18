@@ -128,7 +128,7 @@
 .audioflume-pricing-plan-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(14px, 1.4vw, 22px);
+  gap: 22px;
 }
 
 .audioflume-pricing-plan {
@@ -1038,7 +1038,7 @@
   .audioflume-pricing-offers-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: clamp(14px, 1.4vw, 22px);
+    gap: 22px;
   }
 
   .audioflume-pricing-plan-grid {
@@ -1304,10 +1304,6 @@
 
   .audioflume-pricing-hero-bottom {
     width: 100%;
-  }
-
-  .audioflume-pricing-plan-grid {
-    gap: 14px;
   }
 
   .audioflume-pricing-plan-banner,
