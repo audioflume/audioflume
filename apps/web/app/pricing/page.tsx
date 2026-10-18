@@ -9,6 +9,9 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
+import { getSongs } from "@/lib/songs";
+
+import PricingOriginalsShelf from "./PricingOriginalsShelf";
 
 import "./pricing-page.css";
 
@@ -266,9 +269,10 @@ function PlanStatus({ included }: { included: boolean }) {
 }
 
 export default async function PricingPage() {
-  const [{ userId }, pricingHeroImages] = await Promise.all([
+  const [{ userId }, pricingHeroImages, songs] = await Promise.all([
     auth(),
     getPricingHeroImages(),
+    getSongs().catch(() => []),
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get Lifetime Access";
@@ -277,6 +281,15 @@ export default async function PricingPage() {
     (image) =>
       !image.includes("andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"),
   );
+  const lifetimeOriginalSongs = songs
+    .filter(
+      (song) =>
+        Boolean(song.audioUrl) &&
+        song.artist.trim().localeCompare("Audioflume", undefined, {
+          sensitivity: "base",
+        }) === 0,
+    )
+    .slice(0, 8);
 
   return (
     <main className="audioflume-pricing-page-root">
@@ -426,6 +439,19 @@ export default async function PricingPage() {
             </div>
           </div>
 
+          {lifetimeOriginalSongs.length > 0 ? (
+            <div className="audioflume-pricing-originals-shelf">
+              <div
+                className="audioflume-pricing-originals-shelf-background"
+                aria-hidden="true"
+              />
+              <div
+                className="audioflume-pricing-originals-shelf-overlay"
+                aria-hidden="true"
+              />
+              <PricingOriginalsShelf songs={lifetimeOriginalSongs} />
+            </div>
+          ) : null}
           </section>
         </div>
 
