@@ -739,6 +739,36 @@
   }
 }
 
+@media (max-width: 1500px) {
+  .audioflume-pricing-lifetime {
+    min-height: 0;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto;
+    grid-template-areas:
+      "brand heading"
+      "description meta"
+      "pricing action";
+    column-gap: 32px;
+    row-gap: 34px;
+    padding: 32px;
+  }
+
+  .audioflume-pricing-lifetime-meta {
+    justify-self: start;
+    margin-top: 0;
+    text-align: left;
+    white-space: normal;
+  }
+
+  .audioflume-pricing-lifetime-action {
+    justify-content: flex-start;
+  }
+
+  .audioflume-pricing-lifetime-action > a {
+    max-width: none;
+  }
+}
+
 @media (max-width: 980px) {
   .audioflume-pricing-lifetime {
     min-height: 0;
