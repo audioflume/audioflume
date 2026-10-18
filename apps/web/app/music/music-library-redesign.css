@@ -806,6 +806,7 @@ main
   min-height: 0;
   overflow: hidden;
   padding: 0;
+  transition: padding 180ms ease;
 }
 
 .audioflume-music-page
@@ -900,7 +901,6 @@ main
   box-sizing: border-box;
   width: 100%;
   min-height: 60px;
-  flex: 0 0 auto;
   border-bottom: 1.25px solid var(--border);
 }
 
@@ -1695,6 +1695,12 @@ main
     overflow-y: auto !important;
     border-top: 1.25px solid var(--border) !important;
     overscroll-behavior: contain;
+  }
+
+  .audioflume-music-page
+    .fw-filter-rail.is-accordion
+    > .fw-filter-accordion-section {
+    flex: 0 0 auto;
   }
 
   .audioflume-music-page
