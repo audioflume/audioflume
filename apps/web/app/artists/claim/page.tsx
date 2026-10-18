@@ -32,6 +32,14 @@ export default async function ArtistClaimPage() {
         html:not(.light):not([data-theme="light"]) .artist-onboarding-left-background {
           background: #111111;
         }
+
+        .artist-onboarding-hero input[type="text"],
+        .artist-onboarding-hero input[type="url"],
+        .artist-onboarding-hero input[type="email"],
+        .artist-onboarding-hero input[type="password"],
+        .artist-onboarding-hero textarea {
+          background: transparent !important;
+        }
       `}</style>
 
       <section className="artist-onboarding-hero relative isolate overflow-hidden px-5 pb-[120px] pt-[152px] md:px-8 xl:px-10">
