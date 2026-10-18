@@ -5,8 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
-import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
-import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 import { getSongs } from "@/lib/songs";
@@ -518,39 +516,6 @@ export default async function PricingPage() {
             </table>
           </div>
         </section>
-      </section>
-
-      <section className="group/pricing-testimonials relative overflow-hidden bg-[var(--bg-tertiary)] text-[var(--text-primary)]">
-        <div
-          className="pointer-events-none absolute left-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition group-hover/pricing-testimonials:opacity-100 sm:flex"
-          aria-hidden="true"
-        >
-          <ChevronLeftIcon size={18} />
-        </div>
-
-        <div
-          className="pointer-events-none absolute right-8 top-1/2 z-20 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition group-hover/pricing-testimonials:opacity-100 sm:flex"
-          aria-hidden="true"
-        >
-          <ChevronRightIcon size={18} />
-        </div>
-
-        <div className="mx-auto w-[calc(100%-var(--filmwave-editorial-inset)-var(--filmwave-editorial-inset))] max-w-[var(--filmwave-editorial-max-width)] py-[clamp(84px,8vw,126px)]">
-          <div className="mx-auto max-w-[900px] text-left">
-            <p className="m-0 font-[family-name:var(--font-aktiv-grotesk)] text-[14.5px] font-light uppercase leading-none tracking-[0.04em] text-[var(--text-muted)]">
-              Testimonials
-            </p>
-            <blockquote className="mt-7 max-w-none font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(16px,1.45vw,20px)] font-light leading-[1.35] tracking-normal">
-              “Add a longer filmmaker testimonial here that speaks to the quality of the music, the speed of finding the right track, and how Audioflume helps keep the editing process focused, creative, and moving without unnecessary friction.”
-            </blockquote>
-            <div className="mt-7">
-              <div className="text-[16px] font-medium leading-[1.2]">Filmmaker name</div>
-              <div className="mt-1 text-[13px] font-light leading-[1.35] text-[var(--text-secondary)]">
-                Role / Studio
-              </div>
-            </div>
-          </div>
-        </div>
       </section>
 
       <section className="audioflume-pricing-includes-section">
