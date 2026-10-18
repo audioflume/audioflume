@@ -915,11 +915,15 @@
   }
 
   .audioflume-pricing-lifetime-action {
+    min-width: 0;
     justify-content: flex-start;
   }
 
   .audioflume-pricing-lifetime-action > a {
+    width: 100%;
+    min-width: 0;
     max-width: none;
+    flex: 1 1 auto;
   }
 }
 
