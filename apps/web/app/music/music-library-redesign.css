@@ -860,9 +860,10 @@ html
 .audioflume-music-page
   > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
   > .fw-music-content-column {
+  padding-right: 32px !important;
   padding-left: calc(
     var(--audioflume-music-filter-width) +
-      var(--audioflume-music-content-gap)
+      28px
   ) !important;
 }
 
@@ -1063,13 +1064,17 @@ html
 }
 
 .audioflume-music-page
+  .fw-filter-rail.is-accordion {
+  padding-top: 0 !important;
+}
+
+.audioflume-music-page
   > section
   > .fw-music-content-column
   > .fw-filter-panel-wrap.is-open
   .fw-filter-rail.is-accordion {
   width: 100% !important;
   max-width: 100% !important;
-  padding-top: 0 !important;
 }
 
 .audioflume-music-page
