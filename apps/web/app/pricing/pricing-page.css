@@ -1351,33 +1351,46 @@
 
 
 /* Pricing route loading state */
+.audioflume-pricing-loading {
+  --audioflume-pricing-skeleton-fill: color-mix(
+    in srgb,
+    var(--text-primary) 7%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-muted: color-mix(
+    in srgb,
+    var(--text-primary) 5%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-on-dark: rgba(255, 255, 255, 0.07);
+  --audioflume-pricing-skeleton-fill-on-dark-muted: rgba(255, 255, 255, 0.05);
+}
+
 .audioflume-pricing-skeleton-block {
   display: block;
-  background: color-mix(in srgb, var(--text-primary) 8%, transparent);
+  background: var(--audioflume-pricing-skeleton-fill);
   animation: audioflume-pricing-skeleton-pulse 1.35s ease-in-out infinite;
 }
 
 @keyframes audioflume-pricing-skeleton-pulse {
   0%,
   100% {
-    opacity: 0.72;
+    opacity: 0.45;
   }
 
   50% {
-    opacity: 1;
+    opacity: 0.9;
   }
 }
 
 .audioflume-pricing-loading .audioflume-pricing-overview .is-overview-eyebrow {
   width: 126px;
   height: 12px;
-  background: rgba(17, 17, 17, 0.11);
 }
 
 .audioflume-pricing-loading .audioflume-pricing-overview .is-overview-title {
   width: min(560px, 38vw);
   height: clamp(54px, 5vw, 73px);
-  background: rgba(17, 17, 17, 0.11);
 }
 
 .audioflume-pricing-overview-skeleton-copy {
@@ -1390,7 +1403,6 @@
 .audioflume-pricing-overview-skeleton-copy .audioflume-pricing-skeleton-block {
   width: 100%;
   height: clamp(20px, 1.65vw, 27px);
-  background: rgba(17, 17, 17, 0.11);
 }
 
 .audioflume-pricing-overview-skeleton-copy .audioflume-pricing-skeleton-block:nth-child(2) {
@@ -1405,17 +1417,16 @@
   background: #111111;
 }
 
-.audioflume-pricing-plan-skeleton .audioflume-pricing-skeleton-block,
-.audioflume-pricing-plan-skeleton-description .audioflume-pricing-skeleton-block,
-.audioflume-pricing-plan-skeleton-price .audioflume-pricing-skeleton-block,
-.audioflume-pricing-plan-skeleton-features .audioflume-pricing-skeleton-block {
-  background: rgba(255, 255, 255, 0.15);
+.audioflume-pricing-plan-skeleton::before {
+  display: none;
 }
 
-.audioflume-pricing-plan-skeleton .is-plan-kicker {
-  width: 126px;
-  height: 14px;
-  margin-bottom: 14px;
+.audioflume-pricing-plan-skeleton .audioflume-pricing-skeleton-block {
+  background: var(--audioflume-pricing-skeleton-fill-on-dark);
+}
+
+.audioflume-pricing-plan-skeleton .audioflume-pricing-plan-banner {
+  min-height: 102px;
 }
 
 .audioflume-pricing-plan-skeleton .is-plan-name {
@@ -1427,7 +1438,6 @@
   display: grid;
   min-height: 66px;
   gap: 9px;
-  margin-top: 18px;
   align-content: start;
 }
 
@@ -1462,7 +1472,6 @@
   width: 100%;
   height: 52px;
   margin-top: 12px;
-  background: rgba(255, 255, 255, 0.86);
 }
 
 .audioflume-pricing-plan-skeleton-features {
@@ -1472,22 +1481,113 @@
 }
 
 .audioflume-pricing-plan-skeleton-features > div {
-  display: grid;
-  grid-template-columns: 13px minmax(0, 1fr);
-  align-items: center;
-  gap: 10px;
+  display: flex;
   min-height: 39px;
-  border-top: 1.25px solid rgba(255, 255, 255, 0.24);
-}
-
-.audioflume-pricing-plan-skeleton-features .is-dot {
-  width: 5px;
-  height: 5px;
+  align-items: center;
+  border-top: 1.25px solid rgba(255, 255, 255, 0.2);
 }
 
 .audioflume-pricing-plan-skeleton-features .is-feature-line {
   width: 68%;
   height: 10px;
+}
+
+.audioflume-pricing-lifetime-skeleton .audioflume-pricing-skeleton-block,
+.audioflume-pricing-originals-skeleton .audioflume-pricing-skeleton-block,
+.audioflume-pricing-enterprise-skeleton .audioflume-pricing-skeleton-block {
+  background: var(--audioflume-pricing-skeleton-fill-on-dark);
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-brand {
+  grid-area: brand;
+  width: min(100%, 245px);
+  height: 28px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-heading {
+  grid-area: heading;
+  width: 190px;
+  height: 16px;
+  margin-top: 5px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-meta {
+  grid-area: meta;
+  width: 140px;
+  height: 10px;
+  justify-self: end;
+  margin-top: 9px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-description {
+  grid-area: description;
+  display: grid;
+  align-self: end;
+  gap: 8px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-description .audioflume-pricing-skeleton-block {
+  width: min(100%, 480px);
+  height: 12px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-description .audioflume-pricing-skeleton-block:last-child {
+  width: min(72%, 350px);
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-pricing {
+  grid-area: pricing;
+  display: flex;
+  align-self: end;
+  gap: 24px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-badge {
+  width: 78px;
+  height: 18px;
+  margin-bottom: 9px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-badge.is-short {
+  width: 58px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-price {
+  width: 118px;
+  height: 52px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-price.is-short {
+  width: 92px;
+}
+
+.audioflume-pricing-lifetime-skeleton .is-lifetime-action {
+  grid-area: action;
+  width: 100%;
+  height: 52px;
+  align-self: end;
+}
+
+.audioflume-pricing-originals-skeleton {
+  background: #111111;
+}
+
+.audioflume-pricing-originals-skeleton .is-original-art {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.audioflume-pricing-originals-skeleton .is-original-title {
+  width: 74%;
+  height: 11px;
+  margin-top: 12px;
+}
+
+.audioflume-pricing-originals-skeleton .is-original-meta {
+  width: 46%;
+  height: 8px;
+  margin-top: 7px;
+  background: var(--audioflume-pricing-skeleton-fill-on-dark-muted);
 }
 
 .audioflume-pricing-loading .is-comparison-label {
@@ -1502,10 +1602,6 @@
 
 .audioflume-pricing-comparison-skeleton {
   overflow: hidden;
-}
-
-.audioflume-pricing-comparison-skeleton .audioflume-pricing-skeleton-block {
-  background: rgba(17, 17, 17, 0.09);
 }
 
 .audioflume-pricing-comparison-skeleton-head {
@@ -1589,53 +1685,6 @@
   border-radius: 999px;
 }
 
-.audioflume-pricing-testimonial-skeleton {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-
-.audioflume-pricing-testimonial-skeleton > div {
-  width: min(calc(100% - 160px), 900px);
-  margin: 0 auto;
-  padding: clamp(84px, 8vw, 126px) 0;
-}
-
-.audioflume-pricing-testimonial-skeleton .is-testimonial-eyebrow {
-  width: 92px;
-  height: 12px;
-}
-
-.audioflume-pricing-testimonial-skeleton .is-quote {
-  display: grid;
-  gap: 9px;
-  margin-top: 28px;
-}
-
-.audioflume-pricing-testimonial-skeleton .is-quote .audioflume-pricing-skeleton-block {
-  width: 100%;
-  height: 18px;
-}
-
-.audioflume-pricing-testimonial-skeleton .is-quote .audioflume-pricing-skeleton-block:nth-child(2) {
-  width: 94%;
-}
-
-.audioflume-pricing-testimonial-skeleton .is-quote .audioflume-pricing-skeleton-block:nth-child(3) {
-  width: 74%;
-}
-
-.audioflume-pricing-testimonial-skeleton .is-person {
-  width: 120px;
-  height: 15px;
-  margin-top: 28px;
-}
-
-.audioflume-pricing-testimonial-skeleton .is-role {
-  width: 82px;
-  height: 11px;
-  margin-top: 6px;
-}
-
 .audioflume-pricing-includes-skeleton .is-includes-eyebrow {
   width: 142px;
   height: 12px;
@@ -1675,10 +1724,6 @@
 
 .audioflume-pricing-includes-skeleton .is-include-copy .audioflume-pricing-skeleton-block:last-child {
   width: 76%;
-}
-
-.audioflume-pricing-enterprise-skeleton .audioflume-pricing-skeleton-block {
-  background: rgba(255, 255, 255, 0.14);
 }
 
 .audioflume-pricing-enterprise-skeleton .is-enterprise-media {
@@ -1730,7 +1775,32 @@
   width: 240px;
   height: 44px;
   margin-top: 30px;
-  background: rgba(255, 255, 255, 0.84);
+}
+
+@media (max-width: 1500px) {
+  .audioflume-pricing-lifetime-skeleton .is-lifetime-meta {
+    justify-self: start;
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 1168px) {
+  .audioflume-pricing-lifetime-skeleton .is-lifetime-pricing {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+  }
+
+  .audioflume-pricing-lifetime-skeleton .is-lifetime-action {
+    width: 100%;
+  }
+}
+
+@media (max-width: 760px) {
+  .audioflume-pricing-lifetime-skeleton .is-lifetime-meta {
+    display: none;
+  }
 }
 
 @media (max-width: 760px) {
@@ -1742,12 +1812,7 @@
     width: 100%;
     margin-left: 0;
   }
-
-  .audioflume-pricing-testimonial-skeleton > div {
-    width: calc(100% - 40px);
-  }
 }
-
 
 html:not(.light):not([data-theme="light"]) .audioflume-pricing-plans-section::before {
   background: var(--bg-primary);
