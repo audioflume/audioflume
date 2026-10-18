@@ -1214,7 +1214,15 @@ html
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   > .fw-filter-accordion-section {
+  box-sizing: border-box;
+  min-height: 60px;
   border-bottom: 1.25px solid var(--border);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  > .fw-filter-accordion-section:not(:has(> .fw-filter-accordion-detail.is-open)) {
+  height: 60px;
 }
 
 .audioflume-music-page
@@ -1234,6 +1242,7 @@ html
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item {
   height: calc(60px - 1.25px) !important;
+  min-height: calc(60px - 1.25px) !important;
 }
 
 .audioflume-music-page
