@@ -5,6 +5,7 @@
   width: 100% !important;
   padding-right: var(--fw-music-content-inset-right) !important;
   padding-left: var(--fw-music-content-inset-right) !important;
+  transition: padding-right 200ms ease, padding-left 200ms ease;
 }
 
 .music-page-content-shell.is-filter-closed > .fw-music-content-column {
