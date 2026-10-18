@@ -1103,25 +1103,25 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 @container (max-width: 760px) {
   .audioflume-home-reference-trending-copy {
-    --audioflume-trending-copy-scale: 0.92;
+    --audioflume-trending-copy-scale: 0.96;
   }
 }
 
 @container (max-width: 680px) {
   .audioflume-home-reference-trending-copy {
-    --audioflume-trending-copy-scale: 0.82;
+    --audioflume-trending-copy-scale: 0.90;
   }
 }
 
 @container (max-width: 600px) {
   .audioflume-home-reference-trending-copy {
-    --audioflume-trending-copy-scale: 0.72;
+    --audioflume-trending-copy-scale: 0.84;
   }
 }
 
 @container (max-width: 520px) {
   .audioflume-home-reference-trending-copy {
-    --audioflume-trending-copy-scale: 0.62;
+    --audioflume-trending-copy-scale: 0.78;
   }
 }
 
