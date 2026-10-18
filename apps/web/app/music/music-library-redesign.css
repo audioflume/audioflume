@@ -173,7 +173,7 @@
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort {
   justify-content: center;
   gap: 38px;
-  transform: translateX(-28px);
+  transform: none;
 }
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-song {
