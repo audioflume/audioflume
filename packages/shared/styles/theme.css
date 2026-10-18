@@ -63,7 +63,10 @@
   );
 
   /* Canonical Filmwave page construction. */
-  --filmwave-page-gutter: 50px;
+  --filmwave-page-gutter: 80px;
+  --filmwave-page-width: calc(
+    100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+  );
   --filmwave-editorial-inset-default: clamp(28px, 7.8vw, 96px);
   --filmwave-editorial-inset: var(--filmwave-editorial-inset-default);
   --filmwave-editorial-inset-compact: min(
@@ -254,4 +257,17 @@
   background: var(--bg-primary);
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk);
+}
+
+
+@media (max-width: 980px) {
+  :where(:root) {
+    --filmwave-page-gutter: 24px;
+  }
+}
+
+.filmwave-page-width {
+  width: var(--filmwave-page-width);
+  margin-right: auto;
+  margin-left: auto;
 }
