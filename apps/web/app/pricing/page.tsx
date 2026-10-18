@@ -324,32 +324,36 @@ export default async function PricingPage() {
 
             return (
               <article key={plan.name} className="audioflume-pricing-plan">
-                <Image
-                  src={planImage}
-                  alt=""
-                  fill
-                  sizes="(max-width: 980px) 100vw, 33vw"
-                  className="audioflume-pricing-plan-background"
-                  aria-hidden="true"
-                />
-                <span
-                  className="audioflume-pricing-plan-overlay"
-                  aria-hidden="true"
-                />
-                <div className="audioflume-pricing-plan-meta">
-                  <p className="audioflume-pricing-plan-kicker">{plan.kicker}</p>
-                </div>
-                <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
-                <p className="audioflume-pricing-plan-description">
-                  {plan.description}
-                </p>
-
-                <div className="audioflume-pricing-plan-price">
-                  <strong>{plan.price}</strong>
-                  {plan.priceDetail ? <span>{plan.priceDetail}</span> : null}
+                <div className="audioflume-pricing-plan-banner">
+                  <Image
+                    src={planImage}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1168px) 50vw, 33vw"
+                    className="audioflume-pricing-plan-banner-background"
+                    aria-hidden="true"
+                  />
+                  <span
+                    className="audioflume-pricing-plan-banner-overlay"
+                    aria-hidden="true"
+                  />
+                  <div className="audioflume-pricing-plan-meta">
+                    <p className="audioflume-pricing-plan-kicker">{plan.kicker}</p>
+                  </div>
+                  <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
                 </div>
 
-                <div className="audioflume-pricing-plan-action-row">
+                <div className="audioflume-pricing-plan-body">
+                  <p className="audioflume-pricing-plan-description">
+                    {plan.description}
+                  </p>
+
+                  <div className="audioflume-pricing-plan-price">
+                    <strong>{plan.price}</strong>
+                    {plan.priceDetail ? <span>{plan.priceDetail}</span> : null}
+                  </div>
+
+                  <div className="audioflume-pricing-plan-action-row">
                   {isEnterprise ? (
                     <a
                       href="mailto:hello@filmwave.io?subject=Audioflume%20Enterprise"
@@ -369,11 +373,12 @@ export default async function PricingPage() {
                   )}
                 </div>
 
-                <ul className="audioflume-pricing-plan-features">
-                  {plan.features.map((feature) => (
-                    <li key={feature}>{feature}</li>
-                  ))}
-                </ul>
+                  <ul className="audioflume-pricing-plan-features">
+                    {plan.features.map((feature) => (
+                      <li key={feature}>{feature}</li>
+                    ))}
+                  </ul>
+                </div>
               </article>
             );
           })}
