@@ -205,7 +205,7 @@
   grid-template-columns:
     minmax(300px, 0.95fr)
     minmax(470px, 1.25fr)
-    minmax(300px, 0.9fr);
+    max-content;
   grid-template-rows: auto 1fr;
   grid-template-areas:
     "brand heading meta"
@@ -246,7 +246,7 @@
 
 .audioflume-pricing-lifetime-logo {
   display: block;
-  width: min(100%, 304px);
+  width: min(100%, 270px);
   height: auto;
   color: #ffffff;
 }
@@ -257,16 +257,17 @@
   margin: 2px 0 0;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(20px, 1.6vw, 23px);
+  font-size: clamp(16px, 1.25vw, 18px);
   font-weight: 400;
-  letter-spacing: -0.035em;
+  letter-spacing: normal;
   line-height: 1;
   text-transform: uppercase;
 }
 
 .audioflume-pricing-lifetime-meta {
   grid-area: meta;
-  justify-self: end;
+  width: 100%;
+  justify-self: stretch;
   align-self: start;
   margin: 8px 0 0;
   color: rgba(255, 255, 255, 0.86);
@@ -364,12 +365,13 @@
   display: flex;
   width: 100%;
   align-self: end;
+  justify-self: stretch;
   justify-content: flex-end;
 }
 
 .audioflume-pricing-lifetime-action > a {
   width: 100%;
-  max-width: 344px;
+  max-width: none;
   height: 56px;
   min-height: 56px;
   background: #ffffff !important;
@@ -811,7 +813,7 @@
   }
 
   .audioflume-pricing-lifetime-logo {
-    width: min(100%, 280px);
+    width: min(100%, 250px);
   }
 
   .audioflume-pricing-lifetime-pricing {
