@@ -161,7 +161,7 @@
 .audioflume-pricing-plan-banner {
   position: relative;
   display: flex;
-  min-height: 156px;
+  min-height: 0;
   flex-direction: column;
   overflow: hidden;
   padding: clamp(28px, 2.6vw, 40px);
