@@ -3073,7 +3073,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   top: 50%;
   left: 50%;
   display: grid;
-  width: 186%;
+  width: clamp(186%, 205vw, 230%);
   grid-template-columns: repeat(14, minmax(0, 1fr));
   gap: 0;
   transform: translate(-50%, -50%) rotate(34deg);
@@ -3135,17 +3135,9 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     aspect-ratio: 1.25 / 1;
   }
 
-  .audioflume-home-lifetime-cover-grid {
-    width: 180%;
-    grid-template-columns: repeat(12, minmax(0, 1fr));
-  }
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-lifetime-cover-grid {
-    grid-template-columns: repeat(10, minmax(0, 1fr));
-  }
-
   .audioflume-home-lifetime-feature-copy {
     min-height: 560px;
     padding: 24px;
