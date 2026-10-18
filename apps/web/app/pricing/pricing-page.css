@@ -922,7 +922,7 @@
 .audioflume-pricing-enterprise-title {
   position: relative;
   z-index: 2;
-  max-width: 760px;
+  max-width: 520px;
   margin: 0;
   color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
