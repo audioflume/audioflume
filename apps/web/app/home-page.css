@@ -2925,11 +2925,11 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-lifetime-feature-copy {
   box-sizing: border-box;
-  display: flex;
+  display: grid;
   min-width: 0;
-  flex-direction: column;
+  grid-template-rows: auto 1fr;
   background: #deded8;
-  padding: 28px 84px 48px;
+  padding: 28px;
   color: #111111;
 }
 
@@ -2939,6 +2939,27 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   justify-content: space-between;
   gap: 24px;
 }
+
+.audioflume-home-lifetime-feature-top + .audioflume-home-lifetime-feature-heading {
+  align-self: end;
+  margin-bottom: 0;
+}
+
+.audioflume-home-lifetime-feature-heading,
+.audioflume-home-lifetime-feature-pricing,
+.audioflume-home-lifetime-feature-description {
+  margin-left: 56px;
+  margin-right: 56px;
+}
+
+.audioflume-home-lifetime-feature-heading {
+  margin-top: auto;
+}
+
+.audioflume-home-lifetime-feature-description {
+  margin-bottom: 56px;
+}
+
 
 .audioflume-home-lifetime-feature-logo {
   width: 198px;
@@ -2961,7 +2982,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-heading {
-  margin: 92px 0 0;
+  margin: 0;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(44px, 3.25vw, 58px);
@@ -2975,7 +2996,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   display: flex;
   align-items: end;
   gap: 28px;
-  margin-top: auto;
+  margin-top: 34px;
 }
 
 .audioflume-home-lifetime-feature-price-group {
