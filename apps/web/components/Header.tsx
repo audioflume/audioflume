@@ -751,7 +751,7 @@ export default function Header() {
           transform: translate(2px, calc(-50% - 2px));
         }
 
-        @media (max-width: 980px) {
+        @media (max-width: 1000px) {
           .filmwave-playlists-mega-inner {
             grid-template-columns: max-content !important;
             gap: 24px !important;
