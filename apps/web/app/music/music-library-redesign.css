@@ -1263,7 +1263,9 @@ main
 }
 
 .audioflume-music-page .audioflume-music-skeleton-row {
+  box-sizing: border-box;
   display: grid;
+  width: calc(100% + 12px + 16px);
   min-height: 86px;
   grid-template-columns:
     62px
@@ -1278,6 +1280,8 @@ main
     94px;
   align-items: center;
   gap: 12px;
+  margin-right: -16px;
+  margin-left: -12px;
   padding: 12px 16px 12px 12px;
 }
 
