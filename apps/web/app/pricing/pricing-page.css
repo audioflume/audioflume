@@ -881,6 +881,10 @@
     grid-template-columns: repeat(8, minmax(118px, 1fr));
     gap: 28px;
     overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: none;
+    touch-action: pan-x;
   }
 
   .audioflume-pricing-lifetime {
