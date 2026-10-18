@@ -62,6 +62,7 @@
 /* Desktop card padding should visually match the website card inset. */
 .desktop-app-main .desktop-music-page .desktop-song-card {
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y);
+  --filmwave-song-card-padding-right: var(--filmwave-song-card-padding-y);
 }
 
 /* Match the website side-filter rail order while keeping Clear all at the bottom. */
