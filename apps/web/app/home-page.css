@@ -2940,32 +2940,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   gap: 24px;
 }
 
-.audioflume-home-lifetime-feature-top + .audioflume-home-lifetime-feature-heading {
+.audioflume-home-lifetime-feature-main {
   align-self: end;
+  margin: 0 56px 56px;
 }
-
-.audioflume-home-lifetime-feature-heading,
-.audioflume-home-lifetime-feature-pricing,
-.audioflume-home-lifetime-feature-description {
-  width: calc(100% - 112px);
-  margin-right: 56px;
-  margin-left: 56px;
-}
-
-.audioflume-home-lifetime-feature-heading {
-  margin-top: auto;
-  margin-bottom: 0;
-}
-
-.audioflume-home-lifetime-feature-pricing {
-  margin-top: 34px;
-}
-
-.audioflume-home-lifetime-feature-description {
-  margin-top: 34px;
-  margin-bottom: 56px;
-}
-
 
 .audioflume-home-lifetime-feature-logo {
   width: 198px;
@@ -3002,6 +2980,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   display: flex;
   align-items: end;
   gap: 28px;
+  margin-top: 34px;
 }
 
 .audioflume-home-lifetime-feature-price-group {
@@ -3109,6 +3088,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .audioflume-home-lifetime-feature-copy {
     min-height: 560px;
     padding: 24px;
+  }
+
+  .audioflume-home-lifetime-feature-main {
+    margin: 0 0 24px;
   }
 
   .audioflume-home-lifetime-feature-top {
