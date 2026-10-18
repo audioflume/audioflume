@@ -8,20 +8,6 @@
   transition: padding-right 200ms ease, padding-left 200ms ease;
 }
 
-.music-page-content-shell.is-filter-closed > .fw-music-content-column {
-  padding-right: var(--filmwave-page-gutter) !important;
-  padding-left: var(--filmwave-page-gutter) !important;
-}
-
-.music-page-content-shell .filmwave-song-card {
-  width: calc(
-    100% + var(--filmwave-song-card-padding-left) +
-      var(--filmwave-song-card-padding-right)
-  );
-  margin-right: calc(-1 * var(--filmwave-song-card-padding-right));
-  margin-left: calc(-1 * var(--filmwave-song-card-padding-left));
-}
-
 .fw-toolbar-sticky {
   box-sizing: border-box !important;
   width: 100% !important;
@@ -376,10 +362,6 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   padding-top: 0 !important;
   padding-right: 28px !important;
   padding-left: 28px !important;
-}
-
-.audioflume-music-page .fw-music-content-column {
-  padding-top: 0 !important;
 }
 
 /* ─── Restore web top-nav/sidebar-hidden layout ───────────── */
