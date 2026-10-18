@@ -709,6 +709,14 @@ main
   padding-left: 20px !important;
 }
 
+.audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-filter-panel-wrap.is-open
+  .fw-license-filter-options {
+  padding-bottom: 14px;
+}
+
 /* Open filter rail fills the full widened column. */
 .audioflume-music-page
   > section
