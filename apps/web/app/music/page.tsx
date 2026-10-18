@@ -169,8 +169,11 @@ function MusicPageSkeleton() {
             <span className="audioflume-music-skeleton-block is-genre" />
             <span className="audioflume-music-skeleton-block is-key" />
             <span className="audioflume-music-skeleton-block is-bpm" />
-            <span className="audioflume-music-skeleton-block is-action" />
-            <span className="audioflume-music-skeleton-block is-license" />
+            <div className="audioflume-music-skeleton-actions">
+              <span className="audioflume-music-skeleton-block is-action" />
+              <span className="audioflume-music-skeleton-block is-action" />
+              <span className="audioflume-music-skeleton-block is-license" />
+            </div>
           </div>
         ))}
       </div>
