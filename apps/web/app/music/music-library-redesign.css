@@ -1276,8 +1276,7 @@ main
     minmax(130px, 180px)
     52px
     58px
-    26px
-    94px;
+    150px;
   align-items: center;
   gap: 12px;
   margin-right: -16px;
@@ -1338,15 +1337,25 @@ main
   height: 11px;
 }
 
+.audioflume-music-page .audioflume-music-skeleton-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
 .audioflume-music-page .audioflume-music-skeleton-block.is-action {
   width: 28px;
   height: 28px;
+  flex: 0 0 28px;
   border-radius: 50%;
 }
 
 .audioflume-music-page .audioflume-music-skeleton-block.is-license {
   width: 82px;
-  height: 34px;
+  height: 28px;
+  flex: 0 0 82px;
+  margin-left: 8px;
   border-radius: 0;
 }
 
@@ -1370,7 +1379,7 @@ main
       minmax(180px, 1fr)
       48px
       70px
-      86px;
+      150px;
   }
 
   .audioflume-music-page .audioflume-music-skeleton-block.is-key,
