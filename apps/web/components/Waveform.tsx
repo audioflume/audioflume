@@ -29,11 +29,13 @@ export default function Waveform({
   compact = false,
   highlightedEditPointTypes = [],
   showEditPointMarkers,
+  resizeWhenVisibleOnly = false,
 }: {
   song: Song;
   compact?: boolean;
   highlightedEditPointTypes?: string[];
   showEditPointMarkers?: boolean;
+  resizeWhenVisibleOnly?: boolean;
 }) {
   const waveformRef = useRef<SharedWaveformCanvasHandle | null>(null);
   const progressRef = useRef(0);
@@ -128,6 +130,7 @@ export default function Waveform({
       ariaLabel={`Seek ${song.title}`}
       onSeek={seekToProgress}
       onPointerEnter={preloadSongSource}
+      resizeWhenVisibleOnly={resizeWhenVisibleOnly}
     />
   );
 }
