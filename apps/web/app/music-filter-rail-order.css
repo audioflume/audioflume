@@ -253,6 +253,18 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   padding-left: 0;
 }
 
+.audioflume-music-page
+  .fw-filter-advanced-panel
+  > .fw-filter-accordion-detail-inner
+  > .fw-filter-advanced-panel-content
+  > .fw-filter-control-stack {
+  box-sizing: border-box;
+  width: calc(100% - 40px);
+  max-width: none;
+  margin-right: 20px;
+  margin-left: 20px;
+}
+
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-panel
   .fw-filter-control-stack
