@@ -119,6 +119,27 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
       [drawCanvas],
     );
 
+    const syncCanvasBackingSize = useCallback(() => {
+      const canvas = canvasRef.current;
+      if (!canvas) return;
+
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight || 24;
+      if (width < 4) return;
+
+      const dpr = window.devicePixelRatio || 1;
+      const nextWidth = Math.round(width * dpr);
+      const nextHeight = Math.round(height * dpr);
+
+      if (canvas.width === nextWidth && canvas.height === nextHeight) return;
+
+      canvas.width = nextWidth;
+      canvas.height = nextHeight;
+      drawCacheRef.current.cssWidth = width;
+      drawCacheRef.current.cssHeight = height;
+      drawCacheRef.current.dpr = dpr;
+    }, []);
+
     const seekTo = useCallback(
       (nextProgress: number) => {
         const safeNextProgress = Number.isFinite(nextProgress)
@@ -162,6 +183,8 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
 
           if (!isActive) return;
 
+          syncCanvasBackingSize();
+
           const nextWidth = Math.floor(waveform.getBoundingClientRect().width);
           setWaveformWidth((currentWidth) =>
             currentWidth === nextWidth ? currentWidth : nextWidth,
@@ -174,7 +197,7 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
       intersectionObserver.observe(waveform);
 
       return () => intersectionObserver.disconnect();
-    }, [resizeWhenVisibleOnly, scheduleDraw]);
+    }, [resizeWhenVisibleOnly, scheduleDraw, syncCanvasBackingSize]);
 
     useEffect(() => {
       const waveform = waveformRef.current;
@@ -182,6 +205,8 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
 
       const updateWidth = () => {
         if (resizeWhenVisibleOnly && !resizeActiveRef.current) return;
+
+        syncCanvasBackingSize();
 
         const nextWidth = Math.floor(waveform.getBoundingClientRect().width);
         setWaveformWidth((currentWidth) =>
@@ -203,7 +228,7 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
         window.removeEventListener("resize", updateWidth);
         window.clearTimeout(timeout);
       };
-    }, [resizeWhenVisibleOnly, scheduleDraw]);
+    }, [resizeWhenVisibleOnly, scheduleDraw, syncCanvasBackingSize]);
 
     useEffect(() => {
       const observer = new MutationObserver(() => scheduleDraw(true));
