@@ -446,26 +446,27 @@ main
 
 @media (max-width: 1100px) {
   .audioflume-music-page-searchbar {
-    grid-template-columns: 154px minmax(0, 1fr) 96px;
+    grid-template-columns: 154px minmax(0, 1fr) 120px;
   }
 
   .audioflume-music-page-searchbar.is-filters-open {
     grid-template-columns:
       var(--audioflume-music-filter-width, 248px)
       minmax(0, 1fr)
-      96px;
+      120px;
   }
 
   .audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort {
-    gap: 16px;
+    gap: 8px;
     transform: none;
   }
 
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-song {
-    width: 32px;
-    height: 32px;
-    flex: 0 0 32px;
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    border-radius: 6px;
   }
 
   .audioflume-music-page-searchbar
@@ -477,11 +478,12 @@ main
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-button {
-    width: 32px !important;
-    min-width: 32px !important;
-    max-width: 32px !important;
-    height: 32px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    height: 40px !important;
     justify-content: center !important;
+    border-radius: 6px !important;
   }
 
   .audioflume-music-page-searchbar
