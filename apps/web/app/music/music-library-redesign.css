@@ -906,12 +906,6 @@ main
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
-  > .fw-filter-accordion-section:not(:has(> .fw-filter-accordion-detail.is-open)) {
-  height: 60px;
-}
-
-.audioflume-music-page
-  .fw-filter-rail.is-accordion
   > .fw-filter-accordion-section:has(
     .fw-filter-rail-item[data-filter-section-id="cuePoints"]
   ),
