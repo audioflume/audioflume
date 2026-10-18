@@ -1,3 +1,4 @@
+import { auth } from "@clerk/nextjs/server";
 import { ListObjectsV2Command } from "@aws-sdk/client-s3";
 
 import { r2Client } from "@/lib/r2";
@@ -62,7 +63,18 @@ async function getHomeFlashImages() {
 }
 
 export default async function Home() {
-  const homeFlashImages = await getHomeFlashImages();
+  const [{ userId }, homeFlashImages] = await Promise.all([
+    auth(),
+    getHomeFlashImages(),
+  ]);
+  const membershipHref = userId ? "/account/membership" : "/sign-up";
+  const membershipLabel = userId ? "Manage membership" : "Get Lifetime Access";
 
-  return <HomePageContent homeFlashImages={homeFlashImages} />;
+  return (
+    <HomePageContent
+      homeFlashImages={homeFlashImages}
+      membershipHref={membershipHref}
+      membershipLabel={membershipLabel}
+    />
+  );
 }
