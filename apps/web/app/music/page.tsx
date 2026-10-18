@@ -342,7 +342,7 @@ export default function MusicPage() {
   );
 
   useEffect(() => {
-    const mobileFiltersQuery = window.matchMedia("(max-width: 536px)");
+    const mobileFiltersQuery = window.matchMedia("(max-width: 690px)");
 
     const closeDesktopSidebarForMobile = (event: MediaQueryListEvent) => {
       if (event.matches) setFiltersOpen(false);
