@@ -241,39 +241,12 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-panel {
-  display: grid;
-  grid-template-rows: 0fr;
-  overflow: hidden;
-  opacity: 0;
-  transition:
-    grid-template-rows 180ms ease,
-    opacity 160ms ease;
-}
-
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-panel.is-open {
-  grid-template-rows: 1fr;
-  opacity: 1;
-}
-
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-panel-inner {
-  min-height: 0;
-  overflow: hidden;
-  padding: 0;
-  transition: padding 180ms ease;
-}
-
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-panel.is-open
-  .fw-filter-advanced-panel-inner {
+  .fw-filter-advanced-panel-content {
   padding: 14px 20px 18px;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-panel.is-open
-  .fw-filter-advanced-panel-inner:has(.fw-filter-option-list) {
+  .fw-filter-advanced-panel-content:has(.fw-filter-option-list) {
   padding-right: 0;
   padding-left: 0;
 }
@@ -325,8 +298,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-advanced-panel.is-open
-  .fw-filter-advanced-panel-inner:has(.fw-duration-summary) {
+  .fw-filter-advanced-panel-content:has(.fw-duration-summary) {
   padding-bottom: 26px;
 }
 
