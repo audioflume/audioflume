@@ -20,6 +20,7 @@ import PricingOriginalsShelf from "./pricing/PricingOriginalsShelf";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -199,7 +200,7 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
         <span>New &amp; trending music</span>
-        <Link href="/music">Explore trending music</Link>
+        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore trending music<ArrowUpRightIcon size={12} /></Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-reference-trending-visual">
@@ -341,7 +342,7 @@ function HomeTrendingSkeleton() {
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
         <span>New &amp; trending music</span>
-        <Link href="/music">Explore new music</Link>
+        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore new music<ArrowUpRightIcon size={12} /></Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-skeleton-trending-visual">
@@ -649,8 +650,9 @@ export default function HomePageContent({
                 <span>artists</span>
                 <span>&amp; composers.</span>
               </h2>
-              <Link className="audioflume-home-reference-feature-pair-link" href="/discover">
+              <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/discover">
                 Explore artists
+                <ArrowUpRightIcon size={12} />
               </Link>
             </div>
           </div>
@@ -658,8 +660,9 @@ export default function HomePageContent({
           <div className="audioflume-home-reference-feature-pair-column">
             <div className="audioflume-home-reference-feature-pair-card is-playlists">
               <h2>Curated playlists<br />made for editors.</h2>
-              <Link className="audioflume-home-reference-feature-pair-link" href="/curated-playlists">
+              <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/curated-playlists">
                 Explore playlists
+                <ArrowUpRightIcon size={12} />
               </Link>
             </div>
           </div>
@@ -672,7 +675,7 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
             <span className="audioflume-editorial-meta">Original music made in-house</span>
-            <Link href="/music?artist=Audioflume">Explore original music</Link>
+            <Link href="/music?artist=Audioflume" className="inline-flex items-center gap-[5px]">Explore original music<ArrowUpRightIcon size={12} /></Link>
           </div>
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
             <LifetimeAccessCard
@@ -710,7 +713,7 @@ export default function HomePageContent({
       <section className="audioflume-home-reference-new-songs">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
           <span>Newly added songs</span>
-          <Link href="/music">Explore new music</Link>
+          <Link href="/music" className="inline-flex items-center gap-[5px]">Explore new music<ArrowUpRightIcon size={12} /></Link>
         </div>
         <div className="audioflume-home-reference-width">
           <MusicListShell title={null}>
