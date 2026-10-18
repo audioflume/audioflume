@@ -322,14 +322,30 @@ export default async function PricingPage() {
 
             return (
               <article key={plan.name} className="audioflume-pricing-plan">
-                <Image
-                  src={planImage}
-                  alt=""
-                  fill
-                  sizes="(max-width: 1168px) 50vw, 33vw"
-                  className="audioflume-pricing-plan-background"
+                <div
+                  className="audioflume-pricing-plan-image-region audioflume-pricing-plan-image-region-top"
                   aria-hidden="true"
-                />
+                >
+                  <Image
+                    src={planImage}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1168px) 50vw, 33vw"
+                    className="audioflume-pricing-plan-background"
+                  />
+                </div>
+                <div
+                  className="audioflume-pricing-plan-image-region audioflume-pricing-plan-image-region-bottom"
+                  aria-hidden="true"
+                >
+                  <Image
+                    src={planImage}
+                    alt=""
+                    fill
+                    sizes="(max-width: 1168px) 50vw, 33vw"
+                    className="audioflume-pricing-plan-background audioflume-pricing-plan-background-blurred"
+                  />
+                </div>
 
                 <div className="audioflume-pricing-plan-banner">
                   <span
