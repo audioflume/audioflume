@@ -101,10 +101,10 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-license-f
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-license-filter-check {
   box-sizing: border-box;
   display: inline-flex;
-  width: 16px;
-  min-width: 16px;
-  height: 16px;
-  flex: 0 0 16px;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
   align-items: center;
   justify-content: center;
   border: 1.25px solid var(--filmwave-border-color);
