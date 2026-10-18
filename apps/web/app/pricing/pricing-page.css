@@ -1192,6 +1192,20 @@
   }
 }
 
+@media (max-width: 712px) {
+  .audioflume-pricing-offers-grid {
+    grid-template-columns: minmax(0, 500px);
+    justify-content: center;
+  }
+
+  .audioflume-pricing-plan,
+  .audioflume-pricing-lifetime-section {
+    width: 100%;
+    max-width: 500px;
+    justify-self: center;
+  }
+}
+
 @media (max-width: 520px) {
   .audioflume-pricing-hero-inner,
   .audioflume-pricing-plans-section,
