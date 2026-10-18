@@ -1397,7 +1397,6 @@ export default function CommunityPlaylistsPage() {
         }
 
         .community-footer-wrap {
-          border-top: 1.25px solid var(--border-subtle);
           padding-top: 48px;
           padding-bottom: 0;
         }
@@ -1823,7 +1822,7 @@ export default function CommunityPlaylistsPage() {
           )}
 
           <div className="community-footer-wrap">
-            <Footer playerPadding={false} showTopBorder={false} />
+            <Footer playerPadding={false} />
           </div>
         </section>
       </main>
