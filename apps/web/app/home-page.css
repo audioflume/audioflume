@@ -14,7 +14,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference {
-  --home-reference-width: calc(100vw - 160px);
+  --home-reference-width: var(--filmwave-page-width);
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
   background: var(--bg-primary);
@@ -1811,10 +1811,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     grid-template-columns: repeat(3, minmax(0, 1fr));
     padding-right: 24px;
     padding-left: 24px;
-  }
-
-  .audioflume-home-reference {
-    --home-reference-width: calc(100vw - 48px);
   }
 
   .audioflume-home-reference-hero {
