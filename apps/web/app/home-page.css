@@ -1488,6 +1488,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 .audioflume-home-reference-new-songs .fw-song-list {
   margin-right: 0;
   margin-left: 0;
+  padding-right: 0;
+  padding-left: 0;
   background: var(--bg-secondary);
 }
 
