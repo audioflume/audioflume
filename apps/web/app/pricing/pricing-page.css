@@ -1368,6 +1368,64 @@
   animation: audioflume-pricing-skeleton-pulse 1.35s ease-in-out infinite;
 }
 
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-loading {
+  --audioflume-pricing-skeleton-fill: color-mix(
+    in srgb,
+    #111111 7%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-muted: color-mix(
+    in srgb,
+    #111111 5%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-on-dark: color-mix(
+    in srgb,
+    #111111 7%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-on-dark-muted: color-mix(
+    in srgb,
+    #111111 5%,
+    transparent
+  );
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-pricing-loading
+  .audioflume-pricing-plan-skeleton,
+:where(html.light, html[data-theme="light"])
+  .audioflume-pricing-loading
+  .audioflume-pricing-lifetime-skeleton,
+:where(html.light, html[data-theme="light"])
+  .audioflume-pricing-loading
+  .audioflume-pricing-originals-skeleton {
+  background: transparent;
+}
+
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-loading {
+  --audioflume-pricing-skeleton-fill: color-mix(
+    in srgb,
+    #ffffff 10%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-muted: color-mix(
+    in srgb,
+    #ffffff 7%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-on-dark: color-mix(
+    in srgb,
+    #ffffff 16%,
+    transparent
+  );
+  --audioflume-pricing-skeleton-fill-on-dark-muted: color-mix(
+    in srgb,
+    #ffffff 10%,
+    transparent
+  );
+}
+
 @keyframes audioflume-pricing-skeleton-pulse {
   0%,
   100% {
