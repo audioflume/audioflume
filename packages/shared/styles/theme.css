@@ -262,7 +262,7 @@
 
 @media (max-width: 980px) {
   :where(:root) {
-    --filmwave-page-gutter: 24px;
+    --filmwave-page-gutter: 40px;
   }
 }
 
