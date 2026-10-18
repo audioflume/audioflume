@@ -1496,6 +1496,7 @@ export default function MusicPage() {
                     song={song}
                     highlightedEditPointTypes={highlightedEditPointTypes}
                     showEditPointMarkers={effectiveShowEditPointMarkers}
+                    resizeWaveformWhenVisibleOnly
                   />
                 ))}
               </>
