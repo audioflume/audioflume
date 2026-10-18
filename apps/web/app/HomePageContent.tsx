@@ -12,7 +12,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import LifetimeAccessCard from "@/components/LifetimeAccessCard";
+import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
@@ -666,25 +666,50 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
             <div className="audioflume-home-lifetime-feature-copy">
-              <LifetimeAccessCard
-                membershipHref={membershipHref}
-                membershipLabel={membershipLabel}
-              />
-              <Link
-                href="/music?artist=Audioflume"
-                className="audioflume-home-lifetime-feature-link inline-flex items-center gap-[5px]"
-              >
-                Explore original music
-                <ArrowUpRightIcon
-                  size={16}
-                  strokeWidth={1.5}
-                  className="translate-y-[2px]"
-                />
-              </Link>
+              <div className="audioflume-home-lifetime-feature-top">
+                <div className="audioflume-home-lifetime-feature-logo">
+                  <AudioflumeOriginalsLogo />
+                </div>
+                <Link
+                  href="/music?artist=Audioflume"
+                  className="audioflume-home-lifetime-feature-link inline-flex items-center gap-[5px]"
+                >
+                  Explore original music
+                  <ArrowUpRightIcon
+                    size={16}
+                    strokeWidth={1.5}
+                    className="translate-y-[2px]"
+                  />
+                </Link>
+              </div>
+
               <h2 className="audioflume-home-lifetime-feature-heading">
                 Lifetime access<br />to original music.
               </h2>
+
+              <div className="audioflume-home-lifetime-feature-pricing">
+                <div className="audioflume-home-lifetime-feature-price-group is-regular">
+                  <span className="audioflume-pricing-lifetime-badge">Regular price</span>
+                  <div className="audioflume-pricing-plan-price">
+                    <strong>$199</strong>
+                  </div>
+                </div>
+                <div className="audioflume-home-lifetime-feature-price-group">
+                  <span className="audioflume-pricing-lifetime-badge is-light">
+                    Limited time offer
+                  </span>
+                  <div className="audioflume-pricing-plan-price">
+                    <strong>$99</strong>
+                    <span>One time payment</span>
+                  </div>
+                </div>
+              </div>
+
+              <p className="audioflume-home-lifetime-feature-description">
+                Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees.
+              </p>
             </div>
+
             <div
               className="audioflume-home-lifetime-feature-art"
               aria-hidden="true"
