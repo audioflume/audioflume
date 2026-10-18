@@ -880,6 +880,7 @@ html
   > section
   > .fw-music-content-column
   > .fw-filter-panel-wrap {
+  margin-top: -16px !important;
   --audioflume-music-filter-height: calc(
     100dvh - var(--filmwave-header-height, 60px) - 75px -
       var(--filmwave-sidebar-bottom-offset, 0px)
