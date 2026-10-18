@@ -37,7 +37,7 @@
   left: 50%;
   z-index: -1;
   width: 100vw;
-  background: #e5e5dd;
+  background: #ffffff;
   transform: translateX(-50%);
 }
 
@@ -204,9 +204,11 @@
   grid-template-columns: minmax(280px, 1.05fr) minmax(430px, 1.15fr) minmax(220px, 0.72fr);
   align-items: center;
   gap: clamp(36px, 4vw, 72px);
-  min-height: 0;
+  min-height: 225px;
   margin-top: 0;
-  padding: clamp(22px, 2.2vw, 34px) 0;
+  overflow: hidden;
+  background: #e5e5dd;
+  padding: clamp(34px, 3.4vw, 52px);
   color: var(--text-primary);
 }
 
@@ -1298,6 +1300,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action >
 
 html:not(.light):not([data-theme="light"]) .audioflume-pricing-plans-section::before {
   background: var(--bg-primary);
+}
+
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime {
+  background: #151515;
 }
 
 html:not(.light):not([data-theme="light"]) .audioflume-pricing-comparison-block {
