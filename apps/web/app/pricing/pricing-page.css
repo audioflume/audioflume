@@ -339,6 +339,17 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audiofl
   opacity: 1 !important;
 }
 
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action > a {
+  background: #ffffff !important;
+  color: #111111 !important;
+}
+
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action > a:hover,
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action > a:focus-visible {
+  background: #f0f0f0 !important;
+  color: #111111 !important;
+}
+
 .audioflume-pricing-comparison-section {
   margin-top: 48px;
 }
