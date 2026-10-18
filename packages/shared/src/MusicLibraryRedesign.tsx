@@ -922,11 +922,13 @@ function MusicAdvancedSection({
             </button>
 
             <div
-              className={`fw-filter-advanced-panel${isOpen ? " is-open" : ""}`}
+              className={`fw-filter-accordion-detail fw-filter-advanced-panel${isOpen ? " is-open" : ""}`}
               aria-hidden={!isOpen}
             >
-              <div className="fw-filter-advanced-panel-inner">
-                {renderSection(sectionId)}
+              <div className="fw-filter-accordion-detail-inner fw-filter-advanced-panel-inner">
+                <div className="fw-filter-accordion-content fw-filter-advanced-panel-content">
+                  {renderSection(sectionId)}
+                </div>
               </div>
             </div>
           </div>
@@ -1274,7 +1276,9 @@ export function MusicFilterPanel({
                         aria-hidden={!isActive}
                       >
                         <div className="fw-filter-accordion-detail-inner">
-                          {renderDetail(section.id)}
+                          <div className="fw-filter-accordion-content">
+                            {renderDetail(section.id)}
+                          </div>
                         </div>
                       </div>
                     ) : null}
