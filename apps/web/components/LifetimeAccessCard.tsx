@@ -79,7 +79,7 @@ export default function LifetimeAccessCard({
         <div className="audioflume-pricing-lifetime-price-group is-regular">
           <span className="audioflume-pricing-lifetime-badge">Regular price</span>
           <div className="audioflume-pricing-plan-price">
-            <strong>$199</strong>
+            <strong>$299</strong>
           </div>
         </div>
         <div className="audioflume-pricing-lifetime-price-group">
