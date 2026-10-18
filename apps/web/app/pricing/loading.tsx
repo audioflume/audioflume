@@ -16,26 +16,67 @@ function SkeletonBlock({
 function PlanSkeleton() {
   return (
     <article className="audioflume-pricing-plan audioflume-pricing-plan-skeleton" aria-hidden="true">
-      <SkeletonBlock className="is-plan-kicker" />
-      <SkeletonBlock className="is-plan-name" />
-      <div className="audioflume-pricing-plan-skeleton-description">
-        <SkeletonBlock />
-        <SkeletonBlock />
+      <div className="audioflume-pricing-plan-banner">
+        <SkeletonBlock className="is-plan-name" />
       </div>
-      <div className="audioflume-pricing-plan-skeleton-price">
-        <SkeletonBlock className="is-price" />
-        <SkeletonBlock className="is-price-detail" />
-      </div>
-      <SkeletonBlock className="is-plan-button" />
-      <div className="audioflume-pricing-plan-skeleton-features">
-        {Array.from({ length: 4 }).map((_, index) => (
-          <div key={index}>
-            <SkeletonBlock className="is-dot" />
-            <SkeletonBlock className="is-feature-line" />
-          </div>
-        ))}
+      <div className="audioflume-pricing-plan-body">
+        <div className="audioflume-pricing-plan-skeleton-description">
+          <SkeletonBlock />
+          <SkeletonBlock />
+        </div>
+        <div className="audioflume-pricing-plan-skeleton-price">
+          <SkeletonBlock className="is-price" />
+          <SkeletonBlock className="is-price-detail" />
+        </div>
+        <SkeletonBlock className="is-plan-button" />
+        <div className="audioflume-pricing-plan-skeleton-features">
+          {Array.from({ length: 4 }).map((_, index) => (
+            <div key={index}>
+              <SkeletonBlock className="is-feature-line" />
+            </div>
+          ))}
+        </div>
       </div>
     </article>
+  );
+}
+
+function LifetimeSkeleton() {
+  return (
+    <section className="audioflume-pricing-lifetime-section" aria-hidden="true">
+      <div className="audioflume-pricing-lifetime audioflume-pricing-lifetime-skeleton">
+        <SkeletonBlock className="is-lifetime-brand" />
+        <SkeletonBlock className="is-lifetime-heading" />
+        <SkeletonBlock className="is-lifetime-meta" />
+        <div className="is-lifetime-description">
+          <SkeletonBlock />
+          <SkeletonBlock />
+        </div>
+        <div className="is-lifetime-pricing">
+          <div>
+            <SkeletonBlock className="is-lifetime-badge" />
+            <SkeletonBlock className="is-lifetime-price" />
+          </div>
+          <div>
+            <SkeletonBlock className="is-lifetime-badge is-short" />
+            <SkeletonBlock className="is-lifetime-price is-short" />
+          </div>
+        </div>
+        <SkeletonBlock className="is-lifetime-action" />
+      </div>
+
+      <div className="audioflume-pricing-originals-shelf audioflume-pricing-originals-skeleton">
+        <div className="audioflume-pricing-originals-grid">
+          {Array.from({ length: 8 }).map((_, index) => (
+            <div className="audioflume-pricing-originals-card" key={index}>
+              <SkeletonBlock className="is-original-art" />
+              <SkeletonBlock className="is-original-title" />
+              <SkeletonBlock className="is-original-meta" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -55,10 +96,13 @@ export default function Loading() {
           </div>
         </div>
 
-        <div className="audioflume-pricing-plan-grid">
-          <PlanSkeleton />
-          <PlanSkeleton />
-          <PlanSkeleton />
+        <div className="audioflume-pricing-offers-grid">
+          <div className="audioflume-pricing-plan-grid">
+            <PlanSkeleton />
+            <PlanSkeleton />
+            <PlanSkeleton />
+          </div>
+          <LifetimeSkeleton />
         </div>
 
         <section className="audioflume-pricing-comparison-section">
@@ -92,19 +136,6 @@ export default function Loading() {
             </div>
           </div>
         </section>
-      </section>
-
-      <section className="audioflume-pricing-testimonial-skeleton">
-        <div>
-          <SkeletonBlock className="is-testimonial-eyebrow" />
-          <div className="is-quote">
-            <SkeletonBlock />
-            <SkeletonBlock />
-            <SkeletonBlock />
-          </div>
-          <SkeletonBlock className="is-person" />
-          <SkeletonBlock className="is-role" />
-        </div>
       </section>
 
       <section className="audioflume-pricing-includes-section audioflume-pricing-includes-skeleton">
