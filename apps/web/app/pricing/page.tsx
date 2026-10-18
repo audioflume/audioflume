@@ -336,9 +336,6 @@ export default async function PricingPage() {
                     className="audioflume-pricing-plan-banner-overlay"
                     aria-hidden="true"
                   />
-                  <div className="audioflume-pricing-plan-meta">
-                    <p className="audioflume-pricing-plan-kicker">{plan.kicker}</p>
-                  </div>
                   <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
                 </div>
 
