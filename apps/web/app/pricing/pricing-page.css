@@ -881,8 +881,6 @@
     grid-template-columns: repeat(8, minmax(118px, 1fr));
     gap: 28px;
     overflow-x: auto;
-    padding-right: 32px;
-    padding-left: 32px;
   }
 
   .audioflume-pricing-lifetime {
@@ -984,7 +982,6 @@
   .audioflume-pricing-originals-grid {
     grid-template-columns: repeat(8, 112px);
     gap: 20px;
-    padding: 38px 24px 36px;
   }
 
   .audioflume-pricing-lifetime {
