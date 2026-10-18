@@ -950,11 +950,6 @@
 }
 
 .discover-artist-shelf-footer span {
-  font-size: clamp(15px, 1.05vw, 18px);
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1.15;
-  text-transform: uppercase;
   white-space: nowrap;
 }
 
