@@ -896,8 +896,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-tools-grid {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
-  gap: 12px;
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .audioflume-home-reference-tools-column {
@@ -906,10 +905,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-tools-originals {
   margin-top: 72px;
-}
-
-.audioflume-home-reference-blank-card {
-  background: var(--bg-tertiary);
 }
 
 .audioflume-home-reference-tool-card {
