@@ -152,33 +152,10 @@
   pointer-events: none;
 }
 
-.audioflume-pricing-plan-image-region {
-  position: absolute;
-  right: 0;
-  left: 0;
-  z-index: 0;
-  overflow: hidden;
-  pointer-events: none;
-}
-
-.audioflume-pricing-plan-image-region-top {
-  top: 0;
-  height: 56%;
-}
-
-.audioflume-pricing-plan-image-region-bottom {
-  top: 56%;
-  bottom: 0;
-}
-
 .audioflume-pricing-plan-background {
+  z-index: 0;
   object-fit: cover;
   object-position: center;
-}
-
-.audioflume-pricing-plan-background-blurred {
-  filter: blur(18px);
-  transform: scale(1.08);
 }
 
 .audioflume-pricing-plan-banner {
@@ -217,6 +194,22 @@
   flex-direction: column;
   background: transparent;
   padding: clamp(28px, 2.6vw, 40px);
+}
+
+.audioflume-pricing-plan-body::before {
+  position: absolute;
+  top: calc(
+    clamp(28px, 2.6vw, 40px) + 66px + 16px + 72px + 8px + 26px
+  );
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -1;
+  background: rgba(17, 17, 17, 0.08);
+  content: "";
+  -webkit-backdrop-filter: blur(18px);
+  backdrop-filter: blur(18px);
+  pointer-events: none;
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-kicker {
