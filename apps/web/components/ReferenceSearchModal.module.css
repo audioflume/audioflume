@@ -400,6 +400,14 @@
   box-shadow: none;
 }
 
+.embedded .image {
+  background-image: url("https://images.filmwave.io/images/home/Search-By-Song-Background.png");
+}
+
+.embedded .overlay {
+  display: none;
+}
+
 .embedded .content {
   width: min(740px, 100%);
   min-height: 420px;
