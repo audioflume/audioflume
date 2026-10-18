@@ -2944,8 +2944,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   align-self: end;
   margin:
     0
-    clamp(26px, 2vw, 32px)
-    clamp(26px, 2vw, 32px);
+    clamp(34px, 2.4vw, 40px)
+    clamp(34px, 2.4vw, 40px);
 }
 
 .audioflume-home-lifetime-feature-logo {
