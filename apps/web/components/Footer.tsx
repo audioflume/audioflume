@@ -99,9 +99,6 @@ export default function Footer({
     /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
       pathname,
     );
-  const isStandaloneFooter =
-    (isEditorialLandingPage && pathname !== "/discover") ||
-    pathname === "/artists/claim";
   const shouldShowTopBorder = showTopBorder && !isPlaylistDetailPage;
 
   useEffect(() => {
@@ -144,23 +141,27 @@ export default function Footer({
         .playlist-detail-footer-shell:has(> .playlist-detail-page-footer) {
           padding-top: 0;
         }
+
+        .audioflume-site-footer {
+          width: calc(100vw - 160px) !important;
+          max-width: none !important;
+          margin-right: auto !important;
+          margin-left: auto !important;
+          padding-right: 0 !important;
+          padding-left: 0 !important;
+        }
+
+        @media (max-width: 980px) {
+          .audioflume-site-footer {
+            width: calc(100vw - 48px) !important;
+          }
+        }
       `}</style>
 
       <footer
         ref={footerRef}
-        className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isInteriorDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
+        className={`audioflume-site-footer box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isInteriorDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
         style={{
-          width:
-            pathname === "/"
-              ? "var(--home-reference-width)"
-              : isStandaloneFooter
-                ? "calc(100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter))"
-                : "100%",
-          maxWidth: "none",
-          marginRight: isStandaloneFooter ? "auto" : "0",
-          marginLeft: isStandaloneFooter ? "auto" : "0",
-          paddingRight: "0px",
-          paddingLeft: "0px",
           paddingBottom: shouldUsePlayerPadding
             ? playerVisible
               ? "calc(72px + 8px)"
