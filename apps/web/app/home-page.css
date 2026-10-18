@@ -2913,3 +2913,197 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     white-space: normal;
   }
 }
+
+
+/* Homepage Lifetime Access feature. */
+.audioflume-home-reference-lifetime-access {
+  display: grid;
+  height: 510px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  overflow: hidden;
+}
+
+.audioflume-home-lifetime-feature-copy {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  background: #deded8;
+  color: #111111;
+}
+
+.audioflume-home-lifetime-feature-art {
+  min-width: 0;
+  background-image: url("https://images.filmwave.io/images/home/cover-art-grid.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime {
+  position: absolute;
+  inset: 0;
+  display: block;
+  min-height: 0;
+  overflow: visible;
+  background: transparent;
+  padding: 0;
+  color: #111111;
+}
+
+.audioflume-home-lifetime-feature-copy
+  :is(
+    .audioflume-pricing-lifetime-background,
+    .audioflume-pricing-lifetime-overlay,
+    .audioflume-pricing-lifetime-heading,
+    .audioflume-pricing-lifetime-meta,
+    .audioflume-pricing-lifetime-action
+  ) {
+  display: none;
+}
+
+.audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-brand {
+  position: absolute;
+  top: 28px;
+  left: 28px;
+}
+
+.audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-logo {
+  width: 198px;
+  color: #111111;
+}
+
+.audioflume-home-lifetime-feature-link {
+  position: absolute;
+  top: 30px;
+  right: 28px;
+  z-index: 3;
+  color: #111111;
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: normal;
+  text-decoration: none;
+}
+
+.audioflume-home-lifetime-feature-heading {
+  position: absolute;
+  top: 140px;
+  left: 84px;
+  z-index: 3;
+  margin: 0;
+  color: #111111;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(44px, 3.25vw, 58px);
+  font-weight: 300;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-pricing {
+  position: absolute;
+  bottom: 142px;
+  left: 84px;
+  z-index: 3;
+  align-items: end;
+  gap: 28px;
+}
+
+.audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-description {
+  position: absolute;
+  right: 84px;
+  bottom: 48px;
+  left: 84px;
+  z-index: 3;
+  max-width: 520px;
+  color: #111111;
+}
+
+.audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime
+  .audioflume-pricing-plan-price
+  strong,
+.audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime
+  .audioflume-pricing-plan-price
+  span {
+  color: #111111;
+}
+
+.audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime-price-group.is-regular
+  .audioflume-pricing-plan-price
+  strong {
+  color: #bdbdb4;
+}
+
+.audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime-price-group.is-regular
+  .audioflume-pricing-plan-price
+  strong::after {
+  background: #bdbdb4;
+}
+
+.audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-badge {
+  background: #c5c5bc;
+  color: #ffffff;
+}
+
+.audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime-badge.is-light {
+  background: #111111;
+  color: #ffffff;
+}
+
+@media (max-width: 900px) {
+  .audioflume-home-reference-lifetime-access {
+    height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .audioflume-home-lifetime-feature-copy {
+    min-height: 510px;
+  }
+
+  .audioflume-home-lifetime-feature-art {
+    aspect-ratio: 1.25 / 1;
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-lifetime-feature-copy {
+    min-height: 560px;
+  }
+
+  .audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-brand {
+    top: 24px;
+    left: 24px;
+  }
+
+  .audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-logo {
+    width: 170px;
+  }
+
+  .audioflume-home-lifetime-feature-link {
+    top: 64px;
+    right: auto;
+    left: 24px;
+  }
+
+  .audioflume-home-lifetime-feature-heading {
+    top: 142px;
+    left: 24px;
+    font-size: clamp(38px, 11vw, 52px);
+  }
+
+  .audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-pricing {
+    bottom: 150px;
+    left: 24px;
+    gap: 18px;
+  }
+
+  .audioflume-home-lifetime-feature-copy .audioflume-pricing-lifetime-description {
+    right: 24px;
+    bottom: 34px;
+    left: 24px;
+  }
+}
