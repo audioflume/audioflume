@@ -16,7 +16,6 @@ import LifetimeAccessCard from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
-import PricingOriginalsShelf from "./pricing/PricingOriginalsShelf";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -490,14 +489,6 @@ export default function HomePageContent({
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
   );
-  const audioflumeOriginalSongs = playableSongs
-    .filter(
-      (song) =>
-        song.artist.trim().localeCompare("Audioflume", undefined, {
-          sensitivity: "base",
-        }) === 0,
-    )
-    .slice(0, 8);
   const originalSongs = playableSongs.slice(
     HOME_SHELF_SONG_COUNT,
     HOME_SHELF_SONG_COUNT + 12,
@@ -673,28 +664,31 @@ export default function HomePageContent({
 
       <section className="audioflume-home-reference-tools">
         <div className="audioflume-home-reference-tools-originals">
-          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-            <span className="audioflume-editorial-meta">Original music made in-house</span>
-            <Link href="/music?artist=Audioflume" className="inline-flex items-center gap-[5px]">Explore original music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" /></Link>
-          </div>
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
-            <LifetimeAccessCard
-              membershipHref={membershipHref}
-              membershipLabel={membershipLabel}
+            <div className="audioflume-home-lifetime-feature-copy">
+              <LifetimeAccessCard
+                membershipHref={membershipHref}
+                membershipLabel={membershipLabel}
+              />
+              <Link
+                href="/music?artist=Audioflume"
+                className="audioflume-home-lifetime-feature-link inline-flex items-center gap-[5px]"
+              >
+                Explore original music
+                <ArrowUpRightIcon
+                  size={16}
+                  strokeWidth={1.5}
+                  className="translate-y-[2px]"
+                />
+              </Link>
+              <h2 className="audioflume-home-lifetime-feature-heading">
+                Lifetime access<br />to original music.
+              </h2>
+            </div>
+            <div
+              className="audioflume-home-lifetime-feature-art"
+              aria-hidden="true"
             />
-            {audioflumeOriginalSongs.length > 0 ? (
-              <div className="audioflume-pricing-originals-shelf">
-                <div
-                  className="audioflume-pricing-originals-shelf-background"
-                  aria-hidden="true"
-                />
-                <div
-                  className="audioflume-pricing-originals-shelf-overlay"
-                  aria-hidden="true"
-                />
-                <PricingOriginalsShelf songs={audioflumeOriginalSongs} />
-              </div>
-            ) : null}
           </div>
         </div>
 
