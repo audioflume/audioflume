@@ -2944,8 +2944,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   align-self: end;
   margin:
     0
-    clamp(18px, 1.5vw, 24px)
-    clamp(18px, 1.5vw, 24px);
+    clamp(26px, 2vw, 32px)
+    clamp(26px, 2vw, 32px);
 }
 
 .audioflume-home-lifetime-feature-logo {
@@ -3083,6 +3083,30 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
   .audioflume-home-lifetime-feature-copy {
     min-height: 510px;
+  }
+
+  .audioflume-home-lifetime-feature-logo {
+    width: 198px;
+  }
+
+  .audioflume-home-lifetime-feature-link {
+    font-size: 15px;
+  }
+
+  .audioflume-home-lifetime-feature-heading {
+    font-size: 58px;
+  }
+
+  .audioflume-home-lifetime-feature-copy .audioflume-pricing-plan-price strong {
+    font-size: 68px;
+  }
+
+  .audioflume-home-lifetime-feature-copy .audioflume-pricing-plan-price span {
+    font-size: 18px;
+  }
+
+  .audioflume-home-lifetime-feature-description {
+    font-size: 14.5px;
   }
 
   .audioflume-home-lifetime-feature-art {
