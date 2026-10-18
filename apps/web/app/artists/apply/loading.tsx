@@ -23,7 +23,7 @@ export default function Loading() {
           background: #111111;
         }
       `}</style>
-      <section className="artist-onboarding-loading-hero relative isolate overflow-hidden px-5 pb-[120px] pt-[186px] md:px-8 xl:px-10">
+      <section className="artist-onboarding-loading-hero relative isolate overflow-hidden px-5 pb-[120px] pt-[152px] md:px-8 xl:px-10">
         <div
           aria-hidden="true"
           className="absolute inset-y-0 right-0 w-1/2 bg-[rgba(255,255,255,0.035)]"
