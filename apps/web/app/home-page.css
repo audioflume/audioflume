@@ -1129,6 +1129,32 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 
 @media (max-width: 980px) {
+  @container (max-width: 760px) {
+    .audioflume-home-reference-trending-copy {
+      --audioflume-trending-copy-scale: 1;
+    }
+  }
+
+  @container (max-width: 680px) {
+    .audioflume-home-reference-trending-copy {
+      --audioflume-trending-copy-scale: 0.96;
+    }
+  }
+
+  @container (max-width: 600px) {
+    .audioflume-home-reference-trending-copy {
+      --audioflume-trending-copy-scale: 0.92;
+    }
+  }
+
+  @container (max-width: 520px) {
+    .audioflume-home-reference-trending-copy {
+      --audioflume-trending-copy-scale: 0.88;
+    }
+  }
+}
+
+@media (max-width: 980px) {
   .audioflume-home-reference-feature-pair-grid,
   .audioflume-home-reference-tools-grid {
     width: var(--home-reference-width);
