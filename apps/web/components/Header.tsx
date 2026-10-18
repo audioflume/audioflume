@@ -193,45 +193,33 @@ export default function Header() {
     if (!headerElement) return;
 
     let frame = 0;
-    let elasticFrame = 0;
-
-    function applyHeaderBottom() {
-      const bottom = headerElement.getBoundingClientRect().bottom;
-      document.documentElement.style.setProperty(
-        "--filmwave-web-header-bottom",
-        `${Math.max(0, Math.round(bottom))}px`,
-      );
-    }
 
     function syncHeaderBottom() {
       window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(applyHeaderBottom);
-    }
-
-    function syncElasticHeaderBottom() {
-      applyHeaderBottom();
-      elasticFrame = window.requestAnimationFrame(syncElasticHeaderBottom);
+      frame = window.requestAnimationFrame(() => {
+        const bottom = headerElement.getBoundingClientRect().bottom;
+        document.documentElement.style.setProperty(
+          "--filmwave-web-header-bottom",
+          `${Math.max(0, Math.round(bottom))}px`,
+        );
+      });
     }
 
     const resizeObserver = new ResizeObserver(syncHeaderBottom);
 
     syncHeaderBottom();
-    if (playlistsMenuOpen) {
-      elasticFrame = window.requestAnimationFrame(syncElasticHeaderBottom);
-    }
     resizeObserver.observe(headerElement);
     window.addEventListener("scroll", syncHeaderBottom, { passive: true });
     window.addEventListener("resize", syncHeaderBottom);
 
     return () => {
       window.cancelAnimationFrame(frame);
-      window.cancelAnimationFrame(elasticFrame);
       resizeObserver.disconnect();
       window.removeEventListener("scroll", syncHeaderBottom);
       window.removeEventListener("resize", syncHeaderBottom);
       document.documentElement.style.removeProperty("--filmwave-web-header-bottom");
     };
-  }, [playlistsMenuOpen]);
+  }, []);
 
   function openPlaylistsMenu() {
     setPlaylistsMenuOpen(true);
@@ -359,6 +347,7 @@ export default function Header() {
         }
 
         .filmwave-web-header .filmwave-header-actions {
+          position: static !important;
           min-width: 0 !important;
           flex: 1 1 auto !important;
           gap: 0 !important;
@@ -580,7 +569,15 @@ export default function Header() {
           transform: translateY(0) !important;
         }
 
+        .filmwave-web-header .filmwave-header-nav-item-playlists {
+          position: static !important;
+        }
+
         .filmwave-playlists-mega-menu {
+          position: absolute !important;
+          top: 100% !important;
+          right: 0 !important;
+          left: 0 !important;
           z-index: 2147483000 !important;
           overflow: visible !important;
           border-top: 0 !important;
