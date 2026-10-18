@@ -183,7 +183,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   padding-left: 0 !important;
 }
 
-.fw-song-list {
+.fw-song-list:not(.audioflume-music-page .fw-song-list) {
   margin-top: 0 !important;
   margin-right: 0 !important;
   margin-left: 0 !important;
@@ -193,7 +193,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   margin-top: 14px !important;
 }
 
-.fw-song-list-head {
+.fw-song-list-head:not(.audioflume-music-page .fw-song-list-head) {
   display: none !important;
 }
 
@@ -205,9 +205,12 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   --filmwave-song-card-hover-bg: var(--filmwave-neutral-surface) !important;
 }
 
-.fw-song-list .filmwave-song-card,
-.fw-song-list .desktop-song-card,
-.fw-song-list .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+.fw-song-list .filmwave-song-card:not(.audioflume-music-page .filmwave-song-card),
+.fw-song-list .desktop-song-card:not(.audioflume-music-page .desktop-song-card),
+.fw-song-list
+  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center:not(
+    .audioflume-music-page *
+  ) {
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y) !important;
 }
 
