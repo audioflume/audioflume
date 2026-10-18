@@ -68,14 +68,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:h
 
 main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-rail.is-accordion
-  .fw-filter-rail-item.is-active:not(:hover) {
-  background: transparent !important;
-  background-color: transparent !important;
-}
-
-main
-  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail-chevron {
   display: inline-flex !important;
   opacity: 1 !important;
