@@ -387,7 +387,7 @@ function ReadyToCutTracks({ songs }: { songs: Song[] }) {
     <section className="discover-track-section">
       <div className="discover-track-section-heading">
         <SectionTitle variant="small">Ready-to-cut tracks</SectionTitle>
-        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore more tracks<ArrowUpRightIcon size={12} /></Link>
+        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore more tracks<ArrowUpRightIcon size={14} className="translate-y-[1px]" /></Link>
       </div>
 
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
