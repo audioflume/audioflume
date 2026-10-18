@@ -121,6 +121,10 @@
   line-height: 1.22;
 }
 
+.audioflume-pricing-offers-grid {
+  display: contents;
+}
+
 .audioflume-pricing-plan-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -388,143 +392,6 @@
   background: #f0f0f0 !important;
   color: #111111 !important;
   opacity: 1 !important;
-}
-
-.audioflume-pricing-originals-shelf {
-  position: relative;
-  min-height: 270px;
-  overflow: hidden;
-  background: #111111;
-  color: #ffffff;
-}
-
-.audioflume-pricing-originals-shelf-background {
-  position: absolute;
-  inset: -30px;
-  background-image: url("https://images.filmwave.io/images/pricing/andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg");
-  background-position: center 68%;
-  background-size: cover;
-  filter: blur(22px);
-  transform: scale(1.08);
-}
-
-.audioflume-pricing-originals-shelf-overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(17, 17, 17, 0.74);
-}
-
-.audioflume-pricing-originals-grid {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
-  gap: clamp(28px, 4vw, 64px);
-  padding: 62px 74px 52px;
-}
-
-.audioflume-pricing-originals-card {
-  min-width: 0;
-}
-
-.audioflume-pricing-originals-art {
-  position: relative;
-  display: block;
-  width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 0;
-  background: rgba(255, 255, 255, 0.06);
-  padding: 0;
-  color: #111111;
-  cursor: pointer;
-}
-
-.audioflume-pricing-originals-art img,
-.audioflume-pricing-originals-art-fallback {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 220ms ease;
-}
-
-.audioflume-pricing-originals-card:hover
-  .audioflume-pricing-originals-art img,
-.audioflume-pricing-originals-card:hover
-  .audioflume-pricing-originals-art-fallback {
-  transform: scale(1.018);
-}
-
-.audioflume-pricing-originals-art-fallback {
-  background: linear-gradient(135deg, #242424, #111111);
-}
-
-.audioflume-pricing-originals-play-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 2;
-  display: grid;
-  width: 46px;
-  height: 46px;
-  place-items: center;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #111111;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  transform-origin: center;
-  transition:
-    opacity 160ms ease,
-    transform 160ms ease;
-}
-
-.audioflume-pricing-originals-card:hover
-  .audioflume-pricing-originals-play-icon,
-.audioflume-pricing-originals-art:focus-visible
-  .audioflume-pricing-originals-play-icon,
-.audioflume-pricing-originals-card.is-playing
-  .audioflume-pricing-originals-play-icon {
-  opacity: 1;
-}
-
-.audioflume-pricing-originals-play-icon:hover,
-.audioflume-pricing-originals-art:focus-visible
-  .audioflume-pricing-originals-play-icon {
-  transform: translate(-50%, -50%) scale(1.03);
-}
-
-.audioflume-pricing-originals-copy {
-  display: grid;
-  min-width: 0;
-  gap: 2px;
-  margin-top: 10px;
-}
-
-.audioflume-pricing-originals-copy strong,
-.audioflume-pricing-originals-copy span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.audioflume-pricing-originals-copy strong {
-  color: #ffffff;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1.2;
-}
-
-.audioflume-pricing-originals-copy span {
-  color: rgba(255, 255, 255, 0.52);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 9.5px;
-  font-weight: 300;
-  line-height: 1.2;
 }
 
 .audioflume-pricing-comparison-section {
@@ -880,16 +747,6 @@
 }
 
 @media (max-width: 1500px) {
-  .audioflume-pricing-originals-grid {
-    grid-template-columns: repeat(8, minmax(118px, 1fr));
-    gap: 28px;
-    overflow-x: auto;
-    overflow-y: hidden;
-    overscroll-behavior-x: contain;
-    overscroll-behavior-y: none;
-    touch-action: pan-x;
-  }
-
   .audioflume-pricing-lifetime {
     min-height: 0;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -920,24 +777,40 @@
 }
 
 @media (max-width: 980px) {
+  .audioflume-pricing-offers-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: clamp(14px, 1.4vw, 22px);
+  }
+
+  .audioflume-pricing-plan-grid {
+    display: contents;
+  }
+
+  .audioflume-pricing-lifetime-section {
+    min-width: 0;
+    height: 100%;
+    margin-top: 0;
+  }
+
   .audioflume-pricing-lifetime {
+    box-sizing: border-box;
+    height: 100%;
     min-height: 0;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: auto auto auto;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
     grid-template-areas:
-      "brand heading"
-      "description meta"
-      "pricing action";
-    column-gap: 32px;
-    row-gap: 34px;
+      "brand"
+      "heading"
+      "pricing"
+      "description"
+      "action";
+    gap: 26px;
     padding: 32px;
   }
 
   .audioflume-pricing-lifetime-meta {
-    justify-self: start;
-    margin-top: 0;
-    text-align: left;
-    white-space: normal;
+    display: none;
   }
 
   .audioflume-pricing-lifetime-action {
@@ -961,11 +834,6 @@
     grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
   }
 
-  .audioflume-pricing-plan-grid {
-    grid-template-columns: minmax(0, 1fr);
-    justify-content: stretch;
-  }
-
   .audioflume-pricing-plan {
     width: 100%;
     min-height: 0;
@@ -982,15 +850,6 @@
 }
 
 @media (max-width: 760px) {
-  .audioflume-pricing-originals-shelf {
-    min-height: 0;
-  }
-
-  .audioflume-pricing-originals-grid {
-    grid-template-columns: repeat(8, 112px);
-    gap: 20px;
-  }
-
   .audioflume-pricing-lifetime {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
