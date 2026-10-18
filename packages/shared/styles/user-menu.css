@@ -9,6 +9,7 @@
 /* tokens */
 :root {
   --filmwave-menu-bg: #1d1d1d;
+  --filmwave-web-user-menu-bg: #151515;
   --filmwave-menu-border: var(--filmwave-border-color);
   --filmwave-menu-hover: rgba(255, 255, 255, 0.07);
   --filmwave-menu-sep: var(--filmwave-border-color);
@@ -25,6 +26,7 @@
 
 html[data-theme="light"] {
   --filmwave-menu-bg: var(--filmwave-white);
+  --filmwave-web-user-menu-bg: var(--filmwave-white);
   --filmwave-menu-border: var(--filmwave-border-color);
   --filmwave-menu-hover: rgba(0, 0, 0, 0.05);
   --filmwave-menu-sep: var(--filmwave-border-color);
@@ -221,6 +223,7 @@ html[data-theme="light"] {
 /* Web header user menu refinements */
 .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
   box-sizing: border-box;
+  background: var(--filmwave-web-user-menu-bg);
   padding: 10px;
 }
 
