@@ -281,6 +281,10 @@ export default async function PricingPage() {
     (image) =>
       !image.includes("andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"),
   );
+  const pricingOverviewImage =
+    pricingPlanImages[1] ??
+    pricingPlanImages[0] ??
+    DEFAULT_PRICING_HERO_IMAGE;
   const lifetimeOriginalSongs = songs
     .filter(
       (song) =>
@@ -295,6 +299,18 @@ export default async function PricingPage() {
     <main className="audioflume-pricing-page-root">
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-overview">
+          <Image
+            src={pricingOverviewImage}
+            alt=""
+            fill
+            sizes="100vw"
+            className="audioflume-pricing-overview-background"
+            aria-hidden="true"
+          />
+          <span
+            className="audioflume-pricing-overview-overlay"
+            aria-hidden="true"
+          />
           <div className="audioflume-pricing-overview-heading">
             <span className="audioflume-pricing-overview-eyebrow">
               Choose your plan
