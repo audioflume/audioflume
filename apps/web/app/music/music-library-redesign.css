@@ -343,6 +343,31 @@ main
     padding-right: 0 !important;
     padding-left: 0 !important;
   }
+
+  .audioflume-music-page
+    .fw-filter-rail.is-accordion {
+    flex: 0 0 auto !important;
+    flex-direction: column !important;
+    overflow-x: hidden !important;
+    overflow-y: auto !important;
+    border-right: 0 !important;
+    border-bottom: 0 !important;
+    padding: 0 0 40px !important;
+  }
+
+  .audioflume-music-page
+    .fw-filter-rail.is-accordion
+    .fw-filter-rail-item {
+    width: 100% !important;
+    flex: 0 0 auto !important;
+    padding: 0 20px !important;
+  }
+
+  .audioflume-music-page
+    .fw-filter-rail.is-accordion
+    .fw-filter-rail-chevron {
+    display: inline-flex !important;
+  }
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
