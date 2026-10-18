@@ -988,6 +988,10 @@
   .audioflume-pricing-plan {
     width: 100%;
   }
+
+  .audioflume-pricing-plan-price strong {
+    font-size: 68px;
+  }
 }
 
 @media (max-width: 760px) {
