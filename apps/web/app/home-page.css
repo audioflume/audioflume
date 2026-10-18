@@ -498,7 +498,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   left: 50%;
   display: flex;
   width: max-content;
-  max-width: calc(100vw - 160px);
+  max-width: var(--home-reference-width);
   align-items: center;
   justify-content: center;
   gap: 34px;
@@ -662,7 +662,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-curated-playlists > .audioflume-home-reference-width,
 .audioflume-home-reference-playlists > .audioflume-home-reference-width,
 .audioflume-home-reference-new-songs > .audioflume-home-reference-width {
-  width: calc(100vw - 160px);
+  width: var(--home-reference-width);
   max-width: none;
 }
 
@@ -702,7 +702,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-intro {
   display: flex;
-  width: calc(100vw - 160px);
+  width: var(--home-reference-width);
   max-width: none;
   align-items: flex-end;
   justify-content: space-between;
@@ -733,7 +733,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-grid {
   display: grid;
-  width: calc(100vw - 160px);
+  width: var(--home-reference-width);
   max-width: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 12px;
@@ -950,7 +950,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-trending-grid {
   display: grid;
-  width: calc(100vw - 160px);
+  width: var(--home-reference-width);
   max-width: none;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   min-height: 560px;
@@ -1806,13 +1806,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 980px) {
-  .audioflume-home-reference-library-grid,
-  .audioflume-home-reference-feature-grid {
-    width: var(--home-reference-width);
-  }
-
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    padding-right: 24px;
+    padding-left: 24px;
   }
 
   .audioflume-home-reference {
@@ -1866,7 +1863,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 14px;
-    padding: 0 20px;
   }
 
   .audioflume-home-reference-hero {
