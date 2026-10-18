@@ -231,6 +231,9 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
       scheduleResize();
 
       const resizeObserver = new ResizeObserver(() => {
+        if (resizeWhenVisibleOnly && !resizeActiveRef.current) return;
+
+        syncCanvasBackingSize();
         scheduleResize();
       });
       resizeObserver.observe(waveform);
@@ -243,7 +246,11 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
           resizeAnimationFrameRef.current = null;
         }
       };
-    }, [scheduleResize]);
+    }, [
+      resizeWhenVisibleOnly,
+      scheduleResize,
+      syncCanvasBackingSize,
+    ]);
 
     useEffect(() => {
       const observer = new MutationObserver(() => scheduleDraw(true));
