@@ -547,7 +547,7 @@ function ArtistShelf({
       {footerCopy && (
         <div className="discover-artist-shelf-footer">
           <p>{MOCKUP_LOREM}</p>
-          <span>{footerCopy}</span>
+          <span className="audioflume-editorial-meta">{footerCopy}</span>
         </div>
       )}
     </section>
