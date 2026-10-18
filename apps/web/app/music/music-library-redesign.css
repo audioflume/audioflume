@@ -1549,7 +1549,7 @@ main
 @media (max-width: 536px) {
   .audioflume-music-page-searchbar,
   .audioflume-music-page-searchbar.is-filters-open {
-    grid-template-columns: 82px minmax(0, 1fr) 96px;
+    grid-template-columns: 82px minmax(0, 1fr) 120px;
   }
 
   .audioflume-music-page-searchbar
@@ -1683,6 +1683,7 @@ main
     .fw-filter-rail.is-accordion {
     height: 100% !important;
     overflow-y: auto !important;
+    border-top: 1.25px solid var(--border) !important;
     overscroll-behavior: contain;
   }
 
