@@ -156,14 +156,20 @@ export default function Footer({
         ref={footerRef}
         className={`box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isInteriorDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
         style={{
-          width: isEditorialLandingPage
-            ? usesCuratedFooterGeometry
-              ? "calc(100% - var(--filmwave-editorial-inset-compact) - var(--filmwave-editorial-inset-compact))"
-              : "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))"
-            : undefined,
-          maxWidth: isEditorialLandingPage
-            ? "var(--filmwave-editorial-max-width)"
-            : undefined,
+          width:
+            pathname === "/"
+              ? "var(--home-reference-width)"
+              : isEditorialLandingPage
+                ? usesCuratedFooterGeometry
+                  ? "calc(100% - var(--filmwave-editorial-inset-compact) - var(--filmwave-editorial-inset-compact))"
+                  : "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))"
+                : undefined,
+          maxWidth:
+            pathname === "/"
+              ? "none"
+              : isEditorialLandingPage
+                ? "var(--filmwave-editorial-max-width)"
+                : undefined,
           marginRight: isEditorialLandingPage ? "auto" : undefined,
           marginLeft: isEditorialLandingPage ? "auto" : undefined,
           paddingRight: isMusicPage
