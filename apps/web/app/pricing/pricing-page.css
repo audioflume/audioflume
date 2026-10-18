@@ -670,9 +670,11 @@
 
 .audioflume-pricing-plan-action-row > a {
   width: 100%;
+  min-width: 0;
   max-width: none;
   height: 52px;
   min-height: 52px;
+  flex: 1 1 auto;
 }
 
 .audioflume-pricing-plan-features {
