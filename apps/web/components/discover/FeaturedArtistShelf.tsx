@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -96,7 +97,7 @@ export default function FeaturedArtistShelf({
       {headingVisible ? (
         <div className="discover-artist-featured-heading">
           <span>This month&apos;s featured artists</span>
-          <Link href="/discover">Explore artists &amp; composers</Link>
+          <Link href="/discover" className="inline-flex items-center gap-[5px]">Explore artists &amp; composers<ArrowUpRightIcon size={12} /></Link>
         </div>
       ) : null}
 
