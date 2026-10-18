@@ -683,31 +683,33 @@ export default function HomePageContent({
                 </Link>
               </div>
 
-              <h2 className="audioflume-home-lifetime-feature-heading">
-                Lifetime access<br />to original music.
-              </h2>
+              <div className="audioflume-home-lifetime-feature-main">
+                <h2 className="audioflume-home-lifetime-feature-heading">
+                  Lifetime access<br />to original music.
+                </h2>
 
-              <div className="audioflume-home-lifetime-feature-pricing">
-                <div className="audioflume-home-lifetime-feature-price-group is-regular">
-                  <span className="audioflume-pricing-lifetime-badge">Regular price</span>
-                  <div className="audioflume-pricing-plan-price">
-                    <strong>$199</strong>
+                <div className="audioflume-home-lifetime-feature-pricing">
+                  <div className="audioflume-home-lifetime-feature-price-group is-regular">
+                    <span className="audioflume-pricing-lifetime-badge">Regular price</span>
+                    <div className="audioflume-pricing-plan-price">
+                      <strong>$199</strong>
+                    </div>
+                  </div>
+                  <div className="audioflume-home-lifetime-feature-price-group">
+                    <span className="audioflume-pricing-lifetime-badge is-light">
+                      Limited time offer
+                    </span>
+                    <div className="audioflume-pricing-plan-price">
+                      <strong>$99</strong>
+                      <span>One time payment</span>
+                    </div>
                   </div>
                 </div>
-                <div className="audioflume-home-lifetime-feature-price-group">
-                  <span className="audioflume-pricing-lifetime-badge is-light">
-                    Limited time offer
-                  </span>
-                  <div className="audioflume-pricing-plan-price">
-                    <strong>$99</strong>
-                    <span>One time payment</span>
-                  </div>
-                </div>
+
+                <p className="audioflume-home-lifetime-feature-description">
+                  Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees.
+                </p>
               </div>
-
-              <p className="audioflume-home-lifetime-feature-description">
-                Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees.
-              </p>
             </div>
 
             <div
