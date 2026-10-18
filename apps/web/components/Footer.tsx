@@ -94,20 +94,14 @@ export default function Footer({
     pathname === "/artists/apply" ||
     pathname === "/artists/licensing" ||
     pathname === "/artists/earnings";
-  const usesCuratedFooterGeometry =
-    pathname === "/" || pathname === "/pricing" || pathname === "/curated-playlists";
   const isCommunityPlaylistsPage = pathname === "/community-playlists";
   const isPublicArtistPage =
     /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
       pathname,
     );
-  const removePageGutter =
-    !pageGutter ||
-    isProjectDetailPage ||
-    isEditorialLandingPage ||
-    isInteriorDetailPage ||
-    isCommunityPlaylistsPage ||
-    isPublicArtistPage;
+  const isStandaloneFooter =
+    (isEditorialLandingPage && pathname !== "/discover") ||
+    pathname === "/artists/claim";
   const shouldShowTopBorder = showTopBorder && !isPlaylistDetailPage;
 
   useEffect(() => {
@@ -159,29 +153,14 @@ export default function Footer({
           width:
             pathname === "/"
               ? "var(--home-reference-width)"
-              : isEditorialLandingPage
-                ? usesCuratedFooterGeometry
-                  ? "calc(100% - var(--filmwave-editorial-inset-compact) - var(--filmwave-editorial-inset-compact))"
-                  : "calc(100% - var(--filmwave-editorial-inset) - var(--filmwave-editorial-inset))"
-                : undefined,
-          maxWidth:
-            pathname === "/"
-              ? "none"
-              : isEditorialLandingPage
-                ? "var(--filmwave-editorial-max-width)"
-                : undefined,
-          marginRight: isEditorialLandingPage ? "auto" : undefined,
-          marginLeft: isEditorialLandingPage ? "auto" : undefined,
-          paddingRight: isMusicPage
-            ? "30px"
-            : removePageGutter
-              ? "0px"
-              : undefined,
-          paddingLeft: isMusicPage
-            ? "30px"
-            : removePageGutter
-              ? "0px"
-              : undefined,
+              : isStandaloneFooter
+                ? "calc(100% - var(--filmwave-page-gutter) - var(--filmwave-page-gutter))"
+                : "100%",
+          maxWidth: "none",
+          marginRight: isStandaloneFooter ? "auto" : "0",
+          marginLeft: isStandaloneFooter ? "auto" : "0",
+          paddingRight: "0px",
+          paddingLeft: "0px",
           paddingBottom: shouldUsePlayerPadding
             ? playerVisible
               ? "calc(72px + 8px)"
