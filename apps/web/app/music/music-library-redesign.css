@@ -1546,7 +1546,7 @@ main
 }
 
 
-@media (max-width: 536px) {
+@media (max-width: 320px) {
   .audioflume-music-page-searchbar,
   .audioflume-music-page-searchbar.is-filters-open {
     grid-template-columns: 82px minmax(0, 1fr) 120px;
