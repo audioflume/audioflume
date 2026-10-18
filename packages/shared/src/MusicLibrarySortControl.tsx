@@ -112,6 +112,18 @@ export function MusicLibrarySortControl({
             strokeWidth="1.6"
           />
         </svg>
+        <svg
+          aria-hidden="true"
+          viewBox="0 0 24 24"
+          focusable="false"
+          className="filmwave-music-sort-responsive-icon"
+        >
+          <path d="M7 5V19" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M4.5 16.5L7 19L9.5 16.5" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" />
+          <path d="M13 7H20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M13 12H18" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+          <path d="M13 17H16" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" />
+        </svg>
       </button>
 
       {isOpen ? (
