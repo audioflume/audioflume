@@ -728,7 +728,7 @@ body:has(.curated-playlists-page-root)
 
 @media (max-width: 980px) {
   .curated-page-intro {
-    width: calc(100vw - 48px);
+    width: 100%;
     grid-template-columns: 1fr;
     gap: 32px;
   }
