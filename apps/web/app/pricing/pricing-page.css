@@ -18,8 +18,8 @@
 .audioflume-pricing-plans-section,
 .audioflume-pricing-includes-section,
 .audioflume-pricing-enterprise-section {
-  width: calc(100% - 160px);
-  max-width: var(--filmwave-editorial-max-width);
+  width: var(--filmwave-page-width);
+  max-width: none;
   margin: 0 auto;
 }
 
