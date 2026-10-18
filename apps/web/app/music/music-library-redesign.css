@@ -805,21 +805,18 @@ main
   .fw-filter-accordion-detail-inner {
   min-height: 0;
   overflow: hidden;
-  padding: 0;
-  transition: padding 180ms ease;
 }
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
-  .fw-filter-accordion-detail.is-open
-  .fw-filter-accordion-detail-inner {
+  .fw-filter-accordion-content {
+  box-sizing: border-box;
   padding: 8px 0 14px;
 }
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
-  .fw-filter-accordion-detail.is-open
-  .fw-filter-accordion-detail-inner:has(.fw-filter-advanced-accordion) {
+  .fw-filter-accordion-content:has(.fw-filter-advanced-accordion) {
   padding: 0;
 }
 
