@@ -3076,7 +3076,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   width: clamp(170%, 188vw, 212%);
   grid-template-columns: repeat(14, minmax(0, 1fr));
   gap: 0;
-  transform: translate(-50%, -50%) rotate(28deg);
+  transform: translate(-50%, -50%) rotate(34deg);
   transform-origin: center;
 }
 
