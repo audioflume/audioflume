@@ -1782,6 +1782,10 @@ html
 }
 
 
+.audioflume-music-page .audioflume-music-filter-skeleton-wrap {
+  border-right: 1.25px solid var(--border);
+}
+
 .audioflume-music-page .audioflume-music-filter-skeleton-wrap .fw-filter-panel-body {
   display: block;
 }
