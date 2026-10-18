@@ -757,9 +757,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-card.is-artists {
   --audioflume-feature-artists-scale: 1;
   container-type: inline-size;
+  display: flex;
+  align-items: flex-end;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
     url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
+  padding: 0 4.73% 6.5%;
 }
 
 .audioflume-home-feature-flash-media {
@@ -813,8 +816,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-card.is-artists h2 {
-  bottom: 9%;
-  left: 4.73%;
+  position: relative;
   width: max-content;
   max-width: none;
   color: #ffffff;
