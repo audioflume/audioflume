@@ -1151,9 +1151,13 @@
   }
 
   .audioflume-pricing-overview {
+    width: 100%;
+    max-width: 500px;
     grid-template-columns: 1fr;
     gap: 28px;
+    margin-right: auto;
     margin-bottom: 44px;
+    margin-left: auto;
   }
 
   .audioflume-pricing-overview h1,
