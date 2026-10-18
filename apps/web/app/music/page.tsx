@@ -1296,8 +1296,10 @@ export default function MusicPage() {
       />
 
       <section
-        className={`min-h-screen pt-14 transition-[margin-left] duration-200 ${
-          filtersOpen ? "ml-[var(--sidebar-width)]" : "ml-0"
+        className={`music-page-content-shell min-h-screen pt-14 transition-[margin-left] duration-200 ${
+          filtersOpen
+            ? "is-filter-open ml-[var(--sidebar-width)]"
+            : "is-filter-closed ml-0"
         }`}
       >
         <div className="fw-music-content-column">
