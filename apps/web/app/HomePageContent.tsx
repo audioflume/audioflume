@@ -36,6 +36,7 @@ import type { Song } from "@/lib/types";
 
 const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
+const HOME_LIFETIME_COVER_TILE_COUNT = 56;
 const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg";
 const HOME_UI_GRAPHIC_DARK =
@@ -489,6 +490,29 @@ export default function HomePageContent({
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
   );
+  const lifetimeOriginalCovers = useMemo(
+    () =>
+      songs
+        .filter(
+          (song) =>
+            song.artist.trim().localeCompare("Audioflume", undefined, {
+              sensitivity: "base",
+            }) === 0 && Boolean(song.coverArt),
+        )
+        .map((song) => song.coverArt as string),
+    [songs],
+  );
+  const lifetimeCoverTiles = useMemo(
+    () =>
+      lifetimeOriginalCovers.length > 0
+        ? Array.from(
+            { length: HOME_LIFETIME_COVER_TILE_COUNT },
+            (_, index) =>
+              lifetimeOriginalCovers[index % lifetimeOriginalCovers.length],
+          )
+        : [],
+    [lifetimeOriginalCovers],
+  );
   const originalSongs = playableSongs.slice(
     HOME_SHELF_SONG_COUNT,
     HOME_SHELF_SONG_COUNT + 12,
@@ -715,7 +739,20 @@ export default function HomePageContent({
             <div
               className="audioflume-home-lifetime-feature-art"
               aria-hidden="true"
-            />
+            >
+              {lifetimeCoverTiles.length > 0 ? (
+                <div className="audioflume-home-lifetime-cover-grid">
+                  {lifetimeCoverTiles.map((coverArt, index) => (
+                    <img
+                      key={`${coverArt}-${index}`}
+                      src={coverArt}
+                      alt=""
+                      draggable={false}
+                    />
+                  ))}
+                </div>
+              ) : null}
+            </div>
           </div>
         </div>
 
