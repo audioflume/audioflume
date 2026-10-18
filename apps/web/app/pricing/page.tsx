@@ -263,7 +263,6 @@ export default async function PricingPage() {
         <div className="audioflume-pricing-plan-grid">
           {plans.map((plan, index) => {
             const isEnterprise = plan.name === "Enterprise";
-            const isRecommended = plan.name === "Studio";
             const planActionLabel = userId
               ? "Manage membership"
               : `Choose ${plan.name}`;
@@ -290,11 +289,6 @@ export default async function PricingPage() {
                 />
                 <div className="audioflume-pricing-plan-meta">
                   <p className="audioflume-pricing-plan-kicker">{plan.kicker}</p>
-                  {isRecommended ? (
-                    <span className="audioflume-pricing-plan-recommended">
-                      Best for most filmmakers
-                    </span>
-                  ) : null}
                 </div>
                 <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
                 <p className="audioflume-pricing-plan-description">
