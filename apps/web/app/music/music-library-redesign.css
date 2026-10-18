@@ -368,7 +368,7 @@ main
   .fw-filter-rail {
   box-sizing: border-box !important;
   gap: 0 !important;
-  padding: 10px 0 40px !important;
+  padding: 0 0 40px !important;
 }
 
 html.fw-display-exclude-ai-songs
@@ -907,7 +907,7 @@ html
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
-  transform: translate(-100%, calc(-1 * var(--audioflume-music-content-gap))) !important;
+  transform: translateX(-100%) !important;
   transition:
     transform 180ms ease,
     opacity 140ms ease,
@@ -921,7 +921,7 @@ html
   opacity: 1 !important;
   visibility: visible !important;
   pointer-events: auto !important;
-  transform: translate(0, calc(-1 * var(--audioflume-music-content-gap))) !important;
+  transform: translateX(0) !important;
   transition:
     transform 180ms ease,
     opacity 140ms ease !important;
