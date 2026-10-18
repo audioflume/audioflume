@@ -262,6 +262,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   min-height: 0;
   overflow: hidden;
   padding: 0;
+  transition: padding 180ms ease;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
