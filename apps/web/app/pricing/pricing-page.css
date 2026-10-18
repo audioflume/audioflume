@@ -734,7 +734,7 @@
 
 .audioflume-pricing-plan-price {
   display: grid;
-  min-height: 92px;
+  min-height: 72px;
   grid-template-columns: max-content max-content;
   align-items: baseline;
   column-gap: 8px;
@@ -771,7 +771,7 @@
 }
 
 .audioflume-pricing-plan-action-row {
-  margin-top: 12px;
+  margin-top: 8px;
 }
 
 .audioflume-pricing-plan-action-row > a {
