@@ -139,23 +139,14 @@
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  background: #111111;
-  color: #ffffff;
+  background: #ffffff;
+  color: #111111;
   padding: clamp(28px, 2.6vw, 40px);
 }
 
-.audioflume-pricing-plan-background {
-  z-index: 0;
-  object-fit: cover;
-  object-position: center;
-}
-
+.audioflume-pricing-plan-background,
 .audioflume-pricing-plan-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: rgba(17, 17, 17, 0.72);
-  pointer-events: none;
+  display: none;
 }
 
 .audioflume-pricing-plan > :not(.audioflume-pricing-plan-background):not(.audioflume-pricing-plan-overlay) {
@@ -165,35 +156,32 @@
 
 .audioflume-pricing-plan .audioflume-pricing-plan-kicker,
 .audioflume-pricing-plan .audioflume-pricing-plan-description {
-  color: rgba(255, 255, 255, 0.78) !important;
+  color: var(--text-secondary) !important;
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-features li {
-  color: #ffffff !important;
+  color: #111111 !important;
+  border-top-color: var(--border);
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-price span {
-  color: #ffffff !important;
+  color: #111111 !important;
   font-weight: 400;
 }
 
-.audioflume-pricing-plan .audioflume-pricing-plan-features li {
-  border-top-color: rgba(255, 255, 255, 0.24);
-}
-
 .audioflume-pricing-plan .audioflume-pricing-plan-features li::before {
-  background: #ffffff;
+  background: #111111;
 }
 
 .audioflume-pricing-plan .audioflume-public-action-button {
-  background: #ffffff !important;
-  color: #111111 !important;
+  background: #111111 !important;
+  color: #ffffff !important;
   opacity: 1 !important;
 }
 
 .audioflume-pricing-plan .audioflume-public-action-button:hover,
 .audioflume-pricing-plan .audioflume-public-action-button:focus-visible {
-  background: #111111 !important;
+  background: #2a2a2a !important;
   color: #ffffff !important;
   opacity: 1 !important;
 }
