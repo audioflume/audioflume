@@ -1295,7 +1295,7 @@
   .audioflume-pricing-hero-inner,
   .audioflume-pricing-plans-section,
   .audioflume-pricing-enterprise-section {
-    width: calc(100% - 40px);
+    width: var(--filmwave-page-width);
   }
 
   .audioflume-pricing-hero-media {
