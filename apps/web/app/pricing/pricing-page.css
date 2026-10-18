@@ -969,6 +969,27 @@
     display: none;
   }
 
+  .audioflume-pricing-lifetime-pricing {
+    width: 100%;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 22px;
+  }
+
+  .audioflume-pricing-lifetime-price-group {
+    width: 100%;
+  }
+
+  .audioflume-pricing-lifetime .audioflume-pricing-plan-price {
+    width: 100%;
+    grid-template-columns: max-content minmax(0, 1fr);
+  }
+
+  .audioflume-pricing-lifetime .audioflume-pricing-plan-price span {
+    min-width: 0;
+    white-space: normal;
+  }
+
   .audioflume-pricing-lifetime-action {
     justify-content: flex-start;
   }
