@@ -198,7 +198,7 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
   return (
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-        <span>New &amp; Trending Music</span>
+        <span>New &amp; trending music</span>
         <Link href="/music">Explore New Music</Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
@@ -340,7 +340,7 @@ function HomeTrendingSkeleton() {
   return (
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-        <span>New &amp; Trending Music</span>
+        <span>New &amp; trending music</span>
         <Link href="/music">Explore New Music</Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
@@ -671,7 +671,7 @@ export default function HomePageContent({
       <section className="audioflume-home-reference-tools">
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-            <span className="audioflume-editorial-meta">original music made in-house</span>
+            <span className="audioflume-editorial-meta">Original music made in-house</span>
             <Link href="/music?artist=Audioflume">Explore Original Music</Link>
           </div>
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
@@ -698,7 +698,7 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid audioflume-home-reference-tools-search">
           <div className="audioflume-home-reference-tools-column is-reference-search">
             <div className="audioflume-home-reference-section-heading">
-              <span>Search by Song</span>
+              <span>Search by song</span>
             </div>
             <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
               <GlobalReferenceSearch embedded />
@@ -709,7 +709,7 @@ export default function HomePageContent({
 
       <section className="audioflume-home-reference-new-songs">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-          <span>Newly Added Songs</span>
+          <span>Newly added songs</span>
           <Link href="/music">Explore New Music</Link>
         </div>
         <div className="audioflume-home-reference-width">
