@@ -1124,7 +1124,7 @@
     grid-template-columns: minmax(0, 680px);
     justify-content: center;
     gap: 42px;
-    padding: 42px;
+    padding: 56px 42px;
   }
 
   .audioflume-pricing-include-row {
