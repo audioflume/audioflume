@@ -35,7 +35,6 @@ body {
 }
 
 /* Explicit small non-uppercase treatments that previously tightened tracking. */
-.discover-artist-shelf-heading h2,
 .discover-artist-card-overlay strong,
 .discover-artist-card-meta strong,
 .discover-artist-editorial-meta span:first-child,
