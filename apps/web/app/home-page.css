@@ -2224,7 +2224,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-pricing-originals-shelf {
   position: relative;
-  min-height: 270px;
+  min-height: 0;
   overflow: hidden;
   background: #111111;
   color: #ffffff;
