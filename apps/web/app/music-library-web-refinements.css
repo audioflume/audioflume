@@ -12,6 +12,15 @@
   padding-left: var(--filmwave-page-gutter) !important;
 }
 
+.music-page-content-shell.is-filter-closed .filmwave-song-card {
+  width: calc(
+    100% + var(--filmwave-song-card-padding-left) +
+      var(--filmwave-song-card-padding-right)
+  );
+  margin-right: calc(-1 * var(--filmwave-song-card-padding-right));
+  margin-left: calc(-1 * var(--filmwave-song-card-padding-left));
+}
+
 .fw-toolbar-sticky {
   box-sizing: border-box !important;
   width: 100% !important;
