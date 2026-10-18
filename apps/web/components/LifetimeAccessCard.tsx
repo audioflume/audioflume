@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 
-function AudioflumeOriginalsLogo() {
+export function AudioflumeOriginalsLogo() {
   return (
     <svg
       className="audioflume-pricing-lifetime-logo"
