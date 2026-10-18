@@ -501,7 +501,8 @@ main
 
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
-    .filmwave-music-sort-responsive-icon {
+    .filmwave-music-sort-button
+    > .filmwave-music-sort-responsive-icon {
     display: block;
     width: 17px !important;
     height: 17px !important;
