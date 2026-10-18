@@ -236,7 +236,7 @@
 }
 
 html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audioflume-pricing-plan-description {
-  color: var(--text-secondary);
+  color: #ffffff;
 }
 
 .audioflume-pricing-lifetime-offer {
