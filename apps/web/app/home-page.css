@@ -1013,14 +1013,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending-title-row > small {
-  width: clamp(175px, 13vw, 195px);
+  width: clamp(205px, 15vw, 235px);
   color: #ffffff;
   -webkit-text-fill-color: #ffffff;
-  font-size: clamp(13px, 0.98vw, 15px);
+  font-size: clamp(15px, 1.12vw, 17px);
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.35;
-  transform: translateY(-25px);
+  transform: translateY(-1.35em);
 }
 
 .audioflume-home-reference-trending-list {
@@ -1134,8 +1134,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-trending-title-row > small {
-    width: clamp(195px, 23.5vw, 230px);
-    font-size: clamp(14px, 1.85vw, 18px);
+    width: clamp(220px, 25vw, 255px);
+    font-size: clamp(16px, 1.95vw, 19px);
   }
 
   .audioflume-home-reference-trending-visual {
@@ -1159,10 +1159,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .audioflume-home-reference-trending-title > span:first-child,
   .audioflume-home-reference-trending-title-row {
     white-space: nowrap;
-  }
-
-  .audioflume-home-reference-trending-title-row > small {
-    transform: translateY(-20px);
   }
 
 }
