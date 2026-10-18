@@ -1233,7 +1233,7 @@ html
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item {
-  height: 60px !important;
+  height: calc(60px - 1.25px) !important;
 }
 
 .audioflume-music-page
