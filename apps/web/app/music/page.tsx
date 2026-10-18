@@ -340,6 +340,27 @@ export default function MusicPage() {
   const [filtersOpen, setFiltersOpen] = useState(
     () => searchParams.get("filters") !== "closed",
   );
+
+  useEffect(() => {
+    const mobileFiltersQuery = window.matchMedia("(max-width: 536px)");
+
+    const closeDesktopSidebarForMobile = (event: MediaQueryListEvent) => {
+      if (event.matches) setFiltersOpen(false);
+    };
+
+    if (mobileFiltersQuery.matches) {
+      setFiltersOpen(false);
+    }
+
+    mobileFiltersQuery.addEventListener("change", closeDesktopSidebarForMobile);
+
+    return () => {
+      mobileFiltersQuery.removeEventListener(
+        "change",
+        closeDesktopSidebarForMobile,
+      );
+    };
+  }, []);
   const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
