@@ -837,6 +837,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists h2 {
+  position: absolute;
+  bottom: 17%;
+  left: 11.5%;
   color: #111111;
   font-size: clamp(31px, 2.4vw, 44px);
 }
