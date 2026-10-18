@@ -191,6 +191,47 @@ function HomeSongShelf({
   );
 }
 
+function HomeOriginalSongCard({ song }: { song: Song }) {
+  const { togglePlayPause } = usePlayer();
+  const playing = useIsCurrentSongPlaying(song.id);
+
+  return (
+    <article
+      className={`audioflume-home-reference-original-song-card${playing ? " is-playing" : ""}`}
+    >
+      <button
+        type="button"
+        className="audioflume-home-reference-original-song-card-play"
+        onClick={() => togglePlayPause(song)}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {song.coverArt ? (
+          <img src={song.coverArt} alt="" draggable={false} />
+        ) : (
+          <span className="audioflume-home-reference-original-song-card-fallback" />
+        )}
+        <span className="audioflume-home-reference-original-song-card-icon">
+          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+        </span>
+      </button>
+      <span className="audioflume-home-reference-original-song-card-copy">
+        <strong>{song.title}</strong>
+        <span>{song.artist}</span>
+      </span>
+    </article>
+  );
+}
+
+function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
+  return (
+    <div className="audioflume-home-reference-original-song-grid">
+      {songs.slice(0, 12).map((song) => (
+        <HomeOriginalSongCard key={song.id} song={song} />
+      ))}
+    </div>
+  );
+}
+
 function HomeTrendingSection({ songs }: { songs: Song[] }) {
   const visibleSongs = songs.slice(0, 7);
 
@@ -513,10 +554,14 @@ export default function HomePageContent({
         : [],
     [lifetimeOriginalCovers],
   );
-  const originalSongs = playableSongs.slice(
-    HOME_SHELF_SONG_COUNT,
-    HOME_SHELF_SONG_COUNT + 12,
-  );
+  const originalSongs = playableSongs
+    .filter(
+      (song) =>
+        song.artist.trim().localeCompare("Audioflume", undefined, {
+          sensitivity: "base",
+        }) === 0,
+    )
+    .slice(0, 12);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
 
   useEffect(() => {
@@ -755,6 +800,28 @@ export default function HomePageContent({
             </div>
           </div>
         </div>
+
+        <section className="audioflume-home-reference-playlists">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+            <span>Audioflume originals</span>
+            <Link
+              href="/music?artist=Audioflume"
+              className="inline-flex items-center gap-[5px]"
+            >
+              Explore originals
+              <ArrowUpRightIcon
+                size={16}
+                strokeWidth={1.5}
+                className="translate-y-[2px]"
+              />
+            </Link>
+          </div>
+          {songsLoading ? (
+            <HomeOriginalsSkeleton />
+          ) : originalSongs.length > 0 ? (
+            <HomeOriginalSongGrid songs={originalSongs} />
+          ) : null}
+        </section>
 
         <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid audioflume-home-reference-tools-search">
           <div className="audioflume-home-reference-tools-column is-reference-search">
