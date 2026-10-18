@@ -378,8 +378,8 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   padding-left: 28px !important;
 }
 
-.fw-music-content-column {
-  padding-top: 16px !important;
+.audioflume-music-page .fw-music-content-column {
+  padding-top: 0 !important;
 }
 
 /* ─── Restore web top-nav/sidebar-hidden layout ───────────── */
