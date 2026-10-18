@@ -72,6 +72,7 @@ export default function SongCard({
   highlightedEditPointTypes = [],
   showEditPointMarkers: showEditPointMarkersProp,
   showDivider = true,
+  resizeWaveformWhenVisibleOnly = false,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
@@ -83,6 +84,7 @@ export default function SongCard({
   highlightedEditPointTypes?: string[];
   showEditPointMarkers?: boolean;
   showDivider?: boolean;
+  resizeWaveformWhenVisibleOnly?: boolean;
   onRemoveFromPlaylist?: (songId: string) => void;
   onRemoveFromProject?: (songId: string) => void;
 }) {
@@ -270,6 +272,7 @@ export default function SongCard({
             song={song}
             highlightedEditPointTypes={highlightedEditPointTypes}
             showEditPointMarkers={showEditPointMarkers}
+            resizeWhenVisibleOnly={resizeWaveformWhenVisibleOnly}
           />
         }
         duration={durationLabel}
