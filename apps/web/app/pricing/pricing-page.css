@@ -232,6 +232,10 @@
 .audioflume-pricing-lifetime .audioflume-pricing-plan-description {
   min-height: 0;
   margin: 22px 0 0;
+  color: #111111;
+}
+
+html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audioflume-pricing-plan-description {
   color: var(--text-secondary);
 }
 
