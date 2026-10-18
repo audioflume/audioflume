@@ -279,6 +279,12 @@
   stroke-width: 1.6 !important;
 }
 
+.audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar-sort
+  .filmwave-music-sort-responsive-icon {
+  display: none;
+}
+
 html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
   padding-top: 0 !important;
 }
@@ -488,7 +494,27 @@ main
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-chevron {
+    display: none;
+  }
+
+  .audioflume-music-page-searchbar
+    .audioflume-music-page-searchbar-sort
+    .filmwave-music-sort-responsive-icon {
+    display: block;
+    width: 17px !important;
+    height: 17px !important;
+    flex: 0 0 17px !important;
     margin-left: 0 !important;
+  }
+
+  :where(html.light, html[data-theme="light"])
+    .audioflume-music-page-searchbar
+    .audioflume-music-page-searchbar-song,
+  :where(html.light, html[data-theme="light"])
+    .audioflume-music-page-searchbar
+    .audioflume-music-page-searchbar-sort
+    .filmwave-music-sort-button {
+    border: 1.25px solid var(--border) !important;
   }
 }
 
