@@ -17,6 +17,7 @@ import FeaturedArtistShelf from "@/components/discover/FeaturedArtistShelf";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -386,7 +387,7 @@ function ReadyToCutTracks({ songs }: { songs: Song[] }) {
     <section className="discover-track-section">
       <div className="discover-track-section-heading">
         <SectionTitle variant="small">Ready-to-cut tracks</SectionTitle>
-        <Link href="/music">Explore more tracks</Link>
+        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore more tracks<ArrowUpRightIcon size={12} /></Link>
       </div>
 
       <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
