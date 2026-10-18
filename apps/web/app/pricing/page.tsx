@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 
 import Footer from "@/components/Footer";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import LifetimeAccessCard from "@/components/LifetimeAccessCard";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
@@ -372,7 +373,7 @@ export default async function PricingPage() {
         <section className="audioflume-pricing-comparison-section">
           <div className="audioflume-pricing-comparison-heading">
             <span>Plan Comparison</span>
-            <Link href="/artists/licensing">View licensing details</Link>
+            <Link href="/artists/licensing" className="inline-flex items-center gap-[5px]">View licensing details<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" /></Link>
           </div>
           <div className="audioflume-pricing-comparison-block">
             <table className="audioflume-pricing-comparison-table">
