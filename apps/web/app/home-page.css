@@ -1119,8 +1119,20 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 
 @media (min-width: 981px) and (max-width: 1180px) {
+  .audioflume-home-reference-feature-pair-card.is-artists {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 18px;
+  }
+
   .audioflume-home-reference-feature-pair-card.is-artists h2 {
-    transform: translateY(-52px) scale(var(--audioflume-feature-artists-scale));
+    width: 100%;
+    transform: scale(var(--audioflume-feature-artists-scale));
+  }
+
+  .audioflume-home-reference-feature-pair-card.is-artists .audioflume-home-reference-feature-pair-link {
+    align-self: flex-end;
   }
 }
 
