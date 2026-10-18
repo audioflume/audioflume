@@ -1121,7 +1121,8 @@
   .audioflume-pricing-includes-section {
     box-sizing: border-box;
     width: 100%;
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 680px);
+    justify-content: center;
     gap: 42px;
     padding: 42px;
   }
