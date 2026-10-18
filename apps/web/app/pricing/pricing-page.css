@@ -836,16 +836,6 @@
 
   .audioflume-pricing-plan {
     width: 100%;
-    min-height: 0;
-  }
-
-  .audioflume-pricing-plan-description,
-  .audioflume-pricing-plan-price {
-    min-height: 0;
-  }
-
-  .audioflume-pricing-plan-features {
-    margin-top: 36px;
   }
 }
 
