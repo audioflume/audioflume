@@ -471,11 +471,6 @@ main
   --audioflume-music-content-gap: 20px;
 }
 
-.music-page-content-shell.is-filter-closed > .fw-music-content-column {
-  padding-right: var(--filmwave-page-gutter) !important;
-  padding-left: var(--filmwave-page-gutter) !important;
-}
-
 .music-page-content-shell .filmwave-song-card {
   width: calc(
     100% + var(--filmwave-song-card-padding-left) +
