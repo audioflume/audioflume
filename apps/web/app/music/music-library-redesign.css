@@ -334,6 +334,16 @@ main
 }
 
 @media (max-width: 640px) {
+  .audioflume-music-page
+    > section
+    > .fw-music-content-column
+    > .fw-song-list {
+    margin-right: 12px !important;
+    margin-left: 8px !important;
+    padding-right: 0 !important;
+    padding-left: 0 !important;
+  }
+
   main
     > section:has(.fw-music-content-column .fw-filter-panel-wrap.is-open)
     .fw-song-list {
