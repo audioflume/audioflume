@@ -1365,6 +1365,7 @@ export default function MusicPage() {
                         onDurationsChange={setSelectedDurations}
                         groupAdvancedControls
                         advancedCountControls
+                        showMobileCloseButton
                         advancedGroupIds={["build", "region"]}
                         markersActive={effectiveShowEditPointMarkers}
                         markersDisabled={!filtersHydrated}
