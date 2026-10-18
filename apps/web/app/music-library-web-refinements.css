@@ -7,6 +7,11 @@
   padding-left: var(--fw-music-content-inset-right) !important;
 }
 
+.music-page-content-shell.is-filter-closed > .fw-music-content-column {
+  padding-right: var(--filmwave-page-gutter) !important;
+  padding-left: var(--filmwave-page-gutter) !important;
+}
+
 .fw-toolbar-sticky {
   box-sizing: border-box !important;
   width: 100% !important;
