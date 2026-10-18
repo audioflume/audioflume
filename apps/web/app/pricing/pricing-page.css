@@ -731,10 +731,12 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action >
   }
 
   .audioflume-pricing-plan-grid {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 437px);
+    justify-content: center;
   }
 
   .audioflume-pricing-plan {
+    width: 100%;
     min-height: 0;
   }
 
