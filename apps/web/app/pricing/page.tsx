@@ -466,22 +466,21 @@ export default async function PricingPage() {
             <Link href="/artists/licensing">View licensing details</Link>
           </div>
           <div className="audioflume-pricing-comparison-block">
-            <div className="overflow-x-auto">
-            <table className="w-full min-w-[820px] border-collapse">
+            <table className="audioflume-pricing-comparison-table">
               <thead>
                 <tr className="border-b-[1.25px] border-[var(--border)]">
-                  <th className="w-[34%] pb-8 pr-8 text-left align-top" scope="col">
+                  <th className="audioflume-pricing-comparison-label-column" scope="col">
                     <p className="audioflume-pricing-section-eyebrow mb-1">
                       Flexible Licensing Options
                     </p>
-                    <h2 className="mt-[29px] max-w-none whitespace-nowrap font-[family-name:var(--font-aktiv-grotesk)] text-[clamp(28px,2.5vw,36px)] font-normal leading-[0.94] tracking-[-0.035em]">
+                    <h2 className="audioflume-pricing-comparison-title">
                       Compare these plans.
                     </h2>
                   </th>
                   {plans.map((plan, index) => (
                     <th
                       key={plan.name}
-                      className={`w-[22%] px-5 pb-8 text-center align-top${index > 0 ? " border-l-[1.25px] border-[var(--border)]" : ""}`}
+                      className={`audioflume-pricing-comparison-plan-column${index > 0 ? " border-l-[1.25px] border-[var(--border)]" : ""}`}
                       scope="col"
                     >
                       <p className="audioflume-pricing-plan-name">{plan.name}</p>
@@ -499,25 +498,24 @@ export default async function PricingPage() {
               <tbody>
                 {planComparisonRows.map((row) => (
                   <tr key={row.label} className="border-b-[1.25px] border-[var(--border)] last:border-b-0">
-                    <th className="py-6 pr-8 text-left" scope="row">
+                    <th className="audioflume-pricing-comparison-row-label" scope="row">
                       <div className="audioflume-pricing-include-title">
                         {row.label}
                       </div>
                     </th>
-                    <td className="px-5 py-6 text-center">
+                    <td className="audioflume-pricing-comparison-status-cell">
                       <PlanStatus included={row.starter} />
                     </td>
-                    <td className="border-l-[1.25px] border-[var(--border)] px-5 py-6 text-center">
+                    <td className="audioflume-pricing-comparison-status-cell border-l-[1.25px] border-[var(--border)]">
                       <PlanStatus included={row.studio} />
                     </td>
-                    <td className="border-l-[1.25px] border-[var(--border)] px-5 py-6 text-center">
+                    <td className="audioflume-pricing-comparison-status-cell border-l-[1.25px] border-[var(--border)]">
                       <PlanStatus included={row.enterprise} />
                     </td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            </div>
           </div>
         </section>
       </section>
