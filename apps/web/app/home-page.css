@@ -1120,11 +1120,26 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 @media (max-width: 980px) {
   .audioflume-home-reference-feature-pair-grid,
   .audioflume-home-reference-tools-grid {
+    width: var(--home-reference-width);
     grid-template-columns: 1fr;
   }
 
   .audioflume-home-reference-feature-pair-card {
+    width: 100%;
     aspect-ratio: 1.48 / 1;
+  }
+
+  .audioflume-home-reference-feature-pair-card.is-artists {
+    gap: 16px;
+  }
+
+  .audioflume-home-reference-feature-pair-card.is-artists h2 {
+    font-size: clamp(50px, 6vw, 62px);
+  }
+
+  .audioflume-home-reference-feature-pair-card.is-playlists h2 {
+    bottom: 20%;
+    left: 8%;
   }
 
   .audioflume-home-reference-trending-grid {
@@ -1798,7 +1813,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference {
-    --home-reference-width: min(100% - 48px, 820px);
+    --home-reference-width: calc(100vw - 48px);
   }
 
   .audioflume-home-reference-hero {
@@ -1852,7 +1867,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference {
-    --home-reference-width: calc(100vw - 40px);
+    --home-reference-width: calc(100vw - 36px);
   }
 
   .audioflume-home-reference-hero {
