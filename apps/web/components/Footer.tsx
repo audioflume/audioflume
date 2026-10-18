@@ -69,7 +69,6 @@ export default function Footer({
   className = "",
   playerPadding = true,
   showTopBorder = true,
-  pageGutter = true,
 }: FooterProps) {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
@@ -79,26 +78,12 @@ export default function Footer({
   const isMusicPage = pathname === "/music";
   const isAdminPage = pathname.startsWith("/admin");
   const shouldUsePlayerPadding = playerPadding || isAdminPage;
-  const isProjectDetailPage = /^\/projects\/[^/]+/.test(pathname);
   const isPlaylistDetailPage =
     /^\/playlists\/[^/]+/.test(pathname) ||
     /^\/curated-playlists\/[^/]+/.test(pathname) ||
     /^\/community-playlists\/[^/]+/.test(pathname);
   const isAlbumDetailPage = /^\/artists\/[^/]+\/albums\/[^/]+/.test(pathname);
   const isInteriorDetailPage = isPlaylistDetailPage || isAlbumDetailPage;
-  const isEditorialLandingPage =
-    pathname === "/" ||
-    pathname === "/pricing" ||
-    pathname === "/discover" ||
-    pathname === "/curated-playlists" ||
-    pathname === "/artists/apply" ||
-    pathname === "/artists/licensing" ||
-    pathname === "/artists/earnings";
-  const isCommunityPlaylistsPage = pathname === "/community-playlists";
-  const isPublicArtistPage =
-    /^\/artists\/(?!apply(?:\/|$)|claim(?:\/|$)|dashboard(?:\/|$))[^/]+\/?$/.test(
-      pathname,
-    );
   const shouldShowTopBorder = showTopBorder && !isPlaylistDetailPage;
 
   useEffect(() => {
