@@ -16,6 +16,7 @@ import LifetimeAccessCard from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
+import PricingOriginalsShelf from "./pricing/PricingOriginalsShelf";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -488,6 +489,14 @@ export default function HomePageContent({
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
   );
+  const audioflumeOriginalSongs = playableSongs
+    .filter(
+      (song) =>
+        song.artist.trim().localeCompare("Audioflume", undefined, {
+          sensitivity: "base",
+        }) === 0,
+    )
+    .slice(0, 8);
   const originalSongs = playableSongs.slice(
     HOME_SHELF_SONG_COUNT,
     HOME_SHELF_SONG_COUNT + 12,
@@ -660,17 +669,6 @@ export default function HomePageContent({
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
 
       <section className="audioflume-home-reference-tools">
-        <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid">
-          <div className="audioflume-home-reference-tools-column is-reference-search">
-            <div className="audioflume-home-reference-section-heading">
-              <span>Search by Song</span>
-            </div>
-            <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
-              <GlobalReferenceSearch embedded />
-            </div>
-          </div>
-        </div>
-
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
             <span>Audioflume Originals</span>
@@ -681,6 +679,30 @@ export default function HomePageContent({
               membershipHref={membershipHref}
               membershipLabel={membershipLabel}
             />
+            {audioflumeOriginalSongs.length > 0 ? (
+              <div className="audioflume-pricing-originals-shelf">
+                <div
+                  className="audioflume-pricing-originals-shelf-background"
+                  aria-hidden="true"
+                />
+                <div
+                  className="audioflume-pricing-originals-shelf-overlay"
+                  aria-hidden="true"
+                />
+                <PricingOriginalsShelf songs={audioflumeOriginalSongs} />
+              </div>
+            ) : null}
+          </div>
+        </div>
+
+        <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid audioflume-home-reference-tools-search">
+          <div className="audioflume-home-reference-tools-column is-reference-search">
+            <div className="audioflume-home-reference-section-heading">
+              <span>Search by Song</span>
+            </div>
+            <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
+              <GlobalReferenceSearch embedded />
+            </div>
           </div>
         </div>
       </section>
