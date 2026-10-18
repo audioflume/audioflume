@@ -2691,7 +2691,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   align-items: center;
   justify-content: center;
   margin-bottom: 9px;
-  background: #e5e5dd;
+  background: #d8d8d3;
   padding: 0 7px;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
