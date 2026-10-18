@@ -158,3 +158,14 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
   margin-right: auto;
   margin-left: auto;
 }
+
+
+/* Shared editorial meta label used across Home and Discover. */
+.audioflume-editorial-meta {
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 18px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1.15;
+  text-transform: uppercase;
+}
