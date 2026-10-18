@@ -13,7 +13,7 @@
   padding-left: var(--filmwave-page-gutter) !important;
 }
 
-.music-page-content-shell.is-filter-closed .filmwave-song-card {
+.music-page-content-shell .filmwave-song-card {
   width: calc(
     100% + var(--filmwave-song-card-padding-left) +
       var(--filmwave-song-card-padding-right)
