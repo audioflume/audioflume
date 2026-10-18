@@ -830,6 +830,15 @@ main
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
+  .fw-filter-accordion-content.fw-filter-advanced-panel-content:has(
+    > .fw-filter-control-stack
+  ) {
+  padding-top: 18px;
+  padding-bottom: 18px;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
   > .fw-filter-accordion-section:has(
     > .fw-filter-rail-item[data-filter-section-id="advanced"][aria-expanded="true"]
   )
