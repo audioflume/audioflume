@@ -128,7 +128,7 @@ export default function Footer({
         }
 
         .audioflume-site-footer {
-          width: calc(100vw - 160px) !important;
+          width: var(--filmwave-page-width) !important;
           max-width: none !important;
           margin-right: auto !important;
           margin-left: auto !important;
@@ -136,11 +136,6 @@ export default function Footer({
           padding-left: 0 !important;
         }
 
-        @media (max-width: 980px) {
-          .audioflume-site-footer {
-            width: calc(100vw - 48px) !important;
-          }
-        }
       `}</style>
 
       <footer
