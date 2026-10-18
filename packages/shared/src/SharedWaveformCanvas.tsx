@@ -47,6 +47,7 @@ export type SharedWaveformCanvasProps = {
   ariaLabel?: string;
   options?: WaveformBarOptions;
   onPointerEnter?: () => void;
+  resizeWhenVisibleOnly?: boolean;
 };
 
 const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWaveformCanvasProps>(
@@ -61,6 +62,7 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
       ariaLabel = "Seek",
       options,
       onPointerEnter,
+      resizeWhenVisibleOnly = false,
     },
     ref,
   ) {
@@ -69,6 +71,7 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
     const waveformBarsRef = useRef<number[]>([]);
     const waveformProgressRef = useRef(0);
     const animationFrameRef = useRef<number | null>(null);
+    const resizeActiveRef = useRef(!resizeWhenVisibleOnly);
     const drawCacheRef = useRef<WaveformCanvasDrawCache>(
       createWaveformCanvasDrawCache(),
     );
@@ -140,8 +143,50 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
       const waveform = waveformRef.current;
       if (!waveform) return;
 
+      if (!resizeWhenVisibleOnly) {
+        resizeActiveRef.current = true;
+        return;
+      }
+
+      if (typeof IntersectionObserver === "undefined") {
+        resizeActiveRef.current = true;
+        return;
+      }
+
+      resizeActiveRef.current = false;
+
+      const intersectionObserver = new IntersectionObserver(
+        ([entry]) => {
+          const isActive = Boolean(entry?.isIntersecting);
+          resizeActiveRef.current = isActive;
+
+          if (!isActive) return;
+
+          const nextWidth = Math.floor(waveform.getBoundingClientRect().width);
+          setWaveformWidth((currentWidth) =>
+            currentWidth === nextWidth ? currentWidth : nextWidth,
+          );
+          scheduleDraw(true);
+        },
+        { rootMargin: "300px 0px" },
+      );
+
+      intersectionObserver.observe(waveform);
+
+      return () => intersectionObserver.disconnect();
+    }, [resizeWhenVisibleOnly, scheduleDraw]);
+
+    useEffect(() => {
+      const waveform = waveformRef.current;
+      if (!waveform) return;
+
       const updateWidth = () => {
-        setWaveformWidth(Math.floor(waveform.getBoundingClientRect().width));
+        if (resizeWhenVisibleOnly && !resizeActiveRef.current) return;
+
+        const nextWidth = Math.floor(waveform.getBoundingClientRect().width);
+        setWaveformWidth((currentWidth) =>
+          currentWidth === nextWidth ? currentWidth : nextWidth,
+        );
         scheduleDraw(true);
       };
 
@@ -158,7 +203,7 @@ const SharedWaveformCanvas = forwardRef<SharedWaveformCanvasHandle, SharedWavefo
         window.removeEventListener("resize", updateWidth);
         window.clearTimeout(timeout);
       };
-    }, [scheduleDraw]);
+    }, [resizeWhenVisibleOnly, scheduleDraw]);
 
     useEffect(() => {
       const observer = new MutationObserver(() => scheduleDraw(true));
