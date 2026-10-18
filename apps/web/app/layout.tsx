@@ -106,6 +106,38 @@ export default async function RootLayout({
         suppressHydrationWarning
       >
         <head>
+          <script
+            dangerouslySetInnerHTML={{
+              __html: `
+                (function () {
+                  try {
+                    var theme =
+                      window.localStorage.getItem("filmwave-theme-mode") ||
+                      window.localStorage.getItem("filmwave-theme");
+                    if (theme !== "light" && theme !== "dark") {
+                      theme =
+                        document.documentElement.dataset.theme === "light"
+                          ? "light"
+                          : "dark";
+                    }
+                    document.documentElement.dataset.theme = theme;
+                    document.documentElement.classList.toggle(
+                      "light",
+                      theme === "light",
+                    );
+                    document.cookie =
+                      "filmwave-theme-mode=" +
+                      theme +
+                      ";path=/;max-age=31536000;SameSite=Lax";
+                    document.cookie =
+                      "filmwave-theme=" +
+                      theme +
+                      ";path=/;max-age=31536000;SameSite=Lax";
+                  } catch (_) {}
+                })();
+              `,
+            }}
+          />
           <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
