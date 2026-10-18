@@ -322,15 +322,16 @@ export default async function PricingPage() {
 
             return (
               <article key={plan.name} className="audioflume-pricing-plan">
+                <Image
+                  src={planImage}
+                  alt=""
+                  fill
+                  sizes="(max-width: 1168px) 50vw, 33vw"
+                  className="audioflume-pricing-plan-background"
+                  aria-hidden="true"
+                />
+
                 <div className="audioflume-pricing-plan-banner">
-                  <Image
-                    src={planImage}
-                    alt=""
-                    fill
-                    sizes="(max-width: 1168px) 50vw, 33vw"
-                    className="audioflume-pricing-plan-banner-background"
-                    aria-hidden="true"
-                  />
                   <span
                     className="audioflume-pricing-plan-banner-overlay"
                     aria-hidden="true"
