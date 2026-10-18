@@ -15,7 +15,6 @@ export type SongCardWaveformProps = {
   options?: WaveformBarOptions;
   onSeek?: (progress: number) => void;
   onPointerEnter?: () => void;
-  resizeWhenVisibleOnly?: boolean;
 };
 
 export const SongCardWaveform = forwardRef<
@@ -31,7 +30,6 @@ export const SongCardWaveform = forwardRef<
     options,
     onSeek,
     onPointerEnter,
-    resizeWhenVisibleOnly = false,
   },
   ref,
 ) {
@@ -47,7 +45,6 @@ export const SongCardWaveform = forwardRef<
       ariaLabel={ariaLabel}
       options={options}
       onPointerEnter={onPointerEnter}
-      resizeWhenVisibleOnly={resizeWhenVisibleOnly}
     />
   );
 });
