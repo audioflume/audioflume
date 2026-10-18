@@ -709,7 +709,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   width: var(--home-reference-width);
   max-width: none;
-  grid-template-columns: minmax(620px, 1fr) minmax(0, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: flex-end;
   gap: 32px;
   margin-bottom: 32px;
