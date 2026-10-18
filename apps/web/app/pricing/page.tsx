@@ -11,6 +11,8 @@ import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 import { getSongs } from "@/lib/songs";
 
+import PricingOriginalsShelf from "./PricingOriginalsShelf";
+
 import "./pricing-page.css";
 
 export const metadata: Metadata = {
@@ -443,29 +445,7 @@ export default async function PricingPage() {
                 aria-hidden="true"
               />
               <div className="audioflume-pricing-originals-shelf-overlay" aria-hidden="true" />
-              <div className="audioflume-pricing-originals-grid">
-                {lifetimeOriginalSongs.map((song) => (
-                  <article
-                    key={song.id}
-                    className="audioflume-pricing-originals-card"
-                  >
-                    <div className="audioflume-pricing-originals-art">
-                      {song.coverArt ? (
-                        <img src={song.coverArt} alt="" draggable={false} />
-                      ) : (
-                        <span
-                          className="audioflume-pricing-originals-art-fallback"
-                          aria-hidden="true"
-                        />
-                      )}
-                    </div>
-                    <div className="audioflume-pricing-originals-copy">
-                      <strong>{song.title}</strong>
-                      <span>{song.artist}</span>
-                    </div>
-                  </article>
-                ))}
-              </div>
+              <PricingOriginalsShelf songs={lifetimeOriginalSongs} />
             </div>
           ) : null}
         </section>
