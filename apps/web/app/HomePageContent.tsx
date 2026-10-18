@@ -199,7 +199,7 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
         <span>New &amp; trending music</span>
-        <Link href="/music">Explore Trending Music</Link>
+        <Link href="/music">Explore trending music</Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-reference-trending-visual">
@@ -341,7 +341,7 @@ function HomeTrendingSkeleton() {
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
         <span>New &amp; trending music</span>
-        <Link href="/music">Explore New Music</Link>
+        <Link href="/music">Explore new music</Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-skeleton-trending-visual">
@@ -650,7 +650,7 @@ export default function HomePageContent({
                 <span>&amp; composers.</span>
               </h2>
               <Link className="audioflume-home-reference-feature-pair-link" href="/discover">
-                Explore Artists
+                Explore artists
               </Link>
             </div>
           </div>
@@ -659,7 +659,7 @@ export default function HomePageContent({
             <div className="audioflume-home-reference-feature-pair-card is-playlists">
               <h2>Curated playlists<br />made for editors.</h2>
               <Link className="audioflume-home-reference-feature-pair-link" href="/curated-playlists">
-                Explore Playlists
+                Explore playlists
               </Link>
             </div>
           </div>
@@ -672,7 +672,7 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
             <span className="audioflume-editorial-meta">Original music made in-house</span>
-            <Link href="/music?artist=Audioflume">Explore Original Music</Link>
+            <Link href="/music?artist=Audioflume">Explore original music</Link>
           </div>
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
             <LifetimeAccessCard
@@ -710,7 +710,7 @@ export default function HomePageContent({
       <section className="audioflume-home-reference-new-songs">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
           <span>Newly added songs</span>
-          <Link href="/music">Explore New Music</Link>
+          <Link href="/music">Explore new music</Link>
         </div>
         <div className="audioflume-home-reference-width">
           <MusicListShell title={null}>
