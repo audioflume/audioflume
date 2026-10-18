@@ -193,33 +193,45 @@ export default function Header() {
     if (!headerElement) return;
 
     let frame = 0;
+    let elasticFrame = 0;
+
+    function applyHeaderBottom() {
+      const bottom = headerElement.getBoundingClientRect().bottom;
+      document.documentElement.style.setProperty(
+        "--filmwave-web-header-bottom",
+        `${Math.max(0, Math.round(bottom))}px`,
+      );
+    }
 
     function syncHeaderBottom() {
       window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        const bottom = headerElement.getBoundingClientRect().bottom;
-        document.documentElement.style.setProperty(
-          "--filmwave-web-header-bottom",
-          `${Math.max(0, Math.round(bottom))}px`,
-        );
-      });
+      frame = window.requestAnimationFrame(applyHeaderBottom);
+    }
+
+    function syncElasticHeaderBottom() {
+      applyHeaderBottom();
+      elasticFrame = window.requestAnimationFrame(syncElasticHeaderBottom);
     }
 
     const resizeObserver = new ResizeObserver(syncHeaderBottom);
 
     syncHeaderBottom();
+    if (playlistsMenuOpen) {
+      elasticFrame = window.requestAnimationFrame(syncElasticHeaderBottom);
+    }
     resizeObserver.observe(headerElement);
     window.addEventListener("scroll", syncHeaderBottom, { passive: true });
     window.addEventListener("resize", syncHeaderBottom);
 
     return () => {
       window.cancelAnimationFrame(frame);
+      window.cancelAnimationFrame(elasticFrame);
       resizeObserver.disconnect();
       window.removeEventListener("scroll", syncHeaderBottom);
       window.removeEventListener("resize", syncHeaderBottom);
       document.documentElement.style.removeProperty("--filmwave-web-header-bottom");
     };
-  }, []);
+  }, [playlistsMenuOpen]);
 
   function openPlaylistsMenu() {
     setPlaylistsMenuOpen(true);
