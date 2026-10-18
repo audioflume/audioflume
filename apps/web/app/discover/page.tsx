@@ -862,7 +862,7 @@ export default function DiscoverPage() {
         />
 
         <ArtistShelf
-          title="Artists We're Watching"
+          title="Artists we're watching"
           items={ARTISTS_WATCHING}
           footerCopy="1500+ artists trending online"
         />
@@ -890,10 +890,10 @@ export default function DiscoverPage() {
           ))}
         </section>
 
-        <ArtistShelf title="Top Albums" items={TOP_ALBUMS} square />
+        <ArtistShelf title="Top albums" items={TOP_ALBUMS} square />
 
         <ArtistShelf
-          title="Support New Artists"
+          title="Support new artists"
           items={SUPPORT_NEW_ARTISTS}
           footerCopy="1500+ artists trending online"
         />
