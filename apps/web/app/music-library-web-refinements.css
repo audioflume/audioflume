@@ -212,6 +212,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
     .audioflume-music-page *
   ) {
   --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y) !important;
+  --filmwave-song-card-padding-right: var(--filmwave-song-card-padding-y) !important;
 }
 
 :is(
