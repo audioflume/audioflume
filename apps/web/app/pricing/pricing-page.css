@@ -1110,6 +1110,14 @@
 }
 
 @media (max-width: 980px) {
+  .audioflume-pricing-overview {
+    gap: clamp(28px, 5vw, 56px);
+  }
+
+  .audioflume-pricing-overview h1 {
+    font-size: clamp(44px, 5.5vw, 64px);
+  }
+
   .audioflume-pricing-hero-media {
     width: 67%;
   }
@@ -1149,39 +1157,6 @@
   .audioflume-pricing-lifetime-pricing {
     flex-wrap: wrap;
   }
-
-  .audioflume-pricing-overview {
-    width: 100%;
-    max-width: 500px;
-    grid-template-columns: 1fr;
-    gap: 28px;
-    margin-right: auto;
-    margin-bottom: 44px;
-    margin-left: auto;
-  }
-
-  .audioflume-pricing-overview h1,
-  .audioflume-pricing-overview p {
-    grid-column: 1;
-  }
-
-  .audioflume-pricing-overview h1 {
-    white-space: normal;
-  }
-
-  .audioflume-pricing-overview p {
-    width: 100%;
-    margin-left: 0;
-  }
-
-  .audioflume-pricing-overview h1 {
-    font-size: clamp(46px, 12vw, 64px);
-  }
-
-  .audioflume-pricing-overview p {
-    font-size: clamp(16px, 4vw, 18px);
-  }
-
 
   .audioflume-pricing-hero-title-stage {
     margin-top: 92px;
@@ -1283,6 +1258,32 @@
     width: 100%;
     max-width: 500px;
     justify-self: center;
+  }
+
+  .audioflume-pricing-overview {
+    width: 100%;
+    max-width: 500px;
+    grid-template-columns: 1fr;
+    gap: 28px;
+    margin-right: auto;
+    margin-bottom: 44px;
+    margin-left: auto;
+  }
+
+  .audioflume-pricing-overview h1,
+  .audioflume-pricing-overview p {
+    grid-column: 1;
+  }
+
+  .audioflume-pricing-overview h1 {
+    font-size: clamp(46px, 12vw, 64px);
+    white-space: normal;
+  }
+
+  .audioflume-pricing-overview p {
+    width: 100%;
+    margin-left: 0;
+    font-size: clamp(16px, 4vw, 18px);
   }
 }
 
