@@ -1118,6 +1118,23 @@
     font-size: clamp(44px, 5.5vw, 64px);
   }
 
+  .audioflume-pricing-includes-section {
+    box-sizing: border-box;
+    width: 100%;
+    grid-template-columns: 1fr;
+    gap: 42px;
+    padding: 42px;
+  }
+
+  .audioflume-pricing-include-row {
+    grid-template-columns: 40px minmax(0, 1fr);
+    gap: 10px 16px;
+  }
+
+  .audioflume-pricing-include-copy {
+    grid-column: 2;
+  }
+
   .audioflume-pricing-hero-media {
     width: 67%;
   }
@@ -1204,29 +1221,12 @@
   }
 
   .audioflume-pricing-section-intro,
-  .audioflume-pricing-includes-section,
   .audioflume-pricing-enterprise-section {
     grid-template-columns: 1fr;
   }
 
   .audioflume-pricing-section-intro {
     gap: 24px;
-  }
-
-  .audioflume-pricing-includes-section {
-    box-sizing: border-box;
-    width: 100%;
-    gap: 42px;
-    padding: 42px;
-  }
-
-  .audioflume-pricing-include-row {
-    grid-template-columns: 40px minmax(0, 1fr);
-    gap: 10px 16px;
-  }
-
-  .audioflume-pricing-include-copy {
-    grid-column: 2;
   }
 
   .audioflume-pricing-enterprise-section {
