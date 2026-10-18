@@ -96,7 +96,7 @@ export default function FeaturedArtistShelf({
       {headingVisible ? (
         <div className="discover-artist-featured-heading">
           <span>This month&apos;s featured artists</span>
-          <Link href="/discover">Explore Artists &amp; Composers</Link>
+          <Link href="/discover">Explore artists &amp; composers</Link>
         </div>
       ) : null}
 
