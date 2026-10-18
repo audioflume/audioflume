@@ -137,6 +137,17 @@ export default function Footer({
           padding-left: 0 !important;
         }
 
+        .fw-music-content-column .audioflume-site-footer,
+        .community-content .audioflume-site-footer,
+        .filmwave-admin-content-page section .audioflume-site-footer,
+        .playlist-detail-footer-shell .audioflume-site-footer,
+        .artist-public-footer .audioflume-site-footer,
+        .music-page-footer-wrap .audioflume-site-footer {
+          width: 100% !important;
+          margin-right: 0 !important;
+          margin-left: 0 !important;
+        }
+
       `}</style>
 
       <footer
