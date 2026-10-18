@@ -904,7 +904,7 @@
       "pricing action";
     column-gap: 32px;
     row-gap: 34px;
-    padding: 32px;
+    padding: 36px 38px 40px;
   }
 
   .audioflume-pricing-lifetime-meta {
