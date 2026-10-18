@@ -97,7 +97,7 @@ export default function FeaturedArtistShelf({
       {headingVisible ? (
         <div className="discover-artist-featured-heading">
           <span>This month&apos;s featured artists</span>
-          <Link href="/discover" className="inline-flex items-center gap-[5px]">Explore artists &amp; composers<ArrowUpRightIcon size={12} /></Link>
+          <Link href="/discover" className="inline-flex items-center gap-[5px]">Explore artists &amp; composers<ArrowUpRightIcon size={14} className="translate-y-[1px]" /></Link>
         </div>
       ) : null}
 
