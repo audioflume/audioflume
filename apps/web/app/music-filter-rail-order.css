@@ -240,12 +240,14 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   transform: rotate(0deg);
 }
 
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+.audioflume-music-page
   .fw-filter-advanced-panel-content {
+  box-sizing: border-box;
+  width: 100%;
   padding: 14px 20px 18px;
 }
 
-main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+.audioflume-music-page
   .fw-filter-advanced-panel-content:has(.fw-filter-option-list) {
   padding-right: 0;
   padding-left: 0;
