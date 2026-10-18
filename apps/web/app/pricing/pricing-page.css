@@ -139,8 +139,14 @@
   flex-direction: column;
   overflow: hidden;
   border: 0;
-  background: #ffffff;
+  background: #111111;
   color: #111111;
+}
+
+.audioflume-pricing-plan-background {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center;
 }
 
 .audioflume-pricing-plan-banner {
@@ -153,12 +159,6 @@
   color: #ffffff;
 }
 
-.audioflume-pricing-plan-banner-background {
-  z-index: 0;
-  object-fit: cover;
-  object-position: center;
-}
-
 .audioflume-pricing-plan-banner-overlay {
   position: absolute;
   inset: 0;
@@ -167,7 +167,7 @@
   pointer-events: none;
 }
 
-.audioflume-pricing-plan-banner > :not(.audioflume-pricing-plan-banner-background):not(.audioflume-pricing-plan-banner-overlay) {
+.audioflume-pricing-plan-banner > :not(.audioflume-pricing-plan-banner-overlay) {
   position: relative;
   z-index: 2;
 }
@@ -181,11 +181,16 @@
 }
 
 .audioflume-pricing-plan-body {
+  position: relative;
+  z-index: 2;
   display: flex;
   min-width: 0;
   flex: 1;
   flex-direction: column;
+  background: rgba(255, 255, 255, 0.72);
   padding: clamp(28px, 2.6vw, 40px);
+  -webkit-backdrop-filter: blur(22px);
+  backdrop-filter: blur(22px);
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-kicker {
