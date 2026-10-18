@@ -306,9 +306,7 @@ export default function ReferenceSearchModal({
           <div className={styles.eyebrow}>Reference search</div>
           <h2 id={titleId}>Find something similar.</h2>
           <p>
-            {embedded
-              ? "Search by artist or track, or paste a link."
-              : "Search by artist or track, or paste a Spotify, YouTube, or Apple Music link."}
+            Search by artist or track, or paste a Spotify, YouTube, or Apple Music link.
           </p>
 
           {submitting && selectedResult ? (
