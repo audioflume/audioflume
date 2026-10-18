@@ -632,7 +632,7 @@ export default function HomePageContent({
           <div className="audioflume-home-reference-feature-pair-intro-copy">
             A growing catalogue built around cinematic storytelling.
           </div>
-          <div className="audioflume-home-reference-feature-pair-intro-meta">
+          <div className="audioflume-home-reference-feature-pair-intro-meta audioflume-editorial-meta">
             1500+ ARTISTS TRENDING ONLINE
           </div>
         </div>
@@ -671,7 +671,7 @@ export default function HomePageContent({
       <section className="audioflume-home-reference-tools">
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-            <span>Audioflume Originals</span>
+            <span className="audioflume-editorial-meta">original music made in-house</span>
             <Link href="/music?artist=Audioflume">Explore Original Music</Link>
           </div>
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
