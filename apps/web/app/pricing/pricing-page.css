@@ -37,7 +37,7 @@
   left: 50%;
   z-index: -1;
   width: 100vw;
-  background: #ffffff;
+  background: #e5e5dd;
   transform: translateX(-50%);
 }
 
@@ -195,7 +195,7 @@
 }
 
 .audioflume-pricing-lifetime-section {
-  margin-top: 48px;
+  margin-top: 72px;
 }
 
 .audioflume-pricing-lifetime {
@@ -207,9 +207,28 @@
   min-height: 225px;
   margin-top: 0;
   overflow: hidden;
-  background: #e5e5dd;
+  background: #111111;
   padding: clamp(34px, 3.4vw, 52px);
-  color: var(--text-primary);
+  color: #ffffff;
+}
+
+.audioflume-pricing-lifetime-background {
+  z-index: 0;
+  object-fit: cover;
+  object-position: center;
+}
+
+.audioflume-pricing-lifetime-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(17, 17, 17, 0.58);
+  pointer-events: none;
+}
+
+.audioflume-pricing-lifetime > :not(.audioflume-pricing-lifetime-background):not(.audioflume-pricing-lifetime-overlay) {
+  position: relative;
+  z-index: 2;
 }
 
 .audioflume-pricing-lifetime-copy {
@@ -233,12 +252,8 @@
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-description {
   min-height: 0;
-  margin: 22px 0 0;
-  color: #111111;
-}
-
-html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audioflume-pricing-plan-description {
-  color: #ffffff;
+  margin: 28px 0 0;
+  color: rgba(255, 255, 255, 0.78);
 }
 
 .audioflume-pricing-lifetime-offer {
@@ -247,7 +262,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audiofl
 }
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-name {
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .audioflume-pricing-lifetime-pricing {
@@ -264,9 +279,9 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audiofl
 .audioflume-pricing-lifetime-badge {
   display: inline-flex;
   margin-bottom: 9px;
-  background: var(--text-primary);
+  background: #111111;
   padding: 4px 7px;
-  color: var(--bg-primary);
+  color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 9.5px;
   font-weight: 400;
@@ -274,8 +289,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audiofl
 }
 
 .audioflume-pricing-lifetime-badge.is-light {
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  background: #ffffff;
+  color: #111111;
 }
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-price {
@@ -284,12 +299,12 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audiofl
 }
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-price strong {
-  color: var(--text-primary);
+  color: #ffffff;
 }
 
 .audioflume-pricing-lifetime-price-group.is-regular .audioflume-pricing-plan-price strong {
   position: relative;
-  color: #7f7f78;
+  color: #e5e5dd;
   text-decoration: none;
 }
 
@@ -299,14 +314,14 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audiofl
   right: -8px;
   left: -8px;
   height: 2px;
-  background: #7f7f78;
+  background: #e5e5dd;
   content: "";
   transform: translateY(-50%);
   pointer-events: none;
 }
 
 .audioflume-pricing-lifetime .audioflume-pricing-plan-price span {
-  color: var(--text-primary);
+  color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 18px;
   font-weight: 400;
@@ -329,27 +344,16 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime .audiofl
   max-width: 300px;
   height: 52px;
   min-height: 52px;
-  background: #111111 !important;
-  color: #ffffff !important;
+  background: #ffffff !important;
+  color: #111111 !important;
   opacity: 1 !important;
 }
 
 .audioflume-pricing-lifetime-action > a:hover,
 .audioflume-pricing-lifetime-action > a:focus-visible {
-  background: var(--text-secondary) !important;
-  color: var(--bg-primary) !important;
-  opacity: 1 !important;
-}
-
-html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action > a {
-  background: #ffffff !important;
-  color: #111111 !important;
-}
-
-html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action > a:hover,
-html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime-action > a:focus-visible {
   background: #f0f0f0 !important;
   color: #111111 !important;
+  opacity: 1 !important;
 }
 
 .audioflume-pricing-comparison-section {
@@ -1302,9 +1306,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-pricing-plans-section::be
   background: var(--bg-primary);
 }
 
-html:not(.light):not([data-theme="light"]) .audioflume-pricing-lifetime {
-  background: #151515;
-}
 
 html:not(.light):not([data-theme="light"]) .audioflume-pricing-comparison-block {
   background: #151515;
