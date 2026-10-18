@@ -814,7 +814,7 @@
 
 .audioflume-pricing-includes-section {
   display: grid;
-  grid-template-columns: 420px minmax(0, 1fr);
+  grid-template-columns: clamp(280px, 29.3vw, 420px) minmax(0, 1fr);
   gap: clamp(56px, 8vw, 130px);
   padding: clamp(72px, 7vw, 108px) 0 clamp(90px, 9vw, 142px);
 }
