@@ -912,9 +912,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-tools-originals {
-  margin-top: 72px;
+  margin-top: 0;
 }
 
+.audioflume-home-reference-tools-search {
+  margin-top: 72px;
+}
 
 .audioflume-home-reference-tool-card {
   height: 350px;
@@ -2763,6 +2766,16 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 1500px) {
+  .audioflume-home-reference-lifetime-access .audioflume-pricing-originals-grid {
+    grid-template-columns: repeat(8, 96.5px);
+    gap: 60px;
+    overflow-x: auto;
+    overflow-y: hidden;
+    overscroll-behavior-x: contain;
+    overscroll-behavior-y: none;
+    touch-action: pan-x;
+  }
+
   .audioflume-home-reference-lifetime-access .audioflume-pricing-lifetime {
     min-height: 0;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -2798,6 +2811,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 1168px) {
+  .audioflume-home-reference-lifetime-access .audioflume-pricing-originals-shelf {
+    display: none;
+  }
+
   .audioflume-home-reference-lifetime-access .audioflume-pricing-lifetime {
     box-sizing: border-box;
     height: 100%;
