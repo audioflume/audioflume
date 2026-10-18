@@ -2942,21 +2942,27 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-lifetime-feature-top + .audioflume-home-lifetime-feature-heading {
   align-self: end;
-  margin-bottom: 0;
 }
 
 .audioflume-home-lifetime-feature-heading,
 .audioflume-home-lifetime-feature-pricing,
 .audioflume-home-lifetime-feature-description {
-  margin-left: 56px;
+  width: calc(100% - 112px);
   margin-right: 56px;
+  margin-left: 56px;
 }
 
 .audioflume-home-lifetime-feature-heading {
   margin-top: auto;
+  margin-bottom: 0;
+}
+
+.audioflume-home-lifetime-feature-pricing {
+  margin-top: 34px;
 }
 
 .audioflume-home-lifetime-feature-description {
+  margin-top: 34px;
   margin-bottom: 56px;
 }
 
@@ -2996,7 +3002,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   display: flex;
   align-items: end;
   gap: 28px;
-  margin-top: 34px;
 }
 
 .audioflume-home-lifetime-feature-price-group {
