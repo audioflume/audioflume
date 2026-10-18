@@ -1822,7 +1822,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-library-grid {
-    width: min(760px, calc(100vw - 96px));
+    width: min(
+      var(--filmwave-editorial-max-width),
+      calc(
+        100% - var(--filmwave-editorial-inset-compact) -
+          var(--filmwave-editorial-inset-compact)
+      )
+    );
     grid-template-columns: 1fr;
     gap: 46px;
     margin-right: auto;
@@ -1835,7 +1841,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-feature-grid {
-    width: min(760px, calc(100vw - 96px));
+    width: min(
+      var(--filmwave-editorial-max-width),
+      calc(
+        100% - var(--filmwave-editorial-inset-compact) -
+          var(--filmwave-editorial-inset-compact)
+      )
+    );
     margin-right: auto;
     margin-left: auto;
   }
