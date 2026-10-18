@@ -340,27 +340,49 @@ export default function MusicPage() {
   const [filtersOpen, setFiltersOpen] = useState(
     () => searchParams.get("filters") !== "closed",
   );
+  const desktopFiltersOpenRef = useRef(filtersOpen);
 
   useEffect(() => {
     const mobileFiltersQuery = window.matchMedia("(max-width: 690px)");
 
-    const closeDesktopSidebarForMobile = (event: MediaQueryListEvent) => {
-      if (event.matches) setFiltersOpen(false);
+    const syncSidebarForViewport = (event: MediaQueryListEvent) => {
+      if (event.matches) {
+        setFiltersOpen(false);
+        return;
+      }
+
+      setFiltersOpen(desktopFiltersOpenRef.current);
     };
 
     if (mobileFiltersQuery.matches) {
       setFiltersOpen(false);
     }
 
-    mobileFiltersQuery.addEventListener("change", closeDesktopSidebarForMobile);
+    mobileFiltersQuery.addEventListener("change", syncSidebarForViewport);
 
     return () => {
       mobileFiltersQuery.removeEventListener(
         "change",
-        closeDesktopSidebarForMobile,
+        syncSidebarForViewport,
       );
     };
   }, []);
+
+  function toggleFiltersOpen() {
+    const isMobile = window.matchMedia("(max-width: 690px)").matches;
+
+    setFiltersOpen((open) => {
+      const nextOpen = !open;
+      if (!isMobile) desktopFiltersOpenRef.current = nextOpen;
+      return nextOpen;
+    });
+  }
+
+  function closeFilters() {
+    const isMobile = window.matchMedia("(max-width: 690px)").matches;
+    if (!isMobile) desktopFiltersOpenRef.current = false;
+    setFiltersOpen(false);
+  }
   const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
@@ -1225,7 +1247,7 @@ export default function MusicPage() {
           type="button"
           className="audioflume-home-reference-searchbar-filters"
           aria-expanded={filtersOpen}
-          onClick={() => setFiltersOpen((open) => !open)}
+          onClick={toggleFiltersOpen}
         >
           <span className="audioflume-music-filter-button-icon" aria-hidden="true">
             <svg
@@ -1374,7 +1396,7 @@ export default function MusicPage() {
                         }
                         hasActive={hasActiveClearableFilters}
                         onClearAll={clearAllFilters}
-                        onClose={() => setFiltersOpen(false)}
+                        onClose={closeFilters}
                       />
           )}
           <MusicQuickChips>
