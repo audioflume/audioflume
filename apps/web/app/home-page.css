@@ -822,7 +822,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: max-content;
   max-width: none;
   color: #ffffff;
-  font-size: clamp(44px, 3.8vw, 58px);
+  font-size: clamp(50px, 4.4vw, 66px);
   font-weight: 300;
   letter-spacing: -0.04em;
   line-height: 0.9em;
