@@ -885,8 +885,6 @@
 
 @media (max-width: 1500px) {
   .audioflume-pricing-originals-grid {
-    grid-template-columns: repeat(8, minmax(118px, 1fr));
-    gap: 28px;
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
