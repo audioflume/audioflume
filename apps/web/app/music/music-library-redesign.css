@@ -1565,7 +1565,9 @@ main
     > span:last-child {
     display: none;
   }
+}
 
+@media (max-width: 536px) {
   .audioflume-music-page
     > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
     > .fw-music-content-column {
