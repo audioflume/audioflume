@@ -36,7 +36,7 @@ import type { Song } from "@/lib/types";
 
 const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
-const HOME_LIFETIME_COVER_TILE_COUNT = 56;
+const HOME_LIFETIME_COVER_TILE_COUNT = 98;
 const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg";
 const HOME_UI_GRAPHIC_DARK =
