@@ -477,7 +477,12 @@
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
   gap: clamp(28px, 4vw, 64px);
-  padding: 62px 74px 52px;
+  padding: 62px 74px;
+  scrollbar-width: none;
+}
+
+.audioflume-pricing-originals-grid::-webkit-scrollbar {
+  display: none;
 }
 
 .audioflume-pricing-originals-card {
