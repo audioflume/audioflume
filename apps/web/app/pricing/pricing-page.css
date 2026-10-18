@@ -140,7 +140,16 @@
   overflow: hidden;
   border: 0;
   background: #111111;
-  color: #111111;
+  color: #ffffff;
+}
+
+.audioflume-pricing-plan::before {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(17, 17, 17, 0.58);
+  content: "";
+  pointer-events: none;
 }
 
 .audioflume-pricing-plan-background {
@@ -160,11 +169,7 @@
 }
 
 .audioflume-pricing-plan-banner-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: rgba(17, 17, 17, 0.46);
-  pointer-events: none;
+  display: none;
 }
 
 .audioflume-pricing-plan-banner > :not(.audioflume-pricing-plan-banner-overlay) {
@@ -187,10 +192,8 @@
   min-width: 0;
   flex: 1;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.72);
+  background: transparent;
   padding: clamp(28px, 2.6vw, 40px);
-  -webkit-backdrop-filter: blur(22px);
-  backdrop-filter: blur(22px);
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-kicker {
@@ -198,33 +201,37 @@
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-description {
-  color: var(--text-secondary) !important;
+  color: rgba(255, 255, 255, 0.76) !important;
 }
 
-.audioflume-pricing-plan .audioflume-pricing-plan-features li {
-  color: #111111 !important;
-  border-top-color: var(--border);
+.audioflume-pricing-plan .audioflume-pricing-plan-price strong,
+.audioflume-pricing-plan .audioflume-pricing-plan-price span {
+  color: #ffffff !important;
 }
 
 .audioflume-pricing-plan .audioflume-pricing-plan-price span {
-  color: #111111 !important;
   font-weight: 400;
 }
 
+.audioflume-pricing-plan .audioflume-pricing-plan-features li {
+  color: rgba(255, 255, 255, 0.88) !important;
+  border-top-color: rgba(255, 255, 255, 0.2);
+}
+
 .audioflume-pricing-plan .audioflume-pricing-plan-features li::before {
-  background: #111111;
+  background: #ffffff;
 }
 
 .audioflume-pricing-plan .audioflume-public-action-button {
-  background: #111111 !important;
-  color: #ffffff !important;
+  background: #ffffff !important;
+  color: #111111 !important;
   opacity: 1 !important;
 }
 
 .audioflume-pricing-plan .audioflume-public-action-button:hover,
 .audioflume-pricing-plan .audioflume-public-action-button:focus-visible {
-  background: #2a2a2a !important;
-  color: #ffffff !important;
+  background: rgba(255, 255, 255, 0.88) !important;
+  color: #111111 !important;
   opacity: 1 !important;
 }
 
