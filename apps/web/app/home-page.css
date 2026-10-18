@@ -818,7 +818,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: max-content;
   max-width: none;
   color: #ffffff;
-  font-size: clamp(34px, 3vw, 46px);
+  font-size: clamp(38px, 3.3vw, 50px);
   font-weight: 300;
   letter-spacing: -0.04em;
   line-height: 0.9em;
@@ -2125,3 +2125,9 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 }
 
+
+
+.audioflume-home-reference-search-by-song-card [class*="_content_"] {
+  margin-right: auto;
+  margin-left: 0;
+}
