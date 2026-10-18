@@ -53,6 +53,13 @@
   cursor: pointer;
 }
 
+.audioflume-music-page-searchbar
+  .audioflume-home-reference-searchbar-filters
+  > span:last-child {
+  opacity: 1;
+  transition: opacity 0s linear 180ms;
+}
+
 .audioflume-music-page-searchbar .audioflume-music-filter-button-icon {
   position: relative;
   width: 22px;
@@ -1565,7 +1572,8 @@ main
   .audioflume-music-page-searchbar
     .audioflume-home-reference-searchbar-filters
     > span:last-child {
-    display: none;
+    opacity: 0;
+    transition-delay: 0s;
   }
 }
 
