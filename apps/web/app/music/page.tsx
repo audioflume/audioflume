@@ -113,7 +113,18 @@ function MusicFilterColumnSkeleton({ open }: { open: boolean }) {
                 <span
                   className={`audioflume-music-filter-skeleton-label is-${index % 3}`}
                 />
-                <span className="audioflume-music-filter-skeleton-chevron" />
+                <svg
+                  className="audioflume-music-filter-skeleton-chevron"
+                  viewBox="0 0 24 24"
+                  width="11"
+                  height="11"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill="currentColor"
+                    d="M8.6 5.3a1.3 1.3 0 0 1 1.84.04l5.5 5.76a1.3 1.3 0 0 1 0 1.8l-5.5 5.76a1.3 1.3 0 0 1-1.88-1.8L13.2 12 8.56 7.14a1.3 1.3 0 0 1 .04-1.84Z"
+                  />
+                </svg>
               </div>
             ))}
           </div>
