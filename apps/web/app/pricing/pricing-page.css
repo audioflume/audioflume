@@ -440,13 +440,6 @@
   cursor: pointer;
 }
 
-.audioflume-pricing-originals-art::after {
-  position: absolute;
-  inset: 0;
-  background: rgba(17, 17, 17, 0.28);
-  content: "";
-}
-
 .audioflume-pricing-originals-art img,
 .audioflume-pricing-originals-art-fallback {
   position: absolute;
