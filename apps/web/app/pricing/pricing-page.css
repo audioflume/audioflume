@@ -926,11 +926,11 @@
   margin: 0;
   color: var(--filmwave-white);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 72px;
-  font-weight: 400;
-  letter-spacing: -0.035em;
-  line-height: 0.84;
-  text-transform: none;
+  font-size: clamp(50px, 4vw, 62px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 0.9em;
+  text-transform: uppercase;
   mix-blend-mode: difference;
   transform: translateY(5px);
 }
