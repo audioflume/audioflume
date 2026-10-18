@@ -930,7 +930,7 @@
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 0.84;
-  text-transform: uppercase;
+  text-transform: none;
   mix-blend-mode: difference;
   transform: translateY(5px);
 }
