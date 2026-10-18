@@ -2929,7 +2929,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   min-width: 0;
   grid-template-rows: auto 1fr;
   background: #deded8;
-  padding: clamp(20px, 1.6vw, 28px);
+  padding: 28px;
   color: #111111;
 }
 
