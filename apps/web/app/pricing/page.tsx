@@ -9,9 +9,6 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
-import { getSongs } from "@/lib/songs";
-
-import PricingOriginalsShelf from "./PricingOriginalsShelf";
 
 import "./pricing-page.css";
 
@@ -269,10 +266,9 @@ function PlanStatus({ included }: { included: boolean }) {
 }
 
 export default async function PricingPage() {
-  const [{ userId }, pricingHeroImages, songs] = await Promise.all([
+  const [{ userId }, pricingHeroImages] = await Promise.all([
     auth(),
     getPricingHeroImages(),
-    getSongs().catch(() => []),
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = userId ? "Manage membership" : "Get Lifetime Access";
@@ -281,15 +277,6 @@ export default async function PricingPage() {
     (image) =>
       !image.includes("andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"),
   );
-  const lifetimeOriginalSongs = songs
-    .filter(
-      (song) =>
-        Boolean(song.audioUrl) &&
-        song.artist.trim().localeCompare("Audioflume", undefined, {
-          sensitivity: "base",
-        }) === 0,
-    )
-    .slice(0, 8);
 
   return (
     <main className="audioflume-pricing-page-root">
@@ -308,7 +295,8 @@ export default async function PricingPage() {
           </p>
         </div>
 
-        <div className="audioflume-pricing-plan-grid">
+        <div className="audioflume-pricing-offers-grid">
+          <div className="audioflume-pricing-plan-grid">
           {plans.map((plan, index) => {
             const isEnterprise = plan.name === "Enterprise";
             const planActionLabel = userId
@@ -376,9 +364,9 @@ export default async function PricingPage() {
               </article>
             );
           })}
-        </div>
+          </div>
 
-        <section className="audioflume-pricing-lifetime-section">
+          <section className="audioflume-pricing-lifetime-section">
           <div className="audioflume-pricing-lifetime">
             <Image
               src="https://images.filmwave.io/images/pricing/andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"
@@ -438,17 +426,8 @@ export default async function PricingPage() {
             </div>
           </div>
 
-          {lifetimeOriginalSongs.length > 0 ? (
-            <div className="audioflume-pricing-originals-shelf">
-              <div
-                className="audioflume-pricing-originals-shelf-background"
-                aria-hidden="true"
-              />
-              <div className="audioflume-pricing-originals-shelf-overlay" aria-hidden="true" />
-              <PricingOriginalsShelf songs={lifetimeOriginalSongs} />
-            </div>
-          ) : null}
-        </section>
+          </section>
+        </div>
 
         <section className="audioflume-pricing-comparison-section">
           <div className="audioflume-pricing-comparison-heading">
