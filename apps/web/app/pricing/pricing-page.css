@@ -390,6 +390,93 @@
   opacity: 1 !important;
 }
 
+.audioflume-pricing-originals-shelf {
+  position: relative;
+  min-height: 270px;
+  overflow: hidden;
+  background: #111111;
+  color: #ffffff;
+}
+
+.audioflume-pricing-originals-shelf-background {
+  position: absolute;
+  inset: -30px;
+  background-image: url("https://images.filmwave.io/images/pricing/andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg");
+  background-position: center 68%;
+  background-size: cover;
+  filter: blur(22px);
+  transform: scale(1.08);
+}
+
+.audioflume-pricing-originals-shelf-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(17, 17, 17, 0.74);
+}
+
+.audioflume-pricing-originals-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
+  gap: clamp(28px, 4vw, 64px);
+  padding: 62px 74px 52px;
+}
+
+.audioflume-pricing-originals-card {
+  min-width: 0;
+}
+
+.audioflume-pricing-originals-art {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.audioflume-pricing-originals-art img,
+.audioflume-pricing-originals-art-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.audioflume-pricing-originals-art-fallback {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.audioflume-pricing-originals-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+  margin-top: 10px;
+}
+
+.audioflume-pricing-originals-copy strong,
+.audioflume-pricing-originals-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audioflume-pricing-originals-copy strong {
+  color: #ffffff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.audioflume-pricing-originals-copy span {
+  color: rgba(255, 255, 255, 0.52);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 9.5px;
+  font-weight: 300;
+  line-height: 1.2;
+}
+
 .audioflume-pricing-comparison-section {
   margin-top: 48px;
 }
@@ -740,6 +827,14 @@
 }
 
 @media (max-width: 1500px) {
+  .audioflume-pricing-originals-grid {
+    grid-template-columns: repeat(8, minmax(118px, 1fr));
+    gap: 28px;
+    overflow-x: auto;
+    padding-right: 32px;
+    padding-left: 32px;
+  }
+
   .audioflume-pricing-lifetime {
     min-height: 0;
     grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -832,6 +927,16 @@
 }
 
 @media (max-width: 760px) {
+  .audioflume-pricing-originals-shelf {
+    min-height: 0;
+  }
+
+  .audioflume-pricing-originals-grid {
+    grid-template-columns: repeat(8, 112px);
+    gap: 20px;
+    padding: 38px 24px 36px;
+  }
+
   .audioflume-pricing-lifetime {
     grid-template-columns: 1fr;
     grid-template-rows: auto;
