@@ -998,6 +998,7 @@ type MusicFilterPanelProps = {
   onClose: () => void;
   accordion?: boolean;
   advancedCountControls?: boolean;
+  showMobileCloseButton?: boolean;
 };
 
 export function MusicFilterPanel({
@@ -1023,6 +1024,7 @@ export function MusicFilterPanel({
   onClose,
   accordion = false,
   advancedCountControls = false,
+  showMobileCloseButton = false,
 }: MusicFilterPanelProps) {
   const advancedGroupIdSet = new Set(advancedGroupIds);
   const advancedGroups = groupAdvancedControls
@@ -1175,6 +1177,18 @@ export function MusicFilterPanel({
     <div className={`fw-filter-panel-wrap${open ? " is-open" : ""}`} aria-hidden={!open}>
       <div className="fw-filter-panel-reveal">
         <div className="fw-filter-panel">
+          {showMobileCloseButton ? (
+            <button
+              type="button"
+              className="fw-filter-mobile-close"
+              aria-label="Close filters"
+              onClick={onClose}
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path d="M6 6L18 18M18 6L6 18" />
+              </svg>
+            </button>
+          ) : null}
           <div className="fw-filter-panel-body">
             <nav
               className={`fw-filter-rail${accordion ? " is-accordion" : ""}`}
