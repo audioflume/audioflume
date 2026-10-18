@@ -675,6 +675,7 @@
   height: 52px;
   min-height: 52px;
   flex: 1 1 auto;
+  white-space: nowrap;
 }
 
 .audioflume-pricing-plan-features {
