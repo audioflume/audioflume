@@ -781,7 +781,7 @@ export default function Header() {
           display: none;
         }
 
-        @media (max-width: 320px) {
+        @media (max-width: 690px) {
           .filmwave-web-header .filmwave-header-nav,
           .filmwave-web-header .filmwave-header-right-actions {
             display: none !important;
