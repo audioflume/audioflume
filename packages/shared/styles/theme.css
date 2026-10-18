@@ -245,14 +245,6 @@
   --filmwave-editorial-inset: var(--filmwave-editorial-inset-compact);
 }
 
-@media (max-width: 620px) {
-  :where(:root) {
-    --filmwave-page-gutter: 18px;
-    --filmwave-editorial-inset-default: 18px;
-    --filmwave-editorial-inset: var(--filmwave-editorial-inset-default);
-  }
-}
-
 :where(body) {
   background: var(--bg-primary);
   color: var(--text-primary);
@@ -263,6 +255,14 @@
 @media (max-width: 980px) {
   :where(:root) {
     --filmwave-page-gutter: 40px;
+  }
+}
+
+@media (max-width: 620px) {
+  :where(:root) {
+    --filmwave-page-gutter: 24px;
+    --filmwave-editorial-inset-default: 24px;
+    --filmwave-editorial-inset: var(--filmwave-editorial-inset-default);
   }
 }
 
