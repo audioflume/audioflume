@@ -71,6 +71,7 @@ export default function Header() {
   const { user, isLoaded } = useUser();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [avatarImageFailed, setAvatarImageFailed] = useState(false);
@@ -128,7 +129,26 @@ export default function Header() {
 
   useEffect(() => {
     setPlaylistsMenuOpen(false);
+    setMobileNavOpen(false);
   }, [pathname]);
+
+  useEffect(() => {
+    if (!mobileNavOpen) return;
+
+    const previousOverflow = document.body.style.overflow;
+
+    function handleMobileNavEscape(event: KeyboardEvent) {
+      if (event.key === "Escape") setMobileNavOpen(false);
+    }
+
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", handleMobileNavEscape);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", handleMobileNavEscape);
+    };
+  }, [mobileNavOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -755,6 +775,89 @@ export default function Header() {
             gap: 18px;
           }
         }
+
+        .filmwave-mobile-nav-toggle,
+        .filmwave-mobile-nav-panel {
+          display: none;
+        }
+
+        @media (max-width: 320px) {
+          .filmwave-web-header .filmwave-header-nav,
+          .filmwave-web-header .filmwave-header-right-actions {
+            display: none !important;
+          }
+
+          .filmwave-web-header .filmwave-header-drag-surface {
+            min-width: 16px !important;
+            flex-basis: 16px !important;
+          }
+
+          .filmwave-mobile-nav-toggle {
+            display: inline-flex;
+            width: 44px;
+            height: 44px;
+            flex: 0 0 44px;
+            align-items: center;
+            justify-content: center;
+            margin-left: auto;
+            border: 0;
+            background: transparent;
+            padding: 0;
+            color: inherit;
+            cursor: pointer;
+          }
+
+          .filmwave-mobile-nav-toggle svg {
+            width: 22px;
+            height: 22px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 1.5;
+            stroke-linecap: round;
+          }
+
+          .filmwave-mobile-nav-panel {
+            position: fixed;
+            top: calc(28px + var(--filmwave-header-height, 75px));
+            right: 0;
+            bottom: 0;
+            left: 0;
+            z-index: calc(var(--filmwave-z-header) - 1);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            border-top: var(--filmwave-border-width) solid var(--border);
+          }
+
+          .filmwave-mobile-nav-panel a {
+            display: flex;
+            min-height: 60px;
+            align-items: center;
+            border-bottom: var(--filmwave-border-width) solid var(--border);
+            padding: 0 20px;
+            color: inherit;
+            font-size: 18px;
+            font-weight: 400;
+            text-decoration: none;
+          }
+
+          .filmwave-mobile-nav-panel .filmwave-mobile-nav-secondary {
+            font-size: 14px;
+          }
+
+          .filmwave-mobile-nav-panel .filmwave-mobile-nav-create {
+            margin: 20px;
+            min-height: 48px;
+            justify-content: center;
+            border: 0;
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            font-size: 13px;
+            font-weight: 500;
+          }
+        }
       `}</style>
 
       <div className="audioflume-artist-cta-bar">
@@ -934,6 +1037,24 @@ export default function Header() {
               })}
             </nav>
 
+            <button
+              type="button"
+              className="filmwave-mobile-nav-toggle"
+              aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
+              aria-expanded={mobileNavOpen}
+              onClick={() => setMobileNavOpen((open) => !open)}
+            >
+              {mobileNavOpen ? (
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 6L18 18M18 6L6 18" />
+                </svg>
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M4 7H20M4 12H20M4 17H20" />
+                </svg>
+              )}
+            </button>
+
             {isLoaded && (
               <div className="filmwave-header-right-actions">
                 <Link href="/pricing" className="filmwave-header-utility-link">
@@ -1000,6 +1121,55 @@ export default function Header() {
           </>
         }
       />
+
+      {mobileNavOpen ? (
+        <nav className="filmwave-mobile-nav-panel" aria-label="Mobile navigation">
+          {TOP_NAV_LINKS.map((link) => (
+            <Link
+              key={link.href}
+              href={link.href === "/playlists" ? "/curated-playlists" : link.href}
+              onClick={() => setMobileNavOpen(false)}
+            >
+              {link.label}
+            </Link>
+          ))}
+
+          <Link
+            href="/pricing"
+            className="filmwave-mobile-nav-secondary"
+            onClick={() => setMobileNavOpen(false)}
+          >
+            Pricing
+          </Link>
+
+          <a
+            href="mailto:hello@filmwave.io"
+            className="filmwave-mobile-nav-secondary"
+            onClick={() => setMobileNavOpen(false)}
+          >
+            Need Enterprise?
+          </a>
+
+          {isLoaded && !user ? (
+            <>
+              <Link
+                href="/sign-in"
+                className="filmwave-mobile-nav-secondary"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Login
+              </Link>
+              <Link
+                href="/sign-up"
+                className="filmwave-mobile-nav-create"
+                onClick={() => setMobileNavOpen(false)}
+              >
+                Create Free Account
+              </Link>
+            </>
+          ) : null}
+        </nav>
+      ) : null}
     </>
   );
 }
