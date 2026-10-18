@@ -1352,18 +1352,14 @@
 
 /* Pricing route loading state */
 .audioflume-pricing-loading {
-  --audioflume-pricing-skeleton-fill: color-mix(
-    in srgb,
-    var(--text-primary) 7%,
-    transparent
-  );
+  --audioflume-pricing-skeleton-fill: var(--bg-tertiary);
   --audioflume-pricing-skeleton-fill-muted: color-mix(
     in srgb,
-    var(--text-primary) 5%,
+    var(--bg-tertiary) 72%,
     transparent
   );
-  --audioflume-pricing-skeleton-fill-on-dark: rgba(255, 255, 255, 0.07);
-  --audioflume-pricing-skeleton-fill-on-dark-muted: rgba(255, 255, 255, 0.05);
+  --audioflume-pricing-skeleton-fill-on-dark: rgba(255, 255, 255, 0.16);
+  --audioflume-pricing-skeleton-fill-on-dark-muted: rgba(255, 255, 255, 0.10);
 }
 
 .audioflume-pricing-skeleton-block {
