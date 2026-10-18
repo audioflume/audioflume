@@ -713,13 +713,6 @@ export default function HomePageContent({
               <GlobalReferenceSearch embedded />
             </div>
           </div>
-
-          <div className="audioflume-home-reference-tools-column is-blank">
-            <div className="audioflume-home-reference-section-heading" aria-hidden="true">
-              <span>&nbsp;</span>
-            </div>
-            <div className="audioflume-home-reference-tool-card audioflume-home-reference-blank-card" />
-          </div>
         </div>
 
         <div className="audioflume-home-reference-tools-originals">
