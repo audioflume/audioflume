@@ -873,9 +873,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-card.is-playlists .audioflume-home-reference-feature-pair-link {
-  position: absolute;
-  right: 4.73%;
-  bottom: 4.73%;
+  margin-left: auto;
   background: #111111;
   color: #ffffff;
 }
