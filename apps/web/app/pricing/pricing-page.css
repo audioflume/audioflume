@@ -225,6 +225,10 @@
   line-height: 0.95;
 }
 
+.audioflume-pricing-lifetime-title > span {
+  color: #7f7f78;
+}
+
 .audioflume-pricing-lifetime-title strong {
   font-weight: 400;
 }
