@@ -664,9 +664,7 @@ export default function PlaylistTopControls() {
           border: 1.25px solid var(--border) !important;
           border-radius: 4px !important;
           background: transparent !important;
-          box-shadow: inset 0 0 0 0 transparent !important;
           transition:
-            box-shadow 150ms ease,
             background-color 150ms ease,
             color 150ms ease !important;
         }
@@ -706,9 +704,8 @@ export default function PlaylistTopControls() {
         .playlists-view-button:focus-visible,
         .playlists-sort-button:hover,
         .playlists-sort-button:focus-visible {
-          border-color: var(--border) !important;
+          border-color: var(--text-muted) !important;
           background: transparent !important;
-          box-shadow: inset 0 0 0 1.25px var(--text-muted) !important;
           color: var(--text-primary) !important;
         }
 
@@ -877,9 +874,8 @@ export default function PlaylistTopControls() {
           .playlists-sort-button:hover,
           .playlists-sort-button:focus-visible,
           .playlists-sort-button.is-open {
-            border-color: var(--border) !important;
+            border-color: var(--text-muted) !important;
             background: transparent !important;
-            box-shadow: inset 0 0 0 1.25px var(--text-muted) !important;
           }
 
           .playlists-new-button:hover {
