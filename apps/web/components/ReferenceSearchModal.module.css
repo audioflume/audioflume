@@ -367,7 +367,7 @@
 @media (max-width: 720px) {
   .backdrop {
     align-items: center;
-    padding: 32px;
+    padding: 16px;
   }
 
   .modal {
@@ -392,13 +392,6 @@
     display: none;
   }
 }
-
-@media (max-width: 640px) {
-  .backdrop {
-    padding: 20px;
-  }
-}
-
 
 .embedded {
   width: 100%;
