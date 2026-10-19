@@ -1860,18 +1860,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 }
 
-@media (max-width: 840px) {
+@media (max-width: 760px) {
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-reference-original-song-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 14px;
-  }
-
   .audioflume-home-reference-hero {
     height: calc(
     100dvh - 28px - var(--filmwave-header-height, 60px) -
