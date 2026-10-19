@@ -356,6 +356,11 @@ export default function ReferenceSearchModal({
                     setDropdownOpen(true);
                   }
                 }}
+                onBlur={() => {
+                  if (value.trim().length === 0 && value !== "") {
+                    onChange("");
+                  }
+                }}
                 placeholder="Song, artist, or music link"
                 aria-label="Song, artist, or music link"
                 autoComplete="off"
