@@ -7,7 +7,6 @@ import GridViewIcon from "@/components/icons/GridViewIcon";
 import { BackendDragHandleGlyph } from "@/components/backend/BackendDragHandle";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
-import SortIcon from "@/components/icons/SortIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
@@ -71,6 +70,27 @@ function ChevronIcon() {
         d="M4.5 6.25 8 9.75l3.5-3.5"
         stroke="currentColor"
         strokeWidth="1.6"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
+function ResponsiveSortIcon() {
+  return (
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 19V5M8 5L4 9M8 5L12 9M16 5V19M16 19L12 15M16 19L20 15"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.9"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -774,15 +794,24 @@ export default function PlaylistTopControls() {
             gap: 8px !important;
           }
 
+          .playlists-view-button,
           .playlists-sort-button,
           .playlists-new-button {
             width: 44px !important;
             min-width: 44px !important;
+            height: 44px !important;
+            min-height: 44px !important;
+            flex: 0 0 44px !important;
             padding: 0 !important;
           }
 
           .playlists-sort-button {
             gap: 0 !important;
+          }
+
+          .playlists-sort-button:hover,
+          .playlists-sort-button.is-open {
+            background: var(--bg-hover) !important;
           }
 
           .playlists-sort-button-icon {
@@ -792,7 +821,7 @@ export default function PlaylistTopControls() {
           .playlists-sort-button-label,
           .playlists-sort-button-chevron,
           .playlists-new-button-label {
-            display: none;
+            display: none !important;
           }
         }
 
@@ -916,7 +945,7 @@ export default function PlaylistTopControls() {
                   aria-label="Sort playlists"
                 >
                   <span className="playlists-sort-button-icon" aria-hidden="true">
-                    <SortIcon />
+                    <ResponsiveSortIcon />
                   </span>
                   <span className="playlists-sort-button-label">Sort By</span>
                   <span className="playlists-sort-button-chevron">
