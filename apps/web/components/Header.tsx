@@ -784,8 +784,19 @@ export default function Header() {
             padding-right: 8px !important;
           }
 
-          .filmwave-web-header .filmwave-header-nav,
+          .filmwave-web-header .filmwave-header-nav {
+            display: none !important;
+          }
+
           .filmwave-web-header .filmwave-header-right-actions {
+            display: inline-flex !important;
+            gap: 6px;
+            margin-left: 0;
+          }
+
+          .filmwave-web-header
+            .filmwave-header-right-actions
+            > :not(.filmwave-header-account-wrap) {
             display: none !important;
           }
 
@@ -917,17 +928,26 @@ export default function Header() {
             box-shadow: none;
           }
 
-          .filmwave-mobile-account-menu .filmwave-web-user-menu a {
-            min-height: 0;
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-dropdown-item {
+            height: 35px;
+            min-height: 35px;
             border-bottom: 0;
-            padding: 0;
-            font-size: inherit;
+            padding-right: 12px;
+            padding-left: 12px;
+            font-size: 13.5px;
+            font-weight: 300;
+            line-height: normal;
           }
 
           .filmwave-mobile-account-menu
             .filmwave-web-user-menu
             > .filmwave-user-menu-profile-link {
+            min-height: 0;
             border-bottom: 1.25px solid var(--filmwave-menu-sep);
+            padding: 0;
+            font-size: inherit;
           }
 
           .filmwave-mobile-nav-panel .filmwave-mobile-nav-create {
