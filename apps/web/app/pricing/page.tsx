@@ -12,6 +12,7 @@ import { r2Client } from "@/lib/r2";
 import { getSongs } from "@/lib/songs";
 
 import PricingOriginalsShelf from "./PricingOriginalsShelf";
+import PricingUiShowcase from "./PricingUiShowcase";
 
 import "./pricing-page.css";
 
@@ -429,6 +430,8 @@ export default async function PricingPage() {
           </div>
         </section>
       </section>
+
+      <PricingUiShowcase />
 
       <section className="audioflume-pricing-includes-section">
         <div>
