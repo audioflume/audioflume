@@ -72,7 +72,7 @@ export default function LifetimeAccessCard({
       </p>
 
       <p className="audioflume-pricing-lifetime-description">
-        Lifetime access to in-house original music, licensed for commercial work and clients up to 100 employees.
+        Lifetime access to in-house made original music, licensed for commercial work and clients up to 100 employees.
       </p>
 
       <div className="audioflume-pricing-lifetime-pricing">
