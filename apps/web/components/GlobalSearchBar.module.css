@@ -296,14 +296,30 @@
 
   .filters {
     box-sizing: border-box;
+    width: 40px;
+    height: 40px;
+    align-self: center;
     gap: 0;
-    justify-content: flex-start;
-    padding-right: 0;
-    padding-left: 30px;
+    justify-content: center;
+    margin-left: 21px;
+    border: 1.25px solid var(--border);
+    border-radius: 4px;
+    padding: 0;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease;
+  }
+
+  .filters:hover,
+  .filters:focus-visible {
+    border-color: var(--text-muted);
+    background: transparent;
   }
 
   .filters > span {
     opacity: 0;
+    width: 0;
+    overflow: hidden;
     transition-duration: 0s;
     transition-delay: 0s;
   }
