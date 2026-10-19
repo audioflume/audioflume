@@ -1519,6 +1519,25 @@ export default function CommunityPlaylistsPage() {
             </label>
           </div>
 
+          <div
+            className="community-tabs community-searchbar-tabs"
+            role="tablist"
+            aria-label="Community playlist sorting"
+          >
+            {COMMUNITY_TABS.map((tab) => (
+              <button
+                type="button"
+                role="tab"
+                key={tab}
+                className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
+                aria-selected={activeTab === tab}
+                onClick={() => setActiveTab(tab)}
+              >
+                {tab}
+              </button>
+            ))}
+          </div>
+
           <div className="community-searchbar-sort">
             <MusicLibrarySortControl
               value={
