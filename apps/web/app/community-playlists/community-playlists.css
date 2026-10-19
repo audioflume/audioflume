@@ -1468,10 +1468,7 @@
     height: 40px !important;
     justify-content: center !important;
     border-radius: 4px !important;
-    box-shadow: inset 0 0 0 0 transparent !important;
-    transition:
-      box-shadow 150ms ease,
-      background-color 150ms ease !important;
+    transition: background-color 150ms ease !important;
   }
 
   .community-searchbar-sort .filmwave-music-sort-button > span,
@@ -1509,9 +1506,8 @@
     .filmwave-music-sort-button:focus-visible,
   .community-searchbar-sort
     .filmwave-music-sort-button.is-open {
-    border-color: var(--border) !important;
+    border-color: var(--text-muted) !important;
     background: transparent !important;
-    box-shadow: inset 0 0 0 1.25px var(--text-muted) !important;
   }
 }
 
