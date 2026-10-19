@@ -241,7 +241,7 @@ export default async function PricingPage() {
     getSongs().catch(() => []),
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
-  const membershipLabel = userId ? "Manage membership" : "Get Lifetime Access";
+  const membershipLabel = "Get Lifetime Access";
   const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
   const pricingPlanImages = pricingHeroImages.filter(
     (image) =>
