@@ -1587,6 +1587,7 @@ main
   }
 }
 
+.audioflume-music-page .fw-filter-mobile-header,
 .audioflume-music-page .fw-filter-mobile-close {
   display: none;
 }
@@ -1663,6 +1664,49 @@ main
     > section
     > .fw-music-content-column
     > .fw-filter-panel-wrap
+    .fw-filter-mobile-header {
+    display: flex;
+    width: 100%;
+    height: 60px;
+    flex: 0 0 60px;
+    align-items: center;
+    justify-content: space-between;
+    color: var(--text-primary);
+  }
+
+  .audioflume-music-page
+    > section
+    > .fw-music-content-column
+    > .fw-filter-panel-wrap
+    .fw-filter-mobile-title {
+    display: inline-flex;
+    align-items: center;
+    gap: 18px;
+    padding-left: 30px;
+    font-size: 13px;
+    font-weight: 400;
+    white-space: nowrap;
+  }
+
+  .audioflume-music-page
+    > section
+    > .fw-music-content-column
+    > .fw-filter-panel-wrap
+    .fw-filter-mobile-title
+    svg {
+    width: 22px;
+    height: 22px;
+    flex: 0 0 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-width: 1.4;
+  }
+
+  .audioflume-music-page
+    > section
+    > .fw-music-content-column
+    > .fw-filter-panel-wrap
     .fw-filter-mobile-close {
     display: inline-flex;
     width: 60px;
@@ -1670,7 +1714,6 @@ main
     flex: 0 0 60px;
     align-items: center;
     justify-content: center;
-    align-self: flex-end;
     border: 0;
     background: transparent;
     padding: 0;
