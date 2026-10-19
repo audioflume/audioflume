@@ -1157,7 +1157,6 @@
 
   .audioflume-pricing-comparison-section {
     padding-top: 40px;
-    padding-bottom: 40px;
   }
 
   .audioflume-pricing-includes-section {
@@ -1166,7 +1165,7 @@
     grid-template-columns: minmax(0, 680px);
     justify-content: center;
     gap: 42px;
-    padding: 0 42px;
+    padding: 40px 42px;
   }
 
   .audioflume-pricing-enterprise-section {
