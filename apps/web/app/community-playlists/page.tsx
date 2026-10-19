@@ -1539,13 +1539,10 @@ export default function CommunityPlaylistsPage() {
           </div>
 
           <div className="community-searchbar-sort">
-            <MusicLibrarySortControl
-              value={
-                COMMUNITY_TABS.includes(activeTab)
-                  ? activeTab
-                  : "Trending"
-              }
+            <MusicLibrarySortControl<CommunityTab>
+              value={activeTab}
               onChange={(value) => setActiveTab(value)}
+              onClear={() => setActiveTab("All")}
               options={COMMUNITY_SORT_OPTIONS}
               showSelectedCheck
             />
