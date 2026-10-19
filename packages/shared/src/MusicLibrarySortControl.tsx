@@ -10,28 +10,40 @@ import {
 
 export type MusicLibrarySortValue = "recent" | "downloaded";
 
-export const MUSIC_LIBRARY_SORT_OPTIONS: Array<{
-  value: MusicLibrarySortValue;
+export type MusicLibrarySortOption<TValue extends string = MusicLibrarySortValue> = {
+  value: TValue;
   label: string;
-}> = [
+};
+
+export const MUSIC_LIBRARY_SORT_OPTIONS: Array<
+  MusicLibrarySortOption<MusicLibrarySortValue>
+> = [
   { value: "recent", label: "Most Recent" },
   { value: "downloaded", label: "Most Popular" },
 ];
 
-export function MusicLibrarySortControl({
+export function MusicLibrarySortControl<
+  TValue extends string = MusicLibrarySortValue,
+>({
   value,
   onChange,
   showSelectedCheck = false,
+  options,
 }: {
-  value: MusicLibrarySortValue;
-  onChange: (value: MusicLibrarySortValue) => void;
+  value: TValue;
+  onChange: (value: TValue) => void;
   showSelectedCheck?: boolean;
+  options?: ReadonlyArray<MusicLibrarySortOption<TValue>>;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement | null>(null);
+  const sortOptions =
+    options ??
+    (MUSIC_LIBRARY_SORT_OPTIONS as ReadonlyArray<
+      MusicLibrarySortOption<TValue>
+    >);
   const activeOption =
-    MUSIC_LIBRARY_SORT_OPTIONS.find((option) => option.value === value) ??
-    MUSIC_LIBRARY_SORT_OPTIONS[0];
+    sortOptions.find((option) => option.value === value) ?? sortOptions[0];
 
   useEffect(() => {
     if (!isOpen) return;
@@ -65,7 +77,7 @@ export function MusicLibrarySortControl({
 
   function selectOption(
     event: ReactMouseEvent<HTMLButtonElement>,
-    nextValue: MusicLibrarySortValue,
+    nextValue: TValue,
   ) {
     event.preventDefault();
     event.stopPropagation();
@@ -129,7 +141,7 @@ export function MusicLibrarySortControl({
 
       {isOpen ? (
         <div className="filmwave-dropdown-shell filmwave-music-sort-menu" role="menu">
-          {MUSIC_LIBRARY_SORT_OPTIONS.map((option) => (
+          {sortOptions.map((option) => (
             <button
               key={option.value}
               type="button"
