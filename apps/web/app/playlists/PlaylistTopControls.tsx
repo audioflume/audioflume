@@ -654,9 +654,36 @@ export default function PlaylistTopControls() {
           grid-template-columns: max-content minmax(320px, 1fr) max-content !important;
         }
 
+        .playlists-status-pill,
+        .playlists-view-button,
+        .playlists-sort-button,
+        .playlists-new-button {
+          box-sizing: border-box !important;
+          height: 40px !important;
+          min-height: 40px !important;
+          border: 1.25px solid var(--border) !important;
+          border-radius: 6px !important;
+          background: transparent !important;
+        }
+
         .playlists-status-pill {
           width: auto !important;
           min-width: 126px !important;
+          padding-right: 12px !important;
+          padding-left: 12px !important;
+        }
+
+        .playlists-view-button {
+          width: 40px !important;
+          min-width: 40px !important;
+          flex: 0 0 40px !important;
+          padding: 0 !important;
+        }
+
+        .playlists-sort-button,
+        .playlists-new-button {
+          padding-right: 12px !important;
+          padding-left: 12px !important;
         }
 
         .playlist-scope-dropdown {
