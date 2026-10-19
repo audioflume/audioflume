@@ -591,6 +591,7 @@
 
 .audioflume-pricing-comparison-section {
   padding-top: 72px;
+  padding-bottom: var(--filmwave-page-gutter);
 }
 
 .audioflume-pricing-comparison-heading {
