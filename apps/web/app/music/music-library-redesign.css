@@ -454,6 +454,21 @@ main
 
 
 @media (max-width: 1000px) {
+  .audioflume-music-page-searchbar
+    .audioflume-home-reference-searchbar-field {
+    width: min(720px, calc(100% - 12px));
+    margin: 12px 0 12px 12px;
+  }
+
+  .audioflume-music-page-searchbar
+    .audioflume-music-page-searchbar-sort {
+    box-sizing: border-box;
+    justify-content: center;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+
   .audioflume-music-page-searchbar {
     grid-template-columns: 154px minmax(0, 1fr) 120px;
   }
