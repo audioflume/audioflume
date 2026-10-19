@@ -491,6 +491,9 @@ main
     height: 40px;
     flex: 0 0 40px;
     border-radius: 4px;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease;
   }
 
   .audioflume-music-page-searchbar
@@ -508,6 +511,9 @@ main
     height: 40px !important;
     justify-content: center !important;
     border-radius: 4px !important;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease !important;
   }
 
   .audioflume-music-page-searchbar
