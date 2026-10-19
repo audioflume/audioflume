@@ -256,10 +256,7 @@
     justify-content: center;
     gap: 0;
     border-radius: 4px;
-    box-shadow: inset 0 0 0 0 transparent;
-    transition:
-      box-shadow 150ms ease,
-      background-color 150ms ease;
+    transition: background-color 150ms ease;
   }
 
   .song > span {
@@ -286,9 +283,8 @@
   :global(html.dark) .song:focus-visible,
   :global(html[data-theme="dark"]) .song:hover,
   :global(html[data-theme="dark"]) .song:focus-visible {
-    border-color: var(--border);
+    border-color: var(--text-muted);
     background: transparent;
-    box-shadow: inset 0 0 0 1.25px var(--text-muted);
   }
 
   .trailing {
@@ -313,10 +309,7 @@
     border: 1.25px solid var(--border);
     border-radius: 4px;
     padding: 0;
-    box-shadow: inset 0 0 0 0 transparent;
-    transition:
-      box-shadow 150ms ease,
-      background-color 150ms ease;
+    transition: background-color 150ms ease;
   }
 
   :global(html.light) .filters:hover,
@@ -327,9 +320,8 @@
   :global(html.dark) .filters:focus-visible,
   :global(html[data-theme="dark"]) .filters:hover,
   :global(html[data-theme="dark"]) .filters:focus-visible {
-    border-color: var(--border);
+    border-color: var(--text-muted);
     background: transparent;
-    box-shadow: inset 0 0 0 1.25px var(--text-muted);
   }
 
   .filters > span {
