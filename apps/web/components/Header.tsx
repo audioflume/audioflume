@@ -781,7 +781,7 @@ export default function Header() {
 
         @media (max-width: 690px) {
           .filmwave-web-header .filmwave-header-inner {
-            padding-right: 8px !important;
+            padding-right: 14px !important;
           }
 
           .filmwave-web-header .filmwave-header-nav {
@@ -790,7 +790,7 @@ export default function Header() {
 
           .filmwave-web-header .filmwave-header-right-actions {
             display: inline-flex !important;
-            gap: 6px;
+            gap: 12px;
             margin-left: 0;
           }
 
@@ -925,20 +925,9 @@ export default function Header() {
             .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
             width: 100%;
             border: 0;
+            background: var(--bg-primary);
+            padding: 0;
             box-shadow: none;
-          }
-
-          .filmwave-mobile-account-menu
-            .filmwave-web-user-menu
-            .filmwave-dropdown-item {
-            height: 35px;
-            min-height: 35px;
-            border-bottom: 0;
-            padding-right: 12px;
-            padding-left: 12px;
-            font-size: 13.5px;
-            font-weight: 300;
-            line-height: normal;
           }
 
           .filmwave-mobile-account-menu
@@ -948,6 +937,90 @@ export default function Header() {
             border-bottom: 1.25px solid var(--filmwave-menu-sep);
             padding: 0;
             font-size: inherit;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-profile {
+            min-height: 84px;
+            gap: 14px;
+            padding: 16px 20px;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-avatar {
+            width: 44px;
+            height: 44px;
+            flex-basis: 44px;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-name {
+            font-size: 18px;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-email {
+            font-size: 14px;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-actions {
+            padding: 0;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-dropdown-item {
+            height: 60px;
+            min-height: 60px;
+            border-bottom: 0;
+            padding-right: 20px;
+            padding-left: 20px;
+            font-size: 18px;
+            font-weight: 400;
+            line-height: normal;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu-new-project {
+            border-bottom: 1.25px solid var(--filmwave-menu-sep);
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-web-user-menu-new-project-button {
+            min-height: 72px;
+            padding: 0 20px;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-library-section,
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-web-user-menu-account-section,
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-signout {
+            border-top: 0;
+            border-bottom: 1.25px solid var(--filmwave-menu-sep);
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-signout {
+            border-bottom: 0;
+          }
+
+          .filmwave-mobile-account-menu
+            .filmwave-web-user-menu
+            .filmwave-user-menu-theme-value {
+            font-size: 14px;
           }
 
           .filmwave-mobile-nav-panel .filmwave-mobile-nav-create {
@@ -1181,10 +1254,19 @@ export default function Header() {
                     <div className="filmwave-header-account-wrap" ref={menuRef}>
                       <button
                         type="button"
-                        onClick={() => setMenuOpen((prev) => !prev)}
+                        onClick={() => {
+                          if (window.matchMedia("(max-width: 690px)").matches) {
+                            setMenuOpen(false);
+                            setMobileNavOpen(true);
+                            setMobileAccountOpen(true);
+                            return;
+                          }
+
+                          setMenuOpen((prev) => !prev);
+                        }}
                         className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
                         aria-label="Open user menu"
-                        aria-expanded={menuOpen}
+                        aria-expanded={menuOpen || mobileAccountOpen}
                       >
                         <span
                           className="filmwave-header-avatar"
