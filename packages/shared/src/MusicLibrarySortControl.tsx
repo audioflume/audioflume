@@ -29,11 +29,13 @@ export function MusicLibrarySortControl<
   onChange,
   showSelectedCheck = false,
   options,
+  onClear,
 }: {
   value: TValue;
   onChange: (value: TValue) => void;
   showSelectedCheck?: boolean;
   options?: ReadonlyArray<MusicLibrarySortOption<TValue>>;
+  onClear?: () => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const controlRef = useRef<HTMLDivElement | null>(null);
@@ -82,7 +84,9 @@ export function MusicLibrarySortControl<
     event.preventDefault();
     event.stopPropagation();
 
-    if (nextValue !== value) {
+    if (nextValue === value && onClear) {
+      onClear();
+    } else if (nextValue !== value) {
       onChange(nextValue);
     }
 
