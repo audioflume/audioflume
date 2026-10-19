@@ -322,10 +322,6 @@ export default function Header() {
         }
 
         @media (max-width: 640px) {
-          .audioflume-artist-cta-bar {
-            padding: 0 16px;
-          }
-
           .audioflume-artist-cta-link {
             font-size: 8px;
           }
