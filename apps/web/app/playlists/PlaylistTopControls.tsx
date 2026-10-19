@@ -669,6 +669,7 @@ export default function PlaylistTopControls() {
         .playlists-status-pill {
           width: auto !important;
           min-width: 126px !important;
+          justify-content: center !important;
           padding-right: 12px !important;
           padding-left: 12px !important;
         }
@@ -690,9 +691,18 @@ export default function PlaylistTopControls() {
           padding-left: 12px !important;
         }
 
+        .playlists-sort-button {
+          justify-content: center !important;
+        }
+
         .playlists-scope-button:hover,
-        .playlists-sort-button:hover {
-          background: var(--bg-hover) !important;
+        .playlists-scope-button:focus-visible,
+        .playlists-view-button:hover,
+        .playlists-view-button:focus-visible,
+        .playlists-sort-button:hover,
+        .playlists-sort-button:focus-visible {
+          border-color: var(--text-muted) !important;
+          background: transparent !important;
           color: var(--text-primary) !important;
         }
 
@@ -857,8 +867,14 @@ export default function PlaylistTopControls() {
           }
 
           .playlists-view-button:hover,
+          .playlists-view-button:focus-visible,
           .playlists-sort-button:hover,
-          .playlists-sort-button.is-open,
+          .playlists-sort-button:focus-visible,
+          .playlists-sort-button.is-open {
+            border-color: var(--text-muted) !important;
+            background: transparent !important;
+          }
+
           .playlists-new-button:hover {
             background: var(--bg-hover) !important;
           }
