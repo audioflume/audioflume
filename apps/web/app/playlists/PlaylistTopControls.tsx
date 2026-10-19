@@ -665,6 +665,7 @@ export default function PlaylistTopControls() {
           border-radius: 4px !important;
           background: transparent !important;
           transition:
+            border-color 150ms ease,
             background-color 150ms ease,
             color 150ms ease !important;
         }
