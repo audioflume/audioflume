@@ -366,8 +366,8 @@
 
 @media (max-width: 720px) {
   .backdrop {
-    align-items: flex-end;
-    padding: 16px;
+    align-items: center;
+    padding: 32px;
   }
 
   .modal {
@@ -390,6 +390,12 @@
 
   .field > span {
     display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .backdrop {
+    padding: 20px;
   }
 }
 
