@@ -57,7 +57,7 @@
   .audioflume-home-reference-searchbar-filters
   > span:last-child {
   opacity: 1;
-  transition: opacity 0s linear 180ms;
+  transition: opacity 140ms ease 180ms;
 }
 
 .audioflume-music-page-searchbar .audioflume-music-filter-button-icon {
