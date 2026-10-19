@@ -797,20 +797,26 @@ export default function PlaylistTopControls() {
           .playlists-view-button,
           .playlists-sort-button,
           .playlists-new-button {
-            width: 51px !important;
-            min-width: 51px !important;
-            height: 51px !important;
-            min-height: 51px !important;
-            flex: 0 0 51px !important;
+            box-sizing: border-box !important;
+            width: 40px !important;
+            min-width: 40px !important;
+            height: 40px !important;
+            min-height: 40px !important;
+            flex: 0 0 40px !important;
             padding: 0 !important;
+            border: 1.25px solid var(--border) !important;
+            border-radius: 6px !important;
+            background: transparent !important;
           }
 
           .playlists-sort-button {
             gap: 0 !important;
           }
 
+          .playlists-view-button:hover,
           .playlists-sort-button:hover,
-          .playlists-sort-button.is-open {
+          .playlists-sort-button.is-open,
+          .playlists-new-button:hover {
             background: var(--bg-hover) !important;
           }
 
