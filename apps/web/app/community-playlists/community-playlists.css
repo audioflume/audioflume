@@ -1490,6 +1490,23 @@
     .filmwave-music-sort-button {
     border: 1.25px solid var(--border) !important;
   }
+
+  :where(html.dark, html[data-theme="dark"])
+    .community-searchbar-sort
+    .filmwave-music-sort-button {
+    border: 1.25px solid var(--border) !important;
+    background: transparent !important;
+    color: var(--text-primary) !important;
+  }
+
+  :where(html.dark, html[data-theme="dark"])
+    .community-searchbar-sort
+    .filmwave-music-sort-button:hover,
+  :where(html.dark, html[data-theme="dark"])
+    .community-searchbar-sort
+    .filmwave-music-sort-button.is-open {
+    background: var(--bg-hover) !important;
+  }
 }
 
 @media (max-width: 760px) {
