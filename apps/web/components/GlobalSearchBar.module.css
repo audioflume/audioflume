@@ -224,28 +224,54 @@
   color: var(--text-primary);
 }
 
-@media (max-width: 720px) {
-  .bar {
-    grid-template-columns: 112px minmax(0, 1fr);
-  }
-
-  .filters {
-    gap: 12px;
-    padding: 0 20px;
-  }
-
-  .field {
-    width: calc(100% - 20px);
-    margin: 12px 10px;
-    padding: 0 18px;
-  }
-
-  .field input,
-  .field input::placeholder {
-    font-size: 14px;
+@media (max-width: 1000px) {
+  .bar,
+  .withTrailing {
+    grid-template-columns: 154px minmax(0, 1fr) 120px;
   }
 
   .actions {
+    gap: 0;
+    padding: 0;
+  }
+
+  .song {
+    width: 40px;
+    height: 40px;
+    flex: 0 0 40px;
+    justify-content: center;
+    gap: 0;
+    border-radius: 6px;
+  }
+
+  .song > span {
     display: none;
+  }
+
+  :global(html.light) .song,
+  :global(html[data-theme="light"]) .song {
+    border: 1.25px solid var(--border);
+  }
+
+  .trailing {
+    display: none;
+  }
+}
+
+@media (max-width: 690px) {
+  .bar,
+  .withTrailing {
+    grid-template-columns: 82px minmax(0, 1fr) 120px;
+  }
+
+  .filters {
+    box-sizing: border-box;
+    gap: 0;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+  .filters > span {
+    opacity: 0;
   }
 }
