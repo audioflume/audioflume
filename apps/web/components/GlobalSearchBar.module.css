@@ -267,6 +267,20 @@
     border: 1.25px solid var(--border);
   }
 
+  :global(html.dark) .song,
+  :global(html[data-theme="dark"]) .song {
+    border: 1.25px solid var(--border);
+    background: transparent;
+    color: var(--text-primary);
+  }
+
+  :global(html.dark) .song:hover,
+  :global(html.dark) .song:focus-visible,
+  :global(html[data-theme="dark"]) .song:hover,
+  :global(html[data-theme="dark"]) .song:focus-visible {
+    background: var(--bg-hover);
+  }
+
   .trailing {
     display: none;
   }
