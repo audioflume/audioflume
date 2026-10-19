@@ -680,10 +680,19 @@ export default function PlaylistTopControls() {
           padding: 0 !important;
         }
 
+        .playlists-control-right {
+          gap: 6px !important;
+        }
+
         .playlists-sort-button,
         .playlists-new-button {
           padding-right: 12px !important;
           padding-left: 12px !important;
+        }
+
+        :where(html.light, html[data-theme="light"]) .playlists-new-button:hover {
+          background: var(--bg-hover) !important;
+          color: var(--text-primary) !important;
         }
 
         .playlist-scope-dropdown {
