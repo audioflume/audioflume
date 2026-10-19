@@ -228,7 +228,7 @@
 @media (max-width: 1000px) {
   .bar,
   .withTrailing {
-    grid-template-columns: 154px minmax(0, 1fr) 120px;
+    grid-template-columns: 154px minmax(0, 1fr) 88px;
   }
 
   .field {
@@ -238,8 +238,8 @@
 
   .actions {
     gap: 0;
-    padding: 0;
-    justify-content: center;
+    padding: 0 24px 0 0;
+    justify-content: flex-end;
   }
 
   .song {
@@ -268,15 +268,15 @@
 @media (max-width: 690px) {
   .bar,
   .withTrailing {
-    grid-template-columns: 82px minmax(0, 1fr) 120px;
+    grid-template-columns: 82px minmax(0, 1fr) 88px;
   }
 
   .filters {
     box-sizing: border-box;
     gap: 0;
-    justify-content: center;
+    justify-content: flex-start;
     padding-right: 0;
-    padding-left: 0;
+    padding-left: 30px;
   }
 
   .filters > span {
@@ -288,7 +288,5 @@
     margin: 12px;
   }
 
-  .actions {
-    justify-content: center;
-  }
+
 }
