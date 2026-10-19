@@ -1180,16 +1180,24 @@ export function MusicFilterPanel({
       <div className="fw-filter-panel-reveal">
         <div className="fw-filter-panel">
           {showMobileCloseButton ? (
-            <button
-              type="button"
-              className="fw-filter-mobile-close"
-              aria-label="Close filters"
-              onClick={onClose}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 6L18 18M18 6L6 18" />
-              </svg>
-            </button>
+            <div className="fw-filter-mobile-header">
+              <div className="fw-filter-mobile-title">
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+                </svg>
+                <span>Filters</span>
+              </div>
+              <button
+                type="button"
+                className="fw-filter-mobile-close"
+                aria-label="Close filters"
+                onClick={onClose}
+              >
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M6 6L18 18M18 6L6 18" />
+                </svg>
+              </button>
+            </div>
           ) : null}
           <div className="fw-filter-panel-body">
             <nav
