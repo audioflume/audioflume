@@ -556,21 +556,21 @@ main
     color: var(--text-primary) !important;
   }
 
-  :where(html.dark, html[data-theme="dark"])
-    .audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-song:hover,
-  :where(html.dark, html[data-theme="dark"])
-    .audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-song:focus-visible,
-  :where(html.dark, html[data-theme="dark"])
-    .audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-button:hover,
-  :where(html.dark, html[data-theme="dark"])
-    .audioflume-music-page-searchbar
+  .audioflume-music-page-searchbar
+    .audioflume-music-page-searchbar-sort
+    .filmwave-music-sort-button:focus-visible,
+  .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-button.is-open {
-    background: var(--bg-hover) !important;
+    border-color: var(--text-muted) !important;
+    background: transparent !important;
   }
 }
 
