@@ -1860,6 +1860,12 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 }
 
+@media (max-width: 840px) {
+  .audioflume-home-reference-original-song-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
 @media (max-width: 720px) {
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
