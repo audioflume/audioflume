@@ -2867,7 +2867,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-description {
-  max-width: 520px;
+  max-width: 460px;
   margin: clamp(22px, 2.2vw, 34px) 0 0;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
