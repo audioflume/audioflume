@@ -790,8 +790,8 @@ export default function Header() {
 
           .filmwave-web-header .filmwave-header-right-actions {
             display: inline-flex !important;
-            gap: 18px;
-            margin-left: 0;
+            gap: 0;
+            margin-left: 18px;
           }
 
           .filmwave-web-header
@@ -1343,33 +1343,6 @@ export default function Header() {
               >
                 Need Enterprise?
               </a>
-
-              {isLoaded && user ? (
-                <button
-                  type="button"
-                  className="filmwave-mobile-nav-account-trigger"
-                  onClick={() => setMobileAccountOpen(true)}
-                >
-                  <span
-                    className="filmwave-mobile-nav-account-avatar"
-                    style={{
-                      backgroundColor:
-                        avatarImage && !avatarImageFailed ? "transparent" : "#808080",
-                    }}
-                  >
-                    {avatarImage && !avatarImageFailed ? (
-                      <img
-                        src={avatarImage}
-                        alt=""
-                        onError={() => setAvatarImageFailed(true)}
-                      />
-                    ) : (
-                      initials
-                    )}
-                  </span>
-                  <span>Account</span>
-                </button>
-              ) : null}
 
               {isLoaded && !user ? (
                 <>
