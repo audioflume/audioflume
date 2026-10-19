@@ -68,8 +68,8 @@ body .playlists-tabs-row {
   min-height: 51px !important;
   border: 0 !important;
   border-radius: 0 !important;
-  background: transparent !important;
-  background-color: transparent !important;
+  background: var(--filmwave-neutral-surface) !important;
+  background-color: var(--filmwave-neutral-surface) !important;
   padding: 0 16px !important;
 }
 
@@ -77,8 +77,8 @@ body .playlists-tabs-row {
   .playlists-top-controls
   > .fw-toolbar-header-search-row {
   --fw-header-search-muted-color: #a3a3a3;
-  background: transparent !important;
-  background-color: transparent !important;
+  background: #f3f3f3 !important;
+  background-color: #f3f3f3 !important;
 }
 
 .playlists-top-controls .fw-toolbar-search-static {
