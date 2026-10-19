@@ -41,12 +41,18 @@
 
 .filters {
   gap: 18px;
+  overflow: hidden;
   border-right: 1.25px solid rgba(255, 255, 255, 0.08);
   padding: 0 30px;
   color: inherit;
   font-size: 13px;
   font-weight: 400;
   text-decoration: none;
+}
+
+.filters > span {
+  opacity: 1;
+  transition: opacity 140ms ease 180ms;
 }
 
 .filters svg {
@@ -281,7 +287,8 @@
   }
 
   .filters > span {
-    display: none;
+    opacity: 0;
+    transition-delay: 0s;
   }
 
   .field {
