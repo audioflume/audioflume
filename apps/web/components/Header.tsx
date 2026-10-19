@@ -818,7 +818,10 @@ export default function Header() {
 
           .filmwave-mobile-nav-panel {
             position: fixed;
-            top: calc(28px + var(--filmwave-header-height, 75px));
+            top: var(
+              --filmwave-web-header-bottom,
+              calc(28px + var(--filmwave-header-height, 75px))
+            );
             right: 0;
             bottom: 0;
             left: 0;
@@ -828,7 +831,6 @@ export default function Header() {
             overflow-y: auto;
             background: var(--bg-primary);
             color: var(--text-primary);
-            border-top: var(--filmwave-border-width) solid var(--border);
           }
 
           .filmwave-mobile-nav-panel a {
