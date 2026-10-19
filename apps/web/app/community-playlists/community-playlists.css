@@ -1499,13 +1499,14 @@
     color: var(--text-primary) !important;
   }
 
-  :where(html.dark, html[data-theme="dark"])
-    .community-searchbar-sort
+  .community-searchbar-sort
     .filmwave-music-sort-button:hover,
-  :where(html.dark, html[data-theme="dark"])
-    .community-searchbar-sort
+  .community-searchbar-sort
+    .filmwave-music-sort-button:focus-visible,
+  .community-searchbar-sort
     .filmwave-music-sort-button.is-open {
-    background: var(--bg-hover) !important;
+    border-color: var(--text-muted) !important;
+    background: transparent !important;
   }
 }
 
