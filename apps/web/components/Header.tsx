@@ -782,6 +782,10 @@ export default function Header() {
         }
 
         @media (max-width: 690px) {
+          .filmwave-web-header .filmwave-header-inner {
+            padding-right: 8px !important;
+          }
+
           .filmwave-web-header .filmwave-header-nav,
           .filmwave-web-header .filmwave-header-right-actions {
             display: none !important;
