@@ -681,7 +681,7 @@ export default function PlaylistTopControls() {
         }
 
         .playlists-control-right {
-          gap: 6px !important;
+          gap: 8px !important;
         }
 
         .playlists-sort-button,
