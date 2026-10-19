@@ -51,6 +51,7 @@
 .filters svg {
   width: 22px;
   height: 22px;
+  flex: 0 0 22px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -230,9 +231,15 @@
     grid-template-columns: 154px minmax(0, 1fr) 120px;
   }
 
+  .field {
+    width: min(720px, calc(100% - 32px));
+    margin: 12px;
+  }
+
   .actions {
     gap: 0;
     padding: 0;
+    justify-content: center;
   }
 
   .song {
@@ -267,11 +274,21 @@
   .filters {
     box-sizing: border-box;
     gap: 0;
-    padding-right: 30px;
-    padding-left: 30px;
+    justify-content: center;
+    padding-right: 0;
+    padding-left: 0;
   }
 
   .filters > span {
-    opacity: 0;
+    display: none;
+  }
+
+  .field {
+    width: min(720px, calc(100% - 32px));
+    margin: 12px;
+  }
+
+  .actions {
+    justify-content: center;
   }
 }
