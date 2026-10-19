@@ -690,9 +690,16 @@ export default function PlaylistTopControls() {
           padding-left: 12px !important;
         }
 
-        :where(html.light, html[data-theme="light"]) .playlists-new-button:hover {
+        .playlists-scope-button:hover,
+        .playlists-sort-button:hover {
           background: var(--bg-hover) !important;
           color: var(--text-primary) !important;
+        }
+
+        .playlists-new-button:hover {
+          border-color: var(--text-primary) !important;
+          background: var(--text-primary) !important;
+          color: var(--bg-primary) !important;
         }
 
         .playlist-scope-dropdown {
