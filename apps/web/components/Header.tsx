@@ -781,7 +781,7 @@ export default function Header() {
 
         @media (max-width: 690px) {
           .filmwave-web-header .filmwave-header-inner {
-            padding-right: 14px !important;
+            padding-right: var(--filmwave-header-padding-x) !important;
           }
 
           .filmwave-web-header .filmwave-header-nav {
@@ -790,7 +790,7 @@ export default function Header() {
 
           .filmwave-web-header .filmwave-header-right-actions {
             display: inline-flex !important;
-            gap: 12px;
+            gap: 18px;
             margin-left: 0;
           }
 
@@ -905,15 +905,6 @@ export default function Header() {
             width: 100%;
             height: 100%;
             object-fit: cover;
-          }
-
-          .filmwave-mobile-nav-account-back {
-            gap: 10px;
-          }
-
-          .filmwave-mobile-nav-account-back span:first-child {
-            font-size: 20px;
-            line-height: 1;
           }
 
           .filmwave-mobile-account-menu {
@@ -1316,14 +1307,6 @@ export default function Header() {
         <nav className="filmwave-mobile-nav-panel" aria-label="Mobile navigation">
           {mobileAccountOpen && user ? (
             <>
-              <button
-                type="button"
-                className="filmwave-mobile-nav-account-back"
-                onClick={() => setMobileAccountOpen(false)}
-              >
-                <span aria-hidden="true">←</span>
-                <span>Back</span>
-              </button>
               <div className="filmwave-mobile-account-menu">
                 <UserMenu
                   onClose={() => {
