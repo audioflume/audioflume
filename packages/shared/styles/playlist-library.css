@@ -348,16 +348,16 @@
   line-height: 1.1 !important;
 }
 
-/* Use the canonical global section-title styling for My Playlists. */
+/* Use the canonical global small section-title styling for My Playlists. */
 .playlists-page .playlists-hero .playlists-title,
 .playlists-page .playlists-hero .playlists-title::before {
   margin: 0 !important;
-  font-family: var(--filmwave-section-title-font-family) !important;
-  font-size: var(--filmwave-section-title-font-size) !important;
-  font-weight: var(--filmwave-section-title-font-weight) !important;
-  letter-spacing: var(--filmwave-section-title-letter-spacing) !important;
-  line-height: var(--filmwave-section-title-line-height) !important;
-  text-transform: none !important;
+  font-family: var(--filmwave-small-section-title-font-family) !important;
+  font-size: var(--filmwave-small-section-title-font-size) !important;
+  font-weight: var(--filmwave-small-section-title-font-weight) !important;
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing) !important;
+  line-height: var(--filmwave-small-section-title-line-height) !important;
+  text-transform: var(--filmwave-small-section-title-text-transform) !important;
 }
 
 .playlists-page .playlists-hero .playlists-title {
