@@ -662,7 +662,7 @@ export default function PlaylistTopControls() {
           height: 40px !important;
           min-height: 40px !important;
           border: 1.25px solid var(--border) !important;
-          border-radius: 6px !important;
+          border-radius: 4px !important;
           background: transparent !important;
         }
 
@@ -848,7 +848,7 @@ export default function PlaylistTopControls() {
             flex: 0 0 40px !important;
             padding: 0 !important;
             border: 1.25px solid var(--border) !important;
-            border-radius: 6px !important;
+            border-radius: 4px !important;
             background: transparent !important;
           }
 
