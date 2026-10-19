@@ -229,18 +229,18 @@
 @media (max-width: 1000px) {
   .bar,
   .withTrailing {
-    grid-template-columns: 154px minmax(0, 1fr) 56px;
+    grid-template-columns: 154px minmax(0, 1fr) 72px;
   }
 
   .field {
-    width: min(720px, calc(100% - 32px));
-    margin: 12px;
+    width: min(720px, calc(100% - 12px));
+    margin: 12px 0 12px 12px;
   }
 
   .actions {
     gap: 0;
-    padding: 0 16px 0 0;
-    justify-content: flex-end;
+    padding: 0 16px;
+    justify-content: center;
   }
 
   .song {
@@ -269,7 +269,7 @@
 @media (max-width: 690px) {
   .bar,
   .withTrailing {
-    grid-template-columns: 82px minmax(0, 1fr) 56px;
+    grid-template-columns: 82px minmax(0, 1fr) 72px;
   }
 
   .filters {
@@ -285,8 +285,8 @@
   }
 
   .field {
-    width: min(720px, calc(100% - 32px));
-    margin: 12px;
+    width: min(720px, calc(100% - 12px));
+    margin: 12px 0 12px 12px;
   }
 
 
