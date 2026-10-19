@@ -11,6 +11,7 @@
   height: var(--filmwave-searchbar-height, 75px);
   grid-template-columns: 154px minmax(0, 1fr) 230px;
   align-items: stretch;
+  transition: grid-template-columns 180ms ease;
   border-bottom: 1.25px solid rgba(255, 255, 255, 0.08);
   background: #111111;
   color: #ffffff;
@@ -228,7 +229,7 @@
 @media (max-width: 1000px) {
   .bar,
   .withTrailing {
-    grid-template-columns: 154px minmax(0, 1fr) 88px;
+    grid-template-columns: 154px minmax(0, 1fr) 56px;
   }
 
   .field {
@@ -238,7 +239,7 @@
 
   .actions {
     gap: 0;
-    padding: 0 24px 0 0;
+    padding: 0 16px 0 0;
     justify-content: flex-end;
   }
 
@@ -268,7 +269,7 @@
 @media (max-width: 690px) {
   .bar,
   .withTrailing {
-    grid-template-columns: 82px minmax(0, 1fr) 88px;
+    grid-template-columns: 82px minmax(0, 1fr) 56px;
   }
 
   .filters {
