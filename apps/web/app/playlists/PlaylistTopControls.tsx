@@ -880,7 +880,9 @@ export default function PlaylistTopControls() {
           }
 
           .playlists-new-button:hover {
-            background: var(--bg-hover) !important;
+            border-color: var(--text-primary) !important;
+            background: var(--text-primary) !important;
+            color: var(--bg-primary) !important;
           }
 
           .playlists-sort-button-icon {
