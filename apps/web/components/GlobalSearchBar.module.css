@@ -274,11 +274,10 @@
     color: var(--text-primary);
   }
 
-  :global(html.dark) .song:hover,
-  :global(html.dark) .song:focus-visible,
-  :global(html[data-theme="dark"]) .song:hover,
-  :global(html[data-theme="dark"]) .song:focus-visible {
-    background: var(--bg-hover);
+  .song:hover,
+  .song:focus-visible {
+    border-color: var(--text-muted);
+    background: transparent;
   }
 
   .trailing {
