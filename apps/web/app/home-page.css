@@ -2941,7 +2941,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-link svg {
-  transform: translateY(0) !important;
+  transform: translateY(-1px) !important;
 }
 
 .audioflume-home-lifetime-feature-heading {
