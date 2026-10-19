@@ -845,6 +845,162 @@
   background: var(--text-primary);
 }
 
+.audioflume-pricing-ui-showcase {
+  position: relative;
+  overflow: hidden;
+  background: #080808;
+}
+
+.audioflume-pricing-ui-showcase::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 2;
+  height: 110px;
+  background: linear-gradient(
+    180deg,
+    #090909 0%,
+    rgba(9, 9, 9, 0.72) 38%,
+    rgba(9, 9, 9, 0) 100%
+  );
+  pointer-events: none;
+}
+
+.audioflume-pricing-ui-showcase > img {
+  display: block;
+  width: 100%;
+  height: clamp(450px, 38vw, 600px);
+  object-fit: cover;
+  object-position: center top;
+}
+
+.audioflume-pricing-ui-graphic.is-light {
+  display: none;
+}
+
+.audioflume-pricing-ui-overlay {
+  position: absolute;
+  top: clamp(92px, 7vw, 116px);
+  left: 50%;
+  display: flex;
+  width: max-content;
+  max-width: var(--filmwave-page-width);
+  align-items: center;
+  justify-content: center;
+  gap: 34px;
+  margin: 0;
+  transform: translateX(-50%);
+}
+
+.audioflume-pricing-ui-overlay h2 {
+  max-width: none;
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(22px, 1.55vw, 27px);
+  font-weight: 300;
+  letter-spacing: normal;
+  line-height: 1.05;
+  white-space: nowrap;
+}
+
+.audioflume-pricing-ui-overlay a {
+  display: inline-flex;
+  min-height: 42px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 0 18px;
+  color: #111111;
+  font-size: 13px;
+  font-weight: 400;
+  text-decoration: none;
+}
+
+.audioflume-pricing-ui-theme-toggle {
+  position: absolute;
+  right: 20px;
+  bottom: 20px;
+  z-index: 3;
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  border: 0;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #111111;
+  padding: 0;
+  opacity: 0;
+  pointer-events: none;
+  cursor: pointer;
+  transition: opacity 160ms ease;
+}
+
+.audioflume-pricing-ui-showcase:hover .audioflume-pricing-ui-theme-toggle,
+.audioflume-pricing-ui-theme-toggle:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.audioflume-pricing-ui-theme-toggle svg {
+  width: 10px;
+  height: 10px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.35;
+}
+
+.audioflume-pricing-ui-theme-toggle svg:has(circle) {
+  width: 12px;
+  height: 12px;
+}
+
+.audioflume-pricing-ui-theme-toggle svg path:only-child {
+  fill: currentColor;
+  stroke: none;
+  transform: translate(0.7px, -0.3px);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-ui-showcase {
+  background: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-ui-showcase::before {
+  background: linear-gradient(
+    180deg,
+    #ffffff 0%,
+    rgba(255, 255, 255, 0.72) 38%,
+    rgba(255, 255, 255, 0) 100%
+  );
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-ui-graphic.is-dark {
+  display: none;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-ui-graphic.is-light {
+  display: block;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-ui-overlay h2 {
+  color: #111111;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-ui-overlay a {
+  background: #111111;
+  color: #ffffff;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-pricing-ui-theme-toggle {
+  background: #111111;
+  color: #ffffff;
+}
+
 .audioflume-pricing-includes-section {
   display: grid;
   grid-template-columns: clamp(280px, 29.3vw, 420px) minmax(0, 1fr);
@@ -1193,6 +1349,21 @@
 
   .audioflume-pricing-hero-bottom {
     grid-template-columns: minmax(0, 0.4fr) minmax(0, 0.6fr);
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-pricing-ui-showcase > img {
+    height: 390px;
+  }
+
+  .audioflume-pricing-ui-overlay {
+    top: 64px;
+    width: calc(100vw - 40px);
+    max-width: none;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 18px;
   }
 }
 
