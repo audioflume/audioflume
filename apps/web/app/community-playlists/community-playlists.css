@@ -1468,6 +1468,9 @@
     height: 40px !important;
     justify-content: center !important;
     border-radius: 4px !important;
+    transition:
+      border-color 150ms ease,
+      background-color 150ms ease !important;
   }
 
   .community-searchbar-sort .filmwave-music-sort-button > span,
