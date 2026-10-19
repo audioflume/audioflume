@@ -1108,7 +1108,18 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-feature-pair-grid {
-    gap: 56px;
+    gap: 40px;
+  }
+
+  .audioflume-home-reference-trending,
+  .audioflume-home-reference-tools,
+  .audioflume-home-reference-playlists,
+  .audioflume-home-reference-new-songs {
+    padding-top: 40px;
+  }
+
+  .audioflume-home-reference-tools-search {
+    margin-top: 40px;
   }
 
   .audioflume-home-reference-feature-pair-card {
