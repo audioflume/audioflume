@@ -663,6 +663,12 @@ export default function PlaylistTopControls() {
           min-width: 178px !important;
         }
 
+        .playlists-scope-button:hover,
+        .playlists-sort-button:hover {
+          background: var(--bg-hover) !important;
+          color: var(--text-primary) !important;
+        }
+
         .playlist-scope-dropdown button.is-active {
           background: transparent !important;
           color: var(--filmwave-menu-text) !important;
@@ -797,11 +803,11 @@ export default function PlaylistTopControls() {
           .playlists-view-button,
           .playlists-sort-button,
           .playlists-new-button {
-            width: 44px !important;
-            min-width: 44px !important;
-            height: 44px !important;
-            min-height: 44px !important;
-            flex: 0 0 44px !important;
+            width: var(--filmwave-searchbar-height, 51px) !important;
+            min-width: var(--filmwave-searchbar-height, 51px) !important;
+            height: var(--filmwave-searchbar-height, 51px) !important;
+            min-height: var(--filmwave-searchbar-height, 51px) !important;
+            flex: 0 0 var(--filmwave-searchbar-height, 51px) !important;
             padding: 0 !important;
           }
 
