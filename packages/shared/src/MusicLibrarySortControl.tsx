@@ -134,12 +134,14 @@ export function MusicLibrarySortControl<
           focusable="false"
           className="filmwave-music-sort-responsive-icon"
         >
-          <path d="M8 6H20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-          <path d="M8 12H20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-          <path d="M8 18H20" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round" />
-          <path d="M4.5 6H4.51" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-          <path d="M4.5 12H4.51" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-          <path d="M4.5 18H4.51" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+          <path
+            d="M8 19V5M8 5L4 9M8 5L12 9M16 5V19M16 19L12 15M16 19L20 15"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.9"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
         </svg>
       </button>
 
