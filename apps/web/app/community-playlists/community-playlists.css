@@ -429,6 +429,7 @@
 
 .community-searchbar-filter-button {
   gap: 18px;
+  overflow: hidden;
   border: 0;
   border-right: 1.25px solid var(--border);
   background: transparent;
@@ -438,6 +439,11 @@
   font-size: 13px;
   font-weight: 400;
   cursor: pointer;
+}
+
+.community-searchbar-filter-button > span:last-child {
+  opacity: 1;
+  transition: opacity 140ms ease 180ms;
 }
 
 .community-searchbar-filter-icon {
@@ -1355,26 +1361,12 @@
 @media (max-width: 760px) {
   .community-searchbar-row,
   .community-searchbar-row.is-filters-open {
-    grid-template-columns: 112px minmax(0, 1fr);
-  }
-
-  .community-searchbar-filter-button {
-    gap: 12px;
-    padding: 0 20px;
+    grid-template-columns: 154px minmax(0, 1fr);
   }
 
   .community-searchbar-search .audioflume-home-reference-searchbar-field {
-    width: calc(100% - 20px);
-    gap: 12px;
-    margin: 12px 10px;
-    padding: 0 18px;
-  }
-
-  .community-searchbar-search .audioflume-home-reference-searchbar-field input,
-  .community-searchbar-search
-    .audioflume-home-reference-searchbar-field
-    input::placeholder {
-    font-size: 14px;
+    width: min(720px, calc(100% - 12px));
+    margin: 12px 0 12px 12px;
   }
 
   .community-searchbar-tabs {
@@ -1499,6 +1491,26 @@
   .community-shelves {
     gap: 36px;
     margin-top: 30px;
+  }
+}
+
+@media (max-width: 690px) {
+  .community-searchbar-row,
+  .community-searchbar-row.is-filters-open {
+    grid-template-columns: 82px minmax(0, 1fr);
+  }
+
+  .community-searchbar-filter-button {
+    box-sizing: border-box;
+    gap: 0;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+  .community-searchbar-filter-button > span:last-child {
+    opacity: 0;
+    transition-duration: 0s;
+    transition-delay: 0s;
   }
 }
 
