@@ -846,7 +846,7 @@ export default function Header() {
           }
 
           .filmwave-mobile-nav-panel .filmwave-mobile-nav-secondary {
-            font-size: 14px;
+            font-size: 18px;
           }
 
           .filmwave-mobile-nav-panel .filmwave-mobile-nav-create {
