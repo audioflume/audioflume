@@ -1107,6 +1107,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     grid-template-columns: 1fr;
   }
 
+  .audioflume-home-reference-feature-pair-grid {
+    gap: 56px;
+  }
+
   .audioflume-home-reference-feature-pair-card {
     width: 100%;
     aspect-ratio: 1.48 / 1;
