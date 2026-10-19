@@ -1109,9 +1109,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
   .audioflume-home-reference-feature-pair,
   .audioflume-home-reference-trending,
-  .audioflume-home-reference-tools,
-  .audioflume-home-reference-playlists,
-  .audioflume-home-reference-new-songs {
+  .audioflume-home-reference-tools {
     padding-top: 40px;
   }
 
@@ -1121,11 +1119,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
   .audioflume-home-reference-tools-search {
     padding-top: 40px;
-  }
-
-  .audioflume-home-reference-library {
-    padding-top: 40px;
-    padding-bottom: 40px;
   }
 
   .audioflume-home-reference-feature-pair-card {
@@ -1478,6 +1471,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-reference-new-songs {
   padding: 56px 0 0;
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-reference-playlists,
+  .audioflume-home-reference-new-songs {
+    padding-top: 40px;
+  }
 }
 
 .audioflume-home-reference-new-songs .fw-song-list {
@@ -1941,7 +1941,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-library {
-    padding-top: 166px;
+    padding: 166px 0;
   }
 
   .audioflume-home-reference-layered-playlists {
