@@ -422,7 +422,7 @@
 
 .community-searchbar-filter-button,
 .community-searchbar-search,
-.community-searchbar-tabs {
+.community-searchbar-sort {
   display: flex;
   align-items: center;
 }
@@ -586,48 +586,65 @@
   color: #a3a3a3;
 }
 
-.community-searchbar-tabs {
-  justify-content: center;
-  padding: 0 58px 0 28px;
-}
-
-.community-tabs {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  gap: 22px;
-  margin: 0;
-  white-space: nowrap;
-}
-
-.community-feed-tab {
+.community-searchbar-sort {
   position: relative;
-  border: 0;
-  background: transparent;
-  padding: 8px 0;
-  color: var(--text-muted);
-  font-family: inherit;
-  font-size: 14px;
-  font-weight: 400;
-  cursor: pointer;
-  transition: color 150ms ease;
+  justify-content: center;
+  padding: 0 28px;
 }
 
-.community-feed-tab::after {
-  content: "";
-  position: absolute;
-  right: 0;
-  bottom: 2px;
-  left: 0;
-  height: 1px;
-  background: transparent;
+.community-searchbar-sort .filmwave-music-sort-control {
+  position: relative;
 }
 
-.community-feed-tab:hover,
-.community-feed-tab:focus-visible,
-.community-feed-tab.is-active {
-  color: var(--text-primary);
-  outline: none;
+.community-searchbar-sort .filmwave-music-sort-button {
+  width: auto !important;
+  min-width: max-content !important;
+  max-width: none !important;
+  height: auto !important;
+  gap: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
+  font-weight: 400 !important;
+  line-height: 1 !important;
+  box-shadow: none !important;
+}
+
+.community-searchbar-sort .filmwave-music-sort-button > span {
+  flex: 0 0 auto !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+
+.community-searchbar-sort .filmwave-music-sort-button:hover,
+.community-searchbar-sort .filmwave-music-sort-button.is-open {
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
+}
+
+.community-searchbar-sort .filmwave-music-sort-chevron {
+  width: 14px !important;
+  height: 14px !important;
+  flex: 0 0 14px !important;
+  margin-left: 4px !important;
+  transform: translateY(1px);
+  color: var(--text-primary) !important;
+}
+
+.community-searchbar-sort .filmwave-music-sort-responsive-icon {
+  display: none;
+}
+
+.community-searchbar-sort .filmwave-music-sort-selected-check {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
 }
 
 
@@ -1346,22 +1363,10 @@
   }
 }
 
-@media (max-width: 900px) {
-  .community-searchbar-tabs {
-    gap: 16px;
-    padding-right: 20px;
-    padding-left: 18px;
-  }
-
-  .community-feed-tab {
-    font-size: 14px;
-  }
-}
-
-@media (max-width: 760px) {
+@media (max-width: 1000px) {
   .community-searchbar-row,
   .community-searchbar-row.is-filters-open {
-    grid-template-columns: 154px minmax(0, 1fr);
+    grid-template-columns: 154px minmax(0, 1fr) 72px;
   }
 
   .community-searchbar-search .audioflume-home-reference-searchbar-field {
@@ -1369,9 +1374,44 @@
     margin: 12px 0 12px 12px;
   }
 
-  .community-searchbar-tabs {
-    display: none;
+  .community-searchbar-sort {
+    box-sizing: border-box;
+    justify-content: center;
+    padding: 0 16px;
   }
+
+  .community-searchbar-sort .filmwave-music-sort-button {
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    height: 40px !important;
+    justify-content: center !important;
+    border-radius: 6px !important;
+  }
+
+  .community-searchbar-sort .filmwave-music-sort-button > span,
+  .community-searchbar-sort .filmwave-music-sort-chevron {
+    display: none !important;
+  }
+
+  .community-searchbar-sort
+    .filmwave-music-sort-button
+    > .filmwave-music-sort-responsive-icon {
+    display: block;
+    width: 17px !important;
+    height: 17px !important;
+    flex: 0 0 17px !important;
+    margin-left: 0 !important;
+  }
+
+  :where(html.light, html[data-theme="light"])
+    .community-searchbar-sort
+    .filmwave-music-sort-button {
+    border: 1.25px solid var(--border) !important;
+  }
+}
+
+@media (max-width: 760px) {
 
   .community-page:not(.is-sidebar-open) .community-sidebar {
     display: none;
@@ -1497,7 +1537,7 @@
 @media (max-width: 690px) {
   .community-searchbar-row,
   .community-searchbar-row.is-filters-open {
-    grid-template-columns: 82px minmax(0, 1fr);
+    grid-template-columns: 82px minmax(0, 1fr) 72px;
   }
 
   .community-searchbar-filter-button {
