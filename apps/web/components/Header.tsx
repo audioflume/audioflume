@@ -791,7 +791,7 @@ export default function Header() {
           .filmwave-web-header .filmwave-header-right-actions {
             display: inline-flex !important;
             gap: 0;
-            margin-left: 8px;
+            margin-left: 6px;
           }
 
           .filmwave-web-header
