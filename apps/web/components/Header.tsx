@@ -324,10 +324,6 @@ export default function Header() {
             padding: 0 16px;
           }
 
-          .audioflume-artist-cta-copy span {
-            display: none;
-          }
-
           .audioflume-artist-cta-link {
             font-size: 8px;
           }
