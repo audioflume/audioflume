@@ -1860,7 +1860,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 }
 
-@media (max-width: 760px) {
+@media (max-width: 680px) {
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
