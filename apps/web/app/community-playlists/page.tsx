@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
+import { MusicLibrarySortControl } from "@filmwave/shared";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import RecentPlaylistCards from "@/components/RecentPlaylistCards";
@@ -63,6 +64,11 @@ const COMMUNITY_TABS: CommunityTab[] = [
   "Most Liked",
   "Favorites",
 ];
+
+const COMMUNITY_SORT_OPTIONS = COMMUNITY_TABS.map((value) => ({
+  value,
+  label: value,
+}));
 
 const COMMUNITY_FEATURE_BANNER_IMAGE =
   "https://images.filmwave.io/images/community-playlists/nik-shuliahin-Lg_oC6gDCjU-unsplash.jpg";
@@ -1513,29 +1519,17 @@ export default function CommunityPlaylistsPage() {
             </label>
           </div>
 
-          <div
-            className="community-tabs community-searchbar-tabs"
-            role="tablist"
-            aria-label="Community playlist sorting"
-          >
-            {COMMUNITY_TABS.map((tab) => (
-              <button
-                type="button"
-                role="tab"
-                key={tab}
-                className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
-                aria-selected={activeTab === tab}
-                onClick={() => {
-                  if (tab === "All") {
-                    showAllView();
-                    return;
-                  }
-                  setActiveTab(tab);
-                }}
-              >
-                {tab}
-              </button>
-            ))}
+          <div className="community-searchbar-sort">
+            <MusicLibrarySortControl
+              value={
+                COMMUNITY_TABS.includes(activeTab)
+                  ? activeTab
+                  : "Trending"
+              }
+              onChange={(value) => setActiveTab(value)}
+              options={COMMUNITY_SORT_OPTIONS}
+              showSelectedCheck
+            />
           </div>
         </div>
 
