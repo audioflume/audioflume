@@ -265,8 +265,10 @@ export default function Header() {
     <>
       <style>{`
         .audioflume-artist-cta-bar {
-          position: sticky;
+          position: fixed;
           top: 0;
+          right: 0;
+          left: 0;
           z-index: var(--filmwave-z-header);
           display: flex;
           box-sizing: border-box;
@@ -279,6 +281,11 @@ export default function Header() {
           padding: 0 24px;
           color: #ffffff;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
+        }
+
+        .audioflume-artist-cta-spacer {
+          height: 28px;
+          flex: 0 0 28px;
         }
 
         .audioflume-artist-cta-copy {
@@ -1056,6 +1063,7 @@ export default function Header() {
         }
       `}</style>
 
+      <div className="audioflume-artist-cta-spacer" aria-hidden="true" />
       <div className="audioflume-artist-cta-bar">
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
