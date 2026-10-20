@@ -261,18 +261,13 @@ export default async function PricingPage() {
   return (
     <main className="audioflume-pricing-page-root">
       <section className="audioflume-pricing-plans-section">
-        <div className="audioflume-pricing-overview">
-          <div className="audioflume-pricing-overview-heading">
-            <span className="audioflume-pricing-overview-eyebrow">
-              Choose your plan
-            </span>
-            <h1>Plans &amp; Pricing</h1>
+        <div className="audioflume-pricing-catalogue-intro">
+          <div className="audioflume-pricing-catalogue-intro-copy">
+            A growing catalogue built around cinematic storytelling.
           </div>
-          <p>
-            Straightforward access to Audioflume&apos;s curated music and SFX
-            catalogue, with plans for solo filmmakers, active studios, and
-            larger creative teams.
-          </p>
+          <div className="audioflume-pricing-catalogue-intro-meta audioflume-editorial-meta">
+            1500+ ARTISTS TRENDING ONLINE
+          </div>
         </div>
 
         <div className="audioflume-pricing-offers-grid">
