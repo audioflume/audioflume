@@ -175,5 +175,5 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
 }
 
 .audioflume-arrow-text-link:hover svg {
-  translate: 2px -2px;
+  translate: 1px -1px;
 }
