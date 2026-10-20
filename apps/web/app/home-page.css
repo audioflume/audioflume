@@ -2314,10 +2314,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   line-height: 1.2;
 }
 
-.audioflume-pricing-comparison-section {
-  margin-top: 72px;
-}
-
 .audioflume-pricing-comparison-heading {
   display: flex;
   min-height: 28px;
