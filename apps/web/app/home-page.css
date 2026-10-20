@@ -787,6 +787,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   min-width: 0;
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
+  border-radius: 6px;
   background: var(--bg-tertiary);
 }
 
