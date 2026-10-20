@@ -169,3 +169,11 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
   line-height: 1.15;
   text-transform: uppercase;
 }
+
+.audioflume-arrow-text-link svg {
+  transition: translate 160ms ease;
+}
+
+.audioflume-arrow-text-link:hover svg {
+  translate: 2px -2px;
+}
