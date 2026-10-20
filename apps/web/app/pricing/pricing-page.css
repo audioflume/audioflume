@@ -270,8 +270,8 @@
 
 .audioflume-pricing-plan .audioflume-public-action-button:hover,
 .audioflume-pricing-plan .audioflume-public-action-button:focus-visible {
-  background: rgba(255, 255, 255, 0.88) !important;
-  color: #111111 !important;
+  background: #111111 !important;
+  color: #ffffff !important;
   opacity: 1 !important;
 }
 
@@ -466,7 +466,7 @@
 
 .audioflume-pricing-lifetime-action > a:hover,
 .audioflume-pricing-lifetime-action > a:focus-visible {
-  background: #f0f0f0 !important;
+  background: #e5e5dd !important;
   color: #111111 !important;
   opacity: 1 !important;
 }
