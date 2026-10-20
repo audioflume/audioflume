@@ -1694,12 +1694,11 @@ main
     > section.is-filter-closing
     > .fw-music-content-column
     > .fw-filter-panel-wrap.is-open {
-    opacity: 0 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
     pointer-events: none !important;
     transform: translateX(-100%) !important;
-    transition:
-      transform 180ms ease,
-      opacity 140ms ease !important;
+    transition: transform 180ms ease !important;
   }
 
   .audioflume-music-page
