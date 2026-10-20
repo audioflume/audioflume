@@ -1232,13 +1232,23 @@ export default function Header() {
             <button
               type="button"
               className="filmwave-mobile-nav-toggle"
-              aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
-              aria-expanded={mobileNavOpen}
+              aria-label={
+                mobileNavOpen && !mobileAccountOpen
+                  ? "Close navigation"
+                  : "Open navigation"
+              }
+              aria-expanded={mobileNavOpen && !mobileAccountOpen}
               onClick={() => {
+                if (mobileAccountOpen) {
+                  setMobileAccountOpen(false);
+                  setMobileNavOpen(true);
+                  return;
+                }
+
                 setMobileNavOpen((open) => !open);
               }}
             >
-              {mobileNavOpen ? (
+              {mobileNavOpen && !mobileAccountOpen ? (
                 <svg viewBox="0 0 24 24" aria-hidden="true">
                   <path d="M6 6L18 18M18 6L6 18" />
                 </svg>
@@ -1270,8 +1280,14 @@ export default function Header() {
                         onClick={() => {
                           if (window.matchMedia("(max-width: 690px)").matches) {
                             setMenuOpen(false);
-                            setMobileNavOpen(true);
+
+                            if (mobileNavOpen && mobileAccountOpen) {
+                              setMobileNavOpen(false);
+                              return;
+                            }
+
                             setMobileAccountOpen(true);
+                            setMobileNavOpen(true);
                             return;
                           }
 
@@ -1279,7 +1295,7 @@ export default function Header() {
                         }}
                         className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
                         aria-label="Open user menu"
-                        aria-expanded={menuOpen || mobileAccountOpen}
+                        aria-expanded={menuOpen || (mobileNavOpen && mobileAccountOpen)}
                       >
                         <span
                           className="filmwave-header-avatar"
