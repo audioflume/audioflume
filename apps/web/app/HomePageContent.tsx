@@ -832,7 +832,7 @@ export default function HomePageContent({
                     Lifetime access to in-house made original music, licensed for commercial work and clients up to 100 employees.
                   </p>
                   <Link
-                    href={membershipHref}
+                    href="/pricing"
                     className="audioflume-home-lifetime-feature-hover-action"
                   >
                     Get Lifetime Access
