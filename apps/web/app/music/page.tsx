@@ -403,7 +403,7 @@ export default function MusicPage() {
 
   function closeFilters() {
     const isMobile = window.matchMedia("(max-width: 690px)").matches;
-    const isFullscreenMobile = window.matchMedia("(max-width: 536px)").matches;
+    const isFullscreenMobile = window.matchMedia("(max-width: 690px)").matches;
 
     if (!isMobile) {
       desktopFiltersOpenRef.current = false;
