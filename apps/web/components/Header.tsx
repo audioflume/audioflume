@@ -153,6 +153,16 @@ export default function Header() {
   }, [mobileNavOpen]);
 
   useEffect(() => {
+    if (mobileNavOpen || !mobileAccountOpen) return;
+
+    const timeout = window.setTimeout(() => {
+      setMobileAccountOpen(false);
+    }, 180);
+
+    return () => window.clearTimeout(timeout);
+  }, [mobileNavOpen, mobileAccountOpen]);
+
+  useEffect(() => {
     let cancelled = false;
 
     async function loadCuratedPreview() {
@@ -840,6 +850,25 @@ export default function Header() {
             overflow-y: auto;
             background: var(--bg-primary);
             color: var(--text-primary);
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            transform: translateX(-100%);
+            transition:
+              transform 180ms ease,
+              opacity 140ms ease,
+              visibility 0s linear 180ms;
+          }
+
+          .filmwave-mobile-nav-panel.is-open {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+            transform: translateX(0);
+            transition:
+              transform 180ms ease,
+              opacity 140ms ease,
+              visibility 0s linear 0s;
           }
 
           .filmwave-mobile-nav-panel a {
@@ -1206,10 +1235,7 @@ export default function Header() {
               aria-label={mobileNavOpen ? "Close navigation" : "Open navigation"}
               aria-expanded={mobileNavOpen}
               onClick={() => {
-                setMobileNavOpen((open) => {
-                  if (open) setMobileAccountOpen(false);
-                  return !open;
-                });
+                setMobileNavOpen((open) => !open);
               }}
             >
               {mobileNavOpen ? (
@@ -1299,14 +1325,16 @@ export default function Header() {
         }
       />
 
-      {mobileNavOpen ? (
-        <nav className="filmwave-mobile-nav-panel" aria-label="Mobile navigation">
+      <nav
+        className={`filmwave-mobile-nav-panel${mobileNavOpen ? " is-open" : ""}`}
+        aria-label="Mobile navigation"
+        aria-hidden={!mobileNavOpen}
+      >
           {mobileAccountOpen && user ? (
             <>
               <div className="filmwave-mobile-account-menu">
                 <UserMenu
                   onClose={() => {
-                    setMobileAccountOpen(false);
                     setMobileNavOpen(false);
                   }}
                 />
@@ -1361,7 +1389,6 @@ export default function Header() {
             </>
           )}
         </nav>
-      ) : null}
     </>
   );
 }
