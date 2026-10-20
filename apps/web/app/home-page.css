@@ -3014,7 +3014,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   font-size: clamp(13px, 1vw, 14.5px);
   font-weight: 300;
   line-height: 1.65;
-  transition: opacity 160ms ease;
+  opacity: 1;
+  transition: opacity 90ms ease 70ms;
 }
 
 .audioflume-home-lifetime-feature-hover-action {
@@ -3032,14 +3033,17 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   text-decoration: none;
   opacity: 0;
   pointer-events: none;
+  transform: translateY(3px);
   transition:
     background-color 160ms ease,
-    opacity 160ms ease;
+    opacity 110ms ease,
+    transform 140ms ease;
 }
 
 .audioflume-home-lifetime-feature-copy:hover
   .audioflume-home-lifetime-feature-description {
   opacity: 0;
+  transition-delay: 0ms;
 }
 
 .audioflume-home-lifetime-feature-copy:hover
@@ -3048,6 +3052,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .audioflume-home-lifetime-feature-hover-action {
   opacity: 1;
   pointer-events: auto;
+  transform: translateY(0);
+  transition-delay: 0ms, 85ms, 85ms;
 }
 
 .audioflume-home-lifetime-feature-hover-action:hover,
