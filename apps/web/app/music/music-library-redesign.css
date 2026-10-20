@@ -1651,7 +1651,7 @@ main
   display: none;
 }
 
-@media (max-width: 536px) {
+@media (max-width: 690px) {
   .audioflume-music-page
     > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
     > .fw-music-content-column {
