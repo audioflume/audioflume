@@ -236,7 +236,7 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
         <span>New &amp; trending music</span>
-        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore trending music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-0" /></Link>
+        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore trending music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" /></Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-reference-trending-visual">
@@ -378,7 +378,7 @@ function HomeTrendingSkeleton() {
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
         <span>New &amp; trending music</span>
-        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore new music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-0" /></Link>
+        <Link href="/music" className="inline-flex items-center gap-[5px]">Explore new music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" /></Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-skeleton-trending-visual">
