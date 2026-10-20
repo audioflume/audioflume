@@ -321,7 +321,7 @@ export default async function PricingPage() {
                       style={{ fontSize: "14px", fontWeight: 400 }}
                     >
                       Contact us
-                      <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
+                      <ArrowUpRightIcon size={16} strokeWidth={1.5} className="-ml-[3px] translate-y-[1px]" />
                     </a>
                   ) : (
                     <Link
@@ -330,7 +330,7 @@ export default async function PricingPage() {
                       style={{ fontSize: "14px", fontWeight: 400 }}
                     >
                       {planActionLabel}
-                      <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
+                      <ArrowUpRightIcon size={16} strokeWidth={1.5} className="-ml-[3px] translate-y-[1px]" />
                     </Link>
                   )}
                 </div>
