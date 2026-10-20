@@ -101,7 +101,7 @@ export default function LifetimeAccessCard({
           style={{ fontSize: "14px", fontWeight: 400 }}
         >
           {membershipLabel}
-          <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
+          <ArrowUpRightIcon size={16} strokeWidth={1.5} className="-ml-[3px] translate-y-[1px]" />
         </Link>
       </div>
     </div>
