@@ -827,6 +827,13 @@ export default function HomePageContent({
                   </div>
                 </div>
 
+                <Link
+                  href={membershipHref}
+                  className="audioflume-home-lifetime-feature-action"
+                >
+                  {membershipLabel}
+                </Link>
+
                 <p className="audioflume-home-lifetime-feature-description">
                   Lifetime access to in-house made original music, licensed for commercial work and clients up to 100 employees.
                 </p>
