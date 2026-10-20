@@ -340,6 +340,8 @@ export default function MusicPage() {
   const [filtersOpen, setFiltersOpen] = useState(
     () => searchParams.get("filters") !== "closed",
   );
+  const [filtersClosing, setFiltersClosing] = useState(false);
+  const filterCloseTimeoutRef = useRef<number | null>(null);
   const desktopFiltersOpenRef = useRef(filtersOpen);
 
   useEffect(() => {
@@ -347,10 +349,12 @@ export default function MusicPage() {
 
     const syncSidebarForViewport = (event: MediaQueryListEvent) => {
       if (event.matches) {
+        setFiltersClosing(false);
         setFiltersOpen(false);
         return;
       }
 
+      setFiltersClosing(false);
       setFiltersOpen(desktopFiltersOpenRef.current);
     };
 
@@ -368,20 +372,56 @@ export default function MusicPage() {
     };
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (filterCloseTimeoutRef.current !== null) {
+        window.clearTimeout(filterCloseTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  function openFilters() {
+    if (filterCloseTimeoutRef.current !== null) {
+      window.clearTimeout(filterCloseTimeoutRef.current);
+      filterCloseTimeoutRef.current = null;
+    }
+    setFiltersClosing(false);
+    setFiltersOpen(true);
+  }
+
   function toggleFiltersOpen() {
     const isMobile = window.matchMedia("(max-width: 690px)").matches;
 
-    setFiltersOpen((open) => {
-      const nextOpen = !open;
-      if (!isMobile) desktopFiltersOpenRef.current = nextOpen;
-      return nextOpen;
-    });
+    if (filtersOpen) {
+      closeFilters();
+      return;
+    }
+
+    if (!isMobile) desktopFiltersOpenRef.current = true;
+    openFilters();
   }
 
   function closeFilters() {
     const isMobile = window.matchMedia("(max-width: 690px)").matches;
-    if (!isMobile) desktopFiltersOpenRef.current = false;
-    setFiltersOpen(false);
+    const isFullscreenMobile = window.matchMedia("(max-width: 536px)").matches;
+
+    if (!isMobile) {
+      desktopFiltersOpenRef.current = false;
+      setFiltersOpen(false);
+      return;
+    }
+
+    if (!isFullscreenMobile || !filtersOpen || filtersClosing) {
+      setFiltersOpen(false);
+      return;
+    }
+
+    setFiltersClosing(true);
+    filterCloseTimeoutRef.current = window.setTimeout(() => {
+      setFiltersOpen(false);
+      setFiltersClosing(false);
+      filterCloseTimeoutRef.current = null;
+    }, 180);
   }
   const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
@@ -1357,7 +1397,7 @@ export default function MusicPage() {
           filtersOpen
             ? "is-filter-open ml-[var(--sidebar-width)]"
             : "is-filter-closed ml-0"
-        }`}
+        }${filtersClosing ? " is-filter-closing" : ""}`}
       >
         <div className="fw-music-content-column">
           {showSongSkeleton ? (
