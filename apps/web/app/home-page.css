@@ -3024,7 +3024,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   align-items: center;
   justify-content: center;
   background: #111111;
-  color: #ffffff;
+  color: #ffffff !important;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 14px;
   font-weight: 400;
