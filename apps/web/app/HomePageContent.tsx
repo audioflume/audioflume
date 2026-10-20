@@ -760,7 +760,7 @@ export default function HomePageContent({
               </h2>
               <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/discover">
                 Explore artists
-                <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-0" />
+                <ArrowUpRightIcon size={16} strokeWidth={1.5} className="audioflume-home-reference-feature-pair-arrow" />
               </Link>
             </div>
           </div>
@@ -770,7 +770,7 @@ export default function HomePageContent({
               <h2>Curated playlists<br />made for editors.</h2>
               <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/curated-playlists">
                 Explore playlists
-                <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-0" />
+                <ArrowUpRightIcon size={16} strokeWidth={1.5} className="audioflume-home-reference-feature-pair-arrow" />
               </Link>
             </div>
           </div>
