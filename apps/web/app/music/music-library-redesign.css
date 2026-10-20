@@ -1670,7 +1670,7 @@ main
     right: 0 !important;
     bottom: 0 !important;
     left: 0 !important;
-    z-index: 1000 !important;
+    z-index: calc(var(--filmwave-z-header) - 2) !important;
     width: 100vw !important;
     max-width: none !important;
     height: auto !important;
