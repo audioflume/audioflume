@@ -46,7 +46,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: flex-end;
   gap: 32px;
-  margin-bottom: 56px;
+  margin-bottom: 32px;
   color: var(--text-primary);
 }
 
