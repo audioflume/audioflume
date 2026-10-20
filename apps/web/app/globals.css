@@ -175,8 +175,8 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
   top: 0;
   left: 0;
   transition:
-    top 160ms ease,
-    left 160ms ease;
+    top 100ms ease,
+    left 100ms ease;
 }
 
 .audioflume-arrow-text-link:hover svg {
