@@ -1494,6 +1494,24 @@
 }
 
 @media (max-width: 712px) {
+  .audioflume-pricing-catalogue-intro {
+    width: 100%;
+    max-width: 500px;
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 24px;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+  }
+
+  .audioflume-pricing-catalogue-intro-copy,
+  .audioflume-pricing-catalogue-intro-meta {
+    width: 100%;
+    justify-self: center;
+    text-align: center;
+  }
+
   .audioflume-pricing-offers-grid {
     grid-template-columns: minmax(0, 500px);
     justify-content: center;
