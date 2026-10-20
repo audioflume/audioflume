@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 
 export function AudioflumeOriginalsLogo() {
@@ -100,6 +101,7 @@ export default function LifetimeAccessCard({
           style={{ fontSize: "14px", fontWeight: 400 }}
         >
           {membershipLabel}
+          <ArrowUpRightIcon size={14} strokeWidth={1.5} />
         </Link>
       </div>
     </div>
