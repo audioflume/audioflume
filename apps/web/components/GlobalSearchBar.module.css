@@ -311,33 +311,13 @@
 
   .filters {
     box-sizing: border-box;
-    width: 40px;
-    height: 40px;
-    align-self: center;
     gap: 0;
-    justify-content: center;
-    margin-left: 21px;
-    border: 1.25px solid var(--border);
-    border-radius: 4px;
-    padding: 0;
-  }
-
-  :global(html.light) .filters:hover,
-  :global(html.light) .filters:focus-visible,
-  :global(html[data-theme="light"]) .filters:hover,
-  :global(html[data-theme="light"]) .filters:focus-visible,
-  :global(html.dark) .filters:hover,
-  :global(html.dark) .filters:focus-visible,
-  :global(html[data-theme="dark"]) .filters:hover,
-  :global(html[data-theme="dark"]) .filters:focus-visible {
-    border-color: var(--text-muted);
-    background: transparent;
+    padding-right: 30px;
+    padding-left: 30px;
   }
 
   .filters > span {
     opacity: 0;
-    width: 0;
-    overflow: hidden;
     transition-duration: 0s;
     transition-delay: 0s;
   }
