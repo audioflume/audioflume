@@ -37,6 +37,11 @@ type PlayerBroadcastMessage =
   | {
       type: "closed";
       tabId: string;
+    }
+  | {
+      type: "pause-request";
+      tabId: string;
+      targetTabId: string;
     };
 
 type PlayerProgressSnapshot = {
@@ -120,6 +125,9 @@ function isPlayerBroadcastMessage(
   const message = value as Partial<PlayerBroadcastMessage>;
   if (typeof message.tabId !== "string") return false;
   if (message.type === "closed") return true;
+  if (message.type === "pause-request") {
+    return typeof message.targetTabId === "string";
+  }
   if (message.type === "paused") {
     return (
       (typeof message.songId === "string" || message.songId === null) &&
@@ -808,6 +816,29 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         return;
       }
 
+      if (message.type === "pause-request") {
+        if (message.targetTabId !== tabIdRef.current) return;
+
+        playRequestIdRef.current += 1;
+        pendingPlayAfterManifestRef.current = false;
+
+        const audio = getAudio();
+        if (!audio.paused) audio.pause();
+        setIsPlayingState(false);
+
+        if (currentSongRef.current) {
+          lastStorageWriteTimeRef.current = Date.now();
+          writeStoredPlayerState({
+            currentSong: currentSongRef.current,
+            currentTime: currentTimeRef.current,
+            duration: durationRef.current,
+          });
+        }
+
+        postPausedState();
+        return;
+      }
+
       if (message.type === "paused") {
         if (remoteOwnerTabIdRef.current === message.tabId) {
           remoteOwnerTabIdRef.current = null;
@@ -913,7 +944,18 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         e.preventDefault();
         const audio = getAudio();
         if (currentSongRef.current) {
-          if (audio.paused) { safePlay(); } else { safePause(); }
+          const remoteOwnerTabId = remoteOwnerTabIdRef.current;
+          if (remoteOwnerTabId) {
+            postPlayerMessage({
+              type: "pause-request",
+              tabId: tabIdRef.current,
+              targetTabId: remoteOwnerTabId,
+            });
+          } else if (audio.paused) {
+            safePlay();
+          } else {
+            safePause();
+          }
         }
       }
       if (e.code === "ArrowDown") { e.preventDefault(); navigateTrackRef.current("next"); }
@@ -921,7 +963,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     };
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [safePause, safePlay]);
+  }, [postPlayerMessage, safePause, safePlay]);
 
   const playerValue = useMemo(() => {
     const value = {
