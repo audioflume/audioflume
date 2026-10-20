@@ -423,3 +423,19 @@ html body .playlist-detail-page .playlist-detail-cover,
 html body .community-detail-page .community-detail-cover {
   border-radius: 0 !important;
 }
+
+/* Keep playlist interior song rows square instead of inheriting the shared library-card radius. */
+html body .playlist-detail-page .fw-song-list .filmwave-song-card,
+html body .playlist-detail-page .fw-song-list .desktop-song-card,
+html body
+  .playlist-detail-page
+  .fw-song-list
+  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center,
+html body .community-detail-page .fw-song-list .filmwave-song-card,
+html body .community-detail-page .fw-song-list .desktop-song-card,
+html body
+  .community-detail-page
+  .fw-song-list
+  .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
+  border-radius: 0 !important;
+}
