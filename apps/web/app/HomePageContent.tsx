@@ -469,25 +469,25 @@ function HomeFeaturedArtistGrid({
                 <strong>{artist.name}</strong>
                 <span>{designation}</span>
               </span>
-
-              <button
-                type="button"
-                className="audioflume-home-reference-featured-artist-play"
-                onClick={(event) => playArtist(event, artist)}
-                disabled={!playable.length}
-                aria-label={
-                  artistIsPlaying
-                    ? `Pause ${artist.name}`
-                    : `Play ${artist.name}`
-                }
-              >
-                {artistIsPlaying ? (
-                  <PauseIcon size={12} />
-                ) : (
-                  <PlayIconSmall size={12} />
-                )}
-              </button>
             </Link>
+
+            <button
+              type="button"
+              className="audioflume-home-reference-featured-artist-play"
+              onClick={(event) => playArtist(event, artist)}
+              disabled={!playable.length}
+              aria-label={
+                artistIsPlaying
+                  ? `Pause ${artist.name}`
+                  : `Play ${artist.name}`
+              }
+            >
+              {artistIsPlaying ? (
+                <PauseIcon size={12} />
+              ) : (
+                <PlayIconSmall size={12} />
+              )}
+            </button>
           </article>
         );
       })}
