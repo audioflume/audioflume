@@ -732,6 +732,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font-size: clamp(31px, 2.4vw, 44px);
 }
 
+.audioflume-home-reference-feature-pair-arrow {
+  transform: translateY(1px);
+}
+
 .audioflume-home-reference-feature-pair-link {
   position: relative;
   display: inline-flex;
