@@ -1674,11 +1674,21 @@ main
   }
 
   .audioflume-music-page
-    > section
+    > section:not(.is-mobile-filter-open)
+    > .fw-music-content-column
+    > .fw-filter-panel-wrap.is-open {
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    transform: translateX(-100%) !important;
+  }
+
+  .audioflume-music-page
+    > section.is-mobile-filter-open
     > .fw-music-content-column
     > .fw-filter-panel-wrap.is-open,
   .audioflume-music-page
-    > section
+    > section.is-mobile-filter-open
     > .fw-music-content-column
     > .fw-filter-panel-wrap.is-open.has-selected-filter-section {
     width: 100vw !important;
@@ -1691,7 +1701,7 @@ main
   }
 
   .audioflume-music-page
-    > section.is-filter-closing
+    > section.is-mobile-filter-open.is-filter-closing
     > .fw-music-content-column
     > .fw-filter-panel-wrap.is-open {
     opacity: 1 !important;
