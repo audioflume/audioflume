@@ -483,9 +483,9 @@ function HomeFeaturedArtistGrid({
               }
             >
               {artistIsPlaying ? (
-                <PauseIcon size={12} />
+                <PauseIcon size={18} />
               ) : (
-                <PlayIconSmall size={12} />
+                <PlayIconSmall size={18} />
               )}
             </button>
           </article>
@@ -747,7 +747,7 @@ export default function HomePageContent({
         </div>
 
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
-          <div className="audioflume-home-reference-feature-pair-column">
+          <div className="audioflume-home-reference-feature-pair-column is-artists-feature">
             <div className="audioflume-home-reference-feature-pair-card is-artists">
               <PricingHeroImageFlash
                 images={homeFlashImages}
@@ -765,7 +765,7 @@ export default function HomePageContent({
             </div>
           </div>
 
-          <div className="audioflume-home-reference-feature-pair-column">
+          <div className="audioflume-home-reference-feature-pair-column is-playlists-feature">
             <div className="audioflume-home-reference-feature-pair-card is-playlists">
               <h2>Curated playlists<br />made for editors.</h2>
               <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/curated-playlists">
@@ -774,13 +774,11 @@ export default function HomePageContent({
               </Link>
             </div>
           </div>
-        </div>
 
-        {artists.length > 0 ? (
-          <div className="audioflume-home-reference-width">
+          {artists.length > 0 ? (
             <HomeFeaturedArtistGrid artists={artists} />
-          </div>
-        ) : null}
+          ) : null}
+        </div>
       </section>
 
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
