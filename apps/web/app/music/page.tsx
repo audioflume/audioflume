@@ -341,6 +341,7 @@ export default function MusicPage() {
     () => searchParams.get("filters") !== "closed",
   );
   const [filtersClosing, setFiltersClosing] = useState(false);
+  const [mobileFiltersActive, setMobileFiltersActive] = useState(false);
   const filterCloseTimeoutRef = useRef<number | null>(null);
   const desktopFiltersOpenRef = useRef(filtersOpen);
 
@@ -350,15 +351,18 @@ export default function MusicPage() {
     const syncSidebarForViewport = (event: MediaQueryListEvent) => {
       if (event.matches) {
         setFiltersClosing(false);
+        setMobileFiltersActive(false);
         setFiltersOpen(false);
         return;
       }
 
       setFiltersClosing(false);
+      setMobileFiltersActive(false);
       setFiltersOpen(desktopFiltersOpenRef.current);
     };
 
     if (mobileFiltersQuery.matches) {
+      setMobileFiltersActive(false);
       setFiltersOpen(false);
     }
 
@@ -397,7 +401,11 @@ export default function MusicPage() {
       return;
     }
 
-    if (!isMobile) desktopFiltersOpenRef.current = true;
+    if (isMobile) {
+      setMobileFiltersActive(true);
+    } else {
+      desktopFiltersOpenRef.current = true;
+    }
     openFilters();
   }
 
@@ -407,11 +415,13 @@ export default function MusicPage() {
 
     if (!isMobile) {
       desktopFiltersOpenRef.current = false;
+      setMobileFiltersActive(false);
       setFiltersOpen(false);
       return;
     }
 
     if (!isFullscreenMobile || !filtersOpen || filtersClosing) {
+      setMobileFiltersActive(false);
       setFiltersOpen(false);
       return;
     }
@@ -420,6 +430,7 @@ export default function MusicPage() {
     filterCloseTimeoutRef.current = window.setTimeout(() => {
       setFiltersOpen(false);
       setFiltersClosing(false);
+      setMobileFiltersActive(false);
       filterCloseTimeoutRef.current = null;
     }, 180);
   }
@@ -1397,7 +1408,7 @@ export default function MusicPage() {
           filtersOpen
             ? "is-filter-open ml-[var(--sidebar-width)]"
             : "is-filter-closed ml-0"
-        }${filtersClosing ? " is-filter-closing" : ""}`}
+        }${mobileFiltersActive ? " is-mobile-filter-open" : ""}${filtersClosing ? " is-filter-closing" : ""}`}
       >
         <div className="fw-music-content-column">
           {showSongSkeleton ? (
