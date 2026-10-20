@@ -836,7 +836,7 @@ export default function HomePageContent({
                     className="audioflume-home-lifetime-feature-hover-action"
                   >
                     Get Lifetime Access
-                    <ArrowUpRightIcon size={14} strokeWidth={1.5} className="ml-[5px]" />
+                    <ArrowUpRightIcon size={16} strokeWidth={1.5} className="ml-[5px]" />
                   </Link>
                 </div>
               </div>
