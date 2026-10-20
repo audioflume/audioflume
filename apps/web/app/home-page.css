@@ -3088,10 +3088,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-reference-featured-artist-grid {
-    grid-template-columns: 1fr;
-  }
-
   .audioflume-home-reference-featured-artist-card {
     aspect-ratio: 1.75 / 1;
   }
