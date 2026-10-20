@@ -337,6 +337,10 @@ export default function Header() {
           }
         }
 
+        .filmwave-header.filmwave-web-header {
+          top: 28px;
+        }
+
         .filmwave-header-tonal-wordmark {
           display: inline-flex !important;
           align-items: center !important;
