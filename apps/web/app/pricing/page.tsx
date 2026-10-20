@@ -263,10 +263,10 @@ export default async function PricingPage() {
       <section className="audioflume-pricing-plans-section">
         <div className="audioflume-pricing-catalogue-intro">
           <div className="audioflume-pricing-catalogue-intro-copy">
-            A growing catalogue built around cinematic storytelling.
+            Music licensing for solo filmmakers, studios, and larger teams.
           </div>
           <div className="audioflume-pricing-catalogue-intro-meta audioflume-editorial-meta">
-            1500+ ARTISTS TRENDING ONLINE
+            Choose the plan that fits your workflow.
           </div>
         </div>
 
