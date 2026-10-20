@@ -607,7 +607,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   grid-template-areas:
     "artists playlists"
     "featured featured";
-  column-gap: 12px;
+  column-gap: 24px;
   row-gap: 24px;
 }
 
