@@ -1663,11 +1663,17 @@ main
     > .fw-music-content-column
     > .fw-filter-panel-wrap {
     position: fixed !important;
-    inset: 0 !important;
+    top: var(
+      --filmwave-web-header-bottom,
+      calc(28px + var(--filmwave-header-height, 75px))
+    ) !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
     z-index: 1000 !important;
     width: 100vw !important;
     max-width: none !important;
-    height: 100dvh !important;
+    height: auto !important;
     margin: 0 !important;
     background: var(--bg-primary) !important;
     transform: translateX(-100%) !important;
@@ -1693,7 +1699,7 @@ main
     > .fw-filter-panel-wrap.is-open.has-selected-filter-section {
     width: 100vw !important;
     max-width: none !important;
-    height: 100dvh !important;
+    height: auto !important;
     opacity: 1 !important;
     visibility: visible !important;
     pointer-events: auto !important;
