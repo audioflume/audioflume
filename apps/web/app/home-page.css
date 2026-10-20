@@ -351,13 +351,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   cursor: pointer;
 }
 
-.audioflume-home-reference-original-song-card-play::after {
-  position: absolute;
-  inset: 0;
-  background: rgba(17, 17, 17, 0.28);
-  content: "";
-}
-
 .audioflume-home-reference-original-song-card-play > img,
 .audioflume-home-reference-original-song-card-play > img,
 .audioflume-home-reference-original-song-card-fallback {
