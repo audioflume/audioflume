@@ -46,7 +46,7 @@
   grid-template-columns: repeat(2, minmax(0, 1fr));
   align-items: flex-end;
   gap: 32px;
-  margin-bottom: 32px;
+  margin-bottom: 56px;
   color: var(--text-primary);
 }
 
@@ -276,7 +276,7 @@
 }
 
 .audioflume-pricing-lifetime-section {
-  padding-top: 72px;
+  padding-top: 56px;
 }
 
 .audioflume-pricing-lifetime {
@@ -614,7 +614,7 @@
 }
 
 .audioflume-pricing-comparison-section {
-  padding-top: 72px;
+  padding-top: 56px;
   padding-bottom: var(--filmwave-page-gutter);
 }
 
