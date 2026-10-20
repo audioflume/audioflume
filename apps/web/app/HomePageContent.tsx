@@ -403,6 +403,98 @@ function HomeTrendingSkeleton() {
   );
 }
 
+function HomeFeaturedArtistGrid({
+  artists,
+}: {
+  artists: HomeArtist[];
+}) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+
+  function playArtist(event: MouseEvent, artist: HomeArtist) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+    if (!playable.length) return;
+
+    const artistIsPlaying = Boolean(
+      isPlaying &&
+        currentSong &&
+        playable.some((song) => song.id === currentSong.id),
+    );
+
+    if (artistIsPlaying && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+
+    setQueue(playable);
+    togglePlayPause(playable[0]);
+  }
+
+  return (
+    <div className="audioflume-home-reference-featured-artist-grid">
+      {artists.slice(0, 4).map((artist) => {
+        const image = artist.hero_image_url || artist.profile_image_url || "";
+        const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+        const artistIsPlaying = Boolean(
+          isPlaying &&
+            currentSong &&
+            playable.some((song) => song.id === currentSong.id),
+        );
+        const designation =
+          artist.designation || artist.custom_text || "Composer";
+
+        return (
+          <article
+            key={artist.id}
+            className="audioflume-home-reference-featured-artist-card"
+          >
+            <Link
+              href={`/artists/${artist.slug}`}
+              className="audioflume-home-reference-featured-artist-link"
+            >
+              {image ? (
+                <img
+                  src={image}
+                  alt=""
+                  draggable={false}
+                  style={{
+                    objectPosition: `${artist.hero_image_position_x ?? 50}% ${artist.hero_image_position_y ?? 50}%`,
+                  }}
+                />
+              ) : null}
+
+              <span className="audioflume-home-reference-featured-artist-copy">
+                <strong>{artist.name}</strong>
+                <span>{designation}</span>
+              </span>
+
+              <button
+                type="button"
+                className="audioflume-home-reference-featured-artist-play"
+                onClick={(event) => playArtist(event, artist)}
+                disabled={!playable.length}
+                aria-label={
+                  artistIsPlaying
+                    ? `Pause ${artist.name}`
+                    : `Play ${artist.name}`
+                }
+              >
+                {artistIsPlaying ? (
+                  <PauseIcon size={12} />
+                ) : (
+                  <PlayIconSmall size={12} />
+                )}
+              </button>
+            </Link>
+          </article>
+        );
+      })}
+    </div>
+  );
+}
+
 function HomeSongShelfSkeleton() {
   return (
     <div className="audioflume-home-reference-shelf audioflume-home-reference-song-shelf audioflume-home-skeleton-song-shelf">
@@ -683,6 +775,12 @@ export default function HomePageContent({
             </div>
           </div>
         </div>
+
+        {artists.length > 0 ? (
+          <div className="audioflume-home-reference-width">
+            <HomeFeaturedArtistGrid artists={artists} />
+          </div>
+        ) : null}
       </section>
 
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
