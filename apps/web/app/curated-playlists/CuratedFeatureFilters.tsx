@@ -95,31 +95,39 @@ export default function CuratedFeatureFilters({
         })}
       </div>
 
-      {activeFilter && activeSubcategories.length > 0 && (
-        <div
-          className="discover-mood-pill-list curated-page-subfilter-list"
-          role="group"
-          aria-label="Curated playlist subfilters"
-        >
-          {activeSubcategories.map((subcategory) => {
-            const isActive = activeSubcategoryId === subcategory.id;
+      <div
+        className={`curated-page-subfilter-reveal${
+          activeFilter && activeSubcategories.length > 0 ? " is-open" : ""
+        }`}
+      >
+        <div className="curated-page-subfilter-reveal-inner">
+          <div
+            className="discover-mood-pill-list curated-page-subfilter-list"
+            role="group"
+            aria-label="Curated playlist subfilters"
+          >
+            {activeSubcategories.map((subcategory) => {
+              const isActive = activeSubcategoryId === subcategory.id;
 
-            return (
-              <button
-                key={subcategory.id}
-                type="button"
-                className={`curated-subfilter-pill${isActive ? " is-active" : ""}`}
-                aria-pressed={isActive}
-                onClick={() =>
-                  onSubcategoryChange(isActive ? null : subcategory.id)
-                }
-              >
-                {subcategory.label}
-              </button>
-            );
-          })}
+              return (
+                <button
+                  key={subcategory.id}
+                  type="button"
+                  className={`discover-category-filter-pill curated-subfilter-pill${
+                    isActive ? " is-active" : ""
+                  }`}
+                  aria-pressed={isActive}
+                  onClick={() =>
+                    onSubcategoryChange(isActive ? null : subcategory.id)
+                  }
+                >
+                  {subcategory.label}
+                </button>
+              );
+            })}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
