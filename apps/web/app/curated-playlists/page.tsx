@@ -259,7 +259,7 @@ export default function CuratedPlaylistsPage() {
 
         </div>
       </section>
-      <Footer showTopBorder={false} />
+      <Footer className="curated-playlists-page-footer" showTopBorder={false} />
     </main>
   );
 }
