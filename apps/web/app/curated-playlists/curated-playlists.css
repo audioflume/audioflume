@@ -21,7 +21,7 @@ body:has(.curated-playlists-page-root) {
 .curated-playlists-page-layer {
   min-height: 100vh;
   padding-top: 0;
-  padding-bottom: 64px;
+  padding-bottom: 0;
 }
 
 .curated-playlists-page-layer > div {
