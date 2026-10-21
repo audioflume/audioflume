@@ -2028,10 +2028,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     gap: 54px;
   }
 
-  .audioflume-home-reference-shelf-arrow {
-    display: none;
-  }
-
   .audioflume-home-skeleton-song-row {
     grid-template-columns: 62px minmax(0, 1fr) 78px;
   }
