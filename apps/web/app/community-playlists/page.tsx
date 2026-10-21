@@ -1163,8 +1163,8 @@ export default function CommunityPlaylistsPage() {
                     }}
                   >
                     <svg viewBox="0 0 20 20" aria-hidden="true">
-                      <circle cx="8.5" cy="8.5" r="5.25" />
-                      <path d="m12.5 12.5 4 4" />
+                      <circle cx="8" cy="8" r="5.25" />
+                      <path d="m11.9 11.9 4.1 4.1" />
                     </svg>
                   </button>
                   <div className="community-pill-search-field-wrap">
@@ -1175,6 +1175,16 @@ export default function CommunityPlaylistsPage() {
                       placeholder="Search playlists or users"
                       aria-label="Search community playlists or users"
                     />
+                    {query && (
+                      <button
+                        type="button"
+                        className="community-pill-search-clear"
+                        aria-label="Clear search"
+                        onClick={() => setQuery("")}
+                      >
+                        <XIcon size={12} />
+                      </button>
+                    )}
                   </div>
                 </div>
 
