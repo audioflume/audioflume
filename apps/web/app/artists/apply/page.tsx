@@ -3,7 +3,7 @@ import ArtistApplicationForm from "@/components/artists/ArtistApplicationForm";
 
 export default function ArtistApplyPage() {
   return (
-    <main className="artist-apply-page-root bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="artist-apply-page-root min-h-[calc(100vh-var(--filmwave-header-height,75px))] bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
         .artist-apply-page-root form > section > div:last-child .filmwave-backend-button {
           height: 40px;
