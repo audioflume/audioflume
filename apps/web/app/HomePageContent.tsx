@@ -433,8 +433,10 @@ function HomeFeaturedArtistGrid({
   }
 
   return (
-    <div className="audioflume-home-reference-featured-artist-grid">
-      {artists.slice(0, 4).map((artist) => {
+    <div className="audioflume-home-reference-featured-artist-section">
+      <h2>Featured artists</h2>
+      <div className="audioflume-home-reference-featured-artist-grid">
+        {artists.slice(0, 4).map((artist) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
         const artistIsPlaying = Boolean(
@@ -489,8 +491,9 @@ function HomeFeaturedArtistGrid({
               )}
             </button>
           </article>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   );
 }
