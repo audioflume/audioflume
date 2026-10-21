@@ -3,7 +3,7 @@ import ArtistApplicationForm from "@/components/artists/ArtistApplicationForm";
 
 export default function ArtistApplyPage() {
   return (
-    <main className="artist-apply-page-root min-h-[calc(100vh-var(--filmwave-header-height,75px))] bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="artist-apply-page-root flex min-h-[calc(100vh-var(--filmwave-header-height,75px))] flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
         .artist-apply-page-root form > section > div:last-child .filmwave-backend-button {
           height: 40px;
@@ -77,7 +77,7 @@ export default function ArtistApplyPage() {
         </div>
       </section>
 
-      <section>
+      <section className="mt-auto">
         <Footer playerPadding={false} showTopBorder={false} flushBottom />
       </section>
     </main>
