@@ -10,8 +10,19 @@ export default async function ArtistClaimPage() {
   const user = await currentUser();
 
   return (
-    <main className="flex min-h-screen flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="artist-claim-page-root flex min-h-screen flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
+        body:has(.artist-claim-page-root) {
+          display: flex;
+          min-height: 100dvh;
+          flex-direction: column;
+        }
+
+        .artist-claim-page-root {
+          width: 100%;
+          flex: 1 0 auto;
+        }
+
         html:not(.light):not([data-theme="light"]) .artist-claim-panel-shell {
           box-shadow: none;
         }
