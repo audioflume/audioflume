@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 
-import CuratedBrowseFilters from "@/components/curated/CuratedBrowseFilters";
 import {
   CURATED_BROWSE_FILTERS,
   type CuratedBrowseTag,
@@ -54,47 +53,35 @@ export default function CuratedFeatureFilters({
     }
   }, [activeFilter, onFilterChange]);
 
-  const activeSubcategories =
-    browseTaxonomy?.filters.find((filter) => filter.value === activeFilter)
-      ?.subcategories ?? [];
-
   return (
-    <div className="curated-page-filter-stack">
+    <div className="curated-page-pill-browser">
+      <p className="curated-page-pill-description">
+        A highly curated collection of playlists built around moods, genres,
+        scenes, and creative use cases.
+      </p>
+
       <div
-        className={`curated-page-filter-row${activeFilter ? " has-active-filter" : ""}`}
+        className="curated-page-pill-list"
+        role="group"
+        aria-label="Curated playlist filters"
       >
-        <CuratedBrowseFilters
-          activeFilter={activeFilter}
-          onFilterChange={onFilterChange}
-          variant="curated-page"
-          collapseToActive={Boolean(activeFilter)}
-          showActiveClearIcon={Boolean(activeFilter)}
-        />
+        {CURATED_BROWSE_FILTERS.map((filter) => {
+          const isActive = activeFilter === filter.value;
 
-        {activeFilter && activeSubcategories.length > 0 && (
-          <nav
-            className="curated-page-subcategory-row"
-            aria-label="Filter by subcategory"
-          >
-            {activeSubcategories.map((subcategory) => {
-              const isActive = activeSubcategoryId === subcategory.id;
-
-              return (
-                <button
-                  key={subcategory.id}
-                  type="button"
-                  className={`curated-page-subcategory-button${isActive ? " is-active" : ""}`}
-                  aria-pressed={isActive}
-                  onClick={() =>
-                    onSubcategoryChange(isActive ? null : subcategory.id)
-                  }
-                >
-                  {subcategory.label}
-                </button>
-              );
-            })}
-          </nav>
-        )}
+          return (
+            <button
+              key={filter.value}
+              type="button"
+              className={`curated-page-filter-pill${isActive ? " is-active" : ""}`}
+              aria-pressed={isActive}
+              onClick={() =>
+                onFilterChange(isActive ? null : filter.value)
+              }
+            >
+              {filter.label}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
