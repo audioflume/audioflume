@@ -589,3 +589,40 @@ body:has(.curated-playlists-page-root)
   }
 }
 
+.curated-page-reference-search {
+  width: min(100%, var(--filmwave-editorial-max-width));
+  margin: 56px auto 0;
+}
+
+.curated-page-reference-search-heading {
+  display: flex;
+  min-height: 28px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
+  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
+  font-family: var(--filmwave-section-title-font-family);
+  line-height: var(--filmwave-section-title-line-height);
+}
+
+.curated-page-reference-search-heading > span {
+  color: var(--text-primary);
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
+}
+
+.curated-page-reference-search-card {
+  height: 420px;
+  min-height: 420px;
+  overflow: hidden;
+  background: #111111;
+}
+
+.curated-page-reference-search-card > * {
+  width: 100%;
+  height: 100%;
+}
