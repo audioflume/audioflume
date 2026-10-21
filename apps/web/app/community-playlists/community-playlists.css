@@ -199,6 +199,73 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-page-grid-group,
+.community-page-skeleton {
+  padding-top: 0;
+}
+
+.community-skeleton-intro {
+  display: grid;
+  width: min(calc(100% - 40px), 700px);
+  gap: 8px;
+  margin: 64px auto 40px;
+}
+
+.community-skeleton-intro-line,
+.community-skeleton-search-pill,
+.community-skeleton-pill,
+.community-skeleton-card-image,
+.community-skeleton-card-avatar,
+.community-skeleton-card-title,
+.community-skeleton-card-count {
+  display: block;
+  background: color-mix(in srgb, var(--text-primary) 7%, transparent);
+  animation: community-skeleton-pulse 1.35s ease-in-out infinite;
+}
+
+.community-skeleton-intro-line {
+  height: 25px;
+  margin: 0 auto;
+}
+
+.community-skeleton-intro-line.is-long {
+  width: 100%;
+}
+
+.community-skeleton-intro-line.is-short {
+  width: 66%;
+}
+
+.community-skeleton-pill-row {
+  display: flex;
+  width: min(calc(100% - 80px), 1320px);
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin: 0 auto;
+  padding: 0 10px 2px;
+}
+
+.community-skeleton-search-pill {
+  width: 30px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.community-skeleton-pill {
+  width: 72px;
+  height: 30px;
+  border-radius: 999px;
+}
+
+.community-skeleton-pill.is-1 {
+  width: 86px;
+}
+
+.community-skeleton-pill.is-2 {
+  width: 64px;
+}
+
 .community-skeleton-grid-wrap {
   width: min(100%, var(--filmwave-editorial-max-width));
   margin: 75px auto 0;
@@ -211,369 +278,45 @@ body:has(.community-playlists-page-root) {
   gap: 32px 12px;
 }
 
-.community-card {
-  position: relative;
-  display: grid;
-  min-width: 0;
-  grid-template-columns: minmax(0, 1fr);
-}
-
-.community-cover-wrap {
-  position: relative;
-  width: 100%;
-  aspect-ratio: 16 / 9;
-  overflow: hidden;
-  background: var(--bg-secondary);
-}
-
-.community-cover-link {
-  position: absolute;
-  inset: 0;
-  display: block;
-  color: inherit;
-  text-decoration: none;
-}
-
-.community-cover,
-.community-cover-placeholder {
-  position: absolute;
-  inset: 0;
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.community-cover {
-  object-fit: cover;
-  transition: transform 320ms ease;
-}
-
-.community-cover-placeholder {
-  background: var(--bg-secondary);
-}
-
-.community-card:hover .community-cover {
-  transform: scale(1.017);
-}
-
-.community-cover-wrap::after {
-  content: "";
-  position: absolute;
-  inset: 42% 0 0;
-  z-index: 2;
-  background: linear-gradient(
-    to top,
-    rgba(0, 0, 0, 0.48) 0%,
-    rgba(0, 0, 0, 0.18) 52%,
-    rgba(0, 0, 0, 0) 100%
-  );
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 150ms ease;
-}
-
-.community-cover-wrap:hover::after,
-.community-cover-wrap:focus-within::after {
-  opacity: 1;
-}
-
-.community-like {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  z-index: 5;
-  display: inline-flex;
-  width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: #ffffff;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 150ms ease;
-}
-
-.community-like:disabled {
-  cursor: default;
-}
-
-.community-card:hover .community-like,
-.community-card:focus-within .community-like,
-.community-like[aria-pressed="true"] {
-  opacity: 1;
-}
-
-.community-play {
-  position: absolute;
-  right: 16px;
-  bottom: 16px;
-  z-index: 5;
-  display: inline-flex;
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: #ffffff;
-  cursor: pointer;
-  opacity: 0;
-  transition: opacity 150ms ease;
-}
-
-.community-cover-wrap:hover .community-play,
-.community-cover-wrap:focus-within .community-play,
-.community-play:focus-visible,
-.community-play[data-playlist-playing="true"] {
-  opacity: 1;
-}
-
-.community-play:hover,
-.community-play:focus-visible {
-  outline: none;
-}
-
-.community-play:disabled {
-  cursor: default;
-}
-
-.community-card-count-overlay {
-  position: absolute;
-  left: 16px;
-  bottom: 16px;
-  z-index: 5;
-  display: inline-flex;
-  max-width: calc(100% - 64px);
-  align-items: center;
-  gap: 14px;
-  color: #ffffff;
-  font-size: 11px;
-  line-height: 1;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 150ms ease;
-}
-
-.community-card-count-overlay .community-engagement-item {
-  display: inline-flex;
-  align-items: center;
-  gap: 3px;
-}
-
-.community-card-count-overlay .community-engagement-item svg {
-  display: block;
-  width: 13px;
-  height: 13px;
-  flex: 0 0 13px;
-}
-
-.community-cover-wrap:hover .community-card-count-overlay,
-.community-cover-wrap:focus-within .community-card-count-overlay {
-  opacity: 1;
-}
-
-.community-card-details {
-  display: block;
-  min-width: 0;
-  margin-top: 9px;
-}
-
-.community-card-copy {
-  min-width: 0;
-}
-
-.community-title-link {
-  display: block;
-  min-width: 0;
-  color: inherit;
-  text-decoration: none;
-}
-
-.community-title-link h2 {
-  margin: 0;
-  overflow: hidden;
-  color: var(--text-primary);
-  font-family: var(--discover-playlist-card-title-font-family, inherit);
-  font-size: 16px;
-  font-weight: 300;
-  letter-spacing: var(--discover-playlist-card-title-letter-spacing, normal);
-  line-height: 1.15;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.community-card-creator {
-  display: inline-flex;
-  min-width: 0;
-  max-width: 100%;
-  align-items: center;
-  gap: 6px;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: var(--text-muted);
-  font: inherit;
-  cursor: pointer;
-  text-align: left;
-}
-
-.community-card-creator-overlay {
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  z-index: 5;
-  max-width: calc(100% - 72px);
-  color: #ffffff;
-}
-
-.community-card-creator:focus-visible {
-  outline: none;
-}
-
-.community-card-creator:hover .community-card-creator-meta-avatar,
-.community-card-creator:focus-visible .community-card-creator-meta-avatar {
-  transform: scale(1.04);
-}
-
-.community-card-creator-meta-avatar {
-  display: block;
-  width: 24px;
-  height: 24px;
-  flex: 0 0 24px;
-  border-radius: 50%;
-  object-fit: cover;
-  background: var(--bg-tertiary);
-  transform-origin: center;
-  transition: transform 150ms ease;
-}
-
-.community-card-creator-meta-avatar-placeholder {
-  background: var(--bg-tertiary);
-}
-
-.community-card-creator-meta-name {
-  min-width: 0;
-  max-width: 0;
-  overflow: hidden;
-  color: currentColor;
-  font-size: 11.5px;
-  font-weight: 400;
-  line-height: 1.45;
-  opacity: 0;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  transition:
-    max-width 180ms ease,
-    opacity 150ms ease;
-}
-
-.community-card:hover .community-card-creator-meta-name,
-.community-card:focus-within .community-card-creator-meta-name {
-  max-width: 160px;
-  opacity: 1;
-}
-
-.community-card-song-count {
-  margin: 3px 0 0;
-  overflow: hidden;
-  color: var(--text-muted);
-  font-size: 11.5px;
-  font-weight: 400;
-  line-height: 1.45;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.community-page-empty-state {
-  width: min(100%, var(--filmwave-editorial-max-width));
-  margin: 75px auto 0;
-  color: var(--text-secondary);
-  font-size: 14px;
-}
-
-.community-page-reference-search {
-  width: min(100%, var(--filmwave-editorial-max-width));
-  margin: 56px auto 0;
-}
-
-.community-page-reference-search-heading {
-  display: flex;
-  min-height: 28px;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
-  font-family: var(--filmwave-section-title-font-family);
-  line-height: var(--filmwave-section-title-line-height);
-}
-
-.community-page-reference-search-heading > span {
-  color: var(--text-primary);
-  font-family: var(--filmwave-small-section-title-font-family);
-  font-size: var(--filmwave-small-section-title-font-size);
-  font-weight: var(--filmwave-small-section-title-font-weight);
-  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
-  line-height: var(--filmwave-small-section-title-line-height);
-  text-transform: var(--filmwave-small-section-title-text-transform);
-}
-
-.community-page-reference-search-card {
-  height: 420px;
-  min-height: 420px;
-  overflow: hidden;
-  background: #111111;
-}
-
-.community-page-reference-search-card > * {
-  width: 100%;
-  height: 100%;
-}
-
 .community-skeleton-card {
   min-width: 0;
 }
 
-.community-skeleton-card-image,
-.community-skeleton-card-title,
-.community-skeleton-card-creator span,
-.community-skeleton-card-creator i {
-  background: var(--bg-tertiary);
-  animation: community-skeleton-pulse 1.35s ease-in-out infinite;
-}
-
 .community-skeleton-card-image {
+  position: relative;
   width: 100%;
   aspect-ratio: 16 / 9;
 }
 
+.community-skeleton-card-avatar {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--text-primary) 11%, transparent);
+}
+
 .community-skeleton-card-title {
-  width: 64%;
-  height: 12px;
+  width: 68%;
+  height: 15px;
   margin-top: 9px;
 }
 
-.community-skeleton-card-creator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 4px;
+.community-skeleton-card-title.is-1 {
+  width: 78%;
 }
 
-.community-skeleton-card-creator span {
-  width: 18px;
-  height: 18px;
-  flex: 0 0 18px;
-  border-radius: 50%;
+.community-skeleton-card-title.is-2 {
+  width: 56%;
 }
 
-.community-skeleton-card-creator i {
-  width: 72px;
+.community-skeleton-card-count {
+  width: 42px;
   height: 8px;
+  margin-top: 6px;
+  background: color-mix(in srgb, var(--text-primary) 5%, transparent);
 }
 
 @keyframes community-skeleton-pulse {
@@ -588,6 +331,10 @@ body:has(.community-playlists-page-root) {
 }
 
 @media (max-width: 980px) {
+  .community-skeleton-pill-row {
+    width: calc(100% - 64px);
+  }
+
   .community-page-playlist-grid,
   .community-skeleton-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -598,5 +345,14 @@ body:has(.community-playlists-page-root) {
   .community-page-playlist-grid,
   .community-skeleton-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 720px) {
+  .community-skeleton-pill-row {
+    width: calc(100% - 32px);
+    gap: 7px;
+    padding-right: 4px;
+    padding-left: 4px;
   }
 }
