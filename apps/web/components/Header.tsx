@@ -281,8 +281,10 @@ export default function Header() {
     }
 
     playlistsMenuOpenFrameRef.current = window.requestAnimationFrame(() => {
-      playlistsMenuOpenFrameRef.current = null;
-      setPlaylistsMenuOpen(true);
+      playlistsMenuOpenFrameRef.current = window.requestAnimationFrame(() => {
+        playlistsMenuOpenFrameRef.current = null;
+        setPlaylistsMenuOpen(true);
+      });
     });
   }
 
