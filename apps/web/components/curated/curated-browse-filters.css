@@ -6,7 +6,6 @@
 }
 
 .curated-page-filter-stack {
-  position: relative;
   min-width: 0;
   margin-top: 24px;
 }
@@ -15,17 +14,22 @@
   display: flex;
   min-width: 0;
   align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-x: contain;
+  scrollbar-width: none;
+}
+
+.curated-page-filter-row::-webkit-scrollbar {
+  display: none;
 }
 
 .curated-page-subcategory-row {
-  position: absolute;
-  top: calc(100% + 10px);
-  right: 0;
-  left: 0;
-  z-index: 5;
   display: flex;
   min-width: 0;
-  flex-wrap: wrap;
+  flex: 1 1 auto;
+  flex-wrap: nowrap;
   gap: 8px;
   margin: 0;
 }
@@ -68,6 +72,16 @@
   min-width: 0;
   flex: 1 1 auto;
   margin-top: 0;
+}
+
+.curated-page-filter-row.has-active-filter .curated-feature-filters {
+  flex: 0 0 auto;
+}
+
+.curated-page-filter-row.has-active-filter
+  .curated-feature-filter-pill--curated-page {
+  min-width: 132px;
+  flex: 0 0 132px;
 }
 
 .curated-feature-filter-pill {
@@ -115,6 +129,34 @@
   color: var(--bg-primary);
 }
 
+.curated-feature-filter-icon-default,
+.curated-feature-filter-icon-clear {
+  display: inline-flex;
+  width: 13px;
+  min-width: 13px;
+  height: 13px;
+  align-items: center;
+  justify-content: center;
+}
+
+.curated-feature-filter-icon-clear {
+  display: none;
+}
+
+.curated-feature-filter-pill.is-active:hover
+  .curated-feature-filter-icon-default,
+.curated-feature-filter-pill.is-active:focus-visible
+  .curated-feature-filter-icon-default {
+  display: none;
+}
+
+.curated-feature-filter-pill.is-active:hover
+  .curated-feature-filter-icon-clear,
+.curated-feature-filter-pill.is-active:focus-visible
+  .curated-feature-filter-icon-clear {
+  display: inline-flex;
+}
+
 .curated-feature-filter-pill svg {
   width: 13px;
   min-width: 13px;
@@ -140,22 +182,6 @@
   }
 
   .curated-feature-filters::-webkit-scrollbar {
-    display: none;
-  }
-
-  .curated-page-subcategory-row {
-    right: calc(var(--filmwave-page-gutter) * -1);
-    left: calc(var(--filmwave-page-gutter) * -1);
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    overflow-y: hidden;
-    padding-right: var(--filmwave-page-gutter);
-    padding-left: var(--filmwave-page-gutter);
-    overscroll-behavior-x: contain;
-    scrollbar-width: none;
-  }
-
-  .curated-page-subcategory-row::-webkit-scrollbar {
     display: none;
   }
 
