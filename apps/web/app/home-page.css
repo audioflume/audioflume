@@ -604,11 +604,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: var(--home-reference-width);
   max-width: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-template-areas:
-    "artists playlists"
-    "featured featured";
+  grid-template-areas: "artists playlists";
   column-gap: 24px;
-  row-gap: 24px;
 }
 
 .audioflume-home-reference-feature-pair-column {
@@ -621,10 +618,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-column.is-playlists-feature {
   grid-area: playlists;
-}
-
-.audioflume-home-reference-featured-artist-grid {
-  grid-area: featured;
 }
 
 .audioflume-home-reference-feature-pair-card {
@@ -778,15 +771,25 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: #111111;
 }
 
-.audioflume-home-reference-featured-artist-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+.audioflume-home-reference-featured-artists {
+  padding: 56px 0 0;
+  background: var(--bg-primary);
+}
+
+.audioflume-home-reference-featured-artist-shelf {
+  width: calc(100vw - var(--filmwave-page-gutter));
+  margin-left: var(--filmwave-page-gutter);
+}
+
+.audioflume-home-reference-featured-artist-shelf
+  .audioflume-home-reference-shelf-scroller {
   gap: 6px;
 }
 
 .audioflume-home-reference-featured-artist-card {
   position: relative;
-  min-width: 0;
+  width: calc(30.303% - 5.46px);
+  min-width: calc(30.303% - 5.46px);
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
   border-radius: 6px;
@@ -1098,11 +1101,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 980px) {
-  .audioflume-home-reference-featured-artist-grid {
-    gap: 6px;
-    margin-top: 12px;
-  }
-
   .audioflume-home-reference-feature-pair-grid,
   .audioflume-home-reference-tools-grid {
     width: var(--home-reference-width);
@@ -1110,6 +1108,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-feature-pair,
+  .audioflume-home-reference-featured-artists,
   .audioflume-home-reference-trending,
   .audioflume-home-reference-tools {
     padding-top: 40px;
@@ -1118,7 +1117,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .audioflume-home-reference-feature-pair-grid {
     grid-template-areas:
       "artists"
-      "featured"
       "playlists";
     column-gap: 0;
     row-gap: 0;
@@ -1173,8 +1171,9 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 760px) {
-  .audioflume-home-reference-featured-artist-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .audioflume-home-reference-featured-artist-card {
+    width: calc(60% - 3px);
+    min-width: calc(60% - 3px);
   }
 }
 
