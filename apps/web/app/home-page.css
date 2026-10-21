@@ -1612,10 +1612,14 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-skeleton-trending-row {
   display: grid;
+  box-sizing: border-box;
+  width: calc(100% + 22px);
   min-height: 64px;
   grid-template-columns: 42px minmax(0, 1fr) 18px 78px;
   align-items: center;
   gap: 18px;
+  margin-right: -11px;
+  margin-left: -11px;
   padding: 9px 11px;
 }
 
@@ -1757,18 +1761,18 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-skeleton-original-copy {
   display: grid;
-  gap: 6px;
+  gap: 2px;
   margin-top: 10px;
 }
 
 .audioflume-home-skeleton-block.is-original-title {
   width: 72%;
-  height: 13px;
+  height: 20px;
 }
 
 .audioflume-home-skeleton-block.is-original-artist {
   width: 46%;
-  height: 10px;
+  height: 16px;
 }
 
 .audioflume-home-skeleton-song-rows {
