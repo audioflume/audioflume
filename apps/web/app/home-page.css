@@ -813,6 +813,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   padding-left: var(--filmwave-page-gutter);
   scroll-padding-right: var(--filmwave-page-gutter);
   scroll-padding-left: var(--filmwave-page-gutter);
+  scroll-snap-type: x proximity;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -835,7 +836,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   border-radius: 0;
   background: var(--bg-tertiary);
   scroll-snap-align: start;
-  scroll-snap-stop: always;
+  scroll-snap-stop: normal;
 }
 
 .audioflume-home-reference-featured-artist-card.is-placeholder {
