@@ -144,9 +144,13 @@
   }
 
   .curated-page-subcategory-row {
+    right: calc(var(--filmwave-page-gutter) * -1);
+    left: calc(var(--filmwave-page-gutter) * -1);
     flex-wrap: nowrap;
     overflow-x: auto;
     overflow-y: hidden;
+    padding-right: var(--filmwave-page-gutter);
+    padding-left: var(--filmwave-page-gutter);
     overscroll-behavior-x: contain;
     scrollbar-width: none;
   }
