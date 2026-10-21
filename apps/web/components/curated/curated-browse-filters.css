@@ -75,13 +75,30 @@
 }
 
 .curated-page-filter-row.has-active-filter .curated-feature-filters {
+  display: flex;
+  width: auto;
+  min-width: 0;
   flex: 0 0 auto;
+  grid-template-columns: none;
+  overflow: visible;
 }
 
 .curated-page-filter-row.has-active-filter
   .curated-feature-filter-pill--curated-page {
+  width: auto;
   min-width: 132px;
-  flex: 0 0 132px;
+  flex: 0 0 auto;
+}
+
+.curated-page-filter-row.has-active-filter
+  .curated-page-subcategory-row {
+  min-width: max-content;
+  flex: 0 0 auto;
+}
+
+.curated-page-filter-row.has-active-filter
+  .curated-page-subcategory-button {
+  flex: 0 0 auto;
 }
 
 .curated-feature-filter-pill {
