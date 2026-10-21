@@ -574,7 +574,8 @@ body:has(.curated-playlists-page-root)
   display: flex;
   min-height: 28px;
   align-items: baseline;
-  gap: 12px;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: var(--filmwave-small-section-title-margin-bottom);
 }
 
