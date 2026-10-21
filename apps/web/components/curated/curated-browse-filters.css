@@ -127,7 +127,10 @@
 }
 
 .curated-page-subfilter-reveal-inner {
+  display: flex;
+  width: 100%;
   min-height: 0;
+  justify-content: center;
 }
 
 .curated-page-subfilter-list {
