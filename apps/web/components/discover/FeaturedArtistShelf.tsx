@@ -13,6 +13,7 @@ export type DiscoverFeatureCardArtist = {
   id: string;
   name: string;
   slug: string;
+  designation: string | null;
   custom_text: string | null;
   hero_image_url: string | null;
   hero_image_position_x: number;
