@@ -782,7 +782,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-artist-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 8px;
+  gap: 12px;
   padding-right: var(--filmwave-page-gutter);
   padding-left: var(--filmwave-page-gutter);
 }
