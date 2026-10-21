@@ -6,6 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import type {
   CuratedBrowseTag,
   CuratedPlaylist,
@@ -275,6 +276,17 @@ export default function CuratedPlaylistsPage() {
                 </div>
               </section>
             )}
+
+          {!loading && !error && playlists.length > 0 && (
+            <section className="curated-page-reference-search">
+              <div className="curated-page-reference-search-heading">
+                <span>Search by song</span>
+              </div>
+              <div className="curated-page-reference-search-card">
+                <GlobalReferenceSearch embedded />
+              </div>
+            </section>
+          )}
 
         </div>
       </section>
