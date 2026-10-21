@@ -1118,6 +1118,7 @@ export default function CommunityPlaylistsPage() {
                       setFilterMenuOpen(false);
                       setSelectedCategory("All");
                     } else {
+                      setActiveTab("All");
                       setFilterMenuOpen(true);
                     }
                   }}
@@ -1146,6 +1147,7 @@ export default function CommunityPlaylistsPage() {
                       onClick={() => {
                         setActiveTab(isActive ? "All" : tab);
                         setFilterMenuOpen(false);
+                        setSelectedCategory("All");
                       }}
                     >
                       {tab}
