@@ -19,7 +19,6 @@ import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
-import FeaturedArtistCard from "@/components/discover/FeaturedArtistCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -409,15 +408,90 @@ function HomeFeaturedArtistGrid({
 }: {
   artists: HomeArtist[];
 }) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+
+  function playArtist(event: MouseEvent, artist: HomeArtist) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+    if (!playable.length) return;
+
+    const artistIsPlaying = Boolean(
+      isPlaying &&
+        currentSong &&
+        playable.some((song) => song.id === currentSong.id),
+    );
+
+    if (artistIsPlaying && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+
+    setQueue(playable);
+    togglePlayPause(playable[0]);
+  }
+
   return (
-    <Shelf
-      label="featured artists"
-      className="audioflume-home-reference-featured-artist-shelf"
-    >
-      {artists.slice(0, 4).map((artist) => (
-        <FeaturedArtistCard key={artist.id} artist={artist} />
-      ))}
-    </Shelf>
+    <div className="audioflume-home-reference-featured-artist-grid">
+      {artists.slice(0, 4).map((artist) => {
+        const image = artist.hero_image_url || artist.profile_image_url || "";
+        const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+        const artistIsPlaying = Boolean(
+          isPlaying &&
+            currentSong &&
+            playable.some((song) => song.id === currentSong.id),
+        );
+        const designation =
+          artist.designation || artist.custom_text || "Composer";
+
+        return (
+          <article
+            key={artist.id}
+            className="audioflume-home-reference-featured-artist-card"
+          >
+            <Link
+              href={`/artists/${artist.slug}`}
+              className="audioflume-home-reference-featured-artist-link"
+            >
+              {image ? (
+                <img
+                  src={image}
+                  alt=""
+                  draggable={false}
+                  style={{
+                    objectPosition: `${artist.hero_image_position_x ?? 50}% ${artist.hero_image_position_y ?? 50}%`,
+                  }}
+                />
+              ) : null}
+
+              <span className="audioflume-home-reference-featured-artist-copy">
+                <strong>{artist.name}</strong>
+                <span>{designation}</span>
+              </span>
+            </Link>
+
+            <button
+              type="button"
+              className="audioflume-home-reference-featured-artist-play"
+              onClick={(event) => playArtist(event, artist)}
+              disabled={!playable.length}
+              aria-label={
+                artistIsPlaying
+                  ? `Pause ${artist.name}`
+                  : `Play ${artist.name}`
+              }
+            >
+              {artistIsPlaying ? (
+                <PauseIcon size={18} />
+              ) : (
+                <PlayIconSmall size={18} />
+              )}
+            </button>
+          </article>
+        );
+      })}
+    </div>
   );
 }
 
@@ -701,28 +775,11 @@ export default function HomePageContent({
             </div>
           </div>
 
+          {artists.length > 0 ? (
+            <HomeFeaturedArtistGrid artists={artists} />
+          ) : null}
         </div>
       </section>
-
-      {artists.length > 0 ? (
-        <section className="audioflume-home-reference-featured-artists">
-          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-            <span>Featured artists</span>
-            <Link
-              href="/discover"
-              className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
-            >
-              Explore artists
-              <ArrowUpRightIcon
-                size={16}
-                strokeWidth={1.5}
-                className="translate-y-[1px]"
-              />
-            </Link>
-          </div>
-          <HomeFeaturedArtistGrid artists={artists} />
-        </section>
-      ) : null}
 
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
 
