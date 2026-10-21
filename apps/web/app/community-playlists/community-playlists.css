@@ -290,7 +290,6 @@ body:has(.community-playlists-page-root) {
   max-width: 100%;
   align-items: center;
   gap: 6px;
-  margin-top: 4px;
   border: 0;
   background: transparent;
   padding: 0;
@@ -298,6 +297,15 @@ body:has(.community-playlists-page-root) {
   font: inherit;
   cursor: pointer;
   text-align: left;
+}
+
+.community-card-creator-overlay {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 5;
+  max-width: calc(100% - 72px);
+  color: #ffffff;
 }
 
 .community-card-creator:hover,
@@ -325,6 +333,17 @@ body:has(.community-playlists-page-root) {
   min-width: 0;
   overflow: hidden;
   color: currentColor;
+  font-size: 11.5px;
+  font-weight: 400;
+  line-height: 1.45;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.community-card-song-count {
+  margin: 3px 0 0;
+  overflow: hidden;
+  color: var(--text-muted);
   font-size: 11.5px;
   font-weight: 400;
   line-height: 1.45;
