@@ -48,7 +48,29 @@ export default function CuratedFeatureFilters({
   >([]);
   const [subfiltersOpen, setSubfiltersOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const searchRef = useRef<HTMLDivElement | null>(null);
   const subfilterCloseTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    if (!searchOpen || searchValue.trim()) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Node &&
+        searchRef.current &&
+        !searchRef.current.contains(target)
+      ) {
+        setSearchOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [searchOpen, searchValue]);
 
   useEffect(() => {
     if (appliedLinkedFilterRef.current) return;
@@ -114,7 +136,10 @@ export default function CuratedFeatureFilters({
         role="group"
         aria-label="Curated playlist filters"
       >
-        <div className={`curated-pill-search${searchOpen ? " is-open" : ""}`}>
+        <div
+          ref={searchRef}
+          className={`curated-pill-search${searchOpen ? " is-open" : ""}`}
+        >
           <button
             type="button"
             className={`curated-pill-search-toggle${searchOpen ? " is-active" : ""}`}
