@@ -91,7 +91,7 @@ body:has(.community-playlists-page-root) {
   display: block;
   width: 14px;
   height: 14px;
-  margin: -1px 0 0;
+  margin: 1px 0 0 1px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.5;
