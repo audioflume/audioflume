@@ -52,7 +52,8 @@ body:has(.community-playlists-page-root) {
 
 .community-pill-search {
   display: flex;
-  min-width: 30px;
+  width: 250px;
+  min-width: 250px;
   height: 30px;
   align-items: center;
   overflow: hidden;
@@ -60,14 +61,8 @@ body:has(.community-playlists-page-root) {
   border-radius: 999px;
   background: transparent;
   transition:
-    width 220ms ease,
     border-color 150ms ease,
     background-color 150ms ease;
-  width: 30px;
-}
-
-.community-pill-search.is-open {
-  width: 250px;
 }
 
 .community-pill-search:hover,
@@ -86,14 +81,10 @@ body:has(.community-playlists-page-root) {
   background: transparent;
   padding: 0;
   color: var(--text-secondary);
-  cursor: pointer;
 }
 
-.community-pill-search-toggle:hover,
-.community-pill-search-toggle:focus-visible,
 .community-pill-search-toggle.is-active {
   color: var(--text-primary);
-  outline: none;
 }
 
 .community-pill-search-toggle svg {
@@ -114,11 +105,6 @@ body:has(.community-playlists-page-root) {
   min-width: 0;
   flex: 1 1 auto;
   align-items: center;
-  opacity: 0;
-  transition: opacity 140ms ease;
-}
-
-.community-pill-search.is-open .community-pill-search-field-wrap {
   opacity: 1;
 }
 
