@@ -82,7 +82,7 @@ export default function CuratedFeatureFilters({
             <button
               key={filter.value}
               type="button"
-              className={`discover-category-filter-pill${isActive ? " is-active" : ""}`}
+              className={`curated-main-filter-pill${isActive ? " is-active" : ""}`}
               aria-pressed={isActive}
               onClick={() => {
                 onSubcategoryChange(null);
@@ -108,7 +108,7 @@ export default function CuratedFeatureFilters({
               <button
                 key={subcategory.id}
                 type="button"
-                className={`discover-category-filter-pill${isActive ? " is-active" : ""}`}
+                className={`curated-subfilter-pill${isActive ? " is-active" : ""}`}
                 aria-pressed={isActive}
                 onClick={() =>
                   onSubcategoryChange(isActive ? null : subcategory.id)
