@@ -67,33 +67,37 @@
 
 .curated-main-filter-pill {
   display: inline-flex;
+  min-height: 30px;
   align-items: center;
   justify-content: center;
-  border: 0;
-  border-radius: 4px;
-  background: var(--bg-card);
-  padding: 4px 10px;
-  color: var(--text-muted);
+  border: 1.25px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  padding: 3px 12px;
+  color: var(--text-secondary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 11px;
-  font-weight: 500;
+  font-size: 12px;
+  font-weight: 400;
   line-height: 1.15;
   cursor: pointer;
   transition:
+    border-color 150ms ease,
     background-color 150ms ease,
     color 150ms ease;
 }
 
 .curated-main-filter-pill:hover,
 .curated-main-filter-pill:focus-visible {
-  background: var(--bg-hover);
+  border-color: var(--text-muted);
+  background: var(--bg-secondary);
   color: var(--text-primary);
   outline: none;
 }
 
 .curated-main-filter-pill.is-active {
-  background: var(--bg-elevated);
-  color: var(--text-primary);
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .curated-subfilter-pill {
