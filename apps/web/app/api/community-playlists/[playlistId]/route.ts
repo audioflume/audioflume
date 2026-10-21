@@ -1,6 +1,9 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { attachPrimaryArtistProfiles } from "@/lib/songs";
+import {
+  attachPrimaryArtistProfiles,
+  normalizeSongRow as normalizeLibrarySongRow,
+} from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 import {
   isCommunityPlaylistCategory,
@@ -32,33 +35,6 @@ type PlaylistSongRow = {
   created_at: string;
 };
 
-type SupabaseSongRow = {
-  id: string | number;
-  title: string | null;
-  artist: string | null;
-  audio_url: string | null;
-  cover_url: string | null;
-  stems: string | null;
-  waveform_peaks: string | null;
-  duration: number | null;
-  key: string | null;
-  bpm: number | null;
-  genres: string[] | null;
-  moods: string[] | null;
-  instruments: string[] | null;
-  builds: string[] | null;
-  vocals: string[] | null;
-  instrumental: boolean | null;
-  ai_generated: boolean | null;
-  license_type: "standard" | "premium" | null;
-  edit_points: string | null;
-};
-
-type StemItem = {
-  name: string;
-  url: string;
-};
-
 type CommunityPlaylistSong = Song & {
   playlist_song_id: number;
   playlist_id: number;
@@ -70,7 +46,7 @@ type CommunityPlaylistSong = Song & {
 const PLAYLIST_SONG_SELECT =
   "id, playlist_id, song_id, position, created_at";
 const SONG_SELECT =
-  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points";
+  "id, title, artist, audio_url, playback_url, hls_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points, download_count, size_bytes, created_at";
 
 function getDisplayName(user: {
   firstName: string | null;
@@ -82,67 +58,6 @@ function getDisplayName(user: {
     user.username ||
     "Audioflume member"
   );
-}
-
-function getStemNameFromUrl(url: string, index: number) {
-  const decodedUrl = decodeURIComponent(url);
-  const filename =
-    decodedUrl
-      .split("/")
-      .pop()
-      ?.replace(/\.[^/.]+$/, "") || "";
-
-  if (filename) {
-    return filename
-      .replaceAll("-", " ")
-      .replaceAll("_", " ")
-      .replace(/\b\w/g, (character) => character.toUpperCase());
-  }
-
-  return `Stem ${index + 1}`;
-}
-
-function parseStems(value: string | null): StemItem[] {
-  if (!value) return [];
-
-  return value
-    .split("\n")
-    .map((url, index) => {
-      const cleanUrl = url.trim();
-      if (!cleanUrl) return null;
-
-      return {
-        name: getStemNameFromUrl(cleanUrl, index),
-        url: cleanUrl,
-      };
-    })
-    .filter((item): item is StemItem => Boolean(item));
-}
-
-function normalizeSongRow(row: SupabaseSongRow): Song {
-  return {
-    id: String(row.id),
-    title: String(row.title || ""),
-    artist: String(row.artist || ""),
-    audioUrl: String(row.audio_url || ""),
-    playbackUrl: String(row.audio_url || ""),
-    hlsUrl: "",
-    coverArt: row.cover_url ? String(row.cover_url) : null,
-    stems: parseStems(row.stems),
-    waveformPeaks: String(row.waveform_peaks || "[]"),
-    duration: Number(row.duration || 0),
-    key: String(row.key || ""),
-    bpm: Number(row.bpm || 0),
-    genres: Array.isArray(row.genres) ? row.genres : [],
-    moods: Array.isArray(row.moods) ? row.moods : [],
-    instruments: Array.isArray(row.instruments) ? row.instruments : [],
-    builds: Array.isArray(row.builds) ? row.builds : [],
-    vocals: Array.isArray(row.vocals) ? row.vocals : [],
-    instrumental: Boolean(row.instrumental),
-    aiGenerated: Boolean(row.ai_generated),
-    licenseType: row.license_type === "premium" ? "premium" : "standard",
-    editPoints: String(row.edit_points || '{"markers":[],"ranges":[]}'),
-  };
 }
 
 function mergePlaylistSong(
@@ -225,9 +140,7 @@ export async function GET(request: Request, context: RouteContext) {
 
       if (songsError) throw songsError;
 
-      const normalizedSongs = ((songRows ?? []) as SupabaseSongRow[]).map(
-        normalizeSongRow,
-      );
+      const normalizedSongs = (songRows ?? []).map(normalizeLibrarySongRow);
       const hydratedSongs = playbackOnly
         ? normalizedSongs
         : await attachPrimaryArtistProfiles(normalizedSongs);
