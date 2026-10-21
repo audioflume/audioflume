@@ -1,12 +1,15 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import {
   CURATED_BROWSE_FILTERS,
   type CuratedBrowseTag,
 } from "@/lib/curatedPlaylists";
-import type { CuratedBrowseTaxonomy } from "@/lib/curatedBrowseTaxonomy";
+import type {
+  CuratedBrowseSubcategoryRecord,
+  CuratedBrowseTaxonomy,
+} from "@/lib/curatedBrowseTaxonomy";
 
 import "@/components/curated/curated-browse-filters.css";
 
@@ -36,6 +39,11 @@ export default function CuratedFeatureFilters({
   onSearchChange?: (value: string) => void;
 }) {
   const appliedLinkedFilterRef = useRef(false);
+  const [displayedSubcategories, setDisplayedSubcategories] = useState<
+    CuratedBrowseSubcategoryRecord[]
+  >([]);
+  const [subfiltersOpen, setSubfiltersOpen] = useState(false);
+  const subfilterCloseTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     if (appliedLinkedFilterRef.current) return;
@@ -60,6 +68,34 @@ export default function CuratedFeatureFilters({
       .find((filter) => filter.value === activeFilter)
       ?.subcategories.slice()
       .sort((a, b) => a.label.localeCompare(b.label)) ?? [];
+
+  useEffect(() => {
+    if (subfilterCloseTimeoutRef.current !== null) {
+      window.clearTimeout(subfilterCloseTimeoutRef.current);
+      subfilterCloseTimeoutRef.current = null;
+    }
+
+    if (activeFilter && activeSubcategories.length > 0) {
+      setDisplayedSubcategories(activeSubcategories);
+      window.requestAnimationFrame(() => {
+        setSubfiltersOpen(true);
+      });
+      return;
+    }
+
+    setSubfiltersOpen(false);
+    subfilterCloseTimeoutRef.current = window.setTimeout(() => {
+      setDisplayedSubcategories([]);
+      subfilterCloseTimeoutRef.current = null;
+    }, 220);
+
+    return () => {
+      if (subfilterCloseTimeoutRef.current !== null) {
+        window.clearTimeout(subfilterCloseTimeoutRef.current);
+        subfilterCloseTimeoutRef.current = null;
+      }
+    };
+  }, [activeFilter, browseTaxonomy]);
 
   return (
     <div className="discover-mood-browser curated-page-pill-browser">
@@ -95,7 +131,7 @@ export default function CuratedFeatureFilters({
 
       <div
         className={`curated-page-subfilter-reveal${
-          activeFilter && activeSubcategories.length > 0 ? " is-open" : ""
+          subfiltersOpen ? " is-open" : ""
         }`}
       >
         <div className="curated-page-subfilter-reveal-inner">
@@ -104,7 +140,7 @@ export default function CuratedFeatureFilters({
             role="group"
             aria-label="Curated playlist subfilters"
           >
-            {activeSubcategories.map((subcategory) => {
+            {displayedSubcategories.map((subcategory) => {
               const isActive = activeSubcategoryId === subcategory.id;
 
               return (
