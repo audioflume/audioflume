@@ -433,7 +433,10 @@ function HomeFeaturedArtistGrid({
   }
 
   return (
-    <div className="audioflume-home-reference-featured-artist-grid">
+    <Shelf
+      label="featured artists"
+      className="audioflume-home-reference-featured-artist-shelf"
+    >
       {artists.slice(0, 4).map((artist) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
@@ -491,7 +494,7 @@ function HomeFeaturedArtistGrid({
           </article>
         );
       })}
-    </div>
+    </Shelf>
   );
 }
 
@@ -775,11 +778,17 @@ export default function HomePageContent({
             </div>
           </div>
 
-          {artists.length > 0 ? (
-            <HomeFeaturedArtistGrid artists={artists} />
-          ) : null}
         </div>
       </section>
+
+      {artists.length > 0 ? (
+        <section className="audioflume-home-reference-featured-artists">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+            <span>Featured artists</span>
+          </div>
+          <HomeFeaturedArtistGrid artists={artists} />
+        </section>
+      ) : null}
 
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
 
