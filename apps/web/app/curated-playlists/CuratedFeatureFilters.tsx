@@ -53,6 +53,27 @@ export default function CuratedFeatureFilters({
     }
   }, [activeFilter, onFilterChange]);
 
+  const filterPills = CURATED_BROWSE_FILTERS.flatMap((filter) => {
+    const taxonomyFilter = browseTaxonomy?.filters.find(
+      (item) => item.value === filter.value,
+    );
+
+    return [
+      {
+        key: `parent-${filter.value}`,
+        label: filter.label,
+        filter: filter.value,
+        subcategoryId: null,
+      },
+      ...(taxonomyFilter?.subcategories.map((subcategory) => ({
+        key: `subcategory-${filter.value}-${subcategory.id}`,
+        label: subcategory.label,
+        filter: filter.value,
+        subcategoryId: subcategory.id,
+      })) ?? []),
+    ];
+  }).sort((a, b) => a.label.localeCompare(b.label));
+
   return (
     <div className="discover-mood-browser curated-page-pill-browser">
       <p className="discover-category-description">
@@ -65,56 +86,37 @@ export default function CuratedFeatureFilters({
         role="group"
         aria-label="Curated playlist filters"
       >
-        {CURATED_BROWSE_FILTERS.flatMap((filter) => {
-          const taxonomyFilter = browseTaxonomy?.filters.find(
-            (item) => item.value === filter.value,
-          );
-          const parentIsActive =
-            activeFilter === filter.value && activeSubcategoryId === null;
+        {filterPills.map((pill) => {
+          const isParent = pill.subcategoryId === null;
+          const isActive =
+            activeFilter === pill.filter &&
+            activeSubcategoryId === pill.subcategoryId;
 
-          const parentPill = (
+          return (
             <button
-              key={`parent-${filter.value}`}
+              key={pill.key}
               type="button"
-              className={`discover-category-filter-pill${parentIsActive ? " is-active" : ""}`}
-              aria-pressed={parentIsActive}
+              className={`discover-category-filter-pill${isActive ? " is-active" : ""}`}
+              aria-pressed={isActive}
               onClick={() => {
-                onSubcategoryChange(null);
-                onFilterChange(parentIsActive ? null : filter.value);
+                if (isParent) {
+                  onSubcategoryChange(null);
+                  onFilterChange(isActive ? null : pill.filter);
+                  return;
+                }
+
+                if (isActive) {
+                  onSubcategoryChange(null);
+                  return;
+                }
+
+                onFilterChange(pill.filter);
+                onSubcategoryChange(pill.subcategoryId);
               }}
             >
-              {filter.label}
+              {pill.label}
             </button>
           );
-
-          const subcategoryPills =
-            taxonomyFilter?.subcategories.map((subcategory) => {
-              const isActive =
-                activeFilter === filter.value &&
-                activeSubcategoryId === subcategory.id;
-
-              return (
-                <button
-                  key={`subcategory-${filter.value}-${subcategory.id}`}
-                  type="button"
-                  className={`discover-category-filter-pill${isActive ? " is-active" : ""}`}
-                  aria-pressed={isActive}
-                  onClick={() => {
-                    if (isActive) {
-                      onSubcategoryChange(null);
-                      return;
-                    }
-
-                    onFilterChange(filter.value);
-                    onSubcategoryChange(subcategory.id);
-                  }}
-                >
-                  {subcategory.label}
-                </button>
-              );
-            }) ?? [];
-
-          return [parentPill, ...subcategoryPills];
         })}
       </div>
     </div>
