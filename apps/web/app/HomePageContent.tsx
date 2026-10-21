@@ -461,6 +461,31 @@ function HomeTrendingSkeleton() {
   );
 }
 
+function HomeFeaturedArtistSkeleton() {
+  return (
+    <Shelf
+      label="featured artists"
+      className="audioflume-home-reference-featured-artist-shelf"
+      snapAfterScroll
+    >
+      {Array.from({ length: 4 }, (_, index) => (
+        <article
+          key={index}
+          className="audioflume-home-reference-featured-artist-card audioflume-home-skeleton-featured-artist-card"
+          aria-hidden="true"
+        >
+          <HomeSkeletonBlock className="is-featured-artist-media" />
+          <div className="audioflume-home-skeleton-featured-artist-copy">
+            <HomeSkeletonBlock className="is-featured-artist-name" />
+            <HomeSkeletonBlock className="is-featured-artist-designation" />
+          </div>
+          <HomeSkeletonBlock className="is-featured-artist-play" />
+        </article>
+      ))}
+    </Shelf>
+  );
+}
+
 function HomeFeaturedArtistGrid({
   artists,
 }: {
@@ -847,7 +872,9 @@ export default function HomePageContent({
             </div>
           </div>
 
-          {artists.length > 0 ? (
+          {artistsLoading ? (
+            <HomeFeaturedArtistSkeleton />
+          ) : artists.length > 0 ? (
             <HomeFeaturedArtistGrid artists={artists} />
           ) : null}
         </div>
