@@ -99,7 +99,7 @@
   padding-left: var(--filmwave-curated-shelf-edge);
   scroll-padding-right: var(--filmwave-curated-shelf-edge);
   scroll-padding-left: var(--filmwave-curated-shelf-edge);
-  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 .portalShell {
