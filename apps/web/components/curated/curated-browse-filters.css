@@ -7,11 +7,11 @@
 }
 
 .discover-category-description {
-  width: min(calc(100% - 40px), 420px);
-  margin: 65px 0 40px;
+  width: min(calc(100% - 40px), 580px);
+  margin: 40px 0 40px;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(17px, 1.15vw, 22px);
+  font-size: 24px;
   font-weight: 300;
   letter-spacing: -0.025em;
   line-height: 1.35;
@@ -102,30 +102,36 @@
 
 .curated-subfilter-pill {
   display: inline-flex;
-  height: 28px;
+  min-height: 22px;
   align-items: center;
   justify-content: center;
-  border: 0;
+  padding: 2px 10px;
+  cursor: pointer;
+  border: 1.25px solid transparent;
   border-radius: 999px;
-  background: var(--bg-elevated);
-  padding: 0 12px;
+  background: var(--filmwave-neutral-surface);
   color: var(--text-secondary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 11px;
-  font-weight: 500;
-  line-height: 1;
-  cursor: pointer;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.15;
   transition:
+    border-color 150ms ease,
     background-color 150ms ease,
     color 150ms ease;
 }
 
 .curated-subfilter-pill:hover,
-.curated-subfilter-pill:focus-visible,
-.curated-subfilter-pill.is-active {
-  background: var(--bg-hover);
+.curated-subfilter-pill:focus-visible {
+  border-color: var(--text-muted);
   color: var(--text-primary);
   outline: none;
+}
+
+.curated-subfilter-pill.is-active {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
 }
 
 .curated-page-subfilter-list {
@@ -141,7 +147,6 @@
 @media (max-width: 720px) {
   .discover-category-description {
     width: calc(100% - 40px);
-    font-size: 18px;
   }
 
   .discover-mood-pill-list {
