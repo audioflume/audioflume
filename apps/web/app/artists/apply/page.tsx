@@ -78,7 +78,7 @@ export default function ArtistApplyPage() {
       </section>
 
       <section>
-        <Footer showTopBorder={false} />
+        <Footer playerPadding={false} showTopBorder={false} flushBottom />
       </section>
     </main>
   );
