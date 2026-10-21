@@ -570,6 +570,15 @@ body:has(.curated-playlists-page-root)
   margin: 75px auto 0;
 }
 
+.curved-playlist-grid-transition {
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.curved-playlist-grid-transition.is-visible {
+  opacity: 1;
+}
+
 .curated-page-playlist-grid {
   --filmwave-curated-shelf-card-width: 100%;
   display: grid;
