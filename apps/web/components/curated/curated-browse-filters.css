@@ -65,10 +65,63 @@
   margin-top: 24px;
 }
 
-.curated-page-pill-browser .discover-category-filter-pill.is-active {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+.curated-main-filter-pill {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 4px;
+  background: var(--bg-card);
+  padding: 4px 10px;
+  color: var(--text-muted);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.15;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.curated-main-filter-pill:hover,
+.curated-main-filter-pill:focus-visible {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  outline: none;
+}
+
+.curated-main-filter-pill.is-active {
+  background: var(--bg-elevated);
+  color: var(--text-primary);
+}
+
+.curated-subfilter-pill {
+  display: inline-flex;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: var(--bg-elevated);
+  padding: 0 12px;
+  color: var(--text-secondary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1;
+  cursor: pointer;
+  transition:
+    background-color 150ms ease,
+    color 150ms ease;
+}
+
+.curated-subfilter-pill:hover,
+.curated-subfilter-pill:focus-visible,
+.curated-subfilter-pill.is-active {
+  background: var(--bg-hover);
+  color: var(--text-primary);
+  outline: none;
 }
 
 .curated-page-subfilter-list {
