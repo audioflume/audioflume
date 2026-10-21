@@ -1200,8 +1200,6 @@ export default function CommunityPlaylistsPage() {
                   </div>
                 </form>
 
-                </div>
-
                 <button
                   type="button"
                   className={`curated-main-filter-pill community-main-filter-pill${
