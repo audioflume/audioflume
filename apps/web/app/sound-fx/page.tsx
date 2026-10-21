@@ -4,6 +4,8 @@ import { MOOD_OPTIONS } from "@filmwave/shared";
 import { useRouter } from "next/navigation";
 import { type FormEvent, useState } from "react";
 
+import "@/components/curated/curated-browse-filters.css";
+
 export default function SoundFxPage() {
   const router = useRouter();
   const [search, setSearch] = useState("");
@@ -109,63 +111,6 @@ export default function SoundFxPage() {
           outline-offset: 3px;
         }
 
-        .sound-fx-discover-top .discover-mood-browser {
-          display: flex;
-          width: 100%;
-          flex-direction: column;
-          align-items: center;
-          pointer-events: auto;
-        }
-
-        .sound-fx-discover-top .discover-category-description {
-          width: min(calc(100% - 40px), 420px);
-          margin: 65px 0 40px;
-          color: var(--text-primary);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: clamp(17px, 1.15vw, 22px);
-          font-weight: 300;
-          letter-spacing: -0.025em;
-          line-height: 1.35;
-          text-align: center;
-        }
-
-        .sound-fx-discover-top .discover-mood-pill-list {
-          display: flex;
-          width: min(calc(100% - 80px), 1320px);
-          overflow: visible;
-          flex-wrap: wrap;
-          align-items: center;
-          justify-content: center;
-          gap: 8px;
-          padding: 0 10px 2px;
-        }
-
-        .sound-fx-discover-top .discover-category-filter-pill {
-          display: inline-flex;
-          min-height: 22px;
-          align-items: center;
-          justify-content: center;
-          padding: 2px 10px;
-          cursor: pointer;
-          border: 1.25px solid transparent;
-          border-radius: 999px;
-          background: var(--filmwave-neutral-surface);
-          color: rgba(255, 255, 255, 0.82);
-          font-family: var(--font-aktiv-grotesk), sans-serif;
-          font-size: 12px;
-          font-weight: 400;
-          line-height: 1.15;
-          transition:
-            border-color 150ms ease,
-            background-color 150ms ease,
-            color 150ms ease;
-        }
-
-        .sound-fx-discover-top .discover-category-filter-pill:focus-visible {
-          outline: 1px solid currentColor;
-          outline-offset: 2px;
-        }
-
         :where(html.light, html[data-theme="light"])
           .sound-fx-discover-top
           .discover-category-search {
@@ -206,21 +151,11 @@ export default function SoundFxPage() {
           color: var(--filmwave-black);
         }
 
-        :where(html.light, html[data-theme="light"])
-          .sound-fx-discover-top
-          .discover-category-filter-pill {
-          border-color: transparent;
-          color: var(--text-secondary);
-        }
-
         @media (max-width: 980px) {
           .sound-fx-discover-top .discover-category-search {
             width: calc(100% - 64px);
           }
 
-          .sound-fx-discover-top .discover-mood-pill-list {
-            width: calc(100% - 64px);
-          }
         }
 
         @media (max-width: 720px) {
@@ -247,24 +182,6 @@ export default function SoundFxPage() {
             font-size: 20px;
           }
 
-          .sound-fx-discover-top .discover-category-description {
-            width: calc(100% - 40px);
-            font-size: 18px;
-          }
-
-          .sound-fx-discover-top .discover-mood-pill-list {
-            width: calc(100% - 32px);
-            gap: 7px;
-            padding-right: 4px;
-            padding-left: 4px;
-          }
-
-          .sound-fx-discover-top .discover-category-filter-pill {
-            min-height: 22px;
-            padding-right: 10px;
-            padding-left: 10px;
-            font-size: 11px;
-          }
         }
       `}</style>
 
