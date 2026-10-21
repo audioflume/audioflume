@@ -40,6 +40,7 @@ type FooterProps = {
   playerPadding?: boolean;
   showTopBorder?: boolean;
   pageGutter?: boolean;
+  flushBottom?: boolean;
 };
 
 function InstagramIcon() {
@@ -69,6 +70,7 @@ export default function Footer({
   className = "",
   playerPadding = true,
   showTopBorder = true,
+  flushBottom = false,
 }: FooterProps) {
   const pathname = usePathname();
   const { currentSong } = usePlayer();
@@ -153,11 +155,13 @@ export default function Footer({
         ref={footerRef}
         className={`audioflume-site-footer box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isInteriorDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
         style={{
-          paddingBottom: shouldUsePlayerPadding
-            ? playerVisible
-              ? "calc(72px + 8px)"
-              : "8px"
-            : "8px",
+          paddingBottom: flushBottom
+            ? "0px"
+            : shouldUsePlayerPadding
+              ? playerVisible
+                ? "calc(72px + 8px)"
+                : "8px"
+              : "8px",
         }}
       >
         <div className={`${shouldShowTopBorder ? "border-t-[1.25px] border-[var(--border-subtle)]" : ""} px-0 pb-14 pt-14`}>
