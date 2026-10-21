@@ -67,6 +67,8 @@ function Shelf({
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const snapTimeoutRef = useRef<number | null>(null);
+  const lastScrollLeftRef = useRef(0);
+  const lastScrollTimeRef = useRef(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
@@ -146,16 +148,28 @@ function Shelf({
 
       if (!snapAfterScroll) return;
 
+      const now = performance.now();
+      const elapsed = Math.max(1, now - lastScrollTimeRef.current);
+      const distance = scroller.scrollLeft - lastScrollLeftRef.current;
+      const velocity = Math.abs(distance / elapsed);
+
+      lastScrollLeftRef.current = scroller.scrollLeft;
+      lastScrollTimeRef.current = now;
+
       if (snapTimeoutRef.current !== null) {
         window.clearTimeout(snapTimeoutRef.current);
       }
 
+      const settleDelay = velocity < 0.12 ? 70 : velocity < 0.3 ? 120 : 220;
+
       snapTimeoutRef.current = window.setTimeout(() => {
         snapTimeoutRef.current = null;
         snapToNearestCard(scroller);
-      }, 400);
+      }, settleDelay);
     };
 
+    lastScrollLeftRef.current = scroller.scrollLeft;
+    lastScrollTimeRef.current = performance.now();
     updateScrollState();
     scroller.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", updateScrollState);
