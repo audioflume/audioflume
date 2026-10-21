@@ -27,6 +27,10 @@ body:has(.community-playlists-page-root) {
   margin-top: 24px;
 }
 
+.community-page-pill-browser .discover-category-description {
+  width: min(calc(100% - 40px), 700px);
+}
+
 .community-main-filter-pill {
   gap: 7px;
 }
@@ -129,6 +133,27 @@ body:has(.community-playlists-page-root) {
   transform: scale(1.017);
 }
 
+.community-cover-wrap::after {
+  content: "";
+  position: absolute;
+  inset: 42% 0 0;
+  z-index: 2;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.48) 0%,
+    rgba(0, 0, 0, 0.18) 52%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.community-cover-wrap:hover::after,
+.community-cover-wrap:focus-within::after {
+  opacity: 1;
+}
+
 .community-like {
   position: absolute;
   top: 16px;
@@ -158,12 +183,80 @@ body:has(.community-playlists-page-root) {
   opacity: 1;
 }
 
+.community-play {
+  position: absolute;
+  right: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: inline-flex;
+  width: 24px;
+  min-width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #ffffff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.community-card:hover .community-play,
+.community-card:focus-within .community-play,
+.community-play:focus-visible,
+.community-play[data-playlist-playing="true"] {
+  opacity: 1;
+}
+
+.community-play:hover,
+.community-play:focus-visible {
+  outline: none;
+}
+
+.community-play:disabled {
+  cursor: default;
+}
+
+.community-card-count-overlay {
+  position: absolute;
+  left: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: inline-flex;
+  max-width: calc(100% - 64px);
+  align-items: center;
+  gap: 14px;
+  color: #ffffff;
+  font-size: 11px;
+  line-height: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.community-card-count-overlay .community-engagement-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.community-card-count-overlay .community-engagement-item svg {
+  display: block;
+  width: 13px;
+  height: 13px;
+  flex: 0 0 13px;
+}
+
+.community-cover-wrap:hover .community-card-count-overlay,
+.community-cover-wrap:focus-within .community-card-count-overlay {
+  opacity: 1;
+}
+
 .community-card-details {
-  display: grid;
+  display: block;
   min-width: 0;
-  grid-template-columns: minmax(0, 1fr) 24px;
-  align-items: start;
-  gap: 8px;
   margin-top: 9px;
 }
 
@@ -237,41 +330,6 @@ body:has(.community-playlists-page-root) {
   line-height: 1.45;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
-
-.community-play {
-  display: inline-flex;
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background: transparent;
-  padding: 0;
-  color: var(--text-secondary);
-  cursor: pointer;
-  opacity: 0;
-  transition:
-    opacity 150ms ease,
-    color 150ms ease;
-}
-
-.community-card:hover .community-play,
-.community-card:focus-within .community-play,
-.community-play:focus-visible,
-.community-play[data-playlist-playing="true"] {
-  opacity: 1;
-}
-
-.community-play:hover,
-.community-play:focus-visible {
-  color: var(--text-primary);
-  outline: none;
-}
-
-.community-play:disabled {
-  cursor: default;
 }
 
 .community-page-empty-state {
