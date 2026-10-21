@@ -91,7 +91,7 @@ body:has(.community-playlists-page-root) {
   display: block;
   width: 14px;
   height: 14px;
-  margin: -1px 0 0 -1px;
+  margin: -1px 0 0;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.5;
@@ -525,7 +525,7 @@ body:has(.community-playlists-page-root) {
 .community-skeleton-intro {
   display: grid;
   width: min(calc(100% - 40px), 700px);
-  gap: 8px;
+  gap: 0;
   margin: 64px auto 40px;
 }
 
@@ -542,7 +542,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-skeleton-intro-line {
-  height: 25px;
+  height: 32px;
   margin: 0 auto;
 }
 
