@@ -3018,7 +3018,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   font-weight: 300;
   line-height: 1.65;
   opacity: 1;
-  transition: opacity 180ms ease 90ms;
+  transform: translateY(0);
+  transition:
+    opacity 260ms ease 90ms,
+    transform 260ms ease 90ms;
 }
 
 .audioflume-home-lifetime-feature-hover-action {
@@ -3046,6 +3049,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 .audioflume-home-lifetime-feature-copy:hover
   .audioflume-home-lifetime-feature-description {
   opacity: 0;
+  transform: translateY(-3px);
   transition-delay: 0ms;
 }
 
