@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
@@ -109,11 +109,6 @@ export default function CuratedPlaylistsPage() {
   const [activeBrowseSubcategoryId, setActiveBrowseSubcategoryId] =
     useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [renderedPlaylists, setRenderedPlaylists] = useState<
-    CuratedPlaylistWithBrowseAssignments[]
-  >([]);
-  const [playlistGridVisible, setPlaylistGridVisible] = useState(true);
-  const playlistTransitionTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -209,32 +204,6 @@ export default function CuratedPlaylistsPage() {
     searchQuery,
   ]);
 
-  useEffect(() => {
-    if (loading) return;
-
-    if (playlistTransitionTimeoutRef.current !== null) {
-      window.clearTimeout(playlistTransitionTimeoutRef.current);
-    }
-
-    setPlaylistGridVisible(false);
-
-    playlistTransitionTimeoutRef.current = window.setTimeout(() => {
-      setRenderedPlaylists(visiblePlaylists);
-      playlistTransitionTimeoutRef.current = null;
-
-      window.requestAnimationFrame(() => {
-        setPlaylistGridVisible(true);
-      });
-    }, 150);
-
-    return () => {
-      if (playlistTransitionTimeoutRef.current !== null) {
-        window.clearTimeout(playlistTransitionTimeoutRef.current);
-        playlistTransitionTimeoutRef.current = null;
-      }
-    };
-  }, [loading, visiblePlaylists]);
-
   const hasActiveSearch = searchQuery.trim().length > 0;
 
   return (
@@ -283,8 +252,7 @@ export default function CuratedPlaylistsPage() {
             !error &&
             playlists.length > 0 &&
             (activeBrowseFilter || hasActiveSearch) &&
-            renderedPlaylists.length === 0 &&
-            playlistGridVisible && (
+            visiblePlaylists.length === 0 && (
               <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
                 {hasActiveSearch
                   ? "No curated playlists match your search."
@@ -294,14 +262,10 @@ export default function CuratedPlaylistsPage() {
 
           {!loading &&
             !error &&
-            renderedPlaylists.length > 0 && (
-              <section
-                className={`curated-page-grid-group curved-playlist-grid-transition${
-                  playlistGridVisible ? " is-visible" : ""
-                }`}
-              >
+            visiblePlaylists.length > 0 && (
+              <section className="curated-page-grid-group">
                 <div className="curated-page-playlist-grid">
-                  {renderedPlaylists.map((playlist, index) => (
+                  {visiblePlaylists.map((playlist, index) => (
                     <CuratedPlaylistCard
                       key={playlist.id}
                       playlist={playlist}
