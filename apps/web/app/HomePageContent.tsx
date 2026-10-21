@@ -409,6 +409,8 @@ function HomeFeaturedArtistGrid({
   artists: HomeArtist[];
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const visibleArtists = artists.slice(0, 4);
+  const testPlaceholders = Array.from({ length: 4 }, (_, index) => index);
 
   function playArtist(event: MouseEvent, artist: HomeArtist) {
     event.preventDefault();
@@ -433,8 +435,11 @@ function HomeFeaturedArtistGrid({
   }
 
   return (
-    <div className="audioflume-home-reference-featured-artist-grid">
-      {artists.slice(0, 4).map((artist) => {
+    <Shelf
+      label="featured artists"
+      className="audioflume-home-reference-featured-artist-shelf"
+    >
+      {visibleArtists.map((artist) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
         const artistIsPlaying = Boolean(
@@ -491,7 +496,15 @@ function HomeFeaturedArtistGrid({
           </article>
         );
       })}
-    </div>
+
+      {testPlaceholders.map((index) => (
+        <article
+          key={`featured-artist-placeholder-${index}`}
+          className="audioflume-home-reference-featured-artist-card is-placeholder"
+          aria-hidden="true"
+        />
+      ))}
+    </Shelf>
   );
 }
 
