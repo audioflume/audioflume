@@ -37,7 +37,7 @@ const NEW_SONG_COUNT = 10;
 const HOME_SHELF_SONG_COUNT = 12;
 const HOME_LIFETIME_COVER_TILE_COUNT = 182;
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg";
+  "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
 
 type HomeArtist = {
   id: string;
