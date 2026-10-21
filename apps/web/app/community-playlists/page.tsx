@@ -1004,6 +1004,31 @@ export default function CommunityPlaylistsPage() {
           </Link>
 
           <button
+            type="button"
+            className={`community-card-creator community-card-creator-overlay${
+              selectedCreatorId === playlist.creator.id ? " is-active" : ""
+            }`}
+            aria-pressed={selectedCreatorId === playlist.creator.id}
+            onClick={() => filterByCreator(playlist.creator)}
+          >
+            {playlist.creator.imageUrl ? (
+              <img
+                className="community-card-creator-meta-avatar"
+                src={playlist.creator.imageUrl}
+                alt=""
+              />
+            ) : (
+              <span
+                className="community-card-creator-meta-avatar community-card-creator-meta-avatar-placeholder"
+                aria-hidden="true"
+              />
+            )}
+            <span className="community-card-creator-meta-name">
+              {playlist.creator.name}
+            </span>
+          </button>
+
+          <button
             className={`community-like${isFavorite ? " is-liked" : ""}`}
             type="button"
             aria-label={`${isFavorite ? "Remove from saved" : "Save"}: ${playlist.name}`}
@@ -1074,31 +1099,11 @@ export default function CommunityPlaylistsPage() {
             >
               <h2>{playlist.name}</h2>
             </Link>
+            <p className="community-card-song-count">
+              {playlist.song_count} {playlist.song_count === 1 ? "song" : "songs"}
+            </p>
 
-            <button
-              type="button"
-              className={`community-card-creator${
-                selectedCreatorId === playlist.creator.id ? " is-active" : ""
-              }`}
-              aria-pressed={selectedCreatorId === playlist.creator.id}
-              onClick={() => filterByCreator(playlist.creator)}
-            >
-              {playlist.creator.imageUrl ? (
-                <img
-                  className="community-card-creator-meta-avatar"
-                  src={playlist.creator.imageUrl}
-                  alt=""
-                />
-              ) : (
-                <span
-                  className="community-card-creator-meta-avatar community-card-creator-meta-avatar-placeholder"
-                  aria-hidden="true"
-                />
-              )}
-              <span className="community-card-creator-meta-name">
-                {playlist.creator.name}
-              </span>
-            </button>
+
           </div>
 
         </div>
@@ -1158,7 +1163,7 @@ export default function CommunityPlaylistsPage() {
                   >
                     <path d="M3 5h12M3 9h12M3 13h12" />
                   </svg>
-                  <span>Filter</span>
+                  <span>Filters</span>
                 </button>
 
                 {communityMainFilters.map((tab) => {
