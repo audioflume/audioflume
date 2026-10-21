@@ -11,12 +11,17 @@
 }
 
 .curated-page-filter-row {
+  box-sizing: border-box;
   display: flex;
+  width: 100vw;
   min-width: 0;
   align-items: center;
   gap: 8px;
+  margin-left: calc(var(--filmwave-page-gutter) * -1);
   overflow-x: auto;
   overflow-y: hidden;
+  padding-right: var(--filmwave-page-gutter);
+  padding-left: var(--filmwave-page-gutter);
   overscroll-behavior-x: contain;
   scrollbar-width: none;
 }
@@ -77,8 +82,8 @@
 
 .curated-page-filter-row.has-active-filter .curated-feature-filters {
   display: flex;
-  width: auto;
-  min-width: 0;
+  width: max-content;
+  min-width: max-content;
   flex: 0 0 auto;
   grid-template-columns: none;
   overflow: visible;
