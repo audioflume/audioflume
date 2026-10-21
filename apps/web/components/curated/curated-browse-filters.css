@@ -116,17 +116,14 @@
   width: 100%;
   grid-template-rows: 0fr;
   opacity: 0;
-  transform: translateY(-4px);
   transition:
     grid-template-rows 220ms ease,
-    opacity 170ms ease,
-    transform 220ms ease;
+    opacity 220ms ease;
 }
 
 .curated-page-subfilter-reveal.is-open {
   grid-template-rows: 1fr;
   opacity: 1;
-  transform: translateY(0);
 }
 
 .curated-page-subfilter-reveal-inner {
