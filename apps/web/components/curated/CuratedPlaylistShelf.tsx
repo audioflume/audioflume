@@ -138,6 +138,28 @@ export default function CuratedPlaylistShelf({
     return cards[1].offsetLeft - cards[0].offsetLeft;
   }
 
+  function getVisibleCardCount(scroller: HTMLDivElement) {
+    const cards = Array.from(
+      scroller.children,
+    ).filter((child): child is HTMLElement => child instanceof HTMLElement);
+
+    if (cards.length < 2) return 1;
+
+    const step = cards[1].offsetLeft - cards[0].offsetLeft;
+    const cardWidth = cards[0].getBoundingClientRect().width;
+    const gap = Math.max(0, step - cardWidth);
+    const styles = window.getComputedStyle(scroller);
+    const paddingLeft = Number.parseFloat(styles.paddingLeft) || 0;
+    const paddingRight = Number.parseFloat(styles.paddingRight) || 0;
+    const contentWidth =
+      scroller.clientWidth - paddingLeft - paddingRight;
+
+    return Math.max(
+      1,
+      Math.round((contentWidth + gap) / step),
+    );
+  }
+
   function scrollPlaylists(direction: "prev" | "next") {
     const scroller = scrollerRef.current;
 
@@ -147,8 +169,10 @@ export default function CuratedPlaylistShelf({
     if (!step) return;
 
     const currentIndex = Math.round(scroller.scrollLeft / step);
+    const visibleCardCount = getVisibleCardCount(scroller);
     const nextIndex =
-      currentIndex + (direction === "next" ? 4 : -4);
+      currentIndex +
+      (direction === "next" ? visibleCardCount : -visibleCardCount);
     const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
     const target = Math.max(
       0,
