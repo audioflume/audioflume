@@ -1220,6 +1220,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 }
 
+@media (max-width: 760px) {
+  .audioflume-home-reference-featured-artist-card {
+    width: calc((var(--home-reference-width) - 6px) / 2);
+    min-width: calc((var(--home-reference-width) - 6px) / 2);
+  }
+}
+
 @media (max-width: 720px) {
   .audioflume-home-reference-trending-grid {
     width: calc(100vw - 36px);
