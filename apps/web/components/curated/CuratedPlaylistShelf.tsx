@@ -4,7 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import SectionTitle from "@/components/SectionTitle";
-import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -196,7 +195,7 @@ export default function CuratedPlaylistShelf({
       snapTimeoutRef.current = window.setTimeout(() => {
         snapTimeoutRef.current = null;
         snapToNearestCard(scroller);
-      }, 220);
+      }, 400);
     };
 
     updateScrollState();
@@ -243,20 +242,13 @@ export default function CuratedPlaylistShelf({
         <div
           className={`${shelfStyles.heading}${viewAllHref ? " discover-section-header" : ""}`}
         >
-          <div className={shelfStyles.headingTitleGroup}>
+          <div className="min-w-0">
             <SectionTitle variant="small">{title}</SectionTitle>
-            <span className={shelfStyles.playlistCount}>
-              {playlists.length} {playlists.length === 1 ? "playlist" : "playlists"}
-            </span>
           </div>
 
-          <ShelfNavigationControls
-            label={title}
-            onPrev={() => scrollPlaylists("prev")}
-            onNext={() => scrollPlaylists("next")}
-            canScrollPrev={canScrollPrev}
-            canScrollNext={canScrollNext}
-          />
+          <span className={shelfStyles.playlistCount}>
+            {playlists.length} {playlists.length === 1 ? "playlist" : "playlists"}
+          </span>
         </div>
 
         <div
