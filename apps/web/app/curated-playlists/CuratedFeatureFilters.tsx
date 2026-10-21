@@ -33,6 +33,7 @@ export default function CuratedFeatureFilters({
   onSubcategoryChange,
   searchValue = "",
   onSearchChange,
+  onSearchSubmit,
 }: {
   activeFilter: CuratedBrowseTag | null;
   activeSubcategoryId: number | null;
@@ -41,36 +42,14 @@ export default function CuratedFeatureFilters({
   onSubcategoryChange: (subcategoryId: number | null) => void;
   searchValue?: string;
   onSearchChange?: (value: string) => void;
+  onSearchSubmit?: () => void;
 }) {
   const appliedLinkedFilterRef = useRef(false);
   const [displayedSubcategories, setDisplayedSubcategories] = useState<
     CuratedBrowseSubcategoryRecord[]
   >([]);
   const [subfiltersOpen, setSubfiltersOpen] = useState(false);
-  const [searchOpen, setSearchOpen] = useState(false);
-  const searchRef = useRef<HTMLDivElement | null>(null);
   const subfilterCloseTimeoutRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    if (!searchOpen || searchValue.trim()) return;
-
-    const handlePointerDown = (event: PointerEvent) => {
-      const target = event.target;
-      if (
-        target instanceof Node &&
-        searchRef.current &&
-        !searchRef.current.contains(target)
-      ) {
-        setSearchOpen(false);
-      }
-    };
-
-    document.addEventListener("pointerdown", handlePointerDown);
-
-    return () => {
-      document.removeEventListener("pointerdown", handlePointerDown);
-    };
-  }, [searchOpen, searchValue]);
 
   useEffect(() => {
     if (appliedLinkedFilterRef.current) return;
@@ -136,31 +115,24 @@ export default function CuratedFeatureFilters({
         role="group"
         aria-label="Curated playlist filters"
       >
-        <div
-          ref={searchRef}
-          className={`curated-pill-search${searchOpen ? " is-open" : ""}`}
+        <form
+          className="curated-pill-search is-open"
+          role="search"
+          onSubmit={(event) => {
+            event.preventDefault();
+            if (!searchValue.trim()) return;
+            onSearchSubmit?.();
+          }}
         >
-          <button
-            type="button"
-            className={`curated-pill-search-toggle${searchOpen ? " is-active" : ""}`}
-            aria-label={searchOpen ? "Close playlist search" : "Search curated playlists"}
-            aria-expanded={searchOpen}
-            onClick={() => {
-              if (searchOpen) {
-                setSearchOpen(false);
-                onSearchChange?.("");
-              } else {
-                onSubcategoryChange(null);
-                onFilterChange(null);
-                setSearchOpen(true);
-              }
-            }}
+          <span
+            className="curated-pill-search-toggle is-active"
+            aria-hidden="true"
           >
-            <svg viewBox="0 0 20 20" aria-hidden="true">
+            <svg viewBox="0 0 20 20">
               <circle cx="8" cy="8" r="5.25" />
               <path d="m11.9 11.9 4.1 4.1" />
             </svg>
-          </button>
+          </span>
           <div className="curated-pill-search-field-wrap">
             <input
               type="search"
@@ -180,6 +152,8 @@ export default function CuratedFeatureFilters({
               </button>
             )}
           </div>
+        </form>
+
         </div>
 
         {mainFilters.map((filter) => {
@@ -192,8 +166,6 @@ export default function CuratedFeatureFilters({
               className={`curated-main-filter-pill${isActive ? " is-active" : ""}`}
               aria-pressed={isActive}
               onClick={() => {
-                setSearchOpen(false);
-                onSearchChange?.("");
                 onSubcategoryChange(null);
                 onFilterChange(isActive ? null : filter.value);
               }}
