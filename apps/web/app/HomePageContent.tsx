@@ -56,12 +56,17 @@ function Shelf({
   label,
   children,
   className = "",
+  snapAfterScroll = false,
+  itemsPerArrow = 1,
 }: {
   label: string;
   children: ReactNode;
   className?: string;
+  snapAfterScroll?: boolean;
+  itemsPerArrow?: number;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const snapTimeoutRef = useRef<number | null>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
 
@@ -73,9 +78,58 @@ function Shelf({
     setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
   }
 
+  function getCardStep(scroller: HTMLDivElement) {
+    const cards = Array.from(
+      scroller.children,
+    ).filter((child): child is HTMLElement => child instanceof HTMLElement);
+
+    if (cards.length < 2) return 0;
+
+    return cards[1].offsetLeft - cards[0].offsetLeft;
+  }
+
+  function snapToNearestCard(scroller: HTMLDivElement) {
+    const step = getCardStep(scroller);
+    if (!step) return;
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    const target = Math.max(
+      0,
+      Math.min(Math.round(scroller.scrollLeft / step) * step, maxScrollLeft),
+    );
+
+    if (Math.abs(scroller.scrollLeft - target) < 1) return;
+
+    scroller.scrollTo({
+      left: target,
+      behavior: "smooth",
+    });
+  }
+
   function scroll(direction: "prev" | "next") {
     const scroller = scrollerRef.current;
     if (!scroller) return;
+
+    if (snapAfterScroll) {
+      const step = getCardStep(scroller);
+      if (!step) return;
+
+      const currentIndex = Math.round(scroller.scrollLeft / step);
+      const nextIndex =
+        currentIndex + (direction === "next" ? itemsPerArrow : -itemsPerArrow);
+      const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+      const target = Math.max(
+        0,
+        Math.min(nextIndex * step, maxScrollLeft),
+      );
+
+      scroller.scrollTo({
+        left: target,
+        behavior: "smooth",
+      });
+      return;
+    }
+
     const amount = Math.max(scroller.clientWidth * 0.8, 360);
     scroller.scrollBy({
       left: direction === "next" ? amount : -amount,
@@ -87,19 +141,39 @@ function Shelf({
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
+    const handleScroll = () => {
+      updateScrollState();
+
+      if (!snapAfterScroll) return;
+
+      if (snapTimeoutRef.current !== null) {
+        window.clearTimeout(snapTimeoutRef.current);
+      }
+
+      snapTimeoutRef.current = window.setTimeout(() => {
+        snapTimeoutRef.current = null;
+        snapToNearestCard(scroller);
+      }, 400);
+    };
+
     updateScrollState();
-    scroller.addEventListener("scroll", updateScrollState, { passive: true });
+    scroller.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", updateScrollState);
 
     const observer = new ResizeObserver(updateScrollState);
     observer.observe(scroller);
 
     return () => {
-      scroller.removeEventListener("scroll", updateScrollState);
+      scroller.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", updateScrollState);
       observer.disconnect();
+
+      if (snapTimeoutRef.current !== null) {
+        window.clearTimeout(snapTimeoutRef.current);
+        snapTimeoutRef.current = null;
+      }
     };
-  }, []);
+  }, [itemsPerArrow, snapAfterScroll]);
 
   return (
     <div className={`audioflume-home-reference-shelf group/home-reference-shelf ${className}`}>
@@ -438,6 +512,8 @@ function HomeFeaturedArtistGrid({
     <Shelf
       label="featured artists"
       className="audioflume-home-reference-featured-artist-shelf"
+      snapAfterScroll
+      itemsPerArrow={4}
     >
       {visibleArtists.map((artist) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
