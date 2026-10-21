@@ -1355,7 +1355,7 @@ export default function CommunityPlaylistsPage() {
         </div>
       </section>
 
-      <Footer />
+      <Footer showTopBorder={false} />
 
       {toastMessage && (
         <Toast
