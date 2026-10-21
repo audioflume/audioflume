@@ -60,38 +60,42 @@ export default function CuratedFeatureFilters({
 
   return (
     <div className="curated-page-filter-stack">
-      <div className="curated-page-filter-row">
+      <div
+        className={`curated-page-filter-row${activeFilter ? " has-active-filter" : ""}`}
+      >
         <CuratedBrowseFilters
           activeFilter={activeFilter}
           onFilterChange={onFilterChange}
           variant="curated-page"
+          collapseToActive={Boolean(activeFilter)}
+          showActiveClearIcon={Boolean(activeFilter)}
         />
+
+        {activeFilter && activeSubcategories.length > 0 && (
+          <nav
+            className="curated-page-subcategory-row"
+            aria-label="Filter by subcategory"
+          >
+            {activeSubcategories.map((subcategory) => {
+              const isActive = activeSubcategoryId === subcategory.id;
+
+              return (
+                <button
+                  key={subcategory.id}
+                  type="button"
+                  className={`curated-page-subcategory-button${isActive ? " is-active" : ""}`}
+                  aria-pressed={isActive}
+                  onClick={() =>
+                    onSubcategoryChange(isActive ? null : subcategory.id)
+                  }
+                >
+                  {subcategory.label}
+                </button>
+              );
+            })}
+          </nav>
+        )}
       </div>
-
-      {activeFilter && activeSubcategories.length > 0 && (
-        <nav
-          className="curated-page-subcategory-row"
-          aria-label="Filter by subcategory"
-        >
-          {activeSubcategories.map((subcategory) => {
-            const isActive = activeSubcategoryId === subcategory.id;
-
-            return (
-              <button
-                key={subcategory.id}
-                type="button"
-                className={`curated-page-subcategory-button${isActive ? " is-active" : ""}`}
-                aria-pressed={isActive}
-                onClick={() =>
-                  onSubcategoryChange(isActive ? null : subcategory.id)
-                }
-              >
-                {subcategory.label}
-              </button>
-            );
-          })}
-        </nav>
-      )}
     </div>
   );
 }
