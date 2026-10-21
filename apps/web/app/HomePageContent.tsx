@@ -19,6 +19,7 @@ import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
+import FeaturedArtistCard from "@/components/discover/FeaturedArtistCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -408,92 +409,14 @@ function HomeFeaturedArtistGrid({
 }: {
   artists: HomeArtist[];
 }) {
-  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
-
-  function playArtist(event: MouseEvent, artist: HomeArtist) {
-    event.preventDefault();
-    event.stopPropagation();
-
-    const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
-    if (!playable.length) return;
-
-    const artistIsPlaying = Boolean(
-      isPlaying &&
-        currentSong &&
-        playable.some((song) => song.id === currentSong.id),
-    );
-
-    if (artistIsPlaying && currentSong) {
-      togglePlayPause(currentSong);
-      return;
-    }
-
-    setQueue(playable);
-    togglePlayPause(playable[0]);
-  }
-
   return (
     <Shelf
       label="featured artists"
       className="audioflume-home-reference-featured-artist-shelf"
     >
-      {artists.slice(0, 4).map((artist) => {
-        const image = artist.hero_image_url || artist.profile_image_url || "";
-        const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
-        const artistIsPlaying = Boolean(
-          isPlaying &&
-            currentSong &&
-            playable.some((song) => song.id === currentSong.id),
-        );
-        const designation =
-          artist.designation || artist.custom_text || "Composer";
-
-        return (
-          <article
-            key={artist.id}
-            className="audioflume-home-reference-featured-artist-card"
-          >
-            <Link
-              href={`/artists/${artist.slug}`}
-              className="audioflume-home-reference-featured-artist-link"
-            >
-              {image ? (
-                <img
-                  src={image}
-                  alt=""
-                  draggable={false}
-                  style={{
-                    objectPosition: `${artist.hero_image_position_x ?? 50}% ${artist.hero_image_position_y ?? 50}%`,
-                  }}
-                />
-              ) : null}
-
-              <span className="audioflume-home-reference-featured-artist-copy">
-                <strong>{artist.name}</strong>
-                <span>{designation}</span>
-              </span>
-            </Link>
-
-            <button
-              type="button"
-              className="audioflume-home-reference-featured-artist-play"
-              onClick={(event) => playArtist(event, artist)}
-              disabled={!playable.length}
-              aria-label={
-                artistIsPlaying
-                  ? `Pause ${artist.name}`
-                  : `Play ${artist.name}`
-              }
-            >
-              {artistIsPlaying ? (
-                <PauseIcon size={18} />
-              ) : (
-                <PlayIconSmall size={18} />
-              )}
-            </button>
-          </article>
-        );
-      })}
+      {artists.slice(0, 4).map((artist) => (
+        <FeaturedArtistCard key={artist.id} artist={artist} />
+      ))}
     </Shelf>
   );
 }
