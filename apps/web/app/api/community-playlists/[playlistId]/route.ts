@@ -159,8 +159,9 @@ function mergePlaylistSong(
   };
 }
 
-export async function GET(_request: Request, context: RouteContext) {
+export async function GET(request: Request, context: RouteContext) {
   try {
+    const playbackOnly = new URL(request.url).searchParams.get("playback") === "1";
     const { playlistId } = await context.params;
     const numericPlaylistId = Number(playlistId);
 
@@ -224,12 +225,15 @@ export async function GET(_request: Request, context: RouteContext) {
 
       if (songsError) throw songsError;
 
-      const normalizedSongs = await attachPrimaryArtistProfiles(
-        ((songRows ?? []) as SupabaseSongRow[]).map(normalizeSongRow),
+      const normalizedSongs = ((songRows ?? []) as SupabaseSongRow[]).map(
+        normalizeSongRow,
       );
+      const hydratedSongs = playbackOnly
+        ? normalizedSongs
+        : await attachPrimaryArtistProfiles(normalizedSongs);
 
       const songsById = new Map(
-        normalizedSongs.map((song) => [String(song.id), song]),
+        hydratedSongs.map((song) => [String(song.id), song]),
       );
 
       songs = playlistSongRows
@@ -238,6 +242,13 @@ export async function GET(_request: Request, context: RouteContext) {
           return song ? mergePlaylistSong(playlistSong, song) : null;
         })
         .filter((song): song is CommunityPlaylistSong => Boolean(song));
+    }
+
+    if (playbackOnly) {
+      return NextResponse.json(
+        { songs },
+        { headers: { "Cache-Control": "no-store" } },
+      );
     }
 
     let playCount = 0;
