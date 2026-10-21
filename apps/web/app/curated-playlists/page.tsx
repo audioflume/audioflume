@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-import CuratedFeatureCarousel from "@/components/curated/CuratedFeatureCarousel";
-import CuratedPlaylistShelf from "@/components/curated/CuratedPlaylistShelf";
+import CuratedPlaylistShelf, { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import SectionTitle from "@/components/SectionTitle";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
@@ -209,19 +208,6 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  const featurePlaylists = useMemo(() => {
-    const playlistById = new Map(
-      playlists.map((playlist) => [playlist.id, playlist]),
-    );
-
-    return manualShelfIds.featured
-      .map((id) => playlistById.get(id))
-      .filter(
-        (playlist): playlist is CuratedPlaylistWithBrowseAssignments =>
-          Boolean(playlist),
-      );
-  }, [manualShelfIds.featured, playlists]);
-
   const groupedPlaylists = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
     const searchablePlaylists = normalizedSearchQuery
@@ -273,25 +259,19 @@ export default function CuratedPlaylistsPage() {
           : [];
       }
 
-      return activeFilter.subcategories
-        .map((subcategory) => {
-          const subcategoryPlaylists = filteredPlaylists
-            .filter((playlist) =>
-              (playlist.browse_assignments ?? []).some(
-                (assignment) =>
-                  assignment.browse_filter === activeBrowseFilter &&
-                  assignment.subcategory_id === subcategory.id,
-              ),
-            )
-            .sort((a, b) => a.position - b.position);
+      const allFilteredPlaylists = [...filteredPlaylists].sort(
+        (a, b) => a.position - b.position,
+      );
 
-          return {
-            name: subcategory.label,
-            description: null,
-            playlists: subcategoryPlaylists,
-          };
-        })
-        .filter((group) => group.playlists.length > 0);
+      return allFilteredPlaylists.length > 0
+        ? [
+            {
+              name: activeFilter.label,
+              description: null,
+              playlists: allFilteredPlaylists,
+            },
+          ]
+        : [];
     }
 
     if (normalizedSearchQuery) {
@@ -354,6 +334,7 @@ export default function CuratedPlaylistsPage() {
   ]);
 
   const hasActiveSearch = searchQuery.trim().length > 0;
+  const hasActiveFiltering = Boolean(activeBrowseFilter || hasActiveSearch);
 
   return (
     <main className="curated-playlists-page-root">
@@ -361,10 +342,6 @@ export default function CuratedPlaylistsPage() {
 
       <section className="curated-playlists-page-layer">
         <div className="px-8">
-          {!loading && !error && playlists.length > 0 && (
-            <CuratedFeatureCarousel playlists={featurePlaylists} />
-          )}
-
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
@@ -415,9 +392,37 @@ export default function CuratedPlaylistsPage() {
 
           {!loading &&
             !error &&
-            groupedPlaylists.map(
-              ({ name, playlists: groupPlaylists }) => (
-                <div key={name} id={getCuratedGroupId(name)} className="scroll-mt-28">
+            groupedPlaylists.map(({ name, playlists: groupPlaylists }) =>
+              hasActiveFiltering ? (
+                <section
+                  key={name}
+                  id={getCuratedGroupId(name)}
+                  className="curated-page-grid-group scroll-mt-28"
+                >
+                  <div className="curated-page-grid-heading">
+                    <SectionTitle variant="small">{name}</SectionTitle>
+                    <span className="curated-page-grid-count">
+                      {groupPlaylists.length}{" "}
+                      {groupPlaylists.length === 1 ? "playlist" : "playlists"}
+                    </span>
+                  </div>
+
+                  <div className="curated-page-playlist-grid">
+                    {groupPlaylists.map((playlist, index) => (
+                      <CuratedPlaylistCard
+                        key={playlist.id}
+                        playlist={playlist}
+                        index={index}
+                      />
+                    ))}
+                  </div>
+                </section>
+              ) : (
+                <div
+                  key={name}
+                  id={getCuratedGroupId(name)}
+                  className="scroll-mt-28"
+                >
                   <CuratedPlaylistShelf
                     title={name}
                     playlists={groupPlaylists}
