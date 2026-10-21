@@ -549,12 +549,19 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
     const current = currentSongRef.current;
     if (!current) return;
 
-    if (remoteOwnerTabIdRef.current) {
-      takingPlaybackOwnershipRef.current = true;
+    takingPlaybackOwnershipRef.current = true;
+
+    const remoteOwnerTabId = remoteOwnerTabIdRef.current;
+    if (remoteOwnerTabId) {
+      postPlayerMessage({
+        type: "pause-request",
+        tabId: tabIdRef.current,
+        targetTabId: remoteOwnerTabId,
+      });
     }
 
     loadSongSource(audio, current, true);
-  }, [loadSongSource]);
+  }, [loadSongSource, postPlayerMessage]);
 
   const safePause = useCallback(() => {
     playRequestIdRef.current += 1;
@@ -611,8 +618,17 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         ? shouldPlay
         : remotePlaybackActive || !audio.paused;
 
-      if (remotePlaybackActive && wasPlaying) {
+      if (wasPlaying) {
         takingPlaybackOwnershipRef.current = true;
+
+        const remoteOwnerTabId = remoteOwnerTabIdRef.current;
+        if (remoteOwnerTabId) {
+          postPlayerMessage({
+            type: "pause-request",
+            tabId: tabIdRef.current,
+            targetTabId: remoteOwnerTabId,
+          });
+        }
       }
 
       playRequestIdRef.current += 1;
@@ -635,7 +651,13 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
 
       loadSongSource(audio, song, wasPlaying);
     },
-    [emitPlaybackUpdate, loadSongSource, setCurrentTimeState, setDurationState],
+    [
+      emitPlaybackUpdate,
+      loadSongSource,
+      postPlayerMessage,
+      setCurrentTimeState,
+      setDurationState,
+    ],
   );
 
   playSongDirectlyRef.current = playSongDirectly;
@@ -848,10 +870,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      if (
-        takingPlaybackOwnershipRef.current &&
-        remoteOwnerTabIdRef.current === message.tabId
-      ) {
+      if (takingPlaybackOwnershipRef.current) {
         return;
       }
 
