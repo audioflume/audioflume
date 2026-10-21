@@ -5,6 +5,17 @@ export default function ArtistApplyPage() {
   return (
     <main className="artist-apply-page-root flex min-h-screen flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
+        body:has(.artist-apply-page-root) {
+          display: flex;
+          min-height: 100dvh;
+          flex-direction: column;
+        }
+
+        .artist-apply-page-root {
+          width: 100%;
+          flex: 1 0 auto;
+        }
+
         .artist-apply-page-root form > section > div:last-child .filmwave-backend-button {
           height: 40px;
           border-radius: 0;
