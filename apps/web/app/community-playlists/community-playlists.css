@@ -437,7 +437,7 @@ body:has(.community-playlists-page-root) {
 
 .community-card-creator:hover .community-card-creator-meta-avatar,
 .community-card-creator:focus-visible .community-card-creator-meta-avatar {
-  transform: scale(1.08);
+  transform: scale(1.04);
 }
 
 .community-card-creator-meta-avatar {
