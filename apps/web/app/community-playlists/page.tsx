@@ -1017,6 +1017,26 @@ export default function CommunityPlaylistsPage() {
             <BookmarkGlyph filled={isFavorite} />
           </button>
 
+          <button
+            className="community-play"
+            type="button"
+            aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
+            aria-pressed={isPlaylistPlaying}
+            aria-busy={isPlaylistLoading}
+            data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
+            disabled={isPlaylistLoading}
+            onClick={(event) => {
+              event.stopPropagation();
+              void togglePlaylistPlayback(playlist);
+            }}
+          >
+            {isPlaylistPlaying ? (
+              <PauseIcon size={18} />
+            ) : (
+              <PlayIconSmall size={18} />
+            )}
+          </button>
+
 
           <div
             className="community-card-count-overlay"
@@ -1081,25 +1101,6 @@ export default function CommunityPlaylistsPage() {
             </button>
           </div>
 
-          <button
-            className="community-play"
-            type="button"
-            aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
-            aria-pressed={isPlaylistPlaying}
-            aria-busy={isPlaylistLoading}
-            data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
-            disabled={isPlaylistLoading}
-            onClick={(event) => {
-              event.stopPropagation();
-              void togglePlaylistPlayback(playlist);
-            }}
-          >
-            {isPlaylistPlaying ? (
-              <PauseIcon size={18} />
-            ) : (
-              <PlayIconSmall size={18} />
-            )}
-          </button>
         </div>
       </article>
     );
