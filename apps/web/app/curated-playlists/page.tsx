@@ -3,11 +3,9 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
-import CuratedPlaylistShelf, { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import SectionTitle from "@/components/SectionTitle";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
-import XIcon from "@/components/icons/XIcon";
 import type {
   CuratedBrowseTag,
   CuratedPlaylist,
@@ -16,23 +14,10 @@ import type {
   CuratedBrowseAssignment,
   CuratedBrowseTaxonomy,
 } from "@/lib/curatedBrowseTaxonomy";
-import type { CuratedPlaylistShelfState } from "@/lib/curatedPlaylistShelves";
-import CuratedFeatureFilters, { getCuratedGroupId } from "./CuratedFeatureFilters";
+import CuratedFeatureFilters from "./CuratedFeatureFilters";
 
 type CuratedPlaylistWithBrowseAssignments = CuratedPlaylist & {
   browse_assignments?: CuratedBrowseAssignment[];
-};
-
-type CuratedShelfGroup = {
-  name: string;
-  description: string | null;
-  playlists: CuratedPlaylist[];
-};
-
-type ManualShelfIds = {
-  featured: number[];
-  popular: number[];
-  trending: number[];
 };
 
 function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
@@ -117,11 +102,6 @@ export default function CuratedPlaylistsPage() {
   const [playlists, setPlaylists] = useState<CuratedPlaylistWithBrowseAssignments[]>([]);
   const [browseTaxonomy, setBrowseTaxonomy] =
     useState<CuratedBrowseTaxonomy | null>(null);
-  const [manualShelfIds, setManualShelfIds] = useState<ManualShelfIds>({
-    featured: [],
-    popular: [],
-    trending: [],
-  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [activeBrowseFilter, setActiveBrowseFilter] =
@@ -138,9 +118,8 @@ export default function CuratedPlaylistsPage() {
         setLoading(true);
         setError("");
 
-        const [playlistRes, shelfRes, taxonomyRes] = await Promise.all([
+        const [playlistRes, taxonomyRes] = await Promise.all([
           fetch("/api/curated-playlists"),
-          fetch("/api/curated-playlist-shelves").catch(() => null),
           fetch("/api/curated-browse-taxonomy"),
         ]);
 
@@ -158,16 +137,6 @@ export default function CuratedPlaylistsPage() {
           );
         }
 
-        let shelfData: CuratedPlaylistShelfState | null = null;
-
-        if (shelfRes?.ok) {
-          try {
-            shelfData = await shelfRes.json();
-          } catch {
-            shelfData = null;
-          }
-        }
-
         const visiblePlaylists: CuratedPlaylistWithBrowseAssignments[] =
           Array.isArray(playlistData)
             ? playlistData.filter((playlist) => !playlist.discover_section)
@@ -176,17 +145,6 @@ export default function CuratedPlaylistsPage() {
         if (!cancelled) {
           setPlaylists(visiblePlaylists);
           setBrowseTaxonomy(taxonomyData);
-          setManualShelfIds({
-            featured: Array.isArray(shelfData?.featured)
-              ? shelfData.featured.map((item) => Number(item.playlist_id))
-              : [],
-            popular: Array.isArray(shelfData?.popular)
-              ? shelfData.popular.map((item) => Number(item.playlist_id))
-              : [],
-            trending: Array.isArray(shelfData?.trending)
-              ? shelfData.trending.map((item) => Number(item.playlist_id))
-              : [],
-          });
         }
       } catch (err) {
         if (!cancelled) {
@@ -208,9 +166,9 @@ export default function CuratedPlaylistsPage() {
     };
   }, []);
 
-  const groupedPlaylists = useMemo(() => {
+  const visiblePlaylists = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
-    const searchablePlaylists = normalizedSearchQuery
+    let results = normalizedSearchQuery
       ? playlists.filter((playlist) =>
           [playlist.name, playlist.description, playlist.kicker].some((value) =>
             String(value || "")
@@ -218,123 +176,35 @@ export default function CuratedPlaylistsPage() {
               .includes(normalizedSearchQuery),
           ),
         )
-      : playlists;
+      : [...playlists];
 
     if (activeBrowseFilter) {
-      const activeFilter = browseTaxonomy?.filters.find(
-        (filter) => filter.value === activeBrowseFilter,
-      );
-
-      if (!activeFilter) return [];
-
-      const filteredPlaylists = searchablePlaylists.filter((playlist) =>
+      results = results.filter((playlist) =>
         playlist.browse_tags.includes(activeBrowseFilter),
       );
 
       if (activeBrowseSubcategoryId !== null) {
-        const activeSubcategory = activeFilter.subcategories.find(
-          (subcategory) => subcategory.id === activeBrowseSubcategoryId,
+        results = results.filter((playlist) =>
+          (playlist.browse_assignments ?? []).some(
+            (assignment) =>
+              assignment.browse_filter === activeBrowseFilter &&
+              assignment.subcategory_id === activeBrowseSubcategoryId,
+          ),
         );
-
-        if (!activeSubcategory) return [];
-
-        const subcategoryPlaylists = filteredPlaylists
-          .filter((playlist) =>
-            (playlist.browse_assignments ?? []).some(
-              (assignment) =>
-                assignment.browse_filter === activeBrowseFilter &&
-                assignment.subcategory_id === activeBrowseSubcategoryId,
-            ),
-          )
-          .sort((a, b) => a.position - b.position);
-
-        return subcategoryPlaylists.length > 0
-          ? [
-              {
-                name: activeSubcategory.label,
-                description: null,
-                playlists: subcategoryPlaylists,
-              },
-            ]
-          : [];
       }
 
-      const allFilteredPlaylists = [...filteredPlaylists].sort(
-        (a, b) => a.position - b.position,
-      );
-
-      return allFilteredPlaylists.length > 0
-        ? [
-            {
-              name: activeFilter.label,
-              description: null,
-              playlists: allFilteredPlaylists,
-            },
-          ]
-        : [];
+      return results.sort((a, b) => a.position - b.position);
     }
 
-    if (normalizedSearchQuery) {
-      return searchablePlaylists.length > 0
-        ? [
-            {
-              name: "Search Results",
-              description: null,
-              playlists: [...searchablePlaylists].sort(sortNewestFirst),
-            },
-          ]
-        : [];
-    }
-
-    const searchableById = new Map(
-      searchablePlaylists.map((playlist) => [playlist.id, playlist]),
-    );
-    const popular = manualShelfIds.popular
-      .map((id) => searchableById.get(id))
-      .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
-    const newlyAdded = [...searchablePlaylists]
-      .sort(sortNewestFirst)
-      .slice(0, 10);
-    const trending = manualShelfIds.trending
-      .map((id) => searchableById.get(id))
-      .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
-
-    const groups: CuratedShelfGroup[] = [];
-
-    if (popular.length > 0) {
-      groups.push({
-        name: "Staff Picks",
-        description: null,
-        playlists: popular,
-      });
-    }
-    if (newlyAdded.length > 0) {
-      groups.push({
-        name: "Newly Added",
-        description: null,
-        playlists: newlyAdded,
-      });
-    }
-    if (trending.length > 0) {
-      groups.push({
-        name: "Trending Playlists",
-        description: null,
-        playlists: trending,
-      });
-    }
-
-    return groups;
+    return results.sort(sortNewestFirst);
   }, [
     activeBrowseFilter,
     activeBrowseSubcategoryId,
-    browseTaxonomy,
-    manualShelfIds,
     playlists,
     searchQuery,
   ]);
 
   const hasActiveSearch = searchQuery.trim().length > 0;
-  const hasActiveFiltering = Boolean(activeBrowseFilter || hasActiveSearch);
 
   return (
     <main className="curated-playlists-page-root">
@@ -382,7 +252,7 @@ export default function CuratedPlaylistsPage() {
             !error &&
             playlists.length > 0 &&
             (activeBrowseFilter || hasActiveSearch) &&
-            groupedPlaylists.length === 0 && (
+            visiblePlaylists.length === 0 && (
               <div className="mt-[75px] text-sm text-[var(--text-secondary)]">
                 {hasActiveSearch
                   ? "No curated playlists match your search."
@@ -392,44 +262,18 @@ export default function CuratedPlaylistsPage() {
 
           {!loading &&
             !error &&
-            groupedPlaylists.map(({ name, playlists: groupPlaylists }) =>
-              hasActiveFiltering ? (
-                <section
-                  key={name}
-                  id={getCuratedGroupId(name)}
-                  className="curated-page-grid-group scroll-mt-28"
-                >
-                  <div className="curated-page-grid-heading">
-                    <SectionTitle variant="small">{name}</SectionTitle>
-                    <span className="curated-page-grid-count">
-                      {groupPlaylists.length}{" "}
-                      {groupPlaylists.length === 1 ? "playlist" : "playlists"}
-                    </span>
-                  </div>
-
-                  <div className="curated-page-playlist-grid">
-                    {groupPlaylists.map((playlist, index) => (
-                      <CuratedPlaylistCard
-                        key={playlist.id}
-                        playlist={playlist}
-                        index={index}
-                      />
-                    ))}
-                  </div>
-                </section>
-              ) : (
-                <div
-                  key={name}
-                  id={getCuratedGroupId(name)}
-                  className="scroll-mt-28"
-                >
-                  <CuratedPlaylistShelf
-                    title={name}
-                    playlists={groupPlaylists}
-                    className="mt-[75px]"
-                  />
+            visiblePlaylists.length > 0 && (
+              <section className="curated-page-grid-group">
+                <div className="curated-page-playlist-grid">
+                  {visiblePlaylists.map((playlist, index) => (
+                    <CuratedPlaylistCard
+                      key={playlist.id}
+                      playlist={playlist}
+                      index={index}
+                    />
+                  ))}
                 </div>
-              ),
+              </section>
             )}
 
           {!loading && !error && playlists.length > 0 && (
