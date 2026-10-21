@@ -11,6 +11,7 @@ export type FeaturedArtistCardArtist = {
   id: string;
   name: string;
   slug: string;
+  designation?: string | null;
   hero_image_url?: string | null;
   profile_image_url?: string | null;
   hero_image_position_x?: number;
@@ -74,6 +75,11 @@ export default function FeaturedArtistCard({
         <div className="discover-artist-feature-bar">
           <span className="discover-artist-feature-copy">
             <strong>{artist.name}</strong>
+            {artist.designation ? (
+              <span className="discover-artist-feature-designation">
+                {artist.designation}
+              </span>
+            ) : null}
             <span className="discover-artist-feature-genres">
               {genres.length > 0
                 ? genres.map((genre) => <span key={genre}>{genre}</span>)
