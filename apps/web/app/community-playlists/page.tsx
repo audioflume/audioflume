@@ -899,7 +899,7 @@ export default function CommunityPlaylistsPage() {
 
       if (!songs) {
         const response = await fetch(
-          `/api/community-playlists/${encodeURIComponent(String(playlist.id))}`,
+          `/api/community-playlists/${encodeURIComponent(String(playlist.id))}?playback=1`,
           { cache: "no-store" },
         );
         const data = (await response.json()) as CommunityPlaylistPlaybackResponse;
