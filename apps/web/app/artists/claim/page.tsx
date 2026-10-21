@@ -10,7 +10,7 @@ export default async function ArtistClaimPage() {
   const user = await currentUser();
 
   return (
-    <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
         html:not(.light):not([data-theme="light"]) .artist-claim-panel-shell {
           box-shadow: none;
