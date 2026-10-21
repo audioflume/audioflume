@@ -5,6 +5,8 @@ import Link from "next/link";
 import { MusicLibrarySortControl } from "@filmwave/shared";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
+import GlobalSearchBar from "@/components/GlobalSearchBar";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import Toast from "@/components/Toast";
 import XIcon from "@/components/icons/XIcon";
@@ -19,6 +21,7 @@ import {
 import type { Song } from "@/lib/types";
 import "../../../../packages/shared/styles/music-side-filter.css";
 import "../playlists/playlists-tabs-rail.css";
+import "@/components/curated/curated-browse-filters.css";
 import "./community-playlists.css";
 
 type CommunityPlaylist = {
@@ -357,6 +360,7 @@ export default function CommunityPlaylistsPage() {
   const communityContentRef = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
   const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
@@ -945,6 +949,18 @@ export default function CommunityPlaylistsPage() {
     showAllView();
   }
 
+  const filterIsActive =
+    filterMenuOpen || selectedCategory !== "All";
+  const communitySubfiltersOpen =
+    filterIsActive || Boolean(selectedCreator);
+
+  const communityMainFilters: CommunityTab[] = [
+    "Trending",
+    "Recent",
+    "Most Liked",
+    "Favorites",
+  ];
+
   const showAllBanner =
     activeTab === "All" &&
     selectedCategory === "All" &&
@@ -971,19 +987,23 @@ export default function CommunityPlaylistsPage() {
 
     return (
       <article className="community-card" key={playlist.id}>
-        <div
-          className="community-cover-wrap"
-          style={{ borderRadius: "6px" }}
-        >
+        <div className="community-cover-wrap">
           <Link
             className="community-cover-link"
             href={`/community-playlists/${playlist.id}`}
             aria-label={`Open ${playlist.name}`}
           >
-            {playlist.cover_image_url && (
-              <img className="community-cover" src={playlist.cover_image_url} alt="" />
+            {playlist.cover_image_url ? (
+              <img
+                className="community-cover"
+                src={playlist.cover_image_url}
+                alt=""
+              />
+            ) : (
+              <span className="community-cover-placeholder" aria-hidden="true" />
             )}
           </Link>
+
           <button
             className={`community-like${isFavorite ? " is-liked" : ""}`}
             type="button"
@@ -997,6 +1017,43 @@ export default function CommunityPlaylistsPage() {
           >
             <BookmarkGlyph filled={isFavorite} />
           </button>
+        </div>
+
+        <div className="community-card-details">
+          <div className="community-card-copy">
+            <Link
+              className="community-title-link"
+              href={`/community-playlists/${playlist.id}`}
+            >
+              <h2>{playlist.name}</h2>
+            </Link>
+
+            <button
+              type="button"
+              className={`community-card-creator${
+                selectedCreatorId === playlist.creator.id ? " is-active" : ""
+              }`}
+              aria-pressed={selectedCreatorId === playlist.creator.id}
+              onClick={() => filterByCreator(playlist.creator)}
+            >
+              {playlist.creator.imageUrl ? (
+                <img
+                  className="community-card-creator-meta-avatar"
+                  src={playlist.creator.imageUrl}
+                  alt=""
+                />
+              ) : (
+                <span
+                  className="community-card-creator-meta-avatar community-card-creator-meta-avatar-placeholder"
+                  aria-hidden="true"
+                />
+              )}
+              <span className="community-card-creator-meta-name">
+                {playlist.creator.name}
+              </span>
+            </button>
+          </div>
+
           <button
             className="community-play"
             type="button"
@@ -1016,66 +1073,6 @@ export default function CommunityPlaylistsPage() {
               <PlayIconSmall size={18} />
             )}
           </button>
-          <div
-            className="community-card-count-overlay"
-            aria-label="Playlist engagement"
-          >
-            <span
-              className="community-engagement-item"
-              title={`${playlist.play_count} plays`}
-            >
-              <PlayCountIcon />
-              <span>{formatCompactCount(playlist.play_count)}</span>
-            </span>
-            <span
-              className="community-engagement-item"
-              title={`${playlist.like_count} likes`}
-            >
-              <LikeCountIcon />
-              <span>{formatCompactCount(playlist.like_count)}</span>
-            </span>
-            <span
-              className="community-engagement-item"
-              title={`${playlist.song_count} songs`}
-            >
-              <SongCountIcon />
-              <span>{formatCompactCount(playlist.song_count)}</span>
-            </span>
-          </div>
-        </div>
-        <div className="community-card-title-row">
-          <h2>
-            <Link
-              className="community-title-link"
-              href={`/community-playlists/${playlist.id}`}
-            >
-              {playlist.name}
-            </Link>
-          </h2>
-        </div>
-        <div className="community-card-meta">
-          <button
-            type="button"
-            className={`community-card-creator${selectedCreatorId === playlist.creator.id ? " is-active" : ""}`}
-            aria-pressed={selectedCreatorId === playlist.creator.id}
-            onClick={() => filterByCreator(playlist.creator)}
-          >
-            {playlist.creator.imageUrl ? (
-              <img
-                className="community-card-creator-meta-avatar"
-                src={playlist.creator.imageUrl}
-                alt=""
-              />
-            ) : (
-              <span
-                className="community-card-creator-meta-avatar community-card-creator-meta-avatar-placeholder"
-                aria-hidden="true"
-              />
-            )}
-            <span className="community-card-creator-meta-name">
-              {playlist.creator.name}
-            </span>
-          </button>
         </div>
       </article>
     );
@@ -1093,754 +1090,182 @@ export default function CommunityPlaylistsPage() {
   }
 
   return (
-    <>
-      <style>{`
-        .community-page {
-          height: auto;
-          min-height: calc(100vh - var(--filmwave-header-height, 60px));
-          margin-top: var(--filmwave-header-height, 60px);
-          display: grid;
-          grid-template-columns: 0 minmax(0, 1fr);
-          grid-template-rows: var(--filmwave-searchbar-height, 75px) auto;
-          overflow: visible;
-          background: var(--bg-primary);
-          color: var(--text-primary);
-          transition: grid-template-columns 180ms ease;
-        }
+    <main className="community-playlists-page-root">
+      <GlobalSearchBar layer="high" />
 
-        .community-page.is-sidebar-open {
-          grid-template-columns: 248px minmax(0, 1fr);
-        }
+      <section className="community-playlists-page-layer">
+        <div className="community-playlists-page-inner">
+          {!loading && playlists.length > 0 && (
+            <div className="discover-mood-browser curated-page-pill-browser community-page-pill-browser">
+              <p className="discover-category-description">
+                A growing collection of playlists made by the community, built
+                around moods, genres, scenes, and creative workflows.
+              </p>
 
-        .community-page.is-player-visible {
-          height: auto;
-          min-height: calc(
-            100vh - var(--filmwave-header-height, 60px) - 72px
-          );
-        }
-
-        .community-sidebar {
-          position: sticky;
-          top: calc(
-            var(--filmwave-header-height, 60px) +
-              var(--filmwave-searchbar-height, 75px)
-          );
-          align-self: start;
-          height: calc(
-            100dvh - var(--filmwave-header-height, 60px) -
-              var(--filmwave-searchbar-height, 75px)
-          );
-          border-right-color: var(--border) !important;
-        }
-
-        .community-page.is-player-visible .community-sidebar {
-          height: calc(
-            100dvh - var(--filmwave-header-height, 60px) -
-              var(--filmwave-searchbar-height, 75px) - 72px
-          );
-        }
-
-        .community-sidebar-section + .community-sidebar-section {
-          border-top-color: var(--border) !important;
-        }
-
-        .community-content {
-          height: auto !important;
-          overflow-y: visible !important;
-          overscroll-behavior: auto !important;
-          padding-top: 22px !important;
-          padding-bottom: 0 !important;
-        }
-
-        .community-searchbar-row {
-          position: sticky;
-          top: var(--filmwave-header-height, 60px);
-        }
-
-        .community-content.has-feature-banner,
-        .community-content.has-creator-banner {
-          padding-top: 0 !important;
-        }
-
-        .community-heading-row {
-          display: flex;
-          height: 36px;
-          align-items: center;
-          gap: 16px;
-          margin-bottom: 16px;
-        }
-
-        .community-heading-row > .community-title-style-scope {
-          flex: 0 0 320px;
-          min-width: 0;
-        }
-
-        .community-sidebar-search {
-          margin-bottom: 24px;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap {
-          width: 100% !important;
-          margin-left: 0 !important;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search  {
-          width: 100% !important;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-base {
-          min-height: 32px !important;
-          height: 32px !important;
-          border-radius: 10px !important;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-lead {
-          width: 28px !important;
-          margin-left: 6px !important;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-input {
-          font-size: 10px !important;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-icon {
-          width: 16px !important;
-          height: 16px !important;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-clear {
-          width: 24px !important;
-          height: 24px !important;
-          margin-right: 4px !important;
-        }
-
-        .community-sidebar-search > .filmwave-header-search-wrap .filmwave-header-search-clear svg {
-          width: 12px !important;
-          height: 12px !important;
-        }
-
-        .community-title-style-scope.playlists-page {
-          position: static !important;
-          display: block !important;
-          min-height: 0 !important;
-          margin: 0 !important;
-          overflow: visible !important;
-          background: transparent !important;
-        }
-
-        .community-title-style-scope.playlists-page .playlists-hero {
-          padding: 0 !important;
-          margin: 0 !important;
-        }
-
-        .community-title-style-scope.playlists-page .playlists-title::before {
-          content: "Community Playlists";
-        }
-
-        .community-sidebar-heading {
-          color: #fff !important;
-          font-family: var(--font-aktiv-grotesk), sans-serif !important;
-          font-size: 14px !important;
-          font-weight: 400 !important;
-          font-kerning: normal !important;
-          letter-spacing: 0 !important;
-          line-height: 1.1 !important;
-          text-transform: none !important;
-        }
-
-        :where(html.light, html[data-theme="light"]) .community-sidebar-heading {
-          color: var(--text-primary) !important;
-        }
-
-        .community-categories nav {
-          gap: 0 !important;
-        }
-
-        .community-categories .fw-filter-rail-item {
-          width: 100%;
-          border: 0;
-          background: transparent;
-          font-family: inherit;
-          text-align: left;
-          cursor: pointer;
-        }
-
-        .community-categories .fw-filter-rail-item.is-active {
-          background: var(--bg-hover) !important;
-          background-color: var(--bg-hover) !important;
-          color: var(--text-primary) !important;
-        }
-
-        .community-category-count {
-          margin-left: auto;
-          color: var(--text-muted);
-          font-size: 10px;
-        }
-
-        .community-categories .fw-filter-rail-item.is-active .community-category-count {
-          color: var(--text-secondary);
-        }
-
-        .community-featured {
-          min-height: 0 !important;
-          height: auto !important;
-          flex: 0 0 auto !important;
-          overflow: visible !important;
-          padding-bottom: 32px !important;
-        }
-
-        .community-featured-list {
-          min-height: 0 !important;
-          flex: 0 0 auto !important;
-          overflow: visible !important;
-          overscroll-behavior: auto !important;
-          padding-bottom: 0 !important;
-        }
-
-        .community-track-count {
-          margin-top: 5px !important;
-        }
-
-        .community-engagement {
-          display: flex;
-          align-items: center;
-          gap: 16px;
-          margin-top: 9px;
-          color: var(--text-muted);
-          font-size: 11px;
-          line-height: 1;
-        }
-
-        .community-engagement-item {
-          display: inline-flex;
-          align-items: center;
-          gap: 5px;
-        }
-
-        .community-engagement-item svg {
-          display: block;
-          width: 14px;
-          height: 14px;
-          flex: 0 0 14px;
-        }
-
-        .community-jump-back {
-          margin-top: 14px;
-        }
-
-        .community-jump-back-heading {
-          margin: 0;
-          color: var(--text-primary);
-          font-size: 18px;
-          font-weight: 500;
-          line-height: 1.2;
-          letter-spacing: -0.035em;
-        }
-
-        .community-jump-back .recent-playlist-card-list {
-          margin-top: 16px;
-        }
-
-        .community-cover-link {
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          display: block;
-          color: inherit;
-          text-decoration: none;
-        }
-
-        .community-title-link {
-          color: inherit;
-          text-decoration: none;
-          transition: opacity 150ms ease;
-        }
-
-        .community-title-link:hover,
-        .community-title-link:focus-visible {
-          opacity: 0.62;
-          outline: none;
-        }
-
-        .community-creator-overlay {
-          position: absolute;
-          right: 8px;
-          bottom: 8px;
-          z-index: 2;
-          display: inline-flex;
-          max-width: calc(100% - 16px);
-          align-items: center;
-          gap: 7px;
-          border-radius: 999px;
-          background: rgba(12, 12, 12, 0.72);
-          padding: 5px 8px 5px 5px;
-          color: #fff;
-          font-size: 10.5px;
-          line-height: 1;
-          -webkit-backdrop-filter: blur(8px);
-          backdrop-filter: blur(8px);
-        }
-
-        .community-creator-overlay > span:last-child {
-          overflow: hidden;
-          text-overflow: ellipsis;
-          white-space: nowrap;
-          opacity: 0.6;
-        }
-
-        .community-avatar-image,
-        .community-creator-overlay .community-avatar {
-          display: block;
-          width: 20px;
-          height: 20px;
-          flex: 0 0 20px;
-          border-radius: 50%;
-          object-fit: cover;
-        }
-
-        .community-creator-overlay .community-avatar {
-          background: #808080;
-        }
-
-        .community-footer-wrap {
-          padding-top: 48px;
-          padding-bottom: 0;
-        }
-
-        .community-empty-state {
-          grid-column: 1 / -1;
-          min-height: 220px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: var(--text-muted);
-          font-size: 12px;
-        }
-
-        .community-cover {
-          transition: transform 0.7s ease;
-        }
-
-        .community-card:hover .community-cover {
-          transform: scale(1.025);
-        }
-
-        .community-like {
-          position: absolute;
-          top: 10px;
-          right: 10px;
-          left: auto;
-          z-index: 5;
-          grid-column: auto;
-          grid-row: auto;
-          color: #fff;
-          transition: transform 150ms ease, opacity 150ms ease;
-        }
-
-        .community-like:hover,
-        .community-like:focus-visible {
-          transform: scale(1.08);
-          outline: none;
-        }
-
-        .community-like:disabled {
-          cursor: default;
-        }
-
-        .community-card-title-row {
-          grid-template-columns: minmax(0, 1fr) 24px;
-        }
-
-
-        @media (max-width: 760px) {
-          .community-page,
-          .community-page.is-player-visible {
-            height: auto;
-            min-height: calc(100vh - var(--filmwave-header-height, 56px));
-            display: block;
-            overflow: visible;
-          }
-        }
-
-      `}</style>
-
-      <main
-        className={`community-page${sidebarOpen ? " is-sidebar-open" : ""}${playerVisible ? " is-player-visible" : ""}`}
-      >
-        <div
-          className={`community-searchbar-row${sidebarOpen ? " is-filters-open" : ""}`}
-        >
-          <button
-            type="button"
-            className="community-searchbar-filter-button"
-            aria-expanded={sidebarOpen}
-            onClick={() => setSidebarOpen((open) => !open)}
-          >
-            <span className="community-searchbar-filter-icon" aria-hidden="true">
-              <svg
-                className="community-searchbar-filter-open-icon"
-                viewBox="0 0 24 24"
+              <div
+                className="discover-mood-pill-list"
+                role="group"
+                aria-label="Community playlist filters"
               >
-                <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
-              </svg>
-              <XIcon
-                className="community-searchbar-filter-close-icon"
-                size={22}
-              />
-            </span>
-            <span>Filters</span>
-          </button>
-
-          <div className="community-searchbar-search">
-            <label className="audioflume-home-reference-searchbar-field">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="11" cy="11" r="6.5" />
-                <path d="m16 16 4.5 4.5" />
-              </svg>
-              <input
-                type="search"
-                value={query}
-                onChange={(event) => {
-                  setQuery(event.target.value);
-                }}
-                placeholder="Search playlists or creators"
-                aria-label="Search community playlists"
-              />
-              {query.length > 0 ? (
                 <button
                   type="button"
-                  className="audioflume-home-reference-searchbar-clear"
-                  onClick={clearCommunitySearch}
-                  aria-label="Clear community playlist search"
+                  className={`curated-main-filter-pill community-main-filter-pill${
+                    filterIsActive ? " is-active" : ""
+                  }`}
+                  aria-pressed={filterIsActive}
+                  onClick={() => {
+                    if (filterIsActive) {
+                      setFilterMenuOpen(false);
+                      setSelectedCategory("All");
+                    } else {
+                      setFilterMenuOpen(true);
+                    }
+                  }}
                 >
-                  <XIcon size={8} />
-                </button>
-              ) : null}
-            </label>
-          </div>
-
-          <div
-            className="community-tabs community-searchbar-tabs"
-            role="tablist"
-            aria-label="Community playlist sorting"
-          >
-            {COMMUNITY_TABS.map((tab) => (
-              <button
-                type="button"
-                role="tab"
-                key={tab}
-                className={`community-feed-tab${activeTab === tab ? " is-active" : ""}`}
-                aria-selected={activeTab === tab}
-                onClick={() => setActiveTab(tab)}
-              >
-                {tab}
-              </button>
-            ))}
-          </div>
-
-          <div className="community-searchbar-sort">
-            <MusicLibrarySortControl<CommunityTab>
-              value={activeTab}
-              onChange={(value) => setActiveTab(value)}
-              onClear={() => setActiveTab("All")}
-              options={COMMUNITY_SORT_OPTIONS}
-              showSelectedCheck
-            />
-          </div>
-        </div>
-
-        <aside
-          className="community-sidebar"
-          aria-label="Community playlist discovery"
-          aria-hidden={!sidebarOpen}
-        >
-          <section className="community-sidebar-section community-categories">
-            <nav aria-label="Community playlist categories">
-              <button
-                type="button"
-                className={`fw-filter-rail-item${selectedCategory === "All" && activeTab === "All" ? " is-active" : ""}`}
-                aria-pressed={selectedCategory === "All" && activeTab === "All"}
-                onClick={showAllView}
-              >
-                <span className="fw-filter-rail-label">All</span>
-                <span className="community-category-count">{playlists.length}</span>
-                <span className="community-filter-rail-chevron" aria-hidden="true">
-                  <FilterRailChevron />
-                </span>
-              </button>
-              {COMMUNITY_PLAYLIST_CATEGORIES.map((category) => (
-                <button
-                  type="button"
-                  className={`fw-filter-rail-item${selectedCategory === category ? " is-active" : ""}`}
-                  key={category}
-                  aria-pressed={selectedCategory === category}
-                  onClick={() => setSelectedCategory(category)}
-                >
-                  <span className="community-category-icon" aria-hidden="true">
-                    <CommunityCategoryIcon category={category} />
-                  </span>
-                  <span className="fw-filter-rail-label">{category}</span>
-                  <span className="community-category-count">
-                    {categoryCounts.get(category) ?? 0}
-                  </span>
-                  <span className="community-filter-rail-chevron" aria-hidden="true">
-                    <FilterRailChevron />
-                  </span>
-                </button>
-              ))}
-            </nav>
-          </section>
-
-        </aside>
-
-        <section
-          ref={communityContentRef}
-          className={`community-content${showAllBanner ? " has-feature-banner" : ""}${selectedCreator ? " has-creator-banner" : ""}`}
-        >
-          {showAllBanner && (
-            <section
-              className="community-feature-banner"
-              style={{ backgroundImage: `url("${COMMUNITY_FEATURE_BANNER_IMAGE}")` }}
-              aria-label="Playlists made by you"
-            >
-              <div className="community-feature-banner-shade" />
-              <h1>Playlists made by you.</h1>
-            </section>
-          )}
-
-          {selectedCreator && (
-            <section
-              className="community-creator-banner"
-              aria-label={`Playlists made by ${selectedCreator.name}`}
-            >
-              {selectedCreator.imageUrl ? (
-                <div
-                  className="community-creator-banner-background"
-                  style={{ backgroundImage: `url("${selectedCreator.imageUrl}")` }}
-                  aria-hidden="true"
-                />
-              ) : null}
-              <div className="community-creator-banner-shade" />
-              <div className="community-creator-banner-content">
-                {selectedCreator.imageUrl ? (
-                  <img
-                    className="community-creator-banner-avatar"
-                    src={selectedCreator.imageUrl}
-                    alt=""
-                  />
-                ) : (
-                  <span
-                    className="community-creator-banner-avatar community-creator-banner-avatar-placeholder"
+                  <svg
+                    className="community-filter-pill-icon"
+                    viewBox="0 0 18 18"
                     aria-hidden="true"
-                  />
-                )}
-                <h1>{`Playlists made by ${selectedCreator.name}`}</h1>
-              </div>
-            </section>
-          )}
+                  >
+                    <path d="M3 5h12M3 9h12M3 13h12" />
+                  </svg>
+                  <span>Filter</span>
+                </button>
 
-          {recentPlaylists.length > 0 && (
-            <section
-              className="community-jump-back"
-              aria-label="Jump Back In"
-            >
-              <RecentPlaylistCards
-                playlists={recentPlaylists.slice(0, 4).map((playlist) => ({
-                  key: `community:${playlist.id}`,
-                  href: `/community-playlists/${playlist.id}`,
-                  name: playlist.name,
-                  coverImageUrl: playlist.cover_image_url,
-                  metadata: `${playlist.creator.name} · ${playlist.song_count} songs`,
-                }))}
-              />
-            </section>
+                {communityMainFilters.map((tab) => {
+                  const isActive = activeTab === tab;
+
+                  return (
+                    <button
+                      key={tab}
+                      type="button"
+                      className={`curated-main-filter-pill${
+                        isActive ? " is-active" : ""
+                      }`}
+                      aria-pressed={isActive}
+                      onClick={() => {
+                        setActiveTab(isActive ? "All" : tab);
+                        setFilterMenuOpen(false);
+                      }}
+                    >
+                      {tab}
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div
+                className={`curated-page-subfilter-reveal${
+                  communitySubfiltersOpen ? " is-open" : ""
+                }`}
+              >
+                <div className="curated-page-subfilter-reveal-inner">
+                  <div
+                    className="discover-mood-pill-list curated-page-subfilter-list community-page-subfilter-list"
+                    role="group"
+                    aria-label="Community playlist subfilters"
+                  >
+                    {selectedCreator && (
+                      <button
+                        type="button"
+                        className="discover-category-filter-pill curated-subfilter-pill community-creator-filter-pill is-active"
+                        onClick={() => setSelectedCreatorId(null)}
+                        aria-label={`Clear ${selectedCreator.name} filter`}
+                      >
+                        {selectedCreator.imageUrl ? (
+                          <img
+                            className="community-creator-filter-avatar"
+                            src={selectedCreator.imageUrl}
+                            alt=""
+                          />
+                        ) : (
+                          <span
+                            className="community-creator-filter-avatar community-creator-filter-avatar-placeholder"
+                            aria-hidden="true"
+                          />
+                        )}
+                        <span>{selectedCreator.name}</span>
+                        <XIcon size={11} />
+                      </button>
+                    )}
+
+                    {filterIsActive && (
+                      <>
+                        <button
+                          type="button"
+                          className={`discover-category-filter-pill curated-subfilter-pill${
+                            selectedCategory === "All" ? " is-active" : ""
+                          }`}
+                          aria-pressed={selectedCategory === "All"}
+                          onClick={() => setSelectedCategory("All")}
+                        >
+                          All
+                        </button>
+
+                        {COMMUNITY_PLAYLIST_CATEGORIES.map((category) => {
+                          const isActive = selectedCategory === category;
+
+                          return (
+                            <button
+                              type="button"
+                              key={category}
+                              className={`discover-category-filter-pill curated-subfilter-pill${
+                                isActive ? " is-active" : ""
+                              }`}
+                              aria-pressed={isActive}
+                              onClick={() =>
+                                setSelectedCategory(isActive ? "All" : category)
+                              }
+                            >
+                              {category}
+                            </button>
+                          );
+                        })}
+                      </>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           )}
 
           {loading ? (
             <CommunityPlaylistsLoadingSkeleton />
-          ) : communityShelves.length > 0 ? (
-            <div className="community-shelves" id="community-grid">
-              {communityShelves.map((shelf) => (
-                <section className="community-shelf" key={shelf.key}>
-                  <div className="community-shelf-heading-row">
-                    <h2>{shelf.title}</h2>
-                  </div>
-                  <div className="community-shelf-viewport">
-                    {communityShelfState[shelf.key]?.imageCenterY !== null && (
-                      <>
-                        <button
-                          type="button"
-                          className="community-shelf-arrow is-left"
-                          aria-label={`Scroll ${shelf.title} left`}
-                          disabled={!communityShelfState[shelf.key]?.canScrollPrev}
-                          style={{
-                            top:
-                              communityShelfState[shelf.key]?.imageCenterY ??
-                              undefined,
-                          }}
-                          onClick={() => scrollCommunityShelf(shelf.key, -1)}
-                        >
-                          <ChevronLeftIcon size={18} />
-                        </button>
-                        <button
-                          type="button"
-                          className="community-shelf-arrow is-right"
-                          aria-label={`Scroll ${shelf.title} right`}
-                          disabled={!communityShelfState[shelf.key]?.canScrollNext}
-                          style={{
-                            top:
-                              communityShelfState[shelf.key]?.imageCenterY ??
-                              undefined,
-                          }}
-                          onClick={() => scrollCommunityShelf(shelf.key, 1)}
-                        >
-                          <ChevronRightIcon size={18} />
-                        </button>
-                      </>
-                    )}
-                    <div
-                      className="community-shelf-row"
-                      data-community-shelf={shelf.key}
-                    >
-                      {shelf.playlists.map((playlist) =>
-                        renderPlaylistCard(playlist),
-                      )}
-                    </div>
-                  </div>
-                </section>
-              ))}
-
-              {topContributors.length > 0 && (
-                <section className="community-shelf community-contributor-shelf">
-                  <div className="community-shelf-heading-row">
-                    <h2>Top Contributors</h2>
-                  </div>
-                  <div className="community-shelf-viewport community-contributor-viewport">
-                    {communityShelfState.contributors?.imageCenterY !== null && (
-                      <>
-                        <button
-                          type="button"
-                          className="community-shelf-arrow is-left"
-                          aria-label="Scroll Top Contributors left"
-                          disabled={!communityShelfState.contributors?.canScrollPrev}
-                          style={{
-                            top:
-                              communityShelfState.contributors?.imageCenterY ??
-                              undefined,
-                          }}
-                          onClick={() => scrollCommunityShelf("contributors", -1)}
-                        >
-                          <ChevronLeftIcon size={18} />
-                        </button>
-                        <button
-                          type="button"
-                          className="community-shelf-arrow is-right"
-                          aria-label="Scroll Top Contributors right"
-                          disabled={!communityShelfState.contributors?.canScrollNext}
-                          style={{
-                            top:
-                              communityShelfState.contributors?.imageCenterY ??
-                              undefined,
-                          }}
-                          onClick={() => scrollCommunityShelf("contributors", 1)}
-                        >
-                          <ChevronRightIcon size={18} />
-                        </button>
-                      </>
-                    )}
-                    <div
-                      className="community-contributor-row"
-                      data-community-shelf="contributors"
-                    >
-                      {topContributors.map((contributor) => (
-                        <button
-                          type="button"
-                          className="community-contributor-card"
-                          key={contributor.id}
-                          onClick={() =>
-                            filterByCreator({
-                              id: contributor.id,
-                              name: contributor.name,
-                              imageUrl: contributor.imageUrl,
-                            })
-                          }
-                        >
-                          <span className="community-contributor-image-frame">
-                            {contributor.imageUrl ? (
-                              <img
-                                className="community-contributor-image"
-                                src={contributor.imageUrl}
-                                alt=""
-                              />
-                            ) : (
-                              <span
-                                className="community-contributor-image community-contributor-image-placeholder"
-                                aria-hidden="true"
-                              />
-                            )}
-                          </span>
-                          <span className="community-contributor-name">
-                            {contributor.name}
-                          </span>
-                          <span className="community-contributor-count">
-                            {contributor.playlistCount} {contributor.playlistCount === 1 ? "playlist" : "playlists"}
-                          </span>
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                </section>
-              )}
-            </div>
-          ) : (
-            <section className="community-filtered-section">
-              {activeFilterLabel ? (
-                <div className="community-filtered-section-heading">
-                  <button
-                    type="button"
-                    className={`community-filter-pill${selectedCreator ? " is-creator" : ""}`}
-                    onClick={clearCommunityFilters}
-                    aria-label={`Clear ${activeFilterLabel} filter`}
-                  >
-                    {selectedCreator?.imageUrl ? (
-                      <img
-                        className="community-filter-pill-avatar"
-                        src={selectedCreator.imageUrl}
-                        alt=""
-                      />
-                    ) : selectedCreator ? (
-                      <span
-                        className="community-filter-pill-avatar community-filter-pill-avatar-placeholder"
-                        aria-hidden="true"
-                      />
-                    ) : null}
-                    <span>{activeFilterLabel}</span>
-                    <XIcon size={13} />
-                  </button>
-                </div>
-              ) : null}
-              <div className="community-grid" id="community-grid">
-                {filteredPlaylists.length === 0 && (
-                  <div className="community-empty-state">{getEmptyStateMessage()}</div>
-                )}
-
+          ) : filteredPlaylists.length > 0 ? (
+            <section className="community-page-grid-group">
+              <div className="community-page-playlist-grid" id="community-grid">
                 {filteredPlaylists.map((playlist) =>
                   renderPlaylistCard(playlist),
                 )}
               </div>
             </section>
+          ) : (
+            <div className="community-page-empty-state">
+              {getEmptyStateMessage()}
+            </div>
           )}
 
-          <div className="community-footer-wrap">
-            <Footer playerPadding={false} />
-          </div>
-        </section>
-      </main>
+          {!loading && playlists.length > 0 && (
+            <section className="community-page-reference-search">
+              <div className="community-page-reference-search-heading">
+                <span>Search by song</span>
+              </div>
+              <div className="community-page-reference-search-card">
+                <GlobalReferenceSearch embedded />
+              </div>
+            </section>
+          )}
+        </div>
+      </section>
 
-      <Toast
-        message={toastMessage}
-        bottomOffset={playerVisible ? "88px" : "24px"}
-      />
-    </>
+      <Footer />
+
+      {toastMessage && (
+        <Toast
+          message={toastMessage}
+          onClose={() => setToastMessage(null)}
+        />
+      )}
+    </main>
   );
 }
