@@ -777,22 +777,23 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-featured-artist-shelf {
-  width: calc(100vw - var(--filmwave-page-gutter));
-  margin-left: var(--filmwave-page-gutter);
+  width: 100vw;
 }
 
 .audioflume-home-reference-featured-artist-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 6px;
+  gap: 8px;
+  padding-right: var(--filmwave-page-gutter);
+  padding-left: var(--filmwave-page-gutter);
 }
 
 .audioflume-home-reference-featured-artist-card {
   position: relative;
-  width: calc(30.303% - 5.46px);
-  min-width: calc(30.303% - 5.46px);
+  width: calc((var(--home-reference-width) - 18px) / 3.3);
+  min-width: calc((var(--home-reference-width) - 18px) / 3.3);
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   background: var(--bg-tertiary);
 }
 
