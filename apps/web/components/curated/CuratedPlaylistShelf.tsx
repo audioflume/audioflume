@@ -113,9 +113,6 @@ export default function CuratedPlaylistShelf({
   className = "mt-12",
 }: CuratedPlaylistShelfProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const snapTimeoutRef = useRef<number | null>(null);
-  const lastScrollLeftRef = useRef(0);
-  const lastScrollTimeRef = useRef(0);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [imageCenterY, setImageCenterY] = useState<number | null>(null);
@@ -139,24 +136,6 @@ export default function CuratedPlaylistShelf({
     if (cards.length < 2) return 0;
 
     return cards[1].offsetLeft - cards[0].offsetLeft;
-  }
-
-  function snapToNearestCard(scroller: HTMLDivElement) {
-    const step = getCardStep(scroller);
-    if (!step) return;
-
-    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
-    const target = Math.max(
-      0,
-      Math.min(Math.round(scroller.scrollLeft / step) * step, maxScrollLeft),
-    );
-
-    if (Math.abs(scroller.scrollLeft - target) < 1) return;
-
-    scroller.scrollTo({
-      left: target,
-      behavior: "smooth",
-    });
   }
 
   function scrollPlaylists(direction: "prev" | "next") {
@@ -187,46 +166,17 @@ export default function CuratedPlaylistShelf({
 
     if (!scroller) return;
 
-    const handleScroll = () => {
-      updateScrollState();
-
-      const now = performance.now();
-      const elapsed = Math.max(1, now - lastScrollTimeRef.current);
-      const distance = scroller.scrollLeft - lastScrollLeftRef.current;
-      const velocity = Math.abs(distance / elapsed);
-
-      lastScrollLeftRef.current = scroller.scrollLeft;
-      lastScrollTimeRef.current = now;
-
-      if (snapTimeoutRef.current !== null) {
-        window.clearTimeout(snapTimeoutRef.current);
-      }
-
-      const settleDelay = velocity < 0.12 ? 70 : velocity < 0.3 ? 120 : 220;
-
-      snapTimeoutRef.current = window.setTimeout(() => {
-        snapTimeoutRef.current = null;
-        snapToNearestCard(scroller);
-      }, settleDelay);
-    };
-
-    lastScrollLeftRef.current = scroller.scrollLeft;
-    lastScrollTimeRef.current = performance.now();
     updateScrollState();
 
-    scroller.addEventListener("scroll", handleScroll, { passive: true });
+    scroller.addEventListener("scroll", updateScrollState, { passive: true });
     window.addEventListener("resize", updateScrollState);
 
     return () => {
-      scroller.removeEventListener("scroll", handleScroll);
+      scroller.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", updateScrollState);
-
-      if (snapTimeoutRef.current !== null) {
-        window.clearTimeout(snapTimeoutRef.current);
-        snapTimeoutRef.current = null;
-      }
     };
   }, [playlists.length]);
+
 
   useEffect(() => {
     const scroller = scrollerRef.current;
