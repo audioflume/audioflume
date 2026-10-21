@@ -496,7 +496,7 @@
 
 .discover-artist-feature-media-home {
   position: relative;
-  aspect-ratio: 1.63 / 1;
+  aspect-ratio: 16 / 9;
   overflow: hidden;
   background: var(--bg-tertiary);
 }
