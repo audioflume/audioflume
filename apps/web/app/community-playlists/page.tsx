@@ -1179,7 +1179,6 @@ export default function CommunityPlaylistsPage() {
                       <path d="m11.9 11.9 4.1 4.1" />
                     </svg>
                   </span>
-
                   <div className="community-pill-search-field-wrap">
                     <input
                       type="search"
