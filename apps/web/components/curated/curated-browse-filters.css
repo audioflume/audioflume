@@ -1,14 +1,14 @@
-.curated-page-pill-browser {
+.discover-mood-browser {
   display: flex;
   width: 100%;
   flex-direction: column;
   align-items: center;
-  margin-top: 24px;
+  pointer-events: auto;
 }
 
-.curated-page-pill-description {
-  width: min(calc(100% - 40px), 520px);
-  margin: 38px 0 40px;
+.discover-category-description {
+  width: min(calc(100% - 40px), 420px);
+  margin: 65px 0 40px;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(17px, 1.15vw, 22px);
@@ -18,9 +18,10 @@
   text-align: center;
 }
 
-.curated-page-pill-list {
+.discover-mood-pill-list {
   display: flex;
   width: min(calc(100% - 80px), 1320px);
+  overflow: visible;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -28,71 +29,68 @@
   padding: 0 10px 2px;
 }
 
-.curated-page-filter-pill {
+.discover-category-filter-pill {
   display: inline-flex;
   min-height: 22px;
   align-items: center;
   justify-content: center;
+  padding: 2px 10px;
+  cursor: pointer;
   border: 1.25px solid transparent;
   border-radius: 999px;
   background: var(--filmwave-neutral-surface);
-  padding: 2px 10px;
-  color: var(--text-secondary);
+  color: rgba(255, 255, 255, 0.82);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 12px;
   font-weight: 400;
   line-height: 1.15;
-  cursor: pointer;
   transition:
     border-color 150ms ease,
     background-color 150ms ease,
     color 150ms ease;
 }
 
-.curated-page-filter-pill:hover,
-.curated-page-filter-pill:focus-visible {
-  border-color: var(--text-muted);
-  color: var(--text-primary);
-  outline: none;
-}
-
-.curated-page-filter-pill:focus-visible {
+.discover-category-filter-pill:focus-visible {
   outline: 1px solid currentColor;
   outline-offset: 2px;
 }
 
-.curated-page-filter-pill.is-active {
+:where(html.light, html[data-theme="light"])
+  .discover-category-filter-pill {
+  border-color: transparent;
+  color: var(--text-secondary);
+}
+
+.curated-page-pill-browser {
+  margin-top: 24px;
+}
+
+.curated-page-pill-browser .discover-category-filter-pill.is-active {
   border-color: var(--text-primary);
   background: var(--text-primary);
   color: var(--bg-primary);
 }
 
 @media (max-width: 980px) {
-  .curated-page-pill-list {
+  .discover-mood-pill-list {
     width: calc(100% - 64px);
   }
 }
 
 @media (max-width: 720px) {
-  .curated-page-pill-browser {
-    margin-top: 24px;
-  }
-
-  .curated-page-pill-description {
+  .discover-category-description {
     width: calc(100% - 40px);
-    margin-top: 32px;
-    margin-bottom: 32px;
     font-size: 18px;
   }
 
-  .curated-page-pill-list {
+  .discover-mood-pill-list {
     width: calc(100% - 32px);
     gap: 7px;
     padding-right: 4px;
     padding-left: 4px;
   }
 
-  .curated-page-filter-pill {
+  .discover-category-filter-pill {
     min-height: 22px;
     padding-right: 10px;
     padding-left: 10px;
