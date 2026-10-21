@@ -791,8 +791,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .discover-artist-feature-card {
   --discover-artist-feature-media-height: 400px;
   position: relative;
-  width: calc((var(--home-reference-width) - 18px) / 3.3);
-  min-width: calc((var(--home-reference-width) - 18px) / 3.3);
+  width: min(40vw, 840px);
+  min-width: min(40vw, 840px);
   background: transparent;
 }
 
@@ -1326,14 +1326,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
   .audioflume-home-reference-trending-list {
     padding: 24px 28px;
-  }
-}
-
-@media (max-width: 760px) {
-  .audioflume-home-reference-featured-artist-shelf
-    .discover-artist-feature-card {
-    width: calc(60% - 4px);
-    min-width: calc(60% - 4px);
   }
 }
 
