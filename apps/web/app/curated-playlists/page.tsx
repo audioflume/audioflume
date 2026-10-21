@@ -32,69 +32,34 @@ function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
 function CuratedPlaylistsLoadingSkeleton() {
   return (
     <div className="curated-page-skeleton" aria-hidden="true">
-      <div className="curated-page-skeleton-feature-carousel">
-        <div className="curated-page-skeleton-feature-viewport">
-          <div className="curated-page-skeleton-feature-track">
-            {Array.from({ length: 3 }, (_, index) => (
-              <div
-                key={index}
-                className="curated-page-skeleton-feature-card"
-              >
-                <div className="curated-page-skeleton-feature-media">
-                  <span
-                    className={`curated-page-skeleton-feature-title is-${index}`}
-                  />
-                </div>
-                {index === 1 && (
-                  <>
-                    <span className="curated-page-skeleton-feature-bookmark" />
-                    <span className="curated-page-skeleton-feature-play" />
-                  </>
-                )}
-              </div>
-            ))}
-          </div>
-          <span className="curated-page-skeleton-feature-arrow is-left" />
-          <span className="curated-page-skeleton-feature-arrow is-right" />
-        </div>
+      <div className="curated-page-skeleton-intro">
+        <span className="curated-page-skeleton-intro-line is-long" />
+        <span className="curated-page-skeleton-intro-line is-short" />
       </div>
 
-      <div className="curated-page-skeleton-filters">
+      <div className="curated-page-skeleton-pill-row">
+        <span className="curated-page-skeleton-search-pill" />
         {Array.from({ length: 8 }, (_, index) => (
-          <div
+          <span
             key={index}
-            className="curated-page-skeleton-filter"
-          >
-            <span
-              className={`curated-page-skeleton-filter-icon is-${index % 3}`}
-            />
-            <span
-              className={`curated-page-skeleton-filter-label is-${index % 4}`}
-            />
-          </div>
+            className={`curated-page-skeleton-pill is-${index % 4}`}
+          />
         ))}
       </div>
 
-      {[0, 1, 2].map((groupIndex) => (
-        <section key={groupIndex} className="curated-page-skeleton-grid-group">
-          <div className="curated-page-skeleton-grid-head">
-            <span className="curated-page-skeleton-heading" />
-          </div>
-
-          <div className="curated-page-skeleton-grid">
-            {Array.from({ length: 6 }, (_, cardIndex) => (
-              <article
-                key={cardIndex}
-                className="curated-page-skeleton-grid-card"
-              >
-                <div className="curated-page-skeleton-card" />
-                <span className="curated-page-skeleton-card-title" />
-                <span className="curated-page-skeleton-card-meta" />
-              </article>
-            ))}
-          </div>
-        </section>
-      ))}
+      <section className="curated-page-skeleton-grid-group">
+        <div className="curated-page-skeleton-grid">
+          {Array.from({ length: 8 }, (_, index) => (
+            <article key={index} className="curated-page-skeleton-grid-card">
+              <div className="curated-page-skeleton-card" />
+              <span
+                className={`curated-page-skeleton-card-title is-${index % 3}`}
+              />
+              <span className="curated-page-skeleton-card-meta" />
+            </article>
+          ))}
+        </div>
+      </section>
     </div>
   );
 }
