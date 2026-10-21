@@ -1297,7 +1297,9 @@ export default function CommunityPlaylistsPage() {
                           All
                         </button>
 
-                        {COMMUNITY_PLAYLIST_CATEGORIES.map((category) => {
+                        {COMMUNITY_PLAYLIST_CATEGORIES.filter(
+                          (category) => (categoryCounts.get(category) ?? 0) > 0,
+                        ).map((category) => {
                           const isActive = selectedCategory === category;
 
                           return (
