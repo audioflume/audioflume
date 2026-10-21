@@ -938,7 +938,11 @@ export default function CommunityPlaylistsPage() {
   }
 
   function filterByCreator(creator: CommunityPlaylist["creator"]) {
+    setActiveTab("All");
+    setSelectedCategory("All");
+    setFilterMenuOpen(false);
     setSelectedCreatorId(creator.id);
+    window.scrollTo({ top: 0, behavior: "auto" });
   }
 
   function clearCommunitySearch() {
@@ -966,11 +970,6 @@ export default function CommunityPlaylistsPage() {
     selectedCategory === "All" &&
     !selectedCreatorId &&
     !query.trim();
-
-  useEffect(() => {
-    communityContentRef.current?.scrollTo({ top: 0, behavior: "auto" });
-    window.scrollTo({ top: 0, behavior: "auto" });
-  }, [activeTab, query, selectedCategory, selectedCreatorId]);
 
   function renderPlaylistCard(playlist: CommunityPlaylist) {
     const isFavorite = favoritePlaylistIds.has(playlist.id);
@@ -1195,7 +1194,7 @@ export default function CommunityPlaylistsPage() {
                     role="group"
                     aria-label="Community playlist subfilters"
                   >
-                    {selectedCreator && (
+                    {selectedCreator ? (
                       <button
                         type="button"
                         className="discover-category-filter-pill curated-subfilter-pill community-creator-filter-pill is-active"
@@ -1217,9 +1216,7 @@ export default function CommunityPlaylistsPage() {
                         <span>{selectedCreator.name}</span>
                         <XIcon size={11} />
                       </button>
-                    )}
-
-                    {filterIsActive && (
+                    ) : filterIsActive ? (
                       <>
                         <button
                           type="button"
@@ -1252,7 +1249,7 @@ export default function CommunityPlaylistsPage() {
                           );
                         })}
                       </>
-                    )}
+                    ) : null}
                   </div>
                 </div>
               </div>
