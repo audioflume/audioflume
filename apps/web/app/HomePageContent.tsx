@@ -57,13 +57,11 @@ function Shelf({
   children,
   className = "",
   snapAfterScroll = false,
-  itemsPerArrow = 1,
 }: {
   label: string;
   children: ReactNode;
   className?: string;
   snapAfterScroll?: boolean;
-  itemsPerArrow?: number;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -87,6 +85,28 @@ function Shelf({
     return cards[1].offsetLeft - cards[0].offsetLeft;
   }
 
+  function getVisibleCardCount(scroller: HTMLDivElement) {
+    const cards = Array.from(
+      scroller.children,
+    ).filter((child): child is HTMLElement => child instanceof HTMLElement);
+
+    if (cards.length < 2) return 1;
+
+    const step = cards[1].offsetLeft - cards[0].offsetLeft;
+    const cardWidth = cards[0].getBoundingClientRect().width;
+    const gap = Math.max(0, step - cardWidth);
+    const styles = window.getComputedStyle(scroller);
+    const paddingLeft = Number.parseFloat(styles.paddingLeft) || 0;
+    const paddingRight = Number.parseFloat(styles.paddingRight) || 0;
+    const contentWidth =
+      scroller.clientWidth - paddingLeft - paddingRight;
+
+    return Math.max(
+      1,
+      Math.round((contentWidth + gap) / step),
+    );
+  }
+
   function scroll(direction: "prev" | "next") {
     const scroller = scrollerRef.current;
     if (!scroller) return;
@@ -96,8 +116,10 @@ function Shelf({
       if (!step) return;
 
       const currentIndex = Math.round(scroller.scrollLeft / step);
+      const visibleCardCount = getVisibleCardCount(scroller);
       const nextIndex =
-        currentIndex + (direction === "next" ? itemsPerArrow : -itemsPerArrow);
+        currentIndex +
+        (direction === "next" ? visibleCardCount : -visibleCardCount);
       const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
       const target = Math.max(
         0,
@@ -475,7 +497,6 @@ function HomeFeaturedArtistGrid({
       label="featured artists"
       className="audioflume-home-reference-featured-artist-shelf"
       snapAfterScroll
-      itemsPerArrow={4}
     >
       {visibleArtists.map((artist) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
