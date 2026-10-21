@@ -190,6 +190,10 @@ export default function CuratedPlaylistsPage() {
               onSubcategoryChange={setActiveBrowseSubcategoryId}
               searchValue={searchQuery}
               onSearchChange={setSearchQuery}
+              onSearchSubmit={() => {
+                setActiveBrowseFilter(null);
+                setActiveBrowseSubcategoryId(null);
+              }}
             />
           )}
 
