@@ -12,7 +12,7 @@ export async function GET() {
     const { data: artists, error: artistsError } = await supabaseServer
       .from("artists")
       .select(
-        "id, name, slug, hero_image_url, hero_image_position_x, hero_image_position_y",
+        "id, name, slug, designation, hero_image_url, hero_image_position_x, hero_image_position_y",
       )
       .eq("status", "approved")
       .order("name", { ascending: true });
@@ -75,6 +75,7 @@ export async function GET() {
           id: artistId,
           name: String(artist.name || ""),
           slug: String(artist.slug || ""),
+          designation: artist.designation ? String(artist.designation) : null,
           custom_text: null,
           hero_image_url: artist.hero_image_url
             ? String(artist.hero_image_url)
