@@ -813,7 +813,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   padding-left: var(--filmwave-page-gutter);
   scroll-padding-right: var(--filmwave-page-gutter);
   scroll-padding-left: var(--filmwave-page-gutter);
-  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
 }
 
 .audioflume-home-reference-featured-artist-shelf
