@@ -114,6 +114,7 @@ export default function CuratedPlaylistShelf({
   className = "mt-12",
 }: CuratedPlaylistShelfProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const snapTimeoutRef = useRef<number | null>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [imageCenterY, setImageCenterY] = useState<number | null>(null);
@@ -129,15 +130,53 @@ export default function CuratedPlaylistShelf({
     setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
   }
 
+  function getCardStep(scroller: HTMLDivElement) {
+    const cards = Array.from(
+      scroller.children,
+    ).filter((child): child is HTMLElement => child instanceof HTMLElement);
+
+    if (cards.length < 2) return 0;
+
+    return cards[1].offsetLeft - cards[0].offsetLeft;
+  }
+
+  function snapToNearestCard(scroller: HTMLDivElement) {
+    const step = getCardStep(scroller);
+    if (!step) return;
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    const target = Math.max(
+      0,
+      Math.min(Math.round(scroller.scrollLeft / step) * step, maxScrollLeft),
+    );
+
+    if (Math.abs(scroller.scrollLeft - target) < 1) return;
+
+    scroller.scrollTo({
+      left: target,
+      behavior: "smooth",
+    });
+  }
+
   function scrollPlaylists(direction: "prev" | "next") {
     const scroller = scrollerRef.current;
 
     if (!scroller) return;
 
-    const amount = Math.max(scroller.clientWidth * 0.82, 320);
+    const step = getCardStep(scroller);
+    if (!step) return;
 
-    scroller.scrollBy({
-      left: direction === "next" ? amount : -amount,
+    const currentIndex = Math.round(scroller.scrollLeft / step);
+    const nextIndex =
+      currentIndex + (direction === "next" ? 4 : -4);
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    const target = Math.max(
+      0,
+      Math.min(nextIndex * step, maxScrollLeft),
+    );
+
+    scroller.scrollTo({
+      left: target,
       behavior: "smooth",
     });
   }
@@ -147,14 +186,32 @@ export default function CuratedPlaylistShelf({
 
     if (!scroller) return;
 
+    const handleScroll = () => {
+      updateScrollState();
+
+      if (snapTimeoutRef.current !== null) {
+        window.clearTimeout(snapTimeoutRef.current);
+      }
+
+      snapTimeoutRef.current = window.setTimeout(() => {
+        snapTimeoutRef.current = null;
+        snapToNearestCard(scroller);
+      }, 220);
+    };
+
     updateScrollState();
 
-    scroller.addEventListener("scroll", updateScrollState, { passive: true });
+    scroller.addEventListener("scroll", handleScroll, { passive: true });
     window.addEventListener("resize", updateScrollState);
 
     return () => {
-      scroller.removeEventListener("scroll", updateScrollState);
+      scroller.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", updateScrollState);
+
+      if (snapTimeoutRef.current !== null) {
+        window.clearTimeout(snapTimeoutRef.current);
+        snapTimeoutRef.current = null;
+      }
     };
   }, [playlists.length]);
 
@@ -233,7 +290,7 @@ export default function CuratedPlaylistShelf({
 
           <div
             ref={scrollerRef}
-            className={`flex overflow-x-auto overflow-y-hidden scroll-smooth overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${shelfStyles.scroller}`}
+            className={`flex overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${shelfStyles.scroller}`}
           >
             {playlists.map((playlist, index) => (
               <CuratedPlaylistCard
