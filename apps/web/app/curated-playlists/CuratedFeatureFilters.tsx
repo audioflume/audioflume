@@ -154,8 +154,6 @@ export default function CuratedFeatureFilters({
           </div>
         </form>
 
-        </div>
-
         {mainFilters.map((filter) => {
           const isActive = activeFilter === filter.value;
 
