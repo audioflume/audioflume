@@ -735,3 +735,7 @@ body:has(.curated-playlists-page-root)
     width: min(250px, calc(100vw - 64px));
   }
 }
+
+.curated-playlists-page-footer {
+  margin-top: calc(var(--filmwave-page-gutter) * -1) !important;
+}
