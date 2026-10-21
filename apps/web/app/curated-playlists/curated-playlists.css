@@ -574,7 +574,18 @@ body:has(.curated-playlists-page-root)
   display: flex;
   min-height: 28px;
   align-items: baseline;
+  gap: 12px;
   margin-bottom: var(--filmwave-small-section-title-margin-bottom);
+}
+
+.curated-page-grid-count {
+  flex: 0 0 auto;
+  color: var(--text-muted);
+  font-size: clamp(13px, 1vw, 15px);
+  font-weight: 300;
+  letter-spacing: normal;
+  line-height: 1;
+  white-space: nowrap;
 }
 
 .curated-page-grid-heading p {
@@ -588,7 +599,7 @@ body:has(.curated-playlists-page-root)
 .curated-page-playlist-grid {
   --filmwave-curated-shelf-card-width: 100%;
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 32px 12px;
 }
 
