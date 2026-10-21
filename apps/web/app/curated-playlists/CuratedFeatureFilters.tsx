@@ -56,8 +56,10 @@ export default function CuratedFeatureFilters({
   const mainFilters = CURATED_BROWSE_FILTERS;
 
   const activeSubcategories =
-    browseTaxonomy?.filters.find((filter) => filter.value === activeFilter)
-      ?.subcategories ?? [];
+    browseTaxonomy?.filters
+      .find((filter) => filter.value === activeFilter)
+      ?.subcategories.slice()
+      .sort((a, b) => a.label.localeCompare(b.label)) ?? [];
 
   return (
     <div className="discover-mood-browser curated-page-pill-browser">
