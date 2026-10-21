@@ -186,8 +186,11 @@ export default function CuratedPlaylistShelf({
         <div
           className={`${shelfStyles.heading}${viewAllHref ? " discover-section-header" : ""}`}
         >
-          <div className="min-w-0">
+          <div className={shelfStyles.headingTitleGroup}>
             <SectionTitle variant="small">{title}</SectionTitle>
+            <span className={shelfStyles.playlistCount}>
+              {playlists.length} {playlists.length === 1 ? "playlist" : "playlists"}
+            </span>
           </div>
 
           <ShelfNavigationControls
