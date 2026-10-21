@@ -1155,6 +1155,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .audioflume-home-reference-feature-pair-grid,
   .audioflume-home-reference-tools-grid {
     width: var(--home-reference-width);
+  }
+
+  .audioflume-home-reference-feature-pair-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .audioflume-home-reference-tools-grid {
     grid-template-columns: 1fr;
   }
 
