@@ -84,8 +84,7 @@ export default function Footer({
     /^\/community-playlists\/[^/]+/.test(pathname);
   const isAlbumDetailPage = /^\/artists\/[^/]+\/albums\/[^/]+/.test(pathname);
   const isInteriorDetailPage = isPlaylistDetailPage || isAlbumDetailPage;
-  const shouldShowTopBorder = true;
-  void showTopBorder;
+  const shouldShowTopBorder = showTopBorder;
 
   useEffect(() => {
     if (!isMusicPage) {
