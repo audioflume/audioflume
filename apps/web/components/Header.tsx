@@ -74,6 +74,9 @@ export default function Header() {
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileAccountOpen, setMobileAccountOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
+  const [playlistsMenuMounted, setPlaylistsMenuMounted] = useState(false);
+  const playlistsMenuCloseTimeoutRef = useRef<number | null>(null);
+  const playlistsMenuOpenFrameRef = useRef<number | null>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const [scrolledPastThreshold, setScrolledPastThreshold] = useState(false);
@@ -130,6 +133,7 @@ export default function Header() {
 
   useEffect(() => {
     setPlaylistsMenuOpen(false);
+    setPlaylistsMenuMounted(false);
     setMobileNavOpen(false);
     setMobileAccountOpen(false);
   }, [pathname]);
@@ -253,12 +257,51 @@ export default function Header() {
     };
   }, []);
 
+  useEffect(() => {
+    return () => {
+      if (playlistsMenuOpenFrameRef.current != null) {
+        window.cancelAnimationFrame(playlistsMenuOpenFrameRef.current);
+      }
+      if (playlistsMenuCloseTimeoutRef.current != null) {
+        window.clearTimeout(playlistsMenuCloseTimeoutRef.current);
+      }
+    };
+  }, []);
+
   function openPlaylistsMenu() {
-    setPlaylistsMenuOpen(true);
+    if (playlistsMenuCloseTimeoutRef.current != null) {
+      window.clearTimeout(playlistsMenuCloseTimeoutRef.current);
+      playlistsMenuCloseTimeoutRef.current = null;
+    }
+
+    setPlaylistsMenuMounted(true);
+
+    if (playlistsMenuOpenFrameRef.current != null) {
+      window.cancelAnimationFrame(playlistsMenuOpenFrameRef.current);
+    }
+
+    playlistsMenuOpenFrameRef.current = window.requestAnimationFrame(() => {
+      playlistsMenuOpenFrameRef.current = null;
+      setPlaylistsMenuOpen(true);
+    });
   }
 
   function closePlaylistsMenu() {
+    if (playlistsMenuOpenFrameRef.current != null) {
+      window.cancelAnimationFrame(playlistsMenuOpenFrameRef.current);
+      playlistsMenuOpenFrameRef.current = null;
+    }
+
     setPlaylistsMenuOpen(false);
+
+    if (playlistsMenuCloseTimeoutRef.current != null) {
+      window.clearTimeout(playlistsMenuCloseTimeoutRef.current);
+    }
+
+    playlistsMenuCloseTimeoutRef.current = window.setTimeout(() => {
+      playlistsMenuCloseTimeoutRef.current = null;
+      setPlaylistsMenuMounted(false);
+    }, 150);
   }
 
   return (
@@ -586,8 +629,11 @@ export default function Header() {
           transform: translateY(-4px) !important;
         }
 
-        .filmwave-header-nav-item-playlists.is-open .filmwave-playlists-mega-menu {
+        .filmwave-header-nav-item-playlists.is-mounted .filmwave-playlists-mega-menu {
           display: block !important;
+        }
+
+        .filmwave-header-nav-item-playlists.is-open .filmwave-playlists-mega-menu {
           visibility: visible !important;
           opacity: 1 !important;
           pointer-events: auto !important;
@@ -612,6 +658,10 @@ export default function Header() {
           padding: 0 !important;
           box-shadow: none !important;
           isolation: isolate !important;
+          transition:
+            opacity 150ms ease,
+            visibility 150ms ease,
+            transform 150ms ease !important;
         }
 
         :where(html.light, html[data-theme="light"]) .filmwave-playlists-mega-menu {
@@ -1085,7 +1135,7 @@ export default function Header() {
                   return (
                     <div
                       key={link.href}
-                      className={`filmwave-header-nav-item filmwave-header-nav-item-playlists${playlistsMenuOpen ? " is-open" : ""}`}
+                      className={`filmwave-header-nav-item filmwave-header-nav-item-playlists${playlistsMenuMounted ? " is-mounted" : ""}${playlistsMenuOpen ? " is-open" : ""}`}
                       onMouseEnter={openPlaylistsMenu}
                       onMouseLeave={closePlaylistsMenu}
                       onFocus={openPlaylistsMenu}
