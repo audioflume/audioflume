@@ -2,6 +2,8 @@
 
 import { useEffect, useRef, useState } from "react";
 
+import XIcon from "@/components/icons/XIcon";
+
 import {
   CURATED_BROWSE_FILTERS,
   type CuratedBrowseTag,
@@ -29,6 +31,8 @@ export default function CuratedFeatureFilters({
   browseTaxonomy,
   onFilterChange,
   onSubcategoryChange,
+  searchValue = "",
+  onSearchChange,
 }: {
   activeFilter: CuratedBrowseTag | null;
   activeSubcategoryId: number | null;
@@ -43,6 +47,7 @@ export default function CuratedFeatureFilters({
     CuratedBrowseSubcategoryRecord[]
   >([]);
   const [subfiltersOpen, setSubfiltersOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const subfilterCloseTimeoutRef = useRef<number | null>(null);
 
   useEffect(() => {
@@ -109,6 +114,49 @@ export default function CuratedFeatureFilters({
         role="group"
         aria-label="Curated playlist filters"
       >
+        <div className={`curated-pill-search${searchOpen ? " is-open" : ""}`}>
+          <button
+            type="button"
+            className={`curated-pill-search-toggle${searchOpen ? " is-active" : ""}`}
+            aria-label={searchOpen ? "Close playlist search" : "Search curated playlists"}
+            aria-expanded={searchOpen}
+            onClick={() => {
+              if (searchOpen) {
+                setSearchOpen(false);
+                onSearchChange?.("");
+              } else {
+                onSubcategoryChange(null);
+                onFilterChange(null);
+                setSearchOpen(true);
+              }
+            }}
+          >
+            <svg viewBox="0 0 20 20" aria-hidden="true">
+              <circle cx="8" cy="8" r="5.25" />
+              <path d="m11.9 11.9 4.1 4.1" />
+            </svg>
+          </button>
+          <div className="curated-pill-search-field-wrap">
+            <input
+              type="search"
+              value={searchValue}
+              onChange={(event) => onSearchChange?.(event.target.value)}
+              placeholder="Search playlists"
+              aria-label="Search curated playlists"
+            />
+            {searchValue && (
+              <button
+                type="button"
+                className="curated-pill-search-clear"
+                aria-label="Clear search"
+                onClick={() => onSearchChange?.("")}
+              >
+                <XIcon size={12} />
+              </button>
+            )}
+          </div>
+        </div>
+
         {mainFilters.map((filter) => {
           const isActive = activeFilter === filter.value;
 
@@ -119,6 +167,8 @@ export default function CuratedFeatureFilters({
               className={`curated-main-filter-pill${isActive ? " is-active" : ""}`}
               aria-pressed={isActive}
               onClick={() => {
+                setSearchOpen(false);
+                onSearchChange?.("");
                 onSubcategoryChange(null);
                 onFilterChange(isActive ? null : filter.value);
               }}
