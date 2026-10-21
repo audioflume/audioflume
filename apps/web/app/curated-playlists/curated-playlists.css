@@ -648,7 +648,7 @@ body:has(.curated-playlists-page-root)
 }
 
 .curated-pill-search:hover,
-.curated-pill-search:focus-within {
+.curated-pill-search.is-open:focus-within {
   border-color: var(--text-muted);
 }
 
