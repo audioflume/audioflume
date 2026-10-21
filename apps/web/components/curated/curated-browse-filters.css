@@ -71,6 +71,10 @@
   color: var(--bg-primary);
 }
 
+.curated-page-subfilter-list {
+  margin-top: 14px;
+}
+
 @media (max-width: 980px) {
   .discover-mood-pill-list {
     width: calc(100% - 64px);
