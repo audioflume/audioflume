@@ -431,21 +431,25 @@ body:has(.community-playlists-page-root) {
   color: #ffffff;
 }
 
-.community-card-creator:hover,
-.community-card-creator:focus-visible,
-.community-card-creator.is-active {
-  color: var(--text-primary);
+.community-card-creator:focus-visible {
   outline: none;
+}
+
+.community-card-creator:hover .community-card-creator-meta-avatar,
+.community-card-creator:focus-visible .community-card-creator-meta-avatar {
+  transform: scale(1.08);
 }
 
 .community-card-creator-meta-avatar {
   display: block;
-  width: 28px;
-  height: 28px;
-  flex: 0 0 28px;
+  width: 24px;
+  height: 24px;
+  flex: 0 0 24px;
   border-radius: 50%;
   object-fit: cover;
   background: var(--bg-tertiary);
+  transform-origin: center;
+  transition: transform 150ms ease;
 }
 
 .community-card-creator-meta-avatar-placeholder {
