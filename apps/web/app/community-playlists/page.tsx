@@ -361,6 +361,7 @@ export default function CommunityPlaylistsPage() {
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
+  const [communitySearchOpen, setCommunitySearchOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
   const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
@@ -941,6 +942,8 @@ export default function CommunityPlaylistsPage() {
     setActiveTab("All");
     setSelectedCategory("All");
     setFilterMenuOpen(false);
+    setCommunitySearchOpen(false);
+    setQuery("");
     setSelectedCreatorId(creator.id);
     window.scrollTo({ top: 0, behavior: "auto" });
   }
@@ -1140,6 +1143,41 @@ export default function CommunityPlaylistsPage() {
                 role="group"
                 aria-label="Community playlist filters"
               >
+                <div className={`community-pill-search${communitySearchOpen ? " is-open" : ""}`}>
+                  <button
+                    type="button"
+                    className={`community-pill-search-toggle${communitySearchOpen ? " is-active" : ""}`}
+                    aria-label={communitySearchOpen ? "Close playlist search" : "Search community playlists"}
+                    aria-expanded={communitySearchOpen}
+                    onClick={() => {
+                      if (communitySearchOpen) {
+                        setCommunitySearchOpen(false);
+                        setQuery("");
+                      } else {
+                        setActiveTab("All");
+                        setFilterMenuOpen(false);
+                        setSelectedCategory("All");
+                        setSelectedCreatorId(null);
+                        setCommunitySearchOpen(true);
+                      }
+                    }}
+                  >
+                    <svg viewBox="0 0 20 20" aria-hidden="true">
+                      <circle cx="8.5" cy="8.5" r="5.25" />
+                      <path d="m12.5 12.5 4 4" />
+                    </svg>
+                  </button>
+                  <div className="community-pill-search-field-wrap">
+                    <input
+                      type="search"
+                      value={query}
+                      onChange={(event) => setQuery(event.target.value)}
+                      placeholder="Search playlists or users"
+                      aria-label="Search community playlists or users"
+                    />
+                  </div>
+                </div>
+
                 <button
                   type="button"
                   className={`curated-main-filter-pill community-main-filter-pill${
@@ -1152,6 +1190,9 @@ export default function CommunityPlaylistsPage() {
                       setSelectedCategory("All");
                     } else {
                       setActiveTab("All");
+                      setCommunitySearchOpen(false);
+                      setQuery("");
+                      setSelectedCreatorId(null);
                       setFilterMenuOpen(true);
                     }
                   }}
@@ -1181,6 +1222,9 @@ export default function CommunityPlaylistsPage() {
                         setActiveTab(isActive ? "All" : tab);
                         setFilterMenuOpen(false);
                         setSelectedCategory("All");
+                        setCommunitySearchOpen(false);
+                        setQuery("");
+                        setSelectedCreatorId(null);
                       }}
                     >
                       {tab}
