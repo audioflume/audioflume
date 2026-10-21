@@ -566,7 +566,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-skeleton-search-pill {
-  width: 30px;
+  width: 250px;
   height: 30px;
   border-radius: 999px;
 }
