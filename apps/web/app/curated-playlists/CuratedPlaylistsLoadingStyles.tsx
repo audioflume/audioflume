@@ -71,7 +71,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
 
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-search-pill {
-    width: 30px;
+    width: 250px;
     height: 30px;
     border-radius: 999px;
   }
