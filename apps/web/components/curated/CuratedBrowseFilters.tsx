@@ -112,6 +112,24 @@ function FilterIcon({ icon }: { icon: FilterIconName }) {
   );
 }
 
+
+function FilterClearIcon() {
+  return (
+    <svg
+      width="13"
+      height="13"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.45"
+      strokeLinecap="round"
+      aria-hidden="true"
+    >
+      <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
+  );
+}
+
 type CuratedBrowseFiltersProps = {
   activeFilter?: CuratedBrowseTag | null;
   onFilterChange?: (filter: CuratedBrowseTag | null) => void;
@@ -119,6 +137,8 @@ type CuratedBrowseFiltersProps = {
   ariaLabel?: string;
   className?: string;
   variant?: CuratedBrowseFiltersVariant;
+  collapseToActive?: boolean;
+  showActiveClearIcon?: boolean;
 };
 
 export default function CuratedBrowseFilters({
@@ -128,6 +148,8 @@ export default function CuratedBrowseFilters({
   ariaLabel = "Filter curated playlists",
   className = "",
   variant = "pill",
+  collapseToActive = false,
+  showActiveClearIcon = false,
 }: CuratedBrowseFiltersProps) {
   return (
     <nav
@@ -136,9 +158,21 @@ export default function CuratedBrowseFilters({
     >
       {CURATED_BROWSE_FILTERS.map((filter) => {
         const isActive = activeFilter === filter.value;
+
+        if (collapseToActive && !isActive) {
+          return null;
+        }
+
         const content = (
           <>
-            <FilterIcon icon={FILTER_ICONS[filter.value]} />
+            <span className="curated-feature-filter-icon-default">
+              <FilterIcon icon={FILTER_ICONS[filter.value]} />
+            </span>
+            {isActive && showActiveClearIcon ? (
+              <span className="curated-feature-filter-icon-clear">
+                <FilterClearIcon />
+              </span>
+            ) : null}
             <span>{filter.label}</span>
           </>
         );
