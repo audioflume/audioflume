@@ -324,20 +324,38 @@ function getPublishedTime(value: string | null) {
 
 function CommunityPlaylistsLoadingSkeleton() {
   return (
-    <section className="community-skeleton-grid-wrap" aria-hidden="true">
-      <div className="community-skeleton-grid">
-        {Array.from({ length: 10 }, (_, index) => (
-          <div className="community-skeleton-card" key={index}>
-            <div className="community-skeleton-card-image" />
-            <div className="community-skeleton-card-title" />
-            <div className="community-skeleton-card-creator">
-              <span />
-              <i />
-            </div>
-          </div>
+    <div className="community-page-skeleton" aria-hidden="true">
+      <div className="community-skeleton-intro">
+        <span className="community-skeleton-intro-line is-long" />
+        <span className="community-skeleton-intro-line is-short" />
+      </div>
+
+      <div className="community-skeleton-pill-row">
+        <span className="community-skeleton-search-pill" />
+        {Array.from({ length: 5 }, (_, index) => (
+          <span
+            key={index}
+            className={`community-skeleton-pill is-${index % 3}`}
+          />
         ))}
       </div>
-    </section>
+
+      <section className="community-skeleton-grid-wrap">
+        <div className="community-skeleton-grid">
+          {Array.from({ length: 8 }, (_, index) => (
+            <article className="community-skeleton-card" key={index}>
+              <div className="community-skeleton-card-image">
+                <span className="community-skeleton-card-avatar" />
+              </div>
+              <span
+                className={`community-skeleton-card-title is-${index % 3}`}
+              />
+              <span className="community-skeleton-card-count" />
+            </article>
+          ))}
+        </div>
+      </section>
+    </div>
   );
 }
 
