@@ -1152,6 +1152,11 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     margin-top: 12px;
   }
 
+  .audioflume-home-reference-featured-artist-card {
+    width: calc((var(--home-reference-width) - 12px) / 3);
+    min-width: calc((var(--home-reference-width) - 12px) / 3);
+  }
+
   .audioflume-home-reference-feature-pair-grid,
   .audioflume-home-reference-tools-grid {
     width: var(--home-reference-width);
