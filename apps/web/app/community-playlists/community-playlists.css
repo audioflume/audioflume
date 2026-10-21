@@ -100,6 +100,7 @@ body:has(.community-playlists-page-root) {
   display: block;
   width: 14px;
   height: 14px;
+  margin: -1px 0 0 -1px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.5;
@@ -108,8 +109,11 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-pill-search-field-wrap {
+  position: relative;
+  display: flex;
   min-width: 0;
   flex: 1 1 auto;
+  align-items: center;
   opacity: 0;
   transition: opacity 140ms ease;
 }
@@ -124,7 +128,7 @@ body:has(.community-playlists-page-root) {
   border: 0;
   outline: 0;
   background: transparent;
-  padding: 0 12px 0 3px;
+  padding: 0 30px 0 3px;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 12px;
@@ -140,6 +144,27 @@ body:has(.community-playlists-page-root) {
 
 .community-pill-search-field-wrap input::-webkit-search-cancel-button {
   display: none;
+}
+
+.community-pill-search-clear {
+  position: absolute;
+  right: 9px;
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.community-pill-search-clear:hover,
+.community-pill-search-clear:focus-visible {
+  color: var(--text-primary);
+  outline: none;
 }
 
 @media (max-width: 520px) {
