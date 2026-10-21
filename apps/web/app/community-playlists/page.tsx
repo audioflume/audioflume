@@ -1017,6 +1017,34 @@ export default function CommunityPlaylistsPage() {
           >
             <BookmarkGlyph filled={isFavorite} />
           </button>
+
+
+          <div
+            className="community-card-count-overlay"
+            aria-label="Playlist engagement"
+          >
+            <span
+              className="community-engagement-item"
+              title={`${playlist.play_count} plays`}
+            >
+              <PlayCountIcon />
+              <span>{formatCompactCount(playlist.play_count)}</span>
+            </span>
+            <span
+              className="community-engagement-item"
+              title={`${playlist.like_count} likes`}
+            >
+              <LikeCountIcon />
+              <span>{formatCompactCount(playlist.like_count)}</span>
+            </span>
+            <span
+              className="community-engagement-item"
+              title={`${playlist.song_count} songs`}
+            >
+              <SongCountIcon />
+              <span>{formatCompactCount(playlist.song_count)}</span>
+            </span>
+          </div>
         </div>
 
         <div className="community-card-details">
@@ -1099,7 +1127,7 @@ export default function CommunityPlaylistsPage() {
             <div className="discover-mood-browser curated-page-pill-browser community-page-pill-browser">
               <p className="discover-category-description">
                 A growing collection of playlists made by the community, built
-                around moods, genres, scenes, and creative workflows.
+                around moods, genres, scenes, and whatever inspires you.
               </p>
 
               <div
