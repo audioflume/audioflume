@@ -587,6 +587,7 @@ export default function Header() {
         }
 
         .filmwave-header-nav-item-playlists.is-open .filmwave-playlists-mega-menu {
+          display: block !important;
           visibility: visible !important;
           opacity: 1 !important;
           pointer-events: auto !important;
@@ -603,6 +604,7 @@ export default function Header() {
           right: 0 !important;
           left: 0 !important;
           z-index: 2147483000 !important;
+          display: none !important;
           overflow: visible !important;
           border-top: 0 !important;
           border-bottom: 0 !important;
