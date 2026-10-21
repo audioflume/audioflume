@@ -150,7 +150,19 @@
   border-radius: 999px;
 }
 
-@media (max-width: 900px) {
+@media (max-width: 980px) {
+  .shelf {
+    --filmwave-curated-shelf-card-width: calc(
+      (
+          var(--filmwave-curated-shelf-content-width) -
+            (var(--filmwave-curated-shelf-card-gap) * 2)
+        ) /
+        3
+    );
+  }
+}
+
+@media (max-width: 760px) {
   .shelf {
     --filmwave-curated-shelf-card-width: calc(
       (
@@ -158,14 +170,6 @@
             var(--filmwave-curated-shelf-card-gap)
         ) /
         2
-    );
-  }
-}
-
-@media (max-width: 560px) {
-  .shelf {
-    --filmwave-curated-shelf-card-width: var(
-      --filmwave-curated-shelf-content-width
     );
   }
 }
