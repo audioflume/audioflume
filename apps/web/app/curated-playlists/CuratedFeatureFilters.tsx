@@ -101,7 +101,7 @@ export default function CuratedFeatureFilters({
     <div className="discover-mood-browser curated-page-pill-browser">
       <p className="discover-category-description">
         A highly curated collection of playlists built around moods, genres,
-        scenes, and creative use cases.
+        scenes, and production styles.
       </p>
 
       <div
