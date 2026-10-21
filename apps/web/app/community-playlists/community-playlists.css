@@ -466,6 +466,11 @@ body:has(.community-playlists-page-root) {
   transform: scale(1);
 }
 
+.community-card:hover .community-card-creator:hover .community-card-creator-meta-avatar,
+.community-card:focus-within .community-card-creator:focus-visible .community-card-creator-meta-avatar {
+  transform: scale(1.04);
+}
+
 .community-card:hover .community-card-creator-meta-name,
 .community-card:focus-within .community-card-creator-meta-name {
   max-width: 160px;
