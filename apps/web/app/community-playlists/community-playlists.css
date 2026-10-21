@@ -203,8 +203,8 @@ body:has(.community-playlists-page-root) {
   transition: opacity 150ms ease;
 }
 
-.community-card:hover .community-play,
-.community-card:focus-within .community-play,
+.community-cover-wrap:hover .community-play,
+.community-cover-wrap:focus-within .community-play,
 .community-play:focus-visible,
 .community-play[data-playlist-playing="true"] {
   opacity: 1;
