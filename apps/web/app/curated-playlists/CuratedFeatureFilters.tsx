@@ -54,33 +54,67 @@ export default function CuratedFeatureFilters({
   }, [activeFilter, onFilterChange]);
 
   return (
-    <div className="curated-page-pill-browser">
-      <p className="curated-page-pill-description">
+    <div className="discover-mood-browser curated-page-pill-browser">
+      <p className="discover-category-description">
         A highly curated collection of playlists built around moods, genres,
         scenes, and creative use cases.
       </p>
 
       <div
-        className="curated-page-pill-list"
+        className="discover-mood-pill-list"
         role="group"
         aria-label="Curated playlist filters"
       >
-        {CURATED_BROWSE_FILTERS.map((filter) => {
-          const isActive = activeFilter === filter.value;
+        {CURATED_BROWSE_FILTERS.flatMap((filter) => {
+          const taxonomyFilter = browseTaxonomy?.filters.find(
+            (item) => item.value === filter.value,
+          );
+          const parentIsActive =
+            activeFilter === filter.value && activeSubcategoryId === null;
 
-          return (
+          const parentPill = (
             <button
-              key={filter.value}
+              key={`parent-${filter.value}`}
               type="button"
-              className={`curated-page-filter-pill${isActive ? " is-active" : ""}`}
-              aria-pressed={isActive}
-              onClick={() =>
-                onFilterChange(isActive ? null : filter.value)
-              }
+              className={`discover-category-filter-pill${parentIsActive ? " is-active" : ""}`}
+              aria-pressed={parentIsActive}
+              onClick={() => {
+                onSubcategoryChange(null);
+                onFilterChange(parentIsActive ? null : filter.value);
+              }}
             >
               {filter.label}
             </button>
           );
+
+          const subcategoryPills =
+            taxonomyFilter?.subcategories.map((subcategory) => {
+              const isActive =
+                activeFilter === filter.value &&
+                activeSubcategoryId === subcategory.id;
+
+              return (
+                <button
+                  key={`subcategory-${filter.value}-${subcategory.id}`}
+                  type="button"
+                  className={`discover-category-filter-pill${isActive ? " is-active" : ""}`}
+                  aria-pressed={isActive}
+                  onClick={() => {
+                    if (isActive) {
+                      onSubcategoryChange(null);
+                      return;
+                    }
+
+                    onFilterChange(filter.value);
+                    onSubcategoryChange(subcategory.id);
+                  }}
+                >
+                  {subcategory.label}
+                </button>
+              );
+            }) ?? [];
+
+          return [parentPill, ...subcategoryPills];
         })}
       </div>
     </div>
