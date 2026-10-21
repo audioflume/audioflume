@@ -20,7 +20,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     .curated-page-skeleton-intro {
     display: grid;
     width: min(calc(100% - 40px), 580px);
-    gap: 8px;
+    gap: 0;
     margin: 64px auto 40px;
   }
 
@@ -43,7 +43,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
 
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-intro-line {
-    height: 25px;
+    height: 32px;
     margin: 0 auto;
   }
 
