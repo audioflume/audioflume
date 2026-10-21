@@ -357,11 +357,33 @@ function recordCommunityPlaylistPlay(playlistId: number, songId: string) {
 export default function CommunityPlaylistsPage() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playlistPlaybackCacheRef = useRef(new Map<number, Song[]>());
+  const communitySearchRef = useRef<HTMLDivElement | null>(null);
   const communityContentRef = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [filterMenuOpen, setFilterMenuOpen] = useState(false);
   const [communitySearchOpen, setCommunitySearchOpen] = useState(false);
+
+  useEffect(() => {
+    if (!communitySearchOpen || query.trim()) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      const target = event.target;
+      if (
+        target instanceof Node &&
+        communitySearchRef.current &&
+        !communitySearchRef.current.contains(target)
+      ) {
+        setCommunitySearchOpen(false);
+      }
+    };
+
+    document.addEventListener("pointerdown", handlePointerDown);
+
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+    };
+  }, [communitySearchOpen, query]);
   const [selectedCategory, setSelectedCategory] =
     useState<CategoryFilter>("All");
   const [selectedCreatorId, setSelectedCreatorId] = useState<string | null>(null);
@@ -1143,7 +1165,10 @@ export default function CommunityPlaylistsPage() {
                 role="group"
                 aria-label="Community playlist filters"
               >
-                <div className={`community-pill-search${communitySearchOpen ? " is-open" : ""}`}>
+                <div
+                  ref={communitySearchRef}
+                  className={`community-pill-search${communitySearchOpen ? " is-open" : ""}`}
+                >
                   <button
                     type="button"
                     className={`community-pill-search-toggle${communitySearchOpen ? " is-active" : ""}`}
