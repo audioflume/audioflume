@@ -71,7 +71,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-pill-search:hover,
-.community-pill-search:focus-within {
+.community-pill-search.is-open:focus-within {
   border-color: var(--text-muted);
 }
 
