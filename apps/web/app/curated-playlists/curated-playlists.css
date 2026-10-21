@@ -629,8 +629,8 @@ body:has(.curated-playlists-page-root)
 
 .curated-pill-search {
   display: flex;
-  width: 30px;
-  min-width: 30px;
+  width: 250px;
+  min-width: 250px;
   height: 30px;
   align-items: center;
   overflow: hidden;
@@ -638,13 +638,8 @@ body:has(.curated-playlists-page-root)
   border-radius: 999px;
   background: transparent;
   transition:
-    width 220ms ease,
     border-color 150ms ease,
     background-color 150ms ease;
-}
-
-.curated-pill-search.is-open {
-  width: 250px;
 }
 
 .curated-pill-search:hover,
@@ -663,14 +658,10 @@ body:has(.curated-playlists-page-root)
   background: transparent;
   padding: 0;
   color: var(--text-secondary);
-  cursor: pointer;
 }
 
-.curated-pill-search-toggle:hover,
-.curated-pill-search-toggle:focus-visible,
 .curated-pill-search-toggle.is-active {
   color: var(--text-primary);
-  outline: none;
 }
 
 .curated-pill-search-toggle svg {
@@ -691,11 +682,6 @@ body:has(.curated-playlists-page-root)
   min-width: 0;
   flex: 1 1 auto;
   align-items: center;
-  opacity: 0;
-  transition: opacity 140ms ease;
-}
-
-.curated-pill-search.is-open .curated-pill-search-field-wrap {
   opacity: 1;
 }
 
