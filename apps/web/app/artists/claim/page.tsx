@@ -92,7 +92,7 @@ export default async function ArtistClaimPage() {
       </section>
 
       <section>
-        <Footer showTopBorder={false} />
+        <Footer playerPadding={false} showTopBorder={false} flushBottom />
       </section>
     </main>
   );
