@@ -53,26 +53,15 @@ export default function CuratedFeatureFilters({
     }
   }, [activeFilter, onFilterChange]);
 
-  const filterPills = CURATED_BROWSE_FILTERS.flatMap((filter) => {
-    const taxonomyFilter = browseTaxonomy?.filters.find(
-      (item) => item.value === filter.value,
-    );
+  const mainFilters = [...CURATED_BROWSE_FILTERS].sort((a, b) =>
+    a.label.localeCompare(b.label),
+  );
 
-    return [
-      {
-        key: `parent-${filter.value}`,
-        label: filter.label,
-        filter: filter.value,
-        subcategoryId: null,
-      },
-      ...(taxonomyFilter?.subcategories.map((subcategory) => ({
-        key: `subcategory-${filter.value}-${subcategory.id}`,
-        label: subcategory.label,
-        filter: filter.value,
-        subcategoryId: subcategory.id,
-      })) ?? []),
-    ];
-  }).sort((a, b) => a.label.localeCompare(b.label));
+  const activeSubcategories =
+    browseTaxonomy?.filters
+      .find((filter) => filter.value === activeFilter)
+      ?.subcategories.slice()
+      .sort((a, b) => a.label.localeCompare(b.label)) ?? [];
 
   return (
     <div className="discover-mood-browser curated-page-pill-browser">
@@ -86,39 +75,51 @@ export default function CuratedFeatureFilters({
         role="group"
         aria-label="Curated playlist filters"
       >
-        {filterPills.map((pill) => {
-          const isParent = pill.subcategoryId === null;
-          const isActive =
-            activeFilter === pill.filter &&
-            activeSubcategoryId === pill.subcategoryId;
+        {mainFilters.map((filter) => {
+          const isActive = activeFilter === filter.value;
 
           return (
             <button
-              key={pill.key}
+              key={filter.value}
               type="button"
               className={`discover-category-filter-pill${isActive ? " is-active" : ""}`}
               aria-pressed={isActive}
               onClick={() => {
-                if (isParent) {
-                  onSubcategoryChange(null);
-                  onFilterChange(isActive ? null : pill.filter);
-                  return;
-                }
-
-                if (isActive) {
-                  onSubcategoryChange(null);
-                  return;
-                }
-
-                onFilterChange(pill.filter);
-                onSubcategoryChange(pill.subcategoryId);
+                onSubcategoryChange(null);
+                onFilterChange(isActive ? null : filter.value);
               }}
             >
-              {pill.label}
+              {filter.label}
             </button>
           );
         })}
       </div>
+
+      {activeFilter && activeSubcategories.length > 0 && (
+        <div
+          className="discover-mood-pill-list curated-page-subfilter-list"
+          role="group"
+          aria-label="Curated playlist subfilters"
+        >
+          {activeSubcategories.map((subcategory) => {
+            const isActive = activeSubcategoryId === subcategory.id;
+
+            return (
+              <button
+                key={subcategory.id}
+                type="button"
+                className={`discover-category-filter-pill${isActive ? " is-active" : ""}`}
+                aria-pressed={isActive}
+                onClick={() =>
+                  onSubcategoryChange(isActive ? null : subcategory.id)
+                }
+              >
+                {subcategory.label}
+              </button>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 }
