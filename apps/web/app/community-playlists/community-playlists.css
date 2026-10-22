@@ -550,7 +550,7 @@ body:has(.community-playlists-page-root) {
   display: grid;
   width: min(calc(100% - 40px), 700px);
   gap: 0;
-  margin: 64px auto 40px;
+  margin: 64px auto 62px;
 }
 
 .community-skeleton-intro-line,
