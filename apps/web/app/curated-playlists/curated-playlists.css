@@ -575,6 +575,26 @@ body:has(.curated-playlists-page-root)
   margin-left: calc(0px - var(--curated-page-gutter)) !important;
 }
 
+.curated-page-jump-back-in {
+  width: min(100%, var(--filmwave-editorial-max-width));
+  margin: 75px auto 0;
+}
+
+.curated-page-jump-back-in-heading {
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
+}
+
+.curated-page-jump-back-in-heading h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
+}
+
 .curated-page-grid-group {
   width: min(100%, var(--filmwave-editorial-max-width));
   margin: 75px auto 0;
