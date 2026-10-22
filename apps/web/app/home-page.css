@@ -1107,8 +1107,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-reference-trending-list .filmwave-song-card {
-  --filmwave-song-card-cover-size: 42px;
-  --filmwave-song-card-min-height: 64px;
+  --filmwave-song-card-cover-size: 42px !important;
+  --filmwave-song-card-min-height: 64px !important;
   --filmwave-song-card-padding-left: 11px;
   --filmwave-song-card-padding-right: 11px;
   --filmwave-song-card-padding-y: 9px;
