@@ -1278,10 +1278,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     width: calc(100vw - 36px);
   }
 
-  .audioflume-home-reference-trending-visual {
-    min-height: 430px;
-  }
-
   .audioflume-home-reference-trending-title > span:first-child,
   .audioflume-home-reference-trending-title-row {
     white-space: nowrap;
