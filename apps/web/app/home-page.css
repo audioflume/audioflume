@@ -3251,9 +3251,17 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     aspect-ratio: 1.8 / 1;
   }
 
+  .audioflume-home-lifetime-cover-grid {
+    width: 280%;
+  }
+
 }
 
 @media (max-width: 620px) {
+  .audioflume-home-lifetime-cover-grid {
+    width: 340%;
+  }
+
   .audioflume-home-reference-featured-artist-card {
     aspect-ratio: 1.75 / 1;
   }
