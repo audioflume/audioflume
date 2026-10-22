@@ -100,8 +100,8 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
 
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-grid-group {
-    width: min(100%, var(--filmwave-editorial-max-width));
-    margin: 75px auto 0;
+    width: 100%;
+    margin: 75px 0 0;
   }
 
   body:has(.curated-playlists-page-root)
