@@ -292,13 +292,9 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
 
   return (
     <section className="audioflume-home-reference-trending">
-      <div className="audioflume-home-reference-width audioflume-home-reference-trending-intro">
-        <div className="audioflume-home-reference-feature-pair-intro-copy">
-          A growing catalogue built around cinematic storytelling.
-        </div>
-        <div className="audioflume-home-reference-feature-pair-intro-meta audioflume-editorial-meta">
-          1500+ ARTISTS TRENDING ONLINE
-        </div>
+      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+        <span>New &amp; trending music</span>
+        <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore trending music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" /></Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-reference-trending-visual">
@@ -438,13 +434,9 @@ function HomeSkeletonBlock({
 function HomeTrendingSkeleton() {
   return (
     <section className="audioflume-home-reference-trending">
-      <div className="audioflume-home-reference-width audioflume-home-reference-trending-intro">
-        <div className="audioflume-home-reference-feature-pair-intro-copy">
-          A growing catalogue built around cinematic storytelling.
-        </div>
-        <div className="audioflume-home-reference-feature-pair-intro-meta audioflume-editorial-meta">
-          1500+ ARTISTS TRENDING ONLINE
-        </div>
+      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+        <span>New &amp; trending music</span>
+        <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore new music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" /></Link>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
         <div className="audioflume-home-skeleton-trending-visual">
@@ -842,6 +834,15 @@ export default function HomePageContent({
       </section>
 
       <section className="audioflume-home-reference-feature-pair">
+        <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-intro">
+          <div className="audioflume-home-reference-feature-pair-intro-copy">
+            A growing catalogue built around cinematic storytelling.
+          </div>
+          <div className="audioflume-home-reference-feature-pair-intro-meta audioflume-editorial-meta">
+            1500+ ARTISTS TRENDING ONLINE
+          </div>
+        </div>
+
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
           <div className="audioflume-home-reference-feature-pair-column is-artists-feature">
             <div className="audioflume-home-reference-feature-pair-card is-artists">
@@ -871,13 +872,12 @@ export default function HomePageContent({
             </div>
           </div>
 
+          {artistsLoading ? (
+            <HomeFeaturedArtistSkeleton />
+          ) : artists.length > 0 ? (
+            <HomeFeaturedArtistGrid artists={artists} />
+          ) : null}
         </div>
-
-        {artistsLoading ? (
-          <HomeFeaturedArtistSkeleton />
-        ) : artists.length > 0 ? (
-          <HomeFeaturedArtistGrid artists={artists} />
-        ) : null}
       </section>
 
       {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
