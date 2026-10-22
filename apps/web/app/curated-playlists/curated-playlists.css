@@ -1,5 +1,5 @@
 body:has(.curated-playlists-page-root) {
-  --curated-page-gutter: var(--filmwave-page-gutter);
+  --curated-page-gutter: 80px;
   --curated-playlist-card-gap: clamp(10px, 1.25vw, 18px);
   --curated-feature-edge: var(--filmwave-page-gutter);
   --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
@@ -593,12 +593,20 @@ body:has(.curated-playlists-page-root)
 }
 
 @media (max-width: 980px) {
+  body:has(.curated-playlists-page-root) {
+    --curated-page-gutter: 40px;
+  }
+
   .curated-page-playlist-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 620px) {
+  body:has(.curated-playlists-page-root) {
+    --curated-page-gutter: 24px;
+  }
+
   .curated-page-playlist-grid {
     row-gap: 24px;
     column-gap: 12px;
