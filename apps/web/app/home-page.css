@@ -573,13 +573,27 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending-heading {
-  align-items: last baseline;
+  position: relative;
+  align-items: baseline;
 }
 
-.audioflume-home-reference-trending-heading > span,
+.audioflume-home-reference-trending-title-heading {
+  display: block;
+  line-height: var(--filmwave-small-section-title-line-height);
+}
+
+.audioflume-home-reference-trending-title-heading > span {
+  display: block;
+}
+
+.audioflume-home-reference-trending-title-heading > span:first-child {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+}
+
 .audioflume-home-reference-trending-heading > :last-child {
-  height: 0 !important;
-  align-self: last baseline;
+  align-self: baseline;
 }
 
 .audioflume-home-reference-feature-pair {
