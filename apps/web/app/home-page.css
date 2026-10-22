@@ -2155,14 +2155,24 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   background: rgba(17, 17, 17, 0.08);
 }
 
-:where(html.light, html[data-theme="light"]) .audioflume-home-skeleton-song-card {
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-reference-trending-list.audioflume-home-skeleton-trending-list {
   background: #f2f2ef;
 }
 
 :where(html.light, html[data-theme="light"])
-  .audioflume-home-skeleton-trending-list
+  .audioflume-home-reference-trending-list.audioflume-home-skeleton-trending-list
   .audioflume-home-skeleton-block {
-  background: rgba(255, 255, 255, 0.14);
+  background: rgba(17, 17, 17, 0.08);
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-lifetime-feature-art {
+  background: #f2f2ef;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-skeleton-song-card {
+  background: #f2f2ef;
 }
 
 :where(html.light, html[data-theme="light"])
