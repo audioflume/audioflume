@@ -28,11 +28,17 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-page-pill-browser .discover-category-description {
-  width: min(calc(100% - 40px), 700px);
+  width: min(calc(100% - 40px), 950px);
+  font-size: 32px;
 }
 
 .community-main-filter-pill {
   gap: 7px;
+}
+
+.community-playlists-page-root .curated-main-filter-pill,
+.community-playlists-page-root .curated-subfilter-pill {
+  padding: 8px 18px;
 }
 
 .community-filter-pill-icon {
@@ -54,7 +60,7 @@ body:has(.community-playlists-page-root) {
   display: flex;
   width: 250px;
   min-width: 250px;
-  height: 30px;
+  height: 32px;
   align-items: center;
   overflow: hidden;
   border: 1.25px solid var(--border);
@@ -72,9 +78,9 @@ body:has(.community-playlists-page-root) {
 
 .community-pill-search-toggle {
   display: inline-flex;
-  width: 30px;
-  min-width: 30px;
-  height: 30px;
+  width: 32px;
+  min-width: 32px;
+  height: 32px;
   align-items: center;
   justify-content: center;
   border: 0;
@@ -110,7 +116,7 @@ body:has(.community-playlists-page-root) {
 
 .community-pill-search-field-wrap input {
   width: 100%;
-  height: 28px;
+  height: 30px;
   border: 0;
   outline: 0;
   background: transparent;
