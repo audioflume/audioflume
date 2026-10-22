@@ -41,6 +41,11 @@ body:has(.community-playlists-page-root) {
   padding: 8px 18px;
 }
 
+.community-playlists-page-root .discover-mood-pill-list,
+.community-playlists-page-root .curated-page-subfilter-list {
+  width: 100%;
+}
+
 .community-filter-pill-icon {
   display: block;
   width: 13px;
@@ -580,7 +585,7 @@ body:has(.community-playlists-page-root) {
 
 .community-skeleton-pill-row {
   display: flex;
-  width: min(calc(100% - 80px), 1320px);
+  width: 100%;
   flex-wrap: wrap;
   align-items: center;
   justify-content: center;
@@ -674,12 +679,6 @@ body:has(.community-playlists-page-root) {
 }
 
 @media (max-width: 980px) {
-  .community-skeleton-pill-row {
-    width: calc(100% - 64px);
-  }
-}
-
-@media (max-width: 980px) {
   .community-page-playlist-grid,
   .community-skeleton-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -696,7 +695,6 @@ body:has(.community-playlists-page-root) {
 
 @media (max-width: 720px) {
   .community-skeleton-pill-row {
-    width: calc(100% - 32px);
     gap: 7px;
     padding-right: 4px;
     padding-left: 4px;
