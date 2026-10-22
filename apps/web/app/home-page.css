@@ -1136,12 +1136,17 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-reference-trending-list
   .filmwave-song-duration:not(.filmwave-song-compact-duration) {
-  display: inline-flex !important;
-  color: rgba(255, 255, 255, 0.46);
+  display: none !important;
 }
 
 .audioflume-home-reference-trending-list .filmwave-song-compact-duration {
-  display: none !important;
+  display: inline-flex !important;
+  flex: 0 0 48px;
+  width: 48px;
+  justify-content: flex-end;
+  color: rgba(255, 255, 255, 0.46);
+  text-align: right;
+  white-space: nowrap;
 }
 
 .audioflume-home-reference-trending-list .filmwave-song-title {
