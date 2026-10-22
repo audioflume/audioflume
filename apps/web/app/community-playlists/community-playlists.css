@@ -689,7 +689,8 @@ body:has(.community-playlists-page-root) {
 @media (max-width: 620px) {
   .community-page-playlist-grid,
   .community-skeleton-grid {
-    gap: 24px;
+    row-gap: 24px;
+    column-gap: 12px;
   }
 }
 
