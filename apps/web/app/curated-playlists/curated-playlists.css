@@ -593,6 +593,12 @@ body:has(.curated-playlists-page-root)
   }
 }
 
+@media (max-width: 620px) {
+  .curated-page-playlist-grid {
+    gap: 24px;
+  }
+}
+
 .curated-page-reference-search {
   width: min(100%, var(--filmwave-editorial-max-width));
   margin: 56px auto 0;
