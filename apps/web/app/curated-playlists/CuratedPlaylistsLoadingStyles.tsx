@@ -162,7 +162,8 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
   @media (max-width: 620px) {
     body:has(.curated-playlists-page-root)
       .curated-page-skeleton-grid {
-      gap: 24px;
+      row-gap: 24px;
+      column-gap: 12px;
     }
   }
 
