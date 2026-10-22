@@ -30,6 +30,35 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   margin: 0 auto;
 }
 
+.audioflume-home-reference-width,
+.audioflume-home-reference-footer {
+  transition: width 220ms ease;
+}
+
+.audioflume-home-reference-original-song-grid {
+  transition:
+    padding-left 220ms ease,
+    padding-right 220ms ease;
+}
+
+.audioflume-home-reference-featured-artist-shelf {
+  transition: margin-left 220ms ease;
+}
+
+.audioflume-home-reference-featured-artist-shelf::before,
+.audioflume-home-reference-featured-artist-shelf::after {
+  transition:
+    width 220ms ease,
+    opacity 160ms ease;
+}
+
+.audioflume-home-reference-featured-artist-shelf
+  .audioflume-home-reference-shelf-scroller {
+  transition:
+    padding-left 220ms ease,
+    padding-right 220ms ease;
+}
+
 .audioflume-home-reference-hero {
   position: relative;
   display: grid;
