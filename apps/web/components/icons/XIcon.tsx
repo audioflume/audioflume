@@ -1,9 +1,14 @@
 type XIconProps = {
   size?: number;
+  strokeWidth?: number;
   className?: string;
 };
 
-export default function XIcon({ size = 18, className }: XIconProps) {
+export default function XIcon({
+  size = 18,
+  strokeWidth = 1.8,
+  className,
+}: XIconProps) {
   return (
     <svg
       width={size}
@@ -11,7 +16,7 @@ export default function XIcon({ size = 18, className }: XIconProps) {
       viewBox="0 0 24 24"
       fill="none"
       stroke="currentColor"
-      strokeWidth="1.8"
+      strokeWidth={strokeWidth}
       strokeLinecap="round"
       aria-hidden="true"
       className={className}
