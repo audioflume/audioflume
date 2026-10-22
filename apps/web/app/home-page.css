@@ -1134,8 +1134,14 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   flex: 1 1 auto;
 }
 
-.audioflume-home-reference-trending-list .filmwave-song-duration {
+.audioflume-home-reference-trending-list
+  .filmwave-song-duration:not(.filmwave-song-compact-duration) {
+  display: inline-flex !important;
   color: rgba(255, 255, 255, 0.46);
+}
+
+.audioflume-home-reference-trending-list .filmwave-song-compact-duration {
+  display: none !important;
 }
 
 .audioflume-home-reference-trending-list .filmwave-song-title {
@@ -1154,6 +1160,12 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 .audioflume-home-reference-trending-list .filmwave-song-card.is-playing,
 .audioflume-home-reference-trending-list .filmwave-song-card.is-current {
   background: var(--filmwave-neutral-surface) !important;
+}
+
+@media (max-width: 1200px) {
+  .audioflume-home-reference-trending-list .filmwave-song-duration {
+    display: none !important;
+  }
 }
 
 @media (max-width: 1100px) {
