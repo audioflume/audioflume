@@ -573,7 +573,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-trending-heading {
-  align-items: flex-end;
+  align-items: last baseline;
+}
+
+.audioflume-home-reference-trending-heading > :last-child {
+  height: 0 !important;
+  align-self: last baseline;
 }
 
 .audioflume-home-reference-feature-pair {
