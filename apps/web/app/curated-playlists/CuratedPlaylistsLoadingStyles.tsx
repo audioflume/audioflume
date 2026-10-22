@@ -107,8 +107,8 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-grid {
     display: grid;
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 32px 12px;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 32px;
   }
 
   body:has(.curated-playlists-page-root)
@@ -125,7 +125,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-card-title {
     width: 68%;
-    height: 15px;
+    height: 16px;
     margin-top: 9px;
   }
 
@@ -150,19 +150,12 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
   @media (max-width: 980px) {
     body:has(.curated-playlists-page-root)
       .curated-page-skeleton-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
+      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     body:has(.curated-playlists-page-root)
       .curated-page-skeleton-pill-row {
       width: calc(100% - 64px);
-    }
-  }
-
-  @media (max-width: 760px) {
-    body:has(.curated-playlists-page-root)
-      .curated-page-skeleton-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
     }
   }
 
