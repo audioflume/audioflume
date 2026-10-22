@@ -429,7 +429,7 @@ function HomeSkeletonBlock({
 function HomeTrendingSkeleton() {
   return (
     <section className="audioflume-home-reference-trending">
-      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
+      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading audioflume-home-reference-trending-heading">
         <span className="audioflume-home-reference-trending-title-heading">
           <span>New music added daily.</span>
           <span>120+ new songs this month.</span>
