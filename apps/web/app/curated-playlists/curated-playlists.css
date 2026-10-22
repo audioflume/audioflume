@@ -608,8 +608,7 @@ body:has(.curated-playlists-page-root)
   }
 
   .curated-page-playlist-grid {
-    row-gap: 24px;
-    column-gap: 12px;
+    gap: 24px;
   }
 }
 
