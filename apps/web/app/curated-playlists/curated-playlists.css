@@ -595,7 +595,8 @@ body:has(.curated-playlists-page-root)
 
 @media (max-width: 620px) {
   .curated-page-playlist-grid {
-    gap: 24px;
+    row-gap: 24px;
+    column-gap: 12px;
   }
 }
 
