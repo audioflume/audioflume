@@ -59,7 +59,14 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
-  const user = await currentUser();
+  let user: Awaited<ReturnType<typeof currentUser>> = null;
+
+  try {
+    user = await currentUser();
+  } catch (error) {
+    console.error("Failed to preload Clerk user in root layout:", error);
+  }
+
   const themeCookie =
     cookieStore.get("filmwave-theme-mode")?.value ??
     cookieStore.get("filmwave-theme")?.value;
