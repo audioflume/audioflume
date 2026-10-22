@@ -72,6 +72,11 @@ body:has(.curated-playlists-page-root) {
   padding: 8px 18px;
 }
 
+.curated-playlists-page-root .discover-mood-pill-list,
+.curated-playlists-page-root .curated-page-subfilter-list {
+  width: 100%;
+}
+
 .curated-feature-hero {
   position: relative;
   width: calc(100vw - var(--curated-feature-edge) - var(--curated-feature-edge));
