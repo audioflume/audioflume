@@ -3286,12 +3286,4 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     align-items: flex-start;
     gap: 20px;
   }
-
-  .audioflume-home-lifetime-feature-copy .audioflume-pricing-plan-price strong {
-    font-size: 52px;
-  }
-
-  .audioflume-home-lifetime-feature-copy .audioflume-pricing-plan-price span {
-    font-size: 15px;
-  }
 }
