@@ -965,15 +965,6 @@
   margin-top: calc(clamp(34px, 3vw, 48px) + 20px);
 }
 
-.discover-track-section-heading {
-  display: flex;
-  min-height: 28px;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  margin-bottom: var(--filmwave-section-title-margin-bottom);
-}
-
 .discover-track-section-heading > a {
   color: var(--text-primary);
   font-size: 15px;
