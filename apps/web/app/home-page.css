@@ -15,7 +15,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference {
   --filmwave-page-gutter: clamp(40px, calc(8.1633vw - 76.7347px), 80px);
-  --home-reference-width: var(--filmwave-page-width);
+  --home-reference-width: calc(
+    100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
+  );
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
   background: var(--bg-primary);
