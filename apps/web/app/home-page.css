@@ -603,6 +603,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   line-height: 1.04;
 }
 
+.audioflume-home-reference-feature-pair-intro-copy > span {
+  display: block;
+  white-space: nowrap;
+}
+
 .audioflume-home-reference-feature-pair-intro-meta {
   justify-self: end;
   text-align: right;
@@ -1255,7 +1260,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-feature-pair-intro-copy {
-    max-width: 500px;
+    font-size: clamp(18px, 5vw, 40px);
   }
 
   .audioflume-home-reference-feature-pair-intro-meta {
