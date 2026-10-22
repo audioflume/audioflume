@@ -3248,7 +3248,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-lifetime-feature-art {
-    aspect-ratio: 1.8 / 1;
+    display: none;
   }
 
 }
