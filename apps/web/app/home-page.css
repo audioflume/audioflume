@@ -13,19 +13,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: #ffffff !important;
 }
 
-@property --audioflume-home-page-gutter {
-  syntax: "<length>";
-  inherits: true;
-  initial-value: 80px;
-}
-
 .audioflume-home-reference {
   --audioflume-home-page-gutter: 80px;
   --home-reference-width: calc(
     100vw - var(--audioflume-home-page-gutter) -
       var(--audioflume-home-page-gutter)
   );
-  transition: --audioflume-home-page-gutter 220ms ease;
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
   background: var(--bg-primary);
