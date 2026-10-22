@@ -14,6 +14,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference {
+  --filmwave-page-gutter: clamp(40px, calc(8.1633vw - 76.7347px), 80px);
   --home-reference-width: var(--filmwave-page-width);
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
@@ -3249,6 +3250,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 620px) {
+  .audioflume-home-reference {
+    --filmwave-page-gutter: 24px;
+  }
+
   .audioflume-home-reference-feature-pair-card {
     aspect-ratio: 1 / 1;
   }
