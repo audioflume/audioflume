@@ -248,7 +248,7 @@ export default function CuratedPlaylistsPage() {
 
           {!loading && !error && playlists.length > 0 && (
             <section className="curated-page-reference-search">
-              <div className="curated-page-reference-search-heading">
+              <div className="curated-page-reference-search-heading filmwave-section-heading-row">
                 <span>Search by song</span>
               </div>
               <div className="curated-page-reference-search-card">
