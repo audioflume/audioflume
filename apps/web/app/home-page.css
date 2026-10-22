@@ -3010,7 +3010,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-logo {
-  width: 198px;
+  width: clamp(160px, 13vw, 198px);
 }
 
 .audioflume-home-lifetime-feature-logo .audioflume-pricing-lifetime-logo {
@@ -3221,10 +3221,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
   .audioflume-home-lifetime-feature-copy {
     min-height: 510px;
-  }
-
-  .audioflume-home-lifetime-feature-logo {
-    width: 198px;
   }
 
   .audioflume-home-lifetime-feature-heading {
