@@ -104,7 +104,7 @@ export default function CreateProjectModal({
         }}
       >
         <label htmlFor="project-name" className={modalFieldLabelClass}>
-          Project name
+          Project Name
         </label>
 
         <input
@@ -113,7 +113,6 @@ export default function CreateProjectModal({
           value={name}
           disabled={isCreating}
           onChange={(e) => setName(e.target.value)}
-          placeholder="Example: Pacific Sunday"
           autoFocus
           className={modalInputClass}
         />
