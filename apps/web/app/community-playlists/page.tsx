@@ -1326,6 +1326,30 @@ export default function CommunityPlaylistsPage() {
             </div>
           )}
 
+          {!loading && recentPlaylists.length > 0 && (
+            <section
+              className="community-page-jump-back-in"
+              aria-label="Recently viewed community playlists"
+            >
+              <div className="community-page-jump-back-in-heading">
+                <h2>Jump Back In</h2>
+              </div>
+              <RecentPlaylistCards
+                playlists={recentPlaylists.slice(0, 5).map((playlist) => ({
+                  key: `community:${playlist.id}`,
+                  href: `/community-playlists/${playlist.id}`,
+                  name: playlist.name,
+                  coverImageUrl: playlist.cover_image_url,
+                  metadata: [
+                    playlist.creator?.name ? `By ${playlist.creator.name}` : "Community",
+                    `${playlist.song_count} song${playlist.song_count === 1 ? "" : "s"}`,
+                  ].join(" · "),
+                }))}
+                variant="hero"
+              />
+            </section>
+          )}
+
           {loading ? (
             <CommunityPlaylistsLoadingSkeleton />
           ) : filteredPlaylists.length > 0 ? (
