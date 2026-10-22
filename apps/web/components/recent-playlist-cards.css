@@ -24,6 +24,24 @@
   gap: 20px;
 }
 
+.recent-playlist-card-list.is-page .recent-playlist-card {
+  border: 1.25px solid var(--border);
+  border-radius: 0;
+  background: transparent;
+  transition: border-color 150ms ease;
+}
+
+.recent-playlist-card-list.is-page .recent-playlist-card:hover,
+.recent-playlist-card-list.is-page .recent-playlist-card:focus-visible {
+  border-color: var(--text-muted);
+  background: transparent;
+}
+
+.recent-playlist-card-list.is-page .recent-playlist-card-cover,
+.recent-playlist-card-list.is-page .recent-playlist-card-placeholder {
+  border-radius: 0;
+}
+
 .recent-playlist-card {
   min-width: 0;
   display: flex;
@@ -128,13 +146,15 @@
 }
 
 @media (max-width: 1320px) {
-  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar) {
+  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar):not(.is-page),
+  .recent-playlist-card-list.is-page {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 1040px) {
-  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar) {
+  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar):not(.is-page),
+  .recent-playlist-card-list.is-page {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
@@ -157,13 +177,15 @@
 }
 
 @media (max-width: 760px) {
-  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar) {
+  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar):not(.is-page),
+  .recent-playlist-card-list.is-page {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
 
 @media (max-width: 480px) {
-  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar) {
+  .recent-playlist-card-list:not(.is-hero):not(.is-sidebar):not(.is-page),
+  .recent-playlist-card-list.is-page {
     grid-template-columns: 1fr;
   }
 }
