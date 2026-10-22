@@ -688,6 +688,22 @@ export default function PublicArtistPageView({
           margin: 0 calc(var(--artist-public-page-edge) * -1);
         }
 
+        .artist-public-music .fw-song-list {
+          margin-right: 0;
+          margin-left: 0;
+          padding-right: 0;
+          padding-left: 0;
+        }
+
+        .artist-public-music .filmwave-song-card {
+          width: calc(
+            100% + var(--filmwave-song-card-padding-left) +
+              var(--filmwave-song-card-padding-right)
+          );
+          margin-right: calc(-1 * var(--filmwave-song-card-padding-right));
+          margin-left: calc(-1 * var(--filmwave-song-card-padding-left));
+        }
+
         .artist-public-grid {
           display: grid;
           grid-template-columns: repeat(4, minmax(0, 1fr));
