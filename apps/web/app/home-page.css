@@ -3276,12 +3276,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 @media (max-width: 900px) {
   .audioflume-home-reference-lifetime-access {
-    height: auto;
     grid-template-columns: 1fr;
-  }
-
-  .audioflume-home-lifetime-feature-copy {
-    min-height: 510px;
   }
 
   .audioflume-home-lifetime-feature-heading {
@@ -3312,7 +3307,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-lifetime-feature-copy {
-    min-height: 560px;
     padding: 24px;
   }
 
@@ -3329,10 +3323,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 520px) {
-  .audioflume-home-lifetime-feature-copy {
-    min-height: 620px;
-  }
-
   .audioflume-home-lifetime-feature-pricing {
     flex-direction: column;
     align-items: flex-start;
