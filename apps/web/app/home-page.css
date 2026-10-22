@@ -3189,7 +3189,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   top: 50%;
   left: 50%;
   display: grid;
-  width: max(212%, 1500px);
+  width: max(212%, calc(50vw + 700px));
   grid-template-columns: repeat(14, minmax(0, 1fr));
   gap: 0;
   transform: translate(-50%, -50%) rotate(34deg);
