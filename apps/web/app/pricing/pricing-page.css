@@ -726,6 +726,10 @@
 }
 
 @media (max-width: 640px) {
+  .audioflume-pricing-plans-section {
+    padding-bottom: 40px;
+  }
+
   .audioflume-pricing-comparison-section {
     display: none;
   }
