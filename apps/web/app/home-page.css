@@ -3259,7 +3259,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 @media (max-width: 620px) {
   .audioflume-home-lifetime-cover-grid {
-    width: 340%;
+    width: 212%;
   }
 
   .audioflume-home-reference-featured-artist-card {
