@@ -293,7 +293,10 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
   return (
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading audioflume-home-reference-trending-heading">
-        <span>New music added daily.<br />120+ new songs this month.</span>
+        <span className="audioflume-home-reference-trending-title-heading">
+          <span>New music added daily.</span>
+          <span>120+ new songs this month.</span>
+        </span>
         <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
           Explore trending music
           <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
@@ -427,7 +430,10 @@ function HomeTrendingSkeleton() {
   return (
     <section className="audioflume-home-reference-trending">
       <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-        <span>New music added daily.<br />120+ new songs this month.</span>
+        <span className="audioflume-home-reference-trending-title-heading">
+          <span>New music added daily.</span>
+          <span>120+ new songs this month.</span>
+        </span>
         <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
           Explore trending music
           <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
