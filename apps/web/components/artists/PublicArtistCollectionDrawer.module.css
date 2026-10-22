@@ -193,11 +193,21 @@
 }
 
 .tracks :global(.fw-song-list) {
+  margin-right: 0;
   margin-bottom: 0;
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .tracks :global(.filmwave-song-card) {
   --filmwave-song-card-hover-bg: var(--filmwave-white);
+  width: calc(
+    100% + var(--filmwave-song-card-padding-left) +
+      var(--filmwave-song-card-padding-right)
+  );
+  margin-right: calc(-1 * var(--filmwave-song-card-padding-right));
+  margin-left: calc(-1 * var(--filmwave-song-card-padding-left));
 }
 
 .tracks :global(.filmwave-song-card:hover),
