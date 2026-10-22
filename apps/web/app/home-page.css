@@ -598,8 +598,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-intro-copy {
-  width: 550px;
-  max-width: 100%;
+  width: 100%;
+  max-width: 550px;
   flex: 0 1 550px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 40px;
@@ -610,7 +610,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-intro-copy > span {
   display: block;
-  white-space: nowrap;
 }
 
 .audioflume-home-reference-feature-pair-intro-meta {
