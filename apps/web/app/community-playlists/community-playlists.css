@@ -265,8 +265,8 @@ body:has(.community-playlists-page-root) {
   transition: opacity 150ms ease;
 }
 
-.community-cover-wrap:hover::after,
-.community-cover-wrap:focus-within::after {
+.community-card:hover .community-cover-wrap::after,
+.community-card:focus-within .community-cover-wrap::after {
   opacity: 1;
 }
 
@@ -319,8 +319,8 @@ body:has(.community-playlists-page-root) {
   transition: opacity 150ms ease;
 }
 
-.community-cover-wrap:hover .community-play,
-.community-cover-wrap:focus-within .community-play,
+.community-card:hover .community-play,
+.community-card:focus-within .community-play,
 .community-play:focus-visible,
 .community-play[data-playlist-playing="true"] {
   opacity: 1;
@@ -365,8 +365,8 @@ body:has(.community-playlists-page-root) {
   flex: 0 0 13px;
 }
 
-.community-cover-wrap:hover .community-card-count-overlay,
-.community-cover-wrap:focus-within .community-card-count-overlay {
+.community-card:hover .community-card-count-overlay,
+.community-card:focus-within .community-card-count-overlay {
   opacity: 1;
 }
 
