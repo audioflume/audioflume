@@ -100,7 +100,7 @@
   .filmwave-section-heading-row {
     display: flex;
     min-height: 28px;
-    align-items: flex-end;
+    align-items: baseline;
     justify-content: space-between;
     gap: 24px;
     margin-bottom: var(--filmwave-small-section-title-margin-bottom);
@@ -109,6 +109,7 @@
   }
 
   .filmwave-section-heading-row.is-multiline {
+    align-items: flex-end;
     margin-bottom: calc(
       var(--filmwave-small-section-title-margin-bottom) + 3px
     );
