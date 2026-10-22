@@ -21,7 +21,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     display: grid;
     width: min(calc(100% - 40px), 580px);
     gap: 0;
-    margin: 64px auto 40px;
+    margin: 64px auto 62px;
   }
 
   body:has(.curated-playlists-page-root)
