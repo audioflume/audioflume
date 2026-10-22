@@ -640,7 +640,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: relative;
   display: flex;
   min-width: 0;
-  aspect-ratio: 1.48 / 1;
+  height: 400px;
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
@@ -1225,7 +1225,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
   .audioflume-home-reference-feature-pair-card {
     width: 100%;
-    aspect-ratio: 1.48 / 1;
   }
 
   .audioflume-home-reference-feature-pair-card.is-artists h2 {
@@ -3344,10 +3343,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-reference-feature-pair-card {
-    aspect-ratio: 1 / 1;
-  }
-
   .audioflume-home-reference-featured-artist-card {
     aspect-ratio: 1.75 / 1;
   }
