@@ -3067,7 +3067,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-logo {
-  width: 198px;
+  width: clamp(160px, 32%, 198px);
 }
 
 .audioflume-home-lifetime-feature-logo .audioflume-pricing-lifetime-logo {
@@ -3082,7 +3082,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   top: 28px;
   right: 28px;
   color: #111111;
-  font-size: 15px;
+  font-size: clamp(13px, 1vw, 15px);
   font-weight: 300;
   letter-spacing: normal;
   text-decoration: none;
@@ -3135,7 +3135,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-copy .audioflume-pricing-plan-price strong {
-  font-size: 68px;
+  font-size: clamp(44px, 4vw, 68px);
 }
 
 .audioflume-home-lifetime-feature-copy
@@ -3181,7 +3181,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   margin: 0;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 14.5px;
+  font-size: clamp(13px, 1vw, 14.5px);
   font-weight: 300;
   line-height: 1.65;
   opacity: 1;
