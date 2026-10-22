@@ -159,6 +159,13 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     }
   }
 
+  @media (max-width: 620px) {
+    body:has(.curated-playlists-page-root)
+      .curated-page-skeleton-grid {
+      gap: 24px;
+    }
+  }
+
   @media (max-width: 720px) {
     body:has(.curated-playlists-page-root)
       .curated-page-skeleton-pill-row {
