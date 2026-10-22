@@ -190,6 +190,26 @@ body:has(.community-playlists-page-root) {
   flex: 0 0 11px;
 }
 
+.community-page-jump-back-in {
+  width: min(100%, var(--filmwave-editorial-max-width));
+  margin: 75px auto 0;
+}
+
+.community-page-jump-back-in-heading {
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
+}
+
+.community-page-jump-back-in-heading h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
+}
+
 .community-page-grid-group {
   width: min(100%, var(--filmwave-editorial-max-width));
   margin: 75px auto 0;
