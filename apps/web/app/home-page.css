@@ -3092,7 +3092,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   top: 28px;
   right: 28px;
   color: #111111;
-  font-size: clamp(13px, 1vw, 15px);
+  font-size: 15px;
   font-weight: 300;
   letter-spacing: normal;
   text-decoration: none;
