@@ -386,7 +386,7 @@ function ReadyToCutTracks({ songs }: { songs: Song[] }) {
 
   return (
     <section className="discover-track-section">
-      <div className="discover-track-section-heading">
+      <div className="discover-track-section-heading filmwave-section-heading-row">
         <SectionTitle variant="small">Ready-to-cut tracks</SectionTitle>
         <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore more tracks<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" /></Link>
       </div>
