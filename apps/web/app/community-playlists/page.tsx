@@ -1193,7 +1193,7 @@ export default function CommunityPlaylistsPage() {
                         aria-label="Clear search"
                         onClick={() => setQuery("")}
                       >
-                        <XIcon size={12} />
+                        <XIcon size={12} strokeWidth={2.4} />
                       </button>
                     )}
                   </div>
@@ -1281,7 +1281,7 @@ export default function CommunityPlaylistsPage() {
                           />
                         )}
                         <span>{selectedCreator.name}</span>
-                        <XIcon size={11} />
+                        <XIcon size={11} strokeWidth={2.4} />
                       </button>
                     ) : filterIsActive ? (
                       <>
