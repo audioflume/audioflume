@@ -610,6 +610,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-intro-copy > span {
   display: block;
+  white-space: nowrap;
 }
 
 .audioflume-home-reference-feature-pair-intro-meta {
@@ -2046,6 +2047,12 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 @media (max-width: 680px) {
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 560px) {
+  .audioflume-home-reference-feature-pair-intro-copy > span {
+    white-space: normal;
   }
 }
 
