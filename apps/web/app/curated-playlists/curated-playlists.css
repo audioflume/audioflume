@@ -730,8 +730,9 @@ body:has(.curated-playlists-page-root)
   border: 0;
   background: transparent;
   padding: 0;
-  color: var(--text-muted);
+  color: #777777;
   cursor: pointer;
+  opacity: 1;
 }
 
 .curated-pill-search-clear:hover,
