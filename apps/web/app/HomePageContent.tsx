@@ -292,23 +292,17 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
 
   return (
     <section className="audioflume-home-reference-trending">
-      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-        <span>New &amp; trending music</span>
-        <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore trending music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" /></Link>
+      <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-intro">
+        <div className="audioflume-home-reference-feature-pair-intro-copy">
+          New music added daily.
+          <br className="audioflume-home-reference-feature-pair-intro-break" />
+          120+ new songs this month.
+        </div>
+        <div className="audioflume-home-reference-feature-pair-intro-meta audioflume-editorial-meta">
+          1500+ ARTISTS TRENDING ONLINE
+        </div>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
-        <div className="audioflume-home-reference-trending-visual">
-          <div className="audioflume-home-reference-trending-copy">
-            <div className="audioflume-home-reference-trending-title">
-              <span>New &amp; Trending</span>
-              <span className="audioflume-home-reference-trending-title-row">
-                <span>Music</span>
-                <small>New music added daily.<br />120+ new songs this month.</small>
-              </span>
-            </div>
-          </div>
-        </div>
-
         <div className="audioflume-home-reference-trending-list">
           {visibleSongs.map((song) => (
             <SongCard key={song.id} song={song} showDivider={false} />
@@ -434,15 +428,17 @@ function HomeSkeletonBlock({
 function HomeTrendingSkeleton() {
   return (
     <section className="audioflume-home-reference-trending">
-      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading">
-        <span>New &amp; trending music</span>
-        <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore new music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" /></Link>
+      <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-intro">
+        <div className="audioflume-home-reference-feature-pair-intro-copy">
+          New music added daily.
+          <br className="audioflume-home-reference-feature-pair-intro-break" />
+          120+ new songs this month.
+        </div>
+        <div className="audioflume-home-reference-feature-pair-intro-meta audioflume-editorial-meta">
+          1500+ ARTISTS TRENDING ONLINE
+        </div>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
-        <div className="audioflume-home-skeleton-trending-visual">
-          <HomeSkeletonBlock className="is-trending-title" />
-          <HomeSkeletonBlock className="is-trending-copy" />
-        </div>
         <div className="audioflume-home-reference-trending-list audioflume-home-skeleton-trending-list">
           {Array.from({ length: 7 }, (_, index) => (
             <div key={index} className="audioflume-home-skeleton-trending-row">
