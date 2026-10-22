@@ -303,6 +303,7 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
         </div>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
+        <div className="audioflume-home-reference-trending-visual" aria-hidden="true" />
         <div className="audioflume-home-reference-trending-list">
           {visibleSongs.map((song) => (
             <SongCard key={song.id} song={song} showDivider={false} />
@@ -439,6 +440,7 @@ function HomeTrendingSkeleton() {
         </div>
       </div>
       <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
+        <div className="audioflume-home-skeleton-trending-visual" aria-hidden="true" />
         <div className="audioflume-home-reference-trending-list audioflume-home-skeleton-trending-list">
           {Array.from({ length: 7 }, (_, index) => (
             <div key={index} className="audioflume-home-skeleton-trending-row">
