@@ -716,30 +716,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   line-height: 1.02;
 }
 
-.audioflume-home-reference-feature-pair-card.is-artists h2 {
-  position: relative;
-  width: 100%;
-  max-width: none;
-  color: #ffffff;
-  font-size: clamp(44px, 8.7cqw, 62px);
-  font-weight: 300;
-  letter-spacing: -0.04em;
-  line-height: 0.9em;
-  text-transform: uppercase;
-  transform: scale(var(--audioflume-feature-artists-scale));
-  transform-origin: left bottom;
-}
-
-.audioflume-home-reference-feature-pair-card.is-artists h2 > span {
-  display: block;
-  white-space: nowrap;
-}
-
+.audioflume-home-reference-feature-pair-card.is-artists h2,
 .audioflume-home-reference-feature-pair-card.is-playlists h2 {
   position: absolute;
   bottom: 17%;
   left: 11.5%;
-  color: #111111;
+  color: #ffffff;
   font-size: clamp(31px, 6.2cqw, 44px);
 }
 
