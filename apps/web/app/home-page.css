@@ -1705,8 +1705,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   display: grid;
   box-sizing: border-box;
   width: calc(100% + 22px);
-  min-height: 64px;
-  grid-template-columns: 42px minmax(0, 1fr) 18px 78px;
+  min-height: 86px;
+  grid-template-columns: 62px minmax(0, 1fr) 18px 78px;
   align-items: center;
   gap: 18px;
   margin-right: -11px;
@@ -1720,8 +1720,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-skeleton-block.is-trending-cover {
-  width: 42px;
-  height: 42px;
+  width: 62px;
+  height: 62px;
 }
 
 .audioflume-home-skeleton-block.is-trending-song-title {
@@ -2150,6 +2150,20 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 }
 
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-skeleton-block {
+  background: rgba(17, 17, 17, 0.08);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-skeleton-song-card {
+  background: #f2f2ef;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-skeleton-trending-list
+  .audioflume-home-skeleton-block {
+  background: rgba(255, 255, 255, 0.14);
+}
 
 :where(html.light, html[data-theme="light"])
   body:has(.audioflume-home-reference)
