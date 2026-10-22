@@ -703,7 +703,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-card.is-playlists {
   isolation: isolate;
   background-image: url("https://images.filmwave.io/images/home/Curated%20Playlists.png");
-  background-position: top left;
+  background-position: left;
 }
 
 .audioflume-home-reference-feature-pair-card h2 {
@@ -1012,7 +1012,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   width: var(--home-reference-width);
   max-width: none;
-  height: 560px;
+  height: 660px;
   grid-template-columns: 440px minmax(0, 1fr);
 }
 
@@ -1107,8 +1107,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-reference-trending-list .filmwave-song-card {
-  --filmwave-song-card-cover-size: 42px !important;
-  --filmwave-song-card-min-height: 64px !important;
+  --filmwave-song-card-cover-size: 62px !important;
+  --filmwave-song-card-min-height: 86px !important;
   --filmwave-song-card-padding-left: 11px;
   --filmwave-song-card-padding-right: 11px;
   --filmwave-song-card-padding-y: 9px;
@@ -1245,8 +1245,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-trending-visual {
-    height: 400px;
-    min-height: 400px;
+    height: 340px;
+    min-height: 340px;
   }
 
   .audioflume-home-reference-trending-list {
