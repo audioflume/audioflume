@@ -91,10 +91,6 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-r
   font-size: 11px;
 }
 
-main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
-  font-weight: 400 !important;
-}
-
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   :is(.fw-filter-rail-item, .fw-filter-advanced-trigger)
   > :is(.fw-filter-rail-count, .fw-filter-advanced-count) {
@@ -108,6 +104,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   padding: 0 !important;
   border-radius: 999px !important;
   font-size: 9.5px !important;
+  font-weight: 400 !important;
   line-height: 18px !important;
 }
 
@@ -185,7 +182,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   overflow: hidden;
   background: var(--text-primary);
   color: var(--bg-primary);
-  font-weight: 600;
   text-align: center;
   cursor: pointer;
 }
