@@ -727,6 +727,10 @@
 
 @media (max-width: 640px) {
   .audioflume-pricing-plans-section {
+    padding-bottom: 0;
+  }
+
+  .audioflume-pricing-offers-grid {
     padding-bottom: 40px;
   }
 
