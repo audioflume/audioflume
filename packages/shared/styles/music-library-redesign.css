@@ -819,7 +819,7 @@
   --filmwave-song-card-padding-right: 24px;
   --filmwave-song-card-hover-bg: var(--bg-hover);
   border-bottom: 0;
-  border-radius: 16px;
+  border-radius: 0;
 }
 
 /* Narrow widths */
