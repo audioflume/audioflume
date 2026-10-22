@@ -833,7 +833,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   min-width: calc((var(--home-reference-width) - 18px) / 4);
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0;
   background: var(--bg-tertiary);
   scroll-snap-align: start;
   scroll-snap-stop: normal;
