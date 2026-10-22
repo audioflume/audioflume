@@ -1331,9 +1331,6 @@ export default function CommunityPlaylistsPage() {
               className="community-page-jump-back-in"
               aria-label="Recently viewed community playlists"
             >
-              <div className="community-page-jump-back-in-heading">
-                <h2>Jump Back In</h2>
-              </div>
               <RecentPlaylistCards
                 playlists={recentPlaylists.slice(0, 5).map((playlist) => ({
                   key: `community:${playlist.id}`,
@@ -1345,7 +1342,7 @@ export default function CommunityPlaylistsPage() {
                     `${playlist.song_count} song${playlist.song_count === 1 ? "" : "s"}`,
                   ].join(" · "),
                 }))}
-                variant="hero"
+                variant="page"
               />
             </section>
           )}
