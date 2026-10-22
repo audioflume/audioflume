@@ -347,7 +347,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
-  border-radius: 8px;
   border: 0;
   background: var(--bg-tertiary);
   color: #111111;
@@ -615,7 +614,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   grid-template-areas:
     "artists playlists"
     "featured featured";
-  column-gap: 32px;
+  column-gap: 12px;
   row-gap: 32px;
 }
 
@@ -646,7 +645,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   justify-content: space-between;
   gap: 24px;
   overflow: hidden;
-  border-radius: 8px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -818,7 +816,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-artist-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 8px;
+  gap: 10px;
   padding-right: var(--audioflume-home-page-gutter);
   padding-left: var(--audioflume-home-page-gutter);
   scroll-padding-right: var(--audioflume-home-page-gutter);
@@ -839,8 +837,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-artist-card {
   position: relative;
-  width: calc((var(--home-reference-width) - 24px) / 4);
-  min-width: calc((var(--home-reference-width) - 24px) / 4);
+  width: calc((var(--home-reference-width) - 30px) / 4);
+  min-width: calc((var(--home-reference-width) - 30px) / 4);
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
   border-radius: 8px;
@@ -980,7 +978,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   height: 350px;
   min-height: 350px;
   overflow: hidden;
-  border-radius: 8px;
 }
 
 .audioflume-home-reference-exclusives-card {
@@ -1016,8 +1013,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   max-width: none;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   min-height: 560px;
-  overflow: hidden;
-  border-radius: 8px;
 }
 
 .audioflume-home-reference-trending-visual {
@@ -1162,8 +1157,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 @media (max-width: 1100px) {
   .audioflume-home-reference-featured-artist-card {
-    width: calc((var(--home-reference-width) - 16px) / 3);
-    min-width: calc((var(--home-reference-width) - 16px) / 3);
+    width: calc((var(--home-reference-width) - 20px) / 3);
+    min-width: calc((var(--home-reference-width) - 20px) / 3);
   }
 }
 
@@ -1257,8 +1252,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 @media (max-width: 760px) {
   .audioflume-home-reference-featured-artist-card {
-    width: calc((var(--home-reference-width) - 8px) / 2);
-    min-width: calc((var(--home-reference-width) - 8px) / 2);
+    width: calc((var(--home-reference-width) - 10px) / 2);
+    min-width: calc((var(--home-reference-width) - 10px) / 2);
   }
 }
 
@@ -2256,8 +2251,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 /* Shared Lifetime Access card on Home. */
 .audioflume-home-reference-lifetime-access {
   position: relative;
-  overflow: hidden;
-  border-radius: 8px;
 }
 
 .audioflume-pricing-plan-price {
