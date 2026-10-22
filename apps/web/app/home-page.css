@@ -2166,11 +2166,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   background: rgba(17, 17, 17, 0.08);
 }
 
-:where(html.light, html[data-theme="light"])
-  .audioflume-home-lifetime-feature-art {
-  background: #f2f2ef;
-}
-
 :where(html.light, html[data-theme="light"]) .audioflume-home-skeleton-song-card {
   background: #f2f2ef;
 }
@@ -3263,6 +3258,11 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   min-width: 0;
   overflow: hidden;
   background: #111111;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-lifetime-feature-art {
+  background: #f2f2ef;
 }
 
 .audioflume-home-lifetime-cover-grid {
