@@ -165,9 +165,9 @@ body:has(.community-playlists-page-root) {
   }
 }
 
-.community-creator-filter-pill {
+.community-playlists-page-root .community-creator-filter-pill {
   gap: 6px;
-  padding-left: 5px;
+  padding: 6px 18px 6px 6px;
 }
 
 .community-creator-filter-avatar {
