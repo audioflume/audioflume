@@ -304,12 +304,9 @@ export default function CuratedPlaylistsPage() {
                 className="curated-page-jump-back-in"
                 aria-label="Recently viewed curated playlists"
               >
-                <div className="curated-page-jump-back-in-heading">
-                  <h2>Jump Back In</h2>
-                </div>
                 <RecentPlaylistCards
                   playlists={curatedJumpBackInPlaylists}
-                  variant="hero"
+                  variant="page"
                 />
               </section>
             )}
