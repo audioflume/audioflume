@@ -3189,7 +3189,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   top: 50%;
   left: 50%;
   display: grid;
-  width: clamp(190%, calc(248.67% - 264px), 212%);
+  width: 1500px;
   grid-template-columns: repeat(14, minmax(0, 1fr));
   gap: 0;
   transform: translate(-50%, -50%) rotate(34deg);
@@ -3251,17 +3251,9 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     aspect-ratio: 1.8 / 1;
   }
 
-  .audioflume-home-lifetime-cover-grid {
-    width: clamp(190%, calc(260.71% - 438px), 212%);
-  }
-
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-lifetime-cover-grid {
-    width: 190%;
-  }
-
   .audioflume-home-reference-featured-artist-card {
     aspect-ratio: 1.75 / 1;
   }
