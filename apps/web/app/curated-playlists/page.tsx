@@ -7,15 +7,6 @@ import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
-import RecentPlaylistCards, {
-  type RecentPlaylistCardItem,
-} from "@/components/RecentPlaylistCards";
-import {
-  getRecentPlaylistKey,
-  readRecentPlaylists,
-  RECENT_PLAYLISTS_CHANGED_EVENT,
-  type RecentPlaylistEntry,
-} from "@/components/RecentPlaylistTracker";
 import type {
   CuratedBrowseTag,
   CuratedPlaylist,
@@ -29,15 +20,6 @@ import CuratedFeatureFilters from "./CuratedFeatureFilters";
 type CuratedPlaylistWithBrowseAssignments = CuratedPlaylist & {
   browse_assignments?: CuratedBrowseAssignment[];
 };
-
-function formatCuratedJumpBackInMetadata(playlist: CuratedPlaylist) {
-  const songCount =
-    typeof playlist.song_count === "number"
-      ? `${playlist.song_count} song${playlist.song_count === 1 ? "" : "s"}`
-      : "";
-
-  return [playlist.playlist_group, songCount].filter(Boolean).join(" · ");
-}
 
 function sortNewestFirst(a: CuratedPlaylist, b: CuratedPlaylist) {
   const aTime = a.created_at ? Date.parse(a.created_at) : 0;
@@ -93,9 +75,6 @@ export default function CuratedPlaylistsPage() {
   const [activeBrowseSubcategoryId, setActiveBrowseSubcategoryId] =
     useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
-  const [recentPlaylistEntries, setRecentPlaylistEntries] = useState<
-    RecentPlaylistEntry[]
-  >([]);
 
   useEffect(() => {
     let cancelled = false;
@@ -152,52 +131,6 @@ export default function CuratedPlaylistsPage() {
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    function syncRecentPlaylists() {
-      setRecentPlaylistEntries(
-        readRecentPlaylists().filter((entry) => entry.type === "curated"),
-      );
-    }
-
-    syncRecentPlaylists();
-    window.addEventListener("focus", syncRecentPlaylists);
-    window.addEventListener("pageshow", syncRecentPlaylists);
-    window.addEventListener("storage", syncRecentPlaylists);
-    window.addEventListener(
-      RECENT_PLAYLISTS_CHANGED_EVENT,
-      syncRecentPlaylists,
-    );
-
-    return () => {
-      window.removeEventListener("focus", syncRecentPlaylists);
-      window.removeEventListener("pageshow", syncRecentPlaylists);
-      window.removeEventListener("storage", syncRecentPlaylists);
-      window.removeEventListener(
-        RECENT_PLAYLISTS_CHANGED_EVENT,
-        syncRecentPlaylists,
-      );
-    };
-  }, []);
-
-  const curatedJumpBackInPlaylists = useMemo<RecentPlaylistCardItem[]>(() => {
-    const playlistById = new Map(playlists.map((playlist) => [playlist.id, playlist]));
-
-    return recentPlaylistEntries
-      .map((entry) => playlistById.get(entry.id))
-      .filter(
-        (playlist): playlist is CuratedPlaylistWithBrowseAssignments =>
-          Boolean(playlist),
-      )
-      .slice(0, 5)
-      .map((playlist) => ({
-        key: getRecentPlaylistKey({ type: "curated", id: playlist.id }),
-        href: `/curated-playlists/${playlist.id}`,
-        name: playlist.name,
-        coverImageUrl: playlist.cover_image_url,
-        metadata: formatCuratedJumpBackInMetadata(playlist),
-      }));
-  }, [playlists, recentPlaylistEntries]);
 
   const visiblePlaylists = useMemo(() => {
     const normalizedSearchQuery = searchQuery.trim().toLowerCase();
@@ -295,20 +228,6 @@ export default function CuratedPlaylistsPage() {
                   ? "No curated playlists match your search."
                   : "No playlists are assigned to this filter yet."}
               </div>
-            )}
-
-          {!loading &&
-            !error &&
-            curatedJumpBackInPlaylists.length > 0 && (
-              <section
-                className="curated-page-jump-back-in"
-                aria-label="Recently viewed curated playlists"
-              >
-                <RecentPlaylistCards
-                  playlists={curatedJumpBackInPlaylists}
-                  variant="page"
-                />
-              </section>
             )}
 
           {!loading &&
