@@ -641,6 +641,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: flex;
   min-width: 0;
   height: 400px;
+  container-type: inline-size;
   align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
@@ -720,7 +721,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: 100%;
   max-width: none;
   color: #ffffff;
-  font-size: 62px;
+  font-size: clamp(44px, 8.7cqw, 62px);
   font-weight: 300;
   letter-spacing: -0.04em;
   line-height: 0.9em;
@@ -739,7 +740,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   bottom: 17%;
   left: 11.5%;
   color: #111111;
-  font-size: 44px;
+  font-size: clamp(31px, 6.2cqw, 44px);
 }
 
 .audioflume-home-reference-feature-pair-arrow {
@@ -1011,8 +1012,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   width: var(--home-reference-width);
   max-width: none;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  min-height: 560px;
+  height: 560px;
+  grid-template-columns: 440px minmax(0, 1fr);
 }
 
 .audioflume-home-reference-trending-visual {
@@ -1227,17 +1228,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     width: 100%;
   }
 
-  .audioflume-home-reference-feature-pair-card.is-artists h2 {
-    font-size: 62px;
-  }
-
   .audioflume-home-reference-feature-pair-card.is-playlists h2 {
     bottom: 20%;
     left: 8%;
-    font-size: 44px;
   }
 
   .audioflume-home-reference-trending-grid {
+    height: auto;
     grid-template-columns: 1fr;
   }
 
