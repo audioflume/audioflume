@@ -2995,11 +2995,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-top {
-  display: flex;
+  position: relative;
   min-width: 0;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 0;
 }
 
 .audioflume-home-lifetime-feature-main {
@@ -3011,7 +3008,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-logo {
-  width: min(26%, 198px);
+  width: clamp(160px, 26%, 198px);
 }
 
 .audioflume-home-lifetime-feature-logo .audioflume-pricing-lifetime-logo {
@@ -3022,7 +3019,9 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-link {
-  flex: 0 0 auto;
+  position: absolute;
+  top: 0;
+  right: 0;
   color: #111111;
   font-size: clamp(13px, 1vw, 15px);
   font-weight: 300;
