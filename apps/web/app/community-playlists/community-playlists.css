@@ -686,6 +686,13 @@ body:has(.community-playlists-page-root) {
   }
 }
 
+@media (max-width: 620px) {
+  .community-page-playlist-grid,
+  .community-skeleton-grid {
+    gap: 24px;
+  }
+}
+
 @media (max-width: 720px) {
   .community-skeleton-pill-row {
     width: calc(100% - 32px);
