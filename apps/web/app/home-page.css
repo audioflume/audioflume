@@ -2985,6 +2985,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-copy {
+  position: relative;
   box-sizing: border-box;
   display: grid;
   min-width: 0;
@@ -2995,7 +2996,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-lifetime-feature-top {
-  position: relative;
   min-width: 0;
 }
 
@@ -3020,8 +3020,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-lifetime-feature-link {
   position: absolute;
-  top: 0;
-  right: 16px;
+  top: 28px;
+  right: 28px;
   color: #111111;
   font-size: clamp(13px, 1vw, 15px);
   font-weight: 300;
