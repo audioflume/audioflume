@@ -149,8 +149,9 @@ body:has(.community-playlists-page-root) {
   border: 0;
   background: transparent;
   padding: 0;
-  color: var(--text-muted);
+  color: #777777;
   cursor: pointer;
+  opacity: 1;
 }
 
 .community-pill-search-clear:hover,
@@ -167,7 +168,7 @@ body:has(.community-playlists-page-root) {
 
 .community-playlists-page-root .community-creator-filter-pill {
   gap: 6px;
-  padding: 6px 18px 6px 6px;
+  padding: 6px 10.5px 6px 6px;
 }
 
 .community-creator-filter-avatar {
@@ -188,6 +189,8 @@ body:has(.community-playlists-page-root) {
   width: 11px;
   height: 11px;
   flex: 0 0 11px;
+  color: currentColor;
+  opacity: 1;
 }
 
 .community-page-grid-group {
