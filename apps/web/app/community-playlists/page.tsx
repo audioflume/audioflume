@@ -7,7 +7,6 @@ import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
-import RecentPlaylistCards from "@/components/RecentPlaylistCards";
 import Toast from "@/components/Toast";
 import XIcon from "@/components/icons/XIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -1324,27 +1323,6 @@ export default function CommunityPlaylistsPage() {
                 </div>
               </div>
             </div>
-          )}
-
-          {!loading && recentPlaylists.length > 0 && (
-            <section
-              className="community-page-jump-back-in"
-              aria-label="Recently viewed community playlists"
-            >
-              <RecentPlaylistCards
-                playlists={recentPlaylists.slice(0, 5).map((playlist) => ({
-                  key: `community:${playlist.id}`,
-                  href: `/community-playlists/${playlist.id}`,
-                  name: playlist.name,
-                  coverImageUrl: playlist.cover_image_url,
-                  metadata: [
-                    playlist.creator?.name ? `By ${playlist.creator.name}` : "Community",
-                    `${playlist.song_count} song${playlist.song_count === 1 ? "" : "s"}`,
-                  ].join(" · "),
-                }))}
-                variant="page"
-              />
-            </section>
           )}
 
           {loading ? (
