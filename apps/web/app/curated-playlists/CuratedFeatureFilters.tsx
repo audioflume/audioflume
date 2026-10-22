@@ -148,7 +148,7 @@ export default function CuratedFeatureFilters({
                 aria-label="Clear search"
                 onClick={() => onSearchChange?.("")}
               >
-                <XIcon size={12} />
+                <XIcon size={12} strokeWidth={2.4} />
               </button>
             )}
           </div>
