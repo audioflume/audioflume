@@ -1248,6 +1248,17 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 }
 
+@media (max-width: 770px) {
+  .audioflume-home-reference-feature-pair-intro {
+    grid-template-columns: 1fr;
+  }
+
+  .audioflume-home-reference-feature-pair-intro-meta {
+    justify-self: start;
+    text-align: left;
+  }
+}
+
 @media (max-width: 760px) {
   .audioflume-home-reference-featured-artist-card {
     width: calc((var(--home-reference-width) - 6px) / 2);
