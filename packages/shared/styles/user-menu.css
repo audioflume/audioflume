@@ -292,7 +292,7 @@ html[data-theme="light"] {
 }
 
 .filmwave-web-user-menu .filmwave-dropdown-item {
-  font-weight: 300;
+  font-weight: 400;
 }
 
 :where(html.light, html[data-theme="light"])
