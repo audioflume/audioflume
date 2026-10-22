@@ -2999,7 +2999,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   min-width: 0;
   align-items: flex-start;
   justify-content: space-between;
-  gap: 24px;
+  gap: 0;
 }
 
 .audioflume-home-lifetime-feature-main {
@@ -3023,7 +3023,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-lifetime-feature-link {
   flex: 0 0 auto;
-  margin-right: 16px;
   color: #111111;
   font-size: clamp(13px, 1vw, 15px);
   font-weight: 300;
