@@ -998,7 +998,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: var(--home-reference-width);
   max-width: none;
   height: 660px;
-  grid-template-columns: minmax(0, 1fr);
+  grid-template-columns: 440px minmax(0, 1fr);
   overflow: hidden;
   border-radius: 8px;
 }
