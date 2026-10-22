@@ -231,7 +231,6 @@ export default function CreatePlaylistModal({
             disabled={isCreating}
             onChange={(e) => onNameChange(toSmartTitleCaseInput(e.target.value))}
             onBlur={normalizeName}
-            placeholder="Example: Cinematic"
             className={modalInputClass}
           />
         </div>
