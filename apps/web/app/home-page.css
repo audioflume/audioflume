@@ -347,6 +347,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   width: 100%;
   aspect-ratio: 1;
   overflow: hidden;
+  border-radius: 8px;
   border: 0;
   background: var(--bg-tertiary);
   color: #111111;
@@ -645,6 +646,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   justify-content: space-between;
   gap: 24px;
   overflow: hidden;
+  border-radius: 8px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -978,6 +980,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   height: 350px;
   min-height: 350px;
   overflow: hidden;
+  border-radius: 8px;
 }
 
 .audioflume-home-reference-exclusives-card {
@@ -1013,6 +1016,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   max-width: none;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   min-height: 560px;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .audioflume-home-reference-trending-visual {
@@ -2251,6 +2256,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 /* Shared Lifetime Access card on Home. */
 .audioflume-home-reference-lifetime-access {
   position: relative;
+  overflow: hidden;
+  border-radius: 8px;
 }
 
 .audioflume-pricing-plan-price {
