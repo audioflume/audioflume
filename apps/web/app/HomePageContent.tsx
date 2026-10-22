@@ -852,11 +852,7 @@ export default function HomePageContent({
                 images={homeFlashImages}
                 mediaClassName="audioflume-home-feature-flash-media"
               />
-              <h2>
-                <span>In demand</span>
-                <span>artists</span>
-                <span>&amp; composers.</span>
-              </h2>
+              <h2>In demand artists<br />&amp; composers.</h2>
               <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/discover">
                 Explore artists
                 <ArrowUpRightIcon size={16} strokeWidth={1.5} className="audioflume-home-reference-feature-pair-arrow" />
