@@ -977,12 +977,9 @@ html:not(.light):not([data-theme="light"])
   min-width: 0;
 }
 
-.audioflume-home-reference-tools-originals {
-  padding-top: 56px;
-}
-
+.audioflume-home-reference-tools-originals,
 .audioflume-home-reference-tools-search {
-  padding-top: 56px;
+  display: none;
 }
 
 .audioflume-home-reference-tool-card {
@@ -1250,13 +1247,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     margin-top: 40px;
   }
 
-  .audioflume-home-reference-tools-originals {
-    padding-top: 40px;
-  }
-
-  .audioflume-home-reference-tools-search {
-    padding-top: 40px;
-  }
 
   .audioflume-home-reference-feature-pair-card {
     width: 100%;
