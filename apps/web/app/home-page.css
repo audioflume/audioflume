@@ -566,8 +566,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 :where(html:not(.light):not([data-theme="light"]))
   .audioflume-home-reference-section-heading a,
 :where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-reference-feature-pair-intro {
-  color: #6f6f6f;
+  .audioflume-home-reference-feature-pair-intro-copy,
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-reference-feature-pair-intro-meta {
+  color: #555555;
 }
 
 .audioflume-home-reference-feature-pair {
