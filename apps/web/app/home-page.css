@@ -679,6 +679,39 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   opacity: 1;
 }
 
+
+.audioflume-home-feature-flash-pause {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 3;
+  display: grid;
+  width: 18px;
+  height: 18px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: rgba(255, 255, 255, 0.72);
+  padding: 0;
+  cursor: pointer;
+  transition: color 140ms ease;
+}
+
+.audioflume-home-feature-flash-pause:hover,
+.audioflume-home-feature-flash-pause:focus-visible {
+  color: #ffffff;
+}
+
+.audioflume-home-feature-flash-pause svg {
+  display: block;
+  width: 10px;
+  height: 10px;
+  fill: currentColor;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+
 .audioflume-home-reference-feature-pair-card.is-artists::after {
   position: absolute;
   inset: 0;
