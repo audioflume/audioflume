@@ -31,7 +31,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-width {
   width: var(--home-reference-width);
-  margin: 0 auto;
+  margin-inline: auto;
 }
 
 .audioflume-home-reference-hero {
