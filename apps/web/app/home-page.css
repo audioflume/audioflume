@@ -840,17 +840,17 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-shelf-scrollbar {
   position: relative;
   width: calc(100% - (var(--audioflume-home-page-gutter) * 2));
-  height: 2px;
-  margin: 56px var(--audioflume-home-page-gutter) 0;
-  background: color-mix(in srgb, var(--text-primary) 14%, transparent);
+  height: 1.25px;
+  margin: 32px var(--audioflume-home-page-gutter) 0;
+  background: var(--border);
 }
 
 .audioflume-home-reference-featured-artist-shelf
   .audioflume-home-reference-shelf-scrollbar-thumb {
   position: absolute;
-  top: -1px;
+  top: 0;
   left: 0;
-  height: 4px;
+  height: 2px;
   background: color-mix(in srgb, var(--text-primary) 72%, transparent);
   cursor: grab;
   touch-action: none;
