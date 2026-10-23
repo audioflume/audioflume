@@ -15,6 +15,7 @@ import Footer from "@/components/Footer";
 import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
+import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -685,6 +686,7 @@ function HomeSongRowsSkeleton() {
 }
 
 export default function HomePageContent({
+  homeFlashImages,
   membershipHref,
   membershipLabel,
 }: {
@@ -838,6 +840,10 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
           <div className="audioflume-home-reference-feature-pair-column is-artists-feature">
             <div className="audioflume-home-reference-feature-pair-card is-artists">
+              <PricingHeroImageFlash
+                images={homeFlashImages}
+                mediaClassName="audioflume-home-feature-flash-media"
+              />
               <h2>In demand artists<br />&amp; composers.</h2>
               <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/discover">
                 Explore artists
