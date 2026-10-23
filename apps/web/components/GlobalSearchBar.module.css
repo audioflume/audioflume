@@ -82,6 +82,18 @@
   color: #5a5a5a;
 }
 
+.field:focus-within {
+  background:
+    linear-gradient(
+      110deg,
+      #1b1b1b 18%,
+      #242424 50%,
+      #1b1b1b 82%
+    );
+  background-size: 180% 100%;
+  animation: audioflume-search-field-pulse 2.6s ease-in-out infinite alternate;
+}
+
 .field > svg {
   width: 22px;
   height: 22px;
@@ -226,6 +238,18 @@
   color: #a3a3a3;
 }
 
+:global(html.light) .field:focus-within,
+:global(html[data-theme="light"]) .field:focus-within {
+  background:
+    linear-gradient(
+      110deg,
+      #f5f5f5 18%,
+      #ececec 50%,
+      #f5f5f5 82%
+    );
+  background-size: 180% 100%;
+}
+
 :global(html.light) .field input,
 :global(html[data-theme="light"]) .field input {
   color: var(--text-primary);
@@ -243,6 +267,22 @@
 :global(html[data-theme="light"]) .clear:hover,
 :global(html[data-theme="light"]) .clear:focus-visible {
   color: var(--text-primary);
+}
+
+@keyframes audioflume-search-field-pulse {
+  from {
+    background-position: 0% 50%;
+  }
+
+  to {
+    background-position: 100% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .field:focus-within {
+    animation: none;
+  }
 }
 
 @media (max-width: 1000px) {
