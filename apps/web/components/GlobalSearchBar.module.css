@@ -83,7 +83,8 @@
 }
 
 .field:focus-within {
-  border: 1.25px solid #5a5a5a;
+  border: 1.25px solid var(--filmwave-border-color);
+  color: #ffffff;
 }
 
 .field > svg {
@@ -232,7 +233,8 @@
 
 :global(html.light) .field:focus-within,
 :global(html[data-theme="light"]) .field:focus-within {
-  border-color: #b8b8b8;
+  border-color: var(--filmwave-border-color);
+  color: var(--text-primary);
 }
 
 :global(html.light) .field input,
