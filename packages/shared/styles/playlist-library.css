@@ -328,7 +328,7 @@
 .discover-section-heading h2,
 .curated-playlist-shelf-heading h2 {
   margin: 0 !important;
-  color: var(--text-primary) !important;
+  color: var(--filmwave-section-title-color) !important;
   font-family: var(--font-aktiv-grotesk), sans-serif !important;
   font-size: 24px !important;
   font-weight: 500 !important;
