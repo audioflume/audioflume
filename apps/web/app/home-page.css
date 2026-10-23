@@ -3261,6 +3261,76 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   color: #111111 !important;
 }
 
+html:not(.light):not([data-theme="light"]) .audioflume-home-lifetime-feature-copy {
+  background: #151515;
+  color: #ffffff;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-logo
+  .audioflume-pricing-lifetime-logo,
+html:not(.light):not([data-theme="light"]) .audioflume-home-lifetime-feature-link,
+html:not(.light):not([data-theme="light"]) .audioflume-home-lifetime-feature-heading,
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price
+  strong,
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price
+  span {
+  color: #ffffff;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-home-lifetime-feature-price-group.is-regular
+  .audioflume-pricing-plan-price
+  strong {
+  color: #6f6f6f;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-home-lifetime-feature-price-group.is-regular
+  .audioflume-pricing-plan-price
+  strong::after {
+  background: #6f6f6f;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime-badge {
+  background: #2a2a2a;
+  color: #b7b7b7;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime-badge.is-light {
+  background: #ffffff;
+  color: #111111;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-description {
+  color: #b7b7b7;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-hover-action {
+  background: #ffffff;
+  color: #111111 !important;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-hover-action:hover,
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-lifetime-feature-hover-action:focus-visible {
+  background: #e9e9e9;
+  color: #111111 !important;
+}
+
 .audioflume-home-lifetime-feature-art {
   position: relative;
   min-width: 0;
