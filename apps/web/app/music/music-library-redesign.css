@@ -496,6 +496,13 @@ main
 }
 
 
+main
+  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
+  button.fw-filter-rail-clear-all {
+  margin-bottom: 16px !important;
+}
+
+
 @media (max-width: 1000px) {
   .audioflume-music-page-searchbar
     .audioflume-home-reference-searchbar-field {
