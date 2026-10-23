@@ -7,6 +7,7 @@ import {
   useMemo,
   useRef,
   useState,
+  type KeyboardEvent,
   type MouseEvent,
   type ReactNode,
 } from "react";
@@ -24,6 +25,7 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import {
   useHasCurrentSong,
@@ -285,8 +287,138 @@ function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
   );
 }
 
+function getHomeTrackFallbackGradient(index: number) {
+  const gradients = [
+    "linear-gradient(135deg, #372f4f 0%, #111111 48%, #75649a 100%)",
+    "linear-gradient(135deg, #1f3d3a 0%, #111111 52%, #4d8c7b 100%)",
+    "linear-gradient(135deg, #4f3529 0%, #111111 50%, #b66c45 100%)",
+    "linear-gradient(135deg, #25364f 0%, #111111 52%, #6287c4 100%)",
+    "linear-gradient(135deg, #45233d 0%, #111111 52%, #b75d91 100%)",
+  ];
+
+  return gradients[index % gradients.length];
+}
+
+function stopHomeTrackMouseEvent(event: MouseEvent<HTMLElement>) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.nativeEvent.stopImmediatePropagation();
+}
+
+function stopHomeTrackKeyEvent(event: KeyboardEvent<HTMLElement>) {
+  event.preventDefault();
+  event.stopPropagation();
+  event.nativeEvent.stopImmediatePropagation();
+}
+
+function HomeReadyToCutCoverImage({
+  song,
+  index,
+}: {
+  song: Song;
+  index: number;
+}) {
+  return (
+    <div
+      className="relative h-9 w-9 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
+      style={{
+        background: song.coverArt
+          ? undefined
+          : getHomeTrackFallbackGradient(index),
+      }}
+    >
+      {song.coverArt ? (
+        <img
+          src={song.coverArt}
+          alt=""
+          aria-hidden="true"
+          draggable={false}
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <div className="absolute inset-0 flex items-center justify-center text-[var(--text-muted)]">
+          <WaveformIcon size={20} />
+        </div>
+      )}
+
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+    </div>
+  );
+}
+
+function HomeReadyToCutSongCard({
+  song,
+  index,
+  queue,
+}: {
+  song: Song;
+  index: number;
+  queue: Song[];
+}) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const active = currentSong?.id === song.id;
+  const playing = active && isPlaying;
+
+  function playSong() {
+    if (!song.audioUrl) return;
+    setQueue(queue);
+    togglePlayPause(song);
+  }
+
+  return (
+    <article
+      role="button"
+      tabIndex={song.audioUrl ? 0 : -1}
+      onClick={(event) => {
+        stopHomeTrackMouseEvent(event);
+        playSong();
+      }}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        stopHomeTrackKeyEvent(event);
+        if (!event.repeat) playSong();
+      }}
+      onKeyUp={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        stopHomeTrackKeyEvent(event);
+      }}
+      className="group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
+      aria-label={`Play ${song.title} by ${song.artist}`}
+    >
+      <HomeReadyToCutCoverImage song={song} index={index} />
+
+      <div className="min-w-0 flex-1">
+        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
+          {song.title}
+        </h3>
+
+        <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
+          <span className="truncate">{song.artist}</span>
+          <span>•</span>
+          <span>{song.key || "—"}</span>
+          <span>•</span>
+          <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
+        </div>
+      </div>
+
+      <button
+        type="button"
+        onClick={(event) => {
+          stopHomeTrackMouseEvent(event);
+          playSong();
+        }}
+        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
+        disabled={!song.audioUrl}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {playing ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+      </button>
+    </article>
+  );
+}
+
 function HomeTrendingSection({ songs }: { songs: Song[] }) {
-  const visibleSongs = songs.slice(0, 7);
+  const visibleSongs = songs.slice(0, 12);
 
   if (visibleSongs.length === 0) return null;
 
@@ -299,13 +431,15 @@ function HomeTrendingSection({ songs }: { songs: Song[] }) {
           <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
         </Link>
       </div>
-      <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
-        <div className="audioflume-home-reference-trending-visual" aria-hidden="true" />
-        <div className="audioflume-home-reference-trending-list">
-          {visibleSongs.map((song) => (
-            <SongCard key={song.id} song={song} showDivider={false} />
-          ))}
-        </div>
+      <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {visibleSongs.map((song, index) => (
+          <HomeReadyToCutSongCard
+            key={song.id}
+            song={song}
+            index={index + 30}
+            queue={visibleSongs}
+          />
+        ))}
       </div>
     </section>
   );
@@ -433,21 +567,20 @@ function HomeTrendingSkeleton() {
           <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
         </Link>
       </div>
-      <div className="audioflume-home-reference-width audioflume-home-reference-trending-grid">
-        <div className="audioflume-home-skeleton-trending-visual" aria-hidden="true" />
-        <div className="audioflume-home-reference-trending-list audioflume-home-skeleton-trending-list">
-          {Array.from({ length: 7 }, (_, index) => (
-            <div key={index} className="audioflume-home-skeleton-trending-row">
-              <HomeSkeletonBlock className="is-trending-cover" />
-              <div className="audioflume-home-skeleton-trending-row-copy">
-                <HomeSkeletonBlock className="is-trending-song-title" />
-                <HomeSkeletonBlock className="is-trending-artist" />
-              </div>
-              <HomeSkeletonBlock className="is-trending-action" />
-              <HomeSkeletonBlock className="is-trending-license" />
+      <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+        {Array.from({ length: 12 }, (_, index) => (
+          <div
+            key={index}
+            className="flex h-[54px] items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2"
+          >
+            <HomeSkeletonBlock className="h-9 w-9 shrink-0" />
+            <div className="min-w-0 flex-1">
+              <HomeSkeletonBlock className="h-[13px] w-2/3" />
+              <HomeSkeletonBlock className="mt-1.5 h-[10px] w-1/2" />
             </div>
-          ))}
-        </div>
+            <HomeSkeletonBlock className="h-9 w-9 shrink-0 rounded-full" />
+          </div>
+        ))}
       </div>
     </section>
   );
