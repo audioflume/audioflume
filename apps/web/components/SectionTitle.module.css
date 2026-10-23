@@ -1,6 +1,6 @@
 .title {
   margin: 0;
-  color: var(--text-primary);
+  color: var(--filmwave-section-title-color);
   font-family: var(--filmwave-section-title-font-family);
   font-size: var(--filmwave-section-title-font-size);
   font-weight: var(--filmwave-section-title-font-weight);
