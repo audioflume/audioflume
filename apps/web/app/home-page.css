@@ -35,6 +35,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-hero {
+  display: none;
   position: relative;
   display: grid;
   height: calc(
@@ -2301,6 +2302,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 /* Shared Lifetime Access card on Home. */
 .audioflume-home-reference-lifetime-access {
+  display: none;
   position: relative;
 }
 
