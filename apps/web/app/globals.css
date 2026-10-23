@@ -183,3 +183,10 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
   top: -1px;
   left: 1px;
 }
+
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-arrow-text-link:hover,
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-arrow-text-link:focus-visible {
+  color: #ffffff;
+}
