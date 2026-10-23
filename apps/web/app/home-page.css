@@ -561,6 +561,15 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   text-transform: none;
 }
 
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-reference-section-heading > span,
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-reference-section-heading a,
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-reference-feature-pair-intro {
+  color: #6f6f6f;
+}
+
 .audioflume-home-reference-feature-pair {
   padding: 80px 0 0;
   background: var(--bg-primary);
