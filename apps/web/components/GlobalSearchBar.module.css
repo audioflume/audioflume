@@ -42,7 +42,7 @@
 .filters {
   gap: 18px;
   overflow: hidden;
-  border-right: 1.25px solid rgba(255, 255, 255, 0.08);
+  border-right: 0;
   padding: 0 30px;
   color: inherit;
   font-size: 13px;
@@ -75,7 +75,7 @@
   box-sizing: border-box;
   width: min(720px, calc(100% - 32px));
   gap: 12px;
-  margin: 12px;
+  margin: 12px 12px 12px 0;
   border-radius: 0;
   background: #1b1b1b;
   padding: 0 16px;
@@ -253,7 +253,7 @@
 
   .field {
     width: min(720px, calc(100% - 12px));
-    margin: 12px 0 12px 12px;
+    margin: 12px 0;
   }
 
   .actions {
@@ -325,7 +325,7 @@
 
   .field {
     width: min(720px, calc(100% - 12px));
-    margin: 12px 0 12px 12px;
+    margin: 12px 0;
   }
 
 
