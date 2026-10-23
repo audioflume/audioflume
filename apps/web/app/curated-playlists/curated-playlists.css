@@ -64,6 +64,7 @@ body:has(.curated-playlists-page-root) {
 
 .curated-page-pill-browser .discover-category-description {
   width: min(calc(100% - 40px), 780px);
+  color: var(--filmwave-section-title-color);
   font-size: 32px;
 }
 
