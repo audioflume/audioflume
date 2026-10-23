@@ -10,6 +10,7 @@ const HERO_IMAGE_SIZES =
 type PricingHeroImageFlashProps = {
   images: string[];
   mediaClassName?: string;
+  showPauseControl?: boolean;
 };
 
 type FrameState = {
@@ -45,9 +46,11 @@ function createFrameState(images: string[]): FrameState {
 export default function PricingHeroImageFlash({
   images,
   mediaClassName = "audioflume-home-flash-hero-media",
+  showPauseControl = false,
 }: PricingHeroImageFlashProps) {
   const mediaRef = useRef<HTMLDivElement>(null);
   const [isInViewport, setIsInViewport] = useState(true);
+  const [isPaused, setIsPaused] = useState(false);
   const [settledSources, setSettledSources] = useState<Set<string>>(
     () => new Set(),
   );
@@ -123,7 +126,7 @@ export default function PricingHeroImageFlash({
   }, []);
 
   useEffect(() => {
-    if (!allImagesSettled || usableImages.length <= 1 || !isInViewport) return;
+    if (!allImagesSettled || usableImages.length <= 1 || !isInViewport || isPaused) return;
 
     const prefersReducedMotion = window.matchMedia(
       "(prefers-reduced-motion: reduce)",
@@ -151,7 +154,7 @@ export default function PricingHeroImageFlash({
     }, FLASH_INTERVAL_MS);
 
     return () => window.clearInterval(interval);
-  }, [allImagesSettled, isInViewport, usableImages]);
+  }, [allImagesSettled, isInViewport, isPaused, usableImages]);
 
   function markSettled(src: string) {
     setSettledSources((current) => {
@@ -172,7 +175,7 @@ export default function PricingHeroImageFlash({
   }
 
   return (
-    <div ref={mediaRef} className={mediaClassName} aria-hidden="true">
+    <div ref={mediaRef} className={mediaClassName}>
       {frameState.sources.map((src, index) =>
         src ? (
           <Image
@@ -189,6 +192,25 @@ export default function PricingHeroImageFlash({
           />
         ) : null,
       )}
+      {showPauseControl ? (
+        <button
+          type="button"
+          className="audioflume-home-feature-flash-pause"
+          aria-label={isPaused ? "Resume flashing images" : "Pause flashing images"}
+          aria-pressed={isPaused}
+          onClick={() => setIsPaused((current) => !current)}
+        >
+          {isPaused ? (
+            <svg viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M3.5 2.5L9 6L3.5 9.5Z" />
+            </svg>
+          ) : (
+            <svg viewBox="0 0 12 12" aria-hidden="true">
+              <path d="M3.5 2.25V9.75M8.5 2.25V9.75" />
+            </svg>
+          )}
+        </button>
+      ) : null}
     </div>
   );
 }
