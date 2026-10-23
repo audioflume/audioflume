@@ -837,8 +837,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-artist-card {
   position: relative;
-  width: calc((var(--home-reference-width) - 12px) / 4);
-  min-width: calc((var(--home-reference-width) - 12px) / 4);
+  width: calc((var(--home-reference-width) - 8px) / 3);
+  min-width: calc((var(--home-reference-width) - 8px) / 3);
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
   background: var(--bg-tertiary);
