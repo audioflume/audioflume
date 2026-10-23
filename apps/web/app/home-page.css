@@ -613,6 +613,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-column.is-artists-feature {
   grid-area: artists;
+  container-type: inline-size;
 }
 
 .audioflume-home-reference-feature-pair-column.is-playlists-feature {
@@ -645,7 +646,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-feature-pair-card.is-artists {
   --audioflume-feature-artists-scale: 1;
-  container-type: inline-size;
   flex-direction: row;
   align-items: flex-end;
   justify-content: space-between;
