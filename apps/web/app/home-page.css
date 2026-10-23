@@ -714,6 +714,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font-size: clamp(31px, 6.2cqw, 44px);
 }
 
+.audioflume-home-reference-feature-pair-card.is-playlists h2 {
+  color: #111111;
+}
+
 .audioflume-home-reference-feature-pair-arrow {
   transform: translateY(1px);
 }
