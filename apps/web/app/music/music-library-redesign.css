@@ -111,8 +111,7 @@
 
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field:focus-within {
-  border: 1.25px solid rgba(255, 255, 255, 0.18);
-  animation: audioflume-music-search-field-border-pulse 2.2s ease-in-out infinite alternate;
+  border: 1.25px solid #5a5a5a;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field > svg {
@@ -607,8 +606,7 @@ main
 :where(html.light, html[data-theme="light"])
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field:focus-within {
-  border-color: rgba(17, 17, 17, 0.18);
-  animation-name: audioflume-music-search-field-border-pulse-light;
+  border-color: #b8b8b8;
 }
 
 :where(html.light, html[data-theme="light"])
@@ -622,33 +620,6 @@ main
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-clear {
   color: #a3a3a3;
-}
-
-@keyframes audioflume-music-search-field-border-pulse {
-  from {
-    border-color: rgba(255, 255, 255, 0.12);
-  }
-
-  to {
-    border-color: rgba(255, 255, 255, 0.34);
-  }
-}
-
-@keyframes audioflume-music-search-field-border-pulse-light {
-  from {
-    border-color: rgba(17, 17, 17, 0.1);
-  }
-
-  to {
-    border-color: rgba(17, 17, 17, 0.28);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .audioflume-music-page-searchbar
-    .audioflume-home-reference-searchbar-field:focus-within {
-    animation: none;
-  }
 }
 
 /* Web music page now uses the full-width search bar as the only search/filter chrome. */
