@@ -948,7 +948,22 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 html:not(.light):not([data-theme="light"]) .audioflume-home-ready-track-card {
-  background: var(--filmwave-web-user-menu-bg) !important;
+  background: color-mix(
+    in srgb,
+    var(--filmwave-web-user-menu-bg) 92%,
+    #ffffff 8%
+  ) !important;
+}
+
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-ready-track-card:hover,
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-ready-track-card:focus-visible {
+  background: color-mix(
+    in srgb,
+    var(--filmwave-web-user-menu-bg) 86%,
+    #ffffff 14%
+  ) !important;
 }
 
 
