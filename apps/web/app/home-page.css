@@ -599,11 +599,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   display: grid;
   width: var(--home-reference-width);
   max-width: none;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: minmax(0, 1fr);
   grid-template-areas:
-    "artists playlists"
-    "featured featured";
-  column-gap: 30px;
+    "artists"
+    "featured";
+  column-gap: 0;
   row-gap: 4px;
 }
 
@@ -646,10 +646,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-feature-pair-card.is-artists {
   --audioflume-feature-artists-scale: 1;
   container-type: inline-size;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: 18px;
+  flex-direction: row;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 45px;
   background-image:
     linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
     url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
@@ -706,17 +707,19 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   line-height: 1.02;
 }
 
-.audioflume-home-reference-feature-pair-card.is-artists h2,
+.audioflume-home-reference-feature-pair-card.is-artists h2 {
+  position: relative;
+  color: #ffffff;
+  font-size: 56px;
+  text-transform: uppercase;
+}
+
 .audioflume-home-reference-feature-pair-card.is-playlists h2 {
   position: absolute;
   bottom: 17%;
   left: calc(11.5% - 10px);
-  color: #ffffff;
-  font-size: clamp(31px, 6.2cqw, 44px);
-}
-
-.audioflume-home-reference-feature-pair-card.is-playlists h2 {
   color: #111111;
+  font-size: clamp(31px, 6.2cqw, 44px);
 }
 
 .audioflume-home-reference-feature-pair-arrow {
@@ -1206,8 +1209,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   .audioflume-home-reference-feature-pair-grid {
     grid-template-areas:
       "artists"
-      "featured"
-      "playlists";
+      "featured";
     column-gap: 0;
     row-gap: 4px;
   }
@@ -1228,7 +1230,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     width: 100%;
   }
 
-  .audioflume-home-reference-feature-pair-card.is-artists h2,
   .audioflume-home-reference-feature-pair-card.is-playlists h2 {
     bottom: 20%;
     left: calc(8% - 10px);
