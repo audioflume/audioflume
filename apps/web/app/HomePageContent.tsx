@@ -978,6 +978,7 @@ export default function HomePageContent({
               <PricingHeroImageFlash
                 images={homeFlashImages}
                 mediaClassName="audioflume-home-feature-flash-media"
+                showPauseControl
               />
               <h2>In demand artists<br />&amp; composers.</h2>
               <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/discover">
