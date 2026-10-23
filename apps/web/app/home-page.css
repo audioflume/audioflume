@@ -947,6 +947,11 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   background: var(--bg-primary);
 }
 
+html:not(.light):not([data-theme="light"]) .audioflume-home-ready-track-card {
+  background: var(--filmwave-web-user-menu-bg) !important;
+}
+
+
 .audioflume-home-reference-tools {
   padding: 0;
   background: var(--bg-primary);
