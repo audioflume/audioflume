@@ -83,7 +83,6 @@
 }
 
 .field:focus-within {
-  border: 1.25px solid var(--filmwave-border-color);
   color: #ffffff;
 }
 
@@ -233,7 +232,6 @@
 
 :global(html.light) .field:focus-within,
 :global(html[data-theme="light"]) .field:focus-within {
-  border-color: var(--filmwave-border-color);
   color: var(--text-primary);
 }
 
