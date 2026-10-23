@@ -633,7 +633,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: relative;
   display: flex;
   min-width: 0;
-  height: 470px;
+  height: 400px;
   container-type: inline-size;
   align-items: flex-end;
   justify-content: space-between;
@@ -837,8 +837,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-artist-card {
   position: relative;
-  width: calc((var(--home-reference-width) - 8px) / 3);
-  min-width: calc((var(--home-reference-width) - 8px) / 3);
+  width: calc((var(--home-reference-width) - 12px) / 4);
+  min-width: calc((var(--home-reference-width) - 12px) / 4);
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
   background: var(--bg-tertiary);
