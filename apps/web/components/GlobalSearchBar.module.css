@@ -94,6 +94,7 @@
   stroke: currentColor;
   stroke-linecap: round;
   stroke-width: 1.4;
+  transition: color 150ms ease;
 }
 
 .field input {
@@ -134,6 +135,7 @@
   color: #5a5a5a;
   padding: 0;
   cursor: pointer;
+  transition: color 150ms ease;
 }
 
 .clear svg {
