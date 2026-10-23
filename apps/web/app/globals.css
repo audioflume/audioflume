@@ -170,6 +170,10 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
   text-transform: uppercase;
 }
 
+.audioflume-arrow-text-link {
+  transition: color 150ms ease;
+}
+
 .audioflume-arrow-text-link svg {
   position: relative;
   top: 0;
