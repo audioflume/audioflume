@@ -98,8 +98,7 @@ function Shelf({
       }
 
       const trackWidth = track.clientWidth;
-      const visibleRatio = scroller.clientWidth / scroller.scrollWidth;
-      const thumbWidth = Math.max(72, trackWidth * visibleRatio);
+      const thumbWidth = Math.min(240, trackWidth);
       const thumbTravel = Math.max(0, trackWidth - thumbWidth);
       const left = thumbTravel * (scroller.scrollLeft / maxScrollLeft);
       setScrollbarThumb({ left, width: thumbWidth });
