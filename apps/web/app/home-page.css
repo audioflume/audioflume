@@ -651,9 +651,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   justify-content: space-between;
   gap: 24px;
   padding: 45px;
-  background-image:
-    linear-gradient(rgba(0, 0, 0, 0.32), rgba(0, 0, 0, 0.32)),
-    url("https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg");
+  background-image: url("https://images.filmwave.io/images/home/joel-timothy-WYiIkQFclA4-unsplash.jpg");
 }
 
 .audioflume-home-feature-flash-media {
