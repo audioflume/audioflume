@@ -836,32 +836,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 
-.audioflume-home-reference-featured-artist-shelf
-  .audioflume-home-reference-shelf-scrollbar {
-  position: relative;
-  width: calc(100% - (var(--audioflume-home-page-gutter) * 2));
-  height: 1.25px;
-  margin: 32px var(--audioflume-home-page-gutter) 0;
-  background: var(--border);
-}
-
-.audioflume-home-reference-featured-artist-shelf
-  .audioflume-home-reference-shelf-scrollbar-thumb {
-  position: absolute;
-  top: 0;
-  left: 0;
-  height: 2px;
-  background: color-mix(in srgb, var(--text-primary) 72%, transparent);
-  cursor: grab;
-  touch-action: none;
-  user-select: none;
-  will-change: transform;
-}
-
-.audioflume-home-reference-featured-artist-shelf
-  .audioflume-home-reference-shelf-scrollbar-thumb:active {
-  cursor: grabbing;
-}
 
 .audioflume-home-reference-featured-artist-card {
   position: relative;
