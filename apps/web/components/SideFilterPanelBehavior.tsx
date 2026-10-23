@@ -119,6 +119,21 @@ function createLicenseFilterCheckIcon() {
   `;
 }
 
+function createLicenseRailClearIcon() {
+  return `
+    <span class="fw-filter-rail-count-clear" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="11" height="11" fill="none" aria-hidden="true">
+        <path
+          d="M7 7L17 17M17 7L7 17"
+          stroke="currentColor"
+          stroke-width="2.6"
+          stroke-linecap="round"
+        />
+      </svg>
+    </span>
+  `;
+}
+
 function syncLicenseFilterBoxState(box: HTMLElement) {
   const selectedFilters = new Set(getStoredLicenseFilters());
 
@@ -144,7 +159,7 @@ function syncLicenseFilterBoxState(box: HTMLElement) {
     const countValue = selectedFilters.size;
     count.hidden = countValue === 0;
     count.dataset.countValue = String(countValue);
-    count.textContent = String(countValue);
+    count.innerHTML = `${countValue}${createLicenseRailClearIcon()}`;
   }
 }
 
@@ -681,7 +696,15 @@ export default function SideFilterPanelBehavior() {
 
     function handleSideFilterSectionClear(event: Event) {
       const customEvent = event as CustomEvent<{ sectionId?: string }>;
-      if (customEvent.detail?.sectionId !== "display") return;
+      const sectionId = customEvent.detail?.sectionId;
+
+      if (sectionId === "licenses") {
+        setStoredLicenseFilters([]);
+        syncLicenseFilterBoxes();
+        return;
+      }
+
+      if (sectionId !== "display") return;
 
       if (getStoredDisplayAiFilter()) setStoredDisplayAiFilter(null);
       scheduleSync();
