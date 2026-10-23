@@ -35,7 +35,7 @@ import {
 import { useSongs } from "@/hooks/useSongs";
 import type { Song } from "@/lib/types";
 
-const NEW_SONG_COUNT = 10;
+const NEW_SONG_COUNT = 12;
 const HOME_SHELF_SONG_COUNT = 12;
 const HOME_LIFETIME_COVER_TILE_COUNT = 182;
 const HOME_HERO_IMAGE =
