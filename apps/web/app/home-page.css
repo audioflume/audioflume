@@ -35,8 +35,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-hero {
-  display: none;
   position: relative;
+  display: grid;
   height: calc(
     100dvh - 28px - var(--filmwave-header-height, 60px) -
       var(--filmwave-searchbar-height, 75px)
