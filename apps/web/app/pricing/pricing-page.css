@@ -54,6 +54,7 @@
 
 .audioflume-pricing-catalogue-intro-copy {
   width: 100%;
+  color: var(--filmwave-section-title-color);
   max-width: 680px;
   flex: 0 1 680px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -65,6 +66,7 @@
 
 .audioflume-pricing-catalogue-intro-meta {
   flex: 0 0 auto;
+  color: var(--filmwave-section-title-color);
   text-align: right;
 }
 
