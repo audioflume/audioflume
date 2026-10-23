@@ -29,6 +29,7 @@ body:has(.community-playlists-page-root) {
 
 .community-page-pill-browser .discover-category-description {
   width: min(calc(100% - 40px), 950px);
+  color: var(--filmwave-section-title-color);
   font-size: 32px;
 }
 
