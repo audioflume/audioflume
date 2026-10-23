@@ -677,6 +677,19 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   opacity: 1;
 }
 
+@container (max-width: 666px) {
+  .audioflume-home-reference-feature-pair-card.is-artists {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-end;
+  }
+
+  .audioflume-home-reference-feature-pair-card.is-artists
+    .audioflume-home-reference-feature-pair-link {
+    align-self: flex-start;
+  }
+}
+
 .audioflume-home-reference-feature-pair-card.is-artists::after {
   position: absolute;
   inset: 0;
