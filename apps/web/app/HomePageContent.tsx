@@ -9,6 +9,7 @@ import {
   useState,
   type KeyboardEvent,
   type MouseEvent,
+  type PointerEvent as ReactPointerEvent,
   type ReactNode,
 } from "react";
 
@@ -59,15 +60,28 @@ function Shelf({
   children,
   className = "",
   snapAfterScroll = false,
+  customScrollbar = false,
 }: {
   label: string;
   children: ReactNode;
   className?: string;
   snapAfterScroll?: boolean;
+  customScrollbar?: boolean;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
+  const [scrollbarThumb, setScrollbarThumb] = useState({ left: 0, width: 0 });
+  const scrollbarTrackRef = useRef<HTMLDivElement>(null);
+  const inertiaFrameRef = useRef<number | null>(null);
+  const dragStateRef = useRef<{
+    pointerId: number;
+    startX: number;
+    startScrollLeft: number;
+    lastX: number;
+    lastTime: number;
+    velocity: number;
+  } | null>(null);
 
   function updateScrollState() {
     const scroller = scrollerRef.current;
@@ -75,6 +89,20 @@ function Shelf({
     const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
     setCanScrollPrev(scroller.scrollLeft > 4);
     setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
+
+    if (customScrollbar) {
+      const track = scrollbarTrackRef.current;
+      if (!track || maxScrollLeft <= 0) {
+        setScrollbarThumb({ left: 0, width: track?.clientWidth ?? 0 });
+        return;
+      }
+
+      const trackWidth = track.clientWidth;
+      const thumbWidth = Math.min(240, trackWidth);
+      const thumbTravel = Math.max(0, trackWidth - thumbWidth);
+      const left = thumbTravel * (scroller.scrollLeft / maxScrollLeft);
+      setScrollbarThumb({ left, width: thumbWidth });
+    }
   }
 
   function getCardStep(scroller: HTMLDivElement) {
@@ -107,6 +135,127 @@ function Shelf({
       1,
       Math.round((contentWidth + gap) / step),
     );
+  }
+
+  function snapScrollerToNearest() {
+    const scroller = scrollerRef.current;
+    if (!scroller || !snapAfterScroll) return;
+
+    const step = getCardStep(scroller);
+    if (!step) return;
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    const target = Math.max(
+      0,
+      Math.min(Math.round(scroller.scrollLeft / step) * step, maxScrollLeft),
+    );
+
+    scroller.scrollTo({ left: target, behavior: "smooth" });
+  }
+
+  function stopScrollbarInertia() {
+    if (inertiaFrameRef.current !== null) {
+      window.cancelAnimationFrame(inertiaFrameRef.current);
+      inertiaFrameRef.current = null;
+    }
+  }
+
+  function startScrollbarInertia(initialVelocity: number) {
+    const scroller = scrollerRef.current;
+    if (!scroller) return;
+
+    stopScrollbarInertia();
+
+    let velocity = initialVelocity;
+    let lastTime = performance.now();
+
+    const tick = (now: number) => {
+      const currentScroller = scrollerRef.current;
+      if (!currentScroller) return;
+
+      const dt = Math.min(32, now - lastTime);
+      lastTime = now;
+      currentScroller.scrollLeft += velocity * dt;
+      velocity *= Math.pow(0.92, dt / 16);
+
+      const maxScrollLeft =
+        currentScroller.scrollWidth - currentScroller.clientWidth;
+      const atEdge =
+        currentScroller.scrollLeft <= 0 ||
+        currentScroller.scrollLeft >= maxScrollLeft;
+
+      if (Math.abs(velocity) < 0.02 || atEdge) {
+        inertiaFrameRef.current = null;
+        currentScroller.style.scrollSnapType = "";
+        currentScroller.style.scrollBehavior = "";
+        snapScrollerToNearest();
+        return;
+      }
+
+      inertiaFrameRef.current = window.requestAnimationFrame(tick);
+    };
+
+    inertiaFrameRef.current = window.requestAnimationFrame(tick);
+  }
+
+  function handleScrollbarPointerDown(event: ReactPointerEvent<HTMLDivElement>) {
+    const scroller = scrollerRef.current;
+    const track = scrollbarTrackRef.current;
+    if (!scroller || !track) return;
+
+    stopScrollbarInertia();
+
+    event.currentTarget.setPointerCapture(event.pointerId);
+    scroller.style.scrollSnapType = "none";
+    scroller.style.scrollBehavior = "auto";
+
+    dragStateRef.current = {
+      pointerId: event.pointerId,
+      startX: event.clientX,
+      startScrollLeft: scroller.scrollLeft,
+      lastX: event.clientX,
+      lastTime: performance.now(),
+      velocity: 0,
+    };
+  }
+
+  function handleScrollbarPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const scroller = scrollerRef.current;
+    const track = scrollbarTrackRef.current;
+    const drag = dragStateRef.current;
+    if (!scroller || !track || !drag || drag.pointerId !== event.pointerId) return;
+
+    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
+    const thumbTravel = Math.max(1, track.clientWidth - scrollbarThumb.width);
+    const scrollPerPixel = maxScrollLeft / thumbTravel;
+    const nextScrollLeft =
+      drag.startScrollLeft + (event.clientX - drag.startX) * scrollPerPixel;
+
+    const now = performance.now();
+    const dt = Math.max(1, now - drag.lastTime);
+    const currentScrollLeft = scroller.scrollLeft;
+    scroller.scrollLeft = Math.max(0, Math.min(nextScrollLeft, maxScrollLeft));
+    drag.velocity = (scroller.scrollLeft - currentScrollLeft) / dt;
+    drag.lastX = event.clientX;
+    drag.lastTime = now;
+  }
+
+  function handleScrollbarPointerUp(event: ReactPointerEvent<HTMLDivElement>) {
+    const scroller = scrollerRef.current;
+    const drag = dragStateRef.current;
+    if (!scroller || !drag || drag.pointerId !== event.pointerId) return;
+
+    event.currentTarget.releasePointerCapture(event.pointerId);
+    dragStateRef.current = null;
+
+    if (Math.abs(drag.velocity) >= 0.02) {
+      startScrollbarInertia(drag.velocity);
+      return;
+    }
+
+    scroller.style.scrollSnapType = "";
+    scroller.style.scrollBehavior = "";
+    snapScrollerToNearest();
   }
 
   function scroll(direction: "prev" | "next") {
@@ -154,11 +303,12 @@ function Shelf({
     observer.observe(scroller);
 
     return () => {
+      stopScrollbarInertia();
       scroller.removeEventListener("scroll", updateScrollState);
       window.removeEventListener("resize", updateScrollState);
       observer.disconnect();
     };
-  }, []);
+  }, [customScrollbar]);
 
 
   return (
@@ -186,6 +336,26 @@ function Shelf({
       >
         <ChevronRightIcon size={18} />
       </button>
+
+      {customScrollbar ? (
+        <div
+          ref={scrollbarTrackRef}
+          className="audioflume-home-reference-shelf-scrollbar"
+          aria-hidden="true"
+        >
+          <div
+            className="audioflume-home-reference-shelf-scrollbar-thumb"
+            style={{
+              width: `${scrollbarThumb.width}px`,
+              transform: `translateX(${scrollbarThumb.left}px)`,
+            }}
+            onPointerDown={handleScrollbarPointerDown}
+            onPointerMove={handleScrollbarPointerMove}
+            onPointerUp={handleScrollbarPointerUp}
+            onPointerCancel={handleScrollbarPointerUp}
+          />
+        </div>
+      ) : null}
 
     </div>
   );
@@ -593,6 +763,7 @@ function HomeFeaturedArtistSkeleton() {
       label="featured artists"
       className="audioflume-home-reference-featured-artist-shelf"
       snapAfterScroll
+      customScrollbar
     >
       {Array.from({ length: 4 }, (_, index) => (
         <article
@@ -648,6 +819,7 @@ function HomeFeaturedArtistGrid({
       label="featured artists"
       className="audioflume-home-reference-featured-artist-shelf"
       snapAfterScroll
+      customScrollbar
     >
       {visibleArtists.map((artist) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
