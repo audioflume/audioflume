@@ -757,6 +757,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     justify-content: flex-end;
   }
 
+  .audioflume-home-reference-feature-pair-card.is-artists h2 {
+    font-size: clamp(48px, 8cqw, 56px);
+  }
+
   .audioflume-home-reference-feature-pair-card.is-artists
     .audioflume-home-reference-feature-pair-link {
     align-self: flex-start;
