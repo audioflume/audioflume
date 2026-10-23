@@ -3282,12 +3282,16 @@ html:not(.light):not([data-theme="light"])
   color: #ffffff;
 }
 
+html:not(.light):not([data-theme="light"]) .audioflume-home-lifetime-feature-link {
+  color: var(--filmwave-section-title-color);
+}
+
 html:not(.light):not([data-theme="light"])
   .audioflume-home-lifetime-feature-copy
   .audioflume-home-lifetime-feature-price-group.is-regular
   .audioflume-pricing-plan-price
   strong {
-  color: #6f6f6f;
+  color: #2a2a2a;
 }
 
 html:not(.light):not([data-theme="light"])
@@ -3295,7 +3299,7 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-lifetime-feature-price-group.is-regular
   .audioflume-pricing-plan-price
   strong::after {
-  background: #6f6f6f;
+  background: #2a2a2a;
 }
 
 html:not(.light):not([data-theme="light"])
