@@ -35,8 +35,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-hero {
+  display: none;
   position: relative;
-  display: grid;
   height: calc(
     100dvh - 28px - var(--filmwave-header-height, 60px) -
       var(--filmwave-searchbar-height, 75px)
@@ -604,7 +604,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     "artists playlists"
     "featured featured";
   column-gap: 30px;
-  row-gap: 32px;
+  row-gap: 4px;
 }
 
 .audioflume-home-reference-feature-pair-column {
@@ -616,6 +616,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-reference-feature-pair-column.is-playlists-feature {
+  display: none;
   grid-area: playlists;
 }
 
@@ -1178,7 +1179,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-featured-artist-shelf {
-    margin-top: 12px;
+    margin-top: 0;
   }
 
   .audioflume-home-reference-feature-pair-grid,
@@ -1208,7 +1209,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
       "featured"
       "playlists";
     column-gap: 0;
-    row-gap: 0;
+    row-gap: 4px;
   }
 
   .audioflume-home-reference-feature-pair-column.is-playlists-feature {
