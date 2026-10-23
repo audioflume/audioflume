@@ -788,7 +788,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-artist-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 10px;
+  gap: 4px;
   padding-right: var(--audioflume-home-page-gutter);
   padding-left: var(--audioflume-home-page-gutter);
   scroll-padding-right: var(--audioflume-home-page-gutter);
@@ -809,8 +809,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-featured-artist-card {
   position: relative;
-  width: calc((var(--home-reference-width) - 30px) / 4);
-  min-width: calc((var(--home-reference-width) - 30px) / 4);
+  width: calc((var(--home-reference-width) - 12px) / 4);
+  min-width: calc((var(--home-reference-width) - 12px) / 4);
   aspect-ratio: 1.88 / 1;
   overflow: hidden;
   background: var(--bg-tertiary);
@@ -1163,8 +1163,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-featured-artist-card {
-    width: calc((var(--home-reference-width) - 20px) / 3);
-    min-width: calc((var(--home-reference-width) - 20px) / 3);
+    width: calc((var(--home-reference-width) - 8px) / 3);
+    min-width: calc((var(--home-reference-width) - 8px) / 3);
   }
 }
 
@@ -1256,8 +1256,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-reference-featured-artist-card {
-    width: calc((var(--home-reference-width) - 10px) / 2);
-    min-width: calc((var(--home-reference-width) - 10px) / 2);
+    width: calc((var(--home-reference-width) - 4px) / 2);
+    min-width: calc((var(--home-reference-width) - 4px) / 2);
   }
 
   .audioflume-home-reference-song-search-content h2 {
