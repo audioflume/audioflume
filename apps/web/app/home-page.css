@@ -1573,7 +1573,7 @@ html:not(.light):not([data-theme="light"])
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin-bottom: 14px;
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 19px;
