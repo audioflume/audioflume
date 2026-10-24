@@ -4390,3 +4390,38 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-intro-heading {
   padding-top: 0;
 }
+
+
+/* Match homepage artist genre pills to the Discover hero. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-genres {
+  gap: 8px;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-genres > span {
+  display: inline-flex;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 0 14px;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-genres > .is-placeholder {
+  visibility: hidden;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-play {
+  font-size: 15px;
+}
