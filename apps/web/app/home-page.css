@@ -4253,8 +4253,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 @media (max-width: 620px) {
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card {
-    width: 67vw !important;
-    min-width: 67vw !important;
+    width: 84vw !important;
+    min-width: 84vw !important;
   }
 
   .audioflume-home-mockup-artists
