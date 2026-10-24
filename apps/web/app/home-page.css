@@ -547,35 +547,6 @@ html:not(.light):not([data-theme="light"])
   animation: audioflume-home-skeleton-pulse 1.35s ease-in-out infinite;
 }
 
-.audioflume-home-skeleton-artist-card {
-  position: relative;
-}
-
-.audioflume-home-skeleton-block.is-artist-media {
-  width: 100%;
-  height: var(--audioflume-home-artist-media-height);
-}
-
-.audioflume-home-skeleton-block.is-artist-name {
-  width: 150px;
-  height: 17px;
-}
-
-.audioflume-home-skeleton-artist-pills {
-  display: flex;
-  gap: 6px;
-}
-
-.audioflume-home-skeleton-block.is-artist-pill {
-  width: 58px;
-  height: 21px;
-  border-radius: 999px;
-}
-
-.audioflume-home-skeleton-block.is-artist-pill.is-short {
-  width: 44px;
-}
-
 .audioflume-home-skeleton-block.is-artist-play {
   position: absolute;
   top: calc(var(--audioflume-home-artist-media-height) + 16px);
@@ -585,46 +556,10 @@ html:not(.light):not([data-theme="light"])
   border-radius: 50%;
 }
 
-.audioflume-home-skeleton-playlist-card {
-  min-width: 0;
-}
-
-.audioflume-home-skeleton-block.is-playlist-media {
-  width: 100%;
-  aspect-ratio: 16 / 9;
-}
-
-.audioflume-home-skeleton-block.is-playlist-title {
-  width: 48%;
-  height: 15px;
-  margin-top: 12px;
-}
-
 .audioflume-home-skeleton-block.is-playlist-meta {
   width: 68px;
   height: 10px;
   margin-top: 7px;
-}
-
-.audioflume-home-skeleton-block.is-original-media {
-  width: 100%;
-  aspect-ratio: 1;
-}
-
-.audioflume-home-skeleton-original-copy {
-  display: grid;
-  gap: 2px;
-  margin-top: 10px;
-}
-
-.audioflume-home-skeleton-block.is-original-title {
-  width: 72%;
-  height: 20px;
-}
-
-.audioflume-home-skeleton-block.is-original-artist {
-  width: 46%;
-  height: 16px;
 }
 
 .audioflume-home-skeleton-song-rows {
@@ -741,6 +676,8 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-skeleton-artist-card
   .audioflume-home-skeleton-artist-pills {
+  display: flex;
+  gap: 6px;
   margin-top: 8px;
 }
 
@@ -750,6 +687,7 @@ html:not(.light):not([data-theme="light"])
   width: 72px;
   height: 28px;
   min-height: 28px;
+  border-radius: 999px;
   padding: 0;
   background: color-mix(in srgb, #ffffff 13%, transparent);
 }
@@ -772,6 +710,7 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-skeleton-playlist-card {
   position: relative;
+  min-width: 0;
   overflow: hidden;
   pointer-events: none;
 }
