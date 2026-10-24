@@ -15,7 +15,6 @@ import {
 import Footer from "@/components/Footer";
 import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
-import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import SongCard from "@/components/SongCard";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -903,11 +902,7 @@ function HomeSongRowsSkeleton() {
   );
 }
 
-export default function HomePageContent({
-  homeFlashImages,
-  membershipHref,
-  membershipLabel,
-}: {
+export default function HomePageContent(_props: {
   homeFlashImages: string[];
   membershipHref: string;
   membershipLabel: string;
