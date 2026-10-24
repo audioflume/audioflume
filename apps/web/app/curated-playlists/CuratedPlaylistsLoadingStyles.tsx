@@ -203,7 +203,8 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
 
     body:has(.curated-playlists-page-root)
       .curated-page-skeleton-grid {
-      gap: 24px;
+      column-gap: 10px;
+      row-gap: 32px;
     }
   }
 
