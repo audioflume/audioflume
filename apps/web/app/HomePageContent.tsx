@@ -37,7 +37,6 @@ import type { Song } from "@/lib/types";
 
 const NEW_SONG_COUNT = 12;
 const HOME_SHELF_SONG_COUNT = 12;
-const HOME_LIFETIME_COVER_TILE_COUNT = 182;
 type HomeArtist = {
   id: string;
   name: string;
@@ -748,27 +747,6 @@ function HomeTrendingSkeleton() {
   );
 }
 
-function HomeSongShelfSkeleton() {
-  return (
-    <div className="audioflume-home-reference-shelf audioflume-home-reference-song-shelf audioflume-home-skeleton-song-shelf">
-      <div className="audioflume-home-reference-shelf-scroller">
-        {Array.from({ length: 4 }, (_, index) => (
-          <article
-            key={index}
-            className="audioflume-home-reference-song-card audioflume-home-skeleton-song-card"
-          >
-            <HomeSkeletonBlock className="is-song-art" />
-            <div className="audioflume-home-skeleton-song-copy">
-              <HomeSkeletonBlock className="is-song-title" />
-              <HomeSkeletonBlock className="is-song-artist" />
-            </div>
-          </article>
-        ))}
-      </div>
-    </div>
-  );
-}
-
 function HomeArtistShelfSkeleton() {
   return (
     <Shelf
@@ -895,29 +873,6 @@ export default function HomePageContent(_props: {
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
-  );
-  const lifetimeOriginalCovers = useMemo(
-    () =>
-      songs
-        .filter(
-          (song) =>
-            song.artist.trim().localeCompare("Audioflume", undefined, {
-              sensitivity: "base",
-            }) === 0 && Boolean(song.coverArt),
-        )
-        .map((song) => song.coverArt as string),
-    [songs],
-  );
-  const lifetimeCoverTiles = useMemo(
-    () =>
-      lifetimeOriginalCovers.length > 0
-        ? Array.from(
-            { length: HOME_LIFETIME_COVER_TILE_COUNT },
-            (_, index) =>
-              lifetimeOriginalCovers[index % lifetimeOriginalCovers.length],
-          )
-        : [],
-    [lifetimeOriginalCovers],
   );
   const originalSongs = playableSongs
     .filter(
