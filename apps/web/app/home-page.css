@@ -1478,7 +1478,7 @@ html:not(.light):not([data-theme="light"])
   z-index: 1;
   overflow: hidden;
   color: #ffffff;
-  font-size: 31px;
+  font-size: 28px;
   font-weight: 300;
   letter-spacing: -0.035em;
   line-height: 1.05;
@@ -1643,7 +1643,7 @@ html:not(.light):not([data-theme="light"])
     right: 70px;
     bottom: 21px;
     left: 20px;
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .audioflume-home-mockup-curated-card-play {
