@@ -370,7 +370,7 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
 function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
   return (
     <div className="audioflume-home-reference-original-song-grid">
-      {songs.slice(0, 12).map((song) => (
+      {songs.slice(0, 16).map((song) => (
         <HomeOriginalSongCard key={song.id} song={song} />
       ))}
     </div>
@@ -1064,7 +1064,7 @@ export default function HomePageContent(_props: {
           sensitivity: "base",
         }) === 0,
     )
-    .slice(0, 12);
+    .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
 
   useEffect(() => {
