@@ -544,7 +544,6 @@ function HomeArtistShelf({
               disabled={!playable.length}
               aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
             >
-              <span>{artistIsPlaying ? "Pause Music" : "Play Music"}</span>
               {artistIsPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
             </button>
           </article>
