@@ -4862,31 +4862,6 @@ html:not(.light):not([data-theme="light"])
   white-space: nowrap;
 }
 
-.audioflume-home-lifetime-v2.is-copy-stacked .audioflume-home-lifetime-v2-bottom {
-  grid-template-columns: max-content max-content;
-  row-gap: 24px;
-}
-
-.audioflume-home-lifetime-v2.is-copy-stacked .audioflume-home-lifetime-v2-statement {
-  grid-column: 1 / -1;
-  justify-self: start;
-}
-
-.audioflume-home-lifetime-v2.is-copy-stacked {
-  height: calc(
-    200px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
-  );
-}
-
-.audioflume-home-lifetime-v2.is-copy-stacked .audioflume-home-lifetime-v2-copy {
-  height: calc(
-    200px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
-  );
-  min-height: calc(
-    200px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
-  );
-}
-
 .audioflume-home-lifetime-v2.is-stacked {
   height: auto;
   min-height: 0;
@@ -4900,16 +4875,6 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-copy {
   height: 200px;
   min-height: 200px;
-}
-
-.audioflume-home-lifetime-v2.is-stacked.is-copy-stacked
-  .audioflume-home-lifetime-v2-copy {
-  height: calc(
-    200px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
-  );
-  min-height: calc(
-    200px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
-  );
 }
 
 @media (max-width: 1320px) {
