@@ -1005,6 +1005,7 @@ export default function HomePageContent(_props: {
   const [artistsLoading, setArtistsLoading] = useState(true);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
+  const lifetimeLayoutRef = useRef<HTMLDivElement>(null);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -1046,6 +1047,26 @@ export default function HomePageContent(_props: {
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
+
+  useEffect(() => {
+    const lifetimeBlock = lifetimeLayoutRef.current;
+    const planCard = document.querySelector<HTMLElement>(
+      ".audioflume-home-mockup-editorial-card",
+    );
+    if (!lifetimeBlock || !planCard) return;
+
+    const lifetimeWidth = lifetimeBlock.getBoundingClientRect().width;
+    const planHeight = planCard.getBoundingClientRect().height;
+
+    lifetimeBlock.style.setProperty(
+      "--audioflume-home-lifetime-copy-width",
+      `${lifetimeWidth / 2}px`,
+    );
+    lifetimeBlock.style.setProperty(
+      "--audioflume-home-lifetime-height",
+      `${planHeight}px`,
+    );
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -1177,7 +1198,10 @@ export default function HomePageContent(_props: {
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
-          <div className="audioflume-home-reference-width audioflume-home-lifetime-v2">
+          <div
+            ref={lifetimeLayoutRef}
+            className="audioflume-home-reference-width audioflume-home-lifetime-v2"
+          >
             <div className="audioflume-home-lifetime-v2-copy">
               <div className="audioflume-home-lifetime-v2-top">
                 <span>Plans for a <b>lifetime</b></span>
