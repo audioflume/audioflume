@@ -1794,7 +1794,7 @@ html:not(.light):not([data-theme="light"])
   grid-template-columns: repeat(3, minmax(0, 445px));
   justify-content: space-between;
   gap: 10px;
-  padding-bottom: 10px;
+  padding-bottom: 80px;
 }
 
 .audioflume-home-mockup-editorial-card {
