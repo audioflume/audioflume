@@ -518,6 +518,11 @@ function HomeArtistShelf({
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
                   <strong>{artist.name}</strong>
+                  {artist.designation ? (
+                    <span className="audioflume-home-reference-artist-designation">
+                      {artist.designation}
+                    </span>
+                  ) : null}
                   <span className="audioflume-home-reference-artist-genres">
                     {genres.length > 0
                       ? genres.map((genre) => <span key={genre}>{genre}</span>)
