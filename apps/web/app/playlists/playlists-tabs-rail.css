@@ -700,6 +700,10 @@ section.curated-playlists-page-layer section.mt-10 h2 {
   .playlists-page .playlist-gallery-art {
     height: calc(52vw / 2.38) !important;
   }
+
+  .playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-card-menu-wrap {
+    top: calc((52vw / 2.38) + 9px) !important;
+  }
 }
 
 @media (max-width: 620px) {
@@ -710,6 +714,10 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 
   .playlists-page .playlist-gallery-art {
     height: calc(78vw / 2.38) !important;
+  }
+
+  .playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-card-menu-wrap {
+    top: calc((78vw / 2.38) + 9px) !important;
   }
 }
 
@@ -738,8 +746,10 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 
 .playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-card-menu-wrap {
   position: absolute !important;
-  right: auto !important;
+  top: calc((40vw / 2.38) + 9px) !important;
+  right: 0 !important;
   bottom: auto !important;
+  left: auto !important;
   z-index: 8 !important;
   display: flex !important;
   width: 18px !important;
@@ -765,6 +775,16 @@ section.curated-playlists-page-layer section.mt-10 h2 {
   filter: none !important;
   color: var(--text-secondary) !important;
   padding: 0 !important;
+  opacity: 0 !important;
+  transition:
+    opacity 150ms ease,
+    color 150ms ease !important;
+}
+
+.playlists-page .playlist-gallery-card:not(.is-reordering):hover .playlist-menu-btn-grid,
+.playlists-page .playlist-gallery-card:not(.is-reordering):focus-within .playlist-menu-btn-grid,
+.playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid.is-open {
+  opacity: 1 !important;
 }
 
 .playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid:hover,
