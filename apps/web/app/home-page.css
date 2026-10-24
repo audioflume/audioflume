@@ -4818,8 +4818,14 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-lifetime-v2.is-copy-stacked .audioflume-home-lifetime-v2-copy {
-  height: auto;
-  min-height: var(--audioflume-home-lifetime-height);
+  height: calc(
+    var(--audioflume-home-lifetime-height) +
+      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+  );
+  min-height: calc(
+    var(--audioflume-home-lifetime-height) +
+      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+  );
 }
 
 .audioflume-home-lifetime-v2.is-stacked {
@@ -4835,6 +4841,18 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-copy {
   height: var(--audioflume-home-lifetime-height);
   min-height: var(--audioflume-home-lifetime-height);
+}
+
+.audioflume-home-lifetime-v2.is-stacked.is-copy-stacked
+  .audioflume-home-lifetime-v2-copy {
+  height: calc(
+    var(--audioflume-home-lifetime-height) +
+      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+  );
+  min-height: calc(
+    var(--audioflume-home-lifetime-height) +
+      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+  );
 }
 
 @media (max-width: 1320px) {
