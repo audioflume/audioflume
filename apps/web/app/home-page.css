@@ -4314,3 +4314,21 @@ html:not(.light):not([data-theme="light"])
     bottom: 26px;
   }
 }
+
+
+/* Remove all snapping from the active homepage sliding shelves. */
+.audioflume-home-mockup
+  .audioflume-home-reference-artist-shelf
+  .audioflume-home-reference-shelf-scroller,
+.audioflume-home-mockup
+  .audioflume-home-mockup-curated-shelf
+  .audioflume-home-reference-shelf-scroller {
+  scroll-snap-type: none !important;
+  scroll-padding: 0 !important;
+}
+
+.audioflume-home-mockup .audioflume-home-reference-artist-card,
+.audioflume-home-mockup .audioflume-home-mockup-curated-card {
+  scroll-snap-align: none !important;
+  scroll-snap-stop: normal !important;
+}
