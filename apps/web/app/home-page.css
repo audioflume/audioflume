@@ -5526,3 +5526,136 @@ html:not(.light):not([data-theme="light"])
     max-width: calc(100% - 370px);
   }
 }
+
+
+/* Isolated homepage Lifetime layout: no shared pricing-page classes. */
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  min-width: 0;
+  padding: 0;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top {
+  position: absolute;
+  top: 28px;
+  right: 18px;
+  left: 40px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-link {
+  position: static !important;
+  margin: 0 !important;
+}
+
+.audioflume-home-lifetime-reference-bottom {
+  position: absolute;
+  right: 40px;
+  bottom: 28px;
+  left: 40px;
+  display: grid;
+  grid-template-columns: max-content max-content minmax(260px, 1fr);
+  align-items: end;
+  column-gap: 28px;
+}
+
+.audioflume-home-lifetime-reference-price {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.audioflume-home-lifetime-reference-badge {
+  display: inline-flex;
+  min-height: 18px;
+  align-items: center;
+  background: #656565;
+  padding: 0 8px;
+  color: #ffffff;
+  font-size: 7px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.audioflume-home-lifetime-reference-badge.is-light {
+  background: #ffffff;
+  color: #111111;
+}
+
+.audioflume-home-lifetime-reference-price > strong,
+.audioflume-home-lifetime-reference-offer-line > strong {
+  margin-top: 8px;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(38px, 2.7vw, 50px);
+  font-weight: 400;
+  letter-spacing: -0.055em;
+  line-height: 0.9;
+}
+
+.audioflume-home-lifetime-reference-price.is-regular > strong {
+  position: relative;
+  color: #656565;
+}
+
+.audioflume-home-lifetime-reference-price.is-regular > strong::after {
+  position: absolute;
+  top: 50%;
+  right: -8px;
+  left: -8px;
+  height: 2px;
+  background: #656565;
+  content: "";
+  transform: translateY(-50%);
+}
+
+.audioflume-home-lifetime-reference-offer-line {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.audioflume-home-lifetime-reference-offer-line > strong {
+  color: #ffffff;
+}
+
+.audioflume-home-lifetime-reference-offer-line > span {
+  color: #ffffff;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.audioflume-home-lifetime-feature-reference-copy {
+  position: static;
+  width: auto;
+  max-width: 360px;
+  justify-self: end;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(19px, 1.32vw, 24px);
+  font-weight: 300;
+  letter-spacing: -0.032em;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+@media (max-width: 1180px) {
+  .audioflume-home-lifetime-reference-bottom {
+    right: 28px;
+    left: 28px;
+    grid-template-columns: max-content max-content minmax(220px, 1fr);
+    column-gap: 20px;
+  }
+
+  .audioflume-home-lifetime-feature-reference-copy {
+    max-width: 280px;
+    font-size: 19px;
+  }
+}
