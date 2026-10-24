@@ -49,20 +49,24 @@ function formatSongCount(count?: number) {
 export function CuratedPlaylistCard({
   playlist,
   index,
+  variant = "default",
 }: {
   playlist: CuratedPlaylistCardItem;
   index: number;
+  variant?: "default" | "home";
 }) {
   const href = playlist.href || `/curated-playlists/${playlist.id}`;
   const fallbackGradient =
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
 
+  const isHomeVariant = variant === "home";
+
   return (
     <div className={cardStyles.shell}>
-      <article className={cardStyles.card}>
+      <article className={`${cardStyles.card}${isHomeVariant ? ` ${cardStyles.homeCard}` : ""}`}>
         <Link href={href} className={cardStyles.imageLink}>
           <div
-            className={cardStyles.image}
+            className={`${cardStyles.image}${isHomeVariant ? ` ${cardStyles.homeImage}` : ""}`}
             data-curated-playlist-image
             style={{
               background: playlist.cover_image_url
@@ -80,26 +84,38 @@ export function CuratedPlaylistCard({
                 unoptimized
               />
             )}
+
+            {isHomeVariant ? (
+              <>
+                <span className={cardStyles.homeShade} />
+                <span className={cardStyles.homeKicker}>Featured playlist</span>
+                <strong className={cardStyles.homeTitle}>{playlist.name}</strong>
+              </>
+            ) : null}
           </div>
         </Link>
 
-        <CuratedPlaylistBookmarkButton
-          playlist={playlist}
-          className={cardStyles.bookmarkButton}
-        />
-
-        <div className={cardStyles.details}>
-          <Link href={href} className={cardStyles.copy}>
-            <h3>{playlist.name}</h3>
-            <p>{formatSongCount(playlist.song_count)}</p>
-          </Link>
-
-          <CuratedPlaylistPlayButton
-            playlistId={playlist.id}
-            playlistName={playlist.name}
-            className={cardStyles.playButton}
+        {!isHomeVariant ? (
+          <CuratedPlaylistBookmarkButton
+            playlist={playlist}
+            className={cardStyles.bookmarkButton}
           />
-        </div>
+        ) : null}
+
+        {!isHomeVariant ? (
+          <div className={cardStyles.details}>
+            <Link href={href} className={cardStyles.copy}>
+              <h3>{playlist.name}</h3>
+              <p>{formatSongCount(playlist.song_count)}</p>
+            </Link>
+          </div>
+        ) : null}
+
+        <CuratedPlaylistPlayButton
+          playlistId={playlist.id}
+          playlistName={playlist.name}
+          className={`${cardStyles.playButton}${isHomeVariant ? ` ${cardStyles.homePlayButton}` : ""}`}
+        />
       </article>
     </div>
   );
