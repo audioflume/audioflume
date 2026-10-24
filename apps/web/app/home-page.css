@@ -4876,3 +4876,10 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-width.grid {
   gap: 5px !important;
 }
+
+
+/* Let the catalogue link use the shared arrow-link styling without local overrides. */
+.audioflume-home-mockup-catalogue-heading a.audioflume-arrow-text-link {
+  padding-bottom: 0;
+  font-size: inherit;
+}
