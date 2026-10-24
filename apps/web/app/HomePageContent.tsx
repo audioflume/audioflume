@@ -1081,10 +1081,17 @@ export default function HomePageContent(_props: {
     );
     if (!lifetimeBlock || !planStrip || !planCard) return;
 
-    const lifetimeWidth = lifetimeBlock.getBoundingClientRect().width;
+    const pageStyles = getComputedStyle(
+      lifetimeBlock.closest(".audioflume-home-reference") ?? lifetimeBlock,
+    );
+    const initialGutter =
+      Number.parseFloat(
+        pageStyles.getPropertyValue("--audioflume-home-page-gutter"),
+      ) || 0;
+    const usableScreenWidth = window.screen.width - initialGutter * 2;
     const planWidth = planCard.getBoundingClientRect().width;
     const planHeight = planWidth / 2.45;
-    const lockedCopyWidth = lifetimeWidth / 2;
+    const lockedCopyWidth = usableScreenWidth / 2;
 
     lifetimeLockedCopyWidthRef.current = lockedCopyWidth;
     planStrip.style.setProperty(
@@ -1112,11 +1119,11 @@ export default function HomePageContent(_props: {
         Number.parseFloat(
           styles.getPropertyValue("--audioflume-home-page-gutter"),
         ) || 0;
-      const usablePageWidth = window.innerWidth - gutter * 2;
+      const usableScreenWidth = window.screen.width - gutter * 2;
       const currentBlockWidth = currentBlock.getBoundingClientRect().width;
       const fluidArtWidth = currentBlockWidth - copyWidth;
 
-      setLifetimeStacked(fluidArtWidth <= usablePageWidth / 3);
+      setLifetimeStacked(fluidArtWidth <= usableScreenWidth / 3);
 
       const bottom = currentBlock.querySelector<HTMLElement>(
         ".audioflume-home-lifetime-v2-bottom",
