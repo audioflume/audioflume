@@ -4795,15 +4795,16 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-lifetime-v2-statement {
-  width: 100%;
-  max-width: 360px;
+  width: max-content;
+  max-width: 100%;
   justify-self: end;
-  margin: 0 0 0 48px;
+  margin: 0;
   color: #ffffff;
-  font-size: clamp(19px, 1.2vw, 22px);
+  font-size: clamp(21px, 1.35vw, 24px);
   font-weight: 300;
   letter-spacing: -0.032em;
   line-height: 1.02;
+  text-align: left;
   text-transform: uppercase;
 }
 
@@ -4817,9 +4818,7 @@ html:not(.light):not([data-theme="light"])
   }
 
   .audioflume-home-lifetime-v2-statement {
-    max-width: 300px;
-    margin-left: 32px;
-    font-size: 19px;
+    font-size: 21px;
   }
 }
 
