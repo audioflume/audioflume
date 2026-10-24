@@ -4491,3 +4491,20 @@ html:not(.light):not([data-theme="light"])
   height: auto !important;
   aspect-ratio: 2.38 / 1 !important;
 }
+
+
+/* Keep featured artist block proportions consistent at every viewport size. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-card {
+  width: 67vw !important;
+  min-width: 67vw !important;
+  height: auto !important;
+  aspect-ratio: auto !important;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-media {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 2.38 / 1 !important;
+}
