@@ -111,7 +111,7 @@ export function CuratedPlaylistCard({
         <CuratedPlaylistPlayButton
           playlistId={playlist.id}
           playlistName={playlist.name}
-          className={`${cardStyles.playButton}${isHomeVariant ? ` ${cardStyles.homePlayButton}` : ""}`}
+          className={`${cardStyles.playButton}${isHomeVariant ? ` ${cardStyles.homePlayButton}` : ` ${cardStyles.curatedPagePlayButton}`}`}
         />
       </article>
     </div>
