@@ -257,3 +257,21 @@
     height: 44.211vw;
   }
 }
+
+
+/* Correct curated-page card height to the final homepage 2.38:1 sizing. */
+.homeImage {
+  height: calc(40vw / 2.38);
+}
+
+@media (max-width: 980px) {
+  .homeImage {
+    height: calc(52vw / 2.38);
+  }
+}
+
+@media (max-width: 620px) {
+  .homeImage {
+    height: calc(78vw / 2.38);
+  }
+}
