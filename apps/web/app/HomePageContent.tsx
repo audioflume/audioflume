@@ -16,9 +16,8 @@ import Footer from "@/components/Footer";
 import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
-import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
-import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
@@ -38,9 +37,6 @@ import type { Song } from "@/lib/types";
 const NEW_SONG_COUNT = 12;
 const HOME_SHELF_SONG_COUNT = 12;
 const HOME_LIFETIME_COVER_TILE_COUNT = 182;
-const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
-
 type HomeArtist = {
   id: string;
   name: string;
@@ -545,6 +541,93 @@ function HomeArtistShelf({
   );
 }
 
+function HomeCuratedPlaylistShelf({
+  playlists,
+}: {
+  playlists: CuratedPlaylist[];
+}) {
+  if (playlists.length === 0) return null;
+
+  return (
+    <section className="audioflume-home-mockup-curated">
+      <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+        Curated collections made for editors.
+      </div>
+
+      <Shelf
+        label="curated playlists"
+        className="audioflume-home-mockup-curated-shelf"
+        snapAfterScroll
+      >
+        {playlists.map((playlist, index) => (
+          <article
+            key={playlist.id}
+            className="audioflume-home-mockup-curated-card"
+          >
+            <Link
+              href={`/curated-playlists/${playlist.id}`}
+              className="audioflume-home-mockup-curated-card-link"
+            >
+              <span
+                className="audioflume-home-mockup-curated-card-media"
+                style={{
+                  backgroundImage: playlist.cover_image_url
+                    ? `url("${playlist.cover_image_url}")`
+                    : undefined,
+                }}
+              />
+              <span className="audioflume-home-mockup-curated-card-shade" />
+              <span className="audioflume-home-mockup-curated-card-kicker">
+                {playlist.kicker || `Playlist 0${index + 1}`}
+              </span>
+              <strong>{playlist.name}</strong>
+            </Link>
+
+            <CuratedPlaylistPlayButton
+              playlistId={playlist.id}
+              playlistName={playlist.name}
+              className="audioflume-home-mockup-curated-card-play"
+            />
+          </article>
+        ))}
+      </Shelf>
+    </section>
+  );
+}
+
+function HomeEditorialStrip() {
+  return (
+    <section className="audioflume-home-mockup-editorial-strip audioflume-home-reference-width">
+      <Link
+        href="/pricing"
+        className="audioflume-home-mockup-editorial-card is-subscription"
+      >
+        <span>Plans for subscriptions</span>
+        <strong>Music licensing built around active creative work.</strong>
+        <ArrowUpRightIcon size={14} strokeWidth={1.4} />
+      </Link>
+
+      <Link
+        href="/artists"
+        className="audioflume-home-mockup-editorial-card is-artists"
+      >
+        <span>Plans for artists</span>
+        <strong>Real artists, composers and original music for picture.</strong>
+        <ArrowUpRightIcon size={14} strokeWidth={1.4} />
+      </Link>
+
+      <Link
+        href="/pricing"
+        className="audioflume-home-mockup-editorial-card is-enterprise"
+      >
+        <span>Plans for enterprise</span>
+        <strong>Flexible licensing for larger teams and productions.</strong>
+        <ArrowUpRightIcon size={14} strokeWidth={1.4} />
+      </Link>
+    </section>
+  );
+}
+
 function HomeSkeletonBlock({
   className = "",
 }: {
@@ -938,77 +1021,71 @@ export default function HomePageContent({
   }, []);
 
   return (
-    <main className={`audioflume-home-reference${playerVisible ? " has-player" : ""}`}>
+    <main className={`audioflume-home-reference audioflume-home-mockup${playerVisible ? " has-player" : ""}`}>
       <GlobalSearchBar />
 
-      <section
-        className="audioflume-home-reference-hero"
-        style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
-      >
-        <div className="audioflume-home-reference-hero-shade" />
-        <h1>Human made music &amp; SFX for film.</h1>
+      <section className="audioflume-home-mockup-intro">
+        <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
+          <span>MUSIC, VIDEO &amp; SOUND EFFECTS</span>
+          <span>HUMAN MADE MUSIC FOR FILM</span>
+        </div>
 
-        <div className="audioflume-home-reference-width audioflume-home-reference-hero-trust">
-          <p>Filmmakers working for these brands already use Audioflume.</p>
-          <div className="audioflume-home-reference-logo-row" aria-label="Brand work">
-            <img
-              src="https://images.filmwave.io/images/home/logos.png"
-              alt="Brands using Audioflume"
-              draggable={false}
-            />
-          </div>
+        <div className="audioflume-home-reference-width audioflume-home-mockup-intro-heading">
+          <h1>Human made music &amp; SFX for film.</h1>
+          <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
       </section>
 
-      <section className="audioflume-home-reference-feature-pair">
-        <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-intro">
-          <div className="audioflume-home-reference-feature-pair-intro-copy">
-            A growing catalogue built around
-            <br className="audioflume-home-reference-feature-pair-intro-break" />
-            cinematic storytelling.
+      <section className="audioflume-home-mockup-artists">
+        {artistsLoading ? (
+          <HomeArtistShelfSkeleton />
+        ) : artists.length > 0 ? (
+          <HomeArtistShelf artists={artists} />
+        ) : null}
+      </section>
+
+      {curatedPlaylistsLoading ? (
+        <section className="audioflume-home-mockup-curated">
+          <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+            Curated collections made for editors.
           </div>
-          <div className="audioflume-home-reference-feature-pair-intro-meta audioflume-editorial-meta">
-            1500+ ARTISTS TRENDING ONLINE
-          </div>
+          <HomeCuratedPlaylistSkeleton />
+        </section>
+      ) : (
+        <HomeCuratedPlaylistShelf playlists={curatedPlaylists} />
+      )}
+
+      <section className="audioflume-home-mockup-catalogue">
+        <div className="audioflume-home-reference-width audioflume-home-mockup-catalogue-heading">
+          <h2>A growing catalogue built around<br />cinematic storytelling.</h2>
+          <Link
+            href="/music"
+            className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+          >
+            Find new music
+            <ArrowUpRightIcon size={15} strokeWidth={1.4} />
+          </Link>
         </div>
 
-        <div className="audioflume-home-reference-width audioflume-home-reference-feature-pair-grid">
-          <div className="audioflume-home-reference-feature-pair-column is-artists-feature">
-            <div className="audioflume-home-reference-feature-pair-card is-artists">
-              <PricingHeroImageFlash
-                images={homeFlashImages}
-                mediaClassName="audioflume-home-feature-flash-media"
-                showPauseControl
+        {songsLoading ? (
+          <HomeTrendingSkeleton />
+        ) : (
+          <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+            {recentSongs.map((song, index) => (
+              <HomeReadyToCutSongCard
+                key={song.id}
+                song={song}
+                index={index + 30}
+                queue={recentSongs}
               />
-              <h2>In demand artists<br />&amp; composers.</h2>
-              <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/discover">
-                Explore artists
-                <ArrowUpRightIcon size={16} strokeWidth={1.5} className="audioflume-home-reference-feature-pair-arrow" />
-              </Link>
-            </div>
+            ))}
           </div>
-
-          <div className="audioflume-home-reference-feature-pair-column is-playlists-feature">
-            <div className="audioflume-home-reference-feature-pair-card is-playlists">
-              <h2>Curated playlists<br />made for editors.</h2>
-              <Link className="audioflume-home-reference-feature-pair-link inline-flex items-center gap-[5px]" href="/curated-playlists">
-                Explore playlists
-                <ArrowUpRightIcon size={16} strokeWidth={1.5} className="audioflume-home-reference-feature-pair-arrow" />
-              </Link>
-            </div>
-          </div>
-
-          {artistsLoading ? (
-            <HomeFeaturedArtistSkeleton />
-          ) : artists.length > 0 ? (
-            <HomeFeaturedArtistGrid artists={artists} />
-          ) : null}
-        </div>
+        )}
       </section>
 
-      {songsLoading ? <HomeTrendingSkeleton /> : <HomeTrendingSection songs={recentSongs} />}
+      <HomeEditorialStrip />
 
-      <section className="audioflume-home-reference-tools">
+      <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
             <div className="audioflume-home-lifetime-feature-copy">
@@ -1108,30 +1185,26 @@ export default function HomePageContent({
             <HomeOriginalSongGrid songs={originalSongs} />
           ) : null}
         </section>
-
-        <div className="audioflume-home-reference-width audioflume-home-reference-tools-grid audioflume-home-reference-tools-search">
-          <div className="audioflume-home-reference-tools-column is-reference-search">
-            <div className="audioflume-home-reference-section-heading filmwave-section-heading-row">
-              <span>Search by song</span>
-            </div>
-            <div className="audioflume-home-reference-tool-card audioflume-home-reference-search-by-song-card">
-              <GlobalReferenceSearch embedded />
-            </div>
-          </div>
-        </div>
       </section>
 
       <section className="audioflume-home-reference-new-songs">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row">
           <span>Newly added songs</span>
-          <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore new music<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" /></Link>
+          <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+            Explore new music
+            <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+          </Link>
         </div>
         <div className="audioflume-home-reference-width">
-          <MusicListShell title={null}>
-            {recentSongs.map((song) => (
-              <SongCard key={song.id} song={song} showDivider={false} />
-            ))}
-          </MusicListShell>
+          {songsLoading ? (
+            <HomeSongRowsSkeleton />
+          ) : (
+            <MusicListShell title={null}>
+              {recentSongs.map((song) => (
+                <SongCard key={song.id} song={song} showDivider={false} />
+              ))}
+            </MusicListShell>
+          )}
         </div>
       </section>
 
