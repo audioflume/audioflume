@@ -4830,3 +4830,9 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-shelf-scrollbar-thumb {
   background: #ffffff;
 }
+
+
+/* Increase curated playlist kicker size. */
+.audioflume-home-mockup-curated-card-kicker {
+  font-size: 11px;
+}
