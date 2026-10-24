@@ -3589,11 +3589,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     gap: 14px;
   }
 
-  .audioflume-home-mockup-editorial-strip {
-    padding-right: var(--audioflume-home-page-gutter);
-    padding-left: var(--audioflume-home-page-gutter);
-  }
-
   .audioflume-home-mockup .audioflume-home-reference-lifetime-access {
     min-height: 0;
     grid-template-columns: 1fr;
