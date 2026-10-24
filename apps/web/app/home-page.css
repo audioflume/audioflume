@@ -3602,13 +3602,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-mockup-catalogue-heading {
-    grid-template-columns: 1fr;
-    align-items: start;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
     gap: 14px;
   }
 
   .audioflume-home-mockup-catalogue-heading a {
-    justify-self: start;
+    justify-self: end;
   }
 
   .audioflume-home-mockup .audioflume-home-reference-lifetime-access {
