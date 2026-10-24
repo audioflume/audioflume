@@ -127,8 +127,8 @@
     transform 150ms ease;
 }
 
-.playButton:hover,
-.playButton:focus-visible {
+.curatedPagePlayButton:hover,
+.curatedPagePlayButton:focus-visible {
   background: #ffffff !important;
   color: #111111 !important;
   transform: scale(1.02) !important;
