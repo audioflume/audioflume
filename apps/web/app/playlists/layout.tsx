@@ -20,7 +20,7 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
         }
 
         body:has(.playlists-page) {
-          --playlists-content-gutter: clamp(28px, 5.2vw, 82px);
+          --playlists-content-gutter: var(--filmwave-page-gutter);
           --playlists-shell-gutter: 32px;
         }
 
@@ -59,15 +59,14 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           padding-right: 18px !important;
         }
 
-        @media (max-width: 720px) {
+        @media (max-width: 620px) {
           body:has(.playlists-page) {
-            --playlists-content-gutter: 20px;
+            --playlists-shell-gutter: 24px;
           }
-        }
 
-        @media (max-width: 640px) {
-          body:has(.playlists-page) {
-            --playlists-shell-gutter: 20px;
+          .playlists-page .playlists-shell {
+            padding-right: 24px !important;
+            padding-left: 24px !important;
           }
         }
       `}</style>
