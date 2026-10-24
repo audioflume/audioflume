@@ -4624,3 +4624,15 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-curated {
   padding-top: 0;
 }
+
+
+/* Refine spacing and curated section heading typography. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar {
+  margin-bottom: 70px;
+}
+
+.audioflume-home-mockup-section-label {
+  font-size: 19px;
+  font-weight: 400;
+}
