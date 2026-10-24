@@ -1380,6 +1380,104 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-promo {
+  isolation: isolate;
+  background: #111111;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-promo-media {
+  position: relative;
+  z-index: 0;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-promo-media
+  .audioflume-pricing-hero-frame {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  opacity: 0;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-promo-media
+  .audioflume-pricing-hero-frame.is-active {
+  opacity: 1;
+}
+
+.audioflume-home-reference-artist-promo-shade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: rgba(0, 0, 0, 0.32);
+  pointer-events: none;
+}
+
+.audioflume-home-reference-artist-promo-title {
+  position: absolute;
+  bottom: 34px;
+  left: 34px;
+  z-index: 2;
+  margin: 0;
+  color: #ffffff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(50px, 4vw, 62px);
+  font-weight: 300;
+  letter-spacing: -0.04em;
+  line-height: 0.9;
+  text-transform: uppercase;
+}
+
+.audioflume-home-reference-artist-promo-title > span {
+  display: block;
+  white-space: nowrap;
+}
+
+.audioflume-home-reference-artist-promo-link {
+  position: absolute;
+  right: 34px;
+  bottom: 34px;
+  z-index: 2;
+  min-width: 160px;
+  height: 42px;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  padding: 0 22px;
+  color: #111111;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1;
+  text-decoration: none;
+  transition: background-color 160ms ease;
+}
+
+.audioflume-home-reference-artist-promo-link:hover,
+.audioflume-home-reference-artist-promo-link:focus-visible {
+  background: #e9e9e9;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-reference-artist-promo-title {
+    bottom: 24px;
+    left: 24px;
+    font-size: 38px;
+  }
+
+  .audioflume-home-reference-artist-promo-link {
+    right: 24px;
+    bottom: 24px;
+    min-width: 136px;
+    height: 40px;
+    padding: 0 18px;
+  }
+}
+
+.audioflume-home-mockup-artists
   .audioflume-home-reference-shelf-scrollbar {
   position: relative;
   width: calc(100% - (var(--audioflume-home-page-gutter) * 2));
