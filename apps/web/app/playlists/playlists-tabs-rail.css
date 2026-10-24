@@ -117,6 +117,7 @@ body .playlists-tabs-row {
   height: 22px !important;
   flex-basis: 22px !important;
   transform: none !important;
+  transition: color 150ms ease !important;
 }
 
 .playlists-top-controls .fw-toolbar-search-static-clear-icon {
