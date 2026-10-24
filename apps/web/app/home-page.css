@@ -4890,6 +4890,12 @@ html:not(.light):not([data-theme="light"])
   justify-self: start;
 }
 
+.audioflume-home-lifetime-v2.is-copy-stacked {
+  height: calc(
+    200px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+  );
+}
+
 .audioflume-home-lifetime-v2.is-copy-stacked .audioflume-home-lifetime-v2-copy {
   height: calc(
     200px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
