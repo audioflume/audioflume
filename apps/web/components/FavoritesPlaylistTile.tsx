@@ -3,7 +3,10 @@
 import Link from "next/link";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import HeartIcon from "@/components/icons/HeartIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PauseIcon from "@/components/icons/PauseIcon";
 import { useFavorites } from "@/context/FavoritesContext";
+import { usePlayer } from "@/context/PlayerContext";
 import type { PlaylistViewMode } from "@/context/UserPreferencesContext";
 import { useSongs } from "@/hooks/useSongs";
 import styles from "./FavoritesPlaylistTile.module.css";
@@ -19,11 +22,37 @@ export default function FavoritesPlaylistTile({
 }) {
   const { favoriteIds } = useFavorites();
   const { songs } = useSongs();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const activeSongIds = new Set(songs.map((song) => song.id));
   const activeFavoriteCount = favoriteIds.filter((songId) =>
     activeSongIds.has(songId),
   ).length;
   const trackCount = formatTrackCount(activeFavoriteCount);
+  const favoriteSongs = songs.filter(
+    (song) => favoriteIds.includes(song.id) && Boolean(song.audioUrl),
+  );
+  const currentSongIsFavorite = Boolean(
+    currentSong && favoriteIds.includes(currentSong.id),
+  );
+  const favoritesPlaying = currentSongIsFavorite && isPlaying;
+
+  function toggleFavoritesPlayback(event: React.MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.detail > 0) event.currentTarget.blur();
+
+    if (currentSongIsFavorite && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+
+    const firstSong = favoriteSongs[0];
+    if (!firstSong) return;
+
+    setQueue(favoriteSongs);
+    togglePlayPause(firstSong);
+  }
 
   if (viewMode === "list") {
     return (
@@ -67,6 +96,17 @@ export default function FavoritesPlaylistTile({
           </div>
         </div>
       </Link>
+      <button
+        type="button"
+        className={styles.playButton}
+        onClick={toggleFavoritesPlayback}
+        disabled={favoriteSongs.length === 0}
+        data-playlist-playing={favoritesPlaying ? "true" : "false"}
+        aria-label={`${favoritesPlaying ? "Pause" : "Play"} Favorites`}
+        aria-pressed={favoritesPlaying}
+      >
+        {favoritesPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+      </button>
     </div>
   );
 }
