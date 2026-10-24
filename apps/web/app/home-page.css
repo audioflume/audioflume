@@ -440,7 +440,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-original-song-grid {
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(8, minmax(0, 1fr));
   column-gap: 20px;
   row-gap: 32px;
   padding: 0 var(--audioflume-home-page-gutter);
@@ -3835,7 +3835,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-mockup .audioflume-home-reference-original-song-grid {
-  gap: 10px;
+  column-gap: 10px;
+  row-gap: 24px;
 }
 
 .audioflume-home-mockup .audioflume-home-reference-artist-card,
