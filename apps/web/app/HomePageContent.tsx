@@ -17,6 +17,7 @@ import {
 import Footer from "@/components/Footer";
 import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -448,8 +449,10 @@ function HomeReadyToCutSongCard({
 
 function HomeArtistShelf({
   artists,
+  homeFlashImages,
 }: {
   artists: HomeArtist[];
+  homeFlashImages: string[];
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -481,6 +484,30 @@ function HomeArtistShelf({
       className="audioflume-home-reference-artist-shelf"
       customScrollbar
     >
+      <article className="audioflume-home-reference-artist-card audioflume-home-reference-artist-promo">
+        <PricingHeroImageFlash
+          images={homeFlashImages}
+          mediaClassName="audioflume-home-reference-artist-media audioflume-home-reference-artist-promo-media"
+        />
+        <span className="audioflume-home-reference-artist-promo-shade" aria-hidden="true" />
+        <h2 className="audioflume-home-reference-artist-promo-title">
+          <span>In demand</span>
+          <span>artists</span>
+          <span>&amp; composers.</span>
+        </h2>
+        <Link
+          href="/discover"
+          className="audioflume-home-reference-artist-promo-link inline-flex items-center gap-[5px]"
+        >
+          Explore artists
+          <ArrowUpRightIcon
+            size={16}
+            strokeWidth={1.5}
+            className="translate-y-[2px]"
+          />
+        </Link>
+      </article>
+
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
@@ -776,7 +803,9 @@ function HomeSongRowsSkeleton() {
   );
 }
 
-export default function HomePageContent(_props: {
+export default function HomePageContent({
+  homeFlashImages,
+}: {
   homeFlashImages: string[];
   membershipHref: string;
   membershipLabel: string;
@@ -975,7 +1004,7 @@ export default function HomePageContent(_props: {
         {artistsLoading ? (
           <HomeArtistShelfSkeleton />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} />
         ) : null}
       </section>
 
