@@ -1027,8 +1027,11 @@ export default function HomePageContent(_props: {
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const lifetimeLayoutRef = useRef<HTMLAnchorElement>(null);
   const lifetimeLockedCopyWidthRef = useRef<number | null>(null);
+  const catalogueHeadingRef = useRef<HTMLHeadingElement>(null);
+  const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const [lifetimeStacked, setLifetimeStacked] = useState(false);
   const [lifetimeCopyStacked, setLifetimeCopyStacked] = useState(false);
+  const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -1070,6 +1073,27 @@ export default function HomePageContent(_props: {
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
+
+  useEffect(() => {
+    const heading = catalogueHeadingRef.current;
+    const firstLineMeasure = catalogueFirstLineMeasureRef.current;
+    if (!heading || !firstLineMeasure) return;
+
+    const updateCatalogueHeadingWrap = () => {
+      setCatalogueHeadingNaturalWrap(
+        firstLineMeasure.scrollWidth > heading.clientWidth,
+      );
+    };
+
+    updateCatalogueHeadingWrap();
+
+    const resizeObserver = new ResizeObserver(updateCatalogueHeadingWrap);
+    resizeObserver.observe(heading);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     const lifetimeBlock = lifetimeLayoutRef.current;
@@ -1253,7 +1277,20 @@ export default function HomePageContent(_props: {
 
       <section className="audioflume-home-mockup-catalogue">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline audioflume-home-mockup-catalogue-heading">
-          <h2>A growing catalogue built around cinematic storytelling.</h2>
+          <h2 ref={catalogueHeadingRef}>
+            <span
+              ref={catalogueFirstLineMeasureRef}
+              className="audioflume-home-mockup-catalogue-heading-measure"
+              aria-hidden="true"
+            >
+              A growing catalogue built around
+            </span>
+            {catalogueHeadingNaturalWrap ? (
+              <>A growing catalogue built around cinematic storytelling.</>
+            ) : (
+              <>A growing catalogue built around<br />cinematic storytelling.</>
+            )}
+          </h2>
           <Link
             href="/music"
             className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
