@@ -2650,6 +2650,7 @@ html:not(.light):not([data-theme="light"])
   min-width: clamp(67vw, calc(30.83vw + 354.4px), 88vw) !important;
   height: auto !important;
   overflow: hidden;
+  border-radius: 3px;
   aspect-ratio: auto !important;
   scroll-snap-align: none !important;
   scroll-snap-stop: normal !important;
