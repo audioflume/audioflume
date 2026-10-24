@@ -57,7 +57,7 @@
 
 .discover-artist-hero-skeleton {
   pointer-events: none;
-  animation: skeleton-fade-in 0.3s ease-out both;
+  animation: discover-skeleton-enter 0.3s ease-out both;
 }
 
 .discover-artist-hero-skeleton-block {
@@ -145,6 +145,18 @@
   width: 142px;
   height: 12px;
   align-self: center;
+}
+
+@keyframes discover-skeleton-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes discover-artist-hero-skeleton-pulse {
@@ -415,7 +427,7 @@
 }
 
 .discover-artist-featured-heading.is-loading {
-  animation: skeleton-fade-in 0.3s ease-out both;
+  animation: discover-skeleton-enter 0.3s ease-out both;
 }
 
 .discover-artist-featured-heading-skeleton {
@@ -512,7 +524,7 @@
 
 .discover-artist-feature-card-skeleton {
   pointer-events: none;
-  animation: skeleton-fade-in 0.3s ease-out both;
+  animation: discover-skeleton-enter 0.3s ease-out both;
 }
 
 .discover-artist-feature-card-skeleton:nth-child(2) { animation-delay: 0.04s; }
