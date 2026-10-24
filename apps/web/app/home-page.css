@@ -1907,8 +1907,9 @@ html:not(.light):not([data-theme="light"])
 @media (min-width: 1695px) {
   .audioflume-home-lifetime-v2 {
     width: var(--home-reference-width);
-    height: auto;
-    aspect-ratio: 1535 / 200;
+    height: calc((100vw - 160px) * 0.1302931596);
+    min-height: 0;
+    aspect-ratio: auto;
   }
 }
 
