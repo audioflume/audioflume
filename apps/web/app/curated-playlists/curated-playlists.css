@@ -790,3 +790,33 @@ body:has(.curated-playlists-page-root) {
   padding-right: 10px !important;
   padding-left: 10px !important;
 }
+
+
+/* Restore the original curated page gutters outside the playlist grid. */
+body:has(.curated-playlists-page-root) {
+  --curated-page-gutter: 80px;
+}
+
+.curated-playlists-page-layer > .curated-page-content {
+  padding-right: var(--curated-page-gutter) !important;
+  padding-left: var(--curated-page-gutter) !important;
+}
+
+/* Only the playlist grid uses the tight 10px page edge. */
+.curated-page-grid-group {
+  width: calc(100vw - 20px);
+  margin-left: calc(50% - 50vw + 10px);
+  margin-right: calc(50% - 50vw + 10px);
+}
+
+@media (max-width: 980px) {
+  body:has(.curated-playlists-page-root) {
+    --curated-page-gutter: 40px;
+  }
+}
+
+@media (max-width: 620px) {
+  body:has(.curated-playlists-page-root) {
+    --curated-page-gutter: 24px;
+  }
+}
