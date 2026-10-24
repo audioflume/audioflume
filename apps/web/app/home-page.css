@@ -4644,3 +4644,107 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-shelf-arrow {
   top: 215px;
 }
+
+
+/* Match the curated shelf and catalogue section to the homepage reference. */
+.audioflume-home-mockup-curated {
+  padding-bottom: 94px;
+}
+
+.audioflume-home-mockup-curated-shelf
+  .audioflume-home-reference-shelf-scroller {
+  gap: 10px;
+}
+
+.audioflume-home-mockup-curated-card {
+  width: 40vw;
+  min-width: 40vw;
+  aspect-ratio: 2.38 / 1;
+}
+
+.audioflume-home-mockup-curated-card-kicker {
+  top: 34px;
+  left: 46px;
+  font-size: 10px;
+  font-weight: 300;
+}
+
+.audioflume-home-mockup-curated-card strong {
+  right: 118px;
+  bottom: 39px;
+  left: 46px;
+  font-size: clamp(22px, 1.65vw, 31px);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+}
+
+.audioflume-home-mockup-curated-card-play {
+  right: 34px !important;
+  bottom: 34px !important;
+  width: 52px !important;
+  min-width: 52px !important;
+  height: 52px !important;
+  border-radius: 999px !important;
+  background: rgba(17, 17, 17, 0.28) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+}
+
+.audioflume-home-mockup-curated-card-play:hover,
+.audioflume-home-mockup-curated-card-play:focus-visible {
+  background: rgba(17, 17, 17, 0.36) !important;
+  opacity: 1 !important;
+}
+
+.audioflume-home-mockup-catalogue-heading {
+  margin-bottom: 20px;
+}
+
+.audioflume-home-mockup-catalogue-heading h2 {
+  font-size: clamp(25px, 1.85vw, 34px);
+  font-weight: 300;
+  line-height: 1.02;
+}
+
+.audioflume-home-mockup-catalogue-heading a {
+  padding-bottom: 3px;
+  font-size: 13px;
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-mockup-curated-card {
+    width: 52vw;
+    min-width: 52vw;
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-curated {
+    padding-bottom: 70px;
+  }
+
+  .audioflume-home-mockup-curated-card {
+    width: 78vw;
+    min-width: 78vw;
+  }
+
+  .audioflume-home-mockup-curated-card-kicker {
+    top: 22px;
+    left: 24px;
+  }
+
+  .audioflume-home-mockup-curated-card strong {
+    right: 88px;
+    bottom: 25px;
+    left: 24px;
+    font-size: 22px;
+  }
+
+  .audioflume-home-mockup-curated-card-play {
+    right: 22px !important;
+    bottom: 22px !important;
+    width: 44px !important;
+    min-width: 44px !important;
+    height: 44px !important;
+  }
+}
