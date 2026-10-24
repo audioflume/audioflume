@@ -510,7 +510,7 @@ export default function ProjectsPage() {
         .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 12px 32px 0 32px; }
         .projects-control-bar {
           --fw-header-search-row-height: 51px;
-          --projects-control-gutter: clamp(28px, 5.2vw, 82px);
+          --projects-control-gutter: var(--filmwave-page-gutter);
           box-sizing: border-box !important;
           display: grid !important;
           width: auto !important;
@@ -705,9 +705,9 @@ export default function ProjectsPage() {
         }
         .projects-title {
           margin-top: 36px;
-          margin-right: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
+          margin-right: calc(var(--projects-control-gutter, var(--filmwave-page-gutter)) - 32px);
           margin-bottom: 40px;
-          margin-left: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
+          margin-left: calc(var(--projects-control-gutter, var(--filmwave-page-gutter)) - 32px);
           max-width: 640px;
           color: var(--text-primary);
           font-family: var(--filmwave-section-title-font-family);
@@ -722,8 +722,8 @@ export default function ProjectsPage() {
           grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
           gap: 16px;
           margin-top: 0;
-          margin-right: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
-          margin-left: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
+          margin-right: calc(var(--projects-control-gutter, var(--filmwave-page-gutter)) - 32px);
+          margin-left: calc(var(--projects-control-gutter, var(--filmwave-page-gutter)) - 32px);
         }
         .project-grid-card,
         .project-grid-create-card {
@@ -952,8 +952,8 @@ export default function ProjectsPage() {
           .projects-title { margin-top: 36px; }
           .projects-list { margin-top: 12px; }
         }
-        @media (max-width: 640px) {
-          .projects-shell { padding-left: 20px; padding-right: 20px; }
+        @media (max-width: 620px) {
+          .projects-shell { padding-left: 24px; padding-right: 24px; }
           .projects-row { grid-template-columns: minmax(0, 1fr) 12px minmax(70px, 96px) 32px; column-gap: 14px; padding: 0 18px; }
           .projects-row-link { min-height: 72px; grid-template-columns: 46px minmax(0, 1fr); }
           .projects-row-actions { justify-self: end; padding-left: 0; }
