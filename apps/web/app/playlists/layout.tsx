@@ -51,13 +51,6 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
           margin-left: calc(var(--playlists-content-gutter) - var(--playlists-shell-gutter)) !important;
         }
 
-        .playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-card-menu-wrap {
-          top: auto !important;
-          right: 0 !important;
-          bottom: 18px !important;
-          left: auto !important;
-        }
-
         .playlists-page .playlist-index .playlist-index-row {
           padding-right: 68px !important;
         }
