@@ -23,15 +23,17 @@ export type DiscoverFeatureCardArtist = {
 
 export default function FeaturedArtistShelf({
   artists,
+  loading = false,
   showHeading,
 }: {
   artists: DiscoverFeatureCardArtist[];
+  loading?: boolean;
   showHeading?: boolean;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
-  const headingVisible = showHeading ?? artists.length > 0;
+  const headingVisible = showHeading ?? (loading || artists.length > 0);
 
   function updateScrollState() {
     const scroller = scrollerRef.current;
@@ -74,9 +76,18 @@ export default function FeaturedArtistShelf({
   return (
     <section className="discover-artist-featured">
       {headingVisible ? (
-        <div className="discover-artist-featured-heading">
-          <span>This month&apos;s featured artists</span>
-          <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore artists &amp; composers<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" /></Link>
+        <div className={`discover-artist-featured-heading${loading ? " is-loading" : ""}`}>
+          {loading ? (
+            <>
+              <span className="discover-artist-featured-heading-skeleton is-title" aria-hidden="true" />
+              <span className="discover-artist-featured-heading-skeleton is-link" aria-hidden="true" />
+            </>
+          ) : (
+            <>
+              <span>This month&apos;s featured artists</span>
+              <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">Explore artists &amp; composers<ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" /></Link>
+            </>
+          )}
         </div>
       ) : null}
 
@@ -85,23 +96,46 @@ export default function FeaturedArtistShelf({
           type="button"
           className="discover-artist-featured-shelf-arrow is-left"
           onClick={() => scroll("prev")}
-          disabled={!canScrollPrev}
+          disabled={loading || !canScrollPrev}
           aria-label="Scroll featured artists left"
         >
           <ChevronLeftIcon size={18} />
         </button>
 
         <div ref={scrollerRef} className="discover-artist-featured-scroller">
-          {artists.map((artist) => (
-            <FeaturedArtistCard key={artist.id} artist={artist} />
-          ))}
+          {loading
+            ? Array.from({ length: 4 }, (_, index) => (
+                <article
+                  key={index}
+                  className="discover-artist-feature-card discover-artist-feature-card-skeleton"
+                  aria-hidden="true"
+                >
+                  <div className="discover-artist-feature-media-home discover-artist-feature-skeleton-media">
+                    <div className="discover-artist-feature-bar">
+                      <span className="discover-artist-feature-copy">
+                        <span className="discover-artist-feature-skeleton-line is-name" />
+                        <span className="discover-artist-feature-skeleton-line is-designation" />
+                        <span className="discover-artist-feature-genres discover-artist-feature-skeleton-genres">
+                          <span />
+                          <span />
+                          <span />
+                        </span>
+                      </span>
+                    </div>
+                    <span className="discover-artist-feature-skeleton-play" />
+                  </div>
+                </article>
+              ))
+            : artists.map((artist) => (
+                <FeaturedArtistCard key={artist.id} artist={artist} />
+              ))}
         </div>
 
         <button
           type="button"
           className="discover-artist-featured-shelf-arrow is-right"
           onClick={() => scroll("next")}
-          disabled={!canScrollNext}
+          disabled={loading || !canScrollNext}
           aria-label="Scroll featured artists right"
         >
           <ChevronRightIcon size={18} />
