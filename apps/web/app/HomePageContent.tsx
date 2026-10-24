@@ -1026,13 +1026,10 @@ export default function HomePageContent(_props: {
   const [artistsLoading, setArtistsLoading] = useState(true);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
-  const lifetimeLayoutRef = useRef<HTMLAnchorElement>(null);
-  const lifetimeLockedCopyWidthRef = useRef<number | null>(null);
   const catalogueHeadingRef = useRef<HTMLHeadingElement>(null);
   const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const introHeadingRef = useRef<HTMLDivElement>(null);
   const introHeadlineMeasureRef = useRef<HTMLSpanElement>(null);
-  const [lifetimeStacked, setLifetimeStacked] = useState(false);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
   const [introHeadlineBroken, setIntroHeadlineBroken] = useState(false);
 
@@ -1119,57 +1116,6 @@ export default function HomePageContent(_props: {
     };
   }, []);
 
-  useLayoutEffect(() => {
-    const lifetimeBlock = lifetimeLayoutRef.current;
-    if (!lifetimeBlock) return;
-
-    const pageStyles = getComputedStyle(
-      lifetimeBlock.closest(".audioflume-home-reference") ?? lifetimeBlock,
-    );
-    const initialGutter =
-      Number.parseFloat(
-        pageStyles.getPropertyValue("--audioflume-home-page-gutter"),
-      ) || 0;
-    const usableScreenWidth = window.screen.width - initialGutter * 2;
-    const lockedCopyWidth = usableScreenWidth / 2;
-
-    lifetimeLockedCopyWidthRef.current = lockedCopyWidth;
-    lifetimeBlock.style.setProperty(
-      "--audioflume-home-lifetime-copy-width",
-      `${lockedCopyWidth}px`,
-    );
-
-    const updateLifetimeStack = () => {
-      const currentBlock = lifetimeLayoutRef.current;
-      const copyWidth = lifetimeLockedCopyWidthRef.current;
-      if (!currentBlock || copyWidth === null) return;
-
-      const styles = getComputedStyle(
-        currentBlock.closest(".audioflume-home-reference") ?? currentBlock,
-      );
-      const gutter =
-        Number.parseFloat(
-          styles.getPropertyValue("--audioflume-home-page-gutter"),
-        ) || 0;
-      const usableScreenWidth = window.screen.width - gutter * 2;
-      const currentBlockWidth = currentBlock.getBoundingClientRect().width;
-      const fluidArtWidth = currentBlockWidth - copyWidth;
-
-      setLifetimeStacked(fluidArtWidth <= usableScreenWidth / 3);
-    };
-
-    updateLifetimeStack();
-
-    const resizeObserver = new ResizeObserver(updateLifetimeStack);
-    resizeObserver.observe(lifetimeBlock);
-
-    window.addEventListener("resize", updateLifetimeStack);
-
-    return () => {
-      resizeObserver.disconnect();
-      window.removeEventListener("resize", updateLifetimeStack);
-    };
-  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -1331,10 +1277,24 @@ export default function HomePageContent(_props: {
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
           <Link
-            ref={lifetimeLayoutRef}
             href="/music?artist=Audioflume"
-            className={`audioflume-home-reference-width audioflume-home-lifetime-v2${lifetimeStacked ? " is-stacked" : ""}`}
+            className="audioflume-home-reference-width audioflume-home-lifetime-v2"
           >
+            <div
+              className="audioflume-home-lifetime-v2-art"
+              aria-hidden="true"
+            >
+              <div className="audioflume-home-lifetime-v2-logo">
+                <AudioflumeOriginalsLogo />
+              </div>
+              <img
+                className="audioflume-home-lifetime-v2-image"
+                src="https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg"
+                alt=""
+                draggable={false}
+              />
+            </div>
+
             <div className="audioflume-home-lifetime-v2-copy">
               <div className="audioflume-home-lifetime-v2-top">
                 <span>Plans for a <b>lifetime</b></span>
@@ -1350,41 +1310,9 @@ export default function HomePageContent(_props: {
                 </span>
               </div>
 
-              <div className="audioflume-home-lifetime-v2-bottom">
-                <div className="audioflume-home-lifetime-v2-price is-regular">
-                  <span className="audioflume-home-lifetime-v2-badge">Regular price</span>
-                  <strong>$299</strong>
-                </div>
-
-                <div className="audioflume-home-lifetime-v2-price is-offer">
-                  <span className="audioflume-home-lifetime-v2-badge is-light">
-                    Limited time offer
-                  </span>
-                  <div className="audioflume-home-lifetime-v2-offer-line">
-                    <strong>$99</strong>
-                    <span>One time payment</span>
-                  </div>
-                </div>
-
-                <p className="audioflume-home-lifetime-v2-statement">
-                  Lifetime access to in-house<br />made original music.
-                </p>
-              </div>
-            </div>
-
-            <div
-              className="audioflume-home-lifetime-v2-art"
-              aria-hidden="true"
-            >
-              <div className="audioflume-home-lifetime-v2-logo">
-                <AudioflumeOriginalsLogo />
-              </div>
-              <img
-                className="audioflume-home-lifetime-v2-image"
-                src="https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg"
-                alt=""
-                draggable={false}
-              />
+              <p className="audioflume-home-lifetime-v2-statement">
+                Lifetime access to in-house<br />made original music.
+              </p>
             </div>
           </Link>
         </div>
