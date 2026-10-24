@@ -4090,8 +4090,8 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-mockup-intro {
-    padding-top: 40px;
+  .audioflume-home-mockup-intro-meta > span:last-child {
+    display: none;
   }
 
   .audioflume-home-mockup-intro-heading {
