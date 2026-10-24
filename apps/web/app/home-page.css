@@ -1517,21 +1517,38 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar,
+.audioflume-home-mockup-curated
   .audioflume-home-reference-shelf-scrollbar {
   position: relative;
   width: calc(100% - (var(--audioflume-home-page-gutter) * 2));
-  height: 1.25px;
-  margin: 20px var(--audioflume-home-page-gutter) 70px;
+  height: 1.5px;
+  margin-right: var(--audioflume-home-page-gutter);
+  margin-left: var(--audioflume-home-page-gutter);
   background: var(--border);
 }
 
 .audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar {
+  margin-top: 20px;
+  margin-bottom: 70px;
+}
+
+.audioflume-home-mockup-curated
+  .audioflume-home-reference-shelf-scrollbar {
+  margin-top: 20px;
+  margin-bottom: 0;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar-thumb,
+.audioflume-home-mockup-curated
   .audioflume-home-reference-shelf-scrollbar-thumb {
   position: absolute;
-  top: -0.625px;
+  top: -1px;
   left: 0;
   height: 2.5px;
-  background: color-mix(in srgb, var(--text-primary) 72%, transparent);
+  background: var(--text-primary);
   cursor: grab;
   touch-action: none;
   user-select: none;
@@ -1539,14 +1556,10 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar-thumb:active,
+.audioflume-home-mockup-curated
   .audioflume-home-reference-shelf-scrollbar-thumb:active {
   cursor: grabbing;
-}
-
-html:not(.light):not([data-theme="light"])
-  .audioflume-home-mockup-artists
-  .audioflume-home-reference-shelf-scrollbar-thumb {
-  background: #ffffff;
 }
 
 .audioflume-home-mockup-artists
@@ -1556,6 +1569,10 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-section-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 24px;
   margin-bottom: 14px;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -1563,6 +1580,14 @@ html:not(.light):not([data-theme="light"])
   font-weight: 400;
   letter-spacing: -0.035em;
   line-height: 1.2;
+}
+
+.audioflume-home-mockup-section-label > a {
+  flex: 0 0 auto;
+  font-size: 15px;
+  font-weight: 300;
+  letter-spacing: normal;
+  text-decoration: none;
 }
 
 .audioflume-home-mockup-curated {
