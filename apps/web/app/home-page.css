@@ -4905,3 +4905,143 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-catalogue {
   padding-bottom: 90px;
 }
+
+
+/* Match the editorial + Lifetime block to the supplied homepage reference. */
+.audioflume-home-mockup-editorial-strip {
+  gap: 10px;
+  padding-bottom: 10px;
+}
+
+.audioflume-home-mockup-editorial-card {
+  min-height: 0;
+  height: 238px;
+  padding: 28px 30px 28px;
+}
+
+.audioflume-home-mockup-editorial-card > span {
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 14px;
+  font-weight: 300;
+  text-transform: none;
+}
+
+.audioflume-home-mockup-editorial-card > span b {
+  font-weight: 400;
+}
+
+.audioflume-home-mockup-editorial-card strong {
+  max-width: 410px;
+  font-size: clamp(22px, 1.55vw, 30px);
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+}
+
+.audioflume-home-mockup-editorial-card > svg {
+  top: 24px;
+  right: 24px;
+}
+
+.audioflume-home-mockup .audioflume-home-reference-lifetime-access {
+  height: 252px;
+  grid-template-columns: 51% 49%;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-art {
+  position: relative;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-logo {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  width: 290px;
+  color: #ffffff;
+  transform: translate(-50%, -50%);
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 28px 30px 30px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top > span {
+  color: rgba(255,255,255,0.42);
+  font-size: 14px;
+  font-weight: 300;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top > span b {
+  color: #ffffff;
+  font-weight: 400;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-link {
+  font-size: 0;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-main {
+  display: grid;
+  grid-template-columns: auto minmax(240px, 1fr);
+  align-items: end;
+  gap: 76px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-heading {
+  display: none;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-pricing {
+  align-items: end;
+  gap: 24px;
+  margin-top: 0;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy .audioflume-pricing-plan-price strong {
+  font-size: clamp(40px, 3.1vw, 54px);
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy .audioflume-pricing-plan-price span {
+  font-size: 14px;
+}
+
+.audioflume-home-lifetime-feature-reference-copy {
+  justify-self: end;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(18px, 1.35vw, 25px);
+  font-weight: 300;
+  letter-spacing: -0.025em;
+  line-height: 1.08;
+  text-transform: uppercase;
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-mockup-editorial-card {
+    height: 210px;
+  }
+
+  .audioflume-home-mockup .audioflume-home-reference-lifetime-access {
+    height: auto;
+    min-height: 300px;
+  }
+
+  .audioflume-home-mockup .audioflume-home-lifetime-feature-main {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+
+  .audioflume-home-lifetime-feature-reference-copy {
+    justify-self: start;
+  }
+}
