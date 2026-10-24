@@ -4805,3 +4805,14 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-media::after {
   background: transparent !important;
 }
+
+
+/* Lighten curated playlist play-button overlay. */
+.audioflume-home-mockup-curated-card-play {
+  background: rgba(255, 255, 255, 0.18) !important;
+}
+
+.audioflume-home-mockup-curated-card-play:hover,
+.audioflume-home-mockup-curated-card-play:focus-visible {
+  background: rgba(255, 255, 255, 0.24) !important;
+}
