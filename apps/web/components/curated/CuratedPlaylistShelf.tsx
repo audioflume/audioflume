@@ -88,19 +88,16 @@ export function CuratedPlaylistCard({
             {isHomeVariant ? (
               <>
                 <span className={cardStyles.homeShade} />
-                <span className={cardStyles.homeKicker}>Featured playlist</span>
                 <strong className={cardStyles.homeTitle}>{playlist.name}</strong>
               </>
             ) : null}
           </div>
         </Link>
 
-        {!isHomeVariant ? (
-          <CuratedPlaylistBookmarkButton
-            playlist={playlist}
-            className={cardStyles.bookmarkButton}
-          />
-        ) : null}
+        <CuratedPlaylistBookmarkButton
+          playlist={playlist}
+          className={`${cardStyles.bookmarkButton}${isHomeVariant ? ` ${cardStyles.homeBookmarkButton}` : ""}`}
+        />
 
         {!isHomeVariant ? (
           <div className={cardStyles.details}>
