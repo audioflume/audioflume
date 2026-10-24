@@ -4332,3 +4332,19 @@ html:not(.light):not([data-theme="light"])
   scroll-snap-align: none !important;
   scroll-snap-stop: normal !important;
 }
+
+
+/* Scale the complete Audioflume mark without changing its internal proportions. */
+.audioflume-home-mockup-at {
+  width: 39px;
+  height: 39px;
+  flex-basis: 39px;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-at {
+    width: 32px;
+    height: 32px;
+    flex-basis: 32px;
+  }
+}
