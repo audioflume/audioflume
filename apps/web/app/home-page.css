@@ -4754,7 +4754,7 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2-offer-line > strong {
   margin-top: 8px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(35px, 2.45vw, 46px);
+  font-size: clamp(38px, 2.65vw, 50px);
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.9;
