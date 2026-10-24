@@ -177,7 +177,7 @@ export default function CuratedPlaylistsPage() {
       <GlobalSearchBar layer="high" />
 
       <section className="curated-playlists-page-layer">
-        <div className="px-8">
+        <div className="curated-page-content">
           {!loading && !error && playlists.length > 0 && (
             <CuratedFeatureFilters
               activeFilter={activeBrowseFilter}
