@@ -276,8 +276,8 @@
 
 .audioflume-pricing-plan .audioflume-public-action-button:hover,
 .audioflume-pricing-plan .audioflume-public-action-button:focus-visible {
-  background: #111111 !important;
-  color: #ffffff !important;
+  background: #ffffff !important;
+  color: #111111 !important;
   opacity: 1 !important;
 }
 
@@ -584,13 +584,10 @@
   opacity: 1;
 }
 
-.audioflume-pricing-originals-art:hover
-  .audioflume-pricing-originals-play-icon,
+.audioflume-pricing-originals-play-icon:hover,
 .audioflume-pricing-originals-art:focus-visible
   .audioflume-pricing-originals-play-icon {
-  background: #ffffff !important;
-  color: #111111 !important;
-  transform: translate(-50%, -50%) scale(1.02);
+  transform: translate(-50%, -50%) scale(1.03);
 }
 
 .audioflume-pricing-originals-copy {
