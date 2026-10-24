@@ -4606,3 +4606,10 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-media {
   height: 430px !important;
 }
+
+
+/* Increase space below the featured artist custom scrollbar. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar {
+  margin-bottom: 80px;
+}
