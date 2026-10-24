@@ -694,8 +694,8 @@ function HomeEditorialStrip() {
         href="/pricing"
         className="audioflume-home-mockup-editorial-card is-subscription"
       >
-        <span>Plans for subscriptions</span>
-        <strong>Music licensing built around active creative work.</strong>
+        <span>Plans for <b>solo creators</b></span>
+        <strong>A growing catalogue built around cinematic storytelling.</strong>
         <ArrowUpRightIcon size={14} strokeWidth={1.4} />
       </Link>
 
@@ -703,8 +703,8 @@ function HomeEditorialStrip() {
         href="/artists"
         className="audioflume-home-mockup-editorial-card is-artists"
       >
-        <span>Plans for artists</span>
-        <strong>Real artists, composers and original music for picture.</strong>
+        <span>Plans for <b>studios</b></span>
+        <strong>A growing catalogue built around cinematic storytelling.</strong>
         <ArrowUpRightIcon size={14} strokeWidth={1.4} />
       </Link>
 
@@ -712,8 +712,8 @@ function HomeEditorialStrip() {
         href="/pricing"
         className="audioflume-home-mockup-editorial-card is-enterprise"
       >
-        <span>Plans for enterprise</span>
-        <strong>Flexible licensing for larger teams and productions.</strong>
+        <span>Plans for <b>enterprise</b></span>
+        <strong>A growing catalogue built around cinematic storytelling.</strong>
         <ArrowUpRightIcon size={14} strokeWidth={1.4} />
       </Link>
     </section>
@@ -1180,14 +1180,12 @@ export default function HomePageContent(_props: {
           <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
             <div className="audioflume-home-lifetime-feature-copy">
               <div className="audioflume-home-lifetime-feature-top">
-                <div className="audioflume-home-lifetime-feature-logo">
-                  <AudioflumeOriginalsLogo />
-                </div>
+                <span>Plans for a <b>lifetime</b></span>
                 <Link
                   href="/music?artist=Audioflume"
                   className="audioflume-home-lifetime-feature-link audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+                  aria-label="Explore original music"
                 >
-                  Explore original music
                   <ArrowUpRightIcon
                     size={16}
                     strokeWidth={1.5}
@@ -1197,10 +1195,6 @@ export default function HomePageContent(_props: {
               </div>
 
               <div className="audioflume-home-lifetime-feature-main">
-                <h2 className="audioflume-home-lifetime-feature-heading">
-                  Lifetime access<br />to original music.
-                </h2>
-
                 <div className="audioflume-home-lifetime-feature-pricing">
                   <div className="audioflume-home-lifetime-feature-price-group is-regular">
                     <span className="audioflume-pricing-lifetime-badge">Regular price</span>
@@ -1219,18 +1213,9 @@ export default function HomePageContent(_props: {
                   </div>
                 </div>
 
-                <div className="audioflume-home-lifetime-feature-description-slot">
-                  <p className="audioflume-home-lifetime-feature-description">
-                    Lifetime access to in-house made original music, licensed for commercial work and clients up to 100 employees.
-                  </p>
-                  <Link
-                    href="/pricing"
-                    className="audioflume-home-lifetime-feature-hover-action"
-                  >
-                    Get Lifetime Access
-                    <ArrowUpRightIcon size={16} strokeWidth={1.5} className="ml-[5px] translate-y-[1px]" />
-                  </Link>
-                </div>
+                <p className="audioflume-home-lifetime-feature-reference-copy">
+                  Lifetime access to in-house<br />made original music.
+                </p>
               </div>
             </div>
 
@@ -1238,6 +1223,9 @@ export default function HomePageContent(_props: {
               className="audioflume-home-lifetime-feature-art"
               aria-hidden="true"
             >
+              <div className="audioflume-home-lifetime-feature-logo">
+                <AudioflumeOriginalsLogo />
+              </div>
               <img
                 className="audioflume-home-lifetime-feature-image"
                 src="https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg"
