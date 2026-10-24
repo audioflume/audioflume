@@ -710,7 +710,6 @@ function HomeCuratedPlaylistShelf({
       <Shelf
         label="curated playlists"
         className="audioflume-home-mockup-curated-shelf"
-        snapAfterScroll
       >
         {playlists.map((playlist, index) => (
           <article
