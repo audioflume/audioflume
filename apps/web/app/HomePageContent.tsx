@@ -503,6 +503,7 @@ function HomeArtistShelf({
           <ArrowUpRightIcon
             size={16}
             strokeWidth={1.5}
+            className="translate-y-[1px]"
           />
         </Link>
       </article>
