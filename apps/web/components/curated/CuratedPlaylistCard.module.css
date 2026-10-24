@@ -126,3 +126,100 @@
 .card:focus-within :global(.curated-playlist-play-button) {
   opacity: 1;
 }
+
+.homeCard {
+  overflow: hidden;
+  border-radius: 3px;
+}
+
+.homeImage {
+  aspect-ratio: 2.38 / 1;
+  border-radius: 3px;
+}
+
+.homeShade {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.02) 42%,
+    rgba(0, 0, 0, 0.58) 100%
+  );
+  pointer-events: none;
+}
+
+.homeKicker {
+  position: absolute;
+  top: 24px;
+  left: 30px;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-roboto-mono), monospace;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.homeTitle {
+  position: absolute;
+  right: 82px;
+  bottom: 28px;
+  left: 30px;
+  z-index: 2;
+  overflow: hidden;
+  color: #ffffff;
+  font-size: clamp(22px, 1.65vw, 31px);
+  font-weight: 300;
+  letter-spacing: -0.035em;
+  line-height: 1.05;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.homePlayButton {
+  position: absolute !important;
+  right: 24px !important;
+  bottom: 24px !important;
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px !important;
+  margin: 0 !important;
+  border-radius: 999px !important;
+  background: rgba(255, 255, 255, 0.18) !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.homePlayButton:hover,
+.homePlayButton:focus-visible {
+  background: rgba(255, 255, 255, 0.24) !important;
+  opacity: 1 !important;
+}
+
+.homePlayButton svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+@media (max-width: 620px) {
+  .homeKicker {
+    top: 18px;
+    left: 20px;
+  }
+
+  .homeTitle {
+    right: 70px;
+    bottom: 21px;
+    left: 20px;
+    font-size: 22px;
+  }
+
+  .homePlayButton {
+    right: 18px !important;
+    bottom: 18px !important;
+  }
+}
