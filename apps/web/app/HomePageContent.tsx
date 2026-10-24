@@ -593,12 +593,24 @@ function HomeCuratedPlaylistShelf({
   return (
     <section className="audioflume-home-mockup-curated">
       <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-        Curated collections made for editors.
+        <span>Curated collections made for editors.</span>
+        <Link
+          href="/curated-playlists"
+          className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+        >
+          Explore playlists
+          <ArrowUpRightIcon
+            size={16}
+            strokeWidth={1.5}
+            className="translate-y-[2px]"
+          />
+        </Link>
       </div>
 
       <Shelf
         label="curated playlists"
         className="audioflume-home-mockup-curated-shelf"
+        customScrollbar
       >
         {playlists.map((playlist, index) => (
           <article
@@ -742,6 +754,7 @@ function HomeCuratedPlaylistSkeleton() {
     <Shelf
       label="curated playlists"
       className="audioflume-home-mockup-curated-shelf audioflume-home-skeleton-curated-shelf"
+      customScrollbar
     >
       {Array.from({ length: 4 }, (_, index) => (
         <article
@@ -1013,7 +1026,18 @@ export default function HomePageContent({
       {curatedPlaylistsLoading ? (
         <section className="audioflume-home-mockup-curated">
           <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-            Curated collections made for editors.
+            <span>Curated collections made for editors.</span>
+            <Link
+              href="/curated-playlists"
+              className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+            >
+              Explore playlists
+              <ArrowUpRightIcon
+                size={16}
+                strokeWidth={1.5}
+                className="translate-y-[2px]"
+              />
+            </Link>
           </div>
           <HomeCuratedPlaylistSkeleton />
         </section>
