@@ -4622,7 +4622,7 @@ html:not(.light):not([data-theme="light"])
   font-size: clamp(18px, 1.28vw, 24px);
   font-weight: 400;
   letter-spacing: -0.04em;
-  line-height: 1.02;
+  line-height: 1.06;
 }
 
 /* Isolated homepage Lifetime block — no legacy pricing/Lifetime selectors. */
