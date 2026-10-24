@@ -4069,7 +4069,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     font-size: clamp(
       22px,
       calc(
-        (100vw - (var(--audioflume-home-page-gutter) * 2)) / 16.5
+        (100vw - (var(--audioflume-home-page-gutter) * 2)) / 15
       ),
       32px
     );
