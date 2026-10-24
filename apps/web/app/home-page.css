@@ -1125,50 +1125,6 @@ html:not(.light):not([data-theme="light"])
   background: var(--bg-primary);
 }
 
-.audioflume-home-mockup-intro {
-  padding: 18px 0 0;
-  background: var(--bg-primary);
-}
-
-.audioflume-home-mockup-intro-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  color: var(--text-muted);
-  font-family: var(--font-roboto-mono), monospace;
-  font-size: 9px;
-  font-weight: 400;
-  letter-spacing: 0.02em;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-.audioflume-home-mockup-intro-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 32px;
-  padding-top: 46px;
-  padding-bottom: 24px;
-}
-
-.audioflume-home-mockup-intro-heading h1 {
-  margin: 0;
-  color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 44px;
-  font-weight: 300;
-  letter-spacing: -0.05em;
-  line-height: 0.98;
-}
-
-.audioflume-home-mockup-intro-heading > span {
-  flex: 0 0 auto;
-  padding-bottom: 5px;
-  color: var(--filmwave-section-title-color);
-  text-align: right;
-}
-
 .audioflume-home-mockup-artists {
   overflow: hidden;
   padding-bottom: 54px;
@@ -1233,47 +1189,11 @@ html:not(.light):not([data-theme="light"])
   background: linear-gradient(180deg, rgba(0,0,0,0.02) 42%, rgba(0,0,0,0.58) 100%);
 }
 
-.audioflume-home-mockup-catalogue {
-  padding: 0 0 58px;
-  background: var(--bg-primary);
-}
-
-.audioflume-home-mockup-catalogue-heading {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-items: end;
-  gap: 28px;
-  margin-bottom: 18px;
-}
-
-.audioflume-home-mockup-catalogue-heading h2 {
-  justify-self: start;
-}
-
-.audioflume-home-mockup-catalogue-heading a {
-  justify-self: end;
-}
-
-.audioflume-home-mockup-catalogue-heading h2 {
-  position: relative;
-  margin: 0;
-  color: var(--filmwave-section-title-color);
-  font-family: var(--filmwave-section-title-font-family);
-  font-size: var(--filmwave-section-title-font-size);
-  font-weight: var(--filmwave-section-title-font-weight);
-  letter-spacing: var(--filmwave-section-title-letter-spacing);
-  line-height: var(--filmwave-section-title-line-height);
-}
-
 .audioflume-home-mockup-catalogue-heading-measure {
   position: absolute;
   visibility: hidden;
   white-space: nowrap;
   pointer-events: none;
-}
-
-.audioflume-home-mockup-catalogue-heading a {
-  flex: 0 0 auto;
 }
 
 .audioflume-home-mockup-originals-tools {
@@ -1308,17 +1228,6 @@ html:not(.light):not([data-theme="light"])
     align-items: flex-start;
     flex-direction: column;
     gap: 16px;
-    padding-top: 30px;
-    padding-bottom: 20px;
-  }
-
-  .audioflume-home-mockup-intro-heading h1 {
-    font-size: 38px;
-  }
-
-  .audioflume-home-mockup-intro-heading > span {
-    padding-bottom: 0;
-    text-align: left;
   }
 
   .audioflume-home-mockup-catalogue-heading {
@@ -1338,18 +1247,30 @@ html:not(.light):not([data-theme="light"])
 /* ------------------------------------------------------------------ */
 
 .audioflume-home-mockup-intro {
-  padding-top: 12px;
+  padding: 12px 0 0;
+  background: var(--bg-primary);
 }
 
 .audioflume-home-mockup-intro-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 60px;
+  color: var(--text-muted);
+  font-family: var(--font-roboto-mono), monospace;
   font-size: 10px;
   font-weight: 300;
   letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .audioflume-home-mockup-intro-heading {
+  display: flex;
   flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
   row-gap: 16px;
   padding-top: 0;
   padding-bottom: 20px;
@@ -1361,9 +1282,13 @@ html:not(.light):not([data-theme="light"])
   min-width: 0;
   align-items: center;
   gap: 0;
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 44px;
   font-weight: 400;
   letter-spacing: -0.045em;
+  line-height: 0.98;
   white-space: nowrap;
 }
 
@@ -1375,7 +1300,9 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-intro-heading > span {
+  flex: 0 0 auto;
   padding-bottom: 0;
+  color: var(--filmwave-section-title-color);
   font-size: 17px;
   text-align: left;
 }
@@ -1639,19 +1566,33 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-catalogue {
-  padding-bottom: 90px;
+  padding: 0 0 90px;
+  background: var(--bg-primary);
 }
 
 .audioflume-home-mockup-catalogue-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
+  gap: 28px;
   margin-bottom: 20px;
 }
 
 .audioflume-home-mockup-catalogue-heading h2 {
+  position: relative;
+  justify-self: start;
+  margin: 0;
+  color: var(--filmwave-section-title-color);
   font-family: var(--filmwave-section-title-font-family);
   font-size: var(--filmwave-section-title-font-size);
   font-weight: var(--filmwave-section-title-font-weight);
   letter-spacing: var(--filmwave-section-title-letter-spacing);
   line-height: var(--filmwave-section-title-line-height);
+}
+
+.audioflume-home-mockup-catalogue-heading a {
+  flex: 0 0 auto;
+  justify-self: end;
 }
 
 .audioflume-home-mockup-catalogue
