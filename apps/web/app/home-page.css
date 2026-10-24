@@ -4439,3 +4439,15 @@ html:not(.light):not([data-theme="light"])
     font-weight: 400;
   }
 }
+
+
+/* Refine homepage artist button and genre pill text. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-play {
+  font-weight: 300;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-genres > span {
+  color: rgba(255, 255, 255, 0.4);
+}
