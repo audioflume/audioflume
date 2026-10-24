@@ -96,11 +96,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   right: 28px;
 }
 
-.audioflume-home-reference-song-shelf .audioflume-home-reference-shelf-scroller {
-  padding-right: 0;
-  padding-left: 0;
-}
-
 .audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller {
   padding-right: 80px;
   padding-left: 80px;
@@ -109,140 +104,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-arrow {
   top: 50%;
-}
-
-.audioflume-home-reference-song-card {
-  width: 25vw;
-  min-width: 25vw;
-  height: 310px;
-}
-
-.audioflume-home-reference-song-card-play {
-  position: relative;
-  display: grid;
-  width: 100%;
-  height: 100%;
-  place-items: center;
-  overflow: hidden;
-  border: 0;
-  background: var(--bg-tertiary);
-  color: #ffffff;
-  padding: 0;
-  cursor: pointer;
-}
-
-.audioflume-home-reference-song-card-background {
-  position: absolute;
-  inset: -36px;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  filter: blur(34px);
-  opacity: 0.78;
-  transform: scale(1.16);
-}
-
-.audioflume-home-reference-song-card-play::after {
-  position: absolute;
-  inset: 0;
-  z-index: 1;
-  background: rgba(17, 17, 17, 0.28);
-  content: "";
-  pointer-events: none;
-}
-
-.audioflume-home-reference-song-card-art {
-  position: relative;
-  z-index: 2;
-  display: block;
-  width: 132px;
-  height: 132px;
-  overflow: hidden;
-}
-
-.audioflume-home-reference-song-card-art img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 220ms ease;
-}
-
-.audioflume-home-reference-song-card:hover
-  .audioflume-home-reference-song-card-art img {
-  transform: scale(1.018);
-}
-
-.audioflume-home-reference-song-card-art-icon {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: grid;
-  width: 46px;
-  height: 46px;
-  place-items: center;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #111111;
-  opacity: 0;
-  pointer-events: auto;
-  transform: translate(-50%, -50%);
-  transform-origin: center;
-  transition:
-    opacity 160ms ease,
-    transform 160ms ease;
-}
-
-.audioflume-home-reference-song-card:hover
-  .audioflume-home-reference-song-card-art-icon,
-.audioflume-home-reference-song-card.is-playing
-  .audioflume-home-reference-song-card-art-icon,
-.audioflume-home-reference-song-card-play:focus-visible
-  .audioflume-home-reference-song-card-art-icon {
-  opacity: 1;
-}
-
-.audioflume-home-reference-song-card-art-icon:hover {
-  transform: translate(-50%, -50%) scale(1.03);
-}
-
-.audioflume-home-reference-song-card-fallback {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(135deg, #242424, #111111);
-}
-
-.audioflume-home-reference-song-card-copy {
-  position: absolute;
-  bottom: 42px;
-  left: 50%;
-  z-index: 2;
-  display: grid;
-  width: calc(100% - 72px);
-  gap: 2px;
-  color: #ffffff;
-  text-align: center;
-  transform: translateX(-50%);
-}
-
-.audioflume-home-reference-song-card-copy strong {
-  overflow: hidden;
-  font-size: clamp(13px, 1vw, 14.5px);
-  font-weight: 400;
-  line-height: 1.35;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.audioflume-home-reference-song-card-copy span {
-  overflow: hidden;
-  color: #ffffff;
-  font-size: 11.5px;
-  font-weight: 400;
-  line-height: 1.35;
-  opacity: 0.3;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 .audioflume-home-reference-original-song-card {
@@ -1158,12 +1019,6 @@ html:not(.light):not([data-theme="light"])
     display: block;
   }
 
-  .audioflume-home-reference-song-card {
-    width: 82vw;
-    min-width: 82vw;
-    height: 260px;
-  }
-
   .audioflume-home-reference-artist-card {
     --audioflume-home-artist-media-height: 320px;
     width: 82vw;
@@ -1248,24 +1103,9 @@ html:not(.light):not([data-theme="light"])
   color: #ffffff !important;
 }
 
-:where(html.light, html[data-theme="light"])
-  .audioflume-home-reference-song-shelf
-  .audioflume-home-reference-shelf-arrow,
-:where(html.light, html[data-theme="light"])
-  .audioflume-home-reference-artist-shelf
-  .audioflume-home-reference-shelf-arrow {
-  background: #ffffff;
-  color: #090909;
-}
-
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
   background: rgba(255, 255, 255, 0.14);
   color: #ffffff;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-song-card-play::after,
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-media::after {
-  background: rgba(17, 17, 17, 0.72);
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong {
