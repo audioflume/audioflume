@@ -127,13 +127,6 @@
     transform 150ms ease;
 }
 
-.curatedPagePlayButton:hover,
-.curatedPagePlayButton:focus-visible {
-  background: #ffffff !important;
-  color: #111111 !important;
-  transform: scale(1.02) !important;
-}
-
 .card:hover :global(.curated-playlist-play-button),
 .card:focus-within :global(.curated-playlist-play-button) {
   opacity: 1;
@@ -210,6 +203,14 @@
 .homePlayButton:focus-visible {
   background: rgba(255, 255, 255, 0.24) !important;
   opacity: 1 !important;
+}
+
+.homePlayButton.curatedPagePlayButton:hover,
+.homePlayButton.curatedPagePlayButton:focus-visible {
+  background: #ffffff !important;
+  color: #111111 !important;
+  opacity: 1 !important;
+  transform: scale(1.02) !important;
 }
 
 .homePlayButton svg {
