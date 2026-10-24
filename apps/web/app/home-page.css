@@ -1501,10 +1501,19 @@ html:not(.light):not([data-theme="light"])
   backdrop-filter: blur(10px);
 }
 
+.audioflume-home-mockup-curated-card-play {
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
 .audioflume-home-mockup-curated-card-play:hover,
 .audioflume-home-mockup-curated-card-play:focus-visible {
-  background: rgba(255, 255, 255, 0.24) !important;
+  background: #ffffff !important;
+  color: #111111 !important;
   opacity: 1 !important;
+  transform: scale(1.02);
 }
 
 .audioflume-home-mockup-curated-card-play svg {
