@@ -4879,3 +4879,9 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-ready-track-card {
   padding-right: 14px !important;
 }
+
+
+/* Set catalogue-to-next-section spacing. */
+.audioflume-home-mockup-catalogue {
+  padding-bottom: 80px;
+}
