@@ -410,7 +410,7 @@ function HomeReadyToCutCoverImage({
 }) {
   return (
     <div
-      className="relative h-9 w-9 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
+      className="relative h-[54px] w-[54px] shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
       style={{
         background: song.coverArt
           ? undefined
@@ -482,12 +482,8 @@ function HomeReadyToCutSongCard({
           {song.title}
         </h3>
 
-        <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
-          <span className="truncate">{song.artist}</span>
-          <span>•</span>
-          <span>{song.key || "—"}</span>
-          <span>•</span>
-          <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
+        <div className="mt-1.5 truncate text-[10px] leading-none text-[var(--text-muted)]">
+          {song.artist}
         </div>
       </div>
 
