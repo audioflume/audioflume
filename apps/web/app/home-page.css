@@ -4548,7 +4548,6 @@ html:not(.light):not([data-theme="light"])
   display: grid;
   height: var(--audioflume-home-plan-card-height, auto);
   min-height: var(--audioflume-home-plan-card-height, 0);
-  aspect-ratio: 2.45 / 1;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   align-items: start;
