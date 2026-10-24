@@ -84,6 +84,10 @@ export default function Loading() {
   return (
     <main className="audioflume-pricing-page-root audioflume-pricing-loading" aria-hidden="true">
       <section className="audioflume-pricing-plans-section">
+        <div className="audioflume-pricing-top-meta" aria-hidden="true">
+          <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
+          <span>HUMAN MADE MUSIC &amp; FAIR ARTIST COMPENSATION</span>
+        </div>
         <div className="audioflume-pricing-overview">
           <div className="audioflume-pricing-overview-heading">
             <SkeletonBlock className="is-overview-eyebrow" />
