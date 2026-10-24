@@ -1187,9 +1187,8 @@ export default function HomePageContent(_props: {
         regularPrice.scrollWidth +
         offerPrice.scrollWidth +
         statement.scrollWidth +
-        columnGap * 2 +
-        24;
-      const shouldStackCopy = bottom.clientWidth <= requiredWidth;
+        columnGap * 2;
+      const shouldStackCopy = bottom.clientWidth < requiredWidth;
 
       setLifetimeCopyStacked(shouldStackCopy);
 
