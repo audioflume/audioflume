@@ -4754,7 +4754,7 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2-offer-line > strong {
   margin-top: 8px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(38px, 2.65vw, 50px);
+  font-size: clamp(39px, 2.72vw, 51px);
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.9;
@@ -4800,7 +4800,7 @@ html:not(.light):not([data-theme="light"])
   justify-self: end;
   margin: 0;
   color: #ffffff;
-  font-size: clamp(21px, 1.35vw, 24px);
+  font-size: clamp(20px, 1.3vw, 23px);
   font-weight: 300;
   letter-spacing: -0.032em;
   line-height: 1.02;
@@ -4818,7 +4818,7 @@ html:not(.light):not([data-theme="light"])
   }
 
   .audioflume-home-lifetime-v2-statement {
-    font-size: 21px;
+    font-size: 20px;
   }
 }
 
