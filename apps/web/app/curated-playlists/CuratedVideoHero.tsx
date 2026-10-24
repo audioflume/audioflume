@@ -43,7 +43,7 @@ export default function CuratedVideoHero() {
       <div className="curated-video-hero-content">
         <h1>Curated Playlists</h1>
 
-        <p className="curated-video-hero-primary-copy">
+        <p className="curated-video-hero-primary-copy audioflume-editorial-meta">
           <span>Discover curated music playlists</span>
           <span>Premium audio soundtracks</span>
           <span>For film</span>
