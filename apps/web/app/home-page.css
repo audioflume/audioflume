@@ -4836,3 +4836,36 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-curated-card-kicker {
   font-size: 11px;
 }
+
+
+/* Refine curated and catalogue play controls and catalogue row sizing. */
+.audioflume-home-mockup-curated-card-play {
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px !important;
+}
+
+.audioflume-home-mockup-catalogue
+  .audioflume-home-ready-track-card {
+  height: 70px !important;
+}
+
+.audioflume-home-mockup-catalogue
+  .audioflume-home-ready-track-card > button {
+  width: 42px !important;
+  min-width: 42px !important;
+  height: 42px !important;
+}
+
+.audioflume-home-mockup-catalogue
+  .audioflume-home-reference-width.grid {
+  gap: 7px !important;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-curated-card-play {
+    width: 42px !important;
+    min-width: 42px !important;
+    height: 42px !important;
+  }
+}
