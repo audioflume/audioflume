@@ -4748,3 +4748,53 @@ html:not(.light):not([data-theme="light"])
     height: 44px !important;
   }
 }
+
+
+/* Tighten curated card padding and match catalogue play-button sizing. */
+.audioflume-home-mockup-curated-card-kicker {
+  top: 24px;
+  left: 30px;
+}
+
+.audioflume-home-mockup-curated-card strong {
+  right: 82px;
+  bottom: 28px;
+  left: 30px;
+}
+
+.audioflume-home-mockup-curated-card-play {
+  right: 24px !important;
+  bottom: 24px !important;
+  width: 36px !important;
+  min-width: 36px !important;
+  height: 36px !important;
+  background: rgba(17, 17, 17, 0.28) !important;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.audioflume-home-mockup-curated-card-play svg {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-curated-card-kicker {
+    top: 18px;
+    left: 20px;
+  }
+
+  .audioflume-home-mockup-curated-card strong {
+    right: 70px;
+    bottom: 21px;
+    left: 20px;
+  }
+
+  .audioflume-home-mockup-curated-card-play {
+    right: 18px !important;
+    bottom: 18px !important;
+    width: 36px !important;
+    min-width: 36px !important;
+    height: 36px !important;
+  }
+}
