@@ -4613,3 +4613,14 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-shelf-scrollbar {
   margin-bottom: 80px;
 }
+
+
+/* Make the actual scrollbar-to-curated-section gap 80px total. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar {
+  margin-bottom: 80px;
+}
+
+.audioflume-home-mockup-curated {
+  padding-top: 0;
+}
