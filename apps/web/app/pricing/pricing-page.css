@@ -41,6 +41,20 @@
   transform: translateX(-50%);
 }
 
+.audioflume-pricing-top-meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 60px;
+  color: var(--text-muted);
+  font-family: var(--font-roboto-mono), monospace;
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
 .audioflume-pricing-catalogue-intro {
   display: flex;
   flex-wrap: wrap;
