@@ -4586,7 +4586,7 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-editorial-card.is-enterprise:hover::before {
-  transform: scale(1.03);
+  transform: scale(1.008);
 }
 
 .audioflume-home-mockup-editorial-card > span {
@@ -4678,7 +4678,7 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-lifetime-v2:hover .audioflume-home-lifetime-v2-image {
-  transform: scale(1.03);
+  transform: scale(1.008);
 }
 
 .audioflume-home-lifetime-v2-logo {
