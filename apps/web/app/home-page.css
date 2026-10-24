@@ -3351,11 +3351,11 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 .audioflume-home-mockup-catalogue-heading h2 {
   margin: 0;
   color: var(--filmwave-section-title-color);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(24px, 2.15vw, 38px);
-  font-weight: 300;
-  letter-spacing: -0.035em;
-  line-height: 1.02;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
 }
 
 .audioflume-home-mockup-catalogue-heading a {
@@ -4370,9 +4370,11 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-mockup-catalogue-heading h2 {
-  font-size: 34px;
-  font-weight: 300;
-  line-height: 1.02;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
 }
 
 
