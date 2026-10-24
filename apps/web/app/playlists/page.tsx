@@ -1080,25 +1080,85 @@ export default function PlaylistsPage() {
         .playlist-edit-save { background: var(--text-primary); color: var(--bg-primary); }
         .playlist-edit-save:hover { opacity: 0.82; }
         .playlist-library { padding-top: 0; }
-        .playlist-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 16px; }
+        .playlist-gallery {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          column-gap: 10px;
+          row-gap: 40px;
+        }
         .playlist-gallery-card { position: relative; min-width: 0; cursor: pointer; }
         .playlist-gallery-link { display: block; color: inherit; text-decoration: none; }
         .playlist-gallery-link-static, .playlist-index-row-static { cursor: default !important; }
-        .playlist-gallery-art-wrap { position: relative; min-height: 210px; border-radius: 18px; overflow: hidden; background: var(--bg-secondary); border: 1.25px solid var(--border-subtle); transition: none; }
-        .playlist-gallery-card:hover .playlist-gallery-art-wrap, .playlist-gallery-card.is-menu-open .playlist-gallery-art-wrap { border-color: var(--border); }
-        .playlist-gallery-art { position: absolute; inset: 0; }
-        .playlist-gallery-art::after { content: ""; position: absolute; inset: 0; background: linear-gradient(to top, rgba(0, 0, 0, 0.62), rgba(0, 0, 0, 0.18) 58%, transparent); pointer-events: none; }
+        .playlist-gallery-art-wrap {
+          position: relative;
+          min-height: 0;
+          overflow: visible;
+          border: 0;
+          border-radius: 0;
+          background: transparent;
+          transition: none;
+        }
+        .playlist-gallery-art {
+          position: relative;
+          width: 100%;
+          height: calc(40vw / 2.38);
+          overflow: hidden;
+          border-radius: 3px;
+          background: var(--bg-secondary);
+        }
+        .playlist-gallery-art::after { content: none; }
         .playlist-gallery-art img, .playlist-row-cover img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-        .playlist-gallery-art img { transition: transform 0.7s ease; }
-        .playlist-gallery-card:hover .playlist-gallery-art img, .playlist-gallery-card.is-menu-open .playlist-gallery-art img { transform: scale(1.025); }
+        .playlist-gallery-art img { transition: transform 320ms ease; }
+        .playlist-gallery-card:hover .playlist-gallery-art img, .playlist-gallery-card.is-menu-open .playlist-gallery-art img { transform: scale(1.017); }
         .playlist-gallery-letters { position: absolute; left: 18px; bottom: 18px; z-index: 1; font-family: var(--font-aktiv-grotesk); font-size: 44px; font-weight: 500; line-height: 0.9; letter-spacing: -0.07em; color: rgba(255, 255, 255, 0.12); pointer-events: none; }
-        .playlist-gallery-top-row { position: relative; z-index: 4; display: flex; justify-content: flex-end; padding: 16px; }
-        .playlist-gallery-arrow { display: flex; width: 32px; height: 32px; flex-shrink: 0; align-items: center; justify-content: center; border-radius: 999px; background: rgba(255, 255, 255, 0.12); color: white; backdrop-filter: blur(12px); transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease; }
-        .playlist-gallery-card:hover .playlist-gallery-arrow, .playlist-gallery-card.is-menu-open .playlist-gallery-arrow { background: white; color: black; }
-        .playlist-gallery-content { position: absolute; left: 16px; right: 16px; bottom: 16px; z-index: 4; }
-        .playlist-gallery-kicker { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.52); }
-        .playlist-gallery-content h3 { margin-top: 8px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-aktiv-grotesk); font-size: 25px; font-weight: 500; line-height: 1.15; letter-spacing: -0.055em; color: white; }
-        .playlist-gallery-content p { margin-top: 12px; font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.58); }
+        .playlist-gallery-top-row,
+        .playlist-gallery-arrow { display: none; }
+        .playlist-gallery-content {
+          position: static;
+          margin-top: 9px;
+          padding-right: 22px;
+          color: inherit;
+        }
+        .playlist-gallery-kicker { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 10px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--text-muted); }
+        .playlist-gallery-content h3 {
+          margin: 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: var(--text-primary);
+          font-family: var(--discover-playlist-card-title-font-family, inherit);
+          font-size: 16px;
+          font-weight: 400;
+          letter-spacing: -0.015em;
+          line-height: 1.15;
+        }
+        .playlist-gallery-content p {
+          margin: 3px 0 0;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          color: var(--text-muted);
+          font-size: 11.5px;
+          font-weight: 400;
+          line-height: 1.45;
+        }
+        @media (max-width: 980px) {
+          .playlist-gallery {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+          }
+          .playlist-gallery-art {
+            height: calc(52vw / 2.38);
+          }
+        }
+        @media (max-width: 620px) {
+          .playlist-gallery {
+            column-gap: 10px;
+            row-gap: 32px;
+          }
+          .playlist-gallery-art {
+            height: calc(78vw / 2.38);
+          }
+        }
         .playlist-rename-input { box-sizing: border-box; width: 100%; min-width: 0; height: auto; border: 0 !important; border-radius: 0 !important; outline: 0 !important; background: transparent !important; padding: 0 !important; color: var(--text-primary); box-shadow: none !important; font-family: inherit; }
         .playlist-rename-input:focus { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
         .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-aktiv-grotesk); font-size: 13px; font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
