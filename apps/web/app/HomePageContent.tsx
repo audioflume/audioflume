@@ -504,7 +504,7 @@ function HomeReadyToCutSongCard({
 }
 
 function HomeTrendingSection({ songs }: { songs: Song[] }) {
-  const visibleSongs = songs.slice(0, 12);
+  const visibleSongs = songs.slice(0, 16);
 
   if (visibleSongs.length === 0) return null;
 
