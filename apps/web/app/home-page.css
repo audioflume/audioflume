@@ -1302,9 +1302,9 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-copy strong {
-  font-size: 43px;
+  font-size: clamp(36px, 2.55vw, 50px);
   font-weight: 300;
-  letter-spacing: -0.035em;
+  letter-spacing: -0.03em;
   line-height: 1;
 }
 
