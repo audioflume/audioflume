@@ -610,7 +610,6 @@ function HomeCuratedPlaylistShelf({
       <Shelf
         label="curated playlists"
         className="audioflume-home-mockup-curated-shelf"
-        customScrollbar
       >
         {playlists.map((playlist, index) => (
           <article
@@ -754,7 +753,6 @@ function HomeCuratedPlaylistSkeleton() {
     <Shelf
       label="curated playlists"
       className="audioflume-home-mockup-curated-shelf audioflume-home-skeleton-curated-shelf"
-      customScrollbar
     >
       {Array.from({ length: 4 }, (_, index) => (
         <article
