@@ -490,22 +490,24 @@ function HomeArtistShelf({
           mediaClassName="audioflume-home-reference-artist-media audioflume-home-reference-artist-promo-media"
         />
         <span className="audioflume-home-reference-artist-promo-shade" aria-hidden="true" />
-        <h2 className="audioflume-home-reference-artist-promo-title">
-          <span>In demand</span>
-          <span>artists</span>
-          <span>&amp; composers.</span>
-        </h2>
-        <Link
-          href="/discover"
-          className="audioflume-home-reference-artist-promo-link inline-flex items-center gap-[5px]"
-        >
-          Explore artists
-          <ArrowUpRightIcon
-            size={16}
-            strokeWidth={1.5}
-            className="translate-y-[1px]"
-          />
-        </Link>
+        <div className="audioflume-home-reference-artist-promo-content">
+          <h2 className="audioflume-home-reference-artist-promo-title">
+            <span>In demand</span>
+            <span>artists</span>
+            <span>&amp; composers.</span>
+          </h2>
+          <Link
+            href="/discover"
+            className="audioflume-home-reference-artist-promo-link inline-flex items-center gap-[5px]"
+          >
+            Explore artists
+            <ArrowUpRightIcon
+              size={16}
+              strokeWidth={1.5}
+              className="translate-y-[1px]"
+            />
+          </Link>
+        </div>
       </article>
 
       {artists.map((artist, index) => {
