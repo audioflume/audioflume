@@ -4348,3 +4348,27 @@ html:not(.light):not([data-theme="light"])
     flex-basis: 32px;
   }
 }
+
+
+/* Fine-tune homepage headline mark sizing and spacing. */
+.audioflume-home-mockup-intro-heading h1 {
+  gap: 6px;
+}
+
+.audioflume-home-mockup-at {
+  width: 41px;
+  height: 41px;
+  flex-basis: 41px;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-intro-heading h1 {
+    gap: 5px;
+  }
+
+  .audioflume-home-mockup-at {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
+}
