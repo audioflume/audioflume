@@ -129,9 +129,9 @@
 
 .playButton:hover,
 .playButton:focus-visible {
-  background: #ffffff;
-  color: #111111;
-  transform: scale(1.02);
+  background: #ffffff !important;
+  color: #111111 !important;
+  transform: scale(1.02) !important;
 }
 
 .card:hover :global(.curated-playlist-play-button),
