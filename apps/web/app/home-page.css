@@ -4252,3 +4252,19 @@ html:not(.light):not([data-theme="light"])
     font-weight: 500;
   }
 }
+
+
+/* Free-scroll shelves in the catalogue-first homepage. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-shelf
+  .audioflume-home-reference-shelf-scroller,
+.audioflume-home-mockup-curated-shelf
+  .audioflume-home-reference-shelf-scroller {
+  scroll-snap-type: none;
+}
+
+.audioflume-home-mockup-artists .audioflume-home-reference-artist-card,
+.audioflume-home-mockup-curated-card {
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
+}
