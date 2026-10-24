@@ -1360,15 +1360,14 @@ html:not(.light):not([data-theme="light"])
   right: 34px;
   bottom: 34px;
   display: flex;
-  width: auto;
-  min-width: 160px;
-  height: 42px;
+  width: 220px;
+  min-width: 220px;
+  height: 48px;
   align-items: center;
-  justify-content: center;
-  gap: 5px;
+  justify-content: space-between;
   border-radius: 0;
   background: #ffffff;
-  padding: 0 22px;
+  padding: 0 18px 0 70px;
   color: #111111;
   font-size: 13px;
   font-weight: 400;
@@ -1452,12 +1451,14 @@ html:not(.light):not([data-theme="light"])
   right: 34px;
   bottom: 34px;
   z-index: 2;
-  min-width: 160px;
-  height: 42px;
+  width: 220px;
+  min-width: 220px;
+  height: 48px;
   align-items: center;
   justify-content: center;
+  gap: 5px;
   background: #ffffff;
-  padding: 0 22px;
+  padding: 0 18px;
   color: #111111;
   font-size: 13px;
   font-weight: 400;
@@ -1700,7 +1701,17 @@ html:not(.light):not([data-theme="light"])
     padding-right: 210px;
   }
 
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-play,
+  .audioflume-home-reference-artist-promo-link {
+    width: 180px;
+    min-width: 180px;
+  }
 
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-play {
+    padding-left: 50px;
+  }
 }
 
 @media (max-width: 620px) {
