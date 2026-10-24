@@ -4551,3 +4551,51 @@ html:not(.light):not([data-theme="light"])
     height: 360px !important;
   }
 }
+
+
+/* Keep featured artist height fixed while width narrows with the viewport. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-card {
+  width: 67vw !important;
+  min-width: 67vw !important;
+  height: auto !important;
+  aspect-ratio: auto !important;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-link {
+  height: auto !important;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-media {
+  width: 100% !important;
+  height: 400px !important;
+  aspect-ratio: auto !important;
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-card {
+    width: 67vw !important;
+    min-width: 67vw !important;
+  }
+
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-media {
+    height: 400px !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-card {
+    width: 67vw !important;
+    min-width: 67vw !important;
+  }
+
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-media {
+    height: 400px !important;
+  }
+}
