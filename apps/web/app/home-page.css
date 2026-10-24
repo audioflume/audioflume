@@ -1364,10 +1364,11 @@ html:not(.light):not([data-theme="light"])
   min-width: 220px;
   height: 48px;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 6px;
   border-radius: 0;
   background: #ffffff;
-  padding: 0 18px 0 70px;
+  padding: 0 18px;
   color: #111111;
   font-size: 13px;
   font-weight: 400;
@@ -1708,10 +1709,6 @@ html:not(.light):not([data-theme="light"])
     min-width: 180px;
   }
 
-  .audioflume-home-mockup-artists
-    .audioflume-home-reference-artist-play {
-    padding-left: 50px;
-  }
 }
 
 @media (max-width: 620px) {
