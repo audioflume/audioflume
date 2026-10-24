@@ -4380,3 +4380,13 @@ html:not(.light):not([data-theme="light"])
   font-weight: 300;
   letter-spacing: 0;
 }
+
+
+/* Increase spacing below the homepage intro meta row. */
+.audioflume-home-mockup-intro-meta {
+  margin-bottom: 80px;
+}
+
+.audioflume-home-mockup-intro-heading {
+  padding-top: 0;
+}
