@@ -47,6 +47,7 @@ export type HeaderSearchBarProps = {
   onSubmitSearch?: (value: string) => void;
   searchInputRef?: Ref<HTMLInputElement>;
   searchIcon?: ReactNode;
+  clearIcon?: ReactNode;
   className?: string;
   rowClassName?: string;
   formClassName?: string;
@@ -66,6 +67,7 @@ export function HeaderSearchBar({
   onSubmitSearch,
   searchInputRef,
   searchIcon,
+  clearIcon,
   className = "",
   rowClassName = "",
   formClassName = "",
@@ -125,7 +127,7 @@ export function HeaderSearchBar({
         className="fw-toolbar-search-static-clear-icon"
         aria-hidden="true"
       >
-        <HeaderSearchClearIcon />
+        {clearIcon ?? <HeaderSearchClearIcon />}
       </span>
     </button>
   ) : null;
