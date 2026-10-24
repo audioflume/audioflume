@@ -1061,7 +1061,8 @@ export default function HomePageContent(_props: {
     if (!lifetimeBlock || !planStrip || !planCard) return;
 
     const lifetimeWidth = lifetimeBlock.getBoundingClientRect().width;
-    const planHeight = planCard.getBoundingClientRect().height;
+    const planWidth = planCard.getBoundingClientRect().width;
+    const planHeight = planWidth / 2.45;
     const lockedCopyWidth = lifetimeWidth / 2;
 
     lifetimeLockedCopyWidthRef.current = lockedCopyWidth;
