@@ -3718,8 +3718,6 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-catalogue-heading a {
   flex: 0 0 auto;
-  color: var(--filmwave-section-title-color);
-  font-size: 12px;
 }
 
 .audioflume-home-mockup-catalogue .audioflume-home-reference-trending {
@@ -4706,10 +4704,6 @@ html:not(.light):not([data-theme="light"])
   line-height: 1.02;
 }
 
-.audioflume-home-mockup-catalogue-heading a {
-  padding-bottom: 3px;
-  font-size: 13px;
-}
 
 @media (max-width: 980px) {
   .audioflume-home-mockup-curated-card {
@@ -4878,11 +4872,6 @@ html:not(.light):not([data-theme="light"])
 }
 
 
-/* Let the catalogue link use the shared arrow-link styling without local overrides. */
-.audioflume-home-mockup-catalogue-heading a.audioflume-arrow-text-link {
-  padding-bottom: 0;
-  font-size: inherit;
-}
 
 
 /* Balance catalogue play-button inset within 70px rows. */
