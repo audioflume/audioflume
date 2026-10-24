@@ -4628,9 +4628,10 @@ html:not(.light):not([data-theme="light"])
 /* Isolated homepage Lifetime block — no legacy pricing/Lifetime selectors. */
 .audioflume-home-lifetime-v2 {
   display: grid;
-  width: min(100%, var(--filmwave-editorial-max-width));
+  width: var(--home-reference-width);
   aspect-ratio: 7.25 / 1;
   grid-template-columns: 51.2% 48.8%;
+  grid-template-areas: "art copy";
   margin: 0 auto;
   overflow: hidden;
   border-radius: 4px;
@@ -4638,6 +4639,7 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-lifetime-v2-art {
+  grid-area: art;
   position: relative;
   min-width: 0;
   overflow: hidden;
@@ -4668,6 +4670,7 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-lifetime-v2-copy {
+  grid-area: copy;
   display: grid;
   min-width: 0;
   grid-template-rows: auto 1fr;
@@ -4848,6 +4851,9 @@ html:not(.light):not([data-theme="light"])
 @media (max-width: 620px) {
   .audioflume-home-lifetime-v2 {
     grid-template-columns: 1fr;
+    grid-template-areas:
+      "art"
+      "copy";
   }
 
   .audioflume-home-lifetime-v2-art {
