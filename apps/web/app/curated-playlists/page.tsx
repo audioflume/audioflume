@@ -240,6 +240,7 @@ export default function CuratedPlaylistsPage() {
                       key={playlist.id}
                       playlist={playlist}
                       index={index}
+                      variant="home"
                     />
                   ))}
                 </div>
