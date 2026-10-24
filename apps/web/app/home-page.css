@@ -2108,6 +2108,11 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
+  .audioflume-home-reference-original-song-grid
+    .audioflume-home-reference-original-song-card:nth-child(9) {
+    display: block;
+  }
+
   .audioflume-home-reference-feature-pair-intro-break {
     display: none;
   }
