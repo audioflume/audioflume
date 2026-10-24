@@ -4822,3 +4822,11 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-curated {
   padding-bottom: 80px;
 }
+
+
+/* Use a white custom scrollbar thumb in dark mode. */
+html:not(.light):not([data-theme="light"])
+  .audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar-thumb {
+  background: #ffffff;
+}
