@@ -615,7 +615,7 @@ function HomeEditorialStrip() {
         className="audioflume-home-mockup-editorial-card is-subscription audioflume-arrow-text-link"
       >
         <span>Plans for <b>solo creators</b></span>
-        <strong>A growing catalogue built around cinematic storytelling.</strong>
+        <strong>For independent filmmakers creating commercial projects.</strong>
         <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
 
@@ -624,7 +624,7 @@ function HomeEditorialStrip() {
         className="audioflume-home-mockup-editorial-card is-artists audioflume-arrow-text-link"
       >
         <span>Plans for <b>studios</b></span>
-        <strong>A growing catalogue built around cinematic storytelling.</strong>
+        <strong>For production teams licensing music for ongoing client work.</strong>
         <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
 
@@ -633,7 +633,7 @@ function HomeEditorialStrip() {
         className="audioflume-home-mockup-editorial-card is-enterprise audioflume-arrow-text-link"
       >
         <span>Plans for <b>enterprise</b></span>
-        <strong>A growing catalogue built around cinematic storytelling.</strong>
+        <strong>For larger teams needing broader licensing and support.</strong>
         <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
     </section>
