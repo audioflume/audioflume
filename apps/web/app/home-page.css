@@ -4605,6 +4605,11 @@ html:not(.light):not([data-theme="light"])
   margin: 0 !important;
   color: currentColor;
   transform: translate(12px, -12px) !important;
+  transition: transform 100ms ease;
+}
+
+.audioflume-home-mockup-editorial-card:hover > svg {
+  transform: translate(13px, -13px) !important;
 }
 
 .audioflume-home-mockup-editorial-card > strong {
@@ -4704,6 +4709,11 @@ html:not(.light):not([data-theme="light"])
   font-size: 0;
   text-decoration: none;
   transform: translate(12px, -12px);
+  transition: transform 100ms ease;
+}
+
+.audioflume-home-lifetime-v2:hover .audioflume-home-lifetime-v2-link {
+  transform: translate(13px, -13px);
 }
 
 .audioflume-home-lifetime-v2-link svg {
