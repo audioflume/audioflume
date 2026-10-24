@@ -692,29 +692,29 @@ function HomeEditorialStrip() {
     <section className="audioflume-home-mockup-editorial-strip audioflume-home-reference-width">
       <Link
         href="/pricing"
-        className="audioflume-home-mockup-editorial-card is-subscription"
+        className="audioflume-home-mockup-editorial-card is-subscription audioflume-arrow-text-link"
       >
         <span>Plans for <b>solo creators</b></span>
         <strong>A growing catalogue built around cinematic storytelling.</strong>
-        <ArrowUpRightIcon size={14} strokeWidth={1.4} />
+        <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
 
       <Link
         href="/artists"
-        className="audioflume-home-mockup-editorial-card is-artists"
+        className="audioflume-home-mockup-editorial-card is-artists audioflume-arrow-text-link"
       >
         <span>Plans for <b>studios</b></span>
         <strong>A growing catalogue built around cinematic storytelling.</strong>
-        <ArrowUpRightIcon size={14} strokeWidth={1.4} />
+        <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
 
       <Link
         href="/pricing"
-        className="audioflume-home-mockup-editorial-card is-enterprise"
+        className="audioflume-home-mockup-editorial-card is-enterprise audioflume-arrow-text-link"
       >
         <span>Plans for <b>enterprise</b></span>
         <strong>A growing catalogue built around cinematic storytelling.</strong>
-        <ArrowUpRightIcon size={14} strokeWidth={1.4} />
+        <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
     </section>
   );
