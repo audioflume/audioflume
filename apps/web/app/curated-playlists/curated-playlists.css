@@ -753,3 +753,15 @@ body:has(.curated-playlists-page-root)
 .curated-playlists-page-footer {
   margin-top: calc(var(--filmwave-page-gutter) * -1) !important;
 }
+
+
+/* Match curated page playlist gaps to the homepage playlist shelf. */
+.curated-page-playlist-grid {
+  gap: 10px;
+}
+
+@media (max-width: 620px) {
+  .curated-page-playlist-grid {
+    gap: 10px;
+  }
+}
