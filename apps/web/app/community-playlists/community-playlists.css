@@ -222,6 +222,7 @@ body:has(.community-playlists-page-root) {
   width: 100%;
   height: calc(40vw / 2.38);
   overflow: hidden;
+  border-radius: 3px;
   background: var(--bg-secondary);
 }
 
