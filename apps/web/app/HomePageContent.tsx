@@ -1006,6 +1006,8 @@ export default function HomePageContent(_props: {
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const lifetimeLayoutRef = useRef<HTMLDivElement>(null);
+  const lifetimeLockedCopyWidthRef = useRef<number | null>(null);
+  const [lifetimeStacked, setLifetimeStacked] = useState(false);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -1057,15 +1059,43 @@ export default function HomePageContent(_props: {
 
     const lifetimeWidth = lifetimeBlock.getBoundingClientRect().width;
     const planHeight = planCard.getBoundingClientRect().height;
+    const lockedCopyWidth = lifetimeWidth / 2;
 
+    lifetimeLockedCopyWidthRef.current = lockedCopyWidth;
     lifetimeBlock.style.setProperty(
       "--audioflume-home-lifetime-copy-width",
-      `${lifetimeWidth / 2}px`,
+      `${lockedCopyWidth}px`,
     );
     lifetimeBlock.style.setProperty(
       "--audioflume-home-lifetime-height",
       `${planHeight}px`,
     );
+
+    const updateLifetimeStack = () => {
+      const currentBlock = lifetimeLayoutRef.current;
+      const copyWidth = lifetimeLockedCopyWidthRef.current;
+      if (!currentBlock || copyWidth === null) return;
+
+      const styles = getComputedStyle(
+        currentBlock.closest(".audioflume-home-reference") ?? currentBlock,
+      );
+      const gutter =
+        Number.parseFloat(
+          styles.getPropertyValue("--audioflume-home-page-gutter"),
+        ) || 0;
+      const usablePageWidth = window.innerWidth - gutter * 2;
+      const currentBlockWidth = currentBlock.getBoundingClientRect().width;
+      const fluidArtWidth = currentBlockWidth - copyWidth;
+
+      setLifetimeStacked(fluidArtWidth <= usablePageWidth / 3);
+    };
+
+    updateLifetimeStack();
+    window.addEventListener("resize", updateLifetimeStack);
+
+    return () => {
+      window.removeEventListener("resize", updateLifetimeStack);
+    };
   }, []);
 
   useEffect(() => {
@@ -1200,7 +1230,7 @@ export default function HomePageContent(_props: {
         <div className="audioflume-home-reference-tools-originals">
           <div
             ref={lifetimeLayoutRef}
-            className="audioflume-home-reference-width audioflume-home-lifetime-v2"
+            className={`audioflume-home-reference-width audioflume-home-lifetime-v2${lifetimeStacked ? " is-stacked" : ""}`}
           >
             <div className="audioflume-home-lifetime-v2-copy">
               <div className="audioflume-home-lifetime-v2-top">
