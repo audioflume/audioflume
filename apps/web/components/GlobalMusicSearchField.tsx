@@ -48,7 +48,7 @@ function SearchFieldContent({
           onClick={onClear}
           aria-label="Clear search"
         >
-          <XIcon size={8} />
+          <XIcon size={8} strokeWidth={1.4} />
         </button>
       ) : null}
     </>
