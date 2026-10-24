@@ -160,10 +160,10 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
 }
 
 
-/* Shared editorial meta label used across Home and Discover. */
+/* Shared editorial meta label used across Home, Pricing, Discover, and Curated Playlists. */
 .audioflume-editorial-meta {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1.15;
