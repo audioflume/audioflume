@@ -564,6 +564,8 @@ export default function DiscoverPage() {
   const [featureCardArtists, setFeatureCardArtists] = useState<
     DiscoverFeatureCardArtist[]
   >([]);
+  const [featureCardArtistsLoading, setFeatureCardArtistsLoading] =
+    useState(true);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
   const [canScrollFeatureCardsPrev, setCanScrollFeatureCardsPrev] = useState(false);
   const [canScrollFeatureCardsNext, setCanScrollFeatureCardsNext] = useState(false);
@@ -646,6 +648,8 @@ export default function DiscoverPage() {
         }
       } catch {
         // Leave the managed card slots empty if feature card data is unavailable.
+      } finally {
+        if (!cancelled) setFeatureCardArtistsLoading(false);
       }
     }
 
@@ -860,7 +864,8 @@ export default function DiscoverPage() {
       <div className="discover-artist-content">
         <FeaturedArtistShelf
           artists={featureCardArtists}
-          showHeading={featuredArtistCount > 0}
+          loading={featureCardArtistsLoading}
+          showHeading={featuredArtistCount > 0 || featureCardArtistsLoading}
         />
 
         <ArtistShelf
