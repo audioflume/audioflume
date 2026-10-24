@@ -1177,13 +1177,13 @@ export default function HomePageContent(_props: {
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
-          <div className="audioflume-home-reference-width audioflume-home-reference-lifetime-access">
-            <div className="audioflume-home-lifetime-feature-copy">
-              <div className="audioflume-home-lifetime-feature-top">
+          <div className="audioflume-home-reference-width audioflume-home-lifetime-v2">
+            <div className="audioflume-home-lifetime-v2-copy">
+              <div className="audioflume-home-lifetime-v2-top">
                 <span>Plans for a <b>lifetime</b></span>
                 <Link
                   href="/music?artist=Audioflume"
-                  className="audioflume-home-lifetime-feature-link audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+                  className="audioflume-home-lifetime-v2-link audioflume-arrow-text-link inline-flex items-center gap-[5px]"
                   aria-label="Explore original music"
                 >
                   <ArrowUpRightIcon
@@ -1194,37 +1194,37 @@ export default function HomePageContent(_props: {
                 </Link>
               </div>
 
-              <div className="audioflume-home-lifetime-reference-bottom">
-                <div className="audioflume-home-lifetime-reference-price is-regular">
-                  <span className="audioflume-home-lifetime-reference-badge">Regular price</span>
+              <div className="audioflume-home-lifetime-v2-bottom">
+                <div className="audioflume-home-lifetime-v2-price is-regular">
+                  <span className="audioflume-home-lifetime-v2-badge">Regular price</span>
                   <strong>$299</strong>
                 </div>
 
-                <div className="audioflume-home-lifetime-reference-price is-offer">
-                  <span className="audioflume-home-lifetime-reference-badge is-light">
+                <div className="audioflume-home-lifetime-v2-price is-offer">
+                  <span className="audioflume-home-lifetime-v2-badge is-light">
                     Limited time offer
                   </span>
-                  <div className="audioflume-home-lifetime-reference-offer-line">
+                  <div className="audioflume-home-lifetime-v2-offer-line">
                     <strong>$99</strong>
                     <span>One time payment</span>
                   </div>
                 </div>
 
-                <p className="audioflume-home-lifetime-feature-reference-copy">
+                <p className="audioflume-home-lifetime-v2-statement">
                   Lifetime access to in-house<br />made original music.
                 </p>
               </div>
             </div>
 
             <div
-              className="audioflume-home-lifetime-feature-art"
+              className="audioflume-home-lifetime-v2-art"
               aria-hidden="true"
             >
-              <div className="audioflume-home-lifetime-feature-logo">
+              <div className="audioflume-home-lifetime-v2-logo">
                 <AudioflumeOriginalsLogo />
               </div>
               <img
-                className="audioflume-home-lifetime-feature-image"
+                className="audioflume-home-lifetime-v2-image"
                 src="https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg"
                 alt=""
                 draggable={false}
