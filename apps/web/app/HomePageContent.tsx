@@ -4,6 +4,7 @@ import { MusicListShell } from "@filmwave/shared";
 import Link from "next/link";
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
@@ -1074,7 +1075,7 @@ export default function HomePageContent(_props: {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const heading = catalogueHeadingRef.current;
     const firstLineMeasure = catalogueFirstLineMeasureRef.current;
     if (!heading || !firstLineMeasure) return;
