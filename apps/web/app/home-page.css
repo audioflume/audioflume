@@ -4823,8 +4823,8 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-art,
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-copy {
-  min-height: 0;
-  aspect-ratio: 3.625 / 1;
+  height: var(--audioflume-home-lifetime-height, 260px);
+  min-height: var(--audioflume-home-lifetime-height, 260px);
 }
 
 @media (max-width: 1320px) {
