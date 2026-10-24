@@ -4768,6 +4768,7 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-lifetime-v2-statement {
+  position: relative;
   align-self: end;
   justify-self: start;
   margin: 0;
@@ -4778,6 +4779,13 @@ html:not(.light):not([data-theme="light"])
   line-height: 1.02;
   text-align: left;
   text-transform: uppercase;
+}
+
+.audioflume-home-lifetime-v2-statement-measure {
+  position: absolute;
+  visibility: hidden;
+  white-space: nowrap;
+  pointer-events: none;
 }
 
 @media (max-width: 1320px) {
