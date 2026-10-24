@@ -876,7 +876,12 @@ export default function ProjectsPage() {
         }
         .project-grid-card-skeleton {
           pointer-events: none;
+          animation: skeleton-fade-in 0.3s ease-out both;
         }
+        .project-grid-card-skeleton:nth-child(2) { animation-delay: 0.04s; }
+        .project-grid-card-skeleton:nth-child(3) { animation-delay: 0.08s; }
+        .project-grid-card-skeleton:nth-child(4) { animation-delay: 0.12s; }
+        .project-grid-card-skeleton:nth-child(n + 5) { animation-delay: 0.16s; }
         .project-grid-skeleton-folder {
           width: 74px;
           height: 58px;
