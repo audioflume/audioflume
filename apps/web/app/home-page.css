@@ -5301,3 +5301,102 @@ html:not(.light):not([data-theme="light"])
     grid-template-columns: minmax(300px, 1fr) minmax(220px, 0.8fr);
   }
 }
+
+
+/* Lock pricing-card type and Lifetime content to the reference geometry. */
+.audioflume-home-mockup-editorial-card strong {
+  max-width: 390px;
+  font-size: clamp(18px, 1.28vw, 24px);
+  line-height: 1.02;
+}
+
+.audioflume-home-mockup-editorial-card > svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* Keep every Lifetime content element fully contained within the right panel. */
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy {
+  position: relative;
+  display: block;
+  box-sizing: border-box;
+  padding: 0;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top {
+  position: absolute;
+  top: 30px;
+  right: 26px;
+  left: 42px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-main {
+  position: static;
+  display: block;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-pricing {
+  position: absolute;
+  bottom: 28px;
+  left: 42px;
+  display: flex;
+  width: auto;
+  max-width: calc(100% - 390px);
+  align-items: flex-end;
+  gap: 28px;
+  margin: 0;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-price-group {
+  flex: 0 0 auto;
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price {
+  display: flex;
+  min-height: 0;
+  grid-template-columns: none;
+  align-items: baseline;
+  column-gap: 0;
+  margin: 0;
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price strong {
+  font-size: clamp(36px, 2.45vw, 46px);
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price span {
+  margin-left: 8px;
+  font-size: 12px;
+}
+
+.audioflume-home-lifetime-feature-reference-copy {
+  position: absolute;
+  right: 34px;
+  bottom: 31px;
+  width: 300px;
+  max-width: 300px;
+  margin: 0;
+  font-size: clamp(16px, 1vw, 19px);
+  line-height: 1.03;
+}
+
+@media (max-width: 1180px) {
+  .audioflume-home-mockup .audioflume-home-lifetime-feature-pricing {
+    max-width: calc(100% - 300px);
+    gap: 20px;
+  }
+
+  .audioflume-home-lifetime-feature-reference-copy {
+    width: 240px;
+    max-width: 240px;
+  }
+}
