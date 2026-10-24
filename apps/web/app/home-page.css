@@ -4539,7 +4539,7 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-editorial-strip {
   display: grid;
-  grid-template-columns: repeat(3, 622.67px);
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px;
   padding-bottom: 10px;
 }
@@ -4630,7 +4630,7 @@ html:not(.light):not([data-theme="light"])
   display: grid;
   width: var(--home-reference-width);
   height: 260px;
-  grid-template-columns: minmax(0, 1fr) 921.34px;
+  grid-template-columns: minmax(0, 1fr) 50vw;
   grid-template-areas: "art copy";
   margin: 0 auto;
   overflow: hidden;
