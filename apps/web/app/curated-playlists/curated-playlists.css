@@ -755,14 +755,16 @@ body:has(.curated-playlists-page-root)
 }
 
 
-/* Match curated page playlist gaps to the homepage playlist shelf. */
+/* Keep the homepage-style horizontal gap while giving playlist rows more breathing room. */
 .curated-page-playlist-grid {
-  gap: 10px;
+  column-gap: 10px;
+  row-gap: 40px;
 }
 
 @media (max-width: 620px) {
   .curated-page-playlist-grid {
-    gap: 10px;
+    column-gap: 10px;
+    row-gap: 32px;
   }
 }
 
