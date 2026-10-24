@@ -1194,22 +1194,19 @@ export default function HomePageContent(_props: {
                 </Link>
               </div>
 
-              <div className="audioflume-home-lifetime-feature-main">
-                <div className="audioflume-home-lifetime-feature-pricing">
-                  <div className="audioflume-home-lifetime-feature-price-group is-regular">
-                    <span className="audioflume-pricing-lifetime-badge">Regular price</span>
-                    <div className="audioflume-pricing-plan-price">
-                      <strong>$299</strong>
-                    </div>
-                  </div>
-                  <div className="audioflume-home-lifetime-feature-price-group">
-                    <span className="audioflume-pricing-lifetime-badge is-light">
-                      Limited time offer
-                    </span>
-                    <div className="audioflume-pricing-plan-price">
-                      <strong>$99</strong>
-                      <span>One time payment</span>
-                    </div>
+              <div className="audioflume-home-lifetime-reference-bottom">
+                <div className="audioflume-home-lifetime-reference-price is-regular">
+                  <span className="audioflume-home-lifetime-reference-badge">Regular price</span>
+                  <strong>$299</strong>
+                </div>
+
+                <div className="audioflume-home-lifetime-reference-price is-offer">
+                  <span className="audioflume-home-lifetime-reference-badge is-light">
+                    Limited time offer
+                  </span>
+                  <div className="audioflume-home-lifetime-reference-offer-line">
+                    <strong>$99</strong>
+                    <span>One time payment</span>
                   </div>
                 </div>
 
