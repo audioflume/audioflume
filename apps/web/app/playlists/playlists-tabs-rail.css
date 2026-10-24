@@ -260,7 +260,7 @@ body .playlists-tabs-row {
 .playlists-page .playlists-hero {
   display: block !important;
   padding-top: 0 !important;
-  margin-bottom: var(--filmwave-small-section-title-margin-bottom) !important;
+  margin-bottom: 40px !important;
 }
 
 .playlists-page .playlists-kicker {
@@ -667,6 +667,10 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 }
 
 @media (max-width: 620px) {
+  .playlists-page .playlists-hero {
+    margin-bottom: 32px !important;
+  }
+
   .playlists-page .playlist-gallery-play-button {
     top: calc((78vw / 2.38) - 60px) !important;
     right: 18px !important;
