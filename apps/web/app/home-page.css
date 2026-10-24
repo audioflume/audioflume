@@ -5478,3 +5478,51 @@ html:not(.light):not([data-theme="light"])
     max-width: calc(100% - 340px);
   }
 }
+
+
+/* Final reference alignment for pricing arrows and Lifetime statement. */
+.audioflume-home-mockup-editorial-card > svg {
+  top: 18px !important;
+  right: 18px !important;
+  width: 16px !important;
+  height: 16px !important;
+  stroke-width: 1.5 !important;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-link {
+  top: 18px !important;
+  right: 18px !important;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-link svg {
+  width: 16px !important;
+  height: 16px !important;
+  stroke-width: 1.5 !important;
+}
+
+.audioflume-home-lifetime-feature-reference-copy {
+  right: 44px;
+  bottom: 24px;
+  width: 360px;
+  max-width: 360px;
+  font-size: clamp(19px, 1.32vw, 24px);
+  line-height: 1.02;
+  letter-spacing: -0.032em;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-pricing {
+  max-width: calc(100% - 465px);
+}
+
+@media (max-width: 1180px) {
+  .audioflume-home-lifetime-feature-reference-copy {
+    right: 30px;
+    width: 290px;
+    max-width: 290px;
+    font-size: 19px;
+  }
+
+  .audioflume-home-mockup .audioflume-home-lifetime-feature-pricing {
+    max-width: calc(100% - 370px);
+  }
+}
