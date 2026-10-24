@@ -4869,3 +4869,10 @@ html:not(.light):not([data-theme="light"])
     height: 42px !important;
   }
 }
+
+
+/* Tighten catalogue song grid spacing. */
+.audioflume-home-mockup-catalogue
+  .audioflume-home-reference-width.grid {
+  gap: 5px !important;
+}
