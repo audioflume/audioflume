@@ -1444,7 +1444,7 @@ html:not(.light):not([data-theme="light"])
   position: relative;
   width: min(600px, calc(6.24vw + 506.9px));
   min-width: min(600px, calc(6.24vw + 506.9px));
-  height: var(--audioflume-home-curated-card-height, auto);
+  height: 252px;
   overflow: hidden;
   border-radius: 3px;
   background: var(--bg-tertiary);
