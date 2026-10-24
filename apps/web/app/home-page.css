@@ -4604,5 +4604,5 @@ html:not(.light):not([data-theme="light"])
 /* Restore the original featured-artist visual height, but keep it fixed while width changes. */
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-media {
-  height: 490px !important;
+  height: 430px !important;
 }
