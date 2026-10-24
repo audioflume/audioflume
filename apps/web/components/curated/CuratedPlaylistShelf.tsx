@@ -59,8 +59,9 @@ export function CuratedPlaylistCard({
   const fallbackGradient =
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
 
-  const usesHomeLayout = variant === "home" || variant === "curatedPage";
+  const isHomeVariant = variant === "home";
   const isCuratedPageVariant = variant === "curatedPage";
+  const usesHomeLayout = isHomeVariant || isCuratedPageVariant;
 
   return (
     <div className={cardStyles.shell}>
@@ -86,7 +87,7 @@ export function CuratedPlaylistCard({
               />
             )}
 
-            {usesHomeLayout ? (
+            {isHomeVariant ? (
               <>
                 <span className={cardStyles.homeShade} />
                 <strong className={cardStyles.homeTitle}>{playlist.name}</strong>
@@ -100,7 +101,7 @@ export function CuratedPlaylistCard({
           className={`${cardStyles.bookmarkButton}${usesHomeLayout ? ` ${cardStyles.homeBookmarkButton}` : ""}`}
         />
 
-        {!usesHomeLayout ? (
+        {!isHomeVariant ? (
           <div className={cardStyles.details}>
             <Link href={href} className={cardStyles.copy}>
               <h3>{playlist.name}</h3>
