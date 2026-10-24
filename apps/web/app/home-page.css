@@ -4543,8 +4543,8 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-editorial-card {
   display: grid;
-  height: var(--audioflume-home-plan-card-height, auto);
-  min-height: var(--audioflume-home-plan-card-height, 0);
+  height: 254px;
+  min-height: 254px;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   align-items: start;
@@ -4631,7 +4631,7 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2 {
   display: grid;
   width: var(--home-reference-width);
-  height: var(--audioflume-home-lifetime-height, auto);
+  height: 254px;
   grid-template-columns:
     minmax(0, 1fr)
     var(--audioflume-home-lifetime-copy-width, 50%);
@@ -4831,12 +4831,10 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2.is-copy-stacked .audioflume-home-lifetime-v2-copy {
   height: calc(
-    var(--audioflume-home-lifetime-height) +
-      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+    254px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
   );
   min-height: calc(
-    var(--audioflume-home-lifetime-height) +
-      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+    254px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
   );
 }
 
@@ -4851,19 +4849,17 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-art,
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-copy {
-  height: var(--audioflume-home-lifetime-height);
-  min-height: var(--audioflume-home-lifetime-height);
+  height: 254px;
+  min-height: 254px;
 }
 
 .audioflume-home-lifetime-v2.is-stacked.is-copy-stacked
   .audioflume-home-lifetime-v2-copy {
   height: calc(
-    var(--audioflume-home-lifetime-height) +
-      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+    254px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
   );
   min-height: calc(
-    var(--audioflume-home-lifetime-height) +
-      var(--audioflume-home-lifetime-copy-stack-extra, 0px)
+    254px + var(--audioflume-home-lifetime-copy-stack-extra, 0px)
   );
 }
 
