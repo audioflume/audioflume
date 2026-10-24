@@ -550,7 +550,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-section-heading a {
   color: var(--filmwave-section-title-color);
-  font-size: clamp(13px, 1vw, 15px);
+  font-size: 15px;
   font-weight: 300;
   letter-spacing: normal;
   text-decoration: none;
@@ -3694,7 +3694,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-copy strong {
-  font-size: clamp(31px, 2.7vw, 43px);
+  font-size: 43px;
   font-weight: 300;
 }
 
@@ -4072,33 +4072,20 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 
 /* Refine homepage primary headline weight and scale. */
+.audioflume-home-mockup-intro-heading {
+  flex-wrap: wrap;
+  row-gap: 16px;
+}
+
 .audioflume-home-mockup-intro-heading h1 {
-  font-size: clamp(32px, 2.9vw, 44px);
+  font-size: 44px;
   font-weight: 400;
   white-space: nowrap;
 }
 
-@media (max-width: 840px) {
-  .audioflume-home-mockup-intro-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .audioflume-home-mockup-intro-heading h1 {
-    font-size: clamp(
-      22px,
-      calc(
-        (100vw - (var(--audioflume-home-page-gutter) * 2)) / 15
-      ),
-      32px
-    );
-  }
-
-  .audioflume-home-mockup-intro-heading > span {
-    padding-bottom: 0;
-    text-align: left;
-  }
+.audioflume-home-mockup-intro-heading > span {
+  padding-bottom: 0;
+  text-align: left;
 }
 
 @media (max-width: 620px) {
@@ -4111,7 +4098,20 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-mockup-intro-heading h1 {
+    font-size: 32px;
     font-weight: 400;
+  }
+}
+
+@media (max-width: 480px) {
+  .audioflume-home-mockup-intro-heading h1 {
+    font-size: 26px;
+  }
+}
+
+@media (max-width: 390px) {
+  .audioflume-home-mockup-intro-heading h1 {
+    font-size: 22px;
   }
 }
 
@@ -4350,7 +4350,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   right: 118px;
   bottom: 39px;
   left: 46px;
-  font-size: clamp(22px, 1.65vw, 31px);
+  font-size: 31px;
   font-weight: 300;
   letter-spacing: -0.035em;
 }
@@ -4694,7 +4694,7 @@ html:not(.light):not([data-theme="light"])
   align-self: end;
   margin: 0;
   color: currentColor;
-  font-size: clamp(18px, 1.28vw, 24px);
+  font-size: 24px;
   font-weight: 400;
   letter-spacing: -0.04em;
   line-height: 1.06;
@@ -4837,7 +4837,7 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2-offer-line > strong {
   margin-top: 8px;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(39px, 2.72vw, 51px);
+  font-size: 51px;
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.9;
@@ -4883,7 +4883,7 @@ html:not(.light):not([data-theme="light"])
   justify-self: end;
   margin: 0;
   color: #ffffff;
-  font-size: clamp(20px, 1.3vw, 23px);
+  font-size: 23px;
   font-weight: 300;
   letter-spacing: -0.032em;
   line-height: 1.02;
