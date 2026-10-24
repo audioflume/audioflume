@@ -1654,13 +1654,15 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-editorial-card.is-subscription {
-  background: #e7e7df;
-  background-image: none !important;
+  background:
+    url("https://images.filmwave.io/images/home/Home%20Plan%20Blocks%201.jpg")
+      center / cover no-repeat;
 }
 
 .audioflume-home-mockup-editorial-card.is-artists {
-  background: #0f0f0f;
-  background-image: none !important;
+  background:
+    url("https://images.filmwave.io/images/home/Home%20Plan%20Blocks%202.jpg")
+      center / cover no-repeat;
   color: #ffffff;
 }
 
