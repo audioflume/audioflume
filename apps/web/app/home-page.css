@@ -4078,9 +4078,10 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-mockup-intro-heading h1 {
+  min-width: 0;
   font-size: 44px;
   font-weight: 400;
-  white-space: nowrap;
+  white-space: normal;
 }
 
 .audioflume-home-mockup-intro-heading > span {
@@ -4098,20 +4099,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-mockup-intro-heading h1 {
-    font-size: 32px;
     font-weight: 400;
-  }
-}
-
-@media (max-width: 480px) {
-  .audioflume-home-mockup-intro-heading h1 {
-    font-size: 26px;
-  }
-}
-
-@media (max-width: 390px) {
-  .audioflume-home-mockup-intro-heading h1 {
-    font-size: 22px;
   }
 }
 
