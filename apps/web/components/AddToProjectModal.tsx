@@ -475,14 +475,22 @@ export default function AddToProjectModal({
             )}
 
             {loading && (
-              <div className="grid gap-1 pt-1">
+              <div className="grid gap-1 pt-1" aria-hidden="true">
                 {Array.from({ length: projects.length || 4 }).map((_, index) => (
                   <div
                     key={index}
                     className="flex min-h-[58px] items-center gap-3 rounded-none p-2.5"
+                    style={{
+                      animation: "skeleton-fade-in 0.3s ease-out both",
+                      animationDelay: `${Math.min(index, 3) * 40}ms`,
+                    }}
                   >
-                    <div className="h-10 w-10 animate-pulse rounded-none bg-[var(--bg-primary)]" />
-                    <div className="h-3 w-32 animate-pulse rounded-none bg-[var(--bg-primary)]" />
+                    <div className="h-10 w-10 shrink-0 animate-pulse rounded-none bg-[var(--bg-tertiary)]" />
+                    <div className="min-w-0 flex-1 space-y-2">
+                      <div className="h-3 w-32 max-w-[58%] animate-pulse rounded-none bg-[var(--bg-tertiary)]" />
+                      <div className="h-2.5 w-20 max-w-[38%] animate-pulse rounded-none bg-[var(--bg-tertiary)]" />
+                    </div>
+                    <div className="h-4 w-4 shrink-0 animate-pulse rounded-none bg-[var(--bg-tertiary)]" />
                   </div>
                 ))}
               </div>
