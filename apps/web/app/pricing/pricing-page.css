@@ -55,6 +55,12 @@
   text-transform: uppercase;
 }
 
+@media (max-width: 620px) {
+  .audioflume-pricing-top-meta > span:last-child {
+    display: none;
+  }
+}
+
 .audioflume-pricing-catalogue-intro {
   display: flex;
   flex-wrap: wrap;
