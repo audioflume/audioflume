@@ -4883,3 +4883,10 @@ html:not(.light):not([data-theme="light"])
   padding-bottom: 0;
   font-size: inherit;
 }
+
+
+/* Balance catalogue play-button inset within 70px rows. */
+.audioflume-home-mockup-catalogue
+  .audioflume-home-ready-track-card {
+  padding-right: 14px !important;
+}
