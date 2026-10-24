@@ -1301,11 +1301,6 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-mockup-intro-heading {
     padding-top: 34px;
   }
-
-  .audioflume-home-mockup-curated-card {
-    width: 62vw;
-    min-width: 62vw;
-  }
 }
 
 @media (max-width: 620px) {
