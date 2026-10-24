@@ -584,10 +584,13 @@
   opacity: 1;
 }
 
-.audioflume-pricing-originals-play-icon:hover,
+.audioflume-pricing-originals-art:hover
+  .audioflume-pricing-originals-play-icon,
 .audioflume-pricing-originals-art:focus-visible
   .audioflume-pricing-originals-play-icon {
-  transform: translate(-50%, -50%) scale(1.03);
+  background: #ffffff !important;
+  color: #111111 !important;
+  transform: translate(-50%, -50%) scale(1.02);
 }
 
 .audioflume-pricing-originals-copy {
