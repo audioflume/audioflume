@@ -5045,3 +5045,88 @@ html:not(.light):not([data-theme="light"])
     justify-self: start;
   }
 }
+
+
+/* Second-pass reference match for editorial + Lifetime proportions. */
+.audioflume-home-mockup-editorial-card {
+  height: 205px;
+  min-height: 205px;
+  padding: 24px 26px 24px;
+}
+
+.audioflume-home-mockup-editorial-card > span {
+  font-size: 13px;
+}
+
+.audioflume-home-mockup-editorial-card strong {
+  max-width: 390px;
+  font-size: clamp(20px, 1.42vw, 27px);
+  line-height: 0.98;
+}
+
+.audioflume-home-mockup-editorial-card > svg {
+  top: 21px;
+  right: 21px;
+}
+
+.audioflume-home-mockup .audioflume-home-reference-lifetime-access {
+  height: 210px;
+  min-height: 210px;
+  grid-template-columns: 51% 49%;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-logo {
+  width: 235px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy {
+  padding: 24px 26px 25px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top > span {
+  font-size: 13px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-main {
+  grid-template-columns: minmax(355px, auto) minmax(260px, 1fr);
+  gap: 34px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-pricing {
+  gap: 20px;
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price strong {
+  font-size: clamp(38px, 2.8vw, 50px);
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price span {
+  font-size: 13px;
+}
+
+.audioflume-home-lifetime-feature-reference-copy {
+  max-width: 330px;
+  font-size: clamp(17px, 1.08vw, 21px);
+  line-height: 1.05;
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-mockup-editorial-card {
+    height: 185px;
+    min-height: 185px;
+  }
+
+  .audioflume-home-mockup .audioflume-home-reference-lifetime-access {
+    height: 230px;
+    min-height: 230px;
+  }
+
+  .audioflume-home-mockup .audioflume-home-lifetime-feature-main {
+    grid-template-columns: minmax(300px, auto) minmax(220px, 1fr);
+    gap: 24px;
+  }
+}
