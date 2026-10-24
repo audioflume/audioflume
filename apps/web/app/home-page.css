@@ -4899,3 +4899,9 @@ html:not(.light):not([data-theme="light"])
   height: 100%;
   object-fit: cover;
 }
+
+
+/* Increase catalogue-to-next-section spacing. */
+.audioflume-home-mockup-catalogue {
+  padding-bottom: 90px;
+}
