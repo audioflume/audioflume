@@ -1005,7 +1005,7 @@ export default function HomePageContent(_props: {
   const [artistsLoading, setArtistsLoading] = useState(true);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
-  const lifetimeLayoutRef = useRef<HTMLDivElement>(null);
+  const lifetimeLayoutRef = useRef<HTMLAnchorElement>(null);
   const lifetimeLockedCopyWidthRef = useRef<number | null>(null);
   const [lifetimeStacked, setLifetimeStacked] = useState(false);
   const [lifetimeCopyStacked, setLifetimeCopyStacked] = useState(false);
@@ -1276,24 +1276,24 @@ export default function HomePageContent(_props: {
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
-          <div
+          <Link
             ref={lifetimeLayoutRef}
+            href="/music?artist=Audioflume"
             className={`audioflume-home-reference-width audioflume-home-lifetime-v2${lifetimeStacked ? " is-stacked" : ""}${lifetimeCopyStacked ? " is-copy-stacked" : ""}`}
           >
             <div className="audioflume-home-lifetime-v2-copy">
               <div className="audioflume-home-lifetime-v2-top">
                 <span>Plans for a <b>lifetime</b></span>
-                <Link
-                  href="/music?artist=Audioflume"
-                  className="audioflume-home-lifetime-v2-link audioflume-arrow-text-link inline-flex items-center gap-[5px]"
-                  aria-label="Explore original music"
+                <span
+                  className="audioflume-home-lifetime-v2-link"
+                  aria-hidden="true"
                 >
                   <ArrowUpRightIcon
                     size={16}
                     strokeWidth={1.5}
                     className="translate-y-[2px]"
                   />
-                </Link>
+                </span>
               </div>
 
               <div className="audioflume-home-lifetime-v2-bottom">
@@ -1332,7 +1332,7 @@ export default function HomePageContent(_props: {
                 draggable={false}
               />
             </div>
-          </div>
+          </Link>
         </div>
 
         <section className="audioflume-home-reference-playlists">
