@@ -1052,16 +1052,23 @@ export default function HomePageContent(_props: {
 
   useEffect(() => {
     const lifetimeBlock = lifetimeLayoutRef.current;
+    const planStrip = document.querySelector<HTMLElement>(
+      ".audioflume-home-mockup-editorial-strip",
+    );
     const planCard = document.querySelector<HTMLElement>(
       ".audioflume-home-mockup-editorial-card",
     );
-    if (!lifetimeBlock || !planCard) return;
+    if (!lifetimeBlock || !planStrip || !planCard) return;
 
     const lifetimeWidth = lifetimeBlock.getBoundingClientRect().width;
     const planHeight = planCard.getBoundingClientRect().height;
     const lockedCopyWidth = lifetimeWidth / 2;
 
     lifetimeLockedCopyWidthRef.current = lockedCopyWidth;
+    planStrip.style.setProperty(
+      "--audioflume-home-plan-card-height",
+      `${planHeight}px`,
+    );
     lifetimeBlock.style.setProperty(
       "--audioflume-home-lifetime-copy-width",
       `${lockedCopyWidth}px`,
