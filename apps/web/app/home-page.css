@@ -4552,7 +4552,6 @@ html:not(.light):not([data-theme="light"])
   overflow: hidden;
   border-radius: 4px;
   padding: 28px 30px 26px;
-  background-image: none !important;
   color: #111111;
   text-decoration: none;
 }
@@ -4563,10 +4562,12 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-editorial-card.is-subscription {
   background: #e7e7df;
+  background-image: none !important;
 }
 
 .audioflume-home-mockup-editorial-card.is-artists {
   background: #0f0f0f;
+  background-image: none !important;
   color: #ffffff;
 }
 
