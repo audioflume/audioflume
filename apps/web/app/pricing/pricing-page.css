@@ -26,7 +26,7 @@
 .audioflume-pricing-plans-section {
   position: relative;
   isolation: isolate;
-  padding: 12px 0 0;
+  padding: 88px 0 0;
 }
 
 .audioflume-pricing-plans-section::before {
@@ -39,26 +39,6 @@
   width: 100vw;
   background: #e5e5dd;
   transform: translateX(-50%);
-}
-
-.audioflume-pricing-top-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 60px;
-  color: var(--text-muted);
-  font-family: var(--font-roboto-mono), monospace;
-  font-size: 10px;
-  font-weight: 300;
-  letter-spacing: 0;
-  line-height: 1;
-  text-transform: uppercase;
-}
-
-@media (max-width: 620px) {
-  .audioflume-pricing-top-meta > span:last-child {
-    display: none;
-  }
 }
 
 .audioflume-pricing-catalogue-intro {
@@ -1535,19 +1515,19 @@
   .audioflume-pricing-catalogue-intro {
     width: 100%;
     max-width: 500px;
+    flex-direction: column;
+    align-items: stretch;
+    row-gap: 20px;
     margin-right: auto;
     margin-left: auto;
   }
 
-  .audioflume-pricing-catalogue-intro-copy {
+  .audioflume-pricing-catalogue-intro-copy,
+  .audioflume-pricing-catalogue-intro-meta {
     width: 100%;
     max-width: none;
     flex: 0 0 auto;
     text-align: left;
-  }
-
-  .audioflume-pricing-catalogue-intro-meta {
-    display: none;
   }
 
   .audioflume-pricing-offers-grid {
