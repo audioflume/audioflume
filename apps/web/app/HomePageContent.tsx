@@ -1120,7 +1120,7 @@ export default function HomePageContent(_props: {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const lifetimeBlock = lifetimeLayoutRef.current;
     if (!lifetimeBlock) return;
 
@@ -1140,10 +1140,32 @@ export default function HomePageContent(_props: {
       `${lockedCopyWidth}px`,
     );
 
+    const bottom = lifetimeBlock.querySelector<HTMLElement>(
+      ".audioflume-home-lifetime-v2-bottom",
+    );
+    const regularPrice = lifetimeBlock.querySelector<HTMLElement>(
+      ".audioflume-home-lifetime-v2-price.is-regular",
+    );
+    const offerPrice = lifetimeBlock.querySelector<HTMLElement>(
+      ".audioflume-home-lifetime-v2-price.is-offer",
+    );
+    const statement = lifetimeBlock.querySelector<HTMLElement>(
+      ".audioflume-home-lifetime-v2-statement",
+    );
+
     const updateLifetimeStack = () => {
       const currentBlock = lifetimeLayoutRef.current;
       const copyWidth = lifetimeLockedCopyWidthRef.current;
-      if (!currentBlock || copyWidth === null) return;
+      if (
+        !currentBlock ||
+        copyWidth === null ||
+        !bottom ||
+        !regularPrice ||
+        !offerPrice ||
+        !statement
+      ) {
+        return;
+      }
 
       const styles = getComputedStyle(
         currentBlock.closest(".audioflume-home-reference") ?? currentBlock,
@@ -1158,50 +1180,44 @@ export default function HomePageContent(_props: {
 
       setLifetimeStacked(fluidArtWidth <= usableScreenWidth / 3);
 
-      const bottom = currentBlock.querySelector<HTMLElement>(
-        ".audioflume-home-lifetime-v2-bottom",
-      );
-      const regularPrice = currentBlock.querySelector<HTMLElement>(
-        ".audioflume-home-lifetime-v2-price.is-regular",
-      );
-      const offerPrice = currentBlock.querySelector<HTMLElement>(
-        ".audioflume-home-lifetime-v2-price.is-offer",
-      );
-      const statement = currentBlock.querySelector<HTMLElement>(
-        ".audioflume-home-lifetime-v2-statement",
-      );
+      const bottomStyles = getComputedStyle(bottom);
+      const columnGap =
+        Number.parseFloat(bottomStyles.columnGap || bottomStyles.gap) || 0;
+      const requiredWidth =
+        regularPrice.scrollWidth +
+        offerPrice.scrollWidth +
+        statement.scrollWidth +
+        columnGap * 2 +
+        24;
+      const shouldStackCopy = bottom.clientWidth <= requiredWidth;
 
-      if (bottom && regularPrice && offerPrice && statement) {
-        const bottomStyles = getComputedStyle(bottom);
-        const columnGap =
-          Number.parseFloat(bottomStyles.columnGap || bottomStyles.gap) || 0;
-        const requiredWidth =
-          regularPrice.scrollWidth +
-          offerPrice.scrollWidth +
-          statement.scrollWidth +
-          columnGap * 2 +
-          24;
-        const shouldStackCopy = bottom.clientWidth <= requiredWidth;
+      setLifetimeCopyStacked(shouldStackCopy);
 
-        setLifetimeCopyStacked(shouldStackCopy);
-
-        if (shouldStackCopy) {
-          currentBlock.style.setProperty(
-            "--audioflume-home-lifetime-copy-stack-extra",
-            `${statement.scrollHeight + 24}px`,
-          );
-        } else {
-          currentBlock.style.removeProperty(
-            "--audioflume-home-lifetime-copy-stack-extra",
-          );
-        }
+      if (shouldStackCopy) {
+        currentBlock.style.setProperty(
+          "--audioflume-home-lifetime-copy-stack-extra",
+          `${statement.scrollHeight + 24}px`,
+        );
+      } else {
+        currentBlock.style.removeProperty(
+          "--audioflume-home-lifetime-copy-stack-extra",
+        );
       }
     };
 
     updateLifetimeStack();
+
+    const resizeObserver = new ResizeObserver(updateLifetimeStack);
+    resizeObserver.observe(lifetimeBlock);
+    resizeObserver.observe(bottom);
+    resizeObserver.observe(regularPrice);
+    resizeObserver.observe(offerPrice);
+    resizeObserver.observe(statement);
+
     window.addEventListener("resize", updateLifetimeStack);
 
     return () => {
+      resizeObserver.disconnect();
       window.removeEventListener("resize", updateLifetimeStack);
     };
   }, []);
