@@ -5,6 +5,7 @@ import CreateProjectModal from "@/components/CreateProjectModal";
 import DropdownShell from "@/components/DropdownShell";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
+import XIcon from "@/components/icons/XIcon";
 import ListRowStatusCount from "@/components/ListRowStatusCount";
 import { FolderGlyph } from "@/components/project-browser/ProjectBrowserGlyphs";
 import Toast from "@/components/Toast";
@@ -485,7 +486,7 @@ export default function ProjectsPage() {
     <>
       <style>{`
         .projects-page { position: relative; margin-left: 0; margin-top: 56px; min-height: calc(100vh - 56px); overflow-x: hidden; overflow-y: visible; background: var(--bg-primary); color: var(--text-primary); }
-        .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 22px 32px 0 32px; }
+        .projects-shell { position: relative; z-index: 1; display: flex; min-height: calc(100vh - 56px); flex-direction: column; padding: 12px 32px 0 32px; }
         .projects-control-bar {
           --fw-header-search-row-height: 51px;
           --projects-control-gutter: clamp(28px, 5.2vw, 82px);
@@ -551,7 +552,7 @@ export default function ProjectsPage() {
           height: 51px !important;
           min-height: 51px !important;
           border: 0 !important;
-          border-radius: 0 !important;
+          border-radius: 4px !important;
           background: var(--filmwave-neutral-surface) !important;
           background-color: var(--filmwave-neutral-surface) !important;
           padding: 0 16px !important;
@@ -594,6 +595,20 @@ export default function ProjectsPage() {
           letter-spacing: 0 !important;
           line-height: normal !important;
           opacity: 1 !important;
+        }
+        .projects-control-bar .fw-toolbar-search-static-clear {
+          width: 22px !important;
+          height: 22px !important;
+          flex-basis: 22px !important;
+          transform: none !important;
+          transition: color 150ms ease !important;
+        }
+        .projects-control-bar .fw-toolbar-search-static-clear-icon {
+          transform: none !important;
+        }
+        .projects-control-bar .fw-toolbar-search-static-clear svg {
+          width: 21px !important;
+          height: 21px !important;
         }
         :where(html.light, html[data-theme="light"])
           .projects-control-bar
@@ -987,6 +1002,7 @@ export default function ProjectsPage() {
               variant="control"
               renderForm={false}
               searchIcon={<SearchIcon />}
+              clearIcon={<XIcon size={21} strokeWidth={1.4} />}
               searchValue={query}
               searchPlaceholder="Search projects"
               searchAriaLabel="Search projects"
