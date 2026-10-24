@@ -1238,18 +1238,12 @@ export default function HomePageContent(_props: {
               className="audioflume-home-lifetime-feature-art"
               aria-hidden="true"
             >
-              {lifetimeCoverTiles.length > 0 ? (
-                <div className="audioflume-home-lifetime-cover-grid">
-                  {lifetimeCoverTiles.map((coverArt, index) => (
-                    <img
-                      key={`${coverArt}-${index}`}
-                      src={coverArt}
-                      alt=""
-                      draggable={false}
-                    />
-                  ))}
-                </div>
-              ) : null}
+              <img
+                className="audioflume-home-lifetime-feature-image"
+                src="https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg"
+                alt=""
+                draggable={false}
+              />
             </div>
           </div>
         </div>
