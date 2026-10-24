@@ -1535,19 +1535,19 @@
   .audioflume-pricing-catalogue-intro {
     width: 100%;
     max-width: 500px;
-    flex-direction: column;
-    align-items: stretch;
-    row-gap: 20px;
     margin-right: auto;
     margin-left: auto;
   }
 
-  .audioflume-pricing-catalogue-intro-copy,
-  .audioflume-pricing-catalogue-intro-meta {
+  .audioflume-pricing-catalogue-intro-copy {
     width: 100%;
     max-width: none;
     flex: 0 0 auto;
     text-align: left;
+  }
+
+  .audioflume-pricing-catalogue-intro-meta {
+    display: none;
   }
 
   .audioflume-pricing-offers-grid {
