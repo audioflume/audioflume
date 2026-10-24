@@ -1142,7 +1142,7 @@ export default function HomePageContent(_props: {
       )}
 
       <section className="audioflume-home-mockup-catalogue">
-        <div className="audioflume-home-reference-width audioflume-home-mockup-catalogue-heading">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline audioflume-home-mockup-catalogue-heading">
           <h2>A growing catalogue built around<br />cinematic storytelling.</h2>
           <Link
             href="/music"
