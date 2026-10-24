@@ -1073,13 +1073,7 @@ export default function HomePageContent(_props: {
 
   useEffect(() => {
     const lifetimeBlock = lifetimeLayoutRef.current;
-    const planStrip = document.querySelector<HTMLElement>(
-      ".audioflume-home-mockup-editorial-strip",
-    );
-    const planCard = document.querySelector<HTMLElement>(
-      ".audioflume-home-mockup-editorial-card",
-    );
-    if (!lifetimeBlock || !planStrip || !planCard) return;
+    if (!lifetimeBlock) return;
 
     const pageStyles = getComputedStyle(
       lifetimeBlock.closest(".audioflume-home-reference") ?? lifetimeBlock,
@@ -1089,22 +1083,12 @@ export default function HomePageContent(_props: {
         pageStyles.getPropertyValue("--audioflume-home-page-gutter"),
       ) || 0;
     const usableScreenWidth = window.screen.width - initialGutter * 2;
-    const planWidth = planCard.getBoundingClientRect().width;
-    const planHeight = planWidth / 2.45;
     const lockedCopyWidth = usableScreenWidth / 2;
 
     lifetimeLockedCopyWidthRef.current = lockedCopyWidth;
-    planStrip.style.setProperty(
-      "--audioflume-home-plan-card-height",
-      `${planHeight}px`,
-    );
     lifetimeBlock.style.setProperty(
       "--audioflume-home-lifetime-copy-width",
       `${lockedCopyWidth}px`,
-    );
-    lifetimeBlock.style.setProperty(
-      "--audioflume-home-lifetime-height",
-      `${planHeight}px`,
     );
 
     const updateLifetimeStack = () => {
