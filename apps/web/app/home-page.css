@@ -3844,7 +3844,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-mockup .audioflume-home-reference-original-song-grid {
-  column-gap: 10px;
+  column-gap: 12px;
   row-gap: 24px;
 }
 
