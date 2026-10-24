@@ -12,7 +12,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
         }
 
         body:has(.projects-page) {
-          --projects-content-gutter: clamp(28px, 5.2vw, 82px);
+          --projects-content-gutter: var(--filmwave-page-gutter);
           --projects-shell-gutter: 32px;
           --fw-header-search-row-height: 50px;
         }
@@ -228,15 +228,9 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           }
         }
 
-        @media (max-width: 720px) {
+        @media (max-width: 620px) {
           body:has(.projects-page) {
-            --projects-content-gutter: 20px;
-          }
-        }
-
-        @media (max-width: 640px) {
-          body:has(.projects-page) {
-            --projects-shell-gutter: 20px;
+            --projects-shell-gutter: 24px;
           }
 
           .projects-page .projects-control-bar {
