@@ -3435,7 +3435,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 
 .audioflume-home-mockup-editorial-card strong {
   max-width: 280px;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 300;
   letter-spacing: -0.035em;
   line-height: 1.02;
@@ -4664,7 +4664,7 @@ html:not(.light):not([data-theme="light"])
   align-self: end;
   margin: 0;
   color: currentColor;
-  font-size: 18px;
+  font-size: 20px;
   font-weight: 400;
   letter-spacing: -0.04em;
   line-height: 1.06;
