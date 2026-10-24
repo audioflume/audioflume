@@ -238,3 +238,22 @@
 .homeBookmarkButton[aria-pressed="true"] {
   opacity: 1;
 }
+
+
+/* Match the responsive homepage curated-card height. */
+.homeImage {
+  height: min(22.105vw, 321px);
+  aspect-ratio: auto;
+}
+
+@media (max-width: 980px) {
+  .homeImage {
+    height: 32.632vw;
+  }
+}
+
+@media (max-width: 620px) {
+  .homeImage {
+    height: 44.211vw;
+  }
+}
