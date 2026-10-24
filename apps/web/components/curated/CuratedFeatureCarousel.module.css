@@ -92,18 +92,6 @@
   right: 16px;
   bottom: 16px;
   z-index: 5;
-  border-radius: 999px;
-  transition:
-    background-color 150ms ease,
-    color 150ms ease,
-    transform 150ms ease;
-}
-
-.playButton:hover,
-.playButton:focus-visible {
-  background: #ffffff !important;
-  color: #111111 !important;
-  transform: scale(1.02) !important;
 }
 
 .card:hover :global(.curated-playlist-play-button),
