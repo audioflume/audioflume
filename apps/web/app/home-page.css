@@ -1657,6 +1657,11 @@ html:not(.light):not([data-theme="light"])
   content: "";
 }
 
+.audioflume-home-mockup-editorial-card > * {
+  position: relative;
+  z-index: 1;
+}
+
 .audioflume-home-mockup-editorial-card.is-subscription {
   background:
     url("https://images.filmwave.io/images/home/Home%20Plan%20Blocks%201.jpg")
