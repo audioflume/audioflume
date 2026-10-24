@@ -4384,7 +4384,7 @@ html:not(.light):not([data-theme="light"])
 
 /* Increase spacing below the homepage intro meta row. */
 .audioflume-home-mockup-intro-meta {
-  margin-bottom: 80px;
+  margin-bottom: 60px;
 }
 
 .audioflume-home-mockup-intro-heading {
