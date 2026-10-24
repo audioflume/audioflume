@@ -1442,15 +1442,16 @@ html:not(.light):not([data-theme="light"])
   right: 34px;
   bottom: 34px;
   z-index: 2;
-  min-width: 160px;
-  height: 42px;
+  width: 220px;
+  min-width: 220px;
+  height: 48px;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   background: #ffffff;
-  padding: 0 22px;
+  padding: 0 18px 0 70px;
   color: #111111;
-  font-size: 13px;
-  font-weight: 400;
+  font-size: 15px;
+  font-weight: 300;
   line-height: 1;
   text-decoration: none;
   transition: background-color 160ms ease;
@@ -1471,9 +1472,6 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-promo-link {
     right: 24px;
     bottom: 24px;
-    min-width: 136px;
-    height: 40px;
-    padding: 0 18px;
   }
 }
 
@@ -1691,7 +1689,8 @@ html:not(.light):not([data-theme="light"])
   }
 
   .audioflume-home-mockup-artists
-    .audioflume-home-reference-artist-play {
+    .audioflume-home-reference-artist-play,
+  .audioflume-home-reference-artist-promo-link {
     width: 180px;
     min-width: 180px;
     padding-left: 50px;
