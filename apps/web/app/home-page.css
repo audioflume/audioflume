@@ -4011,17 +4011,11 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-at {
-  display: inline-grid;
+  display: block;
   width: 34px;
   height: 34px;
   flex: 0 0 34px;
-  place-items: center;
-  border: 2px solid currentColor;
-  border-radius: 50%;
-  font-size: 25px;
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 1;
+  color: currentColor;
 }
 
 .audioflume-home-mockup-intro-heading > span {
@@ -4156,8 +4150,6 @@ html:not(.light):not([data-theme="light"])
     width: 28px;
     height: 28px;
     flex-basis: 28px;
-    border-width: 1.75px;
-    font-size: 20px;
   }
 
   .audioflume-home-mockup-artists
@@ -4182,4 +4174,21 @@ html:not(.light):not([data-theme="light"])
     .audioflume-home-reference-artist-play {
     display: none;
   }
+}
+
+
+/* 4px block radius used throughout the catalogue-first homepage mockup. */
+.audioflume-home-mockup .audioflume-home-reference-artist-card,
+.audioflume-home-mockup .audioflume-home-mockup-curated-card,
+.audioflume-home-mockup .audioflume-home-ready-track-card,
+.audioflume-home-mockup .audioflume-home-mockup-editorial-card,
+.audioflume-home-mockup .audioflume-home-reference-lifetime-access,
+.audioflume-home-mockup .audioflume-home-reference-original-song-card-play,
+.audioflume-home-mockup .audioflume-home-reference-search-by-song-card {
+  border-radius: 4px;
+}
+
+.audioflume-home-mockup .audioflume-home-reference-artist-media,
+.audioflume-home-mockup .audioflume-home-mockup-curated-card-media {
+  border-radius: inherit;
 }
