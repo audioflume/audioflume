@@ -1121,8 +1121,20 @@ export default function HomePageContent(_props: {
           statement.scrollWidth +
           columnGap * 2 +
           24;
+        const shouldStackCopy = bottom.clientWidth <= requiredWidth;
 
-        setLifetimeCopyStacked(bottom.clientWidth <= requiredWidth);
+        setLifetimeCopyStacked(shouldStackCopy);
+
+        if (shouldStackCopy) {
+          currentBlock.style.setProperty(
+            "--audioflume-home-lifetime-copy-stack-extra",
+            `${statement.scrollHeight + 24}px`,
+          );
+        } else {
+          currentBlock.style.removeProperty(
+            "--audioflume-home-lifetime-copy-stack-extra",
+          );
+        }
       }
     };
 
