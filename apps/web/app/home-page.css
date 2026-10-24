@@ -1163,12 +1163,6 @@ html:not(.light):not([data-theme="light"])
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-mockup-intro-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 16px;
-  }
-
   .audioflume-home-mockup-catalogue-heading {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: end;
@@ -1585,6 +1579,17 @@ html:not(.light):not([data-theme="light"])
 }
 
 @media (max-width: 620px) {
+  .audioflume-home-mockup-intro-heading {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .audioflume-home-mockup-intro-heading > span {
+    align-self: flex-start;
+    text-align: left;
+  }
+
   .audioflume-home-mockup-intro-meta > span:last-child {
     display: none;
   }
