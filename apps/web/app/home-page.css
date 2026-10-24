@@ -1987,6 +1987,204 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   height: 34px;
 }
 
+/* Current homepage skeletons mirror the live shelf/card structures. */
+.audioflume-home-skeleton-artist-card {
+  position: relative;
+  pointer-events: none;
+}
+
+.audioflume-home-skeleton-artist-card
+  .audioflume-home-reference-artist-media {
+  position: relative;
+  overflow: hidden;
+}
+
+.audioflume-home-skeleton-artist-card
+  .audioflume-home-skeleton-block.is-artist-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.audioflume-home-skeleton-artist-card
+  .audioflume-home-skeleton-block.is-artist-name {
+  width: 210px;
+  max-width: 48%;
+  height: 34px;
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+}
+
+.audioflume-home-skeleton-artist-card
+  .audioflume-home-skeleton-artist-pills {
+  margin-top: 8px;
+}
+
+.audioflume-home-skeleton-artist-card
+  .audioflume-home-skeleton-block.is-artist-pill {
+  display: block;
+  width: 72px;
+  height: 28px;
+  min-height: 28px;
+  padding: 0;
+  background: color-mix(in srgb, #ffffff 13%, transparent);
+}
+
+.audioflume-home-skeleton-artist-card
+  .audioflume-home-skeleton-block.is-artist-pill.is-short {
+  width: 58px;
+}
+
+.audioflume-home-skeleton-artist-card
+  .audioflume-home-skeleton-block.is-artist-play {
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+  pointer-events: none;
+}
+
+.audioflume-home-skeleton-curated-shelf
+  .audioflume-home-reference-shelf-scroller {
+  gap: 10px;
+}
+
+.audioflume-home-skeleton-playlist-card {
+  position: relative;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.audioflume-home-skeleton-playlist-card
+  .audioflume-home-skeleton-block.is-playlist-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.audioflume-home-skeleton-playlist-card
+  .audioflume-home-skeleton-block.is-playlist-kicker {
+  position: absolute;
+  top: 24px;
+  left: 30px;
+  width: 118px;
+  height: 11px;
+  background: color-mix(in srgb, #ffffff 15%, transparent);
+}
+
+.audioflume-home-skeleton-playlist-card
+  .audioflume-home-skeleton-block.is-playlist-title {
+  position: absolute;
+  right: 82px;
+  bottom: 28px;
+  left: 30px;
+  width: 42%;
+  height: 24px;
+  margin: 0;
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+}
+
+.audioflume-home-skeleton-playlist-card
+  .audioflume-home-skeleton-block.is-playlist-play {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  width: 42px;
+  height: 42px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+}
+
+.audioflume-home-skeleton-ready-track {
+  pointer-events: none;
+}
+
+.audioflume-home-skeleton-ready-track
+  .audioflume-home-skeleton-block.is-ready-track-cover {
+  width: 54px;
+  height: 54px;
+  flex: 0 0 54px;
+}
+
+.audioflume-home-skeleton-ready-track-copy {
+  display: grid;
+  min-width: 0;
+  flex: 1;
+  gap: 6px;
+}
+
+.audioflume-home-skeleton-ready-track
+  .audioflume-home-skeleton-block.is-ready-track-title {
+  width: min(170px, 68%);
+  height: 13px;
+}
+
+.audioflume-home-skeleton-ready-track
+  .audioflume-home-skeleton-block.is-ready-track-artist {
+  width: min(105px, 44%);
+  height: 10px;
+}
+
+.audioflume-home-skeleton-ready-track
+  .audioflume-home-skeleton-block.is-ready-track-play {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #ffffff 70%, transparent);
+}
+
+.audioflume-home-skeleton-original-card
+  .audioflume-home-reference-original-song-card-play {
+  pointer-events: none;
+}
+
+.audioflume-home-skeleton-original-card
+  .audioflume-home-skeleton-block.is-original-media {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 1;
+}
+
+.audioflume-home-skeleton-original-copy {
+  display: grid;
+  gap: 2px;
+  margin-top: 0;
+}
+
+.audioflume-home-skeleton-original-copy
+  .audioflume-home-skeleton-block.is-original-title {
+  width: 72%;
+  height: 13px;
+}
+
+.audioflume-home-skeleton-original-copy
+  .audioflume-home-skeleton-block.is-original-artist {
+  width: 46%;
+  height: 10px;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-skeleton-playlist-card
+    .audioflume-home-skeleton-block.is-playlist-kicker {
+    top: 18px;
+    left: 20px;
+  }
+
+  .audioflume-home-skeleton-playlist-card
+    .audioflume-home-skeleton-block.is-playlist-title {
+    right: 70px;
+    bottom: 21px;
+    left: 20px;
+    height: 20px;
+  }
+
+  .audioflume-home-skeleton-playlist-card
+    .audioflume-home-skeleton-block.is-playlist-play {
+    right: 18px;
+    bottom: 18px;
+  }
+}
+
 @keyframes audioflume-home-skeleton-pulse {
   0%,
   100% {
