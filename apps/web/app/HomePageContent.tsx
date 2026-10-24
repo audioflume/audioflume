@@ -1033,7 +1033,6 @@ export default function HomePageContent(_props: {
   const introHeadingRef = useRef<HTMLDivElement>(null);
   const introHeadlineMeasureRef = useRef<HTMLSpanElement>(null);
   const [lifetimeStacked, setLifetimeStacked] = useState(false);
-  const [lifetimeCopyStacked, setLifetimeCopyStacked] = useState(false);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
   const [introHeadlineBroken, setIntroHeadlineBroken] = useState(false);
 
@@ -1140,32 +1139,10 @@ export default function HomePageContent(_props: {
       `${lockedCopyWidth}px`,
     );
 
-    const bottom = lifetimeBlock.querySelector<HTMLElement>(
-      ".audioflume-home-lifetime-v2-bottom",
-    );
-    const regularPrice = lifetimeBlock.querySelector<HTMLElement>(
-      ".audioflume-home-lifetime-v2-price.is-regular",
-    );
-    const offerPrice = lifetimeBlock.querySelector<HTMLElement>(
-      ".audioflume-home-lifetime-v2-price.is-offer",
-    );
-    const statement = lifetimeBlock.querySelector<HTMLElement>(
-      ".audioflume-home-lifetime-v2-statement",
-    );
-
     const updateLifetimeStack = () => {
       const currentBlock = lifetimeLayoutRef.current;
       const copyWidth = lifetimeLockedCopyWidthRef.current;
-      if (
-        !currentBlock ||
-        copyWidth === null ||
-        !bottom ||
-        !regularPrice ||
-        !offerPrice ||
-        !statement
-      ) {
-        return;
-      }
+      if (!currentBlock || copyWidth === null) return;
 
       const styles = getComputedStyle(
         currentBlock.closest(".audioflume-home-reference") ?? currentBlock,
@@ -1179,39 +1156,12 @@ export default function HomePageContent(_props: {
       const fluidArtWidth = currentBlockWidth - copyWidth;
 
       setLifetimeStacked(fluidArtWidth <= usableScreenWidth / 3);
-
-      const bottomStyles = getComputedStyle(bottom);
-      const columnGap =
-        Number.parseFloat(bottomStyles.columnGap || bottomStyles.gap) || 0;
-      const requiredWidth =
-        regularPrice.scrollWidth +
-        offerPrice.scrollWidth +
-        statement.scrollWidth +
-        columnGap * 2;
-      const shouldStackCopy = bottom.clientWidth < requiredWidth;
-
-      setLifetimeCopyStacked(shouldStackCopy);
-
-      if (shouldStackCopy) {
-        currentBlock.style.setProperty(
-          "--audioflume-home-lifetime-copy-stack-extra",
-          `${statement.scrollHeight + 24}px`,
-        );
-      } else {
-        currentBlock.style.removeProperty(
-          "--audioflume-home-lifetime-copy-stack-extra",
-        );
-      }
     };
 
     updateLifetimeStack();
 
     const resizeObserver = new ResizeObserver(updateLifetimeStack);
     resizeObserver.observe(lifetimeBlock);
-    resizeObserver.observe(bottom);
-    resizeObserver.observe(regularPrice);
-    resizeObserver.observe(offerPrice);
-    resizeObserver.observe(statement);
 
     window.addEventListener("resize", updateLifetimeStack);
 
@@ -1383,7 +1333,7 @@ export default function HomePageContent(_props: {
           <Link
             ref={lifetimeLayoutRef}
             href="/music?artist=Audioflume"
-            className={`audioflume-home-reference-width audioflume-home-lifetime-v2${lifetimeStacked ? " is-stacked" : ""}${lifetimeCopyStacked ? " is-copy-stacked" : ""}`}
+            className={`audioflume-home-reference-width audioflume-home-lifetime-v2${lifetimeStacked ? " is-stacked" : ""}`}
           >
             <div className="audioflume-home-lifetime-v2-copy">
               <div className="audioflume-home-lifetime-v2-top">
