@@ -4471,3 +4471,23 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-intro-heading h1 {
   gap: 0;
 }
+
+
+/* Keep featured artist blocks at one fixed ratio across every breakpoint. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-card {
+  aspect-ratio: auto !important;
+  height: auto !important;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-link {
+  height: auto !important;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-media {
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 2.38 / 1 !important;
+}
