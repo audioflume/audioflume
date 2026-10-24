@@ -563,6 +563,35 @@ html:not(.light):not([data-theme="light"])
   gap: 4px;
 }
 
+.audioflume-home-skeleton-ready-track,
+.audioflume-home-skeleton-artist-card,
+.audioflume-home-skeleton-playlist-card,
+.audioflume-home-skeleton-original-card,
+.audioflume-home-skeleton-song-row {
+  animation: skeleton-fade-in 0.3s ease-out both;
+}
+
+.audioflume-home-skeleton-ready-track:nth-child(2),
+.audioflume-home-skeleton-artist-card:nth-child(2),
+.audioflume-home-skeleton-playlist-card:nth-child(2),
+.audioflume-home-skeleton-original-card:nth-child(2),
+.audioflume-home-skeleton-song-row:nth-child(2) { animation-delay: 0.04s; }
+
+.audioflume-home-skeleton-ready-track:nth-child(3),
+.audioflume-home-skeleton-artist-card:nth-child(3),
+.audioflume-home-skeleton-playlist-card:nth-child(3),
+.audioflume-home-skeleton-original-card:nth-child(3),
+.audioflume-home-skeleton-song-row:nth-child(3) { animation-delay: 0.08s; }
+
+.audioflume-home-skeleton-ready-track:nth-child(4),
+.audioflume-home-skeleton-artist-card:nth-child(4),
+.audioflume-home-skeleton-playlist-card:nth-child(4),
+.audioflume-home-skeleton-original-card:nth-child(4),
+.audioflume-home-skeleton-song-row:nth-child(4) { animation-delay: 0.12s; }
+
+.audioflume-home-skeleton-original-card:nth-child(n + 5),
+.audioflume-home-skeleton-song-row:nth-child(n + 5) { animation-delay: 0.16s; }
+
 .audioflume-home-skeleton-song-row {
   display: grid;
   min-height: 86px;
