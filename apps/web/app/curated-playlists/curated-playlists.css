@@ -783,3 +783,10 @@ body:has(.curated-playlists-page-root) {
     --curated-page-gutter: 10px;
   }
 }
+
+
+/* Match visible curated page edge padding to the 10px playlist gap. */
+.curated-playlists-page-layer > .curated-page-content {
+  padding-right: 10px !important;
+  padding-left: 10px !important;
+}
