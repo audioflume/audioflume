@@ -14,7 +14,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
+import { AudioflumeMark, AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import SongCard from "@/components/SongCard";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
@@ -1180,7 +1180,7 @@ export default function HomePageContent(_props: {
         </div>
 
         <div className="audioflume-home-reference-width audioflume-home-mockup-intro-heading">
-          <h1><span className="audioflume-home-mockup-at" aria-hidden="true">@</span>Human made music &amp; SFX for film.</h1>
+          <h1><AudioflumeMark className="audioflume-home-mockup-at" />Human made music &amp; SFX for film.</h1>
           <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
       </section>
