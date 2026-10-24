@@ -674,7 +674,7 @@ function HomeCuratedPlaylistShelf({
               />
               <span className="audioflume-home-mockup-curated-card-shade" />
               <span className="audioflume-home-mockup-curated-card-kicker">
-                {playlist.kicker || `Playlist 0${index + 1}`}
+                Featured playlist
               </span>
               <strong>{playlist.name}</strong>
             </Link>
