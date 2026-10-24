@@ -7,6 +7,7 @@ import GridViewIcon from "@/components/icons/GridViewIcon";
 import { BackendDragHandleGlyph } from "@/components/backend/BackendDragHandle";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
+import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
@@ -978,6 +979,7 @@ export default function PlaylistTopControls() {
           variant="control"
           renderForm={false}
           searchIcon={<SearchIcon />}
+          clearIcon={<XIcon size={21} strokeWidth={1.4} />}
           searchValue={query}
           searchPlaceholder="Search playlists"
           searchAriaLabel="Search playlists"
