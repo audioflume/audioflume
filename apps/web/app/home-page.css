@@ -4268,3 +4268,49 @@ html:not(.light):not([data-theme="light"])
   scroll-snap-align: none;
   scroll-snap-stop: normal;
 }
+
+
+/* Homepage mockup fine-tuning. */
+.audioflume-home-mockup-intro-meta {
+  font-size: 9px;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-bar {
+  bottom: 34px;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-play {
+  bottom: 34px;
+  border-radius: 3px;
+}
+
+.audioflume-home-mockup .audioflume-home-reference-artist-card,
+.audioflume-home-mockup .audioflume-home-mockup-curated-card,
+.audioflume-home-mockup .audioflume-home-ready-track-card,
+.audioflume-home-mockup .audioflume-home-mockup-editorial-card,
+.audioflume-home-mockup .audioflume-home-reference-lifetime-access,
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy,
+.audioflume-home-mockup .audioflume-home-lifetime-feature-art,
+.audioflume-home-mockup .audioflume-home-reference-original-song-card-play,
+.audioflume-home-mockup .audioflume-home-reference-original-song-card,
+.audioflume-home-mockup .audioflume-home-reference-new-songs .filmwave-song-card,
+.audioflume-home-mockup .audioflume-home-reference-new-songs .filmwave-song-card-shell,
+.audioflume-home-mockup .audioflume-home-skeleton-featured-artist-card,
+.audioflume-home-mockup .audioflume-home-skeleton-playlist-card,
+.audioflume-home-mockup .audioflume-home-skeleton-original-song-card,
+.audioflume-home-mockup .audioflume-home-skeleton-trending-row {
+  border-radius: 3px;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-intro-meta {
+    font-size: 9px;
+  }
+
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-bar {
+    bottom: 26px;
+  }
+}
