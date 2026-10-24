@@ -757,30 +757,22 @@ function HomeSkeletonBlock({
 
 function HomeTrendingSkeleton() {
   return (
-    <section className="audioflume-home-reference-trending">
-      <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline">
-        <span>New music added daily.<br />120+ new songs this month.</span>
-        <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-          Explore trending music
-          <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[1px]" />
-        </Link>
-      </div>
-      <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
-        {Array.from({ length: 12 }, (_, index) => (
-          <div
-            key={index}
-            className="flex h-[54px] items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2"
-          >
-            <HomeSkeletonBlock className="h-9 w-9 shrink-0" />
-            <div className="min-w-0 flex-1">
-              <HomeSkeletonBlock className="h-[13px] w-2/3" />
-              <HomeSkeletonBlock className="mt-1.5 h-[10px] w-1/2" />
-            </div>
-            <HomeSkeletonBlock className="h-9 w-9 shrink-0 rounded-full" />
+    <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+      {Array.from({ length: 12 }, (_, index) => (
+        <article
+          key={index}
+          className="audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-4 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2"
+          aria-hidden="true"
+        >
+          <HomeSkeletonBlock className="is-ready-track-cover" />
+          <div className="audioflume-home-skeleton-ready-track-copy">
+            <HomeSkeletonBlock className="is-ready-track-title" />
+            <HomeSkeletonBlock className="is-ready-track-artist" />
           </div>
-        ))}
-      </div>
-    </section>
+          <HomeSkeletonBlock className="is-ready-track-play" />
+        </article>
+      ))}
+    </div>
   );
 }
 
@@ -936,54 +928,75 @@ function HomeSongShelfSkeleton() {
 
 function HomeArtistShelfSkeleton() {
   return (
-    <div className="audioflume-home-reference-shelf audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf">
-      <div className="audioflume-home-reference-shelf-scroller">
-        {Array.from({ length: 3 }, (_, index) => (
-          <article
-            key={index}
-            className="audioflume-home-reference-artist-card audioflume-home-skeleton-artist-card"
-          >
+    <Shelf
+      label="in demand artists"
+      className="audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf"
+      customScrollbar
+    >
+      {Array.from({ length: 3 }, (_, index) => (
+        <article
+          key={index}
+          className="audioflume-home-reference-artist-card audioflume-home-skeleton-artist-card"
+          aria-hidden="true"
+        >
+          <div className="audioflume-home-reference-artist-media">
             <HomeSkeletonBlock className="is-artist-media" />
-            <div className="audioflume-home-skeleton-artist-meta">
+          </div>
+          <div className="audioflume-home-reference-artist-bar">
+            <span className="audioflume-home-reference-artist-copy">
               <HomeSkeletonBlock className="is-artist-name" />
-              <div className="audioflume-home-skeleton-artist-pills">
+              <span className="audioflume-home-reference-artist-genres audioflume-home-skeleton-artist-pills">
                 <HomeSkeletonBlock className="is-artist-pill" />
                 <HomeSkeletonBlock className="is-artist-pill is-short" />
                 <HomeSkeletonBlock className="is-artist-pill" />
-              </div>
-            </div>
-            <HomeSkeletonBlock className="is-artist-play" />
-          </article>
-        ))}
-      </div>
-    </div>
+              </span>
+            </span>
+          </div>
+          <HomeSkeletonBlock className="audioflume-home-reference-artist-play is-artist-play" />
+        </article>
+      ))}
+    </Shelf>
   );
 }
 
 function HomeCuratedPlaylistSkeleton() {
   return (
-    <div className="audioflume-home-reference-playlist-grid audioflume-home-skeleton-playlist-grid">
-      {Array.from({ length: 6 }, (_, index) => (
-        <article key={index} className="audioflume-home-skeleton-playlist-card">
+    <Shelf
+      label="curated playlists"
+      className="audioflume-home-mockup-curated-shelf audioflume-home-skeleton-curated-shelf"
+    >
+      {Array.from({ length: 4 }, (_, index) => (
+        <article
+          key={index}
+          className="audioflume-home-mockup-curated-card audioflume-home-skeleton-playlist-card"
+          aria-hidden="true"
+        >
           <HomeSkeletonBlock className="is-playlist-media" />
+          <HomeSkeletonBlock className="is-playlist-kicker" />
           <HomeSkeletonBlock className="is-playlist-title" />
-          <HomeSkeletonBlock className="is-playlist-meta" />
+          <HomeSkeletonBlock className="is-playlist-play" />
         </article>
       ))}
-    </div>
+    </Shelf>
   );
 }
 
 function HomeOriginalsSkeleton() {
   return (
     <div className="audioflume-home-reference-original-song-grid audioflume-home-skeleton-original-grid">
-      {Array.from({ length: 12 }, (_, index) => (
-        <article key={index} className="audioflume-home-reference-original-song-card">
-          <HomeSkeletonBlock className="is-original-media" />
-          <div className="audioflume-home-skeleton-original-copy">
+      {Array.from({ length: 16 }, (_, index) => (
+        <article
+          key={index}
+          className="audioflume-home-reference-original-song-card audioflume-home-skeleton-original-card"
+          aria-hidden="true"
+        >
+          <div className="audioflume-home-reference-original-song-card-play">
+            <HomeSkeletonBlock className="is-original-media" />
+          </div>
+          <span className="audioflume-home-reference-original-song-card-copy audioflume-home-skeleton-original-copy">
             <HomeSkeletonBlock className="is-original-title" />
             <HomeSkeletonBlock className="is-original-artist" />
-          </div>
+          </span>
         </article>
       ))}
     </div>
