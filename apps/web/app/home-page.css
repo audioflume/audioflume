@@ -4636,3 +4636,11 @@ html:not(.light):not([data-theme="light"])
   font-size: 19px;
   font-weight: 400;
 }
+
+
+/* Center featured artist shelf arrows within the fixed 430px image blocks. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-shelf
+  .audioflume-home-reference-shelf-arrow {
+  top: 215px;
+}
