@@ -1,6 +1,6 @@
 "use client";
 
-import type { Playlist } from "@/lib/types";
+import type { Playlist, PlaylistSong } from "@/lib/types";
 import Link from "next/link";
 import FavoritesPlaylistTile from "@/components/FavoritesPlaylistTile";
 import Footer from "@/components/Footer";
@@ -17,6 +17,8 @@ import GridViewIcon from "@/components/icons/GridViewIcon";
 import ListViewIcon from "@/components/icons/ListViewIcon";
 import MoreIcon from "@/components/icons/MoreIcon";
 import PlusIcon from "@/components/icons/PlusIcon";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PauseIcon from "@/components/icons/PauseIcon";
 import SortIcon from "@/components/icons/SortIcon";
 import {
   iconButtonActiveClass,
@@ -29,7 +31,7 @@ import {
 } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { toSmartTitleCaseInput } from "@/lib/smartTitleCase";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
 import { useUser } from "@clerk/nextjs";
 import {
   DndContext,
@@ -155,14 +157,26 @@ function CreatePlaylistTile({
   viewMode: PlaylistViewMode;
   onClick: () => void;
 }) {
+  if (viewMode === "grid") {
+    return (
+      <button type="button" className="playlist-create-card" onClick={onClick}>
+        <div className="playlist-create-art">
+          <div className="playlist-create-mark">
+            <PlusIcon size={16} />
+          </div>
+        </div>
+        <div className="playlist-create-copy">
+          <span>Create Playlist</span>
+          <small>Build a new collection</small>
+        </div>
+      </button>
+    );
+  }
+
   return (
     <button
       type="button"
-      className={
-        viewMode === "grid"
-          ? "playlist-create-card"
-          : "playlist-create-row playlist-index-row"
-      }
+      className="playlist-create-row playlist-index-row"
       onClick={onClick}
     >
       <div className="playlist-create-mark">
@@ -291,6 +305,129 @@ function PlaylistRenameInput({
         }
       }}
     />
+  );
+}
+
+const playlistPlaybackCache = new Map<string, PlaylistSong[]>();
+const playlistPlaybackRequests = new Map<string, Promise<PlaylistSong[]>>();
+const activePersonalPlaylistListeners = new Set<() => void>();
+let activePersonalPlaylistId: string | null = null;
+
+function subscribeToActivePersonalPlaylist(listener: () => void) {
+  activePersonalPlaylistListeners.add(listener);
+  return () => activePersonalPlaylistListeners.delete(listener);
+}
+
+function getActivePersonalPlaylistId() {
+  return activePersonalPlaylistId;
+}
+
+function setActivePersonalPlaylistId(playlistId: string) {
+  if (activePersonalPlaylistId === playlistId) return;
+  activePersonalPlaylistId = playlistId;
+  activePersonalPlaylistListeners.forEach((listener) => listener());
+}
+
+async function loadPersonalPlaylistSongs(playlistId: string) {
+  const cachedSongs = playlistPlaybackCache.get(playlistId);
+  if (cachedSongs) return cachedSongs;
+
+  const pendingRequest = playlistPlaybackRequests.get(playlistId);
+  if (pendingRequest) return pendingRequest;
+
+  const request = fetch(`/api/playlists/${encodeURIComponent(playlistId)}/songs`)
+    .then(async (response) => {
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data?.error || "Failed to load playlist songs");
+      }
+
+      const songs = Array.isArray(data)
+        ? data
+        : Array.isArray(data?.songs)
+          ? data.songs
+          : Array.isArray(data?.playlistSongs)
+            ? data.playlistSongs
+            : [];
+
+      const validSongs = (songs as PlaylistSong[]).filter((song) => Boolean(song?.id));
+      playlistPlaybackCache.set(playlistId, validSongs);
+      return validSongs;
+    })
+    .finally(() => {
+      playlistPlaybackRequests.delete(playlistId);
+    });
+
+  playlistPlaybackRequests.set(playlistId, request);
+  return request;
+}
+
+function PersonalPlaylistPlayButton({
+  playlistId,
+  playlistName,
+}: {
+  playlistId: number;
+  playlistName: string;
+}) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const [loading, setLoading] = useState(false);
+  const playlistKey = String(playlistId);
+  const activeId = useSyncExternalStore(
+    subscribeToActivePersonalPlaylist,
+    getActivePersonalPlaylistId,
+    () => null,
+  );
+  const cachedSongs = playlistPlaybackCache.get(playlistKey) ?? [];
+  const currentSongBelongsToPlaylist = Boolean(
+    currentSong && cachedSongs.some((song) => song.id === currentSong.id),
+  );
+  const isCurrentPlaylist =
+    activeId === playlistKey && currentSongBelongsToPlaylist;
+  const isPlaylistPlaying = isCurrentPlaylist && isPlaying;
+
+  async function handleClick(event: MouseEvent<HTMLButtonElement>) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    if (event.detail > 0) event.currentTarget.blur();
+    if (loading) return;
+
+    if (isCurrentPlaylist && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+
+    setLoading(true);
+
+    try {
+      const songs = await loadPersonalPlaylistSongs(playlistKey);
+      const playableSongs = songs.filter((song) => Boolean(song.audioUrl));
+      const firstSong = playableSongs[0];
+      if (!firstSong) return;
+
+      setQueue(playableSongs);
+      setActivePersonalPlaylistId(playlistKey);
+      togglePlayPause(firstSong);
+    } catch (error) {
+      console.warn("Playlist card playback failed", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      className="playlist-gallery-play-button"
+      onClick={handleClick}
+      disabled={loading}
+      data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
+      aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlistName}`}
+      aria-pressed={isPlaylistPlaying}
+      aria-busy={loading}
+    >
+      {isPlaylistPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+    </button>
   );
 }
 
@@ -579,6 +716,10 @@ function SortablePlaylistItem({
           </div>
         </div>
       </Link>
+      <PersonalPlaylistPlayButton
+        playlistId={playlist.id}
+        playlistName={playlist.name}
+      />
       {isDeleting && (
         <div className="playlist-deleting-overlay">
           <LoadingSpinner
@@ -1188,17 +1329,18 @@ export default function PlaylistsPage() {
         .playlist-index-row-shell .playlist-menu-btn { background: transparent; color: var(--icon-color); backdrop-filter: none; }
         .playlist-index-row-shell:hover .playlist-menu-btn, .playlist-index-row-shell .playlist-menu-btn.is-open { opacity: 1; }
         .playlist-index-row-shell .playlist-menu-btn:hover, .playlist-index-row-shell .playlist-menu-btn.is-open { background: var(--icon-button-hover); color: var(--text-primary); }
-        .playlist-create-card { position: relative; min-height: 210px; width: 100%; display: flex; flex-direction: column; justify-content: flex-end; gap: 12px; border-radius: 18px; border: 1.25px dashed var(--border); background: var(--bg-card); padding: 16px; cursor: pointer; text-align: left; transition: background 0.15s ease, border-color 0.15s ease; }
-        .playlist-create-card:hover { border-color: var(--border-hover); background: var(--bg-hover); }
+        .playlist-create-card { position: relative; display: block; width: 100%; min-width: 0; border: 0; background: transparent; padding: 0; color: inherit; cursor: pointer; text-align: left; }
+        .playlist-create-art { display: flex; width: 100%; height: calc(40vw / 2.38); align-items: center; justify-content: center; overflow: hidden; border: 1.25px dashed var(--border); border-radius: 3px; background: var(--filmwave-neutral-surface); transition: border-color 150ms ease, background-color 150ms ease; }
+        .playlist-create-card:hover .playlist-create-art { border-color: var(--border-hover); background: color-mix(in srgb, var(--filmwave-neutral-surface) 92%, var(--text-primary) 8%); }
         .playlist-create-row { grid-template-columns: 34px minmax(0, 1fr) 34px; padding: 11px 46px 11px 18px; border: 1.25px dashed var(--border); background: var(--bg-card); }
         .playlist-create-row .playlist-create-mark { width: 34px; height: 34px; grid-column: 1; }
         .playlist-create-row .playlist-create-copy { grid-column: 2; align-items: center; text-align: center; }
         .playlist-create-row:hover { border-color: var(--border-hover); background: var(--bg-hover); transform: translateY(-1px); }
         .playlist-create-mark { width: 38px; height: 38px; border-radius: 0; display: flex; align-items: center; justify-content: center; background: var(--bg-card); color: var(--text-primary); transition: background 0.15s ease; }
         .playlist-create-card:hover .playlist-create-mark, .playlist-create-row:hover .playlist-create-mark { background: var(--bg-hover-strong); }
-        .playlist-create-copy { display: flex; flex-direction: column; gap: 5px; min-width: 0; }
-        .playlist-create-copy span { font-size: 14px; font-weight: 500; color: var(--text-primary); }
-        .playlist-create-copy small { font-size: 11px; color: var(--text-secondary); }
+        .playlist-create-copy { display: flex; flex-direction: column; gap: 0; min-width: 0; margin-top: 9px; }
+        .playlist-create-copy span { overflow: hidden; color: var(--text-primary); font-size: 16px; font-weight: 400; letter-spacing: -0.015em; line-height: 1.15; text-overflow: ellipsis; white-space: nowrap; }
+        .playlist-create-copy small { margin-top: 3px; color: var(--text-muted); font-size: 11.5px; font-weight: 400; line-height: 1.45; }
         .playlist-deleting-overlay { position: absolute; inset: 0; z-index: 30; display: flex; align-items: center; justify-content: center; border-radius: inherit; background: var(--media-overlay-strong); pointer-events: none; }
         .drag-preview-card { width: 320px; overflow: hidden; border-radius: 18px; transform: scale(1.04); box-shadow: 0 24px 80px var(--media-overlay-heavy); }
         .drag-preview-card .playlist-gallery-art-wrap { overflow: hidden; border-radius: 18px; }
@@ -1207,11 +1349,11 @@ export default function PlaylistsPage() {
         .playlist-skeleton-block { position: relative; overflow: hidden; background: var(--bg-tertiary); }
         .playlist-skeleton-block::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 72%, transparent), transparent); animation: playlist-skeleton-shimmer 1.6s ease-in-out infinite; }
         @keyframes playlist-skeleton-shimmer { 100% { transform: translateX(100%); } }
-        .playlist-skeleton-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 28px 16px; }
+        .playlist-skeleton-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: 10px; row-gap: 40px; }
         .playlist-skeleton-gallery-card { min-width: 0; animation: skeleton-fade-in 0.3s ease-out both; }
-        .playlist-skeleton-gallery-art { position: relative; width: 100%; aspect-ratio: 1 / 1; border-radius: 0; border: 0; background: var(--bg-tertiary); overflow: hidden; }
+        .playlist-skeleton-gallery-art { position: relative; width: 100%; height: calc(40vw / 2.38); border-radius: 3px; border: 0; background: var(--bg-tertiary); overflow: hidden; }
         .playlist-skeleton-gallery-art::after { content: ""; position: absolute; inset: 0; transform: translateX(-100%); background: linear-gradient(90deg, transparent, color-mix(in srgb, var(--bg-hover) 48%, transparent), transparent); animation: playlist-skeleton-shimmer 1.6s ease-in-out infinite; }
-        .playlist-skeleton-gallery-copy { margin-top: 12px; }
+        .playlist-skeleton-gallery-copy { margin-top: 9px; }
         .playlist-skeleton-gallery-title { width: 58%; height: 10px; }
         .playlist-skeleton-gallery-meta { width: 28%; height: 7px; margin-top: 7px; }
         .playlist-skeleton-list { display: flex; flex-direction: column; gap: 0; }
@@ -1223,14 +1365,19 @@ export default function PlaylistsPage() {
         .playlist-skeleton-row-meta { width: min(300px, 42%); height: 8px; }
         .playlist-skeleton-row-count { justify-self: end; width: 58px; height: 8px; }
         .playlist-skeleton-row-menu { justify-self: end; width: 28px; height: 28px; }
-        @media (max-width: 980px) { .playlists-control-bar { margin-top: -34px; } }
+        @media (max-width: 980px) {
+          .playlists-control-bar { margin-top: -34px; }
+          .playlist-skeleton-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+          .playlist-create-art, .playlist-skeleton-gallery-art { height: calc(52vw / 2.38); }
+        }
         @media (max-width: 720px) {
           .playlists-hero { padding-top: 88px; }
           .playlists-control-bar { margin-top: -34px; margin-bottom: 32px; }
-          .playlist-gallery, .playlist-skeleton-grid { grid-template-columns: repeat(auto-fill, minmax(240px, 1fr)); gap: 28px 14px; }
-          .playlist-gallery-art-wrap, .playlist-create-card { min-height: 188px; }
-          .playlist-gallery-content h3 { font-size: 23px; }
           .drag-preview-row { width: calc(100vw - var(--sidebar-width) - 36px); }
+        }
+        @media (max-width: 620px) {
+          .playlist-skeleton-grid { column-gap: 10px; row-gap: 32px; }
+          .playlist-create-art, .playlist-skeleton-gallery-art { height: calc(78vw / 2.38); }
         }
         @media (max-width: 520px) {
           .playlist-index-row { grid-template-columns: 18px 50px minmax(0, 1fr) minmax(70px, 96px); gap: 12px; padding: 11px 46px 11px 13px; }
