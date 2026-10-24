@@ -1030,9 +1030,12 @@ export default function HomePageContent(_props: {
   const lifetimeLockedCopyWidthRef = useRef<number | null>(null);
   const catalogueHeadingRef = useRef<HTMLHeadingElement>(null);
   const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
+  const introHeadingRef = useRef<HTMLDivElement>(null);
+  const introHeadlineMeasureRef = useRef<HTMLSpanElement>(null);
   const [lifetimeStacked, setLifetimeStacked] = useState(false);
   const [lifetimeCopyStacked, setLifetimeCopyStacked] = useState(false);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
+  const [introHeadlineBroken, setIntroHeadlineBroken] = useState(false);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -1074,6 +1077,27 @@ export default function HomePageContent(_props: {
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
+
+  useLayoutEffect(() => {
+    const heading = introHeadingRef.current;
+    const headlineMeasure = introHeadlineMeasureRef.current;
+    if (!heading || !headlineMeasure) return;
+
+    const updateIntroHeadlineBreak = () => {
+      setIntroHeadlineBroken(
+        headlineMeasure.scrollWidth > heading.clientWidth,
+      );
+    };
+
+    updateIntroHeadlineBreak();
+
+    const resizeObserver = new ResizeObserver(updateIntroHeadlineBreak);
+    resizeObserver.observe(heading);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
 
   useLayoutEffect(() => {
     const heading = catalogueHeadingRef.current;
@@ -1251,8 +1275,24 @@ export default function HomePageContent(_props: {
           <span>HUMAN MADE MUSIC &amp; FAIR ARTIST COMPENSATION</span>
         </div>
 
-        <div className="audioflume-home-reference-width audioflume-home-mockup-intro-heading">
-          <h1>Human made music &amp; SFX for film.</h1>
+        <div
+          ref={introHeadingRef}
+          className="audioflume-home-reference-width audioflume-home-mockup-intro-heading"
+        >
+          <h1>
+            <span
+              ref={introHeadlineMeasureRef}
+              className="audioflume-home-mockup-intro-heading-measure"
+              aria-hidden="true"
+            >
+              Human made music &amp; SFX for film.
+            </span>
+            {introHeadlineBroken ? (
+              <>Human made music<br />&amp; SFX for film.</>
+            ) : (
+              <>Human made music &amp; SFX for film.</>
+            )}
+          </h1>
           <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
       </section>
