@@ -42,7 +42,7 @@ export default function ModalShell({
   footerClassName = "",
   headerContent,
   inputCorners = "square",
-  contentCorners = "square",
+  contentCorners = "rounded",
   background = "var(--bg-primary)",
   headerHeight = "96px",
   bodyOverflow = "visible",
@@ -67,7 +67,7 @@ export default function ModalShell({
       ? "[&_input:not([type=file])]:rounded-[7px]"
       : "[&_input:not([type=file])]:rounded-none";
   const contentCornerClassName =
-    contentCorners === "rounded" ? "rounded-[4px]" : "rounded-none";
+    contentCorners === "rounded" ? "rounded-[3px]" : "rounded-none";
 
   const modal = (
     <div
