@@ -106,7 +106,7 @@ export default function FeaturedArtistCard({
         {artistIsPlaying ? (
           <PauseIcon size={14} />
         ) : (
-          <PlayIconSmall size={14} />
+          <PlayIconSmall size={18} />
         )}
       </button>
     </article>
