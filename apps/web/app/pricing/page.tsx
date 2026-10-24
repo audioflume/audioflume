@@ -261,6 +261,11 @@ export default async function PricingPage() {
   return (
     <main className="audioflume-pricing-page-root">
       <section className="audioflume-pricing-plans-section">
+        <div className="audioflume-pricing-top-meta">
+          <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
+          <span>HUMAN MADE MUSIC &amp; FAIR ARTIST COMPENSATION</span>
+        </div>
+
         <div className="audioflume-pricing-catalogue-intro">
           <div className="audioflume-pricing-catalogue-intro-copy">
             Music licensing for solo filmmakers, studios, and larger teams.
