@@ -6,10 +6,37 @@
 
 .playlists-page .playlist-library .playlist-gallery,
 .playlists-page .playlist-skeleton-grid {
-  grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
-  column-gap: 38px !important;
-  row-gap: 58px !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  column-gap: 10px !important;
+  row-gap: 40px !important;
   align-items: start !important;
+}
+
+@media (max-width: 980px) {
+  .playlists-page .playlist-library .playlist-gallery,
+  .playlists-page .playlist-skeleton-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  .playlists-page .playlist-gallery-art {
+    height: calc(52vw / 2.38) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .playlists-page .playlist-library .playlist-gallery,
+  .playlists-page .playlist-skeleton-grid {
+    column-gap: 10px !important;
+    row-gap: 32px !important;
+  }
+
+  .playlists-page .playlist-gallery-art {
+    height: calc(78vw / 2.38) !important;
+  }
+}
+
+.playlists-page .playlist-gallery-card a[href="/favorites"] .playlist-gallery-art {
+  background: var(--filmwave-neutral-surface) !important;
 }
 
 /* Shared playlist gallery card surface. */
@@ -45,9 +72,10 @@
   inset: auto !important;
   display: block !important;
   width: 100% !important;
-  aspect-ratio: 1 / 1 !important;
-  overflow: visible !important;
-  border-radius: 7px !important;
+  height: calc(40vw / 2.38) !important;
+  aspect-ratio: auto !important;
+  overflow: hidden !important;
+  border-radius: 3px !important;
   background-size: cover !important;
   background-position: center !important;
   isolation: isolate !important;
@@ -60,11 +88,8 @@
 .playlists-page .playlist-gallery-art::before,
 .playlists-page .playlist-gallery-art::after,
 .playlists-page .playlist-gallery-art-layer {
-  content: "" !important;
-  position: absolute !important;
-  height: 100% !important;
-  border-radius: 7px !important;
-  pointer-events: none !important;
+  content: none !important;
+  display: none !important;
 }
 
 .playlists-page .playlist-gallery-art::before,
@@ -222,7 +247,7 @@
 .playlists-page .playlist-gallery-content {
   position: static !important;
   z-index: 4 !important;
-  margin-top: 16px !important;
+  margin-top: 9px !important;
 }
 
 .playlists-page .playlist-gallery-content .playlist-gallery-kicker {
@@ -237,7 +262,7 @@
 }
 
 .playlists-page .playlist-gallery-content p {
-  margin-top: 5px !important;
+  margin-top: 3px !important;
 }
 
 .playlists-page .playlist-gallery-letters {
@@ -251,30 +276,30 @@
 }
 
 .playlists-page .playlist-create-card {
-  aspect-ratio: 1 / 1 !important;
+  aspect-ratio: auto !important;
   min-height: 0 !important;
-  align-items: center !important;
-  justify-content: center !important;
-  border: 1.25px dashed var(--border) !important;
-  border-radius: 7px !important;
-  background: var(--filmwave-neutral-surface) !important;
-  padding: 16px !important;
-  text-align: center !important;
+  align-items: stretch !important;
+  justify-content: flex-start !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  padding: 0 !important;
+  text-align: left !important;
 }
 
 .playlists-page .playlist-create-card:hover {
-  border-color: var(--border-hover) !important;
-  background: var(--filmwave-neutral-surface) !important;
+  border-color: transparent !important;
+  background: transparent !important;
 }
 
 .playlists-page .playlist-create-card .playlist-create-copy small {
-  display: none !important;
+  display: block !important;
 }
 
 .playlists-page .playlist-create-card .playlist-create-copy span {
-  font-size: 17px !important;
-  font-weight: 500 !important;
-  letter-spacing: -0.045em !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  letter-spacing: -0.015em !important;
 }
 
 .playlists-page .playlist-create-card .playlist-create-mark {
@@ -302,7 +327,15 @@
 }
 
 /* Shared playlist title and count typography for My Playlists. */
-.playlists-page .playlist-gallery-content h3,
+.playlists-page .playlist-gallery-content h3 {
+  color: var(--text-primary) !important;
+  font-family: inherit !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
+}
+
 .playlists-page .playlist-row-main span {
   color: var(--text-primary) !important;
   font-family: inherit !important;
