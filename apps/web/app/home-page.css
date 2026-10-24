@@ -4609,7 +4609,7 @@ html:not(.light):not([data-theme="light"])
   justify-self: end;
   margin: 0 !important;
   color: currentColor;
-  transform: translate(8px, -8px) !important;
+  transform: translate(12px, -12px) !important;
 }
 
 .audioflume-home-mockup-editorial-card > strong {
@@ -4706,7 +4706,7 @@ html:not(.light):not([data-theme="light"])
   color: #ffffff !important;
   font-size: 0;
   text-decoration: none;
-  transform: translate(8px, -8px);
+  transform: translate(12px, -12px);
 }
 
 .audioflume-home-lifetime-v2-link svg {
