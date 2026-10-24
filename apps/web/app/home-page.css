@@ -4885,3 +4885,17 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-catalogue {
   padding-bottom: 80px;
 }
+
+
+/* Use the supplied photo in the homepage Lifetime Access artwork panel. */
+.audioflume-home-mockup .audioflume-home-lifetime-feature-art {
+  position: relative;
+  overflow: hidden;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-image {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
