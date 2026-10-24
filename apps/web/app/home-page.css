@@ -3134,7 +3134,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(34px, 3.2vw, 58px);
   font-weight: 300;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
   line-height: 0.98;
 }
 
@@ -3225,7 +3225,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 17px;
   font-weight: 300;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.035em;
   line-height: 1.2;
 }
 
