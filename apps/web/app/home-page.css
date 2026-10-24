@@ -3566,10 +3566,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-mockup-intro-meta {
-    display: none;
-  }
-
   .audioflume-home-mockup-intro-heading {
     align-items: flex-start;
     flex-direction: column;
@@ -3949,10 +3945,6 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-mockup-intro-meta {
-    font-size: 9px;
-  }
-
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-bar {
     bottom: 26px;
