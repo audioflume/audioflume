@@ -4545,7 +4545,6 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-editorial-card {
-  position: relative;
   display: grid;
   aspect-ratio: 2.45 / 1;
   min-height: 0;
@@ -4601,14 +4600,16 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-editorial-card > svg {
-  position: absolute;
-  top: 16px;
-  right: 18px;
+  position: static !important;
+  grid-column: 2;
+  grid-row: 1;
   width: 16px !important;
   height: 16px !important;
+  align-self: start;
+  justify-self: end;
   margin: 0 !important;
   color: currentColor;
-  transform: none !important;
+  transform: translate(8px, -8px) !important;
 }
 
 .audioflume-home-mockup-editorial-card > strong {
@@ -4670,7 +4671,6 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2-copy {
   grid-area: copy;
-  position: relative;
   display: grid;
   min-width: 0;
   grid-template-rows: auto 1fr;
@@ -4700,15 +4700,13 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-lifetime-v2-link {
-  position: absolute;
-  top: 16px;
-  right: 18px;
   display: inline-flex;
   flex: 0 0 auto;
   align-items: center;
   color: #ffffff !important;
   font-size: 0;
   text-decoration: none;
+  transform: translate(8px, -8px);
 }
 
 .audioflume-home-lifetime-v2-link svg {
