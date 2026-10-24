@@ -717,41 +717,6 @@ html:not(.light):not([data-theme="light"])
   animation: audioflume-home-skeleton-pulse 1.35s ease-in-out infinite;
 }
 
-.audioflume-home-skeleton-song-card {
-  position: relative;
-  display: grid;
-  place-items: center;
-  background: var(--bg-tertiary);
-}
-
-.audioflume-home-skeleton-block.is-song-art {
-  width: 132px;
-  height: 132px;
-}
-
-.audioflume-home-skeleton-song-copy {
-  position: absolute;
-  bottom: 42px;
-  left: 50%;
-  display: grid;
-  width: calc(100% - 72px);
-  justify-items: center;
-  gap: 7px;
-  transform: translateX(-50%);
-}
-
-.audioflume-home-skeleton-block.is-song-title {
-  width: 48%;
-  max-width: 150px;
-  height: 14px;
-}
-
-.audioflume-home-skeleton-block.is-song-artist {
-  width: 30%;
-  max-width: 90px;
-  height: 10px;
-}
-
 .audioflume-home-skeleton-artist-card {
   position: relative;
 }
@@ -1281,10 +1246,6 @@ html:not(.light):not([data-theme="light"])
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-skeleton-block {
   background: rgba(17, 17, 17, 0.08);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-skeleton-song-card {
-  background: #f2f2ef;
 }
 
 :where(html.light, html[data-theme="light"])
