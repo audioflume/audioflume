@@ -114,6 +114,27 @@ function ChevronIcon() {
   );
 }
 
+function ResponsiveSortIcon() {
+  return (
+    <svg
+      width="17"
+      height="17"
+      viewBox="0 0 24 24"
+      fill="none"
+      aria-hidden="true"
+    >
+      <path
+        d="M8 19V5M8 5L4 9M8 5L12 9M16 5V19M16 19L12 15M16 19L20 15"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+    </svg>
+  );
+}
+
 function ArchiveIcon() {
   return (
     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -500,19 +521,15 @@ export default function ProjectsPage() {
           align-items: center !important;
           gap: 18px !important;
         }
-        .projects-status-pill {
-          display: inline-flex !important;
-          width: auto !important;
-          min-width: 126px !important;
-          height: 51px !important;
-          min-height: 51px !important;
-          align-items: center !important;
-          justify-content: flex-start !important;
-          gap: 6px !important;
-          border: 0 !important;
-          border-radius: 0 !important;
+        .projects-status-pill,
+        .projects-sort-button,
+        .projects-new-button {
+          box-sizing: border-box !important;
+          height: 40px !important;
+          min-height: 40px !important;
+          border: 1.25px solid var(--border) !important;
+          border-radius: 4px !important;
           background: transparent !important;
-          padding: 0 !important;
           color: var(--text-primary) !important;
           cursor: pointer !important;
           font-family: var(--font-aktiv-grotesk) !important;
@@ -520,9 +537,26 @@ export default function ProjectsPage() {
           font-weight: 400 !important;
           letter-spacing: normal !important;
           line-height: 1 !important;
+          transition:
+            border-color 150ms ease,
+            background-color 150ms ease,
+            color 150ms ease !important;
+        }
+        .projects-status-pill {
+          display: inline-flex !important;
+          width: auto !important;
+          min-width: 126px !important;
+          align-items: center !important;
+          justify-content: center !important;
+          gap: 6px !important;
+          padding-right: 12px !important;
+          padding-left: 12px !important;
         }
         .projects-status-pill:hover,
-        .projects-status-pill.is-open {
+        .projects-status-pill:focus-visible,
+        .projects-sort-button:hover,
+        .projects-sort-button:focus-visible {
+          border-color: var(--text-muted) !important;
           background: transparent !important;
           color: var(--text-primary) !important;
         }
@@ -624,34 +658,21 @@ export default function ProjectsPage() {
           display: flex !important;
           justify-content: flex-end !important;
           align-items: center !important;
-          gap: 4px !important;
+          gap: 8px !important;
         }
         .projects-sort-button,
         .projects-new-button {
-          box-sizing: border-box !important;
-          height: 51px !important;
-          min-height: 51px !important;
           display: inline-flex !important;
           align-items: center !important;
           justify-content: center !important;
-          border: 0 !important;
-          border-radius: 0 !important;
-          color: var(--text-primary) !important;
-          cursor: pointer !important;
-          font-family: var(--font-aktiv-grotesk) !important;
-          font-size: 14px !important;
-          font-weight: 400 !important;
-          letter-spacing: normal !important;
-          line-height: 1 !important;
-          transition: background 0.15s ease, color 0.15s ease !important;
+          padding-right: 12px !important;
+          padding-left: 12px !important;
         }
         .projects-sort-button {
           gap: 6px !important;
-          background: transparent !important;
-          padding: 0 12px !important;
         }
-        .projects-sort-button:hover,
         .projects-sort-button.is-open {
+          border-color: var(--text-muted) !important;
           background: transparent !important;
           color: var(--text-primary) !important;
         }
@@ -665,22 +686,22 @@ export default function ProjectsPage() {
         }
         .projects-new-button {
           gap: 8px !important;
-          background: transparent !important;
-          padding: 0 22px 0 18px !important;
-          color: var(--text-primary) !important;
         }
         .projects-new-button:hover {
-          background: var(--bg-hover) !important;
-          color: var(--text-primary) !important;
-        }
-        :where(html.light, html[data-theme="light"]) .projects-new-button:hover {
+          border-color: var(--text-primary) !important;
           background: var(--text-primary) !important;
           color: var(--bg-primary) !important;
         }
+        .projects-sort-button-icon,
         .projects-new-button-icon {
-          display: inline-flex !important;
           align-items: center !important;
           justify-content: center !important;
+        }
+        .projects-sort-button-icon {
+          display: none;
+        }
+        .projects-new-button-icon {
+          display: inline-flex !important;
         }
         .projects-title {
           margin-top: 36px;
@@ -1030,8 +1051,13 @@ export default function ProjectsPage() {
                     className={`projects-sort-button${open ? " is-open" : ""}`}
                     aria-label="Sort projects"
                   >
-                    <span>Sort By</span>
-                    <ChevronIcon />
+                    <span className="projects-sort-button-icon" aria-hidden="true">
+                      <ResponsiveSortIcon />
+                    </span>
+                    <span className="projects-sort-button-label">Sort By</span>
+                    <span className="projects-sort-button-chevron">
+                      <ChevronIcon />
+                    </span>
                     <span className="sr-only">
                       <SortLabel sortMode={sortMode} />
                     </span>
@@ -1132,7 +1158,7 @@ export default function ProjectsPage() {
                 <span className="projects-new-button-icon" aria-hidden="true">
                   <PlusIcon size={16} />
                 </span>
-                <span>New Project</span>
+                <span className="projects-new-button-label">New Project</span>
               </button>
             </div>
           </section>
