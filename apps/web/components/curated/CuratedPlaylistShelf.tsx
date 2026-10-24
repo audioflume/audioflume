@@ -53,20 +53,21 @@ export function CuratedPlaylistCard({
 }: {
   playlist: CuratedPlaylistCardItem;
   index: number;
-  variant?: "default" | "home";
+  variant?: "default" | "home" | "curatedPage";
 }) {
   const href = playlist.href || `/curated-playlists/${playlist.id}`;
   const fallbackGradient =
     FALLBACK_GRADIENTS[index % FALLBACK_GRADIENTS.length];
 
-  const isHomeVariant = variant === "home";
+  const usesHomeLayout = variant === "home" || variant === "curatedPage";
+  const isCuratedPageVariant = variant === "curatedPage";
 
   return (
     <div className={cardStyles.shell}>
-      <article className={`${cardStyles.card}${isHomeVariant ? ` ${cardStyles.homeCard}` : ""}`}>
+      <article className={`${cardStyles.card}${usesHomeLayout ? ` ${cardStyles.homeCard}` : ""}`}>
         <Link href={href} className={cardStyles.imageLink}>
           <div
-            className={`${cardStyles.image}${isHomeVariant ? ` ${cardStyles.homeImage}` : ""}`}
+            className={`${cardStyles.image}${usesHomeLayout ? ` ${cardStyles.homeImage}` : ""}`}
             data-curated-playlist-image
             style={{
               background: playlist.cover_image_url
@@ -85,7 +86,7 @@ export function CuratedPlaylistCard({
               />
             )}
 
-            {isHomeVariant ? (
+            {usesHomeLayout ? (
               <>
                 <span className={cardStyles.homeShade} />
                 <strong className={cardStyles.homeTitle}>{playlist.name}</strong>
@@ -96,10 +97,10 @@ export function CuratedPlaylistCard({
 
         <CuratedPlaylistBookmarkButton
           playlist={playlist}
-          className={`${cardStyles.bookmarkButton}${isHomeVariant ? ` ${cardStyles.homeBookmarkButton}` : ""}`}
+          className={`${cardStyles.bookmarkButton}${usesHomeLayout ? ` ${cardStyles.homeBookmarkButton}` : ""}`}
         />
 
-        {!isHomeVariant ? (
+        {!usesHomeLayout ? (
           <div className={cardStyles.details}>
             <Link href={href} className={cardStyles.copy}>
               <h3>{playlist.name}</h3>
@@ -111,7 +112,7 @@ export function CuratedPlaylistCard({
         <CuratedPlaylistPlayButton
           playlistId={playlist.id}
           playlistName={playlist.name}
-          className={`${cardStyles.playButton}${isHomeVariant ? ` ${cardStyles.homePlayButton}` : ` ${cardStyles.curatedPagePlayButton}`}`}
+          className={`${cardStyles.playButton}${usesHomeLayout ? ` ${cardStyles.homePlayButton}` : ""}${isCuratedPageVariant ? ` ${cardStyles.curatedPagePlayButton}` : ""}`}
         />
       </article>
     </div>
