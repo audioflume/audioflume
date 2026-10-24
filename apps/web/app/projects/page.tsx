@@ -960,12 +960,12 @@ export default function ProjectsPage() {
           .projects-row-rename { width: 100%; }
           .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) 12px minmax(70px, 96px) 32px; column-gap: 14px; }
         }
-      `}@media (max-width: 620px) {
+        @media (max-width: 620px) {
           .projects-title {
             margin-bottom: 32px;
           }
         }
-        </style>
+      `}</style>
 
       <main className="projects-page">
         <div className="projects-shell">
