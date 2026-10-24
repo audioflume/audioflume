@@ -1635,6 +1635,7 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-editorial-card {
+  position: relative;
   display: grid;
   box-sizing: border-box;
   height: 200px;
@@ -1650,7 +1651,10 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-editorial-card::before {
+  position: absolute;
+  inset: 0;
   display: none;
+  content: "";
 }
 
 .audioflume-home-mockup-editorial-card.is-subscription {
