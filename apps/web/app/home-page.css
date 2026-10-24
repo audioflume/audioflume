@@ -4451,3 +4451,17 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-genres > span {
   color: rgba(255, 255, 255, 0.4);
 }
+
+
+/* Lock featured artist cards to a consistent aspect ratio. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-card {
+  aspect-ratio: 2.38 / 1;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-media {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
