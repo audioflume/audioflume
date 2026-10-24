@@ -4465,3 +4465,9 @@ html:not(.light):not([data-theme="light"])
   height: 100%;
   aspect-ratio: auto;
 }
+
+
+/* Homepage headline no longer includes the Audioflume mark. */
+.audioflume-home-mockup-intro-heading h1 {
+  gap: 0;
+}
