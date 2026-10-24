@@ -4816,3 +4816,9 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-mockup-curated-card-play:focus-visible {
   background: rgba(255, 255, 255, 0.24) !important;
 }
+
+
+/* Set curated playlists to catalogue section gap. */
+.audioflume-home-mockup-curated {
+  padding-bottom: 80px;
+}
