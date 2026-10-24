@@ -559,30 +559,10 @@ function HomeCuratedPlaylistShelf({
 }: {
   playlists: CuratedPlaylist[];
 }) {
-  const sectionRef = useRef<HTMLElement>(null);
-
-  useEffect(() => {
-    const section = sectionRef.current;
-    if (!section) return;
-
-    const card = section.querySelector<HTMLElement>(
-      ".audioflume-home-mockup-curated-card",
-    );
-    if (!card) return;
-
-    section.style.setProperty(
-      "--audioflume-home-curated-card-height",
-      `${card.getBoundingClientRect().height}px`,
-    );
-  }, [playlists]);
-
   if (playlists.length === 0) return null;
 
   return (
-    <section
-      ref={sectionRef}
-      className="audioflume-home-mockup-curated"
-    >
+    <section className="audioflume-home-mockup-curated">
       <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
         Curated collections made for editors.
       </div>
