@@ -4581,12 +4581,6 @@ html:not(.light):not([data-theme="light"])
   background:
     url("https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg")
       center / cover no-repeat;
-  transform: scale(1);
-  transition: transform 180ms ease;
-}
-
-.audioflume-home-mockup-editorial-card.is-enterprise:hover::before {
-  transform: scale(1.008);
 }
 
 .audioflume-home-mockup-editorial-card > span {
@@ -4673,12 +4667,6 @@ html:not(.light):not([data-theme="light"])
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transform: scale(1);
-  transition: transform 180ms ease;
-}
-
-.audioflume-home-lifetime-v2:hover .audioflume-home-lifetime-v2-image {
-  transform: scale(1.008);
 }
 
 .audioflume-home-lifetime-v2-logo {
