@@ -822,15 +822,6 @@ html:not(.light):not([data-theme="light"])
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-mockup-artists
-    .audioflume-home-reference-artist-play {
-    right: 24px;
-    bottom: 24px;
-    min-width: 136px;
-    height: 40px;
-    padding: 0 18px;
-  }
-
   .audioflume-home-skeleton-playlist-card
     .audioflume-home-skeleton-block.is-playlist-kicker {
     top: 18px;
@@ -1427,11 +1418,22 @@ html:not(.light):not([data-theme="light"])
   pointer-events: none;
 }
 
-.audioflume-home-reference-artist-promo-title {
+.audioflume-home-reference-artist-promo-content {
   position: absolute;
+  right: 34px;
   bottom: 34px;
   left: 34px;
   z-index: 2;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  column-gap: 24px;
+  row-gap: 18px;
+}
+
+.audioflume-home-reference-artist-promo-title {
+  min-width: max-content;
   margin: 0;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -1448,10 +1450,6 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-reference-artist-promo-link {
-  position: absolute;
-  right: 34px;
-  bottom: 34px;
-  z-index: 2;
   width: 220px;
   min-width: 220px;
   height: 48px;
@@ -1474,15 +1472,19 @@ html:not(.light):not([data-theme="light"])
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-reference-artist-promo-title {
+  .audioflume-home-reference-artist-promo-content {
+    right: 24px;
     bottom: 24px;
     left: 24px;
+    row-gap: 14px;
+  }
+
+  .audioflume-home-reference-artist-promo-title {
     font-size: 38px;
   }
 
   .audioflume-home-reference-artist-promo-link {
-    right: 24px;
-    bottom: 24px;
+    width: auto;
     min-width: 136px;
     height: 40px;
     padding: 0 18px;
@@ -1741,7 +1743,28 @@ html:not(.light):not([data-theme="light"])
 
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-play {
+    right: 24px;
+    bottom: 24px;
+    display: grid;
+    width: 44px;
+    min-width: 44px;
+    height: 44px;
+    place-items: center;
+    border-radius: 999px;
+    padding: 0;
+  }
+
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-play > span {
     display: none;
+  }
+
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-play:hover:not(:disabled),
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-play:focus-visible:not(:disabled) {
+    background: #ffffff;
+    transform: scale(1.03);
   }
 
   .audioflume-home-mockup-curated-card-kicker {
