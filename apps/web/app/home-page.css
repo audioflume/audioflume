@@ -4546,8 +4546,9 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-editorial-card {
   display: grid;
-  height: 260px;
-  min-height: 260px;
+  height: var(--audioflume-home-plan-card-height, auto);
+  min-height: var(--audioflume-home-plan-card-height, 0);
+  aspect-ratio: 2.45 / 1;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   align-items: start;
@@ -4629,7 +4630,7 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2 {
   display: grid;
   width: var(--home-reference-width);
-  height: var(--audioflume-home-lifetime-height, 260px);
+  height: var(--audioflume-home-lifetime-height, auto);
   grid-template-columns:
     minmax(0, 1fr)
     var(--audioflume-home-lifetime-copy-width, 50%);
@@ -4823,8 +4824,8 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-art,
 .audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-copy {
-  height: var(--audioflume-home-lifetime-height, 260px);
-  min-height: var(--audioflume-home-lifetime-height, 260px);
+  height: var(--audioflume-home-lifetime-height);
+  min-height: var(--audioflume-home-lifetime-height);
 }
 
 @media (max-width: 1320px) {
