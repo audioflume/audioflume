@@ -1008,6 +1008,7 @@ export default function HomePageContent(_props: {
   const lifetimeLayoutRef = useRef<HTMLDivElement>(null);
   const lifetimeLockedCopyWidthRef = useRef<number | null>(null);
   const [lifetimeStacked, setLifetimeStacked] = useState(false);
+  const [lifetimeCopyStacked, setLifetimeCopyStacked] = useState(false);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -1096,6 +1097,33 @@ export default function HomePageContent(_props: {
       const fluidArtWidth = currentBlockWidth - copyWidth;
 
       setLifetimeStacked(fluidArtWidth <= usablePageWidth / 3);
+
+      const bottom = currentBlock.querySelector<HTMLElement>(
+        ".audioflume-home-lifetime-v2-bottom",
+      );
+      const regularPrice = currentBlock.querySelector<HTMLElement>(
+        ".audioflume-home-lifetime-v2-price.is-regular",
+      );
+      const offerPrice = currentBlock.querySelector<HTMLElement>(
+        ".audioflume-home-lifetime-v2-price.is-offer",
+      );
+      const statement = currentBlock.querySelector<HTMLElement>(
+        ".audioflume-home-lifetime-v2-statement",
+      );
+
+      if (bottom && regularPrice && offerPrice && statement) {
+        const bottomStyles = getComputedStyle(bottom);
+        const columnGap =
+          Number.parseFloat(bottomStyles.columnGap || bottomStyles.gap) || 0;
+        const requiredWidth =
+          regularPrice.scrollWidth +
+          offerPrice.scrollWidth +
+          statement.scrollWidth +
+          columnGap * 2 +
+          24;
+
+        setLifetimeCopyStacked(bottom.clientWidth <= requiredWidth);
+      }
     };
 
     updateLifetimeStack();
@@ -1238,7 +1266,7 @@ export default function HomePageContent(_props: {
         <div className="audioflume-home-reference-tools-originals">
           <div
             ref={lifetimeLayoutRef}
-            className={`audioflume-home-reference-width audioflume-home-lifetime-v2${lifetimeStacked ? " is-stacked" : ""}`}
+            className={`audioflume-home-reference-width audioflume-home-lifetime-v2${lifetimeStacked ? " is-stacked" : ""}${lifetimeCopyStacked ? " is-copy-stacked" : ""}`}
           >
             <div className="audioflume-home-lifetime-v2-copy">
               <div className="audioflume-home-lifetime-v2-top">
