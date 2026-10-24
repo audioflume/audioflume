@@ -4670,14 +4670,12 @@ html:not(.light):not([data-theme="light"])
   line-height: 1.06;
 }
 
-/* Isolated homepage Lifetime block — no legacy pricing/Lifetime selectors. */
+/* Isolated homepage Lifetime block — simple 50/50 split. */
 .audioflume-home-lifetime-v2 {
   display: grid;
   width: var(--home-reference-width);
   height: 200px;
-  grid-template-columns:
-    minmax(0, 1fr)
-    var(--audioflume-home-lifetime-copy-width, 50%);
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   grid-template-areas: "art copy";
   margin: 0 auto;
   overflow: hidden;
@@ -4769,88 +4767,9 @@ html:not(.light):not([data-theme="light"])
   transform: none !important;
 }
 
-.audioflume-home-lifetime-v2-bottom {
-  display: grid;
-  width: 100%;
-  align-self: end;
-  grid-template-columns: max-content max-content minmax(0, 1fr);
-  align-items: end;
-  column-gap: 17px;
-}
-
-.audioflume-home-lifetime-v2-price {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  align-items: flex-start;
-}
-
-.audioflume-home-lifetime-v2-badge {
-  display: inline-flex;
-  min-height: 18px;
-  align-items: center;
-  background: #656565;
-  padding: 0 8px;
-  color: #ffffff;
-  font-size: 7px;
-  font-weight: 400;
-  line-height: 1;
-  white-space: nowrap;
-}
-
-.audioflume-home-lifetime-v2-badge.is-light {
-  background: #ffffff;
-  color: #111111;
-}
-
-.audioflume-home-lifetime-v2-price > strong,
-.audioflume-home-lifetime-v2-offer-line > strong {
-  margin-top: 8px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 51px;
-  font-weight: 400;
-  letter-spacing: -0.055em;
-  line-height: 0.9;
-}
-
-.audioflume-home-lifetime-v2-price.is-regular > strong {
-  position: relative;
-  color: #656565;
-}
-
-.audioflume-home-lifetime-v2-price.is-regular > strong::after {
-  position: absolute;
-  top: 50%;
-  right: -8px;
-  left: -8px;
-  height: 2px;
-  background: #656565;
-  content: "";
-  transform: translateY(-50%);
-}
-
-.audioflume-home-lifetime-v2-offer-line {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-}
-
-.audioflume-home-lifetime-v2-offer-line > strong {
-  color: #ffffff;
-}
-
-.audioflume-home-lifetime-v2-offer-line > span {
-  color: #ffffff;
-  font-size: 12px;
-  font-weight: 400;
-  line-height: 1;
-  white-space: nowrap;
-}
-
 .audioflume-home-lifetime-v2-statement {
-  width: max-content;
-  max-width: 100%;
-  justify-self: end;
+  align-self: end;
+  justify-self: start;
   margin: 0;
   color: #ffffff;
   font-size: 23px;
@@ -4859,22 +4778,6 @@ html:not(.light):not([data-theme="light"])
   line-height: 1.02;
   text-align: left;
   text-transform: uppercase;
-  white-space: nowrap;
-}
-
-.audioflume-home-lifetime-v2.is-stacked {
-  height: auto;
-  min-height: 0;
-  grid-template-columns: 1fr;
-  grid-template-areas:
-    "art"
-    "copy";
-}
-
-.audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-art,
-.audioflume-home-lifetime-v2.is-stacked .audioflume-home-lifetime-v2-copy {
-  height: 200px;
-  min-height: 200px;
 }
 
 @media (max-width: 1320px) {
@@ -4882,12 +4785,28 @@ html:not(.light):not([data-theme="light"])
     padding-left: 30px;
   }
 
-  .audioflume-home-lifetime-v2-bottom {
-    column-gap: 15px;
-  }
-
   .audioflume-home-lifetime-v2-statement {
     font-size: 20px;
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-lifetime-v2 {
+    height: auto;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "art"
+      "copy";
+  }
+
+  .audioflume-home-lifetime-v2-art,
+  .audioflume-home-lifetime-v2-copy {
+    height: 200px;
+    min-height: 200px;
+  }
+
+  .audioflume-home-lifetime-v2-copy {
+    padding: 24px;
   }
 }
 
