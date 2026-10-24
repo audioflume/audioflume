@@ -4798,3 +4798,10 @@ html:not(.light):not([data-theme="light"])
     height: 36px !important;
   }
 }
+
+
+/* Remove dark overlay from homepage featured artist images. */
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-media::after {
+  background: transparent !important;
+}
