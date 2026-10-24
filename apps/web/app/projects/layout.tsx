@@ -170,63 +170,61 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
 
         @media (max-width: 940px) {
           .projects-page .projects-control-bar {
-            grid-template-columns: 150px minmax(0, 1fr) auto !important;
-            align-items: start !important;
-            gap: 12px !important;
+            grid-template-columns: 126px minmax(0, 1fr) auto !important;
+            align-items: center !important;
+            gap: 10px !important;
           }
 
           .projects-page .projects-status-pill {
-            width: 150px !important;
+            width: 126px !important;
+            min-width: 126px !important;
           }
 
           .projects-page .projects-control-right {
             justify-content: flex-end !important;
             flex-wrap: nowrap !important;
-            gap: 6px !important;
+            gap: 8px !important;
           }
 
           .projects-page .projects-sort-button,
           .projects-page .projects-new-button {
-            width: 42px !important;
-            min-width: 42px !important;
+            box-sizing: border-box !important;
+            width: 40px !important;
+            min-width: 40px !important;
+            height: 40px !important;
+            min-height: 40px !important;
+            flex: 0 0 40px !important;
             padding: 0 !important;
+            border: 1.25px solid var(--border) !important;
+            border-radius: 4px !important;
+            background: transparent !important;
           }
 
           .projects-page .projects-sort-button {
-            justify-content: center !important;
             gap: 0 !important;
           }
 
-          .projects-page .projects-sort-button > span:not(.sr-only),
-          .projects-page .projects-sort-button > svg {
+          .projects-page .projects-sort-button:hover,
+          .projects-page .projects-sort-button:focus-visible,
+          .projects-page .projects-sort-button.is-open {
+            border-color: var(--text-muted) !important;
+            background: transparent !important;
+          }
+
+          .projects-page .projects-new-button:hover {
+            border-color: var(--text-primary) !important;
+            background: var(--text-primary) !important;
+            color: var(--bg-primary) !important;
+          }
+
+          .projects-page .projects-sort-button-icon {
+            display: inline-flex !important;
+          }
+
+          .projects-page .projects-sort-button-label,
+          .projects-page .projects-sort-button-chevron,
+          .projects-page .projects-new-button-label {
             display: none !important;
-          }
-
-          .projects-page .projects-sort-button::before {
-            content: "";
-            display: block;
-            width: 17px;
-            height: 17px;
-            background: currentColor;
-            -webkit-mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%205V19%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.5%2016.5L7%2019L9.5%2016.5%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%207H20%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2012H18%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2017H16%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
-            mask-image: url("data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%3E%3Cpath%20d%3D%22M7%205V19%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M4.5%2016.5L7%2019L9.5%2016.5%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%207H20%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2012H18%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3Cpath%20d%3D%22M13%2017H16%22%20stroke%3D%22black%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%2F%3E%3C%2Fsvg%3E");
-            -webkit-mask-position: center;
-            mask-position: center;
-            -webkit-mask-repeat: no-repeat;
-            mask-repeat: no-repeat;
-            -webkit-mask-size: contain;
-            mask-size: contain;
-          }
-
-          .projects-page .projects-new-button {
-            font-size: 0 !important;
-          }
-
-          .projects-page .projects-new-button::before {
-            content: "+";
-            font-size: 18px;
-            font-weight: 400;
-            line-height: 1;
           }
         }
 
@@ -242,14 +240,15 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           }
 
           .projects-page .projects-control-bar {
-            grid-template-columns: 120px minmax(0, 1fr) auto !important;
+            grid-template-columns: 112px minmax(0, 1fr) auto !important;
             gap: 8px !important;
           }
 
           .projects-page .projects-status-pill {
-            width: 120px !important;
-            padding-right: 12px !important;
-            padding-left: 12px !important;
+            width: 112px !important;
+            min-width: 112px !important;
+            padding-right: 10px !important;
+            padding-left: 10px !important;
           }
 
           .projects-page .projects-control-right {
