@@ -223,3 +223,18 @@
     bottom: 18px !important;
   }
 }
+
+
+.homeBookmarkButton {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  margin: 0;
+  opacity: 0;
+}
+
+.homeCard:hover .homeBookmarkButton,
+.homeCard:focus-within .homeBookmarkButton,
+.homeBookmarkButton[aria-pressed="true"] {
+  opacity: 1;
+}
