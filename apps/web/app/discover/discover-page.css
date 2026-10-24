@@ -57,6 +57,7 @@
 
 .discover-artist-hero-skeleton {
   pointer-events: none;
+  animation: skeleton-fade-in 0.3s ease-out both;
 }
 
 .discover-artist-hero-skeleton-block {
