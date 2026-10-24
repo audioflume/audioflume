@@ -4425,3 +4425,17 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-play {
   font-size: 15px;
 }
+
+
+/* Refine homepage primary headline weight and scale. */
+.audioflume-home-mockup-intro-heading h1 {
+  font-size: clamp(32px, 2.9vw, 44px);
+  font-weight: 400;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-intro-heading h1 {
+    font-size: 33px;
+    font-weight: 400;
+  }
+}
