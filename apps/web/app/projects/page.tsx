@@ -706,7 +706,7 @@ export default function ProjectsPage() {
         .projects-title {
           margin-top: 36px;
           margin-right: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
-          margin-bottom: 20px;
+          margin-bottom: 40px;
           margin-left: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
           max-width: 640px;
           color: var(--text-primary);
@@ -721,7 +721,7 @@ export default function ProjectsPage() {
           display: grid;
           grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
           gap: 16px;
-          margin-top: 28px;
+          margin-top: 0;
           margin-right: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
           margin-left: calc(var(--projects-control-gutter, clamp(28px, 5.2vw, 82px)) - 32px);
         }
@@ -960,7 +960,12 @@ export default function ProjectsPage() {
           .projects-row-rename { width: 100%; }
           .projects-row-skeleton { grid-template-columns: 42px minmax(0, 1fr) 12px minmax(70px, 96px) 32px; column-gap: 14px; }
         }
-      `}</style>
+      `}@media (max-width: 620px) {
+          .projects-title {
+            margin-bottom: 32px;
+          }
+        }
+        </style>
 
       <main className="projects-page">
         <div className="projects-shell">
