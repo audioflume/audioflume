@@ -220,7 +220,7 @@ body:has(.community-playlists-page-root) {
 .community-cover-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: calc(40vw / 2.38);
   overflow: hidden;
   background: var(--bg-secondary);
 }
@@ -278,8 +278,8 @@ body:has(.community-playlists-page-root) {
 
 .community-like {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 18px;
+  right: 18px;
   z-index: 5;
   display: inline-flex;
   width: 24px;
@@ -307,34 +307,41 @@ body:has(.community-playlists-page-root) {
 
 .community-play {
   position: absolute;
-  right: 16px;
-  bottom: 16px;
+  right: 24px;
+  bottom: 24px;
   z-index: 5;
   display: inline-flex;
-  width: 24px;
-  min-width: 24px;
-  height: 24px;
+  width: 42px;
+  min-width: 42px;
+  height: 42px;
   align-items: center;
   justify-content: center;
   border: 0;
-  background: transparent;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
   padding: 0;
   color: #ffffff;
   cursor: pointer;
-  opacity: 0;
-  transition: opacity 150ms ease;
-}
-
-.community-card:hover .community-play,
-.community-card:focus-within .community-play,
-.community-play:focus-visible,
-.community-play[data-playlist-playing="true"] {
   opacity: 1;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
 }
 
 .community-play:hover,
 .community-play:focus-visible {
+  background: #ffffff;
+  color: #111111;
   outline: none;
+  transform: scale(1.02);
+}
+
+.community-play svg {
+  width: 15px;
+  height: 15px;
 }
 
 .community-play:disabled {
@@ -400,7 +407,7 @@ body:has(.community-playlists-page-root) {
   font-family: var(--discover-playlist-card-title-font-family, inherit);
   font-size: 16px;
   font-weight: 400;
-  letter-spacing: var(--discover-playlist-card-title-letter-spacing, normal);
+  letter-spacing: -0.015em;
   line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -613,7 +620,8 @@ body:has(.community-playlists-page-root) {
 .community-skeleton-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 32px;
+  column-gap: 10px;
+  row-gap: 40px;
 }
 
 .community-skeleton-card {
@@ -623,7 +631,7 @@ body:has(.community-playlists-page-root) {
 .community-skeleton-card-image {
   position: relative;
   width: 100%;
-  aspect-ratio: 16 / 9;
+  height: calc(40vw / 2.38);
 }
 
 .community-skeleton-card-avatar {
@@ -677,6 +685,11 @@ body:has(.community-playlists-page-root) {
   .community-skeleton-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+
+  .community-cover-wrap,
+  .community-skeleton-card-image {
+    height: calc(52vw / 2.38);
+  }
 }
 
 @media (max-width: 620px) {
@@ -686,7 +699,18 @@ body:has(.community-playlists-page-root) {
 
   .community-page-playlist-grid,
   .community-skeleton-grid {
-    gap: 24px;
+    column-gap: 10px;
+    row-gap: 32px;
+  }
+
+  .community-cover-wrap,
+  .community-skeleton-card-image {
+    height: calc(78vw / 2.38);
+  }
+
+  .community-play {
+    right: 18px;
+    bottom: 18px;
   }
 }
 
