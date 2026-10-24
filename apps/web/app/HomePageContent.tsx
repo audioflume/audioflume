@@ -1030,8 +1030,11 @@ export default function HomePageContent(_props: {
   const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const introHeadingRef = useRef<HTMLDivElement>(null);
   const introHeadlineMeasureRef = useRef<HTMLSpanElement>(null);
+  const lifetimeStatementRef = useRef<HTMLParagraphElement>(null);
+  const lifetimeStatementFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
   const [introHeadlineBroken, setIntroHeadlineBroken] = useState(false);
+  const [lifetimeStatementNaturalWrap, setLifetimeStatementNaturalWrap] = useState(false);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -1089,6 +1092,27 @@ export default function HomePageContent(_props: {
 
     const resizeObserver = new ResizeObserver(updateIntroHeadlineBreak);
     resizeObserver.observe(heading);
+
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    const statement = lifetimeStatementRef.current;
+    const firstLineMeasure = lifetimeStatementFirstLineMeasureRef.current;
+    if (!statement || !firstLineMeasure) return;
+
+    const updateLifetimeStatementWrap = () => {
+      setLifetimeStatementNaturalWrap(
+        firstLineMeasure.scrollWidth > statement.clientWidth,
+      );
+    };
+
+    updateLifetimeStatementWrap();
+
+    const resizeObserver = new ResizeObserver(updateLifetimeStatementWrap);
+    resizeObserver.observe(statement);
 
     return () => {
       resizeObserver.disconnect();
@@ -1310,8 +1334,22 @@ export default function HomePageContent(_props: {
                 </span>
               </div>
 
-              <p className="audioflume-home-lifetime-v2-statement">
-                Lifetime access to in-house<br />made original music.
+              <p
+                ref={lifetimeStatementRef}
+                className="audioflume-home-lifetime-v2-statement"
+              >
+                <span
+                  ref={lifetimeStatementFirstLineMeasureRef}
+                  className="audioflume-home-lifetime-v2-statement-measure"
+                  aria-hidden="true"
+                >
+                  Lifetime access to in-house
+                </span>
+                {lifetimeStatementNaturalWrap ? (
+                  <>Lifetime access to in-house made original music.</>
+                ) : (
+                  <>Lifetime access to in-house<br />made original music.</>
+                )}
               </p>
             </div>
           </Link>
