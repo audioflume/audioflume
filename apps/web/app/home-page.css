@@ -1352,7 +1352,7 @@ html:not(.light):not([data-theme="light"])
   height: 48px;
   align-items: center;
   justify-content: space-between;
-  border-radius: 3px;
+  border-radius: 0;
   background: #ffffff;
   padding: 0 18px 0 70px;
   color: #111111;
