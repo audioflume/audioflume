@@ -18,6 +18,16 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
 
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-intro {
+    animation: skeleton-fade-in 0.3s ease-out both;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-page-skeleton-pill-row {
+    animation: skeleton-fade-in 0.3s ease-out 0.04s both;
+  }
+
+  body:has(.curated-playlists-page-root)
+    .curated-page-skeleton-intro {
     display: grid;
     width: min(calc(100% - 40px), 580px);
     gap: 0;
@@ -108,18 +118,28 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     .curated-page-skeleton-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 32px;
+    column-gap: 10px;
+    row-gap: 40px;
   }
 
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-grid-card {
     min-width: 0;
+    animation: skeleton-fade-in 0.3s ease-out both;
   }
+
+  body:has(.curated-playlists-page-root)
+    .curated-page-skeleton-grid-card:nth-child(2) { animation-delay: 0.04s; }
+  body:has(.curated-playlists-page-root)
+    .curated-page-skeleton-grid-card:nth-child(3) { animation-delay: 0.08s; }
+  body:has(.curated-playlists-page-root)
+    .curated-page-skeleton-grid-card:nth-child(n + 4) { animation-delay: 0.12s; }
 
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-card {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    height: calc(40vw / 2.38);
+    border-radius: 3px;
   }
 
   body:has(.curated-playlists-page-root)
@@ -154,12 +174,33 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     }
 
     body:has(.curated-playlists-page-root)
+      .curated-page-skeleton-card {
+      height: calc(52vw / 2.38);
+    }
+
+    body:has(.curated-playlists-page-root)
+      .curated-page-skeleton-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body:has(.curated-playlists-page-root)
       .curated-page-skeleton-pill-row {
       width: calc(100% - 64px);
     }
   }
 
   @media (max-width: 620px) {
+    body:has(.curated-playlists-page-root)
+      .curated-page-skeleton-grid {
+      column-gap: 10px;
+      row-gap: 32px;
+    }
+
+    body:has(.curated-playlists-page-root)
+      .curated-page-skeleton-card {
+      height: calc(78vw / 2.38);
+    }
+
     body:has(.curated-playlists-page-root)
       .curated-page-skeleton-grid {
       gap: 24px;
