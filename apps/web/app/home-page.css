@@ -1902,13 +1902,16 @@ html:not(.light):not([data-theme="light"])
     min-height: 0;
     aspect-ratio: 445 / 200;
   }
+
+  .audioflume-home-lifetime-v2 {
+    height: calc(14.98127341vw - 26.96629213px);
+    min-height: 0;
+  }
 }
 
 @media (min-width: 1695px) {
   .audioflume-home-lifetime-v2 {
     width: var(--home-reference-width);
-    height: calc(14.98127341vw - 26.96629213px);
-    min-height: 0;
     aspect-ratio: auto;
   }
 }
