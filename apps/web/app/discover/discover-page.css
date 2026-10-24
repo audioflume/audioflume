@@ -484,6 +484,8 @@
   position: relative;
   width: min(40vw, 840px);
   min-width: min(40vw, 840px);
+  overflow: hidden;
+  border-radius: 3px;
   background: transparent;
 }
 
@@ -499,6 +501,7 @@
   position: relative;
   aspect-ratio: 16 / 9;
   overflow: hidden;
+  border-radius: inherit;
   background: var(--bg-tertiary);
 }
 
@@ -608,25 +611,33 @@
 
 .discover-artist-feature-play {
   position: absolute;
-  right: 28px;
-  bottom: 28px;
+  right: 34px;
+  bottom: 34px;
   z-index: 3;
-  display: grid;
-  width: 52px;
-  height: 52px;
-  place-items: center;
+  display: flex;
+  width: 220px;
+  min-width: 220px;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
   border: 0;
-  border-radius: 999px;
+  border-radius: 0;
   background: #ffffff;
+  padding: 0 18px 0 70px;
   color: #111111;
+  font-size: 15px;
+  font-weight: 300;
   cursor: pointer;
-  transition: transform 160ms ease;
-  transform-origin: center;
+  transition: background-color 160ms ease;
 }
 
 .discover-artist-feature-play:hover:not(:disabled),
 .discover-artist-feature-play:focus-visible:not(:disabled) {
-  transform: scale(1.03);
+  background: #f2f2f2;
+}
+
+.discover-artist-feature-play > span {
+  line-height: 1;
 }
 
 .discover-artist-feature-play:disabled {
@@ -1097,6 +1108,17 @@
 }
 
 @media (max-width: 980px) {
+  .discover-artist-feature-bar {
+    padding-right: 210px;
+  }
+
+  .discover-artist-feature-play {
+    width: 180px;
+    min-width: 180px;
+    padding-left: 50px;
+  }
+
+
   .discover-artist-hero {
     --discover-artist-featured-intro-bottom: 240px;
     --discover-artist-hero-height: 930px;
