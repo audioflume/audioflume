@@ -1442,9 +1442,9 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-curated-card {
   position: relative;
-  width: min(40vw, 600px);
-  min-width: min(40vw, 600px);
-  height: var(--audioflume-home-curated-card-height, auto);
+  width: min(88vw, 600px, calc(6.13636vw + 507.95455px));
+  min-width: min(88vw, 600px, calc(6.13636vw + 507.95455px));
+  height: auto;
   overflow: hidden;
   border-radius: 3px;
   background: var(--bg-tertiary);
@@ -1599,10 +1599,6 @@ html:not(.light):not([data-theme="light"])
     padding-left: 50px;
   }
 
-  .audioflume-home-mockup-curated-card {
-    width: clamp(52vw, calc(-10vw + 608px), 88vw);
-    min-width: clamp(52vw, calc(-10vw + 608px), 88vw);
-  }
 }
 
 @media (max-width: 620px) {
