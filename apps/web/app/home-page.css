@@ -3333,11 +3333,19 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
 }
 
 .audioflume-home-mockup-catalogue-heading {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: end;
   gap: 28px;
   margin-bottom: 18px;
+}
+
+.audioflume-home-mockup-catalogue-heading h2 {
+  justify-self: start;
+}
+
+.audioflume-home-mockup-catalogue-heading a {
+  justify-self: end;
 }
 
 .audioflume-home-mockup-catalogue-heading h2 {
@@ -3594,9 +3602,13 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   }
 
   .audioflume-home-mockup-catalogue-heading {
-    align-items: flex-start;
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    align-items: start;
     gap: 14px;
+  }
+
+  .audioflume-home-mockup-catalogue-heading a {
+    justify-self: start;
   }
 
   .audioflume-home-mockup .audioflume-home-reference-lifetime-access {
