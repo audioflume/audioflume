@@ -5130,3 +5130,174 @@ html:not(.light):not([data-theme="light"])
     gap: 24px;
   }
 }
+
+
+/* Reference-accurate pricing + Lifetime block pass. */
+.audioflume-home-mockup-editorial-card {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 2.45 / 1;
+  padding: 30px 32px 28px;
+  background-image: none !important;
+}
+
+.audioflume-home-mockup-editorial-card::before {
+  display: none;
+}
+
+.audioflume-home-mockup-editorial-card.is-subscription {
+  background: #e7e7df;
+  color: #111111;
+}
+
+.audioflume-home-mockup-editorial-card.is-artists,
+.audioflume-home-mockup-editorial-card.is-enterprise {
+  background: #0f0f0f;
+  color: #ffffff;
+}
+
+.audioflume-home-mockup-editorial-card > span {
+  color: #aaa9a1;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1;
+}
+
+.audioflume-home-mockup-editorial-card.is-artists > span,
+.audioflume-home-mockup-editorial-card.is-enterprise > span {
+  color: #666666;
+}
+
+.audioflume-home-mockup-editorial-card > span b {
+  color: #111111;
+  font-weight: 400;
+}
+
+.audioflume-home-mockup-editorial-card.is-artists > span b,
+.audioflume-home-mockup-editorial-card.is-enterprise > span b {
+  color: #ffffff;
+}
+
+.audioflume-home-mockup-editorial-card strong {
+  max-width: 430px;
+  color: #111111;
+  font-size: clamp(21px, 1.55vw, 29px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 0.98;
+}
+
+.audioflume-home-mockup-editorial-card.is-artists strong,
+.audioflume-home-mockup-editorial-card.is-enterprise strong {
+  color: #ffffff;
+}
+
+.audioflume-home-mockup-editorial-card > svg {
+  top: 26px;
+  right: 26px;
+  color: #111111;
+}
+
+.audioflume-home-mockup-editorial-card.is-artists > svg,
+.audioflume-home-mockup-editorial-card.is-enterprise > svg {
+  color: #ffffff;
+}
+
+.audioflume-home-mockup .audioflume-home-reference-lifetime-access {
+  height: auto;
+  min-height: 0;
+  aspect-ratio: 7.25 / 1;
+  grid-template-columns: 51.2% 48.8%;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-art {
+  min-height: 0;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-logo {
+  width: 215px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-copy {
+  min-height: 0;
+  padding: 30px 26px 28px 42px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top > span {
+  color: #555555;
+  font-size: 14px;
+  line-height: 1;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-top > span b {
+  color: #ffffff;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-link {
+  color: #ffffff !important;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-main {
+  display: grid;
+  grid-template-columns: minmax(360px, 1.05fr) minmax(300px, 0.95fr);
+  align-items: end;
+  gap: 38px;
+}
+
+.audioflume-home-mockup .audioflume-home-lifetime-feature-pricing {
+  gap: 26px;
+  margin: 0;
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-lifetime-badge {
+  font-size: 7px;
+  line-height: 1;
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price strong {
+  font-size: clamp(39px, 2.75vw, 51px);
+  line-height: 0.92;
+}
+
+.audioflume-home-mockup
+  .audioflume-home-lifetime-feature-copy
+  .audioflume-pricing-plan-price span {
+  margin-left: 6px;
+  font-size: 13px;
+  line-height: 1;
+}
+
+.audioflume-home-lifetime-feature-reference-copy {
+  width: 100%;
+  max-width: 335px;
+  justify-self: end;
+  margin: 0;
+  color: #ffffff;
+  font-size: clamp(17px, 1.16vw, 22px);
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+  text-transform: uppercase;
+}
+
+@media (max-width: 980px) {
+  .audioflume-home-mockup-editorial-card {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 2.45 / 1;
+  }
+
+  .audioflume-home-mockup .audioflume-home-reference-lifetime-access {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 4.4 / 1;
+  }
+
+  .audioflume-home-mockup .audioflume-home-lifetime-feature-main {
+    grid-template-columns: minmax(300px, 1fr) minmax(220px, 0.8fr);
+  }
+}
