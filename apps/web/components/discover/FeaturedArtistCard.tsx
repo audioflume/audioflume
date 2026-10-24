@@ -103,11 +103,10 @@ export default function FeaturedArtistCard({
         aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
         aria-pressed={artistIsPlaying}
       >
-        <span>{artistIsPlaying ? "Pause Music" : "Play Music"}</span>
         {artistIsPlaying ? (
-          <PauseIcon size={18} />
+          <PauseIcon size={14} />
         ) : (
-          <PlayIconSmall size={18} />
+          <PlayIconSmall size={14} />
         )}
       </button>
     </article>
