@@ -79,11 +79,6 @@ body:has(.curated-playlists-page-root) .curated-featured-playlist {
 .curated-video-hero-primary-copy {
   width: min(100%, 300px);
   margin: 0;
-  font-size: clamp(9px, 0.68vw, 11px);
-  font-weight: 400;
-  letter-spacing: 0;
-  line-height: 0.95;
-  text-transform: uppercase;
 }
 
 .curated-video-hero-primary-copy span {
