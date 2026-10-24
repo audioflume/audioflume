@@ -4372,3 +4372,11 @@ html:not(.light):not([data-theme="light"])
     flex-basis: 34px;
   }
 }
+
+
+/* Refine homepage intro meta typography. */
+.audioflume-home-mockup-intro-meta {
+  font-size: 10px;
+  font-weight: 300;
+  letter-spacing: 0;
+}
