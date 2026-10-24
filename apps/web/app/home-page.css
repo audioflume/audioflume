@@ -4565,9 +4565,21 @@ html:not(.light):not([data-theme="light"])
   background: #e7e7df;
 }
 
-.audioflume-home-mockup-editorial-card.is-artists,
-.audioflume-home-mockup-editorial-card.is-enterprise {
+.audioflume-home-mockup-editorial-card.is-artists {
   background: #0f0f0f;
+  color: #ffffff;
+}
+
+.audioflume-home-mockup-editorial-card.is-enterprise {
+  background:
+    linear-gradient(
+      180deg,
+      rgba(17, 17, 17, 0.24) 0%,
+      rgba(17, 17, 17, 0.58) 44%,
+      rgba(17, 17, 17, 0.96) 100%
+    ),
+    url("https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg")
+      center / cover no-repeat;
   color: #ffffff;
 }
 
