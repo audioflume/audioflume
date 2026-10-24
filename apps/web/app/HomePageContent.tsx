@@ -472,17 +472,17 @@ function HomeReadyToCutSongCard({
         if (event.key !== "Enter" && event.key !== " ") return;
         stopHomeTrackKeyEvent(event);
       }}
-      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
+      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-3 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
       <HomeReadyToCutCoverImage song={song} index={index} />
 
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
+        <h3 className="filmwave-song-title">
           {song.title}
         </h3>
 
-        <div className="mt-1.5 truncate text-[10px] leading-none text-[var(--text-muted)]">
+        <div className="filmwave-song-artist">
           {song.artist}
         </div>
       </div>
@@ -1149,7 +1149,11 @@ export default function HomePageContent(_props: {
             className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
           >
             Find new music
-            <ArrowUpRightIcon size={15} strokeWidth={1.4} />
+            <ArrowUpRightIcon
+              size={16}
+              strokeWidth={1.5}
+              className="translate-y-[2px]"
+            />
           </Link>
         </div>
 
