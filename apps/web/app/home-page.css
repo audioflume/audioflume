@@ -1348,17 +1348,20 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-play {
-  right: 28px;
-  bottom: 28px;
-  display: grid;
-  width: 52px;
-  min-width: 52px;
-  height: 52px;
-  place-items: center;
-  border-radius: 999px;
+  right: 34px;
+  bottom: 34px;
+  display: flex;
+  width: 220px;
+  min-width: 220px;
+  height: 48px;
+  align-items: center;
+  justify-content: space-between;
+  border-radius: 0;
   background: #ffffff;
-  padding: 0;
+  padding: 0 18px 0 70px;
   color: #111111;
+  font-size: 15px;
+  font-weight: 300;
   transform: none;
 }
 
@@ -1366,8 +1369,14 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-play:hover:not(:disabled),
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-play:focus-visible:not(:disabled) {
-  background: #ffffff;
-  transform: scale(1.03);
+  background: #f2f2f2;
+  transform: none;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-play
+  > span {
+  line-height: 1;
 }
 
 .audioflume-home-mockup-artists
@@ -1581,6 +1590,13 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-bar {
     padding-right: 210px;
+  }
+
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-play {
+    width: 180px;
+    min-width: 180px;
+    padding-left: 50px;
   }
 
 }
