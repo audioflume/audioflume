@@ -36,7 +36,6 @@ import { useSongs } from "@/hooks/useSongs";
 import type { Song } from "@/lib/types";
 
 const NEW_SONG_COUNT = 12;
-const HOME_SHELF_SONG_COUNT = 12;
 type HomeArtist = {
   id: string;
   name: string;
@@ -277,62 +276,6 @@ function Shelf({
 
 
     </div>
-  );
-}
-
-function HomeSongCard({ song }: { song: Song }) {
-  const { togglePlayPause } = usePlayer();
-  const playing = useIsCurrentSongPlaying(song.id);
-
-  return (
-    <article
-      className={`audioflume-home-reference-song-card${playing ? " is-playing" : ""}`}
-    >
-      <button
-        type="button"
-        className="audioflume-home-reference-song-card-play"
-        onClick={() => togglePlayPause(song)}
-        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-      >
-        {song.coverArt ? (
-          <>
-            <span
-              className="audioflume-home-reference-song-card-background"
-              style={{ backgroundImage: `url("${song.coverArt}")` }}
-              aria-hidden="true"
-            />
-            <span className="audioflume-home-reference-song-card-art">
-              <img src={song.coverArt} alt="" draggable={false} />
-              <span className="audioflume-home-reference-song-card-art-icon">
-                {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
-              </span>
-            </span>
-          </>
-        ) : (
-          <span className="audioflume-home-reference-song-card-fallback" />
-        )}
-        <span className="audioflume-home-reference-song-card-copy">
-          <strong>{song.title}</strong>
-          <span>{song.artist}</span>
-        </span>
-      </button>
-    </article>
-  );
-}
-
-function HomeSongShelf({
-  songs,
-  label = "featured tracks",
-}: {
-  songs: Song[];
-  label?: string;
-}) {
-  return (
-    <Shelf label={label} className="audioflume-home-reference-song-shelf">
-      {songs.map((song) => (
-        <HomeSongCard key={song.id} song={song} />
-      ))}
-    </Shelf>
   );
 }
 
