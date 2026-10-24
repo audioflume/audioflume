@@ -436,7 +436,7 @@ function HomeReadyToCutSongCard({
           stopHomeTrackMouseEvent(event);
           playSong();
         }}
-        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
+        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-[1.02] disabled:cursor-default disabled:opacity-50"
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
