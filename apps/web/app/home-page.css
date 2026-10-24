@@ -4546,8 +4546,8 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-mockup-editorial-card {
   display: grid;
-  aspect-ratio: 2.45 / 1;
-  min-height: 0;
+  height: 260px;
+  min-height: 260px;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   align-items: start;
@@ -4844,10 +4844,6 @@ html:not(.light):not([data-theme="light"])
 @media (max-width: 980px) {
   .audioflume-home-mockup-editorial-strip {
     grid-template-columns: 1fr;
-  }
-
-  .audioflume-home-mockup-editorial-card {
-    aspect-ratio: 2.45 / 1;
   }
 }
 
