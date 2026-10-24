@@ -4629,8 +4629,10 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2 {
   display: grid;
   width: var(--home-reference-width);
-  height: 260px;
-  grid-template-columns: minmax(0, 1fr) 50vw;
+  height: var(--audioflume-home-lifetime-height, 260px);
+  grid-template-columns:
+    minmax(0, 1fr)
+    var(--audioflume-home-lifetime-copy-width, 50%);
   grid-template-areas: "art copy";
   margin: 0 auto;
   overflow: hidden;
