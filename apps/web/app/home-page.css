@@ -1437,7 +1437,7 @@ html:not(.light):not([data-theme="light"])
   margin: 0;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(50px, 4vw, 62px);
+  font-size: 62px;
   font-weight: 300;
   letter-spacing: -0.04em;
   line-height: 0.9;
@@ -1477,10 +1477,6 @@ html:not(.light):not([data-theme="light"])
     bottom: 24px;
     left: 24px;
     row-gap: 14px;
-  }
-
-  .audioflume-home-reference-artist-promo-title {
-    font-size: 38px;
   }
 
   .audioflume-home-reference-artist-promo-link {
