@@ -4277,6 +4277,7 @@ html:not(.light):not([data-theme="light"]) .audioflume-home-reference-trending-l
   width: 40vw;
   min-width: 40vw;
   height: var(--audioflume-home-curated-card-height, auto);
+  aspect-ratio: 2.38 / 1;
 }
 
 .audioflume-home-mockup-curated-card-kicker {
