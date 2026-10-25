@@ -1656,12 +1656,11 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               disabled={isSaving}
             />
 
-            <section className="admin-song-form-card filmwave-song-form-card">
-              <div className="admin-song-form-card-header filmwave-song-form-header">
-                <div className="admin-song-form-kicker">Song Info</div>
-              </div>
-
-              <div className="filmwave-song-form-body grid gap-4 p-4 md:grid-cols-2 xl:grid-cols-3">
+            <SongFormSection
+              title="Song Info"
+              className="admin-song-form-card"
+              bodyClassName="grid gap-4 p-4 md:grid-cols-2 xl:grid-cols-3"
+            >
                 <div>
                   <FieldLabel>Song Title</FieldLabel>
                   <TextInput
@@ -1728,8 +1727,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     label="Made with AI"
                   />
                 </div>
-              </div>
-            </section>
+            </SongFormSection>
 
             <SongFormSection
               title="Waveform Peaks"
@@ -1818,22 +1816,20 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               onChange={setSelectedVocals}
             />
 
-            <section className="admin-song-form-card filmwave-song-form-card">
-              <div className="admin-song-form-card-header filmwave-song-form-header">
-                <div className="admin-song-form-kicker">Cue Points</div>
-              </div>
-
-              <div className="p-4">
-                <AdminSongEditPointsSection
-                  songId={songId}
-                  audioUrl={existingAudioUrl}
-                  waveformPeaks={waveformPeaks}
-                  duration={duration}
-                  showSaveButton={false}
-                  onEditPointsJsonChange={setEditPointsJson}
-                />
-              </div>
-            </section>
+            <SongFormSection
+              title="Cue Points"
+              className="admin-song-form-card"
+              bodyClassName="p-4"
+            >
+              <AdminSongEditPointsSection
+                songId={songId}
+                audioUrl={existingAudioUrl}
+                waveformPeaks={waveformPeaks}
+                duration={duration}
+                showSaveButton={false}
+                onEditPointsJsonChange={setEditPointsJson}
+              />
+            </SongFormSection>
           </div>
 
           <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
@@ -1887,12 +1883,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               uploadedFiles.audio ||
               uploadedFiles.cover ||
               uploadedFiles.stems.length > 0) && (
-              <section className="admin-song-form-card filmwave-song-form-card filmwave-song-form-card-divided">
-                <div className="admin-song-form-card-header filmwave-song-form-header">
-                  <div className="admin-song-form-kicker">{statusTitle}</div>
-                </div>
-
-                <div className="filmwave-song-form-body grid gap-3 p-4">
+              <SongFormSection
+                title={statusTitle}
+                className="admin-song-form-card"
+                divided
+                bodyClassName="grid gap-3 p-4"
+              >
                   {saveStatus && (
                     <div className="flex items-start gap-2 rounded-lg bg-[var(--bg-tertiary)] p-3">
                       <UploadStatusIcon
@@ -1946,8 +1942,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       )}
                     </div>
                   )}
-                </div>
-              </section>
+              </SongFormSection>
             )}
 
             <div className="grid gap-2">
