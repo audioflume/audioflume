@@ -75,6 +75,7 @@ export function HeaderSearchBar({
   style,
   rowStyle,
   renderForm = true,
+  variant = "header",
 }: HeaderSearchBarProps) {
   const internalSearchInputRef = useRef<HTMLInputElement | null>(null);
   const hasSearchValue = searchValue.length > 0;
@@ -174,7 +175,7 @@ export function HeaderSearchBar({
 
   return (
     <div
-      className={`fw-toolbar-header-search-row${rowClassName ? ` ${rowClassName}` : ""}`}
+      className={`fw-toolbar-header-search-row${variant === "control" ? " is-control" : ""}${rowClassName ? ` ${rowClassName}` : ""}`}
       style={resolvedRowStyle}
     >
       {renderForm ? (
