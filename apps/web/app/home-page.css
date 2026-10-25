@@ -1263,11 +1263,11 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-card:not(.audioflume-home-reference-artist-promo) {
   width: calc(
     min(1020px, clamp(67vw, calc(30.83vw + 354.4px), 88vw)) -
-      clamp(0px, calc(13.45vw - 83.39px), 120px)
+      clamp(0px, calc(20.18vw - 125.12px), 180px)
   ) !important;
   min-width: calc(
     min(1020px, clamp(67vw, calc(30.83vw + 354.4px), 88vw)) -
-      clamp(0px, calc(13.45vw - 83.39px), 120px)
+      clamp(0px, calc(20.18vw - 125.12px), 180px)
   ) !important;
 }
 
@@ -1298,8 +1298,8 @@ html:not(.light):not([data-theme="light"])
 
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card:not(.audioflume-home-reference-artist-promo) {
-    width: calc(100vw * 0.5952380952) !important;
-    min-width: calc(100vw * 0.5952380952) !important;
+    width: calc(100vw * 0.5555555556) !important;
+    min-width: calc(100vw * 0.5555555556) !important;
   }
 
   .audioflume-home-mockup-artists
@@ -1311,7 +1311,7 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card:not(.audioflume-home-reference-artist-promo)
     .audioflume-home-reference-artist-media {
-    aspect-ratio: 900 / 430 !important;
+    aspect-ratio: 840 / 430 !important;
   }
 }
 
