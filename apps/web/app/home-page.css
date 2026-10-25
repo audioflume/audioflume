@@ -2077,7 +2077,7 @@ html:not(.light):not([data-theme="light"])
   box-sizing: border-box;
   align-items: center;
   justify-content: center;
-  padding: 84px;
+  padding: 80px;
   background: #111111;
   color: #ffffff;
 }
@@ -2089,8 +2089,9 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2-link {
   position: absolute;
-  top: 18px;
-  right: 18px;
+  top: 0;
+  right: 0;
+  z-index: 2;
   display: inline-flex;
   width: 16px;
   height: 16px;
@@ -2098,11 +2099,12 @@ html:not(.light):not([data-theme="light"])
   justify-content: center;
   color: #ffffff;
   text-decoration: none;
+  transform: translate(-18px, 18px);
   transition: transform 100ms ease;
 }
 
 .audioflume-home-lifetime-v2-link:hover {
-  transform: translate(1px, -1px);
+  transform: translate(-17px, 17px);
 }
 
 .audioflume-home-lifetime-v2-link svg {
@@ -2249,7 +2251,7 @@ html:not(.light):not([data-theme="light"])
 
   .audioflume-home-lifetime-v2-songs {
     min-height: 520px;
-    padding: 84px;
+    padding: 80px;
   }
 
   .audioflume-home-lifetime-v2-meta-left {
