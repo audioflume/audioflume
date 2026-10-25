@@ -186,7 +186,7 @@ export function Row({ title, description, icon, children }: { title: string; des
   return (
     <div className="grid gap-4 border-b-[1.25px] border-[var(--border-subtle)] px-5 py-4 last:border-b-0 md:grid-cols-[1fr_auto] md:items-center">
       <div className="flex gap-3">
-        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)]">{icon}</div> : null}
+        {icon ? <div className="mt-0.5 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)]">{icon}</div> : null}
         <div>
           <div className="text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">{title}</div>
           <p className="mt-1 max-w-xl text-xs leading-5 text-[var(--text-muted)]">{description}</p>
@@ -199,7 +199,7 @@ export function Row({ title, description, icon, children }: { title: string; des
 
 export function Feedback({ message, tone }: { message: string; tone: "success" | "error" }) {
   return (
-    <div className={`rounded-[7px] border-[1.25px] px-3 py-2 text-xs ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
+    <div className={`rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] px-3 py-2 text-xs ${tone === "success" ? "border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]" : "border-[rgba(220,88,79,0.35)] bg-[rgba(220,88,79,0.08)] text-[#dc584f]"}`}>
       {message}
     </div>
   );
