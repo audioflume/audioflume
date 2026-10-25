@@ -1492,6 +1492,12 @@ html:not(.light):not([data-theme="light"])
   background: #e9e9e9;
 }
 
+.audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link,
+.audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link:hover,
+.audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link:focus-visible {
+  color: #111111;
+}
+
 @media (max-width: 620px) {
   .audioflume-home-reference-artist-promo-content {
     right: 24px;
@@ -1882,6 +1888,12 @@ html:not(.light):not([data-theme="light"])
   background:
     url("https://images.filmwave.io/images/home/Home%20Plan%20Blocks%201.jpg")
       center / cover no-repeat;
+}
+
+.audioflume-home-mockup-editorial-card.is-subscription.audioflume-arrow-text-link,
+.audioflume-home-mockup-editorial-card.is-subscription.audioflume-arrow-text-link:hover,
+.audioflume-home-mockup-editorial-card.is-subscription.audioflume-arrow-text-link:focus-visible {
+  color: #111111;
 }
 
 .audioflume-home-mockup-editorial-card.is-artists {
