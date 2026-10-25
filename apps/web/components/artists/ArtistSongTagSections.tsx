@@ -42,9 +42,9 @@ function TagSection({
   disabled,
 }: TagSectionProps) {
   return (
-    <section className="filmwave-backend-section">
+    <section className="filmwave-backend-section filmwave-song-form-card">
       <div className="px-5 py-5">
-        <div className="mb-3 flex items-center justify-between gap-4">
+        <div className="filmwave-song-form-inline-heading flex items-center justify-between gap-4">
           <h2 className="filmwave-backend-section-title">{title}</h2>
           <span className="text-[11px] text-[var(--text-muted)]">
             {selected.length} selected
