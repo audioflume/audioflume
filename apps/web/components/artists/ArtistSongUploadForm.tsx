@@ -1242,7 +1242,7 @@ export default function ArtistSongUploadForm({
         </div>
 
         <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
-          <section className="filmwave-backend-section filmwave-song-form-card">
+          <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
             <div className="filmwave-backend-section-header filmwave-song-form-header">
               <h2 className="filmwave-backend-section-title">Checklist</h2>
             </div>
@@ -1287,7 +1287,7 @@ export default function ArtistSongUploadForm({
           </section>
 
           {(saveStatus || error) ? (
-            <section className="filmwave-backend-section filmwave-song-form-card">
+            <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
               <div className="filmwave-backend-section-header filmwave-song-form-header">
                 <h2 className="filmwave-backend-section-title">Upload Status</h2>
               </div>
@@ -1306,7 +1306,7 @@ export default function ArtistSongUploadForm({
             </section>
           ) : null}
 
-          <section className="filmwave-backend-section filmwave-song-form-card">
+          <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
             <div className="filmwave-backend-section-header filmwave-song-form-header">
               <h2 className="filmwave-backend-section-title">Actions</h2>
             </div>
