@@ -134,7 +134,6 @@ export default function Footer({
         .fw-music-content-column .audioflume-site-footer,
         .community-content .audioflume-site-footer,
         .filmwave-admin-content-page section .audioflume-site-footer,
-        .playlist-detail-footer-shell .audioflume-site-footer,
         .artist-public-footer .audioflume-site-footer,
         .music-page-footer-wrap .audioflume-site-footer {
           width: 100% !important;
