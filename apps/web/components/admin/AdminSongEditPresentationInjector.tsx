@@ -213,7 +213,7 @@ export default function AdminSongEditPresentationInjector() {
         justify-content: center;
         gap: 7px;
         border: 1.25px solid var(--border);
-        border-radius: 7px;
+        border-radius: 3px;
         background: var(--bg-secondary);
         padding: 0 20px;
         color: var(--text-secondary);
@@ -392,7 +392,7 @@ export default function AdminSongEditPresentationInjector() {
         overflow: hidden;
         gap: 0 !important;
         border: 1.25px solid var(--border-subtle);
-        border-radius: 7px;
+        border-radius: 3px;
         background: var(--bg-secondary);
       }
 
