@@ -222,7 +222,7 @@ body:has(.community-playlists-page-root) {
   width: 100%;
   height: calc(40vw / 2.38);
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 0;
   background: var(--bg-secondary);
 }
 
@@ -646,7 +646,7 @@ body:has(.community-playlists-page-root) {
   position: relative;
   width: 100%;
   height: calc(40vw / 2.38);
-  border-radius: 3px;
+  border-radius: 0;
 }
 
 .community-skeleton-card-avatar {
