@@ -399,7 +399,7 @@ function HomeReadyToCutCoverImage({
 }) {
   return (
     <div
-      className="relative h-[54px] w-[54px] shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
+      className="relative h-9 w-9 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]"
       style={{
         background: song.coverArt
           ? undefined
@@ -420,7 +420,7 @@ function HomeReadyToCutCoverImage({
         </div>
       )}
 
-
+      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
     </div>
   );
 }
@@ -461,18 +461,22 @@ function HomeReadyToCutSongCard({
         if (event.key !== "Enter" && event.key !== " ") return;
         stopHomeTrackKeyEvent(event);
       }}
-      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-4 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
+      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
       <HomeReadyToCutCoverImage song={song} index={index} />
 
       <div className="min-w-0 flex-1">
-        <h3 className="filmwave-song-title">
+        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
           {song.title}
         </h3>
 
-        <div className="filmwave-song-artist">
-          {song.artist}
+        <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
+          <span className="truncate">{song.artist}</span>
+          <span>•</span>
+          <span>{song.key || "—"}</span>
+          <span>•</span>
+          <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
         </div>
       </div>
 
@@ -482,7 +486,7 @@ function HomeReadyToCutSongCard({
           stopHomeTrackMouseEvent(event);
           playSong();
         }}
-        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-[1.02] disabled:cursor-default disabled:opacity-50"
+        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
