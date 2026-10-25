@@ -518,7 +518,7 @@
   width: min(40vw, 607px);
   min-width: min(40vw, 607px);
   overflow: hidden;
-  border-radius: 3px;
+  border-radius: 0;
   background: transparent;
 }
 
