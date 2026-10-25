@@ -1842,12 +1842,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           </div>
 
           <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
-            <section className="admin-song-form-card filmwave-song-form-card filmwave-song-form-card-divided">
-              <div className="admin-song-form-card-header filmwave-song-form-header">
-                <div className="admin-song-form-kicker">Checklist</div>
-              </div>
-
-              <div className="grid gap-2 p-4">
+            <div className="grid gap-2">
                 {uploadWarnings.length > 0 && !uploadComplete ? (
                   <>
                     <div className="rounded-lg bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
@@ -1891,8 +1886,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     Ready to save
                   </div>
                 )}
-              </div>
-            </section>
+            </div>
 
             {(saveStatus ||
               uploadedFiles.audio ||
@@ -1961,12 +1955,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </section>
             )}
 
-            <section className="admin-song-form-card filmwave-song-form-card filmwave-song-form-card-divided">
-              <div className="admin-song-form-card-header filmwave-song-form-header">
-                <div className="admin-song-form-kicker">Actions</div>
-              </div>
-
-              <div className="grid gap-2 p-4">
+            <div className="grid gap-2">
                 {isSaving && (
                   <BackendButton
                     type="button"
@@ -1998,8 +1987,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 >
                   Back to Music
                 </BackendButton>
-              </div>
-            </section>
+            </div>
           </aside>
         </form>
       </div>
