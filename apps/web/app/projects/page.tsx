@@ -953,7 +953,7 @@ export default function ProjectsPage() {
           .projects-list { margin-top: 12px; }
         }
         @media (max-width: 620px) {
-          .projects-shell { padding-left: 16px; padding-right: 16px; }
+          .projects-shell { padding-left: var(--filmwave-page-gutter); padding-right: var(--filmwave-page-gutter); }
           .projects-control-bar,
           .projects-title,
           .projects-grid,
