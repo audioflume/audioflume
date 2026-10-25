@@ -935,7 +935,7 @@ export default function ArtistSongEditor({
             <div className="filmwave-backend-section-header">
               <h2 className="filmwave-backend-section-title">Checklist</h2>
             </div>
-            <div className="grid gap-2 px-5 pb-6">
+            <div className="grid gap-2 px-5 pb-6 pt-5">
               {editWarnings.length > 0 ? (
                 <>
                   <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
@@ -999,7 +999,7 @@ export default function ArtistSongEditor({
             <div className="filmwave-backend-section-header">
               <h2 className="filmwave-backend-section-title">Actions</h2>
             </div>
-            <div className="grid gap-2 px-5 pb-5">
+            <div className="grid gap-2 px-5 pb-5 pt-5">
               {canEditMetadata ? (
                 <button
                   type="submit"
