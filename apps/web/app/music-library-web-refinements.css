@@ -1,10 +1,10 @@
 /* ─── Music library sticky toolbar scroll illusion ───────── */
 
 .fw-music-content-column {
-  box-sizing: border-box !important;
-  width: 100% !important;
-  padding-right: var(--fw-music-content-inset-right) !important;
-  padding-left: var(--fw-music-content-inset-right) !important;
+  box-sizing: border-box;
+  width: 100%;
+  padding-right: var(--fw-music-content-inset-right);
+  padding-left: var(--fw-music-content-inset-right);
   transition: padding-right 200ms ease, padding-left 200ms ease;
 }
 
@@ -12,88 +12,88 @@
 
 .fw-active-chips,
 .fw-filter-panel-active-chips {
-  display: none !important;
+  display: none;
 }
 
 /* Filter actions now live in the toolbar. */
 .fw-filter-panel-footer {
-  display: none !important;
+  display: none;
 }
 
 /* ─── Compact quick filter row controls ───────────────────── */
 
 .fw-quick-end .filmwave-music-sort-button {
-  height: 22px !important;
-  border-radius: 999px !important;
-  padding: 0 8px !important;
-  gap: 3px !important;
-  font-size: 10.5px !important;
-  line-height: 1 !important;
+  height: 22px;
+  border-radius: 999px;
+  padding: 0 8px;
+  gap: 3px;
+  font-size: 10.5px;
+  line-height: 1;
 }
 
 .fw-quick-end .filmwave-music-sort-button svg {
-  width: 10px !important;
-  height: 10px !important;
+  width: 10px;
+  height: 10px;
 }
 
 /* ─── Music filter option pills ────────────────────────────── */
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option-list {
-  display: flex !important;
-  column-width: auto !important;
-  column-gap: 0 !important;
-  flex-direction: column !important;
-  flex-wrap: nowrap !important;
-  align-items: flex-start !important;
-  gap: 6px !important;
+  display: flex;
+  column-width: auto;
+  column-gap: 0;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option {
-  box-sizing: border-box !important;
-  display: inline-flex !important;
-  width: auto !important;
-  height: 28px !important;
-  min-height: 28px !important;
-  flex: 0 0 auto !important;
-  align-self: flex-start !important;
-  justify-content: center !important;
-  gap: 0 !important;
-  break-inside: auto !important;
-  -webkit-column-break-inside: auto !important;
-  border: 1.25px solid var(--border) !important;
-  border-radius: 999px !important;
-  background: transparent !important;
-  padding: 0 10px !important;
-  color: var(--text-secondary) !important;
-  font-family: inherit !important;
-  font-size: 11px !important;
-  font-weight: 400 !important;
-  line-height: 1.2 !important;
-  text-align: center !important;
-  white-space: nowrap !important;
+  box-sizing: border-box;
+  display: inline-flex;
+  width: auto;
+  height: 28px;
+  min-height: 28px;
+  flex: 0 0 auto;
+  align-self: flex-start;
+  justify-content: center;
+  gap: 0;
+  break-inside: auto;
+  -webkit-column-break-inside: auto;
+  border: 1.25px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  padding: 0 10px;
+  color: var(--text-secondary);
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: center;
+  white-space: nowrap;
   transition:
     border-color 150ms ease,
     background-color 150ms ease,
-    color 150ms ease !important;
+    color 150ms ease;
 }
 
 html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-selected):not([aria-pressed="true"]):hover,
 html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-selected):not([aria-pressed="true"]):focus-visible {
-  border-color: var(--border) !important;
-  border-radius: 999px !important;
-  background: var(--bg-hover) !important;
-  color: var(--text-primary) !important;
+  border-color: var(--border);
+  border-radius: 999px;
+  background: var(--bg-hover);
+  color: var(--text-primary);
 }
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option.is-selected,
 .fw-music-content-column
   .fw-filter-detail
   .fw-filter-option[aria-pressed="true"] {
-  border-color: var(--text-primary) !important;
-  border-radius: 999px !important;
-  background: var(--text-primary) !important;
-  color: var(--bg-primary) !important;
-  font-weight: 400 !important;
+  border-color: var(--text-primary);
+  border-radius: 999px;
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  font-weight: 400;
 }
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option:focus-visible {
@@ -102,15 +102,15 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
 }
 
 .fw-music-content-column .fw-filter-detail .fw-filter-option-check {
-  display: none !important;
+  display: none;
 }
 
 .fw-music-content-column
   .fw-filter-detail
   .fw-filter-option.fw-filter-playlist-option {
-  position: relative !important;
-  overflow: visible !important;
-  gap: 5px !important;
+  position: relative;
+  overflow: visible;
+  gap: 5px;
 }
 
 .fw-music-content-column
@@ -135,7 +135,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
 .fw-music-content-column
   .fw-filter-detail
   .fw-filter-option.fw-filter-playlist-option.is-public-playlist {
-  margin-right: 18px !important;
+  margin-right: 18px;
 }
 
 .fw-music-content-column
@@ -163,38 +163,38 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
 /* ─── Music library alignment rail ────────────────────────── */
 
 .fw-quick-row {
-  padding-top: 8px !important;
-  padding-right: 0 !important;
-  padding-bottom: 16px !important;
-  padding-left: 0 !important;
+  padding-top: 8px;
+  padding-right: 0;
+  padding-bottom: 16px;
+  padding-left: 0;
 }
 
 .fw-quick-row + div > .min-h-0 > .px-8 {
-  padding-right: 0 !important;
-  padding-bottom: 12px !important;
-  padding-left: 0 !important;
+  padding-right: 0;
+  padding-bottom: 12px;
+  padding-left: 0;
 }
 
 .fw-hero-section {
-  margin-right: 0 !important;
-  margin-bottom: 12px !important;
-  margin-left: 0 !important;
-  padding-right: 0 !important;
-  padding-left: 0 !important;
+  margin-right: 0;
+  margin-bottom: 12px;
+  margin-left: 0;
+  padding-right: 0;
+  padding-left: 0;
 }
 
 .fw-song-list:not(.audioflume-music-page .fw-song-list) {
-  margin-top: 0 !important;
-  margin-right: 0 !important;
-  margin-left: 0 !important;
+  margin-top: 0;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .fw-quick-row + div[aria-hidden="true"] + .fw-song-list {
-  margin-top: 14px !important;
+  margin-top: 14px;
 }
 
 .fw-song-list-head:not(.audioflume-music-page .fw-song-list-head) {
-  display: none !important;
+  display: none;
 }
 
 :is(
@@ -202,7 +202,7 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   .desktop-song-card,
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
 ):not(.artist-public-collection-drawer *) {
-  --filmwave-song-card-hover-bg: var(--filmwave-neutral-surface) !important;
+  --filmwave-song-card-hover-bg: var(--filmwave-neutral-surface);
 }
 
 .fw-song-list .filmwave-song-card:not(.audioflume-music-page .filmwave-song-card),
@@ -211,8 +211,8 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center:not(
     .audioflume-music-page *
   ) {
-  --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y) !important;
-  --filmwave-song-card-padding-right: var(--filmwave-song-card-padding-y) !important;
+  --filmwave-song-card-padding-left: var(--filmwave-song-card-padding-y);
+  --filmwave-song-card-padding-right: var(--filmwave-song-card-padding-y);
 }
 
 :is(
@@ -220,12 +220,12 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   .desktop-song-card,
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center
 ):not(.artist-public-collection-drawer *):is(:hover, .is-playing, .is-current, .is-active, [aria-current="true"], [data-active="true"]) {
-  background: var(--filmwave-neutral-surface) !important;
+  background: var(--filmwave-neutral-surface);
 }
 
 .filmwave-song-play-overlay,
 .desktop-song-play-overlay {
-  background: transparent !important;
+  background: transparent;
 }
 
 /* ─── Music hero/list spacing cleanup ─────────────────────── */
@@ -233,21 +233,21 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
 .filmwave-app-header,
 .desktop-header,
 .desktop-app-header {
-  border-bottom-color: var(--filmwave-border-color) !important;
+  border-bottom-color: var(--filmwave-border-color);
 }
 
 .fw-music-page-shell,
 .fw-music-content-column,
 .fw-quick-row,
 .fw-song-list {
-  max-width: none !important;
+  max-width: none;
 }
 
 .fw-music-page-shell {
   --fw-music-content-inset-right: 28px;
-  padding-top: 0 !important;
-  padding-right: 28px !important;
-  padding-left: 28px !important;
+  padding-top: 0;
+  padding-right: 28px;
+  padding-left: 28px;
 }
 
 /* ─── Web top-nav/sidebar-hidden layout ───────────────────── */
@@ -260,7 +260,7 @@ body {
 }
 
 .desktop-app-sidebar {
-  display: none !important;
+  display: none;
 }
 
 main > section[class*="ml-[var(--sidebar-width)]"],
@@ -268,25 +268,25 @@ main > section[class*="ml-[var(--sidebar-width)]"],
 .playlist-detail-page,
 .favorites-page,
 .project-detail-page {
-  margin-left: 0 !important;
+  margin-left: 0;
 }
 
 main > section[class*="pt-14"] {
-  padding-top: var(--filmwave-header-height) !important;
+  padding-top: var(--filmwave-header-height);
 }
 
 .playlist-detail-page,
 .favorites-page,
 .project-detail-page {
-  margin-top: var(--filmwave-header-height) !important;
-  min-height: calc(100vh - var(--filmwave-header-height)) !important;
+  margin-top: var(--filmwave-header-height);
+  min-height: calc(100vh - var(--filmwave-header-height));
 }
 
 .playlists-page {
-  margin-top: 0 !important;
+  margin-top: 0;
 }
 
 main > section:has(.fw-filter-panel-wrap) {
-  --filmwave-side-filter-sidebar-offset: 0px !important;
-  margin-left: 0 !important;
+  --filmwave-side-filter-sidebar-offset: 0px;
+  margin-left: 0;
 }
