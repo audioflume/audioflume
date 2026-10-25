@@ -1492,10 +1492,13 @@ html:not(.light):not([data-theme="light"])
   background: #e9e9e9;
 }
 
-.audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link,
-.audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link:hover,
-.audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link:focus-visible {
-  color: #111111;
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link,
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link:hover,
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-reference-artist-promo-link.audioflume-arrow-text-link:focus-visible {
+  color: #111111 !important;
 }
 
 @media (max-width: 620px) {
