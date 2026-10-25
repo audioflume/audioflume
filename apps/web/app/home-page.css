@@ -1447,6 +1447,10 @@ html:not(.light):not([data-theme="light"])
   white-space: normal;
 }
 
+.audioflume-home-reference-artist-promo-title-difference {
+  mix-blend-mode: difference;
+}
+
 .audioflume-home-reference-artist-promo-link {
   width: 220px;
   min-width: 220px;
