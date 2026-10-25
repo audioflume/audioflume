@@ -1731,13 +1731,13 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
             </section>
 
-            <section className="admin-song-form-card filmwave-song-form-card">
+            <section className="admin-song-form-card filmwave-song-form-card relative">
               <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div>
                   <div className="admin-song-form-kicker">Waveform Peaks</div>
                 </div>
 
-                <div className="flex items-center gap-1">
+                <div className="absolute right-5 top-4 z-10 flex items-center gap-1">
                   <BackendIconButton
                     type="button"
                     onClick={reAnalyzeWaveformPeaks}
