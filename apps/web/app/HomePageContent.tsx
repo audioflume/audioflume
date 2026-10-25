@@ -1119,7 +1119,7 @@ export default function HomePageContent({
                   LIFETIME ACCESS TO ORIGINAL IN-HOUSE MADE MUSIC
                 </span>
                 <span className="audioflume-home-lifetime-v2-meta-right">
-                  REGULAR <s>$299</s>&nbsp;&nbsp; LIMITED TIME ONLY $99
+                  <s>REGULAR $299</s>&nbsp;&nbsp; LIMITED TIME ONLY $99
                 </span>
               </div>
             </div>
