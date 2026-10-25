@@ -537,15 +537,14 @@ function HomeArtistShelf({
         <span className="audioflume-home-reference-artist-promo-shade" aria-hidden="true" />
         <div className="audioflume-home-reference-artist-promo-content">
           <h2 className="audioflume-home-reference-artist-promo-title">
-            <span>In demand</span>
-            <span>artists</span>
-            <span>&amp; composers.</span>
+            <span>Human made music</span>
+            <span>&amp; SFX for film.</span>
           </h2>
           <Link
-            href="/discover"
+            href="/music"
             className="audioflume-home-reference-artist-promo-link inline-flex items-center gap-[5px]"
           >
-            Explore artists
+            Explore Music
             <ArrowUpRightIcon
               size={16}
               strokeWidth={1.5}
@@ -877,10 +876,7 @@ export default function HomePageContent({
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const catalogueHeadingRef = useRef<HTMLHeadingElement>(null);
   const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
-  const introHeadingRef = useRef<HTMLDivElement>(null);
-  const introHeadlineMeasureRef = useRef<HTMLSpanElement>(null);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
-  const [introHeadlineBroken, setIntroHeadlineBroken] = useState(false);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -899,27 +895,6 @@ export default function HomePageContent({
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
-
-  useLayoutEffect(() => {
-    const heading = introHeadingRef.current;
-    const headlineMeasure = introHeadlineMeasureRef.current;
-    if (!heading || !headlineMeasure) return;
-
-    const updateIntroHeadlineBreak = () => {
-      setIntroHeadlineBroken(
-        headlineMeasure.scrollWidth > heading.clientWidth,
-      );
-    };
-
-    updateIntroHeadlineBreak();
-
-    const resizeObserver = new ResizeObserver(updateIntroHeadlineBreak);
-    resizeObserver.observe(heading);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
 
   useLayoutEffect(() => {
     const heading = catalogueHeadingRef.current;
@@ -1012,25 +987,19 @@ export default function HomePageContent({
           <span>HUMAN MADE MUSIC &amp; FAIR ARTIST COMPENSATION</span>
         </div>
 
-        <div
-          ref={introHeadingRef}
-          className="audioflume-home-reference-width audioflume-home-mockup-intro-heading"
-        >
-          <h1>
-            <span
-              ref={introHeadlineMeasureRef}
-              className="audioflume-home-mockup-intro-heading-measure"
-              aria-hidden="true"
-            >
-              Human made music &amp; SFX for film.
-            </span>
-            {introHeadlineBroken ? (
-              <>Human made music<br />&amp; SFX for film.</>
-            ) : (
-              <>Human made music &amp; SFX for film.</>
-            )}
-          </h1>
+        <div className="audioflume-home-reference-width audioflume-home-mockup-intro-heading">
           <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
+          <Link
+            href="/discover"
+            className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+          >
+            Explore artists
+            <ArrowUpRightIcon
+              size={16}
+              strokeWidth={1.5}
+              className="translate-y-[2px]"
+            />
+          </Link>
         </div>
       </section>
 
