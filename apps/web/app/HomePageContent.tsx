@@ -291,7 +291,10 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
       <button
         type="button"
         className="audioflume-home-reference-original-song-card-play"
-        onClick={() => togglePlayPause(song)}
+        onClick={(event) => {
+          event.stopPropagation();
+          togglePlayPause(song);
+        }}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
         {song.coverArt ? (
@@ -318,6 +321,15 @@ function HomeLifetimeSongRow({ song }: { song: Song }) {
   return (
     <article
       className={`audioflume-home-lifetime-v2-song${playing ? " is-playing" : ""}`}
+      role="button"
+      tabIndex={0}
+      aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      onClick={() => togglePlayPause(song)}
+      onKeyDown={(event) => {
+        if (event.key !== "Enter" && event.key !== " ") return;
+        event.preventDefault();
+        togglePlayPause(song);
+      }}
     >
       <div className="audioflume-home-lifetime-v2-song-cover">
         {song.coverArt ? (
