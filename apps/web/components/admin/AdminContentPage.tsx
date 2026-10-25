@@ -140,7 +140,6 @@ export default function AdminContentPage({
           align-items: center;
         }
 
-        .filmwave-admin-content-page [role="searchbox"],
         .filmwave-admin-content-page > section a[href="/admin/songs/new"],
         .filmwave-admin-content-page a[href="/admin/playlist-manager/new"],
         .filmwave-admin-content-page
@@ -155,10 +154,6 @@ export default function AdminContentPage({
           border-radius: var(--filmwave-backend-control-radius) !important;
         }
 
-        .filmwave-admin-content-page div:has(> [role="searchbox"]) {
-          height: var(--admin-top-control-height);
-          min-height: var(--admin-top-control-height);
-        }
       `}</style>
 
       <section
