@@ -467,7 +467,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                       type="button"
                       role="menuitem"
                       onClick={() => handleArtistChange(profile.id)}
-                      className={`flex w-full items-center gap-2.5 rounded-[7px] px-2.5 py-2 text-left transition-colors ${
+                      className={`flex w-full items-center gap-2.5 rounded-[var(--filmwave-backend-control-radius)] px-2.5 py-2 text-left transition-colors ${
                         selected
                           ? "bg-[var(--bg-hover)] text-[var(--text-primary)]"
                           : "text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
