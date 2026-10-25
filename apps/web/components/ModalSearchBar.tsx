@@ -19,7 +19,7 @@ export default function ModalSearchBar({
 }: ModalSearchBarProps) {
   return (
     <label
-      className={`flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]${className ? ` ${className}` : ""}`}
+      className={`flex h-12 flex-shrink-0 items-center gap-3 rounded-[4px] bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]${className ? ` ${className}` : ""}`}
     >
       <svg
         viewBox="0 0 24 24"
@@ -45,7 +45,7 @@ export default function ModalSearchBar({
           className="flex h-[22px] w-[22px] shrink-0 items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
           aria-label={clearLabel}
         >
-          <XIcon size={8} strokeWidth={1.4} />
+          <XIcon size={8} strokeWidth={1.4} className="h-[21px] w-[21px]" />
         </button>
       ) : null}
     </label>
