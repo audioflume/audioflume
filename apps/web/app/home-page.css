@@ -1665,6 +1665,33 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   white-space: nowrap;
 }
 
+.audioflume-home-mockup-curated-card-bookmark {
+  position: absolute;
+  top: 18px;
+  right: 18px;
+  z-index: 3;
+  display: inline-flex;
+  width: 24px;
+  height: 24px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #ffffff;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.audioflume-home-mockup-curated-card:hover
+  .audioflume-home-mockup-curated-card-bookmark,
+.audioflume-home-mockup-curated-card:focus-within
+  .audioflume-home-mockup-curated-card-bookmark,
+.audioflume-home-mockup-curated-card-bookmark[aria-pressed="true"] {
+  opacity: 1;
+}
+
 .audioflume-home-mockup-curated-card-play {
   position: absolute !important;
   right: 24px !important;
@@ -2060,34 +2087,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 :where(html:not(.light):not([data-theme="light"]))
   .audioflume-home-lifetime-v2-songs {
   background: #151515;
-}
-
-.audioflume-home-lifetime-v2-link {
-  position: absolute;
-  top: 0;
-  right: 0;
-  z-index: 2;
-  display: inline-flex;
-  width: 16px;
-  height: 16px;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  text-decoration: none;
-  transform: translate(-18px, 18px);
-  transition: transform 100ms ease;
-}
-
-.audioflume-home-lifetime-v2-link:hover {
-  transform: translate(-17px, 17px);
-}
-
-.audioflume-home-lifetime-v2-link svg {
-  display: block;
-  width: 16px !important;
-  height: 16px !important;
-  margin: 0 !important;
-  transform: none !important;
 }
 
 .audioflume-home-lifetime-v2-song-list {
