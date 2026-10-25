@@ -70,7 +70,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
   body:has(.curated-playlists-page-root)
     .curated-page-skeleton-pill-row {
     display: flex;
-    width: min(calc(100% - 80px), 1320px);
+    width: min(calc(100% - (var(--filmwave-page-gutter) * 2)), 1320px);
     flex-wrap: wrap;
     align-items: center;
     justify-content: center;
@@ -183,10 +183,6 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
       grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    body:has(.curated-playlists-page-root)
-      .curated-page-skeleton-pill-row {
-      width: calc(100% - 64px);
-    }
   }
 
   @media (max-width: 620px) {
@@ -211,7 +207,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
   @media (max-width: 720px) {
     body:has(.curated-playlists-page-root)
       .curated-page-skeleton-pill-row {
-      width: calc(100% - 32px);
+      width: calc(100% - (var(--filmwave-page-gutter) * 2));
       gap: 7px;
       padding-right: 4px;
       padding-left: 4px;
