@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import Footer from "@/components/Footer";
 import AdminContentPage from "@/components/admin/AdminContentPage";
-import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import { BackendButton } from "@/components/backend/BackendControls";
 import AlertIcon from "@/components/icons/AlertIcon";
 import CheckIcon from "@/components/icons/CheckIcon";
@@ -466,7 +466,7 @@ export default function AdminMusicLibraryPage() {
         }}
       >
         <div className="mb-4 flex items-center justify-between gap-4">
-          <AdminSearchBar
+          <BackendSearchBar
             value={search}
             onChange={setSearch}
             placeholder="Search"
