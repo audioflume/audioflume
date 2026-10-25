@@ -790,21 +790,21 @@
   }
 
   .playlist-detail-section {
-    padding: 24px;
+    padding: 24px var(--filmwave-page-gutter);
   }
 
   .playlist-detail-quick-row,
   .playlist-detail-similar {
-    padding-right: 24px;
-    padding-left: 24px;
+    padding-right: var(--filmwave-page-gutter);
+    padding-left: var(--filmwave-page-gutter);
   }
 
   .playlist-detail-similar-scroller {
-    width: calc(100% + 48px);
-    margin-left: -24px;
-    padding-right: 24px;
-    padding-left: 24px;
-    scroll-padding-inline: 24px;
+    width: calc(100% + (var(--filmwave-page-gutter) * 2));
+    margin-left: calc(var(--filmwave-page-gutter) * -1);
+    padding-right: var(--filmwave-page-gutter);
+    padding-left: var(--filmwave-page-gutter);
+    scroll-padding-inline: var(--filmwave-page-gutter);
   }
 
   .playlist-detail-hero-secondary-actions {
