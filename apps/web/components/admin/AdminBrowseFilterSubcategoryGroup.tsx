@@ -386,7 +386,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
           return (
             <div
               key={subcategory.id}
-              style={{ borderRadius: 7 }}
+              style={{ borderRadius: 3 }}
               className="group/browse-subcategory flex h-10 items-center gap-2 rounded-lg border-[1.25px] border-[var(--border)] px-3 py-0 text-xs text-[var(--text-secondary)]"
             >
               <BackendCheckbox
@@ -442,7 +442,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
               setNewFieldOpen(true);
               setNewDropdownOpen(true);
             }}
-            style={{ borderRadius: 7 }}
+            style={{ borderRadius: 3 }}
             className="flex h-10 items-center rounded-lg border-[1.25px] border-dashed border-[var(--border)] px-3 py-0 text-left text-xs text-[var(--text-muted)] transition hover:text-[var(--text-secondary)]"
           >
             New
@@ -452,7 +452,7 @@ export default function AdminBrowseFilterSubcategoryGroup({
         {mode === "edit" && newFieldOpen && (
           <div ref={newCategoryRef} className="relative h-10 min-w-[140px]">
             <div
-              style={{ borderRadius: 7 }}
+              style={{ borderRadius: 3 }}
               className="flex h-10 min-w-0 items-center rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)]"
             >
               <input
