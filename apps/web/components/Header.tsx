@@ -627,14 +627,6 @@ export default function Header() {
           color: var(--text-primary) !important;
         }
 
-        .filmwave-header-nav-item-playlists:hover .filmwave-playlists-mega-menu,
-        .filmwave-header-nav-item-playlists:focus-within .filmwave-playlists-mega-menu {
-          visibility: hidden !important;
-          opacity: 0 !important;
-          pointer-events: none !important;
-          transform: translateY(-4px) !important;
-        }
-
         .filmwave-header-nav-item-playlists.is-mounted .filmwave-playlists-mega-menu {
           display: block !important;
         }
