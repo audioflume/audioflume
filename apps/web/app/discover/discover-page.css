@@ -398,7 +398,7 @@
 
 .discover-artist-featured-heading {
   display: flex;
-  width: calc(100vw - 160px);
+  width: calc(100vw - (var(--filmwave-page-gutter) * 2));
   min-height: 28px;
   align-items: baseline;
   justify-content: space-between;
