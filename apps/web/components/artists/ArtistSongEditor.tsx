@@ -562,7 +562,7 @@ export default function ArtistSongEditor({
         onSubmit={handleSubmit}
         className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
       >
-        <div className="grid min-w-0 gap-4">
+        <div className="artist-song-main-column grid min-w-0 gap-4">
           {beforeContent}
 
           {reviewFeedback?.notes ? (
@@ -930,7 +930,7 @@ export default function ArtistSongEditor({
           {afterContent}
         </div>
 
-        <aside className="grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
+        <aside className="artist-song-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
           <section className="filmwave-backend-section">
             <div className="filmwave-backend-section-header">
               <h2 className="filmwave-backend-section-title">Checklist</h2>
