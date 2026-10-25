@@ -108,7 +108,7 @@ export default function AdminContentPage({
       <style>{`
         .filmwave-admin-content-page {
           --admin-top-control-height: 40px;
-          --admin-top-control-radius: 7px;
+          --admin-top-control-radius: 3px;
           --admin-top-toolbar-gap: 16px;
         }
 
