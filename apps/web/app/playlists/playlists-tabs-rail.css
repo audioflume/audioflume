@@ -18,7 +18,7 @@ body .playlists-tabs-row {
   min-height: 51px !important;
   grid-template-columns: max-content minmax(320px, 1fr) max-content !important;
   align-items: center !important;
-  gap: 18px !important;
+  gap: 16px !important;
   margin-top: calc(
     var(--filmwave-header-height, 56px) + 12px
   ) !important;
