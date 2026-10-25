@@ -987,7 +987,7 @@ export default function HomePageContent({
           <span>HUMAN MADE MUSIC &amp; FAIR ARTIST COMPENSATION</span>
         </div>
 
-        <div className="audioflume-home-reference-width audioflume-home-mockup-intro-heading">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-intro-heading">
           <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
           <Link
             href="/discover"
