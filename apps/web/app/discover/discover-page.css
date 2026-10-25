@@ -341,16 +341,16 @@
   height: 52px;
   flex-basis: 52px;
   align-self: center;
-  transform: translateY(clamp(-21px, calc(-7.8077px - 1.34615vw), -17.5px));
+  transform: none;
 }
 
 .discover-artist-hero-listen:hover .discover-artist-play-badge,
 .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
-  transform: translateY(clamp(-21px, calc(-7.8077px - 1.34615vw), -17.5px)) scale(1.03);
+  transform: none;
 }
 
 .discover-artist-hero-listen > span:last-child {
-  align-self: baseline;
+  align-self: center;
 }
 
 .discover-artist-hero-featured-intro {
@@ -1379,15 +1379,15 @@
   }
 
   .discover-artist-hero-listen .discover-artist-play-badge {
-    width: 42px;
-    height: 42px;
-    flex-basis: 42px;
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
     transform: none;
   }
 
   .discover-artist-hero-listen:hover .discover-artist-play-badge,
   .discover-artist-hero-listen:focus-visible .discover-artist-play-badge {
-    transform: scale(1.03);
+    transform: none;
   }
 
   .discover-artist-hero-listen > span:last-child {
