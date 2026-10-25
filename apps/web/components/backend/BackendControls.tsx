@@ -70,7 +70,7 @@ export const BackendIconButton = forwardRef<
     <button
       ref={ref}
       className={joinClasses(
-        "flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none",
+        "flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none",
         !colorOnly && "hover:bg-[var(--bg-hover)] focus-visible:bg-[var(--bg-hover)]",
         active && "bg-[var(--bg-hover)] text-[var(--text-primary)]",
         className,
