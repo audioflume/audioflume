@@ -116,7 +116,13 @@ export default function ModalShell({
           className="absolute right-6 top-6 z-10 inline-flex h-[22px] w-[22px] items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
-          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <svg
+            width="21"
+            height="21"
+            viewBox="0 0 24 24"
+            fill="none"
+            aria-hidden="true"
+          >
             <path
               d="M6 6 18 18M18 6 6 18"
               stroke="currentColor"
