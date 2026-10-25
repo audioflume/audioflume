@@ -671,6 +671,15 @@ export default function PlaylistTopControls() {
             color 150ms ease !important;
         }
 
+        .playlists-status-pill,
+        .playlists-sort-button,
+        .playlists-new-button {
+          font-size: 13px !important;
+          font-weight: 400 !important;
+          letter-spacing: normal !important;
+          line-height: 1 !important;
+        }
+
         .playlists-status-pill {
           width: auto !important;
           min-width: 126px !important;
