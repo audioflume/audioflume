@@ -358,15 +358,7 @@ export async function POST(request: Request) {
 
     const profile = await getReferenceProfile(trackId);
     const referenceBpm = Number(profile.track.bpm ?? 0) || null;
-    let embeddingStats = await getSongClapEmbeddingStats();
-
-    if (embeddingStats.pendingSongs > 0) {
-      await ensurePublishedSongClapEmbeddings(
-        Math.min(2, embeddingStats.pendingSongs),
-      );
-      embeddingStats = await getSongClapEmbeddingStats();
-    }
-
+    const embeddingStats = await getSongClapEmbeddingStats();
     const clapReady = embeddingStats.embeddedSongs > 0;
 
     let matches;
