@@ -538,12 +538,14 @@ function HomeArtistShelf({
         <div className="audioflume-home-reference-artist-promo-content">
           <h2 className="audioflume-home-reference-artist-promo-title">
             <span>
+              Human made{" "}
               <span className="audioflume-home-reference-artist-promo-title-difference">
-                Human made
-              </span>{" "}
-              music
+                music
+              </span>
             </span>
-            <span>&amp; SFX for film.</span>
+            <span className="audioflume-home-reference-artist-promo-title-difference">
+              &amp; SFX for film.
+            </span>
           </h2>
           <Link
             href="/music"
