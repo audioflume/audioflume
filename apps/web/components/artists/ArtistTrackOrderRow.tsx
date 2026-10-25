@@ -71,7 +71,7 @@ export default function ArtistTrackOrderRow({
         transition,
         opacity: isDragging ? 0.45 : 1,
         zIndex: isDragging ? 2 : "auto",
-        borderRadius: 7,
+        borderRadius: 3,
       }}
       className={`grid gap-3 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-2 sm:items-center ${
         canManage
