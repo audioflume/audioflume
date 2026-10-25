@@ -364,7 +364,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
   return (
     <main
       className={`min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
-        isMyPage ? "pt-[var(--filmwave-header-height)]" : "pt-14"
+        isMyPage ? "pt-[var(--filmwave-header-height)]" : "pt-0"
       } ${sectionReady ? "" : "invisible"}`}
     >
       <BackendSidebarShell bottom={playerVisible ? "64px" : "0px"}>
@@ -565,7 +565,12 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         className={
           isMyPage
             ? "min-h-screen bg-[var(--bg-primary)] p-0"
-            : "min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-10"
+            : "min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 md:px-10"
+        }
+        style={
+          isMyPage
+            ? undefined
+            : { paddingTop: "calc(var(--filmwave-header-height, 75px) + 13px)" }
         }
       >
         <div
