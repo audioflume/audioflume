@@ -1,6 +1,6 @@
 "use client";
 
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePlayer } from "@/context/PlayerContext";
 
@@ -50,10 +50,68 @@ export default function ModalShell({
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
   const [mounted, setMounted] = useState(false);
+  const dialogRef = useRef<HTMLDivElement | null>(null);
+  const titleId = useId();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    if (!isOpen || !mounted) return;
+
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    const previouslyFocused =
+      document.activeElement instanceof HTMLElement ? document.activeElement : null;
+    const focusableSelector =
+      'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
+
+    const focusFrame = window.requestAnimationFrame(() => {
+      const firstFocusable = dialog.querySelector<HTMLElement>(focusableSelector);
+      (firstFocusable ?? dialog).focus();
+    });
+
+    function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (event.key !== "Tab") return;
+
+      const focusable = Array.from(
+        dialog.querySelectorAll<HTMLElement>(focusableSelector),
+      ).filter((element) => !element.hasAttribute("disabled"));
+
+      if (focusable.length === 0) {
+        event.preventDefault();
+        dialog.focus();
+        return;
+      }
+
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.cancelAnimationFrame(focusFrame);
+      document.removeEventListener("keydown", handleKeyDown);
+      if (previouslyFocused?.isConnected) previouslyFocused.focus();
+    };
+  }, [isOpen, mounted, onClose]);
 
   if (!isOpen || !mounted) return null;
 
@@ -79,6 +137,12 @@ export default function ModalShell({
       }}
     >
       <div
+        ref={dialogRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby={headerContent ? undefined : titleId}
+        aria-label={headerContent ? title : undefined}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
         className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden ${contentCornerClassName} border-0 ${contentClassName}`}
         style={{
@@ -99,6 +163,7 @@ export default function ModalShell({
         >
           {headerContent || (
             <h2
+              id={titleId}
               className={`min-w-0 font-[family-name:var(--font-aktiv-grotesk)] text-[28px] font-light leading-none tracking-[-0.035em] text-[var(--text-primary)] ${
                 centerTitle
                   ? "absolute left-1/2 -translate-x-1/2 whitespace-nowrap"
