@@ -1598,7 +1598,7 @@ export default function MusicPage() {
           </MusicListShell>
         </div>
 
-        <Footer playerPadding={playerVisible} />
+        <Footer playerPadding={playerVisible} pageGutter={false} />
       </section>
     </main>
   );
