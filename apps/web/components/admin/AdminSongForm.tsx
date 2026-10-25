@@ -1878,7 +1878,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               uploadedFiles.stems.length > 0) && (
               <div className="grid gap-3">
                   {saveStatus && (
-                    <div className="flex items-center gap-2 bg-[#e9e9e9] p-3">
+                    <div className="flex items-center gap-2 rounded-[3px] bg-[#e9e9e9] p-3">
                       <UploadStatusIcon
                         status={saveStatus}
                         isSaving={isSaving}
