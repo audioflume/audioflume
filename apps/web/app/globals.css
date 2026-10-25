@@ -151,6 +151,11 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
   transition: color 150ms ease;
 }
 
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-arrow-text-link {
+  color: #444444;
+}
+
 .audioflume-arrow-text-link.inline-flex {
   flex-wrap: nowrap;
   white-space: nowrap;
