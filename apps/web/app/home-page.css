@@ -1232,13 +1232,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: #ffffff;
 }
 
-:where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-mockup-curated
-  .audioflume-home-mockup-section-label
-  > a {
-  color: #444444;
-}
-
 .audioflume-home-mockup-artists {
   padding-bottom: 0;
 }
