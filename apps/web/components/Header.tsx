@@ -505,8 +505,13 @@ export default function Header() {
         }
 
         .filmwave-header-account-wrap {
+          position: relative;
           display: inline-flex;
           align-items: center;
+        }
+
+        .filmwave-web-header .filmwave-header-menu-wrap {
+          right: 0;
         }
 
         .filmwave-web-header ~ * .filmwave-user-menu-action-icon,
