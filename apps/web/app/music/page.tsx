@@ -533,6 +533,12 @@ export default function MusicPage() {
         if (controller.signal.aborted) return;
         console.error("Reference music search failed:", error);
         setReferenceSearchState(null);
+        setSearchBySongQuery("");
+        setFilters((current) =>
+          current.search === referenceSearch
+            ? { ...current, search: "" }
+            : current,
+        );
       });
 
     return () => controller.abort();
