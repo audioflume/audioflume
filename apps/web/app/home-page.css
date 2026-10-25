@@ -1979,7 +1979,7 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2 {
   display: grid;
   width: min(var(--home-reference-width), 1535px);
-  height: 658px;
+  height: 638px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0 auto;
   overflow: hidden;
