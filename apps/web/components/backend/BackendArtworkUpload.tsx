@@ -194,7 +194,7 @@ export default function BackendArtworkUpload({
   }
 
   return (
-    <section className="w-full rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-5">
+    <section className="w-full border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-5">
       <div className="mb-3 flex items-center justify-between gap-3">
         <h2 className="font-[family-name:var(--font-aktiv-grotesk)] text-base font-medium leading-6 tracking-[-0.03em] text-[var(--text-primary)]">
           {title}
@@ -215,7 +215,7 @@ export default function BackendArtworkUpload({
               onClick={() => inputRef.current?.click()}
               onDrop={handleDrop}
               onDragOver={(event) => event.preventDefault()}
-              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="relative h-full w-full cursor-pointer overflow-hidden border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
               aria-label={`Replace ${title.toLowerCase()}`}
             >
               <img
