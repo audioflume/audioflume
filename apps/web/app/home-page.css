@@ -2107,7 +2107,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-lifetime-v2-song:hover .audioflume-home-lifetime-v2-song-play,
-.audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play {
+.audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play,
+.audioflume-home-lifetime-v2-song.is-active .audioflume-home-lifetime-v2-song-play {
   background: #ffffff;
   color: #111111;
   transform: scale(1.04);
