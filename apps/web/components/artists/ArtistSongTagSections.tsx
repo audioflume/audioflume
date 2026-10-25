@@ -1,6 +1,6 @@
 "use client";
 
-import { BackendChoiceButton } from "@/components/backend/BackendControls";
+import { SongFormTagSection } from "@/components/backend/SongFormSection";
 import {
   BUILD_OPTIONS,
   GENRE_OPTIONS,
@@ -26,58 +26,6 @@ type ArtistSongTagSectionsProps = {
   disabled: boolean;
 };
 
-type TagSectionProps = {
-  title: string;
-  options: readonly string[];
-  selected: string[];
-  onChange: (value: string[]) => void;
-  disabled: boolean;
-};
-
-function TagSection({
-  title,
-  options,
-  selected,
-  onChange,
-  disabled,
-}: TagSectionProps) {
-  return (
-    <section className="filmwave-backend-section filmwave-song-form-card">
-      <div className="px-5 py-5">
-        <div className="filmwave-song-form-inline-heading flex items-center justify-between gap-4">
-          <h2 className="filmwave-backend-section-title">{title}</h2>
-          <span className="text-[11px] text-[var(--text-muted)]">
-            {selected.length} selected
-          </span>
-        </div>
-
-        <div className="flex flex-wrap gap-1.5">
-          {options.map((option) => {
-            const active = selected.includes(option);
-            return (
-              <BackendChoiceButton
-                key={option}
-                type="button"
-                disabled={disabled}
-                active={active}
-                onClick={() =>
-                  onChange(
-                    active
-                      ? selected.filter((item) => item !== option)
-                      : [...selected, option],
-                  )
-                }
-              >
-                {option}
-              </BackendChoiceButton>
-            );
-          })}
-        </div>
-      </div>
-    </section>
-  );
-}
-
 export default function ArtistSongTagSections({
   genres,
   onGenresChange,
@@ -95,42 +43,42 @@ export default function ArtistSongTagSections({
 }: ArtistSongTagSectionsProps) {
   return (
     <>
-      <TagSection
+      <SongFormTagSection
         title="Genre"
         options={GENRE_OPTIONS}
         selected={genres}
         onChange={onGenresChange}
         disabled={disabled}
       />
-      <TagSection
+      <SongFormTagSection
         title="Region"
         options={REGION_OPTIONS}
         selected={regions}
         onChange={onRegionsChange}
         disabled={disabled}
       />
-      <TagSection
+      <SongFormTagSection
         title="Scene"
         options={MOOD_OPTIONS}
         selected={moods}
         onChange={onMoodsChange}
         disabled={disabled}
       />
-      <TagSection
+      <SongFormTagSection
         title="Instrument"
         options={INSTRUMENT_OPTIONS}
         selected={instruments}
         onChange={onInstrumentsChange}
         disabled={disabled}
       />
-      <TagSection
+      <SongFormTagSection
         title="Build"
         options={BUILD_OPTIONS}
         selected={builds}
         onChange={onBuildsChange}
         disabled={disabled}
       />
-      <TagSection
+      <SongFormTagSection
         title="Vocals"
         options={VOCALS_OPTIONS}
         selected={vocals}
