@@ -1143,9 +1143,9 @@ main
 .audioflume-music-page .audioflume-music-reference-summary-main > small {
   color: var(--text-muted);
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 9px;
+  font-size: 11px;
   font-weight: 400;
-  letter-spacing: 0.07em;
+  letter-spacing: normal;
   line-height: 1;
   text-transform: uppercase;
 }
