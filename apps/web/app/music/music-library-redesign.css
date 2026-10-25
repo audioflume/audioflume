@@ -1733,7 +1733,7 @@ main
     position: fixed !important;
     top: var(
       --filmwave-web-header-bottom,
-      calc(28px + var(--filmwave-header-height, 75px))
+      var(--filmwave-top-chrome-initial-bottom)
     ) !important;
     right: 0 !important;
     bottom: 0 !important;
