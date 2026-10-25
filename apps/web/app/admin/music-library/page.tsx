@@ -475,7 +475,7 @@ export default function AdminMusicLibraryPage() {
 
           <Link
             href="/admin/songs/new"
-            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
+            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[3px] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
           >
             <UploadIcon size={13} />
             <span>Upload Song</span>
@@ -500,7 +500,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={handleBatchDelete}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[7px] bg-[var(--danger)] px-4 text-[12px] font-normal text-[var(--danger-contrast)] transition hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] disabled:opacity-50"
+                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[3px] bg-[var(--danger)] px-4 text-[12px] font-normal text-[var(--danger-contrast)] transition hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] disabled:opacity-50"
                   >
                     <TrashIcon />
                     {isBatchDeleting
@@ -512,7 +512,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={clearSelection}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-4 text-[12px] font-normal text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
+                    className="inline-flex h-10 items-center justify-center rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-4 text-[12px] font-normal text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
                   >
                     Cancel
                   </button>
@@ -522,7 +522,7 @@ export default function AdminMusicLibraryPage() {
               <button
                 type="button"
                 onClick={() => setFiltersOpen((open) => !open)}
-                className={`flex h-10 items-center gap-2 rounded-[7px] border-[1.25px] px-4 text-[12px] font-normal transition-colors ${
+                className={`flex h-10 items-center gap-2 rounded-[3px] border-[1.25px] px-4 text-[12px] font-normal transition-colors ${
                   filtersOpen || activeFilterCount > 0
                     ? "border-[var(--border)] bg-[var(--bg-hover)] text-[var(--text-primary)]"
                     : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
