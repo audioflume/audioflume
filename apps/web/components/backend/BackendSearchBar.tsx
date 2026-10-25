@@ -37,12 +37,12 @@ export default function BackendSearchBar({
   return (
     <div className={`relative${className ? ` ${className}` : ""}`}>
       <span
-        className="pointer-events-none absolute left-4 top-1/2 flex h-[22px] w-[22px] -translate-y-1/2 items-center justify-center text-[#a3a3a3]"
+        className="pointer-events-none absolute left-[14px] top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[#a3a3a3]"
         aria-hidden="true"
       >
         <svg
           viewBox="0 0 24 24"
-          className="h-[22px] w-[22px] fill-none stroke-current [stroke-linecap:round] [stroke-width:1.4]"
+          className="h-4 w-4 fill-none stroke-current [stroke-linecap:round] [stroke-width:1.4]"
         >
           <circle cx="11" cy="11" r="6.5" />
           <path d="m16 16 4.5 4.5" />
