@@ -838,7 +838,7 @@ export default function PlaylistTopControls() {
           .playlists-top-controls {
             grid-template-columns: 126px minmax(0, 1fr) auto !important;
             align-items: center !important;
-            column-gap: var(--playlists-content-gutter) !important;
+            column-gap: 16px !important;
             row-gap: 0 !important;
           }
 
@@ -901,7 +901,6 @@ export default function PlaylistTopControls() {
         @media (max-width: 640px) {
           .playlists-top-controls {
             grid-template-columns: 112px minmax(0, 1fr) auto !important;
-            column-gap: var(--playlists-content-gutter) !important;
             row-gap: 0 !important;
           }
 
