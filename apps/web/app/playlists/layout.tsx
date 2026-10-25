@@ -61,12 +61,12 @@ export default function PlaylistsLayout({ children }: { children: ReactNode }) {
 
         @media (max-width: 620px) {
           body:has(.playlists-page) {
-            --playlists-shell-gutter: 16px;
+            --playlists-shell-gutter: var(--filmwave-page-gutter);
           }
 
           .playlists-page .playlists-shell {
-            padding-right: 16px !important;
-            padding-left: 16px !important;
+            padding-right: var(--filmwave-page-gutter) !important;
+            padding-left: var(--filmwave-page-gutter) !important;
           }
         }
       `}</style>
