@@ -244,8 +244,7 @@ body > header > div {
     0 120px 220px rgba(18, 18, 18, 0.08);
 }
 
-.filmwave-header-nav-item-playlists:hover .filmwave-playlists-mega-menu,
-.filmwave-header-nav-item-playlists:focus-within .filmwave-playlists-mega-menu {
+.filmwave-header-nav-item-playlists.is-open .filmwave-playlists-mega-menu {
   visibility: visible;
   opacity: 1;
   pointer-events: auto;
