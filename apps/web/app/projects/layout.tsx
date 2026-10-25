@@ -230,7 +230,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
 
         @media (max-width: 620px) {
           body:has(.projects-page) {
-            --projects-shell-gutter: 16px;
+            --projects-shell-gutter: var(--filmwave-page-gutter);
           }
 
           .projects-page .projects-control-bar {
