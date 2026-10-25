@@ -52,7 +52,6 @@ export default function BackendSearchBar({
         type="text"
         role="searchbox"
         value={value}
-        onInput={(event) => onChange(event.currentTarget.value)}
         onChange={(event) => onChange(event.currentTarget.value)}
         placeholder={placeholder}
         className="filmwave-backend-input filmwave-backend-search-input"
