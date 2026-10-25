@@ -2002,7 +2002,7 @@ html:not(.light):not([data-theme="light"])
   min-width: 0;
   box-sizing: border-box;
   overflow: hidden;
-  padding: 24px;
+  padding: 28px;
   background: #111111;
 }
 
@@ -2035,8 +2035,8 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2-pricing {
   position: absolute;
-  bottom: 24px;
-  left: 24px;
+  bottom: 22px;
+  left: 28px;
   z-index: 2;
   display: flex;
   align-items: flex-end;
@@ -2116,7 +2116,7 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2-caption {
   position: absolute;
-  right: 24px;
+  right: 28px;
   bottom: 24px;
   z-index: 2;
   color: #ffffff;
@@ -2336,12 +2336,12 @@ html:not(.light):not([data-theme="light"])
   }
 
   .audioflume-home-lifetime-v2-pricing {
-    bottom: 24px;
-    left: 24px;
+    bottom: 22px;
+    left: 28px;
   }
 
   .audioflume-home-lifetime-v2-caption {
-    right: 24px;
+    right: 28px;
     bottom: 24px;
   }
 
