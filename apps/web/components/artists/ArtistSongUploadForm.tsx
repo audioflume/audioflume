@@ -832,10 +832,10 @@ export default function ArtistSongUploadForm({
   return (
     <div>
       <form
-        className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
+        className="filmwave-song-form grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
         onSubmit={handleSubmit}
       >
-        <div className="artist-song-main-column grid min-w-0 gap-4">
+        <div className="filmwave-song-form-main grid min-w-0 gap-4">
           <BackendSongFileUpload
             audioFile={audioFile}
             onAudioFileChange={(file) => void handleAudioFileChange(file)}
@@ -866,12 +866,12 @@ export default function ArtistSongUploadForm({
             }
           />
 
-          <section className="filmwave-backend-section">
-            <div className="filmwave-backend-section-header">
+          <section className="filmwave-backend-section filmwave-song-form-card">
+            <div className="filmwave-backend-section-header filmwave-song-form-header">
               <h2 className="filmwave-backend-section-title">Song Info</h2>
             </div>
 
-            <div className="grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
+            <div className="filmwave-song-form-body grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
               <div>
                 <BackendInput
                   aria-label="Song Title"
@@ -981,11 +981,11 @@ export default function ArtistSongUploadForm({
           />
 
           {createReleaseOpen ? (
-            <section className="filmwave-backend-section">
-              <div className="filmwave-backend-section-header">
+            <section className="filmwave-backend-section filmwave-song-form-card">
+              <div className="filmwave-backend-section-header filmwave-song-form-header">
                 <h2 className="filmwave-backend-section-title">New Release</h2>
               </div>
-              <div className="grid gap-4 px-5 pb-5">
+              <div className="filmwave-song-form-body grid gap-4 px-5 pb-5">
                 <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_180px]">
                   <label className="block">
                     <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
@@ -1086,11 +1086,11 @@ export default function ArtistSongUploadForm({
             disabled={!canEditMetadata || busy || uploadComplete}
           />
 
-          <section className="filmwave-backend-section">
-            <div className="filmwave-backend-section-header">
+          <section className="filmwave-backend-section filmwave-song-form-card">
+            <div className="filmwave-backend-section-header filmwave-song-form-header">
               <h2 className="filmwave-backend-section-title">Credits</h2>
             </div>
-            <div className="grid gap-3 px-5 pb-5">
+            <div className="filmwave-song-form-body grid gap-3 px-5 pb-5">
               {credits.length === 0 ? (
                 <div className="text-xs text-[var(--text-muted)]">No credits added yet.</div>
               ) : null}
@@ -1139,11 +1139,11 @@ export default function ArtistSongUploadForm({
             </div>
           </section>
 
-          <section className="filmwave-backend-section">
-            <div className="filmwave-backend-section-header">
+          <section className="filmwave-backend-section filmwave-song-form-card">
+            <div className="filmwave-backend-section-header filmwave-song-form-header">
               <h2 className="filmwave-backend-section-title">Rights + Ownership</h2>
             </div>
-            <div className="grid gap-5 px-5 pb-5">
+            <div className="filmwave-song-form-body grid gap-5 px-5 pb-5">
               {!canEditRights ? (
                 <div className="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]">
                   Your role cannot edit ownership. You can upload the draft, and a manager or owner can complete rights before submission.
@@ -1241,12 +1241,12 @@ export default function ArtistSongUploadForm({
           </section>
         </div>
 
-        <aside className="artist-song-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
-          <section className="filmwave-backend-section">
-            <div className="filmwave-backend-section-header">
+        <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
+          <section className="filmwave-backend-section filmwave-song-form-card">
+            <div className="filmwave-backend-section-header filmwave-song-form-header">
               <h2 className="filmwave-backend-section-title">Checklist</h2>
             </div>
-            <div className="grid gap-2 p-4">
+            <div className="filmwave-song-form-body grid gap-2 p-4">
               {uploadWarnings.length > 0 && !uploadComplete ? (
                 <>
                   <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
@@ -1287,11 +1287,11 @@ export default function ArtistSongUploadForm({
           </section>
 
           {(saveStatus || error) ? (
-            <section className="filmwave-backend-section">
-              <div className="filmwave-backend-section-header">
+            <section className="filmwave-backend-section filmwave-song-form-card">
+              <div className="filmwave-backend-section-header filmwave-song-form-header">
                 <h2 className="filmwave-backend-section-title">Upload Status</h2>
               </div>
-              <div className="grid gap-3 px-5 pb-5">
+              <div className="filmwave-song-form-body grid gap-3 px-5 pb-5">
                 {error ? (
                   <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
                     {error}
@@ -1306,11 +1306,11 @@ export default function ArtistSongUploadForm({
             </section>
           ) : null}
 
-          <section className="filmwave-backend-section">
-            <div className="filmwave-backend-section-header">
+          <section className="filmwave-backend-section filmwave-song-form-card">
+            <div className="filmwave-backend-section-header filmwave-song-form-header">
               <h2 className="filmwave-backend-section-title">Actions</h2>
             </div>
-            <div className="grid gap-2 p-4">
+            <div className="filmwave-song-form-body grid gap-2 p-4">
               <button
                 type="submit"
                 disabled={
