@@ -1669,7 +1669,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
         }}
       >
         <form
-          className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
+          className="filmwave-song-form grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
           onSubmit={(e) => {
             e.preventDefault();
 
@@ -1737,12 +1737,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               disabled={isSaving}
             />
 
-            <section className="admin-song-form-card">
-              <div className="admin-song-form-card-header">
+            <section className="admin-song-form-card filmwave-song-form-card">
+              <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div className="admin-song-form-kicker">Song Info</div>
               </div>
 
-              <div className="grid gap-4 p-4 md:grid-cols-2 xl:grid-cols-3">
+              <div className="filmwave-song-form-body grid gap-4 p-4 md:grid-cols-2 xl:grid-cols-3">
                 <div>
                   <FieldLabel>Song Title</FieldLabel>
                   <TextInput
@@ -1812,8 +1812,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
             </section>
 
-            <section className="admin-song-form-card">
-              <div className="admin-song-form-card-header">
+            <section className="admin-song-form-card filmwave-song-form-card">
+              <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div>
                   <div className="admin-song-form-kicker">Waveform Peaks</div>
                 </div>
@@ -1862,12 +1862,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
             </section>
 
-            <section className="admin-song-form-card">
-              <div className="admin-song-form-card-header">
+            <section className="admin-song-form-card filmwave-song-form-card">
+              <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div className="admin-song-form-kicker">Tags</div>
               </div>
 
-              <div className="grid gap-5 p-4">
+              <div className="filmwave-song-form-body grid gap-5 p-4">
                 <div>
                   <div className="mb-2 flex items-center justify-between gap-4">
                     <FieldLabel>Genre</FieldLabel>
@@ -1956,8 +1956,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
             </section>
 
-            <section className="admin-song-form-card">
-              <div className="admin-song-form-card-header">
+            <section className="admin-song-form-card filmwave-song-form-card">
+              <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div className="admin-song-form-kicker">Cue Points</div>
               </div>
 
@@ -1974,9 +1974,9 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
             </section>
           </div>
 
-          <aside className="grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
-            <section className="admin-song-form-card">
-              <div className="admin-song-form-card-header">
+          <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
+            <section className="admin-song-form-card filmwave-song-form-card">
+              <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div className="admin-song-form-kicker">Checklist</div>
               </div>
 
@@ -2031,12 +2031,12 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               uploadedFiles.audio ||
               uploadedFiles.cover ||
               uploadedFiles.stems.length > 0) && (
-              <section className="admin-song-form-card">
-                <div className="admin-song-form-card-header">
+              <section className="admin-song-form-card filmwave-song-form-card">
+                <div className="admin-song-form-card-header filmwave-song-form-header">
                   <div className="admin-song-form-kicker">{statusTitle}</div>
                 </div>
 
-                <div className="grid gap-3 p-4">
+                <div className="filmwave-song-form-body grid gap-3 p-4">
                   {saveStatus && (
                     <div className="flex items-start gap-2 rounded-lg bg-[var(--bg-tertiary)] p-3">
                       <UploadStatusIcon
@@ -2094,8 +2094,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </section>
             )}
 
-            <section className="admin-song-form-card">
-              <div className="admin-song-form-card-header">
+            <section className="admin-song-form-card filmwave-song-form-card">
+              <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div className="admin-song-form-kicker">Actions</div>
               </div>
 
