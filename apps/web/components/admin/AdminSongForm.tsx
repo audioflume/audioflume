@@ -12,7 +12,7 @@ import {
   BackendIconButton,
 } from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
-import { SongFormTagSection } from "@/components/backend/SongFormSection";
+import { SongFormSection, SongFormTagSection } from "@/components/backend/SongFormSection";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
@@ -1731,13 +1731,10 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
             </section>
 
-            <section className="admin-song-form-card filmwave-song-form-card relative">
-              <div className="admin-song-form-card-header filmwave-song-form-header">
-                <div>
-                  <div className="admin-song-form-kicker">Waveform Peaks</div>
-                </div>
-
-                <div className="absolute right-5 top-4 z-10 flex items-center gap-1">
+            <SongFormSection
+              title="Waveform Peaks"
+              action={
+                <div className="flex items-center gap-1">
                   <BackendIconButton
                     type="button"
                     onClick={reAnalyzeWaveformPeaks}
@@ -1762,24 +1759,22 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                     <CopyIcon />
                   </BackendIconButton>
                 </div>
-              </div>
+              }
+            >
+              <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
+                {isEditMode
+                  ? "Existing peak data is loaded from Supabase. Re-analyze only when needed."
+                  : "Generated automatically from the selected audio file using the same 300-point peak format."}
+              </p>
 
-              <div className="filmwave-song-form-body">
-                <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
-                  {isEditMode
-                    ? "Existing peak data is loaded from Supabase. Re-analyze only when needed."
-                    : "Generated automatically from the selected audio file using the same 300-point peak format."}
-                </p>
-
-                <TextArea
-                  value={waveformPeaks}
-                  onChange={setWaveformPeaks}
-                  rows={5}
-                  readOnly={isGeneratingPeaks}
-                  placeholder="Waveform peak JSON will appear here after selecting an audio file."
-                />
-              </div>
-            </section>
+              <TextArea
+                value={waveformPeaks}
+                onChange={setWaveformPeaks}
+                rows={5}
+                readOnly={isGeneratingPeaks}
+                placeholder="Waveform peak JSON will appear here after selecting an audio file."
+              />
+            </SongFormSection>
 
             <SongFormTagSection
               title="Genre"
