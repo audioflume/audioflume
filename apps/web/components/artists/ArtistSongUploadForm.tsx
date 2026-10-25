@@ -250,7 +250,7 @@ function CheckboxInput({
       onChange={onChange}
       label={label}
       disabled={disabled}
-      className="h-10 w-full self-end rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3"
+      className="h-10 w-full self-end rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3"
     />
   );
 }
