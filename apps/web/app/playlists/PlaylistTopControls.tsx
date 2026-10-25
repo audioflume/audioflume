@@ -838,7 +838,8 @@ export default function PlaylistTopControls() {
           .playlists-top-controls {
             grid-template-columns: 126px minmax(0, 1fr) auto !important;
             align-items: center !important;
-            gap: 10px !important;
+            column-gap: 10px !important;
+            row-gap: 0 !important;
           }
 
           .playlists-status-pill {
@@ -900,7 +901,8 @@ export default function PlaylistTopControls() {
         @media (max-width: 640px) {
           .playlists-top-controls {
             grid-template-columns: 112px minmax(0, 1fr) auto !important;
-            gap: 8px !important;
+            column-gap: 8px !important;
+            row-gap: 0 !important;
           }
 
           .playlists-status-pill {
