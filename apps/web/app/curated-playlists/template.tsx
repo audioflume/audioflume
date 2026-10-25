@@ -276,7 +276,7 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
 
   @media (max-width: 620px) {
     body:has(.curated-playlists-page-root) {
-      --curated-page-gutter: 16px;
+      --curated-page-gutter: var(--filmwave-page-gutter);
       --curated-feature-hero-height: 330px;
     }
   }
