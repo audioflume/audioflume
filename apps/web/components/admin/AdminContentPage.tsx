@@ -95,7 +95,7 @@ export default function AdminContentPage({
 
   return (
     <main
-      className={`filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
+      className={`filmwave-admin-content-page min-h-screen bg-[var(--bg-primary)] pt-0 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)] ${
         isDashboard ? "admin-dashboard-content-page" : ""
       } ${isSongUpload || isSongEdit ? "admin-song-upload-content-page" : ""} ${
         isSongEdit ? "admin-song-edit-content-page" : ""
@@ -163,9 +163,10 @@ export default function AdminContentPage({
       `}</style>
 
       <section
-        className={`min-h-screen px-5 pt-[88px] ${resolvedContentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-10 ${
+        className={`min-h-screen px-5 ${resolvedContentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-10 ${
           usesAdminCanvas ? "bg-[var(--filmwave-admin-canvas)]" : ""
         } ${resolvedContentAreaClassName}`}
+        style={{ paddingTop: "calc(var(--filmwave-header-height, 75px) + 13px)" }}
       >
         <div
           className={`mx-auto max-w-[1180px] ${contentClassName}`}
