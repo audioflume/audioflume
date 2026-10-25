@@ -687,7 +687,7 @@ export default function AdminMusicLibraryPage() {
         </section>
       </div>
 
-      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
 
       <Toast
         message={toastMessage}
