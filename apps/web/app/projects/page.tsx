@@ -942,16 +942,6 @@ export default function ProjectsPage() {
         .projects-skeleton-line { width: min(360px, 78%); height: 8px; }
         .projects-skeleton-count { justify-self: end; width: 58px; height: 8px; }
         .projects-skeleton-button { justify-self: end; width: 32px; height: 32px; }
-        @media (max-width: 940px) {
-          .projects-shell { padding-left: 32px; padding-right: 32px; }
-          .projects-control-bar { grid-template-columns: 126px minmax(0, 1fr) auto; align-items: center; gap: 10px; }
-          .projects-status-pill { width: 126px; min-width: 126px; }
-          .projects-control-right { justify-content: flex-end; flex-wrap: nowrap; gap: 8px; }
-          .projects-sort-button, .projects-new-button { width: 44px; min-width: 44px; padding: 0; }
-          .projects-sort-button > span:first-child, .projects-sort-button > svg, .projects-new-button > span:last-child { display: none; }
-          .projects-title { margin-top: 36px; }
-          .projects-list { margin-top: 12px; }
-        }
         @media (max-width: 620px) {
           .projects-shell { padding-left: var(--filmwave-page-gutter); padding-right: var(--filmwave-page-gutter); }
           .projects-control-bar,
