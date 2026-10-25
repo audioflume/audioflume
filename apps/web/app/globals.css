@@ -110,15 +110,7 @@ main > section[class*="ml-[var(--sidebar-width)]"],
   margin-left: var(--filmwave-page-sidebar-offset) !important;
 }
 
-/* Temporary header visibility review. */
-.filmwave-app-header,
-.desktop-header,
-body > header,
-.filmwave-header {
-  display: none !important;
-}
-
-/* Sidebar logo while the web header is hidden. */
+/* Desktop sidebar wordmark. */
 .desktop-app-sidebar-inner::before {
   content: "";
   display: block;
