@@ -519,7 +519,7 @@ export default function ArtistSongEditor({
           {beforeContent}
 
           {reviewFeedback?.notes ? (
-            <section className="rounded-[10px] border-[1.25px] border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
+            <section className="border-[1.25px] border-[var(--status-warning,var(--border))] bg-[var(--status-warning-soft,var(--bg-secondary))] px-5 py-4">
               <div className="text-xs font-medium text-[var(--status-warning,var(--text-primary))]">
                 Review feedback
               </div>
@@ -644,7 +644,7 @@ export default function ArtistSongEditor({
             rightsDisabled={!canEditRights || saving}
             canAddRightsHolder={canEditRights}
             rightsReadOnlyMessage="Your artist role can view rights information but cannot edit ownership details."
-            rightsReadOnlyClassName="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]"
+            rightsReadOnlyClassName="border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3.5 py-3 text-xs text-[var(--text-muted)]"
           />
 
           {afterContent}
@@ -702,7 +702,7 @@ export default function ArtistSongEditor({
                   </div>
                 ) : null}
                 {message ? (
-                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
+                  <div className="bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
                     {message}
                   </div>
                 ) : null}
