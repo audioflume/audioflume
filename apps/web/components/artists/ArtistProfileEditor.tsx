@@ -279,7 +279,7 @@ export default function ArtistProfileEditor({
         <div className="grid gap-4 px-5 pb-5 md:grid-cols-2">
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
-              className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
+              className="h-14 w-14 shrink-0 overflow-hidden rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={{
                 borderRadius: "3px",
                 ...(artist.profile_image_url
@@ -312,7 +312,7 @@ export default function ArtistProfileEditor({
 
           <div className="flex min-h-[92px] min-w-0 items-center gap-4 py-2">
             <div
-              className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
+              className="h-14 w-24 shrink-0 overflow-hidden rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={{
                 borderRadius: "3px",
                 ...(artist.hero_image_url
@@ -377,7 +377,7 @@ export default function ArtistProfileEditor({
               </div>
 
               <div ref={designationFieldRef} className="relative mt-[6px]">
-                <div className="flex h-10 min-w-0 cursor-pointer items-center gap-1 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-1">
+                <div className="flex h-10 min-w-0 cursor-pointer items-center gap-1 rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-1">
                   {selectedDesignations.map((option) => (
                     <button
                       key={option}
