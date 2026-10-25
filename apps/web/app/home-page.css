@@ -2144,13 +2144,9 @@ html:not(.light):not([data-theme="light"])
   outline: none;
 }
 
-.audioflume-home-lifetime-v2-song-play svg {
-  transition: transform 120ms ease;
-}
-
-.audioflume-home-lifetime-v2-song:hover .audioflume-home-lifetime-v2-song-play svg,
-.audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play svg {
-  transform: scale(1.14);
+.audioflume-home-lifetime-v2-song:hover .audioflume-home-lifetime-v2-song-play,
+.audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play {
+  transform: scale(1.04);
 }
 
 .audioflume-home-lifetime-v2-song:first-child {
