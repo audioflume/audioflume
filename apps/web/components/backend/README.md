@@ -17,7 +17,7 @@ Current shared primitives include:
 - `BackendControls.tsx` — buttons, inputs, selects, textareas, checkboxes, choice buttons, status badges, sections.
 - `BackendArtworkUpload.tsx` — canonical image upload with `song` and `compact` variants.
 - `BackendSongFileUpload.tsx` — canonical Audio / Stems / Song Cover upload experience used by Admin and Artist song upload.
-- `BackendModalShell.tsx` — backend modal shell.
+- `BackendModalShell.tsx` — backend wrapper around the shared front-end `ModalShell`; keep modal chrome owned by the shared shell.
 - `BackendPageHeader.tsx` — backend page breadcrumb/header.
 - `BackendSearchBar.tsx` — backend search input.
 - `BackendSidebar.tsx` — shared Admin/Artist sidebar geometry.
