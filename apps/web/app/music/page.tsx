@@ -17,6 +17,7 @@ import {
   MusicQuickChip,
   MusicQuickChips,
   MusicLibrarySortControl,
+  MusicLibraryEmptyState,
   type MusicLibrarySortValue,
   QUICK_FILTERS,
   REGION_OPTIONS,
@@ -1587,14 +1588,27 @@ export default function MusicPage() {
                   </div>
                 ) : null}
 
-                {displayedSongs.map((song, index) => (
-                  <SongCard
-                    key={getMusicSongStableId(song, index)}
-                    song={song}
-                    highlightedEditPointTypes={highlightedEditPointTypes}
-                    showEditPointMarkers={effectiveShowEditPointMarkers}
+                {displayedSongs.length === 0 ? (
+                  <MusicLibraryEmptyState
+                    title="No songs found"
+                    description={
+                      referenceSearchState
+                        ? "Try a different reference track."
+                        : hasActiveFilters
+                          ? "Clear a filter or search for something different."
+                          : "No tracks are available right now."
+                    }
                   />
-                ))}
+                ) : (
+                  displayedSongs.map((song, index) => (
+                    <SongCard
+                      key={getMusicSongStableId(song, index)}
+                      song={song}
+                      highlightedEditPointTypes={highlightedEditPointTypes}
+                      showEditPointMarkers={effectiveShowEditPointMarkers}
+                    />
+                  ))
+                )}
               </>
             )}
           </MusicListShell>
