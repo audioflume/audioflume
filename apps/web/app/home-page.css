@@ -1340,11 +1340,6 @@ html:not(.light):not([data-theme="light"])
 }
 
 .audioflume-home-mockup-artists
-  .audioflume-home-reference-artist-genres > .is-placeholder {
-  visibility: hidden;
-}
-
-.audioflume-home-mockup-artists
   .audioflume-home-reference-artist-play {
   right: 34px;
   bottom: 34px;
