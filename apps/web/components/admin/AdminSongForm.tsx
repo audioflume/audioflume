@@ -1659,7 +1659,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
             <SongFormSection
               title="Song Info"
               className="admin-song-form-card"
-              bodyClassName="grid gap-4 p-4 md:grid-cols-2 xl:grid-cols-3"
+              bodyClassName="grid md:grid-cols-2 xl:grid-cols-3"
             >
                 <div>
                                     <TextInput
@@ -1812,7 +1812,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
             <SongFormSection
               title="Cue Points"
               className="admin-song-form-card"
-              bodyClassName="p-4"
             >
               <AdminSongEditPointsSection
                 songId={songId}
