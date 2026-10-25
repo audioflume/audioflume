@@ -64,26 +64,6 @@
   color: var(--filmwave-black);
 }
 
-/* Song Upload follows the Music Library / Playlist Manager admin language. */
-.admin-song-upload-content-page {
-  --admin-song-card-x: 20px;
-  --admin-song-card-bottom: 20px;
-  --admin-song-title-gap: 12px;
-  --admin-song-content-gap: 12px;
-}
-
-.admin-song-upload-content-page .admin-song-form-card {
-  border-radius: 0;
-  background: var(--bg-primary);
-}
-
-.admin-song-upload-content-page .admin-song-form-card-header {
-  min-height: 56px;
-  padding: 16px var(--admin-song-card-x);
-  border-bottom: 0;
-  background: var(--bg-primary);
-}
-
 .admin-song-upload-content-page
   form
   > aside
@@ -123,20 +103,6 @@
 .admin-song-upload-content-page .admin-song-form-icon-btn.is-open {
   background: transparent;
   color: var(--text-primary);
-}
-
-.admin-song-upload-content-page
-  .admin-song-form-card
-  > [class~="p-4"] {
-  padding: var(--admin-song-title-gap) var(--admin-song-card-x)
-    var(--admin-song-card-bottom);
-}
-
-.admin-song-upload-content-page
-  .admin-song-form-card
-  > .admin-song-form-card-header
-  + [class*="grid"] {
-  gap: var(--admin-song-content-gap);
 }
 
 .admin-song-upload-content-page form :is(
@@ -324,7 +290,7 @@ main.filmwave-admin-content-page.admin-song-upload-content-page
   border: 1.25px solid var(--border);
   border-radius: 0;
   background: var(--bg-primary);
-  padding: 20px var(--admin-song-card-x) var(--admin-song-card-bottom);
+  padding: 20px var(--filmwave-song-form-x) var(--filmwave-song-form-bottom);
 }
 
 .admin-song-upload-content-page
@@ -344,7 +310,7 @@ main.filmwave-admin-content-page.admin-song-upload-content-page
   > div[class*="md:grid-cols-2"]
   > div
   > div:first-child {
-  margin-bottom: var(--admin-song-title-gap);
+  margin-bottom: var(--filmwave-song-form-title-gap);
 }
 
 .admin-song-upload-content-page
