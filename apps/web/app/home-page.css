@@ -2174,7 +2174,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   justify-self: end;
   border: 0;
   border-radius: 999px;
-  background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%);
+  background: var(--bg-primary);
   color: #ffffff;
   transition:
     background-color 120ms ease,
