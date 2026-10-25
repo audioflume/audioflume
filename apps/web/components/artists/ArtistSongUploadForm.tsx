@@ -835,7 +835,7 @@ export default function ArtistSongUploadForm({
         className="grid w-full gap-4 xl:grid-cols-[minmax(0,1fr)_340px]"
         onSubmit={handleSubmit}
       >
-        <div className="grid min-w-0 gap-4">
+        <div className="artist-song-main-column grid min-w-0 gap-4">
           <BackendSongFileUpload
             audioFile={audioFile}
             onAudioFileChange={(file) => void handleAudioFileChange(file)}
@@ -1241,7 +1241,7 @@ export default function ArtistSongUploadForm({
           </section>
         </div>
 
-        <aside className="grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
+        <aside className="artist-song-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
           <section className="filmwave-backend-section">
             <div className="filmwave-backend-section-header">
               <h2 className="filmwave-backend-section-title">Checklist</h2>
