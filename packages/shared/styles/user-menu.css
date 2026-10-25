@@ -2,7 +2,7 @@
 
 .filmwave-dropdown-shell.filmwave-user-menu {
   width: 300px;
-  border-radius: 3px;
+  border-radius: 0;
   --filmwave-menu-item-radius: 0;
 }
 
