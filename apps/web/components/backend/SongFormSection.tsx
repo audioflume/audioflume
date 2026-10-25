@@ -72,11 +72,6 @@ export function SongFormTagSection({
   return (
     <SongFormSection
       title={title}
-      action={
-        <span className="text-[11px] text-[var(--text-muted)]">
-          {selected.length} selected
-        </span>
-      }
       className={className}
       bodyClassName="flex flex-wrap gap-1.5"
     >
