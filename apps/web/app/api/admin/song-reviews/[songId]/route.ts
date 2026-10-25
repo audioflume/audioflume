@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
+import { refreshPublishedSongClapEmbedding } from "@/lib/audioClapEmbeddings";
 import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import { deleteFilesFromR2 } from "@/lib/r2";
 import {
@@ -456,6 +457,17 @@ export async function PATCH(request: Request, context: RouteContext) {
         { error: "Track status changed before this review action completed" },
         { status: 409 },
       );
+    }
+
+    if (updatedSong.status === "published") {
+      try {
+        await refreshPublishedSongClapEmbedding(songId);
+      } catch (embeddingError) {
+        console.error(
+          `Failed to generate Reference Search analysis for published song ${songId}:`,
+          embeddingError,
+        );
+      }
     }
 
     const { data: review, error: reviewError } = await supabaseServer
