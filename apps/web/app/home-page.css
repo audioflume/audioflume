@@ -2146,7 +2146,7 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2-song:hover .audioflume-home-lifetime-v2-song-play,
 .audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play {
-  transform: scale(1.04);
+  transform: scale(1.08);
 }
 
 .audioflume-home-lifetime-v2-song:first-child {
