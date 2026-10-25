@@ -1662,8 +1662,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               bodyClassName="grid gap-4 p-4 md:grid-cols-2 xl:grid-cols-3"
             >
                 <div>
-                  <FieldLabel>Song Title</FieldLabel>
-                  <TextInput
+                                    <TextInput
                     value={title}
                     onChange={setTitle}
                     placeholder="Song Title"
@@ -1671,8 +1670,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
 
                 <div>
-                  <FieldLabel>Artist</FieldLabel>
-                  <TextInput
+                                    <TextInput
                     value={artist}
                     onChange={setArtist}
                     placeholder="Artist"
@@ -1680,8 +1678,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
 
                 <div>
-                  <FieldLabel>BPM</FieldLabel>
-                  <TextInput
+                                    <TextInput
                     value={bpm}
                     onChange={setBpm}
                     placeholder="BPM"
@@ -1690,8 +1687,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
 
                 <div>
-                  <FieldLabel>Key</FieldLabel>
-                  <SelectInput value={songKey} onChange={setSongKey}>
+                                    <SelectInput value={songKey} onChange={setSongKey}>
                     <option value="">Key</option>
                     {keyOptions.map((keyOption) => (
                       <option key={keyOption} value={keyOption}>
@@ -1702,8 +1698,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
 
                 <div>
-                  <FieldLabel>Duration</FieldLabel>
-                  <TextInput
+                                    <TextInput
                     value={duration}
                     onChange={setDuration}
                     placeholder="Duration"
@@ -1711,8 +1706,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
 
                 <div>
-                  <FieldLabel>Type</FieldLabel>
-                  <CheckboxInput
+                                    <CheckboxInput
                     checked={instrumental}
                     onChange={setInstrumental}
                     label="Instrumental"
@@ -1720,8 +1714,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
 
                 <div className="admin-song-ai-field">
-                  <FieldLabel>AI</FieldLabel>
-                  <CheckboxInput
+                                    <CheckboxInput
                     checked={aiGenerated}
                     onChange={setAiGenerated}
                     label="Made with AI"
