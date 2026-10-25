@@ -94,7 +94,7 @@ function SortableSongRow({
         opacity: isDragging ? 0.3 : 1,
         position: "relative",
         zIndex: isDragging ? 1 : "auto",
-        borderRadius: 7,
+        borderRadius: 3,
       }}
       className="flex items-center gap-3 rounded-xl border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-2"
     >
