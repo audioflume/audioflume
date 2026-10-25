@@ -28,18 +28,13 @@
   display: flex;
   width: var(--filmwave-curated-shelf-content-width);
   min-height: 28px;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   margin-bottom: var(--filmwave-small-section-title-margin-bottom);
   margin-left: calc(
     50% - 50vw + var(--filmwave-curated-shelf-edge)
   );
-}
-
-.heading > :last-child {
-  height: 0 !important;
-  align-self: baseline;
 }
 
 .playlistCount {
