@@ -255,7 +255,7 @@
   min-height: 28px;
   max-width: 100%;
   flex-wrap: wrap;
-  align-self: baseline;
+  align-self: center;
   gap: 8px;
   margin: clamp(28px, 2vw, 36px) 0 0;
 }
