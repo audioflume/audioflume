@@ -157,7 +157,7 @@
   display: flex;
   color: var(--filmwave-section-title-color);
   min-height: 28px;
-  align-items: baseline;
+  align-items: flex-end;
   justify-content: space-between;
   gap: 24px;
   margin-bottom: var(--filmwave-small-section-title-margin-bottom);
@@ -167,9 +167,7 @@
 
 .filmwave-section-heading-row.is-multiline {
   align-items: flex-end;
-  margin-bottom: calc(
-    var(--filmwave-small-section-title-margin-bottom) + 3px
-  );
+  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
 }
 
 :where(html.light, html[data-theme="light"]) {
