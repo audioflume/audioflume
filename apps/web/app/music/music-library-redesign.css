@@ -506,7 +506,7 @@ main
 @media (max-width: 1000px) {
   .audioflume-music-page-searchbar
     .audioflume-home-reference-searchbar-field {
-    width: min(720px, calc(100% - 12px));
+    width: min(720px, 100%);
     margin: 12px 0;
   }
 
