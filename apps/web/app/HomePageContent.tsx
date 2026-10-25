@@ -1104,6 +1104,21 @@ export default function HomePageContent({
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
+            <h2>Lifetime access to original in-house made music</h2>
+            <Link
+              href="/music?artist=Audioflume"
+              className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+            >
+              Explore original music
+              <ArrowUpRightIcon
+                size={16}
+                strokeWidth={1.5}
+                className="translate-y-[2px]"
+              />
+            </Link>
+          </div>
+
           <div className="audioflume-home-reference-width audioflume-home-lifetime-v2">
             <div className="audioflume-home-lifetime-v2-art">
               <img
