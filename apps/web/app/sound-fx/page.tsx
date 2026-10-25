@@ -46,7 +46,7 @@ export default function SoundFxPage() {
 
         .sound-fx-discover-top .discover-category-search {
           display: grid;
-          width: min(calc(100% - 80px), 800px);
+          width: min(calc(100% - (var(--filmwave-page-gutter) * 2)), 800px);
           height: 68px;
           grid-template-columns: minmax(0, 1fr) 58px;
           align-items: center;
@@ -151,12 +151,6 @@ export default function SoundFxPage() {
           color: var(--filmwave-black);
         }
 
-        @media (max-width: 980px) {
-          .sound-fx-discover-top .discover-category-search {
-            width: calc(100% - 64px);
-          }
-
-        }
 
         @media (max-width: 720px) {
           .sound-fx-discover-top .sound-fx-discover-content {
@@ -164,7 +158,7 @@ export default function SoundFxPage() {
           }
 
           .sound-fx-discover-top .discover-category-search {
-            width: calc(100% - 40px);
+            width: calc(100% - (var(--filmwave-page-gutter) * 2));
             height: 58px;
             grid-template-columns: minmax(0, 1fr) 52px;
             border-radius: 23px;
