@@ -197,7 +197,7 @@ function SortableReleaseRow({
         <button
           type="button"
           onClick={onEdit}
-          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-compact filmwave-backend-button-secondary"
         >
           {canManage ? "Edit" : "View"}
         </button>
@@ -366,7 +366,7 @@ export default function ArtistReleaseManager({
           <button
             type="button"
             onClick={() => setCreating(true)}
-            className="filmwave-backend-button filmwave-backend-button-primary"
+            className="filmwave-backend-button rounded-[3px] filmwave-backend-button-primary"
           >
             <PlusIcon size={13} />
             New Release
@@ -671,7 +671,7 @@ function CreateRelease({
         type="button"
         onClick={onBack}
         disabled={saving}
-        className="filmwave-backend-button filmwave-backend-button-secondary w-fit"
+        className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary w-fit"
       >
         Back to Releases
       </button>
@@ -799,7 +799,7 @@ function CreateRelease({
         <button
           type="submit"
           disabled={!canManage || saving || !title.trim() || !yearValid}
-          className="filmwave-backend-button filmwave-backend-button-primary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-primary"
         >
           {saving ? "Creating..." : "Create Release"}
         </button>
@@ -1104,7 +1104,7 @@ function ReleaseEditor({
           type="button"
           onClick={onBack}
           disabled={trackOrderDisabled}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary"
         >
           Back to Releases
         </button>
@@ -1234,7 +1234,7 @@ function ReleaseEditor({
           type="button"
           onClick={onBack}
           disabled={trackOrderDisabled}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary"
         >
           Back to Releases
         </button>
@@ -1252,7 +1252,7 @@ function ReleaseEditor({
               type="button"
               onClick={() => void deleteRelease()}
               disabled={trackOrderDisabled}
-              className="filmwave-backend-button filmwave-backend-button-secondary-danger"
+              className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary-danger"
             >
               {deleting ? "Deleting..." : "Delete release"}
             </button>
@@ -1262,7 +1262,7 @@ function ReleaseEditor({
               type="button"
               onClick={() => void changeReleaseStatus("unpublish")}
               disabled={trackOrderDisabled}
-              className="filmwave-backend-button filmwave-backend-button-secondary"
+              className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary"
             >
               {statusChanging ? "Unpublishing..." : "Unpublish"}
             </button>
@@ -1272,7 +1272,7 @@ function ReleaseEditor({
               type="button"
               onClick={() => void changeReleaseStatus("publish")}
               disabled={trackOrderDisabled || !title.trim() || !yearValid}
-              className="filmwave-backend-button filmwave-backend-button-secondary"
+              className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary"
             >
               {statusChanging ? "Publishing..." : "Publish release"}
             </button>
@@ -1281,7 +1281,7 @@ function ReleaseEditor({
             <button
               type="submit"
               disabled={saving || statusChanging || deleting || !title.trim() || !yearValid}
-              className="filmwave-backend-button filmwave-backend-button-primary"
+              className="filmwave-backend-button rounded-[3px] filmwave-backend-button-primary"
             >
               {saving ? "Saving..." : "Save release"}
             </button>
