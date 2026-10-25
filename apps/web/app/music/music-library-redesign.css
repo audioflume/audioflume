@@ -1110,14 +1110,14 @@ main
 .audioflume-music-page .audioflume-music-reference-summary {
   box-sizing: border-box;
   display: grid;
-  width: calc(100% + 40px);
+  width: calc(100% + 60px);
   height: 148px;
   grid-template-columns: 84px minmax(220px, 1fr) minmax(180px, 280px) 36px;
   align-items: center;
   gap: 24px;
-  margin-right: -20px;
+  margin-right: -32px;
   margin-bottom: 18px;
-  margin-left: -20px;
+  margin-left: -28px;
   background: color-mix(in srgb, var(--text-primary) 3.5%, var(--bg-primary));
   padding: 24px 28px;
 }
