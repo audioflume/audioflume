@@ -8,6 +8,7 @@ import Footer from "@/components/Footer";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import Toast from "@/components/Toast";
+import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import XIcon from "@/components/icons/XIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -1002,129 +1003,127 @@ export default function CommunityPlaylistsPage() {
     const isPlaylistLoading = loadingPlaybackPlaylistId === playlist.id;
 
     return (
-      <article className="community-card" key={playlist.id}>
-        <div className="community-cover-wrap">
-          <Link
-            className="community-cover-link"
-            href={`/community-playlists/${playlist.id}`}
-            aria-label={`Open ${playlist.name}`}
-          >
-            {playlist.cover_image_url ? (
-              <img
-                className="community-cover"
-                src={playlist.cover_image_url}
-                alt=""
-              />
-            ) : (
-              <span className="community-cover-placeholder" aria-hidden="true" />
-            )}
-          </Link>
+      <PlaylistCardShell
+        key={playlist.id}
+        href={`/community-playlists/${playlist.id}`}
+        ariaLabel={`Open ${playlist.name}`}
+        className="community-card"
+        mediaClassName="community-cover-wrap"
+        mediaLinkClassName="community-cover-link"
+        media={
+          playlist.cover_image_url ? (
+            <img
+              className="community-cover"
+              src={playlist.cover_image_url}
+              alt=""
+            />
+          ) : (
+            <span className="community-cover-placeholder" aria-hidden="true" />
+          )
+        }
+        overlays={
+          <>
+            <button
+              type="button"
+              className={`community-card-creator community-card-creator-overlay${selectedCreatorId === playlist.creator.id ? " is-active" : ""}`}
+              aria-pressed={selectedCreatorId === playlist.creator.id}
+              onClick={() => filterByCreator(playlist.creator)}
+            >
+              {playlist.creator.imageUrl ? (
+                <img
+                  className="community-card-creator-meta-avatar"
+                  src={playlist.creator.imageUrl}
+                  alt=""
+                />
+              ) : (
+                <span
+                  className="community-card-creator-meta-avatar community-card-creator-meta-avatar-placeholder"
+                  aria-hidden="true"
+                />
+              )}
+              <span className="community-card-creator-meta-name">
+                {playlist.creator.name}
+              </span>
+            </button>
 
-          <button
-            type="button"
-            className={`community-card-creator community-card-creator-overlay${
-              selectedCreatorId === playlist.creator.id ? " is-active" : ""
-            }`}
-            aria-pressed={selectedCreatorId === playlist.creator.id}
-            onClick={() => filterByCreator(playlist.creator)}
-          >
-            {playlist.creator.imageUrl ? (
-              <img
-                className="community-card-creator-meta-avatar"
-                src={playlist.creator.imageUrl}
-                alt=""
-              />
-            ) : (
+            <button
+              className={`community-like${isFavorite ? " is-liked" : ""}`}
+              type="button"
+              aria-label={`${isFavorite ? "Remove from saved" : "Save"}: ${playlist.name}`}
+              aria-pressed={isFavorite}
+              disabled={isPending}
+              onClick={(event) => {
+                event.stopPropagation();
+                void togglePlaylistFavorite(playlist.id);
+              }}
+            >
+              <BookmarkGlyph filled={isFavorite} />
+            </button>
+
+            <button
+              className="community-play"
+              type="button"
+              aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
+              aria-pressed={isPlaylistPlaying}
+              aria-busy={isPlaylistLoading}
+              data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
+              disabled={isPlaylistLoading}
+              onClick={(event) => {
+                event.stopPropagation();
+                void togglePlaylistPlayback(playlist);
+              }}
+            >
+              {isPlaylistPlaying ? (
+                <PauseIcon size={18} />
+              ) : (
+                <PlayIconSmall size={18} />
+              )}
+            </button>
+
+            <div
+              className="community-card-count-overlay"
+              aria-label="Playlist engagement"
+            >
               <span
-                className="community-card-creator-meta-avatar community-card-creator-meta-avatar-placeholder"
-                aria-hidden="true"
-              />
-            )}
-            <span className="community-card-creator-meta-name">
-              {playlist.creator.name}
-            </span>
-          </button>
-
-          <button
-            className={`community-like${isFavorite ? " is-liked" : ""}`}
-            type="button"
-            aria-label={`${isFavorite ? "Remove from saved" : "Save"}: ${playlist.name}`}
-            aria-pressed={isFavorite}
-            disabled={isPending}
-            onClick={(event) => {
-              event.stopPropagation();
-              void togglePlaylistFavorite(playlist.id);
-            }}
-          >
-            <BookmarkGlyph filled={isFavorite} />
-          </button>
-
-          <button
-            className="community-play"
-            type="button"
-            aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
-            aria-pressed={isPlaylistPlaying}
-            aria-busy={isPlaylistLoading}
-            data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
-            disabled={isPlaylistLoading}
-            onClick={(event) => {
-              event.stopPropagation();
-              void togglePlaylistPlayback(playlist);
-            }}
-          >
-            {isPlaylistPlaying ? (
-              <PauseIcon size={18} />
-            ) : (
-              <PlayIconSmall size={18} />
-            )}
-          </button>
-
-
-          <div
-            className="community-card-count-overlay"
-            aria-label="Playlist engagement"
-          >
-            <span
-              className="community-engagement-item"
-              title={`${playlist.play_count} plays`}
-            >
-              <PlayCountIcon />
-              <span>{formatCompactCount(playlist.play_count)}</span>
-            </span>
-            <span
-              className="community-engagement-item"
-              title={`${playlist.like_count} likes`}
-            >
-              <LikeCountIcon />
-              <span>{formatCompactCount(playlist.like_count)}</span>
-            </span>
-            <span
-              className="community-engagement-item"
-              title={`${playlist.song_count} songs`}
-            >
-              <SongCountIcon />
-              <span>{formatCompactCount(playlist.song_count)}</span>
-            </span>
+                className="community-engagement-item"
+                title={`${playlist.play_count} plays`}
+              >
+                <PlayCountIcon />
+                <span>{formatCompactCount(playlist.play_count)}</span>
+              </span>
+              <span
+                className="community-engagement-item"
+                title={`${playlist.like_count} likes`}
+              >
+                <LikeCountIcon />
+                <span>{formatCompactCount(playlist.like_count)}</span>
+              </span>
+              <span
+                className="community-engagement-item"
+                title={`${playlist.song_count} songs`}
+              >
+                <SongCountIcon />
+                <span>{formatCompactCount(playlist.song_count)}</span>
+              </span>
+            </div>
+          </>
+        }
+        details={
+          <div className="community-card-details">
+            <div className="community-card-copy">
+              <Link
+                className="community-title-link"
+                href={`/community-playlists/${playlist.id}`}
+              >
+                <h2>{playlist.name}</h2>
+              </Link>
+              <p className="community-card-song-count">
+                {playlist.song_count} {playlist.song_count === 1 ? "song" : "songs"}
+              </p>
+            </div>
           </div>
-        </div>
-
-        <div className="community-card-details">
-          <div className="community-card-copy">
-            <Link
-              className="community-title-link"
-              href={`/community-playlists/${playlist.id}`}
-            >
-              <h2>{playlist.name}</h2>
-            </Link>
-            <p className="community-card-song-count">
-              {playlist.song_count} {playlist.song_count === 1 ? "song" : "songs"}
-            </p>
-
-
-          </div>
-
-        </div>
-      </article>
+        }
+      />
     );
   }
 
