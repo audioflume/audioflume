@@ -1308,28 +1308,30 @@
   }
 
   .discover-artist-hero-inner {
-    display: block;
+    display: flex;
     height: var(--discover-artist-hero-height);
     min-height: var(--discover-artist-hero-height);
+    align-items: center;
   }
 
   .discover-artist-hero-feature {
-    position: absolute;
-    top: 50%;
-    right: var(--discover-artist-gutter);
-    left: var(--discover-artist-gutter);
-    width: auto;
+    position: relative;
+    top: auto;
+    right: auto;
+    left: auto;
+    width: calc(100% - (var(--discover-artist-gutter) * 2));
     max-width: none;
+    margin: 0 auto;
     padding: 0;
     grid-row: auto;
     grid-template-columns: 1fr;
     grid-template-rows: none;
-    align-self: auto;
+    align-self: center;
     align-items: stretch;
     justify-content: stretch;
     justify-self: auto;
     gap: 20px;
-    transform: translateY(-50%);
+    transform: none;
   }
 
   .discover-artist-hero-identity,
