@@ -138,12 +138,12 @@ export default function Header() {
 
     if (menuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleMenuEscape);
+      document.addEventListener("keydown", handleMenuEscape, true);
     }
 
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleMenuEscape);
+      document.removeEventListener("keydown", handleMenuEscape, true);
     };
   }, [menuOpen]);
 
@@ -283,6 +283,22 @@ export default function Header() {
       }
     };
   }, []);
+
+  useEffect(() => {
+    if (!playlistsMenuOpen) return;
+
+    function handlePlaylistsEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+      closePlaylistsMenu();
+      window.requestAnimationFrame(() => playlistsTriggerRef.current?.focus());
+    }
+
+    document.addEventListener("keydown", handlePlaylistsEscape, true);
+    return () =>
+      document.removeEventListener("keydown", handlePlaylistsEscape, true);
+  }, [playlistsMenuOpen]);
 
   function openPlaylistsMenu() {
     if (playlistsMenuCloseTimeoutRef.current != null) {
