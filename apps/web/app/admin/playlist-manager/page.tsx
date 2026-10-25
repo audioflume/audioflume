@@ -124,7 +124,7 @@ export default function PlaylistManagerPage() {
               key={tab}
               type="button"
               onClick={() => selectTab(tab)}
-              className={`box-border h-10 min-h-10 max-h-10 w-[104px] min-w-[104px] max-w-[104px] shrink-0 cursor-pointer rounded-[7px] border-[1.25px] px-4 text-[12px] font-normal leading-none transition ${
+              className={`box-border h-10 min-h-10 max-h-10 w-[104px] min-w-[104px] max-w-[104px] shrink-0 cursor-pointer rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] px-4 text-[12px] font-normal leading-none transition ${
                 activeTab === tab
                   ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                   : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
@@ -141,7 +141,7 @@ export default function PlaylistManagerPage() {
 
         <Link
           href="/admin/playlist-manager/new"
-          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[7px] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
+          className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
         >
           <PlusIcon size={13} />
           <span>New Playlist</span>
