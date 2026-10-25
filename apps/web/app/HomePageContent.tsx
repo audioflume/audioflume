@@ -350,7 +350,7 @@ function HomeLifetimeSongRow({ song }: { song: Song }) {
         onClick={() => togglePlayPause(song)}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
-        {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+        {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
       </button>
     </article>
   );
