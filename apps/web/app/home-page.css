@@ -1234,9 +1234,9 @@ html:not(.light):not([data-theme="light"])
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 44px;
+  font-size: 52px;
   font-weight: 400;
-  letter-spacing: -0.045em;
+  letter-spacing: -0.05em;
   line-height: 0.98;
   white-space: nowrap;
 }
