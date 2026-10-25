@@ -283,8 +283,8 @@
 
 @media (max-width: 620px) {
   :where(:root) {
-    --filmwave-page-gutter: 24px;
-    --filmwave-editorial-inset-default: 24px;
+    --filmwave-page-gutter: 16px;
+    --filmwave-editorial-inset-default: 16px;
     --filmwave-editorial-inset: var(--filmwave-editorial-inset-default);
   }
 }
