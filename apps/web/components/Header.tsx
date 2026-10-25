@@ -78,6 +78,7 @@ export default function Header() {
   const playlistsMenuCloseTimeoutRef = useRef<number | null>(null);
   const playlistsMenuOpenFrameRef = useRef<number | null>(null);
   const playlistsTriggerRef = useRef<HTMLAnchorElement>(null);
+  const playlistsMenuEscapeDismissedRef = useRef(false);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const [scrolledPastThreshold, setScrolledPastThreshold] = useState(false);
@@ -291,6 +292,7 @@ export default function Header() {
       if (event.key !== "Escape") return;
       event.preventDefault();
       event.stopImmediatePropagation();
+      playlistsMenuEscapeDismissedRef.current = true;
       closePlaylistsMenu();
       window.requestAnimationFrame(() => playlistsTriggerRef.current?.focus());
     }
@@ -301,6 +303,8 @@ export default function Header() {
   }, [playlistsMenuOpen]);
 
   function openPlaylistsMenu() {
+    if (playlistsMenuEscapeDismissedRef.current) return;
+
     if (playlistsMenuCloseTimeoutRef.current != null) {
       window.clearTimeout(playlistsMenuCloseTimeoutRef.current);
       playlistsMenuCloseTimeoutRef.current = null;
@@ -1205,6 +1209,7 @@ export default function Header() {
                         if (event.key !== "Escape") return;
                         event.preventDefault();
                         event.stopPropagation();
+                        playlistsMenuEscapeDismissedRef.current = true;
                         closePlaylistsMenu();
                         playlistsTriggerRef.current?.focus();
                       }}
