@@ -42,7 +42,7 @@ export default function ModalShell({
   footerClassName = "",
   headerContent,
   inputCorners = "square",
-  contentCorners = "rounded",
+  contentCorners = "square",
   background = "var(--bg-primary)",
   headerHeight = "96px",
   bodyOverflow = "visible",
