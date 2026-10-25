@@ -160,7 +160,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled}
           onClick={() => audioInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasAudio ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <AudioActionIcon />
           <span>Choose Audio</span>
@@ -169,7 +169,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled || artworkDisabled}
           onClick={() => artworkActionInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasArtwork ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <ArtworkActionIcon />
           <span>{artworkActionLabel}</span>
@@ -178,7 +178,7 @@ export default function BackendSongFileUpload({
           type="button"
           disabled={disabled}
           onClick={() => stemsInputRef.current?.click()}
-          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
+          className={`inline-flex h-10 min-w-[104px] items-center justify-center gap-2 rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-5 text-xs font-normal leading-none transition hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-50 ${hasStems ? "text-[var(--text-primary)]" : "text-[var(--text-secondary)]"}`}
         >
           <StemsActionIcon />
           <span>Choose Stems</span>
