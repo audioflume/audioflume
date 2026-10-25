@@ -301,7 +301,7 @@ export default function ArtistSongCreditsRightsSections({
             {rightsHolders.map((holder, index) => (
               <div
                 key={index}
-                className="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3"
+                className="border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3"
               >
                 <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
                   <BackendInput
