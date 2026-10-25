@@ -131,6 +131,7 @@ export default function Header() {
     function handleMenuEscape(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
       event.preventDefault();
+      event.stopImmediatePropagation();
       setMenuOpen(false);
       window.requestAnimationFrame(() => accountTriggerRef.current?.focus());
     }
@@ -1187,6 +1188,7 @@ export default function Header() {
                       onKeyDown={(event) => {
                         if (event.key !== "Escape") return;
                         event.preventDefault();
+                        event.stopPropagation();
                         closePlaylistsMenu();
                         playlistsTriggerRef.current?.focus();
                       }}
