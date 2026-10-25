@@ -1,8 +1,3 @@
-/* Admin dashboard */
-.filmwave-admin-content-page > aside {
-  top: var(--filmwave-header-height, 56px) !important;
-}
-
 main[class*="md:ml-[var(--admin-sidebar-width)]"] {
   padding-top: 0 !important;
 }
@@ -29,7 +24,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   letter-spacing: normal;
 }
 
-/* Search controls use the same 40px / 7px geometry as top-page actions. */
+/* Search controls use the same 40px geometry and shared backend radius as top-page actions. */
 .filmwave-admin-content-page [role="searchbox"] {
   display: block;
   box-sizing: border-box;
@@ -145,7 +140,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 }
 
 .admin-song-upload-content-page .admin-song-form-icon-btn {
-  border-radius: 7px;
+  border-radius: var(--filmwave-backend-control-radius, 3px);
 }
 
 .admin-song-upload-content-page .admin-song-form-icon-btn:hover,
@@ -177,7 +172,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   [class~="rounded-md"],
   [class~="rounded-lg"]
 ) {
-  border-radius: 7px;
+  border-radius: var(--filmwave-backend-control-radius, 3px);
 }
 
 .admin-song-upload-content-page form :is(
@@ -189,7 +184,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
 
 .admin-song-upload-content-page form label[class~="h-9"] {
   height: 40px;
-  border-radius: 7px;
+  border-radius: var(--filmwave-backend-control-radius, 3px);
 }
 
 /* Audio and stems rows are file controls, not backend content containers. */
@@ -398,7 +393,7 @@ main.filmwave-admin-content-page.admin-song-upload-content-page
   > div:last-child
   > button {
   height: 40px;
-  border-radius: 7px;
+  border-radius: var(--filmwave-backend-control-radius, 3px);
   font-size: 12px;
   font-weight: 400;
 }
