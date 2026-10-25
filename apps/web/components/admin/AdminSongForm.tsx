@@ -12,6 +12,7 @@ import {
   BackendIconButton,
 } from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
+import { SongFormTagSection } from "@/components/backend/SongFormSection";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
@@ -828,45 +829,6 @@ function TextArea({
       readOnly={readOnly}
       className="w-full resize-none rounded-lg border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 py-2.5 text-xs leading-5 text-[var(--text-primary)] outline-none transition placeholder:text-[var(--text-muted)] focus:border-[var(--text-secondary)] read-only:text-[var(--text-secondary)]"
     />
-  );
-}
-
-function MultiSelectPills({
-  options,
-  selected,
-  onChange,
-}: {
-  options: readonly string[];
-  selected: string[];
-  onChange: (selected: string[]) => void;
-}) {
-  return (
-    <div className="flex flex-wrap gap-1.5">
-      {options.map((option) => {
-        const active = selected.includes(option);
-
-        return (
-          <button
-            key={option}
-            type="button"
-            onClick={() => {
-              onChange(
-                active
-                  ? selected.filter((item) => item !== option)
-                  : [...selected, option],
-              );
-            }}
-            className={`h-7 rounded-full border-[1.25px] px-2.5 text-[11px] font-normal transition ${
-              active
-                ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
-                : "border-[var(--border)] text-[var(--text-secondary)] hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)]"
-            }`}
-          >
-            {option}
-          </button>
-        );
-      })}
-    </div>
   );
 }
 
@@ -1819,99 +1781,47 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </div>
             </section>
 
-            <section className="admin-song-form-card filmwave-song-form-card">
-              <div className="admin-song-form-card-header filmwave-song-form-header">
-                <div className="admin-song-form-kicker">Tags</div>
-              </div>
+            <SongFormTagSection
+              title="Genre"
+              options={GENRE_OPTIONS}
+              selected={selectedGenres}
+              onChange={setSelectedGenres}
+            />
 
-              <div className="filmwave-song-form-body grid gap-5 p-4">
-                <div>
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <FieldLabel>Genre</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
-                      {selectedGenres.length} selected
-                    </span>
-                  </div>
-                  <MultiSelectPills
-                    options={GENRE_OPTIONS}
-                    selected={selectedGenres}
-                    onChange={setSelectedGenres}
-                  />
-                </div>
+            <SongFormTagSection
+              title="Region"
+              options={REGION_OPTIONS}
+              selected={selectedRegions}
+              onChange={setSelectedRegions}
+            />
 
-                <div>
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <FieldLabel>Region</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
-                      {selectedRegions.length} selected
-                    </span>
-                  </div>
-                  <MultiSelectPills
-                    options={REGION_OPTIONS}
-                    selected={selectedRegions}
-                    onChange={setSelectedRegions}
-                  />
-                </div>
+            <SongFormTagSection
+              title="Scene"
+              options={MOOD_OPTIONS}
+              selected={selectedMoods}
+              onChange={setSelectedMoods}
+            />
 
-                <div>
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <FieldLabel>Scene</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
-                      {selectedMoods.length} selected
-                    </span>
-                  </div>
-                  <MultiSelectPills
-                    options={MOOD_OPTIONS}
-                    selected={selectedMoods}
-                    onChange={setSelectedMoods}
-                  />
-                </div>
+            <SongFormTagSection
+              title="Instrument"
+              options={INSTRUMENT_OPTIONS}
+              selected={selectedInstruments}
+              onChange={setSelectedInstruments}
+            />
 
-                <div>
-                  <div className="mb-2 flex items-center justify-between gap-4">
-                    <FieldLabel>Instrument</FieldLabel>
-                    <span className="text-[11px] text-[var(--text-muted)]">
-                      {selectedInstruments.length} selected
-                    </span>
-                  </div>
-                  <MultiSelectPills
-                    options={INSTRUMENT_OPTIONS}
-                    selected={selectedInstruments}
-                    onChange={setSelectedInstruments}
-                  />
-                </div>
+            <SongFormTagSection
+              title="Build"
+              options={BUILD_OPTIONS}
+              selected={selectedBuilds}
+              onChange={setSelectedBuilds}
+            />
 
-                <div className="grid gap-5 md:grid-cols-2">
-                  <div>
-                    <div className="mb-2 flex items-center justify-between gap-4">
-                      <FieldLabel>Build</FieldLabel>
-                      <span className="text-[11px] text-[var(--text-muted)]">
-                        {selectedBuilds.length} selected
-                      </span>
-                    </div>
-                    <MultiSelectPills
-                      options={BUILD_OPTIONS}
-                      selected={selectedBuilds}
-                      onChange={setSelectedBuilds}
-                    />
-                  </div>
-
-                  <div>
-                    <div className="mb-2 flex items-center justify-between gap-4">
-                      <FieldLabel>Vocals</FieldLabel>
-                      <span className="text-[11px] text-[var(--text-muted)]">
-                        {selectedVocals.length} selected
-                      </span>
-                    </div>
-                    <MultiSelectPills
-                      options={VOCALS_OPTIONS}
-                      selected={selectedVocals}
-                      onChange={setSelectedVocals}
-                    />
-                  </div>
-                </div>
-              </div>
-            </section>
+            <SongFormTagSection
+              title="Vocals"
+              options={VOCALS_OPTIONS}
+              selected={selectedVocals}
+              onChange={setSelectedVocals}
+            />
 
             <section className="admin-song-form-card filmwave-song-form-card">
               <div className="admin-song-form-card-header filmwave-song-form-header">
