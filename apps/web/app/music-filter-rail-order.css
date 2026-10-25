@@ -58,28 +58,28 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail-item[data-filter-section-id="cuePoints"],
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail-item[data-filter-section-id="display"] {
-  display: none !important;
+  display: none;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail .fw-filter-rail-item:hover {
-  background: var(--bg-hover) !important;
-  background-color: var(--bg-hover) !important;
+  background: var(--bg-hover);
+  background-color: var(--bg-hover);
 }
 
 main
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail-chevron {
-  display: inline-flex !important;
-  opacity: 1 !important;
+  display: inline-flex;
+  opacity: 1;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-option {
-  border-radius: 999px !important;
+  border-radius: 999px;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-option:hover,
 main > section:has(.fw-filter-panel-wrap) .fw-filter-option.is-selected {
-  border-radius: 999px !important;
+  border-radius: 999px;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-rail-item[data-filter-section-id="playlist"].is-active) .fw-filter-group-label {
@@ -94,30 +94,30 @@ main > section:has(.fw-filter-panel-wrap) .fw-filter-panel-body:has(.fw-filter-r
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   :is(.fw-filter-rail-item, .fw-filter-advanced-trigger)
   > :is(.fw-filter-rail-count, .fw-filter-advanced-count) {
-  box-sizing: border-box !important;
-  width: 18px !important;
-  min-width: 18px !important;
-  height: 18px !important;
-  flex: 0 0 18px !important;
-  margin-left: auto !important;
-  margin-right: 8px !important;
-  padding: 0 !important;
-  border-radius: 999px !important;
-  font-size: 9.5px !important;
-  font-weight: 400 !important;
-  line-height: 18px !important;
+  box-sizing: border-box;
+  width: 18px;
+  min-width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  margin-left: auto;
+  margin-right: 8px;
+  padding: 0;
+  border-radius: 999px;
+  font-size: 9.5px;
+  font-weight: 400;
+  line-height: 18px;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail-item
   > .fw-filter-rail-count:hover {
-  font-size: 0 !important;
+  font-size: 0;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item {
-  gap: 0 !important;
+  gap: 0;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -141,7 +141,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-accordion
   > .fw-filter-advanced-section:last-child {
-  border-bottom: 0 !important;
+  border-bottom: 0;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -189,24 +189,24 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-count
   > .fw-filter-rail-count-clear {
-  position: absolute !important;
-  inset: 0 !important;
-  display: none !important;
-  align-items: center !important;
-  justify-content: center !important;
-  width: 100% !important;
-  height: 100% !important;
-  color: inherit !important;
-  pointer-events: none !important;
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  pointer-events: none;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-count
   > .fw-filter-rail-count-clear
   svg {
-  display: block !important;
-  width: 11px !important;
-  height: 11px !important;
+  display: block;
+  width: 11px;
+  height: 11px;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
@@ -218,7 +218,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-advanced-count:hover
   > .fw-filter-rail-count-clear {
-  display: inline-flex !important;
+  display: inline-flex;
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
