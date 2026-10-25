@@ -36,7 +36,7 @@ main[class*="md:ml-[var(--admin-sidebar-width)]"] > section[class*="pt-[88px]"] 
   height: 40px !important;
   min-height: 40px;
   margin: 0;
-  border-radius: 7px !important;
+  border-radius: 3px !important;
   appearance: none;
   line-height: 20px;
 }
@@ -201,7 +201,7 @@ main.filmwave-admin-content-page.admin-song-upload-content-page
   > section:has(> h2)
   > [class~="grid"][class~="gap-2"]
   > div[class*="rounded-"][class*="border"] {
-  border-radius: var(--filmwave-backend-control-radius, 7px);
+  border-radius: var(--filmwave-backend-control-radius, 3px);
 }
 
 .admin-song-upload-content-page
@@ -439,7 +439,7 @@ main:has(.admin-song-form-card):not(.admin-song-upload-content-page):not(.admin-
 
 /* Canonical admin action controls retain the backend control radius. */
 .filmwave-admin-content-page :is(button, a)[class~="rounded-[7px]"] {
-  border-radius: var(--filmwave-backend-control-radius, 7px);
+  border-radius: var(--filmwave-backend-control-radius, 3px);
 }
 
 .filmwave-admin-content-page :is(
