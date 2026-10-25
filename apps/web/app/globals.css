@@ -189,6 +189,17 @@ body.sidebar-collapsed .desktop-app-sidebar-inner::before,
   align-self: flex-end;
 }
 
+:where(
+    .filmwave-section-heading-row,
+    .audioflume-home-mockup-section-label,
+    .discover-artist-featured-heading,
+    .audioflume-pricing-comparison-heading
+  ):has(> .audioflume-arrow-text-link.inline-flex)
+  > :first-child {
+  position: relative;
+  top: 2px;
+}
+
 .audioflume-arrow-text-link svg {
   position: relative;
   top: 0;
