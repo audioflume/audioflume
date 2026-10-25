@@ -1061,7 +1061,7 @@ export default function ArtistSongUploadForm({
             rightsDisabled={!canEditRights || busy || uploadComplete}
             canAddRightsHolder={canEditRights && !uploadComplete}
             rightsReadOnlyMessage="Your role cannot edit ownership. You can upload the draft, and a manager or owner can complete rights before submission."
-            rightsReadOnlyClassName="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]"
+            rightsReadOnlyClassName="border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]"
           />
         </div>
 
@@ -1117,7 +1117,7 @@ export default function ArtistSongUploadForm({
                   </div>
                 ) : null}
                 {saveStatus ? (
-                  <div className="rounded-[7px] bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
+                  <div className="bg-[var(--bg-tertiary)] p-3 text-xs leading-5 text-[var(--text-secondary)]">
                     {saveStatus}
                   </div>
                 ) : null}
