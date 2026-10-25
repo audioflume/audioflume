@@ -315,12 +315,13 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
 }
 
 function HomeLifetimeSongRow({ song }: { song: Song }) {
-  const { togglePlayPause } = usePlayer();
+  const { currentSong, togglePlayPause } = usePlayer();
   const playing = useIsCurrentSongPlaying(song.id);
+  const active = currentSong?.id === song.id;
 
   return (
     <article
-      className={`audioflume-home-lifetime-v2-song${playing ? " is-playing" : ""}`}
+      className={`audioflume-home-lifetime-v2-song${active ? " is-active" : ""}`}
       role="button"
       tabIndex={0}
       aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
