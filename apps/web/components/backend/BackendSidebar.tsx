@@ -46,10 +46,10 @@ export function BackendSidebarShell({
           className,
         )}
         style={{
-          top: "var(--filmwave-header-height)",
-          height: `calc(100dvh - var(--filmwave-header-height) - ${bottom})`,
+          top: "var(--filmwave-web-header-bottom, var(--filmwave-header-height))",
+          height: `calc(100dvh - var(--filmwave-web-header-bottom, var(--filmwave-header-height)) - ${bottom})`,
           marginLeft: "calc(-1 * var(--admin-sidebar-width))",
-          marginBottom: `calc(-1 * (100dvh - var(--filmwave-header-height) - ${bottom}))`,
+          marginBottom: `calc(-1 * (100dvh - var(--filmwave-web-header-bottom, var(--filmwave-header-height)) - ${bottom}))`,
         }}
       >
         {children}
