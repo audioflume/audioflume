@@ -1202,7 +1202,9 @@ export default function MusicPage() {
 
   const showSongSkeleton =
     !songsError &&
-    ((songsLoading && songs.length === 0) || loadingPlaylistSongs);
+    (!filtersHydrated ||
+      (songsLoading && songs.length === 0) ||
+      loadingPlaylistSongs);
 
   const filterChipGroups = [
     {
