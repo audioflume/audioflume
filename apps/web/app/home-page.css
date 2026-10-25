@@ -1976,7 +1976,7 @@ html:not(.light):not([data-theme="light"])
 .audioflume-home-lifetime-v2 {
   display: grid;
   width: min(var(--home-reference-width), 1535px);
-  height: 705px;
+  height: 675px;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0 auto;
   overflow: hidden;
@@ -2229,24 +2229,48 @@ html:not(.light):not([data-theme="light"])
     padding: 54px 0 34px;
   }
 
-  .audioflume-home-lifetime-v2-meta-left,
-  .audioflume-home-lifetime-v2-meta-right {
+  .audioflume-home-lifetime-v2-meta-left {
     right: auto;
     left: 0;
-    white-space: normal;
+    bottom: 0;
+    white-space: nowrap;
     text-align: left;
   }
 
-  .audioflume-home-lifetime-v2-meta-left {
-    bottom: 28px;
-  }
-
   .audioflume-home-lifetime-v2-meta-right {
+    right: 0;
+    left: auto;
     bottom: 0;
+    white-space: nowrap;
+    text-align: right;
   }
 
   .audioflume-home-lifetime-v2-song-list {
     width: calc(100% - 56px);
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-lifetime-v2-meta {
+    line-height: 1.05;
+    text-align: center;
+  }
+
+  .audioflume-home-lifetime-v2-meta-left,
+  .audioflume-home-lifetime-v2-meta-right {
+    right: 0;
+    left: 0;
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+
+  .audioflume-home-lifetime-v2-meta-left {
+    bottom: 22px;
+  }
+
+  .audioflume-home-lifetime-v2-meta-right {
+    bottom: 0;
   }
 }
 
