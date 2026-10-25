@@ -1,0 +1,25 @@
+.card {
+  position: relative;
+  display: grid;
+  min-width: 0;
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.mediaShell {
+  position: relative;
+  display: grid;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 0;
+  background: var(--bg-secondary);
+}
+
+.mediaLink {
+  position: relative;
+  display: block;
+  min-width: 0;
+  grid-column: 1;
+  grid-row: 1;
+  color: inherit;
+  text-decoration: none;
+}
