@@ -63,7 +63,7 @@ export default function BackendSearchBar({
           className="absolute right-[10px] top-1/2 flex h-[22px] w-[22px] -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
           aria-label={clearLabel}
         >
-          <XIcon size={8} strokeWidth={1.4} />
+          <XIcon size={8} strokeWidth={1.4} className="h-[21px] w-[21px]" />
         </button>
       ) : null}
     </div>
