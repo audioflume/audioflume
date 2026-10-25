@@ -43,33 +43,36 @@ function TagSection({
 }: TagSectionProps) {
   return (
     <section className="filmwave-backend-section">
-      <div className="filmwave-backend-section-header">
-        <h2 className="filmwave-backend-section-title">{title}</h2>
-        <span className="text-[11px] text-[var(--text-muted)]">
-          {selected.length} selected
-        </span>
-      </div>
-      <div className="flex flex-wrap gap-1.5 px-5 pb-5">
-        {options.map((option) => {
-          const active = selected.includes(option);
-          return (
-            <BackendChoiceButton
-              key={option}
-              type="button"
-              disabled={disabled}
-              active={active}
-              onClick={() =>
-                onChange(
-                  active
-                    ? selected.filter((item) => item !== option)
-                    : [...selected, option],
-                )
-              }
-            >
-              {option}
-            </BackendChoiceButton>
-          );
-        })}
+      <div className="px-5 py-5">
+        <div className="mb-3 flex items-center justify-between gap-4">
+          <h2 className="filmwave-backend-section-title">{title}</h2>
+          <span className="text-[11px] text-[var(--text-muted)]">
+            {selected.length} selected
+          </span>
+        </div>
+
+        <div className="flex flex-wrap gap-1.5">
+          {options.map((option) => {
+            const active = selected.includes(option);
+            return (
+              <BackendChoiceButton
+                key={option}
+                type="button"
+                disabled={disabled}
+                active={active}
+                onClick={() =>
+                  onChange(
+                    active
+                      ? selected.filter((item) => item !== option)
+                      : [...selected, option],
+                  )
+                }
+              >
+                {option}
+              </BackendChoiceButton>
+            );
+          })}
+        </div>
       </div>
     </section>
   );
