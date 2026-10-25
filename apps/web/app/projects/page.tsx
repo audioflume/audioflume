@@ -533,7 +533,7 @@ export default function ProjectsPage() {
           color: var(--text-primary) !important;
           cursor: pointer !important;
           font-family: var(--font-aktiv-grotesk) !important;
-          font-size: 14px !important;
+          font-size: 13px !important;
           font-weight: 400 !important;
           letter-spacing: normal !important;
           line-height: 1 !important;
