@@ -1097,6 +1097,14 @@ export function MusicFilterPanel({
     if (!open) return;
     function handleEscape(event: KeyboardEvent) {
       if (event.key !== "Escape" || event.defaultPrevented) return;
+
+      const headerMenuOpen = Boolean(
+        document.querySelector(
+          ".filmwave-header-account-trigger.is-open, .filmwave-header-nav-item-playlists.is-open",
+        ),
+      );
+      if (headerMenuOpen) return;
+
       onClose();
     }
     document.addEventListener("keydown", handleEscape);
