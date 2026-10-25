@@ -125,7 +125,7 @@ main:has(> aside[class*="admin-sidebar-width"])
   padding: 16px var(--filmwave-song-form-x);
 }
 
-.filmwave-song-form-sidebar .filmwave-song-form-header {
+.filmwave-song-form-card-divided .filmwave-song-form-header {
   border-bottom: 1.25px solid var(--border-subtle);
 }
 
@@ -136,10 +136,6 @@ main:has(> aside[class*="admin-sidebar-width"])
 
 .filmwave-song-form-body[class*="grid"] {
   gap: var(--filmwave-song-form-content-gap);
-}
-
-.filmwave-song-form-inline-heading {
-  margin-bottom: var(--filmwave-song-form-title-gap);
 }
 
 .filmwave-backend-button {
