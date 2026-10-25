@@ -34,10 +34,13 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
   const activeNav = navItems.find((item) => item.section === section);
 
   return (
-    <main className="filmwave-account-content-page min-h-screen bg-[var(--bg-primary)] pt-14 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
+    <main className="filmwave-account-content-page min-h-screen bg-[var(--bg-primary)] pt-0 text-[var(--text-primary)] md:ml-[var(--admin-sidebar-width)]">
       <AccountSidebar />
 
-      <section className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 pt-[88px] md:px-10">
+      <section
+        className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 md:px-10"
+        style={{ paddingTop: "calc(var(--filmwave-header-height, 75px) + 13px)" }}
+      >
         <div className="mx-auto flex min-h-full max-w-[1180px] flex-col">
           <BackendPageHeader
             section="Account"
@@ -65,7 +68,6 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
               className="!px-0"
               playerPadding={false}
               showTopBorder={false}
-              pageGutter={false}
               pageGutter={false}
             />
           </div>
