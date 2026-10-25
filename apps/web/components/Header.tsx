@@ -897,7 +897,7 @@ export default function Header() {
             position: fixed;
             top: var(
               --filmwave-web-header-bottom,
-              calc(28px + var(--filmwave-header-height, 75px))
+              var(--filmwave-top-chrome-initial-bottom)
             );
             right: 0;
             bottom: 0;
