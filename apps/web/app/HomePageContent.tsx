@@ -311,6 +311,39 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
   );
 }
 
+function HomeLifetimeSongRow({ song }: { song: Song }) {
+  const { togglePlayPause } = usePlayer();
+  const playing = useIsCurrentSongPlaying(song.id);
+
+  return (
+    <article
+      className={`audioflume-home-lifetime-v2-song${playing ? " is-playing" : ""}`}
+    >
+      <div className="audioflume-home-lifetime-v2-song-cover">
+        {song.coverArt ? (
+          <img src={song.coverArt} alt="" draggable={false} />
+        ) : (
+          <span />
+        )}
+      </div>
+
+      <div className="audioflume-home-lifetime-v2-song-copy">
+        <strong>{song.title}</strong>
+        <span>{song.artist}</span>
+      </div>
+
+      <button
+        type="button"
+        className="audioflume-home-lifetime-v2-song-play"
+        onClick={() => togglePlayPause(song)}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+      </button>
+    </article>
+  );
+}
+
 function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
   return (
     <div className="audioflume-home-reference-original-song-grid">
@@ -834,11 +867,8 @@ export default function HomePageContent({
   const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const introHeadingRef = useRef<HTMLDivElement>(null);
   const introHeadlineMeasureRef = useRef<HTMLSpanElement>(null);
-  const lifetimeStatementRef = useRef<HTMLParagraphElement>(null);
-  const lifetimeStatementFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
   const [introHeadlineBroken, setIntroHeadlineBroken] = useState(false);
-  const [lifetimeStatementNaturalWrap, setLifetimeStatementNaturalWrap] = useState(false);
 
   const playableSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)),
@@ -873,27 +903,6 @@ export default function HomePageContent({
 
     const resizeObserver = new ResizeObserver(updateIntroHeadlineBreak);
     resizeObserver.observe(heading);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, []);
-
-  useLayoutEffect(() => {
-    const statement = lifetimeStatementRef.current;
-    const firstLineMeasure = lifetimeStatementFirstLineMeasureRef.current;
-    if (!statement || !firstLineMeasure) return;
-
-    const updateLifetimeStatementWrap = () => {
-      setLifetimeStatementNaturalWrap(
-        firstLineMeasure.scrollWidth > statement.clientWidth,
-      );
-    };
-
-    updateLifetimeStatementWrap();
-
-    const resizeObserver = new ResizeObserver(updateLifetimeStatementWrap);
-    resizeObserver.observe(statement);
 
     return () => {
       resizeObserver.disconnect();
@@ -1092,59 +1101,52 @@ export default function HomePageContent({
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
-          <Link
-            href="/music?artist=Audioflume"
-            className="audioflume-home-reference-width audioflume-home-lifetime-v2"
-          >
-            <div
-              className="audioflume-home-lifetime-v2-art"
-              aria-hidden="true"
-            >
-              <div className="audioflume-home-lifetime-v2-logo">
-                <AudioflumeOriginalsLogo />
-              </div>
+          <div className="audioflume-home-reference-width audioflume-home-lifetime-v2">
+            <div className="audioflume-home-lifetime-v2-art">
               <img
                 className="audioflume-home-lifetime-v2-image"
                 src="https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg"
                 alt=""
                 draggable={false}
               />
-            </div>
 
-            <div className="audioflume-home-lifetime-v2-copy">
-              <div className="audioflume-home-lifetime-v2-top">
-                <span>Plans for a <b>lifetime</b></span>
-                <span
-                  className="audioflume-home-lifetime-v2-link"
-                  aria-hidden="true"
-                >
-                  <ArrowUpRightIcon
-                    size={16}
-                    strokeWidth={1.5}
-                    className="translate-y-[2px]"
-                  />
-                </span>
+              <div className="audioflume-home-lifetime-v2-logo">
+                <AudioflumeOriginalsLogo />
               </div>
 
-              <p
-                ref={lifetimeStatementRef}
-                className="audioflume-home-lifetime-v2-statement"
-              >
-                <span
-                  ref={lifetimeStatementFirstLineMeasureRef}
-                  className="audioflume-home-lifetime-v2-statement-measure"
-                  aria-hidden="true"
-                >
-                  Lifetime access to in-house
-                </span>
-                {lifetimeStatementNaturalWrap ? (
-                  <>Lifetime access to in-house made original music.</>
-                ) : (
-                  <>Lifetime access to in-house<br />made original music.</>
-                )}
-              </p>
+              <div className="audioflume-home-lifetime-v2-meta">
+                <span>LIFETIME ACCESS TO ORIGINAL IN-HOUSE MADE MUSIC</span>
+                <span>REGULAR $299&nbsp;&nbsp; LIMITED TIME ONLY $99</span>
+              </div>
             </div>
-          </Link>
+
+            <div className="audioflume-home-lifetime-v2-songs">
+              <Link
+                href="/pricing"
+                className="audioflume-home-lifetime-v2-link"
+                aria-label="View Lifetime Access pricing"
+              >
+                <ArrowUpRightIcon size={16} strokeWidth={1.5} />
+              </Link>
+
+              <div className="audioflume-home-lifetime-v2-song-list">
+                {songsLoading
+                  ? Array.from({ length: 7 }, (_, index) => (
+                      <div
+                        key={index}
+                        className="audioflume-home-lifetime-v2-song is-skeleton"
+                      >
+                        <span className="audioflume-home-lifetime-v2-song-cover" />
+                        <span className="audioflume-home-lifetime-v2-song-copy" />
+                        <span className="audioflume-home-lifetime-v2-song-play" />
+                      </div>
+                    ))
+                  : originalSongs.slice(0, 7).map((song) => (
+                      <HomeLifetimeSongRow key={song.id} song={song} />
+                    ))}
+              </div>
+            </div>
+          </div>
         </div>
 
         <section className="audioflume-home-reference-playlists">
