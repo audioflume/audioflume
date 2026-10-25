@@ -262,7 +262,7 @@
   }
 
   .field {
-    width: min(720px, calc(100% - 12px));
+    width: min(720px, 100%);
     margin: 12px 0;
   }
 
@@ -334,7 +334,7 @@
   }
 
   .field {
-    width: min(720px, calc(100% - 12px));
+    width: min(720px, 100%);
     margin: 12px 0;
   }
 
