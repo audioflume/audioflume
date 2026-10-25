@@ -1095,7 +1095,10 @@ export function MusicFilterPanel({
 
   useEffect(() => {
     if (!open) return;
-    function handleEscape(event: KeyboardEvent) { if (event.key === "Escape") onClose(); }
+    function handleEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape" || event.defaultPrevented) return;
+      onClose();
+    }
     document.addEventListener("keydown", handleEscape);
     return () => document.removeEventListener("keydown", handleEscape);
   }, [open, onClose]);
