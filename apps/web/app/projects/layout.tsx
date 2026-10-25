@@ -172,7 +172,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
           .projects-page .projects-control-bar {
             grid-template-columns: 126px minmax(0, 1fr) auto !important;
             align-items: center !important;
-            column-gap: 10px !important;
+            column-gap: var(--projects-content-gutter) !important;
             row-gap: 0 !important;
           }
 
@@ -236,7 +236,7 @@ export default function ProjectsLayout({ children }: { children: ReactNode }) {
 
           .projects-page .projects-control-bar {
             grid-template-columns: 112px minmax(0, 1fr) auto !important;
-            column-gap: 8px !important;
+            column-gap: var(--projects-content-gutter) !important;
             row-gap: 0 !important;
           }
 
