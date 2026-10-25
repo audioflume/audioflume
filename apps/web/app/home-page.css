@@ -1586,7 +1586,7 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-mockup-section-label
   > :first-child {
   position: relative;
-  top: 1px;
+  top: 2px;
 }
 
 .audioflume-home-mockup-curated {
