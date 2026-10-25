@@ -1582,6 +1582,13 @@ html:not(.light):not([data-theme="light"])
   text-decoration: none;
 }
 
+.audioflume-home-mockup-curated
+  .audioflume-home-mockup-section-label
+  > :first-child {
+  position: relative;
+  top: 2px;
+}
+
 .audioflume-home-mockup-curated {
   overflow: hidden;
   padding-top: 0;
