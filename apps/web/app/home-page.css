@@ -2140,15 +2140,17 @@ html:not(.light):not([data-theme="light"])
   border-bottom: 0;
 }
 
-.audioflume-home-lifetime-v2-song:hover,
 .audioflume-home-lifetime-v2-song:focus-visible {
-  background: rgba(255, 255, 255, 0.035);
   outline: none;
 }
 
-.audioflume-home-lifetime-v2-song:hover .audioflume-home-lifetime-v2-song-play,
-.audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play {
-  transform: scale(1.04);
+.audioflume-home-lifetime-v2-song-play svg {
+  transition: transform 120ms ease;
+}
+
+.audioflume-home-lifetime-v2-song:hover .audioflume-home-lifetime-v2-song-play svg,
+.audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play svg {
+  transform: scale(1.14);
 }
 
 .audioflume-home-lifetime-v2-song:first-child {
@@ -2217,9 +2219,6 @@ html:not(.light):not([data-theme="light"])
   transition: transform 120ms ease;
 }
 
-.audioflume-home-lifetime-v2-song-play:hover {
-  transform: scale(1.04);
-}
 
 .audioflume-home-lifetime-v2-song.is-skeleton .audioflume-home-lifetime-v2-song-cover,
 .audioflume-home-lifetime-v2-song.is-skeleton .audioflume-home-lifetime-v2-song-copy,
