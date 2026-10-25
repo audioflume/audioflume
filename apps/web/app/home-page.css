@@ -2130,7 +2130,8 @@ html:not(.light):not([data-theme="light"])
   grid-template-columns: 52px minmax(0, 1fr) 42px;
   align-items: center;
   gap: 22px;
-  min-height: 70px;
+  height: 68px;
+  min-height: 68px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.11);
 }
 
@@ -2219,6 +2220,7 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-lifetime-v2-song {
     grid-template-columns: 46px minmax(0, 1fr) 38px;
     gap: 16px;
+    height: 68px;
     min-height: 68px;
   }
 
