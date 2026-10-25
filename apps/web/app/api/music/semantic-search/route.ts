@@ -20,9 +20,10 @@ export const revalidate = 0;
 
 const MAX_QUERY_LENGTH = 500;
 const MAX_RESULT_COUNT = 200;
-const MAX_RETURNED_RESULTS = 40;
-const MIN_HYBRID_MATCH_SCORE = 0.3;
-const MAX_HYBRID_SCORE_DROP = 0.12;
+const MAX_RETURNED_RESULTS = 24;
+const MIN_HYBRID_MATCH_SCORE = 0.36;
+const MAX_HYBRID_SCORE_DROP = 0.1;
+const MIN_SCORE_SEPARATION = 0.04;
 
 async function getHybridMatches(
   query: string,
@@ -48,6 +49,13 @@ async function getHybridMatches(
 
   const bestScore = ranked[0]?.hybridScore ?? 0;
   if (bestScore < MIN_HYBRID_MATCH_SCORE) return [];
+
+  const comparisonIndex = Math.min(ranked.length - 1, 9);
+  const comparisonScore = ranked[comparisonIndex]?.hybridScore ?? bestScore;
+  const hasClearSeparation =
+    ranked.length <= 3 || bestScore - comparisonScore >= MIN_SCORE_SEPARATION;
+
+  if (!hasClearSeparation) return [];
 
   const minimumScore = Math.max(
     MIN_HYBRID_MATCH_SCORE,
