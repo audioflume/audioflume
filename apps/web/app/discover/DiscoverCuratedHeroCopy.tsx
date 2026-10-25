@@ -154,19 +154,13 @@ export default function DiscoverCuratedHeroCopy({
 
         .discover-mood-pill-list {
           display: flex;
-          width: min(calc(100% - 80px), 1320px);
+          width: min(calc(100% - (var(--filmwave-page-gutter) * 2)), 1320px);
           overflow: visible;
           flex-wrap: wrap;
           align-items: center;
           justify-content: center;
           gap: 8px;
           padding: 0 10px 2px;
-        }
-
-        @media (max-width: 980px) {
-          .discover-mood-pill-list {
-            width: calc(100% - 64px);
-          }
         }
 
         @media (max-width: 720px) {
@@ -176,7 +170,7 @@ export default function DiscoverCuratedHeroCopy({
           }
 
           .discover-mood-pill-list {
-            width: calc(100% - 32px);
+            width: calc(100% - (var(--filmwave-page-gutter) * 2));
             gap: 7px;
             padding-right: 4px;
             padding-left: 4px;
@@ -319,7 +313,6 @@ export default function DiscoverCuratedHeroCopy({
 
             @media (max-width: 980px) {
               .discover-home-search {
-                width: calc(100% - 64px);
                 margin-top: 34px;
               }
             }
