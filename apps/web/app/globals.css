@@ -110,21 +110,6 @@ main > section[class*="ml-[var(--sidebar-width)]"],
   margin-left: var(--filmwave-page-sidebar-offset) !important;
 }
 
-/* ─── Discover page visual-first layout ───────────────────── */
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mb-6,
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > section.mt-6 {
-  display: none !important;
-}
-
-main:has(a[href^="/curated-playlists/"]) > section > div > section:first-child > .mt-4 {
-  margin-top: 0 !important;
-}
-
-main:has(a[href^="/curated-playlists/"]) section.mt-10 article[aria-label^="Play "] > div:first-child {
-  border-radius: 10px;
-}
-
 /* Temporary header visibility review. */
 .filmwave-app-header,
 .desktop-header,
