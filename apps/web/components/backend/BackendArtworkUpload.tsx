@@ -215,7 +215,7 @@ export default function BackendArtworkUpload({
               onClick={() => inputRef.current?.click()}
               onDrop={handleDrop}
               onDragOver={(event) => event.preventDefault()}
-              className="relative h-full w-full cursor-pointer overflow-hidden border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
+              className="relative h-full w-full cursor-pointer overflow-hidden rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] disabled:cursor-not-allowed disabled:opacity-60"
               aria-label={`Replace ${title.toLowerCase()}`}
             >
               <img
@@ -266,7 +266,7 @@ export default function BackendArtworkUpload({
           onClick={() => inputRef.current?.click()}
           onDrop={handleDrop}
           onDragOver={(event) => event.preventDefault()}
-          className="group flex min-h-[180px] w-full cursor-pointer items-center justify-center gap-4 border-[1.25px] border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-5 text-left transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
+          className="group flex min-h-[180px] w-full cursor-pointer items-center justify-center gap-4 rounded-[3px] border-[1.25px] border-dashed border-[var(--border)] bg-[var(--bg-secondary)] p-5 text-left transition hover:border-[var(--border-hover)] hover:bg-[var(--bg-hover)] disabled:cursor-not-allowed disabled:opacity-60"
         >
           <span className="flex h-12 w-12 shrink-0 items-center justify-center bg-[var(--bg-tertiary)] text-[var(--text-muted)] transition group-hover:bg-[var(--bg-primary)]">
             <UploadIcon size={18} />
