@@ -148,14 +148,6 @@ export default async function RootLayout({
           <link rel="stylesheet" href={TYPEKIT_STYLESHEET} />
           <link rel="preconnect" href={R2_CDN_ORIGIN} />
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
-          <style>{`
-            html body .filmwave-header .filmwave-header-actions .filmwave-header-nav .filmwave-header-nav-link {
-              gap: 12px !important;
-              font-family: var(--font-aktiv-grotesk), sans-serif !important;
-              font-size: 13px !important;
-              text-transform: none !important;
-            }
-          `}</style>
         </head>
         <body>
           <ArtistInvitesProvider
