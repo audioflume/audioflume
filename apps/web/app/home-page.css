@@ -2067,6 +2067,11 @@ html:not(.light):not([data-theme="light"])
   color: #ffffff;
 }
 
+:where(html:not(.light):not([data-theme="light"]))
+  .audioflume-home-lifetime-v2-songs {
+  background: #151515;
+}
+
 .audioflume-home-lifetime-v2-link {
   position: absolute;
   top: 18px;
