@@ -1242,11 +1242,7 @@ export default function ArtistSongUploadForm({
         </div>
 
         <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
-          <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Checklist</h2>
-            </div>
-            <div className="filmwave-song-form-body grid gap-2 p-4">
+          <div className="grid gap-2">
               {uploadWarnings.length > 0 && !uploadComplete ? (
                 <>
                   <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
@@ -1283,8 +1279,7 @@ export default function ArtistSongUploadForm({
                   Ready to save
                 </div>
               )}
-            </div>
-          </section>
+          </div>
 
           {(saveStatus || error) ? (
             <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
@@ -1306,11 +1301,7 @@ export default function ArtistSongUploadForm({
             </section>
           ) : null}
 
-          <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Actions</h2>
-            </div>
-            <div className="filmwave-song-form-body grid gap-2 p-4">
+          <div className="grid gap-2">
               <button
                 type="submit"
                 disabled={
@@ -1343,8 +1334,7 @@ export default function ArtistSongUploadForm({
               >
                 Back to Music
               </button>
-            </div>
-          </section>
+          </div>
         </aside>
       </form>
     </div>
