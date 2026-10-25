@@ -16,6 +16,7 @@ import {
   BackendSelect,
 } from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
+import { SongFormSection } from "@/components/backend/SongFormSection";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
 import UploadIcon from "@/components/icons/UploadIcon";
@@ -819,12 +820,10 @@ export default function ArtistSongUploadForm({
             }
           />
 
-          <section className="filmwave-backend-section filmwave-song-form-card">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Song Info</h2>
-            </div>
-
-            <div className="filmwave-song-form-body grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
+          <SongFormSection
+            title="Song Info"
+            bodyClassName="grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4"
+          >
               <div>
                 <BackendInput
                   aria-label="Song Title"
@@ -924,8 +923,7 @@ export default function ArtistSongUploadForm({
                   disabled={!canEditMetadata || busy || uploadComplete}
                 />
               </div>
-            </div>
-          </section>
+          </SongFormSection>
 
           <ArtistSongLicenseSelector
             value={licenseType}
@@ -934,11 +932,10 @@ export default function ArtistSongUploadForm({
           />
 
           {createReleaseOpen ? (
-            <section className="filmwave-backend-section filmwave-song-form-card">
-              <div className="filmwave-backend-section-header filmwave-song-form-header">
-                <h2 className="filmwave-backend-section-title">New Release</h2>
-              </div>
-              <div className="filmwave-song-form-body grid gap-4 px-5 pb-5">
+            <SongFormSection
+              title="New Release"
+              bodyClassName="grid gap-4 px-5 pb-5"
+            >
                 <div className="grid gap-3 md:grid-cols-[minmax(0,1fr)_180px_180px]">
                   <label className="block">
                     <span className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
@@ -1019,8 +1016,7 @@ export default function ArtistSongUploadForm({
                     {creatingRelease ? "Creating..." : "Create Release"}
                   </button>
                 </div>
-              </div>
-            </section>
+            </SongFormSection>
           ) : null}
 
           <ArtistSongTagSections
@@ -1110,11 +1106,11 @@ export default function ArtistSongUploadForm({
           </div>
 
           {(saveStatus || error) ? (
-            <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
-              <div className="filmwave-backend-section-header filmwave-song-form-header">
-                <h2 className="filmwave-backend-section-title">Upload Status</h2>
-              </div>
-              <div className="filmwave-song-form-body grid gap-3 px-5 pb-5">
+            <SongFormSection
+              title="Upload Status"
+              divided
+              bodyClassName="grid gap-3 px-5 pb-5"
+            >
                 {error ? (
                   <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
                     {error}
@@ -1125,8 +1121,7 @@ export default function ArtistSongUploadForm({
                     {saveStatus}
                   </div>
                 ) : null}
-              </div>
-            </section>
+            </SongFormSection>
           ) : null}
 
           <div className="grid gap-2">
