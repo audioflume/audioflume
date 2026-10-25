@@ -7,7 +7,10 @@ import { useRouter } from "next/navigation";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSongEditPointsSection from "@/components/admin/AdminSongEditPointsSection";
-import { BackendButton } from "@/components/backend/BackendControls";
+import {
+  BackendButton,
+  BackendIconButton,
+} from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
@@ -1616,52 +1619,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
       description={pageDescription}
       titleAction={titleAction}
     >
-      <style>{`
-        .admin-song-form-card {
-          overflow: hidden;
-          border-radius: 0.75rem;
-          border: 1.25px solid var(--border);
-          background: var(--bg-secondary);
-        }
-
-        .admin-song-form-card-header {
-          display: flex;
-          min-height: 40px;
-          align-items: center;
-          justify-content: space-between;
-          gap: 1rem;
-          border-bottom: 1.25px solid var(--border);
-          padding: 0 1rem;
-        }
-
-        .admin-song-form-kicker {
-          font-size: 11px;
-          font-weight: 500;
-          letter-spacing: 0.08em;
-          text-transform: uppercase;
-          color: var(--text-muted);
-        }
-
-        .admin-song-form-icon-btn {
-          display: flex;
-          height: 28px;
-          width: 28px;
-          cursor: pointer;
-          align-items: center;
-          justify-content: center;
-          border-radius: 6px;
-          border: 0;
-          background: transparent;
-          color: var(--icon-color);
-          transition: background 0.15s ease, color 0.15s ease, opacity 0.15s ease;
-        }
-
-        .admin-song-form-icon-btn:hover,
-        .admin-song-form-icon-btn.is-open {
-          background: var(--icon-button-hover);
-          color: var(--text-primary);
-        }
-      `}</style>
 
       <div
         style={{
@@ -1819,7 +1776,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
 
                 <div className="flex items-center gap-1">
-                  <button
+                  <BackendIconButton
                     type="button"
                     onClick={reAnalyzeWaveformPeaks}
                     disabled={
@@ -1828,24 +1785,24 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       isSaving
                     }
                     aria-label="Re-analyze waveform peaks"
-                    className="admin-song-form-icon-btn disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--icon-color)]"
+                    className="disabled:cursor-default disabled:opacity-40"
                   >
                     <RefreshIcon />
-                  </button>
+                  </BackendIconButton>
 
-                  <button
+                  <BackendIconButton
                     type="button"
                     onClick={copyWaveformPeaks}
                     disabled={!waveformPeaks}
                     aria-label="Copy waveform peaks"
-                    className="admin-song-form-icon-btn disabled:cursor-default disabled:opacity-40 disabled:hover:bg-transparent disabled:hover:text-[var(--icon-color)]"
+                    className="disabled:cursor-default disabled:opacity-40"
                   >
                     <CopyIcon />
-                  </button>
+                  </BackendIconButton>
                 </div>
               </div>
 
-              <div className="p-4">
+              <div className="filmwave-song-form-body">
                 <p className="mb-3 text-xs leading-5 text-[var(--text-secondary)]">
                   {isEditMode
                     ? "Existing peak data is loaded from Supabase. Re-analyze only when needed."
@@ -1975,7 +1932,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
           </div>
 
           <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
-            <section className="admin-song-form-card filmwave-song-form-card">
+            <section className="admin-song-form-card filmwave-song-form-card filmwave-song-form-card-divided">
               <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div className="admin-song-form-kicker">Checklist</div>
               </div>
@@ -2031,7 +1988,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               uploadedFiles.audio ||
               uploadedFiles.cover ||
               uploadedFiles.stems.length > 0) && (
-              <section className="admin-song-form-card filmwave-song-form-card">
+              <section className="admin-song-form-card filmwave-song-form-card filmwave-song-form-card-divided">
                 <div className="admin-song-form-card-header filmwave-song-form-header">
                   <div className="admin-song-form-kicker">{statusTitle}</div>
                 </div>
@@ -2094,7 +2051,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               </section>
             )}
 
-            <section className="admin-song-form-card filmwave-song-form-card">
+            <section className="admin-song-form-card filmwave-song-form-card filmwave-song-form-card-divided">
               <div className="admin-song-form-card-header filmwave-song-form-header">
                 <div className="admin-song-form-kicker">Actions</div>
               </div>
