@@ -1106,7 +1106,7 @@ export default function HomePageContent({
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
             <h2>
-              Lifetime access to original
+              Lifetime access to original{" "}
               <br className="audioflume-home-lifetime-heading-break" />
               in-house made music
             </h2>
