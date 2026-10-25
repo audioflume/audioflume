@@ -424,7 +424,7 @@ export default function AdminDashboardPage() {
         <section className="rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           Loading...
         </section>
-        <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+        <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
       </AdminContentPage>
     );
   }
@@ -441,7 +441,7 @@ export default function AdminDashboardPage() {
         <section className="rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           You do not have access to this page.
         </section>
-        <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+        <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
       </AdminContentPage>
     );
   }
@@ -587,7 +587,7 @@ export default function AdminDashboardPage() {
         </section>
       ) : null}
 
-      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
     </AdminContentPage>
   );
 }
