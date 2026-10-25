@@ -1263,11 +1263,11 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-reference-artist-card:not(.audioflume-home-reference-artist-promo) {
   width: calc(
     min(1020px, clamp(67vw, calc(30.83vw + 354.4px), 88vw)) -
-      clamp(0px, calc(20.18vw - 125.12px), 180px)
+      clamp(0px, calc(26.91vw - 166.82px), 240px)
   ) !important;
   min-width: calc(
     min(1020px, clamp(67vw, calc(30.83vw + 354.4px), 88vw)) -
-      clamp(0px, calc(20.18vw - 125.12px), 180px)
+      clamp(0px, calc(26.91vw - 166.82px), 240px)
   ) !important;
 }
 
@@ -1298,8 +1298,8 @@ html:not(.light):not([data-theme="light"])
 
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card:not(.audioflume-home-reference-artist-promo) {
-    width: calc(100vw * 0.5555555556) !important;
-    min-width: calc(100vw * 0.5555555556) !important;
+    width: calc(100vw * 0.5158730159) !important;
+    min-width: calc(100vw * 0.5158730159) !important;
   }
 
   .audioflume-home-mockup-artists
@@ -1311,7 +1311,7 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card:not(.audioflume-home-reference-artist-promo)
     .audioflume-home-reference-artist-media {
-    aspect-ratio: 840 / 430 !important;
+    aspect-ratio: 780 / 430 !important;
   }
 }
 
@@ -1768,11 +1768,6 @@ html:not(.light):not([data-theme="light"])
 
 @media (max-width: 980px) {
   .audioflume-home-mockup-artists
-    .audioflume-home-reference-artist-bar {
-    padding-right: 210px;
-  }
-
-  .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-play,
   .audioflume-home-reference-artist-promo-link {
     width: 180px;
@@ -1792,16 +1787,9 @@ html:not(.light):not([data-theme="light"])
   }
 
   .audioflume-home-mockup-artists
-    .audioflume-home-reference-artist-bar {
-    bottom: 26px;
-    padding-right: 26px;
-    padding-left: 22px;
-  }
-
-  .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-play {
-    right: 24px;
-    bottom: 24px;
+    right: 34px;
+    bottom: 34px;
     display: grid;
     width: 44px;
     min-width: 44px;
