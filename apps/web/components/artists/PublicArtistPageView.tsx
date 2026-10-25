@@ -192,10 +192,7 @@ export default function PublicArtistPageView({
     <>
       <style>{`
         .artist-public-page {
-          --artist-public-page-edge: max(
-            var(--filmwave-editorial-inset),
-            calc((100vw - var(--filmwave-editorial-max-width)) / 2)
-          );
+          --artist-public-page-edge: var(--filmwave-page-gutter);
           margin-top: var(--filmwave-header-height);
           min-height: calc(100vh - var(--filmwave-header-height));
           overflow-x: clip;
