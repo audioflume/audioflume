@@ -209,12 +209,16 @@ export default function AdminMusicLibraryPage() {
   ];
 
   const searchedSongs = useMemo(() => {
-    const q = search.trim().toLowerCase();
+    const queryTokens = search
+      .trim()
+      .toLowerCase()
+      .split(/\s+/)
+      .filter(Boolean);
 
-    if (!q) return songs;
+    if (queryTokens.length === 0) return songs;
 
     return songs.filter((song) => {
-      const searchableText = [
+      const searchableWords = [
         song.title,
         song.artist,
         song.key,
@@ -225,9 +229,13 @@ export default function AdminMusicLibraryPage() {
         ...song.vocals,
       ]
         .join(" ")
-        .toLowerCase();
+        .toLowerCase()
+        .split(/\s+/)
+        .filter(Boolean);
 
-      return searchableText.includes(q);
+      return queryTokens.every((token) =>
+        searchableWords.some((word) => word.startsWith(token)),
+      );
     });
   }, [songs, search]);
 
