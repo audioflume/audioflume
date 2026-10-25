@@ -1899,7 +1899,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   {(uploadedFiles.audio ||
                     uploadedFiles.cover ||
                     uploadedFiles.stems.length > 0) && (
-                    <div className="grid gap-2 text-[11px] text-[var(--text-secondary)]">
+                    <div className="grid gap-2 pl-0 text-[11px] text-[var(--text-secondary)]">
                       {uploadedFiles.audio && (
                         <a
                           href={uploadedFiles.audio.url}
@@ -1916,7 +1916,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                           href={uploadedFiles.cover.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="truncate rounded-lg bg-[var(--bg-primary)] px-3 py-2 transition hover:text-[var(--text-primary)]"
+                          className="block truncate transition hover:text-[var(--text-primary)]"
                         >
                           Cover uploaded
                         </a>
