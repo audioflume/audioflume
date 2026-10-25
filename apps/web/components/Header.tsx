@@ -427,8 +427,12 @@ export default function Header() {
         }
 
         .filmwave-web-header .filmwave-header-nav-link {
+          gap: 12px !important;
           padding-right: 8px !important;
           padding-left: 8px !important;
+          font-family: var(--font-aktiv-grotesk), sans-serif !important;
+          font-size: 13px !important;
+          text-transform: none !important;
         }
         .filmwave-header-right-actions {
           display: inline-flex;
