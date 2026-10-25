@@ -113,14 +113,15 @@ export default function ModalShell({
         <button
           type="button"
           onClick={onClose}
-          className="absolute right-5 top-5 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border-0 bg-[var(--bg-tertiary)] p-0 text-[var(--text-secondary)] transition duration-150 hover:scale-[1.03] hover:bg-[#e2e2e2]"
+          className="absolute right-6 top-6 z-10 inline-flex h-[22px] w-[22px] items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
           aria-label={closeLabel}
         >
-          <svg width="15" height="15" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+          <svg width="8" height="8" viewBox="0 0 24 24" fill="none" aria-hidden="true">
             <path
-              d="m2.25 2.25 7.5 7.5M9.75 2.25l-7.5 7.5"
+              d="M6 6 18 18M18 6 6 18"
               stroke="currentColor"
-              strokeWidth="0.9"
+              strokeWidth="1.4"
+              strokeLinecap="round"
             />
           </svg>
         </button>
