@@ -1126,26 +1126,14 @@ export default function HomePageContent({
                 <AudioflumeOriginalsLogo />
               </div>
 
-              <div className="audioflume-home-lifetime-v2-pricing">
-                <div className="audioflume-home-lifetime-v2-price-group is-regular">
-                  <span className="audioflume-home-lifetime-v2-badge">Regular price</span>
-                  <strong>$299</strong>
-                </div>
-
-                <div className="audioflume-home-lifetime-v2-price-group">
-                  <span className="audioflume-home-lifetime-v2-badge is-light">
-                    Limited time offer
-                  </span>
-                  <div className="audioflume-home-lifetime-v2-offer-price">
-                    <strong>$99</strong>
-                    <span>One time payment</span>
-                  </div>
-                </div>
+              <div className="audioflume-home-lifetime-v2-meta">
+                <span className="audioflume-home-lifetime-v2-meta-left">
+                  LIFETIME ACCESS TO ORIGINAL IN-HOUSE MADE MUSIC
+                </span>
+                <span className="audioflume-home-lifetime-v2-meta-right">
+                  <s>REGULAR $299</s>&nbsp;&nbsp; LIMITED TIME ONLY $99
+                </span>
               </div>
-
-              <span className="audioflume-home-lifetime-v2-caption">
-                LIFETIME ACCESS TO ORIGINAL IN-HOUSE MADE MUSIC
-              </span>
             </div>
 
             <div className="audioflume-home-lifetime-v2-songs">
