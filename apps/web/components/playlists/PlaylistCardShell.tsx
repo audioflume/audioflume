@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import type { CSSProperties, ReactNode } from "react";
 import styles from "./PlaylistCardShell.module.css";
 
 type PlaylistCardShellProps = {
@@ -11,7 +11,7 @@ type PlaylistCardShellProps = {
   mediaClassName?: string;
   mediaLinkClassName?: string;
   mediaStyle?: CSSProperties;
-  mediaProps?: Omit<HTMLAttributes<HTMLDivElement>, "className" | "style">;
+  mediaDataAttribute?: string;
   media: ReactNode;
   overlays?: ReactNode;
   details?: ReactNode;
@@ -28,7 +28,7 @@ export default function PlaylistCardShell({
   mediaClassName,
   mediaLinkClassName,
   mediaStyle,
-  mediaProps,
+  mediaDataAttribute,
   media,
   overlays,
   details,
@@ -36,7 +36,7 @@ export default function PlaylistCardShell({
   return (
     <article className={joinClasses(styles.card, className)}>
       <div
-        {...mediaProps}
+        {...(mediaDataAttribute ? { [mediaDataAttribute]: "" } : {})}
         className={joinClasses(styles.mediaShell, mediaClassName)}
         style={mediaStyle}
       >
