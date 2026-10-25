@@ -281,7 +281,7 @@ export default function ArtistProfileEditor({
             <div
               className="h-14 w-14 shrink-0 overflow-hidden rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={{
-                borderRadius: "7px",
+                borderRadius: "3px",
                 ...(artist.profile_image_url
                   ? { backgroundImage: `url(${artist.profile_image_url})` }
                   : {}),
@@ -314,7 +314,7 @@ export default function ArtistProfileEditor({
             <div
               className="h-14 w-24 shrink-0 overflow-hidden rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-tertiary)] bg-cover bg-center bg-clip-padding"
               style={{
-                borderRadius: "7px",
+                borderRadius: "3px",
                 ...(artist.hero_image_url
                   ? { backgroundImage: `url(${artist.hero_image_url})` }
                   : {}),
