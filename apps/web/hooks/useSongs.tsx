@@ -14,35 +14,48 @@ export function useSongs() {
     setLoading(!cachedSongs);
     setError(null);
 
-    try {
-      const res = await fetch("/api/songs", { cache: "no-store" });
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : null;
+    let lastError: unknown = null;
 
-      if (!res.ok) {
-        throw new Error(data?.error || "Failed to load songs");
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        const res = await fetch("/api/songs", { cache: "no-store" });
+        const text = await res.text();
+        const data = text ? JSON.parse(text) : null;
+
+        if (!res.ok) {
+          throw new Error(data?.error || "Failed to load songs");
+        }
+
+        const songsData = Array.isArray(data)
+          ? data
+          : Array.isArray(data?.songs)
+            ? data.songs
+            : null;
+
+        if (!songsData) {
+          throw new Error("Invalid songs response");
+        }
+
+        cachedSongs = songsData;
+        setSongs(songsData);
+        setLoading(false);
+        return;
+      } catch (err) {
+        lastError = err;
+
+        if (attempt === 0) {
+          await new Promise((resolve) => window.setTimeout(resolve, 250));
+        }
       }
-
-      const songsData = Array.isArray(data)
-        ? data
-        : Array.isArray(data?.songs)
-          ? data.songs
-          : null;
-
-      if (!songsData) {
-        throw new Error("Invalid songs response");
-      }
-
-      cachedSongs = songsData;
-      setSongs(songsData);
-    } catch (err) {
-      if (!cachedSongs) {
-        setSongs([]);
-      }
-      setError(err instanceof Error ? err.message : "Failed to load songs");
-    } finally {
-      setLoading(false);
     }
+
+    if (!cachedSongs) {
+      setSongs([]);
+    }
+    setError(
+      lastError instanceof Error ? lastError.message : "Failed to load songs",
+    );
+    setLoading(false);
   }, []);
 
   const refetchSongs = useCallback(async () => {
