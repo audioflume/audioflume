@@ -16,22 +16,6 @@
   letter-spacing: normal;
 }
 
-/* Search controls use the shared backend control geometry. */
-.filmwave-admin-content-page [role="searchbox"] {
-  display: block;
-  box-sizing: border-box;
-  height: var(--filmwave-backend-control-height) !important;
-  min-height: var(--filmwave-backend-control-height);
-  margin: 0;
-  border-radius: var(--filmwave-backend-control-radius) !important;
-  appearance: none;
-  line-height: 20px;
-}
-
-.filmwave-admin-content-page :has(> [role="searchbox"]) {
-  height: var(--filmwave-backend-control-height);
-}
-
 /* Frontend-matched cover hover */
 .admin-cover-hover img {
   transition: transform 500ms ease;
