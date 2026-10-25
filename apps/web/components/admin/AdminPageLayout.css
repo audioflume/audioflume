@@ -286,3 +286,9 @@ main:has(.admin-song-form-card) form [style*="--status-error"],
 main:has(.admin-song-form-card) form [class*="animate-spin"][class*="rounded-full"] {
   border-radius: 999px;
 }
+
+main:has(.admin-song-form-card) .admin-song-edit-points-review,
+main:has(.admin-song-form-card) .admin-song-edit-points-review > div[class*="border"],
+main:has(.admin-song-form-card) .filmwave-song-form-body > div[class*="border"][class*="rounded-[3px]"] {
+  border-radius: 3px;
+}
