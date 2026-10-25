@@ -172,7 +172,7 @@ export default function PlaylistManagerPage() {
         )}
       </div>
 
-      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
     </AdminContentPage>
   );
 }
