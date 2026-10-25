@@ -107,13 +107,26 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .artist-song-main-column .filmwave-backend-section-header {
+  min-height: 56px;
   border-bottom: 0;
+  padding: 16px 20px;
 }
 
 .artist-song-main-column
   .filmwave-backend-section-header
   + :is(.grid, .flex) {
-  padding-top: 12px;
+  padding: 12px 20px 20px;
+}
+
+.artist-song-sidebar .filmwave-backend-section-header {
+  min-height: 56px;
+  padding: 16px 20px;
+}
+
+.artist-song-sidebar
+  .filmwave-backend-section-header
+  + .grid {
+  padding: 12px 20px 20px;
 }
 
 .filmwave-backend-button {
