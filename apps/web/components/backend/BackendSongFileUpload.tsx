@@ -210,7 +210,7 @@ export default function BackendSongFileUpload({
         />
 
         <div className="grid gap-2">
-          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 border-[1.25px] border-[var(--border)] px-3 ${audioStatusBusy || (audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus)) ? "py-2" : ""}`}>
+          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[3px] border-[1.25px] border-[var(--border)] px-3 ${audioStatusBusy || (audioStatus && !/^(generated|re-generated)\s/i.test(audioStatus)) ? "py-2" : ""}`}>
             <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
               Audio
             </div>
@@ -239,7 +239,7 @@ export default function BackendSongFileUpload({
             ) : null}
           </div>
 
-          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 border-[1.25px] border-[var(--border)] px-3 ${visibleStemLabels.length > 0 ? "py-2" : ""}`}>
+          <div className={`grid min-h-10 grid-cols-[72px_minmax(0,1fr)_auto] items-center gap-3 rounded-[3px] border-[1.25px] border-[var(--border)] px-3 ${visibleStemLabels.length > 0 ? "py-2" : ""}`}>
             <div className="text-xs font-medium leading-[18px] text-[var(--text-primary)]">
               Stems
             </div>
