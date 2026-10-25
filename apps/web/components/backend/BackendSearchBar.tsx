@@ -1,7 +1,6 @@
 "use client";
 
 import ModalSearchBar from "@/components/ModalSearchBar";
-import SearchIcon from "@/components/icons/SearchIcon";
 import XIcon from "@/components/icons/XIcon";
 
 type BackendSearchBarProps = {
@@ -38,10 +37,16 @@ export default function BackendSearchBar({
   return (
     <div className={`relative${className ? ` ${className}` : ""}`}>
       <span
-        className="pointer-events-none absolute left-[14px] top-1/2 flex h-[13px] w-[13px] -translate-y-1/2 items-center justify-center text-[var(--text-muted)]"
+        className="pointer-events-none absolute left-4 top-1/2 flex h-[22px] w-[22px] -translate-y-1/2 items-center justify-center text-[#a3a3a3]"
         aria-hidden="true"
       >
-        <SearchIcon size={13} />
+        <svg
+          viewBox="0 0 24 24"
+          className="h-[22px] w-[22px] fill-none stroke-current [stroke-linecap:round] [stroke-width:1.4]"
+        >
+          <circle cx="11" cy="11" r="6.5" />
+          <path d="m16 16 4.5 4.5" />
+        </svg>
       </span>
       <input
         type="text"
@@ -55,10 +60,10 @@ export default function BackendSearchBar({
         <button
           type="button"
           onClick={() => onChange("")}
-          className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center bg-transparent text-[var(--text-primary)]"
+          className="absolute right-[10px] top-1/2 flex h-[22px] w-[22px] -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
           aria-label={clearLabel}
         >
-          <XIcon size={12} />
+          <XIcon size={8} strokeWidth={1.4} />
         </button>
       ) : null}
     </div>
