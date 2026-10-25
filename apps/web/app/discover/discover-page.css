@@ -1,7 +1,7 @@
 .discover-page-root {
   --discover-artist-gutter: var(--filmwave-page-gutter);
   --discover-artist-max-width: 1640px;
-  --discover-artist-content-inset: 80px;
+  --discover-artist-content-inset: var(--filmwave-page-gutter);
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 75px);
   overflow: hidden;
@@ -386,7 +386,7 @@
 .discover-artist-content {
   position: relative;
   z-index: 3;
-  width: calc(100vw - 160px);
+  width: calc(100vw - (var(--filmwave-page-gutter) * 2));
   max-width: none;
   margin: 0 auto;
 }
@@ -403,7 +403,7 @@
   align-items: baseline;
   justify-content: space-between;
   gap: 24px;
-  margin: 0 0 var(--filmwave-section-title-margin-bottom) calc(50% - 50vw + 80px);
+  margin: 0 0 var(--filmwave-section-title-margin-bottom) calc(50% - 50vw + var(--filmwave-page-gutter));
   font-family: var(--filmwave-section-title-font-family);
   line-height: var(--filmwave-section-title-line-height);
 }
@@ -458,8 +458,8 @@
   gap: 10px;
   overflow-x: auto;
   overflow-y: hidden;
-  padding-right: 80px;
-  padding-left: 80px;
+  padding-right: var(--filmwave-page-gutter);
+  padding-left: var(--filmwave-page-gutter);
   scroll-behavior: smooth;
   overscroll-behavior-x: contain;
   scrollbar-width: none;
@@ -1272,14 +1272,6 @@
 }
 
 @media (max-width: 720px) {
-  .discover-page-root {
-    --discover-artist-content-inset: 18px;
-  }
-
-  .discover-artist-content {
-    width: calc(100vw - 36px);
-  }
-
   .discover-artist-hero-skeleton-copy,
   .discover-artist-hero-skeleton-actions {
     grid-column: 1;
