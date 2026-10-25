@@ -1724,6 +1724,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
 
             <SongFormSection
               title="Waveform Peaks"
+              headerClassName="flex items-start justify-between gap-4"
               action={
                 <div className="flex items-center gap-1">
                   <BackendIconButton
