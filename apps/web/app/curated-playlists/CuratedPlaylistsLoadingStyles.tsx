@@ -139,7 +139,7 @@ const CURATED_PLAYLIST_LOADING_STYLES = `
     .curated-page-skeleton-card {
     width: 100%;
     height: calc(40vw / 2.38);
-    border-radius: 3px;
+    border-radius: 0;
   }
 
   body:has(.curated-playlists-page-root)
