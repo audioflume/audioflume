@@ -4,7 +4,7 @@ import { PremiumLabel } from "@filmwave/shared";
 import { useEffect, useMemo, useState } from "react";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
-import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import ApprovedSongPublishButton from "@/components/admin/ApprovedSongPublishButton";
 import Toast from "@/components/Toast";
 
@@ -702,7 +702,7 @@ export default function AdminMusicReviewPage() {
       ) : (
         <>
           <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
-            <AdminSearchBar
+            <BackendSearchBar
               value={search}
               onChange={setSearch}
               placeholder="Search submissions"
