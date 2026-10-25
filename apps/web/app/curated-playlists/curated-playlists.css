@@ -605,7 +605,7 @@ body:has(.curated-playlists-page-root)
 
 @media (max-width: 620px) {
   body:has(.curated-playlists-page-root) {
-    --curated-page-gutter: 24px;
+    --curated-page-gutter: 16px;
   }
 
   .curated-page-playlist-grid {
@@ -812,6 +812,6 @@ body:has(.curated-playlists-page-root) {
 
 @media (max-width: 620px) {
   body:has(.curated-playlists-page-root) {
-    --curated-page-gutter: 24px;
+    --curated-page-gutter: 16px;
   }
 }
