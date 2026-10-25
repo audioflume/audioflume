@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
-import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import ArtistApplicationReviewPanel from "@/components/admin/ArtistApplicationReviewPanel";
 import Toast from "@/components/Toast";
 
@@ -660,7 +660,7 @@ export default function AdminArtistsPage() {
       ) : null}
 
       <section className="mb-4 flex flex-wrap items-center justify-between gap-3">
-        <AdminSearchBar
+        <BackendSearchBar
           value={search}
           onChange={setSearch}
           placeholder="Search artists"
