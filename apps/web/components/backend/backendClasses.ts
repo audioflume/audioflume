@@ -17,9 +17,9 @@ export const backendCompactPrimaryButtonClass =
   "filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-primary";
 
 export const backendIconButtonClass =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:bg-[var(--bg-hover)] hover:text-[var(--text-primary)] focus-visible:bg-[var(--bg-hover)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 export const backendIconButtonColorOnlyClass =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[3px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 export const backendIconButtonActiveClass =
   "bg-[var(--bg-hover)] text-[var(--text-primary)]";
 
