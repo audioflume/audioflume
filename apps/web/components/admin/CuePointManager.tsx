@@ -208,7 +208,7 @@ export default function CuePointManager({
         .admin-cue-point-standalone .cue-point-review-controls > button {
           box-sizing: border-box;
           height: 32px !important;
-          border-radius: 7px !important;
+          border-radius: 3px !important;
           padding-left: 12px !important;
           padding-right: 12px !important;
           font-size: 12px;
@@ -230,7 +230,7 @@ export default function CuePointManager({
         }
 
         .admin-cue-point-standalone button[class~="rounded-full"] {
-          border-radius: 7px !important;
+          border-radius: 3px !important;
         }
 
         .admin-cue-point-standalone
@@ -244,7 +244,7 @@ export default function CuePointManager({
         .admin-cue-point-standalone .edit-point-play-button {
           height: 40px !important;
           width: 40px !important;
-          border-radius: 7px !important;
+          border-radius: 3px !important;
         }
 
         .admin-cue-point-standalone
@@ -252,14 +252,14 @@ export default function CuePointManager({
           > button:last-child {
           height: 26px !important;
           width: 26px !important;
-          border-radius: 7px !important;
+          border-radius: 3px !important;
         }
 
         .admin-cue-point-standalone
           div:has(> .edit-point-play-button)
           + div[role="button"] {
           height: 128px !important;
-          border-radius: 7px !important;
+          border-radius: 3px !important;
           background: var(--bg-secondary) !important;
         }
 
@@ -319,12 +319,12 @@ export default function CuePointManager({
         }
 
         .admin-cue-point-standalone .cue-point-row-grid button {
-          border-radius: 7px !important;
+          border-radius: 3px !important;
         }
 
         .admin-cue-point-standalone .cue-point-row-grid input {
           height: 32px !important;
-          border-radius: 7px !important;
+          border-radius: 3px !important;
           background: var(--bg-secondary) !important;
           font-family: inherit !important;
           font-size: 12px !important;
