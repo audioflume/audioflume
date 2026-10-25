@@ -325,8 +325,12 @@ function HomeLifetimeSongRow({ song }: { song: Song }) {
       role="button"
       tabIndex={0}
       aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-      onClick={() => togglePlayPause(song)}
+      onClick={(event) => {
+        if ((event.target as HTMLElement).closest("button")) return;
+        togglePlayPause(song);
+      }}
       onKeyDown={(event) => {
+        if ((event.target as HTMLElement).closest("button")) return;
         if (event.key !== "Enter" && event.key !== " ") return;
         event.preventDefault();
         togglePlayPause(song);
@@ -348,7 +352,13 @@ function HomeLifetimeSongRow({ song }: { song: Song }) {
       <button
         type="button"
         className="audioflume-home-lifetime-v2-song-play"
-        onClick={() => togglePlayPause(song)}
+        onClick={(event) => {
+          event.stopPropagation();
+          togglePlayPause(song);
+        }}
+        onKeyDown={(event) => {
+          event.stopPropagation();
+        }}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
         {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
