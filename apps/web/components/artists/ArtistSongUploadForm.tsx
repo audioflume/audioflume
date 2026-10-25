@@ -269,7 +269,7 @@ export default function ArtistSongUploadForm({
   const [instrumental, setInstrumental] = useState(false);
   const [explicit, setExplicit] = useState(false);
   const [licenseType, setLicenseType] =
-    useState<ArtistSongLicenseType>("premium");
+    useState<ArtistSongLicenseType>("standard");
   const [credits, setCredits] = useState<Credit[]>([]);
   const [masterOwner, setMasterOwner] = useState("");
   const [publishingOwner, setPublishingOwner] = useState("");
@@ -584,7 +584,7 @@ export default function ArtistSongUploadForm({
     setVocals([]);
     setInstrumental(false);
     setExplicit(false);
-    setLicenseType("premium");
+    setLicenseType("standard");
     setCredits([]);
     setMasterOwner("");
     setPublishingOwner("");
