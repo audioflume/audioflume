@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
+import ModalSearchBar from "@/components/ModalSearchBar";
 import ModalShell from "@/components/ModalShell";
 import { backendModalPrimaryButtonClass } from "@/components/backend/backendClasses";
 import CheckIcon from "@/components/icons/CheckIcon";
@@ -108,26 +109,11 @@ export default function AdminPlaylistShelfPickerModal({
       }
     >
       <div className="-mx-5 flex min-h-0 flex-1 flex-col px-3">
-        <label className="flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
-          <svg
-            width="16"
-            height="16"
-            viewBox="0 0 24 24"
-            fill="none"
-            aria-hidden="true"
-            className="shrink-0"
-          >
-            <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.5" />
-            <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-          </svg>
-          <input
-            type="search"
-            value={search}
-            onChange={(event) => setSearch(event.target.value)}
-            placeholder={resolvedSearchPlaceholder}
-            className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-sm text-[var(--text-primary)] !outline-none placeholder:text-[var(--text-muted)] focus:!border-0"
-          />
-        </label>
+        <ModalSearchBar
+          value={search}
+          onChange={setSearch}
+          placeholder={resolvedSearchPlaceholder}
+        />
 
         <div className="min-h-0 flex-1 overflow-y-auto pb-3 pt-3">
           {displayedPlaylists.length === 0 ? (
