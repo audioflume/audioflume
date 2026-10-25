@@ -250,20 +250,13 @@ html body .fw-music-content-column .fw-filter-detail .fw-filter-option:not(.is-s
   padding-left: 28px !important;
 }
 
-/* ─── Restore web top-nav/sidebar-hidden layout ───────────── */
+/* ─── Web top-nav/sidebar-hidden layout ───────────────────── */
 
 body {
   --sidebar-width: 0px;
   --filmwave-page-sidebar-offset: 0px;
   --filmwave-sidebar-current-panel-width: 0px;
   --filmwave-sidebar-top-offset: var(--filmwave-header-height);
-}
-
-.filmwave-app-header,
-.desktop-header,
-body > header,
-.filmwave-header {
-  display: block !important;
 }
 
 .desktop-app-sidebar {
