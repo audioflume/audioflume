@@ -63,6 +63,9 @@
   );
 
   /* Canonical Filmwave page construction. */
+  --filmwave-top-chrome-initial-bottom: calc(
+    28px + var(--filmwave-header-height, 75px)
+  );
   --filmwave-page-gutter: 80px;
   --filmwave-page-width: calc(
     100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter)
