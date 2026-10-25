@@ -70,7 +70,7 @@ export function CuratedPlaylistCard({
         href={href}
         className={`${cardStyles.card}${usesHomeLayout ? ` ${cardStyles.homeCard}` : ""}`}
         mediaClassName={`${cardStyles.image}${usesHomeLayout ? ` ${cardStyles.homeImage}` : ""}`}
-        mediaProps={{ "data-curated-playlist-image": true }}
+        mediaDataAttribute="data-curated-playlist-image"
         mediaStyle={{
           background: playlist.cover_image_url
             ? "var(--media-overlay-solid)"
