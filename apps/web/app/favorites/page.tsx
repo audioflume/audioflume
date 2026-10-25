@@ -393,7 +393,7 @@ export default function FavoritesPage() {
           className="playlist-detail-footer-shell"
           style={{ paddingBottom: playerVisible ? "72px" : "8px" }}
         >
-          <Footer />
+          <Footer showTopBorder={false} />
         </div>
       )}
     </main>
