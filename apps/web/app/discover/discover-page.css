@@ -299,8 +299,8 @@
   display: flex;
   grid-column: 2;
   grid-row: 3;
-  align-self: baseline;
-  align-items: baseline;
+  align-self: center;
+  align-items: center;
   gap: clamp(42px, 4vw, 72px);
   margin-top: 0;
   font-family: var(--font-roboto-mono-filmwave), monospace;
@@ -1340,7 +1340,6 @@
 
   .discover-artist-hero-eyebrow {
     margin-bottom: 12px;
-    font-size: 12px;
   }
 
   .discover-artist-hero-identity h1 {
