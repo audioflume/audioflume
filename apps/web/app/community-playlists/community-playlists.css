@@ -211,27 +211,15 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-card {
-  position: relative;
-  display: grid;
   min-width: 0;
-  grid-template-columns: minmax(0, 1fr);
 }
 
 .community-cover-wrap {
-  position: relative;
-  width: 100%;
   height: calc(40vw / 2.38);
-  overflow: hidden;
-  border-radius: 0;
-  background: var(--bg-secondary);
 }
 
 .community-cover-link {
-  position: absolute;
-  inset: 0;
-  display: block;
-  color: inherit;
-  text-decoration: none;
+  min-width: 0;
 }
 
 .community-cover,
