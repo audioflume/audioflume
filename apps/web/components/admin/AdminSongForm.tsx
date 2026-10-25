@@ -1876,14 +1876,9 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               uploadedFiles.audio ||
               uploadedFiles.cover ||
               uploadedFiles.stems.length > 0) && (
-              <SongFormSection
-                title={statusTitle}
-                className="admin-song-form-card"
-                divided
-                bodyClassName="grid gap-3 p-4"
-              >
+              <div className="grid gap-3">
                   {saveStatus && (
-                    <div className="flex items-start gap-2 rounded-lg bg-[var(--bg-tertiary)] p-3">
+                    <div className="flex items-center gap-2 rounded-lg bg-[var(--bg-tertiary)] p-3">
                       <UploadStatusIcon
                         status={saveStatus}
                         isSaving={isSaving}
@@ -1935,7 +1930,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       )}
                     </div>
                   )}
-              </SongFormSection>
+              </div>
             )}
 
             <div className="grid gap-2">
