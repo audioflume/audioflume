@@ -86,11 +86,6 @@ main:has(> aside[class*="admin-sidebar-width"])
   background: var(--bg-primary);
 }
 
-/* Canonical backend corner radius: match public/homepage blocks. */
-main:has(> aside[class*="admin-sidebar-width"]) [class~="rounded-[7px]"] {
-  border-radius: 3px !important;
-}
-
 .filmwave-backend-section-header,
 .filmwave-backend-section-header-bordered {
   display: flex;
