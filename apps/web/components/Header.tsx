@@ -77,6 +77,7 @@ export default function Header() {
   const [playlistsMenuMounted, setPlaylistsMenuMounted] = useState(false);
   const playlistsMenuCloseTimeoutRef = useRef<number | null>(null);
   const playlistsMenuOpenFrameRef = useRef<number | null>(null);
+  const playlistsTriggerRef = useRef<HTMLAnchorElement>(null);
   const [profileImage, setProfileImage] = useState<string | null>(null);
   const [avatarImageFailed, setAvatarImageFailed] = useState(false);
   const [scrolledPastThreshold, setScrolledPastThreshold] = useState(false);
@@ -1183,8 +1184,15 @@ export default function Header() {
                           closePlaylistsMenu();
                         }
                       }}
+                      onKeyDown={(event) => {
+                        if (event.key !== "Escape") return;
+                        event.preventDefault();
+                        closePlaylistsMenu();
+                        playlistsTriggerRef.current?.focus();
+                      }}
                     >
                       <Link
+                        ref={playlistsTriggerRef}
                         href="/curated-playlists"
                         className={`filmwave-header-nav-link${isActive ? " is-active" : ""}`}
                         aria-current={isActive ? "page" : undefined}
