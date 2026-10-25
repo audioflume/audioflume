@@ -303,7 +303,10 @@ export default function Header() {
   }, [playlistsMenuOpen]);
 
   function openPlaylistsMenu() {
-    if (playlistsMenuEscapeDismissedRef.current) return;
+    if (playlistsMenuEscapeDismissedRef.current) {
+      playlistsMenuEscapeDismissedRef.current = false;
+      return;
+    }
 
     if (playlistsMenuCloseTimeoutRef.current != null) {
       window.clearTimeout(playlistsMenuCloseTimeoutRef.current);
@@ -547,6 +550,7 @@ export default function Header() {
         }
 
         .filmwave-web-header .filmwave-header-menu-wrap {
+          top: calc(100% + 8px);
           right: 0;
         }
 
