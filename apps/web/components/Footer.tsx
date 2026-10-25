@@ -70,6 +70,7 @@ export default function Footer({
   className = "",
   playerPadding = true,
   showTopBorder = true,
+  pageGutter = true,
   flushBottom = false,
 }: FooterProps) {
   const pathname = usePathname();
@@ -122,7 +123,7 @@ export default function Footer({
           padding-top: 0;
         }
 
-        .audioflume-site-footer {
+        .audioflume-site-footer:not(.audioflume-site-footer-contained) {
           width: var(--filmwave-page-width) !important;
           max-width: none !important;
           margin-right: auto !important;
@@ -134,7 +135,6 @@ export default function Footer({
         .fw-music-content-column .audioflume-site-footer,
         .community-content .audioflume-site-footer,
         .filmwave-admin-content-page section .audioflume-site-footer,
-        .artist-public-footer .audioflume-site-footer,
         .music-page-footer-wrap .audioflume-site-footer {
           width: 100% !important;
           margin-right: 0 !important;
@@ -145,7 +145,7 @@ export default function Footer({
 
       <footer
         ref={footerRef}
-        className={`audioflume-site-footer box-border w-full px-[var(--filmwave-page-gutter)] text-[10px] font-normal text-[var(--text-muted)] ${isInteriorDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
+        className={`audioflume-site-footer ${pageGutter ? "" : "audioflume-site-footer-contained"} box-border w-full ${pageGutter ? "px-[var(--filmwave-page-gutter)]" : "px-0"} text-[10px] font-normal text-[var(--text-muted)] ${isInteriorDetailPage ? "playlist-detail-page-footer" : ""} ${className}`}
         style={{
           paddingBottom: flushBottom
             ? "0px"
