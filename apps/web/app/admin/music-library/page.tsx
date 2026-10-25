@@ -475,7 +475,7 @@ export default function AdminMusicLibraryPage() {
 
           <Link
             href="/admin/songs/new"
-            className="inline-flex h-10 min-w-[104px] cursor-pointer items-center justify-center gap-2 rounded-[3px] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-5 text-[12px] font-normal text-[var(--bg-primary)] transition"
+            className="filmwave-backend-button filmwave-backend-button-primary min-w-[104px]"
           >
             <UploadIcon size={13} />
             <span>Upload Song</span>
@@ -500,7 +500,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={handleBatchDelete}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center gap-2 rounded-[3px] bg-[var(--danger)] px-4 text-[12px] font-normal text-[var(--danger-contrast)] transition hover:bg-[color-mix(in_srgb,var(--danger)_90%,black)] disabled:opacity-50"
+                    className="filmwave-backend-button filmwave-backend-button-danger"
                   >
                     <TrashIcon />
                     {isBatchDeleting
@@ -512,7 +512,7 @@ export default function AdminMusicLibraryPage() {
                     type="button"
                     onClick={clearSelection}
                     disabled={isBatchDeleting}
-                    className="inline-flex h-10 items-center justify-center rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-4 text-[12px] font-normal text-[var(--text-secondary)] transition-colors hover:text-[var(--text-primary)] disabled:opacity-50"
+                    className="filmwave-backend-button filmwave-backend-button-secondary"
                   >
                     Cancel
                   </button>
