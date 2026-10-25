@@ -217,7 +217,7 @@ export default function AdminSidebar() {
 
   return (
     <BackendSidebarShell bottom={playerVisible ? "64px" : "0px"}>
-      <BackendSidebarScrollArea>
+      <BackendSidebarScrollArea className="pt-12">
         <div>
           <BackendSidebarHeading>Admin</BackendSidebarHeading>
           <div className="flex flex-col gap-px">
