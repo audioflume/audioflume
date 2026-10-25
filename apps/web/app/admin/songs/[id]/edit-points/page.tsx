@@ -74,7 +74,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
         <section className="rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-5 text-xs text-[var(--text-secondary)]">
           You do not have access to this admin page.
         </section>
-        <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+        <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
       </AdminContentPage>
     );
   }
@@ -169,7 +169,7 @@ export default async function AdminSongEditPointsPage({ params }: PageProps) {
         />
       </div>
 
-      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
     </AdminContentPage>
   );
 }
