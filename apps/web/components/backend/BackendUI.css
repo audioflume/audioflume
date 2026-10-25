@@ -120,13 +120,15 @@ main:has(> aside[class*="admin-sidebar-width"])
 }
 
 .filmwave-song-form-header {
-  min-height: var(--filmwave-song-form-header-height);
+  min-height: 0;
   border-bottom: 0;
-  padding: 16px var(--filmwave-song-form-x);
+  padding: 20px var(--filmwave-song-form-x) 0;
 }
 
 .filmwave-song-form-card-divided .filmwave-song-form-header {
+  min-height: var(--filmwave-song-form-header-height);
   border-bottom: 1.25px solid var(--border-subtle);
+  padding: 16px var(--filmwave-song-form-x);
 }
 
 .filmwave-song-form-body {
