@@ -106,6 +106,16 @@ main:has(> aside[class*="admin-sidebar-width"])
   letter-spacing: -0.03em;
 }
 
+.artist-song-main-column .filmwave-backend-section-header {
+  border-bottom: 0;
+}
+
+.artist-song-main-column
+  .filmwave-backend-section-header
+  + :is(.grid, .flex) {
+  padding-top: 12px;
+}
+
 .filmwave-backend-button {
   box-sizing: border-box;
   display: inline-flex;
