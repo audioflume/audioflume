@@ -2283,7 +2283,7 @@ html:not(.light):not([data-theme="light"])
 
 @media (max-width: 620px) {
   .audioflume-home-lifetime-v2-songs {
-    padding: 40px 28px;
+    padding: 40px;
   }
 
   .audioflume-home-lifetime-v2-meta {
