@@ -19,7 +19,7 @@ export default function EditPlaylistPage() {
     >
       <AdminCuratedPlaylistForm mode="edit" playlistId={playlistId} />
       <AdminPlaylistPageStyles />
-      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
     </AdminContentPage>
   );
 }
