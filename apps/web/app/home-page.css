@@ -25,7 +25,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   color: var(--text-primary);
 }
 
-.audioflume-home-reference a {
+.audioflume-home-reference a:not(.audioflume-arrow-text-link) {
   color: inherit;
 }
 
