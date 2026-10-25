@@ -677,6 +677,7 @@ export default function PlaylistTopControls() {
           justify-content: center !important;
           padding-right: 12px !important;
           padding-left: 12px !important;
+          white-space: nowrap !important;
         }
 
         .playlists-view-button {
