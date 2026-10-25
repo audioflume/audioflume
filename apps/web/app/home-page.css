@@ -970,7 +970,7 @@ html:not(.light):not([data-theme="light"])
 
 @media (max-width: 620px) {
   .audioflume-home-reference {
-    --audioflume-home-page-gutter: 24px;
+    --audioflume-home-page-gutter: 16px;
   }
 
   .audioflume-home-reference-original-song-grid {
