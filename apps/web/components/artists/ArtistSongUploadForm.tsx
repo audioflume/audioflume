@@ -6,6 +6,10 @@ import ArtistSongLicenseSelector, {
   type ArtistSongLicenseType,
 } from "@/components/artists/ArtistSongLicenseSelector";
 import ArtistSongTagSections from "@/components/artists/ArtistSongTagSections";
+import ArtistSongCreditsRightsSections, {
+  type ArtistSongCredit as Credit,
+  type ArtistSongRightsHolder as RightsHolder,
+} from "@/components/artists/ArtistSongCreditsRightsSections";
 import {
   BackendCheckbox,
   BackendInput,
@@ -61,19 +65,6 @@ type ArtistArtworkResponse = {
     cover_image_url: string | null;
   };
   error?: string;
-};
-
-type Credit = {
-  credit_name: string;
-  credit_role: string;
-};
-
-type RightsHolder = {
-  holder_name: string;
-  rights_type: "master" | "publishing" | "both";
-  ownership_percent: string;
-  pro_affiliation: string;
-  ipi_cae_number: string;
 };
 
 type ArtistSongUploadFormProps = {
@@ -150,14 +141,6 @@ function releaseYearToDate(value: string) {
   if (!value) return null;
   if (!/^\d{4}$/.test(value)) return undefined;
   return `${value}-01-01`;
-}
-
-function FieldLabel({ children }: { children: string }) {
-  return (
-    <label className="mb-1.5 block text-[11px] font-medium text-[var(--text-secondary)]">
-      {children}
-    </label>
-  );
 }
 
 function SelectInput({
@@ -253,20 +236,6 @@ function CheckboxInput({
       className="h-10 w-full self-end rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3"
     />
   );
-}
-
-function emptyCredit(): Credit {
-  return { credit_name: "", credit_role: "" };
-}
-
-function emptyHolder(): RightsHolder {
-  return {
-    holder_name: "",
-    rights_type: "both",
-    ownership_percent: "",
-    pro_affiliation: "",
-    ipi_cae_number: "",
-  };
 }
 
 export default function ArtistSongUploadForm({
@@ -442,22 +411,6 @@ export default function ArtistSongUploadForm({
     instrumental,
     rightsComplete,
   ]);
-
-  function updateCredit(index: number, patch: Partial<Credit>) {
-    setCredits((current) =>
-      current.map((credit, creditIndex) =>
-        creditIndex === index ? { ...credit, ...patch } : credit,
-      ),
-    );
-  }
-
-  function updateHolder(index: number, patch: Partial<RightsHolder>) {
-    setRightsHolders((current) =>
-      current.map((holder, holderIndex) =>
-        holderIndex === index ? { ...holder, ...patch } : holder,
-      ),
-    );
-  }
 
   async function handleAudioFileChange(file: File | null) {
     setAudioFile(file);
@@ -1086,159 +1039,34 @@ export default function ArtistSongUploadForm({
             disabled={!canEditMetadata || busy || uploadComplete}
           />
 
-          <section className="filmwave-backend-section filmwave-song-form-card">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Credits</h2>
-            </div>
-            <div className="filmwave-song-form-body grid gap-3 px-5 pb-5">
-              {credits.length === 0 ? (
-                <div className="text-xs text-[var(--text-muted)]">No credits added yet.</div>
-              ) : null}
-              {credits.map((credit, index) => (
-                <div key={index} className="grid gap-3 md:grid-cols-[1fr_1fr_auto]">
-                  <BackendInput
-                    value={credit.credit_name}
-                    onChange={(event) =>
-                      updateCredit(index, { credit_name: event.target.value })
-                    }
-                    placeholder="Name"
-                    disabled={!canEditMetadata || busy || uploadComplete}
-                  />
-                  <BackendInput
-                    value={credit.credit_role}
-                    onChange={(event) =>
-                      updateCredit(index, { credit_role: event.target.value })
-                    }
-                    placeholder="Role — composer, producer, performer..."
-                    disabled={!canEditMetadata || busy || uploadComplete}
-                  />
-                  <button
-                    type="button"
-                    disabled={!canEditMetadata || busy || uploadComplete}
-                    onClick={() =>
-                      setCredits((current) =>
-                        current.filter((_, itemIndex) => itemIndex !== index),
-                      )
-                    }
-                    className="filmwave-backend-button filmwave-backend-button-secondary"
-                  >
-                    Remove
-                  </button>
-                </div>
-              ))}
-              {canEditMetadata && !uploadComplete ? (
-                <button
-                  type="button"
-                  disabled={busy}
-                  onClick={() => setCredits((current) => [...current, emptyCredit()])}
-                  className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary mt-1 w-fit"
-                >
-                  Add credit
-                </button>
-              ) : null}
-            </div>
-          </section>
-
-          <section className="filmwave-backend-section filmwave-song-form-card">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Rights + Ownership</h2>
-            </div>
-            <div className="filmwave-song-form-body grid gap-5 px-5 pb-5">
-              {!canEditRights ? (
-                <div className="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]">
-                  Your role cannot edit ownership. You can upload the draft, and a manager or owner can complete rights before submission.
-                </div>
-              ) : null}
-
-              <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
-                <div>
-                  <FieldLabel>Master Owner</FieldLabel>
-                  <BackendInput value={masterOwner} onChange={(event) => setMasterOwner(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
-                </div>
-                <div>
-                  <FieldLabel>Publishing Owner</FieldLabel>
-                  <BackendInput value={publishingOwner} onChange={(event) => setPublishingOwner(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
-                </div>
-                <div>
-                  <FieldLabel>PRO Affiliation</FieldLabel>
-                  <BackendInput value={proAffiliation} onChange={(event) => setProAffiliation(event.target.value)} placeholder="SOCAN, ASCAP, BMI..." disabled={!canEditRights || busy || uploadComplete} />
-                </div>
-                <div>
-                  <FieldLabel>Copyright Year</FieldLabel>
-                  <BackendInput type="number" min={1900} max={2200} value={copyrightYear} onChange={(event) => setCopyrightYear(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
-                </div>
-                <div>
-                  <FieldLabel>ISRC</FieldLabel>
-                  <BackendInput value={isrc} onChange={(event) => setIsrc(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
-                </div>
-                <div>
-                  <FieldLabel>ISWC</FieldLabel>
-                  <BackendInput value={iswc} onChange={(event) => setIswc(event.target.value)} disabled={!canEditRights || busy || uploadComplete} />
-                </div>
-              </div>
-
-              <div>
-                <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
-                  <div>
-                    <FieldLabel>Ownership Splits</FieldLabel>
-                    <div className="text-[11px] text-[var(--text-muted)]">
-                      Master: {ownershipTotals.master}% · Publishing: {ownershipTotals.publishing}%
-                    </div>
-                  </div>
-                  {canEditRights && !uploadComplete ? (
-                    <button
-                      type="button"
-                      disabled={busy}
-                      onClick={() =>
-                        setRightsHolders((current) => [...current, emptyHolder()])
-                      }
-                      className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
-                    >
-                      Add rights holder
-                    </button>
-                  ) : null}
-                </div>
-
-                <div className="grid gap-3">
-                  {rightsHolders.length === 0 ? (
-                    <div className="text-xs text-[var(--text-muted)]">
-                      No ownership splits added yet.
-                    </div>
-                  ) : null}
-                  {rightsHolders.map((holder, index) => (
-                    <div key={index} className="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3">
-                      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-[1.2fr_160px_110px_1fr_1fr_auto]">
-                        <BackendInput value={holder.holder_name} onChange={(event) => updateHolder(index, { holder_name: event.target.value })} placeholder="Rights holder" disabled={!canEditRights || busy || uploadComplete} />
-                        <SelectInput value={holder.rights_type} onChange={(value) => updateHolder(index, { rights_type: value as RightsHolder["rights_type"] })} disabled={!canEditRights || busy || uploadComplete}>
-                          <option value="both">Master + publishing</option>
-                          <option value="master">Master</option>
-                          <option value="publishing">Publishing</option>
-                        </SelectInput>
-                        <BackendInput type="number" min={0} max={100} step="0.01" value={holder.ownership_percent} onChange={(event) => updateHolder(index, { ownership_percent: event.target.value })} placeholder="%" disabled={!canEditRights || busy || uploadComplete} />
-                        <BackendInput value={holder.pro_affiliation} onChange={(event) => updateHolder(index, { pro_affiliation: event.target.value })} placeholder="PRO" disabled={!canEditRights || busy || uploadComplete} />
-                        <BackendInput value={holder.ipi_cae_number} onChange={(event) => updateHolder(index, { ipi_cae_number: event.target.value })} placeholder="IPI / CAE" disabled={!canEditRights || busy || uploadComplete} />
-                        <button type="button" disabled={!canEditRights || busy || uploadComplete} onClick={() => setRightsHolders((current) => current.filter((_, itemIndex) => itemIndex !== index))} className="filmwave-backend-button filmwave-backend-button-secondary">
-                          Remove
-                        </button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <FieldLabel>Rights Notes</FieldLabel>
-                <textarea
-                  value={rightsNotes}
-                  onChange={(event) => setRightsNotes(event.target.value)}
-                  rows={4}
-                  maxLength={2000}
-                  disabled={!canEditRights || busy || uploadComplete}
-                  className="filmwave-backend-textarea"
-                />
-              </div>
-            </div>
-          </section>
+          <ArtistSongCreditsRightsSections
+            credits={credits}
+            onCreditsChange={setCredits}
+            creditsDisabled={!canEditMetadata || busy || uploadComplete}
+            canAddCredit={canEditMetadata && !uploadComplete}
+            rightsHolders={rightsHolders}
+            onRightsHoldersChange={setRightsHolders}
+            masterOwner={masterOwner}
+            onMasterOwnerChange={setMasterOwner}
+            publishingOwner={publishingOwner}
+            onPublishingOwnerChange={setPublishingOwner}
+            proAffiliation={proAffiliation}
+            onProAffiliationChange={setProAffiliation}
+            copyrightYear={copyrightYear}
+            onCopyrightYearChange={setCopyrightYear}
+            isrc={isrc}
+            onIsrcChange={setIsrc}
+            iswc={iswc}
+            onIswcChange={setIswc}
+            rightsNotes={rightsNotes}
+            onRightsNotesChange={setRightsNotes}
+            ownershipTotals={ownershipTotals}
+            canEditRights={canEditRights}
+            rightsDisabled={!canEditRights || busy || uploadComplete}
+            canAddRightsHolder={canEditRights && !uploadComplete}
+            rightsReadOnlyMessage="Your role cannot edit ownership. You can upload the draft, and a manager or owner can complete rights before submission."
+            rightsReadOnlyClassName="rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-xs leading-5 text-[var(--text-muted)]"
+          />
         </div>
 
         <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
