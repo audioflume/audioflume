@@ -2093,7 +2093,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   gap: 22px;
   min-height: 0;
   padding: 10px 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.11);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   cursor: pointer;
   transition: background-color 120ms ease;
 }
@@ -2108,6 +2108,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-lifetime-v2-song:hover .audioflume-home-lifetime-v2-song-play,
 .audioflume-home-lifetime-v2-song:focus-visible .audioflume-home-lifetime-v2-song-play {
+  background: #ffffff;
+  color: #111111;
   transform: scale(1.04);
 }
 
@@ -2172,9 +2174,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   justify-self: end;
   border: 0;
   border-radius: 999px;
-  background: #ffffff;
-  color: #111111;
-  transition: transform 120ms ease;
+  background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%);
+  color: #ffffff;
+  transition:
+    background-color 120ms ease,
+    color 120ms ease,
+    transform 120ms ease;
 }
 
 
