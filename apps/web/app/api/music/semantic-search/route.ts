@@ -20,6 +20,9 @@ export const revalidate = 0;
 
 const MAX_QUERY_LENGTH = 500;
 const MAX_RESULT_COUNT = 200;
+const MAX_RETURNED_RESULTS = 40;
+const MIN_HYBRID_MATCH_SCORE = 0.3;
+const MAX_HYBRID_SCORE_DROP = 0.12;
 
 async function getHybridMatches(
   query: string,
@@ -37,12 +40,23 @@ async function getHybridMatches(
 
   if (error) throw error;
 
-  return rankHybridSongSearchResults(
+  const ranked = rankHybridSongSearchResults(
     query,
     matches,
     (data ?? []) as HybridSearchSong[],
-  )
-    .slice(0, MAX_RESULT_COUNT)
+  );
+
+  const bestScore = ranked[0]?.hybridScore ?? 0;
+  if (bestScore < MIN_HYBRID_MATCH_SCORE) return [];
+
+  const minimumScore = Math.max(
+    MIN_HYBRID_MATCH_SCORE,
+    bestScore - MAX_HYBRID_SCORE_DROP,
+  );
+
+  return ranked
+    .filter((result) => result.hybridScore >= minimumScore)
+    .slice(0, MAX_RETURNED_RESULTS)
     .map((result) => ({
       songId: result.id,
       score: Number(result.hybridScore.toFixed(6)),
