@@ -64,19 +64,6 @@
   color: var(--filmwave-black);
 }
 
-.admin-song-upload-content-page
-  form
-  > aside
-  > .admin-song-form-card:first-child
-  > .admin-song-form-card-header,
-.admin-song-upload-content-page
-  form
-  > aside
-  > .admin-song-form-card:last-child
-  > .admin-song-form-card-header {
-  border-bottom: 1.25px solid var(--border-subtle);
-}
-
 .admin-song-upload-content-page .admin-song-form-kicker {
   color: var(--text-primary);
   font-size: 16px;
@@ -236,96 +223,6 @@ main.filmwave-admin-content-page.admin-song-upload-content-page
     + div {
     grid-template-columns: repeat(4, minmax(0, 1fr));
   }
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3) {
-  display: contents;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header {
-  display: none;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div {
-  display: contents;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div[class*="md:grid-cols-2"] {
-  display: contents;
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div:not([class*="md:grid-cols-2"]),
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div[class*="md:grid-cols-2"]
-  > div {
-  border: 1.25px solid var(--border);
-  border-radius: 0;
-  background: var(--bg-primary);
-  padding: 20px var(--filmwave-song-form-x) var(--filmwave-song-form-bottom);
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div:not([class*="md:grid-cols-2"])
-  > div:first-child,
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  > .admin-song-form-card-header
-  + div
-  > div[class*="md:grid-cols-2"]
-  > div
-  > div:first-child {
-  margin-bottom: var(--filmwave-song-form-title-gap);
-}
-
-.admin-song-upload-content-page
-  form
-  > div:first-child
-  > section:nth-of-type(3)
-  label[class*="uppercase"] {
-  margin-bottom: 0;
-  color: var(--text-primary);
-  font-family: inherit;
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 24px;
-  letter-spacing: -0.03em;
-  text-transform: none;
 }
 
 .admin-song-upload-content-page
