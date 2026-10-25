@@ -4,6 +4,7 @@ import type { Playlist, Song } from "@/lib/types";
 import { useEffect, useMemo, useState } from "react";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import Toast from "@/components/Toast";
+import ModalSearchBar from "@/components/ModalSearchBar";
 import ModalShell from "@/components/ModalShell";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
@@ -450,26 +451,11 @@ export default function AddToPlaylistModal({
         <SongPreview song={song} />
 
         <div className="-mx-7 flex min-h-0 flex-1 flex-col bg-[var(--bg-primary)] px-5">
-          <label className="flex h-12 flex-shrink-0 items-center gap-3 bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]">
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              aria-hidden="true"
-              className="shrink-0"
-            >
-              <circle cx="11" cy="11" r="6.5" stroke="currentColor" strokeWidth="1.5" />
-              <path d="m16 16 4 4" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
-            </svg>
-            <input
-              type="search"
-              value={playlistSearch}
-              onChange={(event) => setPlaylistSearch(event.target.value)}
-              placeholder="Search playlists"
-              className="h-full min-w-0 flex-1 !rounded-none !border-0 !bg-transparent p-0 text-sm text-[var(--text-primary)] !outline-none placeholder:text-[var(--text-muted)] focus:!border-0"
-            />
-          </label>
+          <ModalSearchBar
+            value={playlistSearch}
+            onChange={setPlaylistSearch}
+            placeholder="Search playlists"
+          />
 
           <div className="min-h-0 flex-1 space-y-1 overflow-y-auto pb-5 pt-2.5">
             {newPlaylistOpen ? (
