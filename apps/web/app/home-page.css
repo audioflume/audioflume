@@ -443,8 +443,8 @@ html:not(.light):not([data-theme="light"])
   bottom: 28px;
   z-index: 3;
   display: grid;
-  width: 52px;
-  height: 52px;
+  width: 50px;
+  height: 50px;
   place-items: center;
   border: 0;
   border-radius: 999px;
@@ -1992,7 +1992,7 @@ html:not(.light):not([data-theme="light"])
   top: 50%;
   left: 50%;
   z-index: 2;
-  width: clamp(210px, 27%, 330px);
+  width: clamp(290px, 40%, 380px);
   color: #ffffff;
   transform: translate(-50%, -50%);
 }
@@ -2006,32 +2006,44 @@ html:not(.light):not([data-theme="light"])
 
 .audioflume-home-lifetime-v2-meta {
   position: absolute;
-  right: 42px;
-  bottom: 38px;
-  left: 42px;
+  inset: 0;
   z-index: 2;
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 24px;
   color: #ffffff;
-  font-family: var(--font-roboto-mono), monospace;
+  font-family: "Roboto Mono", var(--font-roboto-mono), monospace;
   font-size: 10px;
   font-weight: 400;
   letter-spacing: 0.025em;
   line-height: 1.35;
   text-transform: uppercase;
+  pointer-events: none;
 }
 
-.audioflume-home-lifetime-v2-meta span:last-child {
+.audioflume-home-lifetime-v2-meta-left,
+.audioflume-home-lifetime-v2-meta-right {
+  position: absolute;
+  bottom: 36px;
+  white-space: nowrap;
+}
+
+.audioflume-home-lifetime-v2-meta-left {
+  left: 42px;
+}
+
+.audioflume-home-lifetime-v2-meta-right {
+  right: 42px;
   text-align: right;
+}
+
+.audioflume-home-lifetime-v2-meta-right s {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
 }
 
 .audioflume-home-lifetime-v2-songs {
   position: relative;
   min-width: 0;
   box-sizing: border-box;
-  padding: 74px 76px 48px;
+  padding: 82px 76px 58px;
   background: #111111;
   color: #ffffff;
 }
@@ -2074,7 +2086,7 @@ html:not(.light):not([data-theme="light"])
   grid-template-columns: 52px minmax(0, 1fr) 42px;
   align-items: center;
   gap: 22px;
-  min-height: 75px;
+  min-height: 68px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.11);
 }
 
@@ -2165,13 +2177,13 @@ html:not(.light):not([data-theme="light"])
   }
 
   .audioflume-home-lifetime-v2-songs {
-    padding: 62px 38px 34px;
+    padding: 72px 38px 44px;
   }
 
   .audioflume-home-lifetime-v2-song {
     grid-template-columns: 46px minmax(0, 1fr) 38px;
     gap: 16px;
-    min-height: 66px;
+    min-height: 62px;
   }
 
   .audioflume-home-lifetime-v2-song-cover {
@@ -2185,10 +2197,17 @@ html:not(.light):not([data-theme="light"])
   }
 
   .audioflume-home-lifetime-v2-meta {
+    font-size: 9px;
+  }
+
+  .audioflume-home-lifetime-v2-meta-left {
+    left: 28px;
+    bottom: 28px;
+  }
+
+  .audioflume-home-lifetime-v2-meta-right {
     right: 28px;
     bottom: 28px;
-    left: 28px;
-    font-size: 9px;
   }
 }
 
@@ -2207,14 +2226,20 @@ html:not(.light):not([data-theme="light"])
     padding: 66px 28px 34px;
   }
 
-  .audioflume-home-lifetime-v2-meta {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
+  .audioflume-home-lifetime-v2-meta-left,
+  .audioflume-home-lifetime-v2-meta-right {
+    right: auto;
+    left: 28px;
+    white-space: normal;
+    text-align: left;
   }
 
-  .audioflume-home-lifetime-v2-meta span:last-child {
-    text-align: left;
+  .audioflume-home-lifetime-v2-meta-left {
+    bottom: 52px;
+  }
+
+  .audioflume-home-lifetime-v2-meta-right {
+    bottom: 24px;
   }
 }
 
