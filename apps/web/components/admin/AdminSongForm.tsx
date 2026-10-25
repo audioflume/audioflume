@@ -1877,7 +1877,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               uploadedFiles.stems.length > 0) && (
               <div className="grid gap-3">
                   {saveStatus && (
-                    <div className="flex items-center gap-2 rounded-lg bg-[var(--bg-tertiary)] p-3">
+                    <div className="flex items-center gap-2 bg-[var(--bg-tertiary)] p-3">
                       <UploadStatusIcon
                         status={saveStatus}
                         isSaving={isSaving}
@@ -1904,7 +1904,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                           href={uploadedFiles.audio.url}
                           target="_blank"
                           rel="noreferrer"
-                          className="truncate rounded-lg bg-[var(--bg-primary)] px-3 py-2 transition hover:text-[var(--text-primary)]"
+                          className="block truncate transition hover:text-[var(--text-primary)]"
                         >
                           Main audio uploaded
                         </a>
@@ -1922,7 +1922,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                       )}
 
                       {uploadedFiles.stems.length > 0 && (
-                        <div className="rounded-lg bg-[var(--bg-primary)] px-3 py-2">
+                        <div className="block">
                           {uploadedFiles.stems.length} stem
                           {uploadedFiles.stems.length === 1 ? "" : "s"} uploaded
                         </div>
