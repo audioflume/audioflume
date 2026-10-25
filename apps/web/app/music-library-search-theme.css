@@ -1,13 +1,13 @@
 .fw-music-scroll-reveal-backdrop {
-  position: fixed !important;
-  z-index: calc(var(--filmwave-z-search-filter, 60) - 1) !important;
-  display: none !important;
-  box-sizing: border-box !important;
-  background: transparent !important;
-  background-color: transparent !important;
-  pointer-events: none !important;
+  position: fixed;
+  z-index: calc(var(--filmwave-z-search-filter, 60) - 1);
+  display: none;
+  box-sizing: border-box;
+  background: transparent;
+  background-color: transparent;
+  pointer-events: none;
 }
 
 .fw-music-scroll-reveal-backdrop.is-visible {
-  display: block !important;
+  display: block;
 }
