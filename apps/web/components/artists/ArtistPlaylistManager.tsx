@@ -138,7 +138,7 @@ function SortablePlaylistRow({
         <button
           type="button"
           onClick={onEdit}
-          className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-compact filmwave-backend-button-secondary"
         >
           {canManage ? "Edit" : "View"}
         </button>
@@ -301,7 +301,7 @@ export default function ArtistPlaylistManager({
           <button
             type="button"
             onClick={() => setCreating(true)}
-            className="filmwave-backend-button filmwave-backend-button-primary"
+            className="filmwave-backend-button rounded-[3px] filmwave-backend-button-primary"
           >
             <PlusIcon size={13} />
             New Playlist
@@ -479,7 +479,7 @@ function CreatePlaylist({
         type="button"
         onClick={onBack}
         disabled={saving}
-        className="filmwave-backend-button filmwave-backend-button-secondary w-fit"
+        className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary w-fit"
       >
         Back to Playlists
       </button>
@@ -523,7 +523,7 @@ function CreatePlaylist({
             onChange={setIsPublic}
             disabled={!canManage || saving}
             label="Public"
-            className="h-10 w-full rounded-[7px] border-[1.25px] border-[var(--border)] px-3"
+            className="h-10 w-full rounded-[3px] border-[1.25px] border-[var(--border)] px-3"
           />
         </div>
       </section>
@@ -533,7 +533,7 @@ function CreatePlaylist({
         <button
           type="submit"
           disabled={!canManage || saving || !name.trim()}
-          className="filmwave-backend-button filmwave-backend-button-primary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-primary"
         >
           {saving ? "Creating..." : "Create Playlist"}
         </button>
@@ -728,7 +728,7 @@ function PlaylistEditor({
           type="button"
           onClick={onBack}
           disabled={trackOrderDisabled}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary"
         >
           Back to Playlists
         </button>
@@ -843,7 +843,7 @@ function PlaylistEditor({
           type="button"
           onClick={onBack}
           disabled={trackOrderDisabled}
-          className="filmwave-backend-button filmwave-backend-button-secondary"
+          className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary"
         >
           Back to Playlists
         </button>
@@ -861,7 +861,7 @@ function PlaylistEditor({
               type="button"
               onClick={() => void deletePlaylist()}
               disabled={trackOrderDisabled}
-              className="filmwave-backend-button filmwave-backend-button-secondary-danger"
+              className="filmwave-backend-button rounded-[3px] filmwave-backend-button-secondary-danger"
             >
               {deleting ? "Deleting..." : "Delete playlist"}
             </button>
@@ -870,7 +870,7 @@ function PlaylistEditor({
             <button
               type="submit"
               disabled={trackOrderDisabled || !name.trim()}
-              className="filmwave-backend-button filmwave-backend-button-primary"
+              className="filmwave-backend-button rounded-[3px] filmwave-backend-button-primary"
             >
               {saving ? "Saving..." : "Save Playlist"}
             </button>
