@@ -633,7 +633,7 @@ export default function ArtistOverview({
                 disabled={cropSaving}
                 aria-label={cropEditing ? "Save crop" : "Adjust crop"}
                 title={cropEditing ? "Save crop" : "Adjust crop"}
-                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-[7px] border-[1.25px] border-white/25 bg-black/55 text-white transition-colors hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-60"
+                className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-white/25 bg-black/55 text-white transition-colors hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {cropEditing ? (
                   <svg
