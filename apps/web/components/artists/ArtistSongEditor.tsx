@@ -529,12 +529,10 @@ export default function ArtistSongEditor({
             </section>
           ) : null}
 
-          <section className="filmwave-backend-section filmwave-song-form-card">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Song Info</h2>
-            </div>
-
-            <div className="filmwave-song-form-body grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4">
+          <SongFormSection
+            title="Song Info"
+            bodyClassName="grid gap-3 px-5 pb-5 md:grid-cols-2 xl:grid-cols-4"
+          >
               <div>
                 <BackendInput
                   aria-label="Song Title"
@@ -600,8 +598,7 @@ export default function ArtistSongEditor({
                   disabled={metadataDisabled}
                 />
               </div>
-            </div>
-          </section>
+          </SongFormSection>
 
           {afterSongInfoContent}
 
@@ -694,11 +691,11 @@ export default function ArtistSongEditor({
           </div>
 
           {(message || error) ? (
-            <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
-              <div className="filmwave-backend-section-header filmwave-song-form-header">
-                <h2 className="filmwave-backend-section-title">Save Status</h2>
-              </div>
-              <div className="filmwave-song-form-body grid gap-3 px-5 pb-5">
+            <SongFormSection
+              title="Save Status"
+              divided
+              bodyClassName="grid gap-3 px-5 pb-5"
+            >
                 {error ? (
                   <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
                     {error}
@@ -709,8 +706,7 @@ export default function ArtistSongEditor({
                     {message}
                   </div>
                 ) : null}
-              </div>
-            </section>
+            </SongFormSection>
           ) : null}
 
           <div className="grid gap-2">
