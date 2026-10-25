@@ -123,7 +123,7 @@ export default function AdminPlaylistPageStyles() {
         > aside
         input[type="url"] {
         height: 40px;
-        border-radius: 7px;
+        border-radius: 3px;
         font-family: inherit;
         font-size: 12px;
         line-height: normal;
@@ -150,7 +150,7 @@ export default function AdminPlaylistPageStyles() {
         > button {
         height: 40px;
         min-height: 40px;
-        border-radius: 7px;
+        border-radius: 3px;
         padding-right: 18px;
         padding-left: 18px;
         font-size: 12px;
@@ -214,7 +214,7 @@ export default function AdminPlaylistPageStyles() {
         form
         + section
         [class~="rounded-xl"] {
-        border-radius: 7px;
+        border-radius: 3px;
       }
 
       :is(.admin-playlist-create-content-page, .admin-playlist-edit-content-page)
@@ -229,7 +229,7 @@ export default function AdminPlaylistPageStyles() {
           [class~="rounded-lg"],
           [class~="rounded-md"]
         ) {
-        border-radius: 7px;
+        border-radius: 3px;
       }
 
       /* Playlist create/edit opt into the rounded admin corner system. */
@@ -264,7 +264,7 @@ export default function AdminPlaylistPageStyles() {
         form
         + section
         [class~="rounded-xl"] {
-        border-radius: 7px;
+        border-radius: 3px;
       }
 
       main.filmwave-admin-content-page:is(
@@ -280,7 +280,7 @@ export default function AdminPlaylistPageStyles() {
           [class~="rounded-md"],
           [class~="rounded-lg"]
         ) {
-        border-radius: 7px;
+        border-radius: 3px;
       }
 
       /* Large create/edit surfaces stay sharp while controls keep their own radii. */
@@ -338,7 +338,7 @@ export default function AdminPlaylistPageStyles() {
           .admin-playlist-create-content-page,
           .admin-playlist-edit-content-page
         ) .admin-playlist-shelf-card > div.grid > :is(div, button) {
-        border-radius: 7px;
+        border-radius: 3px;
       }
     `}</style>
   );
