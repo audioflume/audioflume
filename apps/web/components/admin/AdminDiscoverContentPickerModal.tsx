@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
-import AdminModalShell from "@/components/admin/AdminModalShell";
+import BackendModalShell from "@/components/backend/BackendModalShell";
 import AdminSearchBar from "@/components/admin/AdminSearchBar";
 import { backendModalPrimaryButtonClass } from "@/components/backend/backendClasses";
 import CheckIcon from "@/components/icons/CheckIcon";
@@ -73,7 +73,7 @@ export default function AdminDiscoverContentPickerModal({
   }
 
   return (
-    <AdminModalShell
+    <BackendModalShell
       isOpen={isOpen}
       title={`Choose for ${title}`}
       onClose={onClose}
@@ -158,6 +158,6 @@ export default function AdminDiscoverContentPickerModal({
           </div>
         )}
       </div>
-    </AdminModalShell>
+    </BackendModalShell>
   );
 }
