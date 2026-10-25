@@ -305,17 +305,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   text-decoration: none;
 }
 
-html:not(.light):not([data-theme="light"]) .audioflume-home-ready-track-card {
-  background: #151515 !important;
-}
-
-html:not(.light):not([data-theme="light"])
-  .audioflume-home-ready-track-card:hover,
-html:not(.light):not([data-theme="light"])
-  .audioflume-home-ready-track-card:focus-visible {
-  background: #171717 !important;
-}
-
 
 .audioflume-home-reference-tools {
   padding: 0;
