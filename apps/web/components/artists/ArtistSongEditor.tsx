@@ -931,11 +931,7 @@ export default function ArtistSongEditor({
         </div>
 
         <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
-          <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Checklist</h2>
-            </div>
-            <div className="filmwave-song-form-body grid gap-2 p-4">
+          <div className="grid gap-2">
               {editWarnings.length > 0 ? (
                 <>
                   <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
@@ -972,8 +968,7 @@ export default function ArtistSongEditor({
                   Ready to save
                 </div>
               )}
-            </div>
-          </section>
+          </div>
 
           {(message || error) ? (
             <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
@@ -995,11 +990,7 @@ export default function ArtistSongEditor({
             </section>
           ) : null}
 
-          <section className="filmwave-backend-section filmwave-song-form-card filmwave-song-form-card-divided">
-            <div className="filmwave-backend-section-header filmwave-song-form-header">
-              <h2 className="filmwave-backend-section-title">Actions</h2>
-            </div>
-            <div className="filmwave-song-form-body grid gap-2 p-4">
+          <div className="grid gap-2">
               {canEditMetadata ? (
                 <button
                   type="submit"
@@ -1022,8 +1013,7 @@ export default function ArtistSongEditor({
                   Your artist role has read-only catalogue access.
                 </div>
               ) : null}
-            </div>
-          </section>
+          </div>
         </aside>
       </form>
     </div>
