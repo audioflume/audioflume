@@ -9,7 +9,7 @@
 :root {
   --filmwave-backend-control-height: 40px;
   --filmwave-backend-compact-control-height: 32px;
-  --filmwave-backend-control-radius: 7px;
+  --filmwave-backend-control-radius: 3px;
   --filmwave-backend-section-radius: 0px;
   --filmwave-backend-content-max-width: 1180px;
   --status-success: #48b571;
@@ -84,6 +84,11 @@ main:has(> aside[class*="admin-sidebar-width"])
   border: 1.25px solid var(--border);
   border-radius: var(--filmwave-backend-section-radius);
   background: var(--bg-primary);
+}
+
+/* Canonical backend corner radius: match public/homepage blocks. */
+main:has(> aside[class*="admin-sidebar-width"]) [class~="rounded-[7px]"] {
+  border-radius: 3px !important;
 }
 
 .filmwave-backend-section-header,
