@@ -9,8 +9,11 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
 }
 
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) > .fw-music-content-column {
-  grid-column: 1 !important;
+  display: flex !important;
   min-width: 0 !important;
+  min-height: calc(100vh - var(--filmwave-header-height, 56px)) !important;
+  flex-direction: column !important;
+  grid-column: 1 !important;
   padding-top: 0 !important;
 }
 
