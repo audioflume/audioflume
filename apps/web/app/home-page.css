@@ -1222,7 +1222,7 @@ html:not(.light):not([data-theme="light"])
   gap: 32px;
   row-gap: 16px;
   padding-top: 0;
-  padding-bottom: 20px;
+  padding-bottom: 0;
 }
 
 .audioflume-home-mockup-intro-heading > span {
