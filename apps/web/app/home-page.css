@@ -1740,20 +1740,6 @@ html:not(.light):not([data-theme="light"])
   gap: 5px !important;
 }
 
-.audioflume-home-mockup-catalogue
-  .audioflume-home-ready-track-card {
-  height: 70px !important;
-  border-radius: 0;
-  padding-right: 14px !important;
-}
-
-.audioflume-home-mockup-catalogue
-  .audioflume-home-ready-track-card > button {
-  width: 42px !important;
-  min-width: 42px !important;
-  height: 42px !important;
-}
-
 .audioflume-home-mockup .audioflume-home-reference-original-song-grid {
   column-gap: 12px;
   row-gap: 24px;
