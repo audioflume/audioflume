@@ -124,7 +124,7 @@ export default function PlaylistManagerPage() {
               key={tab}
               type="button"
               onClick={() => selectTab(tab)}
-              className={`h-10 min-w-[104px] cursor-pointer rounded-[7px] border-[1.25px] px-5 text-[12px] font-normal transition ${
+              className={`box-border h-10 w-[104px] shrink-0 cursor-pointer rounded-[7px] border-[1.25px] px-4 text-[12px] font-normal transition ${
                 activeTab === tab
                   ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                   : "border-[var(--border)] bg-[var(--bg-secondary)] text-[var(--text-secondary)] hover:text-[var(--text-primary)]"
