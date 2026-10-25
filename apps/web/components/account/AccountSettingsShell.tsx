@@ -66,6 +66,7 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
               playerPadding={false}
               showTopBorder={false}
               pageGutter={false}
+              pageGutter={false}
             />
           </div>
         </div>
