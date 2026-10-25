@@ -84,6 +84,7 @@ export default function Header() {
     CuratedPlaylistPreview[]
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
+  const accountTriggerRef = useRef<HTMLButtonElement>(null);
   const transparentAtTop = pathname === "/";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen;
@@ -126,9 +127,22 @@ export default function Header() {
       }
     }
 
-    if (menuOpen) document.addEventListener("mousedown", handleClickOutside);
+    function handleMenuEscape(event: KeyboardEvent) {
+      if (event.key !== "Escape") return;
+      event.preventDefault();
+      setMenuOpen(false);
+      window.requestAnimationFrame(() => accountTriggerRef.current?.focus());
+    }
 
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    if (menuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleMenuEscape);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleMenuEscape);
+    };
   }, [menuOpen]);
 
   useEffect(() => {
@@ -1351,6 +1365,7 @@ export default function Header() {
                   <>
                     <div className="filmwave-header-account-wrap" ref={menuRef}>
                       <button
+                        ref={accountTriggerRef}
                         type="button"
                         onClick={() => {
                           if (window.matchMedia("(max-width: 690px)").matches) {
@@ -1370,6 +1385,7 @@ export default function Header() {
                         }}
                         className={`filmwave-header-account-trigger${menuOpen ? " is-open" : ""}`}
                         aria-label="Open user menu"
+                        aria-haspopup="menu"
                         aria-expanded={menuOpen || (mobileNavOpen && mobileAccountOpen)}
                       >
                         <span
