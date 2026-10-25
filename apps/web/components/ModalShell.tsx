@@ -51,11 +51,16 @@ export default function ModalShell({
   const playerVisible = !!currentSong;
   const [mounted, setMounted] = useState(false);
   const dialogRef = useRef<HTMLDivElement | null>(null);
+  const onCloseRef = useRef(onClose);
   const titleId = useId();
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  useEffect(() => {
+    onCloseRef.current = onClose;
+  }, [onClose]);
 
   useEffect(() => {
     if (!isOpen || !mounted) return;
@@ -76,7 +81,7 @@ export default function ModalShell({
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key === "Escape") {
         event.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
 
@@ -111,7 +116,7 @@ export default function ModalShell({
       document.removeEventListener("keydown", handleKeyDown);
       if (previouslyFocused?.isConnected) previouslyFocused.focus();
     };
-  }, [isOpen, mounted, onClose]);
+  }, [isOpen, mounted]);
 
   if (!isOpen || !mounted) return null;
 
