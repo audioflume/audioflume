@@ -1777,6 +1777,11 @@ html:not(.light):not([data-theme="light"])
 }
 
 @media (max-width: 620px) {
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-bar {
+    padding-right: 112px;
+  }
+
   .audioflume-home-mockup-curated-card {
     width: 88vw;
     min-width: 88vw;
