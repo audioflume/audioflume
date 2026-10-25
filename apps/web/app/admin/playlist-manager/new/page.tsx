@@ -15,7 +15,7 @@ export default function NewPlaylistPage() {
     >
       <AdminCuratedPlaylistForm mode="create" />
       <AdminPlaylistPageStyles />
-      <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+      <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
     </AdminContentPage>
   );
 }
