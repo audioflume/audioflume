@@ -22,7 +22,6 @@ import { getPendingArtistInviteCount } from "@/lib/pendingArtistInvites";
 import "./globals.css";
 import "./public-action-buttons.css";
 import "./interaction-defaults.css";
-import "./music-library-web-refinements.css";
 import "./discover/discover-page.css";
 import "../components/backend/BackendUI.css";
 import "../components/admin/AdminPageLayout.css";
@@ -37,6 +36,7 @@ import "../../../packages/shared/styles/header-search-shell.css";
 import "./music-filter-rail-order.css";
 import "../../../packages/shared/styles/music-shared-controls.css";
 import "./music-library-search-theme.css";
+import "./music-library-web-refinements.css";
 import "./song-player-typography.css";
 import "./typography-normalization.css";
 
