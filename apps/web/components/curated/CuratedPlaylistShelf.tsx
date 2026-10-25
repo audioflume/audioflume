@@ -10,6 +10,7 @@ import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import CuratedPlaylistBookmarkButton from "./CuratedPlaylistBookmarkButton";
 import CuratedPlaylistPlayButton from "./CuratedPlaylistPlayButton";
+import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import cardStyles from "./CuratedPlaylistCard.module.css";
 import shelfStyles from "./CuratedPlaylistShelf.module.css";
 
@@ -65,17 +66,18 @@ export function CuratedPlaylistCard({
 
   return (
     <div className={cardStyles.shell}>
-      <article className={`${cardStyles.card}${usesHomeLayout ? ` ${cardStyles.homeCard}` : ""}`}>
-        <Link href={href} className={cardStyles.imageLink}>
-          <div
-            className={`${cardStyles.image}${usesHomeLayout ? ` ${cardStyles.homeImage}` : ""}`}
-            data-curated-playlist-image
-            style={{
-              background: playlist.cover_image_url
-                ? "var(--media-overlay-solid)"
-                : fallbackGradient,
-            }}
-          >
+      <PlaylistCardShell
+        href={href}
+        className={`${cardStyles.card}${usesHomeLayout ? ` ${cardStyles.homeCard}` : ""}`}
+        mediaClassName={`${cardStyles.image}${usesHomeLayout ? ` ${cardStyles.homeImage}` : ""}`}
+        mediaProps={{ "data-curated-playlist-image": true }}
+        mediaStyle={{
+          background: playlist.cover_image_url
+            ? "var(--media-overlay-solid)"
+            : fallbackGradient,
+        }}
+        media={
+          <>
             {playlist.cover_image_url && (
               <Image
                 src={playlist.cover_image_url}
@@ -93,29 +95,32 @@ export function CuratedPlaylistCard({
                 <strong className={cardStyles.homeTitle}>{playlist.name}</strong>
               </>
             ) : null}
-          </div>
-        </Link>
-
-        <CuratedPlaylistBookmarkButton
-          playlist={playlist}
-          className={`${cardStyles.bookmarkButton}${usesHomeLayout ? ` ${cardStyles.homeBookmarkButton}` : ""}`}
-        />
-
-        {!isHomeVariant ? (
-          <div className={cardStyles.details}>
-            <Link href={href} className={cardStyles.copy}>
-              <h3>{playlist.name}</h3>
-              <p>{formatSongCount(playlist.song_count)}</p>
-            </Link>
-          </div>
-        ) : null}
-
-        <CuratedPlaylistPlayButton
-          playlistId={playlist.id}
-          playlistName={playlist.name}
-          className={`${cardStyles.playButton}${usesHomeLayout ? ` ${cardStyles.homePlayButton}` : ""}${isCuratedPageVariant ? ` ${cardStyles.curatedPagePlayButton}` : ""}`}
-        />
-      </article>
+          </>
+        }
+        overlays={
+          <>
+            <CuratedPlaylistBookmarkButton
+              playlist={playlist}
+              className={`${cardStyles.bookmarkButton}${usesHomeLayout ? ` ${cardStyles.homeBookmarkButton}` : ""}`}
+            />
+            <CuratedPlaylistPlayButton
+              playlistId={playlist.id}
+              playlistName={playlist.name}
+              className={`${cardStyles.playButton}${usesHomeLayout ? ` ${cardStyles.homePlayButton}` : ""}${isCuratedPageVariant ? ` ${cardStyles.curatedPagePlayButton}` : ""}`}
+            />
+          </>
+        }
+        details={
+          !isHomeVariant ? (
+            <div className={cardStyles.details}>
+              <Link href={href} className={cardStyles.copy}>
+                <h3>{playlist.name}</h3>
+                <p>{formatSongCount(playlist.song_count)}</p>
+              </Link>
+            </div>
+          ) : null
+        }
+      />
     </div>
   );
 }
