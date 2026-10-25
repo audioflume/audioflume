@@ -1309,8 +1309,8 @@
 
   .discover-artist-hero-feature {
     position: absolute;
+    top: 50%;
     right: var(--discover-artist-gutter);
-    bottom: clamp(44px, 7vh, 76px);
     left: var(--discover-artist-gutter);
     width: auto;
     max-width: none;
@@ -1323,6 +1323,7 @@
     justify-content: stretch;
     justify-self: auto;
     gap: 20px;
+    transform: translateY(-50%);
   }
 
   .discover-artist-hero-identity,
@@ -1361,6 +1362,7 @@
   .discover-artist-hero-actions {
     position: static;
     flex-wrap: wrap;
+    align-items: center;
     gap: 14px 24px;
     margin-top: 18px;
     font-size: 10.5px;
@@ -1370,6 +1372,10 @@
     display: inline-flex;
     align-items: center;
     gap: 12px;
+  }
+
+  .discover-artist-hero-listen > span:last-child {
+    align-self: center;
   }
 
   .discover-artist-hero-listen .discover-artist-play-badge {
@@ -1394,7 +1400,7 @@
   }
 
   .discover-artist-hero-slider-marks {
-    display: none;
+    display: flex;
   }
 
   .discover-artist-content {
