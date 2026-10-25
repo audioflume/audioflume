@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState } from "react";
 import BackendModalShell from "@/components/backend/BackendModalShell";
-import AdminSearchBar from "@/components/admin/AdminSearchBar";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import { backendModalPrimaryButtonClass } from "@/components/backend/backendClasses";
 import CheckIcon from "@/components/icons/CheckIcon";
 import PlaylistIcon from "@/components/icons/PlaylistIcon";
@@ -90,7 +90,7 @@ export default function AdminDiscoverContentPickerModal({
       }
     >
       <div className="pb-4">
-        <AdminSearchBar
+        <BackendSearchBar
           value={search}
           onChange={setSearch}
           placeholder="Search Discover content"
