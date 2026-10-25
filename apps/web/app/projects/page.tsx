@@ -519,7 +519,7 @@ export default function ProjectsPage() {
           margin-left: calc(var(--projects-control-gutter) - 32px) !important;
           grid-template-columns: max-content minmax(320px, 1fr) max-content !important;
           align-items: center !important;
-          gap: 18px !important;
+          gap: 16px !important;
         }
         .projects-status-pill,
         .projects-sort-button,
