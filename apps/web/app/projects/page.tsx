@@ -953,7 +953,14 @@ export default function ProjectsPage() {
           .projects-list { margin-top: 12px; }
         }
         @media (max-width: 620px) {
-          .projects-shell { padding-left: 24px; padding-right: 24px; }
+          .projects-shell { padding-left: 16px; padding-right: 16px; }
+          .projects-control-bar,
+          .projects-title,
+          .projects-grid,
+          .projects-list {
+            margin-right: 0 !important;
+            margin-left: 0 !important;
+          }
           .projects-row { grid-template-columns: minmax(0, 1fr) 12px minmax(70px, 96px) 32px; column-gap: 14px; padding: 0 18px; }
           .projects-row-link { min-height: 72px; grid-template-columns: 46px minmax(0, 1fr); }
           .projects-row-actions { justify-self: end; padding-left: 0; }
