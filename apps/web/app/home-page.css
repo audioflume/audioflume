@@ -1778,13 +1778,19 @@ html:not(.light):not([data-theme="light"])
 
 @media (max-width: 620px) {
   .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-card {
+    width: 92vw !important;
+    min-width: 92vw !important;
+  }
+
+  .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-bar {
     padding-right: 112px;
   }
 
   .audioflume-home-mockup-curated-card {
-    width: 88vw;
-    min-width: 88vw;
+    width: 92vw;
+    min-width: 92vw;
   }
 
   .audioflume-home-mockup-intro-meta > span:last-child {
