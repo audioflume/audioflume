@@ -221,14 +221,14 @@ main:has(> aside[class*="admin-sidebar-width"])
 .filmwave-backend-search-input {
   border-radius: var(--filmwave-backend-control-radius);
   padding-right: 44px;
-  padding-left: 50px;
-  font-size: 16px;
+  padding-left: 40px;
+  font-size: 13px;
   font-weight: 300;
 }
 
 .filmwave-backend-search-input::placeholder {
   color: #a3a3a3;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 300;
 }
 
