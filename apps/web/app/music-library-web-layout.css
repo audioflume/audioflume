@@ -51,6 +51,11 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-license-f
   margin-bottom: 17px;
 }
 
+main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-license-filter-count {
+  position: relative;
+  left: 1px;
+}
+
 main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-section-heading {
   flex: 0 0 auto;
   margin-bottom: 17px;
