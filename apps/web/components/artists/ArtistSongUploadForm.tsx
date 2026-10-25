@@ -1249,7 +1249,7 @@ export default function ArtistSongUploadForm({
             <div className="grid gap-2 p-4">
               {uploadWarnings.length > 0 && !uploadComplete ? (
                 <>
-                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
                     <div className="flex items-center gap-2 font-medium">
                       <WarningIcon />
                       <span>
@@ -1271,7 +1271,7 @@ export default function ArtistSongUploadForm({
                     ) : null}
                   </div>
                   {warningsOpen && uploadWarnings.length > 1 ? (
-                    <ul className="grid gap-1.5 rounded-[7px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
+                    <ul className="grid gap-1.5 rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] p-3 text-[11px] leading-5 text-[var(--text-secondary)]">
                       {uploadWarnings.map((warning) => (
                         <li key={warning}>{warning}</li>
                       ))}
@@ -1279,7 +1279,7 @@ export default function ArtistSongUploadForm({
                   ) : null}
                 </>
               ) : (
-                <div className="rounded-[7px] bg-[var(--status-success-soft,rgba(72,181,113,0.08))] p-3 text-xs font-medium text-[var(--status-success,#48b571)]">
+                <div className="rounded-[3px] bg-[rgba(72,181,113,0.08)] p-3 text-xs font-medium text-[#48b571]">
                   Ready to save
                 </div>
               )}
@@ -1293,7 +1293,7 @@ export default function ArtistSongUploadForm({
               </div>
               <div className="grid gap-3 px-5 pb-5">
                 {error ? (
-                  <div className="rounded-[7px] bg-[var(--status-error-soft,rgba(220,88,79,0.08))] p-3 text-xs leading-5 text-[var(--status-error,#dc584f)]">
+                  <div className="rounded-[3px] bg-[rgba(220,88,79,0.08)] p-3 text-xs leading-5 text-[#dc584f]">
                     {error}
                   </div>
                 ) : null}
