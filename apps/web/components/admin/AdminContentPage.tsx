@@ -108,7 +108,6 @@ export default function AdminContentPage({
       <style>{`
         .filmwave-admin-content-page {
           --admin-top-control-height: 40px;
-          --admin-top-control-radius: 3px;
           --admin-top-toolbar-gap: 16px;
         }
 
@@ -153,7 +152,7 @@ export default function AdminContentPage({
           min-height: var(--admin-top-control-height);
           margin-top: 0;
           margin-bottom: 0;
-          border-radius: var(--admin-top-control-radius) !important;
+          border-radius: var(--filmwave-backend-control-radius) !important;
         }
 
         .filmwave-admin-content-page div:has(> [role="searchbox"]) {
