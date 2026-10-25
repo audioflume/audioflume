@@ -214,7 +214,7 @@ export default function AdminContentPage({
           {children}
 
           {showStandardFooter ? (
-            <Footer className="!px-0" playerPadding={false} showTopBorder={false} />
+            <Footer className="!px-0" playerPadding={false} showTopBorder={false} pageGutter={false} />
           ) : null}
         </div>
       </section>
