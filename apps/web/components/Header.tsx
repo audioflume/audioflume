@@ -306,6 +306,26 @@ export default function Header() {
     }, 150);
   }
 
+  function schedulePlaylistsMenuClose() {
+    if (playlistsMenuOpenFrameRef.current != null) {
+      window.cancelAnimationFrame(playlistsMenuOpenFrameRef.current);
+      playlistsMenuOpenFrameRef.current = null;
+    }
+
+    if (playlistsMenuCloseTimeoutRef.current != null) {
+      window.clearTimeout(playlistsMenuCloseTimeoutRef.current);
+    }
+
+    playlistsMenuCloseTimeoutRef.current = window.setTimeout(() => {
+      setPlaylistsMenuOpen(false);
+
+      playlistsMenuCloseTimeoutRef.current = window.setTimeout(() => {
+        playlistsMenuCloseTimeoutRef.current = null;
+        setPlaylistsMenuMounted(false);
+      }, 150);
+    }, 120);
+  }
+
   return (
     <>
       <style>{`
@@ -1135,7 +1155,7 @@ export default function Header() {
                       key={link.href}
                       className={`filmwave-header-nav-item filmwave-header-nav-item-playlists${playlistsMenuMounted ? " is-mounted" : ""}${playlistsMenuOpen ? " is-open" : ""}`}
                       onMouseEnter={openPlaylistsMenu}
-                      onMouseLeave={closePlaylistsMenu}
+                      onMouseLeave={schedulePlaylistsMenuClose}
                       onFocus={openPlaylistsMenu}
                       onBlur={(event) => {
                         if (
@@ -1161,7 +1181,7 @@ export default function Header() {
                         role="menu"
                         aria-label="Playlist navigation"
                         onMouseEnter={openPlaylistsMenu}
-                        onMouseLeave={closePlaylistsMenu}
+                        onMouseLeave={schedulePlaylistsMenuClose}
                       >
                         <div className="filmwave-playlists-mega-inner">
                           <div
