@@ -102,7 +102,7 @@ function createGeneratedEditPoints(saved: number) {
 }
 
 const backendIconLinkClass =
-  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[7px] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
+  "flex h-8 w-8 shrink-0 items-center justify-center rounded-[var(--filmwave-backend-control-radius)] border-0 bg-transparent text-[var(--text-muted)] transition-colors hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)] focus-visible:outline-none";
 
 export default function AdminSongRow({
   song,
