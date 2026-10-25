@@ -513,10 +513,10 @@
 }
 
 .discover-artist-feature-card {
-  --discover-artist-feature-media-height: 400px;
+  --discover-artist-feature-media-height: 341px;
   position: relative;
-  width: min(40vw, 840px);
-  min-width: min(40vw, 840px);
+  width: min(40vw, 607px);
+  min-width: min(40vw, 607px);
   overflow: hidden;
   border-radius: 3px;
   background: transparent;
@@ -596,10 +596,23 @@
 
 .discover-artist-feature-media-home {
   position: relative;
-  aspect-ratio: 16 / 9;
+  width: 100%;
+  height: var(--discover-artist-feature-media-height);
   overflow: hidden;
   border-radius: inherit;
   background: var(--bg-tertiary);
+}
+
+@media (min-width: 1512px) {
+  .discover-artist-feature-card {
+    width: calc(100vw * 0.4014550265);
+    min-width: calc(100vw * 0.4014550265);
+  }
+
+  .discover-artist-feature-media-home {
+    height: auto;
+    aspect-ratio: 607 / 341;
+  }
 }
 
 .discover-artist-feature-media-home::after {
@@ -1438,7 +1451,8 @@
   }
 
   .discover-artist-feature-media-home {
-    aspect-ratio: 1.63 / 1;
+    height: var(--discover-artist-feature-media-height);
+    aspect-ratio: auto;
   }
 
   .discover-artist-feature-bar {
