@@ -709,7 +709,7 @@ body:has(.community-playlists-page-root) {
 
 @media (max-width: 620px) {
   body:has(.community-playlists-page-root) {
-    --community-page-gutter: 24px;
+    --community-page-gutter: 16px;
   }
 
   .community-page-playlist-grid,
