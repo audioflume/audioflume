@@ -1225,29 +1225,6 @@ html:not(.light):not([data-theme="light"])
   padding-bottom: 20px;
 }
 
-.audioflume-home-mockup-intro-heading h1 {
-  position: relative;
-  display: flex;
-  min-width: 0;
-  align-items: center;
-  gap: 0;
-  margin: 0;
-  color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 52px;
-  font-weight: 400;
-  letter-spacing: -0.065em;
-  line-height: 0.98;
-  white-space: nowrap;
-}
-
-.audioflume-home-mockup-intro-heading-measure {
-  position: absolute;
-  visibility: hidden;
-  white-space: nowrap;
-  pointer-events: none;
-}
-
 .audioflume-home-mockup-intro-heading > span {
   flex: 0 0 auto;
   padding-bottom: 0;
@@ -1786,17 +1763,6 @@ html:not(.light):not([data-theme="light"])
   .audioflume-home-mockup-curated-card {
     width: 88vw;
     min-width: 88vw;
-  }
-
-  .audioflume-home-mockup-intro-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .audioflume-home-mockup-intro-heading > span {
-    align-self: flex-start;
-    text-align: left;
   }
 
   .audioflume-home-mockup-intro-meta > span:last-child {
