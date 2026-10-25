@@ -923,30 +923,3 @@ section.curated-playlists-page-layer section.mt-10 h2 {
   color: var(--text-muted) !important;
 }
 
-@media (max-width: 940px) {
-  .playlists-top-controls {
-    grid-template-columns: 1fr !important;
-    gap: 12px !important;
-  }
-
-  .playlists-status-pill {
-    width: 100% !important;
-  }
-
-  .playlists-control-right {
-    justify-content: space-between !important;
-  }
-}
-
-@media (max-width: 640px) {
-  .playlists-top-controls {
-    width: calc(100% - 40px) !important;
-    margin-right: 20px !important;
-    margin-left: 20px !important;
-  }
-
-  .playlists-control-right {
-    flex-wrap: wrap !important;
-    gap: 10px !important;
-  }
-}
