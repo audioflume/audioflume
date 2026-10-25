@@ -3,7 +3,7 @@ import "../discover/discover-reference-layout.css";
 
 const CURATED_LANDING_CARD_RATIO_STYLE = `
   body:has(.curated-playlists-page-root) {
-    --curated-page-gutter: 80px;
+    --curated-page-gutter: var(--filmwave-page-gutter);
     --curated-feature-edge: var(--curated-page-gutter);
     --curated-feature-hero-height: clamp(280px, 29.5vw, 420px);
     --curated-feature-title-thumbnail-size: calc(
@@ -268,15 +268,9 @@ const CURATED_LANDING_CARD_RATIO_STYLE = `
     }
   }
 
-  @media (max-width: 980px) {
-    body:has(.curated-playlists-page-root) {
-      --curated-page-gutter: 40px;
-    }
-  }
 
   @media (max-width: 620px) {
     body:has(.curated-playlists-page-root) {
-      --curated-page-gutter: var(--filmwave-page-gutter);
       --curated-feature-hero-height: 330px;
     }
   }
