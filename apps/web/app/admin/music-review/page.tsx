@@ -717,7 +717,7 @@ export default function AdminMusicReviewPage() {
                     key={filter.value}
                     type="button"
                     onClick={() => setStatusFilter(filter.value)}
-                    className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[7px] border-[1.25px] px-3 text-[11px] font-medium transition ${
+                    className={`inline-flex h-10 shrink-0 cursor-pointer items-center gap-2 rounded-[3px] border-[1.25px] px-3 text-[11px] font-medium transition ${
                       active
                         ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)]"
                         : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
