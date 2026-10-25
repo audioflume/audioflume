@@ -16,20 +16,20 @@
   letter-spacing: normal;
 }
 
-/* Search controls use the same 40px geometry and shared backend radius as top-page actions. */
+/* Search controls use the shared backend control geometry. */
 .filmwave-admin-content-page [role="searchbox"] {
   display: block;
   box-sizing: border-box;
-  height: 40px !important;
-  min-height: 40px;
+  height: var(--filmwave-backend-control-height) !important;
+  min-height: var(--filmwave-backend-control-height);
   margin: 0;
-  border-radius: 3px !important;
+  border-radius: var(--filmwave-backend-control-radius) !important;
   appearance: none;
   line-height: 20px;
 }
 
 .filmwave-admin-content-page :has(> [role="searchbox"]) {
-  height: 40px;
+  height: var(--filmwave-backend-control-height);
 }
 
 /* Frontend-matched cover hover */
