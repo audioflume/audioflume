@@ -20,6 +20,7 @@ import GlobalSearchBar from "@/components/GlobalSearchBar";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
+import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
@@ -701,6 +702,11 @@ function HomeCuratedPlaylistShelf({
               <strong>{playlist.name}</strong>
             </Link>
 
+            <CuratedPlaylistBookmarkButton
+              playlist={playlist}
+              className="audioflume-home-mockup-curated-card-bookmark"
+            />
+
             <CuratedPlaylistPlayButton
               playlistId={playlist.id}
               playlistName={playlist.name}
@@ -1147,14 +1153,6 @@ export default function HomePageContent({
             </div>
 
             <div className="audioflume-home-lifetime-v2-songs">
-              <Link
-                href="/pricing"
-                className="audioflume-home-lifetime-v2-link"
-                aria-label="View Lifetime Access pricing"
-              >
-                <ArrowUpRightIcon size={16} strokeWidth={1.5} />
-              </Link>
-
               <div className="audioflume-home-lifetime-v2-song-list">
                 {songsLoading
                   ? Array.from({ length: 7 }, (_, index) => (
