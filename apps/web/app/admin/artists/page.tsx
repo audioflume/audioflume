@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
+import { BackendButton } from "@/components/backend/BackendControls";
 import ArtistApplicationReviewPanel from "@/components/admin/ArtistApplicationReviewPanel";
 import Toast from "@/components/Toast";
 
@@ -154,18 +155,15 @@ function ActionButton({
   primary?: boolean;
 }) {
   return (
-    <button
+    <BackendButton
       type="button"
       disabled={disabled}
       onClick={onClick}
-      className={`inline-flex h-8 cursor-pointer items-center justify-center rounded-[3px] border-[1.25px] px-3 text-[11px] font-medium transition disabled:cursor-not-allowed disabled:opacity-45 ${
-        primary
-          ? "border-[var(--text-primary)] bg-[var(--text-primary)] text-[var(--bg-primary)] hover:opacity-80"
-          : "border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
-      }`}
+      compact
+      variant={primary ? "primary" : "secondary"}
     >
       {children}
-    </button>
+    </BackendButton>
   );
 }
 
@@ -642,7 +640,7 @@ export default function AdminArtistsPage() {
                   !newArtistEmail.trim()
                 }
                 onClick={() => void createAndInviteArtist()}
-                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[3px] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-45"
+                className="filmwave-backend-button filmwave-backend-button-primary"
               >
                 {creatingArtist ? "Creating..." : "Create & Invite"}
               </button>
@@ -650,7 +648,7 @@ export default function AdminArtistsPage() {
                 type="button"
                 disabled={creatingArtist}
                 onClick={() => setShowCreateArtist(false)}
-                className="inline-flex h-10 cursor-pointer items-center justify-center rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-secondary)] px-4 text-[11px] font-medium text-[var(--text-secondary)] transition hover:border-[var(--text-muted)] hover:text-[var(--text-primary)]"
+                className="filmwave-backend-button filmwave-backend-button-secondary"
               >
                 Cancel
               </button>
@@ -671,7 +669,7 @@ export default function AdminArtistsPage() {
           <button
             type="button"
             onClick={() => setShowCreateArtist((current) => !current)}
-            className="inline-flex h-10 shrink-0 cursor-pointer items-center rounded-[3px] border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[11px] font-medium text-[var(--bg-primary)] transition hover:opacity-80"
+            className="filmwave-backend-button filmwave-backend-button-primary shrink-0"
           >
             Create & Invite
           </button>
@@ -711,7 +709,7 @@ export default function AdminArtistsPage() {
               <button
                 type="button"
                 onClick={() => void loadArtists()}
-                className="inline-flex h-8 cursor-pointer items-center justify-center rounded-[3px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] px-3 text-[11px] font-medium text-[var(--text-primary)]"
+                className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary"
               >
                 Try again
               </button>
