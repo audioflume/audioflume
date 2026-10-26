@@ -1159,6 +1159,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     setExistingAudioUrl("");
     setExistingCoverUrl("");
     setExistingStemUrls([]);
+    setSimilarReferences([]);
     setSelectedMoods([]);
     setSelectedGenres([]);
     setSelectedRegions([]);
