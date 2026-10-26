@@ -1,7 +1,7 @@
 /* Home-only header treatment for the mockup layout. */
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent {
   --filmwave-chrome-surface: transparent;
-  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+  border-bottom-color: transparent !important;
   background: transparent !important;
   background-color: transparent !important;
   color: #ffffff !important;
@@ -10,6 +10,26 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent {
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-logo-action,
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-actions {
+  color: #ffffff !important;
+}
+
+body:has(.audioflume-home-landing)
+  .filmwave-web-header.is-transparent:hover
+  .filmwave-header-nav-link:not(.is-active):not(:hover),
+body:has(.audioflume-home-landing)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-nav-link:hover,
+body:has(.audioflume-home-landing)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-nav-link.is-active,
+body:has(.audioflume-home-landing)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-tonal-wordmark:hover,
+body:has(.audioflume-home-landing)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-logo-action:hover {
+  background: transparent !important;
+  background-color: transparent !important;
   color: #ffffff !important;
 }
 
@@ -111,7 +131,7 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
   z-index: 1;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(72px, 6.2vw, 126px);
+  font-size: clamp(82px, 7vw, 144px);
   font-weight: 300;
   letter-spacing: -0.055em;
   line-height: 0.92;
@@ -128,37 +148,37 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
 }
 
 .audioflume-home-reference-hero-headline .is-human {
-  top: 27%;
+  top: 31%;
   left: 0;
 }
 
 .audioflume-home-reference-hero-headline .is-made {
-  top: 27%;
+  top: 31%;
   right: 0;
 }
 
 .audioflume-home-reference-hero-headline .is-music {
-  top: 37%;
+  top: 42%;
   left: 29%;
 }
 
 .audioflume-home-reference-hero-headline .is-amp {
-  top: 37%;
+  top: 42%;
   left: 49.4%;
 }
 
 .audioflume-home-reference-hero-headline .is-sfx {
-  top: 37%;
+  top: 42%;
   left: 56%;
 }
 
 .audioflume-home-reference-hero-headline .is-for-film {
-  top: 47%;
+  top: 53%;
   right: 8%;
 }
 
 .audioflume-home-reference-hero-mark {
-  top: 59%;
+  top: 66%;
   left: 50%;
   width: clamp(52px, 4.1vw, 80px);
   height: auto;
@@ -2712,7 +2732,7 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
 
 @media (max-width: 1100px) {
   .audioflume-home-reference-hero-headline {
-    font-size: clamp(60px, 7vw, 82px);
+    font-size: clamp(68px, 8vw, 94px);
   }
 
   .audioflume-home-reference-hero-headline .is-music {
@@ -2760,41 +2780,41 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
   }
 
   .audioflume-home-reference-hero-headline {
-    font-size: clamp(40px, 10.5vw, 56px);
+    font-size: clamp(44px, 11.5vw, 62px);
   }
 
   .audioflume-home-reference-hero-headline .is-human {
-    top: 24%;
+    top: 29%;
     left: 0;
   }
 
   .audioflume-home-reference-hero-headline .is-made {
-    top: 24%;
+    top: 29%;
     right: 0;
   }
 
   .audioflume-home-reference-hero-headline .is-music {
-    top: 36%;
+    top: 42%;
     left: 10%;
   }
 
   .audioflume-home-reference-hero-headline .is-amp {
-    top: 36%;
+    top: 42%;
     left: 48%;
   }
 
   .audioflume-home-reference-hero-headline .is-sfx {
-    top: 36%;
+    top: 42%;
     left: 60%;
   }
 
   .audioflume-home-reference-hero-headline .is-for-film {
-    top: 48%;
+    top: 55%;
     right: 4%;
   }
 
   .audioflume-home-reference-hero-mark {
-    top: 60%;
+    top: 68%;
     width: 44px;
   }
 
