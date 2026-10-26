@@ -775,11 +775,16 @@ export default function ArtistSongUploadForm({
         }
       }
 
+      setUploadComplete(true);
       if (similarReferences.length) {
         setSaveStatus("Saving similar-song references...");
-        await saveSimilarSongReferences(uploadedSong.id, similarReferences, artist.id);
+        try {
+          await saveSimilarSongReferences(uploadedSong.id, similarReferences, artist.id);
+        } catch {
+          setSaveStatus("Song saved as a draft, but similar-song references could not be saved. You can add them when editing the song.");
+          return;
+        }
       }
-      setUploadComplete(true);
       setSaveStatus("Song uploaded and saved as a draft.");
     } catch (uploadError) {
       setError(
