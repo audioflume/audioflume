@@ -1269,27 +1269,6 @@ export default function MusicPage() {
       onToggle: toggleIn(selectedBuilds, setSelectedBuilds),
       onClear: () => setSelectedBuilds([]),
     },
-    {
-      id: "cuePoints",
-      label: "Cue Points",
-      options: availableFilterOptions.cuePoints.map((option) => option.label),
-      selected: availableFilterOptions.cuePoints
-        .filter((option) => selectedEditPoints.includes(option.type))
-        .map((option) => option.label),
-      onClear: () => setSelectedEditPoints([]),
-      onToggle: (label: string) => {
-        const option = availableFilterOptions.cuePoints.find(
-          (item) => item.label === label,
-        );
-        if (!option) return;
-
-        setSelectedEditPoints(
-          selectedEditPoints.includes(option.type)
-            ? selectedEditPoints.filter((type) => type !== option.type)
-            : [...selectedEditPoints, option.type],
-        );
-      },
-    },
   ];
 
   return (
