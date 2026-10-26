@@ -1236,10 +1236,10 @@
   }
 
   .discover-artist-hero-feature {
-    width: 91%;
+    width: 100%;
     max-width: none;
-    padding-right: 0;
-    padding-left: 0;
+    padding-right: 80px;
+    padding-left: 80px;
     grid-template-columns: minmax(0, 0.72fr) minmax(330px, 1fr);
     justify-self: center;
     column-gap: 32px;
@@ -1319,10 +1319,11 @@
     top: auto;
     right: auto;
     left: auto;
-    width: calc(100% - (var(--discover-artist-gutter) * 2));
+    width: 100%;
     max-width: none;
     margin: 0 auto;
-    padding: 0;
+    padding-right: 40px;
+    padding-left: 40px;
     grid-row: auto;
     grid-template-columns: 1fr;
     grid-template-rows: none;
