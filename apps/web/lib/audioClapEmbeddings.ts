@@ -1025,3 +1025,77 @@ export async function searchPublishedSongsByClapSimilarity(
 
   return { referenceProfile, matches };
 }
+
+export async function scorePublishedSongsByClapSimilarity(
+  sourceUrl: string,
+  songIds: string[],
+): Promise<{
+  referenceProfile: ClapConceptProfile;
+  matches: ClapSimilarityMatch[];
+}> {
+  const cleanSongIds = [...new Set(
+    songIds.map((songId) => songId.trim()).filter(Boolean),
+  )];
+
+  const {
+    embedding,
+    segmentEmbeddings: referenceSegments,
+    conceptProfile: referenceProfile,
+  } = await createClapAudioAnalysis(sourceUrl);
+
+  if (cleanSongIds.length === 0) {
+    return { referenceProfile, matches: [] };
+  }
+
+  const { data, error } = await supabaseServer.rpc(
+    "match_song_clap_embeddings_by_ids",
+    {
+      query_embedding: embedding,
+      p_song_ids: cleanSongIds,
+      p_model: SONG_CLAP_MODEL_KEY,
+      p_dimensions: SONG_CLAP_EMBEDDING_DIMENSIONS,
+    },
+  );
+
+  if (error) throw error;
+
+  const matches = ((data ?? []) as AudioEmbeddingMatchRow[]).flatMap(
+    (row) => {
+      const songId = String(row.song_id || "").trim();
+      const similarity = Number(row.similarity);
+      const candidateSegments = row.segment_embeddings;
+      const candidateProfile = row.concept_profile;
+
+      if (
+        !songId ||
+        !Number.isFinite(similarity) ||
+        !isSegmentEmbeddings(candidateSegments) ||
+        !isConceptProfile(candidateProfile)
+      ) {
+        return [];
+      }
+
+      const segmentSimilarity = getSegmentSimilarityMetrics(
+        referenceSegments,
+        candidateSegments,
+      );
+
+      return [
+        {
+          songId,
+          similarity,
+          bestSegmentSimilarity:
+            segmentSimilarity.bestSegmentSimilarity,
+          averageBestSegmentSimilarity:
+            segmentSimilarity.averageBestSegmentSimilarity,
+          consistentSegmentSimilarity:
+            segmentSimilarity.consistentSegmentSimilarity,
+          conceptProfile: candidateProfile,
+        },
+      ];
+    },
+  );
+
+  return { referenceProfile, matches };
+}
+
