@@ -4,13 +4,13 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent {
   border-bottom-color: transparent !important;
   background: transparent !important;
   background-color: transparent !important;
-  color: #ffffff !important;
+  color: #e5e5dd !important;
 }
 
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-logo-action,
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-actions {
-  color: #ffffff !important;
+  color: #e5e5dd !important;
 }
 
 body:has(.audioflume-home-landing)
@@ -30,7 +30,7 @@ body:has(.audioflume-home-landing)
   .filmwave-header-logo-action:hover {
   background: transparent !important;
   background-color: transparent !important;
-  color: #ffffff !important;
+  color: #e5e5dd !important;
 }
 
 .audioflume-home-reference {
@@ -403,6 +403,13 @@ body:has(.audioflume-home-landing)
 .audioflume-home-reference-original-song-grid .audioflume-home-reference-original-song-card {
   width: 100%;
   min-width: 0;
+}
+
+
+.audioflume-home-landing .audioflume-home-reference-library,
+.audioflume-home-landing .audioflume-home-reference-footer-region,
+.audioflume-home-landing .audioflume-home-reference-footer {
+  background: #e5e5dd;
 }
 
 .audioflume-home-reference-library {
@@ -1238,7 +1245,7 @@ body:has(.audioflume-home-landing)
   .filmwave-web-header.is-transparent
   .filmwave-header-create-account {
   background: #111111 !important;
-  color: #ffffff !important;
+  color: #e5e5dd !important;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
@@ -1933,7 +1940,7 @@ body:has(.audioflume-home-landing)
   border: 0 !important;
   border-radius: 999px !important;
   background: rgba(255, 255, 255, 0.18) !important;
-  color: #ffffff !important;
+  color: #e5e5dd !important;
   opacity: 1 !important;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
