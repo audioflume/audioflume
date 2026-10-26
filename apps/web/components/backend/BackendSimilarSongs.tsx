@@ -177,55 +177,57 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
         <div className="grid gap-2">
           <div className="text-[11px] font-medium text-[var(--text-secondary)]">Selected references ({value.length}/{MAX_SIMILAR_SONG_REFERENCES})</div>
           {value.map((item) => (
-            <div key={item.id} className="flex items-center gap-2">
-              <div className="min-w-0 flex-1 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
-              <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
-              <button type="button" onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary">{referenceTrackId === item.id.replace(/^deezer:track:/, "") ? "Hide similar artists" : "Show similar artists"}</button>
-              <button type="button" aria-label={`Remove ${item.name}`} disabled={disabled} onClick={() => onChange(value.filter((track) => track.id !== item.id))} className="filmwave-backend-button filmwave-backend-button-secondary">Remove</button>
-            </div>
-          ))}
-        </div>
-      )}
-      {referenceTrackId && (
-        <div className="grid gap-2">
-          <div className="flex items-center justify-between gap-3">
-            <div className="text-[11px] font-medium text-[var(--text-secondary)]">Similar artists</div>
-            <button type="button" onClick={closeSimilarArtists} className="filmwave-backend-button filmwave-backend-button-secondary">Close</button>
-          </div>
-          {relatedArtists.length > 0 ? (
-            <div className="flex flex-wrap gap-2">
-              <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(null)} disabled={suggestionsBusy}>All artists</button>
-              {relatedArtists.map((artist) => (
-                <button key={artist.id} type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(artist.id)} disabled={suggestionsBusy} aria-pressed={selectedArtistId === artist.id}>{artist.name}</button>
-              ))}
-            </div>
-          ) : (
-            <p className="text-xs text-[var(--text-muted)]">
-              {suggestionsBusy ? "Finding similar artists..." : "No similar artists found."}
-            </p>
-          )}
-          {suggestionsBusy && relatedArtists.length > 0 ? (
-            <p className="text-xs text-[var(--text-muted)]">Finding songs by related artists...</p>
-          ) : null}
-        </div>
-      )}
-      {suggestions.length > 0 && (
-        <div className="grid gap-2">
-          <div className="text-[11px] font-medium text-[var(--text-secondary)]">You might also consider</div>
-          {suggestions.map((item) => (
-            <div key={item.id} className="flex items-center gap-2">
-              {item.imageUrl ? <img src={item.imageUrl} alt="" className="h-9 w-9 shrink-0 object-cover" /> : null}
-              <div className="min-w-0 flex-1">
-                <div className="truncate text-xs">{item.name}</div>
-                <div className="truncate text-[11px] text-[var(--text-secondary)]">{item.artist}</div>
+            <div key={item.id} className="grid gap-2">
+              <div className="flex items-center gap-2">
+                <div className="min-w-0 flex-1 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
+                <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
+                <button type="button" onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary">{referenceTrackId === item.id.replace(/^deezer:track:/, "") ? "Hide similar artists" : "Show similar artists"}</button>
+                <button type="button" aria-label={`Remove ${item.name}`} disabled={disabled} onClick={() => onChange(value.filter((track) => track.id !== item.id))} className="filmwave-backend-button filmwave-backend-button-secondary">Remove</button>
               </div>
-              <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
-              <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" disabled={disabled || value.length >= MAX_SIMILAR_SONG_REFERENCES || value.some((reference) => reference.id === item.id)} onClick={() => add(item)}>{value.some((reference) => reference.id === item.id) ? "Added" : "Add"}</button>
+              {referenceTrackId === item.id.replace(/^deezer:track:/, "") && (
+                <div className="grid gap-2 pl-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <div className="text-[11px] font-medium text-[var(--text-secondary)]">Similar artists</div>
+                    <button type="button" onClick={closeSimilarArtists} className="filmwave-backend-button filmwave-backend-button-secondary">Close</button>
+                  </div>
+                  {relatedArtists.length > 0 ? (
+                    <div className="flex flex-wrap gap-2">
+                      <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(null)} disabled={suggestionsBusy}>All artists</button>
+                      {relatedArtists.map((artist) => (
+                        <button key={artist.id} type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(artist.id)} disabled={suggestionsBusy} aria-pressed={selectedArtistId === artist.id}>{artist.name}</button>
+                      ))}
+                    </div>
+                  ) : (
+                    <p className="text-xs text-[var(--text-muted)]">
+                      {suggestionsBusy ? "Finding similar artists..." : "No similar artists found."}
+                    </p>
+                  )}
+                  {suggestionsBusy && relatedArtists.length > 0 ? (
+                    <p className="text-xs text-[var(--text-muted)]">Finding songs by related artists...</p>
+                  ) : null}
+                  {suggestions.length > 0 && (
+                    <div className="grid gap-2">
+                      <div className="text-[11px] font-medium text-[var(--text-secondary)]">You might also consider</div>
+                      {suggestions.map((suggestion) => (
+                        <div key={suggestion.id} className="flex items-center gap-2">
+                          {suggestion.imageUrl ? <img src={suggestion.imageUrl} alt="" className="h-9 w-9 shrink-0 object-cover" /> : null}
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate text-xs">{suggestion.name}</div>
+                            <div className="truncate text-[11px] text-[var(--text-secondary)]">{suggestion.artist}</div>
+                          </div>
+                          <a href={spotifySearchUrl(suggestion)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
+                          <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" disabled={disabled || value.length >= MAX_SIMILAR_SONG_REFERENCES || value.some((reference) => reference.id === suggestion.id)} onClick={() => add(suggestion)}>{value.some((reference) => reference.id === suggestion.id) ? "Added" : "Add"}</button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {error && <p role="alert" className="text-xs text-[var(--status-error)]">{error}</p>}
+                </div>
+              )}
             </div>
           ))}
         </div>
       )}
-      {error && <p role="alert" className="text-xs text-[var(--status-error)]">{error}</p>}
     </SongFormSection>
   );
 }
