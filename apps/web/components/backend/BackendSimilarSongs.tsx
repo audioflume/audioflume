@@ -188,7 +188,6 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
                 <div className="grid gap-2 pl-3">
                   <div className="flex items-center justify-between gap-3">
                     <div className="text-[11px] font-medium text-[var(--text-secondary)]">Similar artists</div>
-                    <button type="button" onClick={closeSimilarArtists} className="filmwave-backend-button filmwave-backend-button-secondary">Close</button>
                   </div>
                   {relatedArtists.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
