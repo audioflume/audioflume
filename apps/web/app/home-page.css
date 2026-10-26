@@ -1117,7 +1117,7 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
 }
 
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent {
   --filmwave-chrome-surface: var(--bg-primary);
   border-bottom-color: var(--border) !important;
@@ -1127,45 +1127,45 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
 }
 
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-tonal-wordmark,
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-logo-action,
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-actions,
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-nav-link,
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-nav-link:hover,
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-nav-link.is-active,
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-utility-link {
   color: var(--text-primary) !important;
 }
 
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent:hover
   .filmwave-header-nav-link:not(.is-active):not(:hover) {
   color: var(--text-secondary) !important;
 }
 
 :where(html.light, html[data-theme="light"])
-  body:has(.audioflume-home-reference)
+  body:has(.audioflume-home-reference:not(.audioflume-home-landing))
   .filmwave-web-header.is-transparent
   .filmwave-header-create-account {
   background: #111111 !important;
