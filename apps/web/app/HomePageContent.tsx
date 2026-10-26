@@ -15,7 +15,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
+import { AudioflumeMark, AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
@@ -1099,7 +1099,18 @@ export default function HomePageContent({
         style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
       >
         <div className="audioflume-home-reference-hero-shade" />
-        <h1>Human made music &amp; SFX for film.</h1>
+        <div className="audioflume-home-reference-hero-headline" aria-label="Human made music and SFX for film.">
+          <span className="is-human">Human</span>
+          <span className="is-made">Made</span>
+          <span className="is-music">Music</span>
+          <span className="is-amp">&amp;</span>
+          <span className="is-sfx">SFX</span>
+          <span className="is-for-film">For film.</span>
+          <AudioflumeMark
+            className="audioflume-home-reference-hero-mark"
+            ariaHidden
+          />
+        </div>
 
         <div className="audioflume-home-reference-width audioflume-home-reference-hero-trust">
           <p>Filmmakers working for these brands already use Audioflume.</p>
