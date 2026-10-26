@@ -102,6 +102,21 @@ function getTrackName(track: DeezerTrack) {
   return track.title_short?.trim() || track.title?.trim() || "";
 }
 
+// Match alternate releases of the same named recording without treating
+// unrelated songs or every title with a similar word as equivalent.
+const VERSION_SUFFIX = /(?:\\s*\\((?:reverb|slowed(?:\\s*\\+\\s*reverb)?|sped\\s*up|speed\\s*up|nightcore|remaster(?:ed)?(?:\\s*\\d{4})?|radio\\s*edit|extended(?:\\s*mix)?|acoustic|instrumental|live(?:\\s*version)?|(?:[\\w\\s-]+\\s+)?remix|(?:[\\w\\s-]+\\s+)?mix|version)\\)|\\s*[-–—]\\s*(?:reverb|slowed(?:\\s*\\+\\s*reverb)?|sped\\s*up|remaster(?:ed)?(?:\\s*\\d{4})?|radio\\s*edit|instrumental|acoustic|live(?:\\s*version)?|[\\w\\s-]+\\s+remix))\\s*$/i;
+
+function canonicalTrackTitle(title: string) {
+  let cleaned = title.trim();
+  // Allow more than one trailing edition label, e.g. "(Slowed) (Reverb)".
+  for (let i = 0; i < 3; i += 1) {
+    const next = cleaned.replace(VERSION_SUFFIX, "").trim();
+    if (next === cleaned || !next) break;
+    cleaned = next;
+  }
+  return normalize(cleaned);
+}
+
 async function fetchDeezerJson<T>(url: string): Promise<T> {
   const response = await fetch(url, {
     headers: {
@@ -790,13 +805,38 @@ export async function POST(request: Request) {
     // An exact, artist-curated Deezer reference is a stronger signal than
     // acoustic similarity. Promote matching published songs even when they
     // fell outside the acoustic retrieval cutoff.
-    const { data: savedReferences, error: referencesError } = await supabaseServer
-      .from("song_similar_references")
-      .select("song_id")
-      .eq("deezer_track_id", String(trackId));
-    if (referencesError) throw referencesError;
+    const referenceTitle = canonicalTrackTitle(profile.track.title || getTrackName(profile.track));
+    const referenceArtist = normalize(profile.track.artist?.name ?? "");
+    const [exactLookup, artistLookup] = await Promise.all([
+      supabaseServer
+        .from("song_similar_references")
+        .select("song_id")
+        .eq("deezer_track_id", String(trackId)),
+      referenceArtist && referenceTitle
+        ? supabaseServer
+            .from("song_similar_references")
+            .select("song_id, title, artist")
+            .ilike("artist", profile.track.artist?.name?.trim() ?? "")
+        : Promise.resolve({ data: [], error: null }),
+    ]);
+    if (exactLookup.error) throw exactLookup.error;
+    // Alternate-version matching is optional: exact IDs and acoustic ranking
+    // still work if the artist/title lookup is unavailable.
+    if (artistLookup.error) {
+      console.warn("Alternate reference version lookup unavailable:", artistLookup.error);
+    }
 
-    const matchingIds = [...new Set((savedReferences ?? []).map((entry) => entry.song_id))];
+    const exactIds = new Set((exactLookup.data ?? []).map((entry) => entry.song_id));
+    const alternateIds = new Set(
+      (artistLookup.data ?? [])
+        .filter((entry) =>
+          normalize(entry.artist ?? "") === referenceArtist &&
+          canonicalTrackTitle(entry.title ?? "") === referenceTitle,
+        )
+        .map((entry) => entry.song_id)
+        .filter((id) => !exactIds.has(id)),
+    );
+    const matchingIds = [...new Set([...exactIds, ...alternateIds])];
     if (matchingIds.length > 0) {
       const { data: publishedSongs, error: publishedError } = await supabaseServer
         .from("songs")
@@ -807,7 +847,7 @@ export async function POST(request: Request) {
 
       const publishedIds = new Set((publishedSongs ?? []).map((song) => song.id));
       const existingMatches = new Map(matches.map((result) => [result.songId, result]));
-      const promoted = matchingIds
+      const promoted = [...exactIds, ...alternateIds]
         .filter((id) => publishedIds.has(id))
         .map((id) => existingMatches.get(id) ?? ({ songId: id, score: 1 } as (typeof matches)[number]));
       const promotedIds = new Set(promoted.map((result) => result.songId));
