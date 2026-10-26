@@ -226,8 +226,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-original-song-grid {
   display: grid;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  column-gap: 20px;
-  row-gap: 32px;
+  gap: 24px;
   padding: 0 var(--audioflume-home-page-gutter);
 }
 
