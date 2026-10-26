@@ -544,34 +544,6 @@ function HomeArtistShelf({
       className="audioflume-home-reference-artist-shelf"
       customScrollbar
     >
-      <article className="audioflume-home-reference-artist-card audioflume-home-reference-artist-promo">
-        <PricingHeroImageFlash
-          images={homeFlashImages}
-          mediaClassName="audioflume-home-reference-artist-media audioflume-home-reference-artist-promo-media"
-        />
-        <span className="audioflume-home-reference-artist-promo-shade" aria-hidden="true" />
-        <div className="audioflume-home-reference-artist-promo-content">
-          <h2 className="audioflume-home-reference-artist-promo-title">
-            <span className="audioflume-home-reference-artist-promo-title-difference">
-              In demand
-            </span>
-            <span>artists</span>
-            <span>&amp; composers.</span>
-          </h2>
-          <Link
-            href="/music"
-            className="audioflume-home-reference-artist-promo-link inline-flex items-center gap-[5px]"
-          >
-            Explore Music
-            <ArrowUpRightIcon
-              size={16}
-              strokeWidth={1.5}
-              className="translate-y-[1px]"
-            />
-          </Link>
-        </div>
-      </article>
-
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
