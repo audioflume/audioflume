@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
+import { AudioflumeLogo } from "@/components/LifetimeAccessCard";
 import cardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import UserMenu from "@/components/UserMenu";
 
@@ -445,13 +446,14 @@ export default function Header() {
           display: inline-flex !important;
           align-items: center !important;
           color: var(--text-primary) !important;
-          font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-          font-size: 22px !important;
-          font-weight: 500 !important;
-          letter-spacing: -0.045em !important;
           line-height: 1 !important;
-          text-transform: lowercase !important;
           transform: translateY(-1px) !important;
+        }
+
+        .filmwave-header-audioflume-logo {
+          display: block;
+          width: auto;
+          height: 26px;
         }
 
         .filmwave-web-header,
@@ -1185,7 +1187,9 @@ export default function Header() {
             className="filmwave-header-logo-action"
             aria-label="audioflume Home"
           >
-            <span className="filmwave-header-tonal-wordmark">audioflume</span>
+            <span className="filmwave-header-tonal-wordmark">
+              <AudioflumeLogo className="filmwave-header-audioflume-logo" />
+            </span>
           </Link>
         }
         actions={
