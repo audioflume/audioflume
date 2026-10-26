@@ -620,6 +620,8 @@ export default function ArtistSongEditor({
 
           {afterSongInfoContent}
 
+          <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={metadataDisabled || !similarReferencesReady} />
+
           <ArtistSongTagSections
             genres={genres}
             onGenresChange={setGenres}
@@ -635,8 +637,6 @@ export default function ArtistSongEditor({
             onVocalsChange={setVocals}
             disabled={metadataDisabled}
           />
-
-          <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={metadataDisabled || !similarReferencesReady} />
 
           <ArtistSongCreditsRightsSections
             credits={credits}
