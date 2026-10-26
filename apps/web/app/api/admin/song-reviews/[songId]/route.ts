@@ -5,6 +5,10 @@ import { refreshPublishedSongClapEmbedding } from "@/lib/audioClapEmbeddings";
 import { refreshPublishedSongDiscogsEmbedding } from "@/lib/audioDiscogsEmbeddings";
 import { refreshPublishedSongRhythmProfile } from "@/lib/audioRhythmFeatures";
 import { refreshPublishedSongHarmonicProfile } from "@/lib/audioHarmonicFeatures";
+import {
+  isMeritAnalyzerConfigured,
+  refreshPublishedSongMeritEmbedding,
+} from "@/lib/audioMeritEmbeddings";
 import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import { deleteFilesFromR2 } from "@/lib/r2";
 import {
@@ -468,6 +472,9 @@ export async function PATCH(request: Request, context: RouteContext) {
       await refreshPublishedSongDiscogsEmbedding(songId);
       await refreshPublishedSongRhythmProfile(songId);
       await refreshPublishedSongHarmonicProfile(songId);
+      if (isMeritAnalyzerConfigured()) {
+        await refreshPublishedSongMeritEmbedding(songId);
+      }
       } catch (embeddingError) {
         console.error(
           `Failed to generate Reference Search analysis for published song ${songId}:`,
