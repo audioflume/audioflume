@@ -43,7 +43,7 @@ export const revalidate = 0;
 const MAX_RESULT_COUNT = 200;
 const RETRIEVAL_MATCH_COUNT = 100;
 const MIN_REFERENCE_MATCH_SCORE = 0.5;
-const MAX_REFERENCE_SCORE_DROP = 0.12;
+const MAX_REFERENCE_SCORE_DROP = 0.07;
 
 type DeezerArtist = {
   id?: number;
@@ -709,7 +709,7 @@ export async function POST(request: Request) {
         }));
       ranking =
         meritReady && referenceMeritEmbeddings
-          ? "audio-clap-discogs-rhythm-harmonic-merit-rerank-v11"
+          ? "audio-clap-discogs-rhythm-harmonic-merit-rerank-v12"
           : harmonicReady
             ? "audio-clap-discogs-rhythm-harmonic-rerank-v9"
             : rhythmReady
