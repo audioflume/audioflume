@@ -238,7 +238,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-library {
   padding: clamp(80px, 10vw, 166px) 0;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-reference-library-grid {
@@ -322,7 +322,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-tools {
   padding: 0;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-reference-tools > .discover-artist-featured {
@@ -884,7 +884,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-footer-region {
   width: 100%;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-reference-footer {
@@ -1080,13 +1080,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 /* ------------------------------------------------------------------ */
 
 .audioflume-home-mockup {
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-mockup-artists {
   overflow: hidden;
   padding-bottom: 54px;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-mockup-artists .audioflume-home-reference-artist-shelf {
@@ -1200,7 +1200,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-mockup-intro {
   padding: 12px 0 0;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-mockup-intro-meta {
@@ -1652,7 +1652,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   overflow: hidden;
   padding-top: 0;
   padding-bottom: 80px;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-mockup-curated-shelf
@@ -1774,7 +1774,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-mockup-catalogue {
   padding: 0 0 80px;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-mockup-catalogue-heading {
@@ -2379,7 +2379,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-featured-songs {
   overflow: hidden;
   padding: 0 0 80px;
-  background: var(--bg-primary);
+  background: #e5e5dd;
 }
 
 .audioflume-home-featured-songs
