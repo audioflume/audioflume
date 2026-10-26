@@ -3,6 +3,8 @@ import nextEnv from "@next/env";
 
 const { loadEnvConfig } = nextEnv;
 import { fileURLToPath } from "node:url";
+import http from "node:http";
+import https from "node:https";
 
 const projectDir = fileURLToPath(new URL("..", import.meta.url));
 loadEnvConfig(projectDir);
@@ -67,32 +69,85 @@ async function getNextCandidate() {
   };
 }
 
-async function createEmbeddings(sourceUrl) {
-  const response = await fetch(`${analyzerUrl}/merit`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "x-analyzer-secret": analyzerSecret,
-    },
-    body: JSON.stringify({ audioUrl: sourceUrl }),
-  });
+function requestAnalyzerJson(urlString, payload) {
+  return new Promise((resolve, reject) => {
+    const url = new URL(urlString);
+    const transport = url.protocol === "https:" ? https : http;
+    const body = JSON.stringify(payload);
 
-  const result = await response.json().catch(() => null);
+    const request = transport.request(
+      url,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Content-Length": Buffer.byteLength(body),
+          "x-analyzer-secret": analyzerSecret,
+        },
+      },
+      (response) => {
+        let raw = "";
 
-  if (!response.ok) {
-    throw new Error(
-      result?.detail ||
-        `MERIT analyzer request failed with ${response.status}`,
+        response.setEncoding("utf8");
+        response.on("data", (chunk) => {
+          raw += chunk;
+        });
+        response.on("end", () => {
+          let result = null;
+
+          try {
+            result = raw ? JSON.parse(raw) : null;
+          } catch {
+            result = null;
+          }
+
+          const status = response.statusCode ?? 500;
+
+          if (status < 200 || status >= 300) {
+            reject(
+              new Error(
+                result?.detail ||
+                  `MERIT analyzer request failed with ${status}`,
+              ),
+            );
+            return;
+          }
+
+          resolve(result);
+        });
+      },
     );
-  }
 
-  for (const factor of ["melody", "rhythm", "timbre"]) {
-    if (!Array.isArray(result?.[factor]) || result[factor].length !== dimensions) {
-      throw new Error(`Invalid MERIT ${factor} embedding`);
+    request.on("error", reject);
+    request.write(body);
+    request.end();
+  });
+}
+
+async function createEmbeddings(sourceUrl) {
+  const heartbeat = setInterval(() => {
+    console.log("  MERIT analyzer is still processing...");
+  }, 30_000);
+
+  try {
+    const result = await requestAnalyzerJson(
+      `${analyzerUrl}/merit`,
+      { audioUrl: sourceUrl },
+    );
+
+    for (const factor of ["melody", "rhythm", "timbre"]) {
+      if (
+        !Array.isArray(result?.[factor]) ||
+        result[factor].length !== dimensions
+      ) {
+        throw new Error(`Invalid MERIT ${factor} embedding`);
+      }
     }
-  }
 
-  return result;
+    return result;
+  } finally {
+    clearInterval(heartbeat);
+  }
 }
 
 async function upsert(candidate, embeddings) {
