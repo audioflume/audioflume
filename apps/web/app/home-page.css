@@ -2367,7 +2367,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 18px;
+  gap: 30px;
   padding-right: var(--audioflume-home-page-gutter);
   padding-left: var(--audioflume-home-page-gutter);
   scroll-padding: 0 !important;
@@ -2376,8 +2376,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-card {
   display: grid;
-  width: min(230px, 17vw);
-  min-width: min(230px, 17vw);
+  width: 210px;
+  min-width: 210px;
   gap: 10px;
 }
 
@@ -2480,23 +2480,18 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-shelf
   .audioflume-home-reference-shelf-arrow {
-  top: min(115px, 8.5vw);
+  top: 105px;
 }
 
 @media (max-width: 900px) {
-  .audioflume-home-featured-song-shelf
-    .audioflume-home-reference-shelf-scroller {
-    gap: 12px;
-  }
-
   .audioflume-home-featured-song-card {
-    width: 190px;
-    min-width: 190px;
+    width: 210px;
+    min-width: 210px;
   }
 
   .audioflume-home-featured-song-shelf
     .audioflume-home-reference-shelf-arrow {
-    top: 95px;
+    top: 105px;
   }
 }
 
@@ -2506,12 +2501,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-featured-song-card {
-    width: 155px;
-    min-width: 155px;
+    width: 210px;
+    min-width: 210px;
   }
 
   .audioflume-home-featured-song-shelf
     .audioflume-home-reference-shelf-arrow {
-    top: 77.5px;
+    top: 105px;
   }
 }
