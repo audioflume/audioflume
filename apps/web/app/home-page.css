@@ -163,6 +163,7 @@ body:has(.audioflume-home-landing)
   position: absolute;
   inset: 0;
   z-index: 1;
+  color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(82px, 7vw, 144px);
   font-weight: 300;
@@ -170,21 +171,16 @@ body:has(.audioflume-home-landing)
   line-height: 0.92;
   text-transform: uppercase;
   pointer-events: none;
-  isolation: auto;
-}
-
-.audioflume-home-reference-hero-headline > span,
-.audioflume-home-reference-hero-mark {
-  position: absolute;
-}
-
-.audioflume-home-reference-hero-headline > span {
-  z-index: 1;
-  color: #ffffff;
   mix-blend-mode: difference;
 }
 
+.audioflume-home-reference-hero-headline > span {
+  position: absolute;
+  color: #ffffff;
+}
+
 .audioflume-home-reference-hero-mark {
+  position: absolute;
   z-index: 2;
   color: #ffffff;
   mix-blend-mode: normal;
