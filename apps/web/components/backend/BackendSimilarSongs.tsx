@@ -152,18 +152,26 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
           ))}
         </div>
       )}
-      {relatedArtists.length > 0 && (
+      {referenceTrackId && (
         <div className="grid gap-2">
           <div className="text-[11px] font-medium text-[var(--text-secondary)]">Similar artists</div>
-          <div className="flex flex-wrap gap-2">
-            <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(null)} disabled={suggestionsBusy}>All artists</button>
-            {relatedArtists.map((artist) => (
-              <button key={artist.id} type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(artist.id)} disabled={suggestionsBusy} aria-pressed={selectedArtistId === artist.id}>{artist.name}</button>
-            ))}
-          </div>
+          {relatedArtists.length > 0 ? (
+            <div className="flex flex-wrap gap-2">
+              <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(null)} disabled={suggestionsBusy}>All artists</button>
+              {relatedArtists.map((artist) => (
+                <button key={artist.id} type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(artist.id)} disabled={suggestionsBusy} aria-pressed={selectedArtistId === artist.id}>{artist.name}</button>
+              ))}
+            </div>
+          ) : (
+            <p className="text-xs text-[var(--text-muted)]">
+              {suggestionsBusy ? "Finding similar artists..." : "No similar artists found."}
+            </p>
+          )}
+          {suggestionsBusy && relatedArtists.length > 0 ? (
+            <p className="text-xs text-[var(--text-muted)]">Finding songs by related artists...</p>
+          ) : null}
         </div>
       )}
-      {suggestionsBusy && <p className="text-xs text-[var(--text-muted)]">Finding songs by related artists...</p>}
       {suggestions.length > 0 && (
         <div className="grid gap-2">
           <div className="text-[11px] font-medium text-[var(--text-secondary)]">You might also consider</div>
