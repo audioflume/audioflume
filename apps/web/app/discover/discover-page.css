@@ -217,6 +217,7 @@
 
 .discover-artist-hero-eyebrow {
   display: block;
+  white-space: nowrap;
   grid-column: 1;
   grid-row: 1;
   margin-bottom: 22px;
@@ -315,10 +316,12 @@
 .discover-artist-hero-actions a {
   color: inherit;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .discover-artist-hero-listen {
   display: inline-grid;
+  white-space: nowrap;
   grid-template-columns: 52px auto;
   align-items: center;
   column-gap: 18px;
@@ -1272,6 +1275,40 @@
   }
 }
 
+@media (max-width: 840px) {
+  .discover-artist-hero-feature {
+    grid-template-columns: 1fr;
+    grid-template-rows: none;
+    align-items: stretch;
+    justify-content: stretch;
+    gap: 20px;
+  }
+
+  .discover-artist-hero-identity,
+  .discover-artist-hero-detail {
+    display: block;
+  }
+
+  .discover-artist-hero-detail {
+    position: static;
+    grid-column: auto;
+    grid-row: auto;
+    align-self: auto;
+  }
+
+  .discover-artist-hero-eyebrow {
+    margin-bottom: 12px;
+  }
+
+  .discover-artist-hero-actions {
+    position: static;
+    flex-wrap: nowrap;
+    align-items: center;
+    gap: 24px;
+    margin-top: 18px;
+  }
+}
+
 @media (max-width: 720px) {
   .discover-artist-hero-skeleton-copy,
   .discover-artist-hero-skeleton-actions {
@@ -1369,7 +1406,7 @@
 
   .discover-artist-hero-actions {
     position: static;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: center;
     gap: 14px 24px;
     margin-top: 18px;
