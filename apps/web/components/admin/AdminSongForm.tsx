@@ -1747,6 +1747,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 </div>
             </SongFormSection>
 
+            <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={isSaving || !similarReferencesReady} />
+
             <SongFormSection
               title="Waveform Peaks"
               headerClassName="flex items-start justify-between gap-4"
@@ -1792,8 +1794,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 placeholder="Waveform peak JSON will appear here after selecting an audio file."
               />
             </SongFormSection>
-
-            <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={isSaving || !similarReferencesReady} />
 
             <SongFormTagSection
               title="Genre"
