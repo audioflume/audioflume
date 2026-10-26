@@ -76,7 +76,7 @@
   width: min(720px, calc(100% - 32px));
   gap: 12px;
   margin: 12px 12px 12px 0;
-  border-radius: 4px;
+  border-radius: 0;
   background: var(--filmwave-web-user-menu-bg);
   padding: 0 16px;
   color: #5a5a5a;
