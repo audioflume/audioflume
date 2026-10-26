@@ -453,7 +453,7 @@ export default function Header() {
         .filmwave-header-audioflume-logo {
           display: block;
           width: auto;
-          height: 26px;
+          height: 22px;
         }
 
         .filmwave-web-header,
