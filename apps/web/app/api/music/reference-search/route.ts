@@ -27,6 +27,13 @@ import {
   getPublishedSongHarmonicProfiles,
   getSongHarmonicProfileStats,
 } from "@/lib/audioHarmonicFeatures";
+import {
+  compareMeritEmbeddings,
+  createMeritAudioEmbeddings,
+  getPublishedSongMeritEmbeddings,
+  getSongMeritEmbeddingStats,
+  isMeritAnalyzerConfigured,
+} from "@/lib/audioMeritEmbeddings";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -199,6 +206,9 @@ function scoreMatch({
   discogsSimilarity,
   detailedRhythmSimilarity,
   harmonicSimilarity,
+  meritMelodySimilarity,
+  meritRhythmSimilarity,
+  meritTimbreSimilarity,
 }: {
   audioSimilarity: number;
   bestSegmentSimilarity: number;
@@ -212,9 +222,16 @@ function scoreMatch({
   discogsSimilarity: number | null;
   detailedRhythmSimilarity: number | null;
   harmonicSimilarity: number | null;
+  meritMelodySimilarity: number | null;
+  meritRhythmSimilarity: number | null;
+  meritTimbreSimilarity: number | null;
 }) {
+  const meritAvailable =
+    meritMelodySimilarity !== null &&
+    meritRhythmSimilarity !== null &&
+    meritTimbreSimilarity !== null;
   const signals = [
-    { score: audioSimilarity, weight: 0.18 },
+    { score: audioSimilarity, weight: meritAvailable ? 0.04 : 0.18 },
     { score: consistentSegmentSimilarity, weight: 0.15 },
     { score: averageBestSegmentSimilarity, weight: 0.08 },
     { score: bestSegmentSimilarity, weight: 0.03 },
@@ -231,6 +248,15 @@ function scoreMatch({
     ...(harmonicSimilarity === null
       ? []
       : [{ score: harmonicSimilarity, weight: 0.08 }]),
+    ...(meritMelodySimilarity === null
+      ? []
+      : [{ score: meritMelodySimilarity, weight: 0.04 }]),
+    ...(meritRhythmSimilarity === null
+      ? []
+      : [{ score: meritRhythmSimilarity, weight: 0.04 }]),
+    ...(meritTimbreSimilarity === null
+      ? []
+      : [{ score: meritTimbreSimilarity, weight: 0.06 }]),
     ...(tempoSimilarity === null
       ? []
       : [{ score: tempoSimilarity, weight: 0.02 }]),
@@ -400,17 +426,26 @@ export async function POST(request: Request) {
 
     const profile = await getReferenceProfile(trackId);
     const referenceBpm = Number(profile.track.bpm ?? 0) || null;
-    const [embeddingStats, discogsStats, rhythmStats, harmonicStats] =
-      await Promise.all([
-        getSongClapEmbeddingStats(),
-        getSongDiscogsEmbeddingStats().catch(() => null),
-        getSongRhythmProfileStats().catch(() => null),
-        getSongHarmonicProfileStats().catch(() => null),
-      ]);
+    const [
+      embeddingStats,
+      discogsStats,
+      rhythmStats,
+      harmonicStats,
+      meritStats,
+    ] = await Promise.all([
+      getSongClapEmbeddingStats(),
+      getSongDiscogsEmbeddingStats().catch(() => null),
+      getSongRhythmProfileStats().catch(() => null),
+      getSongHarmonicProfileStats().catch(() => null),
+      getSongMeritEmbeddingStats().catch(() => null),
+    ]);
     const clapReady = embeddingStats.embeddedSongs > 0;
     const discogsReady = (discogsStats?.embeddedSongs ?? 0) > 0;
     const rhythmReady = (rhythmStats?.profiledSongs ?? 0) > 0;
     const harmonicReady = (harmonicStats?.profiledSongs ?? 0) > 0;
+    const meritReady =
+      isMeritAnalyzerConfigured() &&
+      (meritStats?.embeddedSongs ?? 0) > 0;
 
     let matches;
     let ranking;
@@ -459,6 +494,8 @@ export async function POST(request: Request) {
         candidateRhythmProfiles,
         referenceHarmonicProfile,
         candidateHarmonicProfiles,
+        referenceMeritEmbeddings,
+        candidateMeritEmbeddings,
       ] = await Promise.all([
         scorePublishedSongsByClapSimilarity(
           profile.previewUrl,
@@ -476,6 +513,12 @@ export async function POST(request: Request) {
         harmonicReady
           ? getPublishedSongHarmonicProfiles(ids)
           : Promise.resolve([]),
+        meritReady
+          ? createMeritAudioEmbeddings(profile.previewUrl).catch(() => null)
+          : Promise.resolve(null),
+        meritReady
+          ? getPublishedSongMeritEmbeddings(ids)
+          : Promise.resolve([]),
       ]);
       const rhythmProfileBySongId = new Map(
         candidateRhythmProfiles.map((candidateProfile) => [
@@ -487,6 +530,12 @@ export async function POST(request: Request) {
         candidateHarmonicProfiles.map((candidateProfile) => [
           candidateProfile.songId,
           candidateProfile,
+        ]),
+      );
+      const meritEmbeddingBySongId = new Map(
+        candidateMeritEmbeddings.map((candidateEmbedding) => [
+          candidateEmbedding.songId,
+          candidateEmbedding,
         ]),
       );
 
@@ -535,6 +584,15 @@ export async function POST(request: Request) {
                   candidateHarmonicProfile,
                 )
               : null;
+          const candidateMeritEmbedding =
+            meritEmbeddingBySongId.get(result.songId);
+          const meritSimilarity =
+            referenceMeritEmbeddings && candidateMeritEmbedding
+              ? compareMeritEmbeddings(
+                  referenceMeritEmbeddings,
+                  candidateMeritEmbedding,
+                )
+              : null;
 
           return {
             songId: result.songId,
@@ -557,11 +615,17 @@ export async function POST(request: Request) {
               discogsSimilarity,
               detailedRhythmSimilarity,
               harmonicSimilarity,
+              meritMelodySimilarity: meritSimilarity?.melody ?? null,
+              meritRhythmSimilarity: meritSimilarity?.rhythm ?? null,
+              meritTimbreSimilarity: meritSimilarity?.timbre ?? null,
             }),
             audioSimilarity: result.similarity,
             discogsSimilarity,
             detailedRhythmSimilarity,
             harmonicSimilarity,
+            meritMelodySimilarity: meritSimilarity?.melody ?? null,
+            meritRhythmSimilarity: meritSimilarity?.rhythm ?? null,
+            meritTimbreSimilarity: meritSimilarity?.timbre ?? null,
             bestSegmentSimilarity:
               result.bestSegmentSimilarity,
             averageBestSegmentSimilarity:
@@ -605,6 +669,18 @@ export async function POST(request: Request) {
             result.harmonicSimilarity === null
               ? null
               : Number(result.harmonicSimilarity.toFixed(6)),
+          meritMelodySimilarity:
+            result.meritMelodySimilarity === null
+              ? null
+              : Number(result.meritMelodySimilarity.toFixed(6)),
+          meritRhythmSimilarity:
+            result.meritRhythmSimilarity === null
+              ? null
+              : Number(result.meritRhythmSimilarity.toFixed(6)),
+          meritTimbreSimilarity:
+            result.meritTimbreSimilarity === null
+              ? null
+              : Number(result.meritTimbreSimilarity.toFixed(6)),
           bestSegmentSimilarity: Number(
             result.bestSegmentSimilarity.toFixed(6),
           ),
@@ -631,13 +707,16 @@ export async function POST(request: Request) {
             result.energyDensitySimilarity.toFixed(6),
           ),
         }));
-      ranking = harmonicReady
-        ? "audio-clap-discogs-rhythm-harmonic-rerank-v9"
-        : rhythmReady
-          ? "audio-clap-discogs-rhythm-rerank-v8"
-          : discogsReady
-            ? "audio-clap-discogs-weighted-rerank-v7"
-            : "audio-clap-fulltrack-segments-v5";
+      ranking =
+        meritReady && referenceMeritEmbeddings
+          ? "audio-clap-discogs-rhythm-harmonic-merit-rerank-v10"
+          : harmonicReady
+            ? "audio-clap-discogs-rhythm-harmonic-rerank-v9"
+            : rhythmReady
+              ? "audio-clap-discogs-rhythm-rerank-v8"
+              : discogsReady
+                ? "audio-clap-discogs-weighted-rerank-v7"
+                : "audio-clap-fulltrack-segments-v5";
     }
 
     return NextResponse.json(
