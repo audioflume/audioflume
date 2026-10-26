@@ -34,6 +34,21 @@ export default function HomeLandingContent() {
             ariaHidden
           />
         </div>
+        <div
+          className="audioflume-home-reference-width audioflume-home-reference-hero-trust"
+        >
+          <p>Filmmakers working for these brands already use Audioflume.</p>
+          <div
+            className="audioflume-home-reference-logo-row"
+            aria-label="Brand work"
+          >
+            <img
+              src="https://images.filmwave.io/images/home/logos.png"
+              alt="Brands using Audioflume"
+              draggable={false}
+            />
+          </div>
+        </div>
       </section>
 
       <section className="audioflume-home-reference-library">
