@@ -426,7 +426,7 @@ export default function ArtistSongEditor({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!canEditMetadata || saving || loadState !== "ready" || !similarReferencesReady) return;
+    if (!canEditMetadata || saving || loadState !== "ready") return;
 
     try {
       setSaving(true);
@@ -477,7 +477,9 @@ export default function ArtistSongEditor({
         throw new Error(result.error || "Failed to save track details");
       }
 
-      await saveSimilarSongReferences(songId, similarReferences, artist.id);
+      if (similarReferencesReady) {
+        await saveSimilarSongReferences(songId, similarReferences, artist.id);
+      }
       const revisionPending = Boolean(result.revision_pending);
       setTitle(result.song.title);
       setMessage(
@@ -731,7 +733,7 @@ export default function ArtistSongEditor({
               {canEditMetadata ? (
                 <button
                   type="submit"
-                  disabled={saving || !title.trim() || !similarReferencesReady}
+                  disabled={saving || !title.trim()}
                   className="filmwave-backend-button filmwave-backend-button-primary w-full"
                 >
                   {saving ? "Saving..." : "Save Changes"}
