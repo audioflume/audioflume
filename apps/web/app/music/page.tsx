@@ -31,8 +31,11 @@ import { useAuth } from "@clerk/nextjs";
 import { useSearchParams } from "next/navigation";
 
 import {
+  getReferenceSearchMatches,
   getReferenceSearchMatchSongIds,
+  getReferenceSearchRanking,
   takeReferenceSearchHandoff,
+  type ReferenceSearchMatch,
 } from "@/lib/referenceSearchHandoff";
 import type { BpmFilterValue, KeyFilterValue, Song } from "@/lib/types";
 
@@ -206,7 +209,41 @@ type ReferenceSearchState = {
   imageUrl?: string | null;
   status: "loading" | "success";
   songIds: string[];
+  matches: ReferenceSearchMatch[];
+  ranking: string | null;
 };
+
+type ReferenceJudgment = "strong" | "decent" | "poor";
+
+type ReferenceEvaluationRecord = {
+  key: string;
+  referenceId: string;
+  referenceQuery: string;
+  referenceName: string;
+  referenceArtist: string;
+  ranking: string | null;
+  songId: string;
+  songTitle: string;
+  songArtist: string;
+  judgment: ReferenceJudgment;
+  match: ReferenceSearchMatch;
+  updatedAt: string;
+};
+
+const REFERENCE_EVALUATIONS_STORAGE_KEY =
+  "audioflume:reference-search-evaluations:v1";
+
+function getReferenceEvaluationKey(
+  referenceId: string,
+  songId: string,
+  ranking: string | null,
+) {
+  return `${referenceId}:${songId}:${ranking ?? "unknown"}`;
+}
+
+function formatReferenceScore(value: number | null) {
+  return value === null ? "—" : value.toFixed(3);
+}
 
 function getStoredLicenseFilters(): LicenseFilterValue[] {
   if (typeof window === "undefined") return [];
@@ -444,8 +481,40 @@ export default function MusicPage() {
     useState<ReferenceSearchState | null>(null);
   const [searchBySongOpen, setSearchBySongOpen] = useState(false);
   const [searchBySongQuery, setSearchBySongQuery] = useState("");
+  const [referenceJudgments, setReferenceJudgments] = useState<
+    Record<string, ReferenceJudgment>
+  >({});
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    try {
+      const stored = window.localStorage.getItem(
+        REFERENCE_EVALUATIONS_STORAGE_KEY,
+      );
+      if (!stored) return;
+
+      const parsed = JSON.parse(stored);
+      if (!Array.isArray(parsed)) return;
+
+      const judgments: Record<string, ReferenceJudgment> = {};
+      parsed.forEach((record: unknown) => {
+        if (!record || typeof record !== "object") return;
+        const candidate = record as Partial<ReferenceEvaluationRecord>;
+        if (
+          typeof candidate.key === "string" &&
+          (candidate.judgment === "strong" ||
+            candidate.judgment === "decent" ||
+            candidate.judgment === "poor")
+        ) {
+          judgments[candidate.key] = candidate.judgment;
+        }
+      });
+      setReferenceJudgments(judgments);
+    } catch {
+      setReferenceJudgments({});
+    }
+  }, []);
 
   useEffect(() => {
     function syncLicenseFilters() {
@@ -510,6 +579,8 @@ export default function MusicPage() {
       query: referenceSearch,
       status: "loading",
       songIds: [],
+      matches: [],
+      ranking: null,
     });
 
     void fetch("/api/music/reference-search", {
@@ -528,6 +599,8 @@ export default function MusicPage() {
           query: referenceSearch,
           status: "success",
           songIds: getReferenceSearchMatchSongIds(data),
+          matches: getReferenceSearchMatches(data),
+          ranking: getReferenceSearchRanking(data),
         });
       })
       .catch((error) => {
@@ -1069,6 +1142,87 @@ export default function MusicPage() {
     songsLoading,
   ]);
 
+  const referenceMatchBySongId = useMemo(() => {
+    const map = new Map<string, ReferenceSearchMatch>();
+
+    referenceSearchState?.matches.forEach((match) => {
+      map.set(match.songId, match);
+    });
+
+    return map;
+  }, [referenceSearchState]);
+
+  function getReferenceMatchForSong(song: Song) {
+    for (const id of getMusicSongIdentityValues(song)) {
+      const match = referenceMatchBySongId.get(id);
+      if (match) return match;
+    }
+
+    return null;
+  }
+
+  function saveReferenceJudgment(
+    song: Song,
+    match: ReferenceSearchMatch,
+    judgment: ReferenceJudgment,
+  ) {
+    if (!referenceSearchState) return;
+
+    const key = getReferenceEvaluationKey(
+      referenceSearchState.referenceId,
+      match.songId,
+      referenceSearchState.ranking,
+    );
+
+    const record: ReferenceEvaluationRecord = {
+      key,
+      referenceId: referenceSearchState.referenceId,
+      referenceQuery: referenceSearchState.query,
+      referenceName:
+        referenceSearchState.name || referenceSearchState.query,
+      referenceArtist: referenceSearchState.artist || "",
+      ranking: referenceSearchState.ranking,
+      songId: match.songId,
+      songTitle: String(song.title ?? ""),
+      songArtist: String(song.artist ?? ""),
+      judgment,
+      match,
+      updatedAt: new Date().toISOString(),
+    };
+
+    try {
+      const stored = window.localStorage.getItem(
+        REFERENCE_EVALUATIONS_STORAGE_KEY,
+      );
+      const parsed = stored ? JSON.parse(stored) : [];
+      const records = Array.isArray(parsed)
+        ? parsed.filter(
+            (item): item is ReferenceEvaluationRecord =>
+              Boolean(
+                item &&
+                  typeof item === "object" &&
+                  typeof (item as ReferenceEvaluationRecord).key === "string",
+              ),
+          )
+        : [];
+      const nextRecords = [
+        ...records.filter((item) => item.key !== key),
+        record,
+      ];
+
+      window.localStorage.setItem(
+        REFERENCE_EVALUATIONS_STORAGE_KEY,
+        JSON.stringify(nextRecords),
+      );
+      setReferenceJudgments((current) => ({
+        ...current,
+        [key]: judgment,
+      }));
+    } catch (error) {
+      console.error("Reference evaluation save failed:", error);
+    }
+  }
+
   const filteredSongs = useMemo(() => {
     if (!filtersHydrated) return [];
 
@@ -1374,6 +1528,8 @@ export default function MusicPage() {
             imageUrl: result.imageUrl,
             status: "loading",
             songIds: [],
+            matches: [],
+            ranking: null,
           });
 
           try {
@@ -1396,6 +1552,8 @@ export default function MusicPage() {
               imageUrl: result.imageUrl,
               status: "success",
               songIds: getReferenceSearchMatchSongIds(data),
+              matches: getReferenceSearchMatches(data),
+              ranking: getReferenceSearchRanking(data),
             });
             setSearchBySongOpen(false);
           } catch (error) {
@@ -1519,6 +1677,11 @@ export default function MusicPage() {
                           ? "Finding close matches…"
                           : `${referenceSearchState.songIds.length} close ${referenceSearchState.songIds.length === 1 ? "match" : "matches"}`}
                       </span>
+                      {referenceSearchState.ranking ? (
+                        <span className="audioflume-music-reference-summary-ranking">
+                          {referenceSearchState.ranking}
+                        </span>
+                      ) : null}
                     </div>
 
                     <button
@@ -1600,14 +1763,129 @@ export default function MusicPage() {
                     }
                   />
                 ) : (
-                  displayedSongs.map((song, index) => (
-                    <SongCard
-                      key={getMusicSongStableId(song, index)}
-                      song={song}
-                      highlightedEditPointTypes={highlightedEditPointTypes}
-                      showEditPointMarkers={effectiveShowEditPointMarkers}
-                    />
-                  ))
+                  displayedSongs.map((song, index) => {
+                    const match = getReferenceMatchForSong(song);
+                    const evaluationKey =
+                      match && referenceSearchState
+                        ? getReferenceEvaluationKey(
+                            referenceSearchState.referenceId,
+                            match.songId,
+                            referenceSearchState.ranking,
+                          )
+                        : null;
+                    const judgment = evaluationKey
+                      ? referenceJudgments[evaluationKey]
+                      : undefined;
+
+                    return (
+                      <div
+                        key={getMusicSongStableId(song, index)}
+                        className={
+                          match
+                            ? "audioflume-reference-evaluation-result"
+                            : undefined
+                        }
+                      >
+                        <SongCard
+                          song={song}
+                          highlightedEditPointTypes={highlightedEditPointTypes}
+                          showEditPointMarkers={effectiveShowEditPointMarkers}
+                        />
+
+                        {match ? (
+                          <div className="audioflume-reference-evaluation">
+                            <div className="audioflume-reference-evaluation-scores">
+                              <span>
+                                <b>Total</b> {formatReferenceScore(match.score)}
+                              </span>
+                              <span>
+                                <b>CLAP</b> {formatReferenceScore(match.audioSimilarity)}
+                              </span>
+                              <span>
+                                <b>Segments</b>{" "}
+                                {formatReferenceScore(
+                                  match.consistentSegmentSimilarity,
+                                )}
+                              </span>
+                              <span>
+                                <b>Instrument</b>{" "}
+                                {formatReferenceScore(
+                                  match.instrumentationSimilarity,
+                                )}
+                              </span>
+                              <span>
+                                <b>Character</b>{" "}
+                                {formatReferenceScore(match.characterSimilarity)}
+                              </span>
+                              <span>
+                                <b>Discogs</b>{" "}
+                                {formatReferenceScore(match.discogsSimilarity)}
+                              </span>
+                              <span>
+                                <b>Rhythm</b>{" "}
+                                {formatReferenceScore(
+                                  match.detailedRhythmSimilarity,
+                                )}
+                              </span>
+                              <span>
+                                <b>Harmony</b>{" "}
+                                {formatReferenceScore(match.harmonicSimilarity)}
+                              </span>
+                              <span>
+                                <b>MERIT melody</b>{" "}
+                                {formatReferenceScore(
+                                  match.meritMelodySimilarity,
+                                )}
+                              </span>
+                              <span>
+                                <b>MERIT rhythm</b>{" "}
+                                {formatReferenceScore(
+                                  match.meritRhythmSimilarity,
+                                )}
+                              </span>
+                              <span>
+                                <b>MERIT timbre</b>{" "}
+                                {formatReferenceScore(
+                                  match.meritTimbreSimilarity,
+                                )}
+                              </span>
+                              <span>
+                                <b>Tempo</b>{" "}
+                                {formatReferenceScore(match.tempoSimilarity)}
+                              </span>
+                            </div>
+
+                            <div
+                              className="audioflume-reference-evaluation-actions"
+                              aria-label="Rate reference match"
+                            >
+                              {(
+                                [
+                                  ["strong", "Strong"],
+                                  ["decent", "Decent"],
+                                  ["poor", "Poor"],
+                                ] as const
+                              ).map(([value, label]) => (
+                                <button
+                                  key={value}
+                                  type="button"
+                                  className={
+                                    judgment === value ? "is-selected" : undefined
+                                  }
+                                  aria-pressed={judgment === value}
+                                  onClick={() =>
+                                    saveReferenceJudgment(song, match, value)
+                                  }
+                                >
+                                  {label}
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+                        ) : null}
+                      </div>
+                    );
+                  })
                 )}
               </>
             )}
