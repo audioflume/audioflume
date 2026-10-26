@@ -1225,13 +1225,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   line-height: 1.04;
 }
 
-.audioflume-home-mockup-intro-trending {
+.audioflume-home-mockup-intro-heading > span {
   flex: 0 0 auto;
   padding-bottom: 0;
   color: var(--filmwave-section-title-color);
   font-size: 17px;
-  text-align: right;
-  white-space: nowrap;
+  text-align: left;
 }
 
 :where(html:not(.light):not([data-theme="light"]))
@@ -1240,7 +1239,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 :where(html:not(.light):not([data-theme="light"]))
-  .audioflume-home-mockup-intro-trending {
+  .audioflume-home-mockup-intro-heading > span {
   color: #ffffff;
 }
 
