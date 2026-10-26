@@ -3,6 +3,7 @@ import { requireAdmin } from "@/lib/admin";
 import { refreshPublishedSongClapEmbedding } from "@/lib/audioClapEmbeddings";
 import { refreshPublishedSongDiscogsEmbedding } from "@/lib/audioDiscogsEmbeddings";
 import { refreshPublishedSongRhythmProfile } from "@/lib/audioRhythmFeatures";
+import { refreshPublishedSongHarmonicProfile } from "@/lib/audioHarmonicFeatures";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -174,6 +175,7 @@ export async function POST(req: Request) {
       await refreshPublishedSongClapEmbedding(String(data.id));
       await refreshPublishedSongDiscogsEmbedding(String(data.id));
       await refreshPublishedSongRhythmProfile(String(data.id));
+      await refreshPublishedSongHarmonicProfile(String(data.id));
     } catch (embeddingError) {
       console.error(
         `Failed to generate Reference Search analysis for published song ${data.id}:`,
