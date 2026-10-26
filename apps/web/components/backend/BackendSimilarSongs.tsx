@@ -181,7 +181,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
               <div className="flex items-center gap-2">
                 <div className="min-w-0 flex-1 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
                 <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
-                <button type="button" onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary">{referenceTrackId === item.id.replace(/^deezer:track:/, "") ? "Hide similar artists" : "Show similar artists"}</button>
+                <button type="button" onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary w-[140px] shrink-0">{referenceTrackId === item.id.replace(/^deezer:track:/, "") ? "Hide similar artists" : "Show similar artists"}</button>
                 <button type="button" aria-label={`Remove ${item.name}`} disabled={disabled} onClick={() => onChange(value.filter((track) => track.id !== item.id))} className="filmwave-backend-button filmwave-backend-button-secondary">Remove</button>
               </div>
               {referenceTrackId === item.id.replace(/^deezer:track:/, "") && (
