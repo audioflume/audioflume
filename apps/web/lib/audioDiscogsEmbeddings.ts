@@ -4,8 +4,6 @@ import { createRequire } from "node:module";
 import { access } from "node:fs/promises";
 import path from "node:path";
 
-import { env, Tensor } from "@huggingface/transformers";
-
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const SONG_DISCOGS_MODEL_ID =
@@ -72,16 +70,29 @@ type EssentiaPackage = {
   };
 };
 
-type OnnxBackend = {
-  createInferenceSession: (
-    bufferOrPath: Uint8Array | string,
-    sessionOptions?: Record<string, unknown>,
-    sessionConfig?: Record<string, unknown>,
-  ) => Promise<unknown>;
-  runInferenceSession: (
-    session: unknown,
-    feeds: Record<string, Tensor>,
-  ) => Promise<Record<string, Tensor>>;
+type OnnxTensor = {
+  data: ArrayLike<number>;
+  dims: readonly number[];
+};
+
+type OnnxInferenceSession = {
+  run: (
+    feeds: Record<string, unknown>,
+  ) => Promise<Record<string, OnnxTensor>>;
+};
+
+type OnnxRuntime = {
+  Tensor: new (
+    type: "float32",
+    data: Float32Array,
+    dims: readonly number[],
+  ) => unknown;
+  InferenceSession: {
+    create: (
+      model: Uint8Array,
+      options?: Record<string, unknown>,
+    ) => Promise<OnnxInferenceSession>;
+  };
 };
 
 export type DiscogsSimilarityMatch = {
@@ -105,7 +116,8 @@ const embeddingCache = new Map<
 
 let resolvedFfmpegPath: string | null = null;
 let extractorPromise: Promise<EssentiaExtractor> | null = null;
-let inferenceSessionPromise: Promise<unknown> | null = null;
+let onnxRuntime: OnnxRuntime | null = null;
+let inferenceSessionPromise: Promise<OnnxInferenceSession> | null = null;
 
 function clampInteger(value: number, min: number, max: number) {
   if (!Number.isFinite(value)) return min;
@@ -357,9 +369,18 @@ async function getExtractor() {
   return extractorPromise;
 }
 
-function getOnnxBackend() {
-  const backend = env.backends.onnx as unknown as OnnxBackend;
-  return backend;
+function getOnnxRuntime() {
+  if (onnxRuntime) return onnxRuntime;
+
+  const require = createRequire(import.meta.url);
+  const transformersEntry = require.resolve("@huggingface/transformers");
+  const requireFromTransformers = createRequire(transformersEntry);
+
+  onnxRuntime = requireFromTransformers(
+    "onnxruntime-node",
+  ) as OnnxRuntime;
+
+  return onnxRuntime;
 }
 
 async function getInferenceSession() {
@@ -377,7 +398,7 @@ async function getInferenceSession() {
     }
 
     const modelBytes = new Uint8Array(await response.arrayBuffer());
-    return getOnnxBackend().createInferenceSession(modelBytes, {}, {});
+    return getOnnxRuntime().InferenceSession.create(modelBytes);
   })();
 
   return inferenceSessionPromise;
@@ -425,7 +446,7 @@ async function embedPatches(patches: number[][][]) {
   }
 
   const session = await getInferenceSession();
-  const backend = getOnnxBackend();
+  const runtime = getOnnxRuntime();
   const embeddings: number[][] = [];
 
   for (let offset = 0; offset < patches.length; offset += MODEL_BATCH_SIZE) {
@@ -450,13 +471,13 @@ async function embedPatches(patches: number[][][]) {
       }
     }
 
-    const input = new Tensor(
+    const input = new runtime.Tensor(
       "float32",
       flattened,
       [MODEL_BATCH_SIZE, PATCH_SIZE, MEL_BANDS],
     );
 
-    const outputs = await backend.runInferenceSession(session, {
+    const outputs = await session.run({
       serving_default_melspectrogram: input,
     });
     const trackOutput =
