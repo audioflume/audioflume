@@ -33,6 +33,12 @@ body:has(.audioflume-home-landing)
   color: #e5e5dd !important;
 }
 
+body:has(.audioflume-home-landing)
+  .filmwave-web-header.is-transparent
+  .filmwave-header-nav-link {
+  color: #e5e5dd !important;
+}
+
 .audioflume-home-reference {
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
   --home-reference-width: calc(
