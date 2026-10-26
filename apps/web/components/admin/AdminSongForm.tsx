@@ -1494,10 +1494,15 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               signal: abortController.signal,
             });
 
-      if (similarReferencesReady) {
-        await saveSimilarSongReferences(savedSong.id, similarReferences);
-      }
       setSavedRecordId(savedSong.id);
+      if (similarReferencesReady) {
+        try {
+          await saveSimilarSongReferences(savedSong.id, similarReferences);
+        } catch {
+          setSaveStatus("Song saved, but similar-song references could not be saved. You can retry from Edit Song.");
+          return;
+        }
+      }
       setExistingAudioUrl(finalAudioUrl);
       setExistingCoverUrl(finalCoverUrl || "");
       setExistingStemUrls(finalStemUrls);
