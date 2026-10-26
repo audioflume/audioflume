@@ -12,6 +12,8 @@ import {
   BackendIconButton,
 } from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
+import BackendSimilarSongs from "@/components/backend/BackendSimilarSongs";
+import { loadSimilarSongReferences, saveSimilarSongReferences, type SimilarSongReference } from "@/lib/similarSongReferences";
 import { SongFormSection, SongFormTagSection } from "@/components/backend/SongFormSection";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
@@ -895,6 +897,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const isEditMode = mode === "edit";
 
   const [title, setTitle] = useState("");
+  const [similarReferences, setSimilarReferences] = useState<SimilarSongReference[]>([]);
+  const [similarReferencesReady, setSimilarReferencesReady] = useState(!isEditMode);
   const [artist, setArtist] = useState("Audioflume");
   const [bpm, setBpm] = useState("");
   const [songKey, setSongKey] = useState("");
@@ -937,6 +941,18 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   "markers": [],
   "ranges": []
 }`);
+
+  useEffect(() => {
+    if (!isEditMode || !songId || !isAdmin) return;
+    let cancelled = false;
+    setSimilarReferencesReady(false);
+    void loadSimilarSongReferences(songId)
+      .then((refs) => {
+        if (!cancelled) { setSimilarReferences(refs); setSimilarReferencesReady(true); }
+      })
+      .catch((cause) => { if (!cancelled) setLoadError(cause instanceof Error ? cause.message : "Unable to load similar songs"); });
+    return () => { cancelled = true; };
+  }, [isEditMode, songId, isAdmin]);
 
   const uploadComplete = !!savedRecordId && !isSaving;
 
@@ -1337,6 +1353,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   };
 
   const handleSaveSong = async () => {
+    if (!similarReferencesReady) return;
     setSaveStatus("");
     setSavedRecordId("");
     setUploadedFiles({
@@ -1477,6 +1494,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               signal: abortController.signal,
             });
 
+      await saveSimilarSongReferences(savedSong.id, similarReferences);
       setSavedRecordId(savedSong.id);
       setExistingAudioUrl(finalAudioUrl);
       setExistingCoverUrl(finalCoverUrl || "");
@@ -1768,6 +1786,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               />
             </SongFormSection>
 
+            <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={isSaving || !similarReferencesReady} />
+
             <SongFormTagSection
               title="Genre"
               options={GENRE_OPTIONS}
@@ -1950,7 +1970,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   onClick={
                     uploadComplete && !isEditMode ? resetPage : undefined
                   }
-                  disabled={isSaving || isGeneratingPeaks}
+                  disabled={isSaving || isGeneratingPeaks || !similarReferencesReady}
                   className="w-full"
                 >
                   {!isSaving && <UploadIcon size={15} />}
