@@ -15,7 +15,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
-import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
+import { AudioflumeMark, AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
@@ -1099,7 +1099,11 @@ export default function HomePageContent({
 
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-intro-heading">
           <h1 className="audioflume-home-mockup-intro-title">
-            Human made music &amp; SFX for film.
+            <span>Human made music &amp; SFX for film.</span>
+            <AudioflumeMark
+              className="audioflume-home-mockup-intro-mark-sup"
+              ariaHidden
+            />
           </h1>
           <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
