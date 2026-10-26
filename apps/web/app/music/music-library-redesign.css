@@ -1144,7 +1144,7 @@ main
   position: absolute;
   inset: 0;
   z-index: -1;
-  background: rgba(17, 17, 17, 0.76);
+  background: rgba(17, 17, 17, 0.58);
 }
 
 .audioflume-music-page .audioflume-music-reference-summary > img,
