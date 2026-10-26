@@ -4,6 +4,7 @@ import { requireAdmin } from "@/lib/admin";
 import { refreshPublishedSongClapEmbedding } from "@/lib/audioClapEmbeddings";
 import { refreshPublishedSongDiscogsEmbedding } from "@/lib/audioDiscogsEmbeddings";
 import { refreshPublishedSongRhythmProfile } from "@/lib/audioRhythmFeatures";
+import { refreshPublishedSongHarmonicProfile } from "@/lib/audioHarmonicFeatures";
 import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import { deleteFilesFromR2 } from "@/lib/r2";
 import {
@@ -466,6 +467,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         await refreshPublishedSongClapEmbedding(songId);
       await refreshPublishedSongDiscogsEmbedding(songId);
       await refreshPublishedSongRhythmProfile(songId);
+      await refreshPublishedSongHarmonicProfile(songId);
       } catch (embeddingError) {
         console.error(
           `Failed to generate Reference Search analysis for published song ${songId}:`,
