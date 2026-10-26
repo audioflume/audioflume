@@ -76,9 +76,10 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
     onChange([...value, reference]);
   }
 
-  async function select(reference: CatalogResult) {
+  function select(reference: CatalogResult) {
     add(reference);
-    await showSimilarArtists(reference);
+    setQuery("");
+    setResults([]);
   }
 
   async function showSimilarArtists(reference: SimilarSongReference) {
