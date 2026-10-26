@@ -1296,6 +1296,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-mockup-artists
+  .audioflume-home-reference-artist-promo {
+  width: calc(100vw - var(--audioflume-home-page-gutter)) !important;
+  min-width: calc(100vw - var(--audioflume-home-page-gutter)) !important;
+}
+
+.audioflume-home-mockup-artists
   .audioflume-home-reference-artist-link {
   height: auto !important;
 }
@@ -1463,7 +1469,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: absolute;
   right: 34px;
   bottom: 34px;
-  left: 34px;
+  left: 0;
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
@@ -1539,7 +1545,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-artist-promo-content {
     right: 24px;
     bottom: 24px;
-    left: 24px;
+    left: 0;
     row-gap: 14px;
   }
 
@@ -1838,6 +1844,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     .audioflume-home-reference-artist-card {
     width: 92vw !important;
     min-width: 92vw !important;
+  }
+
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-promo {
+    width: calc(100vw - var(--audioflume-home-page-gutter)) !important;
+    min-width: calc(100vw - var(--audioflume-home-page-gutter)) !important;
   }
 
   .audioflume-home-mockup-artists
