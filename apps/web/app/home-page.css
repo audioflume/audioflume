@@ -1877,8 +1877,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: relative;
   display: grid;
   box-sizing: border-box;
-  height: 200px;
-  min-height: 200px;
+  height: 252px;
+  min-height: 252px;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   align-items: start;
