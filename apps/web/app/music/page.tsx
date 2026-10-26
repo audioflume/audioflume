@@ -1490,7 +1490,16 @@ export default function MusicPage() {
             ) : (
               <>
                 {referenceSearchState ? (
-                  <div className="audioflume-music-reference-summary">
+                  <div
+                    className="audioflume-music-reference-summary"
+                    style={
+                      referenceSearchState.imageUrl
+                        ? ({
+                            "--audioflume-reference-summary-image": `url("${referenceSearchState.imageUrl}")`,
+                          } as React.CSSProperties)
+                        : undefined
+                    }
+                  >
                     {referenceSearchState.imageUrl ? (
                       <img
                         src={referenceSearchState.imageUrl}
