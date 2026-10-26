@@ -319,6 +319,7 @@ def get_merit_bundle():
         MERIT_MODEL_ID,
         trust_remote_code=True,
     ).to(MERIT_DEVICE).eval()
+    model.config.output_hidden_states = True
 
     _merit_bundle = {
         "processor": processor,
@@ -372,9 +373,24 @@ def encode_merit_window(samples: np.ndarray):
     output = model(
         **inputs,
         output_hidden_states=True,
+        return_dict=True,
     )
+    hidden_states = getattr(output, "hidden_states", None)
+
+    if hidden_states is None:
+        raise RuntimeError(
+            "MERT did not return hidden_states. "
+            "Audioflume MERIT requires Transformers 4.57.6."
+        )
+
+    if len(hidden_states) <= max(MERIT_EXTRACT_LAYERS):
+        raise RuntimeError(
+            f"MERT returned only {len(hidden_states)} hidden-state layers; "
+            f"layer {max(MERIT_EXTRACT_LAYERS)} is required."
+        )
+
     parts = [
-        output.hidden_states[layer].mean(dim=1)
+        hidden_states[layer].mean(dim=1)
         for layer in MERIT_EXTRACT_LAYERS
     ]
     backbone = torch.cat(parts, dim=-1)
