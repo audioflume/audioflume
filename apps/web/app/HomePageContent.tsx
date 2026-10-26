@@ -995,17 +995,10 @@ export default function HomePageContent({
     )
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
-  const featuredSongs = useMemo(() => {
-    const featuredArtistSongs = artists
-      .flatMap((artist) => artist.songs)
-      .filter((song) => Boolean(song.audioUrl));
-    const uniqueFeaturedSongs = Array.from(
-      new Map(featuredArtistSongs.map((song) => [song.id, song])).values(),
-    );
-
-    return (uniqueFeaturedSongs.length > 0 ? uniqueFeaturedSongs : playableSongs)
-      .slice(0, 12);
-  }, [artists, playableSongs]);
+  const featuredSongs = useMemo(
+    () => playableSongs.slice(0, 15),
+    [playableSongs],
+  );
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
