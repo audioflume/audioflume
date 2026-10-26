@@ -27,6 +27,18 @@ export async function GET(request: Request) {
     if (!reference.artist?.id) return NextResponse.json({ results: [] });
     const related = await deezer(`/artist/${reference.artist.id}/related?limit=12`);
     const artists = (related.data || []).slice(0, 12) as Array<{ id: number; name?: string; picture_medium?: string }>;
+    const artistResults = artists
+      .filter((artist) => Number.isFinite(artist.id) && artist.id > 0)
+      .map((artist) => ({
+        id: artist.id,
+        name: artist.name || "Unknown Artist",
+        imageUrl: artist.picture_medium || null,
+      }));
+    if (new URL(request.url).searchParams.get("mode") === "artists") {
+      return NextResponse.json({ artists: artistResults }, {
+        headers: { "Cache-Control": "private, no-store" },
+      });
+    }
     const artistId = new URL(request.url).searchParams.get("artistId");
     if (artistId && (!/^[1-9][0-9]{0,15}$/.test(artistId) || !artists.some((artist) => String(artist.id) === artistId))) {
       return NextResponse.json({ error: "Unknown related artist" }, { status: 400 });
