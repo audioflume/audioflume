@@ -178,7 +178,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
         <div className="grid gap-1 border-[1.25px] border-[var(--border)] p-2">
           {results.map((result) => (
             <div key={result.id} className="flex items-center gap-3 px-2 py-1.5">
-              {result.imageUrl ? <img src={result.imageUrl} alt="" className="h-10 w-10 shrink-0 object-cover" /> : <div className="h-10 w-10 bg-[var(--bg-tertiary)]" />}
+              {result.imageUrl ? <img src={result.imageUrl} alt="" className="h-9 w-9 shrink-0 object-cover" /> : <div className="h-10 w-10 bg-[var(--bg-tertiary)]" />}
               <div className="min-w-0 flex-1">
                 <div className="truncate text-xs font-medium">{result.name}</div>
                 <div className="truncate text-[11px] text-[var(--text-secondary)]">{result.artist}</div>
@@ -196,7 +196,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
             <div key={item.id} className="grid gap-2">
               <div className="flex items-center gap-2">
                 <div className="flex min-w-0 flex-1 items-center gap-3">
-                  {item.imageUrl ? <img src={item.imageUrl} alt="" className="h-10 w-10 shrink-0 object-cover" /> : <div className="h-10 w-10 shrink-0 bg-[var(--bg-tertiary)]" />}
+                  {item.imageUrl ? <img src={item.imageUrl} alt="" className="h-10 w-10 shrink-0 object-cover" /> : <div className="h-9 w-9 shrink-0 bg-[var(--bg-tertiary)]" />}
                   <div className="min-w-0 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
                 </div>
                 <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary"><SpotifyIcon /><span>Spotify ↗</span></a>
