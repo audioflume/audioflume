@@ -8,17 +8,17 @@ import { supabaseServer } from "@/lib/supabaseServer";
 
 export const SONG_CLAP_MODEL_ID = "Xenova/larger_clap_music_and_speech";
 export const SONG_CLAP_MODEL_KEY =
-  "Xenova/larger_clap_music_and_speech:q8:3x10s:segments-v3";
+  "Xenova/larger_clap_music_and_speech:q8:5x10s:fulltrack-v4";
 export const SONG_CLAP_CONCEPT_VERSION = "clap-concepts-v2";
 export const SONG_CLAP_EMBEDDING_DIMENSIONS = 512;
 
 const FFMPEG_EXECUTABLE_NAME =
   process.platform === "win32" ? "ffmpeg.exe" : "ffmpeg";
 const SAMPLE_RATE = 48000;
-const ANALYSIS_SECONDS = 30;
 const WINDOW_SECONDS = 10;
+const WINDOW_COUNT = 5;
 const WINDOW_SAMPLES = SAMPLE_RATE * WINDOW_SECONDS;
-const MAX_PCM_BYTES = SAMPLE_RATE * ANALYSIS_SECONDS * 4 + 1024 * 256;
+const MAX_PCM_BYTES = WINDOW_SAMPLES * 4 + 1024 * 256;
 const CACHE_TTL_MS = 60 * 60 * 1000;
 const DEFAULT_MATCH_COUNT = 200;
 const DEFAULT_MIN_SIMILARITY = -1;
@@ -234,8 +234,83 @@ async function resolveFfmpegPath() {
   return resolvedFfmpegPath;
 }
 
-async function decodeAudioToFloat32(sourceUrl: string) {
+async function getAudioDurationSeconds(sourceUrl: string) {
   const ffmpegCommand = await resolveFfmpegPath();
+
+  return await new Promise<number | null>((resolve) => {
+    const child = spawn(
+      ffmpegCommand,
+      ["-hide_banner", "-i", sourceUrl],
+      {
+        stdio: ["ignore", "ignore", "pipe"],
+      },
+    );
+
+    const errors: Buffer[] = [];
+    let finished = false;
+
+    const timeout = setTimeout(() => {
+      if (finished) return;
+      finished = true;
+      child.kill("SIGKILL");
+      resolve(null);
+    }, 15_000);
+
+    child.stderr.on("data", (chunk: Buffer) => {
+      errors.push(chunk);
+    });
+
+    child.on("error", () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timeout);
+      resolve(null);
+    });
+
+    child.on("close", () => {
+      if (finished) return;
+      finished = true;
+      clearTimeout(timeout);
+
+      const output = Buffer.concat(errors).toString("utf8");
+      const match = /Duration:\s*(\d+):(\d+):(\d+(?:\.\d+)?)/.exec(output);
+
+      if (!match) {
+        resolve(null);
+        return;
+      }
+
+      const hours = Number(match[1]);
+      const minutes = Number(match[2]);
+      const seconds = Number(match[3]);
+      const duration = hours * 3600 + minutes * 60 + seconds;
+
+      resolve(Number.isFinite(duration) && duration > 0 ? duration : null);
+    });
+  });
+}
+
+function getAnalysisWindowStarts(durationSeconds: number | null) {
+  if (!durationSeconds || durationSeconds <= WINDOW_SECONDS) {
+    return [0];
+  }
+
+  const finalStart = Math.max(0, durationSeconds - WINDOW_SECONDS);
+  return Array.from({ length: WINDOW_COUNT }, (_, index) =>
+    (finalStart * index) / (WINDOW_COUNT - 1),
+  ).filter(
+    (start, index, all) =>
+      all.findIndex((value) => Math.abs(value - start) < 0.01) === index,
+  );
+}
+
+async function decodeAudioWindow(
+  sourceUrl: string,
+  startSeconds: number,
+) {
+  const ffmpegCommand = await resolveFfmpegPath();
+  const seekArgs =
+    startSeconds > 0 ? ["-ss", startSeconds.toFixed(3)] : [];
 
   return await new Promise<Float32Array>((resolve, reject) => {
     const child = spawn(
@@ -244,10 +319,11 @@ async function decodeAudioToFloat32(sourceUrl: string) {
         "-hide_banner",
         "-loglevel",
         "error",
+        ...seekArgs,
         "-i",
         sourceUrl,
         "-t",
-        String(ANALYSIS_SECONDS),
+        String(WINDOW_SECONDS),
         "-vn",
         "-ac",
         "1",
@@ -339,21 +415,6 @@ function normalizeVector(values: number[]) {
   }
 
   return values.map((value) => value / magnitude);
-}
-
-function getAnalysisWindows(samples: Float32Array) {
-  if (samples.length <= WINDOW_SAMPLES) return [samples];
-
-  const finalStart = samples.length - WINDOW_SAMPLES;
-  const starts = [
-    0,
-    Math.floor(finalStart / 2),
-    finalStart,
-  ].filter((start, index, all) => all.indexOf(start) === index);
-
-  return starts.map((start) =>
-    samples.slice(start, start + WINDOW_SAMPLES),
-  );
 }
 
 async function getClapRuntime() {
@@ -744,16 +805,17 @@ export async function createClapAudioAnalysis(sourceUrl: string) {
     };
   }
 
-  const samples = await decodeAudioToFloat32(cleanUrl);
-  if (samples.length === 0) {
-    throw new Error("Decoded audio was empty");
-  }
-
+  const durationSeconds = await getAudioDurationSeconds(cleanUrl);
+  const windowStarts = getAnalysisWindowStarts(durationSeconds);
   const runtime = await getClapRuntime();
-  const windows = getAnalysisWindows(samples);
   const embeddings: number[][] = [];
 
-  for (const window of windows) {
+  for (const startSeconds of windowStarts) {
+    const window = await decodeAudioWindow(cleanUrl, startSeconds);
+    if (window.length === 0) {
+      throw new Error("Decoded audio was empty");
+    }
+
     embeddings.push(await embedWindow(window, runtime));
   }
 
