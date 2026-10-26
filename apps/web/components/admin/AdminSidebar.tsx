@@ -73,7 +73,6 @@ const navGroups: AdminNavGroup[] = [
         href: "/admin/playlist-manager",
         icon: "playlist",
       },
-      { label: "Cue Points", href: "/admin/edit-points", icon: "cue" },
     ],
   },
   {
