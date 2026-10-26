@@ -2020,11 +2020,12 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-mockup-editorial-price span {
   color: currentColor;
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 9.5px;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 18px;
   font-weight: 400;
-  line-height: 1.45;
-  text-transform: uppercase;
+  letter-spacing: normal;
+  line-height: 1;
+  text-transform: none;
   white-space: nowrap;
 }
 
