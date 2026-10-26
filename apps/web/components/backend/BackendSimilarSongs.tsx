@@ -84,6 +84,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
         aria-label="Search similar reference songs"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
+        onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }}
         placeholder="Search for a song or artist..."
         disabled={disabled || value.length >= MAX_SIMILAR_SONG_REFERENCES}
         className="filmwave-backend-input w-full"
