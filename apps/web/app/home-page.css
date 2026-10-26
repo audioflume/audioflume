@@ -109,7 +109,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-landing .audioflume-home-reference-hero {
   height: calc(100dvh - 28px);
-  min-height: 700px;
+  min-height: 620px;
 }
 
 .audioflume-home-landing.has-player .audioflume-home-reference-hero {
@@ -2834,7 +2834,7 @@ body:has(.audioflume-home-landing)
 
   .audioflume-home-landing .audioflume-home-reference-hero {
     height: calc(100dvh - 28px);
-    min-height: 560px;
+    min-height: 500px;
   }
 
   .audioflume-home-landing.has-player .audioflume-home-reference-hero {
