@@ -29,11 +29,11 @@ export default function HomeLandingContent() {
           <span className="is-amp">&amp;</span>
           <span className="is-sfx">SFX</span>
           <span className="is-for-film">For film.</span>
-          <AudioflumeMark
-            className="audioflume-home-reference-hero-mark"
-            ariaHidden
-          />
         </div>
+        <AudioflumeMark
+          className="audioflume-home-reference-hero-mark"
+          ariaHidden
+        />
         <div
           className="audioflume-home-reference-width audioflume-home-reference-hero-trust"
         >
