@@ -279,7 +279,18 @@
 }
 
 .discover-artist-hero-genres > .is-placeholder {
-  visibility: hidden;
+  width: 72px;
+  flex: 0 0 72px;
+}
+
+.discover-artist-hero-genres > .is-placeholder:nth-child(2) {
+  width: 94px;
+  flex-basis: 94px;
+}
+
+.discover-artist-hero-genres > .is-placeholder:nth-child(3) {
+  width: 64px;
+  flex-basis: 64px;
 }
 
 .discover-artist-hero-detail > p {
