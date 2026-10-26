@@ -24,6 +24,12 @@ import {
   SONG_RHYTHM_PROFILE_VERSION,
 } from "@/lib/audioRhythmFeatures";
 import {
+  ensurePublishedSongHarmonicProfiles,
+  getSongHarmonicProfileStats,
+  refreshPublishedSongHarmonicProfile,
+  SONG_HARMONIC_PROFILE_VERSION,
+} from "@/lib/audioHarmonicFeatures";
+import {
   backfillPublishedSongSearchEmbeddings,
   ensurePublishedSongSearchEmbeddings,
   getSongSearchEmbeddingStats,
@@ -138,11 +144,13 @@ export async function GET() {
       audioSimilarityStats,
       discogsSimilarityStats,
       rhythmProfileStats,
+      harmonicProfileStats,
     ] = await Promise.all([
       getSongSearchEmbeddingStats(),
       getSongClapEmbeddingStats(),
       getSongDiscogsEmbeddingStats(),
       getSongRhythmProfileStats(),
+      getSongHarmonicProfileStats(),
     ]);
 
     return NextResponse.json({
@@ -164,6 +172,10 @@ export async function GET() {
       rhythmSimilarity: {
         stats: rhythmProfileStats,
         profileVersion: SONG_RHYTHM_PROFILE_VERSION,
+      },
+      harmonicSimilarity: {
+        stats: harmonicProfileStats,
+        profileVersion: SONG_HARMONIC_PROFILE_VERSION,
       },
     });
   } catch (error) {
@@ -187,6 +199,39 @@ export async function POST(request: Request) {
         : {};
     const action = typeof payload.action === "string" ? payload.action : "";
 
+
+    if (action === "harmonic-backfill") {
+      const requestedBatchSize = Number(payload.batchSize);
+      const batchSize = Number.isFinite(requestedBatchSize)
+        ? Math.min(2, Math.max(1, Math.floor(requestedBatchSize)))
+        : 1;
+      const updated = await ensurePublishedSongHarmonicProfiles(batchSize);
+      const stats = await getSongHarmonicProfileStats();
+
+      return NextResponse.json({
+        action,
+        updated,
+        stats,
+        profileVersion: SONG_HARMONIC_PROFILE_VERSION,
+      });
+    }
+
+    if (action === "harmonic-refresh") {
+      const songId =
+        typeof payload.songId === "string" ? payload.songId.trim() : "";
+
+      if (!songId) {
+        return NextResponse.json(
+          { error: "songId is required" },
+          { status: 400 },
+        );
+      }
+
+      const updated = await refreshPublishedSongHarmonicProfile(songId);
+      const stats = await getSongHarmonicProfileStats();
+
+      return NextResponse.json({ action, songId, updated, stats });
+    }
 
     if (action === "rhythm-backfill") {
       const requestedBatchSize = Number(payload.batchSize);
@@ -361,7 +406,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: "action must be rhythm-backfill, rhythm-refresh, discogs-backfill, discogs-refresh, audio-backfill, audio-refresh, backfill, refresh, or search" },
+      { error: "action must be harmonic-backfill, harmonic-refresh, rhythm-backfill, rhythm-refresh, discogs-backfill, discogs-refresh, audio-backfill, audio-refresh, backfill, refresh, or search" },
       { status: 400 },
     );
   } catch (error) {
