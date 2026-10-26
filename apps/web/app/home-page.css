@@ -2371,7 +2371,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-shelf {
   --audioflume-featured-song-gap: 30px;
-  --audioflume-featured-song-visible-count: 6.45;
+  --audioflume-featured-song-card-width: calc(
+    (
+        100vw -
+          var(--audioflume-home-page-gutter) -
+          (6 * var(--audioflume-featured-song-gap))
+      ) /
+      6.25
+  );
   width: 100vw;
 }
 
@@ -2386,20 +2393,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-card {
   display: grid;
-  width: calc(
-    (
-        var(--home-reference-width) -
-          (6 * var(--audioflume-featured-song-gap))
-      ) /
-      var(--audioflume-featured-song-visible-count)
-  );
-  min-width: calc(
-    (
-        var(--home-reference-width) -
-          (6 * var(--audioflume-featured-song-gap))
-      ) /
-      var(--audioflume-featured-song-visible-count)
-  );
+  width: var(--audioflume-featured-song-card-width);
+  min-width: var(--audioflume-featured-song-card-width);
   gap: 10px;
 }
 
@@ -2496,36 +2491,19 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-shelf
   .audioflume-home-reference-shelf-arrow {
-  top: calc(
-    (
-        var(--home-reference-width) -
-          (6 * var(--audioflume-featured-song-gap))
-      ) /
-      var(--audioflume-featured-song-visible-count) /
-      2
-  );
+  top: calc(var(--audioflume-featured-song-card-width) / 2);
 }
 
 @media (max-width: 1350px) {
   .audioflume-home-featured-song-shelf {
     --audioflume-featured-song-gap: 26px;
-    --audioflume-featured-song-visible-count: 5.3;
-  }
-
-  .audioflume-home-featured-song-card {
-    width: calc(
+    --audioflume-featured-song-card-width: calc(
       (
-          var(--home-reference-width) -
+          100vw -
+            var(--audioflume-home-page-gutter) -
             (5 * var(--audioflume-featured-song-gap))
         ) /
-        var(--audioflume-featured-song-visible-count)
-    );
-    min-width: calc(
-      (
-          var(--home-reference-width) -
-            (5 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count)
+        5.25
     );
   }
 }
@@ -2533,23 +2511,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 @media (max-width: 1050px) {
   .audioflume-home-featured-song-shelf {
     --audioflume-featured-song-gap: 22px;
-    --audioflume-featured-song-visible-count: 4.3;
-  }
-
-  .audioflume-home-featured-song-card {
-    width: calc(
+    --audioflume-featured-song-card-width: calc(
       (
-          var(--home-reference-width) -
+          100vw -
+            var(--audioflume-home-page-gutter) -
             (4 * var(--audioflume-featured-song-gap))
         ) /
-        var(--audioflume-featured-song-visible-count)
-    );
-    min-width: calc(
-      (
-          var(--home-reference-width) -
-            (4 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count)
+        4.25
     );
   }
 }
@@ -2557,23 +2525,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 @media (max-width: 760px) {
   .audioflume-home-featured-song-shelf {
     --audioflume-featured-song-gap: 18px;
-    --audioflume-featured-song-visible-count: 3.3;
-  }
-
-  .audioflume-home-featured-song-card {
-    width: calc(
+    --audioflume-featured-song-card-width: calc(
       (
-          var(--home-reference-width) -
+          100vw -
+            var(--audioflume-home-page-gutter) -
             (3 * var(--audioflume-featured-song-gap))
         ) /
-        var(--audioflume-featured-song-visible-count)
-    );
-    min-width: calc(
-      (
-          var(--home-reference-width) -
-            (3 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count)
+        3.25
     );
   }
 }
@@ -2585,80 +2543,14 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
   .audioflume-home-featured-song-shelf {
     --audioflume-featured-song-gap: 14px;
-    --audioflume-featured-song-visible-count: 2.3;
-  }
-
-  .audioflume-home-featured-song-card {
-    width: calc(
+    --audioflume-featured-song-card-width: calc(
       (
-          var(--home-reference-width) -
+          100vw -
+            var(--audioflume-home-page-gutter) -
             (2 * var(--audioflume-featured-song-gap))
         ) /
-        var(--audioflume-featured-song-visible-count)
-    );
-    min-width: calc(
-      (
-          var(--home-reference-width) -
-            (2 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count)
+        2.25
     );
   }
 }
 
-
-@media (max-width: 1350px) {
-  .audioflume-home-featured-song-shelf
-    .audioflume-home-reference-shelf-arrow {
-    top: calc(
-      (
-          var(--home-reference-width) -
-            (5 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count) /
-        2
-    );
-  }
-}
-
-@media (max-width: 1050px) {
-  .audioflume-home-featured-song-shelf
-    .audioflume-home-reference-shelf-arrow {
-    top: calc(
-      (
-          var(--home-reference-width) -
-            (4 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count) /
-        2
-    );
-  }
-}
-
-@media (max-width: 760px) {
-  .audioflume-home-featured-song-shelf
-    .audioflume-home-reference-shelf-arrow {
-    top: calc(
-      (
-          var(--home-reference-width) -
-            (3 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count) /
-        2
-    );
-  }
-}
-
-@media (max-width: 620px) {
-  .audioflume-home-featured-song-shelf
-    .audioflume-home-reference-shelf-arrow {
-    top: calc(
-      (
-          var(--home-reference-width) -
-            (2 * var(--audioflume-featured-song-gap))
-        ) /
-        var(--audioflume-featured-song-visible-count) /
-        2
-    );
-  }
-}
