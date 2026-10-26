@@ -784,12 +784,11 @@ export default function DiscoverPage() {
                       <span key={genre}>{genre}</span>
                     ))
                   ) : (
-                    <span
-                      className="is-placeholder"
-                      aria-hidden="true"
-                    >
-                      Genre
-                    </span>
+                    <>
+                      <span className="is-placeholder" aria-hidden="true" />
+                      <span className="is-placeholder" aria-hidden="true" />
+                      <span className="is-placeholder" aria-hidden="true" />
+                    </>
                   )}
                 </div>
               </div>
