@@ -2370,7 +2370,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-shelf {
   --audioflume-featured-song-gap: 30px;
-  --audioflume-featured-song-visible-count: 6.3;
+  --audioflume-featured-song-visible-count: 6.45;
   width: 100vw;
 }
 
