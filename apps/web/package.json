@@ -14,7 +14,8 @@
     "audio:backfill-streaming": "node scripts/backfill-audio-streaming-assets.mjs",
     "playlists:migrate-covers": "node scripts/migrate-playlist-covers-to-r2.mjs",
     "shorten:ai-local": "node scripts/shorten-ai-repair-local.mjs",
-    "shorten:interpret-local": "node scripts/shorten-ai-interpretation-local.mjs"
+    "shorten:interpret-local": "node scripts/shorten-ai-interpretation-local.mjs",
+    "merit:backfill": "node scripts/backfill-merit-embeddings.mjs"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.1045.0",
