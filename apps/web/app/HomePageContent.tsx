@@ -309,7 +309,7 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
       </button>
       <span className="audioflume-home-reference-original-song-card-copy">
         <strong className="audioflume-home-song-title">{song.title}</strong>
-        <span>{song.artist}</span>
+        <span className="audioflume-home-song-artist">{song.artist}</span>
       </span>
     </article>
   );
@@ -347,7 +347,7 @@ function HomeLifetimeSongRow({ song }: { song: Song }) {
 
       <div className="audioflume-home-lifetime-v2-song-copy">
         <strong className="audioflume-home-song-title">{song.title}</strong>
-        <span>{song.artist}</span>
+        <span className="audioflume-home-song-artist">{song.artist}</span>
       </div>
 
       <button
@@ -483,8 +483,8 @@ function HomeReadyToCutSongCard({
           {song.title}
         </h3>
 
-        <div className="mt-1.5 flex min-w-0 items-center text-[10px] leading-none text-[var(--text-muted)]">
-          <span className="truncate">{song.artist}</span>
+        <div className="mt-1.5 flex min-w-0 items-center text-[var(--text-muted)]">
+          <span className="audioflume-home-song-artist truncate">{song.artist}</span>
         </div>
       </div>
 
@@ -750,8 +750,8 @@ function HomeFeaturedSongCard({
       </button>
 
       <span className="audioflume-home-featured-song-copy">
-<strong className="audioflume-home-song-title">{song.title}</strong>
-        <span>{song.artist}</span>
+        <strong className="audioflume-home-song-title">{song.title}</strong>
+        <span className="audioflume-home-song-artist">{song.artist}</span>
       </span>
     </article>
   );
