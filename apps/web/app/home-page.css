@@ -1,15 +1,15 @@
 /* Home-only header treatment for the mockup layout. */
-body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent {
-  --filmwave-chrome-surface: #111111;
-  border-bottom-color: rgba(255, 255, 255, 0.08) !important;
-  background: #111111 !important;
-  background-color: #111111 !important;
+body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent {
+  --filmwave-chrome-surface: transparent;
+  border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+  background: transparent !important;
+  background-color: transparent !important;
   color: #ffffff !important;
 }
 
-body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
-body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-logo-action,
-body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwave-header-actions {
+body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
+body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-logo-action,
+body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-actions {
   color: #ffffff !important;
 }
 
@@ -110,7 +110,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   z-index: 1;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(62px, 5.1vw, 104px);
+  font-size: clamp(72px, 6.2vw, 126px);
   font-weight: 300;
   letter-spacing: -0.055em;
   line-height: 0.92;
@@ -2711,7 +2711,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 @media (max-width: 1100px) {
   .audioflume-home-reference-hero-headline {
-    font-size: clamp(52px, 6vw, 70px);
+    font-size: clamp(60px, 7vw, 82px);
   }
 
   .audioflume-home-reference-hero-headline .is-music {
@@ -2762,7 +2762,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   }
 
   .audioflume-home-reference-hero-headline {
-    font-size: clamp(34px, 9vw, 48px);
+    font-size: clamp(40px, 10.5vw, 56px);
   }
 
   .audioflume-home-reference-hero-headline .is-human {
