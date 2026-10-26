@@ -18,6 +18,12 @@ import {
   SONG_DISCOGS_MODEL_KEY,
 } from "@/lib/audioDiscogsEmbeddings";
 import {
+  ensurePublishedSongRhythmProfiles,
+  getSongRhythmProfileStats,
+  refreshPublishedSongRhythmProfile,
+  SONG_RHYTHM_PROFILE_VERSION,
+} from "@/lib/audioRhythmFeatures";
+import {
   backfillPublishedSongSearchEmbeddings,
   ensurePublishedSongSearchEmbeddings,
   getSongSearchEmbeddingStats,
@@ -127,12 +133,17 @@ export async function GET() {
   if (access.response) return access.response;
 
   try {
-    const [stats, audioSimilarityStats, discogsSimilarityStats] =
-      await Promise.all([
-        getSongSearchEmbeddingStats(),
-        getSongClapEmbeddingStats(),
-        getSongDiscogsEmbeddingStats(),
-      ]);
+    const [
+      stats,
+      audioSimilarityStats,
+      discogsSimilarityStats,
+      rhythmProfileStats,
+    ] = await Promise.all([
+      getSongSearchEmbeddingStats(),
+      getSongClapEmbeddingStats(),
+      getSongDiscogsEmbeddingStats(),
+      getSongRhythmProfileStats(),
+    ]);
 
     return NextResponse.json({
       stats,
@@ -149,6 +160,10 @@ export async function GET() {
         analysisModel: SONG_DISCOGS_MODEL_ID,
         embeddingModel: SONG_DISCOGS_MODEL_KEY,
         dimensions: SONG_DISCOGS_EMBEDDING_DIMENSIONS,
+      },
+      rhythmSimilarity: {
+        stats: rhythmProfileStats,
+        profileVersion: SONG_RHYTHM_PROFILE_VERSION,
       },
     });
   } catch (error) {
@@ -172,6 +187,39 @@ export async function POST(request: Request) {
         : {};
     const action = typeof payload.action === "string" ? payload.action : "";
 
+
+    if (action === "rhythm-backfill") {
+      const requestedBatchSize = Number(payload.batchSize);
+      const batchSize = Number.isFinite(requestedBatchSize)
+        ? Math.min(2, Math.max(1, Math.floor(requestedBatchSize)))
+        : 1;
+      const updated = await ensurePublishedSongRhythmProfiles(batchSize);
+      const stats = await getSongRhythmProfileStats();
+
+      return NextResponse.json({
+        action,
+        updated,
+        stats,
+        profileVersion: SONG_RHYTHM_PROFILE_VERSION,
+      });
+    }
+
+    if (action === "rhythm-refresh") {
+      const songId =
+        typeof payload.songId === "string" ? payload.songId.trim() : "";
+
+      if (!songId) {
+        return NextResponse.json(
+          { error: "songId is required" },
+          { status: 400 },
+        );
+      }
+
+      const updated = await refreshPublishedSongRhythmProfile(songId);
+      const stats = await getSongRhythmProfileStats();
+
+      return NextResponse.json({ action, songId, updated, stats });
+    }
 
     if (action === "discogs-backfill") {
       const requestedBatchSize = Number(payload.batchSize);
@@ -313,7 +361,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: "action must be discogs-backfill, discogs-refresh, audio-backfill, audio-refresh, backfill, refresh, or search" },
+      { error: "action must be rhythm-backfill, rhythm-refresh, discogs-backfill, discogs-refresh, audio-backfill, audio-refresh, backfill, refresh, or search" },
       { status: 400 },
     );
   } catch (error) {
