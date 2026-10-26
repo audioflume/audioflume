@@ -21,7 +21,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   );
   padding-top: var(--filmwave-header-height, 75px);
   overflow-x: clip;
-  background: var(--bg-primary);
+  background: #e5e5dd;
   color: var(--text-primary);
 }
 
