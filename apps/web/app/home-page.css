@@ -177,7 +177,14 @@ body:has(.audioflume-home-landing)
 .audioflume-home-reference-hero-mark {
   position: absolute;
   color: #ffffff;
+}
+
+.audioflume-home-reference-hero-headline > span {
   mix-blend-mode: difference;
+}
+
+.audioflume-home-reference-hero-mark {
+  mix-blend-mode: normal;
 }
 
 .audioflume-home-reference-hero-headline .is-human {
