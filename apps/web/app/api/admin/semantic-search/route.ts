@@ -10,6 +10,14 @@ import {
   SONG_CLAP_MODEL_KEY,
 } from "@/lib/audioClapEmbeddings";
 import {
+  ensurePublishedSongDiscogsEmbeddings,
+  getSongDiscogsEmbeddingStats,
+  refreshPublishedSongDiscogsEmbedding,
+  SONG_DISCOGS_EMBEDDING_DIMENSIONS,
+  SONG_DISCOGS_MODEL_ID,
+  SONG_DISCOGS_MODEL_KEY,
+} from "@/lib/audioDiscogsEmbeddings";
+import {
   backfillPublishedSongSearchEmbeddings,
   ensurePublishedSongSearchEmbeddings,
   getSongSearchEmbeddingStats,
@@ -119,10 +127,12 @@ export async function GET() {
   if (access.response) return access.response;
 
   try {
-    const [stats, audioSimilarityStats] = await Promise.all([
-      getSongSearchEmbeddingStats(),
-      getSongClapEmbeddingStats(),
-    ]);
+    const [stats, audioSimilarityStats, discogsSimilarityStats] =
+      await Promise.all([
+        getSongSearchEmbeddingStats(),
+        getSongClapEmbeddingStats(),
+        getSongDiscogsEmbeddingStats(),
+      ]);
 
     return NextResponse.json({
       stats,
@@ -133,6 +143,12 @@ export async function GET() {
         analysisModel: SONG_CLAP_MODEL_ID,
         embeddingModel: SONG_CLAP_MODEL_KEY,
         dimensions: SONG_CLAP_EMBEDDING_DIMENSIONS,
+      },
+      discogsSimilarity: {
+        stats: discogsSimilarityStats,
+        analysisModel: SONG_DISCOGS_MODEL_ID,
+        embeddingModel: SONG_DISCOGS_MODEL_KEY,
+        dimensions: SONG_DISCOGS_EMBEDDING_DIMENSIONS,
       },
     });
   } catch (error) {
@@ -156,6 +172,41 @@ export async function POST(request: Request) {
         : {};
     const action = typeof payload.action === "string" ? payload.action : "";
 
+
+    if (action === "discogs-backfill") {
+      const requestedBatchSize = Number(payload.batchSize);
+      const batchSize = Number.isFinite(requestedBatchSize)
+        ? Math.min(2, Math.max(1, Math.floor(requestedBatchSize)))
+        : 1;
+      const updated = await ensurePublishedSongDiscogsEmbeddings(batchSize);
+      const stats = await getSongDiscogsEmbeddingStats();
+
+      return NextResponse.json({
+        action,
+        updated,
+        stats,
+        analysisModel: SONG_DISCOGS_MODEL_ID,
+        embeddingModel: SONG_DISCOGS_MODEL_KEY,
+        dimensions: SONG_DISCOGS_EMBEDDING_DIMENSIONS,
+      });
+    }
+
+    if (action === "discogs-refresh") {
+      const songId =
+        typeof payload.songId === "string" ? payload.songId.trim() : "";
+
+      if (!songId) {
+        return NextResponse.json(
+          { error: "songId is required" },
+          { status: 400 },
+        );
+      }
+
+      const updated = await refreshPublishedSongDiscogsEmbedding(songId);
+      const stats = await getSongDiscogsEmbeddingStats();
+
+      return NextResponse.json({ action, songId, updated, stats });
+    }
 
     if (action === "audio-backfill") {
       const requestedBatchSize = Number(payload.batchSize);
@@ -262,7 +313,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: "action must be audio-backfill, audio-refresh, backfill, refresh, or search" },
+      { error: "action must be discogs-backfill, discogs-refresh, audio-backfill, audio-refresh, backfill, refresh, or search" },
       { status: 400 },
     );
   } catch (error) {
