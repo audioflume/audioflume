@@ -1004,7 +1004,7 @@ export default function HomePageContent({
       <section className="audioflume-home-mockup-intro">
         <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
           <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
-          <span>HUMAN MADE MUSIC &amp; FAIR ARTIST COMPENSATION</span>
+          <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
         </div>
 
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-intro-heading">
