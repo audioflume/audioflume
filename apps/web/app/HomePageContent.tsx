@@ -37,6 +37,9 @@ import {
 import { useSongs } from "@/hooks/useSongs";
 import type { Song } from "@/lib/types";
 
+const HOME_HERO_IMAGE =
+  "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
+
 const NEW_SONG_COUNT = 12;
 type HomeArtist = {
   id: string;
@@ -1090,6 +1093,25 @@ export default function HomePageContent({
   return (
     <main className={`audioflume-home-reference audioflume-home-mockup${playerVisible ? " has-player" : ""}`}>
       <GlobalSearchBar />
+
+      <section
+        className="audioflume-home-reference-hero"
+        style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
+      >
+        <div className="audioflume-home-reference-hero-shade" />
+        <h1>Human made music &amp; SFX for film.</h1>
+
+        <div className="audioflume-home-reference-width audioflume-home-reference-hero-trust">
+          <p>Filmmakers working for these brands already use Audioflume.</p>
+          <div className="audioflume-home-reference-logo-row" aria-label="Brand work">
+            <img
+              src="https://images.filmwave.io/images/home/logos.png"
+              alt="Brands using Audioflume"
+              draggable={false}
+            />
+          </div>
+        </div>
+      </section>
 
       <section className="audioflume-home-mockup-intro">
         <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
