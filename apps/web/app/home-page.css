@@ -192,37 +192,37 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-reference-hero-headline .is-human {
-  top: 31%;
+  top: 28%;
   left: -0.07em;
 }
 
 .audioflume-home-reference-hero-headline .is-made {
-  top: 31%;
+  top: 28%;
   right: 0;
 }
 
 .audioflume-home-reference-hero-headline .is-music {
-  top: 42%;
+  top: 39%;
   left: 29%;
 }
 
 .audioflume-home-reference-hero-headline .is-amp {
-  top: 42%;
+  top: 39%;
   left: 49.4%;
 }
 
 .audioflume-home-reference-hero-headline .is-sfx {
-  top: 42%;
+  top: 39%;
   left: 56%;
 }
 
 .audioflume-home-reference-hero-headline .is-for-film {
-  top: 53%;
+  top: 50%;
   right: 8%;
 }
 
 .audioflume-home-reference-hero-mark {
-  top: 66%;
+  top: 63%;
   left: 50%;
   width: clamp(52px, 4.1vw, 80px);
   height: auto;
@@ -2846,37 +2846,37 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-home-reference-hero-headline .is-human {
-    top: 29%;
+    top: 26%;
     left: -0.07em;
   }
 
   .audioflume-home-reference-hero-headline .is-made {
-    top: 29%;
+    top: 26%;
     right: 0;
   }
 
   .audioflume-home-reference-hero-headline .is-music {
-    top: 42%;
+    top: 39%;
     left: 10%;
   }
 
   .audioflume-home-reference-hero-headline .is-amp {
-    top: 42%;
+    top: 39%;
     left: 48%;
   }
 
   .audioflume-home-reference-hero-headline .is-sfx {
-    top: 42%;
+    top: 39%;
     left: 60%;
   }
 
   .audioflume-home-reference-hero-headline .is-for-film {
-    top: 55%;
+    top: 52%;
     right: 4%;
   }
 
   .audioflume-home-reference-hero-mark {
-    top: 68%;
+    top: 65%;
     width: 44px;
   }
 
