@@ -28,6 +28,7 @@ export default function GlobalReferenceSearch({
   async function handleSubmit(
     value: string,
     result?: ReferenceCatalogResult,
+    signal?: AbortSignal,
   ) {
     const params = new URLSearchParams({
       referenceSearch: value,
@@ -44,6 +45,7 @@ export default function GlobalReferenceSearch({
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ referenceId: result.id }),
+      signal,
     });
 
     if (!response.ok) {
@@ -51,6 +53,7 @@ export default function GlobalReferenceSearch({
     }
 
     const data = await response.json();
+    if (signal?.aborted) return;
     writeReferenceSearchHandoff({
       referenceId: result.id,
       query: value,
