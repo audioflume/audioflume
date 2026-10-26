@@ -35,8 +35,21 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-song-title {
+  margin: 0;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 13px;
+  font-style: normal;
   font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.15;
+}
+
+.audioflume-home-song-artist {
+  margin: 0;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 300;
   letter-spacing: normal;
   line-height: 1.15;
 }
@@ -171,9 +184,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-reference-original-song-card-copy span {
   overflow: hidden;
   color: var(--text-subtle);
-  font-size: 11.5px;
-  font-weight: 400;
-  line-height: 1.35;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -2214,9 +2224,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-lifetime-v2-song-copy span {
   color: #8e8e8e;
-  font-size: 13px;
-  font-weight: 400;
-  line-height: 1.15;
 }
 
 .audioflume-home-lifetime-v2-song-play {
@@ -2471,9 +2478,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-featured-song-copy > span {
   color: var(--text-muted);
-  font-size: 11px;
-  font-weight: 300;
-  line-height: 1.15;
 }
 
 .audioflume-home-featured-song-shelf
