@@ -1015,9 +1015,7 @@ export default function HomePageContent({
           <h1 className="audioflume-home-mockup-intro-title">
             Human made music &amp; SFX for film.
           </h1>
-          <span className="audioflume-editorial-meta audioflume-home-mockup-intro-trending">
-            1500+ ARTISTS TRENDING ONLINE
-          </span>
+          <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
       </section>
 
