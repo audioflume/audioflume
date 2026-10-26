@@ -28,6 +28,7 @@ type ReferenceSearchModalProps = {
   onSubmit: (
     value: string,
     result?: ReferenceCatalogResult,
+    signal?: AbortSignal,
   ) => void | Promise<void>;
   embedded?: boolean;
 };
@@ -87,6 +88,7 @@ export default function ReferenceSearchModal({
 }: ReferenceSearchModalProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
   const searchFormRef = useRef<HTMLFormElement | null>(null);
+  const activeSearchRef = useRef<AbortController | null>(null);
   const [results, setResults] = useState<ReferenceCatalogResult[]>([]);
   const [loading, setLoading] = useState(false);
   const [submitting, setSubmitting] = useState(false);
@@ -95,8 +97,8 @@ export default function ReferenceSearchModal({
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   function closeModal() {
-    if (submitting) return;
-
+    activeSearchRef.current?.abort();
+    activeSearchRef.current = null;
     onChange("");
     setResults([]);
     setLoading(false);
@@ -136,6 +138,8 @@ export default function ReferenceSearchModal({
 
   useEffect(() => {
     if (!open) {
+      activeSearchRef.current?.abort();
+      activeSearchRef.current = null;
       setResults([]);
       setLoading(false);
       setSubmitting(false);
@@ -210,6 +214,9 @@ export default function ReferenceSearchModal({
   ) {
     const cleanQuery = query.trim();
     if (!cleanQuery || submitting) return;
+    activeSearchRef.current?.abort();
+    const searchController = new AbortController();
+    activeSearchRef.current = searchController;
 
     if (isMusicLink(cleanQuery) && !result) {
       setLoading(true);
@@ -219,6 +226,7 @@ export default function ReferenceSearchModal({
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ url: cleanQuery }),
+          signal: searchController.signal,
         });
 
         if (!response.ok) {
@@ -238,6 +246,7 @@ export default function ReferenceSearchModal({
           throw new Error("Reference link resolution returned no track");
         }
 
+        if (searchController.signal.aborted) return;
         onChange(resolved.searchQuery);
 
         if (resolved.kind === "track") {
@@ -245,12 +254,15 @@ export default function ReferenceSearchModal({
           setSubmitting(true);
         }
 
-        await onSubmit(resolved.searchQuery, resolved);
+        await onSubmit(resolved.searchQuery, resolved, searchController.signal);
       } catch (error) {
-        console.error("Reference link resolution failed:", error);
+        if (!searchController.signal.aborted) console.error("Reference link resolution failed:", error);
       } finally {
-        setLoading(false);
-        setSubmitting(false);
+        if (activeSearchRef.current === searchController) {
+          activeSearchRef.current = null;
+          setLoading(false);
+          setSubmitting(false);
+        }
       }
 
       return;
@@ -264,9 +276,12 @@ export default function ReferenceSearchModal({
     }
 
     try {
-      await onSubmit(cleanQuery, result);
+      await onSubmit(cleanQuery, result, searchController.signal);
     } finally {
-      setSubmitting(false);
+      if (activeSearchRef.current === searchController) {
+        activeSearchRef.current = null;
+        setSubmitting(false);
+      }
     }
   }
 
@@ -296,7 +311,6 @@ export default function ReferenceSearchModal({
             className={styles.close}
             aria-label="Close reference search"
             onClick={closeModal}
-            disabled={submitting}
           >
             <XIcon size={12} />
           </button>
