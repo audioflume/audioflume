@@ -102,29 +102,12 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-landing .audioflume-home-reference-hero {
-  height: 100dvh;
+  height: calc(100dvh - 28px);
 }
 
 .audioflume-home-landing.has-player .audioflume-home-reference-hero {
   height: calc(
-    100dvh - var(--filmwave-player-height, 72px)
-  );
-}
-
-html.filmwave-artist-invite-banner-active
-  .audioflume-home-landing
-  .audioflume-home-reference-hero {
-  height: calc(
-    100dvh - var(--filmwave-artist-invite-banner-height, 38px)
-  );
-}
-
-html.filmwave-artist-invite-banner-active
-  .audioflume-home-landing.has-player
-  .audioflume-home-reference-hero {
-  height: calc(
-    100dvh - var(--filmwave-artist-invite-banner-height, 38px) -
-      var(--filmwave-player-height, 72px)
+    100dvh - 28px - var(--filmwave-player-height, 72px)
   );
 }
 
@@ -199,7 +182,7 @@ html.filmwave-artist-invite-banner-active
 
 .audioflume-home-reference-hero-headline .is-human {
   top: 31%;
-  left: -0.11em;
+  left: -0.07em;
 }
 
 .audioflume-home-reference-hero-headline .is-made {
@@ -2831,29 +2814,12 @@ html.filmwave-artist-invite-banner-active
   }
 
   .audioflume-home-landing .audioflume-home-reference-hero {
-    height: 100dvh;
+    height: calc(100dvh - 28px);
   }
 
   .audioflume-home-landing.has-player .audioflume-home-reference-hero {
     height: calc(
-      100dvh - var(--filmwave-player-height, 72px)
-    );
-  }
-
-  html.filmwave-artist-invite-banner-active
-    .audioflume-home-landing
-    .audioflume-home-reference-hero {
-    height: calc(
-      100dvh - var(--filmwave-artist-invite-banner-height, 38px)
-    );
-  }
-
-  html.filmwave-artist-invite-banner-active
-    .audioflume-home-landing.has-player
-    .audioflume-home-reference-hero {
-    height: calc(
-      100dvh - var(--filmwave-artist-invite-banner-height, 38px) -
-        var(--filmwave-player-height, 72px)
+      100dvh - 28px - var(--filmwave-player-height, 72px)
     );
   }
 
@@ -2863,7 +2829,7 @@ html.filmwave-artist-invite-banner-active
 
   .audioflume-home-reference-hero-headline .is-human {
     top: 29%;
-    left: -0.11em;
+    left: -0.07em;
   }
 
   .audioflume-home-reference-hero-headline .is-made {
