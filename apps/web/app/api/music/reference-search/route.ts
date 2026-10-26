@@ -812,7 +812,7 @@ export async function POST(request: Request) {
         .from("song_similar_references")
         .select("song_id")
         .eq("deezer_track_id", String(trackId)),
-      referenceArtist && referenceTitle
+      referenceArtist
         ? supabaseServer
             .from("song_similar_references")
             .select("song_id, title, artist")
@@ -836,7 +836,15 @@ export async function POST(request: Request) {
         .map((entry) => entry.song_id)
         .filter((id) => !exactIds.has(id)),
     );
-    const matchingIds = [...new Set([...exactIds, ...alternateIds])];
+    // A saved reference by the searched artist is relevant even when its
+    // recording is outside acoustic retrieval. Keep those additional songs
+    // after the audio-ranked matches, not above stronger audio matches.
+    const sameArtistIds = new Set(
+      (artistLookup.data ?? [])
+        .filter((entry) => normalize(entry.artist ?? "") === referenceArtist)
+        .map((entry) => entry.song_id),
+    );
+    const matchingIds = [...new Set([...exactIds, ...alternateIds, ...sameArtistIds])];
     if (matchingIds.length > 0) {
       const { data: publishedSongs, error: publishedError } = await supabaseServer
         .from("songs")
@@ -851,7 +859,13 @@ export async function POST(request: Request) {
         .filter((id) => publishedIds.has(id))
         .map((id) => existingMatches.get(id) ?? ({ songId: id, score: 1 } as (typeof matches)[number]));
       const promotedIds = new Set(promoted.map((result) => result.songId));
-      matches = [...promoted, ...matches.filter((result) => !promotedIds.has(result.songId))]
+      const audioRanked = matches.filter((result) => !promotedIds.has(result.songId));
+      const includedIds = new Set([...promotedIds, ...audioRanked.map((result) => result.songId)]);
+      const remainingArtistMatches = [...sameArtistIds]
+        .filter((id) => publishedIds.has(id) && !includedIds.has(id))
+        .map((id) => existingMatches.get(id) ?? ({ songId: id, score: 0 } as (typeof matches)[number]));
+
+      matches = [...promoted, ...audioRanked, ...remainingArtistMatches]
         .slice(0, MAX_RESULT_COUNT);
     }
 
