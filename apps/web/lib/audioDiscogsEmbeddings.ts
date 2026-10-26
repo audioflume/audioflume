@@ -76,6 +76,8 @@ type OnnxTensor = {
 };
 
 type OnnxInferenceSession = {
+  inputNames: readonly string[];
+  outputNames: readonly string[];
   run: (
     feeds: Record<string, unknown>,
   ) => Promise<Record<string, OnnxTensor>>;
@@ -479,11 +481,24 @@ async function embedPatches(patches: number[][][]) {
       [MODEL_BATCH_SIZE, PATCH_SIZE, MEL_BANDS],
     );
 
+    const inputName = session.inputNames[0];
+
+    if (!inputName) {
+      throw new Error("Discogs EffNet ONNX model has no input name");
+    }
+
     const outputs = await session.run({
-      serving_default_melspectrogram: input,
+      [inputName]: input,
     });
     const trackOutput =
-      outputs["PartitionedCall:0"] ??
+      session.outputNames
+        .map((outputName) => outputs[outputName])
+        .find(
+          (output) =>
+            output &&
+            output.dims.length === 2 &&
+            output.dims[1] === SONG_DISCOGS_EMBEDDING_DIMENSIONS,
+        ) ??
       Object.values(outputs).find(
         (output) =>
           output.dims.length === 2 &&
