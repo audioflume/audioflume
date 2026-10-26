@@ -184,6 +184,7 @@ function scoreMatch({
   rhythmSimilarity,
   energyDensitySimilarity,
   tempoSimilarity,
+  discogsSimilarity,
 }: {
   audioSimilarity: number;
   bestSegmentSimilarity: number;
@@ -194,9 +195,10 @@ function scoreMatch({
   rhythmSimilarity: number;
   energyDensitySimilarity: number;
   tempoSimilarity: number | null;
+  discogsSimilarity: number | null;
 }) {
   const signals = [
-    { score: audioSimilarity, weight: 0.42 },
+    { score: audioSimilarity, weight: 0.32 },
     { score: consistentSegmentSimilarity, weight: 0.15 },
     { score: averageBestSegmentSimilarity, weight: 0.08 },
     { score: bestSegmentSimilarity, weight: 0.03 },
@@ -204,6 +206,9 @@ function scoreMatch({
     { score: characterSimilarity, weight: 0.08 },
     { score: rhythmSimilarity, weight: 0.04 },
     { score: energyDensitySimilarity, weight: 0.03 },
+    ...(discogsSimilarity === null
+      ? []
+      : [{ score: discogsSimilarity, weight: 0.1 }]),
     ...(tempoSimilarity === null
       ? []
       : [{ score: tempoSimilarity, weight: 0.02 }]),
@@ -414,6 +419,12 @@ export async function POST(request: Request) {
         ...clapRetrieval.matches.map((result) => result.songId),
         ...discogsRetrieval.map((result) => result.songId),
       ])];
+      const discogsSimilarityBySongId = new Map(
+        discogsRetrieval.map((result) => [
+          result.songId,
+          result.similarity,
+        ]),
+      );
 
       const audioSearch = await scorePublishedSongsByClapSimilarity(
         profile.previewUrl,
@@ -444,6 +455,8 @@ export async function POST(request: Request) {
             audioSearch.referenceProfile,
             result.conceptProfile,
           );
+          const discogsSimilarity =
+            discogsSimilarityBySongId.get(result.songId) ?? null;
 
           return {
             songId: result.songId,
@@ -463,8 +476,10 @@ export async function POST(request: Request) {
               energyDensitySimilarity:
                 conceptSimilarity.energyDensity,
               tempoSimilarity,
+              discogsSimilarity,
             }),
             audioSimilarity: result.similarity,
+            discogsSimilarity,
             bestSegmentSimilarity:
               result.bestSegmentSimilarity,
             averageBestSegmentSimilarity:
@@ -496,6 +511,10 @@ export async function POST(request: Request) {
           songId: result.songId,
           score: Number(result.score.toFixed(6)),
           audioSimilarity: Number(result.audioSimilarity.toFixed(6)),
+          discogsSimilarity:
+            result.discogsSimilarity === null
+              ? null
+              : Number(result.discogsSimilarity.toFixed(6)),
           bestSegmentSimilarity: Number(
             result.bestSegmentSimilarity.toFixed(6),
           ),
@@ -523,7 +542,7 @@ export async function POST(request: Request) {
           ),
         }));
       ranking = discogsReady
-        ? "audio-clap-discogs-retrieve-clap-rerank-v6"
+        ? "audio-clap-discogs-weighted-rerank-v7"
         : "audio-clap-fulltrack-segments-v5";
     }
 
