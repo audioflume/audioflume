@@ -1321,7 +1321,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card:not(.audioflume-home-reference-artist-promo)
     .audioflume-home-reference-artist-media {
-    aspect-ratio: 780 / 430 !important;
+    aspect-ratio: 820 / 430 !important;
   }
 }
 
