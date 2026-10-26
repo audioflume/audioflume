@@ -1792,8 +1792,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-mockup .audioflume-home-reference-original-song-grid {
-  column-gap: 12px;
-  row-gap: 24px;
+  column-gap: 24px;
+  row-gap: 32px;
 }
 
 .audioflume-home-mockup .audioflume-home-reference-original-song-card,
