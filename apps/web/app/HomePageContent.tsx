@@ -729,7 +729,9 @@ function HomeFeaturedSongCard({
   }
 
   return (
-    <article className="audioflume-home-featured-song-card">
+    <article
+      className={`audioflume-home-featured-song-card${active ? " is-active" : ""}`}
+    >
       <button
         type="button"
         className="audioflume-home-featured-song-art"
