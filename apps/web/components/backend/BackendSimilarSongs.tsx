@@ -9,6 +9,12 @@ type CatalogResult = SimilarSongReference & {
   kind: "track" | "artist";
 };
 
+type RelatedArtist = { id: number; name: string; imageUrl: string | null };
+
+function spotifySearchUrl(track: Pick<SimilarSongReference, "name" | "artist">) {
+  return `https://open.spotify.com/search/${encodeURIComponent(`${track.name} ${track.artist}`)}`;
+}
+
 type Props = {
   value: SimilarSongReference[];
   onChange: (next: SimilarSongReference[]) => void;
@@ -19,6 +25,9 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<CatalogResult[]>([]);
   const [suggestions, setSuggestions] = useState<SimilarSongReference[]>([]);
+  const [relatedArtists, setRelatedArtists] = useState<RelatedArtist[]>([]);
+  const [referenceTrackId, setReferenceTrackId] = useState("");
+  const [selectedArtistId, setSelectedArtistId] = useState<number | null>(null);
   const [busy, setBusy] = useState(false);
   const [suggestionsBusy, setSuggestionsBusy] = useState(false);
   const [error, setError] = useState("");
@@ -61,8 +70,30 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
     const trackId = reference.id.replace(/^deezer:track:/, "");
     setSuggestionsBusy(true);
     setSuggestions([]);
+    setRelatedArtists([]);
+    setSelectedArtistId(null);
+    setReferenceTrackId(trackId);
     try {
       const response = await fetch(`/api/music/similar-song-suggestions?trackId=${trackId}`);
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error || "Suggestions unavailable");
+      setSuggestions(body.results || []);
+      setRelatedArtists(body.artists || []);
+      setError("");
+    } catch (cause) {
+      setError(cause instanceof Error ? cause.message : "Suggestions unavailable");
+    } finally {
+      setSuggestionsBusy(false);
+    }
+  }
+
+  async function showArtistTracks(artistId: number | null) {
+    if (!referenceTrackId) return;
+    setSelectedArtistId(artistId);
+    setSuggestionsBusy(true);
+    try {
+      const url = `/api/music/similar-song-suggestions?trackId=${referenceTrackId}${artistId ? `&artistId=${artistId}` : ""}`;
+      const response = await fetch(url);
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || "Suggestions unavailable");
       setSuggestions(body.results || []);
@@ -99,7 +130,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
                 <div className="truncate text-xs font-medium">{result.name}</div>
                 <div className="truncate text-[11px] text-[var(--text-secondary)]">{result.artist}</div>
               </div>
-              <a href={result.externalUrl} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={(event) => event.stopPropagation()}>Listen ↗</a>
+              <a href={spotifySearchUrl(result)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={(event) => event.stopPropagation()}>Spotify ↗</a>
               <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void select(result)} disabled={disabled}>Select</button>
             </div>
           ))}
@@ -111,10 +142,21 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
           {value.map((item) => (
             <div key={item.id} className="flex items-center gap-2">
               <div className="min-w-0 flex-1 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
-              <a href={item.externalUrl} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Listen ↗</a>
+              <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
               <button type="button" aria-label={`Remove ${item.name}`} disabled={disabled} onClick={() => onChange(value.filter((track) => track.id !== item.id))} className="filmwave-backend-button filmwave-backend-button-secondary">Remove</button>
             </div>
           ))}
+        </div>
+      )}
+      {relatedArtists.length > 0 && (
+        <div className="grid gap-2">
+          <div className="text-[11px] font-medium text-[var(--text-secondary)]">Similar artists</div>
+          <div className="flex flex-wrap gap-2">
+            <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(null)} disabled={suggestionsBusy}>All artists</button>
+            {relatedArtists.map((artist) => (
+              <button key={artist.id} type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(artist.id)} disabled={suggestionsBusy} aria-pressed={selectedArtistId === artist.id}>{artist.name}</button>
+            ))}
+          </div>
         </div>
       )}
       {suggestionsBusy && <p className="text-xs text-[var(--text-muted)]">Finding songs by related artists...</p>}
@@ -128,12 +170,13 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
                 <div className="truncate text-xs">{item.name}</div>
                 <div className="truncate text-[11px] text-[var(--text-secondary)]">{item.artist}</div>
               </div>
-              <a href={item.externalUrl} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Listen ↗</a>
+              <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
               <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" disabled={disabled || value.length >= MAX_SIMILAR_SONG_REFERENCES || value.some((reference) => reference.id === item.id)} onClick={() => add(item)}>{value.some((reference) => reference.id === item.id) ? "Added" : "Add"}</button>
             </div>
           ))}
         </div>
       )}
+      <p className="text-[11px] text-[var(--text-secondary)]">Spotify links search for the song and artist; choose the correct recording there.</p>
       {error && <p role="alert" className="text-xs text-[var(--status-error)]">{error}</p>}
     </SongFormSection>
   );
