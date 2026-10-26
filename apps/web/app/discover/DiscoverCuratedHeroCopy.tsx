@@ -213,7 +213,7 @@ export default function DiscoverCuratedHeroCopy({
               align-items: center;
               margin-top: clamp(38px, 3.5vw, 52px);
               border: 0;
-              border-radius: 28px;
+              border-radius: 0;
               background: var(--filmwave-white);
               box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
               pointer-events: auto;
