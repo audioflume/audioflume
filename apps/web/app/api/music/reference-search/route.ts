@@ -4,8 +4,13 @@ import { NextResponse } from "next/server";
 import {
   compareClapConceptProfiles,
   getSongClapEmbeddingStats,
+  scorePublishedSongsByClapSimilarity,
   searchPublishedSongsByClapSimilarity,
 } from "@/lib/audioClapEmbeddings";
+import {
+  getSongDiscogsEmbeddingStats,
+  searchPublishedSongsByDiscogsSimilarity,
+} from "@/lib/audioDiscogsEmbeddings";
 import {
   analyzeAudioUrl,
   compareAudioFeatures,
@@ -17,6 +22,7 @@ export const dynamic = "force-dynamic";
 export const revalidate = 0;
 
 const MAX_RESULT_COUNT = 200;
+const RETRIEVAL_MATCH_COUNT = 100;
 const MIN_REFERENCE_MATCH_SCORE = 0.5;
 const MAX_REFERENCE_SCORE_DROP = 0.12;
 
@@ -367,8 +373,12 @@ export async function POST(request: Request) {
 
     const profile = await getReferenceProfile(trackId);
     const referenceBpm = Number(profile.track.bpm ?? 0) || null;
-    const embeddingStats = await getSongClapEmbeddingStats();
+    const [embeddingStats, discogsStats] = await Promise.all([
+      getSongClapEmbeddingStats(),
+      getSongDiscogsEmbeddingStats().catch(() => null),
+    ]);
     const clapReady = embeddingStats.embeddedSongs > 0;
+    const discogsReady = (discogsStats?.embeddedSongs ?? 0) > 0;
 
     let matches;
     let ranking;
@@ -381,15 +391,34 @@ export async function POST(request: Request) {
       });
       ranking = "audio-similarity-v1-fallback";
     } else {
-      const audioSearch = await searchPublishedSongsByClapSimilarity(
-        profile.previewUrl,
-        {
-          matchCount: MAX_RESULT_COUNT,
-          minSimilarity: -1,
-        },
-      );
+      const [clapRetrieval, discogsRetrieval] = await Promise.all([
+        searchPublishedSongsByClapSimilarity(
+          profile.previewUrl,
+          {
+            matchCount: RETRIEVAL_MATCH_COUNT,
+            minSimilarity: -1,
+          },
+        ),
+        discogsReady
+          ? searchPublishedSongsByDiscogsSimilarity(
+              profile.previewUrl,
+              {
+                matchCount: RETRIEVAL_MATCH_COUNT,
+                minSimilarity: -1,
+              },
+            )
+          : Promise.resolve([]),
+      ]);
 
-      const ids = audioSearch.matches.map((result) => result.songId);
+      const ids = [...new Set([
+        ...clapRetrieval.matches.map((result) => result.songId),
+        ...discogsRetrieval.map((result) => result.songId),
+      ])];
+
+      const audioSearch = await scorePublishedSongsByClapSimilarity(
+        profile.previewUrl,
+        ids,
+      );
       const { data, error } =
         ids.length === 0
           ? { data: [], error: null }
@@ -493,7 +522,9 @@ export async function POST(request: Request) {
             result.energyDensitySimilarity.toFixed(6),
           ),
         }));
-      ranking = "audio-clap-fulltrack-segments-v5";
+      ranking = discogsReady
+        ? "audio-clap-discogs-retrieve-clap-rerank-v6"
+        : "audio-clap-fulltrack-segments-v5";
     }
 
     return NextResponse.json(
