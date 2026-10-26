@@ -161,7 +161,7 @@ export default function SoundFxPage() {
             width: calc(100% - (var(--filmwave-page-gutter) * 2));
             height: 58px;
             grid-template-columns: minmax(0, 1fr) 52px;
-            border-radius: 23px;
+            border-radius: 0;
           }
 
           .sound-fx-discover-top .discover-category-search input {
