@@ -552,7 +552,8 @@ function HomeArtistShelf({
             <span className="audioflume-home-reference-artist-promo-title-difference">
               In demand
             </span>
-            <span>artists &amp; composers.</span>
+            <span>artists</span>
+            <span>&amp; composers.</span>
           </h2>
           <Link
             href="/music"
