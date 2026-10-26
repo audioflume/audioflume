@@ -231,35 +231,35 @@ function scoreMatch({
     meritRhythmSimilarity !== null &&
     meritTimbreSimilarity !== null;
   const signals = [
-    { score: audioSimilarity, weight: meritAvailable ? 0.04 : 0.18 },
-    { score: consistentSegmentSimilarity, weight: 0.15 },
-    { score: averageBestSegmentSimilarity, weight: 0.08 },
-    { score: bestSegmentSimilarity, weight: 0.03 },
-    { score: instrumentationSimilarity, weight: 0.15 },
-    { score: characterSimilarity, weight: 0.08 },
-    { score: rhythmSimilarity, weight: 0.04 },
-    { score: energyDensitySimilarity, weight: 0.03 },
+    { score: audioSimilarity, weight: meritAvailable ? 0.044 : 0.18 },
+    { score: consistentSegmentSimilarity, weight: 0.161 },
+    { score: averageBestSegmentSimilarity, weight: 0.094 },
+    { score: bestSegmentSimilarity, weight: 0.047 },
+    { score: instrumentationSimilarity, weight: 0.134 },
+    { score: characterSimilarity, weight: 0.079 },
+    { score: rhythmSimilarity, weight: 0.054 },
+    { score: energyDensitySimilarity, weight: 0.05 },
     ...(discogsSimilarity === null
       ? []
-      : [{ score: discogsSimilarity, weight: 0.1 }]),
+      : [{ score: discogsSimilarity, weight: 0.088 }]),
     ...(detailedRhythmSimilarity === null
       ? []
-      : [{ score: detailedRhythmSimilarity, weight: 0.06 }]),
+      : [{ score: detailedRhythmSimilarity, weight: 0.032 }]),
     ...(harmonicSimilarity === null
       ? []
-      : [{ score: harmonicSimilarity, weight: 0.08 }]),
+      : [{ score: harmonicSimilarity, weight: 0.042 }]),
     ...(meritMelodySimilarity === null
       ? []
-      : [{ score: meritMelodySimilarity, weight: 0.04 }]),
+      : [{ score: meritMelodySimilarity, weight: 0.056 }]),
     ...(meritRhythmSimilarity === null
       ? []
-      : [{ score: meritRhythmSimilarity, weight: 0.04 }]),
+      : [{ score: meritRhythmSimilarity, weight: 0.051 }]),
     ...(meritTimbreSimilarity === null
       ? []
-      : [{ score: meritTimbreSimilarity, weight: 0.06 }]),
+      : [{ score: meritTimbreSimilarity, weight: 0.052 }]),
     ...(tempoSimilarity === null
       ? []
-      : [{ score: tempoSimilarity, weight: 0.02 }]),
+      : [{ score: tempoSimilarity, weight: 0.019 }]),
   ];
 
   const totalWeight = signals.reduce(
@@ -709,7 +709,7 @@ export async function POST(request: Request) {
         }));
       ranking =
         meritReady && referenceMeritEmbeddings
-          ? "audio-clap-discogs-rhythm-harmonic-merit-rerank-v10"
+          ? "audio-clap-discogs-rhythm-harmonic-merit-rerank-v11"
           : harmonicReady
             ? "audio-clap-discogs-rhythm-harmonic-rerank-v9"
             : rhythmReady
