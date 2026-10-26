@@ -763,12 +763,12 @@ function HomeFeaturedSongShelf({ songs }: { songs: Song[] }) {
   return (
     <section className="audioflume-home-featured-songs">
       <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-        <span>Featured songs</span>
+        <span>Tracks made for storytelling.</span>
         <Link
           href="/music"
           className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
         >
-          Explore music
+          More like this
           <ArrowUpRightIcon
             size={16}
             strokeWidth={1.5}
@@ -1190,7 +1190,7 @@ export default function HomePageContent({
             <h2>
               Lifetime access to original{" "}
               <br className="audioflume-home-lifetime-heading-break" />
-              in-house made music
+              in-house made music.
             </h2>
             <Link
               href="/music?artist=Audioflume"
