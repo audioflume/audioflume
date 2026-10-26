@@ -419,6 +419,14 @@ body:has(.audioflume-home-landing)
   background: #e5e5dd;
 }
 
+/* Lower homepage headings use the warm beige tone in dark mode only. */
+:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library h2,
+:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library h3,
+:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library-grid > p,
+:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-footer h2 {
+  color: #e5e5dd;
+}
+
 .audioflume-home-reference-library {
   padding: clamp(80px, 10vw, 166px) 0;
   background: var(--bg-primary);
