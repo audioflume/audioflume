@@ -171,7 +171,6 @@ body:has(.audioflume-home-landing)
   line-height: 0.92;
   text-transform: uppercase;
   pointer-events: none;
-  mix-blend-mode: difference;
 }
 
 .audioflume-home-reference-hero-headline > span,
@@ -185,6 +184,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-reference-hero-mark {
+  color: #ffffff;
   mix-blend-mode: normal;
 }
 
