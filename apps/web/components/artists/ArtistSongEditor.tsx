@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 import ArtistSongTagSections from "@/components/artists/ArtistSongTagSections";
+import BackendSimilarSongs from "@/components/backend/BackendSimilarSongs";
+import { loadSimilarSongReferences, saveSimilarSongReferences, type SimilarSongReference } from "@/lib/similarSongReferences";
 import ArtistSongCreditsRightsSections, {
   type ArtistSongCredit as Credit,
   type ArtistSongRightsHolder as RightsHolder,
@@ -265,6 +267,8 @@ export default function ArtistSongEditor({
   const [copyrightYear, setCopyrightYear] = useState("");
   const [rightsNotes, setRightsNotes] = useState("");
   const [rightsHolders, setRightsHolders] = useState<RightsHolder[]>([]);
+  const [similarReferences, setSimilarReferences] = useState<SimilarSongReference[]>([]);
+  const [similarReferencesReady, setSimilarReferencesReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -349,6 +353,17 @@ export default function ArtistSongEditor({
     };
   }, [artist.id, songId]);
 
+  useEffect(() => {
+    let cancelled = false;
+    setSimilarReferencesReady(false);
+    void loadSimilarSongReferences(songId, artist.id)
+      .then((references) => {
+        if (!cancelled) { setSimilarReferences(references); setSimilarReferencesReady(true); }
+      })
+      .catch((cause) => { if (!cancelled) setError(cause instanceof Error ? cause.message : "Unable to load similar songs"); });
+    return () => { cancelled = true; };
+  }, [songId, artist.id]);
+
   const ownershipTotals = useMemo(() => {
     let master = 0;
     let publishing = 0;
@@ -411,7 +426,7 @@ export default function ArtistSongEditor({
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (!canEditMetadata || saving || loadState !== "ready") return;
+    if (!canEditMetadata || saving || loadState !== "ready" || !similarReferencesReady) return;
 
     try {
       setSaving(true);
@@ -462,6 +477,7 @@ export default function ArtistSongEditor({
         throw new Error(result.error || "Failed to save track details");
       }
 
+      await saveSimilarSongReferences(songId, similarReferences, artist.id);
       const revisionPending = Boolean(result.revision_pending);
       setTitle(result.song.title);
       setMessage(
@@ -618,6 +634,8 @@ export default function ArtistSongEditor({
             disabled={metadataDisabled}
           />
 
+          <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={metadataDisabled || !similarReferencesReady} />
+
           <ArtistSongCreditsRightsSections
             credits={credits}
             onCreditsChange={setCredits}
@@ -713,7 +731,7 @@ export default function ArtistSongEditor({
               {canEditMetadata ? (
                 <button
                   type="submit"
-                  disabled={saving || !title.trim()}
+                  disabled={saving || !title.trim() || !similarReferencesReady}
                   className="filmwave-backend-button filmwave-backend-button-primary w-full"
                 >
                   {saving ? "Saving..." : "Save Changes"}
