@@ -30,6 +30,14 @@ import {
   SONG_HARMONIC_PROFILE_VERSION,
 } from "@/lib/audioHarmonicFeatures";
 import {
+  ensurePublishedSongMeritEmbeddings,
+  getSongMeritEmbeddingStats,
+  refreshPublishedSongMeritEmbedding,
+  SONG_MERIT_EMBEDDING_DIMENSIONS,
+  SONG_MERIT_MODEL_ID,
+  SONG_MERIT_MODEL_KEY,
+} from "@/lib/audioMeritEmbeddings";
+import {
   backfillPublishedSongSearchEmbeddings,
   ensurePublishedSongSearchEmbeddings,
   getSongSearchEmbeddingStats,
@@ -145,12 +153,14 @@ export async function GET() {
       discogsSimilarityStats,
       rhythmProfileStats,
       harmonicProfileStats,
+      meritEmbeddingStats,
     ] = await Promise.all([
       getSongSearchEmbeddingStats(),
       getSongClapEmbeddingStats(),
       getSongDiscogsEmbeddingStats(),
       getSongRhythmProfileStats(),
       getSongHarmonicProfileStats(),
+      getSongMeritEmbeddingStats(),
     ]);
 
     return NextResponse.json({
@@ -177,6 +187,12 @@ export async function GET() {
         stats: harmonicProfileStats,
         profileVersion: SONG_HARMONIC_PROFILE_VERSION,
       },
+      meritSimilarity: {
+        stats: meritEmbeddingStats,
+        analysisModel: SONG_MERIT_MODEL_ID,
+        embeddingModel: SONG_MERIT_MODEL_KEY,
+        dimensions: SONG_MERIT_EMBEDDING_DIMENSIONS,
+      },
     });
   } catch (error) {
     console.error("Failed to load semantic search status:", error);
@@ -199,6 +215,37 @@ export async function POST(request: Request) {
         : {};
     const action = typeof payload.action === "string" ? payload.action : "";
 
+
+    if (action === "merit-backfill") {
+      const updated = await ensurePublishedSongMeritEmbeddings(1);
+      const stats = await getSongMeritEmbeddingStats();
+
+      return NextResponse.json({
+        action,
+        updated,
+        stats,
+        analysisModel: SONG_MERIT_MODEL_ID,
+        embeddingModel: SONG_MERIT_MODEL_KEY,
+        dimensions: SONG_MERIT_EMBEDDING_DIMENSIONS,
+      });
+    }
+
+    if (action === "merit-refresh") {
+      const songId =
+        typeof payload.songId === "string" ? payload.songId.trim() : "";
+
+      if (!songId) {
+        return NextResponse.json(
+          { error: "songId is required" },
+          { status: 400 },
+        );
+      }
+
+      const updated = await refreshPublishedSongMeritEmbedding(songId);
+      const stats = await getSongMeritEmbeddingStats();
+
+      return NextResponse.json({ action, songId, updated, stats });
+    }
 
     if (action === "harmonic-backfill") {
       const requestedBatchSize = Number(payload.batchSize);
@@ -406,7 +453,7 @@ export async function POST(request: Request) {
     }
 
     return NextResponse.json(
-      { error: "action must be harmonic-backfill, harmonic-refresh, rhythm-backfill, rhythm-refresh, discogs-backfill, discogs-refresh, audio-backfill, audio-refresh, backfill, refresh, or search" },
+      { error: "action must be merit-backfill, merit-refresh, harmonic-backfill, harmonic-refresh, rhythm-backfill, rhythm-refresh, discogs-backfill, discogs-refresh, audio-backfill, audio-refresh, backfill, refresh, or search" },
       { status: 400 },
     );
   } catch (error) {
