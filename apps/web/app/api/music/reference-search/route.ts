@@ -170,6 +170,9 @@ function getTempoSimilarity(
 
 function scoreMatch({
   audioSimilarity,
+  bestSegmentSimilarity,
+  averageBestSegmentSimilarity,
+  consistentSegmentSimilarity,
   instrumentationSimilarity,
   characterSimilarity,
   rhythmSimilarity,
@@ -177,6 +180,9 @@ function scoreMatch({
   tempoSimilarity,
 }: {
   audioSimilarity: number;
+  bestSegmentSimilarity: number;
+  averageBestSegmentSimilarity: number;
+  consistentSegmentSimilarity: number;
   instrumentationSimilarity: number;
   characterSimilarity: number;
   rhythmSimilarity: number;
@@ -184,14 +190,17 @@ function scoreMatch({
   tempoSimilarity: number | null;
 }) {
   const signals = [
-    { score: audioSimilarity, weight: 0.55 },
-    { score: instrumentationSimilarity, weight: 0.2 },
-    { score: characterSimilarity, weight: 0.1 },
-    { score: rhythmSimilarity, weight: 0.075 },
-    { score: energyDensitySimilarity, weight: 0.05 },
+    { score: audioSimilarity, weight: 0.42 },
+    { score: consistentSegmentSimilarity, weight: 0.15 },
+    { score: averageBestSegmentSimilarity, weight: 0.08 },
+    { score: bestSegmentSimilarity, weight: 0.03 },
+    { score: instrumentationSimilarity, weight: 0.15 },
+    { score: characterSimilarity, weight: 0.08 },
+    { score: rhythmSimilarity, weight: 0.04 },
+    { score: energyDensitySimilarity, weight: 0.03 },
     ...(tempoSimilarity === null
       ? []
-      : [{ score: tempoSimilarity, weight: 0.025 }]),
+      : [{ score: tempoSimilarity, weight: 0.02 }]),
   ];
 
   const totalWeight = signals.reduce(
@@ -411,6 +420,12 @@ export async function POST(request: Request) {
             songId: result.songId,
             score: scoreMatch({
               audioSimilarity: result.similarity,
+              bestSegmentSimilarity:
+                result.bestSegmentSimilarity,
+              averageBestSegmentSimilarity:
+                result.averageBestSegmentSimilarity,
+              consistentSegmentSimilarity:
+                result.consistentSegmentSimilarity,
               instrumentationSimilarity:
                 conceptSimilarity.instrumentation,
               characterSimilarity:
@@ -478,7 +493,7 @@ export async function POST(request: Request) {
             result.energyDensitySimilarity.toFixed(6),
           ),
         }));
-      ranking = "audio-clap-concepts-v4-baseline";
+      ranking = "audio-clap-fulltrack-segments-v5";
     }
 
     return NextResponse.json(
