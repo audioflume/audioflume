@@ -21,6 +21,12 @@ import {
   getPublishedSongRhythmProfiles,
   getSongRhythmProfileStats,
 } from "@/lib/audioRhythmFeatures";
+import {
+  compareHarmonicProfiles,
+  createHarmonicProfile,
+  getPublishedSongHarmonicProfiles,
+  getSongHarmonicProfileStats,
+} from "@/lib/audioHarmonicFeatures";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -192,6 +198,7 @@ function scoreMatch({
   tempoSimilarity,
   discogsSimilarity,
   detailedRhythmSimilarity,
+  harmonicSimilarity,
 }: {
   audioSimilarity: number;
   bestSegmentSimilarity: number;
@@ -204,9 +211,10 @@ function scoreMatch({
   tempoSimilarity: number | null;
   discogsSimilarity: number | null;
   detailedRhythmSimilarity: number | null;
+  harmonicSimilarity: number | null;
 }) {
   const signals = [
-    { score: audioSimilarity, weight: 0.26 },
+    { score: audioSimilarity, weight: 0.18 },
     { score: consistentSegmentSimilarity, weight: 0.15 },
     { score: averageBestSegmentSimilarity, weight: 0.08 },
     { score: bestSegmentSimilarity, weight: 0.03 },
@@ -220,6 +228,9 @@ function scoreMatch({
     ...(detailedRhythmSimilarity === null
       ? []
       : [{ score: detailedRhythmSimilarity, weight: 0.06 }]),
+    ...(harmonicSimilarity === null
+      ? []
+      : [{ score: harmonicSimilarity, weight: 0.08 }]),
     ...(tempoSimilarity === null
       ? []
       : [{ score: tempoSimilarity, weight: 0.02 }]),
@@ -389,14 +400,17 @@ export async function POST(request: Request) {
 
     const profile = await getReferenceProfile(trackId);
     const referenceBpm = Number(profile.track.bpm ?? 0) || null;
-    const [embeddingStats, discogsStats, rhythmStats] = await Promise.all([
-      getSongClapEmbeddingStats(),
-      getSongDiscogsEmbeddingStats().catch(() => null),
-      getSongRhythmProfileStats().catch(() => null),
-    ]);
+    const [embeddingStats, discogsStats, rhythmStats, harmonicStats] =
+      await Promise.all([
+        getSongClapEmbeddingStats(),
+        getSongDiscogsEmbeddingStats().catch(() => null),
+        getSongRhythmProfileStats().catch(() => null),
+        getSongHarmonicProfileStats().catch(() => null),
+      ]);
     const clapReady = embeddingStats.embeddedSongs > 0;
     const discogsReady = (discogsStats?.embeddedSongs ?? 0) > 0;
     const rhythmReady = (rhythmStats?.profiledSongs ?? 0) > 0;
+    const harmonicReady = (harmonicStats?.profiledSongs ?? 0) > 0;
 
     let matches;
     let ranking;
@@ -439,21 +453,38 @@ export async function POST(request: Request) {
         ]),
       );
 
-      const [audioSearch, referenceRhythmProfile, candidateRhythmProfiles] =
-        await Promise.all([
-          scorePublishedSongsByClapSimilarity(
-            profile.previewUrl,
-            ids,
-          ),
-          rhythmReady
-            ? createRhythmProfile(profile.previewUrl)
-            : Promise.resolve(null),
-          rhythmReady
-            ? getPublishedSongRhythmProfiles(ids)
-            : Promise.resolve([]),
-        ]);
+      const [
+        audioSearch,
+        referenceRhythmProfile,
+        candidateRhythmProfiles,
+        referenceHarmonicProfile,
+        candidateHarmonicProfiles,
+      ] = await Promise.all([
+        scorePublishedSongsByClapSimilarity(
+          profile.previewUrl,
+          ids,
+        ),
+        rhythmReady
+          ? createRhythmProfile(profile.previewUrl)
+          : Promise.resolve(null),
+        rhythmReady
+          ? getPublishedSongRhythmProfiles(ids)
+          : Promise.resolve([]),
+        harmonicReady
+          ? createHarmonicProfile(profile.previewUrl)
+          : Promise.resolve(null),
+        harmonicReady
+          ? getPublishedSongHarmonicProfiles(ids)
+          : Promise.resolve([]),
+      ]);
       const rhythmProfileBySongId = new Map(
         candidateRhythmProfiles.map((candidateProfile) => [
+          candidateProfile.songId,
+          candidateProfile,
+        ]),
+      );
+      const harmonicProfileBySongId = new Map(
+        candidateHarmonicProfiles.map((candidateProfile) => [
           candidateProfile.songId,
           candidateProfile,
         ]),
@@ -495,6 +526,15 @@ export async function POST(request: Request) {
                   candidateRhythmProfile,
                 )
               : null;
+          const candidateHarmonicProfile =
+            harmonicProfileBySongId.get(result.songId);
+          const harmonicSimilarity =
+            referenceHarmonicProfile && candidateHarmonicProfile
+              ? compareHarmonicProfiles(
+                  referenceHarmonicProfile,
+                  candidateHarmonicProfile,
+                )
+              : null;
 
           return {
             songId: result.songId,
@@ -516,10 +556,12 @@ export async function POST(request: Request) {
               tempoSimilarity,
               discogsSimilarity,
               detailedRhythmSimilarity,
+              harmonicSimilarity,
             }),
             audioSimilarity: result.similarity,
             discogsSimilarity,
             detailedRhythmSimilarity,
+            harmonicSimilarity,
             bestSegmentSimilarity:
               result.bestSegmentSimilarity,
             averageBestSegmentSimilarity:
@@ -559,6 +601,10 @@ export async function POST(request: Request) {
             result.detailedRhythmSimilarity === null
               ? null
               : Number(result.detailedRhythmSimilarity.toFixed(6)),
+          harmonicSimilarity:
+            result.harmonicSimilarity === null
+              ? null
+              : Number(result.harmonicSimilarity.toFixed(6)),
           bestSegmentSimilarity: Number(
             result.bestSegmentSimilarity.toFixed(6),
           ),
@@ -585,11 +631,13 @@ export async function POST(request: Request) {
             result.energyDensitySimilarity.toFixed(6),
           ),
         }));
-      ranking = rhythmReady
-        ? "audio-clap-discogs-rhythm-rerank-v8"
-        : discogsReady
-          ? "audio-clap-discogs-weighted-rerank-v7"
-          : "audio-clap-fulltrack-segments-v5";
+      ranking = harmonicReady
+        ? "audio-clap-discogs-rhythm-harmonic-rerank-v9"
+        : rhythmReady
+          ? "audio-clap-discogs-rhythm-rerank-v8"
+          : discogsReady
+            ? "audio-clap-discogs-weighted-rerank-v7"
+            : "audio-clap-fulltrack-segments-v5";
     }
 
     return NextResponse.json(
