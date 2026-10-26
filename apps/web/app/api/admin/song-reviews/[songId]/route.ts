@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 
 import { requireAdmin } from "@/lib/admin";
 import { refreshPublishedSongClapEmbedding } from "@/lib/audioClapEmbeddings";
+import { refreshPublishedSongDiscogsEmbedding } from "@/lib/audioDiscogsEmbeddings";
 import { createArtistNotificationForMembers } from "@/lib/artistNotifications";
 import { deleteFilesFromR2 } from "@/lib/r2";
 import {
@@ -462,6 +463,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (updatedSong.status === "published") {
       try {
         await refreshPublishedSongClapEmbedding(songId);
+      await refreshPublishedSongDiscogsEmbedding(songId);
       } catch (embeddingError) {
         console.error(
           `Failed to generate Reference Search analysis for published song ${songId}:`,
