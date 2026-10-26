@@ -25,6 +25,10 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
   color: var(--text-primary);
 }
 
+.audioflume-home-landing {
+  padding-top: 0;
+}
+
 .audioflume-home-reference a:not(.audioflume-arrow-text-link) {
   color: inherit;
 }
@@ -78,15 +82,12 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
 }
 
 .audioflume-home-landing .audioflume-home-reference-hero {
-  height: calc(
-    100dvh - 28px - var(--filmwave-header-height, 60px)
-  );
+  height: 100dvh;
 }
 
 .audioflume-home-landing.has-player .audioflume-home-reference-hero {
   height: calc(
-    100dvh - 28px - var(--filmwave-header-height, 60px) -
-      var(--filmwave-player-height, 72px)
+    100dvh - var(--filmwave-player-height, 72px)
   );
 }
 
@@ -2749,15 +2750,12 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave
   }
 
   .audioflume-home-landing .audioflume-home-reference-hero {
-    height: calc(
-      100dvh - 28px - var(--filmwave-header-height, 60px)
-    );
+    height: 100dvh;
   }
 
   .audioflume-home-landing.has-player .audioflume-home-reference-hero {
     height: calc(
-      100dvh - 28px - var(--filmwave-header-height, 60px) -
-        var(--filmwave-player-height, 72px)
+      100dvh - var(--filmwave-player-height, 72px)
     );
   }
 
