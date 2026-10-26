@@ -157,9 +157,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-reference-original-song-card-copy strong {
   overflow: hidden;
-  font-size: 14.5px;
+  font-size: 13px;
   font-weight: 400;
-  line-height: 1.35;
+  letter-spacing: normal;
+  line-height: 1.15;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -2206,8 +2207,9 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 
 .audioflume-home-lifetime-v2-song-copy strong {
   color: #ffffff;
-  font-size: 14px;
-  font-weight: 500;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: normal;
   line-height: 1.15;
 }
 
