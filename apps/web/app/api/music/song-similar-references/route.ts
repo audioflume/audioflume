@@ -85,13 +85,18 @@ export async function PUT(request: Request) {
         ? item.imageUrl.slice(0, 600) : null;
       rows.push({ song_id: songId, deezer_track_id: match[1], title, artist, image_url: imageUrl, position });
     }
-    // Delete and insert are intentionally scoped to the authorized song only.
-    const { error: deleteError } = await supabaseServer.from("song_similar_references").delete().eq("song_id", songId);
-    if (deleteError) throw deleteError;
+    // Upsert first so an insert failure never clears the existing references.
     if (rows.length) {
-      const { error: insertError } = await supabaseServer.from("song_similar_references").insert(rows);
-      if (insertError) throw insertError;
+      const { error: upsertError } = await supabaseServer.from("song_similar_references")
+        .upsert(rows, { onConflict: "song_id,deezer_track_id" });
+      if (upsertError) throw upsertError;
     }
+    let deletion = supabaseServer.from("song_similar_references").delete().eq("song_id", songId);
+    if (rows.length) {
+      deletion = deletion.not("deezer_track_id", "in", `(${rows.map((row) => row.deezer_track_id).join(",")})`);
+    }
+    const { error: deleteError } = await deletion;
+    if (deleteError) throw deleteError;
     return NextResponse.json({ ok: true });
   } catch (error) { return failure(error); }
 }
