@@ -1352,35 +1352,21 @@ export default function MusicPage() {
         value={searchBySongQuery}
         onChange={setSearchBySongQuery}
         onClose={() => setSearchBySongOpen(false)}
-        onSubmit={async (query, result) => {
-          setSearchBySongQuery(query);
-
+        onSubmit={async (query, result, signal) => {
+          if (signal?.aborted) return;
           if (result?.kind !== "track") {
+            setSearchBySongQuery(query);
             setSearchBySongOpen(false);
             setSearch(query);
             return;
           }
-
-          setFilters((current) => ({
-            ...current,
-            search: query,
-          }));
-          setSemanticSearchState(null);
-          setReferenceSearchState({
-            referenceId: result.id,
-            query,
-            name: result.name,
-            artist: result.artist,
-            imageUrl: result.imageUrl,
-            status: "loading",
-            songIds: [],
-          });
 
           try {
             const response = await fetch("/api/music/reference-search", {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ referenceId: result.id }),
+              signal,
             });
 
             if (!response.ok) {
@@ -1388,6 +1374,10 @@ export default function MusicPage() {
             }
 
             const data = await response.json();
+            if (signal?.aborted) return;
+            setSearchBySongQuery(query);
+            setFilters((current) => ({ ...current, search: query }));
+            setSemanticSearchState(null);
             setReferenceSearchState({
               referenceId: result.id,
               query,
@@ -1399,8 +1389,8 @@ export default function MusicPage() {
             });
             setSearchBySongOpen(false);
           } catch (error) {
+            if (signal?.aborted) return;
             console.error("Reference music search failed:", error);
-            setReferenceSearchState(null);
             throw error;
           }
         }}
