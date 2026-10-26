@@ -334,7 +334,6 @@ export default function ReferenceSearchModal({
             className={styles.searchForm}
             onSubmit={(event) => {
               event.preventDefault();
-              submitQuery(value);
             }}
           >
             <label className={styles.field}>
@@ -346,6 +345,12 @@ export default function ReferenceSearchModal({
                 onChange={(event) => {
                   onChange(event.target.value);
                   setDropdownOpen(true);
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Enter") {
+                    event.preventDefault();
+                    event.stopPropagation();
+                  }
                 }}
                 onFocus={() => {
                   if (
