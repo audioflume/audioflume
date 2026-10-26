@@ -188,24 +188,6 @@ export default function AdminSongActionsDropdown({
           Copy Audio URL
         </button>
 
-        {hasEditPoints ? (
-          <Link href={editPointsHref} onClick={() => onOpenChange(false)}>
-            Cue Point Manager
-          </Link>
-        ) : (
-          <button
-            type="button"
-            onClick={analyzeEditPoints}
-            disabled={!audioUrl || isAnalyzing}
-          >
-            <span className="inline-flex items-center gap-2">
-              {isAnalyzing && (
-                <LoadingSpinner size={12} stroke={12} color="currentColor" />
-              )}
-              {isAnalyzing ? "Analyzing..." : "Analyze Cue Points"}
-            </span>
-          </button>
-        )}
 
         <button
           type="button"
