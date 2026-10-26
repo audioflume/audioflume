@@ -1,5 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
-import { loadEnvConfig } from "@next/env";
+import nextEnv from "@next/env";
+
+const { loadEnvConfig } = nextEnv;
 import { fileURLToPath } from "node:url";
 
 const projectDir = fileURLToPath(new URL("..", import.meta.url));
