@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { SongFormSection } from "@/components/backend/SongFormSection";
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import type { SimilarSongReference } from "@/lib/similarSongReferences";
@@ -32,6 +32,18 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
   const [busy, setBusy] = useState(false);
   const [suggestionsBusy, setSuggestionsBusy] = useState(false);
   const [error, setError] = useState("");
+  const artistRequestRef = useRef<AbortController | null>(null);
+
+  function closeSimilarArtists() {
+    artistRequestRef.current?.abort();
+    artistRequestRef.current = null;
+    setReferenceTrackId("");
+    setRelatedArtists([]);
+    setSuggestions([]);
+    setSelectedArtistId(null);
+    setSuggestionsBusy(false);
+    setError("");
+  }
 
   useEffect(() => {
     if (query.trim().length < 2) {
@@ -70,6 +82,13 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
   }
 
   async function showSimilarArtists(reference: SimilarSongReference) {
+    if (referenceTrackId === reference.id.replace(/^deezer:track:/, "")) {
+      closeSimilarArtists();
+      return;
+    }
+    artistRequestRef.current?.abort();
+    const controller = new AbortController();
+    artistRequestRef.current = controller;
     setQuery("");
     setResults([]);
     const trackId = reference.id.replace(/^deezer:track:/, "");
@@ -79,8 +98,9 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
     setSelectedArtistId(null);
     setReferenceTrackId(trackId);
     try {
-      const response = await fetch(`/api/music/similar-song-suggestions?trackId=${trackId}&mode=artists`);
+      const response = await fetch(`/api/music/similar-song-suggestions?trackId=${trackId}&mode=artists`, { signal: controller.signal });
       const body = await response.json();
+      if (controller.signal.aborted) return;
       if (!response.ok) throw new Error(body.error || "Related artists unavailable");
       setRelatedArtists(body.artists || []);
       if (!(body.artists || []).length) {
@@ -89,27 +109,37 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
         setError("");
       }
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Related artists unavailable");
+      if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "Related artists unavailable");
     } finally {
-      setSuggestionsBusy(false);
+      if (artistRequestRef.current === controller) {
+        artistRequestRef.current = null;
+        setSuggestionsBusy(false);
+      }
     }
   }
 
   async function showArtistTracks(artistId: number | null) {
     if (!referenceTrackId) return;
+    artistRequestRef.current?.abort();
+    const controller = new AbortController();
+    artistRequestRef.current = controller;
     setSelectedArtistId(artistId);
     setSuggestionsBusy(true);
     try {
       const url = `/api/music/similar-song-suggestions?trackId=${referenceTrackId}${artistId ? `&artistId=${artistId}` : ""}`;
-      const response = await fetch(url);
+      const response = await fetch(url, { signal: controller.signal });
       const body = await response.json();
+      if (controller.signal.aborted) return;
       if (!response.ok) throw new Error(body.error || "Suggestions unavailable");
       setSuggestions(body.results || []);
       setError("");
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Suggestions unavailable");
+      if (!controller.signal.aborted) setError(cause instanceof Error ? cause.message : "Suggestions unavailable");
     } finally {
-      setSuggestionsBusy(false);
+      if (artistRequestRef.current === controller) {
+        artistRequestRef.current = null;
+        setSuggestionsBusy(false);
+      }
     }
   }
 
@@ -149,7 +179,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
             <div key={item.id} className="flex items-center gap-2">
               <div className="min-w-0 flex-1 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
               <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
-              <button type="button" disabled={suggestionsBusy} onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary">Show similar artists</button>
+              <button type="button" onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary">{referenceTrackId === item.id.replace(/^deezer:track:/, "") ? "Hide similar artists" : "Show similar artists"}</button>
               <button type="button" aria-label={`Remove ${item.name}`} disabled={disabled} onClick={() => onChange(value.filter((track) => track.id !== item.id))} className="filmwave-backend-button filmwave-backend-button-secondary">Remove</button>
             </div>
           ))}
@@ -157,7 +187,10 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
       )}
       {referenceTrackId && (
         <div className="grid gap-2">
-          <div className="text-[11px] font-medium text-[var(--text-secondary)]">Similar artists</div>
+          <div className="flex items-center justify-between gap-3">
+            <div className="text-[11px] font-medium text-[var(--text-secondary)]">Similar artists</div>
+            <button type="button" onClick={closeSimilarArtists} className="filmwave-backend-button filmwave-backend-button-secondary">Close</button>
+          </div>
           {relatedArtists.length > 0 ? (
             <div className="flex flex-wrap gap-2">
               <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(null)} disabled={suggestionsBusy}>All artists</button>
