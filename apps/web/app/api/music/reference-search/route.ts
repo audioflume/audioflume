@@ -741,7 +741,7 @@ export async function POST(request: Request) {
       const existingMatches = new Map(matches.map((result) => [result.songId, result]));
       const promoted = matchingIds
         .filter((id) => publishedIds.has(id))
-        .map((id) => existingMatches.get(id) ?? { songId: id, score: 1 });
+        .map((id) => existingMatches.get(id) ?? ({ songId: id, score: 1 } as (typeof matches)[number]));
       const promotedIds = new Set(promoted.map((result) => result.songId));
       matches = [...promoted, ...matches.filter((result) => !promotedIds.has(result.songId))]
         .slice(0, MAX_RESULT_COUNT);
