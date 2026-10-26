@@ -2462,7 +2462,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-featured-song-art:hover
   .audioflume-home-featured-song-play,
 .audioflume-home-featured-song-art:focus-visible
-  .audioflume-home-featured-song-play,
+  .audioflume-home-featured-song-play {
+  transform: scale(1.02);
+}
+
 .audioflume-home-featured-song-card.is-active
   .audioflume-home-featured-song-play {
   background: #ffffff;
