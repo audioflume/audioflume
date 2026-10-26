@@ -125,6 +125,38 @@ body:has(.audioflume-home-landing)
     linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 58%);
 }
 
+.audioflume-home-reference-hero-trust {
+  position: absolute;
+  right: 0;
+  bottom: 38px;
+  left: 0;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
+  align-items: center;
+  gap: 72px;
+}
+
+.audioflume-home-reference-hero-trust > p {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.34);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1.4;
+}
+
+.audioflume-home-reference-logo-row {
+  min-width: 0;
+}
+
+.audioflume-home-reference-logo-row img {
+  display: block;
+  width: 100%;
+  height: auto;
+  opacity: 0.86;
+}
+
 .audioflume-home-reference-hero-headline {
   position: absolute;
   inset: 0;
@@ -981,6 +1013,17 @@ body:has(.audioflume-home-landing)
 }
 
 @media (max-width: 620px) {
+  .audioflume-home-reference-hero-trust {
+    bottom: 26px;
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .audioflume-home-reference-hero-trust > p {
+    display: none;
+  }
+
+
   .audioflume-home-skeleton-playlist-card
     .audioflume-home-skeleton-block.is-playlist-kicker {
     top: 18px;
