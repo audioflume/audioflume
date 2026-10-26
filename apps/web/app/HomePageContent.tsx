@@ -1012,18 +1012,12 @@ export default function HomePageContent({
         </div>
 
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-intro-heading">
-          <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
-          <Link
-            href="/discover"
-            className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
-          >
-            Explore artists
-            <ArrowUpRightIcon
-              size={16}
-              strokeWidth={1.5}
-              className="translate-y-[2px]"
-            />
-          </Link>
+          <h1 className="audioflume-home-mockup-intro-title">
+            Human made music &amp; SFX for film.
+          </h1>
+          <span className="audioflume-editorial-meta audioflume-home-mockup-intro-trending">
+            1500+ ARTISTS TRENDING ONLINE
+          </span>
         </div>
       </section>
 
