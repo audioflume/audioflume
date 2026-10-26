@@ -1229,7 +1229,10 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 .audioflume-home-mockup-intro-title {
+  display: inline-flex;
   min-width: 0;
+  align-items: center;
+  gap: 6px;
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -1237,6 +1240,24 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   font-weight: 400;
   letter-spacing: -0.065em;
   line-height: 1.04;
+}
+
+.audioflume-home-mockup-intro-mark {
+  width: 41px;
+  height: 41px;
+  flex: 0 0 41px;
+}
+
+@media (max-width: 760px) {
+  .audioflume-home-mockup-intro-title {
+    gap: 5px;
+  }
+
+  .audioflume-home-mockup-intro-mark {
+    width: 34px;
+    height: 34px;
+    flex-basis: 34px;
+  }
 }
 
 .audioflume-home-mockup-intro-heading > span {
