@@ -16,6 +16,8 @@ import {
   BackendSelect,
 } from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
+import BackendSimilarSongs from "@/components/backend/BackendSimilarSongs";
+import { saveSimilarSongReferences, type SimilarSongReference } from "@/lib/similarSongReferences";
 import { SongFormSection } from "@/components/backend/SongFormSection";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
 import ChevronUpIcon from "@/components/icons/ChevronUpIcon";
@@ -258,6 +260,7 @@ export default function ArtistSongUploadForm({
   const [waveformPeaks, setWaveformPeaks] = useState("");
   const [duration, setDuration] = useState(0);
   const [title, setTitle] = useState("");
+  const [similarReferences, setSimilarReferences] = useState<SimilarSongReference[]>([]);
   const [bpm, setBpm] = useState("");
   const [songKey, setSongKey] = useState("");
   const [genres, setGenres] = useState<string[]>([]);
@@ -601,6 +604,7 @@ export default function ArtistSongUploadForm({
     setError("");
     setWarningsOpen(false);
     setUploadComplete(false);
+    setSimilarReferences([]);
     window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
@@ -771,6 +775,10 @@ export default function ArtistSongUploadForm({
         }
       }
 
+      if (similarReferences.length) {
+        setSaveStatus("Saving similar-song references...");
+        await saveSimilarSongReferences(uploadedSong.id, similarReferences, artist.id);
+      }
       setUploadComplete(true);
       setSaveStatus("Song uploaded and saved as a draft.");
     } catch (uploadError) {
@@ -1034,6 +1042,8 @@ export default function ArtistSongUploadForm({
             onVocalsChange={setVocals}
             disabled={!canEditMetadata || busy || uploadComplete}
           />
+
+          <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={!canEditMetadata || busy || uploadComplete} />
 
           <ArtistSongCreditsRightsSections
             credits={credits}
