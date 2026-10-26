@@ -201,11 +201,6 @@ export default function AdminMusicLibraryPage() {
     { key: "songInfo", label: "Missing Info", count: issueCounts.songInfo },
     { key: "peakData", label: "Missing Peaks", count: issueCounts.peakData },
     { key: "tags", label: "Missing Tags", count: issueCounts.tags },
-    {
-      key: "editPoints",
-      label: "Missing Cue Points",
-      count: issueCounts.editPoints,
-    },
   ];
 
   const searchedSongs = useMemo(() => {
