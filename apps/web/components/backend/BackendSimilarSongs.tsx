@@ -192,9 +192,26 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
                   </div>
                   {relatedArtists.length > 0 ? (
                     <div className="flex flex-wrap gap-2">
-                      <button type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(null)} disabled={suggestionsBusy}>All artists</button>
+                      <button
+                        type="button"
+                        className="inline-flex min-h-6 items-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-2.5 py-1 text-[10px] font-normal leading-none text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40 aria-pressed:bg-[var(--text-primary)] aria-pressed:text-[var(--bg-primary)]"
+                        onClick={() => void showArtistTracks(null)}
+                        disabled={suggestionsBusy}
+                        aria-pressed={selectedArtistId === null}
+                      >
+                        All artists
+                      </button>
                       {relatedArtists.map((artist) => (
-                        <button key={artist.id} type="button" className="filmwave-backend-button filmwave-backend-button-secondary" onClick={() => void showArtistTracks(artist.id)} disabled={suggestionsBusy} aria-pressed={selectedArtistId === artist.id}>{artist.name}</button>
+                        <button
+                          key={artist.id}
+                          type="button"
+                          className="inline-flex min-h-6 items-center rounded-full border border-[var(--border)] bg-[var(--bg-secondary)] px-2.5 py-1 text-[10px] font-normal leading-none text-[var(--text-secondary)] transition-colors hover:bg-[var(--bg-tertiary)] hover:text-[var(--text-primary)] disabled:cursor-not-allowed disabled:opacity-40 aria-pressed:bg-[var(--text-primary)] aria-pressed:text-[var(--bg-primary)]"
+                          onClick={() => void showArtistTracks(artist.id)}
+                          disabled={suggestionsBusy}
+                          aria-pressed={selectedArtistId === artist.id}
+                        >
+                          {artist.name}
+                        </button>
                       ))}
                     </div>
                   ) : (
