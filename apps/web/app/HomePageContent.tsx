@@ -38,7 +38,7 @@ import { useSongs } from "@/hooks/useSongs";
 import type { Song } from "@/lib/types";
 
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
+  "https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg";
 
 const NEW_SONG_COUNT = 12;
 type HomeArtist = {
