@@ -1584,7 +1584,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-shelf-scrollbar-thumb {
   position: absolute;
   top: auto;
-  bottom: 0;
+  bottom: calc(-1 * var(--filmwave-border-width));
   left: 0;
   height: 2.5px;
   background: var(--text-primary);
