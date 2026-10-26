@@ -79,14 +79,17 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
     setSelectedArtistId(null);
     setReferenceTrackId(trackId);
     try {
-      const response = await fetch(`/api/music/similar-song-suggestions?trackId=${trackId}`);
+      const response = await fetch(`/api/music/similar-song-suggestions?trackId=${trackId}&mode=artists`);
       const body = await response.json();
-      if (!response.ok) throw new Error(body.error || "Suggestions unavailable");
-      setSuggestions(body.results || []);
+      if (!response.ok) throw new Error(body.error || "Related artists unavailable");
       setRelatedArtists(body.artists || []);
-      setError("");
+      if (!(body.artists || []).length) {
+        setError("No related artists were returned for this recording.");
+      } else {
+        setError("");
+      }
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : "Suggestions unavailable");
+      setError(cause instanceof Error ? cause.message : "Related artists unavailable");
     } finally {
       setSuggestionsBusy(false);
     }
