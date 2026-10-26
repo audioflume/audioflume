@@ -149,7 +149,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-reference-hero-headline .is-human {
   top: 31%;
-  left: 0;
+  left: -0.035em;
 }
 
 .audioflume-home-reference-hero-headline .is-made {
@@ -2785,7 +2785,7 @@ body:has(.audioflume-home-landing)
 
   .audioflume-home-reference-hero-headline .is-human {
     top: 29%;
-    left: 0;
+    left: -0.035em;
   }
 
   .audioflume-home-reference-hero-headline .is-made {
