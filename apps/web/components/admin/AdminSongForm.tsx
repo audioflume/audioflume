@@ -950,7 +950,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
       .then((refs) => {
         if (!cancelled) { setSimilarReferences(refs); setSimilarReferencesReady(true); }
       })
-      .catch((cause) => { if (!cancelled) setLoadError(cause instanceof Error ? cause.message : "Unable to load similar songs"); });
+      .catch(() => { if (!cancelled) setSaveStatus("Similar-song references unavailable; other song fields remain editable."); });
     return () => { cancelled = true; };
   }, [isEditMode, songId, isAdmin]);
 
@@ -1354,7 +1354,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   };
 
   const handleSaveSong = async () => {
-    if (!similarReferencesReady) return;
     setSaveStatus("");
     setSavedRecordId("");
     setUploadedFiles({
@@ -1495,7 +1494,9 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               signal: abortController.signal,
             });
 
-      await saveSimilarSongReferences(savedSong.id, similarReferences);
+      if (similarReferencesReady) {
+        await saveSimilarSongReferences(savedSong.id, similarReferences);
+      }
       setSavedRecordId(savedSong.id);
       setExistingAudioUrl(finalAudioUrl);
       setExistingCoverUrl(finalCoverUrl || "");
@@ -1971,7 +1972,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                   onClick={
                     uploadComplete && !isEditMode ? resetPage : undefined
                   }
-                  disabled={isSaving || isGeneratingPeaks || !similarReferencesReady}
+                  disabled={isSaving || isGeneratingPeaks}
                   className="w-full"
                 >
                   {!isSaving && <UploadIcon size={15} />}
