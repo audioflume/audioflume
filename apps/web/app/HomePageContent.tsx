@@ -483,12 +483,8 @@ function HomeReadyToCutSongCard({
           {song.title}
         </h3>
 
-        <div className="mt-1.5 flex min-w-0 items-center gap-1.5 text-[10px] leading-none text-[var(--text-muted)]">
+        <div className="mt-1.5 flex min-w-0 items-center text-[10px] leading-none text-[var(--text-muted)]">
           <span className="truncate">{song.artist}</span>
-          <span>•</span>
-          <span>{song.key || "—"}</span>
-          <span>•</span>
-          <span>{song.bpm ? `${song.bpm} BPM` : "—"}</span>
         </div>
       </div>
 
