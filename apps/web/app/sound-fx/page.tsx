@@ -52,7 +52,7 @@ export default function SoundFxPage() {
           align-items: center;
           margin-top: 10px;
           border: 0;
-          border-radius: 0;
+          border-radius: 28px;
           background: var(--filmwave-neutral-surface);
           box-shadow: 0 18px 42px rgba(0, 0, 0, 0.18);
         }
