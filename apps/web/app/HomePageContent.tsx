@@ -479,7 +479,7 @@ function HomeReadyToCutSongCard({
       <HomeReadyToCutCoverImage song={song} index={index} />
 
       <div className="min-w-0 flex-1">
-        <h3 className="truncate text-[13px] font-medium leading-none text-[var(--text-primary)]">
+        <h3 className="truncate text-[13px] font-normal leading-[1.15] tracking-normal text-[var(--text-primary)]">
           {song.title}
         </h3>
 
