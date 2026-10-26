@@ -601,7 +601,7 @@ body:has(.discover-page-root) .discover-reference-hero-mount {
     width: calc(100% - 40px);
     height: 58px;
     grid-template-columns: minmax(0, 1fr) 52px;
-    border-radius: 23px;
+    border-radius: 0;
   }
 
   .discover-category-search input {
