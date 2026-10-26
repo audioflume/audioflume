@@ -277,6 +277,8 @@ export default function ReferenceSearchModal({
 
     try {
       await onSubmit(cleanQuery, result, searchController.signal);
+    } catch (error) {
+      if (!searchController.signal.aborted) throw error;
     } finally {
       if (activeSearchRef.current === searchController) {
         activeSearchRef.current = null;
