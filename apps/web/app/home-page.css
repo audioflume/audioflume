@@ -1557,12 +1557,13 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-shelf-scrollbar {
   position: relative;
   width: calc(100% - (var(--audioflume-home-page-gutter) * 2));
-  height: 1.25px;
-  min-height: 1.25px;
-  max-height: 1.25px;
+  height: var(--filmwave-border-width);
+  min-height: var(--filmwave-border-width);
+  max-height: var(--filmwave-border-width);
   margin-right: var(--audioflume-home-page-gutter);
   margin-left: var(--audioflume-home-page-gutter);
-  background: var(--border);
+  border-bottom: var(--filmwave-border-width) solid var(--border);
+  background: transparent;
 }
 
 .audioflume-home-mockup-artists
