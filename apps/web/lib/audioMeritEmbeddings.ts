@@ -340,8 +340,11 @@ export function compareMeritEmbeddings(
   candidate: MeritEmbeddings,
 ) {
   return {
-    melody: cosineSimilarity(reference.melody, candidate.melody),
-    rhythm: cosineSimilarity(reference.rhythm, candidate.rhythm),
-    timbre: cosineSimilarity(reference.timbre, candidate.timbre),
+    melody:
+      (cosineSimilarity(reference.melody, candidate.melody) + 1) / 2,
+    rhythm:
+      (cosineSimilarity(reference.rhythm, candidate.rhythm) + 1) / 2,
+    timbre:
+      (cosineSimilarity(reference.timbre, candidate.timbre) + 1) / 2,
   };
 }
