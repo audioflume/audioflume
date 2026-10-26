@@ -1124,7 +1124,7 @@ export default function HomePageContent({
 
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-intro-heading">
           <h1 className="audioflume-home-mockup-intro-title">
-            Human made music &amp; SFX for film.
+            HUMAN MADE MUSIC &amp; SFX FOR FILM.
           </h1>
           <span className="audioflume-editorial-meta">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
