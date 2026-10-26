@@ -274,7 +274,7 @@ export default function MusicPlayer() {
     () => getAdjacentCuePoint(visibleCuePoints, currentTime, "next"),
     [visibleCuePoints, currentTime],
   );
-  const showCuePointControls =
+  const showCuePointControls = false &&
     effectiveShowEditPointMarkers &&
     showWaveform &&
     playerWidth >= 940 &&
