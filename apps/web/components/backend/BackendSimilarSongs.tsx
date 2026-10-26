@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SongFormSection } from "@/components/backend/SongFormSection";
+import XIcon from "@/components/icons/XIcon";
 import type { SimilarSongReference } from "@/lib/similarSongReferences";
 import { MAX_SIMILAR_SONG_REFERENCES } from "@/lib/similarSongReferences";
 
@@ -65,6 +66,10 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
 
   async function select(reference: CatalogResult) {
     add(reference);
+    await showSimilarArtists(reference);
+  }
+
+  async function showSimilarArtists(reference: SimilarSongReference) {
     setQuery("");
     setResults([]);
     const trackId = reference.id.replace(/^deezer:track:/, "");
@@ -108,18 +113,40 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
   return (
     <SongFormSection title="Similar Songs" bodyClassName="grid gap-3 px-5 pb-5">
       <p className="text-xs leading-5 text-[var(--text-secondary)]">
-        Optional. Add up to 10 commercial songs that sound like yours. These references do not affect Search by Song ranking yet.
+        Optional. Add up to 10 commercial songs that sound like yours. Exact matching references are prioritized in Search by Song.
       </p>
-      <input
-        type="search"
-        aria-label="Search similar reference songs"
-        value={query}
-        onChange={(event) => setQuery(event.target.value)}
-        onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }}
-        placeholder="Search for a song or artist..."
-        disabled={disabled || value.length >= MAX_SIMILAR_SONG_REFERENCES}
-        className="filmwave-backend-input w-full"
-      />
+      <div className="relative">
+        <span
+          aria-hidden="true"
+          className="pointer-events-none absolute left-[14px] top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[#a3a3a3]"
+        >
+          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current [stroke-linecap:round] [stroke-width:1.4]">
+            <circle cx="11" cy="11" r="6.5" />
+            <path d="m16 16 4.5 4.5" />
+          </svg>
+        </span>
+        <input
+          type="text"
+          role="searchbox"
+          aria-label="Search similar reference songs"
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+          onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }}
+          placeholder="Search for a song or artist..."
+          disabled={disabled || value.length >= MAX_SIMILAR_SONG_REFERENCES}
+          className="filmwave-backend-input filmwave-backend-search-input w-full"
+        />
+        {query ? (
+          <button
+            type="button"
+            aria-label="Clear search"
+            onClick={() => setQuery("")}
+            className="absolute right-[10px] top-1/2 flex h-[22px] w-[22px] -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
+          >
+            <XIcon size={8} strokeWidth={1.4} className="h-[21px] w-[21px]" />
+          </button>
+        ) : null}
+      </div>
       {busy && <p className="text-xs text-[var(--text-muted)]">Searching Deezer...</p>}
       {results.length > 0 && (
         <div className="grid gap-1 border-[1.25px] border-[var(--border)] p-2">
@@ -143,6 +170,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
             <div key={item.id} className="flex items-center gap-2">
               <div className="min-w-0 flex-1 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
               <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary">Spotify ↗</a>
+              <button type="button" disabled={suggestionsBusy} onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary">Show similar artists</button>
               <button type="button" aria-label={`Remove ${item.name}`} disabled={disabled} onClick={() => onChange(value.filter((track) => track.id !== item.id))} className="filmwave-backend-button filmwave-backend-button-secondary">Remove</button>
             </div>
           ))}
@@ -176,7 +204,6 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
           ))}
         </div>
       )}
-      <p className="text-[11px] text-[var(--text-secondary)]">Spotify links search for the song and artist; choose the correct recording there.</p>
       {error && <p role="alert" className="text-xs text-[var(--status-error)]">{error}</p>}
     </SongFormSection>
   );
