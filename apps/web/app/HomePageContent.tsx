@@ -711,6 +711,84 @@ function HomeCuratedPlaylistShelf({
   );
 }
 
+function HomeFeaturedSongCard({
+  song,
+  queue,
+}: {
+  song: Song;
+  queue: Song[];
+}) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const active = currentSong?.id === song.id;
+  const playing = active && isPlaying;
+
+  function playSong() {
+    if (!song.audioUrl) return;
+    setQueue(queue);
+    togglePlayPause(song);
+  }
+
+  return (
+    <article className="audioflume-home-featured-song-card">
+      <button
+        type="button"
+        className="audioflume-home-featured-song-art"
+        onClick={playSong}
+        disabled={!song.audioUrl}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {song.coverArt ? (
+          <img src={song.coverArt} alt="" draggable={false} />
+        ) : (
+          <span className="audioflume-home-featured-song-fallback">
+            <WaveformIcon size={24} />
+          </span>
+        )}
+        <span className="audioflume-home-featured-song-play" aria-hidden="true">
+          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+        </span>
+      </button>
+
+      <span className="audioflume-home-featured-song-copy">
+        <strong>{song.title}</strong>
+        <span>{song.artist}</span>
+      </span>
+    </article>
+  );
+}
+
+function HomeFeaturedSongShelf({ songs }: { songs: Song[] }) {
+  if (songs.length === 0) return null;
+
+  return (
+    <section className="audioflume-home-featured-songs">
+      <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+        <span>Featured songs</span>
+        <Link
+          href="/music"
+          className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+        >
+          Explore music
+          <ArrowUpRightIcon
+            size={16}
+            strokeWidth={1.5}
+            className="translate-y-[2px]"
+          />
+        </Link>
+      </div>
+
+      <Shelf
+        label="featured songs"
+        className="audioflume-home-featured-song-shelf"
+      >
+        {songs.map((song) => (
+          <HomeFeaturedSongCard key={song.id} song={song} queue={songs} />
+        ))}
+      </Shelf>
+    </section>
+  );
+}
+
 function HomeEditorialStrip() {
   return (
     <section className="audioflume-home-mockup-editorial-strip audioflume-home-reference-width">
@@ -917,6 +995,17 @@ export default function HomePageContent({
     )
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
+  const featuredSongs = useMemo(() => {
+    const featuredArtistSongs = artists
+      .flatMap((artist) => artist.songs)
+      .filter((song) => Boolean(song.audioUrl));
+    const uniqueFeaturedSongs = Array.from(
+      new Map(featuredArtistSongs.map((song) => [song.id, song])).values(),
+    );
+
+    return (uniqueFeaturedSongs.length > 0 ? uniqueFeaturedSongs : playableSongs)
+      .slice(0, 12);
+  }, [artists, playableSongs]);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
@@ -1050,6 +1139,10 @@ export default function HomePageContent({
       ) : (
         <HomeCuratedPlaylistShelf playlists={curatedPlaylists} />
       )}
+
+      {!songsLoading && !artistsLoading ? (
+        <HomeFeaturedSongShelf songs={featuredSongs} />
+      ) : null}
 
       <section className="audioflume-home-mockup-catalogue">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline audioflume-home-mockup-catalogue-heading">
