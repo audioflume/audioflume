@@ -14,11 +14,10 @@ type RelatedArtist = { id: number; name: string; imageUrl: string | null };
 
 function SpotifyIcon() {
   return (
-    <svg width="14" height="14" viewBox="0 0 64 64" fill="none" aria-hidden="true">
-      <path
-        fill="currentColor"
-        d="M32,0C14.3,0,0,14.34,0,32s14.34,32,32,32,32-14.34,32-32S49.66,0,32,0ZM46.68,46.18c-.57.96-1.8,1.22-2.75.65-7.53-4.59-16.98-5.62-28.14-3.1-1.07.23-2.14-.42-2.37-1.49s.42-2.14,1.49-2.37c12.2-2.79,22.67-1.61,31.08,3.56.95.57,1.26,1.79.69,2.74,0,0,0,0,0,.01h0ZM50.58,37.47c-.73,1.19-2.26,1.53-3.44.84-8.6-5.28-21.72-6.81-31.89-3.75-1.34.38-2.71-.34-3.1-1.64-.38-1.34.34-2.71,1.68-3.1,11.62-3.52,26.07-1.83,35.98,4.24,1.15.69,1.49,2.22.76,3.4h0ZM50.92,28.37c-10.32-6.12-27.34-6.69-37.2-3.71-1.57.5-3.25-.42-3.75-1.99s.42-3.25,1.99-3.75c11.32-3.44,30.13-2.75,41.98,4.28,1.42.84,1.87,2.68,1.03,4.09-.76,1.45-2.64,1.91-4.05,1.07h0Z"
-      />
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M3.5 8.2c5.6-1.7 11.8-1.1 17 2" stroke="currentColor" strokeWidth="2.6" strokeLinecap="round" />
+      <path d="M4.8 12.6c4.8-1.4 10.1-.9 14.5 1.8" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" />
+      <path d="M6 16.8c4-1.1 8.1-.6 11.7 1.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   );
 }
@@ -196,7 +195,10 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
           {value.map((item) => (
             <div key={item.id} className="grid gap-2">
               <div className="flex items-center gap-2">
-                <div className="min-w-0 flex-1 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
+                <div className="flex min-w-0 flex-1 items-center gap-3">
+                  {item.imageUrl ? <img src={item.imageUrl} alt="" className="h-10 w-10 shrink-0 object-cover" /> : <div className="h-10 w-10 shrink-0 bg-[var(--bg-tertiary)]" />}
+                  <div className="min-w-0 truncate text-xs">{item.name} <span className="text-[var(--text-secondary)]">— {item.artist}</span></div>
+                </div>
                 <a href={spotifySearchUrl(item)} target="_blank" rel="noopener noreferrer" className="filmwave-backend-button filmwave-backend-button-secondary"><SpotifyIcon /><span>Spotify ↗</span></a>
                 <button type="button" onClick={() => void showSimilarArtists(item)} className="filmwave-backend-button filmwave-backend-button-secondary w-[138px] shrink-0 whitespace-nowrap">{referenceTrackId === item.id.replace(/^deezer:track:/, "") ? "Hide similar artists" : "Show similar artists"}</button>
                 <button type="button" aria-label={`Remove ${item.name}`} disabled={disabled} onClick={() => onChange(value.filter((track) => track.id !== item.id))} className="filmwave-backend-button filmwave-backend-button-secondary">Remove</button>
