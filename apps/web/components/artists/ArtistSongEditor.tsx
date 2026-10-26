@@ -8,6 +8,8 @@ import {
   useState,
 } from "react";
 import ArtistSongTagSections from "@/components/artists/ArtistSongTagSections";
+import BackendSimilarSongs from "@/components/backend/BackendSimilarSongs";
+import { loadSimilarSongReferences, saveSimilarSongReferences, type SimilarSongReference } from "@/lib/similarSongReferences";
 import ArtistSongCreditsRightsSections, {
   type ArtistSongCredit as Credit,
   type ArtistSongRightsHolder as RightsHolder,
@@ -265,6 +267,8 @@ export default function ArtistSongEditor({
   const [copyrightYear, setCopyrightYear] = useState("");
   const [rightsNotes, setRightsNotes] = useState("");
   const [rightsHolders, setRightsHolders] = useState<RightsHolder[]>([]);
+  const [similarReferences, setSimilarReferences] = useState<SimilarSongReference[]>([]);
+  const [similarReferencesReady, setSimilarReferencesReady] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
@@ -348,6 +352,17 @@ export default function ArtistSongEditor({
       cancelled = true;
     };
   }, [artist.id, songId]);
+
+  useEffect(() => {
+    let cancelled = false;
+    setSimilarReferencesReady(false);
+    void loadSimilarSongReferences(songId, artist.id)
+      .then((references) => {
+        if (!cancelled) { setSimilarReferences(references); setSimilarReferencesReady(true); }
+      })
+      .catch((cause) => { if (!cancelled) setError(cause instanceof Error ? cause.message : "Unable to load similar songs"); });
+    return () => { cancelled = true; };
+  }, [songId, artist.id]);
 
   const ownershipTotals = useMemo(() => {
     let master = 0;
@@ -462,6 +477,9 @@ export default function ArtistSongEditor({
         throw new Error(result.error || "Failed to save track details");
       }
 
+      if (similarReferencesReady) {
+        await saveSimilarSongReferences(songId, similarReferences, artist.id);
+      }
       const revisionPending = Boolean(result.revision_pending);
       setTitle(result.song.title);
       setMessage(
@@ -617,6 +635,8 @@ export default function ArtistSongEditor({
             onVocalsChange={setVocals}
             disabled={metadataDisabled}
           />
+
+          <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={metadataDisabled || !similarReferencesReady} />
 
           <ArtistSongCreditsRightsSections
             credits={credits}

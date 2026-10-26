@@ -12,6 +12,8 @@ import {
   BackendIconButton,
 } from "@/components/backend/BackendControls";
 import BackendSongFileUpload from "@/components/backend/BackendSongFileUpload";
+import BackendSimilarSongs from "@/components/backend/BackendSimilarSongs";
+import { loadSimilarSongReferences, saveSimilarSongReferences, type SimilarSongReference } from "@/lib/similarSongReferences";
 import { SongFormSection, SongFormTagSection } from "@/components/backend/SongFormSection";
 import CheckMarkIcon from "@/components/icons/CheckMarkIcon";
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
@@ -895,6 +897,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const isEditMode = mode === "edit";
 
   const [title, setTitle] = useState("");
+  const [similarReferences, setSimilarReferences] = useState<SimilarSongReference[]>([]);
+  const [similarReferencesReady, setSimilarReferencesReady] = useState(!isEditMode);
   const [artist, setArtist] = useState("Audioflume");
   const [bpm, setBpm] = useState("");
   const [songKey, setSongKey] = useState("");
@@ -937,6 +941,18 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   "markers": [],
   "ranges": []
 }`);
+
+  useEffect(() => {
+    if (!isEditMode || !songId || !isAdmin) return;
+    let cancelled = false;
+    setSimilarReferencesReady(false);
+    void loadSimilarSongReferences(songId)
+      .then((refs) => {
+        if (!cancelled) { setSimilarReferences(refs); setSimilarReferencesReady(true); }
+      })
+      .catch(() => { if (!cancelled) setSaveStatus("Similar-song references unavailable; other song fields remain editable."); });
+    return () => { cancelled = true; };
+  }, [isEditMode, songId, isAdmin]);
 
   const uploadComplete = !!savedRecordId && !isSaving;
 
@@ -1143,6 +1159,7 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
     setExistingAudioUrl("");
     setExistingCoverUrl("");
     setExistingStemUrls([]);
+    setSimilarReferences([]);
     setSelectedMoods([]);
     setSelectedGenres([]);
     setSelectedRegions([]);
@@ -1478,6 +1495,14 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
             });
 
       setSavedRecordId(savedSong.id);
+      if (similarReferencesReady) {
+        try {
+          await saveSimilarSongReferences(savedSong.id, similarReferences);
+        } catch {
+          setSaveStatus("Song saved, but similar-song references could not be saved. You can retry from Edit Song.");
+          return;
+        }
+      }
       setExistingAudioUrl(finalAudioUrl);
       setExistingCoverUrl(finalCoverUrl || "");
       setExistingStemUrls(finalStemUrls);
@@ -1767,6 +1792,8 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
                 placeholder="Waveform peak JSON will appear here after selecting an audio file."
               />
             </SongFormSection>
+
+            <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={isSaving || !similarReferencesReady} />
 
             <SongFormTagSection
               title="Genre"
