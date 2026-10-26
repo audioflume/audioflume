@@ -938,6 +938,8 @@ export default function ArtistSongUploadForm({
               </div>
           </SongFormSection>
 
+          <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={!canEditMetadata || busy || uploadComplete} />
+
           <ArtistSongLicenseSelector
             value={licenseType}
             onChange={setLicenseType}
@@ -1047,8 +1049,6 @@ export default function ArtistSongUploadForm({
             onVocalsChange={setVocals}
             disabled={!canEditMetadata || busy || uploadComplete}
           />
-
-          <BackendSimilarSongs value={similarReferences} onChange={setSimilarReferences} disabled={!canEditMetadata || busy || uploadComplete} />
 
           <ArtistSongCreditsRightsSections
             credits={credits}
