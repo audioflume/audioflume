@@ -1,5 +1,6 @@
 import ffmpegPath from "ffmpeg-static";
 import { spawn } from "node:child_process";
+import { createRequire } from "node:module";
 import { access } from "node:fs/promises";
 import path from "node:path";
 
@@ -335,13 +336,18 @@ async function getExtractor() {
   if (extractorPromise) return extractorPromise;
 
   extractorPromise = (async () => {
-    const imported = (await import("essentia.js")) as unknown as
-      | EssentiaPackage
-      | { default: EssentiaPackage };
-    const packageValue =
-      "default" in imported ? imported.default : imported;
+    const require = createRequire(import.meta.url);
+    const packageValue = require("essentia.js") as EssentiaPackage;
+    const Extractor =
+      packageValue.EssentiaModel?.EssentiaTFInputExtractor;
 
-    return new packageValue.EssentiaModel.EssentiaTFInputExtractor(
+    if (typeof Extractor !== "function") {
+      throw new Error(
+        "EssentiaTFInputExtractor is unavailable from essentia.js",
+      );
+    }
+
+    return new Extractor(
       packageValue.EssentiaWASM,
       "musicnn",
       false,
