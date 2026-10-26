@@ -8,7 +8,9 @@ import ReferenceSearchModal, {
   type ReferenceCatalogResult,
 } from "@/components/ReferenceSearchModal";
 import {
+  getReferenceSearchMatches,
   getReferenceSearchMatchSongIds,
+  getReferenceSearchRanking,
   writeReferenceSearchHandoff,
 } from "@/lib/referenceSearchHandoff";
 
@@ -58,6 +60,8 @@ export default function GlobalReferenceSearch({
       artist: result.artist,
       imageUrl: result.imageUrl,
       songIds: getReferenceSearchMatchSongIds(data),
+      matches: getReferenceSearchMatches(data),
+      ranking: getReferenceSearchRanking(data),
     });
 
     params.set("referenceTrackId", result.id);
