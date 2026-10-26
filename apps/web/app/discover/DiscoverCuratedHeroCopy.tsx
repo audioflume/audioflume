@@ -324,7 +324,7 @@ export default function DiscoverCuratedHeroCopy({
                 grid-template-columns: minmax(0, 1fr) 52px;
                 margin-right: auto;
                 margin-left: auto;
-                border-radius: 23px;
+                border-radius: 0;
               }
 
               .discover-home-search input {
