@@ -5,7 +5,7 @@ import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { useHasCurrentSong } from "@/context/PlayerContext";
 
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/artist-signup/soundtrap-7pAguituFGo-unsplash-web.jpg";
+  "https://images.filmwave.io/images/home/natalie-parham-9Qccv5rZtRM-unsplash.jpg";
 
 export default function HomeLandingContent() {
   const playerVisible = useHasCurrentSong();
