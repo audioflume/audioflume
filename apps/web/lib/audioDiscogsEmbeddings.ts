@@ -62,11 +62,13 @@ type EssentiaExtractor = {
 
 type EssentiaPackage = {
   EssentiaWASM: unknown;
-  EssentiaTFInputExtractor: new (
-    wasm: unknown,
-    extractorType?: string,
-    isDebug?: boolean,
-  ) => EssentiaExtractor;
+  EssentiaModel: {
+    EssentiaTFInputExtractor: new (
+      wasm: unknown,
+      extractorType?: string,
+      isDebug?: boolean,
+    ) => EssentiaExtractor;
+  };
 };
 
 type OnnxBackend = {
@@ -339,7 +341,7 @@ async function getExtractor() {
     const packageValue =
       "default" in imported ? imported.default : imported;
 
-    return new packageValue.EssentiaTFInputExtractor(
+    return new packageValue.EssentiaModel.EssentiaTFInputExtractor(
       packageValue.EssentiaWASM,
       "musicnn",
       false,
