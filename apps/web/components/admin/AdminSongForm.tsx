@@ -1837,19 +1837,6 @@ export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
               onChange={setSelectedVocals}
             />
 
-            <SongFormSection
-              title="Cue Points"
-              className="admin-song-form-card"
-            >
-              <AdminSongEditPointsSection
-                songId={songId}
-                audioUrl={existingAudioUrl}
-                waveformPeaks={waveformPeaks}
-                duration={duration}
-                showSaveButton={false}
-                onEditPointsJsonChange={setEditPointsJson}
-              />
-            </SongFormSection>
           </div>
 
           <aside className="filmwave-song-form-sidebar grid h-fit gap-4 xl:sticky xl:top-[88px] xl:mt-14">
