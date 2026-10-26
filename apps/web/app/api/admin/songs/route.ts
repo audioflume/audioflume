@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
 import { refreshPublishedSongClapEmbedding } from "@/lib/audioClapEmbeddings";
+import { refreshPublishedSongDiscogsEmbedding } from "@/lib/audioDiscogsEmbeddings";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -170,6 +171,7 @@ export async function POST(req: Request) {
 
     try {
       await refreshPublishedSongClapEmbedding(String(data.id));
+      await refreshPublishedSongDiscogsEmbedding(String(data.id));
     } catch (embeddingError) {
       console.error(
         `Failed to generate Reference Search analysis for published song ${data.id}:`,
