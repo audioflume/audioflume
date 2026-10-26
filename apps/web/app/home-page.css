@@ -513,18 +513,6 @@ body:has(.audioflume-home-landing)
 }
 
 
-@media (max-width: 1320px) {
-  .audioflume-home-mockup-intro-title {
-    width: 100%;
-    max-width: 100%;
-    white-space: normal;
-    overflow-wrap: normal;
-    word-break: normal;
-    text-align: left;
-    text-align-last: auto;
-  }
-}
-
 @media (max-width: 1100px) {
 
   .audioflume-home-reference-library h2 {
@@ -1443,6 +1431,17 @@ body:has(.audioflume-home-landing)
   text-align: justify;
   text-align-last: justify;
   white-space: nowrap;
+}
+
+@media (max-width: 1320px) {
+  .audioflume-home-mockup-intro-title {
+    max-width: 100%;
+    white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
+    text-align: left;
+    text-align-last: auto;
+  }
 }
 
 .audioflume-home-mockup-intro-heading > span {
