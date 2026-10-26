@@ -422,8 +422,7 @@ body:has(.audioflume-home-landing)
 /* Lower homepage headings use the warm beige tone in dark mode only. */
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library h2,
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library h3,
-:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library-grid > p,
-:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-footer h2 {
+:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library-grid > p {
   color: #e5e5dd;
 }
 
