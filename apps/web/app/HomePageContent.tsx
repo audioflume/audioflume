@@ -971,10 +971,10 @@ function HomeSongRowsSkeleton() {
 
 export default function HomePageContent({
   homeFlashImages,
+  showHero = true,
 }: {
   homeFlashImages: string[];
-  membershipHref: string;
-  membershipLabel: string;
+  showHero?: boolean;
 }) {
   const { songs, loading: songsLoading } = useSongs();
   const { setQueue } = usePlayer();
@@ -1094,25 +1094,27 @@ export default function HomePageContent({
     <main className={`audioflume-home-reference audioflume-home-mockup${playerVisible ? " has-player" : ""}`}>
       <GlobalSearchBar />
 
-      <section
-        className="audioflume-home-reference-hero"
-        style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
-      >
-        <div className="audioflume-home-reference-hero-shade" />
-        <div className="audioflume-home-reference-hero-headline" aria-label="Human made music and SFX for film.">
-          <span className="is-human">Human</span>
-          <span className="is-made">Made</span>
-          <span className="is-music">Music</span>
-          <span className="is-amp">&amp;</span>
-          <span className="is-sfx">SFX</span>
-          <span className="is-for-film">For film.</span>
-          <AudioflumeMark
-            className="audioflume-home-reference-hero-mark"
-            ariaHidden
-          />
-        </div>
-
-      </section>
+      {showHero ? (
+        <section
+          className="audioflume-home-reference-hero"
+          style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
+        >
+          <div className="audioflume-home-reference-hero-shade" />
+          <div className="audioflume-home-reference-hero-headline" aria-label="Human made music and SFX for film.">
+            <span className="is-human">Human</span>
+            <span className="is-made">Made</span>
+            <span className="is-music">Music</span>
+            <span className="is-amp">&amp;</span>
+            <span className="is-sfx">SFX</span>
+            <span className="is-for-film">For film.</span>
+            <AudioflumeMark
+              className="audioflume-home-reference-hero-mark"
+              ariaHidden
+            />
+          </div>
+  
+        </section>
+      ) : null}
 
       <section className="audioflume-home-mockup-intro">
         <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
