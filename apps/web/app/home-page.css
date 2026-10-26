@@ -91,19 +91,62 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 58%);
 }
 
-.audioflume-home-reference-hero h1 {
-  position: relative;
+.audioflume-home-reference-hero-headline {
+  position: absolute;
+  inset: 0;
   z-index: 1;
-  width: min(1180px, calc(100vw - 80px));
-  margin: -78px 0 0;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 76px;
-  font-weight: 400;
+  font-size: clamp(62px, 5.1vw, 104px);
+  font-weight: 300;
   letter-spacing: -0.055em;
-  line-height: 0.96;
-  text-align: center;
+  line-height: 0.92;
+  text-transform: uppercase;
+  pointer-events: none;
+}
+
+.audioflume-home-reference-hero-headline > span,
+.audioflume-home-reference-hero-mark {
+  position: absolute;
   mix-blend-mode: difference;
+}
+
+.audioflume-home-reference-hero-headline .is-human {
+  top: 27%;
+  left: 0;
+}
+
+.audioflume-home-reference-hero-headline .is-made {
+  top: 27%;
+  right: 0;
+}
+
+.audioflume-home-reference-hero-headline .is-music {
+  top: 37%;
+  left: 29%;
+}
+
+.audioflume-home-reference-hero-headline .is-amp {
+  top: 37%;
+  left: 49.4%;
+}
+
+.audioflume-home-reference-hero-headline .is-sfx {
+  top: 37%;
+  left: 56%;
+}
+
+.audioflume-home-reference-hero-headline .is-for-film {
+  top: 47%;
+  right: 8%;
+}
+
+.audioflume-home-reference-hero-mark {
+  top: 59%;
+  left: 50%;
+  width: clamp(52px, 4.1vw, 80px);
+  height: auto;
+  transform: translateX(-50%);
 }
 
 .audioflume-home-reference-hero-trust {
@@ -2684,8 +2727,16 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 @media (max-width: 1100px) {
-  .audioflume-home-reference-hero h1 {
-    font-size: 64px;
+  .audioflume-home-reference-hero-headline {
+    font-size: clamp(52px, 6vw, 70px);
+  }
+
+  .audioflume-home-reference-hero-headline .is-music {
+    left: 24%;
+  }
+
+  .audioflume-home-reference-hero-headline .is-for-film {
+    right: 5%;
   }
 }
 
@@ -2717,9 +2768,43 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     );
   }
 
-  .audioflume-home-reference-hero h1 {
-    width: calc(100vw - 40px);
-    font-size: 48px;
+  .audioflume-home-reference-hero-headline {
+    font-size: clamp(34px, 9vw, 48px);
+  }
+
+  .audioflume-home-reference-hero-headline .is-human {
+    top: 24%;
+    left: 0;
+  }
+
+  .audioflume-home-reference-hero-headline .is-made {
+    top: 24%;
+    right: 0;
+  }
+
+  .audioflume-home-reference-hero-headline .is-music {
+    top: 36%;
+    left: 10%;
+  }
+
+  .audioflume-home-reference-hero-headline .is-amp {
+    top: 36%;
+    left: 48%;
+  }
+
+  .audioflume-home-reference-hero-headline .is-sfx {
+    top: 36%;
+    left: 60%;
+  }
+
+  .audioflume-home-reference-hero-headline .is-for-film {
+    top: 48%;
+    right: 4%;
+  }
+
+  .audioflume-home-reference-hero-mark {
+    top: 60%;
+    width: 44px;
   }
 
   .audioflume-home-reference-hero-trust {
