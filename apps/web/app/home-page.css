@@ -513,9 +513,13 @@ body:has(.audioflume-home-landing)
 }
 
 
-@media (max-width: 1180px) {
+@media (max-width: 1320px) {
   .audioflume-home-mockup-intro-title {
+    width: 100%;
+    max-width: 100%;
     white-space: normal;
+    overflow-wrap: normal;
+    word-break: normal;
     text-align: left;
     text-align-last: auto;
   }
