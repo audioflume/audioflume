@@ -2345,3 +2345,173 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 }
 
 
+
+
+/* Featured songs shelf */
+.audioflume-home-featured-songs {
+  overflow: hidden;
+  padding: 0 0 80px;
+  background: var(--bg-primary);
+}
+
+.audioflume-home-featured-songs
+  .audioflume-home-mockup-section-label
+  > :first-child {
+  position: relative;
+  top: 2px;
+}
+
+.audioflume-home-featured-song-shelf {
+  width: 100vw;
+}
+
+.audioflume-home-featured-song-shelf
+  .audioflume-home-reference-shelf-scroller {
+  gap: 18px;
+  padding-right: var(--audioflume-home-page-gutter);
+  padding-left: var(--audioflume-home-page-gutter);
+  scroll-padding: 0 !important;
+  scroll-snap-type: none !important;
+}
+
+.audioflume-home-featured-song-card {
+  display: grid;
+  width: min(230px, 17vw);
+  min-width: min(230px, 17vw);
+  gap: 10px;
+}
+
+.audioflume-home-featured-song-art {
+  position: relative;
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  border: 0;
+  border-radius: 0;
+  aspect-ratio: 1;
+  background: var(--bg-tertiary);
+  padding: 0;
+  color: #ffffff;
+  cursor: pointer;
+}
+
+.audioflume-home-featured-song-art:disabled {
+  cursor: default;
+}
+
+.audioflume-home-featured-song-art > img,
+.audioflume-home-featured-song-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 220ms ease;
+}
+
+.audioflume-home-featured-song-card:hover
+  .audioflume-home-featured-song-art > img {
+  transform: scale(1.012);
+}
+
+.audioflume-home-featured-song-fallback {
+  place-items: center;
+  background: color-mix(
+    in srgb,
+    var(--bg-tertiary) 92%,
+    var(--text-primary) 8%
+  );
+  color: var(--text-muted);
+}
+
+.audioflume-home-featured-song-play {
+  position: absolute;
+  right: 14px;
+  bottom: 14px;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(17, 17, 17, 0.34);
+  color: #ffffff;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  transition:
+    background-color 150ms ease,
+    color 150ms ease,
+    transform 150ms ease;
+}
+
+.audioflume-home-featured-song-art:hover
+  .audioflume-home-featured-song-play,
+.audioflume-home-featured-song-art:focus-visible
+  .audioflume-home-featured-song-play {
+  background: #ffffff;
+  color: #111111;
+  transform: scale(1.02);
+}
+
+.audioflume-home-featured-song-copy {
+  display: grid;
+  min-width: 0;
+  gap: 2px;
+}
+
+.audioflume-home-featured-song-copy > strong,
+.audioflume-home-featured-song-copy > span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audioflume-home-featured-song-copy > strong {
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.15;
+}
+
+.audioflume-home-featured-song-copy > span {
+  color: var(--text-muted);
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1.15;
+}
+
+.audioflume-home-featured-song-shelf
+  .audioflume-home-reference-shelf-arrow {
+  top: min(115px, 8.5vw);
+}
+
+@media (max-width: 900px) {
+  .audioflume-home-featured-song-shelf
+    .audioflume-home-reference-shelf-scroller {
+    gap: 12px;
+  }
+
+  .audioflume-home-featured-song-card {
+    width: 190px;
+    min-width: 190px;
+  }
+
+  .audioflume-home-featured-song-shelf
+    .audioflume-home-reference-shelf-arrow {
+    top: 95px;
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-featured-songs {
+    padding-bottom: 56px;
+  }
+
+  .audioflume-home-featured-song-card {
+    width: 155px;
+    min-width: 155px;
+  }
+
+  .audioflume-home-featured-song-shelf
+    .audioflume-home-reference-shelf-arrow {
+    top: 77.5px;
+  }
+}
