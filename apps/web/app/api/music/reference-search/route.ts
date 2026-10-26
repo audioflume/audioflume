@@ -397,6 +397,72 @@ async function getLegacyAudioMatches({
     }));
 }
 
+// Related-artist overlap is a supporting ranking signal, not a replacement
+// for audio matching or the exact-reference promotion below.
+const RELATED_ARTIST_BOOST_PER_REFERENCE = 0.012;
+const RELATED_ARTIST_BOOST_CAP = 0.036;
+
+async function getRelatedReferenceArtistNames(artist: DeezerArtist | undefined) {
+  const names = new Set<string>();
+  const direct = normalize(artist?.name ?? "");
+  if (direct) names.add(direct);
+  if (!artist?.id) return names;
+
+  try {
+    const related = await fetchDeezerJson<{
+      data?: Array<{ name?: string }>;
+    }>(`https://api.deezer.com/artist/${artist.id}/related?limit=30`);
+    for (const entry of related.data ?? []) {
+      const name = normalize(entry.name ?? "");
+      if (name) names.add(name);
+    }
+  } catch (error) {
+    // Deezer related artists are optional; audio ranking must still work.
+    console.warn("Related artist lookup unavailable for reference search:", error);
+  }
+  return names;
+}
+
+async function boostMatchesByRelatedArtists<T extends { songId: string; score: number }>(
+  matches: T[],
+  artist: DeezerArtist | undefined,
+): Promise<T[]> {
+  if (!matches.length) return matches;
+
+  const artistNames = await getRelatedReferenceArtistNames(artist);
+  if (!artistNames.size) return matches;
+
+  const { data, error } = await supabaseServer
+    .from("song_similar_references")
+    .select("song_id, artist")
+    .in("song_id", matches.map((match) => match.songId));
+  if (error) {
+    console.warn("Reference artist overlap unavailable:", error);
+    return matches;
+  }
+
+  const overlaps = new Map<string, Set<string>>();
+  for (const reference of data ?? []) {
+    const artistName = normalize(reference.artist ?? "");
+    if (!artistName || !artistNames.has(artistName)) continue;
+    const seen = overlaps.get(reference.song_id) ?? new Set<string>();
+    seen.add(artistName);
+    overlaps.set(reference.song_id, seen);
+  }
+
+  return matches
+    .map((match) => ({
+      ...match,
+      score: Number((
+        match.score + Math.min(
+          RELATED_ARTIST_BOOST_CAP,
+          (overlaps.get(match.songId)?.size ?? 0) * RELATED_ARTIST_BOOST_PER_REFERENCE,
+        )
+      ).toFixed(6)),
+    }))
+    .sort((a, b) => b.score - a.score);
+}
+
 export async function POST(request: Request) {
   const { userId } = await auth();
 
@@ -718,6 +784,8 @@ export async function POST(request: Request) {
                 ? "audio-clap-discogs-weighted-rerank-v7"
                 : "audio-clap-fulltrack-segments-v5";
     }
+
+    matches = await boostMatchesByRelatedArtists(matches, profile.track.artist);
 
     // An exact, artist-curated Deezer reference is a stronger signal than
     // acoustic similarity. Promote matching published songs even when they
