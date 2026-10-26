@@ -9,6 +9,7 @@ import {
 } from "react";
 import ArtistSongTagSections from "@/components/artists/ArtistSongTagSections";
 import BackendSimilarSongs from "@/components/backend/BackendSimilarSongs";
+import { SongFormSection } from "@/components/backend/SongFormSection";
 import { loadSimilarSongReferences, saveSimilarSongReferences, type SimilarSongReference } from "@/lib/similarSongReferences";
 import ArtistSongCreditsRightsSections, {
   type ArtistSongCredit as Credit,
