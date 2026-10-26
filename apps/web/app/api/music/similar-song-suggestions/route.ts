@@ -25,8 +25,13 @@ export async function GET(request: Request) {
   try {
     const reference = await deezer(`/track/${trackId}`) as DeezerTrack;
     if (!reference.artist?.id) return NextResponse.json({ results: [] });
-    const related = await deezer(`/artist/${reference.artist.id}/related?limit=8`);
-    const artists = (related.data || []).slice(0, 12) as Array<{ id: number; name?: string; picture_medium?: string }>;\n    const artistId = new URL(request.url).searchParams.get("artistId");\n    if (artistId && (!/^[1-9][0-9]{0,15}$/.test(artistId) || !artists.some((artist) => String(artist.id) === artistId))) {\n      return NextResponse.json({ error: "Unknown related artist" }, { status: 400 });\n    }\n    const artistsToQuery = artistId ? artists.filter((artist) => String(artist.id) === artistId) : artists.slice(0, 6);
+    const related = await deezer(`/artist/${reference.artist.id}/related?limit=12`);
+    const artists = (related.data || []).slice(0, 12) as Array<{ id: number; name?: string; picture_medium?: string }>;
+    const artistId = new URL(request.url).searchParams.get("artistId");
+    if (artistId && (!/^[1-9][0-9]{0,15}$/.test(artistId) || !artists.some((artist) => String(artist.id) === artistId))) {
+      return NextResponse.json({ error: "Unknown related artist" }, { status: 400 });
+    }
+    const artistsToQuery = artistId ? artists.filter((artist) => String(artist.id) === artistId) : artists.slice(0, 6);
     const lists = await Promise.allSettled(artistsToQuery.map((artist) => deezer(`/artist/${artist.id}/top?limit=10`)));
     const seen = new Set<string>();
     const results = lists.flatMap((item) => item.status === "fulfilled" ? (item.value.data || []) as DeezerTrack[] : [])
