@@ -549,15 +549,10 @@ function HomeArtistShelf({
         <span className="audioflume-home-reference-artist-promo-shade" aria-hidden="true" />
         <div className="audioflume-home-reference-artist-promo-content">
           <h2 className="audioflume-home-reference-artist-promo-title">
-            <span>
-              Human made{" "}
-              <span className="audioflume-home-reference-artist-promo-title-difference">
-                music
-              </span>
-            </span>
             <span className="audioflume-home-reference-artist-promo-title-difference">
-              &amp; SFX for film.
+              In demand
             </span>
+            <span>artists &amp; composers.</span>
           </h2>
           <Link
             href="/music"
