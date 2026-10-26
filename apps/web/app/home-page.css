@@ -1558,6 +1558,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   position: relative;
   width: calc(100% - (var(--audioflume-home-page-gutter) * 2));
   height: 1.25px;
+  min-height: 1.25px;
+  max-height: 1.25px;
   margin-right: var(--audioflume-home-page-gutter);
   margin-left: var(--audioflume-home-page-gutter);
   background: var(--border);
