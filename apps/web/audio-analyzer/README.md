@@ -64,3 +64,27 @@ supabase/migrations/20260518000000_create_song_edit_points.sql
 ```
 
 The analyzer deletes previous `source = auto` rows for the song and inserts the latest detected markers.
+
+
+## Experimental MERIT similarity
+
+MERIT uses the `m-a-p/MERT-v1-330M` backbone plus the official `amaai-lab/merit`
+projection heads to produce separate melody, rhythm, and timbre embeddings.
+
+The MERT backbone is licensed CC BY-NC 4.0, so MERIT is disabled by default.
+Enable it only for local/non-commercial evaluation:
+
+```env
+MERIT_ENABLED=true
+```
+
+Install the analyzer dependencies after pulling:
+
+```bash
+cd apps/web/audio-analyzer
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+The first MERIT request downloads the MERT backbone and three projection heads
+from Hugging Face and caches them locally.
