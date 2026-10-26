@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SongFormSection } from "@/components/backend/SongFormSection";
-import XIcon from "@/components/icons/XIcon";
+import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import type { SimilarSongReference } from "@/lib/similarSongReferences";
 import { MAX_SIMILAR_SONG_REFERENCES } from "@/lib/similarSongReferences";
 
@@ -111,41 +111,17 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
   }
 
   return (
-    <SongFormSection title="Similar Songs" bodyClassName="grid gap-3 px-5 pb-5">
+    <SongFormSection title="Similar Songs" bodyClassName="flex min-h-0 flex-col gap-3 px-5 pb-5">
       <p className="text-xs leading-5 text-[var(--text-secondary)]">
         Optional. Add up to 10 commercial songs that sound like yours. Exact matching references are prioritized in Search by Song.
       </p>
-      <div className="relative">
-        <span
-          aria-hidden="true"
-          className="pointer-events-none absolute left-[14px] top-1/2 flex h-4 w-4 -translate-y-1/2 items-center justify-center text-[#a3a3a3]"
-        >
-          <svg viewBox="0 0 24 24" className="h-4 w-4 fill-none stroke-current [stroke-linecap:round] [stroke-width:1.4]">
-            <circle cx="11" cy="11" r="6.5" />
-            <path d="m16 16 4.5 4.5" />
-          </svg>
-        </span>
-        <input
-          type="text"
-          role="searchbox"
-          aria-label="Search similar reference songs"
+      <div onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }}>
+        <BackendSearchBar
           value={query}
-          onChange={(event) => setQuery(event.target.value)}
-          onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }}
+          onChange={setQuery}
           placeholder="Search for a song or artist..."
-          disabled={disabled || value.length >= MAX_SIMILAR_SONG_REFERENCES}
-          className="filmwave-backend-input filmwave-backend-search-input w-full"
+          clearLabel="Clear similar-song search"
         />
-        {query ? (
-          <button
-            type="button"
-            aria-label="Clear search"
-            onClick={() => setQuery("")}
-            className="absolute right-[10px] top-1/2 flex h-[22px] w-[22px] -translate-y-1/2 items-center justify-center border-0 bg-transparent p-0 text-[#a3a3a3] transition-colors duration-150 hover:text-[var(--text-primary)] focus-visible:text-[var(--text-primary)]"
-          >
-            <XIcon size={8} strokeWidth={1.4} className="h-[21px] w-[21px]" />
-          </button>
-        ) : null}
       </div>
       {busy && <p className="text-xs text-[var(--text-muted)]">Searching Deezer...</p>}
       {results.length > 0 && (
