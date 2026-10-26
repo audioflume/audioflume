@@ -6,6 +6,11 @@ from typing import Dict, List, Literal, Optional
 import librosa
 import numpy as np
 import requests
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+from huggingface_hub import hf_hub_download
+from transformers import AutoModel, Wav2Vec2FeatureExtractor
 from dotenv import load_dotenv
 from fastapi import FastAPI, Header, HTTPException
 from pydantic import BaseModel, HttpUrl
@@ -16,6 +21,20 @@ load_dotenv()
 SUPABASE_URL = os.getenv("SUPABASE_URL")
 SUPABASE_SERVICE_ROLE_KEY = os.getenv("SUPABASE_SERVICE_ROLE_KEY")
 ANALYZER_SECRET = os.getenv("ANALYZER_SECRET")
+
+MERIT_ENABLED = os.getenv("MERIT_ENABLED", "").strip().lower() in {
+    "1",
+    "true",
+    "yes",
+}
+MERIT_MODEL_ID = "m-a-p/MERT-v1-330M"
+MERIT_HEAD_REPO = "amaai-lab/merit"
+MERIT_SAMPLE_RATE = 24_000
+MERIT_WINDOW_SECONDS = 10
+MERIT_WINDOW_COUNT = 3
+MERIT_EXTRACT_LAYERS = (3, 4, 5, 6, 23)
+MERIT_DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
+_merit_bundle = None
 
 if not SUPABASE_URL:
     raise RuntimeError("Missing SUPABASE_URL")
@@ -46,6 +65,10 @@ LABELS: Dict[str, str] = {
 
 class AnalyzeRequest(BaseModel):
     songId: str
+    audioUrl: HttpUrl
+
+
+class MeritRequest(BaseModel):
     audioUrl: HttpUrl
 
 
@@ -240,9 +263,211 @@ def save_edit_points(song_id: str, edit_points: List[dict]):
     return rows
 
 
+class MeritProjectionHead(nn.Module):
+    def __init__(self, in_dim=5120, hidden_dim=512, out_dim=128):
+        super().__init__()
+        self.net = nn.Sequential(
+            nn.Linear(in_dim, hidden_dim),
+            nn.ReLU(inplace=True),
+            nn.Linear(hidden_dim, out_dim, bias=False),
+        )
+
+    def forward(self, value):
+        return F.normalize(self.net(value), dim=-1)
+
+
+def load_merit_head(relative_path: str):
+    path = hf_hub_download(
+        repo_id=MERIT_HEAD_REPO,
+        filename=relative_path,
+    )
+
+    try:
+        checkpoint = torch.load(
+            path,
+            map_location=MERIT_DEVICE,
+            weights_only=True,
+        )
+    except TypeError:
+        checkpoint = torch.load(path, map_location=MERIT_DEVICE)
+
+    head = MeritProjectionHead(
+        checkpoint["in_dim"],
+        checkpoint["hidden_dim"],
+        checkpoint["out_dim"],
+    )
+    head.load_state_dict(checkpoint["state_dict"])
+    return head.to(MERIT_DEVICE).eval()
+
+
+def get_merit_bundle():
+    global _merit_bundle
+
+    if _merit_bundle is not None:
+        return _merit_bundle
+
+    if not MERIT_ENABLED:
+        raise RuntimeError(
+            "MERIT is disabled. Set MERIT_ENABLED=true to enable local evaluation."
+        )
+
+    processor = Wav2Vec2FeatureExtractor.from_pretrained(
+        MERIT_MODEL_ID,
+        trust_remote_code=True,
+    )
+    model = AutoModel.from_pretrained(
+        MERIT_MODEL_ID,
+        trust_remote_code=True,
+    ).to(MERIT_DEVICE).eval()
+
+    _merit_bundle = {
+        "processor": processor,
+        "model": model,
+        "melody": load_merit_head("head_mel/best_head.pt"),
+        "rhythm": load_merit_head("head_rhy/best_head.pt"),
+        "timbre": load_merit_head("head_tim/best_head.pt"),
+    }
+    return _merit_bundle
+
+
+def normalize_embedding(value):
+    array = np.asarray(value, dtype=np.float32)
+    norm = float(np.linalg.norm(array))
+    if norm <= 0:
+        return array
+    return array / norm
+
+
+def get_merit_window_starts(duration: float):
+    if duration <= MERIT_WINDOW_SECONDS:
+        return [0.0]
+
+    final_start = max(0.0, duration - MERIT_WINDOW_SECONDS)
+
+    if MERIT_WINDOW_COUNT <= 1:
+        return [final_start / 2]
+
+    return [
+        final_start * index / (MERIT_WINDOW_COUNT - 1)
+        for index in range(MERIT_WINDOW_COUNT)
+    ]
+
+
+@torch.no_grad()
+def encode_merit_window(samples: np.ndarray):
+    bundle = get_merit_bundle()
+    processor = bundle["processor"]
+    model = bundle["model"]
+
+    inputs = processor(
+        samples,
+        sampling_rate=MERIT_SAMPLE_RATE,
+        return_tensors="pt",
+    )
+    inputs = {
+        key: value.to(MERIT_DEVICE)
+        for key, value in inputs.items()
+    }
+
+    output = model(
+        **inputs,
+        output_hidden_states=True,
+    )
+    parts = [
+        output.hidden_states[layer].mean(dim=1)
+        for layer in MERIT_EXTRACT_LAYERS
+    ]
+    backbone = torch.cat(parts, dim=-1)
+
+    return {
+        "melody": bundle["melody"](backbone)[0].detach().cpu().numpy(),
+        "rhythm": bundle["rhythm"](backbone)[0].detach().cpu().numpy(),
+        "timbre": bundle["timbre"](backbone)[0].detach().cpu().numpy(),
+    }
+
+
+def get_merit_embeddings(audio_path: str):
+    duration = librosa.get_duration(path=audio_path)
+    starts = get_merit_window_starts(duration)
+    factor_embeddings = {
+        "melody": [],
+        "rhythm": [],
+        "timbre": [],
+    }
+
+    for start in starts:
+        samples, _ = librosa.load(
+            audio_path,
+            sr=MERIT_SAMPLE_RATE,
+            mono=True,
+            offset=float(start),
+            duration=MERIT_WINDOW_SECONDS,
+        )
+
+        target_samples = MERIT_SAMPLE_RATE * MERIT_WINDOW_SECONDS
+
+        if samples.shape[0] < target_samples:
+            samples = np.pad(
+                samples,
+                (0, target_samples - samples.shape[0]),
+            )
+        elif samples.shape[0] > target_samples:
+            samples = samples[:target_samples]
+
+        embeddings = encode_merit_window(samples.astype(np.float32))
+
+        for factor, embedding in embeddings.items():
+            factor_embeddings[factor].append(embedding)
+
+    averaged = {}
+
+    for factor, embeddings in factor_embeddings.items():
+        stacked = np.stack(embeddings, axis=0)
+        averaged[factor] = normalize_embedding(
+            np.mean(stacked, axis=0)
+        ).tolist()
+
+    return averaged
+
+
+@app.post("/merit")
+def merit(
+    request: MeritRequest,
+    x_analyzer_secret: Optional[str] = Header(default=None),
+):
+    if x_analyzer_secret != ANALYZER_SECRET:
+        raise HTTPException(status_code=401, detail="Unauthorized")
+
+    if not MERIT_ENABLED:
+        raise HTTPException(
+            status_code=503,
+            detail="MERIT is disabled on this analyzer.",
+        )
+
+    audio_path = ""
+
+    try:
+        audio_path = download_audio(str(request.audioUrl))
+        embeddings = get_merit_embeddings(audio_path)
+
+        return {
+            "model": MERIT_MODEL_ID,
+            "dimensions": 128,
+            **embeddings,
+        }
+    except Exception as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    finally:
+        if audio_path and os.path.exists(audio_path):
+            os.remove(audio_path)
+
+
 @app.get("/health")
 def health():
-    return {"ok": True}
+    return {
+        "ok": True,
+        "meritEnabled": MERIT_ENABLED,
+    }
 
 
 @app.post("/analyze")
