@@ -40,7 +40,7 @@
   align-items: center;
   gap: 9px;
   border: 1.25px solid transparent;
-  border-radius: 999px;
+  border-radius: 0;
   background: var(--bg-control);
   padding: 0 10px 0 6px;
   cursor: text;
