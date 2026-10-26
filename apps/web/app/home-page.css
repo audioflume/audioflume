@@ -34,110 +34,6 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   margin-inline: auto;
 }
 
-.audioflume-home-reference-hero {
-  position: relative;
-  display: grid;
-  height: calc(
-    100dvh - 28px - var(--filmwave-header-height, 60px) -
-      var(--filmwave-searchbar-height, 75px)
-  );
-  min-height: 0;
-  place-items: center;
-  background-color: var(--bg-primary);
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-}
-
-.audioflume-home-reference.has-player .audioflume-home-reference-hero {
-  height: calc(
-    100dvh - 28px - var(--filmwave-header-height, 60px) -
-      var(--filmwave-searchbar-height, 75px) -
-      var(--filmwave-player-height, 72px)
-  );
-}
-
-.audioflume-home-reference-hero-shade {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, 0.12) 0%,
-      rgba(0, 0, 0, 0.24) 68%,
-      rgba(9, 9, 9, 0.72) 92%,
-      #090909 100%
-    ),
-    linear-gradient(90deg, rgba(0, 0, 0, 0.18), transparent 58%);
-}
-
-.audioflume-home-reference-hero h1 {
-  position: relative;
-  z-index: 1;
-  width: min(1180px, calc(100vw - 80px));
-  margin: -78px 0 0;
-  color: #ffffff;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 76px;
-  font-weight: 400;
-  letter-spacing: -0.055em;
-  line-height: 0.96;
-  text-align: center;
-  mix-blend-mode: difference;
-}
-
-.audioflume-home-reference-hero-trust {
-  position: absolute;
-  right: 0;
-  bottom: 38px;
-  left: 0;
-  z-index: 2;
-  display: grid;
-  grid-template-columns: minmax(220px, 0.72fr) minmax(0, 1.28fr);
-  align-items: center;
-  gap: 72px;
-}
-
-.audioflume-home-reference-hero-trust > p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.34);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.4;
-}
-
-.audioflume-home-reference-logo-row {
-  min-width: 0;
-}
-
-.audioflume-home-reference-logo-row img {
-  display: block;
-  width: 100%;
-  height: auto;
-  opacity: 0.86;
-}
-
-.audioflume-home-song-title {
-  margin: 0;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  letter-spacing: normal;
-  line-height: 1.15;
-}
-
-.audioflume-home-song-artist {
-  margin: 0;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 11px;
-  font-style: normal;
-  font-weight: 300;
-  letter-spacing: normal;
-  line-height: 1.15;
-}
-
 .audioflume-home-reference-shelf {
   position: relative;
   width: 100vw;
@@ -1317,8 +1213,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   margin: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 52px;
-  font-weight: 400;
+  font-size: 42px;
+  font-weight: 500;
   letter-spacing: -0.065em;
   line-height: 1.04;
 }
@@ -2669,54 +2565,3 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     );
   }
 }
-
-@media (max-width: 1100px) {
-  .audioflume-home-reference-hero h1 {
-    font-size: 64px;
-  }
-}
-
-@media (max-width: 980px) {
-  .audioflume-home-reference-hero {
-    min-height: 640px;
-  }
-
-  .audioflume-home-reference-hero-trust {
-    gap: 36px;
-  }
-}
-
-@media (max-width: 620px) {
-  .audioflume-home-reference-hero {
-    height: calc(
-      100dvh - 28px - var(--filmwave-header-height, 60px) -
-        var(--filmwave-searchbar-height, 75px)
-    );
-    min-height: 0;
-    background-position: 55% center;
-  }
-
-  .audioflume-home-reference.has-player .audioflume-home-reference-hero {
-    height: calc(
-      100dvh - 28px - var(--filmwave-header-height, 60px) -
-        var(--filmwave-searchbar-height, 75px) -
-        var(--filmwave-player-height, 72px)
-    );
-  }
-
-  .audioflume-home-reference-hero h1 {
-    width: calc(100vw - 40px);
-    font-size: 48px;
-  }
-
-  .audioflume-home-reference-hero-trust {
-    bottom: 26px;
-    grid-template-columns: 1fr;
-    gap: 18px;
-  }
-
-  .audioflume-home-reference-hero-trust > p {
-    display: none;
-  }
-}
-
