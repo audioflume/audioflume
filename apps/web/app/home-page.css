@@ -1557,7 +1557,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   .audioflume-home-reference-shelf-scrollbar {
   position: relative;
   width: calc(100% - (var(--audioflume-home-page-gutter) * 2));
-  height: 1.5px;
+  height: 1.25px;
   margin-right: var(--audioflume-home-page-gutter);
   margin-left: var(--audioflume-home-page-gutter);
   background: var(--border);
@@ -1580,7 +1580,8 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
 .audioflume-home-mockup-curated
   .audioflume-home-reference-shelf-scrollbar-thumb {
   position: absolute;
-  top: -1px;
+  top: auto;
+  bottom: 0;
   left: 0;
   height: 2.5px;
   background: var(--text-primary);
@@ -1588,6 +1589,18 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
   touch-action: none;
   user-select: none;
   will-change: transform;
+}
+
+.audioflume-home-mockup-artists
+  .audioflume-home-reference-shelf-scrollbar-thumb::before,
+.audioflume-home-mockup-curated
+  .audioflume-home-reference-shelf-scrollbar-thumb::before {
+  content: "";
+  position: absolute;
+  top: -7px;
+  right: 0;
+  bottom: -7px;
+  left: 0;
 }
 
 .audioflume-home-mockup-artists
