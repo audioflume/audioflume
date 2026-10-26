@@ -2475,8 +2475,7 @@ body:has(.audioflume-home-reference) .filmwave-web-header.is-transparent .filmwa
     transform 150ms ease;
 }
 
-.audioflume-home-featured-song-art:hover
-  .audioflume-home-featured-song-play {
+.audioflume-home-featured-song-play:hover {
   background: #ffffff;
   color: #111111;
   transform: scale(1.08);
