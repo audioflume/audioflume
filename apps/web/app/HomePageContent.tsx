@@ -719,7 +719,10 @@ function HomeEditorialStrip() {
         className="audioflume-home-mockup-editorial-card is-subscription audioflume-arrow-text-link"
       >
         <span>Plans for <b>solo creators</b></span>
-        <strong>For independent filmmakers creating commercial projects.</strong>
+        <div className="audioflume-home-mockup-editorial-price">
+          <strong>$15</strong>
+          <span>CAD / month</span>
+        </div>
         <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
 
@@ -728,7 +731,10 @@ function HomeEditorialStrip() {
         className="audioflume-home-mockup-editorial-card is-artists audioflume-arrow-text-link"
       >
         <span>Plans for <b>studios</b></span>
-        <strong>For production teams licensing music for ongoing client work.</strong>
+        <div className="audioflume-home-mockup-editorial-price">
+          <strong>$39</strong>
+          <span>CAD / month</span>
+        </div>
         <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
       </Link>
 
