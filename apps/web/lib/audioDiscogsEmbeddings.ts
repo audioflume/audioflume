@@ -372,7 +372,9 @@ async function getExtractor() {
 function getOnnxRuntime() {
   if (onnxRuntime) return onnxRuntime;
 
-  const require = createRequire(import.meta.url);
+  const require = createRequire(
+    path.join(process.cwd(), "package.json"),
+  );
   const transformersEntry = require.resolve("@huggingface/transformers");
   const requireFromTransformers = createRequire(transformersEntry);
 
