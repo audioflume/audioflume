@@ -616,7 +616,7 @@ export default function MusicPlayer() {
                   className="relative z-10 flex h-[24px] min-w-[80px] flex-1 cursor-pointer items-center overflow-visible"
                   onClick={handleWaveformClick}
                 >
-                  {visibleCuePoints.map((marker) => {
+                  {false && visibleCuePoints.map((marker) => {
                     const markerType = getMarkerType(marker);
                     const label =
                       marker.label || getEditPointFilterLabel(markerType);
