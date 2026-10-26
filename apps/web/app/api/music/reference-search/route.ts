@@ -719,6 +719,34 @@ export async function POST(request: Request) {
                 : "audio-clap-fulltrack-segments-v5";
     }
 
+    // An exact, artist-curated Deezer reference is a stronger signal than
+    // acoustic similarity. Promote matching published songs even when they
+    // fell outside the acoustic retrieval cutoff.
+    const { data: savedReferences, error: referencesError } = await supabaseServer
+      .from("song_similar_references")
+      .select("song_id")
+      .eq("deezer_track_id", String(trackId));
+    if (referencesError) throw referencesError;
+
+    const matchingIds = [...new Set((savedReferences ?? []).map((entry) => entry.song_id))];
+    if (matchingIds.length > 0) {
+      const { data: publishedSongs, error: publishedError } = await supabaseServer
+        .from("songs")
+        .select("id")
+        .eq("status", "published")
+        .in("id", matchingIds);
+      if (publishedError) throw publishedError;
+
+      const publishedIds = new Set((publishedSongs ?? []).map((song) => song.id));
+      const existingMatches = new Map(matches.map((result) => [result.songId, result]));
+      const promoted = matchingIds
+        .filter((id) => publishedIds.has(id))
+        .map((id) => existingMatches.get(id) ?? { songId: id, score: 1 });
+      const promotedIds = new Set(promoted.map((result) => result.songId));
+      matches = [...promoted, ...matches.filter((result) => !promotedIds.has(result.songId))]
+        .slice(0, MAX_RESULT_COUNT);
+    }
+
     return NextResponse.json(
       {
         matches,
