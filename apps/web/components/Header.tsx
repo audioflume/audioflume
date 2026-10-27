@@ -380,7 +380,7 @@ export default function Header() {
           gap: 24px;
           background: #111111;
           padding: 0 24px;
-          color: #ffffff;
+          color: #e5e5dd;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
         }
 
