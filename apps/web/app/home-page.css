@@ -2191,8 +2191,8 @@ body:has(.audioflume-home-landing)
   position: relative;
   display: grid;
   box-sizing: border-box;
-  height: 200px;
-  min-height: 200px;
+  height: 260px;
+  min-height: 260px;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto 1fr;
   align-items: start;
