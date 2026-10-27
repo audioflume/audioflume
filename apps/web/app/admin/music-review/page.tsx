@@ -336,8 +336,6 @@ export default function AdminMusicReviewPage() {
       showToast("Only published or rejected songs can be removed");
       return;
     }
-    const rejectedCount = eligible.filter(song => song.status === "rejected").length;
-    if (rejectedCount && !window.confirm(`Permanently delete ${rejectedCount} rejected song${rejectedCount === 1 ? "" : "s"}? Published songs will only leave the queue.`)) return;
     setRemoving(true);
     try {
       const response = await fetch("/api/admin/song-reviews/batch-remove", {
