@@ -26,19 +26,18 @@ export default function HomeLandingContent() {
 
   useEffect(() => {
     const controller = new AbortController();
-    Promise.all([
-      fetch("/api/discover-featured-artists", { signal: controller.signal }).then((res) => res.json()),
-      fetch("/api/discover-feature-card-artists", { signal: controller.signal }).then((res) => res.json()),
-    ]).then(([featured, cards]) => {
-      const combined = [
-        ...(Array.isArray(featured?.artists) ? featured.artists : []),
-        ...(Array.isArray(cards?.artists) ? cards.artists : []),
-      ];
-      if (!controller.signal.aborted) {
-        setArtists(Array.from(new Map(combined.map((artist) => [artist.id, artist])).values())
-          .filter((artist) => artist.hero_image_url || artist.profile_image_url));
-      }
-    }).catch(() => {});
+    fetch("/api/home-featured-artists", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Failed to load homepage featured artists");
+        return response.json();
+      })
+      .then((data) => {
+        if (!controller.signal.aborted) {
+          setArtists((Array.isArray(data?.artists) ? data.artists : [])
+            .filter((artist: { hero_image_url?: string | null; profile_image_url?: string | null }) =>
+              artist.hero_image_url || artist.profile_image_url));
+        }
+      }).catch(() => {});
     return () => controller.abort();
   }, []);
 
