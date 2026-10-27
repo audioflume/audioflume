@@ -334,7 +334,7 @@ html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filt
 .audioflume-music-page
   > section
   > .fw-music-content-column
-  > .fw-song-list:not(:has(.audioflume-music-reference-summary)) {
+  > .fw-song-list:not(:has(.audioflume-music-reference-summary, .audioflume-music-originals-summary)) {
   padding-top: 16px;
 }
 
@@ -1254,7 +1254,7 @@ main
 }
 
 .audioflume-music-page .audioflume-music-originals-summary-logo {
-  width: min(420px, calc(100% - 48px));
+  width: min(300px, calc(100% - 48px));
   color: #fff;
 }
 
