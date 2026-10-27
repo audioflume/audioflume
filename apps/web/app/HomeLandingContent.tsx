@@ -52,7 +52,7 @@ export default function HomeLandingContent() {
           aria-label="Human made music and SFX for film."
         >
           <span className="is-mockup-line">
-            <span>Human</span><span>Made</span><span>Music</span><span>&amp;</span><span>SFX</span><span>For</span><span>Film.</span>
+            <span>Human</span><span>Made</span><span>Music</span><span>&amp;</span><span>SFX</span><span>For</span><span>Film</span>
           </span>
         </div>
         <div className="audioflume-home-reference-width audioflume-home-landing-hero-captions">
