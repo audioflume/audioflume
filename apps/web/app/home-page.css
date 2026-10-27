@@ -1884,6 +1884,16 @@ body:has(.audioflume-home-landing)
   min-width: min(760px, 56vw) !important;
 }
 
+/* Preserve the first artist card's image height when later cards are narrower. */
+@media (min-width: 1512px) {
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-card:not(:first-child)
+    .audioflume-home-reference-artist-media {
+    height: calc(100vw * 0.6746031746 * 430 / 1020) !important;
+    aspect-ratio: auto !important;
+  }
+}
+
 .audioflume-home-mockup-curated-card {
   position: relative;
   width: min(540px, 92vw);
