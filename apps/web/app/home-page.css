@@ -1444,10 +1444,6 @@ body:has(.audioflume-home-landing)
   white-space: nowrap;
 }
 
-:where(html.dark, html[data-theme="dark"]) .audioflume-home-mockup-intro-title {
-  color: #e5e5dd;
-}
-
 @media (max-width: 1320px) {
   .audioflume-home-mockup-intro-title {
     max-width: 100%;
