@@ -848,7 +848,7 @@ export default function AdminMusicReviewPage() {
             </div>
 
             <div className="overflow-x-auto overflow-y-hidden border-t-[1.25px] border-[var(--border-subtle)]">
-              <div className="min-w-[980px]">
+              <div className="min-w-[1140px]">
                 {loading ? (
                   <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                     Loading submissions...
