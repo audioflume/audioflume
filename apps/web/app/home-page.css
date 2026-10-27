@@ -3117,8 +3117,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-artist-sequence {
   display: flex;
   flex: 0 0 auto;
-  gap: 12px;
-  padding-right: 12px;
+  gap: 8px;
+  padding-right: 8px;
 }
 .audioflume-home-landing-artist-card {
   display: flex;
