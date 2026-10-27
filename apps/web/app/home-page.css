@@ -1831,6 +1831,13 @@ body:has(.audioflume-home-landing)
   line-height: 1.2;
 }
 
+/* Use the shared section-header bottom alignment and spacing for these rows. */
+.audioflume-home-mockup .audioflume-home-reference-playlists > .filmwave-section-heading-row,
+.audioflume-home-mockup .audioflume-home-reference-new-songs > .filmwave-section-heading-row {
+  align-items: flex-end;
+  margin-bottom: var(--filmwave-small-section-title-margin-bottom);
+}
+
 .audioflume-home-mockup-section-label > span {
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
