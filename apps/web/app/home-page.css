@@ -3180,3 +3180,19 @@ body:has(.audioflume-home-landing)
 
 /* Artist card links inherit the page color by default; keep titles beige. */
 .audioflume-home-reference.audioflume-home-landing .audioflume-home-landing-artist-card .audioflume-home-landing-artist-title { color: #e5e5dd; }
+
+
+.audioflume-home-landing .audioflume-home-landing-search-song {
+  transition: background-color 160ms ease;
+}
+.audioflume-home-landing .audioflume-home-landing-search-song:hover,
+.audioflume-home-landing .audioflume-home-landing-search-song:focus-visible {
+  background: #ffffff;
+}
+.audioflume-home-landing .audioflume-home-landing-search-brand .audioflume-home-landing-search-mark {
+  transition: color 160ms ease;
+}
+.audioflume-home-landing .audioflume-home-landing-search-brand:hover .audioflume-home-landing-search-mark,
+.audioflume-home-landing .audioflume-home-landing-search-brand:focus-visible .audioflume-home-landing-search-mark {
+  color: #ffffff;
+}
