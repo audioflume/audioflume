@@ -1522,6 +1522,14 @@ export default function MusicPage() {
                     <div className="audioflume-music-originals-summary-logo">
                       <AudioflumeOriginalsLogo />
                     </div>
+                    <div className="audioflume-music-originals-summary-meta">
+                      <span className="audioflume-music-originals-summary-meta-left">
+                        LIFETIME ACCESS TO ORIGINAL IN-HOUSE MADE MUSIC
+                      </span>
+                      <span className="audioflume-music-originals-summary-meta-right">
+                        <s>REGULAR $299</s>&nbsp;&nbsp; LIMITED TIME ONLY $99
+                      </span>
+                    </div>
                   </div>
                 ) : featuredSongs.length > 0 ? (
                   <div className="audioflume-music-featured-songs">
