@@ -3128,11 +3128,19 @@ body:has(.audioflume-home-landing)
   border-radius: 0;
   background: #e5e5dd;
   color: #111;
-  font-family: inherit;
+  padding: 0;
+  font: inherit;
   font-size: 14px;
+  font-weight: 400;
+  line-height: 1;
+  white-space: nowrap;
   cursor: pointer;
 }
-.audioflume-home-landing-search-song svg { width: 14px; height: 14px; }
+.audioflume-home-landing-search-song svg {
+  width: 16px;
+  height: 16px;
+  flex: 0 0 auto;
+}
 .audioflume-home-landing-brand-row {
   display: flex;
   align-items: center;
@@ -3272,6 +3280,10 @@ body:has(.audioflume-home-landing)
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-song:hover,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-song:focus-visible {
   background: #333333;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-brand:hover .audioflume-home-landing-search-mark,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-brand:focus-visible .audioflume-home-landing-search-mark {
+  color: #333333;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-brand-row p {
   color: #666666;
