@@ -1325,7 +1325,7 @@ export default function MusicPage() {
         <GlobalMusicSearchField
           value={search}
           onChange={setSearch}
-          onClear={() => setSearch("")}
+          onClear={clearReferenceSearch}
           inputRef={searchInputRef}
         />
 
