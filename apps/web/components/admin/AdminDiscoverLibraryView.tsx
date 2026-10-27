@@ -545,7 +545,7 @@ export default function AdminDiscoverLibraryView({
                     <FeaturedArtistSortableCard
                       key={item.artist_id}
                       item={item}
-                      onRemove={() => void removeFeaturedArtist(item)}
+                      onRemove={() => void removeFeaturedArtist(item, false)}
                     />
                   ))}
                 </div>
@@ -604,7 +604,7 @@ export default function AdminDiscoverLibraryView({
                           removeAriaLabel={`Remove ${playlist.name} from ${sectionLabel}`}
                           removeTitle={`Remove from ${sectionLabel}`}
                           onRemove={() =>
-                            void removeFromSection(sectionKey, playlist)
+                            void removeFromSection(sectionKey, playlist, false)
                           }
                         />
                       ))}
