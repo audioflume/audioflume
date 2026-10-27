@@ -221,8 +221,6 @@ body:has(.audioflume-home-landing)
 .audioflume-home-reference-hero-headline .is-for-film {
   top: 51%;
   right: 8%;
-  color: #ffffff;
-  mix-blend-mode: difference;
 }
 
 .audioflume-home-reference-hero-mark {
