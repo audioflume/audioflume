@@ -1892,7 +1892,7 @@ body:has(.audioflume-home-landing)
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-mockup-featured-artists-heading {
+  .audioflume-home-mockup-artists .audioflume-home-mockup-featured-artists-heading {
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
