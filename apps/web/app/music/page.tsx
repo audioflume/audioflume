@@ -566,6 +566,13 @@ export default function MusicPage() {
   };
 
   const clearReferenceSearch = () => {
+    // Remove the URL handoff as well as in-memory state; otherwise a refresh
+    // replays the reference-search request from referenceTrackId.
+    const url = new URL(window.location.href);
+    url.searchParams.delete("referenceSearch");
+    url.searchParams.delete("referenceTrackId");
+    window.history.replaceState(null, "", url.pathname + url.search + url.hash);
+
     setReferenceSearchState(null);
     setSearchBySongQuery("");
     setFilters((current) => ({ ...current, search: "" }));
