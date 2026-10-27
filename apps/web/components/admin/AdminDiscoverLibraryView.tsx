@@ -291,11 +291,11 @@ export default function AdminDiscoverLibraryView({
     }
   }
 
-  async function removeFeaturedArtist(item: FeaturedArtistItem) {
-    const confirmed = window.confirm(
+  async function removeFeaturedArtist(item: FeaturedArtistItem, confirmRemoval = true) {
+    const confirmed = !confirmRemoval || window.confirm(
       `Remove "${item.artist.name}" from Featured Artists?`,
     );
-    if (!confirmed || savingFeatured) return;
+    if ((confirmRemoval && !confirmed) || savingFeatured) return;
 
     try {
       setSavingFeatured(true);
@@ -395,9 +395,10 @@ export default function AdminDiscoverLibraryView({
   async function removeFromSection(
     sectionKey: DiscoverSectionShelfKey,
     playlist: CuratedPlaylist,
+    confirmRemoval = true,
   ) {
     const label = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
-    const confirmed = window.confirm(`Remove "${playlist.name}" from ${label}?`);
+    const confirmed = !confirmRemoval || window.confirm(`Remove "${playlist.name}" from ${label}?`);
     if (!confirmed || savingSection) return;
 
     try {
@@ -623,6 +624,10 @@ export default function AdminDiscoverLibraryView({
           saving={savingFeatured}
           onClose={() => setArtistPickerOpen(false)}
           onAdd={addFeaturedArtists}
+          onRemove={(artistId) => {
+            const item = featuredArtists.find((entry) => entry.artist_id === artistId);
+            if (item) return removeFeaturedArtist(item, false);
+          }}
         />
       )}
 
@@ -635,6 +640,10 @@ export default function AdminDiscoverLibraryView({
           saving={savingSection}
           onClose={() => setPickerSection(null)}
           onAdd={(playlistIds) => addToSection(pickerSection, playlistIds)}
+          onRemove={(playlistId) => {
+            const playlist = playlists.find((entry) => entry.id === playlistId);
+            if (playlist) return removeFromSection(pickerSection, playlist, false);
+          }}
         />
       )}
 
