@@ -409,7 +409,7 @@ export default function AddToProjectModal({
                 }}
                 className="mb-1 flex min-h-[58px] w-full items-center gap-3 rounded-none p-2.5"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--filmwave-search-surface)] text-[var(--text-primary)]">
                   <PlusIcon size={18} />
                 </span>
 
@@ -451,7 +451,7 @@ export default function AddToProjectModal({
                 onClick={() => setNewProjectOpen(true)}
                 className="group flex min-h-[58px] w-full cursor-pointer items-center gap-3 rounded-none p-2.5 text-left transition-colors hover:bg-[var(--bg-hover)]"
               >
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--bg-hover)] text-[var(--text-primary)] transition-[filter] group-hover:brightness-[0.90]">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-none bg-[var(--filmwave-search-surface)] text-[var(--text-primary)] transition-[filter] group-hover:brightness-[0.90]">
                   <PlusIcon size={18} />
                 </span>
                 <span className="min-w-0 flex-1 truncate text-[14.5px] font-normal leading-[1.35] text-[var(--text-primary)]">
