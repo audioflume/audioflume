@@ -2982,7 +2982,7 @@ body:has(.audioflume-home-landing)
   flex: 0 0 62px;
   align-items: center;
   justify-content: center;
-  border-right: 1px solid rgba(255, 255, 255, 0.025);
+  border-right: 1px solid #ffffff06;
 }
 .audioflume-home-landing-search-mark {
   width: 28px;
