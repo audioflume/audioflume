@@ -3153,7 +3153,8 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-artist-carousel {
   width: 100%;
-  overflow: hidden;
+  overflow-x: auto;
+  overflow-y: hidden;
   background: #111;
   padding-bottom: 118px;
   cursor: grab;
