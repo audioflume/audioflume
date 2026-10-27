@@ -169,7 +169,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-reference-hero-headline {
   position: absolute;
   inset: 0;
-  z-index: 1;
+  /* Do not isolate the blend text from the hero image/shade backdrop. */
+  z-index: auto;
   color: #e5e5dd;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(82px, 7vw, 144px);
