@@ -9,7 +9,7 @@ import { useHasCurrentSong } from "@/context/PlayerContext";
 import { useEffect, useState } from "react";
 
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/natalie-parham-9Qccv5rZtRM-unsplash.jpg";
+  "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
 
 export default function HomeLandingContent() {
   const playerVisible = useHasCurrentSong();
