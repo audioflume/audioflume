@@ -3122,7 +3122,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-artist-card {
   display: flex;
-  width: clamp(210px, 17.6vw, 310px);
+  width: clamp(300px, 26vw, 480px);
   flex: 0 0 auto;
   flex-direction: column;
   color: #e5e5dd;
