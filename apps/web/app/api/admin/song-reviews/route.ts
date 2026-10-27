@@ -47,11 +47,11 @@ export async function GET() {
       return NextResponse.json({ songs: [] });
     }
 
-    const [songsResult, revisionsResult] = await Promise.all([
+    const [songsResult, revisionsResult, excludedResult] = await Promise.all([
       supabaseServer
         .from("songs")
         .select(
-          "id, title, artist, status, duration, key, bpm, cover_url, license_type, created_at, submitted_at",
+          "id, title, artist, status, duration, key, bpm, cover_url, audio_url, license_type, created_at, submitted_at",
         )
         .in("id", songIds)
         .in("status", [...REVIEW_STATUSES]),
@@ -59,10 +59,13 @@ export async function GET() {
         .from("song_pending_revisions")
         .select("song_id, status, metadata, duration, updated_at")
         .in("song_id", songIds),
+      supabaseServer.from("music_review_queue_exclusions").select("song_id"),
     ]);
 
     if (songsResult.error) throw songsResult.error;
     if (revisionsResult.error) throw revisionsResult.error;
+    if (excludedResult.error) throw excludedResult.error;
+    const excludedIds = new Set((excludedResult.data ?? []).map(row => row.song_id));
 
     const songs = songsResult.data ?? [];
     const revisionBySongId = new Map(
@@ -95,7 +98,7 @@ export async function GET() {
       }
     }
 
-    const queueSongs = songs.map((song) => {
+    const queueSongs = songs.filter(song => !excludedIds.has(song.id)).map((song) => {
       const artistId = primaryArtistBySong.get(song.id);
       const revision = revisionBySongId.get(song.id);
       const metadata =
