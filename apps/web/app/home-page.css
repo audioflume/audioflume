@@ -1875,10 +1875,19 @@ body:has(.audioflume-home-landing)
   gap: 10px;
 }
 
+.audioflume-home-mockup-artists > .audioflume-home-mockup-section-label {
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
+}
+
+.audioflume-home-mockup-artists .audioflume-home-reference-artist-card:not(:first-child) {
+  width: min(760px, 56vw) !important;
+  min-width: min(760px, 56vw) !important;
+}
+
 .audioflume-home-mockup-curated-card {
   position: relative;
-  width: min(462px, 92vw);
-  min-width: min(462px, 92vw);
+  width: min(540px, 92vw);
+  min-width: min(540px, 92vw);
   height: 252px;
   overflow: hidden;
   border-radius: 0;
