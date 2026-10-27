@@ -7,16 +7,15 @@ import Footer from "@/components/Footer";
 import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
-import AdminPlaylistLibraryView from "@/components/admin/AdminPlaylistLibraryView";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
-type ManagerTab = "playlists" | "curated" | "discover";
+type ManagerTab = "playlists" | "discover";
 
 const PLAYLIST_MANAGER_TAB_STORAGE_KEY = "audioflume-admin-playlist-manager-tab";
 
 function isManagerTab(value: string | null): value is ManagerTab {
-  return value === "playlists" || value === "curated" || value === "discover";
+  return value === "playlists" || value === "discover";
 }
 
 export default function PlaylistManagerPage() {
@@ -110,16 +109,16 @@ export default function PlaylistManagerPage() {
 
   return (
     <AdminContentPage
-      label="Playlist Manager"
-      title="Playlist Manager"
-      description="Manage the playlist library, curated shelves, and Discover content."
+      label="Content Manager"
+      title="Content Manager"
+      description="Manage playlists and featured content on Discover."
       compactHeader
       contentAreaClassName="bg-[var(--filmwave-neutral-surface)]"
       contentAreaBottomPadding={false}
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className={`flex items-center gap-2 ${activeTab === null ? "invisible" : ""}`}>
-          {(["playlists", "curated", "discover"] as ManagerTab[]).map((tab) => (
+          {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
             <button
               key={tab}
               type="button"
@@ -132,9 +131,7 @@ export default function PlaylistManagerPage() {
             >
               {tab === "playlists"
                 ? "All Playlists"
-                : tab === "curated"
-                  ? "Curated"
-                  : "Discover"}
+                : "Discover"}
             </button>
           ))}
         </div>
@@ -156,12 +153,6 @@ export default function PlaylistManagerPage() {
             error={error}
             deletingId={deletingId}
             onDeletePlaylist={deletePlaylist}
-          />
-        ) : activeTab === "curated" ? (
-          <AdminPlaylistLibraryView
-            playlists={playlists}
-            loading={loading}
-            error={error}
           />
         ) : (
           <AdminDiscoverLibraryView
