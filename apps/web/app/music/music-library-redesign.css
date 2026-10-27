@@ -1246,7 +1246,7 @@ main
 }
 
 .audioflume-music-page .audioflume-music-originals-summary-logo {
-  width: min(300px, calc(100% - 48px));
+  width: min(270px, calc(100% - 48px));
   color: #111;
 }
 
