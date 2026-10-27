@@ -1091,7 +1091,7 @@ export default function HomePageContent({
         </section>
       ) : null}
 
-      <section className="audioflume-home-mockup-intro" hidden>
+      <section className="audioflume-home-mockup-intro">
         <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
           <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
           <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
