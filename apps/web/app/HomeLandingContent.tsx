@@ -93,11 +93,12 @@ export default function HomeLandingContent() {
 
     function onWheel(event: WheelEvent) {
       if (event.ctrlKey || !loopWidth) return;
-      const delta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
-      if (!delta) return;
+      // Only handle genuinely horizontal gestures. Vertical wheel scrolling
+      // must continue through the carousel to scroll the page normally.
+      if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
       event.preventDefault();
       pausedUntil = performance.now() + 1300;
-      viewport!.scrollLeft += delta;
+      viewport!.scrollLeft += event.deltaX;
       wrap();
     }
 
