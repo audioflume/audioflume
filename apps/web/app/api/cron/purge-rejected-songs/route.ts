@@ -7,6 +7,7 @@ export const maxDuration = 60;
 
 const RETENTION_DAYS = 30;
 const MAX_PER_RUN = 25;
+const MAX_CANDIDATES = 500;
 
 function fileKey(url: unknown): string | null {
   if (typeof url !== "string" || !url.trim()) return null;
@@ -34,12 +35,14 @@ export async function GET(request: Request) {
     const { data: rejected, error } = await supabaseServer.from("songs")
       .select("id,title,status,audio_url,playback_url,hls_url,cover_url,stems")
       .eq("status", "rejected")
-      .limit(MAX_PER_RUN);
+      .order("created_at", { ascending: true })
+      .limit(MAX_CANDIDATES);
     if (error) throw error;
 
     const removed: string[] = [];
     const skipped: string[] = [];
     for (const song of rejected ?? []) {
+      if (removed.length >= MAX_PER_RUN) break;
       // Never use song creation time; eligibility starts at the latest rejection event.
       const { data: latest, error: eventError } = await supabaseServer
         .from("song_review_events")
