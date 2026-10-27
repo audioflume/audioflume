@@ -1292,6 +1292,19 @@ main
   text-decoration-color: currentColor;
 }
 
+/* Match the shared user menu surface and beige accents in dark mode only. */
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-music-page .audioflume-music-originals-summary {
+  background: var(--filmwave-web-user-menu-bg);
+}
+
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-music-page .audioflume-music-originals-summary-logo,
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-music-page .audioflume-music-originals-summary-meta {
+  color: #e5e5dd;
+}
+
 .audioflume-music-page .audioflume-music-featured-songs {
   --audioflume-featured-song-inset: 36px;
   display: grid;
