@@ -77,7 +77,7 @@
   gap: 12px;
   margin: 12px 12px 12px 0;
   border-radius: 0;
-  background: var(--filmwave-web-user-menu-bg);
+  background: var(--filmwave-search-surface);
   padding: 0 16px;
   color: #5a5a5a;
 }
