@@ -2891,17 +2891,17 @@ body:has(.audioflume-home-landing)
   transform: translateY(-50%);
 }
 .audioflume-home-landing .audioflume-home-reference-hero-shade {
-  background:
-    linear-gradient(rgba(0, 0, 0, .14), rgba(0, 0, 0, .14)),
-    linear-gradient(
-      180deg,
-      rgba(0, 0, 0, .12) 0%,
-      rgba(0, 0, 0, .08) 32%,
-      rgba(17, 17, 17, .16) 46%,
-      rgba(17, 17, 17, .48) 68%,
-      rgba(17, 17, 17, .88) 90%,
-      #111 100%
-    );
+  /* A single gradient darkens the photo and resolves to the exact
+     #111 background of the following section, avoiding a color seam. */
+  background: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, .24) 0%,
+    rgba(0, 0, 0, .22) 28%,
+    rgba(17, 17, 17, .35) 48%,
+    rgba(17, 17, 17, .72) 72%,
+    rgba(17, 17, 17, .96) 91%,
+    #111 100%
+  );
 }
 .audioflume-home-hero-responsive-break {
   display: none;
