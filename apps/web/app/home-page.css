@@ -2872,46 +2872,23 @@ body:has(.audioflume-home-landing)
   min-height: 470px;
 }
 .audioflume-home-landing .audioflume-home-reference-hero-headline {
-  display: block;
   position: absolute;
-  inset: 0;
-  z-index: auto;
+  inset: auto 0;
+  top: 50%;
+  z-index: 1;
+  display: block;
   width: 100%;
   margin: 0;
   padding: 0;
   color: #e5e5dd;
-  font-size: clamp(82px, 7vw, 144px);
+  font-size: clamp(42px, 5.05vw, 108px);
+  font-weight: 300;
   letter-spacing: -0.055em;
-  line-height: 0.92;
-  text-align: left;
-  white-space: normal;
-  transform: none;
-}
-.audioflume-home-landing .audioflume-home-reference-hero-headline .is-human {
-  top: 29%;
-  left: -0.07em;
-}
-.audioflume-home-landing .audioflume-home-reference-hero-headline .is-made {
-  top: 29%;
-  right: 0;
-}
-.audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx {
-  top: 40%;
-  left: 29%;
-  display: inline-flex;
-  gap: 0.28em;
+  line-height: 1;
+  text-align: justify;
+  text-align-last: justify;
   white-space: nowrap;
-  color: #e5e5dd;
-  mix-blend-mode: normal;
-}
-.audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx > span {
-  color: inherit;
-}
-.audioflume-home-landing .audioflume-home-reference-hero-headline .is-for-film {
-  top: 51%;
-  right: 8%;
-  color: #e5e5dd;
-  mix-blend-mode: normal;
+  transform: translateY(-50%);
 }
 .audioflume-home-landing .audioflume-home-reference-hero-shade {
   background: linear-gradient(
@@ -2924,16 +2901,13 @@ body:has(.audioflume-home-landing)
     #111 100%
   );
 }
-@media (max-width: 1100px) {
-  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(68px, 8vw, 94px); }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx { left: 24%; }
-}
 @media (max-width: 620px) {
-  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(44px, 11.5vw, 62px); }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-human { top: 27%; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-made { top: 27%; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx { top: 40%; left: 10%; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-for-film { top: 53%; right: 4%; }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline {
+    font-size: clamp(24px, 5.05vw, 42px);
+    padding-inline: 12px;
+    white-space: normal;
+    text-align-last: auto;
+  }
 }
 .audioflume-home-landing-hero-captions {
   position: absolute;
