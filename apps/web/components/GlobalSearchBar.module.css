@@ -12,7 +12,7 @@
   grid-template-columns: 154px minmax(0, 1fr) 230px;
   align-items: stretch;
   transition: grid-template-columns 180ms ease;
-  border-bottom: 1.25px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1.25px solid var(--filmwave-border-color);
   background: #111111;
   color: #ffffff;
   overscroll-behavior: none;
