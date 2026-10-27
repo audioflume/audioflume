@@ -223,11 +223,23 @@ function ReviewCover({
   playable: boolean;
 }) {
   return (
-    <button type="button" onClick={onPlay} disabled={!playable} aria-label={playing ? `Pause ${title}` : `Play ${title}`} className="group/review-cover relative h-[52px] w-[52px] overflow-hidden bg-[var(--bg-tertiary)] disabled:cursor-default">
+    <button
+      type="button"
+      onClick={onPlay}
+      disabled={!playable}
+      aria-label={playing ? `Pause ${title}` : `Play ${title}`}
+      className="group/review-cover relative h-[52px] w-[52px] cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default"
+    >
       {coverUrl ? (
         <img src={coverUrl} alt={title} className="h-full w-full object-cover" />
       ) : null}
-      {playable && <span className={`absolute inset-0 flex items-center justify-center bg-black/45 text-white transition-opacity ${playing ? "opacity-100" : "opacity-0 group-hover/review-cover:opacity-100 group-focus-visible/review-cover:opacity-100"}`}>{playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}</span>}
+      {playable ? (
+        <span
+          className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${playing ? "opacity-100" : "opacity-0 group-hover/review-cover:opacity-100 group-focus-visible/review-cover:opacity-100"}`}
+        >
+          {playing ? <PauseIcon /> : <PlayIconSmall />}
+        </span>
+      ) : null}
     </button>
   );
 }
