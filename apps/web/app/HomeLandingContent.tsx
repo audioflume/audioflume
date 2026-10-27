@@ -44,48 +44,40 @@ export default function HomeLandingContent() {
 
   useEffect(() => {
     const viewport = carouselRef.current;
-    if (!viewport || artists.length === 0) return;
-
-    const sequence = viewport.querySelector<HTMLElement>(".audioflume-home-landing-artist-sequence");
-    if (!sequence) return;
+    const track = viewport?.querySelector<HTMLElement>(".audioflume-home-landing-artist-track");
+    const sequence = track?.querySelector<HTMLElement>(".audioflume-home-landing-artist-sequence");
+    if (!viewport || !track || !sequence || artists.length === 0) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
     let loopWidth = 0;
+    let offset = 0;
     let dragging = false;
     let dragged = false;
-    let startX = 0;
-    let startScroll = 0;
+    let previousX = 0;
     let lastFrame = 0;
     let pausedUntil = 0;
     let frame = 0;
 
-    function wrap() {
+    function render() {
       if (!loopWidth) return;
-      // Keep the scroll position in the middle two copies, with identical
-      // content on either side for seamless manual and automatic movement.
-      while (viewport!.scrollLeft >= loopWidth * 2) viewport!.scrollLeft -= loopWidth;
-      while (viewport!.scrollLeft < loopWidth) viewport!.scrollLeft += loopWidth;
+      offset = ((offset % loopWidth) + loopWidth) % loopWidth;
+      track!.style.transform = `translate3d(${-offset}px, 0, 0)`;
     }
 
     function measure() {
       const width = sequence!.getBoundingClientRect().width;
       if (!width) return;
-      if (!loopWidth) {
-        loopWidth = width;
-        viewport!.scrollLeft = width;
-      } else if (Math.abs(width - loopWidth) > 0.5) {
-        const progress = (viewport!.scrollLeft - loopWidth) / loopWidth;
-        loopWidth = width;
-        viewport!.scrollLeft = width * (1 + progress);
-        wrap();
+      if (loopWidth && Math.abs(width - loopWidth) > 0.5) {
+        offset *= width / loopWidth;
       }
+      loopWidth = width;
+      render();
     }
 
     function tick(time: number) {
-      measure();
       if (lastFrame && loopWidth && !dragging && time >= pausedUntil && !reducedMotion.matches) {
-        viewport!.scrollLeft += (loopWidth / 95000) * Math.min(time - lastFrame, 64);
-        wrap();
+        offset += (loopWidth / 95000) * Math.min(time - lastFrame, 64);
+        render();
       }
       lastFrame = time;
       frame = requestAnimationFrame(tick);
@@ -93,37 +85,36 @@ export default function HomeLandingContent() {
 
     function onWheel(event: WheelEvent) {
       if (event.ctrlKey || !loopWidth) return;
-      // Only handle genuinely horizontal gestures. Vertical wheel scrolling
-      // must continue through the carousel to scroll the page normally.
+      // Never capture vertical page scrolling.
       if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
       event.preventDefault();
+      offset += event.deltaX;
       pausedUntil = performance.now() + 1300;
-      viewport!.scrollLeft += event.deltaX;
-      wrap();
+      render();
     }
 
     function onPointerDown(event: PointerEvent) {
       if (event.pointerType === "mouse" && event.button !== 0) return;
       dragging = true;
       dragged = false;
-      startX = event.clientX;
-      startScroll = viewport!.scrollLeft;
+      previousX = event.clientX;
       pausedUntil = performance.now() + 1300;
     }
+
     function onPointerMove(event: PointerEvent) {
       if (!dragging) return;
-      const delta = event.clientX - startX;
-      if (Math.abs(delta) > 5 && !dragged) {
+      const dx = event.clientX - previousX;
+      if (Math.abs(dx) > 5 && !dragged) {
         dragged = true;
         viewport!.setPointerCapture(event.pointerId);
       }
+      previousX = event.clientX;
       if (!dragged) return;
-      const target = startScroll - delta;
-      viewport!.scrollLeft = target;
-      wrap();
-      if (Math.abs(viewport!.scrollLeft - target) > 1) startScroll += viewport!.scrollLeft - target;
+      offset -= dx;
       pausedUntil = performance.now() + 1300;
+      render();
     }
+
     function onPointerUp() {
       if (!dragging) return;
       dragging = false;
@@ -146,6 +137,7 @@ export default function HomeLandingContent() {
     return () => {
       cancelAnimationFrame(frame);
       observer.disconnect();
+      track.style.transform = "";
       viewport.removeEventListener("wheel", onWheel);
       viewport.removeEventListener("pointerdown", onPointerDown);
       viewport.removeEventListener("pointermove", onPointerMove);
