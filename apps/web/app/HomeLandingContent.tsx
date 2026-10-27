@@ -57,14 +57,23 @@ export default function HomeLandingContent() {
       </section>
 
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
-        <div className="audioflume-home-landing-search">
-          <div className="audioflume-home-landing-search-field">
-            <Link href="/discover" className="audioflume-home-landing-search-brand" aria-label="Explore Discover">
-              <AudioflumeMark ariaHidden className="audioflume-home-landing-search-mark" />
-            </Link>
-            <GlobalMusicSearch showSubmitArrow />
+        <div className="audioflume-home-landing-search-group">
+          <div className="audioflume-home-landing-search">
+            <div className="audioflume-home-landing-search-field">
+              <Link href="/discover" className="audioflume-home-landing-search-brand" aria-label="Explore Discover">
+                <AudioflumeMark ariaHidden className="audioflume-home-landing-search-mark" />
+              </Link>
+              <GlobalMusicSearch showSubmitArrow />
+            </div>
+            <GlobalReferenceSearch className="audioflume-home-landing-search-song" />
           </div>
-          <GlobalReferenceSearch className="audioflume-home-landing-search-song" />
+          <nav className="audioflume-home-landing-keywords" aria-label="Popular music searches">
+            {["Cinematic", "Ambient", "Emotional", "Uplifting", "Documentary", "Tension", "Piano"].map((keyword) => (
+              <Link key={keyword} href={`/music?search=${encodeURIComponent(keyword)}`} className="audioflume-home-landing-keyword">
+                {keyword}
+              </Link>
+            ))}
+          </nav>
         </div>
         <div className="audioflume-home-reference-width audioflume-home-landing-brand-row">
           <p>Filmmakers working for these brands already use Audioflume.</p>
