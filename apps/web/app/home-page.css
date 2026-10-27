@@ -210,8 +210,8 @@ body:has(.audioflume-home-landing)
   align-items: baseline;
   gap: 0.28em;
   white-space: nowrap;
-  color: #ffffff;
-  mix-blend-mode: difference;
+  color: #e5e5dd;
+  mix-blend-mode: normal;
 }
 
 .audioflume-home-reference-hero-headline .is-music-sfx > span {
