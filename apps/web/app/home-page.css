@@ -2920,7 +2920,7 @@ body:has(.audioflume-home-landing)
 }
 @media (max-width: 620px) {
   .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    font-size: clamp(23px, 5.5vw, 34px);
+    font-size: clamp(38px, 8vw, 54px);
   }
 }
 .audioflume-home-landing-hero-captions {
