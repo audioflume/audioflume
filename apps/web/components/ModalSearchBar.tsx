@@ -19,7 +19,7 @@ export default function ModalSearchBar({
 }: ModalSearchBarProps) {
   return (
     <label
-      className={`flex h-12 flex-shrink-0 items-center gap-3 rounded-none bg-[var(--bg-hover)] px-4 text-[var(--text-muted)]${className ? ` ${className}` : ""}`}
+      className={`flex h-12 flex-shrink-0 items-center gap-3 rounded-none bg-[var(--filmwave-search-surface)] px-4 text-[var(--text-muted)]${className ? ` ${className}` : ""}`}
     >
       <svg
         viewBox="0 0 24 24"
