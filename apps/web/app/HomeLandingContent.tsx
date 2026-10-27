@@ -90,12 +90,14 @@ export default function HomeLandingContent() {
       dragged = false;
       startX = event.clientX;
       startScroll = viewport!.scrollLeft;
-      viewport!.setPointerCapture(event.pointerId);
     }
     function onPointerMove(event: PointerEvent) {
       if (!dragging) return;
       const delta = event.clientX - startX;
-      if (Math.abs(delta) > 5) dragged = true;
+      if (Math.abs(delta) > 5 && !dragged) {
+        dragged = true;
+        viewport!.setPointerCapture(event.pointerId);
+      }
       viewport!.scrollLeft = startScroll - delta;
       wrap();
       if (loopWidth && (viewport!.scrollLeft !== startScroll - delta)) {
