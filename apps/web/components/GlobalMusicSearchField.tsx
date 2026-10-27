@@ -6,6 +6,7 @@ import type {
 } from "react";
 
 import XIcon from "@/components/icons/XIcon";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 
 export const GLOBAL_MUSIC_SEARCH_PLACEHOLDER =
   "Search by mood, genre, or scene.";
@@ -18,6 +19,7 @@ type GlobalMusicSearchFieldProps = {
   inputRef?: Ref<HTMLInputElement>;
   className?: string;
   clearButtonClassName?: string;
+  showSubmitArrow?: boolean;
 };
 
 function SearchFieldContent({
@@ -26,6 +28,7 @@ function SearchFieldContent({
   onClear,
   inputRef,
   clearButtonClassName = "audioflume-home-reference-searchbar-clear",
+  showSubmitArrow = false,
 }: Omit<GlobalMusicSearchFieldProps, "onSubmit" | "className">) {
   return (
     <>
@@ -51,6 +54,11 @@ function SearchFieldContent({
           <XIcon size={8} strokeWidth={1.4} />
         </button>
       ) : null}
+      {showSubmitArrow ? (
+        <button type="submit" className="audioflume-home-landing-search-submit" aria-label="Submit music search">
+          <ArrowUpRightIcon size={18} strokeWidth={1.5} />
+        </button>
+      ) : null}
     </>
   );
 }
@@ -63,6 +71,7 @@ export default function GlobalMusicSearchField({
   inputRef,
   className = "audioflume-home-reference-searchbar-field",
   clearButtonClassName = "audioflume-home-reference-searchbar-clear",
+  showSubmitArrow = false,
 }: GlobalMusicSearchFieldProps) {
   if (onSubmit) {
     return (
@@ -76,6 +85,7 @@ export default function GlobalMusicSearchField({
           onClear={onClear}
           inputRef={inputRef}
           clearButtonClassName={clearButtonClassName}
+          showSubmitArrow={showSubmitArrow}
         />
       </form>
     );
