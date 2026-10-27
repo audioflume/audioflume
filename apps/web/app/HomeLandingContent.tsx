@@ -49,7 +49,7 @@ export default function HomeLandingContent() {
         style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
       >
         <div className="audioflume-home-reference-hero-shade" />
-        <h1 className="audioflume-home-reference-hero-headline">Human made music <br className="audioflume-home-hero-responsive-break" />&amp; SFX for film</h1>
+        <h1 className="audioflume-home-reference-hero-headline">Human made music<br className="audioflume-home-hero-responsive-break" />&amp; SFX for film</h1>
         <div className="audioflume-home-reference-width audioflume-home-landing-hero-captions">
           <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
           <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
