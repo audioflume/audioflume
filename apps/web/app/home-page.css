@@ -3153,8 +3153,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-artist-carousel {
   width: 100%;
-  overflow-x: auto;
-  overflow-y: hidden;
+  overflow: hidden;
   background: #111;
   padding-bottom: 118px;
   cursor: grab;
@@ -3166,6 +3165,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-artist-track {
   display: flex;
   width: max-content;
+  will-change: transform;
 }
 .audioflume-home-landing-artist-sequence {
   display: flex;
@@ -3198,9 +3198,7 @@ body:has(.audioflume-home-landing)
   font-size: 12px;
   line-height: 1.25;
 }
-@media (prefers-reduced-motion: reduce) {
-  .audioflume-home-landing-artist-carousel { overflow-x: auto; }
-}
+
 @media (max-width: 760px) {
   .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px); min-height: 350px; }
   .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-player-height, 72px)); min-height: 350px; }
