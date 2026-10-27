@@ -2880,7 +2880,7 @@ body:has(.audioflume-home-landing)
   margin: 0;
   padding: 0;
   color: #e5e5dd;
-  font-size: clamp(48px, 5.7vw, 120px);
+  font-size: clamp(46px, 5.35vw, 114px);
   letter-spacing: -0.055em;
   line-height: 1;
   text-align: justify;
@@ -2932,11 +2932,18 @@ body:has(.audioflume-home-landing)
   background: #1b1b1b;
   color: #757575;
 }
+.audioflume-home-landing-search-brand {
+  display: flex;
+  height: calc(100% - 12px);
+  flex: 0 0 74px;
+  align-items: center;
+  justify-content: center;
+  border-right: 1px solid rgba(255, 255, 255, 0.09);
+}
 .audioflume-home-landing-search-mark {
   width: 28px;
   height: 28px;
   flex: 0 0 28px;
-  margin: 0 20px;
   color: #e5e5dd;
 }
 .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-field {
@@ -2945,19 +2952,20 @@ body:has(.audioflume-home-landing)
   min-width: 0;
   height: 100%;
   align-items: center;
-  gap: 9px;
+  gap: 12px;
   margin: 0;
   border: 0;
   background: transparent;
-  padding: 0 12px 0 0;
+  padding: 0 16px;
 }
 .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-field > svg {
-  width: 19px;
-  height: 19px;
-  flex: 0 0 19px;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-width: 1.4;
 }
 .audioflume-home-landing-search-field input {
   width: 100%;
@@ -2968,8 +2976,13 @@ body:has(.audioflume-home-landing)
   color: #fff;
   font-family: inherit;
   font-size: 16px;
+  font-weight: 300;
 }
-.audioflume-home-landing-search-field input::placeholder { color: #737373; }
+.audioflume-home-landing-search-field input::placeholder {
+  color: #5a5a5a;
+  font-size: 16px;
+  opacity: 1;
+}
 .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-clear { color: #ddd; background: none; border: 0; }
 .audioflume-home-landing-search-song {
   display: inline-flex;
@@ -2996,7 +3009,7 @@ body:has(.audioflume-home-landing)
   margin: 0;
   color: #646464;
   font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 9px;
+  font-size: 11px;
   text-transform: uppercase;
 }
 .audioflume-home-landing-brand-row img {
@@ -3038,6 +3051,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-artist-title {
   margin-top: 12px;
+  color: #e5e5dd;
   font-size: 13px;
   line-height: 1.2;
 }
@@ -3057,13 +3071,17 @@ body:has(.audioflume-home-landing)
 @media (max-width: 760px) {
   .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px); min-height: 350px; }
   .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-player-height, 72px)); min-height: 350px; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(24px, 5.7vw, 44px); white-space: normal; text-align-last: auto; padding-inline: 16px; }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(24px, 5.35vw, 42px); white-space: normal; text-align-last: auto; padding-inline: 16px; }
   .audioflume-home-landing-discover { min-height: 300px; padding-top: 96px; }
   .audioflume-home-landing-search { width: min(940px, calc(100% - 32px)); height: 52px; }
-  .audioflume-home-landing-search-mark { width: 22px; height: 22px; flex-basis: 22px; margin-inline: 12px; }
+  .audioflume-home-landing-search-brand { flex-basis: 48px; height: calc(100% - 10px); }
+  .audioflume-home-landing-search-mark { width: 22px; height: 22px; flex-basis: 22px; }
   .audioflume-home-landing-hero-captions { bottom: 22px; font-size: 8px; }
   .audioflume-home-landing-search-song { flex-basis: 150px; }
   .audioflume-home-landing-brand-row { flex-direction: column; gap: 10px; text-align: center; }
   .audioflume-home-landing-brand-row img { width: min(100%, 520px); }
   .audioflume-home-landing-artist-carousel { padding-bottom: 76px; }
 }
+
+/* Artist card links inherit the page color by default; keep titles beige. */
+.audioflume-home-reference.audioflume-home-landing .audioflume-home-landing-artist-card .audioflume-home-landing-artist-title { color: #e5e5dd; }
