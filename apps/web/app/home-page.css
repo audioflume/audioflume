@@ -2988,6 +2988,15 @@ body:has(.audioflume-home-landing)
   color: #e5e5dd;
   border-color: #777;
 }
+/* Override shared link color rules for homepage keyword links in dark mode only. */
+:where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
+  .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword,
+:where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
+  .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:hover,
+:where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
+  .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:focus-visible {
+  color: #e5e5dd !important;
+}
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword {
   color: #666;
 }
