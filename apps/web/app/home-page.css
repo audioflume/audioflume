@@ -2956,6 +2956,51 @@ body:has(.audioflume-home-landing)
   background: #111;
   padding: 150px 0 32px;
 }
+.audioflume-home-landing-search-group {
+  display: flex;
+  width: min(940px, calc(100% - 80px));
+  flex-direction: column;
+  gap: 18px;
+}
+.audioflume-home-landing-search-group .audioflume-home-landing-search {
+  width: 100%;
+}
+.audioflume-home-landing-keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.audioflume-home-landing-keyword {
+  display: inline-flex;
+  min-height: 30px;
+  align-items: center;
+  border: 1.25px solid var(--filmwave-border-color);
+  border-radius: 999px;
+  padding: 0 13px;
+  color: #a3a3a3;
+  font-size: 12px;
+  font-weight: 400;
+  text-decoration: none;
+  transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
+}
+.audioflume-home-landing-keyword:hover,
+.audioflume-home-landing-keyword:focus-visible {
+  color: #e5e5dd;
+  border-color: #777;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword {
+  color: #666;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword:focus-visible {
+  color: #111;
+  border-color: #999;
+}
+@media (max-width: 760px) {
+  .audioflume-home-landing-search-group {
+    width: min(940px, calc(100% - 32px));
+  }
+}
 .audioflume-home-landing-search {
   display: flex;
   width: min(940px, calc(100% - 80px));
