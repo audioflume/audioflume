@@ -1105,6 +1105,9 @@ export default function HomePageContent({
       </section>
 
       <section className="audioflume-home-mockup-artists">
+        <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+          <span>This month&apos;s featured artists</span>
+        </div>
         {artistsLoading ? (
           <HomeArtistShelfSkeleton />
         ) : artists.length > 0 ? (
