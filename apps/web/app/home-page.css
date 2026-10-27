@@ -1405,7 +1405,7 @@ body:has(.audioflume-home-landing)
 /* ------------------------------------------------------------------ */
 
 .audioflume-home-mockup-intro-heading {
-  visibility: hidden;
+  display: none;
 }
 
 .audioflume-home-mockup-intro {
@@ -1417,7 +1417,7 @@ body:has(.audioflume-home-landing)
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 60px;
+  margin-bottom: 80px;
   color: #949494;
   font-family: var(--font-roboto-mono), monospace;
   font-size: 9px;
@@ -1428,7 +1428,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-intro-heading {
-  display: block;
+  display: none;
   padding-top: 0;
   padding-bottom: 0;
 }
