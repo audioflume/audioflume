@@ -59,7 +59,9 @@ export default function HomeLandingContent() {
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
         <div className="audioflume-home-landing-search">
           <div className="audioflume-home-landing-search-field">
-            <AudioflumeMark ariaHidden className="audioflume-home-landing-search-mark" />
+            <div className="audioflume-home-landing-search-brand">
+              <AudioflumeMark ariaHidden className="audioflume-home-landing-search-mark" />
+            </div>
             <GlobalMusicSearch />
           </div>
           <GlobalReferenceSearch className="audioflume-home-landing-search-song" />
