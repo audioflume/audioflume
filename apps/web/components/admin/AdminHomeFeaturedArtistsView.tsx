@@ -134,8 +134,8 @@ export default function AdminHomeFeaturedArtistsView() {
     } catch (e) { setToast(e instanceof Error ? e.message : "Unable to add artists"); }
     finally { setSaving(false); }
   }
-  async function remove(item: FeaturedArtistItem) {
-    if (saving || !window.confirm(`Remove "${item.artist.name}" from Home Featured Artists?`)) return;
+  async function remove(item: FeaturedArtistItem, confirmRemoval = true) {
+    if (saving || (confirmRemoval && !window.confirm(`Remove "${item.artist.name}" from Home Featured Artists?`))) return;
     setSaving(true);
     try {
       await mutate("DELETE", { artist_id: item.artist_id });
@@ -175,7 +175,9 @@ export default function AdminHomeFeaturedArtistsView() {
           </DndContext>}
     </PlaylistManagerCollapsibleSection>
     {pickerOpen && <AdminArtistShelfPickerModal isOpen existingIds={items.map(item => item.artist_id)} saving={saving}
-      onClose={() => setPickerOpen(false)} onAdd={add} title="Home Featured Artists" />}
+      onClose={() => setPickerOpen(false)} onAdd={add}
+      onRemove={(artistId) => { const item = items.find(entry => entry.artist_id === artistId); if (item) return remove(item, false); }}
+      title="Home Featured Artists" />}
     <Toast message={toast} bottomOffset="24px" />
   </>;
 }
