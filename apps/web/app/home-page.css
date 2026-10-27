@@ -2872,29 +2872,21 @@ body:has(.audioflume-home-landing)
   min-height: 470px;
 }
 .audioflume-home-landing .audioflume-home-reference-hero-headline {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  display: block;
+  inset: auto 0;
+  top: 50%;
   z-index: 1;
   width: 100%;
+  margin: 0;
   padding: 0;
-  font-size: clamp(42px, 4.65vw, 108px);
+  color: #e5e5dd;
+  font-size: clamp(48px, 5.7vw, 120px);
   letter-spacing: -0.055em;
   line-height: 1;
-}
-.audioflume-home-landing .audioflume-home-reference-hero-headline .is-mockup-line {
-  position: static;
-  display: flex;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.5em;
+  text-align: justify;
+  text-align-last: justify;
   white-space: nowrap;
-  color: #e5e5dd;
-  mix-blend-mode: normal;
-}
-.audioflume-home-landing .audioflume-home-reference-hero-headline .is-mockup-line > span {
-  flex: 0 0 auto;
+  transform: translateY(-50%);
 }
 .audioflume-home-landing .audioflume-home-reference-hero-shade {
   background: linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.08) 55%, rgba(0,0,0,.3));
@@ -3065,8 +3057,7 @@ body:has(.audioflume-home-landing)
 @media (max-width: 760px) {
   .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px); min-height: 350px; }
   .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-player-height, 72px)); min-height: 350px; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(20px, 4.3vw, 32px); }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-mockup-line { flex-wrap: wrap; justify-content: space-around; gap: .35em .65em; }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(24px, 5.7vw, 44px); white-space: normal; text-align-last: auto; padding-inline: 16px; }
   .audioflume-home-landing-discover { min-height: 300px; padding-top: 96px; }
   .audioflume-home-landing-search { width: min(940px, calc(100% - 32px)); height: 52px; }
   .audioflume-home-landing-search-mark { width: 22px; height: 22px; flex-basis: 22px; margin-inline: 12px; }
