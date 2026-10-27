@@ -7,15 +7,16 @@ import Footer from "@/components/Footer";
 import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
+import AdminHomeFeaturedArtistsView from "@/components/admin/AdminHomeFeaturedArtistsView";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
-type ManagerTab = "playlists" | "discover";
+type ManagerTab = "playlists" | "home" | "discover";
 
 const PLAYLIST_MANAGER_TAB_STORAGE_KEY = "audioflume-admin-playlist-manager-tab";
 
 function isManagerTab(value: string | null): value is ManagerTab {
-  return value === "playlists" || value === "discover";
+  return value === "playlists" || value === "home" || value === "discover";
 }
 
 export default function PlaylistManagerPage() {
@@ -118,7 +119,7 @@ export default function PlaylistManagerPage() {
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className={`flex items-center gap-2 ${activeTab === null ? "invisible" : ""}`}>
-          {(["playlists", "discover"] as ManagerTab[]).map((tab) => (
+          {(["playlists", "home", "discover"] as ManagerTab[]).map((tab) => (
             <button
               key={tab}
               type="button"
@@ -131,7 +132,7 @@ export default function PlaylistManagerPage() {
             >
               {tab === "playlists"
                 ? "All Playlists"
-                : "Discover"}
+                : tab === "home" ? "Home" : "Discover"}
             </button>
           ))}
         </div>
@@ -154,6 +155,8 @@ export default function PlaylistManagerPage() {
             deletingId={deletingId}
             onDeletePlaylist={deletePlaylist}
           />
+        ) : activeTab === "home" ? (
+          <AdminHomeFeaturedArtistsView />
         ) : (
           <AdminDiscoverLibraryView
             playlists={playlists}
