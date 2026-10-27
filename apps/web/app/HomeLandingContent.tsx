@@ -55,11 +55,10 @@ export default function HomeLandingContent() {
             <span>Human</span><span>Made</span><span>Music</span><span>&amp;</span><span>SFX</span><span>For</span><span>Film.</span>
           </span>
         </div>
-        <AudioflumeMark
-          className="audioflume-home-reference-hero-mark"
-          ariaHidden
-        />
-
+        <div className="audioflume-home-reference-width audioflume-home-landing-hero-captions">
+          <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
+          <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
+        </div>
       </section>
 
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
@@ -79,7 +78,7 @@ export default function HomeLandingContent() {
       {artists.length > 0 && (
         <section className="audioflume-home-landing-artist-carousel" aria-label="Featured artists">
           <div className="audioflume-home-landing-artist-track">
-            {[0, 1].map((copy) => (
+            {[0, 1, 2, 3].map((copy) => (
               <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy === 1}>
                 {artists.map((artist) => (
                   <Link key={artist.id} tabIndex={copy === 1 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-card">
