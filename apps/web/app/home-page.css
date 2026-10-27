@@ -3186,3 +3186,52 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing .audioflume-home-landing-search-brand:focus-visible .audioflume-home-landing-search-mark {
   color: #ffffff;
 }
+
+/* Light-mode landing content: keep the hero's dark image fade unchanged. */
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-discover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-artist-carousel {
+  background: #ffffff;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field {
+  background: #f5f5f5;
+  color: #888888;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-brand {
+  border-right-color: var(--filmwave-border-color);
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-mark,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field input {
+  color: #111111;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field input::placeholder,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-clear,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-submit {
+  color: #888888;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-clear:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-submit:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-submit:focus-visible,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-brand:hover .audioflume-home-landing-search-mark,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-brand:focus-visible .audioflume-home-landing-search-mark {
+  color: #111111;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-song {
+  background: #111111;
+  color: #ffffff;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-song:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-song:focus-visible {
+  background: #333333;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-brand-row p {
+  color: #666666;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-brand-row img {
+  opacity: .75;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference.audioflume-home-landing .audioflume-home-landing-artist-card .audioflume-home-landing-artist-title {
+  color: #111111;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-artist-subtitle {
+  color: #777777;
+}
