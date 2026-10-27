@@ -7,6 +7,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
+import { BackendCheckbox } from "@/components/backend/BackendControls";
 import ApprovedSongPublishButton from "@/components/admin/ApprovedSongPublishButton";
 import Toast from "@/components/Toast";
 
@@ -812,7 +813,7 @@ export default function AdminMusicReviewPage() {
               </div>
               <div className="flex items-center gap-3">
                 <label className="flex cursor-pointer items-center gap-2 text-xs text-[var(--text-secondary)]">
-                  <input type="checkbox" checked={allSelected} onChange={toggleSelectAll} disabled={!removableSongs.length || removing} aria-label="Select all removable songs" />
+                  <BackendCheckbox checked={allSelected} onChange={toggleSelectAll} disabled={!removableSongs.length || removing} compact size="sm" ariaLabel="Select all removable songs" />
                   Select all
                 </label>
                 {selectedIds.length > 0 && <button type="button" onClick={() => void removeSelected()} disabled={removing} className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary">{removing ? "Removing..." : `Remove ${selectedIds.length} selected`}</button>}
@@ -853,7 +854,7 @@ export default function AdminMusicReviewPage() {
                               : "1px solid var(--border-subtle)",
                         }}
                       >
-                        <input type="checkbox" aria-label={`Select ${item.title}`} disabled={removing || (item.status !== "published" && item.status !== "rejected")} checked={selectedIds.includes(item.id)} onChange={event => toggleSelection(item.id, event.target.checked)} />
+                        <BackendCheckbox ariaLabel={`Select ${item.title}`} disabled={removing || (item.status !== "published" && item.status !== "rejected")} checked={selectedIds.includes(item.id)} onChange={checked => toggleSelection(item.id, checked)} compact size="sm" />
                         <div className="flex items-center">
                           <ReviewCover coverUrl={item.cover_url} title={item.title} playable={Boolean(item.audio_url)} playing={playingId === item.id} onPlay={() => togglePreview(item)} />
                         </div>
