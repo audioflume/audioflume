@@ -7,7 +7,7 @@ export const runtime = "nodejs";
 
 function r2Key(url: unknown) {
   if (typeof url !== "string" || !url.trim()) return null;
-  try { return decodeURIComponent(new URL(url).pathname.replace(/^\\/+/, "")); }
+  try { return decodeURIComponent(new URL(url).pathname.replace(/^\/+/, "")); }
   catch { return null; }
 }
 function stemUrls(value: unknown): string[] {
