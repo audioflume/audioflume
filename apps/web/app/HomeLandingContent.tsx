@@ -49,7 +49,7 @@ export default function HomeLandingContent() {
         <div className="audioflume-home-reference-hero-shade" />
         <div
           className="audioflume-home-reference-hero-headline"
-          aria-label="Human made music and SFX for film."
+          aria-label="Human made music and SFX for film"
         >
           <span className="is-mockup-line">
             <span>Human</span><span>Made</span><span>Music</span><span>&amp;</span><span>SFX</span><span>For</span><span>Film</span>
