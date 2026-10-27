@@ -28,7 +28,7 @@ export const DISCOVER_SECTION_SHELF_LABELS: Record<
   string
 > = {
   discover_moods: "Explore These Moods",
-  discover_curated: "Curated Playlists",
+  discover_curated: "Featured Playlists",
   discover_production: "Browse by Production Style",
 };
 
