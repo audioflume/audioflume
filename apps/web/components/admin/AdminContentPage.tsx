@@ -27,6 +27,7 @@ const SIDEBAR_SECTION_BY_LABEL: Record<string, string> = {
   "Upload Queue": "Upload",
   "Music Library": "Database",
   "Playlist Manager": "Database",
+  "Content Manager": "Database",
   "Create Playlist": "Database",
   "Cue Points": "Database",
   "Edit Song": "Database",
@@ -67,7 +68,7 @@ export default function AdminContentPage({
     hideIntro ||
     isDashboard ||
     isCuePoints ||
-    resolvedLabel === "Playlist Manager" ||
+    (resolvedLabel === "Playlist Manager" || resolvedLabel === "Content Manager") ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
     isSongEdit ||
@@ -76,7 +77,7 @@ export default function AdminContentPage({
   const usesAdminCanvas =
     isDashboard ||
     isCuePoints ||
-    resolvedLabel === "Playlist Manager" ||
+    (resolvedLabel === "Playlist Manager" || resolvedLabel === "Content Manager") ||
     resolvedLabel === "Music Library" ||
     isSongUpload ||
     isSongEdit ||
