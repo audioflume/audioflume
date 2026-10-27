@@ -1,7 +1,9 @@
 "use client";
 
 import { PremiumLabel } from "@filmwave/shared";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import type { Song } from "@/lib/types";
+import { usePlayer } from "@/context/PlayerContext";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PauseIcon from "@/components/icons/PauseIcon";
 
@@ -259,8 +261,30 @@ export default function AdminMusicReviewPage() {
   const [toastMessage, setToastMessage] = useState("");
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [removing, setRemoving] = useState(false);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [playingId, setPlayingId] = useState<string | null>(null);
+  const { currentSong, isPlaying, togglePlayPause, setQueue, closePlayer } = usePlayer();
+  const playingId = isPlaying ? currentSong?.id : null;
+  const previewSongs = useMemo<Song[]>(() => songs.filter((song) => Boolean(song.audio_url)).map((song) => ({
+    id: song.id,
+    title: song.title,
+    artist: song.artist,
+    audioUrl: song.audio_url!,
+    playbackUrl: song.audio_url!,
+    hlsUrl: "",
+    stems: [],
+    coverArt: song.cover_url,
+    waveformPeaks: "",
+    duration: Number(song.duration) || 0,
+    key: song.key ?? "",
+    bpm: song.bpm ?? 0,
+    genres: [], moods: [], regions: [], instruments: [], builds: [], vocals: [],
+    instrumental: false,
+    editPoints: "",
+    downloadCount: 0,
+  })), [songs]);
+
+  useEffect(() => {
+    setQueue(previewSongs);
+  }, [previewSongs, setQueue]);
 
   async function loadQueue() {
     try {
@@ -289,7 +313,7 @@ export default function AdminMusicReviewPage() {
 
   useEffect(() => {
     void loadQueue();
-    return () => { audioRef.current?.pause(); };
+
   }, []);
 
   const counts = useMemo(() => {
@@ -330,18 +354,8 @@ export default function AdminMusicReviewPage() {
     setSelectedIds(current => checked ? [...new Set([...current, id])] : current.filter(value => value !== id));
   }
   function togglePreview(song: SubmissionSummary) {
-    if (!song.audio_url) return;
-    if (playingId === song.id) {
-      audioRef.current?.pause();
-      setPlayingId(null);
-      return;
-    }
-    audioRef.current?.pause();
-    const audio = new Audio(song.audio_url);
-    audioRef.current = audio;
-    audio.onended = () => setPlayingId(null);
-    audio.onerror = () => { setPlayingId(null); showToast("Unable to play audio preview"); };
-    void audio.play().then(() => setPlayingId(song.id)).catch(() => showToast("Unable to play audio preview"));
+    const preview = previewSongs.find((item) => item.id === song.id);
+    if (preview) togglePlayPause(preview);
   }
   async function removeSelected() {
     if (!selectedIds.length || removing) return;
@@ -359,7 +373,7 @@ export default function AdminMusicReviewPage() {
       const body = await response.json();
       if (!response.ok) throw new Error(body.error || "Unable to remove selected songs");
       const removed = new Set<string>(body.removedSongIds);
-      if (playingId && removed.has(playingId)) { audioRef.current?.pause(); setPlayingId(null); }
+      if (currentSong && removed.has(currentSong.id)) closePlayer();
       setSongs(current => current.filter(song => !removed.has(song.id)));
       setSelectedIds(current => current.filter(id => !removed.has(id)));
       showToast(`Removed ${removed.size} from review queue`);
