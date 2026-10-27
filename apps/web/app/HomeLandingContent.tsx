@@ -6,13 +6,15 @@ import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { useHasCurrentSong } from "@/context/PlayerContext";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
 
 export default function HomeLandingContent() {
   const playerVisible = useHasCurrentSong();
+  const carouselRef = useRef<HTMLElement>(null);
+  const suppressCarouselClickRef = useRef(false);
   const [artists, setArtists] = useState<Array<{
     id: string;
     name: string;
@@ -39,6 +41,100 @@ export default function HomeLandingContent() {
     }).catch(() => {});
     return () => controller.abort();
   }, []);
+
+  useEffect(() => {
+    const viewport = carouselRef.current;
+    if (!viewport || artists.length === 0) return;
+
+    const getLoopWidth = () =>
+      (viewport.firstElementChild?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0;
+    let loopWidth = getLoopWidth();
+    if (!loopWidth) return;
+    viewport.scrollLeft = loopWidth;
+
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let dragging = false;
+    let dragged = false;
+    let startX = 0;
+    let startScroll = 0;
+    let lastFrame = 0;
+    let frame = 0;
+
+    function wrap() {
+      if (!viewport || !loopWidth) return;
+      if (viewport.scrollLeft >= loopWidth * 2) viewport.scrollLeft -= loopWidth;
+      if (viewport.scrollLeft < loopWidth) viewport.scrollLeft += loopWidth;
+    }
+
+    function tick(time: number) {
+      if (lastFrame && !dragging && !reducedMotion.matches) {
+        viewport!.scrollLeft += (loopWidth / 95000) * Math.min(time - lastFrame, 64);
+        wrap();
+      }
+      lastFrame = time;
+      frame = requestAnimationFrame(tick);
+    }
+
+    function onWheel(event: WheelEvent) {
+      if (event.ctrlKey) return;
+      const delta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
+      if (!delta) return;
+      event.preventDefault();
+      viewport!.scrollLeft += delta;
+      wrap();
+    }
+
+    function onPointerDown(event: PointerEvent) {
+      if (event.pointerType === "mouse" && event.button !== 0) return;
+      dragging = true;
+      dragged = false;
+      startX = event.clientX;
+      startScroll = viewport!.scrollLeft;
+      viewport!.setPointerCapture(event.pointerId);
+    }
+    function onPointerMove(event: PointerEvent) {
+      if (!dragging) return;
+      const delta = event.clientX - startX;
+      if (Math.abs(delta) > 5) dragged = true;
+      viewport!.scrollLeft = startScroll - delta;
+      wrap();
+      if (loopWidth && (viewport!.scrollLeft !== startScroll - delta)) {
+        startScroll = viewport!.scrollLeft + delta;
+      }
+    }
+    function onPointerUp() {
+      dragging = false;
+      if (dragged) {
+        suppressCarouselClickRef.current = true;
+        window.setTimeout(() => { suppressCarouselClickRef.current = false; }, 0);
+      }
+    }
+    function onResize() {
+      const newWidth = getLoopWidth();
+      if (!newWidth) return;
+      const fraction = loopWidth ? (viewport!.scrollLeft - loopWidth) / loopWidth : 0;
+      loopWidth = newWidth;
+      viewport!.scrollLeft = loopWidth * (1 + fraction);
+      wrap();
+    }
+
+    viewport.addEventListener("wheel", onWheel, { passive: false });
+    viewport.addEventListener("pointerdown", onPointerDown);
+    viewport.addEventListener("pointermove", onPointerMove);
+    viewport.addEventListener("pointerup", onPointerUp);
+    viewport.addEventListener("pointercancel", onPointerUp);
+    window.addEventListener("resize", onResize);
+    frame = requestAnimationFrame(tick);
+    return () => {
+      cancelAnimationFrame(frame);
+      viewport.removeEventListener("wheel", onWheel);
+      viewport.removeEventListener("pointerdown", onPointerDown);
+      viewport.removeEventListener("pointermove", onPointerMove);
+      viewport.removeEventListener("pointerup", onPointerUp);
+      viewport.removeEventListener("pointercancel", onPointerUp);
+      window.removeEventListener("resize", onResize);
+    };
+  }, [artists]);
 
   return (
     <main
@@ -82,7 +178,7 @@ export default function HomeLandingContent() {
       </section>
 
       {artists.length > 0 && (
-        <section className="audioflume-home-landing-artist-carousel" aria-label="Featured artists">
+        <section ref={carouselRef} className="audioflume-home-landing-artist-carousel" aria-label="Featured artists" onClickCapture={(event) => { if (suppressCarouselClickRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
           <div className="audioflume-home-landing-artist-track">
             {[0, 1, 2, 3].map((copy) => (
               <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy > 0}>
