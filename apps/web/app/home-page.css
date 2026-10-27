@@ -1875,8 +1875,31 @@ body:has(.audioflume-home-landing)
   gap: 10px;
 }
 
-.audioflume-home-mockup-artists > .audioflume-home-mockup-section-label {
+.audioflume-home-mockup-artists > .audioflume-home-mockup-featured-artists-heading {
   margin-bottom: var(--filmwave-section-title-margin-bottom);
+}
+
+.audioflume-home-mockup-featured-artists-heading > .audioflume-home-mockup-featured-artists-count {
+  justify-self: end;
+  color: var(--filmwave-section-title-color);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 12px;
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.2;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-featured-artists-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+  .audioflume-home-mockup-featured-artists-heading > .audioflume-home-mockup-featured-artists-count {
+    justify-self: start;
+    text-align: left;
+  }
 }
 
 .audioflume-home-mockup-artists .audioflume-home-reference-artist-card:not(:first-child) {
