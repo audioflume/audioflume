@@ -1106,7 +1106,7 @@ export default function HomePageContent({
 
       <section className="audioflume-home-mockup-artists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
-          <h2>This month&apos;s featured artists</h2>
+          <h2>This month&apos;s featured artists.</h2>
           <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
         {artistsLoading ? (
