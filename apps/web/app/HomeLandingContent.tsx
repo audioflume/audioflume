@@ -46,28 +46,44 @@ export default function HomeLandingContent() {
     const viewport = carouselRef.current;
     if (!viewport || artists.length === 0) return;
 
-    const getLoopWidth = () =>
-      (viewport.firstElementChild?.firstElementChild as HTMLElement | null)?.offsetWidth ?? 0;
-    let loopWidth = getLoopWidth();
-    if (!loopWidth) return;
-    viewport.scrollLeft = loopWidth;
+    const sequence = viewport.querySelector<HTMLElement>(".audioflume-home-landing-artist-sequence");
+    if (!sequence) return;
 
     const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let loopWidth = 0;
     let dragging = false;
     let dragged = false;
     let startX = 0;
     let startScroll = 0;
     let lastFrame = 0;
+    let pausedUntil = 0;
     let frame = 0;
 
     function wrap() {
-      if (!viewport || !loopWidth) return;
-      if (viewport.scrollLeft >= loopWidth * 2) viewport.scrollLeft -= loopWidth;
-      if (viewport.scrollLeft < loopWidth) viewport.scrollLeft += loopWidth;
+      if (!loopWidth) return;
+      // Keep the scroll position in the middle two copies, with identical
+      // content on either side for seamless manual and automatic movement.
+      while (viewport!.scrollLeft >= loopWidth * 2) viewport!.scrollLeft -= loopWidth;
+      while (viewport!.scrollLeft < loopWidth) viewport!.scrollLeft += loopWidth;
+    }
+
+    function measure() {
+      const width = sequence!.getBoundingClientRect().width;
+      if (!width) return;
+      if (!loopWidth) {
+        loopWidth = width;
+        viewport!.scrollLeft = width;
+      } else if (Math.abs(width - loopWidth) > 0.5) {
+        const progress = (viewport!.scrollLeft - loopWidth) / loopWidth;
+        loopWidth = width;
+        viewport!.scrollLeft = width * (1 + progress);
+        wrap();
+      }
     }
 
     function tick(time: number) {
-      if (lastFrame && !dragging && !reducedMotion.matches) {
+      measure();
+      if (lastFrame && loopWidth && !dragging && time >= pausedUntil && !reducedMotion.matches) {
         viewport!.scrollLeft += (loopWidth / 95000) * Math.min(time - lastFrame, 64);
         wrap();
       }
@@ -76,10 +92,11 @@ export default function HomeLandingContent() {
     }
 
     function onWheel(event: WheelEvent) {
-      if (event.ctrlKey) return;
+      if (event.ctrlKey || !loopWidth) return;
       const delta = event.deltaX !== 0 ? event.deltaX : event.deltaY;
       if (!delta) return;
       event.preventDefault();
+      pausedUntil = performance.now() + 1300;
       viewport!.scrollLeft += delta;
       wrap();
     }
@@ -90,6 +107,7 @@ export default function HomeLandingContent() {
       dragged = false;
       startX = event.clientX;
       startScroll = viewport!.scrollLeft;
+      pausedUntil = performance.now() + 1300;
     }
     function onPointerMove(event: PointerEvent) {
       if (!dragging) return;
@@ -98,43 +116,40 @@ export default function HomeLandingContent() {
         dragged = true;
         viewport!.setPointerCapture(event.pointerId);
       }
-      viewport!.scrollLeft = startScroll - delta;
+      if (!dragged) return;
+      const target = startScroll - delta;
+      viewport!.scrollLeft = target;
       wrap();
-      if (loopWidth && (viewport!.scrollLeft !== startScroll - delta)) {
-        startScroll = viewport!.scrollLeft + delta;
-      }
+      if (Math.abs(viewport!.scrollLeft - target) > 1) startScroll += viewport!.scrollLeft - target;
+      pausedUntil = performance.now() + 1300;
     }
     function onPointerUp() {
+      if (!dragging) return;
       dragging = false;
+      pausedUntil = performance.now() + 1300;
       if (dragged) {
         suppressCarouselClickRef.current = true;
         window.setTimeout(() => { suppressCarouselClickRef.current = false; }, 0);
       }
     }
-    function onResize() {
-      const newWidth = getLoopWidth();
-      if (!newWidth) return;
-      const fraction = loopWidth ? (viewport!.scrollLeft - loopWidth) / loopWidth : 0;
-      loopWidth = newWidth;
-      viewport!.scrollLeft = loopWidth * (1 + fraction);
-      wrap();
-    }
 
+    const observer = new ResizeObserver(measure);
+    observer.observe(sequence);
+    measure();
     viewport.addEventListener("wheel", onWheel, { passive: false });
     viewport.addEventListener("pointerdown", onPointerDown);
     viewport.addEventListener("pointermove", onPointerMove);
     viewport.addEventListener("pointerup", onPointerUp);
     viewport.addEventListener("pointercancel", onPointerUp);
-    window.addEventListener("resize", onResize);
     frame = requestAnimationFrame(tick);
     return () => {
       cancelAnimationFrame(frame);
+      observer.disconnect();
       viewport.removeEventListener("wheel", onWheel);
       viewport.removeEventListener("pointerdown", onPointerDown);
       viewport.removeEventListener("pointermove", onPointerMove);
       viewport.removeEventListener("pointerup", onPointerUp);
       viewport.removeEventListener("pointercancel", onPointerUp);
-      window.removeEventListener("resize", onResize);
     };
   }, [artists]);
 
