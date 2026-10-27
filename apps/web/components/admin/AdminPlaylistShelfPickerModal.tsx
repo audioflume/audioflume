@@ -21,6 +21,7 @@ type Props = {
   emptyMessage?: string;
   onClose: () => void;
   onAdd: (playlistIds: number[]) => void | Promise<void>;
+  onRemove?: (playlistId: number) => void | Promise<void>;
 };
 
 export default function AdminPlaylistShelfPickerModal({
@@ -35,6 +36,7 @@ export default function AdminPlaylistShelfPickerModal({
   emptyMessage,
   onClose,
   onAdd,
+  onRemove,
 }: Props) {
   const [search, setSearch] = useState("");
   const [selectedIds, setSelectedIds] = useState<Set<number>>(new Set());
@@ -62,7 +64,11 @@ export default function AdminPlaylistShelfPickerModal({
   }, [playlists, search]);
 
   function togglePlaylist(playlistId: number) {
-    if (existingIdSet.has(playlistId) || saving) return;
+    if (saving) return;
+    if (existingIdSet.has(playlistId)) {
+      void onRemove?.(playlistId);
+      return;
+    }
 
     setSelectedIds((current) => {
       const next = new Set(current);
@@ -131,7 +137,7 @@ export default function AdminPlaylistShelfPickerModal({
                     key={playlist.id}
                     type="button"
                     onClick={() => togglePlaylist(playlist.id)}
-                    disabled={alreadyAdded || saving}
+                    disabled={saving || (alreadyAdded && !onRemove)}
                     className={`group flex min-h-[52px] w-full items-center gap-3 rounded-none p-2 text-left transition-colors ${
                       alreadyAdded || selected
                         ? "bg-[var(--bg-primary)]"
@@ -159,7 +165,7 @@ export default function AdminPlaylistShelfPickerModal({
                       </span>
                       <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
                         {alreadyAdded
-                          ? "Already added"
+                          ? (onRemove ? "Click to remove" : "Already added")
                           : `${playlist.song_count || 0} songs`}
                       </span>
                     </span>
