@@ -20,7 +20,6 @@ import { CSS } from "@dnd-kit/utilities";
 
 import Toast from "@/components/Toast";
 import AdminArtistShelfPickerModal from "@/components/admin/AdminArtistShelfPickerModal";
-import AdminDiscoverFeatureCardArtists from "@/components/admin/AdminDiscoverFeatureCardArtists";
 import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelfPickerModal";
 import {
   PLAYLIST_MANAGER_GRID_CLASS,
@@ -32,7 +31,6 @@ import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import {
-  DISCOVER_SECTION_SHELF_KEYS,
   DISCOVER_SECTION_SHELF_LABELS,
   type DiscoverSectionShelfKey,
   type DiscoverSectionShelfState,
@@ -175,13 +173,7 @@ export default function AdminDiscoverLibraryView({
   const [savingFeatured, setSavingFeatured] = useState(false);
   const [toastMessage, setToastMessage] = useState("");
   const [featuredCollapsed, setFeaturedCollapsed] = useState(false);
-  const [collapsedSections, setCollapsedSections] = useState<
-    Record<DiscoverSectionShelfKey, boolean>
-  >({
-    discover_moods: false,
-    discover_curated: false,
-    discover_production: false,
-  });
+  const [featuredPlaylistsCollapsed, setFeaturedPlaylistsCollapsed] = useState(false);
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
@@ -268,13 +260,6 @@ export default function AdminDiscoverLibraryView({
     return sectionState[sectionKey]
       .map((item) => playlistById.get(item.playlist_id))
       .filter((playlist): playlist is CuratedPlaylist => Boolean(playlist));
-  }
-
-  function toggleSection(sectionKey: DiscoverSectionShelfKey) {
-    setCollapsedSections((current) => ({
-      ...current,
-      [sectionKey]: !current[sectionKey],
-    }));
   }
 
   async function addFeaturedArtists(artistIds: string[]) {
@@ -496,7 +481,7 @@ export default function AdminDiscoverLibraryView({
   if (combinedLoading) {
     return (
       <div className="grid gap-12">
-        {Array.from({ length: DISCOVER_SECTION_SHELF_KEYS.length + 1 }).map(
+        {Array.from({ length: 2 }).map(
           (_, sectionIndex) => (
             <div key={sectionIndex} className="animate-pulse">
               <div className="mb-4 h-5 w-44 bg-[var(--bg-tertiary)]" />
@@ -542,7 +527,7 @@ export default function AdminDiscoverLibraryView({
         >
           {featuredArtists.length === 0 ? (
             <div className="flex min-h-[120px] items-center justify-center border-[1.25px] border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-              Add an artist to the Discover feature banner.
+              Add artists to the Discover featured artist shelf.
             </div>
           ) : (
             <DndContext
@@ -568,12 +553,11 @@ export default function AdminDiscoverLibraryView({
           )}
         </PlaylistManagerCollapsibleSection>
 
-        <AdminDiscoverFeatureCardArtists />
 
-        {DISCOVER_SECTION_SHELF_KEYS.map((sectionKey) => {
+        {(["discover_curated"] as const).map((sectionKey) => {
           const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
           const sectionPlaylists = getSectionPlaylists(sectionKey);
-          const sectionCollapsed = collapsedSections[sectionKey];
+          const sectionCollapsed = featuredPlaylistsCollapsed;
 
           return (
             <PlaylistManagerCollapsibleSection
@@ -581,7 +565,7 @@ export default function AdminDiscoverLibraryView({
               title={sectionLabel}
               subtitle={`${sectionPlaylists.length} playlist${sectionPlaylists.length === 1 ? "" : "s"}`}
               collapsed={sectionCollapsed}
-              onToggle={() => toggleSection(sectionKey)}
+              onToggle={() => setFeaturedPlaylistsCollapsed((current) => !current)}
               wrapHeader
               wrapActions
               actions={
