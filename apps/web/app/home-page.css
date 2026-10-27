@@ -1880,8 +1880,9 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists .audioflume-home-reference-artist-card:not(:first-child) {
-  width: min(760px, 56vw) !important;
-  min-width: min(760px, 56vw) !important;
+  /* Grow toward the lead card as the viewport narrows; cap secondary cards at 820px. */
+  width: min(820px, calc(30.83vw + 354.4px)) !important;
+  min-width: min(820px, calc(30.83vw + 354.4px)) !important;
 }
 
 /* Preserve the first artist card's image height when later cards are narrower. */
@@ -2082,7 +2083,9 @@ body:has(.audioflume-home-landing)
 
 @media (max-width: 620px) {
   .audioflume-home-mockup-artists
-    .audioflume-home-reference-artist-card {
+    .audioflume-home-reference-artist-card,
+  .audioflume-home-mockup-artists
+    .audioflume-home-reference-artist-card:not(:first-child) {
     width: 92vw !important;
     min-width: 92vw !important;
   }
