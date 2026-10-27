@@ -2963,7 +2963,7 @@ body:has(.audioflume-home-landing)
   flex: 1;
   min-width: 0;
   align-items: center;
-  background: #1b1b1b;
+  background: var(--filmwave-search-surface);
   color: #757575;
 }
 .audioflume-home-landing-search-brand {
