@@ -1404,6 +1404,10 @@ body:has(.audioflume-home-landing)
 /* Current catalogue-first homepage refinements                        */
 /* ------------------------------------------------------------------ */
 
+.audioflume-home-mockup-intro[hidden] {
+  display: none;
+}
+
 .audioflume-home-mockup-intro {
   padding: 12px 0 0;
   background: var(--bg-primary);
@@ -1827,6 +1831,16 @@ body:has(.audioflume-home-landing)
   line-height: 1.2;
 }
 
+.audioflume-home-mockup-section-label > span {
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  text-transform: none;
+}
+
 .audioflume-home-mockup-section-label > a {
   flex: 0 0 auto;
   font-size: 15px;
@@ -1869,6 +1883,19 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-curated-card-media {
   border-radius: inherit;
+}
+
+.audioflume-home-mockup-artists .audioflume-home-mockup-artist-kicker {
+  position: absolute;
+  top: 24px;
+  left: 30px;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-roboto-mono), monospace;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1;
+  text-transform: uppercase;
 }
 
 .audioflume-home-mockup-curated-card-kicker {
