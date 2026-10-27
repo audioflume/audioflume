@@ -1231,6 +1231,40 @@ main
   transform: scale(1.03);
 }
 
+.audioflume-music-page .audioflume-music-originals-summary {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  box-sizing: border-box;
+  width: calc(100% + 60px);
+  height: 148px;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  margin: 0 -32px 18px -28px;
+  background: #111 url("https://images.filmwave.io/images/home/adrien-olichon-u34JNBOIQ10-unsplash-web.jpg") center / cover no-repeat;
+}
+
+.audioflume-music-page .audioflume-music-originals-summary::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: rgba(0, 0, 0, 0.38);
+}
+
+.audioflume-music-page .audioflume-music-originals-summary-logo {
+  width: min(420px, calc(100% - 48px));
+  color: #fff;
+}
+
+.audioflume-music-page .audioflume-music-originals-summary-logo .audioflume-pricing-lifetime-logo {
+  display: block;
+  width: 100%;
+  height: auto;
+  color: inherit;
+}
+
 .audioflume-music-page .audioflume-music-featured-songs {
   --audioflume-featured-song-inset: 36px;
   display: grid;
