@@ -2901,12 +2901,26 @@ body:has(.audioflume-home-landing)
     #111 100%
   );
 }
+.audioflume-home-hero-responsive-break {
+  display: none;
+}
+@media (max-width: 1100px) {
+  .audioflume-home-landing .audioflume-home-reference-hero-headline {
+    box-sizing: border-box;
+    width: 100%;
+    padding: 0;
+    font-size: clamp(32px, 5vw, 54px);
+    white-space: normal;
+    text-align: justify;
+    text-align-last: justify;
+  }
+  .audioflume-home-hero-responsive-break {
+    display: block;
+  }
+}
 @media (max-width: 620px) {
   .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    font-size: clamp(23px, 4.75vw, 40px);
-    padding-inline: 12px;
-    white-space: normal;
-    text-align-last: auto;
+    font-size: clamp(23px, 5.5vw, 34px);
   }
 }
 .audioflume-home-landing-hero-captions {
