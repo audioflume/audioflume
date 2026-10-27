@@ -2873,22 +2873,37 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing .audioflume-home-reference-hero-headline {
   position: absolute;
-  inset: auto 0;
-  top: 47%;
-  z-index: 1;
-  display: block;
+  inset: 0;
+  z-index: auto;
   width: 100%;
   margin: 0;
   padding: 0;
   color: #e5e5dd;
-  font-size: clamp(40px, 4.75vw, 102px);
+  font-size: clamp(82px, 7vw, 144px);
   font-weight: 300;
   letter-spacing: -0.055em;
-  line-height: 1;
-  text-align: justify;
-  text-align-last: justify;
+  line-height: 0.92;
+  text-align: left;
+  white-space: normal;
+  transform: none;
+}
+.audioflume-home-landing .audioflume-home-reference-hero-headline .is-human { top: 29%; left: -0.07em; }
+.audioflume-home-landing .audioflume-home-reference-hero-headline .is-made { top: 29%; right: 0; }
+.audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx {
+  top: 40%;
+  left: 29%;
+  display: inline-flex;
+  gap: 0.28em;
   white-space: nowrap;
-  transform: translateY(-50%);
+  color: #e5e5dd;
+  mix-blend-mode: normal;
+}
+.audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx > span { color: inherit; }
+.audioflume-home-landing .audioflume-home-reference-hero-headline .is-for-film {
+  top: 51%;
+  right: 8%;
+  color: #e5e5dd;
+  mix-blend-mode: normal;
 }
 .audioflume-home-landing .audioflume-home-reference-hero-shade {
   /* A single gradient darkens the photo and resolves to the exact
@@ -2903,27 +2918,16 @@ body:has(.audioflume-home-landing)
     #111 100%
   );
 }
-.audioflume-home-hero-responsive-break {
-  display: none;
-}
 @media (max-width: 1100px) {
-  .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    box-sizing: border-box;
-    width: 100%;
-    padding: 0;
-    font-size: clamp(32px, 5vw, 54px);
-    white-space: normal;
-    text-align: justify;
-    text-align-last: justify;
-  }
-  .audioflume-home-hero-responsive-break {
-    display: block;
-  }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(68px, 8vw, 94px); }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx { left: 24%; }
 }
 @media (max-width: 620px) {
-  .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    font-size: clamp(38px, 8vw, 54px);
-  }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(44px, 11.5vw, 62px); }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-human,
+  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-made { top: 27%; }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-music-sfx { top: 40%; left: 10%; }
+  .audioflume-home-landing .audioflume-home-reference-hero-headline .is-for-film { top: 53%; right: 4%; }
 }
 .audioflume-home-landing-hero-captions {
   position: absolute;
