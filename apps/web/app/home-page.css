@@ -2900,7 +2900,9 @@ body:has(.audioflume-home-landing)
   background: linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.08) 55%, rgba(0,0,0,.3));
 }
 .audioflume-home-landing .audioflume-home-reference-hero-mark {
-  display: none;
+  display: block;
+  top: 70%;
+  width: clamp(38px, 4.1vw, 64px);
 }
 .audioflume-home-landing-discover {
   position: relative;
