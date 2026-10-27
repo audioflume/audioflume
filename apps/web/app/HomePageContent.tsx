@@ -567,6 +567,7 @@ function HomeArtistShelf({
           >
             <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-link">
               <div className="audioflume-home-reference-artist-media">
+                <span className="audioflume-home-mockup-artist-kicker">Featured artist</span>
                 {image ? (
                   <img
                     src={image}
@@ -1090,7 +1091,7 @@ export default function HomePageContent({
         </section>
       ) : null}
 
-      <section className="audioflume-home-mockup-intro">
+      <section className="audioflume-home-mockup-intro" hidden>
         <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
           <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
           <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
@@ -1250,7 +1251,7 @@ export default function HomePageContent({
         </div>
 
         <section className="audioflume-home-reference-playlists">
-          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-section-label">
             <span>Audioflume originals</span>
             <Link
               href="/music?artist=Audioflume"
@@ -1273,7 +1274,7 @@ export default function HomePageContent({
       </section>
 
       <section className="audioflume-home-reference-new-songs">
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row">
+        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-section-label">
           <span>Newly added songs</span>
           <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
             Explore new music
