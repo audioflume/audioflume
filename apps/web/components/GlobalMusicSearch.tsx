@@ -8,11 +8,13 @@ import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 type GlobalMusicSearchProps = {
   fieldClassName?: string;
   clearButtonClassName?: string;
+  showSubmitArrow?: boolean;
 };
 
 export default function GlobalMusicSearch({
   fieldClassName,
   clearButtonClassName,
+  showSubmitArrow = false,
 }: GlobalMusicSearchProps = {}) {
   const router = useRouter();
   const [query, setQuery] = useState("");
@@ -24,6 +26,7 @@ export default function GlobalMusicSearch({
       onClear={() => setQuery("")}
       className={fieldClassName}
       clearButtonClassName={clearButtonClassName}
+      showSubmitArrow={showSubmitArrow}
       onSubmit={(event) => {
         event.preventDefault();
 
