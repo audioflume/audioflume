@@ -256,7 +256,7 @@ html[data-theme="light"] {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--filmwave-search-surface);
+  background: color-mix(in srgb, var(--text-primary) 10%, transparent);
   color: var(--text-primary);
 }
 
