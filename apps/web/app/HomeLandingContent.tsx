@@ -1,6 +1,7 @@
 "use client";
 
 import Footer from "@/components/Footer";
+import Link from "next/link";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
@@ -36,9 +37,9 @@ export default function HomeLandingContent() {
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
         <div className="audioflume-home-landing-search">
           <div className="audioflume-home-landing-search-field">
-            <div className="audioflume-home-landing-search-brand">
+            <Link href="/discover" className="audioflume-home-landing-search-brand" aria-label="Explore Discover">
               <AudioflumeMark ariaHidden className="audioflume-home-landing-search-mark" />
-            </div>
+            </Link>
             <GlobalMusicSearch showSubmitArrow />
           </div>
           <GlobalReferenceSearch className="audioflume-home-landing-search-song" />
