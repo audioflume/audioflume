@@ -1259,7 +1259,7 @@ main
 
 .audioflume-music-page .audioflume-music-originals-summary-meta {
   position: absolute;
-  inset: 24px;
+  inset: 16px;
   color: #111;
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 10px;
