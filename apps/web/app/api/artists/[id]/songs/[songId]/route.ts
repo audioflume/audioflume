@@ -391,7 +391,8 @@ export async function PATCH(request: Request, context: RouteContext) {
 
       if (
         songResult.data.status !== "draft" &&
-        songResult.data.status !== "changes_requested"
+        songResult.data.status !== "changes_requested" &&
+        songResult.data.status !== "rejected"
       ) {
         return NextResponse.json(
           { error: "This track cannot be submitted from its current status" },
@@ -408,7 +409,7 @@ export async function PATCH(request: Request, context: RouteContext) {
         );
       }
 
-      const wasResubmission = songResult.data.status === "changes_requested";
+      const wasResubmission = songResult.data.status === "changes_requested" || songResult.data.status === "rejected";
       const submittedAt = new Date().toISOString();
       const { data: submittedSong, error: submitError } = await supabaseServer
         .from("songs")
@@ -418,6 +419,13 @@ export async function PATCH(request: Request, context: RouteContext) {
         .single();
 
       if (submitError) throw submitError;
+
+      // Any newly submitted revision should return to the admin review queue.
+      const { error: queueError } = await supabaseServer
+        .from("music_review_queue_exclusions")
+        .delete()
+        .eq("song_id", songId);
+      if (queueError) throw queueError;
 
       if (wasResubmission) {
         await createResubmissionNotification(id, submittedSong.title);
@@ -449,6 +457,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (
       existingSong.status !== "draft" &&
       existingSong.status !== "changes_requested" &&
+      existingSong.status !== "rejected" &&
       !usesPendingRevision
     ) {
       return NextResponse.json(
