@@ -6,12 +6,39 @@ import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { useHasCurrentSong } from "@/context/PlayerContext";
+import { useEffect, useState } from "react";
 
 const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/natalie-parham-9Qccv5rZtRM-unsplash.jpg";
 
 export default function HomeLandingContent() {
   const playerVisible = useHasCurrentSong();
+  const [artists, setArtists] = useState<Array<{
+    id: string;
+    name: string;
+    slug: string;
+    designation?: string | null;
+    hero_image_url?: string | null;
+    profile_image_url?: string | null;
+  }>>([]);
+
+  useEffect(() => {
+    const controller = new AbortController();
+    Promise.all([
+      fetch("/api/discover-featured-artists", { signal: controller.signal }).then((res) => res.json()),
+      fetch("/api/discover-feature-card-artists", { signal: controller.signal }).then((res) => res.json()),
+    ]).then(([featured, cards]) => {
+      const combined = [
+        ...(Array.isArray(featured?.artists) ? featured.artists : []),
+        ...(Array.isArray(cards?.artists) ? cards.artists : []),
+      ];
+      if (!controller.signal.aborted) {
+        setArtists(Array.from(new Map(combined.map((artist) => [artist.id, artist])).values())
+          .filter((artist) => artist.hero_image_url || artist.profile_image_url));
+      }
+    }).catch(() => {});
+    return () => controller.abort();
+  }, []);
 
   return (
     <main
@@ -44,6 +71,24 @@ export default function HomeLandingContent() {
           <img src="https://images.filmwave.io/images/home/logos.png" alt="Brands using Audioflume" draggable={false} />
         </div>
       </section>
+
+      {artists.length > 0 && (
+        <section className="audioflume-home-landing-artist-carousel" aria-label="Featured artists">
+          <div className="audioflume-home-landing-artist-track">
+            {[0, 1, 2, 3].map((copy) => (
+              <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy > 0}>
+                {artists.map((artist) => (
+                  <Link key={artist.id} tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-card">
+                    <img src={artist.hero_image_url || artist.profile_image_url || ""} alt="" loading="lazy" />
+                    <span className="audioflume-home-landing-artist-title">{artist.name}</span>
+                    <span className="audioflume-home-landing-artist-subtitle">{artist.designation || "Composer"}</span>
+                  </Link>
+                ))}
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
 
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
