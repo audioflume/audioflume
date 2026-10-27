@@ -1,7 +1,9 @@
 "use client";
 
 import { PremiumLabel } from "@filmwave/shared";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PauseIcon from "@/components/icons/PauseIcon";
 
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
@@ -35,6 +37,7 @@ type SubmissionSummary = {
   key: string | null;
   bpm: number | null;
   cover_url: string | null;
+  audio_url: string | null;
   license_type?: "standard" | "premium" | null;
   created_at: string;
   artist_profile: ArtistProfileSummary | null;
@@ -208,16 +211,23 @@ function DetailValue({ label, value }: { label: string; value: string }) {
 function ReviewCover({
   coverUrl,
   title,
+  onPlay,
+  playing,
+  playable,
 }: {
   coverUrl: string | null;
   title: string;
+  onPlay: () => void;
+  playing: boolean;
+  playable: boolean;
 }) {
   return (
-    <div className="h-[52px] w-[52px] overflow-hidden bg-[var(--bg-tertiary)]">
+    <button type="button" onClick={onPlay} disabled={!playable} aria-label={playing ? `Pause ${title}` : `Play ${title}`} className="group/review-cover relative h-[52px] w-[52px] overflow-hidden bg-[var(--bg-tertiary)] disabled:cursor-default">
       {coverUrl ? (
         <img src={coverUrl} alt={title} className="h-full w-full object-cover" />
       ) : null}
-    </div>
+      {playable && <span className={`absolute inset-0 flex items-center justify-center bg-black/45 text-white transition-opacity ${playing ? "opacity-100" : "opacity-0 group-hover/review-cover:opacity-100 group-focus-visible/review-cover:opacity-100"}`}>{playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}</span>}
+    </button>
   );
 }
 
@@ -233,6 +243,10 @@ export default function AdminMusicReviewPage() {
   const [feedback, setFeedback] = useState("");
   const [actionLoading, setActionLoading] = useState<ReviewAction | null>(null);
   const [toastMessage, setToastMessage] = useState("");
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [removing, setRemoving] = useState(false);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+  const [playingId, setPlayingId] = useState<string | null>(null);
 
   async function loadQueue() {
     try {
@@ -247,6 +261,7 @@ export default function AdminMusicReviewPage() {
       }
 
       setSongs(Array.isArray(body.songs) ? body.songs : []);
+      setSelectedIds([]);
     } catch (loadError) {
       setError(
         loadError instanceof Error
@@ -260,6 +275,7 @@ export default function AdminMusicReviewPage() {
 
   useEffect(() => {
     void loadQueue();
+    return () => { audioRef.current?.pause(); };
   }, []);
 
   const counts = useMemo(() => {
@@ -286,6 +302,59 @@ export default function AdminMusicReviewPage() {
         .includes(query);
     });
   }, [songs, search, statusFilter]);
+
+  const removableSongs = visibleSongs.filter(song => song.status === "published" || song.status === "rejected");
+  const selectedRemovable = removableSongs.filter(song => selectedIds.includes(song.id));
+  const allSelected = removableSongs.length > 0 && selectedRemovable.length === removableSongs.length;
+
+  function toggleSelectAll() {
+    setSelectedIds(current => allSelected
+      ? current.filter(id => !removableSongs.some(song => song.id === id))
+      : [...new Set([...current, ...removableSongs.map(song => song.id)])]);
+  }
+  function toggleSelection(id: string, checked: boolean) {
+    setSelectedIds(current => checked ? [...new Set([...current, id])] : current.filter(value => value !== id));
+  }
+  function togglePreview(song: SubmissionSummary) {
+    if (!song.audio_url) return;
+    if (playingId === song.id) {
+      audioRef.current?.pause();
+      setPlayingId(null);
+      return;
+    }
+    audioRef.current?.pause();
+    const audio = new Audio(song.audio_url);
+    audioRef.current = audio;
+    audio.onended = () => setPlayingId(null);
+    audio.onerror = () => { setPlayingId(null); showToast("Unable to play audio preview"); };
+    void audio.play().then(() => setPlayingId(song.id)).catch(() => showToast("Unable to play audio preview"));
+  }
+  async function removeSelected() {
+    if (!selectedIds.length || removing) return;
+    const eligible = songs.filter(song => selectedIds.includes(song.id));
+    if (eligible.some(song => song.status !== "published" && song.status !== "rejected")) {
+      showToast("Only published or rejected songs can be removed");
+      return;
+    }
+    const rejectedCount = eligible.filter(song => song.status === "rejected").length;
+    if (rejectedCount && !window.confirm(`Permanently delete ${rejectedCount} rejected song${rejectedCount === 1 ? "" : "s"}? Published songs will only leave the queue.`)) return;
+    setRemoving(true);
+    try {
+      const response = await fetch("/api/admin/song-reviews/batch-remove", {
+        method: "POST", headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ songIds: eligible.map(song => song.id) }),
+      });
+      const body = await response.json();
+      if (!response.ok) throw new Error(body.error || "Unable to remove selected songs");
+      const removed = new Set<string>(body.removedSongIds);
+      if (playingId && removed.has(playingId)) { audioRef.current?.pause(); setPlayingId(null); }
+      setSongs(current => current.filter(song => !removed.has(song.id)));
+      setSelectedIds(current => current.filter(id => !removed.has(id)));
+      showToast(`Removed ${removed.size} from review queue`);
+    } catch (error) {
+      showToast(error instanceof Error ? error.message : "Unable to remove songs");
+    } finally { setRemoving(false); }
+  }
 
   function showToast(message: string) {
     setToastMessage(message);
@@ -743,6 +812,13 @@ export default function AdminMusicReviewPage() {
                   {visibleSongs.length} submission{visibleSongs.length === 1 ? "" : "s"}
                 </div>
               </div>
+              <div className="flex items-center gap-3">
+                <label className="flex cursor-pointer items-center gap-2 text-xs text-[var(--text-secondary)]">
+                  <input type="checkbox" checked={allSelected} onChange={toggleSelectAll} disabled={!removableSongs.length || removing} aria-label="Select all removable songs" />
+                  Select all
+                </label>
+                {selectedIds.length > 0 && <button type="button" onClick={() => void removeSelected()} disabled={removing} className="filmwave-backend-button filmwave-backend-button-compact filmwave-backend-button-secondary">{removing ? "Removing..." : `Remove ${selectedIds.length} selected`}</button>}
+              </div>
             </div>
 
             <div className="overflow-x-auto overflow-y-hidden border-t-[1.25px] border-[var(--border-subtle)]">
@@ -771,7 +847,7 @@ export default function AdminMusicReviewPage() {
                     {visibleSongs.map((item, index) => (
                       <div
                         key={item.id}
-                        className="grid min-h-[76px] grid-cols-[60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs transition hover:bg-[var(--bg-hover)]"
+                        className="grid min-h-[76px] grid-cols-[24px_60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs transition hover:bg-[var(--bg-hover)]"
                         style={{
                           borderBottom:
                             index === visibleSongs.length - 1
@@ -779,8 +855,9 @@ export default function AdminMusicReviewPage() {
                               : "1px solid var(--border-subtle)",
                         }}
                       >
+                        <input type="checkbox" aria-label={`Select ${item.title}`} disabled={removing || (item.status !== "published" && item.status !== "rejected")} checked={selectedIds.includes(item.id)} onChange={event => toggleSelection(item.id, event.target.checked)} />
                         <div className="flex items-center">
-                          <ReviewCover coverUrl={item.cover_url} title={item.title} />
+                          <ReviewCover coverUrl={item.cover_url} title={item.title} playable={Boolean(item.audio_url)} playing={playingId === item.id} onPlay={() => togglePreview(item)} />
                         </div>
 
                         <div className="min-w-0">
