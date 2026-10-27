@@ -169,7 +169,7 @@ export default function AdminHomeFeaturedArtistsView() {
         : <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={event => void reorder(event)}>
             <SortableContext items={items.map(item => item.artist_id)} strategy={rectSortingStrategy}>
               <div className={PLAYLIST_MANAGER_GRID_CLASS}>
-                {items.map(item => <FeaturedArtistSortableCard key={item.artist_id} item={item} onRemove={() => void remove(item)} />)}
+                {items.map(item => <FeaturedArtistSortableCard key={item.artist_id} item={item} onRemove={() => void remove(item, false)} />)}
               </div>
             </SortableContext>
           </DndContext>}
