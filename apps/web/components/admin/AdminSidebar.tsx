@@ -69,7 +69,7 @@ const navGroups: AdminNavGroup[] = [
       { label: "Music Review", href: "/admin/music-review", icon: "review" },
       { label: "Artists", href: "/admin/artists", icon: "artists" },
       {
-        label: "Playlist Manager",
+        label: "Content Manager",
         href: "/admin/playlist-manager",
         icon: "playlist",
       },
