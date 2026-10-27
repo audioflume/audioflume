@@ -7,6 +7,7 @@
   --filmwave-black: #111111;
   --filmwave-white: #ffffff;
   --filmwave-neutral-surface: #1a1a1a;
+  --filmwave-search-surface: #1b1b1b;
   --filmwave-admin-canvas: #0d0d0d;
   --filmwave-border-color: color-mix(
     in srgb,
@@ -177,6 +178,7 @@
   color-scheme: light;
 
   --filmwave-neutral-surface: #f2f2f2;
+  --filmwave-search-surface: #f5f5f5;
   --filmwave-admin-canvas: #f2f2f2;
   --filmwave-border-color: color-mix(
     in srgb,
