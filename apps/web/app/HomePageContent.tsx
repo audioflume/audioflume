@@ -1007,15 +1007,33 @@ export default function HomePageContent({
   useEffect(() => {
     let cancelled = false;
 
-    fetch("/api/curated-playlists")
-      .then((response) => response.json())
-      .then((data) => {
+    Promise.all([
+      fetch("/api/curated-playlists").then((response) => {
+        if (!response.ok) throw new Error("Failed to load playlists");
+        return response.json();
+      }),
+      fetch("/api/discover-sections").then((response) => {
+        if (!response.ok) throw new Error("Failed to load featured playlists");
+        return response.json();
+      }),
+    ])
+      .then(([data, sections]) => {
         if (cancelled) return;
 
+        const playlistById = new Map<number, CuratedPlaylist>(
+          (Array.isArray(data) ? data : []).map((playlist: CuratedPlaylist) => [
+            playlist.id,
+            playlist,
+          ]),
+        );
+        const featured = Array.isArray(sections?.discover_curated)
+          ? sections.discover_curated
+          : [];
         setCuratedPlaylists(
-          Array.isArray(data)
-            ? data.filter((playlist) => !playlist.discover_section).slice(0, 6)
-            : [],
+          featured.flatMap((item: { playlist_id: number }) => {
+            const playlist = playlistById.get(item.playlist_id);
+            return playlist ? [playlist] : [];
+          }),
         );
       })
       .catch(() => {
@@ -1033,23 +1051,14 @@ export default function HomePageContent({
   useEffect(() => {
     let cancelled = false;
 
-    Promise.all([
-      fetch("/api/discover-featured-artists").then((response) => response.json()),
-      fetch("/api/discover-feature-card-artists").then((response) => response.json()),
-    ])
-      .then(([featured, cards]) => {
+    fetch("/api/discover-featured-artists")
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load featured artists");
+        return response.json();
+      })
+      .then((featured) => {
         if (cancelled) return;
-
-        const combined = [
-          ...(Array.isArray(featured?.artists) ? featured.artists : []),
-          ...(Array.isArray(cards?.artists) ? cards.artists : []),
-        ] as HomeArtist[];
-
-        const unique = Array.from(
-          new Map(combined.map((artist) => [artist.id, artist])).values(),
-        );
-
-        setArtists(unique);
+        setArtists(Array.isArray(featured?.artists) ? featured.artists : []);
       })
       .catch(() => {
         if (!cancelled) setArtists([]);
