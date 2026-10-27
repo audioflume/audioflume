@@ -25,9 +25,11 @@ export default function HomeLandingContent() {
         >
           <span className="is-human">Human</span>
           <span className="is-made">Made</span>
-          <span className="is-music">Music</span>
-          <span className="is-amp">&amp;</span>
-          <span className="is-sfx">SFX</span>
+          <span className="is-music-sfx">
+            <span>Music</span>
+            <span>&amp;</span>
+            <span>SFX</span>
+          </span>
           <span className="is-for-film">For film.</span>
         </div>
         <AudioflumeMark
