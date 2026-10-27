@@ -2881,7 +2881,7 @@ body:has(.audioflume-home-landing)
   margin: 0;
   padding: 0;
   color: #e5e5dd;
-  font-size: clamp(40px, 4.75vw, 102px);
+  font-size: clamp(64px, 7.6vw, 160px);
   font-weight: 300;
   letter-spacing: -0.055em;
   line-height: 1;
@@ -2911,7 +2911,7 @@ body:has(.audioflume-home-landing)
     box-sizing: border-box;
     width: 100%;
     padding: 0;
-    font-size: clamp(32px, 5vw, 54px);
+    font-size: clamp(52px, 7.3vw, 82px);
     white-space: normal;
     text-align: justify;
     text-align-last: justify;
@@ -2922,7 +2922,7 @@ body:has(.audioflume-home-landing)
 }
 @media (max-width: 620px) {
   .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    font-size: clamp(38px, 8vw, 54px);
+    font-size: clamp(34px, 8.7vw, 55px);
   }
 }
 .audioflume-home-landing-hero-captions {
