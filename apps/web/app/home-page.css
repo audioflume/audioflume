@@ -2864,12 +2864,12 @@ body:has(.audioflume-home-landing)
 
 /* 2026 landing composition: edge-to-edge hero, discovery, marquee and editorial copy. */
 .audioflume-home-landing .audioflume-home-reference-hero {
-  height: min(56vw, 640px);
-  min-height: 370px;
+  height: calc(100dvh - 28px);
+  min-height: 470px;
 }
 .audioflume-home-landing.has-player .audioflume-home-reference-hero {
-  height: min(56vw, 640px);
-  min-height: 370px;
+  height: calc(100dvh - 28px - var(--filmwave-player-height, 72px));
+  min-height: 470px;
 }
 .audioflume-home-landing .audioflume-home-reference-hero-headline {
   display: flex;
@@ -2878,7 +2878,7 @@ body:has(.audioflume-home-landing)
   z-index: 1;
   width: 100%;
   padding: 0;
-  font-size: clamp(27px, 3.35vw, 68px);
+  font-size: clamp(42px, 4.65vw, 108px);
   letter-spacing: -0.055em;
   line-height: 1;
 }
@@ -2899,10 +2899,21 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing .audioflume-home-reference-hero-shade {
   background: linear-gradient(180deg, rgba(0,0,0,.16), rgba(0,0,0,.08) 55%, rgba(0,0,0,.3));
 }
-.audioflume-home-landing .audioflume-home-reference-hero-mark {
-  display: block;
-  top: 70%;
-  width: clamp(38px, 4.1vw, 64px);
+.audioflume-home-landing-hero-captions {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 36px;
+  left: 0;
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  color: #e5e5dd;
+  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: 1.4;
+  text-transform: uppercase;
 }
 .audioflume-home-landing-discover {
   position: relative;
@@ -3044,17 +3055,19 @@ body:has(.audioflume-home-landing)
 }
 @keyframes audioflume-home-artist-marquee {
   from { transform: translateX(0); }
-  to { transform: translateX(-50%); }
+  to { transform: translateX(-25%); }
 }
 @media (prefers-reduced-motion: reduce) {
   .audioflume-home-landing-artist-track { animation: none; }
   .audioflume-home-landing-artist-carousel { overflow-x: auto; }
 }
 @media (max-width: 760px) {
-  .audioflume-home-landing .audioflume-home-reference-hero { min-height: 350px; }
+  .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px); min-height: 350px; }
+  .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-player-height, 72px)); min-height: 350px; }
   .audioflume-home-landing .audioflume-home-reference-hero-headline { font-size: clamp(20px, 4.3vw, 32px); }
   .audioflume-home-landing .audioflume-home-reference-hero-headline .is-mockup-line { flex-wrap: wrap; justify-content: space-around; gap: .35em .65em; }
   .audioflume-home-landing-discover { min-height: 245px; padding-top: 68px; }
+  .audioflume-home-landing-hero-captions { bottom: 22px; font-size: 8px; }
   .audioflume-home-landing-search-song { flex-basis: 130px; }
   .audioflume-home-landing-brand-row { flex-direction: column; gap: 10px; text-align: center; }
   .audioflume-home-landing-brand-row img { width: min(100%, 520px); }
