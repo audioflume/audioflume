@@ -1417,7 +1417,7 @@ body:has(.audioflume-home-landing)
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 80px;
+  margin-bottom: 60px;
   color: #949494;
   font-family: var(--font-roboto-mono), monospace;
   font-size: 9px;
