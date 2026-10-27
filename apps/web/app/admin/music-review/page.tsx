@@ -227,7 +227,8 @@ function ReviewCover({
       type="button"
       onClick={onPlay}
       disabled={!playable}
-      aria-label={playing ? `Pause ${title}` : `Play ${title}`}
+      aria-label={playing ? "Pause song" : "Play song"}
+      title={playing ? `Pause ${title}` : `Play ${title}`}
       className="group/review-cover relative h-[52px] w-[52px] cursor-pointer overflow-hidden rounded-none bg-[var(--bg-tertiary)] disabled:cursor-default"
     >
       {coverUrl ? (
@@ -235,7 +236,7 @@ function ReviewCover({
       ) : null}
       {playable ? (
         <span
-          className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${playing ? "opacity-100" : "opacity-0 group-hover/review-cover:opacity-100 group-focus-visible/review-cover:opacity-100"}`}
+          className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] text-[var(--media-overlay-contrast)] transition ${playing ? "opacity-100" : "opacity-0 group-hover/admin-song-row:opacity-100 group-focus-visible/review-cover:opacity-100"}`}
         >
           {playing ? <PauseIcon /> : <PlayIconSmall />}
         </span>
@@ -858,7 +859,7 @@ export default function AdminMusicReviewPage() {
                     {visibleSongs.map((item, index) => (
                       <div
                         key={item.id}
-                        className="grid min-h-[76px] grid-cols-[24px_60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(220px,auto)] items-center gap-4 px-5 text-xs transition hover:bg-[var(--bg-hover)]"
+                        className="admin-song-row group/admin-song-row grid min-h-[76px] grid-cols-[24px_60px_minmax(220px,1.6fr)_76px_90px_76px_110px_124px_minmax(150px,auto)] items-center gap-4 px-6 text-xs transition hover:bg-[var(--bg-hover)]"
                         style={{
                           borderBottom:
                             index === visibleSongs.length - 1
