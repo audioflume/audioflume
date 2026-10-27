@@ -25,6 +25,7 @@ type Props = {
   maxSelections?: number;
   onClose: () => void;
   onAdd: (artistIds: string[]) => void | Promise<void>;
+  onRemove?: (artistId: string) => void | Promise<void>;
 };
 
 export default function AdminArtistShelfPickerModal({
@@ -35,6 +36,7 @@ export default function AdminArtistShelfPickerModal({
   maxSelections,
   onClose,
   onAdd,
+  onRemove,
 }: Props) {
   const [artists, setArtists] = useState<AdminArtistOption[]>([]);
   const [search, setSearch] = useState("");
@@ -103,7 +105,11 @@ export default function AdminArtistShelfPickerModal({
   }, [artists, search]);
 
   function toggleArtist(artistId: string) {
-    if (existingIdSet.has(artistId) || saving) return;
+    if (saving) return;
+    if (existingIdSet.has(artistId)) {
+      void onRemove?.(artistId);
+      return;
+    }
 
     setSelectedIds((current) => {
       const next = new Set(current);
@@ -191,7 +197,7 @@ export default function AdminArtistShelfPickerModal({
                     key={artist.id}
                     type="button"
                     onClick={() => toggleArtist(artist.id)}
-                    disabled={alreadyAdded || saving || selectionDisabled}
+                    disabled={saving || selectionDisabled || (alreadyAdded && !onRemove)}
                     className={`group flex min-h-[52px] w-full items-center gap-3 rounded-none p-2 text-left transition-colors ${
                       alreadyAdded || selected
                         ? "bg-[var(--bg-primary)]"
@@ -222,7 +228,7 @@ export default function AdminArtistShelfPickerModal({
                         {artist.name}
                       </span>
                       <span className="mt-0.5 block truncate text-[11px] text-[var(--text-muted)]">
-                        {alreadyAdded ? "Already added" : `/artists/${artist.slug}`}
+                        {alreadyAdded ? (onRemove ? "Click to remove" : "Already added") : `/artists/${artist.slug}`}
                       </span>
                     </span>
 
