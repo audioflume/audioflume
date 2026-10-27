@@ -3205,7 +3205,6 @@ body:has(.audioflume-home-landing)
   text-transform: uppercase;
 }
 .audioflume-home-landing-artist-subtitle {
-  margin-top: 5px;
   color: #8b8b8b;
   font-size: 12px;
   font-weight: 300;
