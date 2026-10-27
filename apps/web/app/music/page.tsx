@@ -50,6 +50,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
+import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 
 import "./music-library-redesign.css";
 
@@ -1271,6 +1272,10 @@ export default function MusicPage() {
     },
   ];
 
+  const showOriginalsBanner = selectedArtists.some(
+    (artist) => normalizeFilterValue(artist) === normalizeFilterValue("Audioflume"),
+  );
+
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <div
@@ -1507,6 +1512,16 @@ export default function MusicPage() {
                     >
                       <XIcon size={15} />
                     </button>
+                  </div>
+                ) : showOriginalsBanner ? (
+                  <div
+                    className="audioflume-music-originals-summary"
+                    role="img"
+                    aria-label="Audioflume Originals"
+                  >
+                    <div className="audioflume-music-originals-summary-logo">
+                      <AudioflumeOriginalsLogo />
+                    </div>
                   </div>
                 ) : featuredSongs.length > 0 ? (
                   <div className="audioflume-music-featured-songs">
