@@ -1858,7 +1858,7 @@ body:has(.audioflume-home-landing)
   position: relative;
   width: min(462px, 92vw);
   min-width: min(462px, 92vw);
-  height: 252px;
+  height: auto;
   overflow: hidden;
   border-radius: 0;
   background: var(--bg-tertiary);
