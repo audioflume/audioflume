@@ -433,7 +433,7 @@ export default function ArtistMusicUploader({
         ) : null}
 
         <div className="overflow-x-auto overflow-y-hidden">
-          <div className="min-w-[980px]">
+          <div className="min-w-[1140px]">
             {loadState === "loading" ? (
               <div className="flex min-h-[180px] items-center justify-center px-5 text-xs text-[var(--text-muted)]">
                 Loading music...
