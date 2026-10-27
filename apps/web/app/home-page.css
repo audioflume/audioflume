@@ -2874,14 +2874,14 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing .audioflume-home-reference-hero-headline {
   position: absolute;
   inset: auto 0;
-  top: 50%;
+  top: 47%;
   z-index: 1;
   display: block;
   width: 100%;
   margin: 0;
   padding: 0;
   color: #e5e5dd;
-  font-size: clamp(42px, 5.05vw, 108px);
+  font-size: clamp(40px, 4.75vw, 102px);
   font-weight: 300;
   letter-spacing: -0.055em;
   line-height: 1;
@@ -2903,7 +2903,7 @@ body:has(.audioflume-home-landing)
 }
 @media (max-width: 620px) {
   .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    font-size: clamp(24px, 5.05vw, 42px);
+    font-size: clamp(23px, 4.75vw, 40px);
     padding-inline: 12px;
     white-space: normal;
     text-align-last: auto;
