@@ -183,7 +183,7 @@ function MusicPageSkeleton() {
   );
 }
 const LICENSE_FILTER_VALUES = ["standard", "premium"] as const;
-const SEMANTIC_SEARCH_DEBOUNCE_MS = 350;
+const SEMANTIC_SEARCH_DEBOUNCE_MS = 200;
 const MIN_SEMANTIC_SEARCH_LENGTH = 2;
 
 type LicenseFilterValue = (typeof LICENSE_FILTER_VALUES)[number];
@@ -1208,6 +1208,19 @@ export default function MusicPage() {
       (songsLoading && songs.length === 0) ||
       loadingPlaylistSongs);
 
+  // A sentence is filtered as literal text before its semantic request resolves.
+  // Do not render a false empty state during debounce or while that request is running.
+  const semanticSearchPending =
+    Boolean(userId) &&
+    filtersHydrated &&
+    !directFilterSearch &&
+    !(referenceSearchState && referenceSearchState.query === search.trim()) &&
+    search.trim().length >= MIN_SEMANTIC_SEARCH_LENGTH &&
+    (!semanticSearchState ||
+      semanticSearchState.query !== search.trim());
+  const showResultsSkeleton =
+    showSongSkeleton || (semanticSearchPending && displayedSongs.length === 0);
+
   const filterChipGroups = [
     {
       id: "mood",
@@ -1459,7 +1472,7 @@ export default function MusicPage() {
             title={selectedPlaylist ? selectedPlaylist.name : "All tracks"}
             meta={`${displayedSongs.length} of ${songs.length} tracks`}
           >
-            {showSongSkeleton ? (
+            {showResultsSkeleton ? (
               <MusicPageSkeleton />
             ) : (
               <>
