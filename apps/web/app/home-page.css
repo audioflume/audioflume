@@ -3495,7 +3495,7 @@ body:has(.audioflume-home-landing)
   }
   .audioflume-home-authentic-message {
     padding: 0 6%;
-    font-size: clamp(18px, 4vw, 30px);
+    font-size: clamp(22px, 4vw, 30px);
   }
 }
 @media (max-width: 480px) {
