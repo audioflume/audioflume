@@ -3446,10 +3446,13 @@ body:has(.audioflume-home-landing)
   height: clamp(520px, 48vw, 680px);
   color: #e5e5dd;
 }
-@media (min-width: 901px) {
+@media (min-width: 1400px) {
+  .audioflume-home-authentic-banner {
+    height: 580px;
+  }
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
     height: min(
-      clamp(520px, 48vw, 680px),
+      580px,
       calc(100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px))
     );
   }
