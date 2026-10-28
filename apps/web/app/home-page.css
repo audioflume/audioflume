@@ -3203,6 +3203,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-search-submit svg {
   width: 22px;
   height: 22px;
+}
+.audioflume-home-landing-search-submit svg path {
   stroke-width: 1;
 }
 .audioflume-home-landing-search-submit:hover,
