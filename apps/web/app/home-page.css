@@ -2111,8 +2111,8 @@ body:has(.audioflume-home-landing)
   white-space: nowrap;
 }
 .audioflume-home-originals-heading-badge.is-light {
-  background: #fff;
-  color: #111;
+  background: #111;
+  color: #fff;
 }
 .audioflume-home-originals-heading-price strong {
   position: relative;
