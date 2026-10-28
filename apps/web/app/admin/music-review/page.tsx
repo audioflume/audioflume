@@ -41,6 +41,9 @@ type SubmissionSummary = {
   bpm: number | null;
   cover_url: string | null;
   audio_url: string | null;
+  playback_url: string | null;
+  hls_url: string | null;
+  waveform_peaks: string | null;
   license_type?: "standard" | "premium" | null;
   created_at: string;
   artist_profile: ArtistProfileSummary | null;
@@ -268,11 +271,11 @@ export default function AdminMusicReviewPage() {
     title: song.title,
     artist: song.artist,
     audioUrl: song.audio_url!,
-    playbackUrl: song.audio_url!,
-    hlsUrl: "",
+    playbackUrl: song.playback_url || song.audio_url!,
+    hlsUrl: song.hls_url || "",
     stems: [],
     coverArt: song.cover_url,
-    waveformPeaks: "",
+    waveformPeaks: song.waveform_peaks || "[]",
     duration: Number(song.duration) || 0,
     key: song.key ?? "",
     bpm: song.bpm ?? 0,
