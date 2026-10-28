@@ -8,7 +8,7 @@ type Props = {
   currentUrl: string;
   onUploaded: (url: string) => void;
   onDeleted?: () => void;
-  target: "playlist" | "discover";
+  target: "playlist" | "discover" | "home";
   slug: string;
   variant?: "card" | "hero" | "thumb";
   uploadFile?: (file: File) => Promise<string>;
