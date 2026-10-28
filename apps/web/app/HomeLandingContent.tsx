@@ -6,13 +6,28 @@ import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { useHasCurrentSong } from "@/context/PlayerContext";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
 
 export default function HomeLandingContent() {
   const playerVisible = useHasCurrentSong();
+  const [homeImages, setHomeImages] = useState({
+    hero: HOME_HERO_IMAGE,
+    lowerBanner: "https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash-web.jpg",
+  });
+  useEffect(() => {
+    fetch("/api/home-images", { cache: "no-store" })
+      .then(async (response) => {
+        if (!response.ok) return;
+        const images = await response.json();
+        if (typeof images.hero === "string" && typeof images.lowerBanner === "string") {
+          setHomeImages(images);
+        }
+      })
+      .catch(() => {});
+  }, []);
   const carouselRef = useRef<HTMLElement>(null);
   const authenticBannerRef = useRef<HTMLElement>(null);
   const [authenticBannerVisible, setAuthenticBannerVisible] = useState(false);
@@ -167,7 +182,7 @@ export default function HomeLandingContent() {
     >
       <section
         className="audioflume-home-reference-hero"
-        style={{ backgroundImage: `url("${HOME_HERO_IMAGE}")` }}
+        style={{ backgroundImage: `url("${homeImages.hero}")` }}
       >
         <div className="audioflume-home-reference-hero-shade" />
         <h1 className="audioflume-home-reference-hero-headline">Human made music<br className="audioflume-home-hero-responsive-break" />&amp; SFX for film</h1>
@@ -232,7 +247,7 @@ export default function HomeLandingContent() {
             <h2>Authentic music, curated<br />and licensed for film.</h2>
           </div>
         </div>
-        <div className="audioflume-home-authentic-right">
+        <div className="audioflume-home-authentic-right" style={{ "--audioflume-home-authentic-photo": `url("${homeImages.lowerBanner}")` } as CSSProperties}>
           <div className="audioflume-home-authentic-message">
             <span><span>HUMAN</span><span>MADE</span><span>MUSIC.</span></span>
             <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
