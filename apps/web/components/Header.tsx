@@ -1103,10 +1103,6 @@ export default function Header() {
             font-size: 18px;
           }
 
-          .filmwave-mobile-playlists-links a {
-            padding-left: 40px;
-          }
-
           .filmwave-mobile-nav-account-trigger,
           .filmwave-mobile-nav-account-back {
             display: flex;
