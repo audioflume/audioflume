@@ -74,7 +74,6 @@ export default function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
   const [mobileAccountOpen, setMobileAccountOpen] = useState(false);
-  const [mobilePlaylistsOpen, setMobilePlaylistsOpen] = useState(false);
   const [playlistsMenuOpen, setPlaylistsMenuOpen] = useState(false);
   const [playlistsMenuMounted, setPlaylistsMenuMounted] = useState(false);
   const playlistsMenuCloseTimeoutRef = useRef<number | null>(null);
@@ -157,7 +156,6 @@ export default function Header() {
     setPlaylistsMenuMounted(false);
     setMobileNavOpen(false);
     setMobileAccountOpen(false);
-    setMobilePlaylistsOpen(false);
   }, [pathname]);
 
   useEffect(() => {
@@ -1105,38 +1103,6 @@ export default function Header() {
             font-size: 18px;
           }
 
-          .filmwave-mobile-playlists-toggle {
-            display: flex;
-            width: 100%;
-            min-height: 60px;
-            align-items: center;
-            justify-content: space-between;
-            border: 0;
-            border-bottom: var(--filmwave-border-width) solid var(--border);
-            background: transparent;
-            padding: 0 20px;
-            color: inherit;
-            font-family: inherit;
-            font-size: 18px;
-            font-weight: 400;
-            cursor: pointer;
-          }
-
-          .filmwave-mobile-playlists-toggle svg {
-            width: 18px;
-            height: 18px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 1.5;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-            transition: transform 180ms ease;
-          }
-
-          .filmwave-mobile-playlists-toggle svg.is-open {
-            transform: rotate(180deg);
-          }
-
           .filmwave-mobile-playlists-links a {
             padding-left: 40px;
           }
@@ -1618,27 +1584,16 @@ export default function Header() {
               {TOP_NAV_LINKS.map((link) =>
                 link.href === "/playlists" ? (
                   <div key={link.href} className="filmwave-mobile-playlists">
-                    <button
-                      type="button"
-                      className="filmwave-mobile-playlists-toggle"
-                      aria-expanded={mobilePlaylistsOpen}
-                      aria-controls="filmwave-mobile-playlists-links"
-                      onClick={() => setMobilePlaylistsOpen((open) => !open)}
-                    >
-                      <span>Playlists</span>
-                      <svg viewBox="0 0 24 24" aria-hidden="true" className={mobilePlaylistsOpen ? "is-open" : ""}>
-                        <path d="m6 9 6 6 6-6" />
-                      </svg>
-                    </button>
-                    {mobilePlaylistsOpen && (
-                      <div id="filmwave-mobile-playlists-links" className="filmwave-mobile-playlists-links">
-                        {PLAYLIST_PAGE_LINKS.map((pageLink) => (
-                          <Link key={pageLink.href} href={pageLink.href} onClick={() => setMobileNavOpen(false)}>
-                            {pageLink.label}
-                          </Link>
-                        ))}
-                      </div>
-                    )}
+                    <Link href="/curated-playlists" onClick={() => setMobileNavOpen(false)}>
+                      Playlists
+                    </Link>
+                    <div className="filmwave-mobile-playlists-links">
+                      {PLAYLIST_PAGE_LINKS.map((pageLink) => (
+                        <Link key={pageLink.href} href={pageLink.href} onClick={() => setMobileNavOpen(false)}>
+                          {pageLink.label}
+                        </Link>
+                      ))}
+                    </div>
                   </div>
                 ) : (
                   <Link key={link.href} href={link.href} onClick={() => setMobileNavOpen(false)}>
