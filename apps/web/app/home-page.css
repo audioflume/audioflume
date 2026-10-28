@@ -2121,7 +2121,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-originals-heading-price strong {
   position: relative;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(42px, 3.4vw, 56px);
+  font-size: 56px;
   font-weight: 400;
   line-height: .9;
   letter-spacing: -.06em;
@@ -2173,7 +2173,7 @@ body:has(.audioflume-home-landing)
   }
 }
 /* Once the link needs the space, remove the forced break and let the heading wrap. */
-@media (max-width: 700px) {
+@media (max-width: 525px) {
   .audioflume-home-mockup-originals-tools .audioflume-home-lifetime-heading-break {
     display: none;
   }
