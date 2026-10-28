@@ -3201,8 +3201,9 @@ body:has(.audioflume-home-landing)
   transition: color 150ms ease;
 }
 .audioflume-home-landing-search-submit svg {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
+  stroke-width: 1.2;
 }
 .audioflume-home-landing-search-submit:hover,
 .audioflume-home-landing-search-submit:focus-visible {
