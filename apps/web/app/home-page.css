@@ -3448,11 +3448,11 @@ body:has(.audioflume-home-landing)
 }
 @media (min-width: 1400px) {
   .audioflume-home-authentic-banner {
-    height: 580px;
+    height: 460px;
   }
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
     height: min(
-      580px,
+      460px,
       calc(100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px))
     );
   }
