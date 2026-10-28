@@ -1405,7 +1405,7 @@ body:has(.audioflume-home-landing)
 /* ------------------------------------------------------------------ */
 
 .audioflume-home-mockup-intro-heading {
-  display: none;
+  display: flex;
 }
 
 .audioflume-home-mockup-intro {
@@ -1428,7 +1428,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-intro-heading {
-  display: none;
+  display: flex;
   padding-top: 0;
   padding-bottom: 0;
 }
@@ -1876,7 +1876,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists > .audioflume-home-mockup-featured-artists-heading {
-  margin-bottom: var(--filmwave-section-title-margin-bottom);
+  display: none;
 }
 
 .audioflume-home-mockup-featured-artists-heading > .audioflume-home-mockup-featured-artists-count {
