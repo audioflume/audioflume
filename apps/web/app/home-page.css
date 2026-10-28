@@ -2087,7 +2087,8 @@ body:has(.audioflume-home-landing)
   min-width: 0;
 }
 .audioflume-home-originals-heading-main h2 {
-  flex: 0 0 auto;
+  flex: 0 1 auto;
+  min-width: 0;
 }
 .audioflume-home-originals-heading-pricing {
   display: flex;
@@ -2156,7 +2157,7 @@ body:has(.audioflume-home-landing)
   color: #fff;
 }
 /* Return to the original heading/link row before the pricing crowds the link. */
-@media (max-width: 1650px) {
+@media (max-width: 1250px) {
   .audioflume-home-originals-heading-pricing {
     display: none;
   }
