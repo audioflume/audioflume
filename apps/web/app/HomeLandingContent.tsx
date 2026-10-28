@@ -14,6 +14,26 @@ const HOME_HERO_IMAGE =
 export default function HomeLandingContent() {
   const playerVisible = useHasCurrentSong();
   const carouselRef = useRef<HTMLElement>(null);
+  const authenticBannerRef = useRef<HTMLElement>(null);
+  const [authenticBannerVisible, setAuthenticBannerVisible] = useState(false);
+
+  useEffect(() => {
+    const banner = authenticBannerRef.current;
+    if (!banner) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      setAuthenticBannerVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setAuthenticBannerVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.25 });
+    observer.observe(banner);
+    return () => observer.disconnect();
+  }, []);
+
   const suppressCarouselClickRef = useRef(false);
   const [artists, setArtists] = useState<Array<{
     id: string;
@@ -204,10 +224,15 @@ export default function HomeLandingContent() {
         </section>
       )}
 
-      <section className="audioflume-home-authentic-banner" aria-label="Captivate your audience with authentic music">
+      <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Captivate your audience with authentic music">
         <div className="audioflume-home-authentic-left">
           <div className="audioflume-home-authentic-lockup">
-            <AudioflumeMark className="audioflume-home-authentic-mark" ariaHidden />
+            <span className="audioflume-home-authentic-logo-reveal">
+              <AudioflumeMark className="audioflume-home-authentic-mark" ariaHidden />
+              <svg className="audioflume-home-authentic-ring" viewBox="0 0 39.82 39.53" aria-hidden="true">
+                <circle cx="19.91" cy="19.76" r="17.87" fill="none" stroke="currentColor" strokeWidth="3.2" />
+              </svg>
+            </span>
             <h2>Captivate your audience<br />with authentic music.</h2>
           </div>
         </div>
