@@ -51,13 +51,13 @@ export async function GET() {
       supabaseServer
         .from("songs")
         .select(
-          "id, title, artist, status, duration, key, bpm, cover_url, audio_url, license_type, created_at, submitted_at",
+          "id, title, artist, status, duration, key, bpm, cover_url, audio_url, playback_url, hls_url, waveform_peaks, license_type, created_at, submitted_at",
         )
         .in("id", songIds)
         .in("status", [...REVIEW_STATUSES]),
       supabaseServer
         .from("song_pending_revisions")
-        .select("song_id, status, metadata, duration, updated_at")
+        .select("song_id, status, metadata, audio_url, playback_url, hls_url, waveform_peaks, duration, updated_at")
         .in("song_id", songIds),
       supabaseServer.from("music_review_queue_exclusions").select("song_id"),
     ]);
@@ -111,6 +111,10 @@ export async function GET() {
       return {
         ...song,
         submitted_at: submittedAt,
+        audio_url: revision?.audio_url || song.audio_url,
+        playback_url: revision?.audio_url ? revision.playback_url : song.playback_url,
+        hls_url: revision?.audio_url ? revision.hls_url : song.hls_url,
+        waveform_peaks: revision?.audio_url ? revision.waveform_peaks : song.waveform_peaks,
         ...(revision
           ? {
               title:
