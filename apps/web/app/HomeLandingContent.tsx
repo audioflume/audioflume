@@ -232,7 +232,9 @@ export default function HomeLandingContent() {
               <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy > 0}>
                 {artists.map((artist) => (
                   <Link key={artist.id} tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-card">
-                    <img src={artist.hero_image_url || artist.profile_image_url || ""} alt="" loading="lazy" />
+                    <span className="audioflume-home-landing-artist-image">
+                      <img src={artist.hero_image_url || artist.profile_image_url || ""} alt="" loading="lazy" />
+                    </span>
                     <span className="audioflume-home-landing-artist-title">{artist.name}</span>
                     <span className="audioflume-home-landing-artist-subtitle">{artist.designation || "Composer"}</span>
                   </Link>
