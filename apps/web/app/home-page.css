@@ -3475,7 +3475,7 @@ body:has(.audioflume-home-landing)
   gap: 2px;
   padding: 0;
   color: #e5e5dd;
-  font-size: clamp(19px, 1.85vw, 34px);
+  font-size: clamp(20px, 2vw, 36px);
   font-weight: 300;
   line-height: 1.05;
 }
