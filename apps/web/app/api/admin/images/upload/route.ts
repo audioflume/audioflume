@@ -57,7 +57,7 @@ export async function POST(req: Request) {
     if (file.size > 20 * 1024 * 1024) {
       return NextResponse.json({ error: "File too large (max 20 MB)" }, { status: 400 });
     }
-    if (!["playlist", "discover"].includes(target)) {
+    if (!["playlist", "discover", "home"].includes(target)) {
       return NextResponse.json({ error: "Invalid target" }, { status: 400 });
     }
     if (!["card", "hero", "thumb"].includes(variant)) {
@@ -65,7 +65,7 @@ export async function POST(req: Request) {
     }
 
     const safeSlug = slugify(slug || "untitled");
-    const baseFolder = target === "playlist" ? "images/playlists" : "images/discover";
+    const baseFolder = target === "playlist" ? "images/playlists" : target === "home" ? "images/home" : "images/discover";
     const key = `${baseFolder}/${safeSlug}/${variant}-${Date.now()}.webp`;
 
     const sharp = (await import("sharp")).default;
