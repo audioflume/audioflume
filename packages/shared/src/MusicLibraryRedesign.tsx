@@ -290,7 +290,7 @@ function MusicFilterOptionList({ group }: { group: MusicFilterChipGroup }) {
           selected={group.selected.includes(option)}
           onToggle={() => group.onToggle(option)}
         >
-          {option}
+          {group.id === "mood" && option === "Tense" ? "Tension" : option}
         </MusicFilterOptionRow>
       ))}
     </div>
