@@ -3205,7 +3205,7 @@ body:has(.audioflume-home-landing)
   height: 22px;
 }
 .audioflume-home-landing-search-submit svg path {
-  stroke-width: 1;
+  stroke-width: 1.2;
 }
 .audioflume-home-landing-search-submit:hover,
 .audioflume-home-landing-search-submit:focus-visible {
@@ -3283,11 +3283,23 @@ body:has(.audioflume-home-landing)
   color: #e5e5dd;
   text-decoration: none;
 }
-.audioflume-home-landing-artist-card img {
+.audioflume-home-landing-artist-image {
   display: block;
   width: 100%;
   aspect-ratio: 0.77;
+  overflow: hidden;
+}
+.audioflume-home-landing-artist-card img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+  transition: transform 350ms ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .audioflume-home-landing-artist-card:hover img {
+    transform: scale(1.04);
+  }
 }
 .audioflume-home-landing-artist-title {
   margin-top: 12px;
