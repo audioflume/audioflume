@@ -3517,14 +3517,14 @@ body:has(.audioflume-home-landing)
     --audioflume-lockup-type-size: 18px;
   }
   .audioflume-home-authentic-message {
-    width: 78%;
+    width: min(100%, calc(78% + 70px));
     font-size: clamp(16px, 4.5vw, 21px);
     padding: 0;
   }
 }
 @media (max-width: 360px) {
   .audioflume-home-authentic-message {
-    width: 84%;
+    width: min(100%, calc(84% + 70px));
   }
 }
 
