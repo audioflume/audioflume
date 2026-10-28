@@ -4,7 +4,7 @@ import { r2Client } from "@/lib/r2";
 
 const DEFAULT_HOME_FLASH_IMAGE =
   "https://images.filmwave.io/images/home/andrey-strizhkov-sehwu2FbcHg-unsplash.jpg";
-const HOME_FLASH_IMAGE_EXTENSIONS = /\\.(avif|jpe?g|png|webp)$/i;
+const HOME_FLASH_IMAGE_EXTENSIONS = /\.(avif|jpe?g|png|webp)$/i;
 
 async function listHomeFlashImagesForPrefix(bucket: string, prefix: string) {
   const result = await r2Client.send(
