@@ -3235,9 +3235,9 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-brand-row p {
   margin: 0;
   color: #646464;
-  font-family: var(--font-roboto-mono-filmwave), monospace;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 11px;
-  text-transform: uppercase;
+  text-transform: none;
 }
 .audioflume-home-landing-brand-row img {
   width: min(60%, 760px);
