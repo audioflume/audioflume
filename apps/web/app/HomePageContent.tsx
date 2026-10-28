@@ -1307,6 +1307,21 @@ export default function HomePageContent({
         </div>
       </section>
 
+      <section className="audioflume-home-authentic-banner" aria-label="Captivate your audience with authentic music">
+        <div className="audioflume-home-authentic-left">
+          <div className="audioflume-home-authentic-lockup">
+            <AudioflumeMark className="audioflume-home-authentic-mark" ariaHidden />
+            <h2>Captivate your audience<br />with authentic music.</h2>
+          </div>
+        </div>
+        <div className="audioflume-home-authentic-right">
+          <div className="audioflume-home-authentic-message">
+            <span><span>CAPTIVATE</span><span>YOUR</span><span>AUDIENCE</span></span>
+            <span><span>WITH</span><span>AUTHENTIC</span><span>MUSIC</span></span>
+          </div>
+        </div>
+      </section>
+
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
