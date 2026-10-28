@@ -3043,6 +3043,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-keywords {
   display: flex;
   flex-wrap: wrap;
+  justify-content: center;
   gap: 8px;
 }
 .audioflume-home-landing-keyword {
