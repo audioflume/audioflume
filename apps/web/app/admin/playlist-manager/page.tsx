@@ -8,6 +8,7 @@ import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
 import AdminHomeFeaturedArtistsView from "@/components/admin/AdminHomeFeaturedArtistsView";
+import AdminHomeImagesView from "@/components/admin/AdminHomeImagesView";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
@@ -156,7 +157,10 @@ export default function PlaylistManagerPage() {
             onDeletePlaylist={deletePlaylist}
           />
         ) : activeTab === "home" ? (
-          <AdminHomeFeaturedArtistsView />
+          <>
+            <AdminHomeImagesView />
+            <AdminHomeFeaturedArtistsView />
+          </>
         ) : (
           <AdminDiscoverLibraryView
             playlists={playlists}
