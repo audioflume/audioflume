@@ -3682,7 +3682,7 @@ body:has(.audioflume-home-landing)
 }
 
 
-/* Homepage hero entrance: same reveal language as the lower authentic banner. */
+/* Homepage hero image and headline styling (no entrance animation). */
 .audioflume-home-landing .audioflume-home-reference-hero {
   overflow: hidden;
   background-color: #111;
@@ -3699,33 +3699,6 @@ body:has(.audioflume-home-landing)
   position: static;
   color: inherit;
 }
-@media (prefers-reduced-motion: no-preference) {
-  .audioflume-home-landing .audioflume-home-reference-hero::before {
-    animation: audioflume-home-hero-image-in 3.5s cubic-bezier(.2,.7,.2,1) both;
-  }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span {
-    animation: audioflume-home-hero-word-in 650ms ease-out both;
-  }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(1) { animation-delay: 500ms; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(2) { animation-delay: 580ms; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(3) { animation-delay: 660ms; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(4) { animation-delay: 740ms; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(5) { animation-delay: 820ms; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(6) { animation-delay: 900ms; }
-  .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(7) { animation-delay: 980ms; }
-  .audioflume-home-landing .audioflume-home-landing-hero-captions {
-    animation: audioflume-authentic-fade 800ms ease-out 1.25s both;
-  }
-}
-@keyframes audioflume-home-hero-word-in {
-  from { opacity: 0; transform: translateY(36px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-@keyframes audioflume-home-hero-image-in {
-  from { opacity: 0; transform: scale(1.08); }
-  to { opacity: 1; transform: scale(1); }
-}
-
 /* Header and founding-artist CTA fade in alongside the homepage hero. */
 @media (prefers-reduced-motion: no-preference) {
   .audioflume-home-cta-entrance {
