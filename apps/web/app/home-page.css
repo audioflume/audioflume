@@ -3301,6 +3301,32 @@ body:has(.audioflume-home-landing)
     transform: scale(1.02);
   }
 }
+.audioflume-home-landing-artist-carousel.is-loading .audioflume-home-landing-artist-track {
+  gap: 8px;
+  will-change: auto;
+}
+.audioflume-home-landing-artist-card.is-skeleton {
+  pointer-events: none;
+}
+.audioflume-home-landing-skeleton-shape {
+  display: block;
+  background: #292929;
+  animation: audioflume-home-skeleton-pulse 1.6s ease-in-out infinite;
+}
+.audioflume-home-landing-artist-card.is-skeleton .audioflume-home-landing-artist-title {
+  width: 70%;
+  height: 1em;
+}
+.audioflume-home-landing-artist-card.is-skeleton .audioflume-home-landing-artist-subtitle {
+  width: 38%;
+  height: 18px;
+  margin-top: 5px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .audioflume-home-landing-skeleton-shape {
+    animation: none;
+  }
+}
 .audioflume-home-landing-artist-title {
   margin-top: 12px;
   color: #e5e5dd;
