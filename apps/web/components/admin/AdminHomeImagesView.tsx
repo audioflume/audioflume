@@ -53,7 +53,7 @@ export default function AdminHomeImagesView() {
       >
         {images ? (
           <div className="inline-flex max-w-full flex-wrap items-start gap-8">
-            <div className="w-[180px] shrink-0">
+            <div className="w-[112px] shrink-0">
               <AdminImageUpload
                 currentUrl={images.hero}
                 onUploaded={(url) => void save("hero", url)}
@@ -67,7 +67,7 @@ export default function AdminHomeImagesView() {
                 dropDescription="The full-width image behind the main homepage headline."
               />
             </div>
-            <div className="w-[180px] shrink-0">
+            <div className="w-[112px] shrink-0">
               <AdminImageUpload
                 currentUrl={images.lowerBanner}
                 onUploaded={(url) => void save("lowerBanner", url)}
