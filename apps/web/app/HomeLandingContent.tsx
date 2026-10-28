@@ -29,7 +29,7 @@ export default function HomeLandingContent() {
         setAuthenticBannerVisible(true);
         observer.disconnect();
       }
-    }, { threshold: 0.25 });
+    }, { threshold: 0.55 });
     observer.observe(banner);
     return () => observer.disconnect();
   }, []);
