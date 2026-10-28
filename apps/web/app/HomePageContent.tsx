@@ -1206,17 +1206,32 @@ export default function HomePageContent({
               <br className="audioflume-home-lifetime-heading-break" />
               in-house made music.
             </h2>
-            <Link
-              href="/music?artist=Audioflume"
-              className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
-            >
-              Explore original music
-              <ArrowUpRightIcon
-                size={16}
-                strokeWidth={1.5}
-                className="translate-y-[2px]"
-              />
-            </Link>
+            <div className="audioflume-home-originals-heading-aside">
+              <div className="audioflume-home-originals-heading-pricing">
+                <div className="audioflume-home-originals-heading-price is-regular">
+                  <span className="audioflume-home-originals-heading-badge">Regular price</span>
+                  <strong>$299</strong>
+                </div>
+                <div className="audioflume-home-originals-heading-price">
+                  <span className="audioflume-home-originals-heading-badge is-light">Limited time offer</span>
+                  <div className="audioflume-home-originals-heading-offer">
+                    <strong>$99</strong>
+                    <span>One time payment</span>
+                  </div>
+                </div>
+              </div>
+              <Link
+                href="/music?artist=Audioflume"
+                className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+              >
+                Explore original music
+                <ArrowUpRightIcon
+                  size={16}
+                  strokeWidth={1.5}
+                  className="translate-y-[2px]"
+                />
+              </Link>
+            </div>
           </div>
 
           <div className="audioflume-home-reference-width audioflume-home-lifetime-v2">
