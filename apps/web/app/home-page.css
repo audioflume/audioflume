@@ -3313,6 +3313,9 @@ body:has(.audioflume-home-landing)
   background: #292929;
   animation: audioflume-home-skeleton-pulse 1.6s ease-in-out infinite;
 }
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-skeleton-shape {
+  background: rgba(17, 17, 17, 0.08);
+}
 .audioflume-home-landing-artist-card.is-skeleton .audioflume-home-landing-artist-title {
   width: 70%;
   height: 1em;
