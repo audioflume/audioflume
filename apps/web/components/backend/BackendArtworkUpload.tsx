@@ -23,6 +23,7 @@ type BackendArtworkUploadProps = {
   variant?: "song" | "compact";
   compactSize?: number;
   compactChooseButton?: boolean;
+  titleBelowPreview?: boolean;
   allowRemove?: boolean;
 };
 
@@ -41,6 +42,7 @@ export default function BackendArtworkUpload({
   variant = "song",
   compactSize = 112,
   compactChooseButton = false,
+  titleBelowPreview = false,
   allowRemove = true,
 }: BackendArtworkUploadProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -124,14 +126,14 @@ export default function BackendArtworkUpload({
 
     return (
       <div className="grid gap-2">
-        <div className="flex items-center justify-between gap-3">
+        {!titleBelowPreview && <div className="flex items-center justify-between gap-3">
           <span className="text-xs font-medium text-[var(--text-secondary)]">
             {title}
           </span>
           {required ? (
             <span className="text-[11px] text-[var(--text-muted)]">Required</span>
           ) : null}
-        </div>
+        </div>}
 
         {input}
 
@@ -186,6 +188,10 @@ export default function BackendArtworkUpload({
               </span>
             </span>
           </button>
+        )}
+
+        {titleBelowPreview && (
+          <span className="text-xs font-medium text-[var(--text-secondary)]">{title}</span>
         )}
 
         {footer}
