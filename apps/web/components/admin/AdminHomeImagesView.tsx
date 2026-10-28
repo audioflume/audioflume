@@ -52,8 +52,8 @@ export default function AdminHomeImagesView() {
         wrapHeader
       >
         {images ? (
-          <div className="grid gap-8 md:grid-cols-2">
-            <div className="min-w-0">
+          <div className="flex flex-wrap items-start gap-8">
+            <div className="w-[180px] shrink-0">
               <AdminImageUpload
                 currentUrl={images.hero}
                 onUploaded={(url) => void save("hero", url)}
@@ -62,11 +62,12 @@ export default function AdminHomeImagesView() {
                 variant="hero"
                 allowRemove={false}
                 showUrlInput={false}
-                title="Top Homepage Hero Image"
+                title="Hero Banner"
+                titleBelowPreview
                 dropDescription="The full-width image behind the main homepage headline."
               />
             </div>
-            <div className="min-w-0">
+            <div className="w-[180px] shrink-0">
               <AdminImageUpload
                 currentUrl={images.lowerBanner}
                 onUploaded={(url) => void save("lowerBanner", url)}
@@ -75,7 +76,8 @@ export default function AdminHomeImagesView() {
                 variant="hero"
                 allowRemove={false}
                 showUrlInput={false}
-                title="Lower Photographic Banner Image"
+                title="Lower Banner"
+                titleBelowPreview
                 dropDescription="The image behind ‘Human Made Music. Story Driven Sound.’"
               />
             </div>
