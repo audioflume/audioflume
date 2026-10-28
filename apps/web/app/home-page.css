@@ -3456,6 +3456,10 @@ body:has(.audioflume-home-landing)
 .audioflume-home-authentic-left {
   background: #111;
 }
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-home-authentic-left {
+  background: var(--filmwave-web-user-menu-bg);
+}
 .audioflume-home-authentic-lockup {
   --audioflume-lockup-icon-size: clamp(50px, 4.35vw, 78px);
   --audioflume-lockup-type-size: calc(var(--audioflume-lockup-icon-size) * 0.46);
