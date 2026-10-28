@@ -3429,7 +3429,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-authentic-lockup {
   --audioflume-lockup-type-size: clamp(23px, 2.22vw, 36px);
-  --audioflume-lockup-icon-ratio: 2.5;
+  --audioflume-lockup-icon-ratio: 2.174;
   display: flex;
   max-width: 100%;
   align-items: center;
@@ -3551,8 +3551,8 @@ body:has(.audioflume-home-landing)
   position: relative;
   display: inline-flex;
   flex: 0 0 auto;
-  width: calc(var(--audioflume-lockup-type-size) * var(--audioflume-lockup-icon-ratio));
-  height: calc(var(--audioflume-lockup-type-size) * var(--audioflume-lockup-icon-ratio));
+  width: clamp(50px, 4.35vw, 78px);
+  height: clamp(50px, 4.35vw, 78px);
 }
 .audioflume-home-authentic-logo-reveal .audioflume-home-authentic-mark {
   width: 100%;
