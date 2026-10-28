@@ -1,5 +1,6 @@
 "use client";
 import Image from "next/image";
+import AdminHomeImagesView from "@/components/admin/AdminHomeImagesView";
 import { useEffect, useState } from "react";
 import { DndContext, PointerSensor, closestCenter, useSensor, useSensors, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, arrayMove, rectSortingStrategy, useSortable } from "@dnd-kit/sortable";
@@ -161,6 +162,7 @@ export default function AdminHomeFeaturedArtistsView() {
   if (loading) return <div className="h-48 animate-pulse bg-[var(--bg-tertiary)]" />;
   if (error) return <div className="py-10 text-sm text-[var(--danger)]">{error}</div>;
   return <>
+    <AdminHomeImagesView />
     <PlaylistManagerCollapsibleSection title="Featured Artists" subtitle={`${items.length} artists`}
       collapsed={collapsed} onToggle={() => setCollapsed(value => !value)} wrapHeader wrapActions
       actions={<BackendButton type="button" onClick={() => setPickerOpen(true)} disabled={saving}><PlusIcon size={12} /><span>Add</span></BackendButton>}>
