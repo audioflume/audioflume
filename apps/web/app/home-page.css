@@ -2157,7 +2157,7 @@ body:has(.audioflume-home-landing)
   color: #fff;
 }
 /* Return to the original heading/link row before the pricing crowds the link. */
-@media (max-width: 895px) {
+@media (max-width: 965px) {
   .audioflume-home-originals-heading-pricing {
     display: none;
   }
