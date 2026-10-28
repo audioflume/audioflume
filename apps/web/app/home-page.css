@@ -2075,10 +2075,10 @@ body:has(.audioflume-home-landing)
 
 /* Discover lifetime pricing, aligned directly after the section heading. */
 .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading {
-  align-items: center;
+  align-items: end;
 }
 .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading > a {
-  align-self: center;
+  align-self: end;
 }
 .audioflume-home-originals-heading-main {
   display: flex;
@@ -2157,7 +2157,7 @@ body:has(.audioflume-home-landing)
   color: #fff;
 }
 /* Return to the original heading/link row before the pricing crowds the link. */
-@media (max-width: 1250px) {
+@media (max-width: 1080px) {
   .audioflume-home-originals-heading-pricing {
     display: none;
   }
