@@ -3312,6 +3312,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing-hero-captions { bottom: 22px; font-size: 8px; }
   .audioflume-home-landing-search-song { flex-basis: 150px; }
   .audioflume-home-landing-brand-row { flex-direction: column; gap: 10px; text-align: center; }
+  .audioflume-home-landing-brand-row p { font-size: 10px; }
   .audioflume-home-landing-brand-row img { width: min(100%, 520px); }
   .audioflume-home-landing-artist-carousel { padding-bottom: 76px; }
 }
