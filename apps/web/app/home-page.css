@@ -3517,14 +3517,9 @@ body:has(.audioflume-home-landing)
     --audioflume-lockup-type-size: 18px;
   }
   .audioflume-home-authentic-message {
-    width: min(100%, calc(78% + 70px));
+    width: min(100%, calc(78% + clamp(0px, (480px - 100vw) * 0.4375, 70px)));
     font-size: clamp(16px, 4.5vw, 21px);
     padding: 0;
-  }
-}
-@media (max-width: 360px) {
-  .audioflume-home-authentic-message {
-    width: min(100%, calc(84% + 70px));
   }
 }
 
