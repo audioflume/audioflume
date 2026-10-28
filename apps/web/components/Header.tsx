@@ -96,6 +96,7 @@ export default function Header() {
     "filmwave-web-header",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
+    mobileNavOpen ? "has-open-mobile-nav" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -997,6 +998,10 @@ export default function Header() {
         }
 
         @media (max-width: 690px) {
+          .filmwave-web-header.has-open-mobile-nav {
+            z-index: calc(var(--filmwave-z-header) + 3) !important;
+          }
+
           .filmwave-web-header .filmwave-header-inner {
             padding-right: var(--filmwave-header-padding-x) !important;
           }
@@ -1055,7 +1060,7 @@ export default function Header() {
             right: 0;
             bottom: 0;
             left: 0;
-            z-index: calc(var(--filmwave-z-header) - 1);
+            z-index: calc(var(--filmwave-z-header) + 2);
             display: flex;
             flex-direction: column;
             overflow-y: auto;
