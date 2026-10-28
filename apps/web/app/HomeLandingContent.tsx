@@ -5,13 +5,14 @@ import Link from "next/link";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
+import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import { useHasCurrentSong } from "@/context/PlayerContext";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
 
-export default function HomeLandingContent() {
+export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
   const [homeImages, setHomeImages] = useState({
     hero: HOME_HERO_IMAGE,
@@ -257,7 +258,8 @@ export default function HomeLandingContent() {
             <h2>Authentic music, curated<br />and licensed for film.</h2>
           </div>
         </div>
-        <div className="audioflume-home-authentic-right" style={{ "--audioflume-home-authentic-photo": `url("${homeImages.lowerBanner}")` } as CSSProperties}>
+        <div className="audioflume-home-authentic-right">
+          <PricingHeroImageFlash images={homeFlashImages} mediaClassName="audioflume-home-authentic-flash-media" />
           <div className="audioflume-home-authentic-message">
             <span><span>HUMAN</span><span>MADE</span><span>MUSIC.</span></span>
             <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
