@@ -52,7 +52,7 @@ export default function AdminHomeImagesView() {
         wrapHeader
       >
         {images ? (
-          <div className="flex flex-wrap items-start gap-8">
+          <div className="inline-flex max-w-full flex-wrap items-start gap-8">
             <div className="w-[180px] shrink-0">
               <AdminImageUpload
                 currentUrl={images.hero}
