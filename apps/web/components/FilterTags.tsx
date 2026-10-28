@@ -68,7 +68,7 @@ export default function FilterTags({
   const tags: MusicFilterTagItem[] = [
     ...selectedMoods.map((value) => ({
       id: `mood-${value}`,
-      label: value,
+      label: value === "Tense" ? "Tension" : value,
       onRemove: () => onRemoveMood(value),
     })),
     ...selectedGenres.map((value) => ({
