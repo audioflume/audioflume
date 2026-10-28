@@ -3426,7 +3426,7 @@ body:has(.audioflume-home-landing)
   letter-spacing: -0.035em;
 }
 .audioflume-home-authentic-right {
-  background: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)), url("https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash.jpg") center / cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)), url("https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash-web.jpg") center / cover no-repeat;
 }
 .audioflume-home-authentic-message {
   display: grid;
