@@ -1201,12 +1201,12 @@ export default function HomePageContent({
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <div className="audioflume-home-reference-tools-originals">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
-            <h2>
-              Lifetime access to original{" "}
-              <br className="audioflume-home-lifetime-heading-break" />
-              in-house made music.
-            </h2>
-            <div className="audioflume-home-originals-heading-aside">
+            <div className="audioflume-home-originals-heading-main">
+              <h2>
+                Lifetime access to original{" "}
+                <br className="audioflume-home-lifetime-heading-break" />
+                in-house made music.
+              </h2>
               <div className="audioflume-home-originals-heading-pricing">
                 <div className="audioflume-home-originals-heading-price is-regular">
                   <span className="audioflume-home-originals-heading-badge">Regular price</span>
@@ -1220,7 +1220,8 @@ export default function HomePageContent({
                   </div>
                 </div>
               </div>
-              <Link
+            </div>
+            <Link
                 href="/music?artist=Audioflume"
                 className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
               >
@@ -1231,7 +1232,6 @@ export default function HomePageContent({
                   className="translate-y-[2px]"
                 />
               </Link>
-            </div>
           </div>
 
           <div className="audioflume-home-reference-width audioflume-home-lifetime-v2">
