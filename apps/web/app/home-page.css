@@ -2679,15 +2679,20 @@ body:has(.audioflume-home-landing)
 
 /* Keep the two image captions separate while the banner is still split in two. */
 @media (min-width: 901px) and (max-width: 1350px) {
+  .audioflume-home-lifetime-v2-meta-left,
+  .audioflume-home-lifetime-v2-meta-right {
+    right: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+  }
+
   .audioflume-home-lifetime-v2-meta-left {
     bottom: 22px;
   }
 
   .audioflume-home-lifetime-v2-meta-right {
-    right: auto;
-    left: 0;
     bottom: 0;
-    text-align: left;
   }
 }
 
