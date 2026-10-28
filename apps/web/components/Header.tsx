@@ -802,28 +802,15 @@ export default function Header() {
           pointer-events: none;
         }
 
-        .filmwave-playlists-mega-feature-count {
-          position: absolute;
-          top: 18px;
-          left: 20px;
-          z-index: 2;
-          color: rgba(255, 255, 255, 0.82);
-          font-family: var(--font-roboto-mono), monospace;
-          font-size: 11px;
-          font-weight: 300;
-          line-height: 1;
-          text-transform: uppercase;
-        }
-
         .filmwave-playlists-mega-feature-name {
           position: absolute;
-          right: 74px;
-          bottom: 22px;
+          right: 60px;
+          bottom: 20px;
           left: 20px;
           z-index: 2;
           overflow: hidden;
           color: #ffffff;
-          font-size: 24px;
+          font-size: 18px;
           font-weight: 400;
           letter-spacing: -0.035em;
           line-height: 1.05;
@@ -858,13 +845,13 @@ export default function Header() {
 
         .filmwave-playlists-mega-feature-play {
           position: absolute !important;
-          right: 18px !important;
-          bottom: 18px !important;
+          right: 16px !important;
+          bottom: 16px !important;
           z-index: 3 !important;
           display: grid !important;
-          width: 42px !important;
-          min-width: 42px !important;
-          height: 42px !important;
+          width: 34px !important;
+          min-width: 34px !important;
+          height: 34px !important;
           place-items: center !important;
           margin: 0 !important;
           border: 0 !important;
@@ -885,8 +872,8 @@ export default function Header() {
         }
 
         .filmwave-playlists-mega-feature-play svg {
-          width: 15px !important;
-          height: 15px !important;
+          width: 13px !important;
+          height: 13px !important;
         }
 
         .filmwave-playlists-mega-feature-image {
@@ -1376,9 +1363,6 @@ export default function Header() {
                                             />
                                           )}
                                           <span className="filmwave-playlists-mega-feature-shade" />
-                                          <span className="filmwave-playlists-mega-feature-count">
-                                            {formatTrackCount(playlist.song_count)}
-                                          </span>
                                           <strong className="filmwave-playlists-mega-feature-name">
                                             {playlist.name}
                                           </strong>
