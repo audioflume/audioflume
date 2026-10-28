@@ -52,6 +52,7 @@ type LocationFilterOverrides = {
   selectedGenres: string[];
   selectedMoods: string[];
   selectedArtists: string[];
+  selectedInstruments: string[];
 };
 
 const MUSIC_HEADER_SEARCH_CHANNEL = "filmwave-music-header-search";
@@ -159,7 +160,7 @@ function getLocationFilterValues(searchParams: URLSearchParams, key: string) {
 
 function consumeLocationFilters(): LocationFilterOverrides {
   if (typeof window === "undefined") {
-    return { search: "", selectedGenres: [], selectedMoods: [], selectedArtists: [] };
+    return { search: "", selectedGenres: [], selectedMoods: [], selectedArtists: [], selectedInstruments: [] };
   }
 
   const url = new URL(window.location.href);
@@ -167,17 +168,20 @@ function consumeLocationFilters(): LocationFilterOverrides {
   const selectedGenres = getLocationFilterValues(url.searchParams, "genre");
   const selectedMoods = getLocationFilterValues(url.searchParams, "mood");
   const selectedArtists = getLocationFilterValues(url.searchParams, "artist");
+  const selectedInstruments = getLocationFilterValues(url.searchParams, "instrument");
 
   if (
     url.searchParams.has("search") ||
     url.searchParams.has("genre") ||
     url.searchParams.has("mood") ||
-    url.searchParams.has("artist")
+    url.searchParams.has("artist") ||
+    url.searchParams.has("instrument")
   ) {
     url.searchParams.delete("search");
     url.searchParams.delete("genre");
     url.searchParams.delete("mood");
     url.searchParams.delete("artist");
+    url.searchParams.delete("instrument");
     window.history.replaceState(
       window.history.state,
       "",
@@ -185,7 +189,7 @@ function consumeLocationFilters(): LocationFilterOverrides {
     );
   }
 
-  return { search, selectedGenres, selectedMoods, selectedArtists };
+  return { search, selectedGenres, selectedMoods, selectedArtists, selectedInstruments };
 }
 
 function getEditPointMarkerVisibilityFromEvent(event: Event) {
@@ -242,6 +246,9 @@ export function useFilterPersistence(
           new URLSearchParams(window.location.search),
           "mood",
         ),
+  );
+  const pendingLocationInstrumentsRef = useRef<string[]>(
+    typeof window === "undefined" ? [] : getLocationFilterValues(new URLSearchParams(window.location.search), "instrument"),
   );
   const pendingLocationArtistsRef = useRef<string[]>(
     typeof window === "undefined"
@@ -435,6 +442,9 @@ export function useFilterPersistence(
     if (locationFilters.selectedArtists.length > 0) {
       pendingLocationArtistsRef.current = locationFilters.selectedArtists;
     }
+    if (locationFilters.selectedInstruments.length > 0) {
+      pendingLocationInstrumentsRef.current = locationFilters.selectedInstruments;
+    }
 
     const hydrationSearch =
       locationFilters.search || pendingLocationSearchRef.current || "";
@@ -446,6 +456,8 @@ export function useFilterPersistence(
       locationFilters.selectedMoods.length > 0
         ? locationFilters.selectedMoods
         : pendingLocationMoodsRef.current;
+    const hydrationInstruments = locationFilters.selectedInstruments.length > 0
+      ? locationFilters.selectedInstruments : pendingLocationInstrumentsRef.current;
     const hydrationArtists =
       locationFilters.selectedArtists.length > 0
         ? locationFilters.selectedArtists
@@ -453,7 +465,8 @@ export function useFilterPersistence(
     const hasExploreFilters =
       hydrationGenres.length > 0 ||
       hydrationMoods.length > 0 ||
-      hydrationArtists.length > 0;
+      hydrationArtists.length > 0 ||
+      hydrationInstruments.length > 0;
     const withLocationFilters = (state: MusicFilterState): MusicFilterState =>
       hasExploreFilters
         ? {
@@ -462,6 +475,7 @@ export function useFilterPersistence(
             selectedGenres: hydrationGenres,
             selectedMoods: hydrationMoods,
             selectedArtists: hydrationArtists,
+            selectedInstruments: hydrationInstruments,
             showEditPointMarkers: getStoredEditPointMarkerVisibility(),
           }
         : {
@@ -522,6 +536,7 @@ export function useFilterPersistence(
     pendingLocationGenresRef.current = [];
     pendingLocationMoodsRef.current = [];
     pendingLocationArtistsRef.current = [];
+    pendingLocationInstrumentsRef.current = [];
   }, [hydrated, hydratedKey, storageKey]);
 
   useEffect(() => {
