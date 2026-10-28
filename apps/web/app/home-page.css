@@ -3478,3 +3478,88 @@ body:has(.audioflume-home-landing)
     padding: 0 5%;
   }
 }
+
+/* Scroll-triggered authentic banner entrance. */
+.audioflume-home-authentic-logo-reveal {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  width: clamp(50px, 4.35vw, 78px);
+  height: clamp(50px, 4.35vw, 78px);
+}
+.audioflume-home-authentic-logo-reveal .audioflume-home-authentic-mark {
+  width: 100%;
+  height: 100%;
+}
+.audioflume-home-authentic-ring {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-mark g path:first-child,
+  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-lockup h2,
+  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-message > span > span {
+    opacity: 0;
+  }
+  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-mark g path:nth-child(2) {
+    opacity: 0;
+  }
+  .audioflume-home-authentic-ring circle {
+    stroke-dasharray: 112.3;
+    stroke-dashoffset: 112.3;
+    opacity: 0;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-ring circle {
+    animation: audioflume-authentic-ring-draw 850ms ease-in-out both;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-mark g path:first-child {
+    animation: audioflume-authentic-fade 450ms ease-out 480ms both;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-mark g path:nth-child(2) {
+    animation: audioflume-authentic-fade 150ms linear 850ms both;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-ring {
+    animation: audioflume-authentic-hide 1ms linear 1000ms both;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-lockup h2 {
+    animation: audioflume-authentic-word-in 650ms ease-out 500ms both;
+  }
+  .audioflume-home-authentic-banner .audioflume-home-authentic-message > span > span {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-message > span > span {
+    animation: audioflume-authentic-word-in 650ms cubic-bezier(.2,.7,.2,1) both;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-message > span:first-child > span:nth-child(1) { animation-delay: 700ms; }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-message > span:first-child > span:nth-child(2) { animation-delay: 820ms; }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-message > span:first-child > span:nth-child(3) { animation-delay: 940ms; }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-message > span:nth-child(2) > span:nth-child(1) { animation-delay: 1060ms; }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-message > span:nth-child(2) > span:nth-child(2) { animation-delay: 1180ms; }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-message > span:nth-child(2) > span:nth-child(3) { animation-delay: 1300ms; }
+}
+@keyframes audioflume-authentic-ring-draw {
+  0% { opacity: 1; stroke-dashoffset: 112.3; }
+  100% { opacity: 1; stroke-dashoffset: 0; }
+}
+@keyframes audioflume-authentic-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+@keyframes audioflume-authentic-hide {
+  to { visibility: hidden; }
+}
+@keyframes audioflume-authentic-word-in {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (max-width: 480px) {
+  .audioflume-home-authentic-logo-reveal { width: 45px; height: 45px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .audioflume-home-authentic-ring { display: none; }
+}
