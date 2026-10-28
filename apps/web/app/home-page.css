@@ -1420,7 +1420,7 @@ body:has(.audioflume-home-landing)
   margin-bottom: 60px;
   color: #949494;
   font-family: var(--font-roboto-mono), monospace;
-  font-size: 9px;
+  font-size: 13px;
   font-weight: 300;
   letter-spacing: 0;
   line-height: 1;
@@ -3236,7 +3236,8 @@ body:has(.audioflume-home-landing)
   margin: 0;
   color: #646464;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 11px;
+  font-size: 13px;
+  font-weight: 300;
   text-transform: none;
 }
 .audioflume-home-landing-brand-row img {
