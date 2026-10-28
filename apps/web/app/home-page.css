@@ -3449,7 +3449,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-authentic-message {
   display: grid;
-  width: 68%;
+  width: 60%;
   gap: 2px;
   padding: 0;
   color: #e5e5dd;
