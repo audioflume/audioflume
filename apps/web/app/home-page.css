@@ -2172,12 +2172,6 @@ body:has(.audioflume-home-landing)
     display: initial;
   }
 }
-/* Once the link needs the space, remove the forced break and let the heading wrap. */
-@media (max-width: 525px) {
-  .audioflume-home-mockup-originals-tools .audioflume-home-lifetime-heading-break {
-    display: none;
-  }
-}
 
 .audioflume-home-mockup-catalogue
   .audioflume-home-reference-width.grid {
