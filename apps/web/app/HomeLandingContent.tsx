@@ -51,6 +51,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
   }, []);
 
   const suppressCarouselClickRef = useRef(false);
+  const [artistsLoading, setArtistsLoading] = useState(true);
   const [artists, setArtists] = useState<Array<{
     id: string;
     name: string;
@@ -73,7 +74,9 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             .filter((artist: { hero_image_url?: string | null; profile_image_url?: string | null }) =>
               artist.hero_image_url || artist.profile_image_url));
         }
-      }).catch(() => {});
+      }).catch(() => {}).finally(() => {
+        if (!controller.signal.aborted) setArtistsLoading(false);
+      });
     return () => controller.abort();
   }, []);
 
@@ -226,7 +229,19 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      {artists.length > 0 && (
+      {artistsLoading ? (
+        <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
+          <div className="audioflume-home-landing-artist-track" aria-hidden="true">
+            {Array.from({ length: 5 }, (_, index) => (
+              <div className="audioflume-home-landing-artist-card is-skeleton" key={index}>
+                <span className="audioflume-home-landing-artist-image audioflume-home-landing-skeleton-shape" />
+                <span className="audioflume-home-landing-artist-title audioflume-home-landing-skeleton-shape" />
+                <span className="audioflume-home-landing-artist-subtitle audioflume-home-landing-skeleton-shape" />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : artists.length > 0 ? (
         <section ref={carouselRef} className="audioflume-home-landing-artist-carousel" aria-label="Featured artists" onClickCapture={(event) => { if (suppressCarouselClickRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
           <div className="audioflume-home-landing-artist-track">
             {[0, 1, 2, 3].map((copy) => (
@@ -244,7 +259,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             ))}
           </div>
         </section>
-      )}
+      ) : null}
 
       <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
         <div className="audioflume-home-authentic-left">
