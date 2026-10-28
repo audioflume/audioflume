@@ -3704,7 +3704,7 @@ body:has(.audioflume-home-landing)
     animation: audioflume-home-hero-image-in 3.5s cubic-bezier(.2,.7,.2,1) both;
   }
   .audioflume-home-landing .audioflume-home-reference-hero-headline > span {
-    animation: audioflume-authentic-word-in 650ms ease-out both;
+    animation: audioflume-home-hero-word-in 650ms ease-out both;
   }
   .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(1) { animation-delay: 500ms; }
   .audioflume-home-landing .audioflume-home-reference-hero-headline > span:nth-of-type(2) { animation-delay: 580ms; }
@@ -3716,6 +3716,10 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing .audioflume-home-landing-hero-captions {
     animation: audioflume-authentic-fade 800ms ease-out 1.25s both;
   }
+}
+@keyframes audioflume-home-hero-word-in {
+  from { opacity: 0; transform: translateY(36px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 @keyframes audioflume-home-hero-image-in {
   from { opacity: 0; transform: scale(1.08); }
