@@ -204,9 +204,17 @@ export default function HomeLandingContent() {
             <GlobalReferenceSearch className="audioflume-home-landing-search-song" />
           </div>
           <nav className="audioflume-home-landing-keywords" aria-label="Popular music searches">
-            {["Cinematic", "Ambient", "Emotional", "Uplifting", "Documentary", "Tension", "Piano"].map((keyword) => (
-              <Link key={keyword} href={`/music?search=${encodeURIComponent(keyword)}`} className="audioflume-home-landing-keyword">
-                {keyword}
+            {[
+              { label: "Cinematic", filter: "genre", value: "Cinematic" },
+              { label: "Ambient", filter: "genre", value: "Ambient" },
+              { label: "Emotional", filter: "mood", value: "Emotional" },
+              { label: "Uplifting", filter: "mood", value: "Uplifting" },
+              { label: "Documentary", filter: "genre", value: "Film" },
+              { label: "Tension", filter: "mood", value: "Tense" },
+              { label: "Piano", filter: "instrument", value: "Piano" },
+            ].map(({ label, filter, value }) => (
+              <Link key={label} href={`/music?${filter}=${encodeURIComponent(value)}`} className="audioflume-home-landing-keyword">
+                {label}
               </Link>
             ))}
           </nav>
