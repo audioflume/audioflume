@@ -73,9 +73,7 @@ export default function HomeLandingContent() {
     let dragging = false;
     let dragged = false;
     let previousX = 0;
-    let lastFrame = 0;
-    let pausedUntil = 0;
-    let frame = 0;
+    let previousScrollY = window.scrollY;
 
     function render() {
       if (!loopWidth) return;
@@ -93,13 +91,15 @@ export default function HomeLandingContent() {
       render();
     }
 
-    function tick(time: number) {
-      if (lastFrame && loopWidth && !dragging && time >= pausedUntil && !reducedMotion.matches) {
-        offset += (loopWidth / 95000) * Math.min(time - lastFrame, 64);
-        render();
-      }
-      lastFrame = time;
-      frame = requestAnimationFrame(tick);
+    function onPageScroll() {
+      const currentScrollY = window.scrollY;
+      const deltaY = currentScrollY - previousScrollY;
+      previousScrollY = currentScrollY;
+      if (!loopWidth || dragging || reducedMotion.matches || !deltaY) return;
+      const rect = viewport!.getBoundingClientRect();
+      if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
+      offset += deltaY * 0.65;
+      render();
     }
 
     function onWheel(event: WheelEvent) {
@@ -108,7 +108,6 @@ export default function HomeLandingContent() {
       if (Math.abs(event.deltaX) <= Math.abs(event.deltaY)) return;
       event.preventDefault();
       offset += event.deltaX;
-      pausedUntil = performance.now() + 1300;
       render();
     }
 
@@ -117,7 +116,6 @@ export default function HomeLandingContent() {
       dragging = true;
       dragged = false;
       previousX = event.clientX;
-      pausedUntil = performance.now() + 1300;
     }
 
     function onPointerMove(event: PointerEvent) {
@@ -130,14 +128,12 @@ export default function HomeLandingContent() {
       previousX = event.clientX;
       if (!dragged) return;
       offset -= dx;
-      pausedUntil = performance.now() + 1300;
       render();
     }
 
     function onPointerUp() {
       if (!dragging) return;
       dragging = false;
-      pausedUntil = performance.now() + 1300;
       if (dragged) {
         suppressCarouselClickRef.current = true;
         window.setTimeout(() => { suppressCarouselClickRef.current = false; }, 0);
@@ -152,9 +148,9 @@ export default function HomeLandingContent() {
     viewport.addEventListener("pointermove", onPointerMove);
     viewport.addEventListener("pointerup", onPointerUp);
     viewport.addEventListener("pointercancel", onPointerUp);
-    frame = requestAnimationFrame(tick);
+    window.addEventListener("scroll", onPageScroll, { passive: true });
     return () => {
-      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", onPageScroll);
       observer.disconnect();
       track.style.transform = "";
       viewport.removeEventListener("wheel", onWheel);
