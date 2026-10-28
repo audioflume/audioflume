@@ -3387,3 +3387,94 @@ body:has(.audioflume-home-landing)
   color: #777777;
 }
 
+/* Authentic music banner on the active homepage. */
+.audioflume-home-landing .audioflume-home-authentic-banner {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
+  height: clamp(520px, 48vw, 780px);
+  color: #e5e5dd;
+}
+.audioflume-home-authentic-left,
+.audioflume-home-authentic-right {
+  display: flex;
+  min-width: 0;
+  align-items: center;
+  justify-content: center;
+}
+.audioflume-home-authentic-left {
+  background: #111;
+}
+.audioflume-home-authentic-lockup {
+  display: flex;
+  max-width: 100%;
+  align-items: center;
+  gap: clamp(18px, 1.7vw, 30px);
+  padding: 32px;
+}
+.audioflume-home-authentic-mark {
+  width: clamp(50px, 4.35vw, 78px);
+  height: clamp(50px, 4.35vw, 78px);
+  flex: 0 0 auto;
+}
+.audioflume-home-authentic-lockup h2 {
+  margin: 0;
+  color: inherit;
+  font-size: clamp(23px, 2.22vw, 40px);
+  font-weight: 400;
+  line-height: 1.12;
+  letter-spacing: -0.035em;
+}
+.audioflume-home-authentic-right {
+  background: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)), url("https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash.jpg") center / cover no-repeat;
+}
+.audioflume-home-authentic-message {
+  display: grid;
+  width: 100%;
+  gap: 2px;
+  padding: 0 clamp(35px, 5.6vw, 100px);
+  color: #e5e5dd;
+  font-size: clamp(19px, 1.85vw, 34px);
+  font-weight: 300;
+  line-height: 1.05;
+}
+.audioflume-home-authentic-message > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+@media (max-width: 900px) {
+  .audioflume-home-landing .audioflume-home-authentic-banner {
+    height: auto;
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .audioflume-home-authentic-left,
+  .audioflume-home-authentic-right {
+    min-height: 360px;
+  }
+  .audioflume-home-authentic-message {
+    padding: 0 6%;
+    font-size: clamp(18px, 4vw, 30px);
+  }
+}
+@media (max-width: 480px) {
+  .audioflume-home-authentic-left,
+  .audioflume-home-authentic-right {
+    min-height: 280px;
+  }
+  .audioflume-home-authentic-lockup {
+    padding: 20px;
+    gap: 15px;
+  }
+  .audioflume-home-authentic-lockup h2 {
+    font-size: clamp(18px, 5vw, 25px);
+  }
+  .audioflume-home-authentic-mark {
+    width: 45px;
+    height: 45px;
+  }
+  .audioflume-home-authentic-message {
+    font-size: clamp(13px, 4vw, 19px);
+    padding: 0 5%;
+  }
+}
