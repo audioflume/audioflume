@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { useUser } from "@clerk/nextjs";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
+import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import cardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import UserMenu from "@/components/UserMenu";
 
@@ -780,6 +781,114 @@ export default function Header() {
           border-color: transparent !important;
         }
 
+        .filmwave-playlists-mega-feature-card {
+          position: relative;
+          width: 100%;
+          min-width: 0;
+          overflow: hidden;
+        }
+
+        .filmwave-playlists-mega-feature-image-link {
+          display: block;
+          color: inherit;
+          text-decoration: none;
+        }
+
+        .filmwave-playlists-mega-feature-shade {
+          position: absolute;
+          inset: 0;
+          z-index: 1;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 42%, rgba(0, 0, 0, 0.58) 100%);
+          pointer-events: none;
+        }
+
+        .filmwave-playlists-mega-feature-count {
+          position: absolute;
+          top: 18px;
+          left: 20px;
+          z-index: 2;
+          color: rgba(255, 255, 255, 0.82);
+          font-family: var(--font-roboto-mono), monospace;
+          font-size: 11px;
+          font-weight: 300;
+          line-height: 1;
+          text-transform: uppercase;
+        }
+
+        .filmwave-playlists-mega-feature-name {
+          position: absolute;
+          right: 74px;
+          bottom: 22px;
+          left: 20px;
+          z-index: 2;
+          overflow: hidden;
+          color: #ffffff;
+          font-size: 24px;
+          font-weight: 400;
+          letter-spacing: -0.035em;
+          line-height: 1.05;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+        }
+
+        .filmwave-playlists-mega-feature-bookmark {
+          position: absolute;
+          top: 18px;
+          right: 18px;
+          z-index: 3;
+          display: inline-flex;
+          width: 24px;
+          height: 24px;
+          align-items: center;
+          justify-content: center;
+          border: 0;
+          background: transparent;
+          padding: 0;
+          color: #ffffff;
+          cursor: pointer;
+          opacity: 0;
+          transition: opacity 150ms ease;
+        }
+
+        .filmwave-playlists-mega-feature-card:hover .filmwave-playlists-mega-feature-bookmark,
+        .filmwave-playlists-mega-feature-card:focus-within .filmwave-playlists-mega-feature-bookmark,
+        .filmwave-playlists-mega-feature-bookmark[aria-pressed="true"] {
+          opacity: 1;
+        }
+
+        .filmwave-playlists-mega-feature-play {
+          position: absolute !important;
+          right: 18px !important;
+          bottom: 18px !important;
+          z-index: 3 !important;
+          display: grid !important;
+          width: 42px !important;
+          min-width: 42px !important;
+          height: 42px !important;
+          place-items: center !important;
+          margin: 0 !important;
+          border: 0 !important;
+          border-radius: 999px !important;
+          background: rgba(255, 255, 255, 0.18) !important;
+          color: #e5e5dd !important;
+          opacity: 1 !important;
+          -webkit-backdrop-filter: blur(10px);
+          backdrop-filter: blur(10px);
+          transition: background-color 150ms ease, color 150ms ease, transform 150ms ease;
+        }
+
+        .filmwave-playlists-mega-feature-play:hover,
+        .filmwave-playlists-mega-feature-play:focus-visible {
+          background: #ffffff !important;
+          color: #111111 !important;
+          transform: scale(1.02);
+        }
+
+        .filmwave-playlists-mega-feature-play svg {
+          width: 15px !important;
+          height: 15px !important;
+        }
+
         .filmwave-playlists-mega-feature-image {
           position: relative !important;
           inset: auto !important;
@@ -1251,45 +1360,40 @@ export default function Header() {
                                     key={playlist.id}
                                     className="filmwave-playlists-mega-feature"
                                   >
-                                    <div className={cardStyles.card}>
+                                    <div className="filmwave-playlists-mega-feature-card">
                                       <Link
                                         href={href}
-                                        className={cardStyles.imageLink}
+                                        className="filmwave-playlists-mega-feature-image-link"
                                         role="menuitem"
                                         onClick={closePlaylistsMenu}
                                       >
-                                        <div
-                                          className={`${cardStyles.image} filmwave-playlists-mega-feature-image`}
-                                        >
+                                        <div className="filmwave-playlists-mega-feature-image">
                                           {playlist.cover_image_url && (
                                             <img
                                               src={playlist.cover_image_url}
-                                              alt={playlist.name}
+                                              alt=""
                                               className={cardStyles.media}
                                             />
                                           )}
+                                          <span className="filmwave-playlists-mega-feature-shade" />
+                                          <span className="filmwave-playlists-mega-feature-count">
+                                            {formatTrackCount(playlist.song_count)}
+                                          </span>
+                                          <strong className="filmwave-playlists-mega-feature-name">
+                                            {playlist.name}
+                                          </strong>
                                         </div>
                                       </Link>
-
+                                      <CuratedPlaylistBookmarkButton
+                                        playlist={playlist}
+                                        className="filmwave-playlists-mega-feature-bookmark"
+                                      />
                                       <CuratedPlaylistPlayButton
                                         playlistId={playlist.id}
                                         playlistName={playlist.name}
-                                        className={cardStyles.playButton}
+                                        className="filmwave-playlists-mega-feature-play"
                                       />
                                     </div>
-
-                                    <Link
-                                      href={href}
-                                      className="filmwave-playlists-mega-feature-copy"
-                                      onClick={closePlaylistsMenu}
-                                    >
-                                      <span className="filmwave-playlists-mega-feature-title">
-                                        {playlist.name}
-                                      </span>
-                                      <span className="filmwave-playlists-mega-feature-detail">
-                                        {formatTrackCount(playlist.song_count)}
-                                      </span>
-                                    </Link>
                                   </div>
                                 );
                               })
