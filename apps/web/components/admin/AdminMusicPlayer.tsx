@@ -334,7 +334,7 @@ export default function AdminMusicPlayer() {
                   ? "Playing in another tab"
                   : currentSong.artist
               }
-              className="flex min-w-0 items-center gap-1.5 truncate text-[13px] font-light text-[var(--text-subtle)]"
+              className="flex min-w-0 items-center gap-1.5 truncate text-xs text-[var(--text-subtle)]"
             >
               {remotePlayingInAnotherTab ? (
                 <>
