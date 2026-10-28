@@ -3438,7 +3438,7 @@ body:has(.audioflume-home-landing)
   inset: 0;
   z-index: -1;
   content: "";
-  background: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)), url("https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash-web.jpg") center / cover no-repeat;
+  background: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)), var(--audioflume-home-authentic-photo, url("https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash-web.jpg")) center / cover no-repeat;
 }
 .audioflume-home-authentic-right::after {
   position: absolute;
