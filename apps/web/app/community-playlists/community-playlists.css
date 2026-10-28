@@ -70,7 +70,7 @@ body:has(.community-playlists-page-root) {
   align-items: center;
   overflow: hidden;
   border: 1.25px solid var(--border);
-  border-radius: 0;
+  border-radius: 999px;
   background: transparent;
   transition:
     border-color 150ms ease,
