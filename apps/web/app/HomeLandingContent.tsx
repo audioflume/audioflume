@@ -45,7 +45,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         setAuthenticBannerVisible(true);
         observer.disconnect();
       }
-    }, { threshold: 0.55 });
+    }, { threshold: 0.7 });
     observer.observe(banner);
     return () => observer.disconnect();
   }, []);
