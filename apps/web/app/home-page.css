@@ -3443,13 +3443,13 @@ body:has(.audioflume-home-landing)
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: 100%;
-  height: clamp(460px, 42vw, 680px);
+  height: clamp(520px, 48vw, 680px);
   color: #e5e5dd;
 }
 @media (min-width: 901px) {
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
     height: min(
-      clamp(460px, 42vw, 680px),
+      clamp(520px, 48vw, 680px),
       calc(100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px))
     );
   }
