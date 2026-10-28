@@ -224,7 +224,7 @@ export default function HomeLandingContent() {
         </section>
       )}
 
-      <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Captivate your audience with authentic music">
+      <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Every story deserves its own sound. Human made. Story driven.">
         <div className="audioflume-home-authentic-left">
           <div className="audioflume-home-authentic-lockup">
             <span className="audioflume-home-authentic-logo-reveal">
@@ -233,13 +233,13 @@ export default function HomeLandingContent() {
                 <circle cx="19.91" cy="19.76" r="17.87" fill="none" stroke="currentColor" strokeWidth="3.2" />
               </svg>
             </span>
-            <h2>Captivate your audience<br />with authentic music.</h2>
+            <h2>Every story deserves<br />its own sound.</h2>
           </div>
         </div>
         <div className="audioflume-home-authentic-right">
           <div className="audioflume-home-authentic-message">
-            <span><span>CAPTIVATE</span><span>YOUR</span><span>AUDIENCE</span></span>
-            <span><span>WITH</span><span>AUTHENTIC</span><span>MUSIC</span></span>
+            <span><span>HUMAN</span><span>MADE.</span></span>
+            <span><span>STORY</span><span>DRIVEN.</span></span>
           </div>
         </div>
       </section>
