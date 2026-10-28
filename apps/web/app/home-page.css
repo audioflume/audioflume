@@ -3295,11 +3295,15 @@ body:has(.audioflume-home-landing)
   line-height: 1.5;
 }
 
+@media (max-width: 1100px) {
+  .audioflume-home-landing-discover { justify-content: flex-start; gap: 150px; }
+}
+
 @media (max-width: 760px) {
   .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px); min-height: 350px; }
   .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-player-height, 72px)); min-height: 350px; }
 
-  .audioflume-home-landing-discover { min-height: 300px; padding-top: 96px; }
+  .audioflume-home-landing-discover { min-height: 300px; padding-top: 96px; gap: 96px; }
   .audioflume-home-landing-search { width: min(940px, calc(100% - 32px)); height: 52px; }
   .audioflume-home-landing-search-brand { flex-basis: 48px; height: calc(100% - 10px); }
   .audioflume-home-landing-search-mark { width: 22px; height: 22px; flex-basis: 22px; }
