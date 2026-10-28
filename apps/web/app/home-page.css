@@ -2075,7 +2075,10 @@ body:has(.audioflume-home-landing)
 
 /* Discover lifetime pricing, aligned directly after the section heading. */
 .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading {
-  align-items: end;
+  align-items: center;
+}
+.audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading > a {
+  align-self: center;
 }
 .audioflume-home-originals-heading-main {
   display: flex;
@@ -2152,28 +2155,17 @@ body:has(.audioflume-home-landing)
   .audioflume-home-originals-heading-offer > span {
   color: #fff;
 }
-@media (max-width: 1450px) {
-  .audioflume-home-originals-heading-main {
-    flex-wrap: wrap;
-    row-gap: 24px;
-  }
-}
-@media (max-width: 1200px) {
-  .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading {
-    grid-template-columns: minmax(0, 1fr);
-    justify-items: start;
-  }
-}
-@media (max-width: 620px) {
+/* Return to the original heading/link row before the pricing crowds the link. */
+@media (max-width: 1650px) {
   .audioflume-home-originals-heading-pricing {
-    flex-wrap: wrap;
-    gap: 20px;
+    display: none;
   }
-  .audioflume-home-originals-heading-price strong {
-    font-size: 42px;
+  .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading {
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: end;
   }
-  .audioflume-home-originals-heading-offer > span {
-    font-size: 12px;
+  .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading > a {
+    align-self: end;
   }
 }
 
