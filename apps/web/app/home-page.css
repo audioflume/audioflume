@@ -2168,6 +2168,15 @@ body:has(.audioflume-home-landing)
   .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading > a {
     align-self: end;
   }
+  .audioflume-home-mockup-originals-tools .audioflume-home-lifetime-heading-break {
+    display: initial;
+  }
+}
+/* Once the link needs the space, remove the forced break and let the heading wrap. */
+@media (max-width: 700px) {
+  .audioflume-home-mockup-originals-tools .audioflume-home-lifetime-heading-break {
+    display: none;
+  }
 }
 
 .audioflume-home-mockup-catalogue
