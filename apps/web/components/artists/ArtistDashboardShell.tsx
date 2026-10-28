@@ -91,7 +91,6 @@ const NAV_GROUPS: ArtistNavGroup[] = [
   {
     title: "Manage",
     items: [
-      { section: "profile", label: "Profile" },
       { section: "music", label: "Music" },
       { section: "releases", label: "Releases" },
       { section: "playlists", label: "Playlists" },
@@ -525,6 +524,14 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
                 onClick={() => handleSectionChange("overview")}
               >
                 Overview
+              </BackendSidebarNavItem>
+              <BackendSidebarNavItem
+                href={getArtistDashboardHref("profile", activeArtist.id)}
+                active={sectionReady && activeSection === "profile"}
+                leading={<BackendSidebarGlyph name={ARTIST_NAV_ICONS.profile} />}
+                onClick={() => handleSectionChange("profile")}
+              >
+                Profile
               </BackendSidebarNavItem>
               <BackendSidebarNavItem
                 href={getArtistDashboardHref("my-page", activeArtist.id)}
