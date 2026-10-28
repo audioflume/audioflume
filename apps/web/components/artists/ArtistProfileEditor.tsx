@@ -3,6 +3,7 @@
 import { FormEvent, useEffect, useRef, useState } from "react";
 
 import ChevronDownIcon from "@/components/icons/ChevronDownIcon";
+import Toast from "@/components/Toast";
 import type { ArtistDashboardProfile } from "@/lib/artistDashboard";
 
 type ArtistProfileEditorProps = {
@@ -97,7 +98,14 @@ export default function ArtistProfileEditor({
     null,
   );
   const [message, setMessage] = useState("");
+  const [toastMessage, setToastMessage] = useState("");
   const [error, setError] = useState("");
+  useEffect(() => {
+    if (!toastMessage) return;
+    const timeout = window.setTimeout(() => setToastMessage(""), 2200);
+    return () => window.clearTimeout(timeout);
+  }, [toastMessage]);
+
   const preserveDraftOnNextArtistUpdateRef = useRef(false);
   const designationFieldRef = useRef<HTMLDivElement>(null);
   const selectedDesignations = parseDesignationSelections(designation).filter(
@@ -182,6 +190,7 @@ export default function ArtistProfileEditor({
 
       onSaved(body.artist);
       setMessage("Profile saved.");
+      setToastMessage("Profile saved.");
     } catch (saveError) {
       setError(
         saveError instanceof Error
@@ -602,6 +611,7 @@ export default function ArtistProfileEditor({
           </div>
         ) : null}
       </div>
+      <Toast message={toastMessage} />
     </form>
   );
 }
