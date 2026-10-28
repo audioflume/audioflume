@@ -3457,8 +3457,14 @@ body:has(.audioflume-home-landing)
   background: #111;
 }
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-home-authentic-left,
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-home-authentic-right {
+  background: #e5e5dd;
+}
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-authentic-left {
-  background: var(--filmwave-web-user-menu-bg);
+  color: #111111;
 }
 .audioflume-home-authentic-lockup {
   --audioflume-lockup-icon-size: clamp(50px, 4.35vw, 78px);
