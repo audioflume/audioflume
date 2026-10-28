@@ -98,7 +98,7 @@ export default function HomeLandingContent() {
       if (!loopWidth || dragging || reducedMotion.matches || !deltaY) return;
       const rect = viewport!.getBoundingClientRect();
       if (rect.bottom <= 0 || rect.top >= window.innerHeight) return;
-      offset += deltaY * 0.65;
+      offset += deltaY * 0.5;
       render();
     }
 
