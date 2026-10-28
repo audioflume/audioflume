@@ -1920,8 +1920,8 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-curated-card {
   position: relative;
-  width: min(540px, 92vw);
-  min-width: min(540px, 92vw);
+  width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
+  min-width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
   height: 252px;
   overflow: hidden;
   border-radius: 0;
@@ -2216,11 +2216,6 @@ body:has(.audioflume-home-landing)
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-bar {
     padding-right: 112px;
-  }
-
-  .audioflume-home-mockup-curated-card {
-    width: min(462px, 92vw);
-    min-width: min(462px, 92vw);
   }
 
   .audioflume-home-mockup-intro-meta > span:last-child {
