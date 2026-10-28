@@ -1269,7 +1269,7 @@ export default function Header() {
         }
       `}</style>
 
-      {!isBackendPage && <div className={`audioflume-artist-cta-bar${transparentAtTop ? " audioflume-home-cta-entrance" : ""}`}>
+      {!isBackendPage && <div className="audioflume-artist-cta-bar">
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
