@@ -3496,7 +3496,7 @@ body:has(.audioflume-home-landing)
     min-height: 360px;
   }
   .audioflume-home-authentic-lockup {
-    --audioflume-lockup-icon-size: clamp(50px, 8vw, 72px);
+    --audioflume-lockup-icon-size: clamp(50px, 8vw, 68px);
   }
   .audioflume-home-authentic-message {
     padding: 0 6%;
