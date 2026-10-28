@@ -3447,7 +3447,7 @@ body:has(.audioflume-home-landing)
   color: #e5e5dd;
 }
 @media (min-width: 1400px) {
-  .audioflume-home-authentic-banner {
+  .audioflume-home-landing .audioflume-home-authentic-banner {
     height: 460px;
   }
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
