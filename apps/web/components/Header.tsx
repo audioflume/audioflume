@@ -94,6 +94,7 @@ export default function Header() {
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || menuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
     "filmwave-web-header",
+    transparentAtTop ? "audioflume-home-header-entrance" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
     mobileNavOpen ? "has-open-mobile-nav" : "",
@@ -1268,7 +1269,7 @@ export default function Header() {
         }
       `}</style>
 
-      {!isBackendPage && <div className="audioflume-artist-cta-bar">
+      {!isBackendPage && <div className={`audioflume-artist-cta-bar${transparentAtTop ? " audioflume-home-cta-entrance" : ""}`}>
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
