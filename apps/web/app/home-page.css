@@ -3134,6 +3134,10 @@ body:has(.audioflume-home-landing)
   stroke: currentColor;
   stroke-linecap: round;
   stroke-width: 1.4;
+  transition: color 150ms ease;
+}
+.audioflume-home-landing-search-field:focus-within .audioflume-home-reference-searchbar-field > svg {
+  color: var(--text-primary);
 }
 .audioflume-home-landing-search-field input {
   width: 100%;
