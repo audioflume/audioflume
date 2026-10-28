@@ -1,6 +1,8 @@
 import HomeLandingContent from "./HomeLandingContent";
+import { getHomeFlashImages } from "@/lib/homeFlashImages";
 import "./home-page.css";
 
-export default function Home() {
-  return <HomeLandingContent />;
+export default async function Home() {
+  const homeFlashImages = await getHomeFlashImages();
+  return <HomeLandingContent homeFlashImages={homeFlashImages} />;
 }
