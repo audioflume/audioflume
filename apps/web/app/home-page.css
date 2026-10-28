@@ -3430,9 +3430,9 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-authentic-message {
   display: grid;
-  width: 100%;
+  width: 82%;
   gap: 2px;
-  padding: 0 clamp(35px, 5.6vw, 100px);
+  padding: 0;
   color: #e5e5dd;
   font-size: clamp(19px, 1.85vw, 34px);
   font-weight: 300;
