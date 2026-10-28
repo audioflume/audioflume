@@ -3511,6 +3511,10 @@ body:has(.audioflume-home-landing)
   opacity: 0;
   pointer-events: none;
 }
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-home-authentic-right::after {
+  background: #e5e5dd;
+}
 .audioflume-home-authentic-flash-media {
   position: absolute;
   inset: 0;
