@@ -3426,7 +3426,26 @@ body:has(.audioflume-home-landing)
   letter-spacing: -0.035em;
 }
 .audioflume-home-authentic-right {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #111111;
+}
+.audioflume-home-authentic-right::before {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
   background: linear-gradient(rgba(0, 0, 0, 0.48), rgba(0, 0, 0, 0.48)), url("https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash-web.jpg") center / cover no-repeat;
+}
+.audioflume-home-authentic-right::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  content: "";
+  background: #111111;
+  opacity: 0;
+  pointer-events: none;
 }
 .audioflume-home-authentic-message {
   display: grid;
@@ -3477,6 +3496,30 @@ body:has(.audioflume-home-landing)
     font-size: clamp(13px, 4vw, 19px);
     padding: 0 5%;
   }
+}
+
+/* The image reveals from #111111 as it slowly settles to its original crop. */
+@media (prefers-reduced-motion: no-preference) {
+  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-right::before {
+    transform: scale(1.08);
+  }
+  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-right::after {
+    opacity: 1;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-right::before {
+    animation: audioflume-authentic-image-zoom 3.5s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-right::after {
+    animation: audioflume-authentic-image-reveal 1.8s ease-out both;
+  }
+}
+@keyframes audioflume-authentic-image-zoom {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+@keyframes audioflume-authentic-image-reveal {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 /* Scroll-triggered authentic banner entrance. */
