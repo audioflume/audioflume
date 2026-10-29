@@ -4055,7 +4055,7 @@ body:has(.audioflume-home-landing)
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  gap: 65px;
+  gap: 52px;
 }
 .audioflume-home-founders-shade {
   position: absolute;
@@ -4119,7 +4119,7 @@ body:has(.audioflume-home-landing)
   width: 100%;
   flex-direction: column;
   gap: 8px;
-  padding: 24px 30px;
+  padding: 20px 30px;
   border: 1px solid rgba(255,255,255,.8);
   margin-bottom: 22px;
 }
