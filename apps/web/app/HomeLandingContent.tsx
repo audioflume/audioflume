@@ -18,6 +18,14 @@ const HOME_HERO_IMAGE =
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
   const { songs } = useSongs();
+  const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 40);
+  const songRows = Array.from({ length: 4 }, (_, row) => gridSongs.slice(row * 10, row * 10 + 10));
+  function playGridSong(song: (typeof songs)[number]) {
+    if (!song.audioUrl) return;
+    setQueue(gridSongs);
+    togglePlayPause(song);
+  }
+
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   function playArtist(name: string) {
     const artistSongs = songs.filter((song) =>
@@ -312,6 +320,37 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
           </div>
         </div>
+      </section>
+
+      <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
+        {songRows.map((row, rowIndex) => (
+          <div className="audioflume-home-song-mosaic-row" key={rowIndex}>
+            {row.map((song) => {
+              const playing = isPlaying && currentSong?.id === song.id;
+              return (
+                <article className="audioflume-home-song-mosaic-card" key={song.id}>
+                  <img className="audioflume-home-song-mosaic-background" src={song.coverArt} alt="" loading="lazy" />
+                  <div className="audioflume-home-song-mosaic-shade" aria-hidden="true" />
+                  <div className="audioflume-home-song-mosaic-info">
+                    <img src={song.coverArt} alt="" loading="lazy" />
+                    <div className="audioflume-home-song-mosaic-copy">
+                      <span>{song.title}</span>
+                      <span>{song.artist}</span>
+                    </div>
+                  </div>
+                  <button
+                    type="button"
+                    className="audioflume-home-song-mosaic-play"
+                    onClick={() => playGridSong(song)}
+                    aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+                  >
+                    {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+                  </button>
+                </article>
+              );
+            })}
+          </div>
+        ))}
       </section>
 
       <section className="audioflume-home-reference-library">
