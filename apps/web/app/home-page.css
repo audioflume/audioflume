@@ -3938,19 +3938,29 @@ body:has(.audioflume-home-landing)
   gap: 20px;
 }
 .audioflume-home-song-mosaic-info > img {
-  width: 100px;
-  height: 100px;
-  flex: 0 0 100px;
+  width: 80px;
+  height: 80px;
+  flex: 0 0 80px;
   object-fit: cover;
 }
 .audioflume-home-song-mosaic-copy {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 4px;
-  font-size: clamp(14px, 1.2vw, 20px);
+  gap: 0;
   font-weight: 400;
-  line-height: 1.25;
+}
+.audioflume-home-song-mosaic-copy > span:first-child {
+  font-size: 14.5px;
+  font-weight: 400;
+  line-height: 1.35;
+  color: #ffffff;
+}
+.audioflume-home-song-mosaic-copy > span:last-child {
+  margin-top: 2px;
+  font-size: 11.5px;
+  line-height: 1.35;
+  color: rgba(255,255,255,.72);
 }
 .audioflume-home-song-mosaic-copy > span {
   overflow: hidden;
@@ -3974,6 +3984,7 @@ body:has(.audioflume-home-landing)
   cursor: pointer;
   transition: opacity 180ms ease, transform 180ms ease;
 }
+.audioflume-home-song-mosaic-card.is-wide .audioflume-home-song-mosaic-play,
 .audioflume-home-song-mosaic-card:hover .audioflume-home-song-mosaic-play,
 .audioflume-home-song-mosaic-play:focus-visible {
   opacity: 1;
@@ -3992,11 +4003,6 @@ body:has(.audioflume-home-landing)
     left: 18px;
     gap: 12px;
     max-width: calc(100% - 92px);
-  }
-  .audioflume-home-song-mosaic-info > img {
-    width: 58px;
-    height: 58px;
-    flex-basis: 58px;
   }
   .audioflume-home-song-mosaic-play {
     right: 18px;
