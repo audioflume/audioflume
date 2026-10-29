@@ -4035,10 +4035,13 @@ body:has(.audioflume-home-landing)
   }
   .audioflume-home-song-mosaic-card {
     width: 100%;
+    height: auto;
+    aspect-ratio: 1;
   }
   .audioflume-home-song-mosaic-card.is-wide {
     grid-column: span 2;
     width: 100%;
+    aspect-ratio: 2;
   }
   .audioflume-home-song-mosaic-info {
     position: static;
@@ -4068,6 +4071,10 @@ body:has(.audioflume-home-landing)
     height: 36px;
     opacity: 0;
     transform: none;
+  }
+  .audioflume-home-song-mosaic-thumbnail-play svg {
+    width: 14px;
+    height: 14px;
   }
   .audioflume-home-song-mosaic-card:hover .audioflume-home-song-mosaic-thumbnail-play,
   .audioflume-home-song-mosaic-thumbnail-play:focus-visible {
