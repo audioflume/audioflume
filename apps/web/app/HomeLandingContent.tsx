@@ -1,5 +1,6 @@
-import GenreFilterPills from "@/components/GenreFilterPills";
 "use client";
+
+import GenreFilterPills from "@/components/GenreFilterPills";
 
 import Footer from "@/components/Footer";
 import Link from "next/link";
