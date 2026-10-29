@@ -1,14 +1,15 @@
 "use client";
 
-import { membershipPlanImages } from "../accountData";
+import { useEffect, useState } from "react";
+import Link from "next/link";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import "../../../app/pricing/pricing-page.css";
 import { formatCount } from "../accountUtils";
 import {
-  Button,
   Card,
   CardTitle,
   DangerButton,
-  DiagonalArrowIcon,
   Feedback,
   Info,
 } from "../AccountUI";
@@ -25,6 +26,17 @@ function PlanDetail({ label, value }: { label: string; value: string }) {
 
 export default function MembershipSection() {
   const { membership, display, usage, loadState } = useMembershipData();
+  const [pricingImages, setPricingImages] = useState<string[]>([]);
+  useEffect(() => {
+    let active = true;
+    fetch("/api/pricing-plan-images")
+      .then((response) => response.ok ? response.json() : Promise.reject())
+      .then((data: { images?: string[] }) => {
+        if (active) setPricingImages(data.images ?? []);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, []);
 
   const licenseLabel = membership?.license_label || "Royalty-free commercial use";
   const currentPlanLabel = display?.plan_label || "Lifetime Membership";
@@ -65,17 +77,17 @@ export default function MembershipSection() {
             <article key={plan.name} className="audioflume-pricing-plan">
               <div
                 className="audioflume-pricing-plan-background absolute inset-0 bg-cover bg-center"
-                style={{ backgroundImage: `url("${membershipPlanImages[index]}")` }}
+                style={{ backgroundImage: pricingImages[index] ? `url("${pricingImages[index]}")` : undefined }}
                 aria-hidden="true"
               />
               <div className="audioflume-pricing-plan-banner">
                 <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
-                {isCurrentPlan ? (
-                  <span className="absolute right-6 top-6 z-10 bg-white px-2 py-1 text-[10px] font-medium uppercase text-[#111111]">
-                    Active
-                  </span>
-                ) : null}
               </div>
+              {isCurrentPlan ? (
+                <span className="absolute right-6 top-6 z-[3] inline-flex w-max items-center bg-white px-2 py-1 text-[10px] font-medium uppercase leading-none text-[#111111]">
+                  Active
+                </span>
+              ) : null}
               <div className="audioflume-pricing-plan-body">
                 <p className="audioflume-pricing-plan-description">{plan.description}</p>
                 <div className="audioflume-pricing-plan-price">
@@ -84,13 +96,14 @@ export default function MembershipSection() {
                 </div>
                 <div className="audioflume-pricing-plan-action-row">
                   {isCurrentPlan ? (
-                    <div className="flex h-[52px] w-full items-center justify-center bg-white text-[14px] font-normal text-[#111111]">
+                    <div className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button !cursor-default`} style={{ fontSize: "14px", fontWeight: 400 }}>
                       Current plan
                     </div>
                   ) : (
-                    <Button dark>
-                      Change Plan <DiagonalArrowIcon />
-                    </Button>
+                    <Link href="/pricing" className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none`} style={{ fontSize: "14px", fontWeight: 400 }}>
+                      Change Plan
+                      <ArrowUpRightIcon size={16} strokeWidth={1.5} className="-ml-[3px] translate-y-[1px]" />
+                    </Link>
                   )}
                 </div>
                 <ul className="audioflume-pricing-plan-features">
