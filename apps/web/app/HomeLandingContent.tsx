@@ -18,8 +18,8 @@ const HOME_HERO_IMAGE =
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
   const { songs } = useSongs();
-  const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 40);
-  const songRows = Array.from({ length: 4 }, (_, row) => gridSongs.slice(row * 10, row * 10 + 10));
+  const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 10);
+  const songRows = [gridSongs.slice(0, 2), gridSongs.slice(2, 5), gridSongs.slice(5, 7), gridSongs.slice(7, 10)];
   function playGridSong(song: (typeof songs)[number]) {
     if (!song.audioUrl) return;
     setQueue(gridSongs);
@@ -328,7 +328,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             {row.map((song) => {
               const playing = isPlaying && currentSong?.id === song.id;
               return (
-                <article className="audioflume-home-song-mosaic-card" key={song.id}>
+                <article className={`audioflume-home-song-mosaic-card${(rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id) ? " is-wide" : ""}`} key={song.id}>
                   <img className="audioflume-home-song-mosaic-background" src={song.coverArt} alt="" loading="lazy" />
                   <div className="audioflume-home-song-mosaic-shade" aria-hidden="true" />
                   <div className="audioflume-home-song-mosaic-info">
@@ -338,14 +338,14 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                       <span>{song.artist}</span>
                     </div>
                   </div>
-                  <button
+                  {((rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id)) && <button
                     type="button"
                     className="audioflume-home-song-mosaic-play"
                     onClick={() => playGridSong(song)}
                     aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
                   >
                     {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-                  </button>
+                  </button>}
                 </article>
               );
             })}
