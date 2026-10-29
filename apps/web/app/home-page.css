@@ -671,23 +671,6 @@ body:has(.audioflume-home-landing)
   margin-top: 8px;
 }
 
-.audioflume-home-reference-artist-genres > .audioflume-genre-filter-pill {
-  display: inline-flex;
-  min-height: 21px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.14);
-  padding: 0 10px;
-  color: #ffffff;
-  font-size: 9px;
-  font-weight: 300;
-  line-height: 1;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-}
-
 .audioflume-home-reference-artist-genres > .audioflume-genre-filter-pill.is-placeholder {
   width: 68px;
   padding: 0;
@@ -1265,11 +1248,6 @@ body:has(.audioflume-home-landing)
   .filmwave-header-create-account {
   background: #111111 !important;
   color: #e5e5dd !important;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > .audioflume-genre-filter-pill {
-  background: rgba(255, 255, 255, 0.14);
-  color: #ffffff;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong {
