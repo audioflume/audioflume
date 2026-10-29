@@ -436,7 +436,7 @@ export default function Header() {
         }
 
         :where(html.dark, html[data-theme="dark"]) .audioflume-artist-cta-bar {
-          background: #080808;
+          background: var(--filmwave-search-surface);
           color: #e5e5dd;
         }
 
