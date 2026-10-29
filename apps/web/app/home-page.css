@@ -4043,6 +4043,10 @@ body:has(.audioflume-home-landing)
   padding: 80px var(--audioflume-home-page-gutter, 5vw) clamp(44px, 5vw, 82px);
   background: #e5e5dd;
 }
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-home-founders-section {
+  background: #111;
+}
 .audioflume-home-founders-banner {
   position: relative;
   isolation: isolate;
