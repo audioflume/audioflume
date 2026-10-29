@@ -6,7 +6,10 @@ import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
-import { useHasCurrentSong } from "@/context/PlayerContext";
+import { useHasCurrentSong, usePlayer } from "@/context/PlayerContext";
+import { useSongs } from "@/hooks/useSongs";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PauseIcon from "@/components/icons/PauseIcon";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const HOME_HERO_IMAGE =
@@ -14,6 +17,22 @@ const HOME_HERO_IMAGE =
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
+  const { songs } = useSongs();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  function playArtist(name: string) {
+    const artistSongs = songs.filter((song) =>
+      song.audioUrl && song.artist.trim().toLowerCase() === name.trim().toLowerCase()
+    );
+    if (!artistSongs.length) return;
+    const active = currentSong && artistSongs.some((song) => song.id === currentSong.id);
+    if (active && isPlaying) {
+      togglePlayPause(currentSong);
+    } else {
+      setQueue(artistSongs);
+      togglePlayPause(active && currentSong ? currentSong : artistSongs[0]);
+    }
+  }
+
   const [homeImages, setHomeImages] = useState({
     hero: HOME_HERO_IMAGE,
     lowerBanner: "https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash-web.jpg",
@@ -247,13 +266,26 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             {[0, 1, 2, 3].map((copy) => (
               <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy > 0}>
                 {artists.map((artist) => (
-                  <Link key={artist.id} tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-card">
-                    <span className="audioflume-home-landing-artist-image">
-                      <img src={artist.hero_image_url || artist.profile_image_url || ""} alt="" loading="lazy" />
-                    </span>
-                    <span className="audioflume-home-landing-artist-title">{artist.name}</span>
+                  <div key={artist.id} className="audioflume-home-landing-artist-card">
+                    <div className="audioflume-home-landing-artist-image-wrap">
+                      <Link tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-image">
+                        <img src={artist.hero_image_url || artist.profile_image_url || ""} alt="" loading="lazy" />
+                      </Link>
+                      <button
+                        type="button"
+                        tabIndex={copy > 0 ? -1 : undefined}
+                        className="audioflume-home-landing-artist-play"
+                        onClick={() => playArtist(artist.name)}
+                        aria-label={`Play music by ${artist.name}`}
+                      >
+                        {isPlaying && currentSong?.artist.trim().toLowerCase() === artist.name.trim().toLowerCase()
+                          ? <PauseIcon size={24} />
+                          : <PlayIconSmall size={24} />}
+                      </button>
+                    </div>
+                    <Link tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-title">{artist.name}</Link>
                     <span className="audioflume-home-landing-artist-subtitle">{artist.designation || "Composer"}</span>
-                  </Link>
+                  </div>
                 ))}
               </div>
             ))}
