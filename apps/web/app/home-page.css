@@ -4244,8 +4244,11 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-section { padding: 24px 16px 0; }
   .audioflume-home-founders-banner { padding: 46px 40px; gap: 24px; }
   .audioflume-home-founders-heading { grid-template-columns: 1fr 1fr; text-align: left; font-size: clamp(32px, 7.5vw, 46px); gap: 4px 10px; }
-  .audioflume-home-founders-heading > span:nth-child(odd) { text-align: left; }
-  .audioflume-home-founders-heading > span:nth-child(even) { text-align: right; }
+  .audioflume-home-founders-heading > span:nth-child(1),
+  .audioflume-home-founders-heading > span:nth-child(3),
+  .audioflume-home-founders-heading > span:nth-child(6) { text-align: left; }
+  .audioflume-home-founders-heading > span:nth-child(2),
+  .audioflume-home-founders-heading > span:nth-child(4) { text-align: right; }
   .audioflume-home-founders-heading > span:nth-child(5) { display: none; }
   .audioflume-home-founders-content { grid-template-columns: 1fr; align-items: stretch; gap: 40px; }
   .audioflume-home-founders-benefits { justify-self: stretch; width: 100%; }
