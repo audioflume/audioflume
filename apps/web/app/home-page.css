@@ -3932,6 +3932,37 @@ body:has(.audioflume-home-landing)
     grid-column: span 2;
     width: 100%;
   }
+  .audioflume-home-song-mosaic-info {
+    right: 24px;
+    max-width: none;
+    flex-direction: column-reverse;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .audioflume-home-song-mosaic-thumbnail {
+    width: 44px;
+    height: 44px;
+    flex: 0 0 44px;
+  }
+  .audioflume-home-song-mosaic-thumbnail > img {
+    display: none;
+  }
+  .audioflume-home-song-mosaic-thumbnail-play {
+    top: 0;
+    left: 0;
+    opacity: 1;
+    transform: none;
+  }
+  .audioflume-home-song-mosaic-thumbnail-play:hover,
+  .audioflume-home-song-mosaic-thumbnail-play:focus-visible {
+    transform: scale(1.03);
+  }
+  .audioflume-home-song-mosaic-shade {
+    transition: opacity 220ms ease;
+  }
+  .audioflume-home-song-mosaic-card:hover .audioflume-home-song-mosaic-shade {
+    opacity: 0;
+  }
 }
 
 .audioflume-home-song-mosaic-background {
