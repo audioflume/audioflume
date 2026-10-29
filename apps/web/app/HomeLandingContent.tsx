@@ -324,6 +324,42 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
+      <section className="audioflume-home-founders-section" aria-label="Audioflume Founding Artist Program">
+        <div className="audioflume-home-founders-banner">
+          <div className="audioflume-home-founders-shade" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-top-left" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-bottom-right" aria-hidden="true" />
+          <h2 className="audioflume-home-founders-heading">
+            <span>JOIN</span><span>THE</span><span>FOUNDING</span>
+            <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
+          </h2>
+          <div className="audioflume-home-founders-content">
+            <div className="audioflume-home-founders-intro">
+              <p>The first 100 artists.<br />Founding members for life.</p>
+              <Link href="/artists/apply" className="audioflume-home-founders-apply">
+                Become a Founding Artist <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="audioflume-home-founders-benefits">
+              <div className="audioflume-home-founders-earnings">
+                <strong>100% Earnings*</strong>
+                <span>*On eligible Premium artist licences</span>
+              </div>
+              <ul>
+                {[
+                  "Preferential enterprise licensing terms",
+                  "Lifetime priority promotion",
+                  "Priority licensing opportunities",
+                  "Permanent Founding Artist recognition",
+                  "Exclusive artist features & promotion",
+                  "Priority new-release review",
+                ].map((benefit) => <li key={benefit}><span aria-hidden="true">✓</span>{benefit}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
