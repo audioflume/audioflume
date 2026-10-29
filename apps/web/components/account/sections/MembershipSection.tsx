@@ -1,6 +1,7 @@
 "use client";
 
 import { membershipPlanImages } from "../accountData";
+import "../../../app/pricing/pricing-page.css";
 import { formatCount } from "../accountUtils";
 import {
   Button,
@@ -10,7 +11,6 @@ import {
   DiagonalArrowIcon,
   Feedback,
   Info,
-  VisualPanel,
 } from "../AccountUI";
 import { useMembershipData } from "../hooks/useMembershipData";
 
@@ -23,22 +23,6 @@ function PlanDetail({ label, value }: { label: string; value: string }) {
   );
 }
 
-function ActivePill() {
-  return (
-    <div className="inline-flex items-center rounded-full border-[1.25px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] px-2.5 py-1 text-[11px] font-medium text-[#48b571]">
-      Active
-    </div>
-  );
-}
-
-function CurrentPlanButton() {
-  return (
-    <div className="filmwave-backend-button min-w-[122px] border-[1.25px] border-[rgba(72,181,113,0.35)] bg-[rgba(72,181,113,0.08)] text-[#48b571]">
-      Current plan
-    </div>
-  );
-}
-
 export default function MembershipSection() {
   const { membership, display, usage, loadState } = useMembershipData();
 
@@ -46,9 +30,24 @@ export default function MembershipSection() {
   const currentPlanLabel = display?.plan_label || "Lifetime Membership";
 
   const plans = [
-    ["Starter", "$15 CAD / mo", "Solo creators building a smaller library of client projects."],
-    ["Studio", "$39 CAD / mo", "For active filmmakers and small teams who need more project coverage."],
-    ["Enterprise", "Custom", "For agencies, publishers, and teams with higher-volume licensing needs."],
+    {
+      name: "Creative",
+      price: "$15",
+      description: "For solo filmmakers licensing music and SFX for their own client work.",
+      features: ["Full music + SFX catalogue", "Royalty-free commercial use", "Projects, playlists + favorites", "Desktop sync workflow"],
+    },
+    {
+      name: "Studio Pro+",
+      price: "$39",
+      description: "For active filmmakers and small teams handling more projects and client work.",
+      features: ["Expanded project coverage", "Small-team commercial licensing", "Full music + SFX catalogue", "Desktop sync workflow"],
+    },
+    {
+      name: "Enterprise",
+      price: "Custom",
+      description: "For agencies, publishers, and larger teams with high-volume or custom licensing needs.",
+      features: ["Higher-volume licensing", "Custom usage terms", "Larger team coverage", "Direct licensing support"],
+    },
   ];
 
   return (
@@ -58,6 +57,50 @@ export default function MembershipSection() {
           <Feedback tone="error" message="Could not load membership details. Make sure the Supabase SQL has been run." />
         </div>
       ) : null}
+
+      <div className="audioflume-pricing-plan-grid mb-4">
+        {plans.map((plan, index) => {
+          const isCurrentPlan = plan.name === "Studio Pro+";
+          return (
+            <article key={plan.name} className="audioflume-pricing-plan">
+              <div
+                className="audioflume-pricing-plan-background absolute inset-0 bg-cover bg-center"
+                style={{ backgroundImage: `url("${membershipPlanImages[index]}")` }}
+                aria-hidden="true"
+              />
+              <div className="audioflume-pricing-plan-banner">
+                <h3 className="audioflume-pricing-plan-name">{plan.name}</h3>
+                {isCurrentPlan ? (
+                  <span className="absolute right-6 top-6 z-10 bg-white px-2 py-1 text-[10px] font-medium uppercase text-[#111111]">
+                    Active
+                  </span>
+                ) : null}
+              </div>
+              <div className="audioflume-pricing-plan-body">
+                <p className="audioflume-pricing-plan-description">{plan.description}</p>
+                <div className="audioflume-pricing-plan-price">
+                  <strong>{plan.price}</strong>
+                  {plan.name !== "Enterprise" ? <span>CAD / month</span> : null}
+                </div>
+                <div className="audioflume-pricing-plan-action-row">
+                  {isCurrentPlan ? (
+                    <div className="flex h-[52px] w-full items-center justify-center bg-white text-[14px] font-normal text-[#111111]">
+                      Current plan
+                    </div>
+                  ) : (
+                    <Button dark>
+                      Change Plan <DiagonalArrowIcon />
+                    </Button>
+                  )}
+                </div>
+                <ul className="audioflume-pricing-plan-features">
+                  {plan.features.map((feature) => <li key={feature}>{feature}</li>)}
+                </ul>
+              </div>
+            </article>
+          );
+        })}
+      </div>
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <Card>
@@ -97,37 +140,6 @@ export default function MembershipSection() {
             <Info label="Playlists" value={formatCount(usage?.playlists ?? 0, "playlist")} />
           </div>
         </Card>
-      </div>
-
-      <div className="mt-4 grid gap-4 lg:grid-cols-3">
-        {plans.map(([name, price, description], index) => {
-          const isCurrentPlan = name === "Studio";
-
-          return (
-            <Card key={name} className="group">
-              <VisualPanel image={membershipPlanImages[index]} />
-              <div className="p-4">
-                <div className="flex min-h-[190px] flex-col">
-                  <div className="flex min-h-7 items-start justify-between gap-3">
-                    <div className="text-sm font-medium text-[var(--text-primary)]">{name}</div>
-                    {isCurrentPlan ? <ActivePill /> : null}
-                  </div>
-                  <div className="mt-2 text-2xl font-medium tracking-[-0.05em] text-[var(--text-primary)]">{price}</div>
-                  <p className="mt-2 text-xs leading-5 text-[var(--text-muted)]">{description}</p>
-                  <div className="mt-auto pt-5">
-                    {isCurrentPlan ? (
-                      <CurrentPlanButton />
-                    ) : (
-                      <Button dark>
-                        Change Plan <DiagonalArrowIcon />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </div>
-            </Card>
-          );
-        })}
       </div>
 
       <Card className="mt-4">
