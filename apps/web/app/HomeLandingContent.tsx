@@ -406,7 +406,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       </section>
 
       <div className="audioflume-home-reference-footer-region">
-        <Footer className="audioflume-home-reference-footer" />
+        <Footer className="audioflume-home-reference-footer" showTopBorder={false} />
       </div>
     </main>
   );
