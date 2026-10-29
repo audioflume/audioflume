@@ -3413,8 +3413,8 @@ body:has(.audioflume-home-landing)
   bottom: 28px;
   z-index: 2;
   display: grid;
-  width: 52px;
-  height: 52px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   border: 0;
   border-radius: 999px;
