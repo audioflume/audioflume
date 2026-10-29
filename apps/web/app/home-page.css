@@ -4051,7 +4051,7 @@ body:has(.audioflume-home-landing)
   overflow: hidden;
   background: #101615 url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
   color: #fff;
-  padding: clamp(32px, 3.5vw, 64px) clamp(32px, 5.2vw, 96px);
+  padding: clamp(48px, 5vw, 96px);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -4086,7 +4086,7 @@ body:has(.audioflume-home-landing)
   display: grid;
   grid-template-columns: 1fr 1fr 1.55fr;
   gap: 0 20px;
-  margin: 34px 0 0;
+  margin: 0;
   font-size: clamp(31px, 4.8vw, 84px);
   font-weight: 300;
   letter-spacing: -.045em;
@@ -4110,7 +4110,7 @@ body:has(.audioflume-home-landing)
   line-height: 1.04;
   letter-spacing: -.035em;
 }
-.audioflume-home-reference a.audioflume-home-founders-apply {
+.audioflume-home-reference .audioflume-home-founders-banner a.audioflume-home-founders-apply {
   display: inline-flex;
   min-height: 62px;
   width: min(100%, 440px);
@@ -4118,23 +4118,28 @@ body:has(.audioflume-home-landing)
   justify-content: center;
   gap: 12px;
   background: #e5e5dd;
-  color: #111;
+  color: #111111;
   text-decoration: none;
   font-size: 17px;
   font-weight: 400;
   transition: background 160ms ease;
 }
-.audioflume-home-reference a.audioflume-home-founders-apply:hover {
+.audioflume-home-reference .audioflume-home-founders-banner a.audioflume-home-founders-apply:hover {
   background: #fff;
   color: #111;
+}
+.audioflume-home-founders-benefits {
+  justify-self: end;
+  width: max-content;
+  max-width: 100%;
 }
 .audioflume-home-founders-earnings {
   display: flex;
   width: max-content;
   max-width: 100%;
   flex-direction: column;
-  gap: 3px;
-  padding: 12px 18px;
+  gap: 8px;
+  padding: 24px 30px;
   border: 1px solid rgba(255,255,255,.8);
   margin-bottom: 22px;
 }
@@ -4165,19 +4170,20 @@ body:has(.audioflume-home-landing)
   flex-shrink: 0;
 }
 @media (max-width: 900px) {
-  .audioflume-home-founders-banner { min-height: 640px; padding: 45px 40px; }
-  .audioflume-home-founders-heading { font-size: clamp(30px, 5.4vw, 52px); margin-top: 30px; }
+  .audioflume-home-founders-banner { min-height: 690px; padding: 52px; }
+  .audioflume-home-founders-heading { font-size: clamp(30px, 5.4vw, 52px); }
   .audioflume-home-founders-content { gap: 32px; }
   .audioflume-home-founders-intro p { font-size: 29px; }
   .audioflume-home-founders-apply { min-height: 54px; }
 }
 @media (max-width: 640px) {
   .audioflume-home-founders-section { padding: 24px 16px; }
-  .audioflume-home-founders-banner { min-height: 800px; padding: 54px 24px 32px; gap: 36px; }
-  .audioflume-home-founders-heading { grid-template-columns: 1fr 1fr; text-align: left; font-size: clamp(30px, 7.5vw, 46px); gap: 4px 10px; margin-top: 20px; }
+  .audioflume-home-founders-banner { min-height: 840px; padding: 36px; gap: 36px; }
+  .audioflume-home-founders-heading { grid-template-columns: 1fr 1fr; text-align: left; font-size: clamp(30px, 7.5vw, 46px); gap: 4px 10px; }
   .audioflume-home-founders-heading > span { text-align: left !important; }
   .audioflume-home-founders-heading > span:nth-child(5) { display: none; }
   .audioflume-home-founders-content { grid-template-columns: 1fr; align-items: stretch; gap: 40px; }
+  .audioflume-home-founders-benefits { justify-self: stretch; width: 100%; }
   .audioflume-home-founders-intro p { font-size: 30px; margin-bottom: 22px; }
   .audioflume-home-founders-apply { width: 100%; min-height: 54px; }
   .audioflume-home-founders-corner.is-top-left { top: 18px; left: 18px; }
