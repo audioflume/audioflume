@@ -4110,7 +4110,7 @@ body:has(.audioflume-home-landing)
   line-height: 1.04;
   letter-spacing: -.035em;
 }
-.audioflume-home-reference .audioflume-home-founders-apply {
+.audioflume-home-reference a.audioflume-home-founders-apply {
   display: inline-flex;
   min-height: 62px;
   width: min(100%, 440px);
@@ -4124,7 +4124,7 @@ body:has(.audioflume-home-landing)
   font-weight: 400;
   transition: background 160ms ease;
 }
-.audioflume-home-reference .audioflume-home-founders-apply:hover {
+.audioflume-home-reference a.audioflume-home-founders-apply:hover {
   background: #fff;
 }
 .audioflume-home-founders-earnings {
