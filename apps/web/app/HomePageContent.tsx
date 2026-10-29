@@ -1,5 +1,6 @@
-import GenreFilterPills from "@/components/GenreFilterPills";
 "use client";
+
+import GenreFilterPills from "@/components/GenreFilterPills";
 
 import { MusicListShell } from "@filmwave/shared";
 import Link from "next/link";
