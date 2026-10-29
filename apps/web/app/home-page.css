@@ -4058,7 +4058,7 @@ body:has(.audioflume-home-landing)
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  gap: 32px;
+  gap: 42px;
 }
 .audioflume-home-founders-banner::before {
   content: "";
