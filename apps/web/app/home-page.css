@@ -4067,9 +4067,10 @@ body:has(.audioflume-home-landing)
   z-index: -2;
   background: url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
   transform: scale(1.06);
+  opacity: 0;
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-banner::before {
-  animation: audioflume-founders-image-settle 3400ms ease-out both;
+  animation: audioflume-founders-image-settle 3400ms ease-out both, audioflume-founders-fade 1000ms ease-out both;
 }
 .audioflume-home-founders-shade {
   position: absolute;
@@ -4206,6 +4207,9 @@ body:has(.audioflume-home-landing)
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .audioflume-home-founders-banner::before {
+    opacity: 1;
+  }
   .audioflume-home-founders-banner::before,
   .audioflume-home-founders-heading > span:not(:empty),
   .audioflume-home-founders-intro,
