@@ -1,0 +1,42 @@
+/* Account membership has a narrower content canvas than the public pricing page. */
+.filmwave-account-content-page .audioflume-pricing-lifetime {
+  min-height: 0;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: auto auto auto;
+  grid-template-areas:
+    "brand heading"
+    "description meta"
+    "pricing action";
+  column-gap: 32px;
+  row-gap: 34px;
+}
+.filmwave-account-content-page .audioflume-pricing-lifetime-meta {
+  justify-self: start;
+  margin-top: 0;
+  text-align: left;
+  white-space: normal;
+}
+.filmwave-account-content-page .audioflume-pricing-lifetime-action {
+  min-width: 0;
+  justify-content: flex-start;
+}
+@media (max-width: 1180px) {
+  .filmwave-account-content-page .audioflume-pricing-lifetime {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: auto;
+    grid-template-areas:
+      "brand"
+      "heading"
+      "pricing"
+      "description"
+      "action";
+    gap: 26px;
+    padding: 28px 24px;
+  }
+  .filmwave-account-content-page .audioflume-pricing-lifetime-meta {
+    display: none;
+  }
+  .filmwave-account-content-page .audioflume-pricing-lifetime-pricing {
+    flex-wrap: wrap;
+  }
+}
