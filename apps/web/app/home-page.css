@@ -3904,7 +3904,7 @@ body:has(.audioflume-home-landing)
   position: relative;
   flex: 0 0 33.333333%;
   width: 33.333333%;
-  height: clamp(300px, 28.5vw, 550px);
+  height: 320px;
   min-width: 0;
   overflow: hidden;
   background: #202020;
