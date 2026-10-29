@@ -4159,20 +4159,8 @@ body:has(.audioflume-home-landing)
   flex-direction: column;
   gap: 8px;
   padding: 20px 30px;
-  position: relative;
-  border: 1px solid transparent;
-  margin-bottom: 22px;
-}
-.audioflume-home-founders-earnings::after {
-  content: "";
-  position: absolute;
-  inset: -1px;
   border: 1px solid #e5e5dd;
-  pointer-events: none;
-  clip-path: polygon(0 0, 0 0, 0 0, 0 0);
-}
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-earnings::after {
-  animation: audioflume-founders-border 750ms linear 900ms both;
+  margin-bottom: 22px;
 }
 .audioflume-home-founders-earnings > strong,
 .audioflume-home-founders-earnings > span {
@@ -4225,13 +4213,6 @@ body:has(.audioflume-home-landing)
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
-@keyframes audioflume-founders-border {
-  0% { clip-path: polygon(0 0, 0 0, 0 0, 0 0); }
-  25% { clip-path: polygon(0 0, 100% 0, 100% 0, 0 0); }
-  50% { clip-path: polygon(0 0, 100% 0, 100% 100%, 100% 100%); }
-  75% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-  100% { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
-}
 @media (prefers-reduced-motion: reduce) {
   .audioflume-home-founders-banner::before,
   .audioflume-home-founders-heading > span:not(:empty),
@@ -4243,10 +4224,6 @@ body:has(.audioflume-home-landing)
     animation: none !important;
     opacity: 1;
     transform: none;
-  }
-  .audioflume-home-founders-earnings::after {
-    animation: none !important;
-    clip-path: none;
   }
 }
 @media (max-width: 900px) {
