@@ -3403,6 +3403,45 @@ body:has(.audioflume-home-landing)
   aspect-ratio: 0.77;
   overflow: hidden;
 }
+.audioflume-home-landing-artist-image-wrap {
+  position: relative;
+  width: 100%;
+}
+.audioflume-home-landing-artist-play {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 2;
+  display: grid;
+  width: 72px;
+  height: 72px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  opacity: 0;
+  cursor: pointer;
+  pointer-events: none;
+  transition: opacity 180ms ease, transform 180ms ease;
+  transform-origin: center;
+}
+.audioflume-home-landing-artist-card:hover .audioflume-home-landing-artist-play,
+.audioflume-home-landing-artist-card:focus-within .audioflume-home-landing-artist-play {
+  opacity: 1;
+  pointer-events: auto;
+}
+.audioflume-home-landing-artist-play:hover,
+.audioflume-home-landing-artist-play:focus-visible {
+  transform: scale(1.08);
+}
+@media (hover: none) {
+  .audioflume-home-landing-artist-play {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
 .audioflume-home-landing-artist-card img {
   display: block;
   width: 100%;
