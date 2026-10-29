@@ -4143,7 +4143,7 @@ body:has(.audioflume-home-landing)
   align-items: baseline;
   font-size: clamp(14px, 1.16vw, 19px);
   font-weight: 400;
-  line-height: 1.5;
+  line-height: 1.6;
 }
 .audioflume-home-founders-benefits li > span {
   font-weight: 300;
