@@ -4141,10 +4141,9 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-founders-intro {
   opacity: 0;
-  transform: translateY(20px);
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-intro {
-  animation: audioflume-founders-rise 650ms cubic-bezier(.22,1,.36,1) 900ms both;
+  animation: audioflume-founders-fade 650ms cubic-bezier(.22,1,.36,1) 900ms both;
 }
 .audioflume-home-reference .audioflume-home-founders-banner a.audioflume-home-founders-apply {
   display: inline-flex;
@@ -4174,10 +4173,9 @@ body:has(.audioflume-home-landing)
   margin: 0;
   list-style: none;
   opacity: 0;
-  transform: translateY(12px);
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-benefits ul {
-  animation: audioflume-founders-rise 650ms cubic-bezier(.22,1,.36,1) 1050ms both;
+  animation: audioflume-founders-fade 650ms cubic-bezier(.22,1,.36,1) 1050ms both;
 }
 .audioflume-home-founders-benefits li {
   display: flex;
@@ -4198,6 +4196,10 @@ body:has(.audioflume-home-landing)
 @keyframes audioflume-founders-image-settle {
   from { transform: scale(1.06); }
   to { transform: scale(1); }
+}
+@keyframes audioflume-founders-fade {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 @keyframes audioflume-founders-rise {
   from { opacity: 0; transform: translateY(20px); }
