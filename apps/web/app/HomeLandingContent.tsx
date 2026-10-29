@@ -58,6 +58,26 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       })
       .catch(() => {});
   }, []);
+  const foundingBannerRef = useRef<HTMLElement>(null);
+  const [foundingBannerVisible, setFoundingBannerVisible] = useState(false);
+
+  useEffect(() => {
+    const banner = foundingBannerRef.current;
+    if (!banner) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches || !("IntersectionObserver" in window)) {
+      setFoundingBannerVisible(true);
+      return;
+    }
+    const observer = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setFoundingBannerVisible(true);
+        observer.disconnect();
+      }
+    }, { threshold: 0.2 });
+    observer.observe(banner);
+    return () => observer.disconnect();
+  }, []);
+
   const carouselRef = useRef<HTMLElement>(null);
   const authenticBannerRef = useRef<HTMLElement>(null);
   const [authenticBannerVisible, setAuthenticBannerVisible] = useState(false);
@@ -324,7 +344,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      <section className="audioflume-home-founders-section" aria-label="Audioflume Founding Artist Program">
+      <section ref={foundingBannerRef} className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
         <div className="audioflume-home-founders-banner">
           <div className="audioflume-home-founders-shade" aria-hidden="true" />
           <h2 className="audioflume-home-founders-heading">
@@ -351,7 +371,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                   "Permanent Founding Artist recognition",
                   "Exclusive artist features & promotion",
                   "Priority new-release review",
-                ].map((benefit) => <li key={benefit}><span aria-hidden="true">✓</span>{benefit}</li>)}
+                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
               </ul>
             </div>
           </div>
