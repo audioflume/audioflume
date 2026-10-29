@@ -359,12 +359,9 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
               </Link>
             </div>
             <div className="audioflume-home-founders-benefits">
-              <div className="audioflume-home-founders-earnings">
-                <strong>100% Earnings*</strong>
-                <span>*On eligible Premium artist licences</span>
-              </div>
               <ul>
                 {[
+                  "100% Earnings on eligible Premium artist licences",
                   "Preferential enterprise licensing terms",
                   "Lifetime priority promotion",
                   "Priority licensing opportunities",
