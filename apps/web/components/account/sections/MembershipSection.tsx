@@ -6,6 +6,7 @@ import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import LifetimeAccessCard from "@/components/LifetimeAccessCard";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import "../../../app/pricing/pricing-page.css";
+import "./membership-lifetime.css";
 import { formatCount } from "../accountUtils";
 import {
   Card,
