@@ -94,7 +94,6 @@ export default function Header() {
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || menuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
     "filmwave-web-header",
-    transparentAtTop ? "audioflume-home-header-entrance" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
     mobileNavOpen ? "has-open-mobile-nav" : "",
