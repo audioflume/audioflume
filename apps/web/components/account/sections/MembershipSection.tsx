@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import LifetimeAccessCard from "@/components/LifetimeAccessCard";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import "../../../app/pricing/pricing-page.css";
 import { formatCount } from "../accountUtils";
@@ -114,6 +115,13 @@ export default function MembershipSection() {
           );
         })}
       </div>
+
+      <section className="audioflume-pricing-lifetime-section !pt-0 mb-4">
+        <LifetimeAccessCard
+          membershipHref="/account/membership"
+          membershipLabel="Get Lifetime Access"
+        />
+      </section>
 
       <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr]">
         <Card>
