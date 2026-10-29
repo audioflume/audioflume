@@ -3840,9 +3840,6 @@ body:has(.audioflume-home-landing)
   .audioflume-home-cta-entrance {
     animation: audioflume-home-chrome-fade 800ms ease-out 200ms both;
   }
-  .audioflume-home-header-entrance {
-    animation: audioflume-home-chrome-fade 800ms ease-out 350ms both;
-  }
 }
 @keyframes audioflume-home-chrome-fade {
   from { opacity: 0; }
