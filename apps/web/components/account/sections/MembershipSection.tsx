@@ -96,7 +96,7 @@ export default function MembershipSection() {
                 </div>
                 <div className="audioflume-pricing-plan-action-row">
                   {isCurrentPlan ? (
-                    <div className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button !cursor-default`} style={{ fontSize: "14px", fontWeight: 400 }}>
+                    <div className={`${playlistDetailPrimaryActionButtonClass} audioflume-public-action-button pointer-events-none !h-[52px] !w-full !max-w-none !cursor-default`} style={{ fontSize: "14px", fontWeight: 400 }}>
                       Current plan
                     </div>
                   ) : (
