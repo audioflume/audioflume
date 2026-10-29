@@ -4041,16 +4041,22 @@ body:has(.audioflume-home-landing)
     width: 100%;
   }
   .audioflume-home-song-mosaic-info {
-    right: 24px;
-    max-width: none;
-    flex-direction: column-reverse;
-    align-items: flex-start;
-    gap: 14px;
+    position: static;
+  }
+  .audioflume-home-song-mosaic-copy {
+    position: absolute;
+    bottom: 24px;
+    left: 24px;
+    max-width: calc(100% - 48px);
   }
   .audioflume-home-song-mosaic-thumbnail {
-    width: 44px;
-    height: 44px;
-    flex: 0 0 44px;
+    position: absolute;
+    top: 24px;
+    right: 24px;
+    z-index: 3;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
   }
   .audioflume-home-song-mosaic-thumbnail > img {
     display: none;
@@ -4058,8 +4064,19 @@ body:has(.audioflume-home-landing)
   .audioflume-home-song-mosaic-thumbnail-play {
     top: 0;
     left: 0;
-    opacity: 1;
+    width: 36px;
+    height: 36px;
+    opacity: 0;
     transform: none;
+  }
+  .audioflume-home-song-mosaic-card:hover .audioflume-home-song-mosaic-thumbnail-play,
+  .audioflume-home-song-mosaic-thumbnail-play:focus-visible {
+    opacity: 1;
+  }
+  @media (hover: none) {
+    .audioflume-home-song-mosaic-thumbnail-play {
+      opacity: 1;
+    }
   }
   .audioflume-home-song-mosaic-thumbnail-play:hover,
   .audioflume-home-song-mosaic-thumbnail-play:focus-visible {
