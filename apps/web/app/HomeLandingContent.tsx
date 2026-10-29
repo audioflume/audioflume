@@ -349,7 +349,13 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                       <span>{song.artist}</span>
                     </div>
                   </div>
-
+                  {((rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id)) ? (
+                    <div className="audioflume-home-song-mosaic-genres" aria-label="Song genres">
+                      {(song.genres ?? []).filter(Boolean).slice(0, 3).map((genre) => (
+                        <span key={genre}>{genre}</span>
+                      ))}
+                    </div>
+                  ) : null}
                 </article>
               );
             })}
