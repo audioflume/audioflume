@@ -144,6 +144,45 @@
   fill: currentColor;
 }
 
+/* Track progress around the web player's play/pause transport. */
+.filmwave-music-player .filmwave-player-controls button[data-player-progress-control="true"] {
+  position: relative;
+  width: 40px;
+  height: 40px;
+}
+.filmwave-music-player .filmwave-player-controls button[data-player-progress-control="true"] > svg:not(.filmwave-player-play-progress) {
+  position: relative;
+  z-index: 1;
+}
+.filmwave-music-player .filmwave-player-controls .filmwave-player-play-progress {
+  position: absolute;
+  inset: 0;
+  width: 40px;
+  height: 40px;
+  fill: none;
+  pointer-events: none;
+  transform: rotate(-90deg);
+}
+.filmwave-music-player .filmwave-player-play-progress circle {
+  fill: none;
+  stroke-width: 1.25px;
+}
+.filmwave-music-player .filmwave-player-play-progress-track {
+  stroke: #d6d6d6;
+}
+.filmwave-music-player .filmwave-player-play-progress-fill {
+  stroke: #222222;
+  stroke-linecap: round;
+}
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .filmwave-music-player .filmwave-player-play-progress-track {
+  stroke: #555555;
+}
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .filmwave-music-player .filmwave-player-play-progress-fill {
+  stroke: #f0f0f0;
+}
+
 .filmwave-player-progress-wrap {
   min-width: 0;
   overflow: visible;
