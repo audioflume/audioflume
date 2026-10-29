@@ -3902,13 +3902,17 @@ body:has(.audioflume-home-landing)
 .audioflume-home-song-mosaic-row::-webkit-scrollbar { display: none; }
 .audioflume-home-song-mosaic-card {
   position: relative;
-  flex: 0 0 66.6667%;
-  width: 66.6667%;
+  flex: 0 0 33.333333%;
+  width: 33.333333%;
   height: clamp(300px, 28.5vw, 550px);
   min-width: 0;
   overflow: hidden;
   background: #202020;
   color: white;
+}
+.audioflume-home-song-mosaic-card.is-wide {
+  flex-basis: 66.666667%;
+  width: 66.666667%;
 }
 .audioflume-home-song-mosaic-background {
   position: absolute;
@@ -3981,8 +3985,6 @@ body:has(.audioflume-home-landing)
 }
 @media (max-width: 700px) {
   .audioflume-home-song-mosaic-card {
-    flex-basis: 88%;
-    width: 88%;
     height: 320px;
   }
   .audioflume-home-song-mosaic-info {
