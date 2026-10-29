@@ -1,3 +1,4 @@
+import GenreFilterPills from "@/components/GenreFilterPills";
 "use client";
 
 import Footer from "@/components/Footer";
@@ -350,11 +351,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                     </div>
                   </div>
                   {((rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id)) ? (
-                    <div className="audioflume-home-song-mosaic-genres" aria-label="Song genres">
-                      {(song.genres ?? []).filter(Boolean).slice(0, 3).map((genre) => (
-                        <span key={genre}>{genre}</span>
-                      ))}
-                    </div>
+                    <GenreFilterPills genres={song.genres ?? []} className="audioflume-home-song-mosaic-genres" />
                   ) : null}
                 </article>
               );
