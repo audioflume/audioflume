@@ -332,20 +332,32 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                   <img className="audioflume-home-song-mosaic-background" src={song.coverArt} alt="" loading="lazy" />
                   <div className="audioflume-home-song-mosaic-shade" aria-hidden="true" />
                   <div className="audioflume-home-song-mosaic-info">
-                    <img src={song.coverArt} alt="" loading="lazy" />
+                    <span className="audioflume-home-song-mosaic-thumbnail">
+                      <img src={song.coverArt} alt="" loading="lazy" />
+                      {!(rowIndex === 0 && row[0]?.id === song.id) && !(rowIndex === 2 && row[1]?.id === song.id) ? (
+                        <button
+                          type="button"
+                          className="audioflume-home-song-mosaic-thumbnail-play"
+                          onClick={() => playGridSong(song)}
+                          aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+                        >
+                          {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+                        </button>
+                      ) : null}
+                    </span>
                     <div className="audioflume-home-song-mosaic-copy">
                       <span>{song.title}</span>
                       <span>{song.artist}</span>
                     </div>
                   </div>
-                  <button
+                  {((rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id)) ? <button
                     type="button"
                     className="audioflume-home-song-mosaic-play"
                     onClick={() => playGridSong(song)}
                     aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
                   >
                     {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-                  </button>
+                  </button> : null}
                 </article>
               );
             })}
