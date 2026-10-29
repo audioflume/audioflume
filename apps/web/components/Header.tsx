@@ -385,6 +385,7 @@ export default function Header() {
           justify-content: space-between;
           gap: 24px;
           background: #111111;
+          transition: background-color 180ms ease;
           padding: 0 24px;
           color: #e5e5dd;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
@@ -438,6 +439,10 @@ export default function Header() {
         :where(html.dark, html[data-theme="dark"]) .audioflume-artist-cta-bar {
           background: var(--filmwave-search-surface);
           color: #e5e5dd;
+        }
+
+        :where(html.dark, html[data-theme="dark"]) .audioflume-artist-cta-bar.is-home-transparent {
+          background: #111111;
         }
 
         @media (max-width: 640px) {
@@ -521,8 +526,8 @@ export default function Header() {
           transition: opacity 150ms ease;
         }
 
-        .filmwave-header-utility-link:hover,
-        .filmwave-header-utility-link:focus-visible {
+        .filmwave-web-header:not(.is-transparent) .filmwave-header-utility-link:hover,
+        .filmwave-web-header:not(.is-transparent) .filmwave-header-utility-link:focus-visible {
           opacity: 0.65;
         }
 
@@ -1271,7 +1276,7 @@ export default function Header() {
         }
       `}</style>
 
-      {!isBackendPage && <div className="audioflume-artist-cta-bar">
+      {!isBackendPage && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
