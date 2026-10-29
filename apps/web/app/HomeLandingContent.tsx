@@ -338,14 +338,14 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                       <span>{song.artist}</span>
                     </div>
                   </div>
-                  {((rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id)) && <button
+                  <button
                     type="button"
                     className="audioflume-home-song-mosaic-play"
                     onClick={() => playGridSong(song)}
                     aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
                   >
                     {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-                  </button>}
+                  </button>
                 </article>
               );
             })}
