@@ -671,7 +671,7 @@ body:has(.audioflume-home-landing)
   margin-top: 8px;
 }
 
-.audioflume-home-reference-artist-genres > span {
+.audioflume-home-reference-artist-genres > .audioflume-genre-filter-pill {
   display: inline-flex;
   min-height: 21px;
   align-items: center;
@@ -688,7 +688,7 @@ body:has(.audioflume-home-landing)
   -webkit-backdrop-filter: blur(10px);
 }
 
-.audioflume-home-reference-artist-genres > .is-placeholder {
+.audioflume-home-reference-artist-genres > .audioflume-genre-filter-pill.is-placeholder {
   width: 68px;
   padding: 0;
 }
@@ -1267,7 +1267,7 @@ body:has(.audioflume-home-landing)
   color: #e5e5dd !important;
 }
 
-:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > span {
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-genres > .audioflume-genre-filter-pill {
   background: rgba(255, 255, 255, 0.14);
   color: #ffffff;
 }
@@ -1567,10 +1567,7 @@ body:has(.audioflume-home-landing)
   margin-top: 8px;
 }
 
-:is(
-  .audioflume-home-mockup-artists .audioflume-home-reference-artist-genres,
-  .audioflume-home-song-mosaic-genres
-) > span {
+.audioflume-genre-filter-pills > .audioflume-genre-filter-pill {
   display: inline-flex;
   min-height: 28px;
   align-items: center;
@@ -1587,6 +1584,27 @@ body:has(.audioflume-home-landing)
   backdrop-filter: blur(10px);
 }
 
+
+.audioflume-home-reference-artist-card-overlay-link {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+.audioflume-genre-filter-pills > a.audioflume-genre-filter-pill {
+  text-decoration: none;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color 160ms ease;
+}
+.audioflume-genre-filter-pills > a.audioflume-genre-filter-pill:hover,
+.audioflume-genre-filter-pills > a.audioflume-genre-filter-pill:focus-visible {
+  color: #fff;
+}
+.audioflume-home-mockup-artists .audioflume-home-reference-artist-genres {
+  position: relative;
+  z-index: 3;
+  pointer-events: auto;
+}
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-play {
   right: 34px;
