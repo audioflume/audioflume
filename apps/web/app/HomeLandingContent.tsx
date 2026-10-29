@@ -324,43 +324,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
-        {songRows.map((row, rowIndex) => (
-          <div className="audioflume-home-song-mosaic-row" key={rowIndex}>
-            {row.map((song) => {
-              const playing = isPlaying && currentSong?.id === song.id;
-              return (
-                <article className={`audioflume-home-song-mosaic-card${(rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id) ? " is-wide" : ""}`} key={song.id}>
-                  <img className="audioflume-home-song-mosaic-background" src={song.coverArt} alt="" loading="lazy" />
-                  <div className="audioflume-home-song-mosaic-shade" aria-hidden="true" />
-                  <div className="audioflume-home-song-mosaic-info">
-                    <span className="audioflume-home-song-mosaic-thumbnail">
-                      <img src={song.coverArt} alt="" loading="lazy" />
-                      
-                        <button
-                          type="button"
-                          className="audioflume-home-song-mosaic-thumbnail-play"
-                          onClick={() => playGridSong(song)}
-                          aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-                        >
-                          {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-                        </button>
-                    </span>
-                    <div className="audioflume-home-song-mosaic-copy">
-                      <span>{song.title}</span>
-                      <span>{song.artist}</span>
-                    </div>
-                  </div>
-                  {((rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id)) ? (
-                    <GenreFilterPills genres={song.genres ?? []} className="audioflume-home-song-mosaic-genres" />
-                  ) : null}
-                </article>
-              );
-            })}
-          </div>
-        ))}
-      </section>
-
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
@@ -403,6 +366,43 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             </p>
           </div>
         </div>
+      </section>
+
+      <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
+        {songRows.map((row, rowIndex) => (
+          <div className="audioflume-home-song-mosaic-row" key={rowIndex}>
+            {row.map((song) => {
+              const playing = isPlaying && currentSong?.id === song.id;
+              return (
+                <article className={`audioflume-home-song-mosaic-card${(rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id) ? " is-wide" : ""}`} key={song.id}>
+                  <img className="audioflume-home-song-mosaic-background" src={song.coverArt} alt="" loading="lazy" />
+                  <div className="audioflume-home-song-mosaic-shade" aria-hidden="true" />
+                  <div className="audioflume-home-song-mosaic-info">
+                    <span className="audioflume-home-song-mosaic-thumbnail">
+                      <img src={song.coverArt} alt="" loading="lazy" />
+                      
+                        <button
+                          type="button"
+                          className="audioflume-home-song-mosaic-thumbnail-play"
+                          onClick={() => playGridSong(song)}
+                          aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+                        >
+                          {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+                        </button>
+                    </span>
+                    <div className="audioflume-home-song-mosaic-copy">
+                      <span>{song.title}</span>
+                      <span>{song.artist}</span>
+                    </div>
+                  </div>
+                  {((rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id)) ? (
+                    <GenreFilterPills genres={song.genres ?? []} className="audioflume-home-song-mosaic-genres" />
+                  ) : null}
+                </article>
+              );
+            })}
+          </div>
+        ))}
       </section>
 
       <div className="audioflume-home-reference-footer-region">
