@@ -279,8 +279,8 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                         aria-label={`Play music by ${artist.name}`}
                       >
                         {isPlaying && currentSong?.artist.trim().toLowerCase() === artist.name.trim().toLowerCase()
-                          ? <PauseIcon size={24} />
-                          : <PlayIconSmall size={24} />}
+                          ? <PauseIcon size={18} />
+                          : <PlayIconSmall size={18} />}
                       </button>
                     </div>
                     <Link tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-title">{artist.name}</Link>
