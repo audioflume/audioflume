@@ -55,7 +55,7 @@ body:has(.audioflume-home-landing)
   padding-top: 0;
 }
 
-.audioflume-home-reference a:not(.audioflume-arrow-text-link) {
+.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill) {
   color: inherit;
 }
 
