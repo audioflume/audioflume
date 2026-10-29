@@ -251,20 +251,23 @@ export default function Header() {
 
     let frame = 0;
 
+    function updateHeaderBottom() {
+      const bottom = headerElement.getBoundingClientRect().bottom;
+      document.documentElement.style.setProperty(
+        "--filmwave-web-header-bottom",
+        `${Math.max(0, Math.round(bottom))}px`,
+      );
+    }
+
     function syncHeaderBottom() {
       window.cancelAnimationFrame(frame);
-      frame = window.requestAnimationFrame(() => {
-        const bottom = headerElement.getBoundingClientRect().bottom;
-        document.documentElement.style.setProperty(
-          "--filmwave-web-header-bottom",
-          `${Math.max(0, Math.round(bottom))}px`,
-        );
-      });
+      frame = window.requestAnimationFrame(updateHeaderBottom);
     }
 
     const resizeObserver = new ResizeObserver(syncHeaderBottom);
 
-    syncHeaderBottom();
+    // Set the offset before paint so backend sidebars do not jump on hydration.
+    updateHeaderBottom();
     resizeObserver.observe(headerElement);
     window.addEventListener("scroll", syncHeaderBottom, { passive: true });
     window.addEventListener("resize", syncHeaderBottom);
