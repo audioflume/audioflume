@@ -4091,14 +4091,14 @@ body:has(.audioflume-home-landing)
 .audioflume-home-founders-corner.is-top-left {
   top: 30px;
   left: 30px;
-  border-top: 2px solid #e5e5dd;
-  border-left: 2px solid #e5e5dd;
+  border-top: 1.5px solid #e5e5dd;
+  border-left: 1.5px solid #e5e5dd;
 }
 .audioflume-home-founders-corner.is-bottom-right {
   right: 30px;
   bottom: 30px;
-  border-right: 2px solid #e5e5dd;
-  border-bottom: 2px solid #e5e5dd;
+  border-right: 1.5px solid #e5e5dd;
+  border-bottom: 1.5px solid #e5e5dd;
 }
 .audioflume-home-founders-heading {
   display: grid;
