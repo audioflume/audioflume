@@ -1154,6 +1154,12 @@ body:has(.audioflume-home-landing)
   }
 }
 
+@media (max-width: 690px) {
+  .audioflume-home-reference-feature-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 620px) {
   .audioflume-home-reference-original-song-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
