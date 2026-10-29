@@ -4070,7 +4070,7 @@ body:has(.audioflume-home-landing)
   transform: scale(1.06);
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-banner::before {
-  animation: audioflume-founders-image-settle 2600ms ease-out both;
+  animation: audioflume-founders-image-settle 3400ms ease-out both;
 }
 .audioflume-home-founders-shade {
   position: absolute;
@@ -4094,13 +4094,13 @@ body:has(.audioflume-home-landing)
   transform: translateY(25px);
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-heading > span:not(:empty) {
-  animation: audioflume-founders-rise 650ms cubic-bezier(.22,1,.36,1) both;
+  animation: audioflume-founders-rise 900ms cubic-bezier(.22,1,.36,1) both;
 }
-.audioflume-home-founders-heading > span:nth-child(1) { animation-delay: 100ms; }
-.audioflume-home-founders-heading > span:nth-child(2) { animation-delay: 200ms; }
-.audioflume-home-founders-heading > span:nth-child(3) { animation-delay: 300ms; }
-.audioflume-home-founders-heading > span:nth-child(4) { animation-delay: 400ms; }
-.audioflume-home-founders-heading > span:nth-child(6) { animation-delay: 500ms; }
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-heading > span:nth-child(1) { animation-delay: 150ms; }
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-heading > span:nth-child(2) { animation-delay: 330ms; }
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-heading > span:nth-child(3) { animation-delay: 510ms; }
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-heading > span:nth-child(4) { animation-delay: 690ms; }
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-heading > span:nth-child(6) { animation-delay: 870ms; }
 .audioflume-home-founders-heading > span:nth-child(3n + 1) { text-align: left; }
 .audioflume-home-founders-heading > span:nth-child(3n + 2) { text-align: center; }
 .audioflume-home-founders-heading > span:nth-child(3n) { text-align: right; }
@@ -4123,7 +4123,7 @@ body:has(.audioflume-home-landing)
   transform: translateY(20px);
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-intro {
-  animation: audioflume-founders-rise 650ms cubic-bezier(.22,1,.36,1) 600ms both;
+  animation: audioflume-founders-rise 850ms cubic-bezier(.22,1,.36,1) 1250ms both;
 }
 .audioflume-home-reference .audioflume-home-founders-banner a.audioflume-home-founders-apply {
   display: inline-flex;
@@ -4166,8 +4166,8 @@ body:has(.audioflume-home-landing)
   transform: translateY(12px);
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-benefits li {
-  animation: audioflume-founders-rise 500ms cubic-bezier(.22,1,.36,1) both;
-  animation-delay: calc(1100ms + var(--founder-perk-index) * 70ms);
+  animation: audioflume-founders-rise 750ms cubic-bezier(.22,1,.36,1) both;
+  animation-delay: calc(1450ms + var(--founder-perk-index) * 140ms);
 }
 .audioflume-home-founders-benefits li > span {
   font-weight: 300;
