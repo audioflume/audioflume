@@ -582,20 +582,7 @@ export default function MusicPlayer() {
             onClick={() => togglePlayPause(currentSong)}
             className="flex-shrink-0 cursor-pointer text-[var(--text-primary)] transition-colors hover:text-[var(--text-secondary)]"
             aria-label={displayedIsPlaying ? "Pause song" : "Play song"}
-            data-player-progress-control="true"
           >
-            <svg className="filmwave-player-play-progress" viewBox="0 0 40 40" aria-hidden="true">
-              <circle className="filmwave-player-play-progress-track" cx="20" cy="20" r="18" />
-              <circle
-                className="filmwave-player-play-progress-fill"
-                cx="20"
-                cy="20"
-                r="18"
-                pathLength="100"
-                strokeDasharray="100"
-                strokeDashoffset={100 - (duration > 0 ? Math.max(0, Math.min(100, (currentTime / duration) * 100)) : 0)}
-              />
-            </svg>
             {displayedIsPlaying ? <PauseIcon /> : <PlayIcon />}
           </button>
 
