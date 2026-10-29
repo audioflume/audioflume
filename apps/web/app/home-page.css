@@ -4082,7 +4082,10 @@ body:has(.audioflume-home-landing)
   width: 20px;
   height: 20px;
   pointer-events: none;
-  opacity: .8;
+  opacity: 0;
+}
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-corner {
+  animation: audioflume-founders-corner-fade 650ms ease-out 500ms both;
 }
 .audioflume-home-founders-corner.is-top-left {
   top: 30px;
@@ -4170,6 +4173,11 @@ body:has(.audioflume-home-landing)
   padding: 0;
   margin: 0;
   list-style: none;
+  opacity: 0;
+  transform: translateY(12px);
+}
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-benefits ul {
+  animation: audioflume-founders-rise 650ms cubic-bezier(.22,1,.36,1) 1050ms both;
 }
 .audioflume-home-founders-benefits li {
   display: flex;
@@ -4179,17 +4187,13 @@ body:has(.audioflume-home-landing)
   font-weight: 400;
   line-height: 1.6;
 }
-.audioflume-home-founders-benefits li {
-  opacity: 0;
-  transform: translateY(12px);
-}
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-benefits li {
-  animation: audioflume-founders-rise 600ms cubic-bezier(.22,1,.36,1) both;
-  animation-delay: calc(1050ms + var(--founder-perk-index) * 110ms);
-}
 .audioflume-home-founders-benefits li > span {
   font-weight: 300;
   flex-shrink: 0;
+}
+@keyframes audioflume-founders-corner-fade {
+  from { opacity: 0; }
+  to { opacity: .8; }
 }
 @keyframes audioflume-founders-image-settle {
   from { transform: scale(1.06); }
@@ -4203,10 +4207,14 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-banner::before,
   .audioflume-home-founders-heading > span:not(:empty),
   .audioflume-home-founders-intro,
-  .audioflume-home-founders-benefits li {
+  .audioflume-home-founders-benefits ul {
     animation: none !important;
     opacity: 1;
     transform: none;
+  }
+  .audioflume-home-founders-corner {
+    animation: none !important;
+    opacity: .8;
   }
 }
 @media (max-width: 900px) {
