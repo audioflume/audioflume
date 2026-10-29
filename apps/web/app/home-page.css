@@ -1567,8 +1567,10 @@ body:has(.audioflume-home-landing)
   margin-top: 8px;
 }
 
-.audioflume-home-mockup-artists
-  .audioflume-home-reference-artist-genres > span {
+:is(
+  .audioflume-home-mockup-artists .audioflume-home-reference-artist-genres,
+  .audioflume-home-song-mosaic-genres
+) > span {
   display: inline-flex;
   min-height: 28px;
   align-items: center;
@@ -4031,23 +4033,7 @@ body:has(.audioflume-home-landing)
   max-width: calc(100% - 160px);
   flex-wrap: wrap;
   justify-content: flex-end;
-  gap: 6px;
-}
-.audioflume-home-song-mosaic-genres > span {
-  display: inline-flex;
-  min-height: 21px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 0 10px;
-  color: #fff;
-  font-size: 9px;
-  font-weight: 300;
-  line-height: 1;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  gap: 8px;
 }
 @media (max-width: 700px) {
   .audioflume-home-song-mosaic-genres {
