@@ -3917,15 +3917,19 @@ body:has(.audioflume-home-landing)
   width: 66.666667%;
 }
 @media (max-width: 690px) {
+  .audioflume-home-song-mosaic {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: row dense;
+  }
   .audioflume-home-song-mosaic-row {
-    flex-wrap: wrap;
+    display: contents;
   }
   .audioflume-home-song-mosaic-card {
-    flex-basis: 50%;
-    width: 50%;
+    width: 100%;
   }
   .audioflume-home-song-mosaic-card.is-wide {
-    flex-basis: 100%;
+    grid-column: span 2;
     width: 100%;
   }
 }
