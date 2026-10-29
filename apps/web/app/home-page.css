@@ -3920,6 +3920,12 @@ body:has(.audioflume-home-landing)
   width: 100%;
   height: 100%;
   object-fit: cover;
+  transition: transform 450ms ease;
+}
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .audioflume-home-song-mosaic-card:hover .audioflume-home-song-mosaic-background {
+    transform: scale(1.045);
+  }
 }
 .audioflume-home-song-mosaic-shade {
   position: absolute;
@@ -3937,11 +3943,47 @@ body:has(.audioflume-home-landing)
   align-items: center;
   gap: 20px;
 }
-.audioflume-home-song-mosaic-info > img {
+.audioflume-home-song-mosaic-thumbnail {
+  position: relative;
+  display: block;
   width: 80px;
   height: 80px;
   flex: 0 0 80px;
+}
+.audioflume-home-song-mosaic-thumbnail > img {
+  display: block;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
+}
+.audioflume-home-song-mosaic-thumbnail-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  opacity: 0;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: opacity 180ms ease, transform 160ms ease;
+}
+.audioflume-home-song-mosaic-card:hover .audioflume-home-song-mosaic-thumbnail-play,
+.audioflume-home-song-mosaic-thumbnail-play:focus-visible {
+  opacity: 1;
+}
+.audioflume-home-song-mosaic-thumbnail-play:hover,
+.audioflume-home-song-mosaic-thumbnail-play:focus-visible {
+  transform: translate(-50%, -50%) scale(1.03);
+}
+@media (hover: none) {
+  .audioflume-home-song-mosaic-thumbnail-play { opacity: 1; }
 }
 .audioflume-home-song-mosaic-copy {
   display: flex;
