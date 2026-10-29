@@ -4165,6 +4165,16 @@ body:has(.audioflume-home-landing)
   background: #fff;
   color: #111;
 }
+.audioflume-home-founders-apply > span {
+  position: relative;
+  top: 0;
+  left: 0;
+  transition: top 100ms ease, left 100ms ease;
+}
+.audioflume-home-founders-apply:hover > span {
+  top: -1px;
+  left: 1px;
+}
 .audioflume-home-founders-benefits {
   justify-self: end;
   width: min(100%, 440px);
