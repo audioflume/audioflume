@@ -417,9 +417,7 @@ body:has(.audioflume-home-landing)
 }
 
 
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-reference-library,
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-reference-footer-region,
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-reference-footer {
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-reference-library {
   background: #e5e5dd;
 }
 
