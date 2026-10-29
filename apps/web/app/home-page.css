@@ -3916,6 +3916,20 @@ body:has(.audioflume-home-landing)
   flex-basis: 66.666667%;
   width: 66.666667%;
 }
+@media (max-width: 690px) {
+  .audioflume-home-song-mosaic-row {
+    flex-wrap: wrap;
+  }
+  .audioflume-home-song-mosaic-card {
+    flex-basis: 50%;
+    width: 50%;
+  }
+  .audioflume-home-song-mosaic-card.is-wide {
+    flex-basis: 100%;
+    width: 100%;
+  }
+}
+
 .audioflume-home-song-mosaic-background {
   position: absolute;
   inset: 0;
@@ -4011,19 +4025,6 @@ body:has(.audioflume-home-landing)
   text-overflow: ellipsis;
   white-space: nowrap;
 }
-@media (max-width: 700px) {
-  .audioflume-home-song-mosaic-card {
-    height: 320px;
-  }
-  .audioflume-home-song-mosaic-info {
-    bottom: 18px;
-    left: 18px;
-    gap: 12px;
-    max-width: calc(100% - 92px);
-  }
-}
-
-
 .audioflume-home-song-mosaic-genres {
   position: absolute;
   right: 24px;
@@ -4034,13 +4035,6 @@ body:has(.audioflume-home-landing)
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
-}
-@media (max-width: 700px) {
-  .audioflume-home-song-mosaic-genres {
-    right: 18px;
-    bottom: 18px;
-    max-width: calc(100% - 130px);
-  }
 }
 
 
