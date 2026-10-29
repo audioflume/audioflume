@@ -58,7 +58,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       })
       .catch(() => {});
   }, []);
-  const foundingBannerRef = useRef<HTMLElement>(null);
+  const foundingBannerRef = useRef<HTMLDivElement>(null);
   const [foundingBannerVisible, setFoundingBannerVisible] = useState(false);
 
   useEffect(() => {
@@ -73,7 +73,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         setFoundingBannerVisible(true);
         observer.disconnect();
       }
-    }, { threshold: 0.2 });
+    }, { threshold: 0.1, rootMargin: "0px 0px -30% 0px" });
     observer.observe(banner);
     return () => observer.disconnect();
   }, []);
@@ -344,8 +344,8 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      <section ref={foundingBannerRef} className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
-        <div className="audioflume-home-founders-banner">
+      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
+        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
           <div className="audioflume-home-founders-shade" aria-hidden="true" />
           <h2 className="audioflume-home-founders-heading">
             <span>JOIN</span><span>THE</span><span>FOUNDING</span>
