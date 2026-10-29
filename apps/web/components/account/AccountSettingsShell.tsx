@@ -46,16 +46,6 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
             section="Account"
             label={activeNav?.label || "Account"}
             compact
-            action={
-              section === "notifications" ? undefined : (
-                <Link
-                  href="/music"
-                  className="filmwave-backend-button filmwave-backend-button-secondary filmwave-backend-button-compact"
-                >
-                  Back to Music
-                </Link>
-              )
-            }
           />
 
           <AccountContent section={section} />
