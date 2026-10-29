@@ -73,7 +73,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         setFoundingBannerVisible(true);
         observer.disconnect();
       }
-    }, { threshold: 0.01, rootMargin: "0px 0px -70% 0px" });
+    }, { threshold: 0.01, rootMargin: "0px 0px -45% 0px" });
     observer.observe(banner);
     return () => observer.disconnect();
   }, []);
