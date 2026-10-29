@@ -4118,11 +4118,11 @@ body:has(.audioflume-home-landing)
   line-height: 1.04;
   letter-spacing: -.035em;
 }
-.audioflume-home-founders-intro p {
+.audioflume-home-founders-intro {
   opacity: 0;
   transform: translateY(20px);
 }
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-intro p {
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-intro {
   animation: audioflume-founders-rise 650ms cubic-bezier(.22,1,.36,1) 600ms both;
 }
 .audioflume-home-reference .audioflume-home-founders-banner a.audioflume-home-founders-apply {
@@ -4138,12 +4138,7 @@ body:has(.audioflume-home-landing)
   font-size: 16px;
   font-weight: 400;
   margin-bottom: 5px;
-  opacity: 0;
-  transform: translateY(20px);
   transition: background 160ms ease;
-}
-.audioflume-home-reference .audioflume-home-founders-section.is-visible a.audioflume-home-founders-apply {
-  animation: audioflume-founders-rise 650ms cubic-bezier(.22,1,.36,1) 800ms both;
 }
 .audioflume-home-reference .audioflume-home-founders-banner a.audioflume-home-founders-apply:hover {
   background: #fff;
@@ -4152,33 +4147,6 @@ body:has(.audioflume-home-landing)
 .audioflume-home-founders-benefits {
   justify-self: end;
   width: min(100%, 440px);
-}
-.audioflume-home-founders-earnings {
-  display: flex;
-  width: 100%;
-  flex-direction: column;
-  gap: 8px;
-  padding: 20px 30px;
-  border: 1px solid #e5e5dd;
-  margin-bottom: 22px;
-}
-.audioflume-home-founders-earnings > strong,
-.audioflume-home-founders-earnings > span {
-  opacity: 0;
-  transform: translateY(12px);
-}
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-earnings > strong,
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-earnings > span {
-  animation: audioflume-founders-rise 550ms cubic-bezier(.22,1,.36,1) 1450ms both;
-}
-.audioflume-home-founders-earnings strong {
-  font-size: clamp(26px, 2.45vw, 41px);
-  font-weight: 500;
-  line-height: 1;
-}
-.audioflume-home-founders-earnings span {
-  font-size: 12px;
-  font-weight: 300;
 }
 .audioflume-home-founders-benefits ul {
   padding: 0;
@@ -4216,10 +4184,7 @@ body:has(.audioflume-home-landing)
 @media (prefers-reduced-motion: reduce) {
   .audioflume-home-founders-banner::before,
   .audioflume-home-founders-heading > span:not(:empty),
-  .audioflume-home-founders-intro p,
-  .audioflume-home-reference .audioflume-home-founders-banner a.audioflume-home-founders-apply,
-  .audioflume-home-founders-earnings > strong,
-  .audioflume-home-founders-earnings > span,
+  .audioflume-home-founders-intro,
   .audioflume-home-founders-benefits li {
     animation: none !important;
     opacity: 1;
