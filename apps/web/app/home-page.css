@@ -3409,21 +3409,21 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-artist-play {
   position: absolute;
-  right: 24px;
-  bottom: 24px;
+  right: 28px;
+  bottom: 28px;
   z-index: 2;
   display: grid;
-  width: 72px;
-  height: 72px;
+  width: 52px;
+  height: 52px;
   place-items: center;
   border: 0;
-  border-radius: 50%;
+  border-radius: 999px;
   background: #fff;
   color: #111;
   opacity: 0;
   cursor: pointer;
   pointer-events: none;
-  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 180ms ease, transform 160ms ease;
   transform-origin: center;
 }
 .audioflume-home-landing-artist-card:hover .audioflume-home-landing-artist-play,
@@ -3433,7 +3433,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-artist-play:hover,
 .audioflume-home-landing-artist-play:focus-visible {
-  transform: scale(1.08);
+  transform: scale(1.03);
 }
 @media (hover: none) {
   .audioflume-home-landing-artist-play {
