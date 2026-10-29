@@ -91,7 +91,7 @@ export default function Header() {
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
   const transparentAtTop = pathname === "/";
   const headerIsSolid =
-    !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || menuOpen || mobileNavOpen || mobileAccountOpen;
+    !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
     "filmwave-web-header",
     transparentAtTop ? "supports-transparent-header" : "",
