@@ -1,3 +1,4 @@
+import GenreFilterPills from "@/components/GenreFilterPills";
 "use client";
 
 import { MusicListShell } from "@filmwave/shared";
@@ -565,7 +566,8 @@ function HomeArtistShelf({
             key={artist.id}
             className={`audioflume-home-reference-artist-card${index === 0 ? " is-featured" : ""}`}
           >
-            <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-link">
+            <div className="audioflume-home-reference-artist-link">
+              <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
               <div className="audioflume-home-reference-artist-media">
                 <span className="audioflume-home-mockup-artist-kicker">Featured artist</span>
                 {image ? (
@@ -587,20 +589,10 @@ function HomeArtistShelf({
                       {artist.designation}
                     </span>
                   ) : null}
-                  <span className="audioflume-home-reference-artist-genres">
-                    {genres.length > 0
-                      ? genres.map((genre) => <span key={genre}>{genre}</span>)
-                      : [0, 1, 2].map((placeholder) => (
-                          <span
-                            key={placeholder}
-                            className="is-placeholder"
-                            aria-hidden="true"
-                          />
-                        ))}
-                  </span>
+                  <GenreFilterPills genres={genres} showPlaceholders className="audioflume-home-reference-artist-genres" />
                 </span>
               </div>
-            </Link>
+            </div>
             <button
               type="button"
               className="audioflume-home-reference-artist-play"
