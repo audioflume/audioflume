@@ -384,7 +384,7 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           gap: 24px;
-          background: #111111;
+          background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.18)), linear-gradient(0deg, rgba(0,0,0,.53), transparent 68%), #101615 url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
           padding: 0 24px;
           color: #e5e5dd;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
@@ -433,11 +433,6 @@ export default function Header() {
         .audioflume-artist-cta-link:hover,
         .audioflume-artist-cta-link:focus-visible {
           opacity: 0.65;
-        }
-
-        :where(html.dark, html[data-theme="dark"]) .audioflume-artist-cta-bar {
-          background: #e5e5dd;
-          color: #111111;
         }
 
         @media (max-width: 640px) {
