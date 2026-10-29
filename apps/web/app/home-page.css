@@ -4050,7 +4050,7 @@ body:has(.audioflume-home-landing)
   min-height: clamp(550px, 46vw, 780px);
   overflow: hidden;
   background: #101615 url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
-  color: #fff;
+  color: #e5e5dd;
   padding: clamp(76px, 6.5vw, 124px) clamp(72px, 7vw, 128px);
   display: flex;
   flex-direction: column;
@@ -4120,7 +4120,7 @@ body:has(.audioflume-home-landing)
   flex-direction: column;
   gap: 8px;
   padding: 20px 30px;
-  border: 1px solid rgba(255,255,255,.8);
+  border: 1px solid #e5e5dd;
   margin-bottom: 22px;
 }
 .audioflume-home-founders-earnings strong {
