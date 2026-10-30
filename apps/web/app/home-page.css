@@ -418,7 +418,7 @@ body:has(.audioflume-home-landing)
 
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-reference-library {
-  background: #e5e5dd;
+  background: #ffffff;
 }
 
 /* Lower homepage headings use the warm beige tone in dark mode only. */
@@ -3617,7 +3617,8 @@ body:has(.audioflume-home-landing)
   justify-content: center;
 }
 .audioflume-home-authentic-left {
-  background: #111;
+  background: #e5e5dd;
+  color: #111111;
 }
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-authentic-left,
@@ -4100,7 +4101,7 @@ body:has(.audioflume-home-landing)
 /* Founding Artist homepage promotion — positioned below the split image banner. */
 .audioflume-home-founders-section {
   padding: 80px var(--audioflume-home-page-gutter, 5vw) 0;
-  background: #e5e5dd;
+  background: #ffffff;
 }
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-founders-section {
