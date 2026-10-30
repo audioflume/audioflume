@@ -3895,6 +3895,26 @@ body:has(.audioflume-home-landing)
   overflow: hidden;
   background: #111;
 }
+.audioflume-home-song-mosaic-status {
+  width: 100%;
+  min-height: 160px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 32px;
+  color: #e5e5dd;
+  font-size: 14px;
+  text-align: center;
+}
+.audioflume-home-song-mosaic-status button {
+  border: 1px solid currentColor;
+  background: transparent;
+  padding: 10px 16px;
+  color: inherit;
+  cursor: pointer;
+}
 .audioflume-home-song-mosaic-row {
   display: flex;
   width: 100%;
