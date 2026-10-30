@@ -447,6 +447,15 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
+      <div className="audioflume-home-landing-mosaic-heading">
+        <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+          <span>Discover new music</span>
+          <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+            Explore the library <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+          </Link>
+        </div>
+      </div>
+
       <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
         {songRows.map((row, rowIndex) => (
           <div className="audioflume-home-song-mosaic-row" key={rowIndex}>
