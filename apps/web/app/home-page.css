@@ -4134,30 +4134,6 @@ body:has(.audioflume-home-landing)
   z-index: -1;
   background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.18)), linear-gradient(0deg, rgba(0,0,0,.53), transparent 68%);
 }
-.audioflume-home-founders-corner {
-  position: absolute;
-  z-index: 2;
-  width: 20px;
-  height: 20px;
-  border-color: #e5e5dd;
-  opacity: 0;
-  pointer-events: none;
-}
-.audioflume-home-founders-corner.is-top-left {
-  top: 30px;
-  left: 30px;
-  border-top: 1px solid;
-  border-left: 1px solid;
-}
-.audioflume-home-founders-corner.is-bottom-right {
-  right: 30px;
-  bottom: 30px;
-  border-right: 1px solid;
-  border-bottom: 1px solid;
-}
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-corner {
-  animation: audioflume-founders-corner-fade 650ms ease-out 500ms both;
-}
 .audioflume-home-founders-heading {
   display: grid;
   grid-template-columns: 1fr 1fr 1.55fr;
@@ -4258,10 +4234,6 @@ body:has(.audioflume-home-landing)
   font-weight: 300;
   flex-shrink: 0;
 }
-@keyframes audioflume-founders-corner-fade {
-  from { opacity: 0; }
-  to { opacity: .8; }
-}
 @keyframes audioflume-founders-image-settle {
   from { transform: scale(1.06); }
   to { transform: scale(1); }
@@ -4281,8 +4253,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-banner::before,
   .audioflume-home-founders-heading > span:not(:empty),
   .audioflume-home-founders-intro,
-  .audioflume-home-founders-benefits ul,
-  .audioflume-home-founders-corner {
+  .audioflume-home-founders-benefits ul {
     animation: none !important;
     opacity: 1;
     transform: none;
@@ -4297,8 +4268,6 @@ body:has(.audioflume-home-landing)
 }
 @media (max-width: 640px) {
   .audioflume-home-founders-banner { padding: 96px 40px; gap: 40px; }
-  .audioflume-home-founders-corner.is-top-left { top: 18px; left: 18px; }
-  .audioflume-home-founders-corner.is-bottom-right { right: 18px; bottom: 18px; }
   .audioflume-home-founders-heading { grid-template-columns: 1fr 1fr; text-align: left; font-size: clamp(32px, 7.5vw, 46px); gap: 4px 10px; }
   .audioflume-home-founders-heading > span:nth-child(1),
   .audioflume-home-founders-heading > span:nth-child(3),
