@@ -11,6 +11,7 @@ import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import { useHasCurrentSong, usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
@@ -332,6 +333,12 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
 
       {artistsLoading ? (
         <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
+          <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
+            <h2>Featured artists</h2>
+            <Link href="/artists" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+              Explore artists <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+            </Link>
+          </div>
           <div className="audioflume-home-landing-artist-track" aria-hidden="true">
             {Array.from({ length: 5 }, (_, index) => (
               <div className="audioflume-home-landing-artist-card is-skeleton" key={index}>
@@ -344,6 +351,12 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </section>
       ) : artists.length > 0 ? (
         <section ref={carouselRef} className="audioflume-home-landing-artist-carousel" aria-label="Featured artists" onClickCapture={(event) => { if (suppressCarouselClickRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
+          <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
+            <h2>Featured artists</h2>
+            <Link href="/artists" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+              Explore artists <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+            </Link>
+          </div>
           <div className="audioflume-home-landing-artist-track">
             {[0, 1, 2, 3].map((copy) => (
               <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy > 0}>
