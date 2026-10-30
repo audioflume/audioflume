@@ -45,9 +45,14 @@
   letter-spacing: -0.055em;
   line-height: 0.95;
   white-space: nowrap;
+  padding-top: 0;
+}
+.audioflume-pricing-editorial-title > span {
+  position: relative;
+  top: -0.13em;
 }
 .audioflume-pricing-editorial-title > span:first-child {
-  transform: translateX(-0.045em);
+  transform: translateX(-0.105em);
 }
 @media (max-width: 620px) {
   .audioflume-pricing-editorial-title {
