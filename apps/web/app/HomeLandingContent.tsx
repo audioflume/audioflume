@@ -18,7 +18,6 @@ const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
-  const showArtistCarousel = false;
   const playerVisible = useHasCurrentSong();
   const { songs, loading: songsLoading, error: songsError, refetchSongs } = useSongs();
   const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 10);
@@ -279,7 +278,40 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      {showArtistCarousel && (artistsLoading ? (
+      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
+        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
+          <div className="audioflume-home-founders-shade" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-top-left" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-bottom-right" aria-hidden="true" />
+          <h2 className="audioflume-home-founders-heading">
+            <span>JOIN</span><span>THE</span><span>FOUNDING</span>
+            <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
+          </h2>
+          <div className="audioflume-home-founders-content">
+            <div className="audioflume-home-founders-intro">
+              <p>The first 100 artists.<br />Founding members for life.</p>
+              <Link href="/artists/apply" className="audioflume-home-founders-apply">
+                Become a Founding Artist <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="audioflume-home-founders-benefits">
+              <ul>
+                {[
+                  "100% Earnings on eligible Premium artist licences",
+                  "Preferential enterprise licensing terms",
+                  "Lifetime priority promotion",
+                  "Priority licensing opportunities",
+                  "Permanent Founding Artist recognition",
+                  "Exclusive artist features & promotion",
+                  "Priority new-release review",
+                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {artistsLoading ? (
         <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
           <div className="audioflume-home-landing-artist-track" aria-hidden="true">
             {Array.from({ length: 5 }, (_, index) => (
@@ -322,40 +354,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             ))}
           </div>
         </section>
-      ) : null)}
-
-      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
-        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
-          <div className="audioflume-home-founders-shade" aria-hidden="true" />
-          <span className="audioflume-home-founders-corner is-top-left" aria-hidden="true" />
-          <span className="audioflume-home-founders-corner is-bottom-right" aria-hidden="true" />
-          <h2 className="audioflume-home-founders-heading">
-            <span>JOIN</span><span>THE</span><span>FOUNDING</span>
-            <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
-          </h2>
-          <div className="audioflume-home-founders-content">
-            <div className="audioflume-home-founders-intro">
-              <p>The first 100 artists.<br />Founding members for life.</p>
-              <Link href="/artists/apply" className="audioflume-home-founders-apply">
-                Become a Founding Artist <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <div className="audioflume-home-founders-benefits">
-              <ul>
-                {[
-                  "100% Earnings on eligible Premium artist licences",
-                  "Preferential enterprise licensing terms",
-                  "Lifetime priority promotion",
-                  "Priority licensing opportunities",
-                  "Permanent Founding Artist recognition",
-                  "Exclusive artist features & promotion",
-                  "Priority new-release review",
-                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
+      ) : null}
 
       <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
         <div className="audioflume-home-authentic-left">
