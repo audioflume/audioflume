@@ -1010,9 +1010,7 @@ export default function HomePageContent({
 
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
           <h2>This month&apos;s featured artists</h2>
-          <Link href="/artists" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-            Explore artists <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
-          </Link>
+          <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
       </section>
 
