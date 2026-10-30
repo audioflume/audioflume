@@ -620,7 +620,7 @@ function HomeCuratedPlaylistShelf({
   return (
     <section className="audioflume-home-mockup-curated">
       <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-        <span>Curated collections made for editors.</span>
+        <span>Curated collections made for editors</span>
         <Link
           href="/curated-playlists"
           className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
@@ -733,7 +733,7 @@ function HomeFeaturedSongShelf({ songs }: { songs: Song[] }) {
   return (
     <section className="audioflume-home-featured-songs">
       <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-        <span>Tracks made for storytelling.</span>
+        <span>Tracks made for storytelling</span>
         <Link
           href="/music"
           className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
@@ -1107,7 +1107,7 @@ export default function HomePageContent({
 
       <section className="audioflume-home-mockup-artists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
-          <h2>This month&apos;s featured artists.</h2>
+          <h2>This month&apos;s featured artists</h2>
           <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
         {artistsLoading ? (
@@ -1120,7 +1120,7 @@ export default function HomePageContent({
       {curatedPlaylistsLoading ? (
         <section className="audioflume-home-mockup-curated">
           <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-            <span>Curated collections made for editors.</span>
+            <span>Curated collections made for editors</span>
             <Link
               href="/curated-playlists"
               className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
@@ -1154,9 +1154,9 @@ export default function HomePageContent({
               A growing catalogue built around
             </span>
             {catalogueHeadingNaturalWrap ? (
-              <>A growing catalogue built around cinematic storytelling.</>
+              <>A growing catalogue built around cinematic storytelling</>
             ) : (
-              <>A growing catalogue built around<br />cinematic storytelling.</>
+              <>A growing catalogue built around<br />cinematic storytelling</>
             )}
           </h2>
           <Link
@@ -1197,7 +1197,7 @@ export default function HomePageContent({
               <h2>
                 Lifetime access to original{" "}
                 <br className="audioflume-home-lifetime-heading-break" />
-                in-house made music.
+                in-house made music
               </h2>
               <div className="audioflume-home-originals-heading-pricing">
                 <div className="audioflume-home-originals-heading-price is-regular">
@@ -1317,7 +1317,7 @@ export default function HomePageContent({
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
-            <h2>An extensive library of music curated for film.</h2>
+            <h2>An extensive library of music curated for film</h2>
           </div>
           <p>
             A growing catalogue built around cinematic storytelling, featuring music and SFX
@@ -1328,28 +1328,28 @@ export default function HomePageContent({
 
         <div className="audioflume-home-reference-width audioflume-home-reference-feature-grid">
           <div>
-            <h3>Human made music &amp; SFX.</h3>
+            <h3>Human made music &amp; SFX</h3>
             <p>
               Original work created by independent artists and sound designers,
               built around picture, pacing and story.
             </p>
           </div>
           <div>
-            <h3>Playlists built around the scene.</h3>
+            <h3>Playlists built around the scene</h3>
             <p>
               Curated by people who understand how music works against picture,
               so the right track is easier to find.
             </p>
           </div>
           <div>
-            <h3>Support real world artists.</h3>
+            <h3>Support real world artists</h3>
             <p>
               Music comes from real artists and composers, with licensing built
               around sustainable creative work.
             </p>
           </div>
           <div>
-            <h3>Subscription, premium &amp; bespoke.</h3>
+            <h3>Subscription, premium &amp; bespoke</h3>
             <p>
               Flexible licensing for everyday edits, larger productions, enterprise access,
               and custom commissioned work.
