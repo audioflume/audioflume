@@ -338,7 +338,7 @@ export default function PublicArtistPageView({
           color: #fff;
           font-family: var(--font-aktiv-grotesk), sans-serif;
           font-size: clamp(72px, var(--artist-name-fit-size), 150px);
-          font-weight: 400;
+          font-weight: 300;
           letter-spacing: -0.045em;
           line-height: 0.82;
           text-transform: uppercase;
