@@ -3576,7 +3576,7 @@ body:has(.audioflume-home-landing)
   color: #888888;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-brand {
-  border-right-color: var(--filmwave-border-color);
+  border-right-color: rgba(17, 17, 17, 0.04);
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-mark,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field input {
