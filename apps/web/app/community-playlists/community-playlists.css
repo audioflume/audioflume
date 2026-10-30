@@ -512,6 +512,11 @@ body:has(.community-playlists-page-root) {
   margin: 56px auto 0;
 }
 
+.community-page-reference-search-heading {
+  min-height: 0;
+  align-items: baseline;
+}
+
 .community-page-reference-search-heading > span {
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
