@@ -3379,6 +3379,28 @@ body:has(.audioflume-home-landing)
   touch-action: pan-y;
   scrollbar-width: none;
 }
+.audioflume-home-landing-artist-heading {
+  padding-inline: var(--audioflume-home-page-gutter);
+  margin-bottom: var(--filmwave-section-title-margin-bottom);
+  color: #e5e5dd;
+}
+.audioflume-home-landing-artist-heading h2 {
+  margin: 0;
+  font-family: var(--filmwave-section-title-font-family);
+  font-size: var(--filmwave-section-title-font-size);
+  font-weight: var(--filmwave-section-title-font-weight);
+  letter-spacing: var(--filmwave-section-title-letter-spacing);
+  line-height: var(--filmwave-section-title-line-height);
+}
+.audioflume-home-landing-artist-heading a {
+  color: inherit;
+  font-size: 15px;
+  font-weight: 300;
+  text-decoration: none;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-artist-heading {
+  color: var(--filmwave-section-title-color);
+}
 .audioflume-home-landing-artist-carousel:active { cursor: grabbing; }
 .audioflume-home-landing-artist-carousel::-webkit-scrollbar { display: none; }
 .audioflume-home-landing-artist-track {
