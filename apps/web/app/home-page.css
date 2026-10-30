@@ -4100,7 +4100,7 @@ body:has(.audioflume-home-landing)
 
 /* Founding Artist homepage promotion — positioned below the split image banner. */
 .audioflume-home-founders-section {
-  padding: 80px 0 0;
+  padding: 80px var(--audioflume-home-page-gutter, 5vw) 0;
   background: #e5e5dd;
 }
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
@@ -4300,7 +4300,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-apply { min-height: 54px; }
 }
 @media (max-width: 640px) {
-  .audioflume-home-founders-section { padding: 24px 0 0; }
+  .audioflume-home-founders-section { padding: 24px 16px 0; }
   .audioflume-home-founders-banner { padding: 46px 40px; gap: 40px; }
   .audioflume-home-founders-corner.is-top-left { top: 18px; left: 18px; }
   .audioflume-home-founders-corner.is-bottom-right { right: 18px; bottom: 18px; }
