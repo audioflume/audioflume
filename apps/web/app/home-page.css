@@ -3502,6 +3502,13 @@ body:has(.audioflume-home-landing)
   line-height: 1.5;
 }
 
+@media (max-width: 1350px) {
+  .audioflume-home-landing-artist-carousel { padding-top: 80px; }
+}
+@media (max-width: 620px) {
+  .audioflume-home-landing-artist-carousel { padding-top: 104px; }
+}
+
 @media (max-width: 1100px) {
   .audioflume-home-landing-discover { justify-content: flex-start; gap: 150px; }
 }
