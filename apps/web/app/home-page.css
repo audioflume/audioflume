@@ -3920,16 +3920,32 @@ body:has(.audioflume-home-landing)
 }
 
 
-/* Homepage catalogue heading retains the informational section's beige surface. */
+/* Oversized editorial title directly above the homepage artwork mosaic. */
 .audioflume-home-landing-mosaic-heading {
-  padding: 0 0 20px;
+  display: flex;
+  height: clamp(220px, 25vw, 390px);
+  align-items: flex-end;
+  overflow: hidden;
   background: #e5e5dd;
 }
-.audioflume-home-landing-mosaic-heading .audioflume-home-mockup-section-label {
-  margin-bottom: 0;
+.audioflume-home-landing-mosaic-heading h2 {
+  width: 100%;
+  margin: 0;
+  color: #111111;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(36px, 7.4vw, 140px);
+  font-weight: 300;
+  letter-spacing: -0.055em;
+  line-height: 0.85;
+  text-align: justify;
+  text-align-last: justify;
+  white-space: nowrap;
 }
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-landing-mosaic-heading {
   background: var(--bg-primary);
+}
+:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing-mosaic-heading h2 {
+  color: #e5e5dd;
 }
 
 /* Discover uses the Curated Playlists Search by Song section construction. */
