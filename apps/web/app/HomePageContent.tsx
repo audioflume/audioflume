@@ -1008,10 +1008,11 @@ export default function HomePageContent({
           <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
         </div>
 
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-intro-heading">
-          <h1 className="audioflume-home-mockup-intro-title">
-            HUMAN MADE MUSIC &amp; SFX FOR FILM.
-          </h1>
+        <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+          <span>This month&apos;s featured artists</span>
+          <Link href="/artists" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+            Explore artists <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+          </Link>
         </div>
       </section>
 
