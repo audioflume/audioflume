@@ -26,7 +26,7 @@
 .audioflume-pricing-plans-section {
   position: relative;
   isolation: isolate;
-  padding: 0;
+  padding: 88px 0 0;
 }
 
 .audioflume-pricing-editorial-title {
@@ -45,14 +45,9 @@
   letter-spacing: -0.055em;
   line-height: 0.95;
   white-space: nowrap;
-  padding-top: 0;
-}
-.audioflume-pricing-editorial-title > span {
-  position: relative;
-  top: -0.13em;
 }
 .audioflume-pricing-editorial-title > span:first-child {
-  transform: translateX(-0.105em);
+  transform: translateX(calc(-0.105em + 2px));
 }
 @media (max-width: 620px) {
   .audioflume-pricing-editorial-title {
@@ -1382,7 +1377,7 @@
   }
 
   .audioflume-pricing-plans-section {
-    padding-top: 0;
+    padding-top: 40px;
     padding-bottom: 0;
   }
 
