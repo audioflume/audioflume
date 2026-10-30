@@ -278,7 +278,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      {artistsLoading ? (
+      {false && (artistsLoading ? (
         <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
           <div className="audioflume-home-landing-artist-track" aria-hidden="true">
             {Array.from({ length: 5 }, (_, index) => (
@@ -321,7 +321,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             ))}
           </div>
         </section>
-      ) : null}
+      ) : null)}
 
       <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
         <div className="audioflume-home-authentic-left">
