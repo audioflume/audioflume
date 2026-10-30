@@ -261,6 +261,7 @@ export default async function PricingPage() {
   return (
     <main className="audioflume-pricing-page-root">
       <section className="audioflume-pricing-plans-section">
+        <h1 className="audioflume-pricing-editorial-title"><span>PLANS</span><span>&amp;</span><span>PRICING</span></h1>
         <div className="audioflume-pricing-catalogue-intro">
           <div className="audioflume-pricing-catalogue-intro-copy">
             Music licensing for solo filmmakers, studios, and larger teams.
