@@ -19,7 +19,7 @@ const HOME_HERO_IMAGE =
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
-  const { songs } = useSongs();
+  const { songs, loading: songsLoading, error: songsError, refetchSongs } = useSongs();
   const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 10);
   const songRows = [gridSongs.slice(0, 2), gridSongs.slice(2, 5), gridSongs.slice(5, 7), gridSongs.slice(7, 10)];
   function playGridSong(song: (typeof songs)[number]) {
@@ -422,6 +422,14 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       </section>
 
       <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
+        {gridSongs.length === 0 && (
+          <div className="audioflume-home-song-mosaic-status" role="status">
+            <span>{songsLoading ? "Loading music…" : songsError ? "Music could not be loaded." : "No playable songs with cover art are available."}</span>
+            {!songsLoading && songsError && (
+              <button type="button" onClick={() => void refetchSongs()}>Retry loading music</button>
+            )}
+          </div>
+        )}
         {songRows.map((row, rowIndex) => (
           <div className="audioflume-home-song-mosaic-row" key={rowIndex}>
             {row.map((song) => {
