@@ -19,7 +19,7 @@ const HOME_HERO_IMAGE =
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
-  const { songs, loading: songsLoading, error: songsError, refetchSongs } = useSongs();
+  const { songs } = useSongs();
   const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 10);
   const songRows = [gridSongs.slice(0, 2), gridSongs.slice(2, 5), gridSongs.slice(5, 7), gridSongs.slice(7, 10)];
   function playGridSong(song: (typeof songs)[number]) {
@@ -278,39 +278,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
-        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
-          <div className="audioflume-home-founders-shade" aria-hidden="true" />
-          <span className="audioflume-home-founders-corner is-top-left" aria-hidden="true" />
-          <span className="audioflume-home-founders-corner is-bottom-right" aria-hidden="true" />
-          <h2 className="audioflume-home-founders-heading">
-            <span>JOIN</span><span>THE</span><span>FOUNDING</span>
-            <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
-          </h2>
-          <div className="audioflume-home-founders-content">
-            <div className="audioflume-home-founders-intro">
-              <p>The first 100 artists.<br />Founding members for life.</p>
-              <Link href="/artists/apply" className="audioflume-home-founders-apply">
-                Become a Founding Artist <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <div className="audioflume-home-founders-benefits">
-              <ul>
-                {[
-                  "100% Earnings on eligible Premium artist licences",
-                  "Preferential enterprise licensing terms",
-                  "Lifetime priority promotion",
-                  "Priority licensing opportunities",
-                  "Permanent Founding Artist recognition",
-                  "Exclusive artist features & promotion",
-                  "Priority new-release review",
-                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {artistsLoading ? (
         <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
           <div className="audioflume-home-landing-artist-track" aria-hidden="true">
@@ -377,6 +344,39 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
+      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
+        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
+          <div className="audioflume-home-founders-shade" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-top-left" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-bottom-right" aria-hidden="true" />
+          <h2 className="audioflume-home-founders-heading">
+            <span>JOIN</span><span>THE</span><span>FOUNDING</span>
+            <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
+          </h2>
+          <div className="audioflume-home-founders-content">
+            <div className="audioflume-home-founders-intro">
+              <p>The first 100 artists.<br />Founding members for life.</p>
+              <Link href="/artists/apply" className="audioflume-home-founders-apply">
+                Become a Founding Artist <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="audioflume-home-founders-benefits">
+              <ul>
+                {[
+                  "100% Earnings on eligible Premium artist licences",
+                  "Preferential enterprise licensing terms",
+                  "Lifetime priority promotion",
+                  "Priority licensing opportunities",
+                  "Permanent Founding Artist recognition",
+                  "Exclusive artist features & promotion",
+                  "Priority new-release review",
+                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
           <div className="audioflume-home-reference-library-copy">
@@ -422,14 +422,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       </section>
 
       <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
-        {gridSongs.length === 0 && (
-          <div className="audioflume-home-song-mosaic-status" role="status">
-            <span>{songsLoading ? "Loading music…" : songsError ? "Music could not be loaded." : "No playable songs with cover art are available."}</span>
-            {!songsLoading && songsError && (
-              <button type="button" onClick={() => void refetchSongs()}>Retry loading music</button>
-            )}
-          </div>
-        )}
         {songRows.map((row, rowIndex) => (
           <div className="audioflume-home-song-mosaic-row" key={rowIndex}>
             {row.map((song) => {
