@@ -3923,7 +3923,6 @@ body:has(.audioflume-home-landing)
 /* Oversized editorial title directly above the homepage artwork mosaic. */
 .audioflume-home-landing-mosaic-heading {
   display: flex;
-  height: clamp(220px, 25vw, 390px);
   align-items: flex-end;
   overflow: hidden;
   background: #e5e5dd;
@@ -3933,10 +3932,11 @@ body:has(.audioflume-home-landing)
   margin: 0;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(36px, 7.4vw, 140px);
+  font-size: clamp(26px, 5.2vw, 96px);
   font-weight: 300;
   letter-spacing: -0.055em;
   line-height: 0.85;
+  transform: translateY(0.09em);
   text-align: justify;
   text-align-last: justify;
   white-space: nowrap;
