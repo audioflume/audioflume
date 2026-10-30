@@ -7,6 +7,7 @@ import Link from "next/link";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
+import { DiscoverPricingCards, DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import { useHasCurrentSong, usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
@@ -20,7 +21,8 @@ const HOME_HERO_IMAGE =
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
-  const { songs } = useSongs();
+  const { songs, loading: songsLoading } = useSongs();
+  const originalSongs = songs.filter((song) => song.audioUrl && song.artist.trim().localeCompare("Audioflume", undefined, { sensitivity: "base" }) === 0).slice(0, 16);
   const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 10);
   const songRows = [gridSongs.slice(0, 2), gridSongs.slice(2, 5), gridSongs.slice(5, 7), gridSongs.slice(7, 10)];
   function playGridSong(song: (typeof songs)[number]) {
@@ -329,6 +331,11 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             </div>
           </div>
         </div>
+      </section>
+
+      <DiscoverPricingCards />
+      <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
+        <DiscoverLifetimeAccess originalSongs={originalSongs} songsLoading={songsLoading} />
       </section>
 
       {artistsLoading ? (
