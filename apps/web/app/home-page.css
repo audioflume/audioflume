@@ -3625,14 +3625,14 @@ body:has(.audioflume-home-landing)
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: calc(100% - 2 * var(--audioflume-home-page-gutter, 5vw));
   margin-inline: auto;
-  height: clamp(520px, 48vw, 660px);
+  height: clamp(346.667px, 32vw, 440px);
   color: #e5e5dd;
 }
 @media (min-width: 901px) {
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
     height: min(
-      clamp(520px, 48vw, 660px),
-      calc(100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px))
+      clamp(346.667px, 32vw, 440px),
+      calc((100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px)) / 1.5)
     );
   }
 }
@@ -3746,7 +3746,7 @@ body:has(.audioflume-home-landing)
   }
   .audioflume-home-authentic-left,
   .audioflume-home-authentic-right {
-    min-height: 360px;
+    min-height: 240px;
   }
   .audioflume-home-authentic-lockup {
     --audioflume-lockup-icon-size: clamp(50px, 8vw, 68px);
@@ -3760,7 +3760,7 @@ body:has(.audioflume-home-landing)
 @media (max-width: 480px) {
   .audioflume-home-authentic-left,
   .audioflume-home-authentic-right {
-    min-height: 280px;
+    min-height: 186.667px;
   }
   .audioflume-home-authentic-lockup {
     padding: 20px;
