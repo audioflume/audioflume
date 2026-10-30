@@ -612,6 +612,11 @@ body:has(.curated-playlists-page-root)
   margin: 56px auto 0;
 }
 
+.curated-page-reference-search-heading {
+  min-height: 0;
+  align-items: baseline;
+}
+
 .curated-page-reference-search-heading > span {
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
