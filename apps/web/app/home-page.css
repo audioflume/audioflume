@@ -1881,7 +1881,7 @@ body:has(.audioflume-home-landing)
   display: none;
 }
 
-.audioflume-home-mockup-featured-artists-heading > .audioflume-home-mockup-featured-artists-count {
+.audioflume-home-mockup-catalogue-heading > .audioflume-home-mockup-featured-artists-count {
   justify-self: end;
   color: var(--filmwave-section-title-color);
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -1898,7 +1898,7 @@ body:has(.audioflume-home-landing)
     grid-template-columns: minmax(0, 1fr);
     gap: 12px;
   }
-  .audioflume-home-mockup-featured-artists-heading > .audioflume-home-mockup-featured-artists-count {
+  .audioflume-home-mockup-catalogue-heading > .audioflume-home-mockup-featured-artists-count {
     justify-self: start;
     text-align: left;
   }
