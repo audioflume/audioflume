@@ -347,6 +347,8 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
         <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
           <div className="audioflume-home-founders-shade" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-top-left" aria-hidden="true" />
+          <span className="audioflume-home-founders-corner is-bottom-right" aria-hidden="true" />
           <h2 className="audioflume-home-founders-heading">
             <span>JOIN</span><span>THE</span><span>FOUNDING</span>
             <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
