@@ -20,6 +20,7 @@ import Footer from "@/components/Footer";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverPricingCards, DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
@@ -1152,52 +1153,19 @@ export default function HomePageContent({
         </div>
       </section>
 
-      <section className="audioflume-home-reference-library">
-        <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
-          <div className="audioflume-home-reference-library-copy">
-            <h2>An extensive library of music curated for film</h2>
+      <section className="audioflume-discover-reference-search">
+        <div className="audioflume-home-reference-width">
+          <div className="audioflume-discover-reference-search-heading filmwave-section-heading-row">
+            <span>Search by song</span>
           </div>
-          <p>
-            A growing catalogue built around cinematic storytelling, featuring music and SFX
-            from in-demand artists and composers. Curated to make finding distinctive, usable
-            tracks faster across film, commercial and branded work.
-          </p>
-        </div>
-
-        <div className="audioflume-home-reference-width audioflume-home-reference-feature-grid">
-          <div>
-            <h3>Human made music &amp; SFX</h3>
-            <p>
-              Original work created by independent artists and sound designers,
-              built around picture, pacing and story.
-            </p>
-          </div>
-          <div>
-            <h3>Playlists built around the scene</h3>
-            <p>
-              Curated by people who understand how music works against picture,
-              so the right track is easier to find.
-            </p>
-          </div>
-          <div>
-            <h3>Support real world artists</h3>
-            <p>
-              Music comes from real artists and composers, with licensing built
-              around sustainable creative work.
-            </p>
-          </div>
-          <div>
-            <h3>Subscription, premium &amp; bespoke</h3>
-            <p>
-              Flexible licensing for everyday edits, larger productions, enterprise access,
-              and custom commissioned work.
-            </p>
+          <div className="audioflume-discover-reference-search-card">
+            <GlobalReferenceSearch embedded />
           </div>
         </div>
       </section>
 
       <div className="audioflume-home-reference-footer-region">
-        <Footer className="audioflume-home-reference-footer" />
+        <Footer className="audioflume-home-reference-footer" showTopBorder={false} />
       </div>
     </main>
   );
