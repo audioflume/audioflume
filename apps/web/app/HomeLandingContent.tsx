@@ -336,7 +336,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
             <h2>Discover in demand<br />artists &amp; trending music</h2>
             <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-              Explore Artists &amp; Music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+              Explore artists &amp; music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
             </Link>
           </div>
           <div className="audioflume-home-landing-artist-track" aria-hidden="true">
@@ -354,7 +354,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
             <h2>Discover in demand<br />artists &amp; trending music</h2>
             <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-              Explore Artists &amp; Music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+              Explore artists &amp; music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
             </Link>
           </div>
           <div className="audioflume-home-landing-artist-track">
