@@ -278,7 +278,38 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      {false && (artistsLoading ? (
+      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
+        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
+          <div className="audioflume-home-founders-shade" aria-hidden="true" />
+          <h2 className="audioflume-home-founders-heading">
+            <span>JOIN</span><span>THE</span><span>FOUNDING</span>
+            <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
+          </h2>
+          <div className="audioflume-home-founders-content">
+            <div className="audioflume-home-founders-intro">
+              <p>The first 100 artists.<br />Founding members for life.</p>
+              <Link href="/artists/apply" className="audioflume-home-founders-apply">
+                Become a Founding Artist <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="audioflume-home-founders-benefits">
+              <ul>
+                {[
+                  "100% Earnings on eligible Premium artist licences",
+                  "Preferential enterprise licensing terms",
+                  "Lifetime priority promotion",
+                  "Priority licensing opportunities",
+                  "Permanent Founding Artist recognition",
+                  "Exclusive artist features & promotion",
+                  "Priority new-release review",
+                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {artistsLoading ? (
         <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
           <div className="audioflume-home-landing-artist-track" aria-hidden="true">
             {Array.from({ length: 5 }, (_, index) => (
@@ -321,7 +352,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             ))}
           </div>
         </section>
-      ) : null)}
+      ) : null}
 
       <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
         <div className="audioflume-home-authentic-left">
@@ -340,37 +371,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           <div className="audioflume-home-authentic-message">
             <span><span>HUMAN</span><span>MADE</span><span>MUSIC.</span></span>
             <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
-          </div>
-        </div>
-      </section>
-
-      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
-        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
-          <div className="audioflume-home-founders-shade" aria-hidden="true" />
-          <h2 className="audioflume-home-founders-heading">
-            <span>JOIN</span><span>THE</span><span>FOUNDING</span>
-            <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
-          </h2>
-          <div className="audioflume-home-founders-content">
-            <div className="audioflume-home-founders-intro">
-              <p>The first 100 artists.<br />Founding members for life.</p>
-              <Link href="/artists/apply" className="audioflume-home-founders-apply">
-                Become a Founding Artist <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <div className="audioflume-home-founders-benefits">
-              <ul>
-                {[
-                  "100% Earnings on eligible Premium artist licences",
-                  "Preferential enterprise licensing terms",
-                  "Lifetime priority promotion",
-                  "Priority licensing opportunities",
-                  "Permanent Founding Artist recognition",
-                  "Exclusive artist features & promotion",
-                  "Priority new-release review",
-                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
-              </ul>
-            </div>
           </div>
         </div>
       </section>
