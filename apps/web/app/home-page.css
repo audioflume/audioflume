@@ -3625,14 +3625,14 @@ body:has(.audioflume-home-landing)
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: calc(100% - 2 * var(--audioflume-home-page-gutter, 5vw));
   margin-inline: auto;
-  height: clamp(346.667px, 32vw, 440px);
+  height: clamp(520px, 48vw, 660px);
   color: #e5e5dd;
 }
 @media (min-width: 901px) {
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
     height: min(
-      clamp(346.667px, 32vw, 440px),
-      calc((100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px)) / 1.5)
+      clamp(520px, 48vw, 660px),
+      calc(100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px))
     );
   }
 }
