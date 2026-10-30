@@ -613,13 +613,13 @@ body:has(.curated-playlists-page-root)
 }
 
 .curated-page-reference-search-heading > span {
-  color: var(--filmwave-section-title-color);
-  font-family: var(--filmwave-small-section-title-font-family);
-  font-size: var(--filmwave-small-section-title-font-size);
-  font-weight: var(--filmwave-small-section-title-font-weight);
-  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
-  line-height: var(--filmwave-small-section-title-line-height);
-  text-transform: var(--filmwave-small-section-title-text-transform);
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 19px;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 1.2;
+  text-transform: none;
 }
 
 .curated-page-reference-search-card {
