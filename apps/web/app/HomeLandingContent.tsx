@@ -334,9 +334,9 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       {artistsLoading ? (
         <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
           <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
-            <h2>Featured artists</h2>
-            <Link href="/artists" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-              Explore artists <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+            <h2>Discover in demand<br />artists &amp; trending music</h2>
+            <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+              Explore Artists &amp; Music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
             </Link>
           </div>
           <div className="audioflume-home-landing-artist-track" aria-hidden="true">
@@ -352,9 +352,9 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       ) : artists.length > 0 ? (
         <section ref={carouselRef} className="audioflume-home-landing-artist-carousel" aria-label="Featured artists" onClickCapture={(event) => { if (suppressCarouselClickRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
           <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
-            <h2>Featured artists</h2>
-            <Link href="/artists" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-              Explore artists <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+            <h2>Discover in demand<br />artists &amp; trending music</h2>
+            <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+              Explore Artists &amp; Music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
             </Link>
           </div>
           <div className="audioflume-home-landing-artist-track">
