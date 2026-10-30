@@ -4137,28 +4137,6 @@ body:has(.audioflume-home-landing)
   z-index: -1;
   background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.18)), linear-gradient(0deg, rgba(0,0,0,.53), transparent 68%);
 }
-.audioflume-home-founders-corner {
-  position: absolute;
-  width: 20px;
-  height: 20px;
-  pointer-events: none;
-  opacity: 0;
-}
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-corner {
-  animation: audioflume-founders-corner-fade 650ms ease-out 500ms both;
-}
-.audioflume-home-founders-corner.is-top-left {
-  top: 30px;
-  left: 30px;
-  border-top: 1.5px solid #e5e5dd;
-  border-left: 1.5px solid #e5e5dd;
-}
-.audioflume-home-founders-corner.is-bottom-right {
-  right: 30px;
-  bottom: 30px;
-  border-right: 1.5px solid #e5e5dd;
-  border-bottom: 1.5px solid #e5e5dd;
-}
 .audioflume-home-founders-heading {
   display: grid;
   grid-template-columns: 1fr 1fr 1.55fr;
@@ -4259,10 +4237,6 @@ body:has(.audioflume-home-landing)
   font-weight: 300;
   flex-shrink: 0;
 }
-@keyframes audioflume-founders-corner-fade {
-  from { opacity: 0; }
-  to { opacity: .8; }
-}
 @keyframes audioflume-founders-image-settle {
   from { transform: scale(1.06); }
   to { transform: scale(1); }
@@ -4287,10 +4261,6 @@ body:has(.audioflume-home-landing)
     opacity: 1;
     transform: none;
   }
-  .audioflume-home-founders-corner {
-    animation: none !important;
-    opacity: .8;
-  }
 }
 @media (max-width: 900px) {
   .audioflume-home-founders-banner { padding: 60px 64px; }
@@ -4313,6 +4283,4 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-benefits { justify-self: stretch; width: 100%; }
   .audioflume-home-founders-intro p { font-size: 26px; margin-bottom: 22px; }
   .audioflume-home-founders-apply { width: 100%; min-height: 54px; margin-bottom: 0; }
-  .audioflume-home-founders-corner.is-top-left { top: 18px; left: 18px; }
-  .audioflume-home-founders-corner.is-bottom-right { bottom: 18px; right: 18px; }
 }
