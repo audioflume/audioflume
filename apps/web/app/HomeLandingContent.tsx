@@ -307,7 +307,8 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
             <span>JOIN</span><span>THE</span><span>FOUNDING</span>
             <span>ARTISTS</span><span aria-hidden="true" /><span>PROGRAM</span>
           </h2>
-          <div className="audioflume-home-founders-content">
+        </div>
+        <div className="audioflume-home-founders-content">
             <div className="audioflume-home-founders-intro">
               <p>The first 100 artists.<br />Founding members for life.</p>
               <Link href="/artists/apply" className="audioflume-home-founders-apply">
@@ -327,7 +328,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
                 ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
               </ul>
             </div>
-          </div>
         </div>
       </section>
 
