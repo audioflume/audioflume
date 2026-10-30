@@ -418,7 +418,7 @@ body:has(.audioflume-home-landing)
 
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-reference-library {
-  background: #ffffff;
+  background: #e5e5dd;
 }
 
 /* Lower homepage headings use the warm beige tone in dark mode only. */
@@ -3598,13 +3598,13 @@ body:has(.audioflume-home-landing)
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: 100%;
-  height: clamp(440px, 40vw, 560px);
+  height: clamp(520px, 48vw, 660px);
   color: #e5e5dd;
 }
 @media (min-width: 901px) {
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
     height: min(
-      clamp(440px, 40vw, 560px),
+      clamp(520px, 48vw, 660px),
       calc(100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px))
     );
   }
@@ -3617,8 +3617,7 @@ body:has(.audioflume-home-landing)
   justify-content: center;
 }
 .audioflume-home-authentic-left {
-  background: #e5e5dd;
-  color: #111111;
+  background: #111;
 }
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-authentic-left,
@@ -3895,26 +3894,6 @@ body:has(.audioflume-home-landing)
   overflow: hidden;
   background: #111;
 }
-.audioflume-home-song-mosaic-status {
-  width: 100%;
-  min-height: 160px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 32px;
-  color: #e5e5dd;
-  font-size: 14px;
-  text-align: center;
-}
-.audioflume-home-song-mosaic-status button {
-  border: 1px solid currentColor;
-  background: transparent;
-  padding: 10px 16px;
-  color: inherit;
-  cursor: pointer;
-}
 .audioflume-home-song-mosaic-row {
   display: flex;
   width: 100%;
@@ -4120,8 +4099,8 @@ body:has(.audioflume-home-landing)
 
 /* Founding Artist homepage promotion — positioned below the split image banner. */
 .audioflume-home-founders-section {
-  padding: 0 var(--audioflume-home-page-gutter, 5vw) 80px;
-  background: #ffffff;
+  padding: 80px var(--audioflume-home-page-gutter, 5vw) 0;
+  background: #e5e5dd;
 }
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-founders-section {
@@ -4320,7 +4299,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-apply { min-height: 54px; }
 }
 @media (max-width: 640px) {
-  .audioflume-home-founders-section { padding: 0 16px 80px; }
+  .audioflume-home-founders-section { padding: 24px 16px 0; }
   .audioflume-home-founders-banner { padding: 46px 40px; gap: 40px; }
   .audioflume-home-founders-corner.is-top-left { top: 18px; left: 18px; }
   .audioflume-home-founders-corner.is-bottom-right { right: 18px; bottom: 18px; }
