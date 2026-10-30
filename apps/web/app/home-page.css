@@ -3922,14 +3922,16 @@ body:has(.audioflume-home-landing)
 
 /* Oversized editorial title directly above the homepage artwork mosaic. */
 .audioflume-home-landing-mosaic-heading {
+  position: relative;
+  z-index: 1;
   display: flex;
   align-items: flex-end;
-  overflow: hidden;
+  overflow: visible;
   background: #e5e5dd;
 }
 .audioflume-home-landing-mosaic-heading h2 {
-  width: 100%;
-  margin: 0;
+  width: calc(100% + 0.04em);
+  margin: 0 0 0 -0.04em;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(26px, 5.2vw, 96px);
