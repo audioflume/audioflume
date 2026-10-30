@@ -3920,6 +3920,44 @@ body:has(.audioflume-home-landing)
 }
 
 
+/* Homepage catalogue heading retains the informational section's beige surface. */
+.audioflume-home-landing-mosaic-heading {
+  padding: 0 0 20px;
+  background: #e5e5dd;
+}
+.audioflume-home-landing-mosaic-heading .audioflume-home-mockup-section-label {
+  margin-bottom: 0;
+}
+:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing-mosaic-heading {
+  background: var(--bg-primary);
+}
+
+/* Discover uses the Curated Playlists Search by Song section construction. */
+.audioflume-discover-reference-search {
+  padding-top: 56px;
+  padding-bottom: var(--filmwave-page-gutter);
+  background: var(--bg-primary);
+}
+.audioflume-discover-reference-search-heading > span {
+  color: var(--filmwave-section-title-color);
+  font-family: var(--filmwave-small-section-title-font-family);
+  font-size: var(--filmwave-small-section-title-font-size);
+  font-weight: var(--filmwave-small-section-title-font-weight);
+  letter-spacing: var(--filmwave-small-section-title-letter-spacing);
+  line-height: var(--filmwave-small-section-title-line-height);
+  text-transform: var(--filmwave-small-section-title-text-transform);
+}
+.audioflume-discover-reference-search-card {
+  height: 420px;
+  min-height: 420px;
+  overflow: hidden;
+  background: #111111;
+}
+.audioflume-discover-reference-search-card > * {
+  width: 100%;
+  height: 100%;
+}
+
 /* Artwork-led music rows immediately below the authentic homepage banner. */
 .audioflume-home-song-mosaic {
   width: 100%;
