@@ -3954,6 +3954,11 @@ body:has(.audioflume-home-landing)
   padding-bottom: 0;
   background: var(--bg-primary);
 }
+.audioflume-discover-reference-search-heading {
+  min-height: 0;
+  align-items: baseline;
+}
+
 .audioflume-discover-reference-search-heading > span {
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
