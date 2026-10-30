@@ -3746,7 +3746,7 @@ body:has(.audioflume-home-landing)
   }
   .audioflume-home-authentic-left,
   .audioflume-home-authentic-right {
-    min-height: 240px;
+    min-height: 360px;
   }
   .audioflume-home-authentic-lockup {
     --audioflume-lockup-icon-size: clamp(50px, 8vw, 68px);
@@ -3760,7 +3760,7 @@ body:has(.audioflume-home-landing)
 @media (max-width: 480px) {
   .audioflume-home-authentic-left,
   .audioflume-home-authentic-right {
-    min-height: 186.667px;
+    min-height: 280px;
   }
   .audioflume-home-authentic-lockup {
     padding: 20px;
