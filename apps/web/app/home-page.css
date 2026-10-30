@@ -3335,12 +3335,8 @@ body:has(.audioflume-home-landing)
   gap: 8px;
   border: 0;
   border-radius: 0;
-  background-color: #111111;
-  background-image: linear-gradient(180deg, rgba(17, 17, 17, 0.24) 0%, rgba(17, 17, 17, 0.58) 44%, rgba(17, 17, 17, 0.96) 100%), url("https://images.filmwave.io/images/home/thomas-kinto-qYqbehR-wSI-unsplash.jpg");
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
-  color: #ffffff;
+  background: #e5e5dd;
+  color: #111;
   padding: 0;
   font: inherit;
   font-size: 14px;
@@ -3557,11 +3553,11 @@ body:has(.audioflume-home-landing)
 
 
 .audioflume-home-landing .audioflume-home-landing-search-song {
-  transition: filter 160ms ease;
+  transition: background-color 160ms ease;
 }
 .audioflume-home-landing .audioflume-home-landing-search-song:hover,
 .audioflume-home-landing .audioflume-home-landing-search-song:focus-visible {
-  filter: brightness(1.18);
+  background: #ffffff;
 }
 .audioflume-home-landing .audioflume-home-landing-search-brand .audioflume-home-landing-search-mark {
   transition: color 160ms ease;
@@ -3600,6 +3596,14 @@ body:has(.audioflume-home-landing)
   color: #111111;
 }
 
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-song {
+  background: #111111;
+  color: #ffffff;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-song:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-song:focus-visible {
+  background: #333333;
+}
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-brand:hover .audioflume-home-landing-search-mark,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-landing-search-brand:focus-visible .audioflume-home-landing-search-mark {
   color: #333333;
