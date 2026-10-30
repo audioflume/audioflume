@@ -2282,7 +2282,7 @@ body:has(.audioflume-home-landing)
   grid-template-columns: repeat(3, minmax(0, 445px));
   justify-content: space-between;
   gap: 10px;
-  padding-bottom: 80px;
+  padding-bottom: 56px;
 }
 
 .audioflume-home-mockup-editorial-card {
