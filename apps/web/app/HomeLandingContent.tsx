@@ -448,12 +448,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       </section>
 
       <div className="audioflume-home-landing-mosaic-heading">
-        <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-          <span>Discover new music</span>
-          <Link href="/music" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-            Explore the library <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
-          </Link>
-        </div>
+        <h2>DISCOVER NEW MUSIC &amp; ARTISTS</h2>
       </div>
 
       <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
