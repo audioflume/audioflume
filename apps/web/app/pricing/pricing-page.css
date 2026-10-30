@@ -26,7 +26,7 @@
 .audioflume-pricing-plans-section {
   position: relative;
   isolation: isolate;
-  padding: 88px 0 0;
+  padding: 0;
 }
 
 .audioflume-pricing-editorial-title {
@@ -45,6 +45,9 @@
   letter-spacing: -0.055em;
   line-height: 0.95;
   white-space: nowrap;
+}
+.audioflume-pricing-editorial-title > span:first-child {
+  transform: translateX(-0.045em);
 }
 @media (max-width: 620px) {
   .audioflume-pricing-editorial-title {
@@ -1374,7 +1377,7 @@
   }
 
   .audioflume-pricing-plans-section {
-    padding-top: 40px;
+    padding-top: 0;
     padding-bottom: 0;
   }
 
