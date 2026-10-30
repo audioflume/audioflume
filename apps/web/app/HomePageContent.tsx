@@ -1097,6 +1097,12 @@ export default function HomePageContent({
         )}
       </section>
 
+      <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+        <span>Music licensing for every creator</span>
+        <Link href="/pricing" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+          Explore plans <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+        </Link>
+      </div>
       <DiscoverPricingCards />
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
