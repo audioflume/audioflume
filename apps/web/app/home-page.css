@@ -3930,8 +3930,8 @@ body:has(.audioflume-home-landing)
   background: #e5e5dd;
 }
 .audioflume-home-landing-mosaic-heading h2 {
-  width: calc(100% + 0.04em);
-  margin: 0 0 0 -0.04em;
+  width: calc(100% + 0.09em);
+  margin: 0 0 0 -0.09em;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(26px, 5.2vw, 96px);
