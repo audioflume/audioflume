@@ -3370,6 +3370,7 @@ body:has(.audioflume-home-landing)
   opacity: .5;
 }
 .audioflume-home-landing-artist-carousel {
+  display: none;
   width: 100%;
   overflow: hidden;
   background: #111;
@@ -3619,9 +3620,13 @@ body:has(.audioflume-home-landing)
   color: #777777;
 }
 
+.audioflume-home-landing-pricing {
+  padding-bottom: var(--filmwave-page-gutter);
+}
+
 /* Authentic music banner on the active homepage. */
 .audioflume-home-landing .audioflume-home-authentic-banner {
-  display: grid;
+  display: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   width: calc(100% - 2 * var(--audioflume-home-page-gutter, 5vw));
   margin-inline: auto;
