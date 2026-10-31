@@ -8,7 +8,7 @@ import Link from "next/link";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverPricingCards, DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
-import { useHasCurrentSong, usePlayer } from "@/context/PlayerContext";
+import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -19,7 +19,6 @@ const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/home/kriss-films-I8OoRxdxCqk-unsplash.jpg";
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
-  const playerVisible = useHasCurrentSong();
   const { songs, loading: songsLoading } = useSongs();
   const originalSongs = songs.filter((song) => song.audioUrl && song.artist.trim().localeCompare("Audioflume", undefined, { sensitivity: "base" }) === 0).slice(0, 16);
   const gridSongs = songs.filter((song) => Boolean(song.audioUrl && song.coverArt)).slice(0, 10);
@@ -233,7 +232,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
 
   return (
     <main
-      className={`audioflume-home-reference audioflume-home-landing${playerVisible ? " has-player" : ""}`}
+      className="audioflume-home-reference audioflume-home-landing"
     >
       <section
         className="audioflume-home-reference-hero"
