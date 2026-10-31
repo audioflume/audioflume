@@ -49,7 +49,7 @@
 .af-founding-faq-answer p{margin:0;padding:0 45px 25px 0;font-weight:300;line-height:1.5}
 @media(prefers-reduced-motion:reduce){.af-founding-faq-icon,.af-founding-faq-answer{transition:none}}
 .af-founding-final{background:#111;color:#e5e5dd;padding-block:clamp(95px,10vw,175px)}
-.af-founding-final h2{font-size:clamp(50px,8vw,130px);line-height:.98;letter-spacing:-.06em;font-weight:500;margin:40px 0}
+.af-founding-final h2{font-size:clamp(42px,7vw,118px);line-height:1.02;letter-spacing:-.055em;font-weight:300;margin:40px 0}
 .af-founding-final p{font-size:21px;font-weight:300;max-width:600px;margin:0 0 44px}
 :where(html.dark,html[data-theme="dark"]) .af-founding-benefits{background:#1b1b1b;color:#e5e5dd}
 :where(html.dark,html[data-theme="dark"]) .af-founding-benefit{border-color:#444}
