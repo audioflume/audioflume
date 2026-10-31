@@ -617,20 +617,28 @@ export default function Header() {
 
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
+          --filmwave-transparent-header-text: #fff;
+        }
+
+        .filmwave-web-header.is-founding-route.is-transparent {
+          --filmwave-transparent-header-text: #e5e5dd;
+        }
+
+        .filmwave-web-header.is-transparent {
           border-bottom-color: transparent !important;
           background: transparent !important;
           background-color: transparent !important;
-          color: #fff !important;
+          color: var(--filmwave-transparent-header-text) !important;
         }
 
         .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
         .filmwave-web-header.is-transparent .filmwave-header-logo-action,
         .filmwave-web-header.is-transparent .filmwave-header-actions {
-          color: #fff !important;
+          color: var(--filmwave-transparent-header-text) !important;
         }
 
         .filmwave-web-header.is-transparent .filmwave-header-nav-link {
-          color: #fff !important;
+          color: var(--filmwave-transparent-header-text) !important;
         }
 
         .filmwave-web-header.is-transparent .filmwave-header-create-account {
