@@ -3170,7 +3170,7 @@ body:has(.audioflume-home-landing)
   background: #1b1b1b;
   color: #e5e5dd;
   border: 1px solid #373737;
-  padding: 14px 0 10px;
+  padding: 0 0 10px;
   box-shadow: 0 16px 35px rgba(0,0,0,.2);
 }
 .audioflume-home-landing-search-preview-row {
