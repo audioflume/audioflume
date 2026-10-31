@@ -3076,6 +3076,7 @@ body:has(.audioflume-home-landing)
   margin: 0;
   padding: 0;
   color: #e5e5dd;
+  mix-blend-mode: difference;
   font-size: clamp(64px, 7.6vw, 160px);
   font-weight: 300;
   letter-spacing: -0.055em;
