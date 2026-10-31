@@ -3277,7 +3277,7 @@ body:has(.audioflume-home-landing)
   backdrop-filter: none;
   cursor: inherit;
 }
-.audioflume-home-landing-search-preview-empty { font-size: 13px; padding: 12px 0; }
+.audioflume-home-landing-search-preview-empty { font-size: 13px; padding: 12px 18px; }
 .audioflume-home-landing-search-preview-more {
   display: block;
   width: 100%;
