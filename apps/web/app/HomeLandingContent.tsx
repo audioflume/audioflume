@@ -17,7 +17,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/jakob-owens-xKfS7Hll0Ck-unsplash.jpg";
+  "https://images.filmwave.io/images/home/brian-lundquist-97lEO6F0TNU-unsplash-web.jpg";
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const playerVisible = useHasCurrentSong();
