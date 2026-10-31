@@ -21,7 +21,7 @@
 .af-founding-intro-grid p{margin:0 0 25px}
 .af-founding-benefits{background:#e5e5dd;color:#111;padding-block:clamp(76px,8vw,140px)}
 .af-founding-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:48px}
-.af-founding-section-head h2{margin:0;font-size:clamp(30px,3.6vw,60px);line-height:1.05;font-weight:500;letter-spacing:-.045em}
+.af-founding-section-head h2{margin:0;font-size:clamp(30px,2.6vw,60px);line-height:1.05;font-weight:500;letter-spacing:-.045em}
 .af-founding-section-head>span{font:300 17px/1.2 var(--font-aktiv-grotesk),sans-serif;letter-spacing:0;white-space:nowrap}
 .af-founding-benefit{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,.8fr);gap:28px;border-top:1px solid rgba(17,17,17,.2);padding:31px 0;align-items:start}
 .af-founding-benefit:last-child{border-bottom:1px solid rgba(17,17,17,.2)}
