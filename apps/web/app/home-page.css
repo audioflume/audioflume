@@ -3180,11 +3180,16 @@ body:has(.audioflume-home-landing)
   align-items: center;
   padding: 9px 18px;
   border: 0;
+  border-bottom: 1px solid #373737;
   background: transparent;
   color: inherit;
   font: inherit;
   text-align: left;
   cursor: pointer;
+}
+.audioflume-home-landing-search-preview-row:hover,
+.audioflume-home-landing-search-preview-row:focus-visible {
+  background: var(--filmwave-search-surface);
 }
 .audioflume-home-landing-search-preview-artwork {
   position: relative;
@@ -3227,7 +3232,7 @@ body:has(.audioflume-home-landing)
   opacity: 0;
   color: #111;
   transform: translate(-50%, -50%);
-  pointer-events: none;
+  pointer-events: auto;
 }
 .audioflume-home-landing-search-preview-play::before {
   position: absolute;
@@ -3238,7 +3243,7 @@ body:has(.audioflume-home-landing)
   background: #fff;
   transition: transform 160ms ease;
 }
-.audioflume-home-landing-search-preview-row:hover .audioflume-home-landing-search-preview-play::before,
+.audioflume-home-landing-search-preview-play:hover::before,
 .audioflume-home-landing-search-preview-row:focus-visible .audioflume-home-landing-search-preview-play::before {
   transform: scale(1.04);
 }
@@ -3286,9 +3291,16 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-search-preview-more:hover { text-decoration: underline; }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview {
-  background: #f5f5f5;
+  background: #fff;
   color: #111;
   border-color: #dedede;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row {
+  border-bottom-color: #dedede;
+}
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row:focus-visible {
+  background: #f5f5f5;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-more { color: #111; }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
