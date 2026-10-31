@@ -3180,7 +3180,7 @@ body:has(.audioflume-home-landing)
   align-items: center;
   padding: 9px 18px;
   border: 0;
-  border-bottom: 1px solid #373737;
+  border-bottom: 1px solid var(--filmwave-border-color);
   background: transparent;
   color: inherit;
   font: inherit;
@@ -3258,6 +3258,8 @@ body:has(.audioflume-home-landing)
   opacity: 1;
 }
 .audioflume-home-landing-search-preview-genres {
+  display: inline-flex;
+  align-items: center;
   flex: 0 1 auto;
   justify-content: flex-end;
   min-width: 0;
@@ -3267,7 +3269,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
   background: transparent;
   color: #e5e5dd;
-  border: 1px solid #bcbcbc;
+  border: 1px solid var(--filmwave-border-color);
   min-height: 23px;
   padding: 0 10px;
   font-size: 10px;
@@ -3295,9 +3297,6 @@ body:has(.audioflume-home-landing)
   color: #111;
   border-color: #dedede;
 }
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row {
-  border-bottom-color: #dedede;
-}
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row:hover,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row:focus-visible {
   background: #f5f5f5;
@@ -3306,7 +3305,6 @@ body:has(.audioflume-home-landing)
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
   background: transparent;
   color: #555;
-  border-color: #d0d0d0;
 }
 .audioflume-home-landing-keywords {
   display: flex;
