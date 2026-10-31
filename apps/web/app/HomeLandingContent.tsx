@@ -448,10 +448,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      <div className="audioflume-home-landing-mosaic-heading">
-        <h2>DISCOVER NEW MUSIC &amp; ARTISTS</h2>
-      </div>
-
       <section className="audioflume-home-song-mosaic" aria-label="Explore music from the Audioflume catalogue">
         {songRows.map((row, rowIndex) => (
           <div className="audioflume-home-song-mosaic-row" key={rowIndex}>
