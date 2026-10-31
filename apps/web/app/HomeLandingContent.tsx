@@ -297,17 +297,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
               </Link>
             </div>
             <div className="audioflume-home-founders-benefits">
-              <ul>
-                {[
-                  "100% Earnings on eligible Premium artist licences",
-                  "Preferential enterprise licensing terms",
-                  "Lifetime priority promotion",
-                  "Priority licensing opportunities",
-                  "Permanent Founding Artist recognition",
-                  "Exclusive artist features & promotion",
-                  "Priority new-release review",
-                ].map((benefit, index) => <li key={benefit} style={{ "--founder-perk-index": index } as CSSProperties}><span aria-hidden="true">✓</span>{benefit}</li>)}
-              </ul>
+              <p>Earn <strong>100% on Premium Artist licences</strong>, receive <strong>preferential enterprise licensing terms</strong>, and enjoy exclusive founding artist benefits for life.</p>
             </div>
           </div>
         </div>
