@@ -236,17 +236,27 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
     <main
       className={`audioflume-home-reference audioflume-home-landing${playerVisible ? " has-player" : ""}`}
     >
-      <section
-        className="audioflume-home-reference-hero"
-        style={{ "--audioflume-home-hero-photo": `url("${homeImages.hero}")` } as CSSProperties}
-      >
-        <div className="audioflume-home-reference-hero-shade" />
-        <h1 className="audioflume-home-reference-hero-headline"><span>Human</span>{" "}<span>made</span>{" "}<span>music</span><br className="audioflume-home-hero-responsive-break" /><span>&amp;</span>{" "}<span>SFX</span>{" "}<span>for</span>{" "}<span>film</span></h1>
-        <div className="audioflume-home-reference-width audioflume-home-landing-hero-captions">
-          <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
-          <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
+      <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
+        <div className="audioflume-home-authentic-left">
+          <div className="audioflume-home-authentic-lockup">
+            <span className="audioflume-home-authentic-logo-reveal">
+              <AudioflumeMark className="audioflume-home-authentic-mark" ariaHidden />
+              <svg className="audioflume-home-authentic-ring" viewBox="0 0 39.82 39.53" aria-hidden="true">
+                <circle cx="19.91" cy="19.76" r="17.87" fill="none" stroke="currentColor" strokeWidth="3.2" />
+              </svg>
+            </span>
+            <h2>Authentic music, curated<br />and licensed for film.</h2>
+          </div>
+        </div>
+        <div className="audioflume-home-authentic-right">
+          <PricingHeroImageFlash images={homeFlashImages} mediaClassName="audioflume-home-authentic-flash-media" />
+          <div className="audioflume-home-authentic-message">
+            <span><span>HUMAN</span><span>MADE</span><span>MUSIC.</span></span>
+            <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
+          </div>
         </div>
       </section>
+
 
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
         <div className="audioflume-home-landing-search-group">
@@ -281,26 +291,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </div>
       </section>
 
-      <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
-        <div className="audioflume-home-authentic-left">
-          <div className="audioflume-home-authentic-lockup">
-            <span className="audioflume-home-authentic-logo-reveal">
-              <AudioflumeMark className="audioflume-home-authentic-mark" ariaHidden />
-              <svg className="audioflume-home-authentic-ring" viewBox="0 0 39.82 39.53" aria-hidden="true">
-                <circle cx="19.91" cy="19.76" r="17.87" fill="none" stroke="currentColor" strokeWidth="3.2" />
-              </svg>
-            </span>
-            <h2>Authentic music, curated<br />and licensed for film.</h2>
-          </div>
-        </div>
-        <div className="audioflume-home-authentic-right">
-          <PricingHeroImageFlash images={homeFlashImages} mediaClassName="audioflume-home-authentic-flash-media" />
-          <div className="audioflume-home-authentic-message">
-            <span><span>HUMAN</span><span>MADE</span><span>MUSIC.</span></span>
-            <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
-          </div>
-        </div>
-      </section>
 
       <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
         <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
