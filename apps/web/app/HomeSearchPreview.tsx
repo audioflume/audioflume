@@ -67,22 +67,28 @@ export default function HomeSearchPreview() {
       </div>
       {open && query.trim() && (
         <div className="audioflume-home-landing-search-preview" role="region" aria-label="Song search previews">
-          <div className="audioflume-home-landing-search-preview-title">SONG PREVIEWS</div>
           {matches.length ? matches.map((song) => {
             const playing = currentSong?.id === song.id && isPlaying;
             return (
-              <div className="audioflume-home-landing-search-preview-row" key={song.id}>
-                {song.coverArt ? <img src={song.coverArt} alt="" loading="lazy" /> : <span className="audioflume-home-landing-search-preview-art" />}
-                <div className="audioflume-home-landing-search-preview-info">
+              <button type="button" className="audioflume-home-landing-search-preview-row" key={song.id}
+                onClick={() => { setQueue(matches); togglePlayPause(song); }}
+                aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}>
+                <span className="audioflume-home-landing-search-preview-artwork">
+                  {song.coverArt ? <img src={song.coverArt} alt="" loading="lazy" /> : <span className="audioflume-home-landing-search-preview-art" />}
+                  <span className="audioflume-home-landing-search-preview-play" aria-hidden="true">
+                    {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+                  </span>
+                </span>
+                <span className="audioflume-home-landing-search-preview-info">
                   <span className="audioflume-home-landing-search-preview-name">{song.title}</span>
                   <span className="audioflume-home-landing-search-preview-artist">{song.artist}</span>
-                </div>
-                <button type="button" onClick={() => { setQueue(matches); togglePlayPause(song); }}
-                  aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-                  className="audioflume-home-landing-search-preview-play">
-                  {playing ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-                </button>
-              </div>
+                </span>
+                <span className="audioflume-genre-filter-pills audioflume-home-landing-search-preview-genres">
+                  {(song.genres ?? []).filter(Boolean).slice(0, 3).map((genre) => (
+                    <span key={genre} className="audioflume-genre-filter-pill">{genre}</span>
+                  ))}
+                </span>
+              </button>
             );
           }) : <p className="audioflume-home-landing-search-preview-empty">No matching songs found.</p>}
           <button type="button" className="audioflume-home-landing-search-preview-more" onClick={() => {
