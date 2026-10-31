@@ -3173,18 +3173,30 @@ body:has(.audioflume-home-landing)
   padding: 14px 18px 10px;
   box-shadow: 0 16px 35px rgba(0,0,0,.2);
 }
-.audioflume-home-landing-search-preview-title {
-  font-size: 10px;
-  letter-spacing: .08em;
-  color: #999;
-  margin-bottom: 8px;
-}
 .audioflume-home-landing-search-preview-row {
   display: flex;
+  width: 100%;
   gap: 12px;
   align-items: center;
   padding: 9px 0;
+  border: 0;
   border-bottom: 1px solid #373737;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+.audioflume-home-landing-search-preview-row:hover,
+.audioflume-home-landing-search-preview-row:focus-visible {
+  background: rgba(128,128,128,.12);
+}
+.audioflume-home-landing-search-preview-artwork {
+  position: relative;
+  display: block;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
 }
 .audioflume-home-landing-search-preview-row img,
 .audioflume-home-landing-search-preview-art {
@@ -3210,16 +3222,39 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-search-preview-name { font-size: 14px; font-weight: 400; }
 .audioflume-home-landing-search-preview-artist { font-size: 12px; color: #aaa; }
 .audioflume-home-landing-search-preview-play {
-  flex: 0 0 36px;
-  height: 36px;
+  position: absolute;
+  inset: 0;
   display: grid;
   place-items: center;
-  color: #e5e5dd;
-  background: transparent;
-  border: 0;
-  cursor: pointer;
+  opacity: 0;
+  color: #111;
+  pointer-events: none;
 }
-.audioflume-home-landing-search-preview-play:hover { background: #333; }
+.audioflume-home-landing-search-preview-play::before {
+  position: absolute;
+  content: "";
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: #e5e5dd;
+}
+.audioflume-home-landing-search-preview-play svg {
+  position: relative;
+  z-index: 1;
+}
+.audioflume-home-landing-search-preview-row:hover .audioflume-home-landing-search-preview-play,
+.audioflume-home-landing-search-preview-row:focus-visible .audioflume-home-landing-search-preview-play {
+  opacity: 1;
+}
+.audioflume-home-landing-search-preview-genres {
+  flex: 0 1 auto;
+  justify-content: flex-end;
+  min-width: 0;
+  pointer-events: none;
+}
+.audioflume-home-landing-search-preview-genres .audioflume-genre-filter-pill {
+  cursor: inherit;
+}
 .audioflume-home-landing-search-preview-empty { font-size: 13px; padding: 12px 0; }
 .audioflume-home-landing-search-preview-more {
   display: block;
@@ -3240,9 +3275,7 @@ body:has(.audioflume-home-landing)
   border-color: #dedede;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row { border-color: #dedede; }
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-play,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-more { color: #111; }
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-play:hover { background: #e5e5e5; }
 .audioflume-home-landing-keywords {
   display: flex;
   flex-wrap: wrap;
