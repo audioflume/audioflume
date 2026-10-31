@@ -437,15 +437,6 @@ export default function Header() {
           opacity: 0.65;
         }
 
-        :where(html.dark, html[data-theme="dark"]) .audioflume-artist-cta-bar {
-          background: var(--filmwave-search-surface);
-          color: #e5e5dd;
-        }
-
-        :where(html.dark, html[data-theme="dark"]) .audioflume-artist-cta-bar.is-home-transparent {
-          background: #111111;
-        }
-
         @media (max-width: 640px) {
           .audioflume-artist-cta-link {
             font-size: 8px;
