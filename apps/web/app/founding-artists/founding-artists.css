@@ -20,12 +20,12 @@
 .af-founding-intro{padding-block:clamp(92px,10vw,170px)}
 .af-founding-kicker,.af-founding-statement span,.af-founding-final>div>span{font:300 11px/1.5 var(--font-roboto-mono),monospace;letter-spacing:.045em;text-transform:uppercase}
 .af-founding-intro-grid{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:8%}
-.af-founding-intro h2,.af-founding-faq h2{font-size:clamp(42px,5vw,88px);font-weight:300;letter-spacing:-.055em;line-height:1;margin:0}
+.af-founding-intro h2,.af-founding-faq h2{font-size:clamp(42px,5vw,88px);font-weight:500;letter-spacing:-.055em;line-height:1;margin:0}
 .af-founding-intro-grid>div{max-width:680px;font-size:clamp(18px,1.6vw,25px);line-height:1.45;font-weight:300}
 .af-founding-intro-grid p{margin:0 0 25px}
 .af-founding-benefits{background:#e5e5dd;color:#111;padding-block:clamp(76px,8vw,140px)}
 .af-founding-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:48px}
-.af-founding-section-head h2{margin:0;font-size:clamp(30px,3.6vw,60px);line-height:1.05;font-weight:300;letter-spacing:-.045em}
+.af-founding-section-head h2{margin:0;font-size:clamp(30px,3.6vw,60px);line-height:1.05;font-weight:500;letter-spacing:-.045em}
 .af-founding-section-head>span{font:300 11px/1.4 var(--font-roboto-mono),monospace;white-space:nowrap}
 .af-founding-benefit{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,.8fr);gap:28px;border-top:1px solid rgba(17,17,17,.2);padding:31px 0;align-items:start}
 .af-founding-benefit:last-child{border-bottom:1px solid rgba(17,17,17,.2)}
@@ -38,7 +38,7 @@
 .af-founding-process{padding-block:clamp(90px,10vw,170px)}
 .af-founding-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-bottom:52px}
 .af-founding-steps article{border-top:1px solid var(--filmwave-border-color);padding-top:22px}
-.af-founding-steps article>span{font:300 13px var(--font-roboto-mono),monospace}
+.af-founding-steps article>span{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border:1px solid currentColor;border-radius:50%;font:300 20px var(--font-roboto-mono),monospace}
 .af-founding-steps h3{font-size:clamp(25px,3vw,42px);font-weight:300;letter-spacing:-.04em;margin:34px 0 15px}
 .af-founding-steps p{font-size:16px;font-weight:300;line-height:1.5;max-width:410px}
 .af-founding-faq{background:var(--filmwave-neutral-surface,#f2f2f2);padding-block:clamp(85px,9vw,150px)}
@@ -54,7 +54,7 @@
 .af-founding-faq-answer p{margin:0;padding:0 45px 25px 0;font-weight:300;line-height:1.5}
 @media(prefers-reduced-motion:reduce){.af-founding-faq-icon,.af-founding-faq-answer{transition:none}}
 .af-founding-final{background:#111;color:#e5e5dd;padding-block:clamp(95px,10vw,175px)}
-.af-founding-final h2{font-size:clamp(50px,8vw,130px);line-height:.98;letter-spacing:-.06em;font-weight:300;margin:40px 0}
+.af-founding-final h2{font-size:clamp(50px,8vw,130px);line-height:.98;letter-spacing:-.06em;font-weight:500;margin:40px 0}
 .af-founding-final p{font-size:21px;font-weight:300;max-width:600px;margin:0 0 44px}
 :where(html.dark,html[data-theme="dark"]) .af-founding-benefits{background:#1b1b1b;color:#e5e5dd}
 :where(html.dark,html[data-theme="dark"]) .af-founding-benefit{border-color:#444}
