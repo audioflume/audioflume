@@ -94,6 +94,7 @@ export default function Header() {
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
     "filmwave-web-header",
+    pathname === "/founding-artists" ? "is-founding-route" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
     mobileNavOpen ? "has-open-mobile-nav" : "",
@@ -637,13 +638,13 @@ export default function Header() {
           color: #111;
         }
 
-        .filmwave-web-header.is-transparent:hover
+        .filmwave-web-header.is-transparent:not(.is-founding-route):hover
           .filmwave-header-nav-link:not(.is-active):not(:hover) {
           color: var(--text-secondary) !important;
         }
 
-        .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
-        .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
+        .filmwave-web-header.is-transparent:not(.is-founding-route) .filmwave-header-nav-link:hover,
+        .filmwave-web-header.is-transparent:not(.is-founding-route) .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
           color: var(--text-primary) !important;
