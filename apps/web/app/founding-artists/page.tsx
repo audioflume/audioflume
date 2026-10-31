@@ -54,11 +54,13 @@ export default function FoundingArtistsPage() {
         </div>
       </section>
 
-      <section className="af-founding-intro af-founding-width">
-        <div className="af-founding-kicker">A DIFFERENT KIND OF MUSIC LIBRARY</div>
-        <div className="af-founding-intro-grid">
-          <h2>Built with artists.<br />Not just for them.</h2>
-          <div><p>Audioflume is building a curated music and sound-effects library for filmmakers, powered by the people who make the work.</p><p>The Founding Artists program recognizes the first 100 approved artists who help shape that catalogue. It's an opportunity to join early, be heard, and build a lasting place in a growing creative community.</p></div>
+      <section className="af-founding-intro">
+        <div className="af-founding-width">
+          <div className="af-founding-kicker">A DIFFERENT KIND OF MUSIC LIBRARY</div>
+          <div className="af-founding-intro-grid">
+            <h2>Built with artists.<br />Not just for them.</h2>
+            <div><p>Audioflume is building a curated music and sound-effects library for filmmakers, powered by the people who make the work.</p><p>The Founding Artists program recognizes the first 100 approved artists who help shape that catalogue. It's an opportunity to join early, be heard, and build a lasting place in a growing creative community.</p></div>
+          </div>
         </div>
       </section>
 
