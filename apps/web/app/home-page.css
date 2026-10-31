@@ -3627,16 +3627,19 @@ body:has(.audioflume-home-landing)
 
 /* Authentic music banner on the active homepage. */
 .audioflume-home-landing .audioflume-home-authentic-banner {
-  display: grid;
+  display: none;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  width: 100%;
-  height: calc(100dvh - 28px);
-  min-height: 470px;
+  width: calc(100% - 2 * var(--audioflume-home-page-gutter, 5vw));
+  margin-inline: auto;
+  height: clamp(520px, 48vw, 660px);
   color: #e5e5dd;
 }
 @media (min-width: 901px) {
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
-    height: calc(100dvh - 28px - var(--filmwave-player-height, 72px));
+    height: min(
+      clamp(520px, 48vw, 660px),
+      calc(100dvh - 28px - var(--filmwave-header-height, 60px) - var(--filmwave-player-height, 72px))
+    );
   }
 }
 .audioflume-home-authentic-left,
