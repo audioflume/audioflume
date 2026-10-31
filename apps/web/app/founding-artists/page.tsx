@@ -44,7 +44,7 @@ export default function FoundingArtistsPage() {
         <div className="af-founding-hero-image" aria-hidden="true" />
         <div className="af-founding-hero-shade" aria-hidden="true" />
         <div className="af-founding-hero-inner">
-          <div className="af-founding-hero-eyebrow"><span>ARTIST FIRST. FROM THE BEGINNING.</span><span>THE FOUNDING ARTISTS PROGRAMME</span></div>
+          <div className="af-founding-hero-eyebrow"><span>ARTIST FIRST. FROM THE BEGINNING.</span><span>THE FOUNDING ARTISTS PROGRAM</span></div>
           <h1 id="af-founding-title" className="af-founding-hero-title"><span>JOIN</span><span>THE</span><span>FOUNDING</span><span>ARTISTS</span><span className="af-founding-hero-blank" aria-hidden="true" /><span>PROGRAM</span></h1>
           <div className="af-founding-hero-bottom">
             <p>The first 100 artists.<br />Founding members for life.</p>
