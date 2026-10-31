@@ -1,11 +1,10 @@
 "use client";
 
 import GenreFilterPills from "@/components/GenreFilterPills";
+import HomeSearchPreview from "./HomeSearchPreview";
 
 import Footer from "@/components/Footer";
 import Link from "next/link";
-import GlobalMusicSearch from "@/components/GlobalMusicSearch";
-import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverPricingCards, DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
@@ -250,15 +249,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
 
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
         <div className="audioflume-home-landing-search-group">
-          <div className="audioflume-home-landing-search">
-            <div className="audioflume-home-landing-search-field">
-              <Link href="/discover" className="audioflume-home-landing-search-brand" aria-label="Explore Discover">
-                <AudioflumeMark ariaHidden className="audioflume-home-landing-search-mark" />
-              </Link>
-              <GlobalMusicSearch showSubmitArrow />
-            </div>
-            <GlobalReferenceSearch className="audioflume-home-landing-search-song" />
-          </div>
+          <HomeSearchPreview />
           <nav className="audioflume-home-landing-keywords" aria-label="Popular music searches">
             {[
               { label: "Cinematic", filter: "genre", value: "Cinematic" },
