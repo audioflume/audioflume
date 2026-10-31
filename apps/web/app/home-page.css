@@ -3273,6 +3273,7 @@ body:has(.audioflume-home-landing)
   min-height: 23px;
   padding: 0 10px;
   font-size: 10px;
+  font-weight: 400;
   -webkit-backdrop-filter: none;
   backdrop-filter: none;
   cursor: inherit;
