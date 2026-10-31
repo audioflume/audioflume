@@ -282,24 +282,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       </section>
 
 
-      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
-        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
-          <div className="audioflume-home-founders-shade" aria-hidden="true" />
-          <h2 className="audioflume-home-founders-heading">JOIN THE FOUNDING<br />ARTISTS PROGRAM</h2>
-          <div className="audioflume-home-founders-content">
-            <div className="audioflume-home-founders-intro">
-              <p>The first 100 artists.<br />Founding members for life.</p>
-              <Link href="/founding-artists" className="audioflume-home-founders-apply">
-                Become a Founding Artist <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <div className="audioflume-home-founders-benefits">
-              <p>Earn <strong>100% on Premium Artist licences</strong>, receive <strong>preferential enterprise licensing terms</strong>, and enjoy exclusive founding artist benefits for life.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
         <div className="audioflume-home-authentic-left">
           <div className="audioflume-home-authentic-lockup">
@@ -320,6 +302,25 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           </div>
         </div>
       </section>
+
+      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
+        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
+          <div className="audioflume-home-founders-shade" aria-hidden="true" />
+          <h2 className="audioflume-home-founders-heading">JOIN THE FOUNDING<br />ARTISTS PROGRAM</h2>
+          <div className="audioflume-home-founders-content">
+            <div className="audioflume-home-founders-intro">
+              <p>The first 100 artists.<br />Founding members for life.</p>
+              <Link href="/founding-artists" className="audioflume-home-founders-apply">
+                Become a Founding Artist <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="audioflume-home-founders-benefits">
+              <p>Earn <strong>100% on Premium Artist licences</strong>, receive <strong>preferential enterprise licensing terms</strong>, and enjoy exclusive founding artist benefits for life.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
 
       <div className="audioflume-home-landing-pricing">
         <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
