@@ -1343,7 +1343,7 @@ export default function CommunityPlaylistsPage() {
           {!loading && playlists.length > 0 && (
             <section className="community-page-reference-search">
               <div className="community-page-reference-search-heading filmwave-section-heading-row">
-                <span>Search by song</span>
+                <span>Reference Match</span>
               </div>
               <div className="community-page-reference-search-card">
                 <GlobalReferenceSearch embedded />
