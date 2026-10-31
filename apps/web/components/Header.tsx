@@ -89,7 +89,7 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
-  const transparentAtTop = pathname === "/";
+  const transparentAtTop = pathname === "/" || pathname === "/founding-artists";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
@@ -1280,7 +1280,7 @@ export default function Header() {
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
-        <Link href="/artists/apply" className="audioflume-artist-cta-link">
+        <Link href="/founding-artists" className="audioflume-artist-cta-link">
           <span>ARTIST APPLICATIONS</span>
           <span className="audioflume-artist-cta-arrow" aria-hidden="true">↗</span>
         </Link>
