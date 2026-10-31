@@ -616,7 +616,7 @@ export default function Header() {
 
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
-          border-bottom-color: rgba(255, 255, 255, 0.12) !important;
+          border-bottom-color: transparent !important;
           background: transparent !important;
           background-color: transparent !important;
           color: #fff !important;
