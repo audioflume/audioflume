@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/Footer";
+import FoundingFaq from "./FoundingFaq";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import "./founding-artists.css";
 
@@ -84,7 +85,7 @@ export default function FoundingArtistsPage() {
       <section className="af-founding-faq">
         <div className="af-founding-width af-founding-faq-grid">
           <h2>Good to know</h2>
-          <div>{questions.map(({question,answer}) => <details key={question}><summary>{question}<span aria-hidden="true">+</span></summary><p>{answer}</p></details>)}</div>
+          <FoundingFaq questions={questions} />
         </div>
       </section>
 
