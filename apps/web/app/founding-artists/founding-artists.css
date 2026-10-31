@@ -18,7 +18,7 @@
 .af-founding-cta.is-light{background:#e5e5dd;color:#111}
 .af-founding-cta.is-light:hover,.af-founding-cta.is-light:focus-visible{background:white}
 .af-founding-intro{padding-block:clamp(92px,10vw,170px)}
-.af-founding-kicker,.af-founding-statement span,.af-founding-final>div>span{font:300 9px/1.5 var(--font-aktiv-grotesk),sans-serif;letter-spacing:.045em;text-transform:uppercase}
+.af-founding-kicker,.af-founding-statement span,.af-founding-final>div>span{font:300 17px/1.2 var(--font-aktiv-grotesk),sans-serif;letter-spacing:0;text-transform:uppercase}
 .af-founding-intro-grid{margin-top:52px;display:grid;grid-template-columns:1fr 1fr;gap:8%}
 .af-founding-intro h2,.af-founding-faq h2{font-size:clamp(42px,5vw,88px);font-weight:500;letter-spacing:-.055em;line-height:1;margin:0}
 .af-founding-intro-grid>div{max-width:680px;font-size:clamp(18px,1.6vw,25px);line-height:1.45;font-weight:300}
@@ -26,7 +26,7 @@
 .af-founding-benefits{background:#e5e5dd;color:#111;padding-block:clamp(76px,8vw,140px)}
 .af-founding-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:48px}
 .af-founding-section-head h2{margin:0;font-size:clamp(30px,3.6vw,60px);line-height:1.05;font-weight:500;letter-spacing:-.045em}
-.af-founding-section-head>span{font:300 9px/1.4 var(--font-aktiv-grotesk),sans-serif;white-space:nowrap}
+.af-founding-section-head>span{font:300 17px/1.2 var(--font-aktiv-grotesk),sans-serif;letter-spacing:0;white-space:nowrap}
 .af-founding-benefit{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,.8fr);gap:28px;border-top:1px solid rgba(17,17,17,.2);padding:31px 0;align-items:start}
 .af-founding-benefit:last-child{border-bottom:1px solid rgba(17,17,17,.2)}
 .af-founding-benefit-number{font:300 13px var(--font-roboto-mono-filmwave),monospace}
