@@ -3180,7 +3180,6 @@ body:has(.audioflume-home-landing)
   align-items: center;
   padding: 9px 18px;
   border: 0;
-  border-bottom: 1px solid #373737;
   background: transparent;
   color: inherit;
   font: inherit;
@@ -3207,7 +3206,7 @@ body:has(.audioflume-home-landing)
   flex: 1;
   min-width: 0;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
 }
 .audioflume-home-landing-search-preview-name,
 .audioflume-home-landing-search-preview-artist {
@@ -3228,8 +3227,7 @@ body:has(.audioflume-home-landing)
   opacity: 0;
   color: #111;
   transform: translate(-50%, -50%);
-  transition: scale 160ms ease;
-  pointer-events: auto;
+  pointer-events: none;
 }
 .audioflume-home-landing-search-preview-play::before {
   position: absolute;
@@ -3238,9 +3236,11 @@ body:has(.audioflume-home-landing)
   height: 30px;
   border-radius: 50%;
   background: #fff;
+  transition: transform 160ms ease;
 }
-.audioflume-home-landing-search-preview-play:hover {
-  scale: 1.12;
+.audioflume-home-landing-search-preview-row:hover .audioflume-home-landing-search-preview-play::before,
+.audioflume-home-landing-search-preview-row:focus-visible .audioflume-home-landing-search-preview-play::before {
+  transform: scale(1.04);
 }
 .audioflume-home-landing-search-preview-play svg {
   width: 13px;
@@ -3256,13 +3256,13 @@ body:has(.audioflume-home-landing)
   flex: 0 1 auto;
   justify-content: flex-end;
   min-width: 0;
-  gap: 8px;
+  gap: 12px;
   pointer-events: none;
 }
 .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
   background: transparent;
   color: #e5e5dd;
-  border: 1px solid #666;
+  border: 1px solid #bcbcbc;
   min-height: 23px;
   padding: 0 10px;
   font-size: 10px;
@@ -3290,12 +3290,11 @@ body:has(.audioflume-home-landing)
   color: #111;
   border-color: #dedede;
 }
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row { border-color: #dedede; }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-more { color: #111; }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
   background: transparent;
   color: #555;
-  border-color: #bbb;
+  border-color: #d0d0d0;
 }
 .audioflume-home-landing-keywords {
   display: flex;
