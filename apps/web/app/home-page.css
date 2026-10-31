@@ -4267,7 +4267,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-founders-benefits {
   justify-self: end;
-  width: min(100%, 440px);
+  width: min(100%, clamp(440px, 32vw, 560px));
 }
 .audioflume-home-founders-benefits p {
   margin: 0;
