@@ -163,7 +163,7 @@ export default function BackendSimilarSongs({ value, onChange, disabled = false 
   return (
     <SongFormSection title="Similar Songs" bodyClassName="flex min-h-0 flex-col gap-3 px-5 pb-5">
       <p className="text-xs leading-5 text-[var(--text-secondary)]">
-        Optional. Add up to 10 commercial songs that sound like yours. Exact matches are prioritized in Search by Song, so choosing a popular or trending reference may help your music rank higher when people search for it.
+        Optional. Add up to 10 commercial songs that sound like yours. Exact matches are prioritized in Reference Match, so choosing a popular or trending reference may help your music rank higher when people search for it.
       </p>
       <div onKeyDown={(event) => { if (event.key === "Enter") event.preventDefault(); }}>
         <BackendSearchBar
