@@ -4280,26 +4280,15 @@ body:has(.audioflume-home-landing)
   justify-self: end;
   width: min(100%, 440px);
 }
-.audioflume-home-founders-benefits ul {
-  padding: 0;
+.audioflume-home-founders-benefits p {
   margin: 0;
-  list-style: none;
   opacity: 0;
-}
-.audioflume-home-founders-section.is-visible .audioflume-home-founders-benefits ul {
-  animation: audioflume-founders-fade 650ms cubic-bezier(.22,1,.36,1) 1050ms both;
-}
-.audioflume-home-founders-benefits li {
-  display: flex;
-  gap: 12px;
-  align-items: baseline;
   font-size: clamp(14px, 1.16vw, 19px);
   font-weight: 400;
   line-height: 1.6;
 }
-.audioflume-home-founders-benefits li > span {
-  font-weight: 300;
-  flex-shrink: 0;
+.audioflume-home-founders-section.is-visible .audioflume-home-founders-benefits p {
+  animation: audioflume-founders-fade 650ms cubic-bezier(.22,1,.36,1) 1050ms both;
 }
 @keyframes audioflume-founders-image-settle {
   from { transform: scale(1.06); }
@@ -4320,7 +4309,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-banner::before,
   .audioflume-home-founders-heading > span:not(:empty),
   .audioflume-home-founders-intro,
-  .audioflume-home-founders-benefits ul {
+  .audioflume-home-founders-benefits p {
     animation: none !important;
     opacity: 1;
     transform: none;
