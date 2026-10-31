@@ -3189,7 +3189,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-search-preview-row:hover,
 .audioflume-home-landing-search-preview-row:focus-visible {
-  background: var(--filmwave-search-surface);
+  background: #2b2b2b;
 }
 .audioflume-home-landing-search-preview-artwork {
   position: relative;
