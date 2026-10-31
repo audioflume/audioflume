@@ -43,13 +43,16 @@
 .af-founding-steps p{font-size:16px;font-weight:300;line-height:1.5;max-width:410px}
 .af-founding-faq{background:var(--filmwave-neutral-surface,#f2f2f2);padding-block:clamp(85px,9vw,150px)}
 .af-founding-faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8%}
-.af-founding-faq details{border-top:1px solid var(--filmwave-border-color)}
-.af-founding-faq details:last-child{border-bottom:1px solid var(--filmwave-border-color)}
-.af-founding-faq summary{list-style:none;cursor:pointer;padding:25px 0;display:flex;align-items:center;justify-content:space-between;gap:22px;font-size:19px}
-.af-founding-faq summary::-webkit-details-marker{display:none}
-.af-founding-faq summary span{font-size:26px;font-weight:300}
-.af-founding-faq details[open] summary span{transform:rotate(45deg)}
-.af-founding-faq details p{margin:0;padding:0 45px 25px 0;font-weight:300;line-height:1.5}
+.af-founding-faq-item{border-top:1px solid var(--filmwave-border-color)}
+.af-founding-faq-item:last-child{border-bottom:1px solid var(--filmwave-border-color)}
+.af-founding-faq-trigger{width:100%;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;padding:25px 0;display:flex;align-items:center;justify-content:space-between;gap:22px;font:inherit;font-size:19px}
+.af-founding-faq-icon{display:inline-block;flex:0 0 auto;font-size:26px;font-weight:300;line-height:1;transition:transform 300ms cubic-bezier(.22,1,.36,1)}
+.af-founding-faq-item.is-open .af-founding-faq-icon{transform:rotate(45deg)}
+.af-founding-faq-answer{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows 350ms cubic-bezier(.22,1,.36,1),opacity 250ms ease}
+.af-founding-faq-item.is-open .af-founding-faq-answer{grid-template-rows:1fr;opacity:1}
+.af-founding-faq-answer-inner{min-height:0;overflow:hidden}
+.af-founding-faq-answer p{margin:0;padding:0 45px 25px 0;font-weight:300;line-height:1.5}
+@media(prefers-reduced-motion:reduce){.af-founding-faq-icon,.af-founding-faq-answer{transition:none}}
 .af-founding-final{background:#111;color:#e5e5dd;padding-block:clamp(95px,10vw,175px)}
 .af-founding-final h2{font-size:clamp(50px,8vw,130px);line-height:.98;letter-spacing:-.06em;font-weight:300;margin:40px 0}
 .af-founding-final p{font-size:21px;font-weight:300;max-width:600px;margin:0 0 44px}
