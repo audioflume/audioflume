@@ -618,10 +618,14 @@ export default function Header() {
         .filmwave-web-header.is-transparent {
           --filmwave-chrome-surface: transparent;
           --filmwave-transparent-header-text: #fff;
+          --filmwave-transparent-header-hover-text: var(--text-primary);
+          --filmwave-transparent-header-muted-text: var(--text-secondary);
         }
 
         .filmwave-web-header.is-founding-route.is-transparent {
           --filmwave-transparent-header-text: #e5e5dd;
+          --filmwave-transparent-header-hover-text: #e5e5dd;
+          --filmwave-transparent-header-muted-text: rgba(229, 229, 221, 0.65);
         }
 
         .filmwave-web-header.is-transparent {
@@ -646,16 +650,16 @@ export default function Header() {
           color: #111;
         }
 
-        .filmwave-web-header.is-transparent:not(.is-founding-route):hover
+        .filmwave-web-header.is-transparent:hover
           .filmwave-header-nav-link:not(.is-active):not(:hover) {
-          color: var(--text-secondary) !important;
+          color: var(--filmwave-transparent-header-muted-text) !important;
         }
 
-        .filmwave-web-header.is-transparent:not(.is-founding-route) .filmwave-header-nav-link:hover,
-        .filmwave-web-header.is-transparent:not(.is-founding-route) .filmwave-header-nav-link.is-active {
+        .filmwave-web-header.is-transparent .filmwave-header-nav-link:hover,
+        .filmwave-web-header.is-transparent .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
-          color: var(--text-primary) !important;
+          color: var(--filmwave-transparent-header-hover-text) !important;
         }
 
         .filmwave-web-header.is-solid,
