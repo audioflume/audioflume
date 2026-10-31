@@ -1333,7 +1333,7 @@ export default function MusicPage() {
           <button
             type="button"
             className="audioflume-music-page-searchbar-song"
-            aria-label="Reference Match"
+            aria-label="Find Similar"
             aria-expanded={searchBySongOpen}
             onClick={() => {
               setSearchBySongQuery("");
@@ -1341,7 +1341,7 @@ export default function MusicPage() {
             }}
           >
             <WaveformIcon size={16} />
-            <span>Reference Match</span>
+            <span>Find Similar</span>
           </button>
           <MusicLibrarySortControl
             value={sortOrder}
