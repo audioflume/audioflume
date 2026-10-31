@@ -4237,7 +4237,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-founders-intro p {
   margin: 0 0 38px;
   font-size: clamp(23px, 2.2vw, 36px);
-  font-weight: 500;
+  font-weight: 400;
   line-height: 1.04;
   letter-spacing: -.035em;
 }
@@ -4284,7 +4284,7 @@ body:has(.audioflume-home-landing)
   margin: 0;
   opacity: 0;
   font-size: clamp(14px, 1.16vw, 19px);
-  font-weight: 400;
+  font-weight: 300;
   line-height: 1.6;
 }
 .audioflume-home-founders-section.is-visible .audioflume-home-founders-benefits p {
