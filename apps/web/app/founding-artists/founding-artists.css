@@ -38,7 +38,6 @@
 .af-founding-process{padding-block:clamp(90px,10vw,170px)}
 .af-founding-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-bottom:52px}
 .af-founding-steps article{border-top:1px solid var(--filmwave-border-color);padding-top:22px}
-.af-founding-steps article>span{display:inline-flex;align-items:center;justify-content:center;width:64px;height:64px;border:1px solid currentColor;border-radius:50%;font:300 20px var(--font-roboto-mono-filmwave),monospace}
 .af-founding-steps h3{font-size:clamp(25px,3vw,42px);font-weight:300;letter-spacing:-.04em;margin:34px 0 15px}
 .af-founding-steps p{font-size:16px;font-weight:300;line-height:1.5;max-width:410px}
 .af-founding-faq{background:var(--filmwave-neutral-surface,#f2f2f2);padding-block:clamp(85px,9vw,150px)}
