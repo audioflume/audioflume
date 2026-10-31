@@ -292,7 +292,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           <div className="audioflume-home-founders-content">
             <div className="audioflume-home-founders-intro">
               <p>The first 100 artists.<br />Founding members for life.</p>
-              <Link href="/artists/apply" className="audioflume-home-founders-apply">
+              <Link href="/founding-artists" className="audioflume-home-founders-apply">
                 Become a Founding Artist <span aria-hidden="true">↗</span>
               </Link>
             </div>
