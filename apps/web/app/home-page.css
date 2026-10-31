@@ -4224,7 +4224,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-founders-intro p {
   margin: 0 0 38px;
-  font-size: clamp(23px, 2.2vw, 36px);
+  font-size: clamp(28px, 2.6vw, 36px);
   font-weight: 400;
   line-height: 1.04;
   letter-spacing: -.035em;
@@ -4308,17 +4308,17 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-banner { padding: 110px 64px 64px; }
   .audioflume-home-founders-heading { font-size: clamp(32px, 5.7vw, 56px); }
   .audioflume-home-founders-content { gap: 32px; }
-  .audioflume-home-founders-intro p { font-size: 25px; }
+  .audioflume-home-founders-intro p { font-size: 28px; }
   .audioflume-home-founders-apply { min-height: 54px; }
 }
-@media (max-width: 1160px) {
+@media (max-width: 1000px) {
   .audioflume-home-founders-content { grid-template-columns: 1fr; align-items: stretch; gap: 24px; }
   .audioflume-home-founders-benefits { justify-self: stretch; width: 100%; }
   .audioflume-home-founders-apply { width: 100%; margin-bottom: 0; }
 }
 @media (max-width: 640px) {
-  .audioflume-home-founders-banner { padding: 96px 40px 40px; gap: 40px; }
+  .audioflume-home-founders-banner { padding: 40px; gap: 40px; }
   .audioflume-home-founders-heading { font-size: clamp(32px, 7.5vw, 46px); }
-  .audioflume-home-founders-intro p { font-size: 26px; margin-bottom: 22px; }
+  .audioflume-home-founders-intro p { font-size: 28px; margin-bottom: 22px; }
   .audioflume-home-founders-apply { min-height: 54px; }
 }
