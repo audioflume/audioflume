@@ -88,7 +88,7 @@ export default function GlobalReferenceSearch({
       <button
         type="button"
         className={className}
-        aria-label="Reference Match"
+        aria-label="Find Similar"
         aria-expanded={open}
         onClick={() => {
           setQuery("");
@@ -96,7 +96,7 @@ export default function GlobalReferenceSearch({
         }}
       >
         <WaveformIcon size={16} />
-        <span>Reference Match</span>
+        <span>Find Similar</span>
       </button>
 
       <ReferenceSearchModal
