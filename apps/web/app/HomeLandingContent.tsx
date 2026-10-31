@@ -282,59 +282,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       </section>
 
 
-      <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
-        <div className="audioflume-home-authentic-left">
-          <div className="audioflume-home-authentic-lockup">
-            <span className="audioflume-home-authentic-logo-reveal">
-              <AudioflumeMark className="audioflume-home-authentic-mark" ariaHidden />
-              <svg className="audioflume-home-authentic-ring" viewBox="0 0 39.82 39.53" aria-hidden="true">
-                <circle cx="19.91" cy="19.76" r="17.87" fill="none" stroke="currentColor" strokeWidth="3.2" />
-              </svg>
-            </span>
-            <h2>Authentic music, curated<br />and licensed for film.</h2>
-          </div>
-        </div>
-        <div className="audioflume-home-authentic-right">
-          <PricingHeroImageFlash images={homeFlashImages} mediaClassName="audioflume-home-authentic-flash-media" />
-          <div className="audioflume-home-authentic-message">
-            <span><span>HUMAN</span><span>MADE</span><span>MUSIC.</span></span>
-            <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
-          </div>
-        </div>
-      </section>
-
-      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
-        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
-          <div className="audioflume-home-founders-shade" aria-hidden="true" />
-          <h2 className="audioflume-home-founders-heading">JOIN THE FOUNDING<br />ARTISTS PROGRAM</h2>
-          <div className="audioflume-home-founders-content">
-            <div className="audioflume-home-founders-intro">
-              <p>The first 100 artists.<br />Founding members for life.</p>
-              <Link href="/founding-artists" className="audioflume-home-founders-apply">
-                Become a Founding Artist <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <div className="audioflume-home-founders-benefits">
-              <p>Earn <strong>100% on Premium Artist licences</strong>, receive <strong>preferential enterprise licensing terms</strong>, and enjoy exclusive founding artist benefits for life.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-
-      <div className="audioflume-home-landing-pricing">
-        <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-          <span>Music licensing for every creator</span>
-          <Link href="/pricing" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-            Explore plans <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
-          </Link>
-        </div>
-        <DiscoverPricingCards />
-        <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
-          <DiscoverLifetimeAccess originalSongs={originalSongs} songsLoading={songsLoading} />
-        </section>
-      </div>
-
       {artistsLoading ? (
         <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
           <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
@@ -391,6 +338,60 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           </div>
         </section>
       ) : null}
+
+      <section ref={authenticBannerRef} className={`audioflume-home-authentic-banner${authenticBannerVisible ? " is-visible" : ""}`} aria-label="Authentic music, curated and licensed for film. Human made music. Story driven sound.">
+        <div className="audioflume-home-authentic-left">
+          <div className="audioflume-home-authentic-lockup">
+            <span className="audioflume-home-authentic-logo-reveal">
+              <AudioflumeMark className="audioflume-home-authentic-mark" ariaHidden />
+              <svg className="audioflume-home-authentic-ring" viewBox="0 0 39.82 39.53" aria-hidden="true">
+                <circle cx="19.91" cy="19.76" r="17.87" fill="none" stroke="currentColor" strokeWidth="3.2" />
+              </svg>
+            </span>
+            <h2>Authentic music, curated<br />and licensed for film.</h2>
+          </div>
+        </div>
+        <div className="audioflume-home-authentic-right">
+          <PricingHeroImageFlash images={homeFlashImages} mediaClassName="audioflume-home-authentic-flash-media" />
+          <div className="audioflume-home-authentic-message">
+            <span><span>HUMAN</span><span>MADE</span><span>MUSIC.</span></span>
+            <span><span>STORY</span><span>DRIVEN</span><span>SOUND.</span></span>
+          </div>
+        </div>
+      </section>
+
+      <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
+        <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
+          <div className="audioflume-home-founders-shade" aria-hidden="true" />
+          <h2 className="audioflume-home-founders-heading">JOIN THE FOUNDING<br />ARTISTS PROGRAM</h2>
+          <div className="audioflume-home-founders-content">
+            <div className="audioflume-home-founders-intro">
+              <p>The first 100 artists.<br />Founding members for life.</p>
+              <Link href="/founding-artists" className="audioflume-home-founders-apply">
+                Become a Founding Artist <span aria-hidden="true">↗</span>
+              </Link>
+            </div>
+            <div className="audioflume-home-founders-benefits">
+              <p>Earn <strong>100% on Premium Artist licences</strong>, receive <strong>preferential enterprise licensing terms</strong>, and enjoy exclusive founding artist benefits for life.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+      <div className="audioflume-home-landing-pricing">
+        <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+          <span>Music licensing for every creator</span>
+          <Link href="/pricing" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+            Explore plans <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+          </Link>
+        </div>
+        <DiscoverPricingCards />
+        <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
+          <DiscoverLifetimeAccess originalSongs={originalSongs} songsLoading={songsLoading} />
+        </section>
+      </div>
+
 
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
