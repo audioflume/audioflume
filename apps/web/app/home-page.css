@@ -3461,7 +3461,7 @@ body:has(.audioflume-home-landing)
   justify-content: center;
   border: 0;
   background: transparent;
-  color: #737373;
+  color: #5a5a5a;
   padding: 0;
   cursor: pointer;
   transition: color 150ms ease;
@@ -3738,7 +3738,7 @@ body:has(.audioflume-home-landing)
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-clear,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-submit {
-  color: #888888;
+  color: #a3a3a3;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-clear:hover,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-submit:hover,
