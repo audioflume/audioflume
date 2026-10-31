@@ -4164,7 +4164,7 @@ body:has(.audioflume-home-landing)
 
 /* Founding Artist homepage promotion — positioned below the split image banner. */
 .audioflume-home-founders-section {
-  padding: 0 0 56px;
+  padding: 0 var(--audioflume-home-page-gutter, 5vw) 56px;
   background: #ffffff;
 }
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-founders-section {
