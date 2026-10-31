@@ -8,6 +8,7 @@
 .af-founding-hero-eyebrow{display:flex;justify-content:space-between;gap:24px;font:200 10px/1.3 var(--font-roboto-mono),monospace;letter-spacing:.02em}
 .af-founding-hero-title{display:grid;grid-template-columns:1fr 1fr 1.55fr;gap:0 20px;margin:50px 0;font-size:clamp(35px,5.7vw,110px);font-weight:300;letter-spacing:-.055em;line-height:1.02;text-align:center}
 .af-founding-hero-title>span{animation:af-founding-word .7s both}
+.af-founding-hero-title>span:first-child{text-align:left}
 .af-founding-hero-title>span:nth-child(2){animation-delay:.09s}.af-founding-hero-title>span:nth-child(3){animation-delay:.18s}.af-founding-hero-title>span:nth-child(4){animation-delay:.27s}.af-founding-hero-title>span:nth-child(6){animation-delay:.36s}
 .af-founding-hero-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:32px}
 .af-founding-hero-bottom p{margin:0;font-size:clamp(26px,3.2vw,54px);line-height:1.02;letter-spacing:-.04em;font-weight:400}
