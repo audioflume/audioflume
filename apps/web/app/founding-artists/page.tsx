@@ -78,7 +78,7 @@ export default function FoundingArtistsPage() {
 
       <section className="af-founding-process af-founding-width">
         <div className="af-founding-section-head"><h2>How to become a Founding Artist</h2><span>THREE SIMPLE STEPS</span></div>
-        <div className="af-founding-steps">{steps.map(({ number, title, copy }) => <article key={number}><span>{number}</span><h3>{title}</h3><p>{copy}</p></article>)}</div>
+        <div className="af-founding-steps">{steps.map(({ number, title, copy }) => <article key={number}><div className="grid h-[70px] w-[70px] self-start place-items-center bg-[color-mix(in_srgb,var(--text-primary)_10%,var(--bg-primary))] text-center font-[family-name:var(--font-roboto-mono-filmwave)] text-[28px] font-[300] leading-none text-[var(--filmwave-white)]">{number}</div><h3>{title}</h3><p>{copy}</p></article>)}</div>
         <ApplyLink />
       </section>
 
