@@ -10,25 +10,25 @@ export const metadata: Metadata = {
 };
 
 const benefits = [
-  { number: "01", title: "100% earnings on eligible Premium licences", copy: "Founding Artists receive 100% of eligible Premium artist-licence earnings, subject to the programme terms and applicable deductions. Subscription, enterprise, and commissioned licensing are treated separately." },
+  { number: "01", title: "100% earnings on eligible Premium licences", copy: "Founding Artists receive 100% of eligible Premium artist-licence earnings, subject to the program terms and applicable deductions. Subscription, enterprise, and commissioned licensing are treated separately." },
   { number: "02", title: "Preferential enterprise licensing terms", copy: "Get access to founding-member terms for qualifying individually negotiated enterprise licensing opportunities." },
   { number: "03", title: "Lifetime priority promotion", copy: "Receive priority consideration for editorial placement and discovery opportunities as the Audioflume catalogue grows." },
   { number: "04", title: "Priority licensing opportunities", copy: "Be considered early for relevant briefs, curated selections, and licensing enquiries that match your music." },
   { number: "05", title: "Permanent Founding Artist recognition", copy: "Your Founding Artist status stays associated with your artist profile, recognizing your part in building Audioflume from the beginning." },
   { number: "06", title: "Exclusive artist features & promotion", copy: "Be considered for artist spotlights, launches, interviews, and other dedicated features across Audioflume channels." },
-  { number: "07", title: "Priority new-release review", copy: "Your new submissions receive priority review consideration as part of the founding programme." },
+  { number: "07", title: "Priority new-release review", copy: "Your new submissions receive priority review consideration as part of the founding program." },
 ];
 
 const steps = [
   { number: "01", title: "Apply", copy: "Tell us about your work, your sound, and the music you want to contribute." },
   { number: "02", title: "Get reviewed", copy: "Our team reviews applications for originality, quality, catalogue fit, and licensing readiness." },
-  { number: "03", title: "Join the first 100", copy: "If approved while places remain, you'll be welcomed as a Founding Artist and receive the applicable programme benefits." },
+  { number: "03", title: "Join the first 100", copy: "If approved while places remain, you'll be welcomed as a Founding Artist and receive the applicable program benefits." },
 ];
 
 const questions = [
   { question: "Who can apply?", answer: "Independent artists, composers, producers, and sound designers creating original music for visual storytelling are welcome to apply. Every application is reviewed." },
-  { question: "Is a place guaranteed?", answer: "No. The programme is limited to the first 100 approved artists. Applying does not guarantee acceptance or reserve a place." },
-  { question: "Does founding status last forever?", answer: "Founding recognition is intended to remain with approved members for the lifetime of the programme, subject to compliance with the artist agreement and programme terms." },
+  { question: "Is a place guaranteed?", answer: "No. The program is limited to the first 100 approved artists. Applying does not guarantee acceptance or reserve a place." },
+  { question: "Does founding status last forever?", answer: "Founding recognition is intended to remain with approved members for the lifetime of the program, subject to compliance with the artist agreement and program terms." },
   { question: "Does 100% earnings apply to every licence?", answer: "No. It applies to eligible Premium artist licences only, as defined in the applicable terms. Subscription revenue, enterprise deals, custom commissions, and other licence types may have separate arrangements." },
   { question: "Does priority promotion guarantee placements or sales?", answer: "No. Priority means preferential consideration, not a guarantee of licensing opportunities, sales, placements, or earnings." },
 ];
@@ -57,7 +57,7 @@ export default function FoundingArtistsPage() {
         <div className="af-founding-kicker">A DIFFERENT KIND OF MUSIC LIBRARY</div>
         <div className="af-founding-intro-grid">
           <h2>Built with artists.<br />Not just for them.</h2>
-          <div><p>Audioflume is building a curated music and sound-effects library for filmmakers, powered by the people who make the work.</p><p>The Founding Artists programme recognizes the first 100 approved artists who help shape that catalogue. It's an opportunity to join early, be heard, and build a lasting place in a growing creative community.</p></div>
+          <div><p>Audioflume is building a curated music and sound-effects library for filmmakers, powered by the people who make the work.</p><p>The Founding Artists program recognizes the first 100 approved artists who help shape that catalogue. It's an opportunity to join early, be heard, and build a lasting place in a growing creative community.</p></div>
         </div>
       </section>
 
@@ -67,7 +67,7 @@ export default function FoundingArtistsPage() {
           <div className="af-founding-benefit-list">
             {benefits.map(({ number, title, copy }) => <article className="af-founding-benefit" key={number}><span className="af-founding-benefit-number">{number}</span><h3>{title}</h3><p>{copy}</p></article>)}
           </div>
-          <p className="af-founding-terms-note">*Premium licence eligibility, accounting, deductions, and other programme benefits are governed by the applicable artist agreement and final programme terms. Priority and promotional benefits are not guaranteed placements or earnings.</p>
+          <p className="af-founding-terms-note">*Premium licence eligibility, accounting, deductions, and other program benefits are governed by the applicable artist agreement and final program terms. Priority and promotional benefits are not guaranteed placements or earnings.</p>
         </div>
       </section>
 
