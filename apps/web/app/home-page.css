@@ -3921,36 +3921,6 @@ body:has(.audioflume-home-landing)
 }
 
 
-/* Oversized editorial title directly above the homepage artwork mosaic. */
-.audioflume-home-landing-mosaic-heading {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  align-items: flex-end;
-  overflow: visible;
-  background: #e5e5dd;
-}
-.audioflume-home-landing-mosaic-heading h2 {
-  width: calc(100% + 0.09em);
-  margin: 0 0 0 -0.09em;
-  color: #111111;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(26px, 5.2vw, 96px);
-  font-weight: 300;
-  letter-spacing: -0.055em;
-  line-height: 0.85;
-  transform: translateY(0.09em);
-  text-align: justify;
-  text-align-last: justify;
-  white-space: nowrap;
-}
-:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing-mosaic-heading {
-  background: var(--bg-primary);
-}
-:where(html.dark, html[data-theme="dark"]) .audioflume-home-landing-mosaic-heading h2 {
-  color: #e5e5dd;
-}
-
 /* Discover uses the Curated Playlists Search by Song section construction. */
 .audioflume-discover-reference-search {
   padding-top: 56px;
