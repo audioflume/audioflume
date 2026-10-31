@@ -3260,10 +3260,10 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-search-preview-genres {
   display: inline-flex;
   align-items: center;
-  flex: 0 1 auto;
+  flex: 0 0 auto;
   justify-content: flex-end;
   min-width: 0;
-  gap: 12px;
+  gap: 6px;
   pointer-events: none;
 }
 .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
