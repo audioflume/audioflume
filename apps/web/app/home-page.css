@@ -3170,7 +3170,7 @@ body:has(.audioflume-home-landing)
   background: #1b1b1b;
   color: #e5e5dd;
   border: 1px solid #373737;
-  padding: 14px 18px 10px;
+  padding: 14px 0 10px;
   box-shadow: 0 16px 35px rgba(0,0,0,.2);
 }
 .audioflume-home-landing-search-preview-row {
@@ -3178,7 +3178,7 @@ body:has(.audioflume-home-landing)
   width: 100%;
   gap: 12px;
   align-items: center;
-  padding: 9px 0;
+  padding: 9px 18px;
   border: 0;
   border-bottom: 1px solid #373737;
   background: transparent;
@@ -3236,9 +3236,11 @@ body:has(.audioflume-home-landing)
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background: #e5e5dd;
+  background: #fff;
 }
 .audioflume-home-landing-search-preview-play svg {
+  width: 13px;
+  height: 13px;
   position: relative;
   z-index: 1;
 }
@@ -3252,14 +3254,19 @@ body:has(.audioflume-home-landing)
   min-width: 0;
   pointer-events: none;
 }
-.audioflume-home-landing-search-preview-genres .audioflume-genre-filter-pill {
+.audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
+  background: #383838;
+  color: #f3f3f3;
+  border: 1px solid #565656;
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
   cursor: inherit;
 }
 .audioflume-home-landing-search-preview-empty { font-size: 13px; padding: 12px 0; }
 .audioflume-home-landing-search-preview-more {
   display: block;
   width: 100%;
-  padding: 14px 0 4px;
+  padding: 14px 18px 4px;
   text-align: left;
   border: 0;
   background: transparent;
@@ -3276,6 +3283,11 @@ body:has(.audioflume-home-landing)
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-row { border-color: #dedede; }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-more { color: #111; }
+:where(html.light, html[data-theme="light"]) .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
+  background: #e1e1e1;
+  color: #333;
+  border-color: #c9c9c9;
+}
 .audioflume-home-landing-keywords {
   display: flex;
   flex-wrap: wrap;
