@@ -4059,13 +4059,6 @@ body:has(.audioflume-home-landing)
   position: static;
   color: inherit;
 }
-.audioflume-home-landing .audioflume-home-hero-inline-mark {
-  display: inline-block;
-  width: .74em;
-  height: .74em;
-  vertical-align: -.015em;
-  fill: currentColor;
-}
 /* Header and founding-artist CTA fade in alongside the homepage hero. */
 @media (prefers-reduced-motion: no-preference) {
   .audioflume-home-cta-entrance {
