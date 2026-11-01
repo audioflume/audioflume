@@ -3151,7 +3151,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-discover {
   position: relative;
   display: flex;
-  min-height: 440px;
+  min-height: 410px;
   flex-direction: column;
   justify-content: space-between;
   align-items: center;
@@ -3330,7 +3330,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-keyword {
   display: inline-flex;
-  min-height: 30px;
+  min-height: 24px;
   align-items: center;
   border: 1px solid transparent;
   border-radius: 999px;
