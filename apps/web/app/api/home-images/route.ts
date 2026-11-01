@@ -8,7 +8,7 @@ export const dynamic = "force-dynamic";
 
 const KEY = "config/home-images.json";
 const DEFAULTS = {
-  hero: "https://images.filmwave.io/images/home/kriss-films-I8OoRxdxCqk-unsplash.jpg",
+  hero: "https://images.filmwave.io/images/home/Cinematic%20Filmmaker%20in%20Smoky%20Studio.png",
   lowerBanner: "https://images.filmwave.io/images/home/yunus-tug-HA3X_sDhAgk-unsplash-web.jpg",
 };
 
