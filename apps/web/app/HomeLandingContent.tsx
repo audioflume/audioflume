@@ -239,7 +239,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         style={{ "--audioflume-home-hero-photo": `url("${homeImages.hero}")` } as CSSProperties}
       >
         <div className="audioflume-home-reference-hero-shade" />
-        <h1 className="audioflume-home-reference-hero-headline"><span>Human</span>{" "}<span>made</span>{" "}<span>music</span><br className="audioflume-home-hero-responsive-break" /><span>&amp;</span>{" "}<span>SFX</span>{" "}<span>for</span>{" "}<span>film</span></h1>
+        <h1 className="audioflume-home-reference-hero-headline"><span>Human</span>{" "}<span>m<AudioflumeMark className="audioflume-home-hero-inline-mark" />de</span>{" "}<span>music</span><br className="audioflume-home-hero-responsive-break" /><span>&amp;</span>{" "}<span>SFX</span>{" "}<span>for</span>{" "}<span>film</span></h1>
       </section>
 
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
