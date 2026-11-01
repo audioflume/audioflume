@@ -37,10 +37,10 @@
 .af-founding-steps h3{font-size:clamp(25px,3vw,42px);font-weight:300;letter-spacing:-.04em;margin:34px 0 15px}
 .af-founding-steps p{font-size:16px;font-weight:300;line-height:1.5;max-width:410px}
 .af-founding-faq{background:var(--filmwave-neutral-surface,#f2f2f2);padding-block:clamp(85px,9vw,150px)}
-.af-founding-faq-grid{display:grid;grid-template-columns:1fr 1fr;gap:8%}
+.af-founding-faq-grid{display:grid;grid-template-columns:1fr;gap:0}
 .af-founding-faq-item{border-top:1px solid var(--filmwave-border-color)}
 .af-founding-faq-item:last-child{border-bottom:1px solid var(--filmwave-border-color)}
-.af-founding-faq-trigger{width:100%;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;padding:25px 0;display:flex;align-items:center;justify-content:space-between;gap:22px;font:inherit;font-size:19px}
+.af-founding-faq-trigger{width:100%;border:0;background:transparent;color:inherit;text-align:left;cursor:pointer;padding:25px 0;display:flex;align-items:center;justify-content:space-between;gap:22px;font:inherit;font-size:clamp(28px,3.2vw,52px)}
 .af-founding-faq-icon{display:inline-block;flex:0 0 auto;font-size:26px;font-weight:300;line-height:1;transition:transform 300ms cubic-bezier(.22,1,.36,1)}
 .af-founding-faq-item.is-open .af-founding-faq-icon{transform:rotate(45deg)}
 .af-founding-faq-answer{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows 350ms cubic-bezier(.22,1,.36,1),opacity 250ms ease}
