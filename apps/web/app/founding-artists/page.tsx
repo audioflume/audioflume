@@ -46,7 +46,7 @@ export default function FoundingArtistsPage() {
         <div className="af-founding-hero-shade" aria-hidden="true" />
         <div className="af-founding-hero-inner">
           
-          <h1 id="af-founding-title" className="af-founding-hero-title">JOIN THE FOUNDING ARTISTS PROGRAM</h1>
+          <h1 id="af-founding-title" className="af-founding-hero-title"><span>JOIN THE FOUNDING</span><span>ARTISTS PROGRAM</span></h1>
           <div className="af-founding-hero-bottom">
             <p>The first 100 artists.<br />Founding members for life.</p>
             <ApplyLink light />
