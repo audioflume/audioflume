@@ -20,6 +20,27 @@
   box-shadow: 0 28px 80px rgba(0, 0, 0, 0.34);
 }
 
+
+@media (prefers-reduced-motion: no-preference) {
+  .backdrop {
+    animation: referenceSearchBackdropIn 220ms ease-out both;
+  }
+
+  .backdrop > .modal {
+    animation: referenceSearchModalIn 260ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+}
+
+@keyframes referenceSearchBackdropIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes referenceSearchModalIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 .image,
 .overlay {
   position: absolute;
