@@ -3770,7 +3770,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-landing-pricing {
-  padding-bottom: 56px;
+  padding-bottom: 80px;
 }
 
 /* Authentic music banner on the active homepage. */
@@ -4313,7 +4313,7 @@ body:has(.audioflume-home-landing)
 
 /* Founding Artist homepage promotion — positioned below the split image banner. */
 .audioflume-home-founders-section {
-  padding: 0 var(--audioflume-home-page-gutter, 5vw) 56px;
+  padding: 0 var(--audioflume-home-page-gutter, 5vw) 80px;
   background: #ffffff;
 }
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-founders-section {
