@@ -3538,7 +3538,7 @@ body:has(.audioflume-home-landing)
   overflow: hidden;
   background: #111;
   padding-top: 0;
-  padding-bottom: 118px;
+  padding-bottom: 48px;
   cursor: grab;
   touch-action: pan-y;
   scrollbar-width: none;
@@ -3701,7 +3701,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing-brand-row p { font-size: 10px; }
   .audioflume-home-landing-brand-row img { width: min(100%, 520px); }
   .audioflume-home-landing-artist-carousel {
-    padding-bottom: 76px;
+    padding-bottom: 32px;
   }
 }
 
