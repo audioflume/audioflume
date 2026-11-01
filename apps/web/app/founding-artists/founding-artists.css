@@ -29,7 +29,7 @@
 .af-founding-benefit h3{margin:0;font-size:clamp(22px,2vw,36px);font-weight:400;line-height:1.15;letter-spacing:-.03em}
 .af-founding-benefit p{max-width:600px;margin:0;font-size:16px;font-weight:300;line-height:1.5}
 .af-founding-terms-note{max-width:900px;margin:30px 0 0;font-size:12px;line-height:1.6;color:#5d5d59}
-.af-founding-statement{background:#111;color:#e5e5dd;padding-block:clamp(100px,13vw,220px)}
+.af-founding-statement{background:#111 url("https://images.filmwave.io/images/founding-artists/Founding-Artists-Background.jpg") center / cover no-repeat;color:#e5e5dd;padding-block:clamp(100px,13vw,220px)}
 .af-founding-statement p{font-size:clamp(42px,7vw,118px);font-weight:300;line-height:1.02;letter-spacing:-.055em;margin:44px 0 0;max-width:1350px}
 .af-founding-process{padding-block:clamp(90px,10vw,170px)}
 .af-founding-steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-bottom:52px}
