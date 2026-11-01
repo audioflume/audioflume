@@ -1,11 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
-import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -47,9 +45,6 @@ export default function HomeSearchPreview() {
     <div className="audioflume-home-landing-search-preview-anchor" ref={containerRef}>
       <div className="audioflume-home-landing-search">
         <div className="audioflume-home-landing-search-field">
-          <Link href="/discover" className="audioflume-home-landing-search-brand" aria-label="Explore Discover">
-            <AudioflumeMark ariaHidden className="audioflume-home-landing-search-mark" />
-          </Link>
           <GlobalMusicSearchField
             value={query}
             onChange={(value) => { setQuery(value); setOpen(Boolean(value.trim())); }}
