@@ -3322,7 +3322,7 @@ body:has(.audioflume-home-landing)
   align-items: center;
   border: 1px solid transparent;
   border-radius: 999px;
-  padding: 0 13px;
+  padding: 0;
   color: #e5e5dd;
   font-size: 21px;
   font-weight: 300;
