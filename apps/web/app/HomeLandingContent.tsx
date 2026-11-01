@@ -269,6 +269,51 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       </section>
 
 
+      {artistsLoading ? (
+        <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
+          <div className="audioflume-home-landing-artist-track" aria-hidden="true">
+            {Array.from({ length: 5 }, (_, index) => (
+              <div className="audioflume-home-landing-artist-card is-skeleton" key={index}>
+                <span className="audioflume-home-landing-artist-image audioflume-home-landing-skeleton-shape" />
+                <span className="audioflume-home-landing-artist-title audioflume-home-landing-skeleton-shape" />
+                <span className="audioflume-home-landing-artist-subtitle audioflume-home-landing-skeleton-shape" />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : artists.length > 0 ? (
+        <section ref={carouselRef} className="audioflume-home-landing-artist-carousel" aria-label="Featured artists" onClickCapture={(event) => { if (suppressCarouselClickRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
+          <div className="audioflume-home-landing-artist-track">
+            {[0, 1, 2, 3].map((copy) => (
+              <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy > 0}>
+                {artists.map((artist) => (
+                  <div key={artist.id} className="audioflume-home-landing-artist-card">
+                    <div className="audioflume-home-landing-artist-image-wrap">
+                      <Link tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-image">
+                        <img src={artist.hero_image_url || artist.profile_image_url || ""} alt="" loading="lazy" />
+                      </Link>
+                      <button
+                        type="button"
+                        tabIndex={copy > 0 ? -1 : undefined}
+                        className="audioflume-home-landing-artist-play"
+                        onClick={() => playArtist(artist.name)}
+                        aria-label={`Play music by ${artist.name}`}
+                      >
+                        {isPlaying && currentSong?.artist.trim().toLowerCase() === artist.name.trim().toLowerCase()
+                          ? <PauseIcon size={18} />
+                          : <PlayIconSmall size={18} />}
+                      </button>
+                    </div>
+                    <Link tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-title">{artist.name}</Link>
+                    <span className="audioflume-home-landing-artist-subtitle">{artist.designation || "Composer"}</span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
       <section className={`audioflume-home-founders-section${foundingBannerVisible ? " is-visible" : ""}`} aria-label="Audioflume Founding Artist Program">
         <div ref={foundingBannerRef} className="audioflume-home-founders-banner">
           <div className="audioflume-home-founders-shade" aria-hidden="true" />
@@ -301,63 +346,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
         </section>
       </div>
 
-
-      {artistsLoading ? (
-        <section className="audioflume-home-landing-artist-carousel is-loading" aria-label="Loading featured artists" aria-busy="true">
-          <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
-            <h2>Discover in demand<br />artists &amp; trending music</h2>
-            <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-              Explore artists &amp; music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
-            </Link>
-          </div>
-          <div className="audioflume-home-landing-artist-track" aria-hidden="true">
-            {Array.from({ length: 5 }, (_, index) => (
-              <div className="audioflume-home-landing-artist-card is-skeleton" key={index}>
-                <span className="audioflume-home-landing-artist-image audioflume-home-landing-skeleton-shape" />
-                <span className="audioflume-home-landing-artist-title audioflume-home-landing-skeleton-shape" />
-                <span className="audioflume-home-landing-artist-subtitle audioflume-home-landing-skeleton-shape" />
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : artists.length > 0 ? (
-        <section ref={carouselRef} className="audioflume-home-landing-artist-carousel" aria-label="Featured artists" onClickCapture={(event) => { if (suppressCarouselClickRef.current) { event.preventDefault(); event.stopPropagation(); } }}>
-          <div className="audioflume-home-landing-artist-heading filmwave-section-heading-row">
-            <h2>Discover in demand<br />artists &amp; trending music</h2>
-            <Link href="/discover" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-              Explore artists &amp; music <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
-            </Link>
-          </div>
-          <div className="audioflume-home-landing-artist-track">
-            {[0, 1, 2, 3].map((copy) => (
-              <div className="audioflume-home-landing-artist-sequence" key={copy} aria-hidden={copy > 0}>
-                {artists.map((artist) => (
-                  <div key={artist.id} className="audioflume-home-landing-artist-card">
-                    <div className="audioflume-home-landing-artist-image-wrap">
-                      <Link tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-image">
-                        <img src={artist.hero_image_url || artist.profile_image_url || ""} alt="" loading="lazy" />
-                      </Link>
-                      <button
-                        type="button"
-                        tabIndex={copy > 0 ? -1 : undefined}
-                        className="audioflume-home-landing-artist-play"
-                        onClick={() => playArtist(artist.name)}
-                        aria-label={`Play music by ${artist.name}`}
-                      >
-                        {isPlaying && currentSong?.artist.trim().toLowerCase() === artist.name.trim().toLowerCase()
-                          ? <PauseIcon size={18} />
-                          : <PlayIconSmall size={18} />}
-                      </button>
-                    </div>
-                    <Link tabIndex={copy > 0 ? -1 : undefined} href={`/artists/${artist.slug}`} className="audioflume-home-landing-artist-title">{artist.name}</Link>
-                    <span className="audioflume-home-landing-artist-subtitle">{artist.designation || "Composer"}</span>
-                  </div>
-                ))}
-              </div>
-            ))}
-          </div>
-        </section>
-      ) : null}
 
       <section className="audioflume-home-reference-library">
         <div className="audioflume-home-reference-width audioflume-home-reference-library-grid">
