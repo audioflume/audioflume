@@ -107,6 +107,17 @@ body:has(.audioflume-home-landing)
   );
 }
 
+.audioflume-home-landing .audioflume-home-hero-bottom-mark {
+  position: absolute;
+  bottom: 32px;
+  left: 50%;
+  z-index: 2;
+  width: 36px;
+  height: 36px;
+  color: #e5e5dd;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
 .audioflume-home-landing .audioflume-home-reference-hero {
   height: calc(100dvh - 28px);
   min-height: 470px;
