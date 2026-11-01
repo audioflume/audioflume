@@ -3837,13 +3837,11 @@ body:has(.audioflume-home-landing)
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  box-sizing: border-box;
-  padding: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
   background: #111111;
 }
 .audioflume-home-authentic-right::before {
   position: absolute;
-  inset: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
+  inset: 0;
   z-index: 1;
   content: "";
   background: rgba(0, 0, 0, 0.48);
@@ -3851,7 +3849,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-authentic-right::after {
   position: absolute;
-  inset: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
+  inset: 0;
   z-index: 2;
   content: "";
   background: #111111;
@@ -3864,7 +3862,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-authentic-flash-media {
   position: absolute;
-  inset: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
+  inset: 0;
   z-index: 0;
   overflow: hidden;
 }
@@ -3897,14 +3895,6 @@ body:has(.audioflume-home-landing)
   gap: 10px;
 }
 @media (max-width: 900px) {
-  .audioflume-home-authentic-right {
-    padding: 40px var(--audioflume-home-page-gutter, 5vw);
-  }
-  .audioflume-home-authentic-right::before,
-  .audioflume-home-authentic-right::after,
-  .audioflume-home-authentic-flash-media {
-    inset: 40px var(--audioflume-home-page-gutter, 5vw);
-  }
   .audioflume-home-landing .audioflume-home-authentic-banner {
     height: auto;
     grid-template-columns: minmax(0, 1fr);
@@ -3946,23 +3936,13 @@ body:has(.audioflume-home-landing)
   .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-right::before {
     transform: scale(1.08);
   }
-  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-right::after {
-    opacity: 1;
-  }
   .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-right::before {
     animation: audioflume-authentic-image-zoom 3.5s cubic-bezier(.2,.7,.2,1) both;
-  }
-  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-right::after {
-    animation: audioflume-authentic-image-reveal 1.8s ease-out both;
   }
 }
 @keyframes audioflume-authentic-image-zoom {
   from { transform: scale(1.08); }
   to { transform: scale(1); }
-}
-@keyframes audioflume-authentic-image-reveal {
-  from { opacity: 1; }
-  to { opacity: 0; }
 }
 
 /* Scroll-triggered authentic banner entrance. */
