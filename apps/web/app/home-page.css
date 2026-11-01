@@ -3145,12 +3145,14 @@ body:has(.audioflume-home-landing)
   justify-content: space-between;
   align-items: center;
   background: #111;
-  padding: 150px 0 32px;
+  padding: 0 0 32px;
 }
 .audioflume-home-landing-search-group {
   display: flex;
   width: min(940px, calc(100% - 80px));
+  flex: 1 0 auto;
   flex-direction: column;
+  justify-content: center;
   gap: 18px;
 }
 .audioflume-home-landing-search-group .audioflume-home-landing-search {
