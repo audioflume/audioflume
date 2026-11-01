@@ -240,6 +240,10 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
       >
         <div className="audioflume-home-reference-hero-shade" />
         <h1 className="audioflume-home-reference-hero-headline"><span>Human</span>{" "}<span>made</span>{" "}<span>music</span><br className="audioflume-home-hero-responsive-break" /><span>&amp;</span>{" "}<span>SFX</span>{" "}<span>for</span>{" "}<span>film</span></h1>
+        <div className="audioflume-home-landing-hero-captions">
+          <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
+          <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
+        </div>
       </section>
 
       <section className="audioflume-home-landing-discover" aria-label="Discover music">
