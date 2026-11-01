@@ -16,7 +16,7 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 
 const HOME_HERO_IMAGE =
-  "https://images.filmwave.io/images/home/kriss-films-I8OoRxdxCqk-unsplash.jpg";
+  "https://images.filmwave.io/images/home/Cinematic%20Filmmaker%20in%20Smoky%20Studio.png";
 
 export default function HomeLandingContent({ homeFlashImages }: { homeFlashImages: string[] }) {
   const { songs, loading: songsLoading } = useSongs();
