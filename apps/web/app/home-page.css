@@ -3123,9 +3123,9 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-hero-captions {
   position: absolute;
   z-index: 2;
-  right: 0;
+  right: var(--audioflume-home-page-gutter, 5vw);
   bottom: 36px;
-  left: 0;
+  left: var(--audioflume-home-page-gutter, 5vw);
   display: flex;
   justify-content: space-between;
   gap: 24px;
