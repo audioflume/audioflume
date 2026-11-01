@@ -3310,10 +3310,9 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-keywords {
   display: flex;
   flex-wrap: nowrap;
-  justify-content: center;
-  width: max-content;
-  margin-inline: auto;
-  gap: 8px;
+  justify-content: space-between;
+  width: 100%;
+  gap: 0;
 }
 .audioflume-home-landing-keyword {
   display: inline-flex;
@@ -3323,7 +3322,7 @@ body:has(.audioflume-home-landing)
   border-radius: 999px;
   padding: 0 13px;
   color: #e5e5dd;
-  font-size: clamp(11px, 1.05vw, 21px);
+  font-size: 21px;
   font-weight: 300;
   white-space: nowrap;
   text-transform: uppercase;
