@@ -3317,19 +3317,19 @@ body:has(.audioflume-home-landing)
   display: inline-flex;
   min-height: 30px;
   align-items: center;
-  border: 1.25px solid var(--filmwave-border-color);
+  border: 1px solid transparent;
   border-radius: 999px;
   padding: 0 13px;
   color: #e5e5dd;
-  font-size: 12px;
-  font-weight: 400;
+  font-size: 21px;
+  font-weight: 300;
+  text-transform: uppercase;
   text-decoration: none;
   transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
 }
 .audioflume-home-landing-keyword:hover,
 .audioflume-home-landing-keyword:focus-visible {
   color: #e5e5dd;
-  border-color: #777;
 }
 /* Override shared link color rules for homepage keyword links in dark mode only. */
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
@@ -3341,12 +3341,11 @@ body:has(.audioflume-home-landing)
   color: #e5e5dd !important;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword {
-  color: #666;
+  color: #cbcbcb;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword:hover,
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword:focus-visible {
   color: #111;
-  border-color: #999;
 }
 @media (max-width: 760px) {
   .audioflume-home-landing-search-group {
