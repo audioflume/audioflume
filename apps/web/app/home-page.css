@@ -3837,11 +3837,13 @@ body:has(.audioflume-home-landing)
   position: relative;
   isolation: isolate;
   overflow: hidden;
+  box-sizing: border-box;
+  padding: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
   background: #111111;
 }
 .audioflume-home-authentic-right::before {
   position: absolute;
-  inset: 0;
+  inset: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
   z-index: 1;
   content: "";
   background: rgba(0, 0, 0, 0.48);
@@ -3849,7 +3851,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-authentic-right::after {
   position: absolute;
-  inset: 0;
+  inset: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
   z-index: 2;
   content: "";
   background: #111111;
@@ -3862,7 +3864,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-authentic-flash-media {
   position: absolute;
-  inset: 0;
+  inset: 64px var(--audioflume-home-page-gutter, 5vw) 64px 0;
   z-index: 0;
   overflow: hidden;
 }
@@ -3895,6 +3897,14 @@ body:has(.audioflume-home-landing)
   gap: 10px;
 }
 @media (max-width: 900px) {
+  .audioflume-home-authentic-right {
+    padding: 40px var(--audioflume-home-page-gutter, 5vw);
+  }
+  .audioflume-home-authentic-right::before,
+  .audioflume-home-authentic-right::after,
+  .audioflume-home-authentic-flash-media {
+    inset: 40px var(--audioflume-home-page-gutter, 5vw);
+  }
   .audioflume-home-landing .audioflume-home-authentic-banner {
     height: auto;
     grid-template-columns: minmax(0, 1fr);
