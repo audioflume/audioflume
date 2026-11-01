@@ -86,7 +86,6 @@ export default function FoundingArtistsPage() {
 
       <section className="af-founding-faq">
         <div className="af-founding-width af-founding-faq-grid">
-          <h2>Good to know</h2>
           <FoundingFaq questions={questions} />
         </div>
       </section>
