@@ -3533,7 +3533,7 @@ body:has(.audioflume-home-landing)
   opacity: .5;
 }
 .audioflume-home-landing-artist-carousel {
-  display: none;
+  display: block;
   width: 100%;
   overflow: hidden;
   background: #111;
