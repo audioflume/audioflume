@@ -3537,7 +3537,7 @@ body:has(.audioflume-home-landing)
   width: 100%;
   overflow: hidden;
   background: #111;
-  padding-top: calc(118px - var(--filmwave-page-gutter));
+  padding-top: 0;
   padding-bottom: 118px;
   cursor: grab;
   touch-action: pan-y;
@@ -3701,7 +3701,6 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing-brand-row p { font-size: 10px; }
   .audioflume-home-landing-brand-row img { width: min(100%, 520px); }
   .audioflume-home-landing-artist-carousel {
-    padding-top: calc(76px - var(--filmwave-page-gutter));
     padding-bottom: 76px;
   }
 }
