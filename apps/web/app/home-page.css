@@ -3309,8 +3309,10 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-keywords {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   justify-content: center;
+  width: max-content;
+  margin-inline: auto;
   gap: 8px;
 }
 .audioflume-home-landing-keyword {
@@ -3321,8 +3323,9 @@ body:has(.audioflume-home-landing)
   border-radius: 999px;
   padding: 0 13px;
   color: #e5e5dd;
-  font-size: 21px;
+  font-size: clamp(11px, 1.05vw, 21px);
   font-weight: 300;
+  white-space: nowrap;
   text-transform: uppercase;
   text-decoration: none;
   transition: border-color 150ms ease, color 150ms ease, background-color 150ms ease;
@@ -3340,11 +3343,11 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:focus-visible {
   color: #e5e5dd !important;
 }
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword {
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference .audioflume-home-landing-keywords a.audioflume-home-landing-keyword {
   color: #cbcbcb;
 }
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword:hover,
-:where(html.light, html[data-theme="light"]) .audioflume-home-landing-keyword:focus-visible {
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-home-reference .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:focus-visible {
   color: #111;
 }
 @media (max-width: 760px) {
