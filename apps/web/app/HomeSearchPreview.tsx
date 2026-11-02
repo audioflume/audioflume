@@ -29,7 +29,7 @@ export default function HomeSearchPreview() {
       Boolean(song.audioUrl) &&
       [song.title, song.artist, ...(song.genres ?? []), ...(song.moods ?? []), ...(song.instruments ?? [])]
         .some((value) => String(value ?? "").toLowerCase().includes(term))
-    ).slice(0, 5);
+    ).slice(0, 20);
   }, [query, songs]);
 
   const matchedArtist = useMemo(() => {
