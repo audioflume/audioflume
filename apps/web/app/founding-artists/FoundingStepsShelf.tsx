@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 
@@ -17,6 +17,15 @@ export default function FoundingStepsShelf({ steps }: { steps: Step[] }) {
     setCanLeft(el.scrollLeft > 2);
     setCanRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 2);
   };
+
+  useEffect(() => {
+    const el = scroller.current;
+    if (!el) return;
+    const observer = new ResizeObserver(updateArrows);
+    observer.observe(el);
+    updateArrows();
+    return () => observer.disconnect();
+  }, []);
 
   const slide = (direction: -1 | 1) => {
     const el = scroller.current;
@@ -40,8 +49,8 @@ export default function FoundingStepsShelf({ steps }: { steps: Step[] }) {
         </Link>
       </div>
       <div className="af-founding-steps-controls">
-        <button type="button" onClick={() => slide(-1)} disabled={!canLeft} aria-label="Previous steps">←</button>
-        <button type="button" onClick={() => slide(1)} disabled={!canRight} aria-label="Next steps">→</button>
+        <button type="button" onClick={() => slide(-1)} disabled={!canLeft} aria-label="Previous steps">‹</button>
+        <button type="button" onClick={() => slide(1)} disabled={!canRight} aria-label="Next steps">›</button>
       </div>
     </div>
   );
