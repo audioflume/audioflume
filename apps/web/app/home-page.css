@@ -3399,7 +3399,7 @@ body:has(.audioflume-home-landing)
   color: #555;
 }
 .audioflume-home-landing-keywords {
-  display: none;
+  display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   width: 100%;
