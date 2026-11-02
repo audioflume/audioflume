@@ -7,7 +7,6 @@ import FoundingHeroPlayerHeight from "./FoundingHeroPlayerHeight";
 import FoundingStepsShelf from "./FoundingStepsShelf";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
-import "../discover/discover-page.css";
 import "./founding-artists.css";
 
 export const metadata: Metadata = {
