@@ -1303,7 +1303,7 @@ export default function PlaylistsPage() {
         }
         .playlist-rename-input { box-sizing: border-box; width: 100%; min-width: 0; height: auto; border: 0 !important; border-radius: 0 !important; outline: 0 !important; background: transparent !important; padding: 0 !important; color: var(--text-primary); box-shadow: none !important; font-family: inherit; }
         .playlist-rename-input:focus { border: 0 !important; outline: 0 !important; box-shadow: none !important; }
-        .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--font-aktiv-grotesk); font-size: 13px; font-weight: 500; line-height: 1.1; letter-spacing: -0.035em; }
+        .playlist-gallery-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-family: var(--discover-playlist-card-title-font-family, inherit); font-size: 16px; font-weight: 400; line-height: 1.15; letter-spacing: -0.015em; }
         .playlist-row-rename-input { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 13.5px; font-weight: 500; line-height: 1.35; letter-spacing: normal; }
         .playlist-gallery-handle { display: flex; width: 32px; height: 32px; align-items: center; justify-content: center; border-radius: 999px; border: 1.25px solid rgba(255, 255, 255, 0.14); background: rgba(255, 255, 255, 0.1); color: rgba(255, 255, 255, 0.72); backdrop-filter: blur(12px); }
         .playlist-gallery-card.is-reordering .playlist-gallery-art-wrap { border-style: dashed; }
