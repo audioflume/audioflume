@@ -3145,7 +3145,7 @@ body:has(.audioflume-home-landing)
   justify-content: space-between;
   align-items: center;
   background: #111;
-  padding: 0 0 32px;
+  padding: 0 0 12px;
 }
 .audioflume-home-landing-search-group {
   display: flex;
