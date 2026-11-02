@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import FoundingFaq from "./FoundingFaq";
 import FoundingScrollReveal from "./FoundingScrollReveal";
+import FoundingStepsShelf from "./FoundingStepsShelf";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import "./founding-artists.css";
@@ -82,8 +83,7 @@ export default function FoundingArtistsPage() {
 
       <section className="af-founding-process af-founding-width af-reveal">
         <div className="af-founding-section-head"><h2>How to become a Founding Artist</h2><span>THREE SIMPLE STEPS</span></div>
-        <div className="af-founding-steps">{steps.map(({ number, title, copy }) => <article key={number}><div className="af-founding-step-number grid h-[70px] w-[70px] self-start place-items-center text-center font-[family-name:var(--font-roboto-mono-filmwave)] text-[28px] font-[300] leading-none">{number}</div><h3>{title}</h3><p>{copy}</p></article>)}</div>
-        <ApplyLink />
+        <FoundingStepsShelf steps={steps} />
       </section>
 
       <section className="af-founding-faq af-reveal">
