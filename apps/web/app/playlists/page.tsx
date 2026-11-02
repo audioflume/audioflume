@@ -645,6 +645,12 @@ function SortablePlaylistItem({
             <p>{formatSongCount(stats?.songCount ?? 0)}</p>
           </div>
         </div>
+        <span onMouseDown={(event) => event.preventDefault()}>
+          <PersonalPlaylistPlayButton
+            playlistId={playlist.id}
+            playlistName={playlist.name}
+          />
+        </span>
       </div>
     );
   }
