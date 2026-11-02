@@ -3325,7 +3325,7 @@ body:has(.audioflume-home-landing)
   border-radius: 999px;
   padding: 0;
   color: #e5e5dd;
-  font-size: clamp(17px, calc(13px + 0.5vw), 21px);
+  font-size: 17px;
   font-weight: 300;
   white-space: nowrap;
   text-transform: uppercase;
