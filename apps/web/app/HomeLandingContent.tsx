@@ -8,7 +8,7 @@ import Link from "next/link";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverPricingCards, DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
-import { usePlayer } from "@/context/PlayerContext";
+import { useHasCurrentSong, usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -30,6 +30,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
   }
 
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const playerVisible = useHasCurrentSong();
   function playArtist(name: string) {
     const artistSongs = songs.filter((song) =>
       song.audioUrl && song.artist.trim().toLowerCase() === name.trim().toLowerCase()
@@ -232,7 +233,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
 
   return (
     <main
-      className="audioflume-home-reference audioflume-home-landing"
+      className={`audioflume-home-reference audioflume-home-landing${playerVisible ? " has-player" : ""}`}
     >
       <section
         className="audioflume-home-reference-hero"
