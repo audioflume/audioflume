@@ -405,8 +405,8 @@
 .playlists-page .playlist-gallery-rename-input {
   display: block !important;
   width: 100% !important;
-  height: 16.875px !important;
-  min-height: 16.875px !important;
+  height: 18.4px !important;
+  min-height: 18.4px !important;
   margin: 0 !important;
   border: 0 !important;
   border-radius: 0 !important;
@@ -416,11 +416,11 @@
   padding: 0 !important;
   color: var(--text-primary) !important;
   box-shadow: none !important;
-  font-family: inherit !important;
-  font-size: 13.5px !important;
-  font-weight: 500 !important;
-  line-height: 1.25 !important;
-  letter-spacing: normal !important;
+  font-family: var(--discover-playlist-card-title-font-family, inherit) !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.15 !important;
+  letter-spacing: -0.015em !important;
 }
 
 .playlists-page .playlist-row-rename-input {
