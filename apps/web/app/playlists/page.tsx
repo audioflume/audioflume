@@ -3,6 +3,7 @@
 import type { Playlist, PlaylistSong } from "@/lib/types";
 import Link from "next/link";
 import FavoritesPlaylistTile from "@/components/FavoritesPlaylistTile";
+import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import Footer from "@/components/Footer";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import ListRowStatusCount from "@/components/ListRowStatusCount";
@@ -159,17 +160,20 @@ function CreatePlaylistTile({
 }) {
   if (viewMode === "grid") {
     return (
-      <button type="button" className="playlist-create-card" onClick={onClick}>
-        <div className="playlist-create-art">
-          <div className="playlist-create-mark">
-            <PlusIcon size={16} />
-          </div>
-        </div>
-        <div className="playlist-create-copy">
-          <span>Create Playlist</span>
-          <small>Build a new collection</small>
-        </div>
-      </button>
+      <PlaylistCardShell
+        className="playlist-create-shell"
+        media={
+          <button type="button" className="playlist-create-card" onClick={onClick}>
+            <div className="playlist-create-art">
+              <div className="playlist-create-mark"><PlusIcon size={16} /></div>
+            </div>
+            <div className="playlist-create-copy">
+              <span>Create Playlist</span>
+              <small>Build a new collection</small>
+            </div>
+          </button>
+        }
+      />
     );
   }
 
@@ -688,62 +692,58 @@ function SortablePlaylistItem({
   }
 
   return (
-    <div
-      ref={setNodeRef}
+    <PlaylistCardShell
+      cardRef={setNodeRef}
+      cardStyle={style}
       className={`playlist-gallery-card ${openMenuId === playlist.id ? "is-menu-open" : ""}`}
-      style={style}
-    >
-      <Link href={playlistHref} className="playlist-gallery-link">
-        <div className="playlist-gallery-art-wrap">
-          <PlaylistArtwork
-            playlist={playlist}
-            index={index}
-            className="playlist-gallery-art"
-          />
-          {!cover && (
-            <div className="playlist-gallery-letters">
-              {playlist.name.slice(0, 2).toUpperCase()}
+      href={playlistHref}
+      mediaClassName="playlist-gallery-art-wrap"
+      mediaLinkClassName="playlist-gallery-link"
+      media={
+        <>
+            <PlaylistArtwork
+              playlist={playlist}
+              index={index}
+              className="playlist-gallery-art"
+            />
+            {!cover && (
+              <div className="playlist-gallery-letters">
+                {playlist.name.slice(0, 2).toUpperCase()}
+              </div>
+            )}
+            <div className="playlist-gallery-top-row">
+              <div className="playlist-gallery-arrow">
+                <ArrowUpRightIcon />
+              </div>
+            </div>
+            <div className="playlist-gallery-content">
+              <h3>{playlist.name}</h3>
+              <p>{formatSongCount(stats?.songCount ?? 0)}</p>
+            </div>
+        </>
+      }
+      overlays={
+        <>
+          <PersonalPlaylistPlayButton playlistId={playlist.id} playlistName={playlist.name} />
+          {isDeleting && (
+            <div className="playlist-deleting-overlay">
+              <LoadingSpinner size={24} stroke={7} color="var(--media-overlay-contrast)" />
             </div>
           )}
-          <div className="playlist-gallery-top-row">
-            <div className="playlist-gallery-arrow">
-              <ArrowUpRightIcon />
-            </div>
-          </div>
-          <div className="playlist-gallery-content">
-            <h3>{playlist.name}</h3>
-            <p>{formatSongCount(stats?.songCount ?? 0)}</p>
-          </div>
-        </div>
-      </Link>
-      <PersonalPlaylistPlayButton
-        playlistId={playlist.id}
-        playlistName={playlist.name}
-      />
-      {isDeleting && (
-        <div className="playlist-deleting-overlay">
-          <LoadingSpinner
-            size={24}
-            stroke={7}
-            color="var(--media-overlay-contrast)"
+          <PlaylistMenu
+            playlist={playlist}
+            viewMode={viewMode}
+            open={openMenuId === playlist.id}
+            onOpenChange={(nextOpen) => setOpenMenuId(nextOpen ? playlist.id : null)}
+            onEdit={() => openEdit(playlist)}
+            onRename={() => startRename(playlist)}
+            onDelete={() => handleDeletePlaylist(playlist)}
+            playerVisible={playerVisible}
           />
-        </div>
-      )}
-      <PlaylistMenu
-        playlist={playlist}
-        viewMode={viewMode}
-        open={openMenuId === playlist.id}
-        onOpenChange={(nextOpen) =>
-          setOpenMenuId(nextOpen ? playlist.id : null)
-        }
-        onEdit={() => openEdit(playlist)}
-        onRename={() => startRename(playlist)}
-        onDelete={() => handleDeletePlaylist(playlist)}
-        playerVisible={playerVisible}
-      />
-    </div>
-  );
-}
+        </>
+      }
+    />
+  );}
 
 function DragPreview({
   playlist,
