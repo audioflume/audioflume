@@ -1,4 +1,4 @@
-.af-founding-page{--af-gutter:var(--filmwave-page-gutter,80px);--discover-artist-gutter:var(--af-gutter);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-aktiv-grotesk),sans-serif;overflow:clip}
+.af-founding-page{--af-gutter:var(--filmwave-page-gutter,80px);--sliding-shelf-gutter:var(--af-gutter);background:var(--bg-primary);color:var(--text-primary);font-family:var(--font-aktiv-grotesk),sans-serif;overflow:clip}
 .af-founding-width{width:calc(100% - 2 * var(--af-gutter));margin-inline:auto}
 .af-founding-hero{position:relative;isolation:isolate;min-height:calc(100dvh - 28px);color:#e5e5dd;background:#101615;display:flex;overflow:hidden}
 .af-founding-hero.has-player{min-height:calc(100dvh - 28px - var(--filmwave-player-height,72px))}
