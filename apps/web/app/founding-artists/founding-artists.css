@@ -28,7 +28,7 @@
 .af-founding-benefit{display:grid;grid-template-columns:70px minmax(0,1fr) minmax(0,.8fr);gap:28px;border-top:1px solid rgba(17,17,17,.2);padding:31px 0;align-items:start}
 .af-founding-benefit:last-child{border-bottom:1px solid rgba(17,17,17,.2)}
 .af-founding-benefit-number{font:300 13px var(--font-roboto-mono-filmwave),monospace}
-.af-founding-benefit h3{margin:0;font-size:clamp(22px,2vw,36px);font-weight:400;line-height:1.15;letter-spacing:-.03em}
+.af-founding-benefit h3{margin:0;font-size:clamp(22px,2vw,36px);font-weight:600;line-height:1.15;letter-spacing:-.03em}
 .af-founding-benefit p{max-width:600px;margin:0;font-size:16px;font-weight:300;line-height:1.5}
 .af-founding-terms-note{max-width:900px;margin:30px 0 0;font-size:12px;line-height:1.6;color:#5d5d59}
 .af-founding-statement{background:#111 url("https://images.filmwave.io/images/founding-artists/Founding-Artists-Background.jpg?v=2") center / cover no-repeat;color:#e5e5dd;padding-block:clamp(100px,13vw,220px)}
