@@ -70,19 +70,24 @@
 @keyframes af-founding-photo-fade{from{opacity:0}to{opacity:1}}
 @keyframes af-founding-content-fade{from{opacity:0}to{opacity:1}}
 
-/* Each section's background stays put while its content reveals as it scrolls into view. */
-.af-founding-page.af-motion-ready .af-reveal:not(.is-visible) > .af-founding-width,
-.af-founding-page.af-motion-ready .af-founding-process.af-reveal:not(.is-visible) > *{
-  opacity:0;
-  transform:translateY(24px);
+/* Reveal individual blocks as the visitor reaches them, without moving section backgrounds. */
+.af-founding-page.af-motion-ready .af-reveal-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 850ms cubic-bezier(.22,1,.36,1), transform 850ms cubic-bezier(.22,1,.36,1);
 }
-.af-founding-page.af-motion-ready .af-reveal.is-visible > .af-founding-width,
-.af-founding-page.af-motion-ready .af-founding-process.af-reveal.is-visible > *{
-  animation:af-founding-word 750ms cubic-bezier(.22,1,.36,1) both;
+.af-founding-page.af-motion-ready .af-reveal-item.is-visible {
+  opacity: 1;
+  transform: translateY(0);
 }
-.af-founding-page.af-motion-ready .af-founding-process.af-reveal.is-visible > :nth-child(2){animation-delay:130ms}
-.af-founding-page.af-motion-ready .af-founding-process.af-reveal.is-visible > :nth-child(3){animation-delay:260ms}
-
+.af-founding-page.af-motion-ready .af-founding-benefit.af-reveal-item,
+.af-founding-page.af-motion-ready .af-founding-faq-item.af-reveal-item {
+  transform: translateY(18px);
+}
+.af-founding-page.af-motion-ready .af-founding-benefit.af-reveal-item.is-visible,
+.af-founding-page.af-motion-ready .af-founding-faq-item.af-reveal-item.is-visible {
+  transform: translateY(0);
+}
 @media(max-width:900px){.af-founding-hero-title{font-size:clamp(32px,7vw,72px)}.af-founding-benefit{grid-template-columns:42px 1fr;gap:18px}.af-founding-benefit p{grid-column:2}.af-founding-intro-grid,.af-founding-faq-grid{gap:40px}}
 @media(max-width:620px){.af-founding-hero{min-height:calc(100dvh - 28px)}.af-founding-hero-inner{padding-top:calc(28px + var(--filmwave-header-height,60px));padding-bottom:clamp(36px,9vw,70px)}.af-founding-hero-eyebrow{font-size:9px}.af-founding-hero-eyebrow span:last-child{display:none}.af-founding-hero-title{font-size:clamp(32px,8vw,54px)}.af-founding-hero-bottom{align-items:stretch;flex-direction:column}.af-founding-hero-bottom p{font-size:clamp(28px,6vw,34px)}.af-founding-cta{width:100%}.af-founding-intro-grid,.af-founding-faq-grid,.af-founding-steps{grid-template-columns:1fr}.af-founding-section-head{align-items:flex-start;flex-direction:column;gap:12px}.af-founding-benefit{grid-template-columns:30px 1fr}.af-founding-benefit p{font-size:15px}.af-founding-faq h2{margin-bottom:20px}}
-@media(prefers-reduced-motion:reduce){.af-founding-hero-image,.af-founding-hero-title,.af-founding-hero-bottom,.af-founding-page.af-motion-ready .af-reveal.is-visible > .af-founding-width,.af-founding-page.af-motion-ready .af-founding-process.af-reveal.is-visible > *{animation:none}.af-founding-page.af-motion-ready .af-reveal > .af-founding-width,.af-founding-page.af-motion-ready .af-founding-process.af-reveal > *{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.af-founding-hero-image,.af-founding-hero-title,.af-founding-hero-bottom{animation:none}.af-founding-page.af-motion-ready .af-reveal-item{opacity:1;transform:none;transition:none}}
