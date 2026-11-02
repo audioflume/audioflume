@@ -778,6 +778,7 @@ export default function ProjectsPage() {
           box-sizing: border-box;
           width: 100%;
           height: 17.5px;
+          transform: translateY(2px);
           border: 0;
           border-radius: 0;
           outline: 0;
