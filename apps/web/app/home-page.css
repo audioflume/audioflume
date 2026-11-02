@@ -3217,13 +3217,14 @@ body:has(.audioflume-home-landing)
   z-index: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 1px;
   padding: 14px;
   color: #fff;
 }
 .audioflume-home-landing-search-preview-feature-copy strong {
-  font-size: 18px;
-  font-weight: 400;
+  font-size: 24px;
+  font-weight: 300;
+  text-transform: uppercase;
 }
 .audioflume-home-landing-search-preview-playlist {
   align-items: center;
@@ -3254,7 +3255,7 @@ body:has(.audioflume-home-landing)
   min-width: 0;
   box-sizing: border-box;
   max-height: 314px;
-  padding-top: 14px;
+  padding: 14px 14px 0 0;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
@@ -3268,7 +3269,7 @@ body:has(.audioflume-home-landing)
   width: 100%;
   gap: 12px;
   align-items: center;
-  padding: 9px 18px;
+  padding: 9px;
   border: 0;
   background: transparent;
   color: inherit;
