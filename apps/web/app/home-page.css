@@ -3252,7 +3252,9 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-search-preview-songs {
   min-width: 0;
-  max-height: 420px;
+  box-sizing: border-box;
+  max-height: 314px;
+  padding-top: 14px;
   overflow-y: auto;
   overscroll-behavior: contain;
 }
