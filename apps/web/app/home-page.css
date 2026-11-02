@@ -3446,7 +3446,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-search {
   display: flex;
   width: min(940px, calc(100% - 80px));
-  height: 80px;
+  height: 70px;
   gap: 5px;
 }
 .audioflume-home-landing-search-field {
@@ -3459,8 +3459,8 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-search-brand {
   display: flex;
-  height: calc(100% - 12px);
-  flex: 0 0 62px;
+  height: 100%;
+  flex: 0 0 70px;
   align-items: center;
   justify-content: center;
   border-right: 1px solid #ffffff06;
@@ -3481,7 +3481,7 @@ body:has(.audioflume-home-landing)
   margin: 0;
   border: 0;
   background: transparent;
-  padding: 0 26px;
+  padding: 0 20px;
 }
 .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-field > svg {
   width: 22px;
@@ -3570,7 +3570,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-search-song {
   display: inline-flex;
-  flex: 0 0 270px;
+  flex: 0 0 260px;
   justify-content: center;
   align-items: center;
   gap: 8px;
@@ -3578,7 +3578,7 @@ body:has(.audioflume-home-landing)
   border-radius: 0;
   background: #e5e5dd;
   color: #111;
-  padding: 0 24px;
+  padding: 0 20px;
   font: inherit;
   font-size: 14px;
   font-weight: 400;
@@ -3770,8 +3770,8 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px); min-height: 350px; }
   .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-player-height, 72px)); min-height: 350px; }
 
-  .audioflume-home-landing-search { width: min(940px, calc(100% - 32px)); height: 68px; }
-  .audioflume-home-landing-search-brand { flex-basis: 48px; height: calc(100% - 10px); }
+  .audioflume-home-landing-search { width: min(940px, calc(100% - 32px)); height: 58px; }
+  .audioflume-home-landing-search-brand { flex-basis: 58px; height: 100%; }
   .audioflume-home-landing-search-mark { width: 22px; height: 22px; flex-basis: 22px; }
   .audioflume-home-landing-hero-captions { bottom: 22px; font-size: 8px; }
   .audioflume-home-landing-search-song { flex-basis: 150px; }
