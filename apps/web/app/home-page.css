@@ -3860,6 +3860,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-pricing {
   display: flex;
   flex-direction: column;
+  padding-bottom: 80px;
 }
 
 .audioflume-home-landing-pricing > .audioflume-home-reference-tools {
