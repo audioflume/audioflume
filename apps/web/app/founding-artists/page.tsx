@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import FoundingFaq from "./FoundingFaq";
 import FoundingScrollReveal from "./FoundingScrollReveal";
+import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import "./founding-artists.css";
 
@@ -67,7 +68,7 @@ export default function FoundingArtistsPage() {
 
       <section className="af-founding-benefits af-reveal">
         <div className="af-founding-width">
-          <div className="af-founding-section-head"><h2>Founding member benefits</h2><span>BUILT TO LAST BEYOND LAUNCH</span></div>
+          <div className="af-founding-section-head"><h2>Founding member benefits</h2><AudioflumeMark className="af-founding-benefits-mark" /></div>
           <div className="af-founding-benefit-list">
             {benefits.map(({ number, title, copy }) => <article className="af-founding-benefit" key={number}><span className="af-founding-benefit-number">{number}</span><h3>{title}</h3><p>{copy}</p></article>)}
           </div>
