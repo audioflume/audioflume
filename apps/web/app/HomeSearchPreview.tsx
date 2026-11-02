@@ -19,7 +19,7 @@ export default function HomeSearchPreview() {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [query, setQuery] = useState("");
   const [open, setOpen] = useState(false);
-  const [artists, setArtists] = useState<Array<{ id: string; name: string; slug: string; hero_image_url?: string | null; profile_image_url?: string | null }>>([]);
+  const [artists, setArtists] = useState<Array<{ id: string; name: string; slug: string; hero_image_url?: string | null; profile_image_url?: string | null; tags: string[] }>>([]);
   const [playlists, setPlaylists] = useState<CuratedPlaylist[]>([]);
   const containerRef = useRef<HTMLDivElement>(null);
   const matches = useMemo(() => {
@@ -35,7 +35,10 @@ export default function HomeSearchPreview() {
   const matchedArtist = useMemo(() => {
     const term = query.trim().toLowerCase();
     if (!term) return null;
-    return artists.find((artist) => artist.name.toLowerCase().includes(term))
+    return artists.find((artist) => artist.name.toLowerCase() === term)
+      ?? artists.find((artist) => artist.tags.some((tag) => tag.toLowerCase() === term))
+      ?? artists.find((artist) => artist.name.toLowerCase().includes(term))
+      ?? artists.find((artist) => artist.tags.some((tag) => tag.toLowerCase().includes(term)))
       ?? artists.find((artist) => matches.some((song) => song.artist.toLowerCase() === artist.name.toLowerCase()))
       ?? null;
   }, [artists, matches, query]);
@@ -50,7 +53,7 @@ export default function HomeSearchPreview() {
   useEffect(() => {
     let active = true;
     Promise.all([
-      fetch("/api/home-featured-artists").then((response) => response.ok ? response.json() : null).catch(() => null),
+      fetch("/api/home-search-artists").then((response) => response.ok ? response.json() : null).catch(() => null),
       fetch("/api/curated-playlists").then((response) => response.ok ? response.json() : null).catch(() => null),
     ]).then(([artistData, playlistData]) => {
       if (!active) return;
