@@ -3428,7 +3428,7 @@ body:has(.audioflume-home-landing)
 /* Override shared link color rules for homepage keyword links in dark mode only. */
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword {
-  color: #777 !important;
+  color: #555 !important;
 }
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:hover,
