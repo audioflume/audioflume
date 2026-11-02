@@ -290,3 +290,16 @@
   margin-right: auto;
   margin-left: auto;
 }
+
+/* Shared website/backend modal close control. */
+.filmwave-modal-close {
+  background-color: var(--filmwave-search-surface);
+}
+.filmwave-modal-close:hover,
+.filmwave-modal-close:focus-visible {
+  background-color: #e8e8e8;
+}
+:where(html.dark, html[data-theme="dark"]) .filmwave-modal-close:hover,
+:where(html.dark, html[data-theme="dark"]) .filmwave-modal-close:focus-visible {
+  background-color: #292929;
+}
