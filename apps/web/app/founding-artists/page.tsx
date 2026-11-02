@@ -61,7 +61,7 @@ export default function FoundingArtistsPage() {
         <div className="af-founding-width">
           <div className="af-founding-intro-grid">
             <h2>Audioflume is building a curated music and sound-effects library for filmmakers, powered by the people who make the work.</h2>
-            <p>The Founding Artists program recognizes the first 100 approved artists who help shape that catalogue. It's an opportunity to join early, be heard, and build a lasting place in a growing creative community.</p>
+            <p>The Founding Artists program recognizes the first 100 approved artists who help shape the catalogue. Founding members receive lasting financial advantages, including 100% earnings on Premium Artist licences, preferential enterprise licensing terms, and exclusive benefits designed to reward their early support for years to come.</p>
           </div>
         </div>
       </section>
