@@ -16,6 +16,8 @@
 .af-founding-cta.is-light{background:#e5e5dd;color:#111}
 .af-founding-cta.is-light:hover,.af-founding-cta.is-light:focus-visible{background:white}
 .af-founding-intro{padding-block:clamp(32px,9vw,180px);background:#111111;color:#e5e5dd}
+.af-founding-intro{box-sizing:border-box;min-height:calc(100dvh - 28px)}
+.af-founding-page:has(.af-founding-hero.has-player) .af-founding-intro{min-height:calc(100dvh - 28px - var(--filmwave-player-height,72px))}
 .af-founding-kicker,.af-founding-statement span,.af-founding-final>div>span{font:300 17px/1.2 var(--font-aktiv-grotesk),sans-serif;letter-spacing:0;text-transform:uppercase}
 .af-founding-intro .af-founding-width{width:calc(100% - 2 * clamp(32px,9vw,180px))}
 .af-founding-intro-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(32px,4vw,80px)}
