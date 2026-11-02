@@ -39,7 +39,7 @@
 .af-founding-statement p{font-size:clamp(42px,7vw,118px);font-weight:300;line-height:1.02;letter-spacing:-.055em;margin:44px 0 0;max-width:1350px}
 .af-founding-process{padding-block:clamp(90px,10vw,170px)}
 .af-founding-step-card{box-sizing:border-box;flex:0 0 calc((100vw - 2 * var(--af-gutter) - 40px)/3);min-height:440px;padding:32px;display:flex;flex-direction:column;background:#e5e5dd;color:#111;text-decoration:none}
-.af-founding-step-number{width:70px;height:70px;display:grid;place-items:center;background:#d1d1cc;color:#fff;font:300 28px/1 var(--font-roboto-mono-filmwave),monospace}
+.af-founding-step-number{width:70px;height:70px;display:grid;place-items:center;background:#111111;color:#fff;font:300 28px/1 var(--font-roboto-mono-filmwave),monospace}
 .af-founding-step-content{margin-top:auto}
 .af-founding-step-card h3{font-size:clamp(25px,3vw,42px);font-weight:600;letter-spacing:-.04em;margin:0 0 15px}
 .af-founding-step-card p{font-size:16px;font-weight:300;line-height:1.5;margin:0}
