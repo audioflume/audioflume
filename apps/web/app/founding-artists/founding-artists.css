@@ -10,7 +10,7 @@
 .af-founding-hero-title{width:calc(100% + 2 * var(--af-hero-inset));margin:auto calc(-1 * var(--af-hero-inset));font-size:clamp(34px,7.7vw,160px);font-weight:300;letter-spacing:-.055em;line-height:1.02;text-align:justify;text-align-last:justify}
 .af-founding-hero-title>span{display:block;text-align:justify;text-align-last:justify}
 .af-founding-hero-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:32px}
-.af-founding-hero-bottom p{margin:0;font-size:clamp(30px,2.8vw,44px);line-height:1.02;letter-spacing:-.04em;font-weight:400}
+.af-founding-hero-bottom p{margin:0;font-size:clamp(30px,2.8vw,44px);line-height:1.02;letter-spacing:-.04em;font-weight:500}
 .af-founding-cta{min-height:62px;min-width:min(100%,320px);padding:0 26px;background:#111;color:#e5e5dd;display:inline-flex;align-items:center;justify-content:center;gap:16px;text-decoration:none;font-size:14px;font-weight:400;transition:background 160ms ease}
 .af-founding-cta:hover,.af-founding-cta:focus-visible{background:#333}
 .af-founding-cta.is-light{background:#e5e5dd;color:#111}
