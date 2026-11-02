@@ -3936,13 +3936,23 @@ body:has(.audioflume-home-landing)
   .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-right::before {
     transform: scale(1.08);
   }
+  .audioflume-home-authentic-banner:not(.is-visible) .audioflume-home-authentic-right::after {
+    opacity: 1;
+  }
   .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-right::before {
     animation: audioflume-authentic-image-zoom 3.5s cubic-bezier(.2,.7,.2,1) both;
+  }
+  .audioflume-home-authentic-banner.is-visible .audioflume-home-authentic-right::after {
+    animation: audioflume-authentic-image-reveal 1.8s ease-out both;
   }
 }
 @keyframes audioflume-authentic-image-zoom {
   from { transform: scale(1.08); }
   to { transform: scale(1); }
+}
+@keyframes audioflume-authentic-image-reveal {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 /* Scroll-triggered authentic banner entrance. */
