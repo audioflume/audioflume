@@ -777,7 +777,7 @@ export default function ProjectsPage() {
         .project-grid-card-rename-input {
           box-sizing: border-box;
           width: 100%;
-          height: 24px;
+          height: 17.5px;
           border: 0;
           border-radius: 0;
           outline: 0;
