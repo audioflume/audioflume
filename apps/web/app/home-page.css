@@ -3184,7 +3184,6 @@ body:has(.audioflume-home-landing)
   flex-direction: column;
   gap: 14px;
   padding: 14px;
-  border-right: 1px solid var(--filmwave-border-color);
 }
 .audioflume-home-landing-search-preview-feature,
 .audioflume-home-landing-search-preview-playlist {
@@ -3251,12 +3250,15 @@ body:has(.audioflume-home-landing)
   font-weight: 300;
   letter-spacing: .04em;
 }
-.audioflume-home-landing-search-preview-songs { min-width: 0; }
+.audioflume-home-landing-search-preview-songs {
+  min-width: 0;
+  max-height: 420px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+}
 @media (max-width: 690px) {
   .audioflume-home-landing-search-preview-columns { grid-template-columns: 1fr; }
   .audioflume-home-landing-search-preview-discovery {
-    border-right: 0;
-    border-bottom: 1px solid var(--filmwave-border-color);
   }
 }
 .audioflume-home-landing-search-preview-row {
@@ -3266,7 +3268,6 @@ body:has(.audioflume-home-landing)
   align-items: center;
   padding: 9px 18px;
   border: 0;
-  border-bottom: 1px solid var(--filmwave-border-color);
   background: transparent;
   color: inherit;
   font: inherit;
