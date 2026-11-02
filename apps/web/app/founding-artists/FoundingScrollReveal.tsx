@@ -16,7 +16,7 @@ export default function FoundingScrollReveal() {
           observer.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.01, rootMargin: "0px 0px -18% 0px" });
+    }, { threshold: 0.01, rootMargin: "0px 0px -65% 0px" });
     document.querySelector(".af-founding-page")?.classList.add("af-motion-ready");
     sections.forEach((section) => observer.observe(section));
     return () => {
