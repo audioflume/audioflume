@@ -484,7 +484,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 .playlists-page .playlist-gallery-art {
   height: calc(40vw / 2.38) !important;
   overflow: hidden !important;
-  border-radius: 3px !important;
+  border-radius: 0 !important;
 }
 
 .playlists-page .playlist-gallery-art::before,
