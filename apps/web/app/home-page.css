@@ -3375,6 +3375,7 @@ body:has(.audioflume-home-landing)
   padding: 14px 18px;
   text-align: left;
   border: 0;
+  border-top: 1px solid var(--filmwave-border-color);
   background: transparent;
   color: #e5e5dd;
   font: inherit;
