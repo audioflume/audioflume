@@ -2281,7 +2281,6 @@ body:has(.audioflume-home-landing)
   grid-template-columns: repeat(3, minmax(0, 445px));
   justify-content: space-between;
   gap: 10px;
-  padding-bottom: 80px;
 }
 
 .audioflume-home-mockup-editorial-card {
@@ -3861,7 +3860,6 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-pricing {
   display: flex;
   flex-direction: column;
-  padding-bottom: 80px;
 }
 
 .audioflume-home-landing-pricing > .audioflume-home-reference-tools {
