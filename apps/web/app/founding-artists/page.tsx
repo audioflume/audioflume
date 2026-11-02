@@ -27,7 +27,7 @@ const benefits = [
 const steps = [
   { number: "01", title: "Apply", copy: "Tell us about your work, your sound, and the music you want to contribute." },
   { number: "02", title: "Get reviewed", copy: "Our team reviews applications for originality, quality, catalogue fit, and licensing readiness." },
-  { number: "03", title: "Join the first 100", copy: "If approved while places remain, you'll be welcomed as a Founding Artist and receive the applicable program benefits." },
+  { number: "03", title: "Join the first 100", copy: "If approved, you'll be welcomed as a Founding Artist and receive the applicable program benefits." },
 ];
 
 const questions = [
