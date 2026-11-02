@@ -3,6 +3,7 @@ import Link from "next/link";
 import Footer from "@/components/Footer";
 import FoundingFaq from "./FoundingFaq";
 import FoundingScrollReveal from "./FoundingScrollReveal";
+import FoundingHeroPlayerHeight from "./FoundingHeroPlayerHeight";
 import FoundingStepsShelf from "./FoundingStepsShelf";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -45,7 +46,7 @@ export default function FoundingArtistsPage() {
   return (
     <main className="af-founding-page">
       <FoundingScrollReveal />
-      <section className="af-founding-hero" aria-labelledby="af-founding-title">
+      <FoundingHeroPlayerHeight>
         <div className="af-founding-hero-image" aria-hidden="true" />
         <div className="af-founding-hero-shade" aria-hidden="true" />
         <div className="af-founding-hero-inner">
@@ -56,7 +57,7 @@ export default function FoundingArtistsPage() {
             <ApplyLink light />
           </div>
         </div>
-      </section>
+      </FoundingHeroPlayerHeight>
 
       <section className="af-founding-intro af-reveal">
         <div className="af-founding-width">
