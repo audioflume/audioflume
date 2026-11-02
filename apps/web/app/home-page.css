@@ -3861,8 +3861,11 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-pricing {
   display: flex;
   flex-direction: column;
-  gap: 80px;
   padding-bottom: 80px;
+}
+
+.audioflume-home-landing-pricing > .audioflume-home-reference-tools {
+  margin-bottom: 80px;
 }
 
 /* Authentic music banner on the active homepage. */
