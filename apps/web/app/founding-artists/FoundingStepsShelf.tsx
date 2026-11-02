@@ -7,13 +7,6 @@ import SlidingShelfShell from "@/components/SlidingShelfShell";
 type Step = { number: string; title: string; copy: string };
 
 export default function FoundingStepsShelf({ steps }: { steps: Step[] }) {
-  return () => {
-      scroller.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-      observer.disconnect();
-    };
-  }, [steps.length]);
-
   return (
     <SlidingShelfShell label="application steps" itemCount={steps.length + 1}>
         {steps.map(({ number, title, copy }) => (
