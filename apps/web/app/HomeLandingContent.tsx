@@ -338,6 +338,9 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
 
 
       <div className="audioflume-home-landing-pricing">
+        <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
+          <DiscoverLifetimeAccess originalSongs={originalSongs} songsLoading={songsLoading} />
+        </section>
         <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
           <span>Music licensing for every creator</span>
           <Link href="/pricing" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
@@ -345,9 +348,6 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           </Link>
         </div>
         <DiscoverPricingCards />
-        <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
-          <DiscoverLifetimeAccess originalSongs={originalSongs} songsLoading={songsLoading} />
-        </section>
       </div>
 
 
