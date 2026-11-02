@@ -660,7 +660,7 @@ export default function ProjectsPage() {
           min-width: 0;
           min-height: 184px;
           border: 0;
-          border-radius: 3px;
+          border-radius: 0;
           background: transparent;
           color: var(--text-primary);
           text-align: left;
@@ -675,7 +675,7 @@ export default function ProjectsPage() {
         }
         .project-grid-create-card {
           border: 1.25px dashed var(--border);
-          border-radius: 3px;
+          border-radius: 0;
           background: color-mix(in srgb, var(--bg-primary) 96%, var(--text-primary) 4%);
         }
         .project-grid-create-card:hover {
