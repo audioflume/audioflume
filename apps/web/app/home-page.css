@@ -2283,6 +2283,10 @@ body:has(.audioflume-home-landing)
   gap: 10px;
 }
 
+.audioflume-home-mockup > .audioflume-home-mockup-editorial-strip {
+  margin-bottom: 80px;
+}
+
 .audioflume-home-mockup-editorial-card {
   position: relative;
   display: grid;
