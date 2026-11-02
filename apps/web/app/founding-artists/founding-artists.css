@@ -17,10 +17,10 @@
 .af-founding-intro{padding-block:clamp(32px,9vw,180px);background:#111 url("https://images.filmwave.io/images/founding-artists/Founding-Artists-Background.jpg?v=2") center / cover no-repeat;color:#e5e5dd}
 .af-founding-kicker,.af-founding-statement span,.af-founding-final>div>span{font:300 17px/1.2 var(--font-aktiv-grotesk),sans-serif;letter-spacing:0;text-transform:uppercase}
 .af-founding-intro .af-founding-width{width:calc(100% - 2 * clamp(32px,9vw,180px))}
-.af-founding-intro-grid{display:flex;flex-direction:column;gap:clamp(48px,6vw,100px)}
-.af-founding-intro h2{align-self:flex-start;max-width:45%;margin:0;font-size:clamp(22px,2vw,36px);font-weight:500;letter-spacing:-.03em;line-height:1.15}
+.af-founding-intro-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0}
+.af-founding-intro h2{align-self:start;max-width:100%;margin:0;font-size:clamp(22px,2vw,36px);font-weight:500;letter-spacing:-.03em;line-height:1.15}
 .af-founding-faq h2{font-size:clamp(42px,5vw,88px);font-weight:500;letter-spacing:-.055em;line-height:1;margin:0}
-.af-founding-intro-grid>p{align-self:flex-end;width:48%;max-width:680px;margin:0;font-size:clamp(17px,1.4vw,22px);line-height:1.3;font-weight:300}
+.af-founding-intro-grid>p{align-self:start;width:100%;max-width:none;margin:0;font-size:clamp(17px,1.4vw,22px);line-height:1.3;font-weight:300}
 .af-founding-benefits{background:#e5e5dd;color:#111;padding-block:clamp(76px,8vw,140px)}
 .af-founding-section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;margin-bottom:48px}
 .af-founding-section-head h2{margin:0;font-size:clamp(30px,2.6vw,60px);line-height:1.05;font-weight:600;letter-spacing:-.045em}
@@ -90,5 +90,5 @@
   transform: translateY(0);
 }
 @media(max-width:900px){.af-founding-hero-title{font-size:clamp(32px,7vw,72px)}.af-founding-benefit{grid-template-columns:42px 1fr;gap:18px}.af-founding-benefit p{grid-column:2}.af-founding-intro-grid,.af-founding-faq-grid{gap:40px}}
-@media(max-width:620px){.af-founding-hero{min-height:calc(100dvh - 28px)}.af-founding-hero-inner{padding-top:calc(28px + var(--filmwave-header-height,60px));padding-bottom:clamp(36px,9vw,70px)}.af-founding-hero-eyebrow{font-size:9px}.af-founding-hero-eyebrow span:last-child{display:none}.af-founding-hero-title{font-size:clamp(32px,8vw,54px)}.af-founding-hero-bottom{align-items:stretch;flex-direction:column}.af-founding-hero-bottom p{font-size:clamp(28px,6vw,34px)}.af-founding-cta{width:100%}.af-founding-intro h2,.af-founding-intro-grid>p{max-width:100%;width:100%}.af-founding-faq-grid,.af-founding-steps{grid-template-columns:1fr}.af-founding-section-head{align-items:flex-start;flex-direction:column;gap:12px}.af-founding-benefit{grid-template-columns:30px 1fr}.af-founding-benefit p{font-size:15px}.af-founding-faq h2{margin-bottom:20px}}
+@media(max-width:620px){.af-founding-hero{min-height:calc(100dvh - 28px)}.af-founding-hero-inner{padding-top:calc(28px + var(--filmwave-header-height,60px));padding-bottom:clamp(36px,9vw,70px)}.af-founding-hero-eyebrow{font-size:9px}.af-founding-hero-eyebrow span:last-child{display:none}.af-founding-hero-title{font-size:clamp(32px,8vw,54px)}.af-founding-hero-bottom{align-items:stretch;flex-direction:column}.af-founding-hero-bottom p{font-size:clamp(28px,6vw,34px)}.af-founding-cta{width:100%}.af-founding-intro-grid{grid-template-columns:1fr;gap:clamp(48px,6vw,100px)}.af-founding-intro h2,.af-founding-intro-grid>p{max-width:100%;width:100%}.af-founding-faq-grid,.af-founding-steps{grid-template-columns:1fr}.af-founding-section-head{align-items:flex-start;flex-direction:column;gap:12px}.af-founding-benefit{grid-template-columns:30px 1fr}.af-founding-benefit p{font-size:15px}.af-founding-faq h2{margin-bottom:20px}}
 @media(prefers-reduced-motion:reduce){.af-founding-hero-image,.af-founding-hero-title,.af-founding-hero-bottom{animation:none}.af-founding-page.af-motion-ready .af-reveal-item{opacity:1;transform:none;transition:none}}
