@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import Footer from "@/components/Footer";
 import FoundingFaq from "./FoundingFaq";
+import FoundingScrollReveal from "./FoundingScrollReveal";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import "./founding-artists.css";
 
@@ -41,6 +42,7 @@ function ApplyLink({ light = false, children = "Apply to become a Founding Artis
 export default function FoundingArtistsPage() {
   return (
     <main className="af-founding-page">
+      <FoundingScrollReveal />
       <section className="af-founding-hero" aria-labelledby="af-founding-title">
         <div className="af-founding-hero-image" aria-hidden="true" />
         <div className="af-founding-hero-shade" aria-hidden="true" />
@@ -54,7 +56,7 @@ export default function FoundingArtistsPage() {
         </div>
       </section>
 
-      <section className="af-founding-intro">
+      <section className="af-founding-intro af-reveal">
         <div className="af-founding-width">
           <div className="af-founding-kicker">A DIFFERENT KIND OF MUSIC LIBRARY</div>
           <div className="af-founding-intro-grid">
@@ -64,7 +66,7 @@ export default function FoundingArtistsPage() {
         </div>
       </section>
 
-      <section className="af-founding-benefits">
+      <section className="af-founding-benefits af-reveal">
         <div className="af-founding-width">
           <div className="af-founding-section-head"><h2>Founding member benefits</h2><span>BUILT TO LAST BEYOND LAUNCH</span></div>
           <div className="af-founding-benefit-list">
@@ -74,23 +76,23 @@ export default function FoundingArtistsPage() {
         </div>
       </section>
 
-      <section className="af-founding-statement">
+      <section className="af-founding-statement af-reveal">
         <div className="af-founding-width"><span>WHY WE'RE DOING THIS</span><p>Human-made music deserves a platform that values the people behind it.</p></div>
       </section>
 
-      <section className="af-founding-process af-founding-width">
+      <section className="af-founding-process af-founding-width af-reveal">
         <div className="af-founding-section-head"><h2>How to become a Founding Artist</h2><span>THREE SIMPLE STEPS</span></div>
         <div className="af-founding-steps">{steps.map(({ number, title, copy }) => <article key={number}><div className="af-founding-step-number grid h-[70px] w-[70px] self-start place-items-center text-center font-[family-name:var(--font-roboto-mono-filmwave)] text-[28px] font-[300] leading-none">{number}</div><h3>{title}</h3><p>{copy}</p></article>)}</div>
         <ApplyLink />
       </section>
 
-      <section className="af-founding-faq">
+      <section className="af-founding-faq af-reveal">
         <div className="af-founding-width af-founding-faq-grid">
           <FoundingFaq questions={questions} />
         </div>
       </section>
 
-      <section className="af-founding-final">
+      <section className="af-founding-final af-reveal">
         <div className="af-founding-width"><span>FIRST 100 APPROVED ARTISTS</span><h2>Make your mark<br />from the beginning.</h2><p>Join the people helping shape the next chapter of music for film.</p><ApplyLink light /></div>
       </section>
       <Footer showTopBorder={false} />
