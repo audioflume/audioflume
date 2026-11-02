@@ -14,7 +14,7 @@
 .af-founding-cta:hover,.af-founding-cta:focus-visible{background:#333}
 .af-founding-cta.is-light{background:#e5e5dd;color:#111}
 .af-founding-cta.is-light:hover,.af-founding-cta.is-light:focus-visible{background:white}
-.af-founding-intro{padding-block:clamp(32px,9vw,180px);background:linear-gradient(rgba(0,0,0,.45),rgba(0,0,0,.45)),#111 url("https://images.filmwave.io/images/founding-artists/Founding-Artists-Background.jpg?v=2") center / cover no-repeat;color:#e5e5dd}
+.af-founding-intro{padding-block:clamp(32px,9vw,180px);background:linear-gradient(rgba(17,17,17,.45),rgba(17,17,17,.45)),#111 url("https://images.filmwave.io/images/founding-artists/Founding-Artists-Background.jpg?v=2") center / cover no-repeat;color:#e5e5dd}
 .af-founding-kicker,.af-founding-statement span,.af-founding-final>div>span{font:300 17px/1.2 var(--font-aktiv-grotesk),sans-serif;letter-spacing:0;text-transform:uppercase}
 .af-founding-intro .af-founding-width{width:calc(100% - 2 * clamp(32px,9vw,180px))}
 .af-founding-intro-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:clamp(32px,4vw,80px)}
