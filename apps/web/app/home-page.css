@@ -3428,20 +3428,20 @@ body:has(.audioflume-home-landing)
 /* Override shared link color rules for homepage keyword links in dark mode only. */
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword {
-  color: #999 !important;
+  color: #777 !important;
 }
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:hover,
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:focus-visible {
-  color: #999 !important;
+  color: #e5e5dd !important;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference .audioflume-home-landing-keywords a.audioflume-home-landing-keyword {
-  color: #aaa;
+  color: #c4c4c4;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:hover,
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:focus-visible {
-  color: #888;
+  color: #111;
 }
 .audioflume-home-landing-search {
   display: flex;
