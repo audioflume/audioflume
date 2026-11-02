@@ -38,8 +38,8 @@
 .af-founding-statement{background:#111 url("https://images.filmwave.io/images/founding-artists/Founding-Artists-Background.jpg?v=2") center / cover no-repeat;color:#e5e5dd;padding-block:clamp(100px,13vw,220px)}
 .af-founding-statement p{font-size:clamp(42px,7vw,118px);font-weight:300;line-height:1.02;letter-spacing:-.055em;margin:44px 0 0;max-width:1350px}
 .af-founding-process{padding-block:clamp(90px,10vw,170px)}
-.af-founding-steps-shelf{position:relative}
-.af-founding-steps{display:flex;gap:20px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding-bottom:1px}
+.af-founding-steps-shelf{position:relative;width:100vw;margin-left:calc(-1 * var(--af-gutter))}
+.af-founding-steps{display:flex;gap:20px;overflow-x:auto;overscroll-behavior-x:contain;scroll-snap-type:x mandatory;scroll-behavior:smooth;scrollbar-width:none;padding:0 var(--af-gutter) 1px;scroll-padding-inline:var(--af-gutter)}
 .af-founding-steps::-webkit-scrollbar{display:none}
 .af-founding-step-card{box-sizing:border-box;flex:0 0 calc((100% - 40px)/3);min-height:440px;padding:32px;display:flex;flex-direction:column;scroll-snap-align:start;background:#e5e5dd;color:#111;text-decoration:none}
 .af-founding-step-number{width:70px;height:70px;display:grid;place-items:center;background:#d1d1cc;color:#fff;font:300 28px/1 var(--font-roboto-mono-filmwave),monospace}
@@ -51,9 +51,9 @@
 .af-founding-step-apply-bottom{display:flex;align-items:flex-end;justify-content:space-between;gap:12px}
 .af-founding-step-apply strong{font-size:clamp(32px,3.2vw,54px);font-weight:500;letter-spacing:-.045em;line-height:1.05}
 .af-founding-step-apply svg{flex-shrink:0}
-.af-founding-steps-controls{display:flex;justify-content:flex-end;gap:8px;margin-top:22px}
-.af-founding-steps-controls button{display:grid;place-items:center;width:44px;height:44px;border:1px solid var(--filmwave-border-color);border-radius:50%;background:transparent;color:inherit;font-size:22px;cursor:pointer}
-.af-founding-steps-controls button:disabled{opacity:.3;cursor:default}
+.af-founding-steps-controls{position:absolute;inset:0;pointer-events:none}
+.af-founding-steps-controls button{position:absolute;top:50%;display:grid;place-items:center;width:44px;height:44px;border:0;border-radius:50%;background:#fff;color:#111;font-size:30px;cursor:pointer;opacity:0;pointer-events:auto;box-shadow:0 12px 34px rgba(0,0,0,.28);transform:translateY(-50%);transition:opacity 160ms ease,transform 160ms ease}
+.af-founding-steps-shelf:hover .af-founding-steps-controls button:not(:disabled),.af-founding-steps-controls button:focus-visible{opacity:1}.af-founding-steps-controls button:hover:not(:disabled){transform:translateY(-50%) scale(1.05)}.af-founding-steps-controls button:disabled{opacity:0;pointer-events:none}.af-founding-steps-controls button:first-child{left:28px}.af-founding-steps-controls button:last-child{right:28px}@media(hover:none){.af-founding-steps-controls button:not(:disabled){opacity:1}}
 :where(html.dark,html[data-theme="dark"]) .af-founding-step-card:not(.af-founding-step-apply){background:#e5e5dd;color:#111}
 :where(html.dark,html[data-theme="dark"]) .af-founding-step-apply{background:#111;color:#e5e5dd}
 @media(max-width:900px){.af-founding-step-card{flex-basis:calc((100% - 20px)/2)}}
