@@ -1,11 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import type { CSSProperties, ReactNode } from "react";
+import type { CSSProperties, ReactNode, Ref } from "react";
 import styles from "./PlaylistCardShell.module.css";
 
 type PlaylistCardShellProps = {
-  href: string;
+  href?: string;
+  cardRef?: Ref<HTMLElement>;
+  cardStyle?: CSSProperties;
   ariaLabel?: string;
   className?: string;
   mediaClassName?: string;
@@ -23,6 +25,8 @@ function joinClasses(...classes: Array<string | undefined>) {
 
 export default function PlaylistCardShell({
   href,
+  cardRef,
+  cardStyle,
   ariaLabel,
   className,
   mediaClassName,
@@ -34,19 +38,23 @@ export default function PlaylistCardShell({
   details,
 }: PlaylistCardShellProps) {
   return (
-    <article className={joinClasses(styles.card, className)}>
+    <article ref={cardRef} style={cardStyle} className={joinClasses(styles.card, className)}>
       <div
         {...(mediaDataAttribute ? { [mediaDataAttribute]: "" } : {})}
         className={joinClasses(styles.mediaShell, mediaClassName)}
         style={mediaStyle}
       >
-        <Link
-          href={href}
-          aria-label={ariaLabel}
-          className={joinClasses(styles.mediaLink, mediaLinkClassName)}
-        >
-          {media}
-        </Link>
+        {href ? (
+          <Link
+            href={href}
+            aria-label={ariaLabel}
+            className={joinClasses(styles.mediaLink, mediaLinkClassName)}
+          >
+            {media}
+          </Link>
+        ) : (
+          media
+        )}
         {overlays}
       </div>
       {details}
