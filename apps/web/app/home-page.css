@@ -3859,6 +3859,9 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-landing-pricing {
+  display: flex;
+  flex-direction: column;
+  gap: 80px;
   padding-bottom: 80px;
 }
 
