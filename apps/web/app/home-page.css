@@ -2208,8 +2208,8 @@ body:has(.audioflume-home-landing)
     .audioflume-home-reference-artist-card,
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card:not(:first-child) {
-    width: 92vw !important;
-    min-width: 92vw !important;
+    width: calc(100vw - var(--audioflume-home-page-gutter) + 10px) !important;
+    min-width: calc(100vw - var(--audioflume-home-page-gutter) + 10px) !important;
   }
 
   .audioflume-home-mockup-artists
