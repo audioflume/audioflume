@@ -2286,10 +2286,17 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-  width: min(92vw, max(462px, calc((min(var(--home-reference-width), 1535px) - 20px) / 3)));
-  min-width: min(92vw, max(462px, calc((min(var(--home-reference-width), 1535px) - 20px) / 3)));
+  width: calc((min(var(--home-reference-width), 1535px) - 20px) / 3);
+  min-width: calc((min(var(--home-reference-width), 1535px) - 20px) / 3);
   height: 260px;
   overflow: hidden;
+}
+
+@media (max-width: 1440px) {
+  .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
+    width: min(92vw, 462px, calc(596.933px - 11.25vw));
+    min-width: min(92vw, 462px, calc(596.933px - 11.25vw));
+  }
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
