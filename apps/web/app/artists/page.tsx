@@ -107,7 +107,7 @@ export default function ArtistsPage() {
 
   return (
     <main className={styles.page}>
-      <GlobalSearchBar layer="high" />
+      <GlobalSearchBar layer="high" position="flow" />
       <div className={styles.content}>
         <header className={styles.intro}>
           <div className={styles.introTop}>
