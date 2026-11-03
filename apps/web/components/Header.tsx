@@ -89,7 +89,7 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
-  const transparentAtTop = pathname === "/founding-artists";
+  const transparentAtTop = pathname === "/" || pathname === "/founding-artists";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
