@@ -2286,8 +2286,8 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-  width: min(445px, 92vw);
-  min-width: min(445px, 92vw);
+  width: min(92vw, clamp(445px, calc(483.25px - 2.65625vw), 462px));
+  min-width: min(92vw, clamp(445px, calc(483.25px - 2.65625vw), 462px));
   height: 260px;
   overflow: hidden;
 }
