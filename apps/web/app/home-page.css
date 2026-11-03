@@ -1531,7 +1531,7 @@ body:has(.audioflume-home-landing)
   font-weight: 300;
   letter-spacing: -0.03em;
   line-height: 1;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .audioflume-home-mockup-artists
@@ -2312,7 +2312,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-copy strong {
   font-size: 26px;
-  text-transform: uppercase;
+  text-transform: capitalize;
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-designation {
