@@ -76,7 +76,6 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
           <span className={styles.cardFallback} aria-hidden="true">{artist.name.slice(0, 1)}</span>
         )}
         <span className={styles.cardShade} aria-hidden="true" />
-        <span className={styles.cardIndex} aria-hidden="true">{String(index + 1).padStart(2, "0")} / ARTIST</span>
         <span className={styles.cardContent}>
           <strong className={styles.cardName}>{artist.name}</strong>
           {artist.designation ? <span className={styles.cardDesignation}>{artist.designation}</span> : null}
