@@ -23,7 +23,6 @@ type DirectoryArtist = {
 
 const INITIAL_GENRE_LIMIT = 14;
 const PREVIEW_CARD_COUNT = 8;
-const MASONRY_COLUMN_COUNT = 3;
 
 function ArtistPreviewCard({ index }: { index: number }) {
   return (
@@ -78,6 +77,21 @@ export default function ArtistsPage() {
   const [query, setQuery] = useState("");
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
   const [showAllGenres, setShowAllGenres] = useState(false);
+  const [columnCount, setColumnCount] = useState(3);
+
+  useEffect(() => {
+    const mobile = window.matchMedia("(max-width: 690px)");
+    const tablet = window.matchMedia("(max-width: 1050px)");
+    const syncColumnCount = () => setColumnCount(mobile.matches ? 1 : tablet.matches ? 2 : 3);
+
+    syncColumnCount();
+    mobile.addEventListener("change", syncColumnCount);
+    tablet.addEventListener("change", syncColumnCount);
+    return () => {
+      mobile.removeEventListener("change", syncColumnCount);
+      tablet.removeEventListener("change", syncColumnCount);
+    };
+  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -179,10 +193,10 @@ export default function ArtistsPage() {
           </div>
         ) : (
           <section className={styles.grid} aria-label="Artists">
-            {Array.from({ length: MASONRY_COLUMN_COUNT }, (_, column) => (
+            {Array.from({ length: columnCount }, (_, column) => (
               <div className={styles.column} key={column}>
                 {cards.map((card, index) => {
-                  if (index % MASONRY_COLUMN_COUNT !== column) return null;
+                  if (index % columnCount !== column) return null;
                   return card.kind === "artist" ? (
                     <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
                   ) : (
