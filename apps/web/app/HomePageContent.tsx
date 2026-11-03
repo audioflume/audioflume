@@ -210,11 +210,19 @@ function Shelf({
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
-    const amount = Math.max(scroller.clientWidth * 0.8, 360);
-    scroller.scrollBy({
-      left: direction === "next" ? amount : -amount,
-      behavior: "smooth",
-    });
+    const current = scroller.scrollLeft;
+    const inset = parseFloat(getComputedStyle(scroller).paddingLeft) || 0;
+    const bounds = scroller.getBoundingClientRect();
+    const starts = Array.from(scroller.children, (child) =>
+      child.getBoundingClientRect().left - bounds.left + current - inset,
+    );
+    const target = direction === "next"
+      ? starts.find((start) => start > current + 2)
+      : starts.findLast((start) => start < current - 2);
+
+    if (target !== undefined) {
+      scroller.scrollTo({ left: target, behavior: "smooth" });
+    }
   }
 
   useEffect(() => {
