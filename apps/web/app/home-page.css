@@ -2272,6 +2272,78 @@ body:has(.audioflume-home-landing)
 }
 
 
+/* Discover-only secondary artist shelf, sized to the former plan cards. */
+.audioflume-home-mockup-more-artists {
+  margin-bottom: 80px;
+}
+
+.audioflume-home-mockup-more-artists
+  .audioflume-home-reference-artist-shelf
+  .audioflume-home-reference-shelf-scroller {
+  gap: 10px;
+  padding-right: var(--audioflume-home-page-gutter);
+  padding-left: var(--audioflume-home-page-gutter);
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
+  width: clamp(280px, calc((100vw - var(--audioflume-home-page-gutter) - var(--audioflume-home-page-gutter) - 20px) / 3), 445px);
+  min-width: clamp(280px, calc((100vw - var(--audioflume-home-page-gutter) - var(--audioflume-home-page-gutter) - 20px) / 3), 445px);
+  height: 260px;
+  overflow: hidden;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
+  height: 260px;
+  aspect-ratio: auto;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-bar {
+  bottom: 24px;
+  padding-right: 82px;
+  padding-left: 28px;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-copy strong {
+  font-size: clamp(25px, 2.25vw, 34px);
+  text-transform: uppercase;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-designation {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 12px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-genres {
+  margin-top: 6px;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-mockup-artist-kicker {
+  position: absolute;
+  top: 24px;
+  left: 28px;
+  z-index: 2;
+  color: rgba(255, 255, 255, 0.82);
+  font-family: var(--font-roboto-mono-filmwave), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 300;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-play {
+  right: 24px;
+  bottom: 24px;
+  width: 46px;
+  height: 46px;
+  border-radius: 999px;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-play > span {
+  display: none;
+}
+
 /* ------------------------------------------------------------------ */
 /* Canonical homepage pricing cards + Lifetime block                  */
 /* ------------------------------------------------------------------ */
