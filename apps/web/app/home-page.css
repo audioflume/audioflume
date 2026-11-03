@@ -1284,12 +1284,12 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 4px;
-  padding-right: var(--audioflume-home-page-gutter);
-  padding-left: var(--audioflume-home-page-gutter);
-  scroll-padding-right: var(--audioflume-home-page-gutter);
-  scroll-padding-left: var(--audioflume-home-page-gutter);
-  scroll-snap-type: x proximity;
+  gap: 0;
+  padding-right: 0;
+  padding-left: 0;
+  scroll-padding-right: 0;
+  scroll-padding-left: 0;
+  scroll-snap-type: none !important;
 }
 
 .audioflume-home-mockup-curated-shelf {
@@ -1463,9 +1463,6 @@ body:has(.audioflume-home-landing)
   padding-bottom: 0;
 }
 
-.audioflume-home-mockup-artists
-  .audioflume-home-reference-artist-shelf
-  .audioflume-home-reference-shelf-scroller,
 .audioflume-home-mockup-curated-shelf
   .audioflume-home-reference-shelf-scroller {
   gap: 10px;
