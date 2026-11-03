@@ -109,9 +109,16 @@ export default function ReferenceSearchModal({
   }
 
   useEffect(() => {
-    if (!open) return;
+    if (!open || embedded) return;
 
-    if (!embedded) inputRef.current?.focus();
+    const frame = window.requestAnimationFrame(() => {
+      inputRef.current?.focus({ preventScroll: true });
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [open, embedded]);
+
+  useEffect(() => {
+    if (!open) return;
 
     function handleKeyDown(event: KeyboardEvent) {
       if (event.key !== "Escape") return;
