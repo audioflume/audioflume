@@ -616,7 +616,7 @@ export default function Header() {
         .filmwave-web-header.is-founding-route.is-transparent {
           --filmwave-transparent-header-text: #e5e5dd;
           --filmwave-transparent-header-hover-text: #e5e5dd;
-          --filmwave-transparent-header-muted-text: rgba(229, 229, 221, 0.65);
+          --filmwave-transparent-header-muted-text: #e5e5dd;
         }
 
         .filmwave-web-header.is-transparent {
