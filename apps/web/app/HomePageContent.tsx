@@ -975,7 +975,7 @@ export default function HomePageContent({
   }, []);
 
   return (
-    <main className={`audioflume-home-reference audioflume-home-mockup${playerVisible ? " has-player" : ""}`}>
+    <main className={`audioflume-home-reference audioflume-home-mockup${playerVisible ? " has-player" : ""}${!showHero ? " is-discover-route" : ""}`}>
       <GlobalSearchBar />
 
       {showHero ? (
@@ -1002,6 +1002,7 @@ export default function HomePageContent({
         </section>
       ) : null}
 
+      {showHero ? (
       <section className="audioflume-home-mockup-intro">
         <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
           <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
@@ -1013,6 +1014,7 @@ export default function HomePageContent({
           <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
         </div>
       </section>
+      ) : null}
 
       <section className="audioflume-home-mockup-artists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
