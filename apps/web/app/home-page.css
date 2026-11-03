@@ -1278,9 +1278,11 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists {
-  --audioflume-featured-artist-gap: 4px;
+  --audioflume-featured-artist-gap: 10px;
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
-  --audioflume-featured-artist-scroll-snap: x proximity;
+  --audioflume-featured-artist-scroll-snap: none;
+  --audioflume-featured-artist-scroll-padding: 0;
+  --audioflume-featured-artist-mobile-width: 92vw;
 }
 
 .audioflume-home-mockup-artists .audioflume-home-reference-artist-shelf {
@@ -1293,8 +1295,8 @@ body:has(.audioflume-home-landing)
   gap: var(--audioflume-featured-artist-gap, 0px);
   padding-right: var(--audioflume-featured-artist-inset, 0px);
   padding-left: var(--audioflume-featured-artist-inset, 0px);
-  scroll-padding-right: var(--audioflume-featured-artist-inset, 0px);
-  scroll-padding-left: var(--audioflume-featured-artist-inset, 0px);
+  scroll-padding-right: var(--audioflume-featured-artist-scroll-padding, var(--audioflume-featured-artist-inset, 0px));
+  scroll-padding-left: var(--audioflume-featured-artist-scroll-padding, var(--audioflume-featured-artist-inset, 0px));
   scroll-snap-type: var(--audioflume-featured-artist-scroll-snap, none);
 }
 
@@ -2214,8 +2216,8 @@ body:has(.audioflume-home-landing)
     .audioflume-home-reference-artist-card,
   .audioflume-home-mockup-artists
     .audioflume-home-reference-artist-card:not(:first-child) {
-    width: calc(100vw - var(--audioflume-home-page-gutter) + 10px) !important;
-    min-width: calc(100vw - var(--audioflume-home-page-gutter) + 10px) !important;
+    width: var(--audioflume-featured-artist-mobile-width, calc(100vw - var(--audioflume-home-page-gutter) + 10px)) !important;
+    min-width: var(--audioflume-featured-artist-mobile-width, calc(100vw - var(--audioflume-home-page-gutter) + 10px)) !important;
   }
 
   .audioflume-home-mockup-artists
