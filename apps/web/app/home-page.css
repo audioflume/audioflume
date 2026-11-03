@@ -52,7 +52,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-landing {
-  padding-top: var(--filmwave-header-height, 75px);
+  padding-top: 0;
 }
 
 .audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill) {
@@ -108,9 +108,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-landing .audioflume-home-reference-hero {
-  width: var(--home-reference-width);
-  margin-inline: auto;
-  height: calc(100dvh - 28px - var(--filmwave-header-height, 75px));
+  height: calc(100dvh - 28px);
   min-height: 470px;
 }
 
@@ -3082,13 +3080,13 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-home-landing .audioflume-home-reference-hero {
-    height: calc(100dvh - 28px - var(--filmwave-header-height, 75px));
+    height: calc(100dvh - 28px);
     min-height: 350px;
   }
 
   .audioflume-home-landing.has-player .audioflume-home-reference-hero {
     height: calc(
-      100dvh - 28px - var(--filmwave-header-height, 75px) - var(--filmwave-player-height, 72px)
+      100dvh - 28px - var(--filmwave-player-height, 72px)
     );
   }
 
@@ -3126,13 +3124,11 @@ body:has(.audioflume-home-landing)
 
 /* 2026 landing composition: edge-to-edge hero, discovery, marquee and editorial copy. */
 .audioflume-home-landing .audioflume-home-reference-hero {
-  width: var(--home-reference-width);
-  margin-inline: auto;
-  height: calc(100dvh - 28px - var(--filmwave-header-height, 75px));
+  height: calc(100dvh - 28px);
   min-height: 470px;
 }
 .audioflume-home-landing.has-player .audioflume-home-reference-hero {
-  height: calc(100dvh - 28px - var(--filmwave-header-height, 75px) - var(--filmwave-player-height, 72px));
+  height: calc(100dvh - 28px - var(--filmwave-player-height, 72px));
   min-height: 470px;
 }
 .audioflume-home-landing .audioflume-home-reference-hero-headline {
@@ -3836,8 +3832,8 @@ body:has(.audioflume-home-landing)
 }
 
 @media (max-width: 760px) {
-  .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-header-height, 75px)); min-height: 350px; }
-  .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-header-height, 75px) - var(--filmwave-player-height, 72px)); min-height: 350px; }
+  .audioflume-home-landing .audioflume-home-reference-hero { height: calc(100dvh - 28px); min-height: 350px; }
+  .audioflume-home-landing.has-player .audioflume-home-reference-hero { height: calc(100dvh - 28px - var(--filmwave-player-height, 72px)); min-height: 350px; }
 
   .audioflume-home-landing-search { width: min(940px, calc(100% - 32px)); height: 52px; }
   .audioflume-home-landing-search-brand { flex-basis: 48px; height: calc(100% - 10px); }
