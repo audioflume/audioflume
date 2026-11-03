@@ -4206,6 +4206,14 @@ body:has(.audioflume-home-landing)
   background: var(--audioflume-home-hero-photo) center / cover no-repeat;
   pointer-events: none;
 }
+.audioflume-home-landing .audioflume-home-landing-hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
 .audioflume-home-landing .audioflume-home-reference-hero-headline > span {
   display: inline-block;
   position: static;
