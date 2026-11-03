@@ -635,9 +635,6 @@ function HomeCuratedPlaylistShelf({
                 }}
               />
               <span className="audioflume-home-mockup-curated-card-shade" />
-              <span className="audioflume-home-mockup-curated-card-kicker">
-                Featured playlist
-              </span>
               <strong>{playlist.name}</strong>
             </Link>
 
@@ -819,7 +816,6 @@ function HomeCuratedPlaylistSkeleton() {
           aria-hidden="true"
         >
           <HomeSkeletonBlock className="is-playlist-media" />
-          <HomeSkeletonBlock className="is-playlist-kicker" />
           <HomeSkeletonBlock className="is-playlist-title" />
           <HomeSkeletonBlock className="is-playlist-play" />
         </article>
