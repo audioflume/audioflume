@@ -1271,6 +1271,11 @@ body:has(.audioflume-home-landing)
   background: var(--bg-primary);
 }
 
+.audioflume-home-mockup.is-discover-route {
+  --audioflume-featured-artist-gap: 0px;
+  --audioflume-featured-artist-inset: 0px;
+}
+
 .audioflume-home-mockup-artists {
   overflow: hidden;
   padding-bottom: 54px;
@@ -1284,11 +1289,11 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 4px;
-  padding-right: var(--audioflume-home-page-gutter);
-  padding-left: var(--audioflume-home-page-gutter);
-  scroll-padding-right: var(--audioflume-home-page-gutter);
-  scroll-padding-left: var(--audioflume-home-page-gutter);
+  gap: var(--audioflume-featured-artist-gap, 4px);
+  padding-right: var(--audioflume-featured-artist-inset, var(--audioflume-home-page-gutter));
+  padding-left: var(--audioflume-featured-artist-inset, var(--audioflume-home-page-gutter));
+  scroll-padding-right: var(--audioflume-featured-artist-inset, var(--audioflume-home-page-gutter));
+  scroll-padding-left: var(--audioflume-featured-artist-inset, var(--audioflume-home-page-gutter));
   scroll-snap-type: x proximity;
 }
 
@@ -1465,7 +1470,12 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-shelf
-  .audioflume-home-reference-shelf-scroller,
+  .audioflume-home-reference-shelf-scroller {
+  gap: var(--audioflume-featured-artist-gap, 10px);
+  scroll-snap-type: none !important;
+  scroll-padding: 0 !important;
+}
+
 .audioflume-home-mockup-curated-shelf
   .audioflume-home-reference-shelf-scroller {
   gap: 10px;
