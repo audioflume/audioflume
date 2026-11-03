@@ -1028,8 +1028,7 @@ export default function HomePageContent({
         </section>
       ) : null}
 
-      {showHero ? (
-        <section className="audioflume-home-mockup-intro">
+      <section className="audioflume-home-mockup-intro">
           <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
             <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
             <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
@@ -1040,7 +1039,6 @@ export default function HomePageContent({
             <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
           </div>
         </section>
-      ) : null}
 
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
