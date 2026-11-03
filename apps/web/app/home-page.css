@@ -2304,7 +2304,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-copy strong {
-  font-size: clamp(20px, 1.7vw, 26px);
+  font-size: 26px;
   text-transform: uppercase;
 }
 
