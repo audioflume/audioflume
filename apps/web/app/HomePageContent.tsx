@@ -548,7 +548,7 @@ function HomeArtistShelf({
             <div className="audioflume-home-reference-artist-link">
               <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
               <div className="audioflume-home-reference-artist-media">
-                <span className="audioflume-home-mockup-artist-kicker">Featured artist</span>
+                {!compact ? <span className="audioflume-home-mockup-artist-kicker">Featured artist</span> : null}
                 {image ? (
                   <img
                     src={image}
@@ -568,7 +568,7 @@ function HomeArtistShelf({
                       {artist.designation}
                     </span>
                   ) : null}
-                  <GenreFilterPills genres={genres} showPlaceholders className="audioflume-home-reference-artist-genres" />
+                  {!compact ? <GenreFilterPills genres={genres} showPlaceholders className="audioflume-home-reference-artist-genres" /> : null}
                 </span>
               </div>
             </div>
@@ -579,7 +579,7 @@ function HomeArtistShelf({
               disabled={!playable.length}
               aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
             >
-              {artistIsPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+              {artistIsPlaying ? <PauseIcon size={compact ? 15 : 18} /> : <PlayIconSmall size={compact ? 15 : 18} />}
               <span>{artistIsPlaying ? "Pause Music" : "Play Music"}</span>
             </button>
           </article>
