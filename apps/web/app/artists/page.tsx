@@ -22,6 +22,21 @@ type DirectoryArtist = {
 };
 
 const INITIAL_GENRE_LIMIT = 14;
+const PREVIEW_CARD_COUNT = 8;
+const MASONRY_COLUMN_COUNT = 3;
+
+function ArtistPreviewCard({ index }: { index: number }) {
+  return (
+    <div className={`${styles.previewCard} ${styles[`cardShape${index % 6}`]}`} aria-label="Artist layout preview">
+      <span className={styles.previewIndex}>{String(index + 1).padStart(2, "0")} / PREVIEW</span>
+      <span className={styles.previewContent}>
+        <span>ARTIST DIRECTORY</span>
+        <strong>Artist preview</strong>
+        <span>Layout placeholder</span>
+      </span>
+    </div>
+  );
+}
 
 function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number }) {
   const image = artist.hero_image_url || artist.profile_image_url;
@@ -104,6 +119,13 @@ export default function ArtistsPage() {
   }, [artists, query, activeGenre]);
 
   const displayedGenres = showAllGenres ? genres : genres.slice(0, INITIAL_GENRE_LIMIT);
+  const showPreviews = !query.trim() && !activeGenre;
+  const cards = [
+    ...visibleArtists.map((artist) => ({ kind: "artist" as const, artist })),
+    ...(showPreviews
+      ? Array.from({ length: PREVIEW_CARD_COUNT }, (_, index) => ({ kind: "preview" as const, index }))
+      : []),
+  ];
 
   return (
     <main className={styles.page}>
@@ -157,7 +179,18 @@ export default function ArtistsPage() {
           </div>
         ) : (
           <section className={styles.grid} aria-label="Artists">
-            {visibleArtists.map((artist, index) => <ArtistCard key={artist.id} artist={artist} index={index} />)}
+            {Array.from({ length: MASONRY_COLUMN_COUNT }, (_, column) => (
+              <div className={styles.column} key={column}>
+                {cards.map((card, index) => {
+                  if (index % MASONRY_COLUMN_COUNT !== column) return null;
+                  return card.kind === "artist" ? (
+                    <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
+                  ) : (
+                    <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
+                  );
+                })}
+              </div>
+            ))}
           </section>
         )}
       </div>
