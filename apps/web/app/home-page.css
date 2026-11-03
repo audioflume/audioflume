@@ -1924,7 +1924,7 @@ body:has(.audioflume-home-landing)
   position: relative;
   width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
   min-width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
-  height: 252px;
+  height: 275px;
   overflow: hidden;
   border-radius: 0;
   background: var(--bg-tertiary);
@@ -1972,7 +1972,7 @@ body:has(.audioflume-home-landing)
   overflow: hidden;
   color: #ffffff;
   font-size: 24px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -0.035em;
   line-height: 1.05;
   text-overflow: ellipsis;
