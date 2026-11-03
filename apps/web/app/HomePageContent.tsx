@@ -18,7 +18,7 @@ import {
 
 import Footer from "@/components/Footer";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
-import { DiscoverPricingCards, DiscoverLifetimeAccess } from "./DiscoverPricingSections";
+import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
@@ -488,9 +488,11 @@ function HomeReadyToCutSongCard({
 function HomeArtistShelf({
   artists,
   homeFlashImages,
+  compact = false,
 }: {
   artists: HomeArtist[];
   homeFlashImages: string[];
+  compact?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -519,8 +521,8 @@ function HomeArtistShelf({
   return (
     <Shelf
       label="in demand artists"
-      className="audioflume-home-reference-artist-shelf"
-      customScrollbar
+      className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}`}
+      customScrollbar={!compact}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
@@ -771,12 +773,12 @@ function HomeTrendingSkeleton() {
   );
 }
 
-function HomeArtistShelfSkeleton() {
+function HomeArtistShelfSkeleton({ compact = false }: { compact?: boolean }) {
   return (
     <Shelf
       label="in demand artists"
-      className="audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf"
-      customScrollbar
+      className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}`}
+      customScrollbar={!compact}
     >
       {Array.from({ length: 3 }, (_, index) => (
         <article
@@ -1125,13 +1127,19 @@ export default function HomePageContent({
         )}
       </section>
 
-      <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-        <span>Music licensing for every creator</span>
-        <Link href="/pricing" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
-          Explore plans <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
-        </Link>
-      </div>
-      <DiscoverPricingCards />
+      <section className="audioflume-home-mockup-more-artists">
+        <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+          <span>Discover more artists</span>
+          <Link href="/artists" className="audioflume-arrow-text-link inline-flex items-center gap-[5px]">
+            Explore artists <ArrowUpRightIcon size={16} strokeWidth={1.5} className="translate-y-[2px]" />
+          </Link>
+        </div>
+        {artistsLoading ? (
+          <HomeArtistShelfSkeleton compact />
+        ) : artists.length > 0 ? (
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact />
+        ) : null}
+      </section>
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <DiscoverLifetimeAccess originalSongs={originalSongs} songsLoading={songsLoading} />
