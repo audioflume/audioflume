@@ -5,6 +5,11 @@ import { useEffect, useMemo, useState } from "react";
 
 import Footer from "@/components/Footer";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PauseIcon from "@/components/icons/PauseIcon";
+import { usePlayer } from "@/context/PlayerContext";
+import type { Song } from "@/lib/types";
+import "@/components/curated/curated-browse-filters.css";
 import styles from "./page.module.css";
 
 type DirectoryArtist = {
@@ -19,6 +24,7 @@ type DirectoryArtist = {
   hero_image_position_y: number;
   genres: string[];
   track_count: number;
+  songs: Song[];
 };
 
 const INITIAL_GENRE_LIMIT = 14;
@@ -38,8 +44,22 @@ function ArtistPreviewCard({ index }: { index: number }) {
 }
 
 function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number }) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
-  const primaryGenre = artist.genres[0] ?? artist.designation ?? "Artist";
+  const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+  const artistIsPlaying = Boolean(
+    isPlaying && currentSong && playable.some((song) => song.id === currentSong.id),
+  );
+
+  function playArtist() {
+    if (!playable.length) return;
+    if (artistIsPlaying && currentSong) {
+      togglePlayPause(currentSong);
+      return;
+    }
+    setQueue(playable);
+    togglePlayPause(playable[0]);
+  }
 
   return (
     <article className={`${styles.card} ${styles[`cardShape${index % 6}`]}`}>
@@ -58,14 +78,24 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
         <span className={styles.cardShade} aria-hidden="true" />
         <span className={styles.cardIndex} aria-hidden="true">{String(index + 1).padStart(2, "0")} / ARTIST</span>
         <span className={styles.cardContent}>
-          <span className={styles.cardDetail}>{primaryGenre}</span>
           <strong className={styles.cardName}>{artist.name}</strong>
-          <span className={styles.cardBottom}>
-            <span>{artist.designation || (artist.track_count ? `${artist.track_count} ${artist.track_count === 1 ? "track" : "tracks"}` : "Explore artist")}</span>
-            <span className={styles.cardArrow} aria-hidden="true">↗</span>
+          {artist.designation ? <span className={styles.cardDesignation}>{artist.designation}</span> : null}
+          <span className={styles.cardGenres} aria-label="Artist genres">
+            {artist.genres.length
+              ? artist.genres.slice(0, 3).map((genre) => <span className={styles.cardGenre} key={genre}>{genre}</span>)
+              : [0, 1, 2].map((item) => <span className={`${styles.cardGenre} ${styles.cardGenrePlaceholder}`} aria-hidden="true" key={item} />)}
           </span>
         </span>
       </Link>
+      <button
+        type="button"
+        className={styles.cardPlay}
+        onClick={playArtist}
+        disabled={!playable.length}
+        aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
+      >
+        {artistIsPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+      </button>
     </article>
   );
 }
@@ -166,12 +196,12 @@ export default function ArtistsPage() {
           {!loading && genres.length > 0 && (
             <div className={styles.filters}>
               <div className={styles.genrePills} role="group" aria-label="Filter artists by genre">
-                <button type="button" className={`${styles.genrePill} ${activeGenre === null ? styles.genrePillActive : ""}`} aria-pressed={activeGenre === null} onClick={() => setActiveGenre(null)}>All genres</button>
+                <button type="button" className={`curated-main-filter-pill${activeGenre === null ? " is-active" : ""}`} aria-pressed={activeGenre === null} onClick={() => setActiveGenre(null)}>All genres</button>
                 {displayedGenres.map(([genre]) => (
-                  <button key={genre} type="button" className={`${styles.genrePill} ${activeGenre === genre ? styles.genrePillActive : ""}`} aria-pressed={activeGenre === genre} onClick={() => setActiveGenre(activeGenre === genre ? null : genre)}>{genre}</button>
+                  <button key={genre} type="button" className={`curated-main-filter-pill${activeGenre === genre ? " is-active" : ""}`} aria-pressed={activeGenre === genre} onClick={() => setActiveGenre(activeGenre === genre ? null : genre)}>{genre}</button>
                 ))}
                 {genres.length > INITIAL_GENRE_LIMIT && (
-                  <button type="button" className={styles.moreGenres} onClick={() => setShowAllGenres(!showAllGenres)} aria-expanded={showAllGenres}>
+                  <button type="button" className="curated-main-filter-pill" onClick={() => setShowAllGenres(!showAllGenres)} aria-expanded={showAllGenres}>
                     {showAllGenres ? "Show less −" : `All genres +${genres.length - INITIAL_GENRE_LIMIT}`}
                   </button>
                 )}
