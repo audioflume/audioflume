@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 
 import { supabaseServer } from "@/lib/supabaseServer";
+import { attachEditPoints, attachPrimaryArtistProfiles, normalizeSongRow } from "@/lib/songs";
 
 type ArtistRow = {
   id: string;
@@ -46,11 +47,23 @@ export async function GET() {
     for (let start = 0; start < songIds.length; start += 100) {
       const { data: batch, error } = await supabaseServer
         .from("songs")
-        .select("id, genres")
+        .select("*")
         .in("id", songIds.slice(start, start + 100))
         .eq("status", "published");
       if (error) throw error;
       songs.push(...((batch ?? []) as GenreSong[]));
+    }
+
+    const playableSongs = await attachPrimaryArtistProfiles(
+      await attachEditPoints(songs.map((song) => normalizeSongRow(song))),
+    );
+    const songsById = new Map(playableSongs.map((song) => [song.id, song]));
+    const songIdsByArtist = new Map<string, string[]>();
+    for (const link of links) {
+      if (!songsById.has(link.song_id)) continue;
+      const artistSongIds = songIdsByArtist.get(link.artist_id) ?? [];
+      if (!artistSongIds.includes(link.song_id)) artistSongIds.push(link.song_id);
+      songIdsByArtist.set(link.artist_id, artistSongIds);
     }
 
     const genresBySong = new Map(songs.map((song) => [song.id, song.genres ?? []]));
@@ -84,6 +97,9 @@ export async function GET() {
           hero_image_position_y: artist.hero_image_position_y ?? 50,
           genres: [...(genresByArtist.get(artist.id) ?? [])].sort((a, b) => a.localeCompare(b)),
           track_count: trackCounts.get(artist.id) ?? 0,
+          songs: (songIdsByArtist.get(artist.id) ?? [])
+            .map((songId) => songsById.get(songId))
+            .filter((song) => Boolean(song)),
         })),
     });
   } catch (error) {
