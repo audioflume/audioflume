@@ -211,18 +211,38 @@ function Shelf({
     if (!scroller) return;
 
     const current = scroller.scrollLeft;
-    const inset = parseFloat(getComputedStyle(scroller).paddingLeft) || 0;
+    const styles = getComputedStyle(scroller);
+    const leftInset = parseFloat(styles.paddingLeft) || 0;
+    const rightInset = parseFloat(styles.paddingRight) || 0;
+    const visibleWidth = scroller.clientWidth - leftInset - rightInset;
     const bounds = scroller.getBoundingClientRect();
-    const starts = Array.from(scroller.children, (child) =>
-      child.getBoundingClientRect().left - bounds.left + current - inset,
-    );
-    const target = direction === "next"
-      ? starts.find((start) => start > current + 2)
-      : starts.findLast((start) => start < current - 2);
+    const cards = Array.from(scroller.children, (child) => {
+      const rect = child.getBoundingClientRect();
+      return {
+        start: rect.left - bounds.left + current - leftInset,
+        width: rect.width,
+      };
+    });
+    if (!cards.length) return;
 
-    if (target !== undefined) {
-      scroller.scrollTo({ left: target, behavior: "smooth" });
-    }
+    const firstFullyVisible = cards.findIndex(
+      (card) => card.start >= current - 1 && card.start + card.width <= current + visibleWidth + 1,
+    );
+    const visibleCount = Math.max(
+      1,
+      cards.filter(
+        (card) => card.start >= current - 1 && card.start + card.width <= current + visibleWidth + 1,
+      ).length,
+    );
+    const anchor = firstFullyVisible >= 0
+      ? firstFullyVisible
+      : Math.max(0, cards.findIndex((card) => card.start > current));
+
+    const targetIndex = Math.max(
+      0,
+      Math.min(cards.length - 1, anchor + (direction === "next" ? visibleCount : -visibleCount)),
+    );
+    scroller.scrollTo({ left: cards[targetIndex].start, behavior: "smooth" });
   }
 
   useEffect(() => {
