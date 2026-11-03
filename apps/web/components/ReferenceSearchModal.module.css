@@ -7,6 +7,7 @@
   justify-content: center;
   background: rgba(0, 0, 0, 0.58);
   padding: 32px;
+  will-change: opacity;
 }
 
 .modal {
@@ -28,6 +29,7 @@
 
   .backdrop > .modal {
     animation: referenceSearchModalIn 260ms cubic-bezier(.22, 1, .36, 1) both;
+    will-change: opacity, transform;
   }
 }
 
