@@ -164,46 +164,7 @@
 .cardShape5 { aspect-ratio: 1 / .84; }
 
 .previewCard {
-  position: relative;
-  background: var(--bg-secondary);
-  border: 1px solid var(--border);
-  color: var(--text-secondary);
-}
-
-.previewIndex {
-  position: absolute;
-  top: 24px;
-  left: 26px;
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 10px;
-  letter-spacing: .04em;
-}
-
-.previewContent {
-  position: absolute;
-  right: 26px;
-  bottom: 25px;
-  left: 26px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.previewContent > span {
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 10px;
-  letter-spacing: .04em;
-  text-transform: uppercase;
-}
-
-.previewContent strong {
-  color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(28px, 3vw, 46px);
-  font-weight: 300;
-  letter-spacing: -.05em;
-  line-height: 1.05;
+  background: #666;
 }
 
 .cardLink {
