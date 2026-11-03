@@ -1032,17 +1032,19 @@ export default function HomePageContent({
         </section>
       ) : null}
 
-      <section className="audioflume-home-mockup-intro">
-        <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
-          <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
-          <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
-        </div>
+      {showHero ? (
+        <section className="audioflume-home-mockup-intro">
+          <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
+            <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
+            <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
+          </div>
 
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
-          <h2>This month&apos;s featured artists</h2>
-          <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
-        </div>
-      </section>
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
+            <h2>This month&apos;s featured artists</h2>
+            <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
+          </div>
+        </section>
+      ) : null}
 
       <section className="audioflume-home-mockup-artists">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
