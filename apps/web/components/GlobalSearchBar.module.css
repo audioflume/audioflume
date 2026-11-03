@@ -15,8 +15,6 @@
   border-bottom: 1.25px solid var(--filmwave-border-color);
   background: #111111;
   color: #ffffff;
-  overscroll-behavior: none;
-  touch-action: none;
 }
 
 .flow {
