@@ -4539,7 +4539,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-founders-intro p {
   margin: 0 0 38px;
   font-size: clamp(28px, 2.6vw, 36px);
-  font-weight: 500;
+  font-weight: 300;
   line-height: 1.04;
   letter-spacing: -.035em;
   white-space: nowrap;
