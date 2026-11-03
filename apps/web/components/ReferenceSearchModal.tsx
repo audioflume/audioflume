@@ -86,6 +86,7 @@ export default function ReferenceSearchModal({
   onSubmit,
   embedded = false,
 }: ReferenceSearchModalProps) {
+  const [portalReady, setPortalReady] = useState(false);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const searchFormRef = useRef<HTMLFormElement | null>(null);
   const activeSearchRef = useRef<AbortController | null>(null);
@@ -95,6 +96,10 @@ export default function ReferenceSearchModal({
   const [selectedResult, setSelectedResult] =
     useState<ReferenceCatalogResult | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    setPortalReady(true);
+  }, []);
 
   function closeModal() {
     activeSearchRef.current?.abort();
@@ -212,8 +217,6 @@ export default function ReferenceSearchModal({
       controller.abort();
     };
   }, [open, value]);
-
-  if (!open) return null;
 
   async function submitQuery(
     query: string,
@@ -439,11 +442,14 @@ export default function ReferenceSearchModal({
   );
 
   if (embedded) return modal;
+  if (!portalReady) return null;
 
   return createPortal(
     <div
-      className={styles.backdrop}
+      className={`${styles.backdrop}${open ? ` ${styles.backdropOpen}` : ""}`}
       role="presentation"
+      aria-hidden={!open}
+      inert={!open}
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) closeModal();
       }}
