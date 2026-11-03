@@ -32,14 +32,21 @@ const PREVIEW_CARD_COUNT = 8;
 
 function ArtistPreviewCard({ index }: { index: number }) {
   return (
-    <div className={`${styles.previewCard} ${styles[`cardShape${index % 6}`]}`} aria-label="Artist layout preview">
-      <span className={styles.previewIndex}>{String(index + 1).padStart(2, "0")} / PREVIEW</span>
-      <span className={styles.previewContent}>
-        <span>ARTIST DIRECTORY</span>
-        <strong>Artist preview</strong>
-        <span>Layout placeholder</span>
-      </span>
-    </div>
+    <article className={`${styles.card} ${styles.previewCard} ${styles[`cardShape${index % 6}`]}`} aria-label="Artist layout preview">
+      <div className={styles.cardLink}>
+        <span className={styles.cardShade} aria-hidden="true" />
+        <span className={styles.cardContent}>
+          <strong className={styles.cardName}>Artist preview</strong>
+          <span className={styles.cardDesignation}>Layout placeholder</span>
+          <span className={styles.cardGenres} aria-hidden="true">
+            {[0, 1, 2].map((item) => <span className={`${styles.cardGenre} ${styles.cardGenrePlaceholder}`} key={item} />)}
+          </span>
+        </span>
+      </div>
+      <button type="button" className={styles.cardPlay} disabled aria-label="Preview artist unavailable">
+        <PlayIconSmall size={18} />
+      </button>
+    </article>
   );
 }
 
