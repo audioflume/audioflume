@@ -780,7 +780,7 @@ function HomeArtistShelfSkeleton({ compact = false }: { compact?: boolean }) {
       className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}`}
       customScrollbar={!compact}
     >
-      {Array.from({ length: 3 }, (_, index) => (
+      {Array.from({ length: compact ? 4 : 3 }, (_, index) => (
         <article
           key={index}
           className="audioflume-home-reference-artist-card audioflume-home-skeleton-artist-card"
