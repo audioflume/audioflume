@@ -250,18 +250,6 @@
   background: linear-gradient(180deg, rgba(0,0,0,.30) 0%, transparent 34%, rgba(0,0,0,.14) 53%, rgba(0,0,0,.83) 100%);
 }
 
-.cardIndex {
-  position: absolute;
-  z-index: 2;
-  top: 24px;
-  left: 26px;
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 10px;
-  font-weight: 400;
-  letter-spacing: .04em;
-  color: rgba(255,255,255,.83);
-}
-
 .cardContent {
   position: absolute;
   z-index: 2;
@@ -275,7 +263,7 @@
 
 .cardName {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(30px, 3vw, 54px);
+  font-size: clamp(36px, 2.55vw, 50px);
   font-weight: 300;
   letter-spacing: -.05em;
   line-height: 1.02;
@@ -378,7 +366,6 @@
 @media (max-width: 1050px) {
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .intro { padding-top: 42px; }
-  .cardName { font-size: clamp(30px, 4vw, 48px); }
 }
 
 @media (max-width: 690px) {
@@ -394,9 +381,8 @@
   .grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .column { gap: 12px; }
   .cardShape0, .cardShape1, .cardShape2, .cardShape3, .cardShape4, .cardShape5 { aspect-ratio: 1 / 1.05; }
-  .cardIndex { top: 20px; left: 21px; }
   .cardContent { right: 78px; bottom: 21px; left: 21px; }
-  .cardName { font-size: clamp(35px, 8vw, 54px); }
+  .cardName { font-size: clamp(30px, 8vw, 42px); }
 }
 
 @media (prefers-reduced-motion: reduce) {
