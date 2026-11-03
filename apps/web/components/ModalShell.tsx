@@ -3,6 +3,7 @@
 import { ReactNode, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { usePlayer } from "@/context/PlayerContext";
+import styles from "./ModalShell.module.css";
 
 type ModalShellProps = {
   isOpen: boolean;
@@ -135,7 +136,7 @@ export default function ModalShell({
   const modal = (
     <div
       onClick={onClose}
-      className="fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-[var(--modal-backdrop)] px-4"
+      className={`fixed inset-0 z-[200] flex items-center justify-center overflow-y-auto bg-[var(--modal-backdrop)] px-4 ${styles.backdrop}`}
       style={{
         paddingTop: "32px",
         paddingBottom: playerVisible ? "96px" : "32px",
@@ -149,7 +150,7 @@ export default function ModalShell({
         aria-label={headerContent ? title : undefined}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden ${contentCornerClassName} border-0 ${contentClassName}`}
+        className={`relative my-auto flex w-full ${maxWidth} flex-col overflow-hidden ${contentCornerClassName} border-0 ${contentClassName} ${styles.dialog}`}
         style={{
           maxHeight: modalMaxHeight,
           background,
