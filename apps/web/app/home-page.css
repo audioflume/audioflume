@@ -1444,8 +1444,8 @@ body:has(.audioflume-home-landing)
     white-space: normal;
     overflow-wrap: normal;
     word-break: normal;
-    text-align: left;
-    text-align-last: auto;
+    text-align: justify;
+    text-align-last: justify;
   }
 }
 
