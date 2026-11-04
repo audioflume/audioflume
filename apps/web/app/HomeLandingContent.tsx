@@ -249,7 +249,7 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
           aria-hidden="true"
         />
         <div className="audioflume-home-reference-hero-shade" />
-        <h1 className="audioflume-home-reference-hero-headline">Human made<br className="audioflume-home-hero-narrow-break" />{" "}music<br className="audioflume-home-hero-responsive-break" />&amp; SFX<br className="audioflume-home-hero-narrow-break" />{" "}for film</h1>
+        <h1 className="audioflume-home-reference-hero-headline">Human made<br className="audioflume-home-hero-narrow-break" />{" "}music<br className="audioflume-home-hero-responsive-break" />{" "}&amp; SFX<br className="audioflume-home-hero-narrow-break" />{" "}for film</h1>
         <div className="audioflume-home-landing-hero-captions">
           <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
           <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
