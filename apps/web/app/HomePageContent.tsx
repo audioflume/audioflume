@@ -19,6 +19,8 @@ import {
 import Footer from "@/components/Footer";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
+import DiscoverEditorialArtists from "./discover/DiscoverEditorialArtists";
+import editorialStyles from "./discover/DiscoverEditorialArtists.module.css";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
@@ -1034,23 +1036,40 @@ export default function HomePageContent({
             <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
           </div>
 
-          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
+          {!showHero ? (
+            <div className={editorialStyles.heading}>
+              <h2>The people behind the sound.</h2>
+              <p>An evolving selection of artists and composers shaping the Audioflume catalogue.</p>
+            </div>
+          ) : (
+            <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
+              <h2>This month&apos;s featured artists</h2>
+              <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
+            </div>
+          )}
+        </section>
+
+      {!showHero ? (
+        artistsLoading ? (
+          <section className="audioflume-home-mockup-artists is-discover-featured-artists">
+            <HomeArtistShelfSkeleton />
+          </section>
+        ) : (
+          <DiscoverEditorialArtists artists={artists} />
+        )
+      ) : (
+        <section className="audioflume-home-mockup-artists">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
             <h2>This month&apos;s featured artists</h2>
             <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
           </div>
+          {artistsLoading ? (
+            <HomeArtistShelfSkeleton />
+          ) : artists.length > 0 ? (
+            <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} />
+          ) : null}
         </section>
-
-      <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
-          <h2>This month&apos;s featured artists</h2>
-          <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
-        </div>
-        {artistsLoading ? (
-          <HomeArtistShelfSkeleton />
-        ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} />
-        ) : null}
-      </section>
+      )}
 
       {curatedPlaylistsLoading ? (
         <section className="audioflume-home-mockup-curated">
