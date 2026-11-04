@@ -177,6 +177,12 @@
 
 .featuredCard {
   aspect-ratio: 1 / 1.55;
+  --artist-featured-name-size: clamp(60px, 7.5vw, 115px);
+  --artist-featured-name-case: uppercase;
+  --artist-featured-name-tracking: -0.03em;
+  --artist-featured-name-line-height: 0.88;
+  --artist-featured-designation-size: 15px;
+  --artist-featured-designation-spacing: 5px;
 }
 
 .grid > .featuredCard {
@@ -317,17 +323,18 @@
 
 .cardName {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(36px, 2.55vw, 50px);
+  font-size: var(--artist-featured-name-size, clamp(36px, 2.55vw, 50px));
   font-weight: 300;
-  letter-spacing: -.05em;
-  line-height: 1.02;
+  letter-spacing: var(--artist-featured-name-tracking, -.05em);
+  line-height: var(--artist-featured-name-line-height, 1.02);
+  text-transform: var(--artist-featured-name-case, none);
   overflow-wrap: anywhere;
 }
 
 .cardDesignation {
-  margin-top: 8px;
+  margin-top: var(--artist-featured-designation-spacing, 8px);
   color: rgba(255, 255, 255, .9);
-  font-size: 12px;
+  font-size: var(--artist-featured-designation-size, 12px);
   font-weight: 300;
   line-height: 1.5;
 }
@@ -438,7 +445,10 @@
   .grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .column { gap: 10px; }
   .cardShape0, .cardShape1, .cardShape2, .cardShape3, .cardShape4, .cardShape5 { aspect-ratio: 1 / 1.05; }
-  .featuredCard { aspect-ratio: 1 / 1.2; }
+  .featuredCard {
+    aspect-ratio: 1 / 1.2;
+    --artist-featured-name-size: clamp(80px, 19vw, 104px);
+  }
   .featuredLabel { top: 21px; left: 21px; }
   .cardContent { right: 78px; bottom: 21px; left: 21px; }
   .cardName { font-size: clamp(30px, 8vw, 42px); }
