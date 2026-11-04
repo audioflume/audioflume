@@ -1933,8 +1933,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card,
 .audioflume-home-mockup-curated-card-shell {
   position: relative;
-  width: min(92vw, calc(434px + 4.65vw), calc((1535px - 20px) / 3));
-  min-width: min(92vw, calc(434px + 4.65vw), calc((1535px - 20px) / 3));
+  width: min(92vw, calc(309px + 12.8vw), calc((1535px - 20px) / 3));
+  min-width: min(92vw, calc(309px + 12.8vw), calc((1535px - 20px) / 3));
 }
 
 .audioflume-home-mockup-curated-card-shell {
