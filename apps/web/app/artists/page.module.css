@@ -16,9 +16,11 @@
 }
 
 .intro h1 {
-  max-width: 1300px;
-  margin: 0 auto;
-  text-align: center;
+  width: 100%;
+  margin: 0;
+  text-align: justify;
+  text-align-last: justify;
+  text-transform: uppercase;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(44px, 5vw, 84px);
   font-weight: 300;
