@@ -186,19 +186,7 @@
 }
 
 .grid > .featuredCard {
-  grid-column: span 2;
-  height: 440px;
-  aspect-ratio: auto;
-}
-
-.featuredSide {
-  display: flex;
-  min-width: 0;
-  flex-direction: column;
-  align-self: start;
-}
-
-.featuredSide .card {
+  grid-column: 1 / -1;
   height: 440px;
   aspect-ratio: auto;
 }
