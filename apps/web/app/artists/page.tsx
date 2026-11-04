@@ -51,7 +51,7 @@ function ArtistPreviewCard({ index }: { index: number }) {
   );
 }
 
-function ArtistCard({ artist, index, featured = false }: { artist: DirectoryArtist; index: number; featured?: boolean }) {
+function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
@@ -70,7 +70,7 @@ function ArtistCard({ artist, index, featured = false }: { artist: DirectoryArti
   }
 
   return (
-    <article className={`${styles.card} ${styles[`cardShape${index % 6}`]} ${featured ? styles.featuredCard : ""}`}>
+    <article className={`${styles.card} ${styles[`cardShape${index % 6}`]}`}>
       <Link className={styles.cardLink} href={`/artists/${artist.slug}`} aria-label={`Explore ${artist.name}`}>
         {image ? (
           <img
@@ -84,7 +84,6 @@ function ArtistCard({ artist, index, featured = false }: { artist: DirectoryArti
           <span className={styles.cardFallback} aria-hidden="true">{artist.name.slice(0, 1)}</span>
         )}
         <span className={styles.cardShade} aria-hidden="true" />
-        {featured ? <span className={styles.featuredLabel}>Featured Artist</span> : null}
         <span className={styles.cardContent}>
           <strong className={styles.cardName}>{artist.name}</strong>
           {artist.designation ? <span className={styles.cardDesignation}>{artist.designation}</span> : null}
@@ -117,7 +116,6 @@ function ArtistCard({ artist, index, featured = false }: { artist: DirectoryArti
 
 export default function ArtistsPage() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
-  const [featuredArtistId, setFeaturedArtistId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
@@ -148,7 +146,6 @@ export default function ArtistsPage() {
         const data = await response.json();
         if (!response.ok) throw new Error(data?.error || "Unable to load artists");
         setArtists(Array.isArray(data?.artists) ? data.artists : []);
-        setFeaturedArtistId(typeof data?.featured_artist_id === "string" ? data.featured_artist_id : null);
       } catch (cause) {
         if (controller.signal.aborted) return;
         setError(cause instanceof Error ? cause.message : "Unable to load artists");
@@ -181,10 +178,8 @@ export default function ArtistsPage() {
 
   const displayedGenres = showAllGenres ? genres : genres.slice(0, INITIAL_GENRE_LIMIT);
   const showPreviews = !query.trim() && !activeGenre;
-  const featuredArtist = showPreviews ? visibleArtists.find(artist => artist.id === featuredArtistId) : undefined;
   const cards = [
-    ...(featuredArtist ? [{ kind: "artist" as const, artist: featuredArtist }] : []),
-    ...visibleArtists.filter(artist => artist.id !== featuredArtist?.id).map((artist) => ({ kind: "artist" as const, artist })),
+    ...visibleArtists.map((artist) => ({ kind: "artist" as const, artist })),
     ...(showPreviews
       ? Array.from({ length: PREVIEW_CARD_COUNT }, (_, index) => ({ kind: "preview" as const, index }))
       : []),
@@ -245,38 +240,18 @@ export default function ArtistsPage() {
           </div>
         ) : (
           <section className={styles.grid} aria-label="Artists">
-            {featuredArtist && columnCount === 3 ? (
-              <>
-                <ArtistCard artist={featuredArtist} index={0} featured />
-                <div className={styles.remainingGrid}>
-                  {Array.from({ length: columnCount }, (_, column) => (
-                    <div className={styles.column} key={column}>
-                      {cards.slice(1).map((card, index) => {
-                        if (index % columnCount !== column) return null;
-                        return card.kind === "artist" ? (
-                          <ArtistCard key={card.artist.id} artist={card.artist} index={index + 1} />
-                        ) : (
-                          <ArtistPreviewCard key={`preview-${card.index}`} index={index + 1} />
-                        );
-                      })}
-                    </div>
-                  ))}
-                </div>
-              </>
-            ) : (
-              Array.from({ length: columnCount }, (_, column) => (
-                <div className={styles.column} key={column}>
-                  {cards.map((card, index) => {
-                    if (index % columnCount !== column) return null;
-                    return card.kind === "artist" ? (
-                      <ArtistCard key={card.artist.id} artist={card.artist} index={index} featured={index === 0 && Boolean(featuredArtist)} />
-                    ) : (
-                      <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
-                    );
-                  })}
-                </div>
-              ))
-            )}
+            {Array.from({ length: columnCount }, (_, column) => (
+              <div className={styles.column} key={column}>
+                {cards.map((card, index) => {
+                  if (index % columnCount !== column) return null;
+                  return card.kind === "artist" ? (
+                    <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
+                  ) : (
+                    <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
+                  );
+                })}
+              </div>
+            ))}
           </section>
         )}
       </div>
