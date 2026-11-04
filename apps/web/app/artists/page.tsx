@@ -248,22 +248,15 @@ export default function ArtistsPage() {
             {featuredArtist && columnCount === 3 ? (
               <>
                 <ArtistCard artist={featuredArtist} index={0} featured />
-                <div className={styles.featuredSide}>
-                  {cards[1].kind === "artist" ? (
-                    <ArtistCard key={cards[1].artist.id} artist={cards[1].artist} index={1} />
-                  ) : (
-                    <ArtistPreviewCard key={`preview-${cards[1].index}`} index={1} />
-                  )}
-                </div>
                 <div className={styles.remainingGrid}>
                   {Array.from({ length: columnCount }, (_, column) => (
                     <div className={styles.column} key={column}>
-                      {cards.slice(2).map((card, index) => {
+                      {cards.slice(1).map((card, index) => {
                         if (index % columnCount !== column) return null;
                         return card.kind === "artist" ? (
-                          <ArtistCard key={card.artist.id} artist={card.artist} index={index + 2} />
+                          <ArtistCard key={card.artist.id} artist={card.artist} index={index + 1} />
                         ) : (
-                          <ArtistPreviewCard key={`preview-${card.index}`} index={index + 2} />
+                          <ArtistPreviewCard key={`preview-${card.index}`} index={index + 1} />
                         );
                       })}
                     </div>
