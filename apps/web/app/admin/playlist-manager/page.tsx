@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import Footer from "@/components/Footer";
 import AdminAllPlaylistsView from "@/components/admin/AdminAllPlaylistsView";
+import AdminArtistDirectoryFeatureView from "@/components/admin/AdminArtistDirectoryFeatureView";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
 import AdminHomeFeaturedArtistsView from "@/components/admin/AdminHomeFeaturedArtistsView";
@@ -12,12 +13,12 @@ import AdminHomeImagesView from "@/components/admin/AdminHomeImagesView";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
-type ManagerTab = "playlists" | "home" | "discover";
+type ManagerTab = "playlists" | "home" | "discover" | "artists";
 
 const PLAYLIST_MANAGER_TAB_STORAGE_KEY = "audioflume-admin-playlist-manager-tab";
 
 function isManagerTab(value: string | null): value is ManagerTab {
-  return value === "playlists" || value === "home" || value === "discover";
+  return value === "playlists" || value === "home" || value === "discover" || value === "artists";
 }
 
 export default function PlaylistManagerPage() {
@@ -120,7 +121,7 @@ export default function PlaylistManagerPage() {
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className={`flex items-center gap-2 ${activeTab === null ? "invisible" : ""}`}>
-          {(["playlists", "home", "discover"] as ManagerTab[]).map((tab) => (
+          {(["playlists", "home", "discover", "artists"] as ManagerTab[]).map((tab) => (
             <button
               key={tab}
               type="button"
@@ -133,7 +134,7 @@ export default function PlaylistManagerPage() {
             >
               {tab === "playlists"
                 ? "All Playlists"
-                : tab === "home" ? "Home" : "Discover"}
+                : tab === "home" ? "Home" : tab === "artists" ? "Artists" : "Discover"}
             </button>
           ))}
         </div>
@@ -161,6 +162,8 @@ export default function PlaylistManagerPage() {
             <AdminHomeImagesView />
             <AdminHomeFeaturedArtistsView />
           </>
+        ) : activeTab === "artists" ? (
+          <AdminArtistDirectoryFeatureView />
         ) : (
           <AdminDiscoverLibraryView
             playlists={playlists}
