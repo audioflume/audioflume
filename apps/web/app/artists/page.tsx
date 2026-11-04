@@ -195,7 +195,7 @@ export default function ArtistsPage() {
       <GlobalSearchBar layer="high" position="flow" />
       <div className={styles.content}>
         <header className={styles.intro}>
-          <h1>Discover the artists &amp;<br className={styles.titleBreak} /> composers behind the sound.</h1>
+          <h1>Discover the artists &amp;<br className={styles.titleBreak} /> composers behind the sound</h1>
         </header>
 
         <section className={styles.browser} aria-label="Browse artists">
