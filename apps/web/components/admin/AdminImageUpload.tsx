@@ -16,6 +16,7 @@ type Props = {
   showUrlInput?: boolean;
   title?: string;
   titleBelowPreview?: boolean;
+  titleBelowPreviewClassName?: string;
   dropDescription?: string;
 };
 
@@ -41,6 +42,7 @@ export default function AdminImageUpload({
   showUrlInput = true,
   title = "Cover image",
   titleBelowPreview = false,
+  titleBelowPreviewClassName,
   dropDescription = "Click to upload a playlist cover.",
 }: Props) {
   const localPreviewRef = useRef<string | null>(null);
@@ -163,6 +165,7 @@ export default function AdminImageUpload({
         disabled={uploading || deleting}
         title={title}
         titleBelowPreview={titleBelowPreview}
+        titleBelowPreviewClassName={titleBelowPreviewClassName}
         dropTitle={uploading ? "Uploading…" : "Drop image here"}
         dropDescription={dropDescription}
         variant="compact"
