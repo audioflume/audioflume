@@ -1034,10 +1034,18 @@ export default function HomePageContent({
             <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
           </div>
 
-          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
-            <h2>This month&apos;s featured artists</h2>
-            <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
-          </div>
+          {!showHero ? (
+            <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-intro-heading">
+              <h1 className="audioflume-home-mockup-intro-title">
+                HUMAN MADE MUSIC &amp; SFX FOR FILM.
+              </h1>
+            </div>
+          ) : (
+            <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading">
+              <h2>This month&apos;s featured artists</h2>
+              <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
+            </div>
+          )}
         </section>
 
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
