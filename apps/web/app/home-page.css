@@ -3185,9 +3185,18 @@ body:has(.audioflume-home-landing)
     display: block;
   }
 }
-@media (max-width: 620px) {
+.audioflume-home-hero-narrow-break {
+  display: none;
+}
+@media (max-width: 800px) {
   .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    font-size: clamp(34px, 8.7vw, 55px);
+    font-size: clamp(48px, 11vw, 88px);
+  }
+  .audioflume-home-hero-responsive-break {
+    display: none;
+  }
+  .audioflume-home-hero-narrow-break {
+    display: block;
   }
 }
 .audioflume-home-landing-hero-captions {
