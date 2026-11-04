@@ -110,14 +110,14 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
-  gap: 14px;
+  gap: 10px;
 }
 
 .column {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 14px;
+  gap: 10px;
 }
 
 .card,
@@ -314,8 +314,8 @@
   .browser { padding: 20px 0 28px; }
   .searchForm { flex: 1 1 auto; }
   .genrePills { gap: 7px; }
-  .grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
-  .column { gap: 12px; }
+  .grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
+  .column { gap: 10px; }
   .cardShape0, .cardShape1, .cardShape2, .cardShape3, .cardShape4, .cardShape5 { aspect-ratio: 1 / 1.05; }
   .cardContent { right: 78px; bottom: 21px; left: 21px; }
   .cardName { font-size: clamp(30px, 8vw, 42px); }
