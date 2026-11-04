@@ -168,7 +168,7 @@
   position: relative;
   --artist-featured-name-size: 26px;
   --artist-featured-name-case: uppercase;
-  --artist-featured-name-tracking: -.05em;
+  --artist-featured-name-tracking: -0.03em;
   --artist-featured-name-line-height: 1.02;
   --artist-featured-designation-size: 12px;
   --artist-featured-designation-spacing: 8px;
