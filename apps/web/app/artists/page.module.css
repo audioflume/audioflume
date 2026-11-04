@@ -186,11 +186,12 @@
   display: flex;
   min-width: 0;
   flex-direction: column;
-  gap: 10px;
+  align-self: stretch;
 }
 
 .featuredSide .card {
-  aspect-ratio: 1 / .62;
+  height: 100%;
+  aspect-ratio: auto;
 }
 
 .remainingGrid {
