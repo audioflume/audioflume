@@ -1944,20 +1944,8 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-  height: calc(40vw / 2.38);
+  height: 321px;
   aspect-ratio: auto;
-}
-
-@media (max-width: 980px) {
-  .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-    height: calc(52vw / 2.38);
-  }
-}
-
-@media (max-width: 620px) {
-  .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-    height: calc(78vw / 2.38);
-  }
 }
 
 .audioflume-home-mockup-curated-card {
