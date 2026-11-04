@@ -2322,6 +2322,18 @@ body:has(.audioflume-home-landing)
   aspect-ratio: auto;
 }
 
+@media (min-width: 1512px) {
+  .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
+    height: auto;
+    aspect-ratio: 444 / 257;
+  }
+
+  .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
+    height: auto;
+    aspect-ratio: 444 / 260;
+  }
+}
+
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-bar {
   bottom: 24px;
   padding-right: 82px;
