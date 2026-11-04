@@ -1933,16 +1933,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card,
 .audioflume-home-mockup-curated-card-shell {
   position: relative;
-  width: calc((var(--home-reference-width) - 20px) / 3);
-  min-width: calc((var(--home-reference-width) - 20px) / 3);
-}
-
-@media (max-width: 620px) {
-  .audioflume-home-mockup-curated-card,
-  .audioflume-home-mockup-curated-card-shell {
-    width: 92vw;
-    min-width: 92vw;
-  }
+  width: max(calc((var(--home-reference-width) - 20px) / 3), min(92vw, calc(308px + 9.88vw)));
+  min-width: max(calc((var(--home-reference-width) - 20px) / 3), min(92vw, calc(308px + 9.88vw)));
 }
 
 .audioflume-home-mockup-curated-card-shell {
@@ -2319,17 +2311,10 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-  width: calc((var(--home-reference-width) - 20px) / 3);
-  min-width: calc((var(--home-reference-width) - 20px) / 3);
+  width: max(calc((var(--home-reference-width) - 20px) / 3), min(92vw, calc(308px + 9.88vw)));
+  min-width: max(calc((var(--home-reference-width) - 20px) / 3), min(92vw, calc(308px + 9.88vw)));
   height: 260px;
   overflow: hidden;
-}
-
-@media (max-width: 620px) {
-  .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-    width: 92vw;
-    min-width: 92vw;
-  }
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
