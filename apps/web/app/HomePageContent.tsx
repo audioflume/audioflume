@@ -23,6 +23,7 @@ import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
+import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -618,37 +619,9 @@ function HomeCuratedPlaylistShelf({
         className="audioflume-home-mockup-curated-shelf"
       >
         {playlists.map((playlist, index) => (
-          <article
-            key={playlist.id}
-            className="audioflume-home-mockup-curated-card"
-          >
-            <Link
-              href={`/curated-playlists/${playlist.id}`}
-              className="audioflume-home-mockup-curated-card-link"
-            >
-              <span
-                className="audioflume-home-mockup-curated-card-media"
-                style={{
-                  backgroundImage: playlist.cover_image_url
-                    ? `url("${playlist.cover_image_url}")`
-                    : undefined,
-                }}
-              />
-              <span className="audioflume-home-mockup-curated-card-shade" />
-              <strong>{playlist.name}</strong>
-            </Link>
-
-            <CuratedPlaylistBookmarkButton
-              playlist={playlist}
-              className="audioflume-home-mockup-curated-card-bookmark"
-            />
-
-            <CuratedPlaylistPlayButton
-              playlistId={playlist.id}
-              playlistName={playlist.name}
-              className="audioflume-home-mockup-curated-card-play"
-            />
-          </article>
+          <div key={playlist.id} className="audioflume-home-mockup-curated-card-shell">
+            <CuratedPlaylistCard playlist={playlist} index={index} />
+          </div>
         ))}
       </Shelf>
     </section>
