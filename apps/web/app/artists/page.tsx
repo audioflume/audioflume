@@ -117,6 +117,7 @@ function ArtistCard({ artist, index, featured = false }: { artist: DirectoryArti
 
 export default function ArtistsPage() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
+  const [featuredArtistId, setFeaturedArtistId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
@@ -147,6 +148,7 @@ export default function ArtistsPage() {
         const data = await response.json();
         if (!response.ok) throw new Error(data?.error || "Unable to load artists");
         setArtists(Array.isArray(data?.artists) ? data.artists : []);
+        setFeaturedArtistId(typeof data?.featured_artist_id === "string" ? data.featured_artist_id : null);
       } catch (cause) {
         if (controller.signal.aborted) return;
         setError(cause instanceof Error ? cause.message : "Unable to load artists");
@@ -179,8 +181,10 @@ export default function ArtistsPage() {
 
   const displayedGenres = showAllGenres ? genres : genres.slice(0, INITIAL_GENRE_LIMIT);
   const showPreviews = !query.trim() && !activeGenre;
+  const featuredArtist = showPreviews ? visibleArtists.find(artist => artist.id === featuredArtistId) : undefined;
   const cards = [
-    ...visibleArtists.map((artist) => ({ kind: "artist" as const, artist })),
+    ...(featuredArtist ? [{ kind: "artist" as const, artist: featuredArtist }] : []),
+    ...visibleArtists.filter(artist => artist.id !== featuredArtist?.id).map((artist) => ({ kind: "artist" as const, artist })),
     ...(showPreviews
       ? Array.from({ length: PREVIEW_CARD_COUNT }, (_, index) => ({ kind: "preview" as const, index }))
       : []),
@@ -241,9 +245,9 @@ export default function ArtistsPage() {
           </div>
         ) : (
           <section className={styles.grid} aria-label="Artists">
-            {showPreviews && visibleArtists.length > 0 && columnCount === 3 ? (
+            {featuredArtist && columnCount === 3 ? (
               <>
-                <ArtistCard artist={visibleArtists[0]} index={0} featured />
+                <ArtistCard artist={featuredArtist} index={0} featured />
                 <div className={styles.featuredSide}>
                   {cards[1].kind === "artist" ? (
                     <ArtistCard key={cards[1].artist.id} artist={cards[1].artist} index={1} />
@@ -272,7 +276,7 @@ export default function ArtistsPage() {
                   {cards.map((card, index) => {
                     if (index % columnCount !== column) return null;
                     return card.kind === "artist" ? (
-                      <ArtistCard key={card.artist.id} artist={card.artist} index={index} featured={index === 0 && showPreviews} />
+                      <ArtistCard key={card.artist.id} artist={card.artist} index={index} featured={index === 0 && Boolean(featuredArtist)} />
                     ) : (
                       <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
                     );
