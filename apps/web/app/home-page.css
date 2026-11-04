@@ -1933,8 +1933,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card,
 .audioflume-home-mockup-curated-card-shell {
   position: relative;
-  width: min(92vw, calc(309px + 12.8vw), 505px);
-  min-width: min(92vw, calc(309px + 12.8vw), 505px);
+  width: min(92vw, calc(331px + 9.25vw), 505px);
+  min-width: min(92vw, calc(331px + 9.25vw), 505px);
 }
 
 .audioflume-home-mockup-curated-card-shell {
@@ -1944,7 +1944,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-  height: 321px;
+  height: 257px;
   aspect-ratio: auto;
 }
 
@@ -2311,8 +2311,8 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-  width: min(92vw, calc(309px + 12.8vw), 505px);
-  min-width: min(92vw, calc(309px + 12.8vw), 505px);
+  width: min(92vw, calc(331px + 9.25vw), 505px);
+  min-width: min(92vw, calc(331px + 9.25vw), 505px);
   height: 260px;
   overflow: hidden;
 }
