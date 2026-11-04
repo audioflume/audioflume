@@ -2219,7 +2219,7 @@ body:has(.audioflume-home-landing)
 
 @media (max-width: 620px) {
   .audioflume-home-mockup-artists.is-discover-featured-artists {
-    --audioflume-featured-artist-name-size: clamp(46px, 11vw, 68px);
+    --audioflume-featured-artist-name-size: clamp(90px, 21vw, 118px);
   }
 
   .audioflume-home-mockup-artists
