@@ -46,7 +46,6 @@ export default function AdminHomeImagesView() {
     <>
       <PlaylistManagerCollapsibleSection
         title="Homepage Images"
-        subtitle="Homepage hero image"
         collapsed={collapsed}
         onToggle={() => setCollapsed((value) => !value)}
         wrapHeader
@@ -64,6 +63,7 @@ export default function AdminHomeImagesView() {
                 showUrlInput={false}
                 title="Hero Banner"
                 titleBelowPreview
+                titleBelowPreviewClassName="text-[11px] font-normal text-[var(--text-muted)]"
                 dropDescription="The full-width image behind the main homepage headline."
               />
             </div>
