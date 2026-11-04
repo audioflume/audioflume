@@ -182,10 +182,6 @@ export default function ArtistsPage() {
       <GlobalSearchBar layer="high" position="flow" />
       <div className={styles.content}>
         <header className={styles.intro}>
-          <div className={styles.introTop}>
-            <span className={styles.eyebrow}>AUDIOFLUME / ARTIST DIRECTORY</span>
-            <span className={styles.introCount}>{loading ? "—" : String(artists.length).padStart(2, "0")} ARTISTS</span>
-          </div>
           <h1>Discover the people<br className={styles.titleBreak} /> behind the sound.</h1>
           <p>Independent artists and composers creating the music behind the stories we tell.</p>
         </header>
@@ -197,7 +193,6 @@ export default function ArtistsPage() {
               <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search artists" aria-label="Search artists" />
               {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear artist search">×</button>}
             </form>
-            <span className={styles.resultsCount}>{loading ? "LOADING ARTISTS" : `${visibleArtists.length} ${visibleArtists.length === 1 ? "RESULT" : "RESULTS"}`}</span>
           </div>
           {!loading && genres.length > 0 && (
             <div className={styles.filters}>
