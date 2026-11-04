@@ -2328,6 +2328,10 @@ body:has(.audioflume-home-landing)
     aspect-ratio: 444 / 257;
   }
 
+  .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
+    height: auto;
+  }
+
   .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
     height: auto;
     aspect-ratio: 444 / 260;
