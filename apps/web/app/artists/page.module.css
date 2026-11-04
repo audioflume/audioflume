@@ -179,7 +179,7 @@
 
 .grid > .featuredCard {
   grid-column: span 2;
-  height: 100%;
+  height: 440px;
   aspect-ratio: auto;
 }
 
@@ -191,7 +191,8 @@
 }
 
 .featuredSide .card {
-  aspect-ratio: 1 / .84;
+  height: 440px;
+  aspect-ratio: auto;
 }
 
 .remainingGrid {
