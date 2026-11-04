@@ -1281,6 +1281,7 @@ body:has(.audioflume-home-landing)
   --audioflume-featured-artist-name-size: clamp(64px, 8.5vw, 130px);
   --audioflume-featured-artist-name-blend: difference;
   --audioflume-featured-artist-name-line-height: 0.88;
+  --audioflume-featured-artist-designation-size: 18px;
   --audioflume-featured-artist-bar-layer: auto;
   --audioflume-featured-artist-gap: 10px;
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
@@ -1548,7 +1549,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-reference-artist-designation {
   grid-column: 1;
   color: rgba(255, 255, 255, 0.9);
-  font-size: 12px;
+  font-size: var(--audioflume-featured-artist-designation-size, 12px);
   font-weight: 300;
   line-height: 1.5;
 }
