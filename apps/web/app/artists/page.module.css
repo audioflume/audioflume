@@ -173,6 +173,26 @@
   aspect-ratio: 1 / 1.55;
 }
 
+.grid > .featuredCard {
+  grid-column: span 2;
+  aspect-ratio: 1 / 1.1;
+}
+
+.featuredSide {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.remainingGrid {
+  display: grid;
+  grid-column: 1 / -1;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: start;
+  gap: 10px;
+}
+
 .previewCard {
   background: #666;
 }
@@ -255,7 +275,15 @@
   line-height: 1;
   text-decoration: none;
   cursor: pointer;
-  transition: border-color 150ms ease;
+  opacity: 0;
+  pointer-events: none;
+  transition: border-color 150ms ease, opacity 150ms ease;
+}
+
+.card:hover .cardExplore,
+.card:focus-within .cardExplore {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .cardExplore:hover,
@@ -421,6 +449,13 @@
   color: var(--text-primary);
   background: none;
   cursor: pointer;
+}
+
+@media (hover: none) {
+  .cardExplore {
+    opacity: 1;
+    pointer-events: auto;
+  }
 }
 
 @media (max-width: 1050px) {
