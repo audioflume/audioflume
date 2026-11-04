@@ -15,24 +15,6 @@
   padding: clamp(30px, 3.5vw, 56px) 0 36px;
 }
 
-.introTop {
-  display: flex;
-  justify-content: space-between;
-  gap: 20px;
-  align-items: center;
-  margin-bottom: 22px;
-}
-
-.eyebrow,
-.introCount,
-.resultsCount {
-  color: var(--text-secondary);
-  font-family: var(--font-roboto-mono-filmwave), monospace;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: .04em;
-}
-
 .intro h1 {
   max-width: 1300px;
   margin: 0;
@@ -54,7 +36,6 @@
 
 .browser {
   padding: 24px 0 36px;
-  border-top: 1px solid var(--border);
 }
 
 .browserTop {
@@ -113,10 +94,6 @@
   color: var(--text-secondary);
   font-size: 22px;
   cursor: pointer;
-}
-
-.resultsCount {
-  white-space: nowrap;
 }
 
 .filters {
@@ -332,12 +309,10 @@
 @media (max-width: 690px) {
   .content { padding-bottom: 65px; }
   .intro { padding: 32px 0 28px; }
-  .introTop { margin-bottom: 24px; }
   .intro h1 { font-size: clamp(40px, 8vw, 60px); }
   .intro > p { margin-top: 16px; }
   .browser { padding: 20px 0 28px; }
   .searchForm { flex: 1 1 auto; }
-  .resultsCount { display: none; }
   .genrePills { gap: 7px; }
   .grid { grid-template-columns: minmax(0, 1fr); gap: 12px; }
   .column { gap: 12px; }
