@@ -241,18 +241,47 @@ export default function ArtistsPage() {
           </div>
         ) : (
           <section className={styles.grid} aria-label="Artists">
-            {Array.from({ length: columnCount }, (_, column) => (
-              <div className={styles.column} key={column}>
-                {cards.map((card, index) => {
-                  if (index % columnCount !== column) return null;
-                  return card.kind === "artist" ? (
-                    <ArtistCard key={card.artist.id} artist={card.artist} index={index} featured={index === 0 && showPreviews} />
-                  ) : (
-                    <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
-                  );
-                })}
-              </div>
-            ))}
+            {showPreviews && visibleArtists.length > 0 && columnCount === 3 ? (
+              <>
+                <ArtistCard artist={visibleArtists[0]} index={0} featured />
+                <div className={styles.featuredSide}>
+                  {cards.slice(1, 3).map((card, index) => (
+                    card.kind === "artist" ? (
+                      <ArtistCard key={card.artist.id} artist={card.artist} index={index + 1} />
+                    ) : (
+                      <ArtistPreviewCard key={`preview-${card.index}`} index={index + 1} />
+                    )
+                  ))}
+                </div>
+                <div className={styles.remainingGrid}>
+                  {Array.from({ length: columnCount }, (_, column) => (
+                    <div className={styles.column} key={column}>
+                      {cards.slice(3).map((card, index) => {
+                        if (index % columnCount !== column) return null;
+                        return card.kind === "artist" ? (
+                          <ArtistCard key={card.artist.id} artist={card.artist} index={index + 3} />
+                        ) : (
+                          <ArtistPreviewCard key={`preview-${card.index}`} index={index + 3} />
+                        );
+                      })}
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              Array.from({ length: columnCount }, (_, column) => (
+                <div className={styles.column} key={column}>
+                  {cards.map((card, index) => {
+                    if (index % columnCount !== column) return null;
+                    return card.kind === "artist" ? (
+                      <ArtistCard key={card.artist.id} artist={card.artist} index={index} featured={index === 0 && showPreviews} />
+                    ) : (
+                      <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
+                    );
+                  })}
+                </div>
+              ))
+            )}
           </section>
         )}
         <section className={styles.artistCta} aria-label="Apply to join Audioflume as an artist">
