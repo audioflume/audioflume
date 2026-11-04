@@ -1930,10 +1930,25 @@ body:has(.audioflume-home-landing)
   }
 }
 
-.audioflume-home-mockup-curated-card {
+.audioflume-home-mockup-curated-card,
+.audioflume-home-mockup-curated-card-shell {
   position: relative;
   width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
   min-width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
+}
+
+.audioflume-home-mockup-curated-card-shell {
+  --filmwave-curated-shelf-card-width: 100%;
+  scroll-snap-align: none;
+  scroll-snap-stop: normal;
+}
+
+.audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
+  height: 275px;
+  aspect-ratio: auto;
+}
+
+.audioflume-home-mockup-curated-card {
   height: 275px;
   overflow: hidden;
   border-radius: 0;
