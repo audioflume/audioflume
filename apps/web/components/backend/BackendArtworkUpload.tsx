@@ -24,6 +24,7 @@ type BackendArtworkUploadProps = {
   compactSize?: number;
   compactChooseButton?: boolean;
   titleBelowPreview?: boolean;
+  titleBelowPreviewClassName?: string;
   allowRemove?: boolean;
 };
 
@@ -43,6 +44,7 @@ export default function BackendArtworkUpload({
   compactSize = 112,
   compactChooseButton = false,
   titleBelowPreview = false,
+  titleBelowPreviewClassName = "text-xs font-medium text-[var(--text-secondary)]",
   allowRemove = true,
 }: BackendArtworkUploadProps) {
   const inputRef = useRef<HTMLInputElement | null>(null);
@@ -191,7 +193,7 @@ export default function BackendArtworkUpload({
         )}
 
         {titleBelowPreview && (
-          <span className="text-xs font-medium text-[var(--text-secondary)]">{title}</span>
+          <span className={titleBelowPreviewClassName}>{title}</span>
         )}
 
         {footer}
