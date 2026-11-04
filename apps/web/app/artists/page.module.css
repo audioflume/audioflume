@@ -26,25 +26,8 @@
   line-height: .99;
 }
 
-.intro > p {
-  max-width: 590px;
-  margin: 20px auto 0;
-  text-align: center;
-  color: var(--text-secondary);
-  font-size: clamp(15px, 1.2vw, 18px);
-  font-weight: 300;
-  line-height: 1.5;
-}
-
 .browser {
   padding: 24px 0 36px;
-}
-
-.browserTop {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 24px;
 }
 
 .searchForm {
@@ -143,10 +126,6 @@
 .searchForm :global(.curated-pill-search-clear):focus-visible {
   color: var(--text-primary);
   outline: none;
-}
-
-.filters {
-  margin-top: 22px;
 }
 
 .genrePills {
@@ -360,7 +339,6 @@
   .content { padding-bottom: 65px; }
   .intro { padding: 32px 0 28px; }
   .intro h1 { font-size: clamp(40px, 8vw, 60px); }
-  .intro > p { margin-top: 16px; }
   .browser { padding: 20px 0 28px; }
   .genrePills { gap: 7px; }
   .grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
