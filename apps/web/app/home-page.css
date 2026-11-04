@@ -3190,7 +3190,7 @@ body:has(.audioflume-home-landing)
 }
 @media (max-width: 800px) {
   .audioflume-home-landing .audioflume-home-reference-hero-headline {
-    font-size: clamp(48px, 11vw, 88px);
+    font-size: clamp(54px, 13vw, 104px);
   }
   .audioflume-home-hero-responsive-break {
     display: none;
