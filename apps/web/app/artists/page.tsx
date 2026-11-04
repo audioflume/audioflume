@@ -51,7 +51,7 @@ function ArtistPreviewCard({ index }: { index: number }) {
   );
 }
 
-function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number }) {
+function ArtistCard({ artist, index, featured = false }: { artist: DirectoryArtist; index: number; featured?: boolean }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
@@ -70,7 +70,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
   }
 
   return (
-    <article className={`${styles.card} ${styles[`cardShape${index % 6}`]}`}>
+    <article className={`${styles.card} ${styles[`cardShape${index % 6}`]} ${featured ? styles.featuredCard : ""}`}>
       <Link className={styles.cardLink} href={`/artists/${artist.slug}`} aria-label={`Explore ${artist.name}`}>
         {image ? (
           <img
@@ -84,6 +84,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
           <span className={styles.cardFallback} aria-hidden="true">{artist.name.slice(0, 1)}</span>
         )}
         <span className={styles.cardShade} aria-hidden="true" />
+        {featured ? <span className={styles.featuredLabel}>Featured Artist</span> : null}
         <span className={styles.cardContent}>
           <strong className={styles.cardName}>{artist.name}</strong>
           {artist.designation ? <span className={styles.cardDesignation}>{artist.designation}</span> : null}
@@ -93,6 +94,13 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
               : [0, 1, 2].map((item) => <span className={`${styles.cardGenre} ${styles.cardGenrePlaceholder}`} aria-hidden="true" key={item} />)}
           </span>
         </span>
+      </Link>
+      <Link href={`/artists/${artist.slug}`} className={styles.cardExplore} aria-label={`Explore artist ${artist.name}`}>
+        Explore Artist
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M7 17L17 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+          <path d="M9 7H17V15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </Link>
       <button
         type="button"
@@ -238,7 +246,7 @@ export default function ArtistsPage() {
                 {cards.map((card, index) => {
                   if (index % columnCount !== column) return null;
                   return card.kind === "artist" ? (
-                    <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
+                    <ArtistCard key={card.artist.id} artist={card.artist} index={index} featured={index === 0 && showPreviews} />
                   ) : (
                     <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
                   );
@@ -247,6 +255,19 @@ export default function ArtistsPage() {
             ))}
           </section>
         )}
+        <section className={styles.artistCta} aria-label="Apply to join Audioflume as an artist">
+          <div className={styles.artistCtaCopy}>
+            <h2>Make music? Join the people behind the sound.</h2>
+            <p>Share your sound with filmmakers and storytellers around the world.</p>
+          </div>
+          <Link href="/artists/apply" className={styles.artistCtaLink}>
+            Apply as an Artist
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+              <path d="M7 17L17 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+              <path d="M9 7H17V15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </Link>
+        </section>
       </div>
       <Footer showTopBorder={false} />
     </main>
