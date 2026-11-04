@@ -179,7 +179,7 @@
 
 .grid > .featuredCard {
   grid-column: span 2;
-  aspect-ratio: 1 / 1.1;
+  aspect-ratio: 1.6 / 1;
 }
 
 .featuredSide {
@@ -187,6 +187,10 @@
   min-width: 0;
   flex-direction: column;
   gap: 10px;
+}
+
+.featuredSide .card {
+  aspect-ratio: 1 / .62;
 }
 
 .remainingGrid {
