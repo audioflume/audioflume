@@ -1933,8 +1933,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card,
 .audioflume-home-mockup-curated-card-shell {
   position: relative;
-  width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
-  min-width: min(92vw, clamp(462px, calc(12.58vw + 384px), 540px));
+  width: min(92vw, calc(315px + 8vw), 480px);
+  min-width: min(92vw, calc(315px + 8vw), 480px);
 }
 
 .audioflume-home-mockup-curated-card-shell {
@@ -1944,8 +1944,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-  height: 275px;
-  aspect-ratio: auto;
+  aspect-ratio: 16 / 9;
 }
 
 .audioflume-home-mockup-curated-card {
