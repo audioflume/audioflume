@@ -3,8 +3,9 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import AdminArtistShelfPickerModal from "@/components/admin/AdminArtistShelfPickerModal";
-import { PlaylistManagerCollapsibleSection } from "@/components/admin/AdminPlaylistManagerShared";
+import { PLAYLIST_MANAGER_GRID_CLASS, PlaylistManagerCollapsibleSection } from "@/components/admin/AdminPlaylistManagerShared";
 import { BackendButton } from "@/components/backend/BackendControls";
+import PlusIcon from "@/components/icons/PlusIcon";
 import Toast from "@/components/Toast";
 
 type Artist = {
@@ -69,31 +70,68 @@ export default function AdminArtistDirectoryFeatureView() {
   return (
     <>
       <PlaylistManagerCollapsibleSection
-        title="Featured Artist"
-        subtitle="Choose one artist for the directory's featured block."
+        title="Featured Artists"
+        subtitle={artist ? "1 artist" : "0 artists"}
         collapsed={collapsed}
         onToggle={() => setCollapsed(value => !value)}
         wrapHeader
         wrapActions
-        actions={<BackendButton type="button" disabled={saving || loading} onClick={() => setPickerOpen(true)}>{artist ? "Change Artist" : "Add Artist"}</BackendButton>}
+        actions={
+          <BackendButton
+            type="button"
+            disabled={saving || loading}
+            onClick={() => setPickerOpen(true)}
+          >
+            <PlusIcon size={12} />
+            <span>Add</span>
+          </BackendButton>
+        }
       >
         {loading ? (
           <div className="h-32 animate-pulse bg-[var(--bg-tertiary)]" />
         ) : artist ? (
-          <div className="flex items-center gap-4">
-            <div className="relative h-20 w-32 shrink-0 overflow-hidden bg-[var(--bg-tertiary)]">
-              {(artist.hero_image_url || artist.profile_image_url) && (
-                <Image src={(artist.hero_image_url || artist.profile_image_url)!} alt="" fill sizes="128px" unoptimized className="object-cover" />
-              )}
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-[var(--text-primary)]">{artist.name}</p>
-              <p className="truncate text-xs text-[var(--text-muted)]">/artists/{artist.slug}</p>
-            </div>
-            <BackendButton type="button" disabled={saving} onClick={() => void save(null)}>Remove</BackendButton>
+          <div className={PLAYLIST_MANAGER_GRID_CLASS}>
+            <article className="admin-cover-hover group relative min-w-0">
+              <div className="relative aspect-[16/9] overflow-hidden bg-[var(--bg-tertiary)]">
+                {artist.hero_image_url ? (
+                  <Image
+                    src={artist.hero_image_url}
+                    alt={artist.name}
+                    fill
+                    sizes="(min-width: 1280px) 20vw, (min-width: 768px) 33vw, 50vw"
+                    className="object-cover"
+                    unoptimized
+                  />
+                ) : (
+                  <span className="absolute inset-0 flex items-center justify-center text-[11px] font-medium text-[var(--text-muted)]">
+                    No feature image
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={() => void save(null)}
+                  disabled={saving}
+                  className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_90%,var(--danger)_10%)] hover:text-[var(--danger)] group-hover:opacity-100"
+                  aria-label={`Remove ${artist.name} from Featured Artists`}
+                  title="Remove from Featured Artists"
+                >
+                  ×
+                </button>
+              </div>
+              <div className="mt-2.5 min-w-0">
+                <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
+                  {artist.name}
+                </h4>
+                <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
+                  /artists/{artist.slug}
+                </p>
+              </div>
+            </article>
           </div>
         ) : (
-          <p className="py-5 text-xs text-[var(--text-secondary)]">No artist selected. Choose one to feature on the Artists page.</p>
+          <div className="flex min-h-[120px] items-center justify-center border-[1.25px] border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
+            Add an artist to the Artists page featured block.
+          </div>
         )}
       </PlaylistManagerCollapsibleSection>
       {pickerOpen && (
@@ -102,7 +140,6 @@ export default function AdminArtistDirectoryFeatureView() {
           existingIds={[]}
           maxSelections={1}
           saving={saving}
-          title="Artist Directory Feature"
           onClose={() => setPickerOpen(false)}
           onAdd={ids => void save(ids[0])}
         />
