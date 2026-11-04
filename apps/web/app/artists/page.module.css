@@ -179,19 +179,19 @@
 
 .grid > .featuredCard {
   grid-column: span 2;
-  aspect-ratio: 1.6 / 1;
+  height: 100%;
+  aspect-ratio: auto;
 }
 
 .featuredSide {
   display: flex;
   min-width: 0;
   flex-direction: column;
-  align-self: stretch;
+  align-self: start;
 }
 
 .featuredSide .card {
-  height: 100%;
-  aspect-ratio: auto;
+  aspect-ratio: 1 / .84;
 }
 
 .remainingGrid {
