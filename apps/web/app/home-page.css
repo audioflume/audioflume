@@ -2333,7 +2333,7 @@ body:has(.audioflume-home-landing)
 @media (min-width: 1512px) {
   .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
     height: auto;
-    aspect-ratio: 444 / 257;
+    aspect-ratio: 460 / 257;
   }
 
   .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
