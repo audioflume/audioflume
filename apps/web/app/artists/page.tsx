@@ -184,11 +184,10 @@ export default function ArtistsPage() {
       <div className={styles.content}>
         <header className={styles.intro}>
           <h1>Discover the people<br className={styles.titleBreak} /> behind the sound.</h1>
-          <p>Independent artists and composers creating the music behind the stories we tell.</p>
         </header>
 
         <section className={styles.browser} aria-label="Browse artists">
-          <div className={styles.browserTop}>
+          <div className={styles.genrePills} role="group" aria-label="Search and filter artists">
             <form className={`curated-pill-search is-open ${styles.searchForm}`} role="search" onSubmit={(event) => event.preventDefault()}>
               <span className="curated-pill-search-toggle is-active" aria-hidden="true">
                 <svg viewBox="0 0 20 20">
@@ -205,10 +204,8 @@ export default function ArtistsPage() {
                 )}
               </div>
             </form>
-          </div>
-          {!loading && genres.length > 0 && (
-            <div className={styles.filters}>
-              <div className={styles.genrePills} role="group" aria-label="Filter artists by genre">
+            {!loading && genres.length > 0 && (
+              <>
                 <button type="button" className={`curated-main-filter-pill${activeGenre === null ? " is-active" : ""}`} aria-pressed={activeGenre === null} onClick={() => setActiveGenre(null)}>All genres</button>
                 {displayedGenres.map(([genre]) => (
                   <button key={genre} type="button" className={`curated-main-filter-pill${activeGenre === genre ? " is-active" : ""}`} aria-pressed={activeGenre === genre} onClick={() => setActiveGenre(activeGenre === genre ? null : genre)}>{genre}</button>
@@ -218,9 +215,9 @@ export default function ArtistsPage() {
                     {showAllGenres ? "Show less −" : `All genres +${genres.length - INITIAL_GENRE_LIMIT}`}
                   </button>
                 )}
-              </div>
-            </div>
-          )}
+              </>
+            )}
+          </div>
         </section>
 
         {loading ? (
