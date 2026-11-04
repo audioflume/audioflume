@@ -214,12 +214,12 @@ export default function ArtistsPage() {
             </form>
             {!loading && genres.length > 0 && (
               <>
-                <button type="button" className={`curated-main-filter-pill${activeGenre === null ? " is-active" : ""}`} aria-pressed={activeGenre === null} onClick={() => setActiveGenre(null)}>All genres</button>
+                <button type="button" className={`curated-main-filter-pill ${styles.genreFilterPill}${activeGenre === null ? " is-active" : ""}`} aria-pressed={activeGenre === null} onClick={() => setActiveGenre(null)}>All genres</button>
                 {displayedGenres.map(([genre]) => (
-                  <button key={genre} type="button" className={`curated-main-filter-pill${activeGenre === genre ? " is-active" : ""}`} aria-pressed={activeGenre === genre} onClick={() => setActiveGenre(activeGenre === genre ? null : genre)}>{genre}</button>
+                  <button key={genre} type="button" className={`curated-main-filter-pill ${styles.genreFilterPill}${activeGenre === genre ? " is-active" : ""}`} aria-pressed={activeGenre === genre} onClick={() => setActiveGenre(activeGenre === genre ? null : genre)}>{genre}</button>
                 ))}
                 {genres.length > INITIAL_GENRE_LIMIT && (
-                  <button type="button" className="curated-main-filter-pill" onClick={() => setShowAllGenres(!showAllGenres)} aria-expanded={showAllGenres}>
+                  <button type="button" className={`curated-main-filter-pill ${styles.genreFilterPill}`} onClick={() => setShowAllGenres(!showAllGenres)} aria-expanded={showAllGenres}>
                     {showAllGenres ? "Show less −" : `All genres +${genres.length - INITIAL_GENRE_LIMIT}`}
                   </button>
                 )}
@@ -284,19 +284,6 @@ export default function ArtistsPage() {
             )}
           </section>
         )}
-        <section className={styles.artistCta} aria-label="Apply to join Audioflume as an artist">
-          <div className={styles.artistCtaCopy}>
-            <h2>Make music? Join the people behind the sound.</h2>
-            <p>Share your sound with filmmakers and storytellers around the world.</p>
-          </div>
-          <Link href="/artists/apply" className={styles.artistCtaLink}>
-            Apply as an Artist
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-              <path d="M7 17L17 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-              <path d="M9 7H17V15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
-          </Link>
-        </section>
       </div>
       <Footer showTopBorder={false} />
     </main>
