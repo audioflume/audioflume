@@ -1,3 +1,43 @@
+.heading {
+  width: min(calc(100% - 2 * var(--audioflume-home-page-gutter)), 1535px);
+  margin: 0 auto;
+  padding: 16px 0 36px;
+}
+
+.heading h2 {
+  max-width: 1100px;
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(44px, 5.5vw, 86px);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -.055em;
+}
+
+.heading p {
+  max-width: 640px;
+  margin: 18px 0 0;
+  color: var(--text-secondary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(15px, 1.3vw, 18px);
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+@media (max-width: 690px) {
+  .heading {
+    padding-top: 4px;
+    padding-bottom: 27px;
+  }
+  .heading h2 {
+    font-size: clamp(40px, 9vw, 60px);
+  }
+  .heading p {
+    margin-top: 12px;
+  }
+}
+
 .section {
   width: min(calc(100% - 2 * var(--audioflume-home-page-gutter)), 1535px);
   margin: 0 auto;
