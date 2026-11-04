@@ -1,6 +1,9 @@
 import { NextResponse } from "next/server";
 
 import { supabaseServer } from "@/lib/supabaseServer";
+import { getDirectoryFeaturedArtistId } from "@/lib/artistDirectoryFeature";
+
+export const dynamic = "force-dynamic";
 import { attachEditPoints, attachPrimaryArtistProfiles, normalizeSongRow } from "@/lib/songs";
 
 type ArtistRow = {
@@ -82,7 +85,13 @@ export async function GET() {
       genresByArtist.set(link.artist_id, artistGenres);
     }
 
+    const configuredFeaturedArtistId = await getDirectoryFeaturedArtistId();
+    const featuredArtistId = artists.some(artist =>
+      artist.id === configuredFeaturedArtistId && artist.slug && artist.name
+    ) ? configuredFeaturedArtistId : null;
+
     return NextResponse.json({
+      featured_artist_id: featuredArtistId,
       artists: artists
         .filter((artist) => artist.slug && artist.name)
         .map((artist) => ({
