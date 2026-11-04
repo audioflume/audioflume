@@ -19,6 +19,7 @@ import {
 import Footer from "@/components/Footer";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
+import DiscoverFeaturedArtistBanner from "./discover/DiscoverFeaturedArtistBanner";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
@@ -1003,6 +1004,8 @@ export default function HomePageContent({
   return (
     <main className={`audioflume-home-reference audioflume-home-mockup${playerVisible ? " has-player" : ""}`}>
       <GlobalSearchBar />
+
+      {!showHero && !artistsLoading ? <DiscoverFeaturedArtistBanner artists={artists} /> : null}
 
       {showHero ? (
         <section
