@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import Footer from "@/components/Footer";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PauseIcon from "@/components/icons/PauseIcon";
 import { usePlayer } from "@/context/PlayerContext";
@@ -188,10 +189,21 @@ export default function ArtistsPage() {
 
         <section className={styles.browser} aria-label="Browse artists">
           <div className={styles.browserTop}>
-            <form className={styles.searchForm} role="search" onSubmit={(event) => event.preventDefault()}>
-              <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.8" cy="10.8" r="6.5" /><path d="m16 16 5 5" /></svg>
-              <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search artists" aria-label="Search artists" />
-              {query && <button type="button" onClick={() => setQuery("")} aria-label="Clear artist search">×</button>}
+            <form className={`curated-pill-search is-open ${styles.searchForm}`} role="search" onSubmit={(event) => event.preventDefault()}>
+              <span className="curated-pill-search-toggle is-active" aria-hidden="true">
+                <svg viewBox="0 0 20 20">
+                  <circle cx="8" cy="8" r="5.25" />
+                  <path d="m11.9 11.9 4.1 4.1" />
+                </svg>
+              </span>
+              <div className="curated-pill-search-field-wrap">
+                <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search artists" aria-label="Search artists" />
+                {query && (
+                  <button type="button" className="curated-pill-search-clear" onClick={() => setQuery("")} aria-label="Clear artist search">
+                    <XIcon size={12} strokeWidth={2.4} />
+                  </button>
+                )}
+              </div>
             </form>
           </div>
           {!loading && genres.length > 0 && (
