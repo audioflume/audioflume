@@ -491,12 +491,10 @@ function HomeArtistShelf({
   artists,
   homeFlashImages,
   compact = false,
-  showFeaturedLabel = true,
 }: {
   artists: HomeArtist[];
   homeFlashImages: string[];
   compact?: boolean;
-  showFeaturedLabel?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -552,7 +550,6 @@ function HomeArtistShelf({
             <div className="audioflume-home-reference-artist-link">
               <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
               <div className="audioflume-home-reference-artist-media">
-                {!compact && showFeaturedLabel ? <span className="audioflume-home-mockup-artist-kicker">Featured artist</span> : null}
                 {image ? (
                   <img
                     src={image}
@@ -1037,7 +1034,7 @@ export default function HomePageContent({
         {artistsLoading ? (
           <HomeArtistShelfSkeleton />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} showFeaturedLabel={!showHero} />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} />
         ) : null}
       </section>
 
