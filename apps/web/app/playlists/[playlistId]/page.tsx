@@ -541,21 +541,6 @@ export default function PlaylistDetailPage() {
                     {playlist.cover_image_url && (
                       <img src={playlist.cover_image_url} alt={playlist.name} />
                     )}
-
-                    <button
-                      type="button"
-                      onClick={toggleCoverPlayback}
-                      disabled={filteredSongs.length === 0}
-                      className="playlist-detail-cover-play-button"
-                      aria-label={`${playlistIsPlaying ? "Pause" : "Play"} ${playlist.name}`}
-                      aria-pressed={playlistIsPlaying}
-                    >
-                      {playlistIsPlaying ? (
-                        <PauseIcon size={18} />
-                      ) : (
-                        <PlayIconSmall size={18} />
-                      )}
-                    </button>
                   </div>
 
                   <div className="min-w-0">
@@ -580,6 +565,20 @@ export default function PlaylistDetailPage() {
                     </p>
 
                     <div className="playlist-detail-actions">
+                      <button
+                                            type="button"
+                                            onClick={toggleCoverPlayback}
+                                            disabled={filteredSongs.length === 0}
+                                            className="playlist-detail-actions-play-button"
+                                            aria-label={`${playlistIsPlaying ? "Pause" : "Play"} ${playlist.name}`}
+                                            aria-pressed={playlistIsPlaying}
+                                          >
+                                            {playlistIsPlaying ? (
+                                              <PauseIcon size={18} />
+                                            ) : (
+                                              <PlayIconSmall size={18} />
+                                            )}
+                                          </button>
                       <button
                         type="button"
                         onClick={sharePlaylist}
