@@ -1494,7 +1494,7 @@ body:has(.audioflume-home-landing)
   }
 }
 
-.audioflume-home-mockup-artists
+.audioflume-home-mockup-artists:not(.is-discover-featured-artists)
   .audioflume-home-reference-artist-card {
   width: min(1020px, clamp(67vw, calc(30.83vw + 354.4px), 88vw)) !important;
   min-width: min(1020px, clamp(67vw, calc(30.83vw + 354.4px), 88vw)) !important;
@@ -1511,7 +1511,7 @@ body:has(.audioflume-home-landing)
   height: auto !important;
 }
 
-.audioflume-home-mockup-artists
+.audioflume-home-mockup-artists:not(.is-discover-featured-artists)
   .audioflume-home-reference-artist-media {
   width: 100% !important;
   height: 430px !important;
@@ -1519,19 +1519,19 @@ body:has(.audioflume-home-landing)
   aspect-ratio: auto !important;
 }
 
-.audioflume-home-mockup-artists
+.audioflume-home-mockup-artists:not(.is-discover-featured-artists)
   .audioflume-home-reference-artist-media::after {
   background: transparent !important;
 }
 
 @media (min-width: 1512px) {
-  .audioflume-home-mockup-artists
+  .audioflume-home-mockup-artists:not(.is-discover-featured-artists)
     .audioflume-home-reference-artist-card {
     width: calc(100vw * 0.6746031746) !important;
     min-width: calc(100vw * 0.6746031746) !important;
   }
 
-  .audioflume-home-mockup-artists
+  .audioflume-home-mockup-artists:not(.is-discover-featured-artists)
     .audioflume-home-reference-artist-media {
     height: auto !important;
     aspect-ratio: 1020 / 430 !important;
@@ -1933,15 +1933,150 @@ body:has(.audioflume-home-landing)
   }
 }
 
-.audioflume-home-mockup-artists .audioflume-home-reference-artist-card:not(:first-child) {
+.audioflume-home-mockup-artists:not(.is-discover-featured-artists) .audioflume-home-reference-artist-card:not(:first-child) {
   /* Grow toward the lead card as the viewport narrows; cap secondary cards at 820px. */
   width: min(820px, calc(30.83vw + 354.4px)) !important;
   min-width: min(820px, calc(30.83vw + 354.4px)) !important;
 }
 
+/* Discover's featured-artist layout, independent of the larger lead-card shelf. */
+.audioflume-home-mockup-artists.is-discover-featured-artists {
+  --audioflume-featured-artist-gap: 20px;
+  --audioflume-featured-artist-inset: 16px;
+  padding-top: 20px;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
+  width: clamp(460px, 61vw, 1140px);
+  min-width: clamp(460px, 61vw, 1140px);
+  overflow: hidden;
+  border-radius: 10px;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
+  width: 100%;
+  height: clamp(320px, 27.3vw, 510px);
+  aspect-ratio: auto;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media::after {
+  background: linear-gradient(180deg, rgba(0, 0, 0, .2) 0%, transparent 45%, rgba(0, 0, 0, .48) 100%);
+}
+
+.audioflume-discover-featured-name {
+  position: absolute;
+  top: 46px;
+  left: 46px;
+  z-index: 2;
+  max-width: calc(100% - 260px);
+  color: #fff;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(24px, 2vw, 32px);
+  font-weight: 400;
+  letter-spacing: -.035em;
+  line-height: 1.15;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.audioflume-discover-featured-track {
+  position: absolute;
+  bottom: 30px;
+  left: 30px;
+  z-index: 3;
+  display: flex;
+  max-width: calc(100% - 60px);
+  align-items: center;
+  gap: 30px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #fff;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.audioflume-discover-featured-track:disabled {
+  cursor: default;
+}
+
+.audioflume-discover-featured-track-cover {
+  display: block;
+  width: 105px;
+  height: 105px;
+  flex: 0 0 105px;
+  background: #e5e5e5;
+  overflow: hidden;
+}
+
+.audioflume-discover-featured-track-cover img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.audioflume-discover-featured-track-copy {
+  display: grid;
+  min-width: 0;
+  gap: 7px;
+}
+
+.audioflume-discover-featured-track-copy strong {
+  overflow: hidden;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 1.1;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.audioflume-discover-featured-track-copy > span {
+  overflow: hidden;
+  color: rgba(255, 255, 255, .6);
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 620px) {
+  .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
+    width: 92vw;
+    min-width: 92vw;
+  }
+
+  .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
+    height: 320px;
+  }
+
+  .audioflume-discover-featured-name {
+    top: 26px;
+    left: 24px;
+    max-width: calc(100% - 48px);
+  }
+
+  .audioflume-discover-featured-track {
+    bottom: 22px;
+    left: 22px;
+    gap: 16px;
+  }
+
+  .audioflume-discover-featured-track-cover {
+    width: 72px;
+    height: 72px;
+    flex-basis: 72px;
+  }
+}
+
 /* Preserve the first artist card's image height when later cards are narrower. */
 @media (min-width: 1512px) {
-  .audioflume-home-mockup-artists
+  .audioflume-home-mockup-artists:not(.is-discover-featured-artists)
     .audioflume-home-reference-artist-card:not(:first-child)
     .audioflume-home-reference-artist-media {
     height: calc(100vw * 0.6746031746 * 430 / 1020) !important;
@@ -2251,9 +2386,9 @@ body:has(.audioflume-home-landing)
 }
 
 @media (max-width: 620px) {
-  .audioflume-home-mockup-artists
+  .audioflume-home-mockup-artists:not(.is-discover-featured-artists)
     .audioflume-home-reference-artist-card,
-  .audioflume-home-mockup-artists
+  .audioflume-home-mockup-artists:not(.is-discover-featured-artists)
     .audioflume-home-reference-artist-card:not(:first-child) {
     width: var(--audioflume-featured-artist-mobile-width, calc(100vw - var(--audioflume-home-page-gutter) + 10px)) !important;
     min-width: var(--audioflume-featured-artist-mobile-width, calc(100vw - var(--audioflume-home-page-gutter) + 10px)) !important;
