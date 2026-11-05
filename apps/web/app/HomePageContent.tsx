@@ -491,10 +491,12 @@ function HomeArtistShelf({
   artists,
   homeFlashImages,
   compact = false,
+  discoverLayout = false,
 }: {
   artists: HomeArtist[];
   homeFlashImages: string[];
   compact?: boolean;
+  discoverLayout?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -523,12 +525,13 @@ function HomeArtistShelf({
   return (
     <Shelf
       label="in demand artists"
-      className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}`}
-      customScrollbar={!compact}
+      className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
+      customScrollbar={!compact && !discoverLayout}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+        const featuredSong = playable[0] ?? artist.songs[0];
         const genres = Array.from(
           new Set(
             artist.songs.flatMap((song) =>
@@ -545,7 +548,7 @@ function HomeArtistShelf({
         return (
           <article
             key={artist.id}
-            className={`audioflume-home-reference-artist-card${index === 0 ? " is-featured" : ""}`}
+            className={`audioflume-home-reference-artist-card${index === 0 ? " is-featured" : ""}${discoverLayout ? " is-discover-card" : ""}`}
           >
             <div className="audioflume-home-reference-artist-link">
               <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
@@ -561,6 +564,11 @@ function HomeArtistShelf({
                   />
                 ) : null}
               </div>
+              {discoverLayout ? (
+                <>
+                  <strong className="audioflume-discover-featured-name">{artist.name}</strong>
+                </>
+              ) : (
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
                   <strong>{artist.name}</strong>
@@ -572,6 +580,7 @@ function HomeArtistShelf({
                   {!compact ? <GenreFilterPills genres={genres} showPlaceholders className="audioflume-home-reference-artist-genres" /> : null}
                 </span>
               </div>
+              )}
             </div>
             {!compact ? (
               <Link
@@ -586,7 +595,24 @@ function HomeArtistShelf({
                 </svg>
               </Link>
             ) : null}
-            <button
+            {discoverLayout && featuredSong ? (
+              <button
+                type="button"
+                className="audioflume-discover-featured-track"
+                onClick={(event) => playArtist(event, artist)}
+                disabled={!playable.length}
+                aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
+              >
+                <span className="audioflume-discover-featured-track-cover">
+                  {featuredSong.coverArt ? <img src={featuredSong.coverArt} alt="" draggable={false} /> : null}
+                </span>
+                <span className="audioflume-discover-featured-track-copy">
+                  <strong>{featuredSong.title}</strong>
+                  <span>{featuredSong.artist || artist.name}</span>
+                </span>
+              </button>
+            ) : null}
+            {!discoverLayout ? <button
               type="button"
               className="audioflume-home-reference-artist-play"
               onClick={(event) => playArtist(event, artist)}
@@ -595,7 +621,7 @@ function HomeArtistShelf({
             >
               {artistIsPlaying ? <PauseIcon size={compact ? 15 : 18} /> : <PlayIconSmall size={compact ? 15 : 18} />}
               <span>{artistIsPlaying ? "Pause Music" : "Play Music"}</span>
-            </button>
+            </button> : null}
           </article>
         );
       })}
@@ -1014,7 +1040,7 @@ export default function HomePageContent({
         </section>
       ) : null}
 
-      <section className="audioflume-home-mockup-intro">
+      {showHero ? <section className="audioflume-home-mockup-intro">
           <div className="audioflume-home-reference-width audioflume-home-mockup-intro-meta">
             <span>ROYALTY FREE MUSIC LICENSED FOR FILM</span>
             <span>HUMAN MADE MUSIC &amp; ETHICAL ARTIST COMPENSATION</span>
@@ -1024,7 +1050,7 @@ export default function HomePageContent({
             <h2>This month&apos;s featured artists</h2>
             <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
           </div>
-        </section>
+        </section> : null}
 
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
@@ -1034,7 +1060,7 @@ export default function HomePageContent({
         {artistsLoading ? (
           <HomeArtistShelfSkeleton />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
       </section>
 
