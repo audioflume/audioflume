@@ -64,6 +64,12 @@ body:has(.audioflume-home-landing)
   margin-inline: auto;
 }
 
+.audioflume-home-mockup-curated > .audioflume-home-mockup-section-label,
+.audioflume-home-mockup-more-artists > .audioflume-home-mockup-section-label,
+.audioflume-home-mockup-originals-tools .audioflume-home-reference-section-heading {
+  width: min(var(--home-reference-width), 1535px);
+}
+
 .audioflume-home-song-title {
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
