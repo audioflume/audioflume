@@ -1484,6 +1484,16 @@ body:has(.audioflume-home-landing)
   scroll-padding: 0 !important;
 }
 
+.audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-arrow {
+  top: 128.5px;
+}
+
+@media (min-width: 1512px) {
+  .audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-arrow {
+    top: calc((var(--home-reference-width) - 20px) * 257 / 2760);
+  }
+}
+
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-card {
   width: min(1020px, clamp(67vw, calc(30.83vw + 354.4px), 88vw)) !important;
