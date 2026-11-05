@@ -185,8 +185,10 @@
 
 .homePlayButton:hover,
 .homePlayButton:focus-visible {
-  background: rgba(255, 255, 255, 0.24) !important;
+  background: #ffffff !important;
+  color: #111111 !important;
   opacity: 1 !important;
+  transform: scale(1.02);
 }
 
 .homePlayButton.curatedPagePlayButton {
