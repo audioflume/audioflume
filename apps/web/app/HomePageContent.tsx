@@ -633,7 +633,7 @@ function HomeCuratedPlaylistShelf({
       >
         {playlists.map((playlist, index) => (
           <div key={playlist.id} className="audioflume-home-mockup-curated-card-shell">
-            <CuratedPlaylistCard playlist={playlist} index={index} />
+            <CuratedPlaylistCard playlist={playlist} index={index} variant="curatedPage" />
           </div>
         ))}
       </Shelf>
