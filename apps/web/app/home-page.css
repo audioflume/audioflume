@@ -2341,14 +2341,16 @@ body:has(.audioflume-home-landing)
   aspect-ratio: auto;
 }
 
-@media (min-width: 1513px) {
+@media (min-width: 1512px) {
   .audioflume-home-mockup-curated-card,
   .audioflume-home-mockup-curated-card-shell,
   .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
     width: calc((var(--home-reference-width) - 20px) / 3);
     min-width: calc((var(--home-reference-width) - 20px) / 3);
   }
+}
 
+@media (min-width: 1513px) {
   .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
     height: auto;
     aspect-ratio: 457 / 257;
