@@ -1488,9 +1488,9 @@ body:has(.audioflume-home-landing)
   top: 128.5px;
 }
 
-@media (min-width: 1512px) {
+@media (min-width: 1513px) {
   .audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-arrow {
-    top: calc((var(--home-reference-width) - 20px) * 257 / 2760);
+    top: calc((var(--home-reference-width) - 20px) * 257 / 2742);
   }
 }
 
@@ -2341,7 +2341,7 @@ body:has(.audioflume-home-landing)
   aspect-ratio: auto;
 }
 
-@media (min-width: 1512px) {
+@media (min-width: 1513px) {
   .audioflume-home-mockup-curated-card,
   .audioflume-home-mockup-curated-card-shell,
   .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
@@ -2351,7 +2351,7 @@ body:has(.audioflume-home-landing)
 
   .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
     height: auto;
-    aspect-ratio: 460 / 257;
+    aspect-ratio: 457 / 257;
   }
 
   .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
@@ -2360,7 +2360,7 @@ body:has(.audioflume-home-landing)
 
   .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
     height: auto;
-    aspect-ratio: 460 / 257;
+    aspect-ratio: 457 / 257;
   }
 }
 
