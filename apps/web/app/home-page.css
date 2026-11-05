@@ -1279,7 +1279,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists {
-  --audioflume-featured-artist-name-size: clamp(80px, calc(70.6px + 2.94vw), 100px);
+  --audioflume-featured-artist-name-size: clamp(80px, calc(70.6px + 2.94vw), 85px);
   --audioflume-featured-artist-name-case: uppercase;
   --audioflume-featured-artist-name-line-height: 0.88;
   --audioflume-featured-artist-designation-size: 15px;
