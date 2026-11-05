@@ -1308,10 +1308,10 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-shelf
   .audioflume-home-reference-shelf-scroller {
   gap: 4px;
-  padding-right: var(--audioflume-home-page-gutter);
-  padding-left: var(--audioflume-home-page-gutter);
-  scroll-padding-right: var(--audioflume-home-page-gutter);
-  scroll-padding-left: var(--audioflume-home-page-gutter);
+  padding-right: max(var(--audioflume-home-page-gutter), calc((100vw - 1535px) / 2));
+  padding-left: max(var(--audioflume-home-page-gutter), calc((100vw - 1535px) / 2));
+  scroll-padding-right: max(var(--audioflume-home-page-gutter), calc((100vw - 1535px) / 2));
+  scroll-padding-left: max(var(--audioflume-home-page-gutter), calc((100vw - 1535px) / 2));
   scroll-snap-type: x proximity;
 }
 
@@ -1937,8 +1937,8 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card,
 .audioflume-home-mockup-curated-card-shell {
   position: relative;
-  width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
-  min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
+  width: min(92vw, max(460px, calc((min(var(--home-reference-width), 1535px) - 20px) / 3)));
+  min-width: min(92vw, max(460px, calc((min(var(--home-reference-width), 1535px) - 20px) / 3)));
 }
 
 .audioflume-home-mockup-curated-card-shell {
@@ -2310,13 +2310,13 @@ body:has(.audioflume-home-landing)
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-scroller {
   gap: 10px;
-  padding-right: var(--audioflume-home-page-gutter);
-  padding-left: var(--audioflume-home-page-gutter);
+  padding-right: max(var(--audioflume-home-page-gutter), calc((100vw - 1535px) / 2));
+  padding-left: max(var(--audioflume-home-page-gutter), calc((100vw - 1535px) / 2));
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-  width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
-  min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
+  width: min(92vw, max(460px, calc((min(var(--home-reference-width), 1535px) - 20px) / 3)));
+  min-width: min(92vw, max(460px, calc((min(var(--home-reference-width), 1535px) - 20px) / 3)));
   height: 257px;
   overflow: hidden;
 }
