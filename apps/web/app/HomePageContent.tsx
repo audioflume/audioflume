@@ -526,7 +526,7 @@ function HomeArtistShelf({
     <Shelf
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
-      customScrollbar={!compact && !discoverLayout}
+      customScrollbar={!compact}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
