@@ -1,10 +1,6 @@
 .playlist-detail-cover-play-button {
   position: absolute;
   z-index: 3;
-}
-
-.playlist-detail-cover-play-button,
-.playlist-detail-actions-play-button {
   display: inline-flex;
   width: clamp(52px, 5vw, 72px);
   height: clamp(52px, 5vw, 72px);
@@ -19,20 +15,16 @@
   transition: transform 160ms ease;
 }
 
-.playlist-detail-cover-play-button svg,
-.playlist-detail-actions-play-button svg {
+.playlist-detail-cover-play-button svg {
   width: clamp(18px, 1.7vw, 25px);
   height: clamp(18px, 1.7vw, 25px);
 }
 
 .playlist-detail-cover-play-button:hover,
-.playlist-detail-cover-play-button:focus-visible,
-.playlist-detail-actions-play-button:hover,
-.playlist-detail-actions-play-button:focus-visible {
+.playlist-detail-cover-play-button:focus-visible {
   transform: scale(1.03);
 }
 
-.playlist-detail-cover-play-button:disabled,
-.playlist-detail-actions-play-button:disabled {
+.playlist-detail-cover-play-button:disabled {
   cursor: default;
 }
