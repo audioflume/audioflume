@@ -1943,8 +1943,9 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-artists.is-discover-featured-artists {
   --audioflume-featured-artist-gap: 14px;
   --audioflume-featured-artist-inset: 16px;
-  --audioflume-featured-artist-scrollbar-bottom-gap: 24px;
+  --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
   padding-top: 20px;
+  padding-bottom: 80px;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
