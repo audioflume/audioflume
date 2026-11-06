@@ -339,7 +339,7 @@
   max-height: 0;
   flex-wrap: wrap;
   gap: 8px;
-  overflow: hidden;
+  overflow: visible;
   margin-top: 0;
   transition: max-height 300ms ease, margin-top 300ms ease;
 }
