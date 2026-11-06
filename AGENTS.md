@@ -16,6 +16,8 @@ The canonical title-to-content spacing is `--filmwave-section-title-margin-botto
 
 For **new Home/Discover sections** using the existing `audioflume-home-mockup-section-label` styling, use `HomeSectionWithHeading` from `apps/web/app/HomeSectionWithHeading.tsx`. Put song grids, carousels, and other flex/grid layouts in its **content** slot, never around the heading. The heading's existing bottom margin owns the title-to-content spacing; content gaps must only separate content items. Do not add a row gap between the heading and the content, and do not add a compensating margin or override.
 
+For an optional right-aligned text link in a new Home/Discover section, pass `linkHref` and `linkLabel` to `HomeSectionWithHeading`. The component must emit the existing `audioflume-arrow-text-link inline-flex items-center gap-[5px]` link with `ArrowUpRightIcon` (size 16, stroke width 1.5, `translate-y-[2px]`), as used in the current curated playlist heading. The heading row already controls alignment and separation (`justify-content: space-between`, `gap: 24px`); do not add custom link or title spacing. Omit both link props for a heading without a link. Keep the `action` slot only for custom actions. Do not migrate existing link/heading pairs unless explicitly requested.
+
 For **other pages**, inspect and reuse the established page-specific heading/container structure and canonical spacing token before adding a title. Do not blindly apply a Home/Discover class or change a shared component.
 
 Before committing a new heading:
