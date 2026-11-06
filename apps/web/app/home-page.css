@@ -1848,6 +1848,12 @@ body:has(.audioflume-home-landing)
   top: 215px;
 }
 
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-home-reference-artist-shelf
+  .audioflume-home-reference-shelf-arrow {
+  top: clamp(160px, 13.65vw, 255px);
+}
+
 .audioflume-home-mockup-section-label {
   display: flex;
   align-items: baseline;
