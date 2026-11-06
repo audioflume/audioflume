@@ -2054,14 +2054,59 @@ body:has(.audioflume-home-landing)
   inset: 0;
   display: grid;
   place-items: center;
-  background: rgba(17, 17, 17, 0.34);
   opacity: 0;
   transition: opacity 150ms ease;
 }
 
+.audioflume-discover-compact-song-play-circle {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #111111;
+  transition: transform 150ms ease;
+}
+
 .audioflume-discover-compact-song-art:hover .audioflume-discover-compact-song-play,
-.audioflume-discover-compact-song-art:focus-visible .audioflume-discover-compact-song-play {
+.audioflume-discover-compact-song-art:focus-visible .audioflume-discover-compact-song-play,
+.audioflume-discover-compact-song.is-active .audioflume-discover-compact-song-play {
   opacity: 1;
+}
+
+.audioflume-discover-compact-song-art:hover .audioflume-discover-compact-song-play-circle,
+.audioflume-discover-compact-song-art:focus-visible .audioflume-discover-compact-song-play-circle {
+  transform: scale(1.05);
+}
+
+/* Divider follows the first two visual grid rows at each column count. */
+@media (min-width: 1101px) {
+  .audioflume-discover-compact-song:nth-child(-n+8) {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (min-width: 751px) and (max-width: 1100px) {
+  .audioflume-discover-compact-song:nth-child(-n+6) {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (min-width: 441px) and (max-width: 750px) {
+  .audioflume-discover-compact-song:nth-child(-n+4) {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 440px) {
+  .audioflume-discover-compact-song:nth-child(-n+2) {
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
 }
 
 .audioflume-discover-compact-song-copy {
