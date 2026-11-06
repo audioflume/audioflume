@@ -341,15 +341,24 @@
   gap: 8px;
   overflow: hidden;
   margin-top: 0;
-  opacity: 0;
-  transform: translateY(12px);
-  transition: max-height 300ms ease, margin-top 300ms ease, opacity 220ms ease, transform 300ms ease;
+  transition: max-height 300ms ease, margin-top 300ms ease;
 }
 
 .card:hover .cardGenres,
 .card:focus-within .cardGenres {
   max-height: 120px;
   margin-top: 12px;
+}
+
+.cardGenres > .cardGenre {
+  opacity: 0;
+  transform: translateY(12px);
+  will-change: opacity, transform, backdrop-filter;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.card:hover .cardGenres > .cardGenre,
+.card:focus-within .cardGenres > .cardGenre {
   opacity: 1;
   transform: translateY(0);
 }
@@ -459,6 +468,6 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cardImage, .cardPlay, .cardGenres { transition: none; }
+  .cardImage, .cardPlay, .cardGenres, .cardGenres > .cardGenre { transition: none; }
   .skeleton { animation: none; }
 }
