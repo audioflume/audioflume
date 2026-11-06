@@ -1202,11 +1202,15 @@ export default function HomePageContent({
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
         {!showHero && !songsLoading && discoverCompactSongs.length > 0 ? (
-          <div className="audioflume-discover-compact-songs audioflume-home-reference-width">
+          <HomeSectionWithHeading
+            title="Quick picks"
+            className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
+            contentClassName="audioflume-discover-compact-songs"
+          >
             {discoverCompactSongs.map((song) => (
               <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
             ))}
-          </div>
+          </HomeSectionWithHeading>
         ) : null}
         {!showHero && !songsLoading && !artistsLoading && !discoverFeaturedSongsLoading && discoverArtistSongs.length > 0 ? (
           <HomeSectionWithHeading
