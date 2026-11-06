@@ -565,12 +565,14 @@ function HomeArtistShelf({
                 ) : null}
               </div>
               {discoverLayout ? (
-                <div className="audioflume-discover-featured-identity">
-                  <strong className="audioflume-discover-featured-name">{artist.name}</strong>
+                <>
+                  <div className="audioflume-discover-featured-identity">
+                    <strong className="audioflume-discover-featured-name">{artist.name}</strong>
+                  </div>
                   {artist.designation ? (
                     <span className="audioflume-discover-featured-designation">{artist.designation}</span>
                   ) : null}
-                </div>
+                </>
               ) : (
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
