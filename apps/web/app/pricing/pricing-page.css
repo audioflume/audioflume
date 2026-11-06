@@ -29,26 +29,6 @@
   padding: 88px 0 0;
 }
 
-.audioflume-pricing-editorial-title {
-  width: 100%;
-  margin: 0 0 64px;
-  text-align: justify;
-  text-align-last: justify;
-  text-transform: uppercase;
-  color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(44px, 5vw, 84px);
-  font-weight: 300;
-  letter-spacing: -.065em;
-  line-height: .99;
-}
-@media (max-width: 690px) {
-  .audioflume-pricing-editorial-title {
-    font-size: clamp(40px, 8vw, 60px);
-    margin-bottom: 40px;
-  }
-}
-
 .audioflume-pricing-plans-section::before {
   content: "";
   position: absolute;
