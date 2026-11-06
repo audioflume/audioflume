@@ -20,6 +20,7 @@ import {
 import Footer from "@/components/Footer";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
+import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
@@ -1110,16 +1111,15 @@ export default function HomePageContent({
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
         {!showHero && !songsLoading && !artistsLoading && discoverArtistSongs.length > 0 ? (
-          <div className="audioflume-discover-featured-songs-section audioflume-home-reference-width">
-            <div className="audioflume-home-mockup-section-label">
-              <span>Featured songs</span>
-            </div>
-            <div className="audioflume-discover-featured-songs">
-              {discoverArtistSongs.map((song) => (
-                <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
-              ))}
-            </div>
-          </div>
+          <HomeSectionWithHeading
+            title="Featured songs"
+            className="audioflume-discover-featured-songs-section audioflume-home-reference-width"
+            contentClassName="audioflume-discover-featured-songs"
+          >
+            {discoverArtistSongs.map((song) => (
+              <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
+            ))}
+          </HomeSectionWithHeading>
         ) : null}
       </section>
 
