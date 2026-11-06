@@ -922,6 +922,19 @@ export default function HomePageContent({
     () => playableSongs.slice(0, 15),
     [playableSongs],
   );
+  const discoverArtistSongs = useMemo(() => {
+    const selected = new Map<string, Song>();
+    for (const artist of artists) {
+      for (const song of artist.songs) {
+        if (song.audioUrl && !selected.has(song.id)) selected.set(song.id, song);
+      }
+    }
+    for (const song of playableSongs) {
+      if (selected.size >= 6) break;
+      if (!selected.has(song.id)) selected.set(song.id, song);
+    }
+    return Array.from(selected.values()).slice(0, 6);
+  }, [artists, playableSongs]);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
@@ -1058,14 +1071,33 @@ export default function HomePageContent({
         </section> : null}
 
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
-        <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
-          <h2>This month&apos;s featured artists</h2>
-          <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
-        </div>
+        {!showHero ? (
+          <div className="audioflume-discover-featured-intro audioflume-home-reference-width">
+            <span className="audioflume-discover-featured-eyebrow">THIS MONTH&apos;S FEATURED ARTISTS</span>
+            <div className="audioflume-discover-featured-intro-row">
+              <h2>DISCOVER NEW MUSIC<br />&amp; TRENDING ARTISTS.</h2>
+              <Link href="/artists" className="audioflume-arrow-text-link">
+                Explore this month&apos;s featured artists
+              </Link>
+            </div>
+          </div>
+        ) : (
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
+            <h2>This month&apos;s featured artists</h2>
+            <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
+          </div>
+        )}
         {artistsLoading ? (
           <HomeArtistShelfSkeleton />
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
+        ) : null}
+        {!showHero && !songsLoading && !artistsLoading && discoverArtistSongs.length > 0 ? (
+          <div className="audioflume-discover-featured-songs audioflume-home-reference-width">
+            {discoverArtistSongs.map((song) => (
+              <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
+            ))}
+          </div>
         ) : null}
       </section>
 
