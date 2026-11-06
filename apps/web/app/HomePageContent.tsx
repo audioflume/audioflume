@@ -756,14 +756,14 @@ function HomeCompactSongCard({
   }
 
   return (
-    <article className={`audioflume-discover-compact-song${active ? " is-active" : ""}`}>
-      <button
-        type="button"
-        className="audioflume-discover-compact-song-art"
-        onClick={playSong}
-        disabled={!song.audioUrl}
-        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-      >
+    <button
+      type="button"
+      className={`audioflume-discover-compact-song${active ? " is-active" : ""}`}
+      onClick={playSong}
+      disabled={!song.audioUrl}
+      aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+    >
+      <span className="audioflume-discover-compact-song-art">
         {song.coverArt ? (
           <img src={song.coverArt} alt="" draggable={false} />
         ) : (
@@ -776,12 +776,12 @@ function HomeCompactSongCard({
             {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
           </span>
         </span>
-      </button>
+      </span>
       <span className="audioflume-discover-compact-song-copy">
         <strong className="audioflume-home-song-title">{song.title}</strong>
         <span className="audioflume-home-song-artist">{song.artist}</span>
       </span>
-    </article>
+    </button>
   );
 }
 
