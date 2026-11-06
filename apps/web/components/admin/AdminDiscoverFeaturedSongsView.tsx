@@ -182,8 +182,7 @@ export default function AdminDiscoverFeaturedSongsView() {
           songsUrl="/api/admin/discover-featured-songs?picker=1"
           buttonLabel="Add"
           existingTrackIds={items.map((item) => item.song_id)}
-          maxSelections={6}
-          disabled={saving || loading || items.length >= 6}
+          disabled={saving || loading}
           onAdd={(songIds) => void addSongs(songIds)}
         />
       }
@@ -193,7 +192,7 @@ export default function AdminDiscoverFeaturedSongsView() {
         <div className="min-h-[120px] animate-pulse bg-[var(--bg-tertiary)]" />
       ) : items.length === 0 ? (
         <div className="flex min-h-[120px] items-center justify-center border-[1.25px] border-dashed border-[var(--border)] px-6 text-center text-xs text-[var(--text-secondary)]">
-          Add up to six published songs to the Discover featured songs section.
+          Add published songs to the Discover featured songs section.
         </div>
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => void reorderSongs(event)}>
