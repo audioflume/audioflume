@@ -1204,7 +1204,7 @@ export default function HomePageContent({
       <section className="audioflume-discover-reference-search">
         <div className="audioflume-home-reference-width">
           <div className="audioflume-discover-reference-search-heading filmwave-section-heading-row">
-            <span>Find Similar</span>
+            <span>Find similar songs</span>
           </div>
           <div className="audioflume-discover-reference-search-card">
             <GlobalReferenceSearch embedded />
