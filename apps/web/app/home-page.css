@@ -2043,7 +2043,7 @@ body:has(.audioflume-home-landing)
   opacity: 1;
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 620px) {
   .audioflume-discover-featured-title-break {
     display: none;
   }
