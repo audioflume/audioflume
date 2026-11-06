@@ -1997,11 +1997,14 @@ body:has(.audioflume-home-landing)
   text-decoration: none;
 }
 
+.audioflume-discover-featured-songs-section {
+  margin-top: 80px;
+}
+
 .audioflume-discover-featured-songs {
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
-  margin-top: 80px;
   --audioflume-featured-song-play-background: #ffffff;
   --audioflume-featured-song-play-color: #111111;
   --audioflume-featured-song-play-backdrop: none;
