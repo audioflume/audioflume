@@ -2107,36 +2107,11 @@ body:has(.audioflume-home-landing)
   line-height: 1.15;
 }
 
-.audioflume-discover-featured-genres {
-  position: absolute;
-  right: 30px;
-  bottom: 30px;
-  z-index: 4;
-  display: flex;
-  max-width: calc(100% - 300px);
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 8px;
-  pointer-events: none;
-}
-
-.audioflume-discover-featured-genres > a.audioflume-genre-filter-pill,
-.audioflume-discover-featured-genres > .audioflume-genre-filter-pill.is-placeholder {
-  opacity: 0;
-  transform: translateY(12px);
-  will-change: opacity, transform, backdrop-filter;
-  transition: opacity 220ms ease, transform 220ms ease, color 160ms ease;
-}
-
-.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-genres,
-.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-genres {
-  pointer-events: auto;
-}
-
-.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-genres > .audioflume-genre-filter-pill,
-.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-genres > .audioflume-genre-filter-pill {
-  opacity: 1;
-  transform: translateY(0);
+.audioflume-discover-featured-designation {
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 13px;
+  font-weight: 300;
+  line-height: 1;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore {
