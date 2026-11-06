@@ -1942,7 +1942,7 @@ body:has(.audioflume-home-landing)
 /* Discover's featured-artist layout, independent of the larger lead-card shelf. */
 .audioflume-home-mockup-artists.is-discover-featured-artists {
   --audioflume-featured-artist-gap: 14px;
-  --audioflume-featured-artist-inset: 16px;
+  --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
   --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
   padding-top: 20px;
   padding-bottom: 80px;
