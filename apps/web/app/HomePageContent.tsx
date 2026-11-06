@@ -1073,7 +1073,7 @@ export default function HomePageContent({
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
         {!showHero ? (
           <div className="audioflume-discover-featured-intro audioflume-home-reference-width">
-            <span className="audioflume-discover-featured-eyebrow">THIS MONTH&apos;S FEATURED ARTISTS</span>
+            <span className="audioflume-discover-featured-eyebrow">ROYALTY FREE MUSIC LICENSED FOR FILM</span>
             <div className="audioflume-discover-featured-intro-row">
               <h2>DISCOVER NEW MUSIC<br className="audioflume-discover-featured-title-break" />{" "}&amp; TRENDING ARTISTS.</h2>
               <Link href="/artists" className="audioflume-arrow-text-link">
