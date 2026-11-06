@@ -10,10 +10,7 @@ import {
 import { CSS } from "@dnd-kit/utilities";
 
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
-import {
-  PLAYLIST_MANAGER_GRID_CLASS,
-  PlaylistManagerCollapsibleSection,
-} from "@/components/admin/AdminPlaylistManagerShared";
+import { PlaylistManagerCollapsibleSection } from "@/components/admin/AdminPlaylistManagerShared";
 import { BackendMediaThumbnail } from "@/components/backend/BackendRow";
 import BackendDragHandle from "@/components/backend/BackendDragHandle";
 import type { Song } from "@/lib/types";
@@ -201,7 +198,7 @@ export default function AdminDiscoverFeaturedSongsView() {
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => void reorderSongs(event)}>
           <SortableContext items={items.map((item) => item.song_id)} strategy={rectSortingStrategy}>
-            <div className={PLAYLIST_MANAGER_GRID_CLASS}>
+            <div className="grid grid-cols-3 gap-x-3 gap-y-5 xl:grid-cols-6">
               {items.map((item) => (
                 <SortableSong
                   key={item.song_id}
