@@ -605,6 +605,11 @@ function HomeArtistShelf({
               >
                 <span className="audioflume-discover-featured-track-cover">
                   {featuredSong.coverArt ? <img src={featuredSong.coverArt} alt="" draggable={false} /> : null}
+                  {playable.length > 0 ? (
+                    <span className="audioflume-discover-featured-track-play" aria-hidden="true">
+                      {artistIsPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+                    </span>
+                  ) : null}
                 </span>
                 <span className="audioflume-discover-featured-track-copy">
                   <strong>{featuredSong.title}</strong>
