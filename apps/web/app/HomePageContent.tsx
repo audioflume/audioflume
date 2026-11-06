@@ -567,6 +567,9 @@ function HomeArtistShelf({
               {discoverLayout ? (
                 <div className="audioflume-discover-featured-identity">
                   <strong className="audioflume-discover-featured-name">{artist.name}</strong>
+                  {artist.designation ? (
+                    <span className="audioflume-discover-featured-designation">{artist.designation}</span>
+                  ) : null}
                 </div>
               ) : (
               <div className="audioflume-home-reference-artist-bar">
@@ -582,9 +585,6 @@ function HomeArtistShelf({
               </div>
               )}
             </div>
-            {discoverLayout ? (
-              <GenreFilterPills genres={genres} showPlaceholders className="audioflume-discover-featured-genres" />
-            ) : null}
             {!compact ? (
               <Link
                 href={`/artists/${artist.slug}`}
