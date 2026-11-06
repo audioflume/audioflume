@@ -538,7 +538,10 @@ function HomeArtistShelf({
               Array.isArray(song.genres) ? song.genres.filter(Boolean) : [],
             ),
           ),
-        ).slice(0, 3);
+        );
+        const visibleGenres = discoverLayout
+          ? [...genres].sort((a, b) => a.localeCompare(b)).slice(0, 3)
+          : genres.slice(0, 3);
         const artistIsPlaying = Boolean(
           isPlaying &&
             currentSong &&
@@ -580,7 +583,7 @@ function HomeArtistShelf({
                       {artist.designation}
                     </span>
                   ) : null}
-                  {!compact ? <GenreFilterPills genres={genres} showPlaceholders className="audioflume-home-reference-artist-genres" /> : null}
+                  {!compact ? <GenreFilterPills genres={visibleGenres} showPlaceholders className="audioflume-home-reference-artist-genres" /> : null}
                 </span>
               </div>
               )}
@@ -622,8 +625,8 @@ function HomeArtistShelf({
               </button>
               <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Artist genres">
                 {[0, 1, 2].map((index) => (
-                  genres[index] ? (
-                    <Link href={`/music?genre=${encodeURIComponent(genres[index])}`} className="audioflume-genre-filter-pill" key={genres[index]}>{genres[index]}</Link>
+                  visibleGenres[index] ? (
+                    <Link href={`/music?genre=${encodeURIComponent(visibleGenres[index])}`} className="audioflume-genre-filter-pill" key={visibleGenres[index]}>{visibleGenres[index]}</Link>
                   ) : (
                     <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`} aria-hidden="true" />
                   )
