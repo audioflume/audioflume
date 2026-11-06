@@ -46,7 +46,7 @@ function SortableSong({ item, index, disabled, onRemove }: {
         />
         <BackendDragHandle
           variant="overlay"
-          className="absolute left-0 top-0 z-10 h-5 w-5 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+          className="absolute -left-1 -top-1 z-10 h-5 w-5 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
           disabled={disabled}
           aria-label={`Drag ${item.song.title} to reorder`}
           {...attributes}
