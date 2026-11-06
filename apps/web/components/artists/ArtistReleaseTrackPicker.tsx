@@ -291,7 +291,7 @@ export default function ArtistReleaseTrackPicker({
           />
         </div>
 
-        <div className="-mx-5 min-h-0 flex-1 overflow-x-auto overflow-y-auto border-t-[1.25px] border-[var(--border-subtle)]">
+        <div className="-mx-5 h-0 min-h-0 flex-1 overflow-x-auto overflow-y-auto overscroll-contain border-t-[1.25px] border-[var(--border-subtle)]">
           <div className="min-w-[900px]">
             {loading ? (
               <div className="flex min-h-[220px] items-center justify-center text-xs text-[var(--text-muted)]">
