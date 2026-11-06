@@ -1075,7 +1075,7 @@ export default function HomePageContent({
           <div className="audioflume-discover-featured-intro audioflume-home-reference-width">
             <span className="audioflume-discover-featured-eyebrow">THIS MONTH&apos;S FEATURED ARTISTS</span>
             <div className="audioflume-discover-featured-intro-row">
-              <h2>DISCOVER NEW MUSIC<br />&amp; TRENDING ARTISTS.</h2>
+              <h2>DISCOVER NEW MUSIC<br className="audioflume-discover-featured-title-break" />{" "}&amp; TRENDING ARTISTS.</h2>
               <Link href="/artists" className="audioflume-arrow-text-link">
                 Explore this month&apos;s featured artists
               </Link>
