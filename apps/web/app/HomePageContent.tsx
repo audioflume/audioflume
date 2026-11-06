@@ -1237,7 +1237,7 @@ export default function HomePageContent({
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
-            title="Tracks made for storytelling"
+            title="Trending & popular this month"
             linkHref="/music"
             linkLabel="Explore music"
             className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
