@@ -746,7 +746,8 @@ function HomeCompactSongCard({
   queue: Song[];
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
-  const playing = currentSong?.id === song.id && isPlaying;
+  const active = currentSong?.id === song.id;
+  const playing = active && isPlaying;
 
   function playSong() {
     if (!song.audioUrl) return;
@@ -755,7 +756,7 @@ function HomeCompactSongCard({
   }
 
   return (
-    <article className="audioflume-discover-compact-song">
+    <article className={`audioflume-discover-compact-song${active ? " is-active" : ""}`}>
       <button
         type="button"
         className="audioflume-discover-compact-song-art"
@@ -771,7 +772,9 @@ function HomeCompactSongCard({
           </span>
         )}
         <span className="audioflume-discover-compact-song-play" aria-hidden="true">
-          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+          <span className="audioflume-discover-compact-song-play-circle">
+            {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+          </span>
         </span>
       </button>
       <span className="audioflume-discover-compact-song-copy">
