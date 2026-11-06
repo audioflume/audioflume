@@ -2191,11 +2191,6 @@ body:has(.audioflume-home-landing)
   opacity: 1;
 }
 
-.audioflume-discover-featured-songs .audioflume-home-featured-song-card {
-  width: 100%;
-  min-width: 0;
-}
-
 .audioflume-discover-featured-songs .audioflume-home-featured-song-play {
   opacity: 0;
   transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease;
