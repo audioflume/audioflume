@@ -994,7 +994,7 @@ export default function HomePageContent({
     [playableSongs],
   );
   const discoverArtistSongs = useMemo(() => {
-    if (configuredDiscoverSongs?.length) return configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl)).slice(0, 6);
+    if (configuredDiscoverSongs?.length) return configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl));
     const selected = new Map<string, Song>();
     for (const artist of artists) {
       for (const song of artist.songs) {
@@ -1221,9 +1221,11 @@ export default function HomePageContent({
             className="audioflume-discover-featured-songs-section audioflume-home-reference-width"
             contentClassName="audioflume-discover-featured-songs"
           >
-            {discoverArtistSongs.map((song) => (
-              <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
-            ))}
+            <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf">
+              {discoverArtistSongs.map((song) => (
+                <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
+              ))}
+            </Shelf>
           </HomeSectionWithHeading>
         ) : null}
       </section>
