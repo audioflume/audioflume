@@ -1110,13 +1110,15 @@ export default function HomePageContent({
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
         {!showHero && !songsLoading && !artistsLoading && discoverArtistSongs.length > 0 ? (
-          <div className="audioflume-discover-featured-songs audioflume-home-reference-width">
-            <div className="audioflume-home-mockup-section-label col-span-full">
+          <div className="audioflume-discover-featured-songs-section audioflume-home-reference-width">
+            <div className="audioflume-home-mockup-section-label">
               <span>Featured songs</span>
             </div>
-            {discoverArtistSongs.map((song) => (
-              <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
-            ))}
+            <div className="audioflume-discover-featured-songs">
+              {discoverArtistSongs.map((song) => (
+                <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
+              ))}
+            </div>
           </div>
         ) : null}
       </section>
