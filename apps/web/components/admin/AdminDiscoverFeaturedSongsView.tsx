@@ -211,6 +211,7 @@ export default function AdminDiscoverFeaturedSongsView() {
           releaseType="playlist"
           songsUrl="/api/admin/discover-featured-songs?picker=1"
           buttonLabel="Add"
+          showAddIcon
           existingTrackIds={items.map((item) => item.song_id)}
           disabled={saving || loading}
           onAdd={(songIds) => void addSongs(songIds)}
