@@ -1948,6 +1948,86 @@ body:has(.audioflume-home-landing)
   padding-bottom: 80px;
 }
 
+.audioflume-discover-featured-intro {
+  margin-bottom: 24px;
+}
+
+.audioflume-discover-featured-eyebrow {
+  display: block;
+  margin-bottom: 56px;
+  color: var(--text-muted);
+  font-family: var(--font-roboto-mono-filmwave), ui-monospace, monospace;
+  font-size: 11px;
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.audioflume-discover-featured-intro-row {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+}
+
+.audioflume-discover-featured-intro-row h2 {
+  margin: 0;
+  color: var(--text-primary);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(38px, 3.6vw, 68px);
+  font-weight: 300;
+  letter-spacing: -.045em;
+  line-height: .98;
+}
+
+.audioflume-discover-featured-intro-row > a {
+  flex: 0 0 auto;
+  margin-bottom: 3px;
+  color: var(--text-primary);
+  font-size: clamp(14px, 1.2vw, 19px);
+  font-weight: 300;
+  text-decoration: none;
+}
+
+.audioflume-discover-featured-songs {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
+  margin-top: 68px;
+}
+
+.audioflume-discover-featured-songs .audioflume-home-featured-song-card {
+  width: 100%;
+  min-width: 0;
+}
+
+@media (max-width: 1000px) {
+  .audioflume-discover-featured-intro-row {
+    align-items: start;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .audioflume-discover-featured-eyebrow {
+    margin-bottom: 36px;
+  }
+
+  .audioflume-discover-featured-songs {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .audioflume-discover-featured-intro-row h2 {
+    font-size: clamp(30px, 7vw, 42px);
+  }
+
+  .audioflume-discover-featured-songs {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 10px;
+    margin-top: 40px;
+  }
+}
+
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
   width: clamp(460px, 61vw, 1140px);
   min-width: clamp(460px, 61vw, 1140px);
