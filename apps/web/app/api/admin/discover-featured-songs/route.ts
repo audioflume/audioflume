@@ -56,10 +56,14 @@ export async function GET(request: Request) {
     const ids = rows.map((row) => String(row.song_id));
     if (!ids.length) return NextResponse.json({ items: [] });
 
-    const { data: songs, error: songsError } = await supabaseServer.from("songs")
-      .select(SONG_FIELDS).in("id", ids).eq("status", "published");
-    if (songsError) throw songsError;
-    const normalized = await attachEditPoints((songs ?? []).map(normalizeSongRow));
+    const songs: Record<string, unknown>[] = [];
+    for (let from = 0; from < ids.length; from += 200) {
+      const { data, error } = await supabaseServer.from("songs")
+        .select(SONG_FIELDS).in("id", ids.slice(from, from + 200)).eq("status", "published");
+      if (error) throw error;
+      songs.push(...(data ?? []));
+    }
+    const normalized = await attachEditPoints(songs.map(normalizeSongRow));
     const byId = new Map(normalized.map((song) => [song.id, song]));
     return NextResponse.json({ items: ids.flatMap((id, position) => {
       const song = byId.get(id);
@@ -81,16 +85,25 @@ export async function POST(request: Request) {
     const existingIds = new Set(existing.map((row) => String(row.song_id)));
     const newIds = ids.filter((id) => !existingIds.has(id));
     if (!newIds.length) return NextResponse.json({ success: true });
-    const { data: published, error: songsError } = await supabaseServer.from("songs")
-      .select("id").in("id", newIds).eq("status", "published");
-    if (songsError) throw songsError;
-    if ((published ?? []).length !== newIds.length) {
+    const publishedIds = new Set<string>();
+    for (let from = 0; from < newIds.length; from += 200) {
+      const { data, error } = await supabaseServer.from("songs")
+        .select("id").in("id", newIds.slice(from, from + 200)).eq("status", "published");
+      if (error) throw error;
+      for (const song of data ?? []) publishedIds.add(String(song.id));
+    }
+    if (publishedIds.size !== newIds.length) {
       return NextResponse.json({ error: "Only published songs can be featured." }, { status: 400 });
     }
     const position = Math.max(-1, ...existing.map((row) => Number(row.position)));
-    const { error: insertError } = await supabaseServer.from("discover_featured_songs")
-      .insert(newIds.map((songId, index) => ({ song_id: songId, position: position + index + 1 })));
-    if (insertError) throw insertError;
+    for (let from = 0; from < newIds.length; from += 200) {
+      const { error } = await supabaseServer.from("discover_featured_songs")
+        .insert(newIds.slice(from, from + 200).map((songId, index) => ({
+          song_id: songId,
+          position: position + from + index + 1,
+        })));
+      if (error) throw error;
+    }
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Admin Discover featured songs add failed:", error);
