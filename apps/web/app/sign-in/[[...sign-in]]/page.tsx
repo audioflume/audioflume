@@ -17,7 +17,7 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
     <div className="flex min-h-screen items-center justify-center">
       <SignIn
         forceRedirectUrl={redirectUrl}
-        fallbackRedirectUrl={redirectUrl || "/music"}
+        fallbackRedirectUrl={redirectUrl || "/discover"}
       />
     </div>
   );
