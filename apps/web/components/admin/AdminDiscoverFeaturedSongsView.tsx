@@ -46,7 +46,7 @@ function SortableSong({ item, index, disabled, onRemove }: {
         />
         <BackendDragHandle
           variant="overlay"
-          className="absolute left-0 top-0 z-10 h-5 w-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100"
+          className="absolute left-0 top-0 z-10 h-5 w-5 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
           disabled={disabled}
           aria-label={`Drag ${item.song.title} to reorder`}
           {...attributes}
@@ -65,7 +65,7 @@ function SortableSong({ item, index, disabled, onRemove }: {
         type="button"
         disabled={disabled}
         onClick={onRemove}
-        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--danger)] group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 disabled:cursor-not-allowed"
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--danger)] group-hover:opacity-100 focus-visible:opacity-100 disabled:cursor-not-allowed"
         aria-label={`Remove ${item.song.title} from Featured Songs`}
         title="Remove from Featured Songs"
       >
