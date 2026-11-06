@@ -2190,18 +2190,26 @@ body:has(.audioflume-home-landing)
   position: relative;
   display: grid;
   min-width: 0;
+  height: 90px;
+  align-content: center;
   gap: 7px;
+}
+
+.audioflume-discover-featured-track-copy > strong,
+.audioflume-discover-featured-track-copy > span:not(.audioflume-discover-featured-track-genres) {
   transition: transform 280ms ease;
 }
 
-.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-copy:has(.audioflume-discover-featured-track-genres),
-.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-copy:has(.audioflume-discover-featured-track-genres) {
-  transform: translateY(-35px);
+.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-copy > strong,
+.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-copy > span:not(.audioflume-discover-featured-track-genres),
+.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-copy > strong,
+.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-copy > span:not(.audioflume-discover-featured-track-genres) {
+  transform: translateY(-25px);
 }
 
 .audioflume-discover-featured-track-genres {
   position: absolute;
-  top: calc(100% + 10px);
+  bottom: 0;
   left: 0;
   display: flex;
   width: max-content;
@@ -2209,6 +2217,11 @@ body:has(.audioflume-home-landing)
   flex-wrap: wrap;
   gap: 8px;
   pointer-events: none;
+}
+
+.audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill.is-placeholder {
+  width: 68px;
+  padding: 0;
 }
 
 .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill {
