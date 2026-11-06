@@ -12,7 +12,10 @@ import { CSS } from "@dnd-kit/utilities";
 import ArtistReleaseTrackPicker from "@/components/artists/ArtistReleaseTrackPicker";
 import { PlaylistManagerCollapsibleSection } from "@/components/admin/AdminPlaylistManagerShared";
 import { BackendMediaThumbnail } from "@/components/backend/BackendRow";
-import BackendDragHandle from "@/components/backend/BackendDragHandle";
+import { BackendDragHandleGlyph } from "@/components/backend/BackendDragHandle";
+import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PauseIcon from "@/components/icons/PauseIcon";
+import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
 type FeaturedSongItem = {
@@ -29,30 +32,51 @@ function SortableSong({ item, index, disabled, onRemove }: {
 }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } =
     useSortable({ id: item.song_id, disabled });
+  const { currentSong, isPlaying, togglePlayPause } = usePlayer();
+  const isCurrentSong = currentSong?.id === item.song.id;
+  const actuallyPlaying = isCurrentSong && isPlaying;
+
   return (
     <article
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.45 : 1 }}
-      className="group flex min-w-0 items-center gap-2 py-2"
+      className="group flex min-w-0 cursor-grab items-center gap-2 py-2 active:cursor-grabbing"
+      {...attributes}
+      {...listeners}
     >
       <div className="relative h-8 w-6 shrink-0">
-        <span className="flex h-full w-full items-center justify-center text-[11px] tabular-nums text-[var(--text-muted)] group-hover:opacity-0">
+        <span className="flex h-full w-full items-center justify-center text-[11px] tabular-nums text-[var(--text-muted)] transition-opacity duration-150 group-hover:opacity-0">
           {String(index + 1).padStart(2, "0")}
         </span>
-        <BackendDragHandle
-          variant="row"
-          className="absolute inset-0 h-full w-full opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
-          disabled={disabled}
-          aria-label={`Drag ${item.song.title} to reorder`}
-          {...attributes}
-          {...listeners}
-        />
+        <span aria-hidden="true" className="pointer-events-none absolute inset-0 flex items-center justify-center text-[var(--text-muted)] opacity-0 transition-opacity duration-150 group-hover:opacity-100">
+          <BackendDragHandleGlyph />
+        </span>
       </div>
-      <BackendMediaThumbnail
-        src={item.song.coverArt}
-        alt={item.song.title}
-        size={48}
-      />
+      <button
+        type="button"
+        onClick={() => togglePlayPause(item.song)}
+        onKeyDown={(event) => event.stopPropagation()}
+        disabled={!item.song.audioUrl}
+        className="relative h-12 w-12 shrink-0 cursor-pointer overflow-hidden bg-[var(--bg-tertiary)]"
+        style={{ "--filmwave-song-card-play-size": "30px" } as React.CSSProperties}
+        aria-label={actuallyPlaying ? `Pause ${item.song.title}` : `Play ${item.song.title}`}
+      >
+        <BackendMediaThumbnail
+          src={item.song.coverArt}
+          alt={item.song.title}
+          size={48}
+        />
+        <span
+          className={`pointer-events-none absolute inset-0 flex items-center justify-center transition-opacity duration-150 ${
+            isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+          }`}
+          aria-hidden="true"
+        >
+          <span className="filmwave-song-play-button">
+            {actuallyPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+          </span>
+        </span>
+      </button>
       <div className="min-w-0 flex-1">
         <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
           {item.song.title}
@@ -64,8 +88,10 @@ function SortableSong({ item, index, disabled, onRemove }: {
       <button
         type="button"
         disabled={disabled}
+        onPointerDown={(event) => event.stopPropagation()}
+        onKeyDown={(event) => event.stopPropagation()}
         onClick={onRemove}
-        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--danger)] group-hover:opacity-100 focus-visible:opacity-100 disabled:cursor-not-allowed"
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition-[opacity,color] duration-150 hover:text-[var(--danger)] group-hover:opacity-100 focus-visible:opacity-100 disabled:cursor-not-allowed"
         aria-label={`Remove ${item.song.title} from Featured Songs`}
         title="Remove from Featured Songs"
       >
