@@ -738,6 +738,50 @@ function HomeFeaturedSongCard({
   );
 }
 
+function HomeCompactSongCard({
+  song,
+  queue,
+}: {
+  song: Song;
+  queue: Song[];
+}) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const playing = currentSong?.id === song.id && isPlaying;
+
+  function playSong() {
+    if (!song.audioUrl) return;
+    setQueue(queue);
+    togglePlayPause(song);
+  }
+
+  return (
+    <article className="audioflume-discover-compact-song">
+      <button
+        type="button"
+        className="audioflume-discover-compact-song-art"
+        onClick={playSong}
+        disabled={!song.audioUrl}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        {song.coverArt ? (
+          <img src={song.coverArt} alt="" draggable={false} />
+        ) : (
+          <span className="audioflume-discover-compact-song-fallback">
+            <WaveformIcon size={22} />
+          </span>
+        )}
+        <span className="audioflume-discover-compact-song-play" aria-hidden="true">
+          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+        </span>
+      </button>
+      <span className="audioflume-discover-compact-song-copy">
+        <strong className="audioflume-home-song-title">{song.title}</strong>
+        <span className="audioflume-home-song-artist">{song.artist}</span>
+      </span>
+    </article>
+  );
+}
+
 function HomeFeaturedSongShelf({ songs }: { songs: Song[] }) {
   if (songs.length === 0) return null;
 
@@ -1160,7 +1204,7 @@ export default function HomePageContent({
         {!showHero && !songsLoading && discoverCompactSongs.length > 0 ? (
           <div className="audioflume-discover-compact-songs audioflume-home-reference-width">
             {discoverCompactSongs.map((song) => (
-              <HomeFeaturedSongCard key={song.id} song={song} queue={discoverCompactSongs} />
+              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
             ))}
           </div>
         ) : null}
