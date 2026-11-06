@@ -348,7 +348,7 @@
   gap: 8px;
   overflow: visible;
   margin-top: 0;
-  pointer-events: auto;
+  pointer-events: none;
   transition: max-height 300ms ease, margin-top 300ms ease;
 }
 
@@ -356,6 +356,7 @@
 .card:focus-within .cardGenres {
   max-height: 120px;
   margin-top: 12px;
+  pointer-events: auto;
 }
 
 .cardGenres > .cardGenre {
@@ -389,8 +390,13 @@
 }
 
 .cardGenres > a.cardGenre {
-  pointer-events: auto;
+  pointer-events: none;
   transition: opacity 220ms ease, transform 220ms ease, color 160ms ease;
+}
+
+.card:hover .cardGenres > a.cardGenre,
+.card:focus-within .cardGenres > a.cardGenre {
+  pointer-events: auto;
 }
 
 .cardGenres > a.cardGenre:hover,
