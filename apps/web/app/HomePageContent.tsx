@@ -785,38 +785,6 @@ function HomeCompactSongCard({
   );
 }
 
-function HomeFeaturedSongShelf({ songs }: { songs: Song[] }) {
-  if (songs.length === 0) return null;
-
-  return (
-    <section className="audioflume-home-featured-songs">
-      <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-        <span>Tracks made for storytelling</span>
-        <Link
-          href="/music"
-          className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
-        >
-          More like this
-          <ArrowUpRightIcon
-            size={16}
-            strokeWidth={1.5}
-            className="translate-y-[2px]"
-          />
-        </Link>
-      </div>
-
-      <Shelf
-        label="featured songs"
-        className="audioflume-home-featured-song-shelf"
-      >
-        {songs.map((song) => (
-          <HomeFeaturedSongCard key={song.id} song={song} queue={songs} />
-        ))}
-      </Shelf>
-    </section>
-  );
-}
-
 function HomeSkeletonBlock({
   className = "",
 }: {
@@ -989,10 +957,6 @@ export default function HomePageContent({
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
   const discoverCompactSongs = playableSongs.slice(0, 12);
-  const featuredSongs = useMemo(
-    () => playableSongs.slice(0, 15),
-    [playableSongs],
-  );
   const discoverArtistSongs = useMemo(() => {
     if (configuredDiscoverSongs?.length) return configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl));
     const selected = new Map<string, Song>();
@@ -1254,10 +1218,6 @@ export default function HomePageContent({
         <HomeCuratedPlaylistShelf playlists={curatedPlaylists} />
       )}
 
-      {!songsLoading && !artistsLoading ? (
-        <HomeFeaturedSongShelf songs={featuredSongs} />
-      ) : null}
-
       <section className="audioflume-home-mockup-catalogue">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline audioflume-home-mockup-catalogue-heading">
           <h2 ref={catalogueHeadingRef}>
@@ -1322,12 +1282,12 @@ export default function HomePageContent({
 
         <section className="audioflume-home-reference-playlists">
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-section-label">
-            <span>Audioflume originals</span>
+            <span>Tracks made for storytelling</span>
             <Link
-              href="/music?artist=Audioflume"
+              href="/music"
               className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
             >
-              Explore originals
+              More like this
               <ArrowUpRightIcon
                 size={16}
                 strokeWidth={1.5}
@@ -1337,8 +1297,8 @@ export default function HomePageContent({
           </div>
           {songsLoading ? (
             <HomeOriginalsSkeleton />
-          ) : originalSongs.length > 0 ? (
-            <HomeOriginalSongGrid songs={originalSongs} />
+          ) : playableSongs.length > 0 ? (
+            <HomeOriginalSongGrid songs={playableSongs} />
           ) : null}
         </section>
       </section>
