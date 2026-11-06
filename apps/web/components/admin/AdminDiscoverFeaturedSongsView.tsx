@@ -32,21 +32,23 @@ function SortableSong({ item, disabled, onRemove }: {
     <article
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.45 : 1 }}
-      className="group flex min-w-0 items-center gap-2 border-b border-[var(--border)] py-2"
+      className="group flex min-w-0 items-center gap-2 py-2"
     >
-      <BackendDragHandle
-        variant="row"
-        className="shrink-0"
-        disabled={disabled}
-        aria-label={`Drag ${item.song.title} to reorder`}
-        {...attributes}
-        {...listeners}
-      />
-      <BackendMediaThumbnail
-        src={item.song.coverArt}
-        alt={item.song.title}
-        size={48}
-      />
+      <div className="relative shrink-0">
+        <BackendMediaThumbnail
+          src={item.song.coverArt}
+          alt={item.song.title}
+          size={48}
+        />
+        <BackendDragHandle
+          variant="overlay"
+          className="absolute left-0 top-0 z-10 h-7 w-7 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100"
+          disabled={disabled}
+          aria-label={`Drag ${item.song.title} to reorder`}
+          {...attributes}
+          {...listeners}
+        />
+      </div>
       <div className="min-w-0 flex-1">
         <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
           {item.song.title}
@@ -59,7 +61,7 @@ function SortableSong({ item, disabled, onRemove }: {
         type="button"
         disabled={disabled}
         onClick={onRemove}
-        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-lg font-light leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--danger)] disabled:cursor-not-allowed"
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--danger)] group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 disabled:cursor-not-allowed"
         aria-label={`Remove ${item.song.title} from Featured Songs`}
         title="Remove from Featured Songs"
       >
