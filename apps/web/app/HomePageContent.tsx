@@ -921,6 +921,9 @@ export default function HomePageContent({
   const [discoverFeaturedSongsLoading, setDiscoverFeaturedSongsLoading] = useState(!showHero);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
+  const discoverHeadingRef = useRef<HTMLHeadingElement>(null);
+  const discoverFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
+  const [discoverHeadingNeedsNaturalWrap, setDiscoverHeadingNeedsNaturalWrap] = useState(false);
   const catalogueHeadingRef = useRef<HTMLHeadingElement>(null);
   const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
@@ -960,6 +963,23 @@ export default function HomePageContent({
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
+
+  useLayoutEffect(() => {
+    if (showHero) return;
+    const heading = discoverHeadingRef.current;
+    const measure = discoverFirstLineMeasureRef.current;
+    if (!heading || !measure) return;
+
+    const updateDiscoverHeadingWrap = () => {
+      setDiscoverHeadingNeedsNaturalWrap(measure.getBoundingClientRect().width > heading.clientWidth);
+    };
+
+    updateDiscoverHeadingWrap();
+    const observer = new ResizeObserver(updateDiscoverHeadingWrap);
+    observer.observe(heading);
+    void document.fonts.ready.then(updateDiscoverHeadingWrap);
+    return () => observer.disconnect();
+  }, [showHero]);
 
   useLayoutEffect(() => {
     const heading = catalogueHeadingRef.current;
@@ -1116,7 +1136,10 @@ export default function HomePageContent({
           <div className="audioflume-discover-featured-intro audioflume-home-reference-width">
             <span className="audioflume-discover-featured-eyebrow">ROYALTY FREE MUSIC LICENSED FOR FILM</span>
             <div className="audioflume-discover-featured-intro-row">
-              <h2>DISCOVER NEW MUSIC<br className="audioflume-discover-featured-title-break" />{" "}&amp; TRENDING ARTISTS.</h2>
+              <h2 ref={discoverHeadingRef}>
+                <span ref={discoverFirstLineMeasureRef} className="absolute invisible whitespace-nowrap" aria-hidden="true">DISCOVER NEW MUSIC</span>
+                DISCOVER NEW MUSIC{discoverHeadingNeedsNaturalWrap ? " " : <br />}&amp; TRENDING ARTISTS.
+              </h2>
               <Link href="/artists" className="audioflume-arrow-text-link">
                 Explore this month&apos;s featured artists
               </Link>
