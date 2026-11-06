@@ -1986,7 +1986,7 @@ body:has(.audioflume-home-landing)
   flex: 0 0 auto;
   margin-bottom: 3px;
   color: var(--text-primary);
-  font-size: clamp(14px, 1.2vw, 19px);
+  font-size: 19px;
   font-weight: 300;
   text-decoration: none;
 }
