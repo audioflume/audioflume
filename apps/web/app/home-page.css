@@ -1989,7 +1989,9 @@ body:has(.audioflume-home-landing)
 }
 
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
-  .audioflume-discover-featured-intro-row h2 {
+  .audioflume-discover-featured-intro-row h2,
+:where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
+  .audioflume-discover-featured-intro-row > a {
   color: var(--filmwave-section-title-color);
 }
 
