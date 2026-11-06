@@ -904,7 +904,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-skeleton-curated-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 10px;
+  gap: 4px;
 }
 
 .audioflume-home-skeleton-playlist-card {
@@ -962,9 +962,9 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-skeleton-ready-track
   .audioflume-home-skeleton-block.is-ready-track-cover {
-  width: 54px;
-  height: 54px;
-  flex: 0 0 54px;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
 }
 
 .audioflume-home-skeleton-ready-track-copy {
@@ -988,9 +988,9 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-skeleton-ready-track
   .audioflume-home-skeleton-block.is-ready-track-play {
-  width: 42px;
-  height: 42px;
-  flex: 0 0 42px;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
   border-radius: 999px;
   background: color-mix(in srgb, #ffffff 70%, transparent);
 }
