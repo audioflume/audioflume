@@ -1069,6 +1069,46 @@ export default function HomePageContent({
         ) : null}
       </section>
 
+      {!showHero ? (
+        <section className="audioflume-home-mockup-catalogue">
+          <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline audioflume-home-mockup-catalogue-heading">
+            <h2>
+              {catalogueHeadingNaturalWrap ? (
+                <>A growing catalogue built around cinematic storytelling</>
+              ) : (
+                <>A growing catalogue built around<br />cinematic storytelling</>
+              )}
+            </h2>
+            <Link
+              href="/music"
+              className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+            >
+              Find new music
+              <ArrowUpRightIcon
+                size={16}
+                strokeWidth={1.5}
+                className="translate-y-[2px]"
+              />
+            </Link>
+          </div>
+
+          {songsLoading ? (
+            <HomeTrendingSkeleton />
+          ) : (
+            <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+              {recentSongs.map((song, index) => (
+                <HomeReadyToCutSongCard
+                  key={song.id}
+                  song={song}
+                  index={index + 30}
+                  queue={recentSongs}
+                />
+              ))}
+            </div>
+          )}
+        </section>
+      ) : null}
+
       {curatedPlaylistsLoading ? (
         <section className="audioflume-home-mockup-curated">
           <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
