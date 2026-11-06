@@ -21,8 +21,9 @@ type FeaturedSongItem = {
   song: Song;
 };
 
-function SortableSong({ item, disabled, onRemove }: {
+function SortableSong({ item, index, disabled, onRemove }: {
   item: FeaturedSongItem;
+  index: number;
   disabled: boolean;
   onRemove: () => void;
 }) {
@@ -34,6 +35,9 @@ function SortableSong({ item, disabled, onRemove }: {
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.45 : 1 }}
       className="group flex min-w-0 items-center gap-2 py-2"
     >
+      <span className="w-6 shrink-0 text-[11px] tabular-nums text-[var(--text-muted)]">
+        {String(index + 1).padStart(2, "0")}
+      </span>
       <div className="relative shrink-0">
         <BackendMediaThumbnail
           src={item.song.coverArt}
@@ -42,7 +46,7 @@ function SortableSong({ item, disabled, onRemove }: {
         />
         <BackendDragHandle
           variant="overlay"
-          className="absolute left-0 top-0 z-10 h-7 w-7 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100"
+          className="absolute left-0 top-0 z-10 h-5 w-5 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100"
           disabled={disabled}
           aria-label={`Drag ${item.song.title} to reorder`}
           {...attributes}
@@ -198,10 +202,11 @@ export default function AdminDiscoverFeaturedSongsView() {
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => void reorderSongs(event)}>
           <SortableContext items={items.map((item) => item.song_id)} strategy={rectSortingStrategy}>
             <div className="grid grid-cols-1 gap-x-5 gap-y-0 md:grid-cols-2 xl:grid-cols-3">
-              {items.map((item) => (
+              {items.map((item, index) => (
                 <SortableSong
                   key={item.song_id}
                   item={item}
+                  index={index}
                   disabled={saving}
                   onRemove={() => void removeSong(item.song_id)}
                 />
