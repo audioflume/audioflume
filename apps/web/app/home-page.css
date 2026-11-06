@@ -2221,6 +2221,11 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill {
+  pointer-events: none;
+}
+
+.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill,
+.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill {
   pointer-events: auto;
 }
 
