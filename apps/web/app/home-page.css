@@ -675,7 +675,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-reference-playlists {
-  padding: 56px 0 0;
+  padding: 0;
 }
 
 .audioflume-home-reference-new-songs .filmwave-song-card-shell,
@@ -684,14 +684,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-reference-new-songs {
-  padding: 56px 0 0;
-}
-
-@media (max-width: 980px) {
-  .audioflume-home-reference-playlists,
-  .audioflume-home-reference-new-songs {
-    padding-top: 40px;
-  }
+  padding: 0;
 }
 
 .audioflume-home-reference-new-songs .fw-song-list {
@@ -1299,6 +1292,37 @@ body:has(.audioflume-home-landing)
   background: var(--bg-primary);
 }
 
+/* A single 60px inter-section gap for both Home and Discover.
+   Internal heading/card padding stays with the section itself. */
+.audioflume-home-landing,
+.audioflume-home-mockup {
+  --audioflume-section-gap: 60px;
+}
+
+.audioflume-home-landing > :is(
+  .audioflume-home-landing-discover,
+  .audioflume-home-founders-section,
+  .audioflume-home-landing-pricing,
+  .audioflume-home-reference-library,
+  .audioflume-home-song-mosaic,
+  .audioflume-home-authentic-banner
+),
+.audioflume-home-mockup > :is(
+  .audioflume-home-mockup-curated,
+  .audioflume-home-mockup-catalogue,
+  .audioflume-home-mockup-more-artists,
+  .audioflume-home-reference-tools,
+  .audioflume-home-reference-new-songs,
+  .audioflume-discover-reference-search
+),
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  > :is(.audioflume-discover-compact-songs-section, .audioflume-discover-featured-songs-section),
+.audioflume-home-mockup .audioflume-home-reference-tools
+  > .audioflume-home-reference-playlists,
+.audioflume-home-landing-pricing > .audioflume-home-mockup-section-label {
+  margin-top: var(--audioflume-section-gap);
+}
+
 .audioflume-home-mockup-artists {
   overflow: hidden;
   padding-bottom: 54px;
@@ -1389,14 +1413,6 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup .audioflume-home-reference-tools-originals {
   display: block;
-}
-
-.audioflume-home-mockup .audioflume-home-reference-playlists {
-  padding-top: 56px;
-}
-
-.audioflume-home-mockup .audioflume-home-reference-new-songs {
-  padding-top: 56px;
 }
 
 .audioflume-home-mockup .audioflume-home-reference-library {
@@ -1930,7 +1946,6 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated {
   overflow: hidden;
   padding-top: 0;
-  padding-bottom: 80px;
   background: var(--bg-primary);
 }
 
@@ -1978,7 +1993,6 @@ body:has(.audioflume-home-landing)
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
   --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
   padding-top: 20px;
-  padding-bottom: 80px;
 }
 
 .audioflume-discover-featured-intro {
@@ -2029,10 +2043,6 @@ body:has(.audioflume-home-landing)
   text-decoration: none;
 }
 
-
-.audioflume-discover-compact-songs-section {
-  margin-top: 80px;
-}
 
 .audioflume-discover-compact-songs {
   display: grid;
@@ -2275,10 +2285,6 @@ body:has(.audioflume-home-landing)
   height: 26px;
   border-radius: 999px;
   background: color-mix(in srgb, #ffffff 14%, transparent);
-}
-
-.audioflume-discover-featured-songs-section {
-  margin-top: 80px;
 }
 
 .audioflume-discover-featured-songs-section > .audioflume-home-mockup-section-label {
@@ -2719,7 +2725,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-catalogue {
-  padding: 0 0 80px;
+  padding: 0;
   background: var(--bg-primary);
 }
 
@@ -2946,10 +2952,6 @@ body:has(.audioflume-home-landing)
 
 
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
-.audioflume-home-mockup-more-artists {
-  margin-bottom: 80px;
-}
-
 .audioflume-home-mockup-more-artists
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-scroller {
@@ -4587,11 +4589,6 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-pricing {
   display: flex;
   flex-direction: column;
-  padding-bottom: 80px;
-}
-
-.audioflume-home-landing-pricing > .audioflume-home-reference-tools {
-  margin-bottom: 80px;
 }
 
 /* Authentic music banner on the active homepage. */
@@ -4901,7 +4898,6 @@ body:has(.audioflume-home-landing)
 
 /* Discover uses the Curated Playlists Search by Song section construction. */
 .audioflume-discover-reference-search {
-  padding-top: 56px;
   padding-bottom: 0;
   background: var(--bg-primary);
 }
@@ -5143,7 +5139,7 @@ body:has(.audioflume-home-landing)
 
 /* Founding Artist homepage promotion — positioned below the split image banner. */
 .audioflume-home-founders-section {
-  padding: 0 var(--audioflume-home-page-gutter, 5vw) 80px;
+  padding: 0 var(--audioflume-home-page-gutter, 5vw);
   background: #ffffff;
 }
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-founders-section {
