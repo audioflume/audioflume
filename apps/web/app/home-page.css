@@ -2093,6 +2093,31 @@ body:has(.audioflume-home-landing)
   transform: scale(1.05);
 }
 
+/* Top border on the first grid row at each responsive column count. */
+@media (min-width: 1101px) {
+  .audioflume-discover-compact-song:nth-child(-n + 4) {
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (min-width: 751px) and (max-width: 1100px) {
+  .audioflume-discover-compact-song:nth-child(-n + 3) {
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (min-width: 441px) and (max-width: 750px) {
+  .audioflume-discover-compact-song:nth-child(-n + 2) {
+    border-top: 1px solid var(--border);
+  }
+}
+
+@media (max-width: 440px) {
+  .audioflume-discover-compact-song:first-child {
+    border-top: 1px solid var(--border);
+  }
+}
+
 /* Border every song except the final grid row, including incomplete rows. */
 @media (min-width: 1101px) {
   .audioflume-discover-compact-song:nth-child(4n + 1):nth-last-child(-n + 4),
