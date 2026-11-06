@@ -599,6 +599,7 @@ function HomeArtistShelf({
               </Link>
             ) : null}
             {discoverLayout && featuredSong ? (
+              <>
               <button
                 type="button"
                 className="audioflume-discover-featured-track"
@@ -628,6 +629,7 @@ function HomeArtistShelf({
                   )
                 ))}
               </span>
+              </>
             ) : null}
             {!discoverLayout ? <button
               type="button"
