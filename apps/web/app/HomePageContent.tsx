@@ -1111,6 +1111,9 @@ export default function HomePageContent({
         ) : null}
         {!showHero && !songsLoading && !artistsLoading && discoverArtistSongs.length > 0 ? (
           <div className="audioflume-discover-featured-songs audioflume-home-reference-width">
+            <div className="audioflume-home-mockup-section-label col-span-full">
+              <span>Featured songs</span>
+            </div>
             {discoverArtistSongs.map((song) => (
               <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
             ))}
