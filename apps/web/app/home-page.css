@@ -2122,8 +2122,14 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-curated-card-shell {
   --filmwave-curated-shelf-card-width: 100%;
+  --audioflume-discover-play-opacity: 0;
   scroll-snap-align: none;
   scroll-snap-stop: normal;
+}
+
+.audioflume-home-mockup-curated-card-shell:hover,
+.audioflume-home-mockup-curated-card-shell:focus-within {
+  --audioflume-discover-play-opacity: 1;
 }
 
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
@@ -2556,6 +2562,15 @@ body:has(.audioflume-home-landing)
   width: 42px;
   height: 42px;
   border-radius: 999px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease, transform 160ms ease;
+}
+
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:hover .audioflume-home-reference-artist-play,
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:focus-within .audioflume-home-reference-artist-play {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-play > span {
@@ -2587,7 +2602,7 @@ body:has(.audioflume-home-landing)
   grid-template-rows: auto 1fr;
   align-items: start;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 6px;
   padding: 28px 30px 26px;
   color: #111111;
   text-decoration: none;
@@ -4730,6 +4745,7 @@ body:has(.audioflume-home-landing)
   isolation: isolate;
   width: 100%;
   overflow: hidden;
+  border-radius: 6px;
   background: #101615;
   color: #e5e5dd;
   padding: clamp(64px, calc(5.5vw + 50px), 158px) clamp(40px, 7vw, 128px) clamp(64px, 7vw, 128px);
