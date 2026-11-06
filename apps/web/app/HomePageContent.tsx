@@ -799,6 +799,38 @@ function HomeSkeletonBlock({
 }
 
 
+function DiscoverCompactSongsSkeleton() {
+  return (
+    <div className="audioflume-discover-compact-songs audioflume-discover-skeleton-compact-grid" aria-hidden="true">
+      {Array.from({ length: 12 }, (_, index) => (
+        <div key={index} className="audioflume-discover-compact-song audioflume-discover-skeleton-compact-song">
+          <HomeSkeletonBlock className="is-compact-cover" />
+          <span className="audioflume-discover-compact-song-copy">
+            <HomeSkeletonBlock className="is-compact-title" />
+            <HomeSkeletonBlock className="is-compact-artist" />
+          </span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function DiscoverFeaturedSongsSkeleton() {
+  return (
+    <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf audioflume-discover-skeleton-featured-shelf">
+      {Array.from({ length: 8 }, (_, index) => (
+        <article key={index} className="audioflume-home-featured-song-card audioflume-discover-skeleton-featured-card" aria-hidden="true">
+          <HomeSkeletonBlock className="audioflume-home-featured-song-art is-featured-cover" />
+          <span className="audioflume-home-featured-song-copy">
+            <HomeSkeletonBlock className="is-featured-title" />
+            <HomeSkeletonBlock className="is-featured-artist" />
+          </span>
+        </article>
+      ))}
+    </Shelf>
+  );
+}
+
 function HomeTrendingSkeleton() {
   return (
     <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
@@ -820,11 +852,11 @@ function HomeTrendingSkeleton() {
   );
 }
 
-function HomeArtistShelfSkeleton({ compact = false }: { compact?: boolean }) {
+function HomeArtistShelfSkeleton({ compact = false, discoverLayout = false }: { compact?: boolean; discoverLayout?: boolean }) {
   return (
     <Shelf
       label="in demand artists"
-      className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}`}
+      className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
       customScrollbar={!compact}
     >
       {Array.from({ length: compact ? 4 : 3 }, (_, index) => (
@@ -836,17 +868,39 @@ function HomeArtistShelfSkeleton({ compact = false }: { compact?: boolean }) {
           <div className="audioflume-home-reference-artist-media">
             <HomeSkeletonBlock className="is-artist-media" />
           </div>
-          <div className="audioflume-home-reference-artist-bar">
-            <span className="audioflume-home-reference-artist-copy">
-              <HomeSkeletonBlock className="is-artist-name" />
-              <span className="audioflume-home-reference-artist-genres audioflume-home-skeleton-artist-pills">
-                <HomeSkeletonBlock className="is-artist-pill" />
-                <HomeSkeletonBlock className="is-artist-pill is-short" />
-                <HomeSkeletonBlock className="is-artist-pill" />
+          {discoverLayout ? (
+            <>
+              <div className="audioflume-discover-featured-identity">
+                <HomeSkeletonBlock className="is-discover-artist-name" />
+              </div>
+              <div className="audioflume-discover-featured-track audioflume-discover-skeleton-artist-track">
+                <HomeSkeletonBlock className="is-discover-track-cover" />
+                <span className="audioflume-discover-featured-track-copy">
+                  <HomeSkeletonBlock className="is-discover-track-title" />
+                  <HomeSkeletonBlock className="is-discover-track-artist" />
+                </span>
+              </div>
+              <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres audioflume-discover-skeleton-artist-genres">
+                <HomeSkeletonBlock className="is-discover-genre-pill" />
+                <HomeSkeletonBlock className="is-discover-genre-pill" />
+                <HomeSkeletonBlock className="is-discover-genre-pill" />
               </span>
-            </span>
-          </div>
-          <HomeSkeletonBlock className="audioflume-home-reference-artist-play is-artist-play" />
+            </>
+          ) : (
+            <>
+              <div className="audioflume-home-reference-artist-bar">
+                <span className="audioflume-home-reference-artist-copy">
+                  <HomeSkeletonBlock className="is-artist-name" />
+                  <span className="audioflume-home-reference-artist-genres audioflume-home-skeleton-artist-pills">
+                    <HomeSkeletonBlock className="is-artist-pill" />
+                    <HomeSkeletonBlock className="is-artist-pill is-short" />
+                    <HomeSkeletonBlock className="is-artist-pill" />
+                  </span>
+                </span>
+              </div>
+              <HomeSkeletonBlock className="audioflume-home-reference-artist-play is-artist-play" />
+            </>
+          )}
         </article>
       ))}
     </Shelf>
@@ -1164,34 +1218,40 @@ export default function HomePageContent({
           </div>
         )}
         {artistsLoading ? (
-          <HomeArtistShelfSkeleton />
+          <HomeArtistShelfSkeleton discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
-        {!showHero && !songsLoading && discoverCompactSongs.length > 0 ? (
+        {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
             title="Tracks made for storytelling"
             linkHref="/music"
             linkLabel="Explore music"
             className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
-            contentClassName="audioflume-discover-compact-songs"
+            contentClassName={songsLoading ? "" : "audioflume-discover-compact-songs"}
           >
-            {discoverCompactSongs.map((song) => (
+            {songsLoading ? (
+              <DiscoverCompactSongsSkeleton />
+            ) : discoverCompactSongs.map((song) => (
               <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
             ))}
           </HomeSectionWithHeading>
         ) : null}
-        {!showHero && !songsLoading && !artistsLoading && !discoverFeaturedSongsLoading && discoverArtistSongs.length > 0 ? (
+        {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0) ? (
           <HomeSectionWithHeading
             title="Featured songs"
             className="audioflume-discover-featured-songs-section"
             contentClassName="audioflume-discover-featured-songs"
           >
-            <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf">
-              {discoverArtistSongs.map((song) => (
-                <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
-              ))}
-            </Shelf>
+            {songsLoading || artistsLoading || discoverFeaturedSongsLoading ? (
+              <DiscoverFeaturedSongsSkeleton />
+            ) : (
+              <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf">
+                {discoverArtistSongs.map((song) => (
+                  <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
+                ))}
+              </Shelf>
+            )}
           </HomeSectionWithHeading>
         ) : null}
       </section>
