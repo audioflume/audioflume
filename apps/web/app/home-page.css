@@ -2499,6 +2499,7 @@ body:has(.audioflume-home-landing)
   min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
   height: 257px;
   overflow: hidden;
+  border-radius: 6px;
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
@@ -2728,7 +2729,7 @@ body:has(.audioflume-home-landing)
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 6px;
   background: #111111;
 }
 
@@ -4498,6 +4499,7 @@ body:has(.audioflume-home-landing)
   height: 420px;
   min-height: 420px;
   overflow: hidden;
+  border-radius: 6px;
   background: #111111;
 }
 .audioflume-discover-reference-search-card > * {
