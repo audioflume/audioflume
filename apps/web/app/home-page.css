@@ -2013,6 +2013,12 @@ body:has(.audioflume-home-landing)
   opacity: 1;
 }
 
+@media (max-width: 1200px) {
+  .audioflume-discover-featured-title-break {
+    display: none;
+  }
+}
+
 @media (max-width: 1000px) {
   .audioflume-discover-featured-intro-row {
     align-items: start;
