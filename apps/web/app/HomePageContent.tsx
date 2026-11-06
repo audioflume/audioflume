@@ -837,7 +837,7 @@ function HomeTrendingSkeleton() {
       {Array.from({ length: 12 }, (_, index) => (
         <article
           key={index}
-          className="audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-4 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2"
+          className="audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2"
           aria-hidden="true"
         >
           <HomeSkeletonBlock className="is-ready-track-cover" />
@@ -914,15 +914,16 @@ function HomeCuratedPlaylistSkeleton() {
       className="audioflume-home-mockup-curated-shelf audioflume-home-skeleton-curated-shelf"
     >
       {Array.from({ length: 4 }, (_, index) => (
-        <article
-          key={index}
-          className="audioflume-home-mockup-curated-card audioflume-home-skeleton-playlist-card"
-          aria-hidden="true"
-        >
-          <HomeSkeletonBlock className="is-playlist-media" />
-          <HomeSkeletonBlock className="is-playlist-title" />
-          <HomeSkeletonBlock className="is-playlist-play" />
-        </article>
+        <div key={index} className="audioflume-home-mockup-curated-card-shell">
+          <article
+            className="audioflume-home-mockup-curated-card audioflume-home-skeleton-playlist-card"
+            aria-hidden="true"
+          >
+            <HomeSkeletonBlock className="is-playlist-media" />
+            <HomeSkeletonBlock className="is-playlist-title" />
+            <HomeSkeletonBlock className="is-playlist-play" />
+          </article>
+        </div>
       ))}
     </Shelf>
   );
