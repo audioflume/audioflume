@@ -2209,14 +2209,19 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-track-genres {
   position: absolute;
-  bottom: 0;
-  left: 0;
+  bottom: 30px;
+  left: 150px;
+  z-index: 4;
   display: flex;
   width: max-content;
-  max-width: calc(100vw - 170px);
+  max-width: calc(100% - 180px);
   flex-wrap: wrap;
   gap: 8px;
   pointer-events: none;
+}
+
+.audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill {
+  pointer-events: auto;
 }
 
 .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill.is-placeholder {
@@ -2224,11 +2229,12 @@ body:has(.audioflume-home-landing)
   padding: 0;
 }
 
-.audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill {
+.audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill,
+.audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill.is-placeholder {
   opacity: 0;
   transform: translateY(12px);
   will-change: opacity, transform, backdrop-filter;
-  transition: opacity 220ms ease, transform 220ms ease;
+  transition: opacity 220ms ease, transform 220ms ease, color 160ms ease;
 }
 
 .audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill,
