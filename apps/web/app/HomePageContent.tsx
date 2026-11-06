@@ -917,6 +917,8 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
+  const [configuredDiscoverSongs, setConfiguredDiscoverSongs] = useState<Song[] | null>(null);
+  const [discoverFeaturedSongsLoading, setDiscoverFeaturedSongsLoading] = useState(!showHero);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const catalogueHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -941,6 +943,7 @@ export default function HomePageContent({
     [playableSongs],
   );
   const discoverArtistSongs = useMemo(() => {
+    if (configuredDiscoverSongs?.length) return configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl)).slice(0, 6);
     const selected = new Map<string, Song>();
     for (const artist of artists) {
       for (const song of artist.songs) {
@@ -952,7 +955,7 @@ export default function HomePageContent({
       if (!selected.has(song.id)) selected.set(song.id, song);
     }
     return Array.from(selected.values()).slice(0, 6);
-  }, [artists, playableSongs]);
+  }, [artists, playableSongs, configuredDiscoverSongs]);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
@@ -1023,6 +1026,26 @@ export default function HomePageContent({
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (showHero) return;
+    let cancelled = false;
+    fetch("/api/discover-featured-songs")
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load featured songs");
+        return response.json();
+      })
+      .then((body) => {
+        if (!cancelled) setConfiguredDiscoverSongs(Array.isArray(body?.songs) ? body.songs : []);
+      })
+      .catch(() => {
+        if (!cancelled) setConfiguredDiscoverSongs(null);
+      })
+      .finally(() => {
+        if (!cancelled) setDiscoverFeaturedSongsLoading(false);
+      });
+    return () => { cancelled = true; };
+  }, [showHero]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1110,7 +1133,7 @@ export default function HomePageContent({
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
-        {!showHero && !songsLoading && !artistsLoading && discoverArtistSongs.length > 0 ? (
+        {!showHero && !songsLoading && !artistsLoading && !discoverFeaturedSongsLoading && discoverArtistSongs.length > 0 ? (
           <HomeSectionWithHeading
             title="Featured songs"
             className="audioflume-discover-featured-songs-section audioflume-home-reference-width"
