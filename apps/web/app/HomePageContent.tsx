@@ -941,6 +941,7 @@ export default function HomePageContent({
     )
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
+  const discoverCompactSongs = playableSongs.slice(0, 12);
   const featuredSongs = useMemo(
     () => playableSongs.slice(0, 15),
     [playableSongs],
@@ -1155,6 +1156,13 @@ export default function HomePageContent({
           <HomeArtistShelfSkeleton />
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
+        ) : null}
+        {!showHero && !songsLoading && discoverCompactSongs.length > 0 ? (
+          <div className="audioflume-discover-compact-songs audioflume-home-reference-width">
+            {discoverCompactSongs.map((song) => (
+              <HomeFeaturedSongCard key={song.id} song={song} queue={discoverCompactSongs} />
+            ))}
+          </div>
         ) : null}
         {!showHero && !songsLoading && !artistsLoading && !discoverFeaturedSongsLoading && discoverArtistSongs.length > 0 ? (
           <HomeSectionWithHeading
