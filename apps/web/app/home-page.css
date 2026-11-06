@@ -1970,13 +1970,13 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-intro-row h2 {
-  width: min(100%, 860px);
+  width: min(100%, 610px);
   margin: 0;
   text-align: justify;
   text-align-last: justify;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(38px, 3.6vw, 68px);
+  font-size: clamp(34px, 3vw, 52px);
   font-weight: 300;
   letter-spacing: -.045em;
   line-height: .98;
@@ -2001,6 +2001,16 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-featured-songs .audioflume-home-featured-song-card {
   width: 100%;
   min-width: 0;
+}
+
+.audioflume-discover-featured-songs .audioflume-home-featured-song-play {
+  opacity: 0;
+  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease;
+}
+
+.audioflume-discover-featured-songs .audioflume-home-featured-song-card:hover .audioflume-home-featured-song-play,
+.audioflume-discover-featured-songs .audioflume-home-featured-song-card:focus-within .audioflume-home-featured-song-play {
+  opacity: 1;
 }
 
 @media (max-width: 1000px) {
