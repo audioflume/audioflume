@@ -532,9 +532,6 @@ function HomeArtistShelf({
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
         const featuredSong = playable[0] ?? artist.songs[0];
-        const featuredSongGenres = Array.isArray(featuredSong?.genres)
-          ? [...new Set(featuredSong.genres.filter(Boolean))].slice(0, 3)
-          : [];
         const genres = Array.from(
           new Set(
             artist.songs.flatMap((song) =>
@@ -622,8 +619,8 @@ function HomeArtistShelf({
                   <span>{featuredSong.artist || artist.name}</span>
                   <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Song genres">
                     {[0, 1, 2].map((index) => (
-                      featuredSongGenres[index] ? (
-                        <span className="audioflume-genre-filter-pill" key={featuredSongGenres[index]}>{featuredSongGenres[index]}</span>
+                      genres[index] ? (
+                        <span className="audioflume-genre-filter-pill" key={genres[index]}>{genres[index]}</span>
                       ) : (
                         <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`} aria-hidden="true" />
                       )
