@@ -1964,7 +1964,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-intro-row {
   display: flex;
-  align-items: end;
+  align-items: last baseline;
   justify-content: space-between;
   gap: 32px;
 }
