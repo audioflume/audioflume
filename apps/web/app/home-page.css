@@ -1989,16 +1989,14 @@ body:has(.audioflume-home-landing)
 }
 
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
-  .audioflume-discover-featured-intro-row h2,
-:where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
-  .audioflume-discover-featured-intro-row > a {
+  .audioflume-discover-featured-intro-row h2 {
   color: var(--filmwave-section-title-color);
 }
 
 .audioflume-discover-featured-intro-row > a {
   flex: 0 0 auto;
   margin-bottom: 3px;
-  color: var(--text-primary);
+  color: var(--filmwave-section-title-color);
   font-size: 19px;
   font-weight: 300;
   text-decoration: none;
