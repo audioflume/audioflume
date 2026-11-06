@@ -2014,9 +2014,15 @@ body:has(.audioflume-home-landing)
   grid-template-columns: 50px minmax(0, 1fr);
   align-items: center;
   gap: 12px;
+  width: 100%;
   min-width: 0;
-  padding-bottom: 12px;
+  padding: 0 0 12px;
+  border: 0;
   border-bottom: 1px solid var(--border);
+  background: transparent;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
 }
 
 .audioflume-discover-compact-song-art {
@@ -2033,7 +2039,7 @@ body:has(.audioflume-home-landing)
   cursor: pointer;
 }
 
-.audioflume-discover-compact-song-art:disabled {
+.audioflume-discover-compact-song:disabled {
   cursor: default;
 }
 
