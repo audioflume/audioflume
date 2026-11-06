@@ -29,6 +29,9 @@ type ArtistReleaseTrackPickerProps = {
   releaseType: ReleaseType;
   existingTrackIds: string[];
   disabled?: boolean;
+  songsUrl?: string;
+  buttonLabel?: string;
+  maxSelections?: number;
   onAdd: (songIds: string[]) => void;
 };
 
@@ -127,6 +130,9 @@ export default function ArtistReleaseTrackPicker({
   releaseType,
   existingTrackIds,
   disabled = false,
+  songsUrl,
+  buttonLabel = "Add track",
+  maxSelections,
   onAdd,
 }: ArtistReleaseTrackPickerProps) {
   const [isOpen, setIsOpen] = useState(false);
@@ -160,9 +166,9 @@ export default function ArtistReleaseTrackPicker({
     async function loadSongs() {
       try {
         const response = await fetch(
-          releaseType === "playlist"
+          songsUrl ?? (releaseType === "playlist"
             ? `/api/artists/${artistId}/playlist-track-picker`
-            : `/api/artists/${artistId}/release-track-picker`,
+            : `/api/artists/${artistId}/release-track-picker`),
           { cache: "no-store" },
         );
         const body = (await response.json().catch(() => ({}))) as PickerResponse;
@@ -195,7 +201,7 @@ export default function ArtistReleaseTrackPicker({
     return () => {
       cancelled = true;
     };
-  }, [artistId, isOpen, releaseType]);
+  }, [artistId, isOpen, releaseType, songsUrl]);
 
   const displayedSongs = useMemo(() => {
     const query = search.trim().toLowerCase();
@@ -222,7 +228,7 @@ export default function ArtistReleaseTrackPicker({
 
       const next = new Set(current);
       if (next.has(songId)) next.delete(songId);
-      else next.add(songId);
+      else if (maxSelections == null || next.size + existingIdSet.size < maxSelections) next.add(songId);
       return next;
     });
   }
@@ -248,7 +254,7 @@ export default function ArtistReleaseTrackPicker({
         onClick={() => setIsOpen(true)}
         disabled={disabled || singleHasTrack}
       >
-        Add track
+        {buttonLabel}
       </BackendButton>
 
       <BackendModalShell
