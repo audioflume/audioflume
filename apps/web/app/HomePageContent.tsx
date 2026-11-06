@@ -617,17 +617,17 @@ function HomeArtistShelf({
                 <span className="audioflume-discover-featured-track-copy">
                   <strong>{featuredSong.title}</strong>
                   <span>{featuredSong.artist || artist.name}</span>
-                  <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Song genres">
-                    {[0, 1, 2].map((index) => (
-                      genres[index] ? (
-                        <span className="audioflume-genre-filter-pill" key={genres[index]}>{genres[index]}</span>
-                      ) : (
-                        <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`} aria-hidden="true" />
-                      )
-                    ))}
-                  </span>
                 </span>
               </button>
+              <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Artist genres">
+                {[0, 1, 2].map((index) => (
+                  genres[index] ? (
+                    <Link href={`/music?genre=${encodeURIComponent(genres[index])}`} className="audioflume-genre-filter-pill" key={genres[index]}>{genres[index]}</Link>
+                  ) : (
+                    <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`} aria-hidden="true" />
+                  )
+                ))}
+              </span>
             ) : null}
             {!discoverLayout ? <button
               type="button"
