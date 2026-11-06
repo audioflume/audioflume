@@ -178,9 +178,10 @@
   border-radius: 999px !important;
   background: rgba(255, 255, 255, 0.18) !important;
   color: #ffffff !important;
-  opacity: 1 !important;
+  opacity: var(--audioflume-discover-play-opacity, 1) !important;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
+  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease;
 }
 
 .homePlayButton:hover,
