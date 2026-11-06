@@ -2007,12 +2007,39 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-track-cover {
+  position: relative;
   display: block;
   width: 90px;
   height: 90px;
   flex: 0 0 90px;
   background: #e5e5e5;
   overflow: hidden;
+}
+
+.audioflume-discover-featured-track-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: grid;
+  width: 42px;
+  height: 42px;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff;
+  color: #111111;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  transition: opacity 150ms ease, transform 150ms ease;
+}
+
+.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-play,
+.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-play {
+  opacity: 1;
+}
+
+.audioflume-discover-featured-track-cover:hover .audioflume-discover-featured-track-play {
+  transform: translate(-50%, -50%) scale(1.02);
 }
 
 .audioflume-discover-featured-track-cover img {
