@@ -84,7 +84,7 @@ function ReleasePickerSongRow({
           className="h-full w-full"
         />
         <span
-          className={`absolute inset-0 flex items-center justify-center bg-[var(--media-overlay-strong)] transition-opacity ${
+          className={`absolute inset-0 flex items-center justify-center transition-opacity ${
             isCurrentSong ? "opacity-100" : "opacity-0 group-hover:opacity-100"
           }`}
         >
