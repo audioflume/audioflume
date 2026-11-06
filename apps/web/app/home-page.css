@@ -2175,9 +2175,13 @@ body:has(.audioflume-home-landing)
 }
 
 @media (max-width: 620px) {
+  .audioflume-home-mockup-artists.is-discover-featured-artists {
+    --audioflume-featured-artist-gap: 10px;
+  }
+
   .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
-    width: 92vw;
-    min-width: 92vw;
+    width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
+    min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
   }
 
   .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
