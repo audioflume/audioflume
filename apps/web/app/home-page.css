@@ -2096,6 +2096,17 @@ body:has(.audioflume-home-landing)
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-genres,
+.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-genres {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore {
@@ -2144,14 +2155,12 @@ body:has(.audioflume-home-landing)
   height: 42px;
   place-items: center;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.18);
-  color: #e5e5dd;
+  background: #ffffff;
+  color: #111111;
   opacity: 0;
   pointer-events: none;
   transform: translate(-50%, -50%);
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease;
+  transition: opacity 150ms ease, transform 150ms ease;
 }
 
 .audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-play,
@@ -2161,8 +2170,6 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-track-cover:hover .audioflume-discover-featured-track-play,
 .audioflume-discover-featured-track:focus-visible .audioflume-discover-featured-track-play {
-  background: #ffffff;
-  color: #111111;
   transform: translate(-50%, -50%) scale(1.02);
 }
 
