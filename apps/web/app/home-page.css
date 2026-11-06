@@ -2010,8 +2010,8 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-compact-songs {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 24px;
-  row-gap: 12px;
+  column-gap: 14px;
+  row-gap: 10px;
 }
 
 .audioflume-discover-compact-song {
@@ -2021,7 +2021,7 @@ body:has(.audioflume-home-landing)
   gap: 12px;
   width: 100%;
   min-width: 0;
-  padding: 0 0 12px;
+  padding: 0 0 10px;
   border: 0;
   border-bottom: 1px solid var(--border);
   background: transparent;
