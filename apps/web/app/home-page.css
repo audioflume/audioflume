@@ -2160,6 +2160,96 @@ body:has(.audioflume-home-landing)
   }
 }
 
+/* Discover loading states reuse the same grids and shelf card dimensions as live content. */
+.audioflume-discover-skeleton-compact-song {
+  pointer-events: none;
+}
+
+.audioflume-discover-skeleton-compact-song .is-compact-cover {
+  width: 50px;
+  height: 50px;
+}
+
+.audioflume-discover-skeleton-compact-song .is-compact-title {
+  width: min(75%, 145px);
+  height: 13px;
+}
+
+.audioflume-discover-skeleton-compact-song .is-compact-artist {
+  width: min(48%, 95px);
+  height: 11px;
+}
+
+.audioflume-discover-skeleton-featured-card {
+  pointer-events: none;
+}
+
+.audioflume-discover-skeleton-featured-card .is-featured-cover {
+  width: 100%;
+  aspect-ratio: 1;
+}
+
+.audioflume-discover-skeleton-featured-card .is-featured-title {
+  width: 72%;
+  height: 13px;
+}
+
+.audioflume-discover-skeleton-featured-card .is-featured-artist {
+  width: 46%;
+  height: 11px;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-home-skeleton-artist-card .is-discover-artist-name {
+  width: min(300px, 65%);
+  height: 36px;
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-discover-skeleton-artist-track {
+  pointer-events: none;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-discover-skeleton-artist-track .is-discover-track-cover {
+  width: 90px;
+  height: 90px;
+  flex: 0 0 90px;
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-discover-skeleton-artist-track .audioflume-discover-featured-track-copy {
+  display: grid;
+  min-width: 0;
+  gap: 8px;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-discover-skeleton-artist-track .is-discover-track-title {
+  width: 150px;
+  max-width: 100%;
+  height: 16px;
+  background: color-mix(in srgb, #ffffff 18%, transparent);
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-discover-skeleton-artist-track .is-discover-track-artist {
+  width: 90px;
+  max-width: 100%;
+  height: 11px;
+  background: color-mix(in srgb, #ffffff 14%, transparent);
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-discover-skeleton-artist-genres .is-discover-genre-pill {
+  width: 68px;
+  height: 26px;
+  border-radius: 999px;
+  background: color-mix(in srgb, #ffffff 14%, transparent);
+}
+
 .audioflume-discover-featured-songs-section {
   margin-top: 80px;
 }
