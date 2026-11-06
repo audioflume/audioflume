@@ -3419,13 +3419,17 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-featured-song-shelf {
   --audioflume-featured-song-gap: 30px;
-  --audioflume-featured-song-card-width: calc(
-    (
-        100vw -
-          var(--audioflume-home-page-gutter) -
-          (6 * var(--audioflume-featured-song-gap))
-      ) /
-      6.25
+  --audioflume-featured-song-card-width: clamp(
+    160px,
+    calc(
+      (
+          100vw -
+            var(--audioflume-home-page-gutter) -
+            (6 * var(--audioflume-featured-song-gap))
+        ) /
+        6.25
+    ),
+    400px
   );
   width: 100vw;
 }
@@ -3555,63 +3559,9 @@ body:has(.audioflume-home-landing)
   top: calc(var(--audioflume-featured-song-card-width) / 2);
 }
 
-@media (max-width: 1350px) {
-  .audioflume-home-featured-song-shelf {
-    --audioflume-featured-song-gap: 26px;
-    --audioflume-featured-song-card-width: calc(
-      (
-          100vw -
-            var(--audioflume-home-page-gutter) -
-            (5 * var(--audioflume-featured-song-gap))
-        ) /
-        5.25
-    );
-  }
-}
-
-@media (max-width: 1050px) {
-  .audioflume-home-featured-song-shelf {
-    --audioflume-featured-song-gap: 22px;
-    --audioflume-featured-song-card-width: calc(
-      (
-          100vw -
-            var(--audioflume-home-page-gutter) -
-            (4 * var(--audioflume-featured-song-gap))
-        ) /
-        4.25
-    );
-  }
-}
-
-@media (max-width: 760px) {
-  .audioflume-home-featured-song-shelf {
-    --audioflume-featured-song-gap: 18px;
-    --audioflume-featured-song-card-width: calc(
-      (
-          100vw -
-            var(--audioflume-home-page-gutter) -
-            (3 * var(--audioflume-featured-song-gap))
-        ) /
-        3.25
-    );
-  }
-}
-
 @media (max-width: 620px) {
   .audioflume-home-featured-songs {
     padding-bottom: 56px;
-  }
-
-  .audioflume-home-featured-song-shelf {
-    --audioflume-featured-song-gap: 14px;
-    --audioflume-featured-song-card-width: calc(
-      (
-          100vw -
-            var(--audioflume-home-page-gutter) -
-            (2 * var(--audioflume-featured-song-gap))
-        ) /
-        2.25
-    );
   }
 }
 
