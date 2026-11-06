@@ -1170,7 +1170,7 @@ export default function HomePageContent({
         ) : null}
         {!showHero && !songsLoading && discoverCompactSongs.length > 0 ? (
           <HomeSectionWithHeading
-            title="Quick picks"
+            title="Tracks made for storytelling"
             linkHref="/music"
             linkLabel="Explore music"
             className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
