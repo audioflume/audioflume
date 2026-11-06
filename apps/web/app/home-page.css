@@ -925,6 +925,20 @@ body:has(.audioflume-home-landing)
   aspect-ratio: auto;
 }
 
+.audioflume-home-skeleton-curated-shelf.is-discover-skeleton
+  .audioflume-home-skeleton-block.is-playlist-media {
+  height: 257px;
+  border-radius: 6px;
+}
+
+@media (min-width: 1513px) {
+  .audioflume-home-skeleton-curated-shelf.is-discover-skeleton
+    .audioflume-home-skeleton-block.is-playlist-media {
+    height: auto;
+    aspect-ratio: 457 / 257;
+  }
+}
+
 .audioflume-home-skeleton-playlist-card
   .audioflume-home-skeleton-block.is-playlist-kicker {
   position: absolute;
