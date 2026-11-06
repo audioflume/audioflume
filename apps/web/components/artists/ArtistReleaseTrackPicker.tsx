@@ -13,6 +13,7 @@ import { BackendMediaThumbnail, BackendRowTitle } from "@/components/backend/Bac
 import BackendSearchBar from "@/components/backend/BackendSearchBar";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PlusIcon from "@/components/icons/PlusIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
@@ -31,6 +32,7 @@ type ArtistReleaseTrackPickerProps = {
   disabled?: boolean;
   songsUrl?: string;
   buttonLabel?: string;
+  showAddIcon?: boolean;
   maxSelections?: number;
   onAdd: (songIds: string[]) => void;
 };
@@ -132,6 +134,7 @@ export default function ArtistReleaseTrackPicker({
   disabled = false,
   songsUrl,
   buttonLabel = "Add track",
+  showAddIcon = false,
   maxSelections,
   onAdd,
 }: ArtistReleaseTrackPickerProps) {
@@ -254,6 +257,7 @@ export default function ArtistReleaseTrackPicker({
         onClick={() => setIsOpen(true)}
         disabled={disabled || singleHasTrack}
       >
+        {showAddIcon ? <PlusIcon size={12} /> : null}
         {buttonLabel}
       </BackendButton>
 
