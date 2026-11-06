@@ -2002,6 +2002,9 @@ body:has(.audioflume-home-landing)
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
   margin-top: 80px;
+  --audioflume-featured-song-play-background: #ffffff;
+  --audioflume-featured-song-play-color: #111111;
+  --audioflume-featured-song-play-backdrop: none;
 }
 
 .audioflume-discover-featured-songs .audioflume-home-featured-song-card {
@@ -2096,16 +2099,24 @@ body:has(.audioflume-home-landing)
   flex-wrap: wrap;
   justify-content: flex-end;
   gap: 8px;
-  opacity: 0;
   pointer-events: none;
+}
+
+.audioflume-discover-featured-genres > .audioflume-genre-filter-pill {
+  opacity: 0;
   transform: translateY(12px);
+  will-change: opacity, transform, backdrop-filter;
   transition: opacity 220ms ease, transform 220ms ease;
 }
 
 .audioflume-home-reference-artist-card:hover .audioflume-discover-featured-genres,
 .audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-genres {
-  opacity: 1;
   pointer-events: auto;
+}
+
+.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-genres > .audioflume-genre-filter-pill,
+.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-genres > .audioflume-genre-filter-pill {
+  opacity: 1;
   transform: translateY(0);
 }
 
@@ -3276,10 +3287,10 @@ body:has(.audioflume-home-landing)
   height: 42px;
   place-items: center;
   border-radius: 999px;
-  background: rgba(17, 17, 17, 0.34);
-  color: #ffffff;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
+  background: var(--audioflume-featured-song-play-background, rgba(17, 17, 17, 0.34));
+  color: var(--audioflume-featured-song-play-color, #ffffff);
+  -webkit-backdrop-filter: var(--audioflume-featured-song-play-backdrop, blur(10px));
+  backdrop-filter: var(--audioflume-featured-song-play-backdrop, blur(10px));
   transition:
     background-color 150ms ease,
     color 150ms ease,
