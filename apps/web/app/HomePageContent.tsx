@@ -617,6 +617,13 @@ function HomeArtistShelf({
                 <span className="audioflume-discover-featured-track-copy">
                   <strong>{featuredSong.title}</strong>
                   <span>{featuredSong.artist || artist.name}</span>
+                  {Array.isArray(featuredSong.genres) && featuredSong.genres.some(Boolean) ? (
+                    <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Song genres">
+                      {featuredSong.genres.filter(Boolean).slice(0, 3).map((genre) => (
+                        <span className="audioflume-genre-filter-pill" key={genre}>{genre}</span>
+                      ))}
+                    </span>
+                  ) : null}
                 </span>
               </button>
             ) : null}
