@@ -909,16 +909,6 @@ body:has(.audioflume-home-landing)
   pointer-events: none;
 }
 
-.audioflume-home-skeleton-curated-shelf
-  .audioflume-home-reference-shelf-scroller {
-  gap: 10px;
-}
-
-.audioflume-home-skeleton-curated-shelf.is-discover-skeleton
-  .audioflume-home-reference-shelf-scroller {
-  gap: 4px;
-}
-
 .audioflume-home-skeleton-playlist-card {
   position: relative;
   min-width: 0;
