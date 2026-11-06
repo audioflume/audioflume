@@ -20,6 +20,7 @@ import { CSS } from "@dnd-kit/utilities";
 
 import Toast from "@/components/Toast";
 import AdminArtistShelfPickerModal from "@/components/admin/AdminArtistShelfPickerModal";
+import AdminDiscoverFeaturedSongsView from "@/components/admin/AdminDiscoverFeaturedSongsView";
 import AdminPlaylistShelfPickerModal from "@/components/admin/AdminPlaylistShelfPickerModal";
 import {
   PLAYLIST_MANAGER_GRID_CLASS,
@@ -554,6 +555,8 @@ export default function AdminDiscoverLibraryView({
           )}
         </PlaylistManagerCollapsibleSection>
 
+
+        <AdminDiscoverFeaturedSongsView />
 
         {(["discover_curated"] as const).map((sectionKey) => {
           const sectionLabel = DISCOVER_SECTION_SHELF_LABELS[sectionKey];
