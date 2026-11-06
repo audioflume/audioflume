@@ -35,24 +35,24 @@ function SortableSong({ item, index, disabled, onRemove }: {
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.45 : 1 }}
       className="group flex min-w-0 items-center gap-2 py-2"
     >
-      <span className="w-6 shrink-0 text-[11px] tabular-nums text-[var(--text-muted)]">
-        {String(index + 1).padStart(2, "0")}
-      </span>
-      <div className="relative shrink-0">
-        <BackendMediaThumbnail
-          src={item.song.coverArt}
-          alt={item.song.title}
-          size={48}
-        />
+      <div className="relative h-8 w-6 shrink-0">
+        <span className="flex h-full w-full items-center justify-center text-[11px] tabular-nums text-[var(--text-muted)] group-hover:opacity-0">
+          {String(index + 1).padStart(2, "0")}
+        </span>
         <BackendDragHandle
-          variant="overlay"
-          className="absolute -left-1 -top-1 z-10 h-5 w-5 opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
+          variant="row"
+          className="absolute inset-0 h-full w-full opacity-0 group-hover:opacity-100 focus-visible:opacity-100"
           disabled={disabled}
           aria-label={`Drag ${item.song.title} to reorder`}
           {...attributes}
           {...listeners}
         />
       </div>
+      <BackendMediaThumbnail
+        src={item.song.coverArt}
+        alt={item.song.title}
+        size={48}
+      />
       <div className="min-w-0 flex-1">
         <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
           {item.song.title}
