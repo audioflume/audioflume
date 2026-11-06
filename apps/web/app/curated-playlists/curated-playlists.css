@@ -631,7 +631,7 @@ body:has(.curated-playlists-page-root)
   height: 420px;
   min-height: 420px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   background: #111111;
 }
 
