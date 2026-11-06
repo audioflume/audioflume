@@ -2108,10 +2108,6 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-designation {
-  position: absolute;
-  right: 30px;
-  bottom: 30px;
-  z-index: 2;
   color: rgba(255, 255, 255, 0.9);
   font-size: 13px;
   font-weight: 300;
