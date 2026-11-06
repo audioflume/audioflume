@@ -1303,8 +1303,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing-discover,
   .audioflume-home-landing-pricing,
   .audioflume-home-reference-library,
-  .audioflume-home-song-mosaic,
-  .audioflume-home-authentic-banner
+  .audioflume-home-song-mosaic
 ),
 .audioflume-home-mockup > :is(
   .audioflume-home-mockup-curated,
