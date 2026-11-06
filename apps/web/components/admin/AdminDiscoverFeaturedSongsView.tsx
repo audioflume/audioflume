@@ -32,41 +32,39 @@ function SortableSong({ item, disabled, onRemove }: {
     <article
       ref={setNodeRef}
       style={{ transform: CSS.Transform.toString(transform), transition, opacity: isDragging ? 0.45 : 1 }}
-      className="group relative min-w-0"
+      className="group flex min-w-0 items-center gap-2 border-b border-[var(--border)] py-2"
     >
-      <div className="relative aspect-square bg-[var(--bg-tertiary)]">
-        <BackendMediaThumbnail
-          src={item.song.coverArt}
-          alt={item.song.title}
-          size={300}
-          className="!h-full !w-full"
-        />
-        <BackendDragHandle
-          variant="overlay"
-          className="absolute left-2 top-2 z-10 opacity-0 group-hover:opacity-100"
-          aria-label={`Drag ${item.song.title} to reorder`}
-          {...attributes}
-          {...listeners}
-        />
-        <button
-          type="button"
-          disabled={disabled}
-          onClick={onRemove}
-          className="absolute right-2 top-2 z-10 flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-[var(--bg-primary)] text-lg font-light leading-none text-[var(--text-secondary)] opacity-0 transition hover:text-[var(--danger)] group-hover:opacity-100"
-          aria-label={`Remove ${item.song.title} from Featured Songs`}
-          title="Remove from Featured Songs"
-        >
-          ×
-        </button>
-      </div>
-      <div className="mt-2.5 min-w-0">
+      <BackendDragHandle
+        variant="row"
+        className="shrink-0"
+        disabled={disabled}
+        aria-label={`Drag ${item.song.title} to reorder`}
+        {...attributes}
+        {...listeners}
+      />
+      <BackendMediaThumbnail
+        src={item.song.coverArt}
+        alt={item.song.title}
+        size={48}
+      />
+      <div className="min-w-0 flex-1">
         <h4 className="truncate text-[13px] font-medium tracking-[-0.02em] text-[var(--text-primary)]">
           {item.song.title}
         </h4>
-        <p className="mt-0.5 truncate text-[10px] text-[var(--text-muted)]">
+        <p className="mt-0.5 truncate text-[11px] text-[var(--text-muted)]">
           {item.song.artist}
         </p>
       </div>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={onRemove}
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center text-lg font-light leading-none text-[var(--text-secondary)] transition-colors hover:text-[var(--danger)] disabled:cursor-not-allowed"
+        aria-label={`Remove ${item.song.title} from Featured Songs`}
+        title="Remove from Featured Songs"
+      >
+        ×
+      </button>
     </article>
   );
 }
@@ -197,7 +195,7 @@ export default function AdminDiscoverFeaturedSongsView() {
       ) : (
         <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={(event) => void reorderSongs(event)}>
           <SortableContext items={items.map((item) => item.song_id)} strategy={rectSortingStrategy}>
-            <div className="grid grid-cols-3 gap-x-3 gap-y-5 xl:grid-cols-6">
+            <div className="grid grid-cols-1 gap-x-5 gap-y-0 md:grid-cols-2 xl:grid-cols-3">
               {items.map((item) => (
                 <SortableSong
                   key={item.song_id}
