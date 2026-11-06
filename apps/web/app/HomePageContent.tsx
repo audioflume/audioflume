@@ -1218,7 +1218,7 @@ export default function HomePageContent({
         {!showHero && !songsLoading && !artistsLoading && !discoverFeaturedSongsLoading && discoverArtistSongs.length > 0 ? (
           <HomeSectionWithHeading
             title="Featured songs"
-            className="audioflume-discover-featured-songs-section audioflume-home-reference-width"
+            className="audioflume-discover-featured-songs-section"
             contentClassName="audioflume-discover-featured-songs"
           >
             <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf">
