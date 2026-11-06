@@ -161,15 +161,10 @@
   position: relative;
   display: grid;
   min-height: var(--playlist-detail-cover-size);
-  grid-template-columns: var(--playlist-detail-cover-width, var(--playlist-detail-cover-size)) minmax(0, 1fr);
+  grid-template-columns: var(--playlist-detail-cover-size) minmax(0, 1fr);
   align-items: stretch;
   gap: 0;
   padding: 0;
-}
-
-.playlist-detail-page:not(.album-detail-page) .playlist-detail-hero {
-  --playlist-detail-cover-aspect-ratio: 457 / 257;
-  --playlist-detail-cover-width: calc(var(--playlist-detail-cover-size) * 457 / 257);
 }
 
 .playlist-detail-cover {
@@ -177,7 +172,7 @@
   width: 100%;
   min-width: 0;
   overflow: hidden;
-  aspect-ratio: var(--playlist-detail-cover-aspect-ratio, 1);
+  aspect-ratio: 1;
   background: var(--bg-tertiary);
 }
 
@@ -825,7 +820,7 @@
 
   .playlist-detail-cover {
     width: 100%;
-    aspect-ratio: var(--playlist-detail-cover-aspect-ratio, 1);
+    aspect-ratio: 1;
   }
 
   .playlist-detail-hero > .min-w-0 {
