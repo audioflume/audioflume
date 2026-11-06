@@ -166,7 +166,7 @@
 
 .card {
   position: relative;
-  --artist-featured-name-size: clamp(36px, 2.55vw, 50px);
+  --artist-featured-name-size: clamp(24px, 2.55vw, 32px);
   --artist-featured-name-case: capitalize;
   --artist-featured-name-tracking: -0.03em;
   --artist-featured-name-line-height: 1.02;
@@ -323,7 +323,7 @@
 
 .cardName {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: var(--artist-featured-name-size, clamp(36px, 2.55vw, 50px));
+  font-size: var(--artist-featured-name-size, clamp(24px, 2.55vw, 32px));
   font-weight: 300;
   letter-spacing: var(--artist-featured-name-tracking, -.05em);
   line-height: var(--artist-featured-name-line-height, 1.02);
