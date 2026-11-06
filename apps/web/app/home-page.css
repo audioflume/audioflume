@@ -2088,9 +2088,9 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-designation {
   color: rgba(255, 255, 255, 0.9);
-  font-size: 15px;
+  font-size: 13px;
   font-weight: 300;
-  line-height: 1.5;
+  line-height: 1;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore {
