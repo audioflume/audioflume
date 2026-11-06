@@ -921,7 +921,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-skeleton-curated-shelf.is-discover-skeleton
   .audioflume-home-skeleton-block.is-playlist-media {
   height: 257px;
-  border-radius: 6px;
+  border-radius: 0;
 }
 
 @media (min-width: 1513px) {
@@ -2363,7 +2363,7 @@ body:has(.audioflume-home-landing)
   width: clamp(460px, 61vw, 1140px);
   min-width: clamp(460px, 61vw, 1140px);
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
@@ -2597,7 +2597,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
   height: 257px;
   aspect-ratio: auto;
-  border-radius: 6px;
+  border-radius: 0;
 }
 
 .audioflume-home-mockup-curated-card {
@@ -2963,7 +2963,7 @@ body:has(.audioflume-home-landing)
   min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
   height: 257px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
@@ -3060,7 +3060,7 @@ body:has(.audioflume-home-landing)
   grid-template-rows: auto 1fr;
   align-items: start;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   padding: 28px 30px 26px;
   color: #111111;
   text-decoration: none;
@@ -3202,7 +3202,7 @@ body:has(.audioflume-home-landing)
   grid-template-columns: repeat(2, minmax(0, 1fr));
   margin: 0 auto;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   background: #111111;
 }
 
@@ -4917,7 +4917,7 @@ body:has(.audioflume-home-landing)
   height: 420px;
   min-height: 420px;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   background: #111111;
 }
 .audioflume-discover-reference-search-card > * {
@@ -5148,7 +5148,7 @@ body:has(.audioflume-home-landing)
   isolation: isolate;
   width: 100%;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   background: #101615;
   color: #e5e5dd;
   padding: clamp(64px, calc(5.5vw + 50px), 158px) clamp(40px, 7vw, 128px) clamp(64px, 7vw, 128px);
