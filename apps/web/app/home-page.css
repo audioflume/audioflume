@@ -1970,7 +1970,10 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-intro-row h2 {
+  width: min(100%, 860px);
   margin: 0;
+  text-align: justify;
+  text-align-last: justify;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(38px, 3.6vw, 68px);
@@ -1992,7 +1995,7 @@ body:has(.audioflume-home-landing)
   display: grid;
   grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
-  margin-top: 68px;
+  margin-top: 80px;
 }
 
 .audioflume-discover-featured-songs .audioflume-home-featured-song-card {
@@ -2024,7 +2027,7 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-featured-songs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 20px 10px;
-    margin-top: 40px;
+    margin-top: 80px;
   }
 }
 
