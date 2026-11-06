@@ -71,7 +71,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
 
   return (
     <article className={`${styles.card} ${styles[`cardShape${index % 6}`]}`}>
-      <Link className={styles.cardLink} href={`/artists/${artist.slug}`} aria-label={`Explore ${artist.name}`}>
+      <div className={styles.cardLink}>
         {image ? (
           <img
             className={styles.cardImage}
@@ -84,16 +84,19 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
           <span className={styles.cardFallback} aria-hidden="true">{artist.name.slice(0, 1)}</span>
         )}
         <span className={styles.cardShade} aria-hidden="true" />
+        <Link className={styles.cardOverlayLink} href={`/artists/${artist.slug}`} aria-label={`Explore ${artist.name}`} />
         <span className={styles.cardContent}>
           <strong className={styles.cardName}>{artist.name}</strong>
           {artist.designation ? <span className={styles.cardDesignation}>{artist.designation}</span> : null}
           <span className={styles.cardGenres} aria-label="Artist genres">
             {artist.genres.length
-              ? artist.genres.slice(0, 3).map((genre) => <span className={styles.cardGenre} key={genre}>{genre}</span>)
+              ? artist.genres.slice(0, 3).map((genre) => (
+                  <Link className={styles.cardGenre} href={`/music?genre=${encodeURIComponent(genre)}`} key={genre}>{genre}</Link>
+                ))
               : [0, 1, 2].map((item) => <span className={`${styles.cardGenre} ${styles.cardGenrePlaceholder}`} aria-hidden="true" key={item} />)}
           </span>
         </span>
-      </Link>
+      </div>
       <Link href={`/artists/${artist.slug}`} className={styles.cardExplore} aria-label={`Explore artist ${artist.name}`}>
         Explore Artist
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
