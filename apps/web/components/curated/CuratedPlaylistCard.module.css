@@ -159,8 +159,8 @@
   z-index: 2;
   overflow: hidden;
   color: #ffffff;
-  font-size: 24px;
-  font-weight: 500;
+  font-size: 20px;
+  font-weight: 300;
   letter-spacing: -0.035em;
   line-height: 1.05;
   text-overflow: ellipsis;
@@ -223,7 +223,7 @@
     right: 70px;
     bottom: 21px;
     left: 20px;
-    font-size: 22px;
+    font-size: 20px;
   }
 
   .homePlayButton {
