@@ -30,28 +30,21 @@
 }
 
 .audioflume-pricing-editorial-title {
-  display: flex;
-  position: relative;
-  left: 50%;
-  width: 100vw;
+  width: 100%;
   margin: 0 0 64px;
-  transform: translateX(-50%);
-  align-items: baseline;
-  justify-content: space-between;
+  text-align: justify;
+  text-align-last: justify;
+  text-transform: uppercase;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(38px, 8vw, 150px);
+  font-size: clamp(44px, 5vw, 84px);
   font-weight: 300;
-  letter-spacing: -0.055em;
-  line-height: 0.95;
-  white-space: nowrap;
+  letter-spacing: -.065em;
+  line-height: .99;
 }
-.audioflume-pricing-editorial-title > span:first-child {
-  transform: translateX(calc(-0.105em + 2px));
-}
-@media (max-width: 620px) {
+@media (max-width: 690px) {
   .audioflume-pricing-editorial-title {
-    font-size: clamp(28px, 8vw, 50px);
+    font-size: clamp(40px, 8vw, 60px);
     margin-bottom: 40px;
   }
 }
