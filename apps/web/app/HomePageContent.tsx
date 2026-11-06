@@ -831,13 +831,13 @@ function DiscoverFeaturedSongsSkeleton() {
   );
 }
 
-function HomeTrendingSkeleton() {
+function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayout?: boolean }) {
   return (
     <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 12 }, (_, index) => (
         <article
           key={index}
-          className="audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-2 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2"
+          className={`audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-4 bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2${discoverLayout ? " is-discover-skeleton" : ""}`}
           aria-hidden="true"
         >
           <HomeSkeletonBlock className="is-ready-track-cover" />
@@ -907,15 +907,27 @@ function HomeArtistShelfSkeleton({ compact = false, discoverLayout = false }: { 
   );
 }
 
-function HomeCuratedPlaylistSkeleton() {
+function HomeCuratedPlaylistSkeleton({ discoverLayout = false }: { discoverLayout?: boolean }) {
   return (
     <Shelf
       label="curated playlists"
-      className="audioflume-home-mockup-curated-shelf audioflume-home-skeleton-curated-shelf"
+      className={`audioflume-home-mockup-curated-shelf audioflume-home-skeleton-curated-shelf${discoverLayout ? " is-discover-skeleton" : ""}`}
     >
       {Array.from({ length: 4 }, (_, index) => (
-        <div key={index} className="audioflume-home-mockup-curated-card-shell">
+        discoverLayout ? (
+          <div key={index} className="audioflume-home-mockup-curated-card-shell">
+            <article
+              className="audioflume-home-mockup-curated-card audioflume-home-skeleton-playlist-card"
+              aria-hidden="true"
+            >
+              <HomeSkeletonBlock className="is-playlist-media" />
+              <HomeSkeletonBlock className="is-playlist-title" />
+              <HomeSkeletonBlock className="is-playlist-play" />
+            </article>
+          </div>
+        ) : (
           <article
+            key={index}
             className="audioflume-home-mockup-curated-card audioflume-home-skeleton-playlist-card"
             aria-hidden="true"
           >
@@ -923,7 +935,7 @@ function HomeCuratedPlaylistSkeleton() {
             <HomeSkeletonBlock className="is-playlist-title" />
             <HomeSkeletonBlock className="is-playlist-play" />
           </article>
-        </div>
+        )
       ))}
     </Shelf>
   );
@@ -1273,7 +1285,7 @@ export default function HomePageContent({
               />
             </Link>
           </div>
-          <HomeCuratedPlaylistSkeleton />
+          <HomeCuratedPlaylistSkeleton discoverLayout={!showHero} />
         </section>
       ) : (
         <HomeCuratedPlaylistShelf playlists={curatedPlaylists} />
@@ -1309,7 +1321,7 @@ export default function HomePageContent({
         </div>
 
         {songsLoading ? (
-          <HomeTrendingSkeleton />
+          <HomeTrendingSkeleton discoverLayout={!showHero} />
         ) : (
           <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
             {recentSongs.map((song, index) => (
