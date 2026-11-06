@@ -2175,8 +2175,8 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-song-shelf .audioflume-home-featured-song-card {
-  flex: 0 0 clamp(220px, calc((var(--home-reference-width) - 5 * 12px) / 6), 320px);
-  width: clamp(220px, calc((var(--home-reference-width) - 5 * 12px) / 6), 320px);
+  flex: 0 0 clamp(220px, 20vw, 320px);
+  width: clamp(220px, 20vw, 320px);
   min-width: 220px;
 }
 
