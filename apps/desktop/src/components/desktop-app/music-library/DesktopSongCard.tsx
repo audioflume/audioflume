@@ -1,5 +1,4 @@
 import {
-  AudioflumeArtistLabel,
   DropdownShell,
   getSongCuePointMarkers,
   normalizeEditPointType,
@@ -194,7 +193,7 @@ export default function DesktopSongCard({
           {song.licenseType === "premium" ? <PremiumLabel /> : null}
         </span>
       }
-      artist={<AudioflumeArtistLabel artist={displayMeta.artist} />}
+      artist={displayMeta.artist}
       stems={
         <SongCardStemsSlot
           stems={song.stems}
