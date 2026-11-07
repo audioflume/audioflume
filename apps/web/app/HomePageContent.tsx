@@ -1219,9 +1219,9 @@ export default function HomePageContent({
                 <span ref={discoverFirstLineMeasureRef} className="absolute invisible whitespace-nowrap" aria-hidden="true">DISCOVER NEW MUSIC</span>
                 DISCOVER NEW MUSIC{discoverHeadingNeedsNaturalWrap ? " " : <br />}&amp; TRENDING ARTISTS
               </h2>
-              <Link href="/artists" className="audioflume-arrow-text-link">
+              <span>
                 Explore this month&apos;s featured artists
-              </Link>
+              </span>
             </div>
           </div>
         ) : (
