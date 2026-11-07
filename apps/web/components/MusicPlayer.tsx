@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  AudioflumeArtistLabel,
   DropdownShell,
   buildWaveformBars,
   createWaveformCanvasDrawCache,
@@ -559,10 +558,10 @@ export default function MusicPlayer() {
                   href={`/artists/${currentSong.artistSlug}`}
                   className="cursor-pointer truncate underline-offset-2 transition-colors hover:text-[var(--text-primary)]"
                 >
-                  <AudioflumeArtistLabel artist={currentSong.artist} />
+                  {currentSong.artist}
                 </Link>
               ) : (
-                <span className="truncate"><AudioflumeArtistLabel artist={currentSong.artist} /></span>
+                <span className="truncate">{currentSong.artist}</span>
               )}
             </div>
           </div>
