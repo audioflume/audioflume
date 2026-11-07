@@ -11,7 +11,6 @@ import { useFavorites } from "@/context/FavoritesContext";
 import { useUserPreferences } from "@/context/UserPreferencesContext";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import {
-  AudioflumeArtistLabel,
   getSongStemsFromRecord,
   SongCardShell,
   SongCardStemsSlot,
@@ -248,14 +247,14 @@ export default function SongCard({
             {isPremium ? <PremiumLabel /> : null}
           </span>
         }
-        artist={<AudioflumeArtistLabel artist={song.artist} />}
+        artist={song.artist}
         artistLink={
           song.artistSlug ? (
             <Link
               href={`/artists/${song.artistSlug}`}
               className="cursor-pointer text-inherit no-underline underline-offset-2 transition-colors hover:text-[var(--text-primary)]"
             >
-              <AudioflumeArtistLabel artist={song.artist} />
+              {song.artist}
             </Link>
           ) : undefined
         }
