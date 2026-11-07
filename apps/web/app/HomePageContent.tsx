@@ -527,7 +527,7 @@ function HomeArtistShelf({
     <Shelf
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
-      customScrollbar={!compact}
+      customScrollbar={!compact && !discoverLayout}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
@@ -857,7 +857,7 @@ function HomeArtistShelfSkeleton({ compact = false, discoverLayout = false }: { 
     <Shelf
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
-      customScrollbar={!compact}
+      customScrollbar={!compact && !discoverLayout}
     >
       {Array.from({ length: compact ? 4 : 3 }, (_, index) => (
         <article
@@ -1217,7 +1217,7 @@ export default function HomePageContent({
             <div className="audioflume-discover-featured-intro-row">
               <h2 ref={discoverHeadingRef}>
                 <span ref={discoverFirstLineMeasureRef} className="absolute invisible whitespace-nowrap" aria-hidden="true">DISCOVER NEW MUSIC</span>
-                DISCOVER NEW MUSIC{discoverHeadingNeedsNaturalWrap ? " " : <br />}&amp; TRENDING ARTISTS.
+                DISCOVER NEW MUSIC{discoverHeadingNeedsNaturalWrap ? " " : <br />}&amp; TRENDING ARTISTS
               </h2>
               <Link href="/artists" className="audioflume-arrow-text-link">
                 Explore this month&apos;s featured artists
