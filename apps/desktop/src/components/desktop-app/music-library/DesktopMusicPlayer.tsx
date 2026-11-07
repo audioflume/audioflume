@@ -1,5 +1,4 @@
 import {
-  AudioflumeArtistLabel,
   DropdownShell,
   formatEditPointTime,
   getEditPointFilterLabel,
@@ -524,7 +523,6 @@ export default function DesktopMusicPlayer({
           durationSeconds: song.durationSeconds,
         }}
         titleAddon={song.licenseType === "premium" ? <PremiumLabel /> : null}
-        subtitle={<AudioflumeArtistLabel artist={song.artist} />}
         isPlaying={isPlaying}
         currentTime={displayCurrentTime}
         duration={displayDuration}
