@@ -1300,7 +1300,6 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-landing > :is(
-  .audioflume-home-landing-discover,
   .audioflume-home-landing-pricing,
   .audioflume-home-reference-library,
   .audioflume-home-song-mosaic
