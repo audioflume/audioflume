@@ -176,15 +176,21 @@ export default function DualSidebarExperiment() {
           </Link>
         </div>
         <div className={styles.topBar}>
-          <div className={styles.searchCombo}>
-            <GlobalMusicSearchField
-              value={query}
-              onChange={setQuery}
-              onClear={() => setQuery("")}
-              className={styles.topSearchField}
-              clearButtonClassName={styles.topSearchClear}
-            />
-            <GlobalReferenceSearch className={styles.findSimilarControl} />
+          <div className={styles.searchCombo} role="search" aria-label="Music discovery">
+            <div className={styles.searchArea}>
+              <span className={styles.searchEyebrow}>DISCOVER / 01</span>
+              <GlobalMusicSearchField
+                value={query}
+                onChange={setQuery}
+                onClear={() => setQuery("")}
+                className={styles.topSearchField}
+                clearButtonClassName={styles.topSearchClear}
+              />
+            </div>
+            <div className={styles.referenceArea}>
+              <span className={styles.searchEyebrow}>REFERENCE / 02</span>
+              <GlobalReferenceSearch className={styles.findSimilarControl} />
+            </div>
           </div>
         </div>
         <div className={styles.rightTop}>
@@ -212,7 +218,7 @@ export default function DualSidebarExperiment() {
             ))}
           </div>
           <div className={styles.sidebarSection}>
-            <div className={styles.sideSectionHeading}><span>PLAYLISTS</span><Link href="/playlists" title="Manage playlists">Manage</Link></div>
+            <div className={styles.sideSectionHeading}><span>PLAYLISTS</span><Link href="/playlists" title="Manage playlists" aria-label="Manage playlists"><Icon name="plus" size={16}/></Link></div>
             {playlists.length ? <div className={styles.playlistLinks}>{playlists.slice(0, 7).map(playlist => (
               <Link key={playlist.id} href={"/playlists/" + playlist.id} className={styles.playlistLink}><span>{playlist.name}</span></Link>
             ))}</div> : <p className={styles.emptyPlaylists}>Your saved playlists will appear here.</p>}
