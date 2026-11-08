@@ -2366,7 +2366,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-artist-navigation {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
   height: 28px;
@@ -2382,7 +2382,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-artist-navigation button {
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   width: 28px;
   height: 28px;
