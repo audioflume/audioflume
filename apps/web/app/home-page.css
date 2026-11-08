@@ -2036,7 +2036,7 @@ body:has(.audioflume-home-landing)
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: 14px;
-  row-gap: 7px;
+  row-gap: 12px;
 }
 
 .audioflume-discover-compact-song {
@@ -2046,7 +2046,7 @@ body:has(.audioflume-home-landing)
   gap: 8px;
   width: 100%;
   min-width: 0;
-  padding: 0 0 7px;
+  padding: 0 0 12px;
   border: 0;
   border-bottom: 1px solid var(--border);
   background: transparent;
@@ -2142,28 +2142,28 @@ body:has(.audioflume-home-landing)
 @media (min-width: 1101px) {
   .audioflume-discover-compact-song:nth-child(-n + 4) {
     border-top: 1px solid var(--border);
-    padding-top: 7px;
+    padding-top: 12px;
   }
 }
 
 @media (min-width: 751px) and (max-width: 1100px) {
   .audioflume-discover-compact-song:nth-child(-n + 3) {
     border-top: 1px solid var(--border);
-    padding-top: 7px;
+    padding-top: 12px;
   }
 }
 
 @media (min-width: 441px) and (max-width: 750px) {
   .audioflume-discover-compact-song:nth-child(-n + 2) {
     border-top: 1px solid var(--border);
-    padding-top: 7px;
+    padding-top: 12px;
   }
 }
 
 @media (max-width: 440px) {
   .audioflume-discover-compact-song:first-child {
     border-top: 1px solid var(--border);
-    padding-top: 7px;
+    padding-top: 12px;
   }
 }
 
