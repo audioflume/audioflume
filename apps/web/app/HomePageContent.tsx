@@ -1145,17 +1145,18 @@ export default function HomePageContent({
     () => getDiscoverLensOptions(playableSongs, discoverLens),
     [playableSongs, discoverLens],
   );
+  const activeDiscoverLensValue = discoverLensValue || discoverLensOptions[0]?.value || "";
   const discoverFilteredSongs = useMemo(
     () => showHero || discoverLens === "all"
       ? playableSongs
-      : playableSongs.filter((song) => matchesDiscoverLens(song, discoverLens, discoverLensValue)),
-    [showHero, playableSongs, discoverLens, discoverLensValue],
+      : playableSongs.filter((song) => matchesDiscoverLens(song, discoverLens, activeDiscoverLensValue)),
+    [showHero, playableSongs, discoverLens, activeDiscoverLensValue],
   );
   const discoverArtists = useMemo(
     () => showHero || discoverLens === "all" ? artists : artists.filter(
-      (artist) => artist.songs.some((song) => matchesDiscoverLens(song, discoverLens, discoverLensValue)),
+      (artist) => artist.songs.some((song) => matchesDiscoverLens(song, discoverLens, activeDiscoverLensValue)),
     ),
-    [showHero, artists, discoverLens, discoverLensValue],
+    [showHero, artists, discoverLens, activeDiscoverLensValue],
   );
   const originalSongs = (showHero ? playableSongs : discoverFilteredSongs)
     .filter(
@@ -1171,7 +1172,7 @@ export default function HomePageContent({
     if (configuredDiscoverSongs?.length) {
       const curated = configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl));
       if (showHero || discoverLens === "all") return curated;
-      const matches = curated.filter((song) => matchesDiscoverLens(song, discoverLens, discoverLensValue));
+      const matches = curated.filter((song) => matchesDiscoverLens(song, discoverLens, activeDiscoverLensValue));
       return matches.length ? matches : discoverFilteredSongs.slice(0, 6);
     }
     const selected = new Map<string, Song>();
@@ -1186,9 +1187,9 @@ export default function HomePageContent({
     }
     const selections = Array.from(selected.values()).slice(0, 6);
     if (showHero || discoverLens === "all") return selections;
-    const matches = selections.filter((song) => matchesDiscoverLens(song, discoverLens, discoverLensValue));
+    const matches = selections.filter((song) => matchesDiscoverLens(song, discoverLens, activeDiscoverLensValue));
     return matches.length ? matches : discoverFilteredSongs.slice(0, 6);
-  }, [artists, playableSongs, configuredDiscoverSongs, showHero, discoverLens, discoverLensValue, discoverFilteredSongs]);
+  }, [artists, playableSongs, configuredDiscoverSongs, showHero, discoverLens, activeDiscoverLensValue, discoverFilteredSongs]);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
@@ -1417,7 +1418,7 @@ export default function HomePageContent({
               <select
                 className="audioflume-discover-lens-select"
                 aria-label={`Choose ${discoverLens}`}
-                value={discoverLensValue}
+                value={activeDiscoverLensValue}
                 onChange={(event) => setDiscoverLensValue(event.target.value)}
               >
                 {discoverLensOptions.map((option) => (
