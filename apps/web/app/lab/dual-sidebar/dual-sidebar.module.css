@@ -298,11 +298,8 @@
   width: 100%;
   min-width: 0;
   height: 52px;
-  align-items: center;
-  border: 1px solid var(--exp-line);
-  border-radius: 999px;
-  background: var(--exp-panel);
-  padding: 0 7px 0 22px;
+  align-items: stretch;
+  gap: 10px;
 }
 .topSearchField {
   display: flex;
@@ -310,17 +307,24 @@
   min-width: 0;
   height: 100%;
   align-items: center;
-  gap: 15px;
-  padding: 0 16px 0 0;
+  gap: 14px;
+  padding: 0 15px 0 5px;
+  border-radius: 6px;
+  background: var(--exp-panel);
   color: var(--exp-text);
+  transition: background 160ms ease;
 }
+.topSearchField:focus-within { background: var(--exp-active); }
 .topSearchField > svg {
-  width: 23px;
-  height: 23px;
-  flex: 0 0 23px;
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  padding: 12px;
+  border-radius: 4px;
+  background: var(--exp-hover);
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.4;
+  stroke-width: 1.6;
   stroke-linecap: round;
 }
 .topSearchField input {
@@ -331,11 +335,11 @@
   outline: none;
   background: transparent;
   color: var(--exp-text);
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 300;
-  letter-spacing: -.025em;
+  letter-spacing: -.02em;
 }
-.topSearchField input::placeholder { color: var(--exp-muted); font-size: 16px; opacity: 1; }
+.topSearchField input::placeholder { color: var(--exp-muted); font-size: 15px; opacity: 1; }
 .topSearchField input::-webkit-search-cancel-button { display: none; }
 .topSearchClear {
   display: inline-flex;
@@ -390,46 +394,41 @@
 .findSimilarControl {
   display: inline-flex;
   flex: 0 0 auto;
-  flex-direction: row-reverse;
   align-items: center;
   justify-content: center;
-  gap: 14px;
-  height: 44px;
-  align-self: center;
+  gap: 11px;
+  height: 100%;
   border: 0;
-  border-radius: 999px;
-  padding: 0 0 0 12px;
-  background: transparent;
-  color: var(--exp-text);
+  border-radius: 6px;
+  padding: 0 21px;
+  background: var(--exp-button-bg);
+  color: var(--exp-button-text);
   font-family: inherit;
   font-size: 14px;
-  font-weight: 400;
+  font-weight: 500;
   letter-spacing: -.02em;
   cursor: pointer;
   white-space: nowrap;
+  transition: opacity 160ms ease;
 }
-.findSimilarControl:hover { color: var(--exp-accent); }
-.findSimilarControl svg {
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  padding: 9px;
-  border-radius: 50%;
-  background: #454545;
-  color: #fff;
-  transition: background 160ms ease, transform 160ms ease;
-}
-.findSimilarControl:hover svg { background: #555555; transform: scale(1.04); }
+.findSimilarControl:hover { opacity: .8; }
+.findSimilarControl svg { width: 19px; height: 19px; flex: 0 0 19px; }
 @media (max-width: 1050px) {
-  .searchCombo { height: 48px; padding-left: 17px; padding-right: 7px; }
-  .topSearchField { gap: 10px; }
+  .searchCombo { height: 48px; gap: 7px; }
+  .topSearchField { gap: 9px; padding-right: 10px; }
+  .topSearchField > svg { width: 38px; height: 38px; flex-basis: 38px; padding: 11px; }
   .topSearchField input, .topSearchField input::placeholder { font-size: 14px; }
-  .topSearchField > svg { width: 20px; height: 20px; flex-basis: 20px; }
-  .findSimilarControl { gap: 8px; font-size: 12px; padding-left: 6px; }
-  .findSimilarControl svg { width: 32px; height: 32px; flex-basis: 32px; padding: 8px; }
+  .findSimilarControl { gap: 7px; padding-inline: 13px; font-size: 12px; }
+  .findSimilarControl svg { width: 17px; height: 17px; flex-basis: 17px; }
 }
 @media (max-width: 460px) {
-  .searchCombo { height: 44px; padding-left: 14px; padding-right: 7px; }
+  .searchCombo { height: 44px; gap: 5px; }
+  .topSearchField { gap: 6px; padding-left: 3px; padding-right: 6px; }
+  .topSearchField > svg { width: 36px; height: 36px; flex-basis: 36px; padding: 10px; }
+  .topSearchField input, .topSearchField input::placeholder { font-size: 12px; }
+  .findSimilarControl { gap: 5px; padding-inline: 8px; font-size: 11px; }
+  .findSimilarControl svg { width: 15px; height: 15px; flex-basis: 15px; }
+}
   .topSearchField { gap: 7px; padding-right: 6px; }
   .topSearchField input, .topSearchField input::placeholder { font-size: 12px; }
   .topSearchField > svg { width: 17px; height: 17px; flex-basis: 17px; }
