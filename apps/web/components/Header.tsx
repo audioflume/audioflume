@@ -372,6 +372,8 @@ export default function Header() {
     }, 120);
   }
 
+  if (pathname === "/lab/dual-sidebar") return null;
+
   return (
     <>
       <style>{`
