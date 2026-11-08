@@ -3,7 +3,17 @@
   --exp-bg: #151616;
   --exp-panel: #151616;
   --exp-line: #2b2b2c;
+  --exp-text: #f1f1ef;
   --exp-muted: #8b8b8b;
+  --exp-input-muted: #5a5a5a;
+  --exp-hover: #202020;
+  --exp-active: #222222;
+  --exp-button-bg: #eeeeee;
+  --exp-button-text: #151515;
+  --exp-cover-bg: #292929;
+  --exp-wave-inactive: rgba(255, 255, 255, .42);
+  --exp-wave-progress: #ffffff;
+  --exp-scheme: dark;
   position: fixed;
   inset: 0;
   z-index: 90;
@@ -13,11 +23,28 @@
   height: 100dvh;
   overflow: hidden;
   background: var(--exp-bg);
-  color: #f1f1ef;
+  color: var(--exp-text);
   font-family: var(--font-aktiv-grotesk), Arial, sans-serif;
   font-size: 13px;
   letter-spacing: -.015em;
-  color-scheme: dark;
+  color-scheme: var(--exp-scheme);
+}
+.root[data-theme="light"] {
+  --exp-accent: #171717;
+  --exp-bg: #f8f8f6;
+  --exp-panel: #f8f8f6;
+  --exp-line: #d6d6d2;
+  --exp-text: #171717;
+  --exp-muted: #6d6d6d;
+  --exp-input-muted: #777777;
+  --exp-hover: #ebebe8;
+  --exp-active: #e3e3df;
+  --exp-button-bg: #171717;
+  --exp-button-text: #ffffff;
+  --exp-cover-bg: #ddddda;
+  --exp-wave-inactive: rgba(17, 17, 17, .3);
+  --exp-wave-progress: #171717;
+  --exp-scheme: light;
 }
 .root * { box-sizing: border-box; }
 .root button, .root input { font: inherit; }
@@ -138,7 +165,7 @@
 .status a { text-decoration: underline; color: #bbb; }
 .trackSection { margin-top: 43px; }
 .trackTable { width: 100%; padding-bottom: 35px; }
-.trackHead, .trackRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(65px, .48fr) 47px 38px; align-items: center; column-gap: 10px; }
+.trackHead, .trackRow { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(90px, .9fr) minmax(65px, .48fr) 47px 38px; align-items: center; column-gap: 10px; }
 .trackHead { height: 32px; border-bottom: 1px solid #333; color: #6f6f6f; font-size: 9px; letter-spacing: .095em; text-transform: uppercase; }
 .trackHead > span:last-child { text-align: center; }
 .trackRow { min-height: 62px; border-bottom: 1px solid #292929; }
@@ -146,6 +173,9 @@
 .trackSong { display: flex; align-items: center; min-width: 0; gap: 12px; padding: 6px 0; border: 0; background: transparent; text-align: left; color: #ddd; }
 .trackSong > img, .trackSong > .emptyArtwork { width: 38px; height: 38px; flex: 0 0 38px; object-fit: cover; }
 .trackSong > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.trackWaveform { min-width: 0; height: 28px; display: flex; align-items: center; --waveform-color: var(--exp-wave-inactive); --waveform-progress: var(--exp-wave-progress); }
+.trackWaveform :global(.filmwave-song-waveform) { position: relative; width: 100%; height: 24px; display: block; }
+.trackWaveform :global(.filmwave-song-waveform-canvas) { display: block; width: 100%; height: 100%; }
 .trackSong strong, .queueItem strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #e2e2e2; font-size: 11px; font-weight: 500; }
 .trackSong small, .queueItem small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #777; font-size: 10px; }
 .trackSong:hover strong { color: var(--exp-accent); }
@@ -210,8 +240,8 @@
   .topBar { padding-inline: 17px; }
   .releaseGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
   .hero h1 { font-size: 55px; }
-  .trackHead, .trackRow { grid-template-columns: minmax(0,1fr) 42px 28px; gap: 8px; }
-  .trackHead > span:nth-child(2), .trackGenre { display: none; }
+  .trackHead, .trackRow { grid-template-columns: minmax(0,1fr) minmax(75px,.7fr) 42px 28px; gap: 8px; }
+  .trackHead > span:nth-child(3), .trackGenre { display: none; }
 }
 @media (max-width: 760px) {
   .root { display: flex; flex-direction: column; overflow: auto; }
@@ -242,8 +272,8 @@
   .releaseGrid, .artistGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .genreGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .playlistGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .trackHead, .trackRow { grid-template-columns: minmax(0,1fr) 32px; }
-  .trackHead > span:nth-child(3), .trackTime { display: none; }
+  .trackHead, .trackRow { grid-template-columns: minmax(0,1fr) minmax(70px,.8fr) 32px; }
+  .trackHead > span:nth-child(4), .trackTime { display: none; }
   .topBarRight { display: none; }
 }
 
