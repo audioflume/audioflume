@@ -244,7 +244,6 @@ export default function DualSidebarExperiment() {
             {view === "library" && error && <p className={styles.status}>Could not load songs: {error}</p>}
             {view === "library" && !loading && !visibleSongs.length && <p className={styles.status}>No tracks match this selection.</p>}
             <div className={styles.trackTable}>
-              <div className={styles.trackHead}><span>Title</span><span aria-hidden="true" /><span>Genre</span><span>Time</span><span>Like</span></div>
               {(view === "library" ? visibleSongs : visibleSongs.slice(0, 10)).map(song => <div className={styles.trackRow + (currentSong?.id === song.id ? " " + styles.trackPlaying : "")} key={song.id}>
                 <button className={styles.trackSong} onClick={() => play(song, visibleSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span></button>
                 <div className={styles.trackWaveform}><Waveform song={song} compact showEditPointMarkers={false} /></div>
