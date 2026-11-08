@@ -1,7 +1,7 @@
 .root {
   --exp-accent: #eaeae8;
   --exp-bg: #151616;
-  --exp-panel: #151616;
+  --exp-panel: #1c1d1d;
   --exp-line: #2b2b2c;
   --exp-text: #f1f1ef;
   --exp-muted: #8b8b8b;
@@ -36,7 +36,7 @@
 .root[data-theme="light"] {
   --exp-accent: #171717;
   --exp-bg: #f8f8f6;
-  --exp-panel: #f8f8f6;
+  --exp-panel: #eeefeb;
   --exp-line: #d6d6d2;
   --exp-text: #171717;
   --exp-muted: #6d6d6d;
@@ -63,11 +63,12 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  height: 100%;
+  height: calc(100% - 24px);
+  margin: 12px;
   min-height: 0;
   overflow-y: auto;
-  border-right: 1px solid var(--exp-line);
-  background: var(--exp-bg);
+  border-radius: 6px;
+  background: var(--exp-panel);
   grid-row: 2;
   grid-column: 1;
 }
@@ -192,7 +193,7 @@
 .likeButton { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; background: transparent; color: var(--exp-muted); }
 .likeButton:hover, .isLiked { color: var(--exp-accent); }
 .isLiked svg { fill: currentColor; }
-.rightSidebar { display: flex; flex-direction: column; grid-column: 3; grid-row: 2; min-width: 0; height: calc(100% - 24px); margin: 12px; min-height: 0; overflow-y: auto; border: 1px solid var(--exp-line); border-radius: 6px; background: var(--exp-bg); }
+.rightSidebar { display: flex; flex-direction: column; grid-column: 3; grid-row: 2; min-width: 0; height: calc(100% - 24px); margin: 12px; min-height: 0; overflow-y: auto; border-radius: 6px; background: var(--exp-panel); }
 .rightTop { position: sticky; top: 0; z-index: 2; display: flex; height: 73px; flex: 0 0 73px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px; border-bottom: 1px solid var(--exp-line); background: var(--exp-bg); font-size: 10px; font-weight: 500; letter-spacing: .06em; }
 .accountWrap { position: relative; width: 100%; min-width: 0; }
 .accountTrigger { display: flex; align-items: center; gap: 10px; width: 100%; padding: 0; border: 0; background: transparent; color: var(--exp-text); text-align: left; }
@@ -258,7 +259,7 @@
   .root { display: flex; flex-direction: column; overflow: auto; }
   .unifiedHeader { display: flex; flex: 0 0 auto; flex-direction: column; }
   .rightTop { position: relative; height: 55px; flex-basis: 55px; }
-  .leftSidebar { height: auto; flex: 0 0 auto; overflow: visible; border-right: 0; }
+  .leftSidebar { width: calc(100% - 24px); height: auto; flex: 0 0 auto; overflow: visible; }
   .logoRow { height: 55px; flex-basis: 55px; }
   .sideSearch { display: none; }
   .leftScroll { overflow: visible; }
