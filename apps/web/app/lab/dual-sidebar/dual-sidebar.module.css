@@ -136,10 +136,6 @@
 .heroDots { display: flex; align-items: center; gap: 6px; }
 .heroDots button { width: 5px; height: 5px; padding: 0; border: 0; border-radius: 50%; background: #8b8b8b; }
 .heroDots .dotActive { width: 7px; height: 7px; background: #fff; }
-.heroArrows { position: absolute; right: 18px; bottom: 18px; z-index: 25; display: flex; gap: 6px; opacity: 0; transition: opacity 160ms ease; }
-.featuredArtists:hover .heroArrows, .featuredArtists:focus-within .heroArrows { opacity: 1; }
-.heroArrows button { display: grid; width: 27px; height: 27px; place-items: center; border: 0; background: transparent; color: #fff; }
-.heroArrows button:hover { color: var(--exp-muted); }
 .contentSection { margin: 39px 0 0; }
 .sectionHeader { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; min-height: 34px; margin: 0 0 20px; }
 .sectionHeader h2 { margin: 5px 0 0; font-size: 25px; font-weight: 400; letter-spacing: -.035em; line-height: 1.1; }
