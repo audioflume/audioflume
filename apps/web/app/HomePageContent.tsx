@@ -538,17 +538,19 @@ function DiscoverArtistNavigation({ artistCount }: { artistCount: number }) {
 
   return (
     <div ref={navigationRef} className="audioflume-discover-artist-navigation audioflume-home-reference-width" aria-label="Featured artists navigation">
-      <button type="button" onClick={() => navigate("left")} disabled={!position.canPrev} aria-label="Previous featured artists">
-        <ChevronLeftIcon size={18} />
-      </button>
       <div className="audioflume-discover-artist-navigation-progress" aria-hidden="true">
         {Array.from({ length: position.segments }, (_, index) => (
           <span key={index} className={index === position.current ? "is-active" : ""} />
         ))}
       </div>
-      <button type="button" onClick={() => navigate("right")} disabled={!position.canNext} aria-label="Next featured artists">
-        <ChevronRightIcon size={18} />
-      </button>
+      <div className="audioflume-discover-artist-navigation-arrows">
+        <button type="button" onClick={() => navigate("left")} disabled={!position.canPrev} aria-label="Previous featured artists">
+          <ChevronLeftIcon size={18} />
+        </button>
+        <button type="button" onClick={() => navigate("right")} disabled={!position.canNext} aria-label="Next featured artists">
+          <ChevronRightIcon size={18} />
+        </button>
+      </div>
     </div>
   );
 }
