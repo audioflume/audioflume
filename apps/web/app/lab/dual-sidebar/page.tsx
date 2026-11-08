@@ -176,14 +176,16 @@ export default function DualSidebarExperiment() {
           </Link>
         </div>
         <div className={styles.topBar}>
-          <GlobalMusicSearchField
-            value={query}
-            onChange={setQuery}
-            onClear={() => setQuery("")}
-            className={styles.topSearchField}
-            clearButtonClassName={styles.topSearchClear}
-          />
-          <GlobalReferenceSearch className={styles.findSimilarControl} />
+          <div className={styles.searchCombo}>
+            <GlobalMusicSearchField
+              value={query}
+              onChange={setQuery}
+              onClear={() => setQuery("")}
+              className={styles.topSearchField}
+              clearButtonClassName={styles.topSearchClear}
+            />
+            <GlobalReferenceSearch className={styles.findSimilarControl} />
+          </div>
         </div>
         <div className={styles.rightTop}>
           {user ? (
