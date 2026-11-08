@@ -219,7 +219,7 @@
 .volumeRow input::-webkit-slider-thumb { width: 9px; height: 9px; appearance: none; border-radius: 50%; background: var(--exp-muted); }
 .volumeRow span { width: 28px; text-align: right; }
 .queuePanel { display: flex; flex-direction: column; flex: none; min-height: 0; }
-.queueTabs { display: flex; flex: 0 0 49px; gap: 24px; align-items: stretch; padding: 0 19px; border-bottom: 1px solid var(--exp-line); }
+.queueTabs { display: flex; flex: 0 0 49px; gap: 24px; align-items: stretch; padding: 0 19px; }
 .queueTabs span { display: inline-flex; align-items: center; padding: 0; color: var(--exp-muted); font-size: 12px; font-weight: 300; letter-spacing: normal; }
 .queueSearch { display: flex; align-items: center; gap: 9px; height: 44px; flex: 0 0 44px; margin: 0; padding: 0 18px; border-bottom: 1px solid var(--exp-line); color: var(--exp-muted); }
 .queueList { flex: none; min-height: 0; overflow: visible; padding: 5px 0 10px; }
@@ -344,6 +344,7 @@
   padding: 0;
   margin: 36px 36px 0;
   overflow: hidden;
+  border-radius: 6px;
   background: transparent;
 }
 .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-shelf) {
