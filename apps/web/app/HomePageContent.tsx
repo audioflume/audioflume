@@ -1099,6 +1099,17 @@ export default function HomePageContent({
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
   const discoverCompactSongs = playableSongs.slice(0, 12);
+  const discoverCategories = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const song of playableSongs) {
+      for (const genre of song.genres || []) {
+        if (genre) counts.set(genre, (counts.get(genre) || 0) + 1);
+      }
+    }
+    return Array.from(counts, ([genre, count]) => ({ genre, count }))
+      .sort((a, b) => b.count - a.count || a.genre.localeCompare(b.genre))
+      .slice(0, 8);
+  }, [playableSongs]);
   const discoverArtistSongs = useMemo(() => {
     if (configuredDiscoverSongs?.length) return configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl));
     const selected = new Map<string, Song>();
@@ -1311,6 +1322,24 @@ export default function HomePageContent({
         ) : null}
         {!showHero && !artistsLoading && artists.length > 1 ? (
           <DiscoverArtistNavigation artistCount={artists.length} />
+        ) : null}
+        {!showHero && discoverCategories.length > 0 ? (
+          <HomeSectionWithHeading
+            title="Explore by category"
+            className="audioflume-discover-categories-section audioflume-home-reference-width"
+            contentClassName="audioflume-discover-category-grid"
+          >
+            {discoverCategories.map(({ genre }) => (
+              <Link
+                key={genre}
+                href={`/music?genre=${encodeURIComponent(genre)}`}
+                className="audioflume-discover-category-card"
+              >
+                <span>{genre}</span>
+                <ArrowUpRightIcon size={21} strokeWidth={1.4} aria-hidden="true" />
+              </Link>
+            ))}
+          </HomeSectionWithHeading>
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
