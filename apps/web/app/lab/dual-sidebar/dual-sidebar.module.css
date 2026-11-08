@@ -230,6 +230,7 @@
   .mainScroll { flex: none; overflow: visible; }
   .hero { height: 400px; }
   .rightSidebar { height: auto; min-height: 500px; overflow: visible; flex: 0 0 auto; border-left: 0; border-top: 1px solid #303030; }
+  .accountMenu { position: absolute; top: calc(100% + 8px); right: 0; }
   .playerArtwork { max-height: 280px; }
   .queuePanel { min-height: 300px; }
   .queueList { overflow: visible; }
