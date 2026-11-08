@@ -9,7 +9,7 @@ import XIcon from "@/components/icons/XIcon";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 
 export const GLOBAL_MUSIC_SEARCH_PLACEHOLDER =
-  "Search by mood, genre, or scene.";
+  "Search by mood, genre, or scene";
 
 type GlobalMusicSearchFieldProps = {
   value: string;
