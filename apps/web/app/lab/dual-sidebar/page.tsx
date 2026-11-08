@@ -167,6 +167,7 @@ export default function DualSidebarExperiment() {
             className={styles.topSearchField}
             clearButtonClassName={styles.topSearchClear}
           />
+          <GlobalReferenceSearch className={styles.findSimilarControl} />
         </header>
         <div className={styles.mainScroll}>
           {view !== "library" && <section className={`${styles.featuredArtists} audioflume-home-mockup-artists is-discover-featured-artists`} aria-label="Featured artists">
@@ -231,7 +232,7 @@ export default function DualSidebarExperiment() {
       </section>
 
       <aside className={styles.rightSidebar} aria-label="Music player and queue">
-        <div className={styles.rightTop}><GlobalReferenceSearch className={styles.findSimilarControl} /></div>
+        <div className={styles.rightTop}><span><Icon name="headphones" size={15}/> Now playing</span><span className={styles.onlineStatus}><i/> Live player</span></div>
         <div className={styles.player}>
           <div className={styles.playerArtwork}><Cover song={displaySong}/></div>
           <div className={styles.playerMeta}><div><h2>{displaySong?.title || "Find something to play"}</h2><p>{displaySong?.artist || "Explore Audioflume's catalogue"}</p></div>{displaySong && <button className={styles.likeButton + (favoriteIdSet.has(displaySong.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(displaySong)} aria-label="Toggle favorite"><Icon name="heart" size={19}/></button>}</div>
