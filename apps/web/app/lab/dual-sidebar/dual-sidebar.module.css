@@ -303,7 +303,7 @@
   color: #b2b2b2;
 }
 .topSearchClear:hover { color: #fff; }
-.featuredArtists {
+.featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) {
   --audioflume-home-page-gutter: 0px;
   --audioflume-featured-artist-inset: 0px;
   --audioflume-featured-artist-gap: 12px;
