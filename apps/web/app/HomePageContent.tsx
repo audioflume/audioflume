@@ -1154,7 +1154,7 @@ export default function HomePageContent({
   );
   const discoverArtists = useMemo(
     () => showHero || discoverLens === "all" ? artists : artists.filter(
-      (artist) => artist.songs.some((song) => matchesDiscoverLens(song, discoverLens, activeDiscoverLensValue)),
+      (artist) => (artist.songs || []).some((song) => matchesDiscoverLens(song, discoverLens, activeDiscoverLensValue)),
     ),
     [showHero, artists, discoverLens, activeDiscoverLensValue],
   );
