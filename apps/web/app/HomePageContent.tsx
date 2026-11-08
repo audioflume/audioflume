@@ -810,15 +810,17 @@ function HomeFeaturedSongCard({
 function HomeCompactSongCard({
   song,
   queue,
-  index,
 }: {
   song: Song;
   queue: Song[];
-  index: number;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
+  const duration = Number.isFinite(song.duration) && song.duration > 0
+    ? `${Math.floor(song.duration / 60)}:${Math.floor(song.duration % 60).toString().padStart(2, "0")}`
+    : "0:00";
+
   function playSong() {
     if (!song.audioUrl) return;
     setQueue(queue);
@@ -852,8 +854,8 @@ function HomeCompactSongCard({
           <strong className="audioflume-home-song-title">{song.title}</strong>
           <span className="audioflume-home-song-artist">{song.artist}</span>
         </span>
-        <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
       </button>
+      <span className="audioflume-discover-compact-song-duration">{duration}</span>
     </div>
   );
 }
@@ -882,7 +884,6 @@ function DiscoverCompactSongsSkeleton() {
             <HomeSkeletonBlock className="is-compact-title" />
             <HomeSkeletonBlock className="is-compact-artist" />
           </span>
-          <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
         </div>
       ))}
     </div>
@@ -1321,8 +1322,8 @@ export default function HomePageContent({
           >
             {songsLoading ? (
               <DiscoverCompactSongsSkeleton />
-            ) : discoverCompactSongs.map((song, index) => (
-              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} index={index} />
+            ) : discoverCompactSongs.map((song) => (
+              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
             ))}
           </HomeSectionWithHeading>
         ) : null}
