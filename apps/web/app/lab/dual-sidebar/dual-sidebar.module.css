@@ -75,7 +75,7 @@
 .leftBottom a { display: flex; align-items: center; gap: 3px; margin-left: auto; color: #a5a5a5!important; }
 .leftBottom a:hover { color: #fff!important; }
 .center { display: flex; min-width: 0; min-height: 0; height: 100%; overflow-y: auto; flex-direction: column; background: #171818; }
-.topBar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; justify-content: space-between; height: 73px; min-height: 73px; padding: 0 36px; border-bottom: 1px solid #292929; background: #151616; }
+.topBar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; height: 73px; min-height: 73px; padding: 0 36px; border-bottom: 1px solid #292929; background: #151616; }
 .breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 11px; }
 .breadcrumb > span { color: #777; letter-spacing: .055em; }
 .breadcrumb svg { color: #686868; }
@@ -159,7 +159,7 @@
 .isLiked svg { fill: currentColor; }
 .bottomNote { display: flex; justify-content: space-between; padding: 22px 0 35px; border-top: 1px solid #292929; color: #555; font-size: 9px; letter-spacing: .09em; }
 .rightSidebar { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow-y: auto; border-left: 1px solid #252525; background: #151616; }
-.rightTop { position: sticky; top: 0; z-index: 2; display: flex; height: 73px; flex: 0 0 73px; align-items: center; justify-content: space-between; gap: 5px; padding: 0 20px; border-bottom: 1px solid #282828; background: #151616; font-size: 10px; font-weight: 500; letter-spacing: .06em; }
+.rightTop { position: sticky; top: 0; z-index: 2; display: flex; height: 73px; flex: 0 0 73px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px; border-bottom: 1px solid #282828; background: #151616; font-size: 10px; font-weight: 500; letter-spacing: .06em; }
 .rightTop > span:first-child { display: flex; align-items: center; gap: 8px; }
 .onlineStatus { display: flex; align-items: center; gap: 5px; color: #888; font-size: 9px; }
 .player { padding: 17px 17px 15px; border-bottom: 1px solid #292929; }
@@ -252,4 +252,121 @@
   .trackHead > span:nth-child(4), .trackTime { display: none; }
   .topBarRight { display: none; }
   .bottomNote span { display: none; }
+}
+
+
+/* Isolated three-column adaptations of the website's existing search field and Discover artist shelf. */
+.topSearchField {
+  display: flex;
+  width: 100%;
+  height: 43px;
+  min-width: 0;
+  align-items: center;
+  gap: 13px;
+  border: 1px solid #323333;
+  background: #202121;
+  padding: 0 15px;
+  color: #999;
+}
+.topSearchField:focus-within { border-color: #757575; color: #dedede; }
+.topSearchField > svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+.topSearchField input {
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: #f1f1f1;
+  font-size: 13px;
+}
+.topSearchField input::placeholder { color: #858585; opacity: 1; }
+.topSearchField input::-webkit-search-cancel-button { display: none; }
+.topSearchClear {
+  display: inline-flex;
+  width: 23px;
+  height: 23px;
+  flex: 0 0 23px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #b2b2b2;
+}
+.topSearchClear:hover { color: #fff; }
+.featuredArtists {
+  --audioflume-home-page-gutter: 0px;
+  --audioflume-featured-artist-inset: 0px;
+  --audioflume-featured-artist-gap: 12px;
+  position: relative;
+  width: 100%;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  background: transparent;
+}
+.featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-shelf) {
+  width: 100%;
+}
+.featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-shelf-scroller) {
+  gap: 12px;
+  padding: 0;
+}
+.featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
+  width: min(90%, 810px);
+  min-width: min(90%, 810px);
+}
+.featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-media) {
+  height: min(510px, max(330px, 31vw));
+}
+.featuredArtists :global(.audioflume-home-reference-shelf-arrow.is-left) { left: 14px; }
+.featuredArtists :global(.audioflume-home-reference-shelf-arrow.is-right) { right: 14px; }
+.featuredEmpty {
+  display: flex;
+  height: 360px;
+  align-items: center;
+  justify-content: center;
+  background: #242424;
+  color: #999;
+  font-size: 12px;
+}
+.findSimilarControl {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  flex-shrink: 0;
+  border: 0;
+  padding: 9px 0;
+  background: transparent;
+  color: #e9e9e9;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  white-space: nowrap;
+}
+.findSimilarControl:hover { color: #aaa; }
+.findSimilarControl svg { width: 17px; height: 17px; }
+@media (max-width: 1050px) {
+  .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
+    width: min(94%, 710px);
+    min-width: min(94%, 710px);
+  }
+  .rightTop { padding-inline: 13px; }
+  .rightTop > span { font-size: 9px; }
+}
+@media (max-width: 760px) {
+  .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
+    width: min(90vw, 650px);
+    min-width: min(90vw, 650px);
+  }
 }
