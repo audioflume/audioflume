@@ -1313,7 +1313,7 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-reference-search
 ),
 .audioflume-home-mockup-artists.is-discover-featured-artists
-  > :is(.audioflume-discover-compact-songs-section, .audioflume-discover-featured-songs-section),
+  > .audioflume-discover-featured-songs-section,
 .audioflume-home-mockup .audioflume-home-reference-tools
   > .audioflume-home-reference-playlists,
 .audioflume-home-landing-pricing > .audioflume-home-mockup-section-label {
@@ -2441,6 +2441,71 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-artist-navigation-progress span.is-active {
   background: var(--text-primary);
+}
+
+.audioflume-discover-lenses {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+  margin-top: 24px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  white-space: nowrap;
+}
+
+.audioflume-discover-lenses::-webkit-scrollbar { display: none; }
+
+.audioflume-discover-lens-button {
+  flex: 0 0 auto;
+  min-height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--text-secondary);
+  font: inherit;
+  font-size: 13px;
+  font-weight: 400;
+  cursor: pointer;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.audioflume-discover-lens-button:hover,
+.audioflume-discover-lens-button:focus-visible {
+  color: var(--text-primary);
+}
+
+.audioflume-discover-lens-button.is-active {
+  border-color: var(--text-primary);
+  background: var(--text-primary);
+  color: var(--bg-primary);
+}
+
+.audioflume-discover-lens-select {
+  flex: 0 0 auto;
+  max-width: 190px;
+  min-height: 34px;
+  margin-left: 8px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.audioflume-discover-lens-empty {
+  margin-top: 20px;
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  > .audioflume-discover-compact-songs-section {
+  margin-top: 32px;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media::after {
