@@ -2412,7 +2412,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-artist-navigation-progress span {
   display: block;
-  width: clamp(34px, 6vw, 95px);
+  width: clamp(50px, 8vw, 130px);
   height: 2px;
   background: var(--border-subtle);
   transition: background 150ms ease;
