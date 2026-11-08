@@ -1,8 +1,10 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
+import { useUser } from "@clerk/nextjs";
+import UserMenu from "@/components/UserMenu";
 import { useSongs } from "@/hooks/useSongs";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
@@ -72,6 +74,9 @@ const NAV: { id: View; label: string; icon: IconName }[] = [
 
 export default function DualSidebarExperiment() {
   const { songs, loading, error } = useSongs();
+  const { user, isLoaded: userLoaded } = useUser();
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
+  const userMenuRef = useRef<HTMLDivElement>(null);
   const { playlists } = usePlaylists();
   const { favoriteIdSet, toggleFavorite } = useFavorites();
   const { currentSong, isPlaying, setQueue, togglePlayPause, navigateTrack, seekTo, volume, setVolume } = usePlayer();
@@ -86,6 +91,22 @@ export default function DualSidebarExperiment() {
   const [rightTab, setRightTab] = useState<"queue" | "liked">("queue");
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
   const [shuffle, setShuffle] = useState(false);
+
+  useEffect(() => {
+    if (!userMenuOpen) return;
+    const onOutsideClick = (event: MouseEvent) => {
+      if (!userMenuRef.current?.contains(event.target as Node)) setUserMenuOpen(false);
+    };
+    const onEscape = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setUserMenuOpen(false);
+    };
+    document.addEventListener("mousedown", onOutsideClick);
+    document.addEventListener("keydown", onEscape);
+    return () => {
+      document.removeEventListener("mousedown", onOutsideClick);
+      document.removeEventListener("keydown", onEscape);
+    };
+  }, [userMenuOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -149,7 +170,7 @@ export default function DualSidebarExperiment() {
             ))}
           </div>
           <div className={styles.sidebarSection}>
-            <div className={styles.sideSectionHeading}><span>Your playlists</span><Link href="/playlists" title="Manage playlists"><Icon name="plus" size={16}/></Link></div>
+            <div className={styles.sideSectionHeading}><span>PLAYLISTS</span><Link href="/playlists" title="Manage playlists"><Icon name="plus" size={16}/></Link></div>
             {playlists.length ? <div className={styles.playlistLinks}>{playlists.slice(0, 7).map(playlist => (
               <Link key={playlist.id} href={"/playlists/" + playlist.id} className={styles.playlistLink}><Icon name="music" size={14}/><span>{playlist.name}</span></Link>
             ))}</div> : <p className={styles.emptyPlaylists}>Your saved playlists will appear here.</p>}
@@ -232,7 +253,20 @@ export default function DualSidebarExperiment() {
       </section>
 
       <aside className={styles.rightSidebar} aria-label="Music player and queue">
-        <div className={styles.rightTop}><span><Icon name="headphones" size={15}/> Now playing</span><span className={styles.onlineStatus}><i/> Live player</span></div>
+        <div className={styles.rightTop}>
+          {user ? (
+            <div className={styles.accountWrap} ref={userMenuRef}>
+              <button className={styles.accountTrigger} type="button" aria-label="Open account menu" aria-expanded={userMenuOpen} onClick={() => setUserMenuOpen(open => !open)}>
+                <img className={styles.accountAvatar} src={user.imageUrl} alt="" />
+                <span className={styles.accountName}>{user.fullName || user.username || user.primaryEmailAddress?.emailAddress || "My account"}</span>
+                <Icon name="chevron" size={13} />
+              </button>
+              {userMenuOpen && <div className="filmwave-header-menu-wrap"><UserMenu onClose={() => setUserMenuOpen(false)} /></div>}
+            </div>
+          ) : userLoaded ? (
+            <Link href="/sign-in" className={styles.accountSignIn}>Sign in</Link>
+          ) : null}
+        </div>
         <div className={styles.player}>
           <div className={styles.playerArtwork}><Cover song={displaySong}/></div>
           <div className={styles.playerMeta}><div><h2>{displaySong?.title || "Find something to play"}</h2><p>{displaySong?.artist || "Explore Audioflume's catalogue"}</p></div>{displaySong && <button className={styles.likeButton + (favoriteIdSet.has(displaySong.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(displaySong)} aria-label="Toggle favorite"><Icon name="heart" size={19}/></button>}</div>
@@ -244,7 +278,6 @@ export default function DualSidebarExperiment() {
           <div className={styles.queueSearch}><Icon name="search" size={15}/><input value={sidebarQuery} placeholder="Find a song..." onChange={e => setSidebarQuery(e.target.value)} aria-label="Search sidebar tracks"/></div>
           <div className={styles.queueList}>{sidebarSongs.map(song => <button key={song.id} className={styles.queueItem + (song.id === currentSong?.id ? " " + styles.queueCurrent : "")} onClick={() => play(song, sidebarSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span><em>{formatTime(song.duration || 0)}</em></button>)}{!sidebarSongs.length && <p className={styles.queueEmpty}>No tracks here yet.</p>}</div>
         </div>
-        <div className={styles.rightFooter}><Link href="/playlists">Your playlists <Icon name="arrow" size={13}/></Link><Link href="/discover">Back to Audioflume <Icon name="arrow" size={13}/></Link></div>
       </aside>
     </main>
   );
