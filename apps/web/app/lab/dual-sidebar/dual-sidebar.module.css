@@ -24,7 +24,7 @@
 .root button { cursor: pointer; }
 .root button:disabled { cursor: default; opacity: .35; }
 .root a { color: inherit; text-decoration: none; }
-.root button:focus-visible, .root a:focus-visible, .root input:focus-visible { outline: 1px solid var(--exp-accent); outline-offset: 3px; }
+.root button:focus-visible, .root a:focus-visible, .root input:not([type="search"]):focus-visible { outline: 1px solid var(--exp-accent); outline-offset: 3px; }
 .leftSidebar {
   display: flex;
   flex-direction: column;
@@ -83,7 +83,8 @@
 .topBarRight { display: flex; gap: 25px; align-items: center; color: #6e6e6e; font-size: 10px; letter-spacing: .045em; }
 .allMusic { display: flex; gap: 6px; align-items: center; color: #ccc!important; letter-spacing: normal; }
 .allMusic:hover { color: var(--exp-accent)!important; }
-.mainScroll { flex: none; min-height: 0; overflow: visible; padding: 24px 36px 0; }
+.mainScroll { flex: none; min-height: 0; overflow: visible; padding: 0; }
+.mainScroll > :not(.featuredArtists) { margin-inline: 36px; }
 .hero { position: relative; display: flex; height: clamp(310px, 30vw, 445px); min-height: 310px; overflow: hidden; background: radial-gradient(ellipse at 58% 10%, #666767 0%, #303232 45%, #191a1a 88%); }
 .heroArt { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; filter: grayscale(.4) contrast(1.3); opacity: .36; transform: scale(1.06); }
 .heroTint { position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 25%, rgba(210,210,210,.16), transparent 52%), linear-gradient(90deg, rgba(11,12,12,.88) 0%, rgba(24,25,25,.5) 49%, rgba(18,18,18,.18) 100%), linear-gradient(0deg, rgba(13,13,13,.55), transparent 40%); }
@@ -206,14 +207,14 @@
 @media (max-width: 1350px) {
   .root { grid-template-columns: 180px minmax(0, 1fr) 300px; }
   .topBar { padding-inline: 24px; }
-  .mainScroll { padding-inline: 24px; }
+  .mainScroll > :not(.featuredArtists) { margin-inline: 24px; }
   .releaseGrid { gap: 10px; }
   .rightTop { padding-inline: 13px; }
 }
 @media (max-width: 1050px) {
   .root { grid-template-columns: 168px minmax(0, 1fr) 270px; }
   .topBarRight > span { display: none; }
-  .mainScroll { padding-inline: 17px; }
+  .mainScroll > :not(.featuredArtists) { margin-inline: 17px; }
   .topBar { padding-inline: 17px; }
   .releaseGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
   .hero h1 { font-size: 55px; }
@@ -330,6 +331,7 @@
 .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-media) {
   height: min(510px, max(330px, 31vw));
 }
+.featuredArtists :global(.audioflume-home-reference-shelf-arrow) { display: none; }
 .featuredEmpty {
   display: flex;
   height: 360px;
