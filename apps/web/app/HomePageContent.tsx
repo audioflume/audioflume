@@ -1324,22 +1324,20 @@ export default function HomePageContent({
           <DiscoverArtistNavigation artistCount={artists.length} />
         ) : null}
         {!showHero && discoverCategories.length > 0 ? (
-          <HomeSectionWithHeading
-            title="Explore by category"
-            className="audioflume-discover-categories-section audioflume-home-reference-width"
-            contentClassName="audioflume-discover-category-grid"
-          >
-            {discoverCategories.map(({ genre }) => (
-              <Link
-                key={genre}
-                href={`/music?genre=${encodeURIComponent(genre)}`}
-                className="audioflume-discover-category-card"
-              >
-                <span>{genre}</span>
-                <ArrowUpRightIcon size={21} strokeWidth={1.4} />
-              </Link>
-            ))}
-          </HomeSectionWithHeading>
+          <div className="audioflume-discover-categories-section audioflume-home-reference-width">
+            <div className="audioflume-discover-category-grid">
+              {discoverCategories.map(({ genre }) => (
+                <Link
+                  key={genre}
+                  href={`/music?genre=${encodeURIComponent(genre)}`}
+                  className="audioflume-discover-category-card"
+                >
+                  <span>{genre}</span>
+                  <ArrowUpRightIcon size={21} strokeWidth={1.4} />
+                </Link>
+              ))}
+            </div>
+          </div>
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
