@@ -1313,7 +1313,7 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-reference-search
 ),
 .audioflume-home-mockup-artists.is-discover-featured-artists
-  > :is(.audioflume-discover-categories-section, .audioflume-discover-compact-songs-section, .audioflume-discover-featured-songs-section),
+  > :is(.audioflume-discover-compact-songs-section, .audioflume-discover-featured-songs-section),
 .audioflume-home-mockup .audioflume-home-reference-tools
   > .audioflume-home-reference-playlists,
 .audioflume-home-landing-pricing > .audioflume-home-mockup-section-label {
@@ -2030,63 +2030,6 @@ body:has(.audioflume-home-landing)
   color: #ffffff;
 }
 
-
-.audioflume-discover-category-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.audioflume-discover-category-card {
-  display: flex;
-  min-width: 0;
-  min-height: 132px;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 14px;
-  padding: 20px;
-  border-radius: 10px;
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-  text-decoration: none;
-  transition: background-color 160ms ease;
-}
-
-.audioflume-discover-category-card:hover,
-.audioflume-discover-category-card:focus-visible {
-  background: color-mix(in srgb, var(--bg-tertiary) 87%, var(--text-primary) 13%);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-discover-category-card {
-  background: #e5e5dd;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-discover-category-card:hover,
-:where(html.light, html[data-theme="light"]) .audioflume-discover-category-card:focus-visible {
-  background: color-mix(in srgb, #e5e5dd 87%, var(--text-primary) 13%);
-}
-
-.audioflume-discover-category-card > span {
-  min-width: 0;
-  overflow-wrap: anywhere;
-  font-size: clamp(19px, 1vw, 28px);
-  font-weight: 500;
-  letter-spacing: -.035em;
-  line-height: 1.05;
-}
-
-.audioflume-discover-category-card > svg {
-  flex: 0 0 21px;
-}
-
-@media (max-width: 1000px) {
-  .audioflume-discover-category-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 480px) {
-  .audioflume-discover-category-grid { gap: 10px; }
-  .audioflume-discover-category-card { min-height: 104px; padding: 15px; }
-}
 
 .audioflume-discover-compact-songs {
   display: grid;
