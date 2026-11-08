@@ -2370,7 +2370,7 @@ body:has(.audioflume-home-landing)
   justify-content: space-between;
   gap: 24px;
   height: 28px;
-  margin-top: 10px;
+  margin-top: var(--audioflume-featured-artist-gap);
 }
 
 .audioflume-discover-artist-navigation-arrows {
