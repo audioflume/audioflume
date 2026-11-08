@@ -74,6 +74,17 @@ const NAV: { id: View; label: string; icon: IconName }[] = [
   { id: "artists", label: "Artists", icon: "user" },
 ];
 
+function SectionHeading({ title, action, href, detail }: { title: ReactNode; action?: string; href?: string; detail?: string }) {
+  return (
+    <div className={styles.sectionHeader}>
+      <h2>{title}</h2>
+      {action && href ? (
+        <div className={styles.sectionControls}><Link href={href}>{action} <Icon name="arrow" size={14}/></Link></div>
+      ) : detail ? <span>{detail}</span> : null}
+    </div>
+  );
+}
+
 export default function DualSidebarExperiment() {
   const { songs, loading, error } = useSongs();
   const { theme } = useTheme();
@@ -211,21 +222,18 @@ export default function DualSidebarExperiment() {
           </section>}
 
           {view === "genres" ? <section className={styles.contentSection}>
-            <div className={styles.sectionHeader}><h2>Explore by category</h2><span>Find the feeling</span></div>
+            <SectionHeading title="Explore by category" detail="Find the feeling" />
             <div className={styles.genreGrid}>{genres.map(genre => <button key={genre} className={styles.genreTile + (activeGenre === genre ? " " + styles.genreSelected : "")} onClick={() => setActiveGenre(activeGenre === genre ? null : genre)}><span>{genre}</span><Icon name="arrow" size={18}/></button>)}</div>
           </section> : view === "artists" ? <section className={styles.contentSection}>
-            <div className={styles.sectionHeader}><h2>Artists & composers</h2><Link href="/artists">Explore all <Icon name="arrow" size={14}/></Link></div>
+            <SectionHeading title="Artists & composers" action="Explore all" href="/artists" />
             <div className={styles.artistGrid}>{artists.map(artist => <button key={artist} onClick={() => { setView("discover"); setQuery(artist); }}><Icon name="user" size={17}/>{artist}<Icon name="arrow" size={13}/></button>)}</div>
           </section> : view === "playlists" ? <section className={styles.contentSection}>
-            <div className={styles.sectionHeader}><h2>Your collections</h2><Link href="/playlists">All playlists <Icon name="arrow" size={14}/></Link></div>
+            <SectionHeading title="Your collections" action="All playlists" href="/playlists" />
             <div className={styles.playlistGrid}>{playlists.map(playlist => <Link href={"/playlists/" + playlist.id} key={playlist.id} className={styles.playlistTile}>{playlist.cover_image_url ? <img src={playlist.cover_image_url} alt="" /> : <span className={styles.emptyArtwork}><Icon name="music" size={24}/></span>}<strong>{playlist.name}</strong></Link>)}{!playlists.length && <p className={styles.status}>You have no saved playlists yet. <Link href="/playlists">Explore playlists</Link></p>}</div>
           </section> : null}
 
           {view !== "library" && <section className={styles.contentSection}>
-            <div className={styles.sectionHeader}>
-              <div><h2>{view === "liked" ? "Your liked tracks" : activeGenre ? activeGenre + " tracks" : view === "trending" ? "Explore the catalogue" : "New releases"}</h2></div>
-              <div className={styles.sectionControls}><Link href="/music">View all <Icon name="arrow" size={14}/></Link></div>
-            </div>
+            <SectionHeading title={view === "liked" ? "Your liked tracks" : activeGenre ? activeGenre + " tracks" : view === "trending" ? "Explore the catalogue" : "New releases"} action="View all" href="/music" />
             {loading && <p className={styles.status}>Loading the music library…</p>}
             {error && <p className={styles.status}>Could not load songs: {error}</p>}
             {!loading && !visibleSongs.length && <p className={styles.status}>No tracks match this selection.</p>}
@@ -238,7 +246,7 @@ export default function DualSidebarExperiment() {
           </section>}
 
           <section className={styles.contentSection + " " + styles.trackSection}>
-            <div className={styles.sectionHeader}><div><h2>{view === "library" ? "Music library" : "Tracks worth hearing"}</h2></div><div className={styles.sectionControls}><Link href="/music">Explore all <Icon name="arrow" size={14}/></Link></div></div>
+            <SectionHeading title={view === "library" ? "Music library" : "Tracks worth hearing"} action="Explore all" href="/music" />
             {view === "library" && loading && <p className={styles.status}>Loading the music library…</p>}
             {view === "library" && error && <p className={styles.status}>Could not load songs: {error}</p>}
             {view === "library" && !loading && !visibleSongs.length && <p className={styles.status}>No tracks match this selection.</p>}
