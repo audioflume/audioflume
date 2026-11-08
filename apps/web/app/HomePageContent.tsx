@@ -810,17 +810,15 @@ function HomeFeaturedSongCard({
 function HomeCompactSongCard({
   song,
   queue,
+  index,
 }: {
   song: Song;
   queue: Song[];
+  index: number;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
-  const duration = Number.isFinite(song.duration) && song.duration > 0
-    ? `${Math.floor(song.duration / 60)}:${Math.floor(song.duration % 60).toString().padStart(2, "0")}`
-    : "0:00";
-
   function playSong() {
     if (!song.audioUrl) return;
     setQueue(queue);
@@ -836,6 +834,7 @@ function HomeCompactSongCard({
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
+        <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
         <span className="audioflume-discover-compact-song-art">
           {song.coverArt ? (
             <img src={song.coverArt} alt="" draggable={false} />
@@ -855,7 +854,6 @@ function HomeCompactSongCard({
           <span className="audioflume-home-song-artist">{song.artist}</span>
         </span>
       </button>
-      <span className="audioflume-discover-compact-song-duration">{duration}</span>
     </div>
   );
 }
@@ -879,6 +877,7 @@ function DiscoverCompactSongsSkeleton() {
     <div className="audioflume-discover-compact-songs audioflume-discover-skeleton-compact-grid" aria-hidden="true">
       {Array.from({ length: 12 }, (_, index) => (
         <div key={index} className="audioflume-discover-compact-song audioflume-discover-skeleton-compact-song">
+          <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
           <HomeSkeletonBlock className="is-compact-cover" />
           <span className="audioflume-discover-compact-song-copy">
             <HomeSkeletonBlock className="is-compact-title" />
@@ -1322,8 +1321,8 @@ export default function HomePageContent({
           >
             {songsLoading ? (
               <DiscoverCompactSongsSkeleton />
-            ) : discoverCompactSongs.map((song) => (
-              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
+            ) : discoverCompactSongs.map((song, index) => (
+              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} index={index} />
             ))}
           </HomeSectionWithHeading>
         ) : null}
