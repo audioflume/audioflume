@@ -11,6 +11,8 @@
   --exp-button-bg: #eeeeee;
   --exp-button-text: #151515;
   --exp-cover-bg: #292929;
+  --exp-placeholder-gradient: linear-gradient(125deg, #353637, #202021);
+  --exp-genre-gradient: linear-gradient(145deg, #30302e, #242322);
   --exp-wave-inactive: rgba(255, 255, 255, .42);
   --exp-wave-progress: #ffffff;
   --exp-scheme: dark;
@@ -42,6 +44,8 @@
   --exp-button-bg: #171717;
   --exp-button-text: #ffffff;
   --exp-cover-bg: #ddddda;
+  --exp-placeholder-gradient: linear-gradient(125deg, #e5e5e1, #d6d6d2);
+  --exp-genre-gradient: linear-gradient(145deg, #ebebe8, #dadad6);
   --exp-wave-inactive: rgba(17, 17, 17, .3);
   --exp-wave-progress: #171717;
   --exp-scheme: light;
@@ -84,19 +88,19 @@
 .navItem { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; height: 40px; border: 0; background: transparent; color: var(--exp-muted); text-align: left; padding: 0 11px; transition: background .16s, color .16s; }
 .navItem svg { flex: 0 0 auto; }
 .navItem:hover { color: var(--exp-text); background: var(--exp-hover); }
-.navActive, .navActive:hover { color: #fff; background: var(--exp-active); font-weight: 500; }
-.navActive svg:last-child { margin-left: auto; color: #eaeae8; }
+.navActive, .navActive:hover { color: var(--exp-text); background: var(--exp-active); font-weight: 500; }
+.navActive svg:last-child { margin-left: auto; color: var(--exp-accent); }
 .sidebarSection { padding: 24px 18px 22px; }
 .sideSectionHeading { display: flex; align-items: center; justify-content: space-between; color: var(--exp-muted); font-size: 12px; font-weight: 300; letter-spacing: normal; }
 .sideSectionHeading a { display: inline-flex; align-items: center; color: var(--exp-muted); }
-.sideSectionHeading a:hover { color: #fff; }
+.sideSectionHeading a:hover { color: var(--exp-text); }
 .emptyPlaylists { margin: 19px 0 15px; color: var(--exp-muted); font-size: 11px; line-height: 1.6; }
 .playlistLinks { display: flex; flex-direction: column; gap: 1px; margin: 15px 0; }
 .playlistLink { display: flex; gap: 10px; align-items: center; height: 31px; color: var(--exp-muted)!important; font-size: 11px; }
 .playlistLink span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.playlistLink:hover { color: #fff!important; }
+.playlistLink:hover { color: var(--exp-text)!important; }
 .createButton { display: flex; justify-content: center; align-items: center; gap: 6px; height: 32px; border: 1px solid var(--exp-line); color: var(--exp-muted)!important; font-size: 11px; }
-.createButton:hover { border-color: var(--exp-line); color: #fff!important; }
+.createButton:hover { border-color: var(--exp-line); color: var(--exp-text)!important; }
 .center { display: flex; min-width: 0; min-height: 0; height: 100%; overflow-y: auto; flex-direction: column; background: var(--exp-bg); }
 .topBar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; height: 73px; min-height: 73px; padding: 0 36px; border-bottom: 1px solid var(--exp-line); background: var(--exp-bg); }
 .breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 11px; }
@@ -136,7 +140,7 @@
 .sectionKicker { color: var(--exp-muted); font-size: 9px; letter-spacing: .14em; }
 .sectionHeader > span, .sectionHeader a { color: var(--exp-muted); font-size: 11px; }
 .sectionHeader a { display: inline-flex; align-items: center; gap: 6px; }
-.sectionHeader a:hover { color: #fff; }
+.sectionHeader a:hover { color: var(--exp-text); }
 .sectionControls { display: flex; align-items: center; gap: 13px; }
 .sectionControls button { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid var(--exp-line); background: var(--exp-hover); color: var(--exp-muted); }
 .sectionControls button:hover, .sectionControls .controlActive { color: var(--exp-accent); border-color: var(--exp-accent); }
@@ -149,14 +153,14 @@
 .releaseCard:hover .releasePlay, .releaseCard:focus-visible .releasePlay { opacity: 1; }
 .releaseCard strong { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 11px; font-size: 12px; font-weight: 500; }
 .releaseCard > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 3px; color: var(--exp-muted); font-size: 11px; }
-.emptyArtwork { display: grid; place-items: center; width: 100%; height: 100%; color: var(--exp-muted); background: var(--exp-cover-bg); }
+.emptyArtwork { display: grid; place-items: center; width: 100%; height: 100%; color: var(--exp-muted); background: var(--exp-placeholder-gradient); }
 .genreGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
-.genreTile { display: flex; align-items: end; justify-content: space-between; min-height: 100px; padding: 16px; border: 1px solid var(--exp-line); background: var(--exp-cover-bg); color: var(--exp-text); text-align: left; font-size: 15px; }
-.genreTile:hover, .genreSelected { border-color: var(--exp-accent); color: #fff; }
+.genreTile { display: flex; align-items: end; justify-content: space-between; min-height: 100px; padding: 16px; border: 1px solid var(--exp-line); background: var(--exp-genre-gradient); color: var(--exp-text); text-align: left; font-size: 15px; }
+.genreTile:hover, .genreSelected { border-color: var(--exp-accent); color: var(--exp-text); }
 .artistGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
 .artistGrid button { display: flex; align-items: center; gap: 10px; min-height: 47px; border: 1px solid var(--exp-line); background: var(--exp-active); color: var(--exp-text); padding: 0 13px; text-align: left; }
 .artistGrid button svg:last-child { margin-left: auto; }
-.artistGrid button:hover { color: #fff; border-color: var(--exp-line); }
+.artistGrid button:hover { color: var(--exp-text); border-color: var(--exp-line); }
 .playlistGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
 .playlistTile { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
 .playlistTile > img, .playlistTile > .emptyArtwork { width: 100%; aspect-ratio: 1; height: auto; object-fit: cover; }
@@ -174,7 +178,7 @@
 .trackSong > img, .trackSong > .emptyArtwork { width: 38px; height: 38px; flex: 0 0 38px; object-fit: cover; }
 .trackSong > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
 .trackWaveform { min-width: 0; height: 28px; display: flex; align-items: center; --waveform-color: var(--exp-wave-inactive); --waveform-progress: var(--exp-wave-progress); }
-.trackWaveform :global(.filmwave-song-waveform) { position: relative; width: 100%; height: 24px; display: block; }
+.trackWaveform :global(.filmwave-song-waveform) { position: relative; width: 100%; height: 24px; display: block; --waveform-color: var(--exp-wave-inactive); --waveform-progress: var(--exp-wave-progress); }
 .trackWaveform :global(.filmwave-song-waveform-canvas) { display: block; width: 100%; height: 100%; }
 .trackSong strong, .queueItem strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--exp-text); font-size: 11px; font-weight: 500; }
 .trackSong small, .queueItem small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--exp-muted); font-size: 10px; }
@@ -201,18 +205,18 @@
 .playerMeta h2 { margin: 6px 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 500; }
 .playerMeta p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--exp-muted); font-size: 11px; }
 .playerProgress { margin: 12px 0 0; }
-.playerProgress input { display: block; width: 100%; height: 4px; margin: 0; appearance: none; background: linear-gradient(90deg, var(--exp-accent) var(--range-progress, 0%), #424242 var(--range-progress, 0%)); cursor: pointer; }
-.playerProgress input::-webkit-slider-thumb { appearance: none; width: 9px; height: 9px; background: #ddd; border-radius: 50%; }
+.playerProgress input { display: block; width: 100%; height: 4px; margin: 0; appearance: none; background: linear-gradient(90deg, var(--exp-accent) var(--range-progress, 0%), var(--exp-line) var(--range-progress, 0%)); cursor: pointer; }
+.playerProgress input::-webkit-slider-thumb { appearance: none; width: 9px; height: 9px; background: var(--exp-accent); border-radius: 50%; }
 .playerProgress > div { display: flex; justify-content: space-between; margin-top: 9px; color: var(--exp-muted); font-size: 10px; }
 .playerButtons { display: flex; justify-content: space-between; align-items: center; margin: 15px 0 17px; }
 .playerButtons button { display: grid; place-items: center; width: 35px; height: 35px; padding: 0; border: 0; background: transparent; color: var(--exp-muted); }
-.playerButtons button:hover { color: #fff; }
+.playerButtons button:hover { color: var(--exp-text); }
 .playerButtons .mainPlay { width: 42px; height: 42px; border-radius: 50%; background: var(--exp-button-bg); color: var(--exp-button-text); }
 .playerButtons .mainPlay:hover { background: var(--exp-accent); color: var(--exp-button-text); }
 .playerButtons .controlActive { color: var(--exp-accent); }
 .volumeRow { display: flex; align-items: center; gap: 12px; color: var(--exp-muted); font-size: 10px; }
 .volumeRow input { width: 100%; height: 3px; appearance: none; background: var(--exp-line); accent-color: var(--exp-accent); }
-.volumeRow input::-webkit-slider-thumb { width: 9px; height: 9px; appearance: none; border-radius: 50%; background: #aaa; }
+.volumeRow input::-webkit-slider-thumb { width: 9px; height: 9px; appearance: none; border-radius: 50%; background: var(--exp-muted); }
 .volumeRow span { width: 28px; text-align: right; }
 .queuePanel { display: flex; flex-direction: column; flex: none; min-height: 0; }
 .queueTabs { display: flex; flex: 0 0 49px; gap: 24px; align-items: stretch; padding: 0 19px; border-bottom: 1px solid var(--exp-line); }
@@ -328,7 +332,7 @@
   color: var(--exp-input-muted);
 }
 .topSearchClear svg { width: 21px; height: 21px; }
-.topSearchClear:hover { color: #fff; }
+.topSearchClear:hover { color: var(--exp-text); }
 .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) {
   --audioflume-home-page-gutter: 0px;
   --audioflume-featured-artist-inset: 0px;
