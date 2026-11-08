@@ -1336,7 +1336,7 @@ export default function HomePageContent({
                 className="audioflume-discover-category-card"
               >
                 <span>{genre}</span>
-                <ArrowUpRightIcon size={21} strokeWidth={1.4} aria-hidden="true" />
+                <ArrowUpRightIcon size={21} strokeWidth={1.4} />
               </Link>
             ))}
           </HomeSectionWithHeading>
