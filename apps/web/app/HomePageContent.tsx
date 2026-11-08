@@ -560,11 +560,13 @@ export function HomeArtistShelf({
   homeFlashImages,
   compact = false,
   discoverLayout = false,
+  hideExploreButton = false,
 }: {
   artists: HomeArtist[];
   homeFlashImages: string[];
   compact?: boolean;
   discoverLayout?: boolean;
+  hideExploreButton?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -656,7 +658,7 @@ export function HomeArtistShelf({
               </div>
               )}
             </div>
-            {!compact ? (
+            {!compact && !hideExploreButton ? (
               <Link
                 href={`/artists/${artist.slug}`}
                 className={`${artistCardStyles.cardExplore} audioflume-home-reference-artist-explore`}
