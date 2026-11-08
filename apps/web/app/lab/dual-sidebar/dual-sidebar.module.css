@@ -58,7 +58,7 @@
 .navItem svg { flex: 0 0 auto; }
 .navItem:hover { color: #f5f5f5; background: #202020; }
 .navActive, .navActive:hover { color: #fff; background: #222; font-weight: 500; }
-.navActive i { position: absolute; top: 8px; bottom: 8px; right: 0; width: 3px; background: var(--exp-accent); }
+.navActive svg:last-child { margin-left: auto; color: #eaeae8; }
 .sidebarSection { padding: 24px 18px 22px; }
 .sideSectionHeading { display: flex; align-items: center; justify-content: space-between; color: #737373; font-size: 10px; font-weight: 600; letter-spacing: .085em; }
 .sideSectionHeading a { display: inline-flex; align-items: center; color: #7f7f7f; }
@@ -102,7 +102,7 @@
 .heroDots { display: flex; align-items: center; gap: 6px; }
 .heroDots button { width: 5px; height: 5px; padding: 0; border: 0; border-radius: 50%; background: #8b8b8b; }
 .heroDots .dotActive { width: 7px; height: 7px; background: #fff; }
-.heroArrows { display: flex; gap: 6px; }
+.heroArrows { position: absolute; right: 18px; bottom: 18px; z-index: 25; display: flex; gap: 6px; }
 .heroArrows button { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid rgba(255,255,255,.25); background: rgba(15,15,15,.2); color: #fff; }
 .heroArrows button:hover { background: rgba(255,255,255,.2); }
 .contentSection { margin: 39px 0 0; }
@@ -228,7 +228,7 @@
   .leftScroll { overflow: visible; }
   .navList { display: flex; gap: 3px; overflow-x: auto; padding: 7px 9px; }
   .navItem { width: auto; min-width: max-content; padding: 0 12px; height: 34px; }
-  .navActive i { top: auto; right: 5px; bottom: 0; left: 5px; width: auto; height: 2px; }
+  .navActive svg:last-child { margin-left: 8px; }
   .sidebarSection, .leftBottom { display: none; }
   .center { height: auto; min-height: 480px; overflow: visible; flex: 0 0 auto; }
   .topBar { min-height: 50px; height: 50px; }
@@ -262,17 +262,17 @@
   height: 43px;
   min-width: 0;
   align-items: center;
-  gap: 13px;
-  border: 1px solid #323333;
-  background: #202121;
-  padding: 0 15px;
-  color: #999;
+  gap: 12px;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: #5a5a5a;
 }
-.topSearchField:focus-within { border-color: #757575; color: #dedede; }
+.topSearchField:focus-within { color: #ffffff; }
 .topSearchField > svg {
-  width: 19px;
-  height: 19px;
-  flex: 0 0 19px;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.4;
@@ -285,23 +285,25 @@
   border: 0;
   outline: none;
   background: transparent;
-  color: #f1f1f1;
-  font-size: 13px;
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 300;
 }
-.topSearchField input::placeholder { color: #858585; opacity: 1; }
+.topSearchField input::placeholder { color: #5a5a5a; font-size: 16px; opacity: 1; }
 .topSearchField input::-webkit-search-cancel-button { display: none; }
 .topSearchClear {
   display: inline-flex;
-  width: 23px;
-  height: 23px;
-  flex: 0 0 23px;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
   align-items: center;
   justify-content: center;
   padding: 0;
   border: 0;
   background: transparent;
-  color: #b2b2b2;
+  color: #5a5a5a;
 }
+.topSearchClear svg { width: 21px; height: 21px; }
 .topSearchClear:hover { color: #fff; }
 .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) {
   --audioflume-home-page-gutter: 0px;
@@ -322,14 +324,12 @@
   padding: 0;
 }
 .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
-  width: min(90%, 810px);
-  min-width: min(90%, 810px);
+  width: 100%;
+  min-width: 100%;
 }
 .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-media) {
   height: min(510px, max(330px, 31vw));
 }
-.featuredArtists :global(.audioflume-home-reference-shelf-arrow.is-left) { left: 14px; }
-.featuredArtists :global(.audioflume-home-reference-shelf-arrow.is-right) { right: 14px; }
 .featuredEmpty {
   display: flex;
   height: 360px;
@@ -358,15 +358,15 @@
 .findSimilarControl svg { width: 17px; height: 17px; }
 @media (max-width: 1050px) {
   .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
-    width: min(94%, 710px);
-    min-width: min(94%, 710px);
+    width: 100%;
+    min-width: 100%;
   }
   .rightTop { padding-inline: 13px; }
   .rightTop > span { font-size: 9px; }
 }
 @media (max-width: 760px) {
   .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
-    width: min(90vw, 650px);
-    min-width: min(90vw, 650px);
+    width: 100%;
+    min-width: 100%;
   }
 }
