@@ -2358,6 +2358,61 @@ body:has(.audioflume-home-landing)
   aspect-ratio: auto;
 }
 
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-home-reference-artist-shelf
+  .audioflume-home-reference-shelf-arrow {
+  display: none;
+}
+
+.audioflume-discover-artist-navigation {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+  height: 28px;
+  margin-top: 18px;
+}
+
+.audioflume-discover-artist-navigation button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.audioflume-discover-artist-navigation button:hover:not(:disabled) {
+  color: var(--text-secondary);
+}
+
+.audioflume-discover-artist-navigation button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.audioflume-discover-artist-navigation-progress {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.audioflume-discover-artist-navigation-progress span {
+  display: block;
+  width: 22px;
+  height: 2px;
+  background: var(--border-subtle);
+  transition: background 150ms ease;
+}
+
+.audioflume-discover-artist-navigation-progress span.is-active {
+  background: var(--text-primary);
+}
+
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media::after {
   background: linear-gradient(180deg, rgba(0, 0, 0, .2) 0%, transparent 45%, rgba(0, 0, 0, .48) 100%);
 }
