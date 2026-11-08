@@ -11,7 +11,7 @@
   top: var(--filmwave-header-height, 75px);
   z-index: calc(var(--filmwave-z-search-filter, 60) + 3);
   display: grid;
-  height: var(--filmwave-searchbar-height, 75px);
+  height: var(--filmwave-header-height, 60px);
   grid-template-columns:
     154px
     minmax(0, 1fr)
@@ -19,7 +19,7 @@
   align-items: stretch;
   transition: grid-template-columns 180ms ease;
   border-bottom: var(--filmwave-border-width) solid var(--border);
-  background: var(--bg-primary);
+  background: transparent;
   color: var(--text-primary);
   overscroll-behavior: none;
 }
@@ -104,7 +104,7 @@
   gap: 12px;
   margin: 12px 12px 12px 0;
   border-radius: 0;
-  background: var(--filmwave-search-surface);
+  background: transparent;
   padding: 0 16px;
   color: #5a5a5a;
 }
@@ -629,7 +629,7 @@ main
 :where(html.light, html[data-theme="light"])
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field {
-  background: #f5f5f5;
+  background: transparent;
   color: #a3a3a3;
 }
 
@@ -730,11 +730,11 @@ main
   > .fw-music-content-column
   > .fw-filter-panel-wrap {
   --audioflume-music-filter-height: calc(
-    100dvh - var(--filmwave-header-height, 60px) - 75px -
+    100dvh - var(--filmwave-header-height, 60px) - var(--filmwave-header-height, 60px) -
       var(--filmwave-sidebar-bottom-offset, 0px)
   );
   position: sticky !important;
-  top: calc(var(--filmwave-header-height, 60px) + 75px) !important;
+  top: calc(var(--filmwave-header-height, 60px) * 2) !important;
   bottom: auto !important;
   left: auto !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2) !important;
@@ -1920,8 +1920,8 @@ main
     .fw-filter-mobile-header {
     display: flex;
     width: 100%;
-    height: var(--filmwave-searchbar-height, 75px);
-    flex: 0 0 var(--filmwave-searchbar-height, 75px);
+    height: var(--filmwave-header-height, 60px);
+    flex: 0 0 var(--filmwave-header-height, 60px);
     align-items: center;
     justify-content: space-between;
     color: var(--text-primary);
