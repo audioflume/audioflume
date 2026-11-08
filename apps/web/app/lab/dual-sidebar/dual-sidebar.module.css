@@ -302,7 +302,7 @@
   border: 1px solid var(--exp-line);
   border-radius: 999px;
   background: var(--exp-panel);
-  padding: 0 10px 0 22px;
+  padding: 0 7px 0 22px;
 }
 .topSearchField {
   display: flex;
@@ -331,11 +331,11 @@
   outline: none;
   background: transparent;
   color: var(--exp-text);
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 300;
   letter-spacing: -.025em;
 }
-.topSearchField input::placeholder { color: var(--exp-muted); font-size: 18px; opacity: 1; }
+.topSearchField input::placeholder { color: var(--exp-muted); font-size: 16px; opacity: 1; }
 .topSearchField input::-webkit-search-cancel-button { display: none; }
 .topSearchClear {
   display: inline-flex;
@@ -410,44 +410,31 @@
 }
 .findSimilarControl:hover { color: var(--exp-accent); }
 .findSimilarControl svg {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  padding: 10px;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  padding: 9px;
   border-radius: 50%;
-  background: #626262;
+  background: #454545;
   color: #fff;
   transition: background 160ms ease, transform 160ms ease;
 }
-.findSimilarControl:hover svg { background: #777777; transform: scale(1.04); }
+.findSimilarControl:hover svg { background: #555555; transform: scale(1.04); }
 @media (max-width: 1050px) {
   .searchCombo { height: 48px; padding-left: 17px; padding-right: 7px; }
   .topSearchField { gap: 10px; }
-  .topSearchField input, .topSearchField input::placeholder { font-size: 15px; }
+  .topSearchField input, .topSearchField input::placeholder { font-size: 14px; }
   .topSearchField > svg { width: 20px; height: 20px; flex-basis: 20px; }
   .findSimilarControl { gap: 8px; font-size: 12px; padding-left: 6px; }
-  .findSimilarControl svg { width: 36px; height: 36px; flex-basis: 36px; padding: 9px; }
+  .findSimilarControl svg { width: 32px; height: 32px; flex-basis: 32px; padding: 8px; }
 }
 @media (max-width: 460px) {
-  .searchCombo { height: 44px; padding-left: 14px; padding-right: 5px; }
+  .searchCombo { height: 44px; padding-left: 14px; padding-right: 7px; }
   .topSearchField { gap: 7px; padding-right: 6px; }
   .topSearchField input, .topSearchField input::placeholder { font-size: 12px; }
   .topSearchField > svg { width: 17px; height: 17px; flex-basis: 17px; }
   .findSimilarControl { gap: 5px; padding-left: 4px; font-size: 11px; }
-  .findSimilarControl svg { width: 32px; height: 32px; flex-basis: 32px; padding: 8px; }
-}
-@media (max-width: 1050px) {
-  .topSearchField { gap: 10px; }
-  .topSearchField input, .topSearchField input::placeholder { font-size: 15px; }
-  .topSearchField > svg { width: 21px; height: 21px; flex-basis: 21px; }
-  .findSimilarControl { min-width: 0; padding-inline: 12px; font-size: 12px; gap: 7px; }
-}
-@media (max-width: 460px) {
-  .searchCombo { height: 54px; }
-  .topSearchField input, .topSearchField input::placeholder { font-size: 12px; }
-  .topSearchField > svg { width: 18px; height: 18px; flex-basis: 18px; }
-  .findSimilarControl { height: 40px; padding-inline: 9px; font-size: 11px; }
-  .findSimilarControl svg { width: 15px; height: 15px; flex-basis: 15px; }
+  .findSimilarControl svg { width: 28px; height: 28px; flex-basis: 28px; padding: 7px; }
 }
 @media (max-width: 1050px) {
   .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
