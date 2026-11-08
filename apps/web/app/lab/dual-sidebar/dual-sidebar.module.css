@@ -168,14 +168,14 @@
 .status { margin: 16px 0; color: var(--exp-muted); line-height: 1.5; }
 .status a { text-decoration: underline; color: var(--exp-muted); }
 .trackSection { margin-top: 43px; }
-.trackTable { width: 100%; padding-bottom: 35px; }
+.trackTable { display: flex; flex-direction: column; gap: 12px; width: 100%; padding-bottom: 35px; }
 .trackHead, .trackRow { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(90px, .9fr) minmax(65px, .48fr) 47px 38px; align-items: center; column-gap: 10px; }
 .trackHead { height: 32px; border-bottom: 1px solid var(--exp-line); color: var(--exp-muted); font-size: 9px; letter-spacing: .095em; text-transform: uppercase; }
 .trackHead > span:last-child { text-align: center; }
-.trackRow { min-height: 62px; border-bottom: 1px solid var(--exp-line); }
+.trackRow { min-height: 74px; }
 .trackRow:hover, .trackPlaying { background: var(--exp-hover); }
 .trackSong { display: flex; align-items: center; min-width: 0; gap: 12px; padding: 6px 0; border: 0; background: transparent; text-align: left; color: var(--exp-text); }
-.trackSong > img, .trackSong > .emptyArtwork { width: 38px; height: 38px; flex: 0 0 38px; object-fit: cover; }
+.trackSong > img, .trackSong > .emptyArtwork { width: 60px; height: 60px; flex: 0 0 60px; object-fit: cover; }
 .trackSong > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
 .trackWaveform { min-width: 0; height: 28px; display: flex; align-items: center; --waveform-color: var(--exp-wave-inactive); --waveform-progress: var(--exp-wave-progress); }
 .trackWaveform :global(.filmwave-song-waveform) { position: relative; width: 100%; height: 24px; display: block; --waveform-color: var(--exp-wave-inactive); --waveform-progress: var(--exp-wave-progress); }
@@ -197,7 +197,7 @@
 .accountMenu { position: fixed; z-index: 200; top: 73px; right: 8px; width: min(300px, calc(100vw - 24px)); letter-spacing: normal; }
 .accountSignIn { color: var(--exp-text); font-size: 13px; }
 .player { padding: 17px 17px 15px; border-bottom: 1px solid var(--exp-line); }
-.playerArtwork { position: relative; width: 100%; aspect-ratio: 1.75; overflow: hidden; background: var(--exp-cover-bg); }
+.playerArtwork { position: relative; width: 100%; aspect-ratio: 1.75; overflow: hidden; border-radius: 6px; background: var(--exp-cover-bg); }
 .playerArtwork > img, .playerArtwork > .emptyArtwork { width: 100%; height: 100%; object-fit: cover; }
 .playerArtwork::after { position: absolute; inset: 45% 0 0; background: linear-gradient(0deg, rgba(0,0,0,.55), transparent); content: ""; }
 .playerMeta { display: flex; align-items: center; justify-content: space-between; min-height: 75px; gap: 9px; padding: 15px 3px 9px; }
@@ -223,7 +223,7 @@
 .queueTabs span { display: inline-flex; align-items: center; padding: 0; color: var(--exp-muted); font-size: 12px; font-weight: 300; letter-spacing: normal; }
 .queueSearch { display: flex; align-items: center; gap: 9px; height: 44px; flex: 0 0 44px; margin: 0; padding: 0 18px; border-bottom: 1px solid var(--exp-line); color: var(--exp-muted); }
 .queueList { flex: none; min-height: 0; overflow: visible; padding: 5px 0 10px; }
-.queueItem { display: flex; align-items: center; gap: 11px; width: 100%; min-width: 0; min-height: 58px; padding: 7px 19px; border: 0; border-bottom: 1px solid var(--exp-line); background: transparent; color: var(--exp-text); text-align: left; }
+.queueItem { display: flex; align-items: center; gap: 11px; width: 100%; min-width: 0; min-height: 58px; padding: 7px 19px; border: 0; background: transparent; color: var(--exp-text); text-align: left; }
 .queueItem > img, .queueItem > .emptyArtwork { width: 38px; height: 38px; flex: 0 0 38px; object-fit: cover; }
 .queueItem > span:nth-child(2) { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
 .queueItem > em { margin-left: auto; color: var(--exp-muted); font-size: 10px; font-style: normal; }
@@ -234,6 +234,7 @@
   .root { grid-template-columns: 180px minmax(0, 1fr) 300px; }
   .topBar { padding-inline: 24px; }
   .mainScroll > :not(.featuredArtists) { margin-inline: 24px; }
+  .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) { margin-inline: 24px; }
   .releaseGrid { gap: 10px; }
   .rightTop { padding-inline: 13px; }
 }
@@ -241,6 +242,7 @@
   .root { grid-template-columns: 168px minmax(0, 1fr) 270px; }
   .topBarRight > span { display: none; }
   .mainScroll > :not(.featuredArtists) { margin-inline: 17px; }
+  .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) { margin-inline: 17px; }
   .topBar { padding-inline: 17px; }
   .releaseGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
   .hero h1 { font-size: 55px; }
@@ -338,9 +340,9 @@
   --audioflume-featured-artist-inset: 0px;
   --audioflume-featured-artist-gap: 12px;
   position: relative;
-  width: 100%;
+  width: auto;
   padding: 0;
-  margin: 0;
+  margin: 36px 36px 0;
   overflow: hidden;
   background: transparent;
 }
