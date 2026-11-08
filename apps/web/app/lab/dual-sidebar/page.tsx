@@ -58,10 +58,11 @@ function formatTime(seconds: number) {
   return Math.floor(seconds / 60) + ":" + String(Math.floor(seconds % 60)).padStart(2, "0");
 }
 
-type View = "discover" | "liked" | "trending" | "playlists" | "genres" | "artists";
+type View = "discover" | "library" | "liked" | "trending" | "playlists" | "genres" | "artists";
 
 const NAV: { id: View; label: string; icon: IconName }[] = [
   { id: "discover", label: "Discover", icon: "compass" },
+  { id: "library", label: "Music library", icon: "music" },
   { id: "liked", label: "Liked tracks", icon: "heart" },
   { id: "trending", label: "Top tracks", icon: "trend" },
   { id: "playlists", label: "Playlists", icon: "list" },
@@ -111,12 +112,12 @@ export default function DualSidebarExperiment() {
   const artists = useMemo(() => Array.from(new Set(playableSongs.map(song => song.artist))).filter(Boolean).slice(0, 18), [playableSongs]);
 
   const visibleSongs = useMemo(() => {
-    let pool = view === "liked" ? playableSongs.filter(song => favoriteIdSet.has(song.id)) : view === "trending" ? [...playableSongs].reverse() : recentSongs;
+    let pool = view === "library" ? songs : view === "liked" ? playableSongs.filter(song => favoriteIdSet.has(song.id)) : view === "trending" ? [...playableSongs].reverse() : recentSongs;
     if (activeGenre) pool = pool.filter(song => song.genres?.includes(activeGenre));
     const term = query.trim().toLowerCase();
     if (term) pool = pool.filter(song => [song.title, song.artist, ...(song.genres || [])].some(value => value.toLowerCase().includes(term)));
     return pool;
-  }, [view, playableSongs, favoriteIdSet, recentSongs, activeGenre, query]);
+  }, [view, songs, playableSongs, favoriteIdSet, recentSongs, activeGenre, query]);
 
   const featuredSong = recentSongs[0];
   const displaySong = currentSong || featuredSong || playableSongs[0];
@@ -126,13 +127,6 @@ export default function DualSidebarExperiment() {
   function play(song: Song, queue: Song[] = playableSongs) {
     if (currentSong?.id !== song.id) setQueue(queue);
     togglePlayPause(song);
-  }
-
-  function playSelection() {
-    if (!visibleSongs.length) return;
-    const list = shuffle ? [...visibleSongs].sort(() => Math.random() - 0.5) : visibleSongs;
-    setQueue(list);
-    togglePlayPause(list[0]);
   }
 
   const progress = displaySong && currentSong?.id === displaySong.id && duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
@@ -179,7 +173,7 @@ export default function DualSidebarExperiment() {
           />
         </header>
         <div className={styles.mainScroll}>
-          <section className={`${styles.featuredArtists} audioflume-home-mockup-artists is-discover-featured-artists`} aria-label="Featured artists">
+          {view !== "library" && <section className={`${styles.featuredArtists} audioflume-home-mockup-artists is-discover-featured-artists`} aria-label="Featured artists">
             {featuredArtistsLoading ? (
               <HomeArtistShelfSkeleton discoverLayout />
             ) : featuredArtists.length > 0 ? (
@@ -193,7 +187,7 @@ export default function DualSidebarExperiment() {
                 <button type="button" onClick={() => setFeaturedArtistIndex(index => (index + 1) % featuredArtists.length)} aria-label="Next featured artist"><Icon name="right" size={17}/></button>
               </div>
             )}
-          </section>
+          </section>}
 
           {view === "genres" ? <section className={styles.contentSection}>
             <div className={styles.sectionHeader}><h2>Explore by category</h2><span>Find the feeling</span></div>
@@ -206,10 +200,10 @@ export default function DualSidebarExperiment() {
             <div className={styles.playlistGrid}>{playlists.map(playlist => <Link href={"/playlists/" + playlist.id} key={playlist.id} className={styles.playlistTile}>{playlist.cover_image_url ? <img src={playlist.cover_image_url} alt="" /> : <span className={styles.emptyArtwork}><Icon name="music" size={24}/></span>}<strong>{playlist.name}</strong></Link>)}{!playlists.length && <p className={styles.status}>You have no saved playlists yet. <Link href="/playlists">Explore playlists</Link></p>}</div>
           </section> : null}
 
-          <section className={styles.contentSection}>
+          {view !== "library" && <section className={styles.contentSection}>
             <div className={styles.sectionHeader}>
               <div><h2>{view === "liked" ? "Your liked tracks" : activeGenre ? activeGenre + " tracks" : view === "trending" ? "Explore the catalogue" : "New releases"}</h2></div>
-              <div className={styles.sectionControls}><button onClick={playSelection} disabled={!visibleSongs.length} title="Play this selection"><Icon name="play" size={15}/></button><Link href="/music">View all <Icon name="arrow" size={14}/></Link></div>
+              <div className={styles.sectionControls}><Link href="/music">View all <Icon name="arrow" size={14}/></Link></div>
             </div>
             {loading && <p className={styles.status}>Loading the music library…</p>}
             {error && <p className={styles.status}>Could not load songs: {error}</p>}
@@ -220,14 +214,13 @@ export default function DualSidebarExperiment() {
                 <strong>{song.title}</strong><span>{song.artist}</span>
               </button>)}
             </div>
-          </section>
+          </section>}
 
           <section className={styles.contentSection + " " + styles.trackSection}>
-            <div className={styles.sectionHeader}><div><h2>Tracks worth hearing</h2></div><div className={styles.sectionControls}><button onClick={() => setShuffle(v => !v)} className={shuffle ? styles.controlActive : ""} aria-pressed={shuffle} title="Toggle shuffle"><Icon name="shuffle" size={16}/></button><Link href="/music">Explore all <Icon name="arrow" size={14}/></Link></div></div>
+            <div className={styles.sectionHeader}><div><h2>{view === "library" ? "Music library" : "Tracks worth hearing"}</h2></div><div className={styles.sectionControls}><Link href="/music">Explore all <Icon name="arrow" size={14}/></Link></div></div>
             <div className={styles.trackTable}>
-              <div className={styles.trackHead}><span>#</span><span>Title</span><span>Genre</span><span>Time</span><span>Like</span></div>
-              {visibleSongs.slice(0, 10).map((song, i) => <div className={styles.trackRow + (currentSong?.id === song.id ? " " + styles.trackPlaying : "")} key={song.id}>
-                <button className={styles.trackNumber} onClick={() => play(song, visibleSongs)} aria-label={"Play " + song.title}>{currentSong?.id === song.id && isPlaying ? <Icon name="pause" size={13}/> : String(i + 1).padStart(2, "0")}</button>
+              <div className={styles.trackHead}><span>Title</span><span>Genre</span><span>Time</span><span>Like</span></div>
+              {(view === "library" ? visibleSongs : visibleSongs.slice(0, 10)).map(song => <div className={styles.trackRow + (currentSong?.id === song.id ? " " + styles.trackPlaying : "")} key={song.id}>
                 <button className={styles.trackSong} onClick={() => play(song, visibleSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span></button>
                 <span className={styles.trackGenre}>{song.genres?.[0] || "—"}</span>
                 <span className={styles.trackTime}>{formatTime(song.duration || 0)}</span>
