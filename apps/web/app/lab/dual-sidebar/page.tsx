@@ -169,12 +169,38 @@ export default function DualSidebarExperiment() {
 
   return (
     <main className={styles.root} data-theme={theme}>
-      <aside className={styles.leftSidebar} aria-label="Experimental navigation">
+      <header className={styles.unifiedHeader}>
         <div className={styles.logoRow}>
           <Link href="/" className="filmwave-header-logo-action" aria-label="audioflume Home">
             <span className="filmwave-header-tonal-wordmark">audioflume</span>
           </Link>
         </div>
+        <div className={styles.topBar}>
+          <GlobalMusicSearchField
+            value={query}
+            onChange={setQuery}
+            onClear={() => setQuery("")}
+            className={styles.topSearchField}
+            clearButtonClassName={styles.topSearchClear}
+          />
+          <GlobalReferenceSearch className={styles.findSimilarControl} />
+        </div>
+        <div className={styles.rightTop}>
+          {user ? (
+            <div className={styles.accountWrap} ref={userMenuRef}>
+              <button className={styles.accountTrigger} type="button" aria-label="Open account menu" aria-expanded={userMenuOpen} onClick={() => setUserMenuOpen(open => !open)}>
+                <img className={styles.accountAvatar} src={user.imageUrl} alt="" />
+                <span className={styles.accountName}>{user.fullName || user.username || user.primaryEmailAddress?.emailAddress || "My account"}</span>
+                <Icon name="chevron" size={13} />
+              </button>
+              {userMenuOpen && <div className={styles.accountMenu}><UserMenu onClose={() => setUserMenuOpen(false)} /></div>}
+            </div>
+          ) : userLoaded ? (
+            <Link href="/sign-in" className={styles.accountSignIn}>Sign in</Link>
+          ) : null}
+        </div>
+      </header>
+      <aside className={styles.leftSidebar} aria-label="Experimental navigation">
         <div className={styles.leftScroll}>
           <div className={styles.navList}>
             {NAV.map(item => (
@@ -194,16 +220,6 @@ export default function DualSidebarExperiment() {
       </aside>
 
       <section className={styles.center}>
-        <header className={styles.topBar}>
-          <GlobalMusicSearchField
-            value={query}
-            onChange={setQuery}
-            onClear={() => setQuery("")}
-            className={styles.topSearchField}
-            clearButtonClassName={styles.topSearchClear}
-          />
-          <GlobalReferenceSearch className={styles.findSimilarControl} />
-        </header>
         <div className={styles.mainScroll}>
           {view !== "library" && <section className={`${styles.featuredArtists} audioflume-home-mockup-artists is-discover-featured-artists`} aria-label="Featured artists">
             {featuredArtistsLoading ? (
@@ -264,20 +280,6 @@ export default function DualSidebarExperiment() {
       </section>
 
       <aside className={styles.rightSidebar} aria-label="Music player and queue">
-        <div className={styles.rightTop}>
-          {user ? (
-            <div className={styles.accountWrap} ref={userMenuRef}>
-              <button className={styles.accountTrigger} type="button" aria-label="Open account menu" aria-expanded={userMenuOpen} onClick={() => setUserMenuOpen(open => !open)}>
-                <img className={styles.accountAvatar} src={user.imageUrl} alt="" />
-                <span className={styles.accountName}>{user.fullName || user.username || user.primaryEmailAddress?.emailAddress || "My account"}</span>
-                <Icon name="chevron" size={13} />
-              </button>
-              {userMenuOpen && <div className={styles.accountMenu}><UserMenu onClose={() => setUserMenuOpen(false)} /></div>}
-            </div>
-          ) : userLoaded ? (
-            <Link href="/sign-in" className={styles.accountSignIn}>Sign in</Link>
-          ) : null}
-        </div>
         <div className={styles.player}>
           <div className={styles.playerArtwork}><Cover song={displaySong}/></div>
           <div className={styles.playerMeta}><div><h2>{displaySong?.title || "Find something to play"}</h2><p>{displaySong?.artist || "Explore Audioflume's catalogue"}</p></div>{displaySong && <button className={styles.likeButton + (favoriteIdSet.has(displaySong.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(displaySong)} aria-label="Toggle favorite"><Icon name="heart" size={19}/></button>}</div>
