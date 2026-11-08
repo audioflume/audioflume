@@ -2668,13 +2668,13 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
   height: 257px;
   aspect-ratio: auto;
-  border-radius: 0;
+  border-radius: 10px;
 }
 
 .audioflume-home-mockup-curated-card {
   height: 275px;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 10px;
   background: var(--bg-tertiary);
   aspect-ratio: 2.38 / 1;
   scroll-snap-align: none !important;
@@ -3034,7 +3034,7 @@ body:has(.audioflume-home-landing)
   min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
   height: 257px;
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 10px;
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
