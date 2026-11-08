@@ -2057,6 +2057,15 @@ body:has(.audioflume-home-landing)
   background: color-mix(in srgb, var(--bg-tertiary) 87%, var(--text-primary) 13%);
 }
 
+:where(html.light, html[data-theme="light"]) .audioflume-discover-category-card {
+  background: #e5e5dd;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-discover-category-card:hover,
+:where(html.light, html[data-theme="light"]) .audioflume-discover-category-card:focus-visible {
+  background: color-mix(in srgb, #e5e5dd 87%, var(--text-primary) 13%);
+}
+
 .audioflume-discover-category-card > span {
   min-width: 0;
   overflow-wrap: anywhere;
