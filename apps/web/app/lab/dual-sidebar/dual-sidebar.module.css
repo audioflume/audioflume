@@ -429,12 +429,6 @@
   .findSimilarControl { gap: 5px; padding-inline: 8px; font-size: 11px; }
   .findSimilarControl svg { width: 15px; height: 15px; flex-basis: 15px; }
 }
-  .topSearchField { gap: 7px; padding-right: 6px; }
-  .topSearchField input, .topSearchField input::placeholder { font-size: 12px; }
-  .topSearchField > svg { width: 17px; height: 17px; flex-basis: 17px; }
-  .findSimilarControl { gap: 5px; padding-left: 4px; font-size: 11px; }
-  .findSimilarControl svg { width: 28px; height: 28px; flex-basis: 28px; padding: 7px; }
-}
 @media (max-width: 1050px) {
   .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
     width: 100%;
