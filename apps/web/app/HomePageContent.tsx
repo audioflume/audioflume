@@ -494,7 +494,7 @@ function DiscoverArtistNavigation({ artistCount }: { artistCount: number }) {
     canPrev: false,
     canNext: false,
     current: 0,
-    segments: 1,
+    segments: 4,
   });
 
   useEffect(() => {
@@ -506,7 +506,7 @@ function DiscoverArtistNavigation({ artistCount }: { artistCount: number }) {
 
     const update = () => {
       const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-      const segments = Math.max(1, Math.min(6, Math.ceil(scroller.scrollWidth / scroller.clientWidth)));
+      const segments = 4;
       const current = maxScroll > 0
         ? Math.round((scroller.scrollLeft / maxScroll) * (segments - 1))
         : 0;
