@@ -78,7 +78,7 @@ export default function DualSidebarExperiment() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
   const { playlists } = usePlaylists();
-  const { favoriteIdSet, toggleFavorite } = useFavorites();
+  const { favoriteIds, favoriteIdSet, toggleFavorite } = useFavorites();
   const { currentSong, isPlaying, setQueue, togglePlayPause, navigateTrack, seekTo, volume, setVolume } = usePlayer();
   const { currentTime, duration } = usePlayerProgress();
 
@@ -88,7 +88,6 @@ export default function DualSidebarExperiment() {
   const [featuredArtists, setFeaturedArtists] = useState<HomeArtist[]>([]);
   const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
   const [featuredArtistIndex, setFeaturedArtistIndex] = useState(0);
-  const [rightTab, setRightTab] = useState<"queue" | "liked">("queue");
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
   const [shuffle, setShuffle] = useState(false);
 
@@ -142,8 +141,10 @@ export default function DualSidebarExperiment() {
 
   const featuredSong = recentSongs[0];
   const displaySong = currentSong || featuredSong || playableSongs[0];
-  const sidebarSongs = (rightTab === "liked" ? playableSongs.filter(song => favoriteIdSet.has(song.id)) : recentSongs)
-    .filter(song => [song.title, song.artist].some(v => v.toLowerCase().includes(sidebarQuery.toLowerCase()))).slice(0, 18);
+  const sidebarSongs = favoriteIds
+    .map(id => playableSongs.find(song => song.id === id))
+    .filter((song): song is Song => Boolean(song))
+    .filter(song => [song.title, song.artist].some(v => v.toLowerCase().includes(sidebarQuery.toLowerCase())));
 
   function play(song: Song, queue: Song[] = playableSongs) {
     if (currentSong?.id !== song.id) setQueue(queue);
@@ -274,9 +275,9 @@ export default function DualSidebarExperiment() {
           <div className={styles.playerButtons}><button className={shuffle ? styles.controlActive : ""} aria-pressed={shuffle} onClick={() => setShuffle(v => !v)} aria-label="Shuffle"><Icon name="shuffle" size={18}/></button><button onClick={() => navigateTrack("prev")} aria-label="Previous track"><Icon name="prev" size={21}/></button><button className={styles.mainPlay} onClick={() => displaySong && play(displaySong, recentSongs)} disabled={!displaySong} aria-label={isPlaying ? "Pause" : "Play"}><Icon name={currentSong?.id === displaySong?.id && isPlaying ? "pause" : "play"} size={22}/></button><button onClick={() => navigateTrack("next")} aria-label="Next track"><Icon name="next" size={21}/></button><button title="Repeat is controlled by the main player" disabled><Icon name="repeat" size={18}/></button></div>
           <div className={styles.volumeRow}><Icon name="volume" size={16}/><input aria-label="Volume" type="range" min={0} max={1} step={0.01} value={volume} onChange={event => setVolume(Number(event.target.value))}/><span>{Math.round(volume * 100)}%</span></div>
         </div>
-        <div className={styles.queuePanel}><div className={styles.queueTabs}><button className={rightTab === "queue" ? styles.queueActive : ""} onClick={() => setRightTab("queue")}>Discovery queue</button><button className={rightTab === "liked" ? styles.queueActive : ""} onClick={() => setRightTab("liked")}>Liked</button></div>
+        <div className={styles.queuePanel}><div className={styles.queueTabs}><span className={styles.queueActive}>Liked songs</span></div>
           <div className={styles.queueSearch}><Icon name="search" size={15}/><input value={sidebarQuery} placeholder="Find a song..." onChange={e => setSidebarQuery(e.target.value)} aria-label="Search sidebar tracks"/></div>
-          <div className={styles.queueList}>{sidebarSongs.map(song => <button key={song.id} className={styles.queueItem + (song.id === currentSong?.id ? " " + styles.queueCurrent : "")} onClick={() => play(song, sidebarSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span><em>{formatTime(song.duration || 0)}</em></button>)}{!sidebarSongs.length && <p className={styles.queueEmpty}>No tracks here yet.</p>}</div>
+          <div className={styles.queueList}>{sidebarSongs.map(song => <button key={song.id} className={styles.queueItem + (song.id === currentSong?.id ? " " + styles.queueCurrent : "")} onClick={() => play(song, sidebarSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span><em>{formatTime(song.duration || 0)}</em></button>)}{!sidebarSongs.length && <p className={styles.queueEmpty}>No liked songs found.</p>}</div>
         </div>
       </aside>
     </main>
