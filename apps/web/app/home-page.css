@@ -2060,8 +2060,8 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-category-card > span {
   min-width: 0;
   overflow-wrap: anywhere;
-  font-size: clamp(19px, 1.8vw, 28px);
-  font-weight: 300;
+  font-size: clamp(19px, 1vw, 28px);
+  font-weight: 500;
   letter-spacing: -.035em;
   line-height: 1.05;
 }
