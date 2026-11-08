@@ -2054,7 +2054,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-compact-song-main {
   display: grid;
-  grid-template-columns: 36px 50px minmax(0, 1fr);
+  grid-template-columns: 50px minmax(0, 1fr) 36px;
   align-items: center;
   gap: 12px;
   min-width: 0;
@@ -2207,7 +2207,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover loading states reuse the same grids and shelf card dimensions as live content. */
 .audioflume-discover-skeleton-compact-song {
-  grid-template-columns: 36px 50px minmax(0, 1fr);
+  grid-template-columns: 50px minmax(0, 1fr) 36px;
   gap: 12px;
   pointer-events: none;
 }
