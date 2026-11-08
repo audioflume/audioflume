@@ -14,6 +14,8 @@ import { useFavorites } from "@/context/FavoritesContext";
 import type { Song } from "@/lib/types";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
+import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
+import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import { HomeArtistShelf, HomeArtistShelfSkeleton, type HomeArtist } from "@/app/HomePageContent";
 import "@/app/home-page.css";
 import styles from "./dual-sidebar.module.css";
@@ -232,9 +234,20 @@ export default function DualSidebarExperiment() {
               <div className={styles.featuredEmpty}>Featured artists are currently unavailable.</div>
             )}
             {featuredArtists.length > 1 && !featuredArtistsLoading && (
-              <div className={styles.heroArrows} aria-label="Featured artist navigation">
-                <button type="button" onClick={() => setFeaturedArtistIndex(index => (index - 1 + featuredArtists.length) % featuredArtists.length)} aria-label="Previous featured artist"><Icon name="left" size={17}/></button>
-                <button type="button" onClick={() => setFeaturedArtistIndex(index => (index + 1) % featuredArtists.length)} aria-label="Next featured artist"><Icon name="right" size={17}/></button>
+              <div className="audioflume-discover-artist-navigation" aria-label="Featured artists navigation">
+                <div className="audioflume-discover-artist-navigation-progress" aria-hidden="true">
+                  {Array.from({ length: 4 }, (_, index) => (
+                    <span key={index} className={index === Math.round((Math.min(featuredArtistIndex, featuredArtists.length - 1) / (featuredArtists.length - 1)) * 3) ? "is-active" : ""} />
+                  ))}
+                </div>
+                <div className="audioflume-discover-artist-navigation-arrows">
+                  <button type="button" onClick={() => setFeaturedArtistIndex(index => Math.max(0, index - 1))} disabled={featuredArtistIndex === 0} aria-label="Previous featured artists">
+                    <ChevronLeftIcon size={18} />
+                  </button>
+                  <button type="button" onClick={() => setFeaturedArtistIndex(index => Math.min(featuredArtists.length - 1, index + 1))} disabled={featuredArtistIndex >= featuredArtists.length - 1} aria-label="Next featured artists">
+                    <ChevronRightIcon size={18} />
+                  </button>
+                </div>
               </div>
             )}
           </section>}
