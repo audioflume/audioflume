@@ -205,16 +205,16 @@ export default function DualSidebarExperiment() {
           <div className={styles.navList}>
             {NAV.map(item => (
               <button key={item.id} className={styles.navItem + (view === item.id ? " " + styles.navActive : "")} onClick={() => { setView(item.id); setActiveGenre(null); }}>
-                <Icon name={item.icon} size={17} /><span>{item.label}</span>{view === item.id && <Icon name="chevron" size={13} />}
+                <span>{item.label}</span>
               </button>
             ))}
           </div>
           <div className={styles.sidebarSection}>
-            <div className={styles.sideSectionHeading}><span>PLAYLISTS</span><Link href="/playlists" title="Manage playlists"><Icon name="plus" size={16}/></Link></div>
+            <div className={styles.sideSectionHeading}><span>PLAYLISTS</span><Link href="/playlists" title="Manage playlists">Manage</Link></div>
             {playlists.length ? <div className={styles.playlistLinks}>{playlists.slice(0, 7).map(playlist => (
-              <Link key={playlist.id} href={"/playlists/" + playlist.id} className={styles.playlistLink}><Icon name="music" size={14}/><span>{playlist.name}</span></Link>
+              <Link key={playlist.id} href={"/playlists/" + playlist.id} className={styles.playlistLink}><span>{playlist.name}</span></Link>
             ))}</div> : <p className={styles.emptyPlaylists}>Your saved playlists will appear here.</p>}
-            <Link href="/playlists" className={styles.createButton}>Browse playlists <Icon name="arrow" size={13}/></Link>
+            <Link href="/playlists" className={styles.createButton}>Browse playlists</Link>
           </div>
         </div>
       </aside>
