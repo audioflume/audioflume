@@ -34,7 +34,7 @@ export default function SidebarRenderer({
   }, [initialCollapsed]);
 
   if (isAdminPage) return <AdminSidebar />;
-  if (isDiscoverPage) return null;
+  if (isDiscoverPage || pathname === "/lab/dual-sidebar") return null;
 
   return (
     <>
