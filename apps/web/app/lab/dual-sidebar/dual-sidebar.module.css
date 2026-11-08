@@ -297,7 +297,7 @@
   display: flex;
   width: 100%;
   min-width: 0;
-  height: 64px;
+  height: 52px;
   align-items: center;
   border: 1px solid var(--exp-line);
   border-radius: 999px;
@@ -394,7 +394,7 @@
   align-items: center;
   justify-content: center;
   gap: 14px;
-  height: 52px;
+  height: 44px;
   align-self: center;
   border: 0;
   border-radius: 999px;
@@ -410,31 +410,31 @@
 }
 .findSimilarControl:hover { color: var(--exp-accent); }
 .findSimilarControl svg {
-  width: 48px;
-  height: 48px;
-  flex: 0 0 48px;
-  padding: 12px;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  padding: 10px;
   border-radius: 50%;
-  background: #2869ca;
+  background: #626262;
   color: #fff;
   transition: background 160ms ease, transform 160ms ease;
 }
-.findSimilarControl:hover svg { background: #3479e1; transform: scale(1.04); }
+.findSimilarControl:hover svg { background: #777777; transform: scale(1.04); }
 @media (max-width: 1050px) {
-  .searchCombo { height: 58px; padding-left: 17px; padding-right: 7px; }
+  .searchCombo { height: 48px; padding-left: 17px; padding-right: 7px; }
   .topSearchField { gap: 10px; }
   .topSearchField input, .topSearchField input::placeholder { font-size: 15px; }
   .topSearchField > svg { width: 20px; height: 20px; flex-basis: 20px; }
   .findSimilarControl { gap: 8px; font-size: 12px; padding-left: 6px; }
-  .findSimilarControl svg { width: 42px; height: 42px; flex-basis: 42px; padding: 10px; }
+  .findSimilarControl svg { width: 36px; height: 36px; flex-basis: 36px; padding: 9px; }
 }
 @media (max-width: 460px) {
-  .searchCombo { height: 52px; padding-left: 14px; padding-right: 5px; }
+  .searchCombo { height: 44px; padding-left: 14px; padding-right: 5px; }
   .topSearchField { gap: 7px; padding-right: 6px; }
   .topSearchField input, .topSearchField input::placeholder { font-size: 12px; }
   .topSearchField > svg { width: 17px; height: 17px; flex-basis: 17px; }
   .findSimilarControl { gap: 5px; padding-left: 4px; font-size: 11px; }
-  .findSimilarControl svg { width: 38px; height: 38px; flex-basis: 38px; padding: 9px; }
+  .findSimilarControl svg { width: 32px; height: 32px; flex-basis: 32px; padding: 8px; }
 }
 @media (max-width: 1050px) {
   .topSearchField { gap: 10px; }
