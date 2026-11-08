@@ -203,7 +203,7 @@
 .accountMenu { position: fixed; z-index: 200; top: 73px; right: 8px; width: min(300px, calc(100vw - 24px)); letter-spacing: normal; }
 .accountSignIn { color: var(--exp-text); font-size: 13px; }
 .player { padding: 17px 17px 15px; border-bottom: 1px solid var(--exp-line); }
-.playerArtwork { position: relative; width: 100%; aspect-ratio: 1.75; overflow: hidden; border-radius: 6px; background: var(--exp-cover-bg); }
+.playerArtwork { position: relative; width: 100%; aspect-ratio: 1.75; overflow: hidden; background: var(--exp-cover-bg); }
 .playerArtwork > img, .playerArtwork > .emptyArtwork { width: 100%; height: 100%; object-fit: cover; }
 .playerArtwork::after { position: absolute; inset: 45% 0 0; background: linear-gradient(0deg, rgba(0,0,0,.55), transparent); content: ""; }
 .playerMeta { display: flex; align-items: center; justify-content: space-between; min-height: 75px; gap: 9px; padding: 15px 3px 9px; }
@@ -297,21 +297,32 @@
 
 
 /* Isolated three-column adaptations of the website's existing search field and Discover artist shelf. */
-.topSearchField {
+.searchCombo {
   display: flex;
   flex: 1;
   min-width: 0;
   height: 44px;
   align-items: center;
-  gap: 12px;
+  overflow: hidden;
   border: 1px solid transparent;
   border-radius: 6px;
   background: var(--exp-panel);
+  transition: border-color 160ms ease;
+}
+.searchCombo:focus-within { border-color: var(--exp-muted); }
+.topSearchField {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  align-items: center;
+  gap: 12px;
+  border: 0;
+  background: transparent;
   padding: 0 14px;
   color: var(--exp-muted);
-  transition: border-color 160ms ease, background 160ms ease;
 }
-.topSearchField:focus-within { border-color: var(--exp-muted); color: var(--exp-text); }
+.topSearchField:focus-within { color: var(--exp-text); }
 .topSearchField > svg { width: 18px; height: 18px; flex: 0 0 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
 .topSearchField input { min-width: 0; width: 100%; height: 100%; border: 0; outline: none; background: transparent; color: var(--exp-text); font-size: 13px; font-weight: 400; }
 .topSearchField input::placeholder { color: var(--exp-muted); font-size: 13px; opacity: 1; }
@@ -326,7 +337,7 @@
   position: relative;
   width: auto;
   padding: 0;
-  margin: 36px 36px 0;
+  margin: 12px 36px 0;
   overflow: hidden;
   border-radius: 6px;
   background: transparent;
@@ -361,9 +372,9 @@
   justify-content: center;
   gap: 8px;
   flex-shrink: 0;
-  min-height: 44px;
-  border: 1px solid var(--exp-line);
-  border-radius: 6px;
+  height: 100%;
+  border: 0;
+  border-left: 1px solid var(--exp-line);
   padding: 0 14px;
   background: transparent;
   color: var(--exp-text);
@@ -374,7 +385,7 @@
   cursor: pointer;
   white-space: nowrap;
 }
-.findSimilarControl:hover { background: var(--exp-panel); }
+.findSimilarControl:hover { background: var(--exp-hover); }
 .findSimilarControl svg { width: 16px; height: 16px; flex: 0 0 16px; }
 @media (max-width: 1050px) {
   .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
