@@ -1891,7 +1891,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-artists.is-discover-featured-artists
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-arrow {
-  top: 255px;
+  top: 220px;
 }
 
 .audioflume-home-mockup-section-label {
@@ -2354,7 +2354,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
   width: 100%;
-  height: 510px;
+  height: 440px;
   aspect-ratio: auto;
 }
 
