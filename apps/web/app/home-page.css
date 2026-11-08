@@ -2366,11 +2366,11 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-artist-navigation {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: space-between;
   gap: 24px;
   height: 28px;
-  margin-top: var(--audioflume-featured-artist-gap);
+  margin-top: 10px;
 }
 
 .audioflume-discover-artist-navigation-arrows {
@@ -2382,7 +2382,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-artist-navigation button {
   display: inline-flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   width: 28px;
   height: 28px;
