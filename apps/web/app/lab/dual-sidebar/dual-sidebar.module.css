@@ -75,7 +75,7 @@
 .leftBottom a { display: flex; align-items: center; gap: 3px; margin-left: auto; color: #a5a5a5!important; }
 .leftBottom a:hover { color: #fff!important; }
 .center { display: flex; min-width: 0; min-height: 0; height: 100%; overflow-y: auto; flex-direction: column; background: #171818; }
-.topBar { position: sticky; top: 0; z-index: 2; display: flex; align-items: center; height: 73px; min-height: 73px; padding: 0 36px; border-bottom: 1px solid #292929; background: #151616; }
+.topBar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; height: 73px; min-height: 73px; padding: 0 36px; border-bottom: 1px solid #292929; background: #151616; }
 .breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 11px; }
 .breadcrumb > span { color: #777; letter-spacing: .055em; }
 .breadcrumb svg { color: #686868; }
@@ -141,13 +141,11 @@
 .status a { text-decoration: underline; color: #bbb; }
 .trackSection { margin-top: 43px; }
 .trackTable { width: 100%; padding-bottom: 35px; }
-.trackHead, .trackRow { display: grid; grid-template-columns: 30px minmax(0, 1fr) minmax(65px, .48fr) 47px 38px; align-items: center; column-gap: 10px; }
-.trackHead { height: 32px; border-bottom: 1px solid #333; color: #6f6f6f; font-size: 9px; letter-spacing: .095em; }
+.trackHead, .trackRow { display: grid; grid-template-columns: minmax(0, 1fr) minmax(65px, .48fr) 47px 38px; align-items: center; column-gap: 10px; }
+.trackHead { height: 32px; border-bottom: 1px solid #333; color: #6f6f6f; font-size: 9px; letter-spacing: .095em; text-transform: uppercase; }
 .trackHead > span:last-child { text-align: center; }
 .trackRow { min-height: 62px; border-bottom: 1px solid #292929; }
 .trackRow:hover, .trackPlaying { background: #1d1e1e; }
-.trackNumber { padding: 0; border: 0; background: transparent; color: #8b8b8b; font-size: 11px; }
-.trackPlaying .trackNumber { color: var(--exp-accent); }
 .trackSong { display: flex; align-items: center; min-width: 0; gap: 12px; padding: 6px 0; border: 0; background: transparent; text-align: left; color: #ddd; }
 .trackSong > img, .trackSong > .emptyArtwork { width: 38px; height: 38px; flex: 0 0 38px; object-fit: cover; }
 .trackSong > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
@@ -218,8 +216,8 @@
   .topBar { padding-inline: 17px; }
   .releaseGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
   .hero h1 { font-size: 55px; }
-  .trackHead, .trackRow { grid-template-columns: 22px minmax(0,1fr) 42px 28px; gap: 8px; }
-  .trackHead > span:nth-child(3), .trackGenre { display: none; }
+  .trackHead, .trackRow { grid-template-columns: minmax(0,1fr) 42px 28px; gap: 8px; }
+  .trackHead > span:nth-child(2), .trackGenre { display: none; }
 }
 @media (max-width: 760px) {
   .root { display: flex; flex-direction: column; overflow: auto; }
@@ -249,8 +247,8 @@
   .releaseGrid, .artistGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .genreGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .playlistGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .trackHead, .trackRow { grid-template-columns: 20px minmax(0,1fr) 32px; }
-  .trackHead > span:nth-child(4), .trackTime { display: none; }
+  .trackHead, .trackRow { grid-template-columns: minmax(0,1fr) 32px; }
+  .trackHead > span:nth-child(3), .trackTime { display: none; }
   .topBarRight { display: none; }
   .bottomNote span { display: none; }
 }
