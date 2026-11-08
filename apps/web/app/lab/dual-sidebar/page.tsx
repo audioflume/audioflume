@@ -81,6 +81,7 @@ export default function DualSidebarExperiment() {
   const [sidebarQuery, setSidebarQuery] = useState("");
   const [featuredArtists, setFeaturedArtists] = useState<HomeArtist[]>([]);
   const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
+  const [featuredArtistIndex, setFeaturedArtistIndex] = useState(0);
   const [rightTab, setRightTab] = useState<"queue" | "liked">("queue");
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
   const [shuffle, setShuffle] = useState(false);
@@ -149,12 +150,12 @@ export default function DualSidebarExperiment() {
           <div className={styles.navList}>
             {NAV.map(item => (
               <button key={item.id} className={styles.navItem + (view === item.id ? " " + styles.navActive : "")} onClick={() => { setView(item.id); setActiveGenre(null); }}>
-                <Icon name={item.icon} size={17} /><span>{item.label}</span>{view === item.id && <i />}
+                <Icon name={item.icon} size={17} /><span>{item.label}</span>{view === item.id && <Icon name="chevron" size={13} />}
               </button>
             ))}
           </div>
           <div className={styles.sidebarSection}>
-            <div className={styles.sideSectionHeading}><span>YOUR PLAYLISTS</span><Link href="/playlists" title="Manage playlists"><Icon name="plus" size={16}/></Link></div>
+            <div className={styles.sideSectionHeading}><span>Your playlists</span><Link href="/playlists" title="Manage playlists"><Icon name="plus" size={16}/></Link></div>
             {playlists.length ? <div className={styles.playlistLinks}>{playlists.slice(0, 7).map(playlist => (
               <Link key={playlist.id} href={"/playlists/" + playlist.id} className={styles.playlistLink}><Icon name="music" size={14}/><span>{playlist.name}</span></Link>
             ))}</div> : <p className={styles.emptyPlaylists}>Your saved playlists will appear here.</p>}
@@ -182,9 +183,15 @@ export default function DualSidebarExperiment() {
             {featuredArtistsLoading ? (
               <HomeArtistShelfSkeleton discoverLayout />
             ) : featuredArtists.length > 0 ? (
-              <HomeArtistShelf artists={featuredArtists} homeFlashImages={[]} discoverLayout />
+              <HomeArtistShelf artists={[featuredArtists[featuredArtistIndex % featuredArtists.length]]} homeFlashImages={[]} discoverLayout />
             ) : (
               <div className={styles.featuredEmpty}>Featured artists are currently unavailable.</div>
+            )}
+            {featuredArtists.length > 1 && !featuredArtistsLoading && (
+              <div className={styles.heroArrows} aria-label="Featured artist navigation">
+                <button type="button" onClick={() => setFeaturedArtistIndex(index => (index - 1 + featuredArtists.length) % featuredArtists.length)} aria-label="Previous featured artist"><Icon name="left" size={17}/></button>
+                <button type="button" onClick={() => setFeaturedArtistIndex(index => (index + 1) % featuredArtists.length)} aria-label="Next featured artist"><Icon name="right" size={17}/></button>
+              </div>
             )}
           </section>
 
@@ -218,7 +225,7 @@ export default function DualSidebarExperiment() {
           <section className={styles.contentSection + " " + styles.trackSection}>
             <div className={styles.sectionHeader}><div><h2>Tracks worth hearing</h2></div><div className={styles.sectionControls}><button onClick={() => setShuffle(v => !v)} className={shuffle ? styles.controlActive : ""} aria-pressed={shuffle} title="Toggle shuffle"><Icon name="shuffle" size={16}/></button><Link href="/music">Explore all <Icon name="arrow" size={14}/></Link></div></div>
             <div className={styles.trackTable}>
-              <div className={styles.trackHead}><span>#</span><span>TITLE</span><span>GENRE</span><span>TIME</span><span>LIKE</span></div>
+              <div className={styles.trackHead}><span>#</span><span>Title</span><span>Genre</span><span>Time</span><span>Like</span></div>
               {visibleSongs.slice(0, 10).map((song, i) => <div className={styles.trackRow + (currentSong?.id === song.id ? " " + styles.trackPlaying : "")} key={song.id}>
                 <button className={styles.trackNumber} onClick={() => play(song, visibleSongs)} aria-label={"Play " + song.title}>{currentSong?.id === song.id && isPlaying ? <Icon name="pause" size={13}/> : String(i + 1).padStart(2, "0")}</button>
                 <button className={styles.trackSong} onClick={() => play(song, visibleSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span></button>
@@ -228,24 +235,24 @@ export default function DualSidebarExperiment() {
               </div>)}
             </div>
           </section>
-          <div className={styles.bottomNote}>AUDIOFLUME / HUMAN MADE MUSIC FOR MOVING IMAGES <span>EXPERIMENTAL INTERFACE · 01</span></div>
+          <div className={styles.bottomNote}>Audioflume / Human made music for moving images <span>Experimental interface · 01</span></div>
         </div>
       </section>
 
       <aside className={styles.rightSidebar} aria-label="Music player and queue">
-        <div className={styles.rightTop}><span>FIND SIMILAR SONGS</span><GlobalReferenceSearch className={styles.findSimilarControl} /></div>
+        <div className={styles.rightTop}><GlobalReferenceSearch className={styles.findSimilarControl} /></div>
         <div className={styles.player}>
-          <div className={styles.playerArtwork}><Cover song={displaySong}/><span className={styles.artOverlay}>AUDIOFLUME RADIO</span></div>
-          <div className={styles.playerMeta}><div><span className={styles.playerEyebrow}>CURRENT TRACK</span><h2>{displaySong?.title || "Find something to play"}</h2><p>{displaySong?.artist || "Explore Audioflume's catalogue"}</p></div>{displaySong && <button className={styles.likeButton + (favoriteIdSet.has(displaySong.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(displaySong)} aria-label="Toggle favorite"><Icon name="heart" size={19}/></button>}</div>
+          <div className={styles.playerArtwork}><Cover song={displaySong}/><span className={styles.artOverlay}>Audioflume radio</span></div>
+          <div className={styles.playerMeta}><div><span className={styles.playerEyebrow}>Current track</span><h2>{displaySong?.title || "Find something to play"}</h2><p>{displaySong?.artist || "Explore Audioflume's catalogue"}</p></div>{displaySong && <button className={styles.likeButton + (favoriteIdSet.has(displaySong.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(displaySong)} aria-label="Toggle favorite"><Icon name="heart" size={19}/></button>}</div>
           <div className={styles.playerProgress}><input type="range" min={0} max={100} step={0.1} value={progress} disabled={!currentSong} onChange={event => currentSong && seekTo(currentSong, Number(event.target.value) / 100, isPlaying)} style={{ "--range-progress": String(progress) + "%" } as CSSProperties} aria-label="Playback position"/><div><span>{formatTime(currentSong ? currentTime : 0)}</span><span>{formatTime(shownDuration)}</span></div></div>
           <div className={styles.playerButtons}><button className={shuffle ? styles.controlActive : ""} aria-pressed={shuffle} onClick={() => setShuffle(v => !v)} aria-label="Shuffle"><Icon name="shuffle" size={18}/></button><button onClick={() => navigateTrack("prev")} aria-label="Previous track"><Icon name="prev" size={21}/></button><button className={styles.mainPlay} onClick={() => displaySong && play(displaySong, recentSongs)} disabled={!displaySong} aria-label={isPlaying ? "Pause" : "Play"}><Icon name={currentSong?.id === displaySong?.id && isPlaying ? "pause" : "play"} size={22}/></button><button onClick={() => navigateTrack("next")} aria-label="Next track"><Icon name="next" size={21}/></button><button title="Repeat is controlled by the main player" disabled><Icon name="repeat" size={18}/></button></div>
           <div className={styles.volumeRow}><Icon name="volume" size={16}/><input aria-label="Volume" type="range" min={0} max={1} step={0.01} value={volume} onChange={event => setVolume(Number(event.target.value))}/><span>{Math.round(volume * 100)}%</span></div>
         </div>
-        <div className={styles.queuePanel}><div className={styles.queueTabs}><button className={rightTab === "queue" ? styles.queueActive : ""} onClick={() => setRightTab("queue")}>DISCOVERY QUEUE</button><button className={rightTab === "liked" ? styles.queueActive : ""} onClick={() => setRightTab("liked")}>LIKED</button></div>
+        <div className={styles.queuePanel}><div className={styles.queueTabs}><button className={rightTab === "queue" ? styles.queueActive : ""} onClick={() => setRightTab("queue")}>Discovery queue</button><button className={rightTab === "liked" ? styles.queueActive : ""} onClick={() => setRightTab("liked")}>Liked</button></div>
           <div className={styles.queueSearch}><Icon name="search" size={15}/><input value={sidebarQuery} placeholder="Find a song..." onChange={e => setSidebarQuery(e.target.value)} aria-label="Search sidebar tracks"/></div>
           <div className={styles.queueList}>{sidebarSongs.map(song => <button key={song.id} className={styles.queueItem + (song.id === currentSong?.id ? " " + styles.queueCurrent : "")} onClick={() => play(song, sidebarSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span><em>{formatTime(song.duration || 0)}</em></button>)}{!sidebarSongs.length && <p className={styles.queueEmpty}>No tracks here yet.</p>}</div>
         </div>
-        <div className={styles.rightFooter}><Link href="/playlists">YOUR PLAYLISTS <Icon name="arrow" size={13}/></Link><Link href="/discover">BACK TO AUDIOFLUME <Icon name="arrow" size={13}/></Link></div>
+        <div className={styles.rightFooter}><Link href="/playlists">Your playlists <Icon name="arrow" size={13}/></Link><Link href="/discover">Back to Audioflume <Icon name="arrow" size={13}/></Link></div>
       </aside>
     </main>
   );
