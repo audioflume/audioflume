@@ -187,7 +187,7 @@
 .likeButton { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; background: transparent; color: var(--exp-muted); }
 .likeButton:hover, .isLiked { color: var(--exp-accent); }
 .isLiked svg { fill: currentColor; }
-.rightSidebar { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow-y: auto; border-left: 1px solid var(--exp-line); background: var(--exp-bg); }
+.rightSidebar { display: flex; flex-direction: column; min-width: 0; height: calc(100% - 24px); margin: 12px; min-height: 0; overflow-y: auto; border: 1px solid var(--exp-line); border-radius: 6px; background: var(--exp-bg); }
 .rightTop { position: sticky; top: 0; z-index: 2; display: flex; height: 73px; flex: 0 0 73px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px; border-bottom: 1px solid var(--exp-line); background: var(--exp-bg); font-size: 10px; font-weight: 500; letter-spacing: .06em; }
 .accountWrap { position: relative; width: 100%; min-width: 0; }
 .accountTrigger { display: flex; align-items: center; gap: 10px; width: 100%; padding: 0; border: 0; background: transparent; color: var(--exp-text); text-align: left; }
@@ -263,7 +263,7 @@
   .topBar { min-height: 50px; height: 50px; }
   .mainScroll { flex: none; overflow: visible; }
   .hero { height: 400px; }
-  .rightSidebar { height: auto; min-height: 500px; overflow: visible; flex: 0 0 auto; border-left: 0; border-top: 1px solid var(--exp-line); }
+  .rightSidebar { width: calc(100% - 24px); height: auto; min-height: 500px; overflow: visible; flex: 0 0 auto; }
   .accountMenu { position: absolute; top: calc(100% + 8px); right: 0; }
   .playerArtwork { max-height: 280px; }
   .queuePanel { min-height: 300px; }
