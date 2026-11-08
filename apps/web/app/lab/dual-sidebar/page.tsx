@@ -155,10 +155,6 @@ export default function DualSidebarExperiment() {
             ))}</div> : <p className={styles.emptyPlaylists}>Your saved playlists will appear here.</p>}
             <Link href="/playlists" className={styles.createButton}>Browse playlists <Icon name="arrow" size={13}/></Link>
           </div>
-          <div className={styles.leftBottom}>
-            <span className={styles.onlineDot}/><span>Design experiment</span>
-            <Link href="/discover">Exit lab <Icon name="arrow" size={12}/></Link>
-          </div>
         </div>
       </aside>
 
@@ -231,15 +227,14 @@ export default function DualSidebarExperiment() {
               </div>)}
             </div>
           </section>
-          <div className={styles.bottomNote}>Audioflume / Human made music for moving images <span>Experimental interface · 01</span></div>
         </div>
       </section>
 
       <aside className={styles.rightSidebar} aria-label="Music player and queue">
         <div className={styles.rightTop}><GlobalReferenceSearch className={styles.findSimilarControl} /></div>
         <div className={styles.player}>
-          <div className={styles.playerArtwork}><Cover song={displaySong}/><span className={styles.artOverlay}>Audioflume radio</span></div>
-          <div className={styles.playerMeta}><div><span className={styles.playerEyebrow}>Current track</span><h2>{displaySong?.title || "Find something to play"}</h2><p>{displaySong?.artist || "Explore Audioflume's catalogue"}</p></div>{displaySong && <button className={styles.likeButton + (favoriteIdSet.has(displaySong.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(displaySong)} aria-label="Toggle favorite"><Icon name="heart" size={19}/></button>}</div>
+          <div className={styles.playerArtwork}><Cover song={displaySong}/></div>
+          <div className={styles.playerMeta}><div><h2>{displaySong?.title || "Find something to play"}</h2><p>{displaySong?.artist || "Explore Audioflume's catalogue"}</p></div>{displaySong && <button className={styles.likeButton + (favoriteIdSet.has(displaySong.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(displaySong)} aria-label="Toggle favorite"><Icon name="heart" size={19}/></button>}</div>
           <div className={styles.playerProgress}><input type="range" min={0} max={100} step={0.1} value={progress} disabled={!currentSong} onChange={event => currentSong && seekTo(currentSong, Number(event.target.value) / 100, isPlaying)} style={{ "--range-progress": String(progress) + "%" } as CSSProperties} aria-label="Playback position"/><div><span>{formatTime(currentSong ? currentTime : 0)}</span><span>{formatTime(shownDuration)}</span></div></div>
           <div className={styles.playerButtons}><button className={shuffle ? styles.controlActive : ""} aria-pressed={shuffle} onClick={() => setShuffle(v => !v)} aria-label="Shuffle"><Icon name="shuffle" size={18}/></button><button onClick={() => navigateTrack("prev")} aria-label="Previous track"><Icon name="prev" size={21}/></button><button className={styles.mainPlay} onClick={() => displaySong && play(displaySong, recentSongs)} disabled={!displaySong} aria-label={isPlaying ? "Pause" : "Play"}><Icon name={currentSong?.id === displaySong?.id && isPlaying ? "pause" : "play"} size={22}/></button><button onClick={() => navigateTrack("next")} aria-label="Next track"><Icon name="next" size={21}/></button><button title="Repeat is controlled by the main player" disabled><Icon name="repeat" size={18}/></button></div>
           <div className={styles.volumeRow}><Icon name="volume" size={16}/><input aria-label="Volume" type="range" min={0} max={1} step={0.01} value={volume} onChange={event => setVolume(Number(event.target.value))}/><span>{Math.round(volume * 100)}%</span></div>
