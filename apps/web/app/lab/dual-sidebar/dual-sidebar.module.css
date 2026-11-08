@@ -298,36 +298,86 @@
 
 /* Isolated three-column adaptations of the website's existing search field and Discover artist shelf. */
 .searchCombo {
-  display: flex;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
   flex: 1;
   min-width: 0;
-  height: 44px;
-  align-items: center;
+  height: 60px;
   overflow: hidden;
-  border: 1px solid transparent;
   border-radius: 6px;
   background: var(--exp-panel);
-  transition: border-color 160ms ease;
 }
-.searchCombo:focus-within { border-color: var(--exp-muted); }
+.searchArea, .referenceArea {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  justify-content: center;
+  gap: 4px;
+}
+.searchArea { padding: 0 17px; }
+.referenceArea {
+  position: relative;
+  padding: 0 18px 0 20px;
+  border-left: 1px solid var(--exp-line);
+  transition: background 160ms ease;
+}
+.referenceArea:hover { background: var(--exp-hover); }
+.searchEyebrow {
+  display: block;
+  color: var(--exp-muted);
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: .12em;
+  line-height: 1;
+  pointer-events: none;
+}
+.searchArea:focus-within .searchEyebrow { color: var(--exp-text); }
 .topSearchField {
   display: flex;
-  flex: 1;
+  width: 100%;
   min-width: 0;
-  height: 100%;
+  height: 27px;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   border: 0;
   background: transparent;
-  padding: 0 14px;
+  padding: 0;
+  color: var(--exp-text);
+}
+.topSearchField > svg {
+  width: 19px;
+  height: 19px;
+  flex: 0 0 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+}
+.topSearchField input {
+  width: 100%;
+  min-width: 0;
+  height: 100%;
+  border: 0;
+  outline: none;
+  background: transparent;
+  color: var(--exp-text);
+  font-size: 15px;
+  font-weight: 400;
+}
+.topSearchField input::placeholder { color: var(--exp-muted); font-size: 15px; opacity: 1; }
+.topSearchField input::-webkit-search-cancel-button { display: none; }
+.topSearchClear {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 22px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--exp-muted);
 }
-.topSearchField:focus-within { color: var(--exp-text); }
-.topSearchField > svg { width: 18px; height: 18px; flex: 0 0 18px; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; }
-.topSearchField input { min-width: 0; width: 100%; height: 100%; border: 0; outline: none; background: transparent; color: var(--exp-text); font-size: 13px; font-weight: 400; }
-.topSearchField input::placeholder { color: var(--exp-muted); font-size: 13px; opacity: 1; }
-.topSearchField input::-webkit-search-cancel-button { display: none; }
-.topSearchClear { display: inline-flex; width: 22px; height: 22px; flex: 0 0 22px; align-items: center; justify-content: center; padding: 0; border: 0; background: transparent; color: var(--exp-muted); }
 .topSearchClear svg { width: 18px; height: 18px; }
 .topSearchClear:hover { color: var(--exp-text); }
 .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) {
@@ -368,25 +418,23 @@
 }
 .findSimilarControl {
   display: inline-flex;
+  width: 100%;
+  height: 27px;
   align-items: center;
-  justify-content: center;
-  gap: 8px;
-  flex-shrink: 0;
-  height: 100%;
+  justify-content: flex-start;
+  gap: 9px;
   border: 0;
-  border-left: 1px solid var(--exp-line);
-  padding: 0 14px;
+  padding: 0;
   background: transparent;
   color: var(--exp-text);
   font-family: inherit;
-  font-size: 14px;
+  font-size: 15px;
   font-weight: 400;
-  letter-spacing: 0;
+  letter-spacing: -.02em;
   cursor: pointer;
   white-space: nowrap;
 }
-.findSimilarControl:hover { background: var(--exp-hover); }
-.findSimilarControl svg { width: 16px; height: 16px; flex: 0 0 16px; }
+.findSimilarControl svg { width: 18px; height: 18px; flex: 0 0 18px; }
 @media (max-width: 1050px) {
   .featuredArtists:global(.audioflume-home-mockup-artists.is-discover-featured-artists) :global(.audioflume-home-reference-artist-card) {
     width: 100%;
