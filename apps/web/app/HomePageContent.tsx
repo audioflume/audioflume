@@ -48,30 +48,6 @@ const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/artist-signup/soundtrap-7pAguituFGo-unsplash-web.jpg";
 
 const NEW_SONG_COUNT = 12;
-const DISCOVER_FEATURED_LENSES = [
-  { value: "cinematic", label: "Cinematic" },
-  { value: "ambient", label: "Ambient" },
-  { value: "electronic", label: "Electronic" },
-  { value: "emotional", label: "Emotional" },
-  { value: "uplifting", label: "Uplifting" },
-  { value: "dark", label: "Dark" },
-  { value: "suspense", label: "Suspense" },
-  { value: "energetic", label: "Energetic" },
-  { value: "orchestral", label: "Orchestral" },
-  { value: "calm", label: "Calm" },
-  { value: "inspiring", label: "Inspiring" },
-  { value: "dramatic", label: "Dramatic" },
-] as const;
-
-type DiscoverLens = "all" | (typeof DISCOVER_FEATURED_LENSES)[number]["value"];
-
-function matchesDiscoverLens(song: Song, lens: DiscoverLens): boolean {
-  if (lens === "all") return true;
-  return [...(song.genres || []), ...(song.moods || [])].some(
-    (tag) => tag.trim().toLowerCase() === lens,
-  );
-}
-
 export type HomeArtist = {
   id: string;
   name: string;
@@ -1102,7 +1078,6 @@ export default function HomePageContent({
   const [discoverFeaturedSongsLoading, setDiscoverFeaturedSongsLoading] = useState(!showHero);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
-  const [discoverLens, setDiscoverLens] = useState<DiscoverLens>("all");
   const discoverHeadingRef = useRef<HTMLHeadingElement>(null);
   const discoverFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const [discoverHeadingNeedsNaturalWrap, setDiscoverHeadingNeedsNaturalWrap] = useState(false);
@@ -1114,25 +1089,7 @@ export default function HomePageContent({
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
   );
-  const discoverLensOptions = useMemo(
-    () => DISCOVER_FEATURED_LENSES.filter(
-      (lens) => playableSongs.some((song) => matchesDiscoverLens(song, lens.value)),
-    ).slice(0, 7),
-    [playableSongs],
-  );
-  const discoverFilteredSongs = useMemo(
-    () => showHero || discoverLens === "all"
-      ? playableSongs
-      : playableSongs.filter((song) => matchesDiscoverLens(song, discoverLens)),
-    [showHero, playableSongs, discoverLens],
-  );
-  const discoverArtists = useMemo(
-    () => showHero || discoverLens === "all" ? artists : artists.filter(
-      (artist) => (artist.songs || []).some((song) => matchesDiscoverLens(song, discoverLens)),
-    ),
-    [showHero, artists, discoverLens],
-  );
-  const originalSongs = (showHero ? playableSongs : discoverFilteredSongs)
+  const originalSongs = playableSongs
     .filter(
       (song) =>
         song.artist.trim().localeCompare("Audioflume", undefined, {
@@ -1140,15 +1097,10 @@ export default function HomePageContent({
         }) === 0,
     )
     .slice(0, 16);
-  const recentSongs = (showHero ? playableSongs : discoverFilteredSongs).slice(0, NEW_SONG_COUNT);
-  const discoverCompactSongs = discoverFilteredSongs.slice(0, 12);
+  const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
+  const discoverCompactSongs = playableSongs.slice(0, 12);
   const discoverArtistSongs = useMemo(() => {
-    if (configuredDiscoverSongs?.length) {
-      const curated = configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl));
-      if (showHero || discoverLens === "all") return curated;
-      const matches = curated.filter((song) => matchesDiscoverLens(song, discoverLens));
-      return matches.length ? matches : discoverFilteredSongs.slice(0, 6);
-    }
+    if (configuredDiscoverSongs?.length) return configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl));
     const selected = new Map<string, Song>();
     for (const artist of artists) {
       for (const song of artist.songs) {
@@ -1159,11 +1111,8 @@ export default function HomePageContent({
       if (selected.size >= 6) break;
       if (!selected.has(song.id)) selected.set(song.id, song);
     }
-    const selections = Array.from(selected.values()).slice(0, 6);
-    if (showHero || discoverLens === "all") return selections;
-    const matches = selections.filter((song) => matchesDiscoverLens(song, discoverLens));
-    return matches.length ? matches : discoverFilteredSongs.slice(0, 6);
-  }, [artists, playableSongs, configuredDiscoverSongs, showHero, discoverLens, discoverFilteredSongs]);
+    return Array.from(selected.values()).slice(0, 6);
+  }, [artists, playableSongs, configuredDiscoverSongs]);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
@@ -1357,28 +1306,11 @@ export default function HomePageContent({
         )}
         {artistsLoading ? (
           <HomeArtistShelfSkeleton discoverLayout={!showHero} />
-        ) : discoverArtists.length > 0 ? (
-          <HomeArtistShelf artists={discoverArtists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
-        ) : !showHero && discoverLens !== "all" ? (
-          <p className="audioflume-home-reference-width audioflume-discover-lens-empty">No featured artists match this selection.</p>
+        ) : artists.length > 0 ? (
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
-        {!showHero && !artistsLoading && discoverArtists.length > 1 ? (
-          <DiscoverArtistNavigation artistCount={discoverArtists.length} />
-        ) : null}
-        {!showHero ? (
-          <nav className="audioflume-discover-lenses audioflume-home-reference-width" aria-label="Discover music by genre and mood">
-            {([{ value: "all", label: "All music" }, ...discoverLensOptions] as { value: DiscoverLens; label: string }[]).map(({ value, label }) => (
-              <button
-                key={value}
-                type="button"
-                className={`audioflume-discover-lens-button${discoverLens === value ? " is-active" : ""}`}
-                aria-pressed={discoverLens === value}
-                onClick={() => setDiscoverLens(value)}
-              >
-                {label}
-              </button>
-            ))}
-          </nav>
+        {!showHero && !artistsLoading && artists.length > 1 ? (
+          <DiscoverArtistNavigation artistCount={artists.length} />
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
@@ -1490,8 +1422,8 @@ export default function HomePageContent({
         </div>
         {artistsLoading ? (
           <HomeArtistShelfSkeleton compact />
-        ) : discoverArtists.length > 0 ? (
-          <HomeArtistShelf artists={discoverArtists} homeFlashImages={homeFlashImages} compact />
+        ) : artists.length > 0 ? (
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact />
         ) : null}
       </section>
 
@@ -1515,8 +1447,8 @@ export default function HomePageContent({
           </div>
           {songsLoading ? (
             <HomeOriginalsSkeleton />
-          ) : discoverFilteredSongs.length > 0 ? (
-            <HomeOriginalSongGrid songs={discoverFilteredSongs} />
+          ) : playableSongs.length > 0 ? (
+            <HomeOriginalSongGrid songs={playableSongs} />
           ) : null}
         </section>
       </section>
