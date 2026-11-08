@@ -261,7 +261,7 @@ export default function DualSidebarExperiment() {
                 <span className={styles.accountName}>{user.fullName || user.username || user.primaryEmailAddress?.emailAddress || "My account"}</span>
                 <Icon name="chevron" size={13} />
               </button>
-              {userMenuOpen && <div className="filmwave-header-menu-wrap"><UserMenu onClose={() => setUserMenuOpen(false)} /></div>}
+              {userMenuOpen && <div className={styles.accountMenu}><UserMenu onClose={() => setUserMenuOpen(false)} /></div>}
             </div>
           ) : userLoaded ? (
             <Link href="/sign-in" className={styles.accountSignIn}>Sign in</Link>
