@@ -704,6 +704,11 @@ export function HomeArtistShelf({
               </span>
               </>
             ) : null}
+            {discoverLayout ? (
+              <p className="audioflume-discover-featured-artist-bio">
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt.
+              </p>
+            ) : null}
             {!discoverLayout ? <button
               type="button"
               className="audioflume-home-reference-artist-play"
