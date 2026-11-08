@@ -25,12 +25,6 @@ import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
-import SongMoreDropdown from "@/components/SongMoreDropdown";
-import AddToPlaylistModal from "@/components/AddToPlaylistModal";
-import AddToProjectModal from "@/components/AddToProjectModal";
-import ShortenTrackModal from "@/components/ShortenTrackModal";
-import CreatePlaylistModal from "@/components/CreatePlaylistModal";
-import { usePlaylists } from "@/hooks/usePlaylists";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
@@ -819,15 +813,6 @@ function HomeCompactSongCard({
   queue: Song[];
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
-  const { playlists, setPlaylists } = usePlaylists();
-  const [moreOpen, setMoreOpen] = useState(false);
-  const [playlistModalOpen, setPlaylistModalOpen] = useState(false);
-  const [projectModalOpen, setProjectModalOpen] = useState(false);
-  const [shortenTrackOpen, setShortenTrackOpen] = useState(false);
-  const [createPlaylistOpen, setCreatePlaylistOpen] = useState(false);
-  const [newPlaylistName, setNewPlaylistName] = useState("");
-  const [newPlaylistCoverPreview, setNewPlaylistCoverPreview] = useState<string | null>(null);
-  const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
   const duration = Number.isFinite(song.duration) && song.duration > 0
@@ -840,102 +825,36 @@ function HomeCompactSongCard({
     togglePlayPause(song);
   }
 
-  async function handleCreatePlaylist() {
-    if (!newPlaylistName.trim() || isCreatingPlaylist) return;
-    setIsCreatingPlaylist(true);
-    try {
-      const res = await fetch("/api/playlists", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          name: newPlaylistName,
-          cover_image_url: newPlaylistCoverPreview,
-          position: playlists.length,
-        }),
-      });
-      const text = await res.text();
-      const data = text ? JSON.parse(text) : null;
-      if (!res.ok) {
-        console.error("Failed to create playlist:", data || res.statusText);
-        return;
-      }
-      if (data) setPlaylists((current) => [...current, data]);
-      setNewPlaylistName("");
-      setNewPlaylistCoverPreview(null);
-      setCreatePlaylistOpen(false);
-    } finally {
-      setIsCreatingPlaylist(false);
-    }
-  }
-
   return (
-    <>
-      <div className={`audioflume-discover-compact-song${active ? " is-active" : ""}`}>
-        <button
-          type="button"
-          className="audioflume-discover-compact-song-main"
-          onClick={playSong}
-          disabled={!song.audioUrl}
-          aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
-        >
-          <span className="audioflume-discover-compact-song-art">
-            {song.coverArt ? (
-              <img src={song.coverArt} alt="" draggable={false} />
-            ) : (
-              <span className="audioflume-discover-compact-song-fallback">
-                <WaveformIcon size={22} />
-              </span>
-            )}
-            <span className="audioflume-discover-compact-song-play" aria-hidden="true">
-              <span className="audioflume-discover-compact-song-play-circle">
-                {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
-              </span>
+    <div className={`audioflume-discover-compact-song${active ? " is-active" : ""}`}>
+      <button
+        type="button"
+        className="audioflume-discover-compact-song-main"
+        onClick={playSong}
+        disabled={!song.audioUrl}
+        aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
+      >
+        <span className="audioflume-discover-compact-song-art">
+          {song.coverArt ? (
+            <img src={song.coverArt} alt="" draggable={false} />
+          ) : (
+            <span className="audioflume-discover-compact-song-fallback">
+              <WaveformIcon size={22} />
+            </span>
+          )}
+          <span className="audioflume-discover-compact-song-play" aria-hidden="true">
+            <span className="audioflume-discover-compact-song-play-circle">
+              {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
             </span>
           </span>
-          <span className="audioflume-discover-compact-song-copy">
-            <strong className="audioflume-home-song-title">{song.title}</strong>
-            <span className="audioflume-home-song-artist">{song.artist}</span>
-          </span>
-        </button>
-        <span className="audioflume-discover-compact-song-duration">{duration}</span>
-        <SongMoreDropdown
-          open={moreOpen}
-          onOpenChange={setMoreOpen}
-          onAddToPlaylist={() => setPlaylistModalOpen(true)}
-          onAddToProject={() => setProjectModalOpen(true)}
-          onShortenTrack={() => setShortenTrackOpen(true)}
-          onCreatePlaylist={() => setCreatePlaylistOpen(true)}
-          strategy="fixed"
-          usePortal
-        />
-      </div>
-      {playlistModalOpen && (
-        <AddToPlaylistModal isOpen={playlistModalOpen} song={song} onClose={() => setPlaylistModalOpen(false)} />
-      )}
-      {projectModalOpen && (
-        <AddToProjectModal isOpen={projectModalOpen} song={song} onClose={() => setProjectModalOpen(false)} />
-      )}
-      {shortenTrackOpen && (
-        <ShortenTrackModal isOpen={shortenTrackOpen} song={song} onClose={() => setShortenTrackOpen(false)} />
-      )}
-      {createPlaylistOpen && (
-        <CreatePlaylistModal
-          isOpen={createPlaylistOpen}
-          name={newPlaylistName}
-          coverPreview={newPlaylistCoverPreview}
-          isCreating={isCreatingPlaylist}
-          onNameChange={setNewPlaylistName}
-          onCoverPreviewChange={setNewPlaylistCoverPreview}
-          onCreate={handleCreatePlaylist}
-          onClose={() => {
-            if (isCreatingPlaylist) return;
-            setNewPlaylistName("");
-            setNewPlaylistCoverPreview(null);
-            setCreatePlaylistOpen(false);
-          }}
-        />
-      )}
-    </>
+        </span>
+        <span className="audioflume-discover-compact-song-copy">
+          <strong className="audioflume-home-song-title">{song.title}</strong>
+          <span className="audioflume-home-song-artist">{song.artist}</span>
+        </span>
+      </button>
+      <span className="audioflume-discover-compact-song-duration">{duration}</span>
+    </div>
   );
 }
 
