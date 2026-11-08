@@ -87,7 +87,6 @@ export default function DualSidebarExperiment() {
 
   const [view, setView] = useState<View>("discover");
   const [query, setQuery] = useState("");
-  const [sidebarQuery, setSidebarQuery] = useState("");
   const [featuredArtists, setFeaturedArtists] = useState<HomeArtist[]>([]);
   const [featuredArtistsLoading, setFeaturedArtistsLoading] = useState(true);
   const [featuredArtistIndex, setFeaturedArtistIndex] = useState(0);
@@ -147,7 +146,7 @@ export default function DualSidebarExperiment() {
   const sidebarSongs = favoriteIds
     .map(id => playableSongs.find(song => song.id === id))
     .filter((song): song is Song => Boolean(song))
-    .filter(song => [song.title, song.artist].some(v => v.toLowerCase().includes(sidebarQuery.toLowerCase())));
+;
 
   function play(song: Song, queue: Song[] = playableSongs) {
     if (currentSong?.id !== song.id) setQueue(queue);
@@ -199,7 +198,7 @@ export default function DualSidebarExperiment() {
             {featuredArtistsLoading ? (
               <HomeArtistShelfSkeleton discoverLayout />
             ) : featuredArtists.length > 0 ? (
-              <HomeArtistShelf artists={[featuredArtists[featuredArtistIndex % featuredArtists.length]]} homeFlashImages={[]} discoverLayout />
+              <HomeArtistShelf artists={[featuredArtists[featuredArtistIndex % featuredArtists.length]]} homeFlashImages={[]} discoverLayout hideExploreButton />
             ) : (
               <div className={styles.featuredEmpty}>Featured artists are currently unavailable.</div>
             )}
@@ -279,7 +278,6 @@ export default function DualSidebarExperiment() {
           <div className={styles.volumeRow}><Icon name="volume" size={16}/><input aria-label="Volume" type="range" min={0} max={1} step={0.01} value={volume} onChange={event => setVolume(Number(event.target.value))}/><span>{Math.round(volume * 100)}%</span></div>
         </div>
         <div className={styles.queuePanel}><div className={styles.queueTabs}><span>LIKED</span></div>
-          <div className={styles.queueSearch}><Icon name="search" size={15}/><input value={sidebarQuery} placeholder="Find a song..." onChange={e => setSidebarQuery(e.target.value)} aria-label="Search sidebar tracks"/></div>
           <div className={styles.queueList}>{sidebarSongs.map(song => <button key={song.id} className={styles.queueItem + (song.id === currentSong?.id ? " " + styles.queueCurrent : "")} onClick={() => play(song, sidebarSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span><em>{formatTime(song.duration || 0)}</em></button>)}{!sidebarSongs.length && <p className={styles.queueEmpty}>No liked songs found.</p>}</div>
         </div>
       </aside>
