@@ -70,10 +70,6 @@
 .playlistLink:hover { color: #fff!important; }
 .createButton { display: flex; justify-content: center; align-items: center; gap: 6px; height: 32px; border: 1px solid #353535; color: #bbb!important; font-size: 11px; }
 .createButton:hover { border-color: #666; color: #fff!important; }
-.leftBottom { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: auto; padding: 17px 16px 19px; border-top: 1px solid #252525; color: #777; font-size: 10px; }
-.onlineDot, .onlineStatus i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #81ae83; }
-.leftBottom a { display: flex; align-items: center; gap: 3px; margin-left: auto; color: #a5a5a5!important; }
-.leftBottom a:hover { color: #fff!important; }
 .center { display: flex; min-width: 0; min-height: 0; height: 100%; overflow-y: auto; flex-direction: column; background: #171818; }
 .topBar { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; height: 73px; min-height: 73px; padding: 0 36px; border-bottom: 1px solid #292929; background: #151616; }
 .breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 11px; }
@@ -156,7 +152,6 @@
 .likeButton { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; background: transparent; color: #777; }
 .likeButton:hover, .isLiked { color: var(--exp-accent); }
 .isLiked svg { fill: currentColor; }
-.bottomNote { display: flex; justify-content: space-between; padding: 22px 0 35px; border-top: 1px solid #292929; color: #555; font-size: 9px; letter-spacing: .09em; }
 .rightSidebar { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow-y: auto; border-left: 1px solid #252525; background: #151616; }
 .rightTop { position: sticky; top: 0; z-index: 2; display: flex; height: 73px; flex: 0 0 73px; align-items: center; justify-content: space-between; gap: 12px; padding: 0 20px; border-bottom: 1px solid #282828; background: #151616; font-size: 10px; font-weight: 500; letter-spacing: .06em; }
 .rightTop > span:first-child { display: flex; align-items: center; gap: 8px; }
@@ -165,10 +160,8 @@
 .playerArtwork { position: relative; width: 100%; aspect-ratio: 1.75; overflow: hidden; background: #292929; }
 .playerArtwork > img, .playerArtwork > .emptyArtwork { width: 100%; height: 100%; object-fit: cover; }
 .playerArtwork::after { position: absolute; inset: 45% 0 0; background: linear-gradient(0deg, rgba(0,0,0,.55), transparent); content: ""; }
-.artOverlay { position: absolute; right: 12px; bottom: 12px; z-index: 1; color: #eee; font-size: 9px; letter-spacing: .11em; }
 .playerMeta { display: flex; align-items: center; justify-content: space-between; min-height: 75px; gap: 9px; padding: 15px 3px 9px; }
 .playerMeta > div { min-width: 0; }
-.playerEyebrow { color: #6d6d6d; font-size: 9px; letter-spacing: .13em; }
 .playerMeta h2 { margin: 6px 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 500; }
 .playerMeta p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #888; font-size: 11px; }
 .playerProgress { margin: 12px 0 0; }
@@ -228,7 +221,7 @@
   .navList { display: flex; gap: 3px; overflow-x: auto; padding: 7px 9px; }
   .navItem { width: auto; min-width: max-content; padding: 0 12px; height: 34px; }
   .navActive svg:last-child { margin-left: 8px; }
-  .sidebarSection, .leftBottom { display: none; }
+  .sidebarSection { display: none; }
   .center { height: auto; min-height: 480px; overflow: visible; flex: 0 0 auto; }
   .topBar { min-height: 50px; height: 50px; }
   .mainScroll { flex: none; overflow: visible; }
@@ -250,7 +243,6 @@
   .trackHead, .trackRow { grid-template-columns: minmax(0,1fr) 32px; }
   .trackHead > span:nth-child(3), .trackTime { display: none; }
   .topBarRight { display: none; }
-  .bottomNote span { display: none; }
 }
 
 
