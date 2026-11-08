@@ -2379,20 +2379,6 @@ body:has(.audioflume-home-landing)
   aspect-ratio: auto;
 }
 
-.audioflume-discover-featured-artist-bio {
-  display: flex;
-  height: 56px;
-  align-items: center;
-  margin: 0;
-  padding: 0 20px;
-  background: var(--bg-primary);
-  color: var(--text-secondary);
-  font-size: 12px;
-  font-weight: 300;
-  line-height: 1.4;
-  overflow: hidden;
-}
-
 .audioflume-home-mockup-artists.is-discover-featured-artists
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-arrow {
@@ -2497,7 +2483,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-track {
   position: absolute;
-  bottom: 86px;
+  bottom: 30px;
   left: 30px;
   z-index: 3;
   display: flex;
@@ -2584,7 +2570,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-track-genres {
   position: absolute;
-  bottom: 86px;
+  bottom: 30px;
   left: 150px;
   z-index: 4;
   display: flex;
