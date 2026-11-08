@@ -111,17 +111,16 @@ export default function DualSidebarExperiment() {
     togglePlayPause(list[0]);
   }
 
-  const contentStyle: CSSProperties = { "--exp-accent": "#e86c53" } as CSSProperties;
   const progress = displaySong && currentSong?.id === displaySong.id && duration > 0 ? Math.min(100, (currentTime / duration) * 100) : 0;
   const shownDuration = currentSong?.id === displaySong?.id ? duration || displaySong?.duration || 0 : displaySong?.duration || 0;
 
   return (
-    <main className={styles.root} style={contentStyle}>
+    <main className={styles.root}>
       <aside className={styles.leftSidebar} aria-label="Experimental navigation">
         <div className={styles.logoRow}>
-          <span className={styles.logoMark}><span /><span /><span /><span /><span /></span>
-          <span className={styles.wordmark}>audioflume<span className={styles.wordmarkDot}>.</span></span>
-          <span className={styles.labTag}>LAB</span>
+          <Link href="/" className="filmwave-header-logo-action" aria-label="audioflume Home">
+            <span className="filmwave-header-tonal-wordmark">audioflume</span>
+          </Link>
         </div>
         <div className={styles.sideSearch}>
           <Icon name="search" size={16} />
