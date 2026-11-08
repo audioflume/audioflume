@@ -834,7 +834,6 @@ function HomeCompactSongCard({
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
-        <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
         <span className="audioflume-discover-compact-song-art">
           {song.coverArt ? (
             <img src={song.coverArt} alt="" draggable={false} />
@@ -853,6 +852,7 @@ function HomeCompactSongCard({
           <strong className="audioflume-home-song-title">{song.title}</strong>
           <span className="audioflume-home-song-artist">{song.artist}</span>
         </span>
+        <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
       </button>
     </div>
   );
@@ -877,12 +877,12 @@ function DiscoverCompactSongsSkeleton() {
     <div className="audioflume-discover-compact-songs audioflume-discover-skeleton-compact-grid" aria-hidden="true">
       {Array.from({ length: 12 }, (_, index) => (
         <div key={index} className="audioflume-discover-compact-song audioflume-discover-skeleton-compact-song">
-          <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
           <HomeSkeletonBlock className="is-compact-cover" />
           <span className="audioflume-discover-compact-song-copy">
             <HomeSkeletonBlock className="is-compact-title" />
             <HomeSkeletonBlock className="is-compact-artist" />
           </span>
+          <span className="audioflume-discover-compact-song-number" aria-hidden="true">{index + 1}</span>
         </div>
       ))}
     </div>
