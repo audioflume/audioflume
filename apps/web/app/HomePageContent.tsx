@@ -48,7 +48,7 @@ const HOME_HERO_IMAGE =
   "https://images.filmwave.io/images/artist-signup/soundtrap-7pAguituFGo-unsplash-web.jpg";
 
 const NEW_SONG_COUNT = 12;
-type HomeArtist = {
+export type HomeArtist = {
   id: string;
   name: string;
   slug: string;
@@ -488,7 +488,7 @@ function HomeReadyToCutSongCard({
   );
 }
 
-function HomeArtistShelf({
+export function HomeArtistShelf({
   artists,
   homeFlashImages,
   compact = false,
@@ -852,7 +852,7 @@ function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayout?: boo
   );
 }
 
-function HomeArtistShelfSkeleton({ compact = false, discoverLayout = false }: { compact?: boolean; discoverLayout?: boolean }) {
+export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = false }: { compact?: boolean; discoverLayout?: boolean }) {
   return (
     <Shelf
       label="in demand artists"
