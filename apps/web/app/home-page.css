@@ -2006,8 +2006,7 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-featured-intro-row h2 {
   width: min(100%, 550px);
   margin: 0;
-  text-align: justify;
-  text-align-last: justify;
+  text-align: left;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 48px;
@@ -2371,7 +2370,7 @@ body:has(.audioflume-home-landing)
   width: clamp(460px, 61vw, 1140px);
   min-width: clamp(460px, 61vw, 1140px);
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 10px;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
