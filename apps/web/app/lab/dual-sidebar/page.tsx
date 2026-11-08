@@ -177,20 +177,14 @@ export default function DualSidebarExperiment() {
         </div>
         <div className={styles.topBar}>
           <div className={styles.searchCombo} role="search" aria-label="Music discovery">
-            <div className={styles.searchArea}>
-              <span className={styles.searchEyebrow}>DISCOVER / 01</span>
-              <GlobalMusicSearchField
-                value={query}
-                onChange={setQuery}
-                onClear={() => setQuery("")}
-                className={styles.topSearchField}
-                clearButtonClassName={styles.topSearchClear}
-              />
-            </div>
-            <div className={styles.referenceArea}>
-              <span className={styles.searchEyebrow}>REFERENCE / 02</span>
-              <GlobalReferenceSearch className={styles.findSimilarControl} />
-            </div>
+            <GlobalMusicSearchField
+              value={query}
+              onChange={setQuery}
+              onClear={() => setQuery("")}
+              className={styles.topSearchField}
+              clearButtonClassName={styles.topSearchClear}
+            />
+            <GlobalReferenceSearch className={styles.findSimilarControl} />
           </div>
         </div>
         <div className={styles.rightTop}>
