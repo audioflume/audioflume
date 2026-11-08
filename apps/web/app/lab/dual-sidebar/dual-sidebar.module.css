@@ -60,7 +60,7 @@
 .navActive, .navActive:hover { color: #fff; background: #222; font-weight: 500; }
 .navActive svg:last-child { margin-left: auto; color: #eaeae8; }
 .sidebarSection { padding: 24px 18px 22px; }
-.sideSectionHeading { display: flex; align-items: center; justify-content: space-between; color: #737373; font-size: 10px; font-weight: 300; letter-spacing: normal; }
+.sideSectionHeading { display: flex; align-items: center; justify-content: space-between; color: #737373; font-size: 12px; font-weight: 300; letter-spacing: normal; }
 .sideSectionHeading a { display: inline-flex; align-items: center; color: #7f7f7f; }
 .sideSectionHeading a:hover { color: #fff; }
 .emptyPlaylists { margin: 19px 0 15px; color: #777; font-size: 11px; line-height: 1.6; }
@@ -186,8 +186,7 @@
 .volumeRow span { width: 28px; text-align: right; }
 .queuePanel { display: flex; flex-direction: column; flex: none; min-height: 0; }
 .queueTabs { display: flex; flex: 0 0 49px; gap: 24px; align-items: stretch; padding: 0 19px; border-bottom: 1px solid #292929; }
-.queueTabs span { display: inline-flex; align-items: center; padding: 0; border-bottom: 2px solid transparent; color: #777; font-size: 10px; font-weight: 550; letter-spacing: .055em; }
-.queueTabs .queueActive { border-bottom-color: var(--exp-accent); color: #efefef; }
+.queueTabs span { display: inline-flex; align-items: center; padding: 0; color: #737373; font-size: 12px; font-weight: 300; letter-spacing: normal; }
 .queueSearch { display: flex; align-items: center; gap: 9px; height: 44px; flex: 0 0 44px; margin: 0; padding: 0 18px; border-bottom: 1px solid #292929; color: #6d6d6d; }
 .queueList { flex: none; min-height: 0; overflow: visible; padding: 5px 0 10px; }
 .queueItem { display: flex; align-items: center; gap: 11px; width: 100%; min-width: 0; min-height: 58px; padding: 7px 19px; border: 0; border-bottom: 1px solid #252626; background: transparent; color: #eaeaea; text-align: left; }
