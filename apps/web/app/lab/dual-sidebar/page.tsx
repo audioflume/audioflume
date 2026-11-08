@@ -5,6 +5,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
 import { useUser } from "@clerk/nextjs";
 import UserMenu from "@/components/UserMenu";
+import Waveform from "@/components/Waveform";
+import { useTheme } from "@/context/ThemeContext";
 import { useSongs } from "@/hooks/useSongs";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
@@ -74,6 +76,7 @@ const NAV: { id: View; label: string; icon: IconName }[] = [
 
 export default function DualSidebarExperiment() {
   const { songs, loading, error } = useSongs();
+  const { theme } = useTheme();
   const { user, isLoaded: userLoaded } = useUser();
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const userMenuRef = useRef<HTMLDivElement>(null);
@@ -155,7 +158,7 @@ export default function DualSidebarExperiment() {
   const shownDuration = currentSong?.id === displaySong?.id ? duration || displaySong?.duration || 0 : displaySong?.duration || 0;
 
   return (
-    <main className={styles.root}>
+    <main className={styles.root} data-theme={theme}>
       <aside className={styles.leftSidebar} aria-label="Experimental navigation">
         <div className={styles.logoRow}>
           <Link href="/" className="filmwave-header-logo-action" aria-label="audioflume Home">
@@ -241,9 +244,10 @@ export default function DualSidebarExperiment() {
             {view === "library" && error && <p className={styles.status}>Could not load songs: {error}</p>}
             {view === "library" && !loading && !visibleSongs.length && <p className={styles.status}>No tracks match this selection.</p>}
             <div className={styles.trackTable}>
-              <div className={styles.trackHead}><span>Title</span><span>Genre</span><span>Time</span><span>Like</span></div>
+              <div className={styles.trackHead}><span>Title</span><span aria-hidden="true" /><span>Genre</span><span>Time</span><span>Like</span></div>
               {(view === "library" ? visibleSongs : visibleSongs.slice(0, 10)).map(song => <div className={styles.trackRow + (currentSong?.id === song.id ? " " + styles.trackPlaying : "")} key={song.id}>
                 <button className={styles.trackSong} onClick={() => play(song, visibleSongs)}><Cover song={song}/><span><strong>{song.title}</strong><small>{song.artist}</small></span></button>
+                <div className={styles.trackWaveform}><Waveform song={song} compact showEditPointMarkers={false} /></div>
                 <span className={styles.trackGenre}>{song.genres?.[0] || "—"}</span>
                 <span className={styles.trackTime}>{formatTime(song.duration || 0)}</span>
                 <button className={styles.likeButton + (favoriteIdSet.has(song.id) ? " " + styles.isLiked : "")} onClick={() => toggleFavorite(song)} aria-label={(favoriteIdSet.has(song.id) ? "Unlike " : "Like ") + song.title}><Icon name="heart" size={16}/></button>
