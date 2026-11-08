@@ -1,0 +1,249 @@
+.root {
+  --exp-accent: #e86c53;
+  --exp-bg: #111213;
+  --exp-panel: #151617;
+  --exp-line: #2b2b2c;
+  --exp-muted: #8b8b8b;
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  grid-template-columns: 208px minmax(0, 1fr) 338px;
+  width: 100%;
+  height: 100dvh;
+  overflow: hidden;
+  background: var(--exp-bg);
+  color: #f1f1ef;
+  font-family: var(--font-aktiv-grotesk), Arial, sans-serif;
+  font-size: 13px;
+  letter-spacing: -.015em;
+  color-scheme: dark;
+}
+.root * { box-sizing: border-box; }
+.root button, .root input { font: inherit; }
+.root button { cursor: pointer; }
+.root button:disabled { cursor: default; opacity: .35; }
+.root a { color: inherit; text-decoration: none; }
+.root button:focus-visible, .root a:focus-visible, .root input:focus-visible { outline: 1px solid var(--exp-accent); outline-offset: 3px; }
+.leftSidebar {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  height: 100%;
+  border-right: 1px solid #242525;
+  background: #131414;
+}
+.logoRow { display: flex; height: 73px; flex: 0 0 73px; align-items: center; gap: 9px; padding: 0 19px; border-bottom: 1px solid #252525; }
+.logoMark { display: flex; align-items: center; height: 22px; gap: 2px; }
+.logoMark span { display: block; width: 3px; background: var(--exp-accent); border-radius: 4px; }
+.logoMark span:nth-child(1), .logoMark span:nth-child(5) { height: 7px; }
+.logoMark span:nth-child(2), .logoMark span:nth-child(4) { height: 16px; }
+.logoMark span:nth-child(3) { height: 22px; }
+.wordmark { font-size: 21px; font-weight: 650; letter-spacing: -.065em; }
+.wordmarkDot { color: var(--exp-accent); }
+.labTag { margin-left: auto; padding: 3px 4px; border: 1px solid #4c3631; color: var(--exp-accent); font-size: 8px; letter-spacing: .08em; }
+.sideSearch { display: flex; align-items: center; gap: 9px; height: 44px; flex: 0 0 44px; padding: 0 17px; border-bottom: 1px solid #222; color: #777; }
+.sideSearch input, .queueSearch input { flex: 1; width: 0; min-width: 0; border: 0; outline: none; background: transparent; color: #dedede; font-size: 11px; }
+.sideSearch input::placeholder, .queueSearch input::placeholder { color: #737373; }
+.sideSearch button { border: 0; background: transparent; color: #999; }
+.leftScroll { display: flex; flex-direction: column; flex: 1; min-height: 0; overflow: auto; scrollbar-width: thin; scrollbar-color: #333 transparent; }
+.navList { padding: 16px 10px 25px; border-bottom: 1px solid #252525; }
+.navItem { position: relative; display: flex; align-items: center; gap: 12px; width: 100%; height: 40px; border: 0; background: transparent; color: #8b8c8d; text-align: left; padding: 0 11px; transition: background .16s, color .16s; }
+.navItem svg { flex: 0 0 auto; }
+.navItem:hover { color: #f5f5f5; background: #202020; }
+.navActive, .navActive:hover { color: #fff; background: #222; font-weight: 500; }
+.navActive i { position: absolute; top: 8px; bottom: 8px; right: 0; width: 3px; background: var(--exp-accent); }
+.sidebarSection { padding: 24px 18px 22px; }
+.sideSectionHeading { display: flex; align-items: center; justify-content: space-between; color: #737373; font-size: 10px; font-weight: 600; letter-spacing: .085em; }
+.sideSectionHeading a { display: inline-flex; align-items: center; color: #7f7f7f; }
+.sideSectionHeading a:hover { color: #fff; }
+.emptyPlaylists { margin: 19px 0 15px; color: #777; font-size: 11px; line-height: 1.6; }
+.playlistLinks { display: flex; flex-direction: column; gap: 1px; margin: 15px 0; }
+.playlistLink { display: flex; gap: 10px; align-items: center; height: 31px; color: #aaa!important; font-size: 11px; }
+.playlistLink span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.playlistLink:hover { color: #fff!important; }
+.createButton { display: flex; justify-content: center; align-items: center; gap: 6px; height: 32px; border: 1px solid #353535; color: #bbb!important; font-size: 11px; }
+.createButton:hover { border-color: #666; color: #fff!important; }
+.leftBottom { display: flex; flex-wrap: wrap; align-items: center; gap: 7px; margin-top: auto; padding: 17px 16px 19px; border-top: 1px solid #252525; color: #777; font-size: 10px; }
+.onlineDot, .onlineStatus i { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: #81ae83; }
+.leftBottom a { display: flex; align-items: center; gap: 3px; margin-left: auto; color: #a5a5a5!important; }
+.leftBottom a:hover { color: #fff!important; }
+.center { display: flex; min-width: 0; height: 100%; flex-direction: column; background: #171818; }
+.topBar { display: flex; align-items: center; justify-content: space-between; height: 73px; min-height: 73px; padding: 0 36px; border-bottom: 1px solid #292929; background: #151616; }
+.breadcrumb { display: flex; align-items: center; gap: 10px; font-size: 11px; }
+.breadcrumb > span { color: #777; letter-spacing: .055em; }
+.breadcrumb svg { color: #686868; }
+.breadcrumb strong { font-weight: 500; color: #e7e7e7; }
+.topBarRight { display: flex; gap: 25px; align-items: center; color: #6e6e6e; font-size: 10px; letter-spacing: .045em; }
+.allMusic { display: flex; gap: 6px; align-items: center; color: #ccc!important; letter-spacing: normal; }
+.allMusic:hover { color: var(--exp-accent)!important; }
+.mainScroll { flex: 1; min-height: 0; overflow: auto; padding: 24px 36px 0; scrollbar-width: thin; scrollbar-color: #383838 transparent; }
+.hero { position: relative; display: flex; height: clamp(310px, 30vw, 445px); min-height: 310px; overflow: hidden; background: radial-gradient(ellipse at 58% 10%, #bf4839 0%, #6b221e 45%, #261512 88%); }
+.heroArt { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: center 35%; filter: grayscale(.4) contrast(1.3); opacity: .36; transform: scale(1.06); }
+.heroTint { position: absolute; inset: 0; background: radial-gradient(ellipse at 65% 25%, rgba(244,111,77,.4), transparent 52%), linear-gradient(90deg, rgba(17,9,8,.85) 0%, rgba(47,13,11,.47) 49%, rgba(25,7,5,.12) 100%), linear-gradient(0deg, rgba(13,10,10,.55), transparent 40%); }
+.heroInner { position: relative; display: flex; flex-direction: column; justify-content: space-between; width: 100%; padding: 23px 32px 20px; }
+.heroEyebrow { display: flex; align-items: center; gap: 9px; color: #ded2c9; font-size: 10px; letter-spacing: .13em; }
+.heroEyebrow > span:last-child { color: #d59886; }
+.line { width: 20px; height: 1px; background: var(--exp-accent); }
+.heroContent { max-width: 570px; padding: 18px 0; }
+.eyebrow { color: #ed9f86; font-size: 10px; font-weight: 500; letter-spacing: .16em; }
+.hero h1 { margin: 14px 0 15px; color: #fff9f6; font-size: clamp(48px, 5.3vw, 83px); font-weight: 400; letter-spacing: -.075em; line-height: .95; }
+.hero h1 em { font-weight: 300; font-style: normal; }
+.heroContent p { max-width: 340px; margin: 0 0 22px; color: #eed4cc; font-size: 12px; line-height: 1.6; }
+.heroButton { display: inline-flex; align-items: center; justify-content: center; gap: 9px; min-height: 37px; padding: 0 15px; border: 0; background: #fff0e7; color: #251512; font-size: 11px; font-weight: 600; }
+.heroButton:hover { background: #fff; }
+.heroFooter { display: flex; align-items: end; justify-content: space-between; color: #dfbcb2; font-size: 10px; letter-spacing: .07em; }
+.heroDots { display: flex; align-items: center; gap: 6px; }
+.heroDots button { width: 5px; height: 5px; padding: 0; border: 0; border-radius: 50%; background: #b48f86; }
+.heroDots .dotActive { width: 7px; height: 7px; background: #fff; }
+.heroArrows { display: flex; gap: 6px; }
+.heroArrows button { display: grid; width: 27px; height: 27px; place-items: center; border: 1px solid rgba(255,255,255,.25); background: rgba(15,15,15,.2); color: #fff; }
+.heroArrows button:hover { background: rgba(255,255,255,.2); }
+.contentSection { margin: 39px 0 0; }
+.sectionHeader { display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; min-height: 34px; margin: 0 0 20px; }
+.sectionHeader h2 { margin: 5px 0 0; font-size: 25px; font-weight: 400; letter-spacing: -.035em; line-height: 1.1; }
+.sectionKicker { color: #777; font-size: 9px; letter-spacing: .14em; }
+.sectionHeader > span, .sectionHeader a { color: #9e9e9e; font-size: 11px; }
+.sectionHeader a { display: inline-flex; align-items: center; gap: 6px; }
+.sectionHeader a:hover { color: #fff; }
+.sectionControls { display: flex; align-items: center; gap: 13px; }
+.sectionControls button { display: grid; place-items: center; width: 30px; height: 30px; border: 1px solid #353535; background: #202020; color: #c9c9c9; }
+.sectionControls button:hover, .sectionControls .controlActive { color: var(--exp-accent); border-color: var(--exp-accent); }
+.releaseGrid { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: 15px; }
+.releaseCard { display: flex; flex-direction: column; min-width: 0; padding: 0; border: 0; background: transparent; text-align: left; color: #f1f1f1; }
+.releaseCover { position: relative; display: block; width: 100%; aspect-ratio: 1; overflow: hidden; background: #303030; }
+.releaseCover > img, .releaseCover > .emptyArtwork { width: 100%; height: 100%; object-fit: cover; transition: transform 200ms; }
+.releaseCard:hover .releaseCover > img { transform: scale(1.045); }
+.releasePlay { position: absolute; display: grid; place-items: center; inset: 0; background: rgba(0,0,0,.36); color: #fff; opacity: 0; transition: opacity 160ms; }
+.releaseCard:hover .releasePlay, .releaseCard:focus-visible .releasePlay { opacity: 1; }
+.releaseCard strong { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 11px; font-size: 12px; font-weight: 500; }
+.releaseCard > span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-top: 3px; color: #898989; font-size: 11px; }
+.emptyArtwork { display: grid; place-items: center; width: 100%; height: 100%; color: #6e6e6e; background: linear-gradient(125deg, #3d3531, #202021); }
+.genreGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+.genreTile { display: flex; align-items: end; justify-content: space-between; min-height: 100px; padding: 16px; border: 1px solid #343434; background: linear-gradient(145deg, #30302e, #242322); color: #ddd; text-align: left; font-size: 15px; }
+.genreTile:hover, .genreSelected { border-color: var(--exp-accent); color: #fff; }
+.artistGrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 7px; }
+.artistGrid button { display: flex; align-items: center; gap: 10px; min-height: 47px; border: 1px solid #303030; background: #222; color: #ccc; padding: 0 13px; text-align: left; }
+.artistGrid button svg:last-child { margin-left: auto; }
+.artistGrid button:hover { color: #fff; border-color: #777; }
+.playlistGrid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 13px; }
+.playlistTile { display: flex; flex-direction: column; gap: 9px; min-width: 0; }
+.playlistTile > img, .playlistTile > .emptyArtwork { width: 100%; aspect-ratio: 1; height: auto; object-fit: cover; }
+.playlistTile strong { font-size: 12px; font-weight: 400; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.status { margin: 16px 0; color: #888; line-height: 1.5; }
+.status a { text-decoration: underline; color: #bbb; }
+.trackSection { margin-top: 43px; }
+.trackTable { width: 100%; padding-bottom: 35px; }
+.trackHead, .trackRow { display: grid; grid-template-columns: 30px minmax(0, 1fr) minmax(65px, .48fr) 47px 38px; align-items: center; column-gap: 10px; }
+.trackHead { height: 32px; border-bottom: 1px solid #333; color: #6f6f6f; font-size: 9px; letter-spacing: .095em; }
+.trackHead > span:last-child { text-align: center; }
+.trackRow { min-height: 62px; border-bottom: 1px solid #292929; }
+.trackRow:hover, .trackPlaying { background: #1d1e1e; }
+.trackNumber { padding: 0; border: 0; background: transparent; color: #8b8b8b; font-size: 11px; }
+.trackPlaying .trackNumber { color: var(--exp-accent); }
+.trackSong { display: flex; align-items: center; min-width: 0; gap: 12px; padding: 6px 0; border: 0; background: transparent; text-align: left; color: #ddd; }
+.trackSong > img, .trackSong > .emptyArtwork { width: 38px; height: 38px; flex: 0 0 38px; object-fit: cover; }
+.trackSong > span:last-child { display: flex; min-width: 0; flex-direction: column; gap: 4px; }
+.trackSong strong, .queueItem strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #e2e2e2; font-size: 11px; font-weight: 500; }
+.trackSong small, .queueItem small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #777; font-size: 10px; }
+.trackSong:hover strong { color: var(--exp-accent); }
+.trackGenre, .trackTime { color: #858585; font-size: 11px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.likeButton { display: grid; place-items: center; width: 30px; height: 30px; padding: 0; border: 0; background: transparent; color: #777; }
+.likeButton:hover, .isLiked { color: var(--exp-accent); }
+.isLiked svg { fill: currentColor; }
+.bottomNote { display: flex; justify-content: space-between; padding: 22px 0 35px; border-top: 1px solid #292929; color: #555; font-size: 9px; letter-spacing: .09em; }
+.rightSidebar { display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden; border-left: 1px solid #252525; background: #151616; }
+.rightTop { display: flex; height: 73px; flex: 0 0 73px; align-items: center; justify-content: space-between; gap: 5px; padding: 0 20px; border-bottom: 1px solid #282828; font-size: 10px; font-weight: 500; letter-spacing: .06em; }
+.rightTop > span:first-child { display: flex; align-items: center; gap: 8px; }
+.onlineStatus { display: flex; align-items: center; gap: 5px; color: #888; font-size: 9px; }
+.player { padding: 17px 17px 15px; border-bottom: 1px solid #292929; }
+.playerArtwork { position: relative; width: 100%; aspect-ratio: 1.75; overflow: hidden; background: #292929; }
+.playerArtwork > img, .playerArtwork > .emptyArtwork { width: 100%; height: 100%; object-fit: cover; }
+.playerArtwork::after { position: absolute; inset: 45% 0 0; background: linear-gradient(0deg, rgba(0,0,0,.55), transparent); content: ""; }
+.artOverlay { position: absolute; right: 12px; bottom: 12px; z-index: 1; color: #eee; font-size: 9px; letter-spacing: .11em; }
+.playerMeta { display: flex; align-items: center; justify-content: space-between; min-height: 75px; gap: 9px; padding: 15px 3px 9px; }
+.playerMeta > div { min-width: 0; }
+.playerEyebrow { color: #6d6d6d; font-size: 9px; letter-spacing: .13em; }
+.playerMeta h2 { margin: 6px 0 4px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 15px; font-weight: 500; }
+.playerMeta p { margin: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #888; font-size: 11px; }
+.playerProgress { margin: 12px 0 0; }
+.playerProgress input { display: block; width: 100%; height: 4px; margin: 0; appearance: none; background: linear-gradient(90deg, var(--exp-accent) var(--range-progress, 0%), #424242 var(--range-progress, 0%)); cursor: pointer; }
+.playerProgress input::-webkit-slider-thumb { appearance: none; width: 9px; height: 9px; background: #efb2a0; border-radius: 50%; }
+.playerProgress > div { display: flex; justify-content: space-between; margin-top: 9px; color: #8c8c8c; font-size: 10px; }
+.playerButtons { display: flex; justify-content: space-between; align-items: center; margin: 15px 0 17px; }
+.playerButtons button { display: grid; place-items: center; width: 35px; height: 35px; padding: 0; border: 0; background: transparent; color: #bdbdbd; }
+.playerButtons button:hover { color: #fff; }
+.playerButtons .mainPlay { width: 42px; height: 42px; border-radius: 50%; background: #eee; color: #151515; }
+.playerButtons .mainPlay:hover { background: var(--exp-accent); color: #151515; }
+.playerButtons .controlActive { color: var(--exp-accent); }
+.volumeRow { display: flex; align-items: center; gap: 12px; color: #888; font-size: 10px; }
+.volumeRow input { width: 100%; height: 3px; appearance: none; background: #4e4e4e; accent-color: var(--exp-accent); }
+.volumeRow input::-webkit-slider-thumb { width: 9px; height: 9px; appearance: none; border-radius: 50%; background: #aaa; }
+.volumeRow span { width: 28px; text-align: right; }
+.queuePanel { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.queueTabs { display: flex; flex: 0 0 49px; gap: 24px; align-items: stretch; padding: 0 19px; border-bottom: 1px solid #292929; }
+.queueTabs button { padding: 0; border: 0; border-bottom: 2px solid transparent; background: transparent; color: #777; font-size: 10px; font-weight: 550; letter-spacing: .055em; }
+.queueTabs button:hover { color: #fff; }
+.queueTabs .queueActive { border-bottom-color: var(--exp-accent); color: #efefef; }
+.queueSearch { display: flex; align-items: center; gap: 9px; height: 44px; flex: 0 0 44px; margin: 0 18px; border-bottom: 1px solid #292929; color: #6d6d6d; }
+.queueList { flex: 1; min-height: 0; overflow: auto; padding: 5px 12px 10px; scrollbar-width: thin; scrollbar-color: #383838 transparent; }
+.queueItem { display: flex; align-items: center; gap: 11px; width: 100%; min-width: 0; min-height: 58px; padding: 7px; border: 0; border-bottom: 1px solid #252626; background: transparent; color: #eaeaea; text-align: left; }
+.queueItem > img, .queueItem > .emptyArtwork { width: 38px; height: 38px; flex: 0 0 38px; object-fit: cover; }
+.queueItem > span:nth-child(2) { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 4px; }
+.queueItem > em { margin-left: auto; color: #777; font-size: 10px; font-style: normal; }
+.queueItem:hover, .queueCurrent { background: #242424; }
+.queueCurrent strong { color: var(--exp-accent); }
+.queueEmpty { color: #777; text-align: center; margin: 35px 12px; font-size: 11px; }
+.rightFooter { display: flex; flex: 0 0 45px; gap: 6px; align-items: center; justify-content: space-between; padding: 0 17px; border-top: 1px solid #252525; }
+.rightFooter a { display: inline-flex; align-items: center; gap: 5px; color: #888; font-size: 9px; letter-spacing: .03em; }
+.rightFooter a:hover { color: #fff; }
+@media (max-width: 1350px) {
+  .root { grid-template-columns: 180px minmax(0, 1fr) 300px; }
+  .topBar { padding-inline: 24px; }
+  .mainScroll { padding-inline: 24px; }
+  .releaseGrid { gap: 10px; }
+  .rightTop { padding-inline: 13px; }
+}
+@media (max-width: 1050px) {
+  .root { grid-template-columns: 168px minmax(0, 1fr) 270px; }
+  .topBarRight > span { display: none; }
+  .mainScroll { padding-inline: 17px; }
+  .topBar { padding-inline: 17px; }
+  .releaseGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); row-gap: 22px; }
+  .hero h1 { font-size: 55px; }
+  .trackHead, .trackRow { grid-template-columns: 22px minmax(0,1fr) 42px 28px; gap: 8px; }
+  .trackHead > span:nth-child(3), .trackGenre { display: none; }
+}
+@media (max-width: 760px) {
+  .root { display: flex; flex-direction: column; overflow: auto; }
+  .leftSidebar { height: auto; flex: 0 0 auto; border-right: 0; }
+  .logoRow { height: 55px; flex-basis: 55px; }
+  .sideSearch { display: none; }
+  .leftScroll { overflow: visible; }
+  .navList { display: flex; gap: 3px; overflow-x: auto; padding: 7px 9px; }
+  .navItem { width: auto; min-width: max-content; padding: 0 12px; height: 34px; }
+  .navActive i { top: auto; right: 5px; bottom: 0; left: 5px; width: auto; height: 2px; }
+  .sidebarSection, .leftBottom { display: none; }
+  .center { height: auto; min-height: 480px; overflow: visible; flex: 0 0 auto; }
+  .topBar { min-height: 50px; height: 50px; }
+  .mainScroll { flex: none; overflow: visible; }
+  .hero { height: 400px; }
+  .rightSidebar { height: auto; min-height: 500px; overflow: visible; flex: 0 0 auto; border-left: 0; border-top: 1px solid #303030; }
+  .playerArtwork { max-height: 280px; }
+  .queuePanel { min-height: 300px; }
+  .queueList { overflow: visible; }
+  .releaseGrid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 460px) {
+  .hero { height: 340px; min-height: 340px; }
+  .heroInner { padding: 20px; }
+  .hero h1 { font-size: 50px; }
+  .heroFooter > span { display: none; }
+  .releaseGrid, .artistGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .genreGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .playlistGrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .trackHead, .trackRow { grid-template-columns: 20px minmax(0,1fr) 32px; }
+  .trackHead > span:nth-child(4), .trackTime { display: none; }
+  .topBarRight { display: none; }
+  .bottomNote span { display: none; }
+}
