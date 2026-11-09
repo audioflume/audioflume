@@ -72,13 +72,14 @@ test("artist session routes are exact while admin, claim, desktop and unknown ro
     "/api/artists/apply",
     "/api/artists/apply/images",
     "/api/artists/apply/samples",
+    "/api/artists/42/team",
   ]) {
     assert.equal(shouldRefreshAccountSession(path), true, path);
   }
   for (const path of [
     "/api/artists/claim",
     "/api/artists/apply/images/extra",
-    "/api/artists/42/team",
+    "/api/artists/42/team/extra",
     "/api/admin/system-health",
     "/api/desktop/projects",
   ]) {
