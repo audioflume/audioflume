@@ -93,6 +93,16 @@ export default clerkMiddleware(async (auth, request) => {
     return refreshSupabaseAccountSession(request);
   }
 
+  // OAuth exchange has its own verified owner check. Permit only this exact
+  // callback when Supabase is explicitly selected; all other protected
+  // website routes remain behind Clerk until a reviewed cutover.
+  if (
+    request.nextUrl.pathname === "/auth/supabase/callback" &&
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase"
+  ) {
+    return NextResponse.next();
+  }
+
   // Only refresh migrated account API sessions when the server operator
   // explicitly opts into the Supabase migration. Desktop remains untouched.
   if (
