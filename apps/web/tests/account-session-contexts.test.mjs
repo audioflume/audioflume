@@ -41,9 +41,29 @@ test("Supabase client cache session does not claim legacy ownership or grant ser
   const src = await read("context/AccountSessionContext.tsx");
   assert.match(src, /supabaseAccountBrowser\.auth\.getUser\(\)/);
   assert.match(src, /supabaseAccountBrowser\.auth\.onAuthStateChange/);
-  assert.match(src, /provider === "supabase" \? supabaseUserId : \(clerkUser\?\.id \?\? null\)/);
+  assert.match(src, /provider === "supabase" \? supabaseUser : null/);
+  assert.match(src, /const userId = user\?\.id \?\? null/);
+  assert.match(src, /profileFromVerifiedSupabaseUser\(data\.user\)/);
+  assert.match(src, /profileFromVerifiedSupabaseUser\(session\.user\)/);
+  assert.match(src, /await clerkSignOut\(\)/);
+  assert.match(src, /await supabaseAccountBrowser\.auth\.signOut\(\)/);
   assert.doesNotMatch(src, /auth_identity_links|clerk_user_id|service_role/);
   const api = await read("lib/auth/resolveAccountOwner.ts");
   assert.match(api, /\.eq\("supabase_user_id", supabaseUserId\)/);
   assert.match(api, /supabase\.auth\.getUser\(\)/);
+});
+
+test("header and web user menu use provider-aware identity and sign-out without changing shared shells", async () => {
+  const header = await read("components/Header.tsx");
+  const menu = await read("components/UserMenu.tsx");
+  assert.match(header, /const \{ user, isLoaded \} = useAccountSession\(\)/);
+  assert.match(header, /const initials = user/);
+  assert.match(header, /const avatarImage = profileImage \|\| user\?\.imageUrl \|\| null/);
+  assert.match(header, /<UserMenu onClose=\{\(\) => setMenuOpen\(false\)\} \/>/);
+  assert.match(menu, /const \{ signOut, user \} = useAccountSession\(\)/);
+  assert.match(menu, /onClick=\{\(\) => signOut\(\)\}/);
+  assert.match(menu, /<UserMenuPanel className="filmwave-web-user-menu">/);
+  assert.match(menu, /imageSrc=\{user\?\.imageUrl\}/);
+  assert.doesNotMatch(header, /from ["']@clerk\/nextjs["']/);
+  assert.doesNotMatch(menu, /from ["']@clerk\/nextjs["']/);
 });
