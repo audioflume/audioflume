@@ -318,3 +318,22 @@ node apps/web/scripts/smoke-supabase-auth-local.mjs --provider supabase
 The script is restricted to HTTP loopback hosts (localhost, 127.0.0.1, ::1), never sends credentials/cookies or follows redirects, and uses only GET. It checks expected anonymous denials for the account session, cutover preview, artist access and claims, and admin health/audio proxy; it also confirms the sign-in and artist-claim pages render. The selected `--provider` must match the **already running server's** server-side configuration; the script never sets or changes the provider. A passing run is not a substitute for logged-in role/owner access tests, end-to-end OAuth, desktop pairing, RLS verification, or a production build.
 
 If the MERIT analyzer startup is blocked by a pre-existing listener on port 8000, identify the process with `lsof -nP -iTCP:8000 -sTCP:LISTEN` and confirm it is a stale analyzer before stopping it. Do not change startup scripts or kill unrelated services for this test.
+
+## Artist team, admin page and desktop handoff gates (2026-11-09)
+
+- **Existing artist team invitations:** When `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase`, the artist dashboard verifies the current Supabase subject and legacy owner link, then obtains the exact Auth user via the service-role Admin API. It accepts pending team invitations only for that user's currently confirmed primary email, reusing `acceptPendingArtistTeamInvitations()` and its existing manager/editor/viewer role restrictions. A failed or mismatched email lookup skips invitation acceptance but does not lock the user out of the dashboard. Clerk mode retains the previous invitation flow. This does **not** enable creating new Clerk invitations in Supabase mode.
+- **Artist application page:** `/artists/apply` now uses the verified Supabase cookie page guard when selected, matching its already-converted artist application APIs. Clerk mode and all other routes remain unchanged.
+- **Admin pages:** `/admin` and its exact subtree pass through Supabase session refresh only in Supabase mode; a new server-only `app/admin/layout.tsx` checks `requireAdmin()` before rendering any admin child page. This requires both the existing verified owner mapping and `AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED=true` with server-controlled `app_metadata.role=admin`. `/api/admin/access` exposes only a no-store `{ isAdmin: boolean }` check (200/403); the dashboard and song upload/edit form use it instead of Clerk client metadata when Supabase is active. Clerk mode preserves existing page rendering and its admin checks. Other admin components still require end-to-end review.
+- **Desktop login return:** In the explicitly selected Supabase desktop mode (both desktop and account switches), the existing desktop token page sends a relative same-origin `redirect_url` back to `/api/desktop/auth/token`, which the Supabase sign-in form accepts. Clerk-mode absolute redirect URLs are preserved; token formats and desktop pairing behavior are unchanged.
+
+Local tests to run:
+```bash
+node --experimental-strip-types --test \
+  apps/web/tests/supabase-artist-team-acceptance.test.mjs \
+  apps/web/tests/supabase-browser-cutover-boundaries.test.mjs \
+  apps/web/tests/supabase-admin-page-cutover.test.mjs \
+  apps/web/tests/supabase-desktop-auth-cutover.test.mjs
+node apps/web/scripts/smoke-supabase-auth-local.mjs --provider clerk
+```
+
+The local anonymous smoke script now requests `Accept: application/json` and checks only the six API routes. Browser pages are intentionally excluded because Clerk development may redirect anonymous non-browser requests through `/v1/client/handshake`; test interactive login separately. This staged change does not set provider flags or promote any admin, and **does not replace** signed-in end-to-end testing, reviewed production RLS, and a clean typechecked build.
