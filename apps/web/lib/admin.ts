@@ -1,5 +1,8 @@
 import { currentUser } from '@clerk/nextjs/server'
 import { selectAccountAuthProvider } from '@/lib/auth/selectAccountAuthProvider'
+import { isTrustedSupabaseAdmin } from '@/lib/auth/isTrustedSupabaseAdmin'
+import { resolveAccountOwner } from '@/lib/auth/resolveAccountOwner'
+import { supabaseServer } from '@/lib/supabaseServer'
 
 /**
  * Admin access is determined by two methods (either is sufficient):
@@ -12,9 +15,33 @@ import { selectAccountAuthProvider } from '@/lib/auth/selectAccountAuthProvider'
  *    This is never committed to the repository.
  */
 export async function requireAdmin() {
-  // Clerk privileges must not bleed into a simultaneous Supabase session.
-  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== 'clerk') {
-    return { isAdmin: false, user: null, email: undefined }
+  // Supabase authorization uses a verified linked owner and a fresh server-
+  // trusted Auth Admin API read. Never consult Clerk's current browser user.
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === 'supabase') {
+    const owner = await resolveAccountOwner()
+    if (!owner.userId || !owner.supabaseUserId) {
+      return { isAdmin: false, user: null, email: undefined }
+    }
+
+    if (process.env.AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED !== 'true') {
+      return { isAdmin: false, user: { id: owner.userId }, email: undefined }
+    }
+
+    try {
+      const { data, error } = await supabaseServer.auth.admin.getUserById(owner.supabaseUserId)
+      if (error || data.user?.id !== owner.supabaseUserId) {
+        return { isAdmin: false, user: { id: owner.userId }, email: undefined }
+      }
+      const isAdmin = isTrustedSupabaseAdmin(
+        process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+        process.env.AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED,
+        data.user.app_metadata,
+      )
+      return { isAdmin, user: { id: owner.userId }, email: undefined }
+    } catch (error) {
+      console.error('Supabase admin authorization failed:', error)
+      return { isAdmin: false, user: { id: owner.userId }, email: undefined }
+    }
   }
 
   const user = await currentUser()
