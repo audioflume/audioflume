@@ -77,3 +77,14 @@ test("Supabase session refresh is limited to converted artist APIs and never des
   assert.doesNotMatch(src, /pathname\.startsWith\("\/api\/admin"/);
   assert.doesNotMatch(src, /pathname\.startsWith\("\/api\/desktop"/);
 });
+
+test("team creation cannot use Clerk invitations under the Supabase provider", async () => {
+  const src = await read("app/api/artists/[id]/team/route.ts");
+  const create = src.slice(src.indexOf("export async function POST("), src.indexOf("export async function PATCH("));
+  assert.ok(create.indexOf("selectAccountAuthProvider(") >= 0);
+  assert.ok(create.indexOf("selectAccountAuthProvider(") < create.indexOf("await requireArtistPermission("));
+  assert.ok(create.indexOf("selectAccountAuthProvider(") < create.indexOf("clerkClient()"));
+  assert.match(create, /status: 403/);
+  assert.match(create, /await requireArtistPermission\(id, "artist:manage_members"\)/);
+  assert.match(create, /client\.invitations\.createInvitation\(/);
+});
