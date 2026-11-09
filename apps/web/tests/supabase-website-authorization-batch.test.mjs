@@ -88,3 +88,14 @@ test("team creation cannot use Clerk invitations under the Supabase provider", a
   assert.match(create, /await requireArtistPermission\(id, "artist:manage_members"\)/);
   assert.match(create, /client\.invitations\.createInvitation\(/);
 });
+
+test("Supabase-linked team members cannot revoke pending Clerk invitations", async () => {
+  const src = await read("app/api/artists/[id]/team/route.ts");
+  const deletion = src.slice(src.indexOf("export async function DELETE("));
+  const invitationBlock = deletion.slice(deletion.indexOf("if (invitationId) {"));
+  const guard = invitationBlock.indexOf("selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER)");
+  const revoke = invitationBlock.indexOf("client.invitations.revokeInvitation(");
+  assert.ok(guard >= 0 && revoke > guard);
+  assert.match(invitationBlock.slice(guard, revoke), /status: 403/);
+  assert.match(deletion, /await requireArtistPermission\(id, "artist:manage_members"\)/);
+});
