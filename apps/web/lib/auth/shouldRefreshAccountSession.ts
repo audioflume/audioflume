@@ -5,6 +5,9 @@
  */
 export function shouldRefreshAccountSession(pathname: string) {
   if (
+    pathname === "/api/account/profile" ||
+    pathname === "/api/account/billing-profile" ||
+    pathname === "/api/account/membership" ||
     pathname === "/api/account/notifications" ||
     pathname === "/api/account/usage" ||
     pathname === "/api/account/security-events" ||
