@@ -1,4 +1,5 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import { NextResponse } from "next/server";
 
 import { ensureUserProfile } from "@/lib/account";
@@ -150,6 +151,11 @@ export async function GET(_request: Request, context: RouteContext) {
 }
 
 export async function POST(request: Request, context: RouteContext) {
+  // Clerk invitations and direct user lookups are not a Supabase identity flow.
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
+    return NextResponse.json({ error: "Artist team invitations are not yet available." }, { status: 403 });
+  }
+
   try {
     const { id } = await context.params;
     const access = await requireArtistPermission(id, "artist:manage_members");
