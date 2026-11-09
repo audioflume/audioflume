@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -6,12 +6,13 @@ export async function DELETE(
   _request: Request,
   { params }: { params: Promise<{ songId: string }> },
 ) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
     return NextResponse.json(
-      { error: "You must be signed in to remove favorites." },
-      { status: 401 },
+      { error: account.status === 401 ? "You must be signed in to remove favorites." : account.error },
+      { status: account.status },
     );
   }
 
