@@ -121,7 +121,16 @@ export async function GET(req: Request) {
   const shouldDeepLink = url.searchParams.get("callback") === "deeplink";
   const signInUrl = new URL("/sign-in", url.origin);
 
-  signInUrl.searchParams.set("redirect_url", url.toString());
+  // Supabase sign-in accepts only same-origin relative return paths.
+  // Preserve Clerk's existing absolute callback parameter unchanged.
+  const isSupabaseDesktop = selectDesktopAuthProvider(
+    process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+  ) === "supabase";
+  signInUrl.searchParams.set(
+    "redirect_url",
+    isSupabaseDesktop ? url.pathname + url.search : url.toString(),
+  );
 
   const desktopIdentity = await getSignedInUserId();
 
