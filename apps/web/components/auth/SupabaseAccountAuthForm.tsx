@@ -40,7 +40,7 @@ export default function SupabaseAccountAuthForm({ initialMode, next }: Props) {
     `${window.location.origin}/auth/supabase/callback?next=${encodeURIComponent(destination)}`;
 
   async function checkLinkAndContinue() {
-    const response = await fetch("/api/auth-preview/cutover-session", {
+    const response = await fetch("/api/account/auth-session", {
       credentials: "same-origin",
       cache: "no-store",
     });
