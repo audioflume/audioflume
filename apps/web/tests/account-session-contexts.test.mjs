@@ -41,7 +41,7 @@ test("Supabase client cache session does not claim legacy ownership or grant ser
   const src = await read("context/AccountSessionContext.tsx");
   assert.match(src, /supabaseAccountBrowser\.auth\.getUser\(\)/);
   assert.match(src, /supabaseAccountBrowser\.auth\.onAuthStateChange/);
-  assert.match(src, /provider === "supabase" \? supabaseUser : null/);
+  assert.match(src, /if \(provider === "supabase"\) return supabaseUser/);
   assert.match(src, /const userId = user\?\.id \?\? null/);
   assert.match(src, /profileFromVerifiedSupabaseUser\(data\.user\)/);
   assert.match(src, /profileFromVerifiedSupabaseUser\(session\.user\)/);
