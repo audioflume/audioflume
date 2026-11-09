@@ -43,11 +43,12 @@ export default async function ArtistDashboardPage() {
   // existing team invitations on behalf of the verified legacy owner.
   const { data, error } = await supabaseServer.auth.admin.getUserById(owner.supabaseUserId);
   if (error || data.user?.id !== owner.supabaseUserId) {
-    throw new Error("Unable to verify artist invitation email.");
-  }
-  const verifiedEmails = verifiedSupabaseClaimEmails(owner.supabaseUserId, data.user);
-  if (verifiedEmails.length > 0) {
-    await acceptPendingArtistTeamInvitations(owner.userId, verifiedEmails[0]);
+    console.error("Unable to verify artist team invitation email.");
+  } else {
+    const verifiedEmails = verifiedSupabaseClaimEmails(owner.supabaseUserId, data.user);
+    if (verifiedEmails.length > 0) {
+      await acceptPendingArtistTeamInvitations(owner.userId, verifiedEmails[0]);
+    }
   }
 
   const profiles = await getArtistDashboardProfiles(owner.userId);
