@@ -11,6 +11,8 @@ import { PlaylistsProvider } from "@/context/PlaylistsContext";
 import { ProjectsProvider } from "@/context/ProjectsContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ArtistInvitesProvider } from "@/context/ArtistInvitesContext";
+import { AccountSessionProvider } from "@/context/AccountSessionContext";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
@@ -150,6 +152,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
         <body>
+          <AccountSessionProvider provider={selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER)}>
           <ArtistInvitesProvider
             initialPendingCount={initialPendingArtistInviteCount}
           >
@@ -174,6 +177,7 @@ export default async function RootLayout({
               </ThemeProvider>
             </UserPreferencesProvider>
           </ArtistInvitesProvider>
+          </AccountSessionProvider>
         </body>
       </html>
     </ClerkProvider>
