@@ -97,7 +97,7 @@ function cleanRightsHolders(value: unknown): RightsHolderInput[] {
         item && typeof item === "object"
           ? (item as Record<string, unknown>)
           : {};
-      const rightsType =
+      const rightsType: RightsHolderInput["rights_type"] =
         record.rights_type === "master" ||
         record.rights_type === "publishing" ||
         record.rights_type === "both"
