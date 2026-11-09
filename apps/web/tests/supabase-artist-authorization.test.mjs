@@ -71,8 +71,10 @@ test("only exact artist-team API route refreshes Supabase cookies, never nearby 
   assert.equal(shouldRefreshAccountSession("/api/artists/example-id/team"), true);
   assert.equal(shouldRefreshAccountSession("/api/artists/example-id/team/other"), false);
   assert.equal(shouldRefreshAccountSession("/api/artists/example-id/team/"), false);
-  assert.equal(shouldRefreshAccountSession("/api/artists/example-id/songs"), false);
-  assert.equal(shouldRefreshAccountSession("/api/artists/claim"), false);
+  assert.equal(shouldRefreshAccountSession("/api/artists/example-id/songs"), true);
+  assert.equal(shouldRefreshAccountSession("/api/artists/claim"), true);
+  assert.equal(shouldRefreshAccountSession("/api/artists/example-id/songs/unknown"), false);
+  assert.equal(shouldRefreshAccountSession("/api/artists/claim/unknown"), false);
   assert.equal(shouldRefreshAccountSession("/api/admin/system-health"), false);
 });
 
