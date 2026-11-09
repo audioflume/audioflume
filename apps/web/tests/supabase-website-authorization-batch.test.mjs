@@ -66,26 +66,36 @@ test("image and sample upload and cleanup use verified legacy owner for storage 
   }
 });
 
-test("artist claims never accept a stale Clerk identity while Supabase is active", async () => {
+test("Supabase artist claims use verified linked owner and server-confirmed email, never concurrent Clerk identity", async () => {
   const src = await read("app/api/artists/claim/route.ts");
-  assert.equal((src.match(/selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\) !== "clerk"/g) ?? []).length, 2);
+  const identity = src.slice(src.indexOf("async function getClaimIdentity()"), src.indexOf("function getVerifiedUserEmails("));
+  assert.match(identity, /selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\) === "clerk"/);
+  assert.match(identity, /await currentUser\(\)/);
+  assert.match(identity, /await resolveAccountOwner\(\)/);
+  assert.match(identity, /owner\.userId && !owner\.supabaseUserId|!owner\.userId \|\| !owner\.supabaseUserId/);
+  assert.match(identity, /supabaseServer\.auth\.admin\.getUserById\(owner\.supabaseUserId\)/);
+  assert.match(identity, /data\.user\?\.id !== owner\.supabaseUserId/);
+  assert.match(identity, /verifiedSupabaseClaimEmails\(owner\.supabaseUserId, data\.user\)/);
+
   const get = src.slice(src.indexOf("export async function GET()"), src.indexOf("export async function POST("));
   const post = src.slice(src.indexOf("export async function POST("));
   for (const body of [get, post]) {
-    assert.ok(body.indexOf("selectAccountAuthProvider(") < body.indexOf("await currentUser()"));
-    assert.match(body, /status: 403/);
+    assert.match(body, /await getClaimIdentity\(\)/);
+    assert.match(body, /ensureUserProfile\(identity\.userId, identity\.profile\)/);
+    assert.match(body, /identity\.emails/);
+    assert.doesNotMatch(body, /await currentUser\(\)|user\.id/);
   }
-  assert.match(post, /p_clerk_user_id: user\.id/);
-  assert.match(post, /getVerifiedUserEmails\(user\)/);
+  assert.match(post, /p_clerk_user_id: identity\.userId/);
+  assert.match(post, /normalizeArtistClaimEmail\(invitation\.email\)/);
+  assert.match(post, /if \(!emails\.includes\(invitationEmail\)\)/);
 });
 
 test("Supabase session refresh is limited to converted artist APIs and never desktop or admin", async () => {
   const src = await read("lib/auth/shouldRefreshAccountSession.ts");
-  for (const route of ["access", "apply", "apply/images", "apply/samples"]) {
+  for (const route of ["access", "claim", "apply", "apply/images", "apply/samples"]) {
     assert.ok(src.includes(`pathname === "/api/artists/${route}"`), route);
   }
   assert.doesNotMatch(src, /pathname\.startsWith\("\/api\/artists"/);
-  assert.doesNotMatch(src, /pathname === "\/api\/artists\/claim"/);
   assert.doesNotMatch(src, /pathname\.startsWith\("\/api\/admin"/);
   assert.doesNotMatch(src, /pathname\.startsWith\("\/api\/desktop"/);
 });
