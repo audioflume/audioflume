@@ -65,3 +65,18 @@ test("public website content bypasses Clerk only when Supabase is explicitly sel
   assert.match(router, /isPublicRoute\(request\) \|\| isPublicContentRoute/);
   assert.match(router, /return NextResponse\.next\(\);/);
 });
+
+test("unconverted API paths retain Clerk while audited Supabase handlers bypass it", async () => {
+  const router = getRouter(await read("middleware.ts"));
+  assert.doesNotMatch(router, /if \(pathname\.startsWith\("\/api\/"\)\)\s*\{\s*return NextResponse\.next\(\)/);
+  for (const route of [
+    "/api/account/auth-session",
+    "/api/auth-preview/cutover-session",
+    "/api/admin/access",
+    "/api/admin/system-health",
+    "/api/admin/audio-proxy",
+  ]) {
+    assert.ok(router.includes('pathname === "' + route + '"'), route);
+  }
+  assert.match(router, /return clerkRequestMiddleware\(request, event\);/);
+});
