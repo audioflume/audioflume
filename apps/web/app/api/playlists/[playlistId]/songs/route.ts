@@ -34,6 +34,8 @@ type SupabaseSongRow = {
   bpm: number | null;
   genres: string[] | null;
   moods: string[] | null;
+  regions: string[] | null;
+  download_count: number | null;
   instruments: string[] | null;
   builds: string[] | null;
   vocals: string[] | null;
@@ -54,7 +56,7 @@ type PlaylistSong = Song & {
 const PLAYLIST_SONG_SELECT =
   "id, playlist_id, song_id, position, created_at";
 const SONG_SELECT =
-  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points";
+  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, download_count, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points";
 
 async function verifyPlaylistOwner(playlistId: string, userId: string) {
   const { data, error } = await supabaseServer
@@ -134,6 +136,8 @@ function normalizeSongRow(row: SupabaseSongRow): Song {
     bpm: Number(row.bpm || 0),
     genres: Array.isArray(row.genres) ? row.genres : [],
     moods: Array.isArray(row.moods) ? row.moods : [],
+    regions: Array.isArray(row.regions) ? row.regions : [],
+    downloadCount: Number(row.download_count || 0),
     instruments: Array.isArray(row.instruments) ? row.instruments : [],
     builds: Array.isArray(row.builds) ? row.builds : [],
     vocals: Array.isArray(row.vocals) ? row.vocals : [],
