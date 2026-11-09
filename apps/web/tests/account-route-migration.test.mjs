@@ -26,6 +26,11 @@ const converted = [
   "projects/[projectId]/sync-size/route.ts",
   "songs/[songId]/playlists/route.ts",
   "songs/[songId]/projects/route.ts",
+  "account/notifications/route.ts",
+  "account/usage/route.ts",
+  "account/security-events/route.ts",
+  "community-playlist-favorites/route.ts",
+  "curated-playlists/[playlistId]/save/route.ts",
   "user-preferences/route.ts",
 ];
 
