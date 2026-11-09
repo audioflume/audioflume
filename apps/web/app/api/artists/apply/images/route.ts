@@ -1,5 +1,5 @@
 import { DeleteObjectsCommand, PutObjectCommand } from "@aws-sdk/client-s3";
-import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 
@@ -39,10 +39,11 @@ function normalizeImageKind(
 }
 
 export async function POST(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  if (!account.userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: account.status });
   }
+  const userId = account.userId;
 
   try {
     const formData = await request.formData();
@@ -71,7 +72,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const prefix = `images/artist-applications/${getUserKey(user.id)}`;
+    const prefix = `images/artist-applications/${getUserKey(userId)}`;
     const key = `${prefix}/${kind}-${Date.now()}-${randomUUID()}.webp`;
     const sharp = (await import("sharp")).default;
     const inputBuffer = Buffer.from(await file.arrayBuffer());
@@ -116,16 +117,17 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  if (!account.userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: account.status });
   }
+  const userId = account.userId;
 
   try {
     const body = (await request.json().catch(() => null)) as
       | { keys?: unknown }
       | null;
-    const prefix = `images/artist-applications/${getUserKey(user.id)}/`;
+    const prefix = `images/artist-applications/${getUserKey(userId)}/`;
     const keys = Array.isArray(body?.keys)
       ? body.keys.filter(
           (key): key is string =>
