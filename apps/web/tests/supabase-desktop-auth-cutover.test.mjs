@@ -81,3 +81,17 @@ test("desktop client deep link, token storage and existing sync payload remain u
   const api = await read("../desktop/src/lib/mockFilmwaveApi.ts");
   assert.match(api, /Authorization: `Bearer \$\{token\}`/);
 });
+
+test("desktop profile display uses owner-scoped records in Supabase mode without Clerk directory access", async () => {
+  const src = await read("app/api/desktop/me/route.ts");
+  assert.match(src, /getDesktopUserIdFromRequest\(req\)/);
+  const mode = src.indexOf("selectDesktopAuthProvider(");
+  const clerkLookup = src.indexOf("await clerkClient()");
+  assert.ok(mode >= 0 && clerkLookup > mode);
+  const branch = src.slice(mode, clerkLookup);
+  assert.match(branch, /\.from\("user_profiles"\)/);
+  assert.match(branch, /\.eq\("clerk_user_id", userId\)/);
+  assert.match(branch, /if \(!profile\)/);
+  assert.match(branch, /email: null/);
+  assert.match(src, /getUser\(userId\)/);
+});
