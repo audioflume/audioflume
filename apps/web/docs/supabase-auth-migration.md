@@ -101,6 +101,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [x] Make the shared website `Header` and `UserMenu` consume the Clerk-default account session, including display identity and provider-aware sign-out, without touching their DOM, classes, menu interactions, icons, or link destinations. Live login URLs and protected routes still depend on Clerk.
 - [x] Replace direct Clerk identity hooks in the website Music page, Playlists page and Discover curated-hero filter with the shared Clerk-default account session. Source comparison confirms unchanged JSX/filter/state behavior; local/browser regression testing pending.
 - [x] Stage actual `/sign-in` and `/sign-up` Supabase branches behind the existing server-side provider selection; preserve Clerk's original path by default. Add Google/email/password registration/reset form, one-to-one linked-owner OAuth callback, same-origin redirect allowlist and tests. Supabase-only protected page routing and end-to-end auth tests still pending.
+- [x] Stage Supabase-verified session page guards only for Favorites, Projects and the main Playlists page, preserving Clerk for all other private pages and the community-tab redirect; suppress Clerk-only artist invitation reads in Supabase mode. End-to-end protected-page and cross-account testing still pending.
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
