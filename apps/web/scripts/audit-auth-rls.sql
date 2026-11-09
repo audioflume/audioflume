@@ -89,3 +89,24 @@ JOIN pg_namespace n ON n.oid = p.pronamespace
 WHERE n.nspname = 'public'
   AND p.prokind = 'f'
 ORDER BY p.proname;
+
+-- 7. Compact, read-only release blocker summary.
+-- A nonzero unprotected_tables value means the RLS gate is not clear.
+-- View and policy correctness still require the detailed checks above.
+SELECT
+  COUNT(*) FILTER (WHERE NOT c.relrowsecurity) AS unprotected_tables,
+  COUNT(*) FILTER (
+    WHERE NOT c.relrowsecurity
+      AND (has_table_privilege('anon', c.oid, 'SELECT')
+        OR has_table_privilege('anon', c.oid, 'INSERT')
+        OR has_table_privilege('anon', c.oid, 'UPDATE')
+        OR has_table_privilege('anon', c.oid, 'DELETE'))
+  ) AS unprotected_tables_accessible_to_anon,
+  CASE WHEN COUNT(*) FILTER (WHERE NOT c.relrowsecurity) = 0
+    THEN 'RLS_STATE_REVIEW_REQUIRED'
+    ELSE 'CUTOVER_BLOCKED_RLS_DISABLED'
+  END AS rls_gate
+FROM pg_class c
+JOIN pg_namespace n ON n.oid = c.relnamespace
+WHERE n.nspname = 'public'
+  AND c.relkind IN ('r', 'p');
