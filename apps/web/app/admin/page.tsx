@@ -365,7 +365,7 @@ export default function AdminDashboardPage() {
       });
 
     return () => { cancelled = true; };
-  }, [supabaseMode, session.isLoaded, session.isSignedIn]);
+  }, [supabaseMode, session.isLoaded, session.isSignedIn, session.userId]);
 
   const isLoaded = supabaseMode ? session.isLoaded && adminChecked : clerkLoaded;
   const userEmail = user?.primaryEmailAddress?.emailAddress;
