@@ -16,7 +16,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 
 ## Prototype (this branch only)
 
-- `/auth-preview` provides a custom Google/Apple/email-password interface plus sign-up, recovery and sign-out.
+- `/auth-preview` provides a custom Google/email-password interface plus sign-up, recovery and sign-out.
 - Google OAuth explicitly requests `prompt=select_account`; **Google decides which account appears first**. The app cannot reliably reorder Google's native account list.
 - The prototype uses the existing browser Supabase client and **must not be used as production SSR authorization**.
 - Sign-in to the prototype does **not** establish access to any legacy Clerk-owned records.
@@ -52,7 +52,7 @@ The Clerk ID is currently the application-facing ownership key. Supabase Auth us
 In the Supabase dashboard, configure:
 - Auth site URL and allowlisted redirect URLs for local development, preview and production, including `/auth-preview` for the temporary prototype.
 - Google OAuth client ID and secret plus the callback URL supplied by Supabase. Google account selection is controlled by `prompt=select_account`.
-- Apple Sign in configuration and required Apple developer credentials, if Apple is to be enabled.
+- Apple sign-in is intentionally out of scope because the project will not enroll in the paid Apple Developer Program.
 - Custom SMTP for reliable sign-up confirmation, password reset and recovery emails.
 - Session policies and safe account-linking behavior.
 
@@ -62,7 +62,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 
 - [x] Audit Clerk usage and the ownership model.
 - [x] Create an isolated branch and custom sign-in preview.
-- [ ] Set up Google/Apple and SMTP for a test environment.
+- [ ] Set up Google and SMTP for a test environment.
 - [ ] Implement and test trusted UUID-to-legacy-ID linking.
 - [ ] Establish SSR cookie-based Supabase sessions (`@supabase/ssr`), including refresh handling. Update package and lockfile together.
 - [ ] Convert server API authorization and data-ownership lookups.
