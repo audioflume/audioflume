@@ -2,6 +2,7 @@ import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 import { supabaseServer } from "@/lib/supabaseServer";
+import { getLinkedLegacyUserId } from "@/lib/supabaseIdentity";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -18,6 +19,32 @@ function verifiedClerkEmail(user: Awaited<ReturnType<typeof currentUser>>) {
   return primary?.verification?.status === "verified"
     ? primary.emailAddress.trim().toLowerCase()
     : null;
+}
+
+// Read-only lookup for a signed-in Supabase user. Never returns a legacy ID.
+// It does not establish an Audioflume application session or grant data access.
+export async function GET(request: Request) {
+  const authorization = request.headers.get("authorization");
+  const token = authorization?.startsWith("Bearer ")
+    ? authorization.slice("Bearer ".length).trim()
+    : "";
+
+  if (!token) {
+    return noStore({ error: "Supabase sign-in is required." }, 401);
+  }
+
+  try {
+    const { data: { user }, error } = await supabaseServer.auth.getUser(token);
+    if (error || !user) {
+      return noStore({ error: "Supabase session could not be verified." }, 401);
+    }
+
+    const legacyId = await getLinkedLegacyUserId(token);
+    return noStore({ linked: legacyId !== null });
+  } catch (error) {
+    console.error("Could not read Supabase account link status:", error);
+    return noStore({ error: "Account link status is temporarily unavailable." }, 500);
+  }
 }
 
 // Explicit, opt-in transition only. Requires independent proof of BOTH identities.
