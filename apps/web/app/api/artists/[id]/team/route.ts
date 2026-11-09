@@ -371,6 +371,11 @@ export async function DELETE(request: Request, context: RouteContext) {
       typeof body?.invitation_id === "string" ? body.invitation_id : "";
 
     if (invitationId) {
+      // Pending invitation revocation uses the Clerk invitation API.
+      if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
+        return NextResponse.json({ error: "Artist team invitations are not yet available." }, { status: 403 });
+      }
+
       const { data: invitation, error: inviteLookupError } = await supabaseServer
         .from("artist_team_invitations")
         .select("id, status, clerk_invitation_id")
