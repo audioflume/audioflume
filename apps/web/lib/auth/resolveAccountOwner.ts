@@ -6,15 +6,7 @@ import { createServerClient } from "@supabase/ssr";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { resolveVerifiedLegacyOwner } from "@/lib/auth-preview/resolveVerifiedLegacyOwner";
 import { selectAccountAuthProvider } from "./selectAccountAuthProvider";
-
-export type VerifiedAccountProfileIdentity = {
-  firstName: string | null;
-  lastName: string | null;
-  fullName: string | null;
-  username: string | null;
-  imageUrl: string | null;
-  primaryEmailAddress: { emailAddress: string | null };
-};
+import { profileFromVerifiedSupabaseUser, type VerifiedAccountProfileIdentity } from "./verifiedSupabaseProfile";
 
 type AccountOwner =
   | { userId: string; status: 200; error?: never; profileIdentity?: VerifiedAccountProfileIdentity }
@@ -59,24 +51,7 @@ export async function resolveAccountOwner(): Promise<AccountOwner> {
         const { data: { user }, error } = await supabase.auth.getUser();
         if (error || !user) return null;
 
-        // Metadata supplies display fields only, never identity or authorization.
-        // The verified user.id and auth_identity_links control ownership.
-        const metadata = user.user_metadata ?? {};
-        const display = (key: string) =>
-          typeof metadata[key] === "string" && metadata[key].trim()
-            ? (metadata[key] as string).trim()
-            : null;
-        const firstName = display("given_name") ?? display("first_name");
-        const lastName = display("family_name") ?? display("last_name");
-        verifiedProfile = {
-          firstName,
-          lastName,
-          fullName: display("full_name") ?? display("name")
-            ?? ([firstName, lastName].filter(Boolean).join(" ") || null),
-          username: null,
-          imageUrl: display("avatar_url") ?? display("picture"),
-          primaryEmailAddress: { emailAddress: user.email ?? null },
-        };
+        verifiedProfile = profileFromVerifiedSupabaseUser(user);
         return user.id;
       },
       async (supabaseUserId) => {
