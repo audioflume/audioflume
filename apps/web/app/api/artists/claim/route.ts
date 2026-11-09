@@ -1,4 +1,5 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import { NextResponse } from "next/server";
 
 import { ensureUserProfile } from "@/lib/account";
@@ -25,6 +26,11 @@ function getVerifiedUserEmails(user: {
 }
 
 export async function GET() {
+  // Do not use a concurrent Clerk cookie to authorize a Supabase artist claim.
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
+    return NextResponse.json({ error: "Artist claims require completed account verification." }, { status: 403 });
+  }
+
   const user = await currentUser();
   if (!user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -101,6 +107,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
+  // Email-based ownership transfers must remain Clerk-only until reviewed.
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
+    return NextResponse.json({ error: "Artist claims require completed account verification." }, { status: 403 });
+  }
+
   const user = await currentUser();
   if (!user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
