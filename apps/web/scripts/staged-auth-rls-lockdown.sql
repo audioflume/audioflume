@@ -49,6 +49,19 @@ BEGIN
 END
 $$;
 
+-- The pending-revision apply RPC is SECURITY DEFINER and directly callable
+-- as anon/authenticated in the live grant snapshot. Only privileged server-side
+-- code needs to execute it. Its trigger companion also has broad EXECUTE grants.
+-- Check exact signatures first so this transaction cannot silently skip them.
+DO $
+BEGIN
+  IF to_regprocedure('public.apply_song_pending_revision(uuid)') IS NULL
+    OR to_regprocedure('public.sync_song_pending_revision_submission_activity()') IS NULL THEN
+    RAISE EXCEPTION 'RLS lockdown aborted: pending-revision function signatures changed';
+  END IF;
+END
+$;
+
 -- Enabling RLS without permissive policies denies browser clients. Server-only
 -- service_role queries remain authorized, but still require app-side owner checks.
 ALTER TABLE public.favorites ENABLE ROW LEVEL SECURITY;
@@ -88,6 +101,15 @@ REVOKE ALL PRIVILEGES ON TABLE public.user_security_events FROM anon, authentica
 REVOKE ALL PRIVILEGES ON TABLE public.project_folder_paths FROM anon, authenticated;
 ALTER VIEW public.project_folder_paths SET (security_invoker = true);
 
+-- The server's song revision review route uses the service-role RPC.
+-- Do not change function bodies or their trusted server EXECUTE privileges.
+-- Revoking PUBLIC matters because explicit anon revocation alone would not
+-- remove an inherited PUBLIC function grant.
+REVOKE ALL PRIVILEGES ON FUNCTION public.apply_song_pending_revision(uuid)
+  FROM PUBLIC, anon, authenticated;
+REVOKE ALL PRIVILEGES ON FUNCTION public.sync_song_pending_revision_submission_activity()
+  FROM PUBLIC, anon, authenticated;
+
 -- Abort the transaction if any browser SQL privilege or RLS gap remains.
 DO $$
 DECLARE unsafe_count integer;
@@ -126,6 +148,17 @@ BEGIN
 
   IF unsafe_count <> 0 THEN
     RAISE EXCEPTION 'RLS lockdown failed postcondition on % tables', unsafe_count;
+  END IF;
+
+  IF has_function_privilege('anon', 'public.apply_song_pending_revision(uuid)', 'EXECUTE')
+    OR has_function_privilege('authenticated', 'public.apply_song_pending_revision(uuid)', 'EXECUTE')
+    OR has_function_privilege('anon', 'public.sync_song_pending_revision_submission_activity()', 'EXECUTE')
+    OR has_function_privilege('authenticated', 'public.sync_song_pending_revision_submission_activity()', 'EXECUTE') THEN
+    RAISE EXCEPTION 'Privileged song revision function still executable by browser roles';
+  END IF;
+
+  IF NOT has_function_privilege('service_role', 'public.apply_song_pending_revision(uuid)', 'EXECUTE') THEN
+    RAISE EXCEPTION 'Server revision application lost required execute privilege';
   END IF;
 
   IF has_table_privilege('anon', 'public.project_folder_paths', 'SELECT')
