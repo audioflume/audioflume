@@ -247,3 +247,14 @@ Do not merge PR #158 or cut over web or desktop auth while any release gate rema
 
 - `GET /api/desktop/me` now supports a Supabase desktop-bearer branch that reads `user_profiles` with an exact `clerk_user_id` predicate. This returns existing display name and avatar for the linked legacy owner without invoking Clerk's user directory. It deliberately returns `email: null` rather than treating editable display metadata or a billing email as an authenticated address. The default Clerk user-directory branch remains unchanged. Supabase profile display requires that the account's existing user profile record has been initialized.
 - Additional regression check in `supabase-desktop-auth-cutover.test.mjs` covers this owner-scoped profile path. The full browser, desktop connection and sync integration checks are still pending.
+
+## Live database security audit — blocking 2026-11-09 finding
+
+Read-only inspection of the Audioflume Supabase project found **14 RLS-disabled tables in the exposed `public` schema**; all 14 currently grant anon and authenticated roles direct SELECT/INSERT/UPDATE/DELETE. These include private favorites/playlists/projects/account profiles, billing, memberships and security events, as well as songs. A publicly readable `project_folder_paths` view also lacks `security_invoker`; `project_sync_operations` policies compare a Supabase JWT UUID subject with legacy Clerk owner strings. The identity link table retains the expected one-to-one constraints and no end-user API permissions.
+
+- Reproduce the audit with **read-only** `apps/web/scripts/audit-auth-rls.sql`. See `apps/web/docs/supabase-auth-rls-rollout.md` for the exact affected tables, staged isolation plan, breaking-change risks and browser/desktop security acceptance tests.
+- The review **did not apply a database migration or change live data/grants**. Enabling RLS or revoking access requires inspection of public music and other direct Data API consumers, a generated and reviewed migration in a staging environment, and cross-account regression tests.
+- The `supabase-account-session-routing` regression list was synchronized with previously migrated exact artist application APIs; previously it incorrectly asserted that `/api/artists/apply` remained Clerk-only.
+- Regression source gate: `node --experimental-strip-types --test apps/web/tests/supabase-rls-cutover-readiness.test.mjs apps/web/tests/supabase-account-session-routing.test.mjs`. Also rerun Supabase Security Advisor and validate the complete staging environment.
+
+**Do not enable either global provider switch.** This is a confirmed database access-control blocker regardless of whether the new authentication provider is active.
