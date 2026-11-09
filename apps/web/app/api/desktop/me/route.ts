@@ -1,11 +1,11 @@
 import { clerkClient } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
+import { getVerifiedDesktopUserIdFromRequest } from "@/lib/auth/getVerifiedDesktopUserIdFromRequest";
 import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export async function GET(req: Request) {
-  const userId = getDesktopUserIdFromRequest(req);
+  const userId = await getVerifiedDesktopUserIdFromRequest(req);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
