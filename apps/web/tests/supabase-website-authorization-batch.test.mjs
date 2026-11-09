@@ -7,12 +7,19 @@ import { resolve } from "node:path";
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const read = (path) => readFile(resolve(root, path), "utf8");
 
-test("shared admin authorization rejects concurrent Clerk credentials in Supabase mode", async () => {
+test("shared admin authorization requires a linked Supabase identity and an explicit trusted-role gate", async () => {
   const src = await read("lib/admin.ts");
-  const guard = src.indexOf('selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !==');
+  const guard = src.indexOf("selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === 'supabase'");
   const clerkUser = src.indexOf("await currentUser()");
   assert.ok(guard >= 0 && clerkUser > guard);
-  assert.ok(src.slice(guard, clerkUser).includes("isAdmin: false, user: null"));
+  const supabase = src.slice(guard, clerkUser);
+  assert.match(supabase, /await resolveAccountOwner\(\)/);
+  assert.match(supabase, /AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED !== 'true'/);
+  assert.match(supabase, /getUserById\(owner\.supabaseUserId\)/);
+  assert.match(supabase, /data\.user\?\.id !== owner\.supabaseUserId/);
+  assert.match(supabase, /isTrustedSupabaseAdmin\(/);
+  assert.match(supabase, /isAdmin: false, user: null/);
+  assert.doesNotMatch(supabase, /currentUser\(\)|ADMIN_EMAILS/);
   assert.match(src, /publicMetadata/);
   assert.match(src, /ADMIN_EMAILS/);
 });
