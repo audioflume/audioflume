@@ -153,7 +153,7 @@ export function parseEditPoints(value: EditableSongLike["editPoints"]): Filmwave
 
     return {
       markers: Array.isArray(parsed?.markers)
-        ? parsed.markers.flatMap((marker) => {
+        ? parsed.markers.flatMap((marker: unknown) => {
             const normalized = normalizeMarker(marker);
             return normalized ? [normalized] : [];
           })
