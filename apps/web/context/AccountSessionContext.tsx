@@ -2,7 +2,7 @@
 
 import { useClerk, useUser } from "@clerk/nextjs";
 import { profileFromVerifiedSupabaseUser, type VerifiedAccountProfileIdentity } from "@/lib/auth/verifiedSupabaseProfile";
-import { createContext, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from "react";
 import { supabaseAccountBrowser } from "@/lib/auth/supabaseAccountBrowser";
 
 type AccountProvider = "clerk" | "supabase";
@@ -87,14 +87,14 @@ export function AccountSessionProvider({
     };
   }, [provider, supabaseUser, clerkUser]);
 
-  const signOut = async () => {
+  const signOut = useCallback(async () => {
     if (provider === "supabase") {
       const { error } = await supabaseAccountBrowser.auth.signOut();
       if (error) throw error;
       return;
     }
     await clerkSignOut();
-  };
+  }, [provider, clerkSignOut]);
 
   const value = useMemo<AccountSession>(() => {
     const isLoaded = provider === "supabase" ? supabaseLoaded : clerkLoaded;
