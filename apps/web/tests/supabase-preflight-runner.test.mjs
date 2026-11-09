@@ -30,5 +30,5 @@ test("preflight runs full selected auth suite without switching modes or applyin
   assert.match(script, /RELEASE_NOT_APPROVED/);
   assert.match(script, /smoke-supabase-auth-local\.mjs/);
   assert.doesNotMatch(script, /execSync|shell:\s*true|supabase db push|apply_migration|vercel deploy|process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\s*=/);
-  assert.equal((script.match(/apps\/web\/tests\/supabase-[\w-]+\.test\.mjs/g) || []).length, 14);
+  assert.equal((script.match(/apps\/web\/tests\/supabase-[\w-]+\.test\.mjs/g) || []).length, 16);
 });
