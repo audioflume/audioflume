@@ -8,6 +8,11 @@ export function shouldRefreshAccountSession(pathname: string) {
     pathname === "/api/artists/access" ||
     pathname === "/api/artists/claim" ||
     /^\/api\/artists\/[^/]+\/team$/.test(pathname) ||
+    /^\/api\/artists\/[^/]+\/(?:page-preview|hero-position|notifications|analyze-beats|playlist-track-picker|playlists|release-track-picker|images|releases|songs|agreements|collaborators|earnings|profile|analytics)$/.test(pathname) ||
+    /^\/api\/artists\/[^/]+\/songs\/[^/]+(?:\/(?:license|edit-files|artwork|stems|catalog|release|audio))?$/.test(pathname) ||
+    /^\/api\/artists\/[^/]+\/releases\/[^/]+(?:\/artwork)?$/.test(pathname) ||
+    /^\/api\/artists\/[^/]+\/playlists\/[^/]+(?:\/artwork)?$/.test(pathname) ||
+    /^\/api\/artists\/[^/]+\/earnings\/statement$/.test(pathname) ||
     pathname === "/api/artists/apply" ||
     pathname === "/api/artists/apply/images" ||
     pathname === "/api/artists/apply/samples" ||
