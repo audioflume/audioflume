@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
+import { getVerifiedDesktopUserIdFromRequest } from "@/lib/auth/getVerifiedDesktopUserIdFromRequest";
 import { normalizeSongRow } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 import type { ProjectAsset, ProjectFolder, Song } from "@/lib/types";
@@ -300,7 +300,7 @@ function resolveFolderIdsByPath({
 }
 
 export async function POST(req: Request) {
-  const userId = getDesktopUserIdFromRequest(req);
+  const userId = await getVerifiedDesktopUserIdFromRequest(req);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
