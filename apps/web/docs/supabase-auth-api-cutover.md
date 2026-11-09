@@ -33,7 +33,7 @@ Then start the website and visit `http://localhost:3000/auth-preview/cutover` to
 
 ## Core account API conversion staged (Clerk remains default)
 
-- **27 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
+- **28 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
 - The resolver returns the exact existing Clerk owner ID by default, from `auth()`. Only `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` (server-side environment) selects a Supabase verified-cookie session, which is mapped to the legacy owner using `auth_identity_links`. The production-cookie client and allowlisted middleware refresh are now staged, **but do not set this environment variable on live deployments** until full role, RLS, desktop and end-to-end regression gates pass.
 - Supabase authorization failures never fall back to Clerk. Missing/invalid session -> `401`, verified unlinked identity -> `403`, auth mapping failure -> `500`. Guest Favorites GET and playlist stats GET preserve the existing empty-response contract for a true 401; a 403/500 is not silently treated as empty.
 - The owner predicates, API payloads, ordering and write validations were not rewritten. All changes are isolated to the authorization lookup and denied-response status, except the separate shared playlist-filter read discussed below.
@@ -53,12 +53,21 @@ The tests check provider selection and source-level route coverage; they are not
 
 ## Next account-data route batch
 
-- **27 owner-only route files** now use the Clerk-default, Supabase-ready owner resolver, adding `/api/account/notifications` (GET/PATCH/DELETE), `/api/account/usage` (GET), `/api/account/security-events` (GET), `/api/community-playlist-favorites` (GET/POST/DELETE), and `/api/curated-playlists/[playlistId]/save` (POST).
+- **28 owner-only route files** now use the Clerk-default, Supabase-ready owner resolver, adding `/api/account/notifications` (GET/PATCH/DELETE), `/api/account/usage` (GET), `/api/account/security-events` (GET), `/api/community-playlist-favorites` (GET/POST/DELETE), and `/api/curated-playlists/[playlistId]/save` (POST).
 - Playlist recommendations now also resolve the account through the verified owner resolver while preserving public guest recommendations (401 behaves as guest). Verified unlinked accounts (403) and server authorization failures (500) are denied, rather than treated as guests.
 - Their existing owner constraints remain unchanged, including `account_notifications.recipient_clerk_user_id`, `community_playlist_favorites.clerk_user_id`, and the public-playlist check before saving. No content or membership write semantics were changed.
 - These five exact route patterns were added to `shouldRefreshAccountSession` and its positive/negative tests. Clerk remains the server default.
 - **Identity-dependent routes now staged:** `/api/account/profile`, `/api/account/billing-profile`, and `/api/account/membership` use server-only `resolveAccountIdentity`. With Clerk enabled, it obtains `currentUser()` and preserves the same profile field values. With Supabase enabled, it uses the verified `getUser()` email/display fields plus the one-to-one mapped legacy owner. `verifiedSupabaseProfile.ts` exposes display-only metadata conversion and ensures `user_metadata` cannot set owner IDs, roles or verified email. All profile, billing and membership records remain keyed by the trusted **legacy Clerk owner ID**, not the Supabase UUID. Existing account record and membership write logic remains unchanged. Source tests and pure profile tests are added, but runtime/browser parity and security reviews remain required.
 - This is **not** a completed production cutover. All converted routes require runtime verification under the explicit Supabase provider after surrounding website Clerk hooks and security controls are ready. Do not activate the provider globally.
+
+## Website shared account-data contexts (staged)
+
+- `context/AccountSessionContext.tsx` provides `isLoaded`, `userId`, `isSignedIn` to account-data contexts, with the provider selected **on the server** in `app/layout.tsx` using the same exact `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER` setting as the account APIs. It remains **Clerk by default**.
+- `FavoritesContext`, `PlaylistsContext`, `ProjectsContext`, `UserPreferencesContext` and `PlaylistFilter` now use this session source. Their JSX, CSS, icons, callback logic, localStorage key formats and mutation behavior are unchanged.
+- In Clerk mode, the session identity is the existing Clerk user ID, preserving playlist cache keys. In Supabase mode the identity used to partition browser caches is the Supabase Auth user ID; it **is not the legacy database owner** and cannot authorize API access. Each migrated API still verifies the cookie via server `getUser()` and resolves the legacy ID with `auth_identity_links`.
+- `POST /api/playlists/migrate-covers` is also converted to the same owner resolver and refreshed-cookie allowlist because `PlaylistsContext` invokes it automatically. The R2 conversion/upload and owner-scoped update logic are unchanged.
+- `Header`, `UserMenu`, `ArtistInvitesContext`, protected page middleware, desktop login, artist/admin roles and other Clerk consumers are **not converted**. The application still cannot operate end-to-end under Supabase-only sign-in. The provider switch must remain unset in live environments.
+- Test: `node --test apps/web/tests/account-session-contexts.test.mjs` (source contract), plus existing route/provider and account tests. Test signed-in, signed-out, account switches, pre-existing playlist localStorage, cross-account Favorites/Projects data, and desktop behavior before any provider cutover.
 
 ## Verified identity adapter validation
 
