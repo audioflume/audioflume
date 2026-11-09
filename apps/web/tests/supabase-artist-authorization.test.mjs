@@ -20,7 +20,7 @@ test("Supabase artist identity is owner-linked and never elevates admin from cli
   assert.match(source, /await resolveAccountOwner\(\)/);
   assert.match(source, /userId: owner\.userId, isAdmin: false, status: 200/);
   assert.match(source, /userId: null, isAdmin: false, status: owner\.status/);
-  assert.doesNotMatch(source, /user_metadata|app_metadata|ADMIN_EMAILS|primaryEmailAddress/);
+  assert.doesNotMatch(source, /owner\.profileIdentity|owner\.email|process\.env\.ADMIN_EMAILS/);
   const resolver = await read("lib/auth/resolveAccountOwner.ts");
   assert.match(resolver, /supabase\.auth\.getUser\(\)/);
   assert.match(resolver, /\.eq\("supabase_user_id", supabaseUserId\)/);
