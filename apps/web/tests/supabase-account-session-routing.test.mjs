@@ -14,6 +14,7 @@ test("migrated account APIs are allowlisted for cookie refresh", () => {
   for (const pathname of [
     "/api/favorites", "/api/favorites/song-1",
     "/api/playlists", "/api/playlists/filter-options",
+    "/api/playlists/migrate-covers",
     "/api/playlists/reorder", "/api/playlists/stats",
     "/api/playlists/123", "/api/playlists/123/songs",
     "/api/playlists/123/songs/reorder",
