@@ -26,6 +26,19 @@
 | `GET/PATCH /api/account/profile` | Clerk `currentUser()` provides identity fields | Requires trusted Supabase Auth user-profile data and a separate profile-identity mapping; not a simple user ID swap. |
 | `GET /api/desktop/auth/token` | Clerk session plus `currentUser()` issues desktop HMAC tokens | Requires a separately reviewed desktop login/callback/token rollout; do not silently change. |
 
+## Automated access inventory (new)
+
+Run from the repository root:
+
+```bash
+node apps/web/scripts/audit-auth-cutover.mjs
+node --test apps/web/tests/auth-cutover-audit.test.mjs
+```
+
+Use `node apps/web/scripts/audit-auth-cutover.mjs --json` for a machine-readable report. This scans web source for explicit browser Supabase imports, literal/dynamic `.from()` queries and Clerk imports in client components and API handlers.
+
+**Scope/limitations:** heuristic static import scanning does not prove that a call is reachable from the browser through a transitive dependency, cover desktop code, resolve dynamic query targets, or inspect RPCs/network libraries. Review findings against the real code and Supabase Data API settings before changing grants. Run the scanner after each major migration batch to detect new dependencies. No app behavior is changed by this tool.
+
 ## Critical browser-direct dependency
 
 `components/PlaylistFilter.tsx` currently imports the legacy browser `supabase` client and directly queries `public.playlists`, filtering with the Clerk `userId`. The owner filter is **not** a database permission barrier while RLS is disabled.
