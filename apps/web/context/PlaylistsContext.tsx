@@ -367,6 +367,7 @@ export function PlaylistsProvider({ children }: { children: ReactNode }) {
           }
         }
 
+        if (!userId) return;
         const result = await requestPlaylistCoverMigration(userId);
         if (cancelled) return;
 
