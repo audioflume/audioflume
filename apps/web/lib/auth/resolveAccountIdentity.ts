@@ -1,7 +1,8 @@
 import "server-only";
 
 import { currentUser } from "@clerk/nextjs/server";
-import { resolveAccountOwner, type VerifiedAccountProfileIdentity } from "./resolveAccountOwner";
+import { resolveAccountOwner } from "./resolveAccountOwner";
+import type { VerifiedAccountProfileIdentity } from "./verifiedSupabaseProfile";
 import { selectAccountAuthProvider } from "./selectAccountAuthProvider";
 
 type AccountIdentityUser = VerifiedAccountProfileIdentity & { id: string };
