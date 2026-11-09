@@ -1,5 +1,3 @@
-import { normalizeArtistClaimEmail } from "@/lib/artistClaims";
-
 /**
  * Email-based artist claims are allowed only for a currently confirmed
  * email on the exact server-fetched Supabase Auth subject. User metadata,
@@ -17,6 +15,6 @@ export function verifiedSupabaseClaimEmails(
     return [];
   }
 
-  const email = normalizeArtistClaimEmail(user.email);
+  const email = typeof user.email === "string" ? user.email.trim().toLowerCase().slice(0, 320) : "";
   return email && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) ? [email] : [];
 }
