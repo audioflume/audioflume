@@ -63,3 +63,23 @@ test("Supabase provider is dormant unless server selects it explicitly", async (
   assert.match(source, /\.eq\("supabase_user_id", supabaseUserId\)/);
   assert.match(provider, /value === "supabase" \? "supabase" : "clerk"/);
 });
+
+test("profile, billing and membership routes use verified identity and legacy record ownership", async () => {
+  for (const route of [
+    "account/profile/route.ts",
+    "account/billing-profile/route.ts",
+    "account/membership/route.ts",
+  ]) {
+    const source = await readFile(resolve(root, "app/api", route), "utf8");
+    assert.match(source, /from ["']@\/lib\/auth\/resolveAccountIdentity["']/, route);
+    assert.match(source, /await resolveAccountIdentity\(\)/, route);
+    assert.doesNotMatch(source, /await currentUser\(\)/, route);
+    assert.match(source, /if \(!userId\)/, route);
+  }
+
+  const identity = await readFile(resolve(root, "lib/auth/resolveAccountIdentity.ts"), "utf8");
+  assert.match(identity, /await currentUser\(\)/);
+  assert.match(identity, /await resolveAccountOwner\(\)/);
+  assert.match(identity, /user: \{ id: account.userId, \.\.\.account.profileIdentity \}/);
+  assert.match(identity, /if \(!account.profileIdentity\)/);
+});
