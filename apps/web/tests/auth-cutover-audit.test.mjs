@@ -14,6 +14,7 @@ await supabase.from("playlists").select("id,name");`);
   assert.equal(result.importsBrowserClient, true);
   assert.equal(result.importsClerk, true);
   assert.deepEqual(result.tables, ["playlists"]);
+  assert.equal(result.dynamicTableQueries, 0);
 });
 
 test("does not classify server-only Supabase imports as browser access", () => {
@@ -29,6 +30,16 @@ test("records dynamic table queries for further review", () => {
 await client.from(tableName).select("*");`);
   assert.equal(result.dynamicTableQueries, 1);
   assert.deepEqual(result.tables, []);
+});
+
+test("ignores unrelated JS .from calls when flagging dynamic database tables", () => {
+  const source = `"use client";
+const data = Array.from({ length: 5 });
+const animation = motion.from("bottom");
+const rows = supabase.from("playlists").select("*");`;
+  const result = inspectSource("components/Carousel.tsx", source);
+  assert.equal(result.dynamicTableQueries, 0);
+  assert.deepEqual(result.tables, ["playlists"]);
 });
 
 test("walks source tree without modifying files and separates Clerk server routes", async () => {
