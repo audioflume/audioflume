@@ -61,12 +61,17 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
+  const accountProvider = selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER);
   let user: Awaited<ReturnType<typeof currentUser>> = null;
 
-  try {
-    user = await currentUser();
-  } catch (error) {
-    console.error("Failed to preload Clerk user in root layout:", error);
+  // Artist invitation preloading is still Clerk-only. Never use an unrelated
+  // simultaneous Clerk session to preload invitations for a Supabase account.
+  if (accountProvider === "clerk") {
+    try {
+      user = await currentUser();
+    } catch (error) {
+      console.error("Failed to preload Clerk user in root layout:", error);
+    }
   }
 
   const themeCookie =
@@ -152,7 +157,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
         <body>
-          <AccountSessionProvider provider={selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER)}>
+          <AccountSessionProvider provider={accountProvider}>
           <ArtistInvitesProvider
             initialPendingCount={initialPendingArtistInviteCount}
           >
