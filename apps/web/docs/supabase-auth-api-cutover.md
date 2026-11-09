@@ -226,3 +226,8 @@ Do not merge PR #158 or cut over web or desktop auth while any release gate rema
 - Tests added at `apps/web/tests/supabase-website-authorization-batch.test.mjs`: run with `node --experimental-strip-types --test apps/web/tests/supabase-website-authorization-batch.test.mjs` from repository root.
 
 **Outstanding website authorization blockers:** `/artists/dashboard` remains Clerk-guarded; `/artists/claim` page still embeds Clerk sign-in; existing artist-specific APIs and invitation acceptance must be audited; admin pages are still Clerk UI; Supabase admin roles are intentionally unavailable; RLS and browser/build tests are not complete. Do not enable `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` globally.
+
+### Artist-team provisioning boundary
+
+- `POST /api/artists/[id]/team` still provisions existing users and invitations through Clerk. Because linked-owner authorization now applies to artist permissions, this **POST** endpoint explicitly rejects Supabase-selected requests with 403 before running Clerk user lookup or invitation provisioning. Clerk behavior is untouched.
+- Team membership reads and role editing still use `requireArtistPermission` and existing database membership checks; the underlying Clerk user-directory enrichment remains a dependency to replace before a complete Supabase-only artist-team experience. No blanket artist-route refresh or dashboard guard was introduced.
