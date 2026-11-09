@@ -12,7 +12,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 - Supabase PostgreSQL stores user ownership using text `clerk_user_id` columns in many tables, including playlists, favorites, projects, artist memberships, profiles, memberships and billing profiles.
 - Clerk also provides admin role metadata, artist invitations, user lookup and the account security-management UI.
 - Desktop uses browser Clerk sign-in, `/api/desktop/auth/token`, an Audioflume HMAC token valid for up to 30 days and an `audioflume://auth/callback` deep link.
-- Supabase Auth currently has no existing user accounts. Legacy ownership data must be retained.
+- Supabase Auth currently has two test accounts, with one confirmed Clerk identity mapping (checked November 8, 2026). Legacy ownership data must be retained.
 
 ## Prototype (this branch only)
 
@@ -22,6 +22,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 - Supabase sign-in alone does **not** establish access to any legacy Clerk-owned records. A separate opt-in linking action now requires verified, matching email addresses and valid sessions from both Clerk and Supabase.
 - Once linked, the preview can use `GET /api/auth-preview/account-data` to verify counts of existing playlists, favorites, projects and artist memberships using the verified Supabase token and mapped legacy owner. This route never returns the legacy owner ID, makes no modifications and is not used by production features.
 - An isolated **Test account access isolation** control now checks that anonymous requests are rejected (401) and that the current Supabase session gets either linked-account counts (200) or a denial (403). This does not automatically sign in another Google account; manually switch to a separate test identity for the unlinked case.
+- The read-only account-data API now uses a request-scoped, independently verified Supabase identity resolver (`lib/supabasePreviewAuthorization.ts`) that returns 401 for missing/invalid sessions and 403 for unlinked users. It never accepts a client-supplied legacy owner ID. Supabase tokens use a dedicated header to avoid interfering with Clerk middleware.
 - Production `/sign-in`, `/sign-up`, middleware protection, web APIs and desktop sync remain on Clerk.
 
 ## Security prerequisite — do not skip
@@ -67,7 +68,8 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [ ] Verify Google OAuth works in the test environment and configure SMTP for email signup and recovery.
 - [x] Create the restricted UUID-to-legacy-ID table, dual-auth validation endpoint, and opt-in preview action.
 - [ ] End-to-end test linking the correct Clerk and Supabase accounts, conflicts, missing sessions, account switching and reloads before production use.
-- [ ] Establish SSR cookie-based Supabase sessions (`@supabase/ssr`), including refresh handling. Update package and lockfile together.
+- [ ] Establish SSR cookie-based Supabase sessions (`@supabase/ssr`), including refresh handling. Update package and lockfile together. This requires a verified npm installation; do not manually invent lockfile metadata.
+- [x] Centralize Supabase preview API authorization in a request-scoped server-only resolver, independent from Clerk headers.
 - [x] Add a server-only linked-identity resolver and read-only link-status check (not used by existing application APIs yet).
 - [x] Implement an isolated read-only API for verification of linked user-owned record counts.
 - [ ] Browser-test linked-account record counts against the original Clerk account and run the new **Test account access isolation** button while signed into both the linked and second unlinked Google accounts. It checks no-token = 401; linked = 200; unlinked = 403. Do not claim these pass until run in the browser.
