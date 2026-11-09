@@ -1,9 +1,18 @@
 import { auth } from "@clerk/nextjs/server";
+import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
+import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
 import { NextResponse } from "next/server";
 import { normalizeSongRow } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
 
-async function getDesktopUserId() {
+async function getDesktopUserId(req: Request) {
+  if (selectDesktopAuthProvider(
+    process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+  ) === "supabase") {
+    return getDesktopUserIdFromRequest(req);
+  }
+
   const { userId } = await auth();
 
   if (userId) return userId;
@@ -29,7 +38,7 @@ function getFilenameFromUrl(url: string) {
 }
 
 export async function GET(req: Request) {
-  const userId = await getDesktopUserId();
+  const userId = await getDesktopUserId(req);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
