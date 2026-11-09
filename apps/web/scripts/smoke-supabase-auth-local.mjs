@@ -59,7 +59,21 @@ for (const { path, expected } of checks) {
       signal: AbortSignal.timeout(10_000),
     });
     const ok = response.status === expected;
-    console.log(`${ok ? "PASS" : "FAIL"} ${path}: HTTP ${response.status} (expected ${expected})`);
+    const location = response.headers.get("location");
+    let redirectDetail = "";
+    if (location && response.status >= 300 && response.status < 400) {
+      try {
+        const destination = new URL(location, origin);
+        // Limit output to routing information. Never print OAuth codes,
+        // authentication tokens or arbitrary query-string values.
+        redirectDetail = destination.origin === origin
+          ? ` -> ${destination.pathname}`
+          : ` -> ${destination.origin}${destination.pathname}`;
+      } catch {
+        redirectDetail = " -> (invalid Location header)";
+      }
+    }
+    console.log(`${ok ? "PASS" : "FAIL"} ${path}: HTTP ${response.status} (expected ${expected})${redirectDetail}`);
     if (!ok) failures++;
     await response.body?.cancel();
   } catch (error) {
@@ -69,4 +83,8 @@ for (const { path, expected } of checks) {
 }
 
 console.log(`\n${checks.length - failures}/${checks.length} anonymous local smoke checks passed for ${provider} mode.`);
+if (failures) {
+  console.log("If every path redirects, inspect the displayed destinations and confirm which server is listening on the selected loopback port.");
+  console.log("Redirects are not followed; a redirect to a sign-in page does not count as an API authorization response.");
+}
 if (failures > 0) process.exitCode = 1;
