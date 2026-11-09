@@ -32,6 +32,8 @@ test("migrated account APIs are allowlisted for cookie refresh", () => {
     "/api/community-playlist-favorites", "/api/playlist-recommendations",
     "/api/curated-playlists/123/save",
     "/api/user-preferences",
+    "/api/artists/access", "/api/artists/apply",
+    "/api/artists/apply/images", "/api/artists/apply/samples",
   ]) {
     assert.equal(shouldRefreshAccountSession(pathname), true, pathname);
   }
@@ -40,7 +42,7 @@ test("migrated account APIs are allowlisted for cookie refresh", () => {
 test("Clerk-only, admin, artist and desktop endpoints never refresh the new cookie", () => {
   for (const pathname of [
     "/api/desktop/me", "/api/desktop/auth/token",
-    "/api/desktop/projects", "/api/admin/songs", "/api/artists/apply",
+    "/api/desktop/projects", "/api/admin/songs", "/api/artists/claim",
     "/api/account/profile", "/api/playlists/images/upload",
     "/api/community-playlists", "/api/songs",
 
