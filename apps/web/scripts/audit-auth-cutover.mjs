@@ -24,7 +24,7 @@ const clerkImport = /from\s*["']@clerk\//;
 const directFromQuery = /\.from\(\s*["'`]([^"'`]+)["'`]\s*\)/g;
 const clientDirective = /^\s*["']use client["'];?/;
 const directSdk = /(?:createClient|createBrowserClient)\s*\(/;
-const dynamicFrom = /\.from\(\s*(?!["'`])/g;
+const dynamicFrom = /\b(?:supabase|supabaseServer|client|db)\s*\.from\(\s*([^)]*)\)/g;
 
 async function walk(directory, files) {
   let entries;
@@ -53,7 +53,8 @@ export function inspectSource(relativePath, content) {
   const tables = [...new Set(
     [...content.matchAll(directFromQuery)].map((match) => match[1]),
   )].sort();
-  const dynamicTableQueries = [...content.matchAll(dynamicFrom)].length;
+  const dynamicTableQueries = [...content.matchAll(dynamicFrom)]
+    .filter((match) => !/^["\'`]/.test(match[1].trimStart())).length;
 
   return {
     file: relativePath,
