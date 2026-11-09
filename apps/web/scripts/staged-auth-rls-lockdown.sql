@@ -53,14 +53,14 @@ $$;
 -- as anon/authenticated in the live grant snapshot. Only privileged server-side
 -- code needs to execute it. Its trigger companion also has broad EXECUTE grants.
 -- Check exact signatures first so this transaction cannot silently skip them.
-DO $
+DO $$
 BEGIN
   IF to_regprocedure('public.apply_song_pending_revision(uuid)') IS NULL
     OR to_regprocedure('public.sync_song_pending_revision_submission_activity()') IS NULL THEN
     RAISE EXCEPTION 'RLS lockdown aborted: pending-revision function signatures changed';
   END IF;
 END
-$;
+$$;
 
 -- Enabling RLS without permissive policies denies browser clients. Server-only
 -- service_role queries remain authorized, but still require app-side owner checks.
