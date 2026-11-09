@@ -96,3 +96,17 @@ New **independent staging candidate**, not a generated or executed migration:
 - `tests/supabase-project-sync-rls-lockdown.test.mjs` — source-level candidate and server-only caller regressions.
 
 **Rollout order:** First verify the separate 14-table staging RLS lockdown and external browser/direct Data API dependencies; then apply the project-sync candidate on an isolated copy of the database, run the read-only verification and authenticated web/desktop sync integration tests; only then generate/review a proper migration for a separately approved production deployment. Do not run either staging SQL candidate directly against production. Do not turn on provider flags as part of this RLS work.
+
+## Unified read-only staging security gate (2026-11-09)
+
+`scripts/verify-auth-unified-security-gate.sql` combines the prepared 14-table lockdown, protected folder view, privileged revision RPC, and project-sync grants/policies into one **SELECT-only**, fail-closed release check. It reports `PASS_STAGING_SECURITY_GATE` only after all four security groups meet their expected conditions and all required objects exist. Separate application, browser, cross-account, desktop, and build verification are still mandatory.
+
+The query was executed **read-only** against the connected Audioflume database on 2026-11-09 and returned:
+
+- `BLOCKED_STAGING_SECURITY_GATE`
+- `expected_tables_found=14`, `expected_tables_secured=0`
+- `folder_views_found=1`, `folder_views_secured=0`
+- `privileged_functions_secured=false`
+- `project_sync_tables_found=1`, `project_sync_privileges_secured=false`, `project_sync_policies_remaining=3`
+
+This verifies the actual baseline and query syntax, **not** that a migration was applied or that the connected database is suitable as an isolated staging environment. No privileges, rows, policies, functions or identity links were modified. Do not enable either production Supabase provider until the security rollout is separately approved and validated in staging.
