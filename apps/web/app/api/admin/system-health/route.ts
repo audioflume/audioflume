@@ -3,6 +3,7 @@ import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider"
 import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
+import { requireAdmin } from "@/lib/admin";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const dynamic = "force-dynamic";
@@ -98,15 +99,18 @@ async function checkAnalyzer(): Promise<HealthItem> {
 }
 
 export async function GET() {
-  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase") {
+    const admin = await requireAdmin();
+    if (!admin.isAdmin) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+  } else {
+    const user = await currentUser();
+    const email = user?.primaryEmailAddress?.emailAddress;
 
-  const user = await currentUser();
-  const email = user?.primaryEmailAddress?.emailAddress;
-
-  if (!email || !ADMIN_EMAILS.includes(email)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    if (!email || !ADMIN_EMAILS.includes(email)) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
   }
 
   const statuses = await Promise.all([
