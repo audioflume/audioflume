@@ -93,6 +93,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [x] Run the source-tree inventory across 583 website files: 2 explicit browser Supabase imports (the isolated auth preview and the shared playlist filter), 21 Clerk client imports and 49 Clerk-dependent API routes. Four initial scanner tests passed locally. Correct the scanner's overinclusive dynamic `.from()` matches and add regression coverage; updated tests require local rerun.
 - [x] Move the shared `PlaylistFilter.tsx` from direct browser Supabase reads to the Clerk-authenticated `/api/playlists/filter-options` endpoint without changing markup or UI states; browser regression testing still required.
 - [x] Convert the primary 21 Favorites, Playlists, Projects, song membership and user-preferences API route files to a Clerk-default, explicitly gated Supabase owner resolver. Production Supabase login/refresh cutover and other API handlers still outstanding.
+- [x] Add future production-cookie browser Supabase client, exact cutover test page and read-only owner verification, plus a middleware refresh allowlist that activates on account APIs only with the server-side Supabase provider selection. Browser testing and RLS/security gates remain pending.
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
