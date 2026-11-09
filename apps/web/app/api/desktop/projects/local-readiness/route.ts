@@ -1,7 +1,7 @@
 import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
+import { getVerifiedDesktopUserIdFromRequest } from "@/lib/auth/getVerifiedDesktopUserIdFromRequest";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 type ProjectAssetReadinessMetadata = Record<string, unknown> & {
@@ -135,7 +135,7 @@ function getSongIdentifierValues(song: SongSizeRow) {
 }
 
 async function getRequestUserId(req: Request) {
-  const tokenUserId = getDesktopUserIdFromRequest(req);
+  const tokenUserId = await getVerifiedDesktopUserIdFromRequest(req);
   if (tokenUserId) return tokenUserId;
 
   if (selectDesktopAuthProvider(
