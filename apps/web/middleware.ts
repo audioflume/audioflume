@@ -246,6 +246,12 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
       return applyDesktopCorsHeaders(NextResponse.next(), request);
     }
 
+    // When desktop stays Clerk, retain its original middleware context.
+    // Never drop Clerk's desktop handling merely because web opted in first.
+    if (pathname.startsWith("/api/desktop")) {
+      return clerkRequestMiddleware(request, event);
+    }
+
     // Existing account, artist, and admin APIs still enforce authorization
     // server-side. Bypassing Clerk does not authorize any API request.
     if (pathname.startsWith("/api/")) {
