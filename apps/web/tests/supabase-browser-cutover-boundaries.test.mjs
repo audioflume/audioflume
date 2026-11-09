@@ -40,7 +40,7 @@ test("redirect helper does not permit cross-origin or callback-loop redirects", 
     assert.ok(redirected.startsWith("/"), String(value));
     assert.ok(!redirected.startsWith("//"), String(value));
     assert.ok(!redirected.startsWith("/auth/supabase/callback"), String(value));
-    assert.ok(!redirected.includes("evil.example"), String(value));
+    assert.equal(new URL(redirected, "https://audioflume.invalid").origin, "https://audioflume.invalid", String(value));
   }
   assert.equal(safeAuthRedirect("/artists/claim?source=invitation"), "/artists/claim?source=invitation");
 });
