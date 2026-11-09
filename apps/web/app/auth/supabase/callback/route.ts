@@ -14,17 +14,14 @@ export async function GET(request: NextRequest) {
   }
 
   const next = safeAuthRedirect(request.nextUrl.searchParams.get("next"));
-  const pendingCookies = new Map<string, { value: string; options: Record<string, unknown> }>();
-  const pendingHeaders = new Headers();
-  const response = (pathname: string) => {
-    const result = NextResponse.redirect(new URL(pathname, request.url));
-    result.headers.set("Cache-Control", "private, no-store");
-    pendingCookies.forEach(({ value, options }, name) => result.cookies.set(name, value, options));
-    pendingHeaders.forEach((value, name) => result.headers.set(name, value));
+  const result = NextResponse.redirect(new URL("/sign-in?auth_status=failed", request.url));
+  result.headers.set("Cache-Control", "private, no-store");
+  const redirectTo = (pathname: string) => {
+    result.headers.set("Location", new URL(pathname, request.url).toString());
     return result;
   };
   const code = request.nextUrl.searchParams.get("code");
-  if (!code) return response("/sign-in?auth_status=failed");
+  if (!code) return result;
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -38,9 +35,9 @@ export async function GET(request: NextRequest) {
         setAll(cookiesToSet, headers) {
           cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
           cookiesToSet.forEach(({ name, value, options }) =>
-            pendingCookies.set(name, { value, options }),
+            result.cookies.set(name, value, options),
           );
-          Object.entries(headers).forEach(([name, value]) => pendingHeaders.set(name, value));
+          Object.entries(headers).forEach(([name, value]) => result.headers.set(name, value));
         },
       },
     },
@@ -48,10 +45,10 @@ export async function GET(request: NextRequest) {
 
   try {
     const { error: exchangeError } = await supabase.auth.exchangeCodeForSession(code);
-    if (exchangeError) return response("/sign-in?auth_status=failed");
+    if (exchangeError) return result;
 
     const { data: { user }, error: userError } = await supabase.auth.getUser();
-    if (userError || !user) return response("/sign-in?auth_status=failed");
+    if (userError || !user) return result;
 
     const { data: owner, error: ownerError } = await supabaseServer
       .from("auth_identity_links")
@@ -62,9 +59,9 @@ export async function GET(request: NextRequest) {
     if (ownerError) throw ownerError;
 
     // Registration does not authorize access to another legacy account.
-    return response(owner?.clerk_user_id ? next : "/sign-in?auth_status=unlinked");
+    return redirectTo(owner?.clerk_user_id ? next : "/sign-in?auth_status=unlinked");
   } catch (error) {
     console.error("Supabase account callback failed:", error);
-    return response("/sign-in?auth_status=failed");
+    return result;
   }
 }
