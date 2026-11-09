@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useUser } from "@clerk/nextjs";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
@@ -25,6 +25,7 @@ const titleByMode: Record<Mode, string> = {
 export default function SupabaseAuthPreviewPage() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const [linked, setLinked] = useState(false);
+  const linkStatusRequestId = useRef(0);
   const [linkBusy, setLinkBusy] = useState(false);
   const [verificationBusy, setVerificationBusy] = useState(false);
   const [legacyCounts, setLegacyCounts] = useState<LegacyDataCounts | null>(null);
@@ -44,7 +45,11 @@ export default function SupabaseAuthPreviewPage() {
 
     const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
-      setLinked(false);
+      if (event === "SIGNED_OUT") {
+        linkStatusRequestId.current += 1;
+        setLinked(false);
+        setLegacyCounts(null);
+      }
       if (event === "PASSWORD_RECOVERY") setMode("reset");
     });
     return () => subscription.subscription.unsubscribe();
@@ -52,6 +57,7 @@ export default function SupabaseAuthPreviewPage() {
 
   useEffect(() => {
     let active = true;
+    const requestId = ++linkStatusRequestId.current;
     setLinked(false);
     setLegacyCounts(null);
     if (!user?.id) return;
@@ -62,13 +68,15 @@ export default function SupabaseAuthPreviewPage() {
         if (!session || session.user.id !== user?.id) return;
 
         const response = await fetch("/api/auth-preview/link", {
-          headers: { Authorization: `Bearer ${session.access_token}` },
+          headers: { "X-Audioflume-Supabase-Token": session.access_token },
           cache: "no-store",
         });
         if (!response.ok) return;
 
         const result = (await response.json()) as { linked?: boolean };
-        if (active) setLinked(result.linked === true);
+        if (active && requestId === linkStatusRequestId.current) {
+          setLinked(result.linked === true);
+        }
       } catch {
         // A failed status check never grants access or creates a link.
       }
@@ -146,6 +154,7 @@ export default function SupabaseAuthPreviewPage() {
   }
 
   async function linkExistingAccount() {
+    linkStatusRequestId.current += 1;
     setLinkBusy(true);
     setError("");
     setNotice("");
