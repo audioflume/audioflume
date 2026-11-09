@@ -41,6 +41,33 @@ export default function SupabaseAuthPreviewPage() {
     return () => subscription.subscription.unsubscribe();
   }, []);
 
+  useEffect(() => {
+    let active = true;
+    setLinked(false);
+    if (!user?.id) return;
+
+    async function loadLinkStatus() {
+      try {
+        const { data: { session } } = await supabase.auth.getSession();
+        if (!session || session.user.id !== user?.id) return;
+
+        const response = await fetch("/api/auth-preview/link", {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+          cache: "no-store",
+        });
+        if (!response.ok) return;
+
+        const result = (await response.json()) as { linked?: boolean };
+        if (active) setLinked(result.linked === true);
+      } catch {
+        // A failed status check never grants access or creates a link.
+      }
+    }
+
+    void loadLinkStatus();
+    return () => { active = false; };
+  }, [user?.id]);
+
   function changeMode(next: Mode) {
     setMode(next);
     setError("");
