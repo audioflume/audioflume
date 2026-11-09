@@ -3,6 +3,7 @@ import "server-only";
 import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
 import { getBearerTokenFromRequest, getDesktopUserIdFromRequest, verifyDesktopToken } from "@/lib/desktopAuth";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { verifyDesktopOwnerBinding } from "./verifyDesktopOwnerBinding";
 
 /**
  * In Supabase desktop mode, an HMAC-valid token is not enough: validate the
@@ -21,17 +22,14 @@ export async function getVerifiedDesktopUserIdFromRequest(req: Request): Promise
   const payload = verifyDesktopToken(getBearerTokenFromRequest(req));
   if (!payload?.userId || !payload.supabaseUserId) return null;
 
-  try {
+  return verifyDesktopOwnerBinding(payload.userId, payload.supabaseUserId, async (subject) => {
     const { data, error } = await supabaseServer
       .from("auth_identity_links")
       .select("clerk_user_id")
-      .eq("supabase_user_id", payload.supabaseUserId)
+      .eq("supabase_user_id", subject)
       .maybeSingle();
 
-    if (error || !data || data.clerk_user_id !== payload.userId) return null;
-
-    return payload.userId;
-  } catch {
-    return null;
-  }
+    if (error) throw error;
+    return data?.clerk_user_id ?? null;
+  });
 }
