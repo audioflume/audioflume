@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -6,16 +6,17 @@ import { supabaseServer } from "@/lib/supabaseServer";
 export const runtime = "nodejs";
 
 export async function GET() {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  const { userId } = account;
+  if (!userId) {
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {
     const { data: notifications, error } = await supabaseServer
       .from("account_notifications")
       .select("id, kind, title, message, action_url, read_at, created_at")
-      .eq("recipient_clerk_user_id", user.id)
+      .eq("recipient_clerk_user_id", userId)
       .order("created_at", { ascending: false })
       .limit(100);
 
@@ -37,9 +38,10 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  const { userId } = account;
+  if (!userId) {
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   const body = (await request.json().catch(() => null)) as
@@ -57,7 +59,7 @@ export async function PATCH(request: Request) {
       const { error } = await supabaseServer
         .from("account_notifications")
         .update({ read_at: readAt })
-        .eq("recipient_clerk_user_id", user.id)
+        .eq("recipient_clerk_user_id", userId)
         .is("read_at", null);
 
       if (error) throw error;
@@ -79,7 +81,7 @@ export async function PATCH(request: Request) {
       .from("account_notifications")
       .update({ read_at: readAt })
       .eq("id", notificationId)
-      .eq("recipient_clerk_user_id", user.id)
+      .eq("recipient_clerk_user_id", userId)
       .select("id, read_at")
       .maybeSingle();
 
@@ -99,16 +101,17 @@ export async function PATCH(request: Request) {
 }
 
 export async function DELETE() {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  const { userId } = account;
+  if (!userId) {
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {
     const { error } = await supabaseServer
       .from("account_notifications")
       .delete()
-      .eq("recipient_clerk_user_id", user.id);
+      .eq("recipient_clerk_user_id", userId);
 
     if (error) throw error;
 
