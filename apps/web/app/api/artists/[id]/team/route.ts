@@ -69,7 +69,7 @@ async function loadArtistTeam(artistId: string, currentUserId: string, canManage
           .select("clerk_user_id, display_name, avatar_url")
           .in("clerk_user_id", clerkUserIds)
       : Promise.resolve({ data: [], error: null }),
-    clerkUserIds.length
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "clerk" && clerkUserIds.length
       ? (async () => {
           const client = await clerkClient();
           return client.users.getUserList({
