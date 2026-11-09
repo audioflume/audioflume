@@ -24,10 +24,7 @@ function verifiedClerkEmail(user: Awaited<ReturnType<typeof currentUser>>) {
 // Read-only lookup for a signed-in Supabase user. Never returns a legacy ID.
 // It does not establish an Audioflume application session or grant data access.
 export async function GET(request: Request) {
-  const authorization = request.headers.get("authorization");
-  const token = authorization?.startsWith("Bearer ")
-    ? authorization.slice("Bearer ".length).trim()
-    : "";
+  const token = request.headers.get("x-audioflume-supabase-token")?.trim() ?? "";
 
   if (!token) {
     return noStore({ error: "Supabase sign-in is required." }, 401);
