@@ -28,6 +28,8 @@ export default function SupabaseAuthPreviewPage() {
   const linkStatusRequestId = useRef(0);
   const [linkBusy, setLinkBusy] = useState(false);
   const [verificationBusy, setVerificationBusy] = useState(false);
+  const [isolationBusy, setIsolationBusy] = useState(false);
+  const [isolationResult, setIsolationResult] = useState("");
   const [legacyCounts, setLegacyCounts] = useState<LegacyDataCounts | null>(null);
   const [mode, setMode] = useState<Mode>("sign-in");
   const [user, setUser] = useState<User | null>(null);
@@ -49,6 +51,7 @@ export default function SupabaseAuthPreviewPage() {
         linkStatusRequestId.current += 1;
         setLinked(false);
         setLegacyCounts(null);
+        setIsolationResult("");
       }
       if (event === "PASSWORD_RECOVERY") setMode("reset");
     });
@@ -60,6 +63,7 @@ export default function SupabaseAuthPreviewPage() {
     const requestId = ++linkStatusRequestId.current;
     setLinked(false);
     setLegacyCounts(null);
+    setIsolationResult("");
     if (!user?.id) return;
 
     async function loadLinkStatus() {
@@ -224,6 +228,45 @@ export default function SupabaseAuthPreviewPage() {
     }
   }
 
+  async function checkAccountIsolation() {
+    setIsolationBusy(true);
+    setIsolationResult("");
+    setError("");
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session || session.user.id !== user?.id) {
+        throw new Error("Sign in to Supabase again before running this check.");
+      }
+
+      // First verify that a request without Supabase credentials is denied.
+      const anonymousResponse = await fetch("/api/auth-preview/account-data", {
+        cache: "no-store",
+        credentials: "omit",
+      });
+      if (anonymousResponse.status !== 401) {
+        setIsolationResult("FAIL: The account-data endpoint did not reject a request without a Supabase token.");
+        return;
+      }
+
+      const response = await fetch("/api/auth-preview/account-data", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+        cache: "no-store",
+      });
+
+      if (linked && response.status === 200) {
+        setIsolationResult("PASS: The linked account can read its own record counts; requests without a token are denied.");
+      } else if (!linked && response.status === 403) {
+        setIsolationResult("PASS: This unlinked Google account was denied access to existing Audioflume data (403).");
+      } else {
+        setIsolationResult(`CHECK FAILED: Received HTTP ${response.status} when ${linked ? "200" : "403"} was expected. Do not continue the migration until this is investigated.`);
+      }
+    } catch (isolationError) {
+      setError(isolationError instanceof Error ? isolationError.message : "Access isolation check failed.");
+    } finally {
+      setIsolationBusy(false);
+    }
+  }
+
   async function signOut() {
     setBusy(true);
     const { error: signOutError } = await supabase.auth.signOut();
@@ -284,6 +327,11 @@ export default function SupabaseAuthPreviewPage() {
                 ) : null}
               </>
             ) : null}
+            <button className={styles.secondaryButton} type="button"
+              onClick={() => void checkAccountIsolation()} disabled={busy || isolationBusy || linkBusy}>
+              {isolationBusy ? "Checking account isolation…" : "Test account access isolation"}
+            </button>
+            {isolationResult ? <p className={styles.success} role="status">{isolationResult}</p> : null}
             <button className={styles.secondaryButton} type="button" onClick={signOut} disabled={busy}>
               Sign out of preview
             </button>
