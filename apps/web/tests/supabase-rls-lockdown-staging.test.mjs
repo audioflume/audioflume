@@ -1,0 +1,61 @@
+import test from "node:test";
+import assert from "node:assert/strict";
+import { readFile } from "node:fs/promises";
+import { resolve } from "node:path";
+import { fileURLToPath } from "node:url";
+
+const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
+const read = (path) => readFile(resolve(root, path), "utf8");
+
+const lockedTables = [
+  "favorites", "playlist_songs", "playlists", "project_assets",
+  "project_folders", "projects", "song_edit_points", "song_shorten_jobs",
+  "songs", "user_billing_profiles", "user_downloads", "user_memberships",
+  "user_profiles", "user_security_events",
+];
+
+test("staging RLS lockdown includes exact 14 exposed tables and atomic rollback on errors", async () => {
+  const source = await read("scripts/staged-auth-rls-lockdown.sql");
+  assert.match(source, /BEGIN;/);
+  assert.match(source, /COMMIT;/);
+  assert.match(source, /RAISE EXCEPTION 'RLS lockdown aborted/);
+  assert.match(source, /RAISE EXCEPTION 'RLS lockdown failed postcondition/);
+  assert.match(source, /RAISE EXCEPTION 'Project folder view still exposed/);
+  for (const name of lockedTables) {
+    assert.equal((source.match(new RegExp(`ALTER TABLE public\\.${name} ENABLE ROW LEVEL SECURITY;`, "g")) || []).length, 1, name);
+    assert.equal((source.match(new RegExp(`REVOKE ALL PRIVILEGES ON TABLE public\\.${name} FROM anon, authenticated;`, "g")) || []).length, 1, name);
+  }
+  assert.equal((source.match(/ALTER TABLE public\.[a-z_]+ ENABLE ROW LEVEL SECURITY;/g) || []).length, lockedTables.length);
+  assert.equal((source.match(/REVOKE ALL PRIVILEGES ON TABLE public\.[a-z_]+ FROM anon, authenticated;/g) || []).length, lockedTables.length + 1);
+});
+
+test("lockdown grants no new browser write or broad authenticated role policy", async () => {
+  const source = await read("scripts/staged-auth-rls-lockdown.sql");
+  const sql = source.replace(/^--.*$/gm, "");
+  assert.doesNotMatch(sql, /\bGRANT\s+\w+\s+ON\s+/i);
+  assert.doesNotMatch(sql, /\bCREATE\s+POLICY\b/i);
+  assert.doesNotMatch(sql, /\bDISABLE\s+ROW\s+LEVEL\s+SECURITY\b/i);
+  assert.doesNotMatch(sql, /\bSECURITY\s+DEFINER\b/i);
+  assert.match(sql, /has_table_privilege\('anon'/);
+  assert.match(sql, /has_table_privilege\('authenticated'/);
+  assert.match(sql, /NOT c\.relrowsecurity/);
+  assert.match(sql, /AS missing\(name\)/);
+});
+
+test("exposed folder view is revoked and changed to security invoker", async () => {
+  const source = await read("scripts/staged-auth-rls-lockdown.sql");
+  assert.match(source, /REVOKE ALL PRIVILEGES ON TABLE public\.project_folder_paths FROM anon, authenticated;/);
+  assert.match(source, /ALTER VIEW public\.project_folder_paths SET \(security_invoker = true\);/);
+  assert.match(source, /has_table_privilege\('anon', 'public\.project_folder_paths', 'SELECT'\)/);
+  assert.match(source, /has_table_privilege\('authenticated', 'public\.project_folder_paths', 'SELECT'\)/);
+});
+
+test("staging plan never asserts these database changes were applied to production", async () => {
+  const sql = await read("scripts/staged-auth-rls-lockdown.sql");
+  const plan = await read("docs/supabase-auth-rls-rollout.md");
+  assert.match(sql, /STAGING CANDIDATE ONLY/);
+  assert.match(sql, /NOT a generated Supabase migration/);
+  assert.match(plan, /staged-auth-rls-lockdown\.sql/);
+  assert.match(plan, /staging/i);
+  assert.match(plan, /Do not run this file directly in production/i);
+});
