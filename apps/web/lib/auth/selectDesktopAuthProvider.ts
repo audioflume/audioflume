@@ -1,5 +1,3 @@
-import { selectAccountAuthProvider } from "./selectAccountAuthProvider";
-
 /**
  * Desktop cutover is independent from the website. Both server-side switches
  * must explicitly select Supabase. Never infer desktop mode from a browser
@@ -10,7 +8,7 @@ export function selectDesktopAuthProvider(
   accountProvider: string | undefined,
 ): "clerk" | "supabase" {
   return desktopProvider === "supabase" &&
-    selectAccountAuthProvider(accountProvider) === "supabase"
+    accountProvider === "supabase"
     ? "supabase"
     : "clerk";
 }
