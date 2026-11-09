@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve } from "node:path";
 import { fileURLToPath } from "node:url";
+import { auditSourceTree } from "../scripts/audit-auth-cutover.mjs";
 
 const root = resolve(fileURLToPath(new URL("../", import.meta.url)));
 const read = (path) => readFile(resolve(root, path), "utf8");
@@ -58,4 +59,19 @@ test("staging plan never asserts these database changes were applied to producti
   assert.match(plan, /staged-auth-rls-lockdown\.sql/);
   assert.match(plan, /staging/i);
   assert.match(plan, /Do not run this file directly in production/i);
+});
+
+test("lockdown inventory has no direct browser Supabase query dependency in the web source audit", async () => {
+  const audit = await auditSourceTree(root);
+  const targets = new Set(lockedTables);
+  const directReads = audit.directBrowserSupabase
+    .filter((entry) => entry.tables.some((table) => targets.has(table)))
+    .map((entry) => entry.file);
+  assert.deepEqual(directReads, [], "Move direct browser table access to owner-verified server APIs before applying RLS lockdown.");
+  // This heuristic cannot detect transitive imports or every dynamic RPC.
+  assert.deepEqual(
+    audit.dynamicQueries.filter((entry) => entry.isClient).map((entry) => entry.file),
+    [],
+    "Review dynamic browser DB queries before approving RLS lockdown.",
+  );
 });
