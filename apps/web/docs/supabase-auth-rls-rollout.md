@@ -1,0 +1,57 @@
+# Supabase Auth cutover — live RLS audit and remediation sequence
+
+**Audit date:** 2026-11-09. **Project:** Audioflume. **Status:** release-blocking findings; review only. **No live SQL changes made.**
+
+This document describes the observed database state, not a completed migration. Use the read-only `apps/web/scripts/audit-auth-rls.sql` against the **correct project** to reproduce the inventory before making decisions. Run the Supabase Security Advisor again after each approved change.
+
+## Blocking live findings
+
+At audit time, **14 tables** in exposed `public` had RLS disabled. All 14 also granted **anon** and **authenticated** roles SELECT, INSERT, UPDATE and DELETE (and the other common privileges observed), so direct Data API clients can bypass application-level ownership checks. Server-side owner verification does **not** protect these grants.
+
+| Table | Intended access after migration |
+| --- | --- |
+| `favorites` | Owner-only account data |
+| `playlist_songs` | Owner through parent playlist; separately review any public-playlist visibility requirements |
+| `playlists` | Owner-only writes; separately preserve approved public/community playlist reads |
+| `project_assets` | Owner through parent project |
+| `project_folders` | Owner through parent project; do not trust potentially null or mismatched child `clerk_user_id` |
+| `projects` | Owner-only account data |
+| `song_edit_points` | Catalog metadata: preserve published reads only if explicitly required; server-administered writes |
+| `song_shorten_jobs` | Internal processing / owner-specific jobs; no generic browser writes |
+| `songs` | Public published catalog only via reviewed API or restricted view; unpublished/private data and writes remain privileged |
+| `user_billing_profiles` | Owner-only billing data, server-controlled Stripe fields |
+| `user_downloads` | Owner-only usage/license records, server-controlled writes |
+| `user_memberships` | Owner-only read; server-controlled entitlements and writes |
+| `user_profiles` | Owner-only account profile; separately review deliberately public artist/member display fields |
+| `user_security_events` | Owner-only audit event reads; server-controlled event creation |
+
+**Immediate implication:** Public Data API grants on these tables are a current exposure, independent of when the Supabase Auth feature flag is activated. Prioritize containment with the database operator and verify public site dependencies before revoking access. This review did **not** change production.
+
+Additional observations:
+
+- `auth_identity_links` already has RLS enabled, no user-facing policies, no anon/authenticated table privileges, primary key on `supabase_user_id`, unique constraint on `clerk_user_id`, and a foreign key to `auth.users`. Preserve that boundary. All identity mapping must continue to use server-authenticated `auth.getUser()` and a server-privileged lookup.
+- `public.project_folder_paths` is an exposed view with no `security_invoker` option, and SELECT is granted to anon and authenticated. Its recursive definition traverses `project_folders`, an owner-private table. Review all callers, then apply `security_invoker = true` and appropriate view grants **only together with** correctly scoped base-table RLS. A standalone view change may break reads or leave an unintended path.
+- `project_sync_operations` has RLS enabled, but its policies compare `projects.clerk_user_id` to `auth.jwt() ->> 'sub'`. Supabase Auth's JWT `sub` is a Supabase UUID, not the legacy Clerk ID. The referenced `projects` table also currently has no RLS. Replace this comparison with an independently verified owner-link mapping in an approved migration. Check UPDATE policies include both `USING` and `WITH CHECK`; avoid `auth.role()`.
+- Security Advisor also reported 37 tables with RLS enabled and no policies (often intentional service-role-only access), one security-definer view, and four functions whose search path was mutable. Review function signatures and permissions before changing them.
+- Most application API routes use server-side `supabaseServer` with a service-role key. Service-role queries bypass ordinary RLS. Keep the key server-only and preserve server-side authorization: enabling RLS is **defense in depth**, not a replacement for API ownership checks.
+
+## Remediation order — do not apply blindly
+
+1. **Inventory and isolate current access paths.** Run `node apps/web/scripts/audit-auth-cutover.mjs --json` and the read-only SQL audit. Search the website, desktop, edge functions, and any external apps for direct Data API and database clients. Preserve approved public song, playlist and discover reads through server APIs or explicitly restricted published-content views. Avoid copying privileged `songs` columns into public APIs.
+2. **Prove owner identity across providers.** Use the Supabase Auth UUID from server-verified `auth.getUser()`, mapped through `auth_identity_links` to `clerk_user_id`. For browser database policies if truly needed, use an ownership predicate based on `(select auth.uid())` and the locked-down mapping, or prefer server-only APIs. Never use email, `user_metadata`, client-provided owner IDs or JWT `sub` string equality to a legacy ID.
+3. **Design and review per-table RLS and grants.** Private account data must be inaccessible to anon and other users. Child records (`playlist_songs`, `project_folders`, `project_assets`) require ownership through their parent. If direct browser writes are unnecessary, revoke those privileges and keep writes in owner-checked server APIs. For policies on UPDATE, require both original owner in `USING` and new owner in `WITH CHECK`; SELECT policy is needed for UPDATE. Do not grant generic `TO authenticated USING (true)` policies.
+4. **Deploy in a staging database first.** Use the Supabase CLI to create a uniquely named migration with `supabase migration new`, review the generated changes, run advisor checks, compare required grants, test rollback, and commit the migration and tests together. **Do not execute this document or apply schema changes in production as part of the auth branch.**
+5. **Test actual role behavior before deployment.** As anon: attempts to read/write another user's favorites, playlists, projects, billing, membership and security events must fail; published songs and deliberately public playlists must still work through their supported API. As two independently linked Supabase users: verify both read and write isolation, child ownership, rejection of owner reassignment and unlinked-user access. Test all sync-operation statuses, SSE, and desktop file paths. Test the service-role-only server path without exposing its credential to clients.
+6. **After database gating, validate end-to-end web and desktop.** Clerk baseline, OAuth/email/reset, account pages, artist/admin boundaries, claims and invitations, desktop login/deep link, realtime/automatic sync, subscription/entitlement continuity, cross-provider session isolation, and token revocation. Run full tests and production-like build, verify rollback, then approve cutover separately.
+
+## Release gate
+
+**Do not enable** `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` or `AUDIOFLUME_DESKTOP_AUTH_PROVIDER=supabase` until:
+
+- All 14 unprotected tables have reviewed RLS/grants or have been removed from exposed API access, with documented public-content allowances.
+- `project_folder_paths`, `project_sync_operations` and identity-link permissions pass targeted access tests.
+- Desktop bearer revocation / account unlinking strategy is implemented and validated. A signed 30-day token is not automatically invalidated when a linked identity or session is removed.
+- Artist/admin identity and permission migration is complete, including claims/invitations or explicit user-facing restrictions.
+- Integration tests and builds run in a staging environment; feature-flag and rollback tests pass.
+
+Reference: [Supabase RLS guidance](https://supabase.com/docs/guides/database/postgres/row-level-security), [security advisor / database linter](https://supabase.com/docs/guides/database/database-linter), and [API security](https://supabase.com/docs/guides/api/securing-your-api).
