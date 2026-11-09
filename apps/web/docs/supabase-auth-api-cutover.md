@@ -14,7 +14,7 @@
 
 ## Core account API conversion staged (Clerk remains default)
 
-- **20 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
+- **21 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
 - The resolver returns the exact existing Clerk owner ID by default, from `auth()`. Only `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` (server-side environment) selects a Supabase verified-cookie session, which is mapped to the legacy owner using `auth_identity_links`. **Do not set this environment variable yet**, including on previews, until the production cookie browser client and refresh proxy are installed and the end-to-end regression suite passes.
 - Supabase authorization failures never fall back to Clerk. Missing/invalid session -> `401`, verified unlinked identity -> `403`, auth mapping failure -> `500`. Guest Favorites GET and playlist stats GET preserve the existing empty-response contract for a true 401; a 403/500 is not silently treated as empty.
 - The owner predicates, API payloads, ordering and write validations were not rewritten. All changes are isolated to the authorization lookup and denied-response status, except the separate shared playlist-filter read discussed below.
@@ -63,7 +63,7 @@ Use `node apps/web/scripts/audit-auth-cutover.mjs --json` for a machine-readable
 
 `components/PlaylistFilter.tsx` currently imports the legacy browser `supabase` client and directly queries `public.playlists`, filtering with the Clerk `userId`. The owner filter is **not** a database permission barrier while RLS is disabled.
 
-The **Clerk-protected** `GET /api/playlists/filter-options` returns `[{ id, name }]` alphabetically ordered from an owner-scoped server query. `PlaylistFilter.tsx` now uses this endpoint; test signed-in lists, guests, loading/error states, and playlist selection for exact parity.
+The **Clerk-default, Supabase-ready** `GET /api/playlists/filter-options` returns `[{ id, name }]` alphabetically ordered from an owner-scoped server query. `PlaylistFilter.tsx` now uses this endpoint; test signed-in lists, guests, loading/error states, and playlist selection for exact parity.
 
 **Before revoking browser role access to playlists**, migrate this filter through an authorized server API or an equivalent reviewed ownership-enforced RLS path. It is a shared user-facing filter; do not change its UX, classes, states, styling, interactions or behavior without a separate explicit implementation review. The same audit must be completed for every other browser-direct callsite before applying broad grants/RLS changes.
 
