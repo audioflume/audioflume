@@ -1,4 +1,5 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import { NextResponse } from "next/server";
 
 import { ensureUserProfile } from "@/lib/account";
@@ -68,7 +69,7 @@ async function loadArtistTeam(artistId: string, currentUserId: string, canManage
           .select("clerk_user_id, display_name, avatar_url")
           .in("clerk_user_id", clerkUserIds)
       : Promise.resolve({ data: [], error: null }),
-    clerkUserIds.length
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "clerk" && clerkUserIds.length
       ? (async () => {
           const client = await clerkClient();
           return client.users.getUserList({
@@ -150,6 +151,11 @@ export async function GET(_request: Request, context: RouteContext) {
 }
 
 export async function POST(request: Request, context: RouteContext) {
+  // Clerk invitations and direct user lookups are not a Supabase identity flow.
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
+    return NextResponse.json({ error: "Artist team invitations are not yet available." }, { status: 403 });
+  }
+
   try {
     const { id } = await context.params;
     const access = await requireArtistPermission(id, "artist:manage_members");
@@ -263,7 +269,7 @@ export async function POST(request: Request, context: RouteContext) {
 
     if (invitationError) {
       try {
-        await client.invitations.revokeInvitation({ invitationId: invitation.id });
+        await client.invitations.revokeInvitation(invitation.id);
       } catch (revokeError) {
         console.error("Failed to revoke orphaned Clerk invitation:", revokeError);
       }
@@ -365,6 +371,11 @@ export async function DELETE(request: Request, context: RouteContext) {
       typeof body?.invitation_id === "string" ? body.invitation_id : "";
 
     if (invitationId) {
+      // Pending invitation revocation uses the Clerk invitation API.
+      if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
+        return NextResponse.json({ error: "Artist team invitations are not yet available." }, { status: 403 });
+      }
+
       const { data: invitation, error: inviteLookupError } = await supabaseServer
         .from("artist_team_invitations")
         .select("id, status, clerk_invitation_id")
@@ -383,9 +394,7 @@ export async function DELETE(request: Request, context: RouteContext) {
       if (invitation.clerk_invitation_id) {
         const client = await clerkClient();
         try {
-          await client.invitations.revokeInvitation({
-            invitationId: invitation.clerk_invitation_id,
-          });
+          await client.invitations.revokeInvitation(invitation.clerk_invitation_id);
         } catch (revokeError) {
           console.error("Failed to revoke Clerk invitation:", revokeError);
         }

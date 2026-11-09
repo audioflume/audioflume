@@ -1,20 +1,20 @@
 import { NextResponse } from "next/server";
 
-import { requireAdmin } from "@/lib/admin";
+import { resolvePrivilegedActor } from "@/lib/auth/resolvePrivilegedActor";
 import {
   getArtistMembershipsForUser,
   getArtistPermissions,
 } from "@/lib/artistPermissions";
 
 export async function GET() {
-  const { isAdmin, user } = await requireAdmin();
+  const { isAdmin, userId, status } = await resolvePrivilegedActor();
 
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status });
   }
 
   try {
-    const memberships = await getArtistMembershipsForUser(user.id);
+    const memberships = await getArtistMembershipsForUser(userId);
 
     return NextResponse.json({
       isAdmin,

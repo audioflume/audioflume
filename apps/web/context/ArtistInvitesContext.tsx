@@ -1,6 +1,7 @@
 "use client";
 
 import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import {
   createContext,
   useCallback,
@@ -26,9 +27,16 @@ export function ArtistInvitesProvider({
   children: ReactNode;
 }) {
   const { isLoaded: isAuthLoaded, isSignedIn } = useUser();
+  const { provider } = useAccountSession();
   const [pendingInviteCount, setPendingInviteCount] = useState(initialPendingCount);
 
   const refreshPendingInvites = useCallback(async () => {
+    // Artist invite endpoints remain Clerk-only. Never read invitations
+    // belonging to a separate, concurrently signed-in Clerk account.
+    if (provider === "supabase") {
+      setPendingInviteCount(0);
+      return;
+    }
     if (!isAuthLoaded) return;
 
     if (!isSignedIn) {
@@ -52,7 +60,11 @@ export function ArtistInvitesProvider({
     } catch {
       // Keep the last known count if a background refresh fails.
     }
-  }, [isAuthLoaded, isSignedIn]);
+  }, [isAuthLoaded, isSignedIn, provider]);
+
+  useEffect(() => {
+    if (provider === "supabase") setPendingInviteCount(0);
+  }, [provider]);
 
   useEffect(() => {
     window.addEventListener("focus", refreshPendingInvites);

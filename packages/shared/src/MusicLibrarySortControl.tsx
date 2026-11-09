@@ -41,7 +41,7 @@ export function MusicLibrarySortControl<
   const controlRef = useRef<HTMLDivElement | null>(null);
   const sortOptions =
     options ??
-    (MUSIC_LIBRARY_SORT_OPTIONS as ReadonlyArray<
+    (MUSIC_LIBRARY_SORT_OPTIONS as unknown as ReadonlyArray<
       MusicLibrarySortOption<TValue>
     >);
   const activeOption =

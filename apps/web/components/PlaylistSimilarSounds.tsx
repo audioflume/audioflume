@@ -105,6 +105,7 @@ export default function PlaylistSimilarSounds() {
     setRecommendations([]);
 
     async function loadRecommendations() {
+      if (!recommendationUrl) return;
       try {
         const response = await fetch(recommendationUrl, {
           signal: controller.signal,

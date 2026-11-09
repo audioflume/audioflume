@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -17,8 +17,9 @@ async function getCount(table: string, userId: string) {
 }
 
 export async function GET() {
-  const { userId } = await auth();
-  if (!userId) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  const { userId } = account;
+  if (!userId) return NextResponse.json({ error: account.error }, { status: account.status });
 
   try {
     const [playlists, projects, favorites, downloads] = await Promise.all([

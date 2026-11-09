@@ -1,17 +1,26 @@
 import { currentUser } from '@clerk/nextjs/server'
+import { selectAccountAuthProvider } from '@/lib/auth/selectAccountAuthProvider'
 import { NextRequest, NextResponse } from 'next/server'
 import { ADMIN_EMAILS } from '@/lib/adminEmails'
+import { requireAdmin } from '@/lib/admin'
 
 export async function GET(req: NextRequest) {
   try {
-    const user = await currentUser()
-    const email = user?.primaryEmailAddress?.emailAddress
+    if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === 'supabase') {
+      const admin = await requireAdmin()
+      if (!admin.isAdmin) {
+        return NextResponse.json({ error: 'Unauthorized audio proxy request.' }, { status: 401 })
+      }
+    } else {
+      const user = await currentUser()
+      const email = user?.primaryEmailAddress?.emailAddress
 
-    if (!email || !ADMIN_EMAILS.includes(email)) {
-      return NextResponse.json(
-        { error: 'Unauthorized audio proxy request.' },
-        { status: 401 }
-      )
+      if (!email || !ADMIN_EMAILS.includes(email)) {
+        return NextResponse.json(
+          { error: 'Unauthorized audio proxy request.' },
+          { status: 401 }
+        )
+      }
     }
 
     const url = req.nextUrl.searchParams.get('url')

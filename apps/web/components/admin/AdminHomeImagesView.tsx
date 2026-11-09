@@ -46,6 +46,7 @@ export default function AdminHomeImagesView() {
     <>
       <PlaylistManagerCollapsibleSection
         title="Homepage Images"
+        subtitle=""
         collapsed={collapsed}
         onToggle={() => setCollapsed((value) => !value)}
         wrapHeader

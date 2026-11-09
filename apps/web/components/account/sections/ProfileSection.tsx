@@ -1,12 +1,12 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { Button, Feedback, Input, ProfileImageUploader } from "../AccountUI";
 import { useAccountProfile } from "../hooks/useAccountProfile";
 import { formatDate } from "../accountUtils";
 
 export default function ProfileSection() {
-  const { user } = useUser();
+  const { user } = useAccountSession();
   const {
     profile,
     identityEmail,

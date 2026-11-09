@@ -4,7 +4,7 @@ import { HeaderShell } from "@filmwave/shared";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import cardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
@@ -69,7 +69,7 @@ function playlistNavIsActive(pathname: string | null, href: string) {
 }
 
 export default function Header() {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded } = useAccountSession();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -252,6 +252,7 @@ export default function Header() {
     let frame = 0;
 
     function updateHeaderBottom() {
+      if (!headerElement) return;
       const bottom = headerElement.getBoundingClientRect().bottom;
       document.documentElement.style.setProperty(
         "--filmwave-web-header-bottom",
@@ -1388,7 +1389,7 @@ export default function Header() {
                                         </div>
                                       </Link>
                                       <CuratedPlaylistBookmarkButton
-                                        playlist={playlist}
+                                        playlist={{ ...playlist, kicker: "", cover_image_url: playlist.cover_image_url ?? null, song_count: playlist.song_count ?? undefined }}
                                         className="filmwave-playlists-mega-feature-bookmark"
                                       />
                                       <CuratedPlaylistPlayButton

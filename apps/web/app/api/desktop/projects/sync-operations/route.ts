@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
+import { getVerifiedDesktopUserIdFromRequest } from "@/lib/auth/getVerifiedDesktopUserIdFromRequest";
 import { completeProjectSyncOperationsForProject } from "@/lib/projectSyncOperations";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -16,7 +16,7 @@ async function getOwnedProject(projectId: string, userId: string) {
 }
 
 export async function GET(req: Request) {
-  const userId = getDesktopUserIdFromRequest(req);
+  const userId = await getVerifiedDesktopUserIdFromRequest(req);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -57,7 +57,7 @@ export async function GET(req: Request) {
 }
 
 export async function POST(req: Request) {
-  const userId = getDesktopUserIdFromRequest(req);
+  const userId = await getVerifiedDesktopUserIdFromRequest(req);
 
   if (!userId) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

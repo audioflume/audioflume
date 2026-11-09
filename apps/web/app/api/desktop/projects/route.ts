@@ -1,6 +1,7 @@
+import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
-import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
+import { getVerifiedDesktopUserIdFromRequest } from "@/lib/auth/getVerifiedDesktopUserIdFromRequest";
 import { normalizeProject } from "@/lib/projects";
 import {
   normalizeProjectAsset,
@@ -204,9 +205,14 @@ function buildDesktopFileTree({
 }
 
 async function getDesktopRequestUserId(req: Request) {
-  const tokenUserId = getDesktopUserIdFromRequest(req);
+  const tokenUserId = await getVerifiedDesktopUserIdFromRequest(req);
 
   if (tokenUserId) return tokenUserId;
+
+  if (selectDesktopAuthProvider(
+    process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+  ) === "supabase") return null;
 
   const { userId } = await auth();
 

@@ -1,6 +1,8 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { createDesktopToken } from "@/lib/desktopAuth";
+import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 
 const DESKTOP_CALLBACK_URL = "audioflume://auth/callback";
 
@@ -86,13 +88,24 @@ function renderPage({
 }
 
 async function getSignedInUserId() {
+  if (selectDesktopAuthProvider(
+    process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+  ) === "supabase") {
+    // Issue a desktop token only for a verified, linked Supabase account.
+    const owner = await resolveAccountOwner();
+    return owner.userId && owner.supabaseUserId
+      ? { userId: owner.userId, supabaseUserId: owner.supabaseUserId }
+      : null;
+  }
+
   const { userId } = await auth();
 
-  if (userId) return userId;
+  if (userId) return { userId };
 
   const user = await currentUser();
 
-  return user?.id ?? null;
+  return user?.id ? { userId: user.id } : null;
 }
 
 function getDesktopCallbackUrl(token: string) {
@@ -108,11 +121,20 @@ export async function GET(req: Request) {
   const shouldDeepLink = url.searchParams.get("callback") === "deeplink";
   const signInUrl = new URL("/sign-in", url.origin);
 
-  signInUrl.searchParams.set("redirect_url", url.toString());
+  // Supabase sign-in accepts only same-origin relative return paths.
+  // Preserve Clerk's existing absolute callback parameter unchanged.
+  const isSupabaseDesktop = selectDesktopAuthProvider(
+    process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+  ) === "supabase";
+  signInUrl.searchParams.set(
+    "redirect_url",
+    isSupabaseDesktop ? url.pathname + url.search : url.toString(),
+  );
 
-  const userId = await getSignedInUserId();
+  const desktopIdentity = await getSignedInUserId();
 
-  if (!userId) {
+  if (!desktopIdentity) {
     return new NextResponse(
       renderPage({
         message:
@@ -129,7 +151,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const token = createDesktopToken(userId);
+  const token = createDesktopToken(desktopIdentity.userId, desktopIdentity.supabaseUserId);
   const callbackUrl = getDesktopCallbackUrl(token);
 
   return new NextResponse(
@@ -152,14 +174,14 @@ export async function GET(req: Request) {
 }
 
 export async function POST() {
-  const userId = await getSignedInUserId();
+  const desktopIdentity = await getSignedInUserId();
 
-  if (!userId) {
+  if (!desktopIdentity) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   return NextResponse.json(
-    { token: createDesktopToken(userId) },
+    { token: createDesktopToken(desktopIdentity.userId, desktopIdentity.supabaseUserId) },
     { headers: { "Cache-Control": "no-store" } },
   );
 }

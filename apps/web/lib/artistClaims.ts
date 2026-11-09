@@ -141,7 +141,7 @@ export async function createArtistClaimInvitation({
 
   if (storeError) {
     try {
-      await client.invitations.revokeInvitation({ invitationId: invitation.id });
+      await client.invitations.revokeInvitation(invitation.id);
     } catch (revokeError) {
       console.error("Failed to revoke orphaned artist claim invitation:", revokeError);
     }
@@ -173,9 +173,7 @@ export async function revokeArtistClaimInvitation({
   if (invitation.clerk_invitation_id) {
     const client = await clerkClient();
     try {
-      await client.invitations.revokeInvitation({
-        invitationId: invitation.clerk_invitation_id,
-      });
+      await client.invitations.revokeInvitation(invitation.clerk_invitation_id);
     } catch (revokeError) {
       console.error("Failed to revoke Clerk artist claim invitation:", revokeError);
     }

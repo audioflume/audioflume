@@ -1,8 +1,9 @@
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
-import type {
-  CuratedPlaylistShelfItem,
-  CuratedPlaylistShelfState,
+import {
+  isCuratedPlaylistShelfKey,
+  type CuratedPlaylistShelfItem,
+  type CuratedPlaylistShelfState,
 } from "@/lib/curatedPlaylistShelves";
 
 function emptyShelves(): CuratedPlaylistShelfState {
@@ -24,11 +25,7 @@ export async function GET() {
       const shelves = emptyShelves();
 
       for (const row of data ?? []) {
-        if (
-          row.shelf_key !== "featured" &&
-          row.shelf_key !== "popular" &&
-          row.shelf_key !== "trending"
-        ) {
+        if (!isCuratedPlaylistShelfKey(row.shelf_key)) {
           continue;
         }
 

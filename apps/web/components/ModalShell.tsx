@@ -80,6 +80,7 @@ export default function ModalShell({
     });
 
     function handleKeyDown(event: KeyboardEvent) {
+      if (!dialog) return;
       if (event.key === "Escape") {
         event.preventDefault();
         onCloseRef.current();

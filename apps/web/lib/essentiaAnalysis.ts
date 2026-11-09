@@ -40,7 +40,7 @@ type BeatAnalyzerResponse = {
 
 type BeatForcedAudioBuffer = AudioBuffer & {
   __filmwaveOriginalGetChannelData__?: AudioBuffer['getChannelData']
-  __filmwaveBeatSyntheticCache__?: Map<number, Float32Array>
+  __filmwaveBeatSyntheticCache__?: Map<number, Float32Array<ArrayBuffer>>
   __filmwaveForcedBpm__?: number
 }
 
@@ -148,7 +148,7 @@ async function decompressLogicResU(payload: Uint8Array) {
   }
 
   try {
-    const input = new Blob([payload]).stream()
+    const input = new Blob([new Uint8Array(payload)]).stream()
     const decompressed = input.pipeThrough(new DecompressionStream('deflate'))
     const buffer = await new Response(decompressed).arrayBuffer()
     return new Uint8Array(buffer)
@@ -340,7 +340,7 @@ function forceLegacyBpmVotingToBeatThis(audioBuffer: AudioBuffer, bpm: number) {
       targetBuffer.getChannelData.bind(targetBuffer)
 
     targetBuffer.__filmwaveOriginalGetChannelData__ = originalGetChannelData
-    targetBuffer.__filmwaveBeatSyntheticCache__ = new Map<number, Float32Array>()
+    targetBuffer.__filmwaveBeatSyntheticCache__ = new Map<number, Float32Array<ArrayBuffer>>()
     targetBuffer.__filmwaveForcedBpm__ = bpm
 
     targetBuffer.getChannelData = (channel: number) => {

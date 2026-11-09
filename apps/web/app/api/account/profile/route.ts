@@ -1,14 +1,15 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountIdentity } from "@/lib/auth/resolveAccountIdentity";
 import { NextResponse } from "next/server";
 import { cleanOptionalString, ensureUserProfile, getPrimaryEmail } from "@/lib/account";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export async function GET() {
-  const user = await currentUser();
-  if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const identity = await resolveAccountIdentity();
+  const { userId, user } = identity;
+  if (!userId) return NextResponse.json({ error: identity.error }, { status: identity.status });
 
   try {
-    const profile = await ensureUserProfile(user.id, user);
+    const profile = await ensureUserProfile(userId, user);
     return NextResponse.json({
       profile,
       identity: { email: getPrimaryEmail(user), image_url: user.imageUrl ?? null },
@@ -20,8 +21,9 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const identity = await resolveAccountIdentity();
+  const { userId, user } = identity;
+  if (!userId) return NextResponse.json({ error: identity.error }, { status: identity.status });
 
   const body = await request.json().catch(() => null);
   if (!body || typeof body !== "object") {
@@ -43,10 +45,10 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    await ensureUserProfile(user.id, user);
+    await ensureUserProfile(userId, user);
     const { data, error } = await supabaseServer
       .from("user_profiles")
-      .upsert({ clerk_user_id: user.id, ...updates }, { onConflict: "clerk_user_id" })
+      .upsert({ clerk_user_id: userId, ...updates }, { onConflict: "clerk_user_id" })
       .select("*")
       .single();
 

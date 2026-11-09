@@ -1,15 +1,18 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export async function GET() {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    // Intentionally returns 200 with empty array rather than 401,
-    // so the UI can render gracefully for unauthenticated users
-    // without needing to handle an error state.
-    return NextResponse.json({ favorites: [] });
+    // Preserve the existing empty guest response; do not conceal an unlinked
+    // Supabase identity or backend error behind an empty favorites array.
+    if (account.status === 401) {
+      return NextResponse.json({ favorites: [] });
+    }
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   const { data, error } = await supabaseServer
@@ -36,12 +39,13 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
     return NextResponse.json(
-      { error: "You must be signed in to favorite songs." },
-      { status: 401 },
+      { error: account.status === 401 ? "You must be signed in to favorite songs." : account.error },
+      { status: account.status },
     );
   }
 

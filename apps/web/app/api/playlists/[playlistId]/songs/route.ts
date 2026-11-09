@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { attachPrimaryArtistProfiles } from "@/lib/songs";
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -34,6 +34,8 @@ type SupabaseSongRow = {
   bpm: number | null;
   genres: string[] | null;
   moods: string[] | null;
+  regions: string[] | null;
+  download_count: number | null;
   instruments: string[] | null;
   builds: string[] | null;
   vocals: string[] | null;
@@ -54,7 +56,7 @@ type PlaylistSong = Song & {
 const PLAYLIST_SONG_SELECT =
   "id, playlist_id, song_id, position, created_at";
 const SONG_SELECT =
-  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points";
+  "id, title, artist, audio_url, cover_url, stems, waveform_peaks, duration, key, bpm, genres, moods, regions, download_count, instruments, builds, vocals, instrumental, ai_generated, license_type, edit_points";
 
 async function verifyPlaylistOwner(playlistId: string, userId: string) {
   const { data, error } = await supabaseServer
@@ -134,6 +136,8 @@ function normalizeSongRow(row: SupabaseSongRow): Song {
     bpm: Number(row.bpm || 0),
     genres: Array.isArray(row.genres) ? row.genres : [],
     moods: Array.isArray(row.moods) ? row.moods : [],
+    regions: Array.isArray(row.regions) ? row.regions : [],
+    downloadCount: Number(row.download_count || 0),
     instruments: Array.isArray(row.instruments) ? row.instruments : [],
     builds: Array.isArray(row.builds) ? row.builds : [],
     vocals: Array.isArray(row.vocals) ? row.vocals : [],
@@ -159,10 +163,11 @@ function mergePlaylistSong(
 }
 
 export async function GET(_req: Request, context: RouteContext) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {
@@ -238,17 +243,18 @@ export async function GET(_req: Request, context: RouteContext) {
 }
 
 export async function POST(req: Request, context: RouteContext) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {
     const { playlistId } = await context.params;
     const body = await req.json();
 
-    const requestedSongs = Array.isArray(body.songs)
+    const requestedSongs: Array<{ song_id: string; position: number }> | null = Array.isArray(body.songs)
       ? body.songs
           .map((item: unknown, index: number) => {
             if (!item || typeof item !== "object") return null;

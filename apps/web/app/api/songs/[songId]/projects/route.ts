@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { ensureDefaultProjectFolders } from "@/lib/projectFolders";
 import { createProjectSyncOperation } from "@/lib/projectSyncOperations";
@@ -70,10 +70,11 @@ async function getSongSizeBytes(songId: string) {
 }
 
 export async function GET(_req: Request, context: RouteContext) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {
@@ -129,10 +130,11 @@ export async function GET(_req: Request, context: RouteContext) {
 }
 
 export async function PATCH(req: Request, context: RouteContext) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {

@@ -30,13 +30,6 @@ export default function FeaturedArtistShelf({
 }) {
   const headingVisible = showHeading ?? (loading || artists.length > 0);
 
-  return () => {
-      scroller.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-      observer.disconnect();
-    };
-  }, [artists.length]);
-
   return (
     <section className="discover-artist-featured">
       {headingVisible ? (

@@ -1,5 +1,7 @@
 import { SignIn } from "@clerk/nextjs";
 import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 
 import Footer from "@/components/Footer";
 import ArtistClaimPanel from "@/components/artists/ArtistClaimPanel";
@@ -7,7 +9,10 @@ import ArtistClaimPanel from "@/components/artists/ArtistClaimPanel";
 export const dynamic = "force-dynamic";
 
 export default async function ArtistClaimPage() {
-  const user = await currentUser();
+  const provider = selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER);
+  const signedIn = provider === "clerk"
+    ? Boolean((await currentUser())?.id)
+    : Boolean((await resolveAccountOwner()).userId);
 
   return (
     <main className="artist-claim-page-root flex min-h-screen flex-col bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -85,16 +90,25 @@ export default async function ArtistClaimPage() {
           </section>
 
           <div className="artist-claim-panel-shell relative z-10">
-            {user?.id ? (
+            {signedIn ? (
               <ArtistClaimPanel />
             ) : (
               <section className="artist-claim-panel-surface overflow-hidden bg-[var(--bg-primary)] p-[50px]">
                 <div className="flex w-full justify-center">
-                  <SignIn
-                    routing="hash"
-                    forceRedirectUrl="/artists/claim"
-                    signUpForceRedirectUrl="/artists/claim"
-                  />
+                  {provider === "clerk" ? (
+                    <SignIn
+                      routing="hash"
+                      forceRedirectUrl="/artists/claim"
+                      signUpForceRedirectUrl="/artists/claim"
+                    />
+                  ) : (
+                    <a
+                      href="/sign-in?redirect_url=%2Fartists%2Fclaim"
+                      className="inline-flex h-10 items-center justify-center rounded-none border-[1.25px] border-[var(--text-primary)] bg-[var(--text-primary)] px-4 text-[12px] font-normal text-[var(--bg-primary)]"
+                    >
+                      Sign in to claim your artist profile
+                    </a>
+                  )}
                 </div>
               </section>
             )}

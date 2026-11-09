@@ -1,10 +1,17 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest, type NextFetchEvent } from "next/server";
+import { refreshSupabaseSsrPreview } from "@/lib/supabaseSsrPreviewRefresh";
+import { refreshSupabaseAccountSession } from "@/lib/auth/refreshSupabaseAccountSession";
+import { shouldRefreshAccountSession } from "@/lib/auth/shouldRefreshAccountSession";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
+import { isMigratedAccountPage } from "@/lib/auth/isMigratedAccountPage";
 
 const isPublicRoute = createRouteMatcher([
   "/",
   "/sign-in(.*)",
   "/sign-up(.*)",
+  "/auth-preview(.*)",
   "/artists/claim(.*)",
   "/artists/earnings",
   "/artists/licensing",
@@ -76,12 +83,77 @@ function applyDesktopCorsHeaders(response: NextResponse, request: NextRequest) {
   return response;
 }
 
-export default clerkMiddleware(async (auth, request) => {
+const clerkRequestMiddleware = clerkMiddleware(async (auth, request) => {
+  // The SSR preview is public and maintains only its own Supabase cookie session.
+  // Every production route and desktop API continues through the existing Clerk flow.
+  if (request.nextUrl.pathname === "/auth-preview/ssr") {
+    return refreshSupabaseSsrPreview(request);
+  }
+
+  // Test the future cookie independently; never replace Clerk automatically.
+  if (request.nextUrl.pathname === "/auth-preview/cutover") {
+    return refreshSupabaseAccountSession(request);
+  }
+
+  // OAuth exchange has its own verified owner check. Permit only this exact
+  // callback when Supabase is explicitly selected; all other protected
+  // website routes remain behind Clerk until a reviewed cutover.
+  if (
+    request.nextUrl.pathname === "/auth/supabase/callback" &&
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase"
+  ) {
+    return NextResponse.next();
+  }
+
+  // Only refresh migrated account API sessions when the server operator
+  // explicitly opts into the Supabase migration. Desktop remains untouched.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    shouldRefreshAccountSession(request.nextUrl.pathname)
+  ) {
+    return refreshSupabaseAccountSession(request);
+  }
+
   if (
     request.nextUrl.pathname === "/playlists" &&
     request.nextUrl.searchParams.get("tab") === "community-playlists"
   ) {
     return NextResponse.redirect(new URL("/playlists/community", request.url));
+  }
+
+  // Artist pages whose APIs verify the linked owner use the Supabase
+  // cookie when selected; Clerk must not protect their page HTML first.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    (request.nextUrl.pathname === "/artists/dashboard" ||
+      request.nextUrl.pathname === "/artists/apply")
+  ) {
+    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+  }
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    request.nextUrl.pathname === "/artists/claim"
+  ) {
+    return refreshSupabaseAccountSession(request);
+  }
+
+  // Supabase admin pages are guarded twice: verified session here and a
+  // server-trusted requireAdmin() check in app/admin/layout.tsx.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    (request.nextUrl.pathname === "/admin" || request.nextUrl.pathname.startsWith("/admin/"))
+  ) {
+    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+  }
+
+  // Only account-data-backed client pages may use the Supabase page guard
+  // when the server opts in. Admin, artist, account settings and desktop
+  // retain the existing Clerk path. APIs still verify legacy ownership.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    isMigratedAccountPage(request.nextUrl.pathname)
+  ) {
+    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
   }
 
   if (request.nextUrl.pathname.startsWith("/api/desktop")) {
@@ -108,6 +180,100 @@ export default clerkMiddleware(async (auth, request) => {
     await auth.protect();
   }
 });
+
+
+// Explicit Supabase website cutover: avoid running Clerk's development-session
+// handshake before paths that already have their own Supabase session handling.
+// Clerk remains the default provider, and unconverted private pages continue
+// through the existing Clerk middleware instead of silently changing access.
+export default function middleware(request: NextRequest, event: NextFetchEvent) {
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase") {
+    const pathname = request.nextUrl.pathname;
+
+    // Both browser entry pages and the OAuth exchange have their own provider-
+    // selected authorization logic. Never redirect them through Clerk.
+    if (
+      pathname === "/sign-in" || pathname.startsWith("/sign-in/") ||
+      pathname === "/sign-up" || pathname.startsWith("/sign-up/") ||
+      pathname === "/auth/supabase/callback"
+    ) {
+      return NextResponse.next();
+    }
+
+    if (pathname === "/auth-preview/ssr") return refreshSupabaseSsrPreview(request);
+    if (pathname === "/auth-preview/cutover") return refreshSupabaseAccountSession(request);
+
+    if (shouldRefreshAccountSession(pathname)) {
+      return refreshSupabaseAccountSession(request);
+    }
+
+    if (
+      pathname === "/playlists" &&
+      request.nextUrl.searchParams.get("tab") === "community-playlists"
+    ) {
+      return NextResponse.redirect(new URL("/playlists/community", request.url));
+    }
+
+    if (pathname === "/artists/dashboard" || pathname === "/artists/apply") {
+      return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+    }
+    if (pathname === "/artists/claim") {
+      return refreshSupabaseAccountSession(request);
+    }
+    if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+      // app/admin/layout.tsx independently enforces server-trusted admin role.
+      return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+    }
+    if (isMigratedAccountPage(pathname)) {
+      return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+    }
+
+    // Only bypass Clerk for desktop when BOTH desktop and website providers
+    // explicitly opt into Supabase. Bearer authorization stays in each API.
+    if (
+      pathname.startsWith("/api/desktop") &&
+      selectDesktopAuthProvider(
+        process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+        process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+      ) === "supabase"
+    ) {
+      if (request.method === "OPTIONS") {
+        return applyDesktopCorsHeaders(
+          new NextResponse(null, { status: 204 }),
+          request,
+        );
+      }
+      return applyDesktopCorsHeaders(NextResponse.next(), request);
+    }
+
+    // When desktop stays Clerk, retain its original middleware context.
+    // Never drop Clerk's desktop handling merely because web opted in first.
+    if (pathname.startsWith("/api/desktop")) {
+      return clerkRequestMiddleware(request, event);
+    }
+
+    // Only audited standalone Supabase handlers skip Clerk entirely.
+    // All other API handlers retain their existing middleware context.
+    if (
+      pathname === "/api/account/auth-session" ||
+      pathname === "/api/auth-preview/cutover-session" ||
+      pathname === "/api/admin/access" ||
+      pathname === "/api/admin/system-health" ||
+      pathname === "/api/admin/audio-proxy"
+    ) {
+      return NextResponse.next();
+    }
+
+    const isPublicContentRoute =
+      isPublicArtistContentRoute(pathname) ||
+      isPublicPlaylistDetailRoute(pathname);
+    if (isPublicRoute(request) || isPublicContentRoute) {
+      return NextResponse.next();
+    }
+  }
+
+  return clerkRequestMiddleware(request, event);
+}
 
 export const config = {
   matcher: [
