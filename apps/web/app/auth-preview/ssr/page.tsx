@@ -8,6 +8,8 @@ export default function SsrSessionPreviewPage() {
   const [email, setEmail] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const [serverStatus, setServerStatus] = useState<string | null>(null);
+  const [ownershipBusy, setOwnershipBusy] = useState(false);
+  const [ownershipStatus, setOwnershipStatus] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -18,6 +20,7 @@ export default function SsrSessionPreviewPage() {
       (_event, session) => {
         setEmail(session?.user.email ?? null);
         setServerStatus(null);
+        setOwnershipStatus(null);
       },
     );
     return () => subscription.subscription.unsubscribe();
@@ -55,6 +58,35 @@ export default function SsrSessionPreviewPage() {
     }
   }
 
+  async function checkLinkedOwnership() {
+    setOwnershipBusy(true);
+    setOwnershipStatus(null);
+    setError("");
+    try {
+      const response = await fetch("/api/auth-preview/ssr-account-data", {
+        credentials: "same-origin",
+        cache: "no-store",
+      });
+      const result = (await response.json()) as {
+        counts?: { playlists: number; projects: number };
+        error?: string;
+      };
+      if (response.status === 401) {
+        setOwnershipStatus("DENIED (401): No verified Supabase cookie session.");
+      } else if (response.status === 403) {
+        setOwnershipStatus("PASS (403): This unlinked account cannot access legacy account data.");
+      } else if (response.ok && result.counts) {
+        setOwnershipStatus(`PASS (200): Verified owner has ${result.counts.playlists} playlists and ${result.counts.projects} projects.`);
+      } else {
+        setOwnershipStatus(`CHECK FAILED (${response.status}): ${result.error ?? "Could not verify account ownership."}`);
+      }
+    } catch (checkError) {
+      setError(checkError instanceof Error ? checkError.message : "Ownership verification failed.");
+    } finally {
+      setOwnershipBusy(false);
+    }
+  }
+
   async function signOut() {
     setError("");
     const { error: signOutError } = await supabaseSsrPreview.auth.signOut();
@@ -62,6 +94,7 @@ export default function SsrSessionPreviewPage() {
     else {
       setEmail(null);
       setServerStatus(null);
+      setOwnershipStatus(null);
     }
   }
 
@@ -91,6 +124,11 @@ export default function SsrSessionPreviewPage() {
           {checking ? "Checking server session…" : "Verify server cookie session"}
         </button>
         {serverStatus ? <p className={styles.success} role="status">{serverStatus}</p> : null}
+        <button type="button" className={styles.secondaryButton}
+          onClick={() => void checkLinkedOwnership()} disabled={ownershipBusy}>
+          {ownershipBusy ? "Verifying linked account…" : "Test cookie-based account access"}
+        </button>
+        {ownershipStatus ? <p className={styles.success} role="status">{ownershipStatus}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
         <a href="/auth-preview">Back to account-linking preview</a>
       </section>
