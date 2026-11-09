@@ -438,7 +438,7 @@ function analyzeHarmonicWindow(samples: Float32Array): HarmonicProfile {
 
   for (let frameIndex = 0; frameIndex < FRAME_COUNT; frameIndex++) {
     const progress =
-      FRAME_COUNT === 1 ? 0 : frameIndex / (FRAME_COUNT - 1);
+      Number(FRAME_COUNT) === 1 ? 0 : frameIndex / (FRAME_COUNT - 1);
     const start = Math.min(
       samples.length - FFT_SIZE,
       Math.round(progress * (samples.length - FFT_SIZE)),
