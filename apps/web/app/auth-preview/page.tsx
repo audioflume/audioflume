@@ -213,7 +213,7 @@ export default function SupabaseAuthPreviewPage() {
       }
 
       const response = await fetch("/api/auth-preview/account-data", {
-        headers: { Authorization: `Bearer ${session.access_token}` },
+        headers: { "X-Audioflume-Supabase-Token": session.access_token },
         cache: "no-store",
       });
       const result = (await response.json()) as {
@@ -254,7 +254,7 @@ export default function SupabaseAuthPreviewPage() {
       }
 
       const response = await fetch("/api/auth-preview/account-data", {
-        headers: { Authorization: `Bearer ${session.access_token}` },
+        headers: { "X-Audioflume-Supabase-Token": session.access_token },
         cache: "no-store",
       });
 
