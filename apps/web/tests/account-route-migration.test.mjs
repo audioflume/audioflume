@@ -10,6 +10,7 @@ const converted = [
   "favorites/[songId]/route.ts",
   "playlists/route.ts",
   "playlists/filter-options/route.ts",
+  "playlists/migrate-covers/route.ts",
   "playlists/[playlistId]/route.ts",
   "playlists/[playlistId]/songs/route.ts",
   "playlists/[playlistId]/songs/[songId]/route.ts",
