@@ -30,3 +30,22 @@ test("Supabase security view does not re-use Clerk controls or claim MFA support
   assert.doesNotMatch(source, /\.auth\.mfa\.enroll\(/);
   assert.doesNotMatch(source, /\.auth\.updateUser\(\{ email/);
 });
+
+test("provider selection mounts Clerk hooks only in the Clerk security child", async () => {
+  const source = await read("components/account/sections/SecuritySection.tsx");
+  assert.match(source, /function ClerkSecuritySection/);
+  assert.match(source, /<ClerkSecuritySection/);
+  assert.match(source, /<SupabaseSecuritySection/);
+  assert.ok(source.indexOf("function ClerkSecuritySection") < source.indexOf("useClerk()"));
+});
+
+test("Supabase security events use scoped API and partition client cache by identity", async () => {
+  const source = await read("components/account/sections/SupabaseSecuritySection.tsx");
+  assert.ok(source.includes('fetch("/api/account/security-events"'));
+  assert.ok(source.includes("eventState?.userId === userId"));
+  assert.ok(source.includes("if (!isLoaded || !userId) return"));
+  assert.ok(source.includes("events.map((event)"));
+  const route = await read("app/api/account/security-events/route.ts");
+  assert.ok(route.includes("resolveAccountOwner()"));
+  assert.ok(route.includes('.eq("clerk_user_id", userId)'));
+});
