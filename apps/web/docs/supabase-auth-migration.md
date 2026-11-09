@@ -25,6 +25,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 - The read-only account-data API now uses a request-scoped, independently verified Supabase identity resolver (`lib/supabasePreviewAuthorization.ts`) that returns 401 for missing/invalid sessions and 403 for unlinked users. It never accepts a client-supplied legacy owner ID. Supabase tokens use a dedicated header to avoid interfering with Clerk middleware.
 - An isolated `/auth-preview/ssr` page uses `@supabase/ssr` browser cookies with an independent cookie name and Google OAuth. `GET /api/auth-preview/ssr-session` verifies the cookie against Supabase Auth server-side and returns only an authenticated boolean. Route-level refresh writes response cookies and prevents caching. This is not a production session or a substitute for a shared Next.js proxy refresh.
 - **Preview-only middleware refresh added:** only exact path `/auth-preview/ssr` invokes `lib/supabaseSsrPreviewRefresh.ts` from existing Clerk middleware; it validates claims with Supabase, forwards rotated cookies into the server request and response, and preserves Supabase cache headers. All other routes retain the original Clerk middleware flow. This has not been end-to-end browser tested for token expiry.
+- `GET /api/auth-preview/ssr-account-data` now tests a server-verified Supabase cookie against the existing one-to-one legacy ownership link and returns only aggregate playlist and project counts. It returns 401 for missing/invalid sessions and 403 for unlinked Supabase identities, without exposing the legacy owner ID or changing any account data. `/auth-preview/ssr` includes a button to exercise the endpoint. This is isolated migration verification, not production authorization.
 - Production `/sign-in`, `/sign-up`, middleware protection, web APIs and desktop sync remain on Clerk.
 
 ## Security prerequisite — do not skip
@@ -75,7 +76,8 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [x] Install `@supabase/ssr` with matching package and npm lockfile (user committed `07148093e`).
 - [x] Add an isolated cookie-based sign-in and server-verification test, independent of existing Clerk and Supabase localStorage sessions.
 - [x] Add narrowly scoped Supabase session refresh in existing Clerk middleware for `/auth-preview/ssr` only; no global refresh or production authentication change.
-- [ ] Browser-test SSR Google redirect, session persistence across reload, automatic refresh near expiry, server `authenticated` responses, sign-out, Clerk website session, and desktop behavior. Production-wide cookie refresh and authorization remain separate gates. Do not cut over before RLS work.
+- [x] Add an isolated, read-only SSR cookie-to-linked-legacy-owner check with 401/403/200 responses and counts scoped to the resolved owner.
+- [ ] Browser-test SSR Google redirect, session persistence across reload, automatic refresh near expiry, server `authenticated` responses, linked/unlinked ownership tests, sign-out, Clerk website session, and desktop behavior. Production-wide cookie refresh and authorization remain separate gates. Do not cut over before RLS work.
 - [x] Centralize Supabase preview API authorization in a request-scoped server-only resolver, independent from Clerk headers.
 - [x] Add a server-only linked-identity resolver and read-only link-status check (not used by existing application APIs yet).
 - [x] Implement an isolated read-only API for verification of linked user-owned record counts.
