@@ -21,6 +21,7 @@ export function shouldRefreshAccountSession(pathname: string) {
     pathname.startsWith("/api/projects/") ||
     pathname === "/api/playlists" ||
     pathname === "/api/playlists/filter-options" ||
+    pathname === "/api/playlists/migrate-covers" ||
     pathname === "/api/playlists/reorder" ||
     pathname === "/api/playlists/stats" ||
     /^\/api\/playlists\/[^/]+(?:\/songs(?:\/.*)?)?$/.test(pathname)
