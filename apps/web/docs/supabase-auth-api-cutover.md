@@ -33,7 +33,7 @@ Then start the website and visit `http://localhost:3000/auth-preview/cutover` to
 
 ## Core account API conversion staged (Clerk remains default)
 
-- **30 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
+- **27 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
 - The resolver returns the exact existing Clerk owner ID by default, from `auth()`. Only `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` (server-side environment) selects a Supabase verified-cookie session, which is mapped to the legacy owner using `auth_identity_links`. The production-cookie client and allowlisted middleware refresh are now staged, **but do not set this environment variable on live deployments** until full role, RLS, desktop and end-to-end regression gates pass.
 - Supabase authorization failures never fall back to Clerk. Missing/invalid session -> `401`, verified unlinked identity -> `403`, auth mapping failure -> `500`. Guest Favorites GET and playlist stats GET preserve the existing empty-response contract for a true 401; a 403/500 is not silently treated as empty.
 - The owner predicates, API payloads, ordering and write validations were not rewritten. All changes are isolated to the authorization lookup and denied-response status, except the separate shared playlist-filter read discussed below.
@@ -53,7 +53,7 @@ The tests check provider selection and source-level route coverage; they are not
 
 ## Next account-data route batch
 
-- **30 account-data route files** now use the Clerk-default, Supabase-ready owner resolver, adding `/api/account/notifications` (GET/PATCH/DELETE), `/api/account/usage` (GET), `/api/account/security-events` (GET), `/api/community-playlist-favorites` (GET/POST/DELETE), and `/api/curated-playlists/[playlistId]/save` (POST).
+- **27 owner-only route files** now use the Clerk-default, Supabase-ready owner resolver, adding `/api/account/notifications` (GET/PATCH/DELETE), `/api/account/usage` (GET), `/api/account/security-events` (GET), `/api/community-playlist-favorites` (GET/POST/DELETE), and `/api/curated-playlists/[playlistId]/save` (POST).
 - Playlist recommendations now also resolve the account through the verified owner resolver while preserving public guest recommendations (401 behaves as guest). Verified unlinked accounts (403) and server authorization failures (500) are denied, rather than treated as guests.
 - Their existing owner constraints remain unchanged, including `account_notifications.recipient_clerk_user_id`, `community_playlist_favorites.clerk_user_id`, and the public-playlist check before saving. No content or membership write semantics were changed.
 - These five exact route patterns were added to `shouldRefreshAccountSession` and its positive/negative tests. Clerk remains the server default.
@@ -83,7 +83,7 @@ The adapter changes **no stored schema or membership entitlement logic**; nevert
 | `POST /api/playlists` | `auth().userId`; creates under legacy owner | Preserve source validations and ownership on writes. |
 | `GET /api/projects` | `auth().userId`; scoped rows and project-assets count | Preserve project ordering, default folders and file counts; child rows must follow verified parent ownership. |
 | `POST /api/projects` | `auth().userId`; creates project/default folders | Preserve server-managed ownership and folder creation. |
-| `GET/PATCH /api/account/profile` | Clerk `currentUser()` provides identity fields | Requires trusted Supabase Auth user-profile data and a separate profile-identity mapping; not a simple user ID swap. |
+| `GET/PATCH /api/account/profile` | Previously directly used Clerk `currentUser()` | Now uses `resolveAccountIdentity` (Clerk default, verified Supabase owner + display identity when enabled); requires runtime parity validation. |
 | `GET /api/desktop/auth/token` | Clerk session plus `currentUser()` issues desktop HMAC tokens | Requires a separately reviewed desktop login/callback/token rollout; do not silently change. |
 
 ## Automated access inventory (new)
