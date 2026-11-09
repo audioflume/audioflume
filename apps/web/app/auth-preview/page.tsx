@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, type FormEvent } from "react";
+import { useUser } from "@clerk/nextjs";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import styles from "./page.module.css";
@@ -15,6 +16,9 @@ const titleByMode: Record<Mode, string> = {
 };
 
 export default function SupabaseAuthPreviewPage() {
+  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  const [linked, setLinked] = useState(false);
+  const [linkBusy, setLinkBusy] = useState(false);
   const [mode, setMode] = useState<Mode>("sign-in");
   const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState("");
@@ -31,6 +35,7 @@ export default function SupabaseAuthPreviewPage() {
 
     const { data: subscription } = supabase.auth.onAuthStateChange((event, session) => {
       setUser(session?.user ?? null);
+      setLinked(false);
       if (event === "PASSWORD_RECOVERY") setMode("reset");
     });
     return () => subscription.subscription.unsubscribe();
@@ -103,6 +108,44 @@ export default function SupabaseAuthPreviewPage() {
     }
   }
 
+  async function linkExistingAccount() {
+    setLinkBusy(true);
+    setError("");
+    setNotice("");
+    try {
+      const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+      const token = sessionData.session?.access_token;
+      if (sessionError || !token) {
+        throw new Error("Your Supabase session has expired. Sign in again.");
+      }
+
+      const response = await fetch("/api/auth-preview/link", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${token}` },
+        cache: "no-store",
+      });
+
+      const result = (await response.json()) as {
+        error?: string;
+        linked?: boolean;
+        alreadyLinked?: boolean;
+      };
+
+      if (!response.ok || !result.linked) {
+        throw new Error(result.error ?? "Could not link these accounts.");
+      }
+
+      setLinked(true);
+      setNotice(result.alreadyLinked
+        ? "These accounts are already linked. Existing Audioflume data is unchanged."
+        : "Accounts linked successfully. Existing Audioflume data remains under your original account.");
+    } catch (linkError) {
+      setError(linkError instanceof Error ? linkError.message : "Could not link these accounts.");
+    } finally {
+      setLinkBusy(false);
+    }
+  }
+
   async function signOut() {
     setBusy(true);
     const { error: signOutError } = await supabase.auth.signOut();
@@ -135,6 +178,21 @@ export default function SupabaseAuthPreviewPage() {
           <div className={styles.session}>
             <p className={styles.sessionLabel}>SUPABASE SESSION ACTIVE</p>
             <p className={styles.sessionEmail}>{user.email ?? "Authenticated user"}</p>
+            {clerkLoaded && !linked ? (
+              clerkUser ? (
+                <button className={styles.secondaryButton} type="button"
+                  onClick={() => void linkExistingAccount()} disabled={busy || linkBusy}>
+                  {linkBusy ? "Verifying accounts…" : "Link to my existing Audioflume account"}
+                </button>
+              ) : (
+                <a className={styles.secondaryButton} href="/sign-in?redirect_url=%2Fauth-preview">
+                  Sign in to your existing Audioflume account to link it
+                </a>
+              )
+            ) : null}
+            {linked ? (
+              <p className={styles.success} role="status">Your Clerk and Supabase identities are linked.</p>
+            ) : null}
             <button className={styles.secondaryButton} type="button" onClick={signOut} disabled={busy}>
               Sign out of preview
             </button>
