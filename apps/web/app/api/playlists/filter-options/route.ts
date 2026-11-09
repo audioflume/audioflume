@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -8,12 +8,13 @@ export const dynamic = "force-dynamic";
 // Clerk-authenticated replacement data source for the existing PlaylistFilter.
 // The shared component is not switched to this route until separately reviewed.
 export async function GET() {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
     return NextResponse.json(
-      { error: "Unauthorized" },
-      { status: 401, headers: { "Cache-Control": "private, no-store" } },
+      { error: account.error },
+      { status: account.status, headers: { "Cache-Control": "private, no-store" } },
     );
   }
 
