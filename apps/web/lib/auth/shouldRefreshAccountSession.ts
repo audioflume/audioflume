@@ -5,6 +5,7 @@
  */
 export function shouldRefreshAccountSession(pathname: string) {
   if (
+    pathname === "/api/artists/access" ||
     pathname === "/api/account/auth-session" ||
     pathname === "/api/account/profile" ||
     pathname === "/api/account/billing-profile" ||
