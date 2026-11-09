@@ -30,6 +30,7 @@ const converted = [
   "account/usage/route.ts",
   "account/security-events/route.ts",
   "community-playlist-favorites/route.ts",
+  "playlist-recommendations/route.ts",
   "curated-playlists/[playlistId]/save/route.ts",
   "user-preferences/route.ts",
 ];
