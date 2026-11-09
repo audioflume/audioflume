@@ -81,3 +81,16 @@ test("production account session endpoint is gated and reveals no legacy owner I
   assert.match(form, /fetch\("\/api\/account\/auth-session"/);
   assert.doesNotMatch(form, /auth-preview\/cutover-session/);
 });
+
+test("password update requires verified linked account session before changing credentials", async () => {
+  const source = await read("components/auth/SupabaseAccountAuthForm.tsx");
+  const resetStart = source.indexOf('} else if (mode === "reset") {');
+  const updatePassword = source.indexOf("supabaseAccountBrowser.auth.updateUser({ password })", resetStart);
+  assert.ok(resetStart >= 0 && updatePassword > resetStart);
+  const resetBranch = source.slice(resetStart, updatePassword);
+  assert.match(resetBranch, /fetch\("\/api\/account\/auth-session"/);
+  assert.match(resetBranch, /credentials: "same-origin"/);
+  assert.match(resetBranch, /cache: "no-store"/);
+  assert.match(resetBranch, /if \(!verification\.ok\)/);
+  assert.match(resetBranch, /throw new Error/);
+});
