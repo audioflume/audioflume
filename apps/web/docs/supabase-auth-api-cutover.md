@@ -258,3 +258,9 @@ Read-only inspection of the Audioflume Supabase project found **14 RLS-disabled 
 - Regression source gate: `node --experimental-strip-types --test apps/web/tests/supabase-rls-cutover-readiness.test.mjs apps/web/tests/supabase-account-session-routing.test.mjs`. Also rerun Supabase Security Advisor and validate the complete staging environment.
 
 **Do not enable either global provider switch.** This is a confirmed database access-control blocker regardless of whether the new authentication provider is active.
+
+## Atomic RLS staging candidate (unapplied)
+
+`apps/web/scripts/staged-auth-rls-lockdown.sql` is a **transactional, staging-only** remediation candidate for the 14 exposed tables identified in the live audit. It enables RLS and revokes direct `anon`/`authenticated` table privileges, revokes access to the exposed project-folder view, and sets the view to `security_invoker = true`. A preflight inventory and postcondition checks abort rather than silently leaving a partial lockdown. It changes no server-side `service_role` authorization and adds **no** permissive policies. Its design deliberately favors existing server APIs over direct browser-table access.
+
+This SQL has **not** been applied to production or staging, is not an official generated migration, and needs real role/RPC/public-site/desktop regression testing in an isolated database before promotion. `apps/web/tests/supabase-rls-lockdown-staging.test.mjs` is a source-level structural test only. The live 14-table exposure remains open pending approved remediation. See `supabase-auth-rls-rollout.md` for the staged application checklist.
