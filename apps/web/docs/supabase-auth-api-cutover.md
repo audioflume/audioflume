@@ -179,3 +179,10 @@ The **Clerk-default, Supabase-ready** `GET /api/playlists/filter-options` return
 - Separate Vercel build failure previously observed at `HomeLandingContent.tsx:414` (unrelated TS nullability) remains unmodified.
 
 Do not merge PR #158 or cut over web or desktop auth while any release gate remains.
+
+## Staged account security view (not yet route-enabled)
+
+- `components/account/sections/SecuritySection.tsx` retains the original Clerk security controls and events view. The existing `useAccountSession()` server-selected provider selects an isolated `SupabaseSecuritySection` in the future Supabase branch; no existing Clerk JSX was redesigned.
+- The isolated view supports requesting a password recovery email using the existing production-cookie browser client and existing auth callback path. It does not attempt to replace Clerk MFA, backup email management or authoritative Supabase security history. Those controls are explicitly unavailable rather than simulated.
+- **`/account/security` remains excluded from `isMigratedAccountPage` and protected by Clerk.** This is a staged UI implementation, not a functional Supabase-only security page. Do not add the path to Supabase page guards until browser recovery flow, authorization, MFA/recovery policy and cross-account isolation have been reviewed.
+- Source-level regression checks: `node --experimental-strip-types --test apps/web/tests/supabase-account-security.test.mjs`. Local test suite, browser recovery flow and production build are still unverified.
