@@ -20,6 +20,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 - Google OAuth explicitly requests `prompt=select_account`; **Google decides which account appears first**. The app cannot reliably reorder Google's native account list.
 - The prototype uses the existing browser Supabase client and **must not be used as production SSR authorization**.
 - Supabase sign-in alone does **not** establish access to any legacy Clerk-owned records. A separate opt-in linking action now requires verified, matching email addresses and valid sessions from both Clerk and Supabase.
+- Once linked, the preview can use `GET /api/auth-preview/account-data` to verify counts of existing playlists, favorites, projects and artist memberships using the verified Supabase token and mapped legacy owner. This route never returns the legacy owner ID, makes no modifications and is not used by production features.
 - Production `/sign-in`, `/sign-up`, middleware protection, web APIs and desktop sync remain on Clerk.
 
 ## Security prerequisite — do not skip
@@ -67,6 +68,8 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [ ] End-to-end test linking the correct Clerk and Supabase accounts, conflicts, missing sessions, account switching and reloads before production use.
 - [ ] Establish SSR cookie-based Supabase sessions (`@supabase/ssr`), including refresh handling. Update package and lockfile together.
 - [x] Add a server-only linked-identity resolver and read-only link-status check (not used by existing application APIs yet).
+- [x] Implement an isolated read-only API for verification of linked user-owned record counts.
+- [ ] Browser-test the linked account data comparison against the existing Clerk session, including a different Google account and no-link denial.
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
