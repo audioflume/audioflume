@@ -1,5 +1,6 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse, type NextRequest } from "next/server";
+import { refreshSupabaseSsrPreview } from "@/lib/supabaseSsrPreviewRefresh";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -78,6 +79,12 @@ function applyDesktopCorsHeaders(response: NextResponse, request: NextRequest) {
 }
 
 export default clerkMiddleware(async (auth, request) => {
+  // The SSR preview is public and maintains only its own Supabase cookie session.
+  // Every production route and desktop API continues through the existing Clerk flow.
+  if (request.nextUrl.pathname === "/auth-preview/ssr") {
+    return refreshSupabaseSsrPreview(request);
+  }
+
   if (
     request.nextUrl.pathname === "/playlists" &&
     request.nextUrl.searchParams.get("tab") === "community-playlists"
