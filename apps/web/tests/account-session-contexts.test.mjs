@@ -67,3 +67,23 @@ test("header and web user menu use provider-aware identity and sign-out without 
   assert.doesNotMatch(header, /from ["']@clerk\/nextjs["']/);
   assert.doesNotMatch(menu, /from ["']@clerk\/nextjs["']/);
 });
+
+test("music playlists and discover saved-filter pages use provider-aware client identity only", async () => {
+  const paths = [
+    "app/music/page.tsx",
+    "app/playlists/page.tsx",
+    "app/discover/DiscoverCuratedHeroCopy.tsx",
+  ];
+  for (const path of paths) {
+    const src = await read(path);
+    assert.match(src, /from ["']@\/context\/AccountSessionContext["']/, path);
+    assert.match(src, /useAccountSession\(\)/, path);
+    assert.doesNotMatch(src, /from ["']@clerk\/nextjs["']/, path);
+  }
+  const music = await read("app/music/page.tsx");
+  const discover = await read("app/discover/DiscoverCuratedHeroCopy.tsx");
+  assert.match(music, /const \{ userId, isLoaded \} = useAccountSession\(\)/);
+  assert.match(music, /MUSIC_FILTER_STORAGE_KEY_PREFIX/);
+  assert.match(discover, /const \{ userId \} = useAccountSession\(\)/);
+  assert.match(discover, /MUSIC_FILTER_STORAGE_KEY_PREFIX/);
+});
