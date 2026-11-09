@@ -1,11 +1,11 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { Button, Card, CardTitle, Feedback, Input } from "../AccountUI";
 import { useBillingProfile } from "../hooks/useBillingProfile";
 
 export default function PaymentSection() {
-  const { user } = useUser();
+  const { user } = useAccountSession();
   const {
     billingProfile,
     form,
