@@ -9,6 +9,7 @@ const converted = [
   "favorites/route.ts",
   "favorites/[songId]/route.ts",
   "playlists/route.ts",
+  "playlists/filter-options/route.ts",
   "playlists/[playlistId]/route.ts",
   "playlists/[playlistId]/songs/route.ts",
   "playlists/[playlistId]/songs/[songId]/route.ts",
@@ -42,7 +43,7 @@ test("playlist filter uses authorized API without direct browser Supabase access
   const endpoint = await readFile(resolve(root, "app/api/playlists/filter-options/route.ts"), "utf8");
   assert.doesNotMatch(source, /from ["']@\/lib\/supabase["']/);
   assert.match(source, /fetch\("\/api\/playlists\/filter-options"/);
-  assert.match(endpoint, /await auth\(\)/);
+  assert.match(endpoint, /await resolveAccountOwner\(\)/);
   assert.match(endpoint, /\.select\("id, name"\)/);
   assert.match(endpoint, /\.eq\("clerk_user_id", userId\)/);
   assert.match(endpoint, /\.order\("name"\)/);
