@@ -43,14 +43,14 @@ export default function SupabaseAuthPreviewPage() {
     setPassword("");
   }
 
-  async function socialSignIn(provider: "google" | "apple") {
+  async function socialSignIn() {
     setBusy(true);
     setError("");
     const { error: signInError } = await supabase.auth.signInWithOAuth({
-      provider,
+      provider: "google",
       options: {
         redirectTo: `${window.location.origin}/auth-preview`,
-        ...(provider === "google" ? { queryParams: { prompt: "select_account" } } : {}),
+        queryParams: { prompt: "select_account" },
       },
     });
     if (signInError) {
@@ -145,12 +145,8 @@ export default function SupabaseAuthPreviewPage() {
               <>
                 <div className={styles.socials}>
                   <button className={styles.secondaryButton} type="button" disabled={busy}
-                    onClick={() => void socialSignIn("google")}>
+                    onClick={() => void socialSignIn()}>
                     Continue with Google
-                  </button>
-                  <button className={styles.secondaryButton} type="button" disabled={busy}
-                    onClick={() => void socialSignIn("apple")}>
-                    Continue with Apple
                   </button>
                 </div>
                 <p className={styles.divider}>or continue with email</p>
