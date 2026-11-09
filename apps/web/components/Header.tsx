@@ -4,7 +4,7 @@ import { HeaderShell } from "@filmwave/shared";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import cardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
@@ -69,7 +69,7 @@ function playlistNavIsActive(pathname: string | null, href: string) {
 }
 
 export default function Header() {
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded } = useAccountSession();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
