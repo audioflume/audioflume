@@ -44,7 +44,7 @@ test("admin authorization cannot inherit Clerk privilege, client metadata or ema
   assert.match(actor, /AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED !== "true"/);
 });
 
-test("independent system-health and audio-proxy checks remain Clerk-only until reviewed", async () => {
+test("direct health and audio-proxy routes use gated Supabase admin or existing Clerk email allowlist", async () => {
   for (const path of [
     "app/api/admin/system-health/route.ts",
     "app/api/admin/audio-proxy/route.ts",
@@ -53,6 +53,10 @@ test("independent system-health and audio-proxy checks remain Clerk-only until r
     const guard = src.indexOf('selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER)');
     const clerk = src.indexOf('await currentUser()');
     assert.ok(guard >= 0 && guard < clerk, path);
-    assert.match(src.slice(guard, clerk), /!== ["']clerk["']/);
+    const supabaseBranch = src.slice(guard, clerk);
+    assert.match(supabaseBranch, /=== ["']supabase["']/);
+    assert.match(supabaseBranch, /await requireAdmin\(\)/);
+    assert.match(supabaseBranch, /if \(!admin\.isAdmin\)/);
+    assert.match(src, /ADMIN_EMAILS\.includes\(email\)/);
   }
 });
