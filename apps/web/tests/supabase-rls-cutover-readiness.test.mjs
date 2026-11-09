@@ -69,6 +69,7 @@ test("auth remains disabled by default and desktop requires independent operator
 test("artist session routes are exact while admin, claim, desktop and unknown routes stay excluded", () => {
   for (const path of [
     "/api/artists/access",
+    "/api/artists/claim",
     "/api/artists/apply",
     "/api/artists/apply/images",
     "/api/artists/apply/samples",
@@ -77,7 +78,7 @@ test("artist session routes are exact while admin, claim, desktop and unknown ro
     assert.equal(shouldRefreshAccountSession(path), true, path);
   }
   for (const path of [
-    "/api/artists/claim",
+    "/api/artists/claim/unknown",
     "/api/artists/apply/images/extra",
     "/api/artists/42/team/extra",
     "/api/admin/system-health",
