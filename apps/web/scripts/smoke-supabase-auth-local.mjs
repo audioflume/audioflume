@@ -43,8 +43,6 @@ const checks = [
   { path: "/api/artists/claim", expected: 401 },
   { path: "/api/admin/system-health", expected: 401 },
   { path: "/api/admin/audio-proxy", expected: 401 },
-  { path: "/sign-in", expected: 200 },
-  { path: "/artists/claim", expected: 200 },
 ];
 
 let failures = 0;
@@ -55,7 +53,7 @@ for (const { path, expected } of checks) {
       method: "GET",
       redirect: "manual",
       cache: "no-store",
-      headers: { Accept: "text/html, application/json" },
+      headers: { Accept: "application/json" },
       signal: AbortSignal.timeout(10_000),
     });
     const ok = response.status === expected;
@@ -82,9 +80,9 @@ for (const { path, expected } of checks) {
   }
 }
 
-console.log(`\n${checks.length - failures}/${checks.length} anonymous local smoke checks passed for ${provider} mode.`);
+console.log(`\n${checks.length - failures}/${checks.length} anonymous API smoke checks passed for ${provider} mode.`);
 if (failures) {
-  console.log("If every path redirects, inspect the displayed destinations and confirm which server is listening on the selected loopback port.");
-  console.log("Redirects are not followed; a redirect to a sign-in page does not count as an API authorization response.");
+  console.log("If an API redirects, inspect its destination and confirm the selected provider and listening server.");
+  console.log("Browser sign-in pages require separate interactive verification of Clerk/Supabase session handshakes.");
 }
 if (failures > 0) process.exitCode = 1;
