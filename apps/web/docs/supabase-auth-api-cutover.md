@@ -337,3 +337,19 @@ node apps/web/scripts/smoke-supabase-auth-local.mjs --provider clerk
 ```
 
 The local anonymous smoke script now requests `Accept: application/json` and checks only the six API routes. Browser pages are intentionally excluded because Clerk development may redirect anonymous non-browser requests through `/v1/client/handshake`; test interactive login separately. This staged change does not set provider flags or promote any admin, and **does not replace** signed-in end-to-end testing, reviewed production RLS, and a clean typechecked build.
+
+## Consolidated local authentication preflight (2026-11-09)
+
+Use the new read-only preflight runner from the repository root:
+
+```bash
+node apps/web/scripts/check-auth-cutover-readiness.mjs
+# Only when a matching local server is already running:
+node apps/web/scripts/check-auth-cutover-readiness.mjs --smoke clerk
+# Or, for a separately configured local Supabase-mode server:
+node apps/web/scripts/check-auth-cutover-readiness.mjs --smoke supabase
+```
+
+It runs the 14 known source/regression suites, audits browser-direct table access, and optionally executes the restricted localhost JSON API checks. The script never changes provider flags, sends bearer tokens, deploys, contacts a production API, or writes to a database. A green `SOURCE_PREFLIGHT_PASS` is **not** release readiness: production-like Next.js build/typecheck, signed-in real browser/desktop flows, Supabase owner links and admin roles, and staging RLS gates must pass separately. `RELEASE_NOT_APPROVED` is printed even when the source preflight passes.
+
+Read-only connected-database verification on 2026-11-09 still reported all 14 audited tables as RLS-disabled with browser SELECT access, three existing project-sync RLS policies, and anonymous EXECUTE on `public.apply_song_pending_revision(uuid)`. These are current **cutover blockers**, not changes executed by this preflight. The operator must review the separately prepared security lockdown candidates on an isolated staging database before an expressly approved production security rollout. Do not enable the Supabase account provider in production on the strength of passing source tests alone.
