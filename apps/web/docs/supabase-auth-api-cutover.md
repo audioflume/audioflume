@@ -68,6 +68,14 @@ The tests check provider selection and source-level route coverage; they are not
 - **Still blocked:** the current `/sign-in` and `/sign-up` URLs, account/protected page middleware, root layout's pending artist-invite preload, and `ArtistInvitesContext` remain Clerk-oriented. Therefore the Supabase provider setting must **not** be enabled for live web or desktop. A proper reviewed Supabase sign-in/sign-up/account recovery flow and protected-route routing are required before cutover.
 - Validation: `node --test apps/web/tests/account-session-contexts.test.mjs`. Also verify both desktop/mobile header account menus, Clerk sign-in/sign-out, avatar fallbacks, account links, playlist cache isolation and Supabase preview session behavior with the server switch **unset**.
 
+## Music, playlists and Discover identity hooks (staged)
+
+- `app/music/page.tsx`, `app/playlists/page.tsx` and `app/discover/DiscoverCuratedHeroCopy.tsx` now consume `useAccountSession()` instead of direct Clerk hooks. The same `userId` and `isLoaded` fields are used in each existing computation, including music filter storage keys and saved playlist selection.
+- Comparison with the prior committed versions confirmed **only the auth import and hook call changed** in each page. All markup, music filters, data requests, saved-state logic and visual behavior remain otherwise identical.
+- Under Clerk (default) browser storage keys stay unchanged. Under Supabase they partition by Supabase session ID for client-only storage. Server-side account access still requires the verified legacy owner mapping.
+- The `/music`, `/playlists`, and Discover experience still require full signed-in/guest regression tests. **Do not enable** the Supabase provider while other protected routes and artist/admin/desktop authorization remain Clerk-only.
+- Source validation: `node --test apps/web/tests/account-session-contexts.test.mjs`.
+
 ## Website shared account-data contexts (staged)
 
 - `context/AccountSessionContext.tsx` provides `isLoaded`, `userId`, `isSignedIn` to account-data contexts, with the provider selected **on the server** in `app/layout.tsx` using the same exact `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER` setting as the account APIs. It remains **Clerk by default**.
