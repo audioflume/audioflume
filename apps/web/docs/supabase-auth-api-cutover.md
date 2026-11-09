@@ -231,3 +231,5 @@ Do not merge PR #158 or cut over web or desktop auth while any release gate rema
 
 - `POST /api/artists/[id]/team` still provisions existing users and invitations through Clerk. Because linked-owner authorization now applies to artist permissions, this **POST** endpoint explicitly rejects Supabase-selected requests with 403 before running Clerk user lookup or invitation provisioning. Clerk behavior is untouched.
 - Team membership reads and role editing still use `requireArtistPermission` and existing database membership checks; the underlying Clerk user-directory enrichment remains a dependency to replace before a complete Supabase-only artist-team experience. No blanket artist-route refresh or dashboard guard was introduced.
+
+- Pending artist-team invitation revocation in `DELETE /api/artists/[id]/team` also remains Clerk-only because it calls the Clerk invitation API; linked Supabase membership removals continue to require `artist:manage_members` and the existing artist/owner query predicates.
