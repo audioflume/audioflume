@@ -25,6 +25,7 @@ const titleByMode: Record<Mode, string> = {
 export default function SupabaseAuthPreviewPage() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const [linked, setLinked] = useState(false);
+  const [linkStatusLoaded, setLinkStatusLoaded] = useState(false);
   const linkStatusRequestId = useRef(0);
   const [linkBusy, setLinkBusy] = useState(false);
   const [verificationBusy, setVerificationBusy] = useState(false);
@@ -50,6 +51,7 @@ export default function SupabaseAuthPreviewPage() {
       if (event === "SIGNED_OUT") {
         linkStatusRequestId.current += 1;
         setLinked(false);
+        setLinkStatusLoaded(false);
         setLegacyCounts(null);
         setIsolationResult("");
       }
@@ -62,6 +64,7 @@ export default function SupabaseAuthPreviewPage() {
     let active = true;
     const requestId = ++linkStatusRequestId.current;
     setLinked(false);
+    setLinkStatusLoaded(false);
     setLegacyCounts(null);
     setIsolationResult("");
     if (!user?.id) return;
@@ -80,6 +83,7 @@ export default function SupabaseAuthPreviewPage() {
         const result = (await response.json()) as { linked?: boolean };
         if (active && requestId === linkStatusRequestId.current) {
           setLinked(result.linked === true);
+          setLinkStatusLoaded(true);
         }
       } catch {
         // A failed status check never grants access or creates a link.
@@ -187,6 +191,7 @@ export default function SupabaseAuthPreviewPage() {
       }
 
       setLinked(true);
+      setLinkStatusLoaded(true);
       setNotice(result.alreadyLinked
         ? "These accounts are already linked. Existing Audioflume data is unchanged."
         : "Accounts linked successfully. Existing Audioflume data remains under your original account.");
@@ -328,8 +333,8 @@ export default function SupabaseAuthPreviewPage() {
               </>
             ) : null}
             <button className={styles.secondaryButton} type="button"
-              onClick={() => void checkAccountIsolation()} disabled={busy || isolationBusy || linkBusy}>
-              {isolationBusy ? "Checking account isolation…" : "Test account access isolation"}
+              onClick={() => void checkAccountIsolation()} disabled={busy || isolationBusy || linkBusy || !linkStatusLoaded}>
+              {isolationBusy ? "Checking account isolation…" : !linkStatusLoaded ? "Checking link status…" : "Test account access isolation"}
             </button>
             {isolationResult ? <p className={styles.success} role="status">{isolationResult}</p> : null}
             <button className={styles.secondaryButton} type="button" onClick={signOut} disabled={busy}>
