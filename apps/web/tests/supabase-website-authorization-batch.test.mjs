@@ -24,13 +24,18 @@ test("shared admin authorization requires a linked Supabase identity and an expl
   assert.match(src, /ADMIN_EMAILS/);
 });
 
-test("direct admin status and audio proxy endpoints deny before reading Clerk identity", async () => {
+test("direct admin health and audio proxy routes authorize Supabase only via shared trusted role", async () => {
   for (const route of ["admin/audio-proxy/route.ts", "admin/system-health/route.ts"]) {
     const src = await read(`app/api/${route}`);
     const guard = src.indexOf("selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER)");
     const clerkUser = src.indexOf("await currentUser()");
     assert.ok(guard >= 0 && clerkUser > guard, route);
-    assert.match(src.slice(guard, clerkUser), /status: 401/);
+    const privilegedBranch = src.slice(guard, clerkUser);
+    assert.match(privilegedBranch, /=== ["']supabase["']/);
+    assert.match(privilegedBranch, /await requireAdmin\(\)/);
+    assert.match(privilegedBranch, /if \(!admin\.isAdmin\)/);
+    assert.match(privilegedBranch, /status: 401/);
+    assert.match(src, /ADMIN_EMAILS\.includes\(email\)/);
   }
 });
 
