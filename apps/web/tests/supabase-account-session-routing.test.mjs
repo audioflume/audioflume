@@ -26,7 +26,7 @@ test("migrated account APIs are allowlisted for cookie refresh", () => {
     "/api/songs/song-1/playlists", "/api/songs/song-1/projects",
     "/api/account/notifications", "/api/account/usage",
     "/api/account/security-events",
-    "/api/community-playlist-favorites",
+    "/api/community-playlist-favorites", "/api/playlist-recommendations",
     "/api/curated-playlists/123/save",
     "/api/user-preferences",
   ]) {
