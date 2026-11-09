@@ -158,7 +158,8 @@ export default function SupabaseAuthPreviewPage() {
 
       const response = await fetch("/api/auth-preview/link", {
         method: "POST",
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { "X-Audioflume-Supabase-Token": token },
+        credentials: "same-origin",
         cache: "no-store",
       });
 
