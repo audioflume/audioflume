@@ -29,6 +29,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 - Isolated `GET /api/auth-preview/ssr-favorites` uses the verified SSR cookie and server-only identity link to return active (published, unarchived) favorite song IDs with the same `favorites: [{song_id, created_at}]` shape as the Clerk GET endpoint. The SSR preview compares exact song ID lists with `GET /api/favorites` only while a Clerk session is present. It gives 401 to missing/invalid cookie users and 403 to unlinked identities. This test does not modify or replace production Favorites.
 - **Authorization foundation consolidated:** `lib/auth-preview/createPreviewSsrRequest.ts` is the request-scoped cookie/session/response helper for the three existing SSR preview endpoints (session, owner counts, active Favorites). `lib/auth-preview/resolveVerifiedLegacyOwner.ts` makes the 401/403/200 owner decision with no client-supplied IDs, keeping the existing endpoint paths and response payloads unchanged.
 - **Automated checks:** `tests/supabase-preview-ownership.test.mjs` tests missing sessions, unlinked identities, owner mapping and fail-closed verification/lookup errors. From `apps/web`, run `node --experimental-strip-types --test tests/supabase-preview-ownership.test.mjs` (Node 22+). These unit checks do not replace browser/session integration or a full Next.js build.
+- A production-targeted but **unused** `lib/auth/resolveSupabaseAccountRequest.ts` now prepares request-scoped verified Supabase ownership from a separate future production cookie namespace. It is not imported by active APIs; Clerk still controls production. The coordinated route conversion and direct browser `PlaylistFilter` dependency are documented in `docs/supabase-auth-api-cutover.md`.
 - Production `/sign-in`, `/sign-up`, middleware protection, web APIs and desktop sync remain on Clerk.
 
 ## Security prerequisite — do not skip
@@ -88,6 +89,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [x] Implement isolated read-only active Favorites API using verified SSR cookie ownership, without touching `/api/favorites`.
 - [ ] Browser-test exact song-ID parity for linked Clerk/Supabase identities and refusal of unlinked/signed-out sessions before migrating the production Favorites API.
 - [x] Consolidate duplicated SSR-preview auth/owner/cookie response code and add executable owner-isolation regression tests.
+- [x] Stage a production-cookie account-ownership resolver without wiring it into any active Clerk route; document API conversion boundaries and the browser-direct playlist dependency.
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
