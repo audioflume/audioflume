@@ -4,6 +4,7 @@ import { refreshSupabaseSsrPreview } from "@/lib/supabaseSsrPreviewRefresh";
 import { refreshSupabaseAccountSession } from "@/lib/auth/refreshSupabaseAccountSession";
 import { shouldRefreshAccountSession } from "@/lib/auth/shouldRefreshAccountSession";
 import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { isMigratedAccountPage } from "@/lib/auth/isMigratedAccountPage";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -101,6 +102,16 @@ export default clerkMiddleware(async (auth, request) => {
     selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase"
   ) {
     return NextResponse.next();
+  }
+
+  // Only account-data-backed client pages may use the Supabase page guard
+  // when the server opts in. Admin, artist, account settings and desktop
+  // retain the existing Clerk path. APIs still verify legacy ownership.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    isMigratedAccountPage(request.nextUrl.pathname)
+  ) {
+    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
   }
 
   // Only refresh migrated account API sessions when the server operator
