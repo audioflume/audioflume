@@ -136,6 +136,15 @@ export default clerkMiddleware(async (auth, request) => {
     return refreshSupabaseAccountSession(request);
   }
 
+  // Supabase admin pages are guarded twice: verified session here and a
+  // server-trusted requireAdmin() check in app/admin/layout.tsx.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    (request.nextUrl.pathname === "/admin" || request.nextUrl.pathname.startsWith("/admin/"))
+  ) {
+    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+  }
+
   // Only account-data-backed client pages may use the Supabase page guard
   // when the server opts in. Admin, artist, account settings and desktop
   // retain the existing Clerk path. APIs still verify legacy ownership.
