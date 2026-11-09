@@ -23,6 +23,7 @@ await supabaseServer.from("favorites").select("*");`);
   assert.equal(result.isClient, false);
   assert.equal(result.importsBrowserClient, false);
   assert.deepEqual(result.tables, ["favorites"]);
+  assert.equal(result.dynamicTableQueries, 0);
 });
 
 test("records dynamic table queries for further review", () => {
