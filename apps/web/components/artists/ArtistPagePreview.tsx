@@ -173,6 +173,7 @@ export default function ArtistPagePreview({
     function updateLayout() {
       cancelAnimationFrame(frameId);
       frameId = requestAnimationFrame(() => {
+        if (!frame || !content) return;
         const virtualWidth = Math.max(window.innerWidth, 1);
         const availableWidth = Math.max(frame.clientWidth, 1);
         const scale = Math.min(1, availableWidth / virtualWidth);
