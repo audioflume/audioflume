@@ -21,7 +21,7 @@ BEGIN;
 DO $$
 DECLARE missing_tables text[];
 BEGIN
-  SELECT array_agg(name) INTO missing_tables
+  SELECT array_agg(missing.name) INTO missing_tables
   FROM unnest(ARRAY[
     'favorites',
     'playlist_songs',
@@ -37,11 +37,11 @@ BEGIN
     'user_memberships',
     'user_profiles',
     'user_security_events'
-  ]::text[]) AS name
+  ]::text[]) AS missing(name)
   WHERE NOT EXISTS (
     SELECT 1 FROM pg_class c
     JOIN pg_namespace n ON n.oid = c.relnamespace
-    WHERE n.nspname = 'public' AND c.relname = name AND c.relkind IN ('r', 'p')
+    WHERE n.nspname = 'public' AND c.relname = missing.name AND c.relkind IN ('r', 'p')
   );
   IF missing_tables IS NOT NULL THEN
     RAISE EXCEPTION 'RLS lockdown aborted: expected tables missing: %', missing_tables;
