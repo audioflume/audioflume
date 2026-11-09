@@ -24,6 +24,8 @@ test("migrated account APIs are allowlisted for cookie refresh", () => {
     "/api/projects/45/events", "/api/projects/45/sync-operations",
     "/api/projects/45/sync-size",
     "/api/songs/song-1/playlists", "/api/songs/song-1/projects",
+    "/api/account/profile", "/api/account/billing-profile",
+    "/api/account/membership",
     "/api/account/notifications", "/api/account/usage",
     "/api/account/security-events",
     "/api/community-playlist-favorites", "/api/playlist-recommendations",
@@ -40,8 +42,7 @@ test("Clerk-only, admin, artist and desktop endpoints never refresh the new cook
     "/api/desktop/projects", "/api/admin/songs", "/api/artists/apply",
     "/api/account/profile", "/api/playlists/images/upload",
     "/api/community-playlists", "/api/songs",
-    "/api/account/profile", "/api/account/billing-profile",
-    "/api/account/membership",
+
     "/api/curated-playlists/123", "/api/curated-playlists",
     "/api/curated-playlists/123/songs",
     "/api/songs/id/download", "/api/auth-preview/ssr-session",
