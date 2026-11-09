@@ -92,3 +92,26 @@ test("Supabase admin elevation is gated and checked against server-controlled ap
   assert.match(admin, /AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED/);
   assert.match(admin, /await currentUser\(\)/);
 });
+
+test("artist dashboard Supabase page bypasses Clerk protection but requires verified session", async () => {
+  const source = await read("middleware.ts");
+  const branch = source.slice(source.indexOf("// Artist dashboard already verifies"));
+  assert.match(branch, /pathname === "\/artists\/dashboard"/);
+  assert.match(branch, /refreshSupabaseAccountSession\(request, \{ requireVerifiedUser: true \}\)/);
+  assert.match(branch, /pathname === "\/artists\/claim"/);
+  assert.match(branch, /return refreshSupabaseAccountSession\(request\)/);
+  assert.match(branch, /selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\) === "supabase"/);
+  assert.match(source, /await auth\.protect\(\)/);
+});
+
+test("artist claim page uses only selected provider identity and preserves Clerk form", async () => {
+  const source = await read("app/artists/claim/page.tsx");
+  assert.match(source, /provider === "clerk"\s*\? Boolean\(\(await currentUser\(\)\)\?\.id\)/);
+  assert.match(source, /Boolean\(\(await resolveAccountOwner\(\)\)\.userId\)/);
+  assert.match(source, /\{signedIn \? \(/);
+  assert.match(source, /<ArtistClaimPanel \/>/);
+  assert.match(source, /provider === "clerk" \? \(/);
+  assert.match(source, /<SignIn/);
+  assert.match(source, /href="\/sign-in\?redirect_url=%2Fartists%2Fclaim"/);
+  assert.doesNotMatch(source, /await currentUser\(\);\s+return \(/);
+});
