@@ -1,5 +1,5 @@
 import { auth } from "@clerk/nextjs/server";
-import { getDesktopUserIdFromRequest } from "@/lib/desktopAuth";
+import { getVerifiedDesktopUserIdFromRequest } from "@/lib/auth/getVerifiedDesktopUserIdFromRequest";
 import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
 import { NextResponse } from "next/server";
 import { normalizeSongRow } from "@/lib/songs";
@@ -10,7 +10,7 @@ async function getDesktopUserId(req: Request) {
     process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
     process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
   ) === "supabase") {
-    return getDesktopUserIdFromRequest(req);
+    return getVerifiedDesktopUserIdFromRequest(req);
   }
 
   const { userId } = await auth();
