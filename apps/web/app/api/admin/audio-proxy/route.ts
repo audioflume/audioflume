@@ -1,8 +1,13 @@
 import { currentUser } from '@clerk/nextjs/server'
+import { selectAccountAuthProvider } from '@/lib/auth/selectAccountAuthProvider'
 import { NextRequest, NextResponse } from 'next/server'
 import { ADMIN_EMAILS } from '@/lib/adminEmails'
 
 export async function GET(req: NextRequest) {
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== 'clerk') {
+    return NextResponse.json({ error: 'Unauthorized audio proxy request.' }, { status: 401 })
+  }
+
   try {
     const user = await currentUser()
     const email = user?.primaryEmailAddress?.emailAddress
