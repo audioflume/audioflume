@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { usePlayer } from "@/context/PlayerContext";
 import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { useRouter } from "next/navigation";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
 import AdminContentPage from "@/components/admin/AdminContentPage";
@@ -884,16 +885,49 @@ function UploadStatusIcon({
 
 export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
   const router = useRouter();
-  const { user, isLoaded } = useUser();
+  const { user, isLoaded: clerkLoaded } = useUser();
+  const session = useAccountSession();
+  const supabaseMode = session.provider === "supabase";
+  const [trustedAdmin, setTrustedAdmin] = useState(false);
+  const [adminChecked, setAdminChecked] = useState(false);
   const { currentSong } = usePlayer();
   const playerVisible = !!currentSong;
 
+  useEffect(() => {
+    if (!supabaseMode || !session.isLoaded) return;
+    if (!session.isSignedIn) {
+      setTrustedAdmin(false);
+      setAdminChecked(true);
+      return;
+    }
+
+    let cancelled = false;
+    setAdminChecked(false);
+    void fetch("/api/admin/access", { cache: "no-store", credentials: "same-origin" })
+      .then(async (response) => {
+        const body = await response.json().catch(() => null) as { isAdmin?: boolean } | null;
+        if (!cancelled) {
+          setTrustedAdmin(response.ok && body?.isAdmin === true);
+          setAdminChecked(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setTrustedAdmin(false);
+          setAdminChecked(true);
+        }
+      });
+
+    return () => { cancelled = true; };
+  }, [supabaseMode, session.isLoaded, session.isSignedIn, session.userId]);
+
+  const isLoaded = supabaseMode ? session.isLoaded && adminChecked : clerkLoaded;
   const userEmail = user?.primaryEmailAddress?.emailAddress;
   const isAdminByRole =
     (user?.publicMetadata as Record<string, unknown> | undefined)?.role ===
     "admin";
   const isAdminByEmail = !!userEmail && ADMIN_EMAILS.includes(userEmail);
-  const isAdmin = isAdminByRole || isAdminByEmail;
+  const isAdmin = supabaseMode ? trustedAdmin : isAdminByRole || isAdminByEmail;
   const isEditMode = mode === "edit";
 
   const [title, setTitle] = useState("");
