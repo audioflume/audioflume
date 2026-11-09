@@ -12,6 +12,9 @@ const read = (path) => readFile(resolve(root, path), "utf8");
 test("only client-rendered account library pages are eligible", () => {
   for (const pathname of [
     "/favorites", "/projects", "/projects/3", "/projects/abc-123", "/playlists",
+    "/account", "/account/profile", "/account/payment",
+    "/account/membership", "/account/notifications",
+    "/account/settings", "/account/support",
   ]) {
     assert.equal(isMigratedAccountPage(pathname), true, pathname);
   }
@@ -19,7 +22,7 @@ test("only client-rendered account library pages are eligible", () => {
 
 test("all other routes remain under existing Clerk protection", () => {
   for (const pathname of [
-    "/account", "/account/profile", "/account/membership",
+    "/account/security", "/account/not-a-section", "/account/profile/extra",
     "/admin", "/admin/music-library", "/artists/dashboard", "/artists/apply",
     "/artists/claim", "/projects/3/assets", "/playlists/community",
     "/playlists/123", "/music", "/discover",
@@ -77,4 +80,21 @@ test("artist invitation refresh cannot mix an old Clerk session with a Supabase 
   assert.match(invites, /if \(provider === "supabase"\)/);
   assert.match(invites, /setPendingInviteCount\(0\)/);
   assert.match(invites, /fetch\("\/api\/artists\/claim"/);
+});
+
+test("account page shells keep Supabase account identity scoped to converted sections", async () => {
+  const sections = [
+    "components/account/AccountSidebar.tsx",
+    "components/account/sections/ProfileSection.tsx",
+    "components/account/sections/PaymentSection.tsx",
+  ];
+  for (const section of sections) {
+    const source = await read(section);
+    assert.match(source, /useAccountSession\(\)/, section);
+    assert.doesNotMatch(source, /from ["']@clerk\/nextjs["']/, section);
+  }
+
+  const security = await read("components/account/sections/SecuritySection.tsx");
+  assert.match(security, /openUserProfile/);
+  assert.equal(isMigratedAccountPage("/account/security"), false);
 });
