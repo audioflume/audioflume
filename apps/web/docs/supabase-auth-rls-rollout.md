@@ -55,3 +55,13 @@ Additional observations:
 - Integration tests and builds run in a staging environment; feature-flag and rollback tests pass.
 
 Reference: [Supabase RLS guidance](https://supabase.com/docs/guides/database/postgres/row-level-security), [security advisor / database linter](https://supabase.com/docs/guides/database/database-linter), and [API security](https://supabase.com/docs/guides/api/securing-your-api).
+
+## Implemented staging candidate (not applied)
+
+`apps/web/scripts/staged-auth-rls-lockdown.sql` is an **unapplied staging candidate** covering all 14 RLS-disabled tables recorded above. In one transaction, it validates the expected table inventory, enables RLS, revokes every table privilege from `anon` and `authenticated`, revokes direct access to `project_folder_paths`, and sets the view to `security_invoker = true`. A postcondition aborts the transaction if any selected table still lacks RLS or retains browser privileges. Existing server-side `service_role` privileges are intentionally unchanged; no permissive or user-editable-claim policies are created.
+
+**Do not run this file directly in production.** Validate it against a disposable/staging database first. It is *not* a generated Supabase migration; after successful tests, use the current Supabase CLI's `supabase migration new` to prepare a reviewed migration under the repository's actual migration directory. Do not invent or apply a production migration before the public catalog, member profile, account, desktop sync, and RPC consumers pass acceptance tests. The rollout is reversible by a separate **reviewed** grant/policy restoration plan; do not blanket-regrant access as an automatic rollback.
+
+The staging test `apps/web/tests/supabase-rls-lockdown-staging.test.mjs` verifies the exact table list, atomic structure, fail-closed postconditions, no new broad grants, and view restrictions. It is a source-level check, **not** proof that PostgreSQL executed the script or that an application build passed. Run it alongside `supabase-rls-cutover-readiness.test.mjs`, then conduct real anonymous/linked-account query tests in staging.
+
+**RPC review before staging application:** The database includes a security-definer `save_curated_playlist_to_user` function (its role grants should remain restricted). Confirm each server-used RPC runs under a trusted role after revoking client table grants. Separately audit any `SECURITY INVOKER` functions and views for direct client access; a successful owner-scoped API request is not sufficient proof of full compatibility.
