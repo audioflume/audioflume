@@ -30,6 +30,8 @@ const paths = [
   "apps/web/tests/supabase-rls-lockdown-staging.test.mjs",
   "apps/web/tests/supabase-rls-cutover-readiness.test.mjs",
   "apps/web/tests/supabase-project-sync-rls-lockdown.test.mjs",
+  "apps/web/tests/supabase-preflight-runner.test.mjs",
+  "apps/web/tests/supabase-unified-security-gate.test.mjs",
 ];
 
 export function parseOptions(args) {
