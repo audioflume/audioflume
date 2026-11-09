@@ -41,7 +41,7 @@ The Clerk ID is currently the application-facing ownership key. Supabase Auth us
 1. **Implemented:** `public.auth_identity_links` stores a one-to-one link, keyed by Supabase `auth.users.id` and unique on `clerk_user_id`. RLS is enabled; `anon` and `authenticated` have no table privileges. The SQL applied to the connected Supabase project is preserved at `docs/sql/auth-identity-links.sql`. No existing ownership rows were changed.
 2. **Partially implemented:** `POST /api/auth-preview/link` independently validates the active Clerk session and a Supabase bearer token, requires two verified matching primary emails, rejects conflicting IDs, and never automatically changes owners. It is opt-in from `/auth-preview`. This requires end-to-end browser testing before production use. Do **not** link solely because email addresses match.
 3. Migrate administrative role claims to trusted server-managed authorization data, **not** Supabase `user_metadata`.
-4. Use a trusted resolver to map each verified Supabase UUID to the correct existing owner key in API routes before converting user-owned queries.
+4. **Implemented, not yet integrated into production routes:** `lib/supabaseIdentity.ts` validates a Supabase bearer token and resolves its linked legacy owner ID server-side. `GET /api/auth-preview/link` returns only whether a verified Supabase session has a link, and the preview retains the status after reload. Do not expose the owner ID to the browser or grant access to protected records until authorization conversion and testing are complete.
 5. Define first-time users who have no Clerk identity, including their ownership key strategy and onboarding.
 6. Preserve subscriptions, artist memberships, profile ownership, invitations and activity history.
 7. Plan a one-time password-reset route for legacy password users if hashes cannot be migrated compatibly. Re-link social accounts only after verification.
@@ -66,6 +66,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [x] Create the restricted UUID-to-legacy-ID table, dual-auth validation endpoint, and opt-in preview action.
 - [ ] End-to-end test linking the correct Clerk and Supabase accounts, conflicts, missing sessions, account switching and reloads before production use.
 - [ ] Establish SSR cookie-based Supabase sessions (`@supabase/ssr`), including refresh handling. Update package and lockfile together.
+- [x] Add a server-only linked-identity resolver and read-only link-status check (not used by existing application APIs yet).
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
