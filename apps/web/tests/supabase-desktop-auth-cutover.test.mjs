@@ -142,3 +142,19 @@ test("every desktop account, project sync and file route uses server link verifi
   assert.match(helper, /\.eq\("supabase_user_id", subject\)/);
   assert.match(helper, /return getDesktopUserIdFromRequest\(req\)/);
 });
+
+test("Supabase desktop sign-in returns to same-origin pairing endpoint while Clerk keeps its absolute redirect", async () => {
+  const src = await read("app/api/desktop/auth/token/route.ts");
+  const start = src.indexOf("export async function GET(req: Request)");
+  const end = src.indexOf("export async function POST()", start);
+  const body = src.slice(start, end);
+  assert.match(body, /const isSupabaseDesktop = selectDesktopAuthProvider\(/);
+  assert.match(body, /process\.env\.AUDIOFLUME_DESKTOP_AUTH_PROVIDER/);
+  assert.match(body, /process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER/);
+  assert.match(body, /isSupabaseDesktop \? url\.pathname \+ url\.search : url\.toString\(\)/);
+  assert.match(body, /signInUrl\.searchParams\.set\(/);
+  assert.match(body, /getSignedInUserId\(\)/);
+  const redirect = await read("lib/auth/safeAuthRedirect.ts");
+  assert.match(redirect, /if \(!value \|\| !value\.startsWith\("\/"\)/);
+  assert.doesNotMatch(body, /new URL\(url\.toString\(\), signInUrl/);
+});
