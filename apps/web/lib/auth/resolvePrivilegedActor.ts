@@ -27,7 +27,7 @@ export async function resolvePrivilegedActor(): Promise<PrivilegedActor> {
   }
 
   const owner = await resolveAccountOwner();
-  if (!owner.userId) {
+  if (owner.status !== 200) {
     return { userId: null, isAdmin: false, status: owner.status };
   }
 
