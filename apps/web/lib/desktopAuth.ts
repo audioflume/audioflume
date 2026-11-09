@@ -4,10 +4,12 @@ import { createHmac, timingSafeEqual } from "crypto";
 const TOKEN_VERSION = "fwdesktop_v1";
 const SUPABASE_TOKEN_VERSION = "fwdesktop_supabase_v1";
 const DEFAULT_TOKEN_TTL_SECONDS = 60 * 60 * 24 * 30;
+const UUID_PATTERN = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
 
 type DesktopTokenPayload = {
   version: typeof TOKEN_VERSION | typeof SUPABASE_TOKEN_VERSION;
   userId: string;
+  supabaseUserId?: string;
   issuedAt: number;
   expiresAt: number;
 };
@@ -49,15 +51,23 @@ function signaturesMatch(left: string, right: string) {
   return timingSafeEqual(leftBuffer, rightBuffer);
 }
 
-export function createDesktopToken(userId: string) {
+export function createDesktopToken(userId: string, supabaseUserId?: string) {
   const issuedAt = Math.floor(Date.now() / 1000);
   const expiresAt = issuedAt + DEFAULT_TOKEN_TTL_SECONDS;
+  const isSupabase = selectDesktopAuthProvider(
+    process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+  ) === "supabase";
+  if (isSupabase && (!supabaseUserId || !UUID_PATTERN.test(supabaseUserId))) {
+    throw new Error("Verified Supabase subject required for desktop token");
+  }
   const payload: DesktopTokenPayload = {
     version: selectDesktopAuthProvider(
       process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
       process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
     ) === "supabase" ? SUPABASE_TOKEN_VERSION : TOKEN_VERSION,
     userId,
+    ...(isSupabase ? { supabaseUserId } : {}),
     issuedAt,
     expiresAt,
   };
@@ -90,6 +100,8 @@ export function verifyDesktopToken(token: string | null | undefined) {
     ) === "supabase" ? SUPABASE_TOKEN_VERSION : TOKEN_VERSION;
     if (payload.version !== expectedVersion) return null;
     if (!payload.userId) return null;
+    if (expectedVersion === SUPABASE_TOKEN_VERSION &&
+      (typeof payload.supabaseUserId !== "string" || !UUID_PATTERN.test(payload.supabaseUserId))) return null;
     if (!Number.isFinite(payload.expiresAt) || payload.expiresAt <= now) return null;
 
     return payload;
