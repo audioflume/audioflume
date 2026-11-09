@@ -31,6 +31,14 @@ test("the RLS audit is read-only and explicitly checks privilege types and missi
   assert.equal((sqlWithoutComments.match(/\bSELECT\b/g) ?? []).length >= 5, true);
 });
 
+test("audit reports a separate release-blocking count for exposed tables lacking RLS", async () => {
+  const sql = await read("scripts/audit-auth-rls.sql");
+  assert.match(sql, /AS unprotected_tables/);
+  assert.match(sql, /AS unprotected_tables_accessible_to_anon/);
+  assert.match(sql, /CUTOVER_BLOCKED_RLS_DISABLED/);
+  assert.match(sql, /RLS_STATE_REVIEW_REQUIRED/);
+});
+
 test("audit covers sensitive identity links, policies, views and privileged functions", async () => {
   const sql = await read("scripts/audit-auth-rls.sql");
   assert.match(sql, /FROM pg_policies/);
