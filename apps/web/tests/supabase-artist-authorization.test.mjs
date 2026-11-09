@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import { resolve, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
+import { shouldRefreshAccountSession } from "../lib/auth/shouldRefreshAccountSession.ts";
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const read = (path) => readFile(resolve(root, path), "utf8");
@@ -52,4 +53,22 @@ test("only the explicitly converted artist access API is added to cookie refresh
   assert.doesNotMatch(routes, /pathname\.startsWith\("\/api\/artists"/);
   const guard = await read("lib/auth/isMigratedAccountPage.ts");
   assert.doesNotMatch(guard, /artists\/dashboard/);
+});
+
+test("Supabase artist team GET resolves membership profiles without Clerk directory reads", async () => {
+  const src = await read("app/api/artists/[id]/team/route.ts");
+  assert.match(src, /await requireArtistPermission\(id, "artist:view"\)/);
+  assert.match(src, /\.from\("user_profiles"\)/);
+  assert.match(src, /selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\) === "clerk" && clerkUserIds\.length/);
+  assert.match(src, /const client = await clerkClient\(\)/);
+  assert.match(src, /profile\?\.display_name \|\| "Audioflume member"/);
+});
+
+test("only exact artist-team API route refreshes Supabase cookies, never nearby artist routes", () => {
+  assert.equal(shouldRefreshAccountSession("/api/artists/example-id/team"), true);
+  assert.equal(shouldRefreshAccountSession("/api/artists/example-id/team/other"), false);
+  assert.equal(shouldRefreshAccountSession("/api/artists/example-id/team/"), false);
+  assert.equal(shouldRefreshAccountSession("/api/artists/example-id/songs"), false);
+  assert.equal(shouldRefreshAccountSession("/api/artists/claim"), false);
+  assert.equal(shouldRefreshAccountSession("/api/admin/system-health"), false);
 });
