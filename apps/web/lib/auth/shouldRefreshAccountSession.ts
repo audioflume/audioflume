@@ -9,6 +9,7 @@ export function shouldRefreshAccountSession(pathname: string) {
     pathname === "/api/account/usage" ||
     pathname === "/api/account/security-events" ||
     pathname === "/api/community-playlist-favorites" ||
+    pathname === "/api/playlist-recommendations" ||
     /^\/api\/curated-playlists\/[^/]+\/save$/.test(pathname) ||
     pathname === "/api/user-preferences" ||
     pathname === "/api/favorites" ||
