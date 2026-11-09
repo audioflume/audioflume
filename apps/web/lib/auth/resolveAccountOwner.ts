@@ -37,9 +37,21 @@ export async function resolveAccountOwner(): Promise<AccountOwner> {
             return cookieStore.getAll();
           },
           setAll(cookiesToSet) {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options),
-            );
+            // Server Components cannot write response cookies. Middleware
+            // refreshes this same cookie before rendering; route handlers
+            // may still persist updates directly when Next permits it.
+            try {
+              cookiesToSet.forEach(({ name, value, options }) =>
+                cookieStore.set(name, value, options),
+              );
+            } catch (error) {
+              if (
+                !(error instanceof Error) ||
+                !/cookies can only be modified|cannot modify cookies|read.?only/i.test(error.message)
+              ) {
+                throw error;
+              }
+            }
           },
         },
       },
