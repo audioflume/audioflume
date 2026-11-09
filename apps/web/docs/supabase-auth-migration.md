@@ -29,6 +29,8 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 
 Supabase's connected-project advisory reported 14 public tables with RLS disabled, including user data. The project also has tables with RLS enabled and no policies, plus a `security_definer` view. The legacy app currently uses a server-side service-role client.
 
+**Read-only authorization inventory completed:** `docs/supabase-auth-access-audit.md` records nine specific account/content tables with disabled RLS and broad database-role grants, the separately restricted link table, the inspected Clerk-dependent routes, and required remediation/rollback checks. This is a release blocker, not a fix; no policy changes have been applied.
+
 Before any cutover:
 1. Map required public vs private data access per table. Inspect existing grants, RLS, views and RPCs.
 2. Apply ownership-checked RLS policies and restrict browser-facing grants. **Never** fix access by granting unrestricted access to `authenticated`.
@@ -77,6 +79,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
 - [ ] Migrate desktop sign-in and HMAC-token issuance/verification while preserving desktop project access.
+- [x] Perform read-only inventory of first-wave account table access grants/RLS and document safe policy rollout.
 - [ ] Add data access policies; verify affected tables and views.
 - [ ] Test sign-in/out, Google multiple-account chooser, email/password, recovery, reload persistence, new/existing users, identity switching, every account area and desktop synchronization.
 - [ ] Compare ownership records before/after migration and verify rollback.
