@@ -95,8 +95,12 @@ test("Supabase admin elevation is gated and checked against server-controlled ap
 
 test("artist dashboard Supabase page bypasses Clerk protection but requires verified session", async () => {
   const source = await read("middleware.ts");
-  const branch = source.slice(source.indexOf("// Artist dashboard already verifies"));
+  const start = source.indexOf("// Artist pages whose APIs verify the linked owner");
+  const end = source.indexOf("// Supabase admin pages are guarded twice", start);
+  assert.ok(start >= 0 && end > start);
+  const branch = source.slice(start, end);
   assert.match(branch, /pathname === "\/artists\/dashboard"/);
+  assert.match(branch, /pathname === "\/artists\/apply"/);
   assert.match(branch, /refreshSupabaseAccountSession\(request, \{ requireVerifiedUser: true \}\)/);
   assert.match(branch, /pathname === "\/artists\/claim"/);
   assert.match(branch, /return refreshSupabaseAccountSession\(request\)/);
