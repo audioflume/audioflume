@@ -5,6 +5,11 @@
  */
 export function shouldRefreshAccountSession(pathname: string) {
   if (
+    pathname === "/api/account/notifications" ||
+    pathname === "/api/account/usage" ||
+    pathname === "/api/account/security-events" ||
+    pathname === "/api/community-playlist-favorites" ||
+    /^\/api\/curated-playlists\/[^/]+\/save$/.test(pathname) ||
     pathname === "/api/user-preferences" ||
     pathname === "/api/favorites" ||
     pathname.startsWith("/api/favorites/") ||
