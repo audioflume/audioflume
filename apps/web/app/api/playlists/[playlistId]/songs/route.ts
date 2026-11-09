@@ -254,7 +254,7 @@ export async function POST(req: Request, context: RouteContext) {
     const { playlistId } = await context.params;
     const body = await req.json();
 
-    const requestedSongs = Array.isArray(body.songs)
+    const requestedSongs: Array<{ song_id: string; position: number }> | null = Array.isArray(body.songs)
       ? body.songs
           .map((item: unknown, index: number) => {
             if (!item || typeof item !== "object") return null;
