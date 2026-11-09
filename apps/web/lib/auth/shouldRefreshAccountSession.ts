@@ -6,6 +6,7 @@
 export function shouldRefreshAccountSession(pathname: string) {
   if (
     pathname === "/api/artists/access" ||
+    pathname === "/api/artists/claim" ||
     /^\/api\/artists\/[^/]+\/team$/.test(pathname) ||
     pathname === "/api/artists/apply" ||
     pathname === "/api/artists/apply/images" ||
