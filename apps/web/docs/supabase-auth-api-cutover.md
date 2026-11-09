@@ -35,13 +35,15 @@ node apps/web/scripts/audit-auth-cutover.mjs
 node --test apps/web/tests/auth-cutover-audit.test.mjs
 ```
 
-Use `node apps/web/scripts/audit-auth-cutover.mjs --json` for a machine-readable report. This scans web source for explicit browser Supabase imports, literal/dynamic `.from()` queries and Clerk imports in client components and API handlers.
+Use `node apps/web/scripts/audit-auth-cutover.mjs --json` for a machine-readable report. This scans web source for explicit browser Supabase imports, literal/dynamic `.from()` queries and Clerk imports in client components and API handlers. The dynamic-query heuristic now narrows results to recognizable database clients and ignores literal table names and ordinary non-database `.from()` calls; it may still miss aliases or chained clients.
 
 **Scope/limitations:** heuristic static import scanning does not prove that a call is reachable from the browser through a transitive dependency, cover desktop code, resolve dynamic query targets, or inspect RPCs/network libraries. Review findings against the real code and Supabase Data API settings before changing grants. Run the scanner after each major migration batch to detect new dependencies. No app behavior is changed by this tool.
 
 ## Critical browser-direct dependency
 
 `components/PlaylistFilter.tsx` currently imports the legacy browser `supabase` client and directly queries `public.playlists`, filtering with the Clerk `userId`. The owner filter is **not** a database permission barrier while RLS is disabled.
+
+A new **Clerk-protected** `GET /api/playlists/filter-options` route now returns exactly `[{ id, name }]` alphabetically ordered from an owner-scoped server query. It is staged but **not yet called** by `PlaylistFilter.tsx`; the component remains unchanged. Test this server route with signed-in/guest sessions and confirm exact list parity before switching the shared filter.
 
 **Before revoking browser role access to playlists**, migrate this filter through an authorized server API or an equivalent reviewed ownership-enforced RLS path. It is a shared user-facing filter; do not change its UX, classes, states, styling, interactions or behavior without a separate explicit implementation review. The same audit must be completed for every other browser-direct callsite before applying broad grants/RLS changes.
 
