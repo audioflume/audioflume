@@ -252,9 +252,15 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
       return clerkRequestMiddleware(request, event);
     }
 
-    // Existing account, artist, and admin APIs still enforce authorization
-    // server-side. Bypassing Clerk does not authorize any API request.
-    if (pathname.startsWith("/api/")) {
+    // Only audited standalone Supabase handlers skip Clerk entirely.
+    // All other API handlers retain their existing middleware context.
+    if (
+      pathname === "/api/account/auth-session" ||
+      pathname === "/api/auth-preview/cutover-session" ||
+      pathname === "/api/admin/access" ||
+      pathname === "/api/admin/system-health" ||
+      pathname === "/api/admin/audio-proxy"
+    ) {
       return NextResponse.next();
     }
 
