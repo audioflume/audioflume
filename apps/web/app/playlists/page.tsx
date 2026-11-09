@@ -33,7 +33,7 @@ import {
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { toSmartTitleCaseInput } from "@/lib/smartTitleCase";
 import { useEffect, useMemo, useState, useSyncExternalStore, type MouseEvent } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import {
   DndContext,
   closestCenter,
@@ -806,7 +806,7 @@ function DragPreview({
 }
 
 export default function PlaylistsPage() {
-  const { user } = useUser();
+  const { user } = useAccountSession();
   const { currentSong } = usePlayer();
   const {
     playlistViewMode: viewMode,
