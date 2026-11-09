@@ -1,7 +1,7 @@
 "use client";
 
 import type { Playlist } from "@/lib/types";
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import {
   createContext,
   ReactNode,
@@ -200,8 +200,7 @@ function requestPlaylistCoverMigration(userId: string) {
 }
 
 export function PlaylistsProvider({ children }: { children: ReactNode }) {
-  const { user, isLoaded } = useUser();
-  const userId = user?.id ?? null;
+  const { userId, isLoaded } = useAccountSession();
 
   const [playlists, setPlaylistsState] = useState<Playlist[]>([]);
   const [loading, setLoading] = useState(true);
