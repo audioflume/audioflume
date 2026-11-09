@@ -57,3 +57,16 @@ test("trusted Supabase role gate fails closed without both explicit operator fla
   assert.equal(isTrustedSupabaseAdmin("supabase", "true", { role: "editor" }), false);
   assert.equal(isTrustedSupabaseAdmin("supabase", "true", { user_metadata: { role: "admin" } }), false);
 });
+
+test("admin song upload/edit form requires trusted Supabase admin while preserving Clerk role checks", async () => {
+  const src = await read("components/admin/AdminSongForm.tsx");
+  const gate = src.slice(src.indexOf("export default function AdminSongForm"), src.indexOf("const [title, setTitle]"));
+  assert.match(gate, /useAccountSession\(\)/);
+  assert.match(gate, /session\.provider === "supabase"/);
+  assert.match(gate, /fetch\("\/api\/admin\/access"/);
+  assert.match(gate, /response\.ok && body\?\.isAdmin === true/);
+  assert.match(gate, /supabaseMode \? trustedAdmin : isAdminByRole \|\| isAdminByEmail/);
+  assert.match(gate, /session\.isSignedIn, session\.userId\]/);
+  assert.match(src, /if \(!isLoaded\)/);
+  assert.match(src, /if \(!isAdmin\)/);
+});
