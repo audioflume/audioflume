@@ -105,7 +105,17 @@ export async function GET() {
   }
 
   try {
-    let playlistsResult = await supabaseServer
+    let playlistsResult: {
+      data: Array<{
+        id: number;
+        clerk_user_id: string;
+        name: string;
+        position: number;
+        source_type?: string | null;
+        source_playlist_id?: number | null;
+      }> | null;
+      error: { message: string } | null;
+    } = await supabaseServer
       .from("playlists")
       .select(
         "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories, source_type, source_playlist_id",
