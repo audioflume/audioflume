@@ -12,10 +12,29 @@
 - Pure owner decision tests: `node --experimental-strip-types --test tests/supabase-preview-ownership.test.mjs` from `apps/web`.
 - The new utility is dormant until the production browser client, proxy refresh, API routing and RLS checks are deliberately switched together.
 
+## Production-cookie integration staged (without activating the provider)
+
+- `lib/auth/supabaseAccountBrowser.ts` creates a browser SSR client with cookie namespace **`sb-audioflume-auth`**, matching `lib/auth/resolveAccountOwner.ts` and the previously staged request-scoped resolver. It is separate from both the localStorage-based legacy client and the `sb-audioflume-auth-preview-ssr` test cookie.
+- `lib/auth/refreshSupabaseAccountSession.ts` refreshes the SSR cookie using `auth.getClaims()` and forwards cookie changes downstream and to the browser, preserving cache-related headers.
+- Existing Clerk middleware is modified **only** to refresh that namespace at the exact `/auth-preview/cutover` path, and when `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` for paths returned by `shouldRefreshAccountSession`. The allowlist does not include desktop, admin, artist, public library, account profile or other Clerk-only API routes. The existing `/auth-preview/ssr` cookie branch and all Clerk route protection remain unchanged.
+- `/auth-preview/cutover` is a read-only **future production-cookie** Google sign-in test. `/api/auth-preview/cutover-session` independently verifies the future cookie and one-to-one linked owner, returning 200 / 401 / 403 without exposing an owner ID. The page displays the server-selected API provider; migrated Favorites/Playlists/Projects reads are offered only if the provider is `supabase` and the cookie mapping passes.
+- Google OAuth redirect URLs must include the new `/auth-preview/cutover` callback URL in Supabase's redirect allowlist before browser login works. Do not alter existing OAuth redirect configuration without checking the current registered URLs.
+- **Do not set `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` on live deployments.** The website's other Clerk hooks/protected pages, admin/artist/billing roles, desktop login, database RLS, browser integration tests and full build are not yet completed. The new preview page may be opened while Clerk is the provider, but a passing cookie check alone does *not* prove that the core APIs have switched.
+
+Verification from the repository root:
+
+```bash
+node --experimental-strip-types --test apps/web/tests/supabase-account-session-routing.test.mjs
+node --experimental-strip-types --test apps/web/tests/account-auth-provider.test.mjs
+node --test apps/web/tests/account-route-migration.test.mjs
+```
+
+Then start the website and visit `http://localhost:3000/auth-preview/cutover` to test the cookie. The standard auth preview remains at `/auth-preview/ssr` and uses a **different session**, so a second Google sign-in may be needed. Without a server-side provider switch, the page should show `Clerk (default)`; the read-only migrated API check button should **not** appear.
+
 ## Core account API conversion staged (Clerk remains default)
 
 - **21 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
-- The resolver returns the exact existing Clerk owner ID by default, from `auth()`. Only `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` (server-side environment) selects a Supabase verified-cookie session, which is mapped to the legacy owner using `auth_identity_links`. **Do not set this environment variable yet**, including on previews, until the production cookie browser client and refresh proxy are installed and the end-to-end regression suite passes.
+- The resolver returns the exact existing Clerk owner ID by default, from `auth()`. Only `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` (server-side environment) selects a Supabase verified-cookie session, which is mapped to the legacy owner using `auth_identity_links`. The production-cookie client and allowlisted middleware refresh are now staged, **but do not set this environment variable on live deployments** until full role, RLS, desktop and end-to-end regression gates pass.
 - Supabase authorization failures never fall back to Clerk. Missing/invalid session -> `401`, verified unlinked identity -> `403`, auth mapping failure -> `500`. Guest Favorites GET and playlist stats GET preserve the existing empty-response contract for a true 401; a 403/500 is not silently treated as empty.
 - The owner predicates, API payloads, ordering and write validations were not rewritten. All changes are isolated to the authorization lookup and denied-response status, except the separate shared playlist-filter read discussed below.
 - The shared `components/PlaylistFilter.tsx` now requests the Clerk-protected same-origin `/api/playlists/filter-options` endpoint instead of a direct browser Supabase query. JSX, shared components, icons, onOpen/onChange and state variables are unchanged. This removes the known browser-direct playlist dependency ahead of RLS remediation.
