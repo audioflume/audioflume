@@ -50,7 +50,7 @@ function isEmbeddedImage(value: unknown): value is string {
 }
 
 function decodeDataUrl(dataUrl: string) {
-  const match = dataUrl.trim().match(/^data:image\/[a-z0-9.+-]+;base64,(.+)$/is);
+  const match = dataUrl.trim().match(/^data:image\/[a-z0-9.+-]+;base64,([\s\S]+)$/i);
 
   if (!match) {
     throw new Error("Unsupported playlist cover data URL");
