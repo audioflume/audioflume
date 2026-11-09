@@ -304,3 +304,17 @@ This is an SSR cookie compatibility step, not authorization bypass or evidence t
 The verified owner resolver now tolerates the specific Next.js read-only cookie-store error when its `setAll` callback runs in a Server Component, while still throwing unrelated errors. This prevents an otherwise verifiable linked session from failing solely because the rendering context cannot write response cookies. Middleware's `refreshSupabaseAccountSession` remains responsible for refreshing and propagating `sb-audioflume-auth` cookies before page rendering; route handlers can continue writing them where Next permits.
 
 This does **not** relax `auth.getUser()` verification, the exact `auth_identity_links.supabase_user_id` lookup, or the default Clerk provider. Source regression coverage: `tests/supabase-server-cookie-rendering.test.mjs`. A real server-rendered staging session test with an expiring token is still necessary.
+
+## Local live HTTP authorization smoke checks (2026-11-09)
+
+Once the local web server is running, verify the *actual route behavior* with the read-only anonymous test script:
+
+```bash
+node apps/web/scripts/smoke-supabase-auth-local.mjs --provider clerk
+# Against a separately configured local server with the staged provider explicitly selected:
+node apps/web/scripts/smoke-supabase-auth-local.mjs --provider supabase
+```
+
+The script is restricted to HTTP loopback hosts (localhost, 127.0.0.1, ::1), never sends credentials/cookies or follows redirects, and uses only GET. It checks expected anonymous denials for the account session, cutover preview, artist access and claims, and admin health/audio proxy; it also confirms the sign-in and artist-claim pages render. The selected `--provider` must match the **already running server's** server-side configuration; the script never sets or changes the provider. A passing run is not a substitute for logged-in role/owner access tests, end-to-end OAuth, desktop pairing, RLS verification, or a production build.
+
+If the MERIT analyzer startup is blocked by a pre-existing listener on port 8000, identify the process with `lsof -nP -iTCP:8000 -sTCP:LISTEN` and confirm it is a stale analyzer before stopping it. Do not change startup scripts or kill unrelated services for this test.
