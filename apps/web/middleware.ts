@@ -104,16 +104,6 @@ export default clerkMiddleware(async (auth, request) => {
     return NextResponse.next();
   }
 
-  // Only account-data-backed client pages may use the Supabase page guard
-  // when the server opts in. Admin, artist, account settings and desktop
-  // retain the existing Clerk path. APIs still verify legacy ownership.
-  if (
-    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
-    isMigratedAccountPage(request.nextUrl.pathname)
-  ) {
-    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
-  }
-
   // Only refresh migrated account API sessions when the server operator
   // explicitly opts into the Supabase migration. Desktop remains untouched.
   if (
@@ -128,6 +118,16 @@ export default clerkMiddleware(async (auth, request) => {
     request.nextUrl.searchParams.get("tab") === "community-playlists"
   ) {
     return NextResponse.redirect(new URL("/playlists/community", request.url));
+  }
+
+  // Only account-data-backed client pages may use the Supabase page guard
+  // when the server opts in. Admin, artist, account settings and desktop
+  // retain the existing Clerk path. APIs still verify legacy ownership.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    isMigratedAccountPage(request.nextUrl.pathname)
+  ) {
+    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
   }
 
   if (request.nextUrl.pathname.startsWith("/api/desktop")) {
