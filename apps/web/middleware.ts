@@ -1,9 +1,10 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest, type NextFetchEvent } from "next/server";
 import { refreshSupabaseSsrPreview } from "@/lib/supabaseSsrPreviewRefresh";
 import { refreshSupabaseAccountSession } from "@/lib/auth/refreshSupabaseAccountSession";
 import { shouldRefreshAccountSession } from "@/lib/auth/shouldRefreshAccountSession";
 import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
 import { isMigratedAccountPage } from "@/lib/auth/isMigratedAccountPage";
 
 const isPublicRoute = createRouteMatcher([
@@ -82,7 +83,7 @@ function applyDesktopCorsHeaders(response: NextResponse, request: NextRequest) {
   return response;
 }
 
-export default clerkMiddleware(async (auth, request) => {
+const clerkRequestMiddleware = clerkMiddleware(async (auth, request) => {
   // The SSR preview is public and maintains only its own Supabase cookie session.
   // Every production route and desktop API continues through the existing Clerk flow.
   if (request.nextUrl.pathname === "/auth-preview/ssr") {
@@ -179,6 +180,88 @@ export default clerkMiddleware(async (auth, request) => {
     await auth.protect();
   }
 });
+
+
+// Explicit Supabase website cutover: avoid running Clerk's development-session
+// handshake before paths that already have their own Supabase session handling.
+// Clerk remains the default provider, and unconverted private pages continue
+// through the existing Clerk middleware instead of silently changing access.
+export default function middleware(request: NextRequest, event: NextFetchEvent) {
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase") {
+    const pathname = request.nextUrl.pathname;
+
+    // Both browser entry pages and the OAuth exchange have their own provider-
+    // selected authorization logic. Never redirect them through Clerk.
+    if (
+      pathname === "/sign-in" || pathname.startsWith("/sign-in/") ||
+      pathname === "/sign-up" || pathname.startsWith("/sign-up/") ||
+      pathname === "/auth/supabase/callback"
+    ) {
+      return NextResponse.next();
+    }
+
+    if (pathname === "/auth-preview/ssr") return refreshSupabaseSsrPreview(request);
+    if (pathname === "/auth-preview/cutover") return refreshSupabaseAccountSession(request);
+
+    if (shouldRefreshAccountSession(pathname)) {
+      return refreshSupabaseAccountSession(request);
+    }
+
+    if (
+      pathname === "/playlists" &&
+      request.nextUrl.searchParams.get("tab") === "community-playlists"
+    ) {
+      return NextResponse.redirect(new URL("/playlists/community", request.url));
+    }
+
+    if (pathname === "/artists/dashboard" || pathname === "/artists/apply") {
+      return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+    }
+    if (pathname === "/artists/claim") {
+      return refreshSupabaseAccountSession(request);
+    }
+    if (pathname === "/admin" || pathname.startsWith("/admin/")) {
+      // app/admin/layout.tsx independently enforces server-trusted admin role.
+      return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+    }
+    if (isMigratedAccountPage(pathname)) {
+      return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+    }
+
+    // Only bypass Clerk for desktop when BOTH desktop and website providers
+    // explicitly opt into Supabase. Bearer authorization stays in each API.
+    if (
+      pathname.startsWith("/api/desktop") &&
+      selectDesktopAuthProvider(
+        process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+        process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+      ) === "supabase"
+    ) {
+      if (request.method === "OPTIONS") {
+        return applyDesktopCorsHeaders(
+          new NextResponse(null, { status: 204 }),
+          request,
+        );
+      }
+      return applyDesktopCorsHeaders(NextResponse.next(), request);
+    }
+
+    // Existing account, artist, and admin APIs still enforce authorization
+    // server-side. Bypassing Clerk does not authorize any API request.
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.next();
+    }
+
+    const isPublicContentRoute =
+      isPublicArtistContentRoute(pathname) ||
+      isPublicPlaylistDetailRoute(pathname);
+    if (isPublicRoute(request) || isPublicContentRoute) {
+      return NextResponse.next();
+    }
+  }
+
+  return clerkRequestMiddleware(request, event);
+}
 
 export const config = {
   matcher: [
