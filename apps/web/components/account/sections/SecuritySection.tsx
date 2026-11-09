@@ -1,12 +1,15 @@
 "use client";
 
 import { useClerk, useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
+import SupabaseSecuritySection from "./SupabaseSecuritySection";
 import { useEffect, useState } from "react";
 import type { SecurityEvent } from "../accountTypes";
 import { Button, Card, CardTitle, Info, Row } from "../AccountUI";
 import { formatDate } from "../accountUtils";
 
 export default function SecuritySection() {
+  const { provider } = useAccountSession();
   const { user } = useUser();
   const { openUserProfile } = useClerk();
   const [events, setEvents] = useState<SecurityEvent[]>([]);
@@ -33,6 +36,8 @@ export default function SecuritySection() {
       active = false;
     };
   }, []);
+
+  if (provider === "supabase") return <SupabaseSecuritySection />;
 
   return (
     <>
