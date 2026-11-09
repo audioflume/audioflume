@@ -99,6 +99,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [x] Stage verified Clerk-default identity handling for account profile, billing profile and membership, with Supabase `getUser()` supplying verified email and display-only user metadata; all account records retain legacy owner IDs. Browser parity and live security tests remain outstanding.
 - [x] Add server-selected, Clerk-default account session for Favorites, Playlists, Projects, User Preferences and the shared playlist filter; migrate the automatically invoked playlist-cover endpoint without changing R2 handling, cache key formats or UI. Shared contexts still need full browser regression, and Header/UserMenu/artist/middleware remain Clerk.
 - [x] Make the shared website `Header` and `UserMenu` consume the Clerk-default account session, including display identity and provider-aware sign-out, without touching their DOM, classes, menu interactions, icons, or link destinations. Live login URLs and protected routes still depend on Clerk.
+- [x] Replace direct Clerk identity hooks in the website Music page, Playlists page and Discover curated-hero filter with the shared Clerk-default account session. Source comparison confirms unchanged JSX/filter/state behavior; local/browser regression testing pending.
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
