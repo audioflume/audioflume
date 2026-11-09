@@ -90,6 +90,7 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [ ] Browser-test exact song-ID parity for linked Clerk/Supabase identities and refusal of unlinked/signed-out sessions before migrating the production Favorites API.
 - [x] Consolidate duplicated SSR-preview auth/owner/cookie response code and add executable owner-isolation regression tests.
 - [x] Stage a production-cookie account-ownership resolver without wiring it into any active Clerk route; document API conversion boundaries and the browser-direct playlist dependency.
+- [x] Add a source-tree inventory script and fixture-based tests to flag direct browser Supabase queries and Clerk-dependent API routes before each cutover batch (not yet executed against the full local checkout).
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
