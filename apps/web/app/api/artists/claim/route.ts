@@ -1,5 +1,7 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
+import { verifiedSupabaseClaimEmails } from "@/lib/auth/verifiedSupabaseClaimEmails";
 import { NextResponse } from "next/server";
 
 import { ensureUserProfile } from "@/lib/account";
@@ -8,6 +10,34 @@ import {
   normalizeArtistClaimEmail,
 } from "@/lib/artistClaims";
 import { supabaseServer } from "@/lib/supabaseServer";
+
+async function getClaimIdentity() {
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "clerk") {
+    const user = await currentUser();
+    if (!user?.id) return null;
+
+    return {
+      userId: user.id,
+      profile: user,
+      emails: getVerifiedUserEmails(user),
+    };
+  }
+
+  const owner = await resolveAccountOwner();
+  if (!owner.userId || !owner.supabaseUserId || !owner.profileIdentity) return null;
+
+  // Supabase Auth Admin API is the authority for confirmed email status.
+  // Never trust display metadata or a client-provided email for claims.
+  const { data, error } = await supabaseServer.auth.admin.getUserById(owner.supabaseUserId);
+  if (error || data.user?.id !== owner.supabaseUserId) return null;
+
+  return {
+    userId: owner.userId,
+    profile: { id: owner.userId, ...owner.profileIdentity },
+    emails: verifiedSupabaseClaimEmails(owner.supabaseUserId, data.user),
+  };
+}
+
 
 function getVerifiedUserEmails(user: {
   emailAddresses: Array<{
@@ -26,21 +56,16 @@ function getVerifiedUserEmails(user: {
 }
 
 export async function GET() {
-  // Do not use a concurrent Clerk cookie to authorize a Supabase artist claim.
-  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
-    return NextResponse.json({ error: "Artist claims require completed account verification." }, { status: 403 });
-  }
-
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
-    await ensureUserProfile(user.id, user);
+    const identity = await getClaimIdentity();
+    if (!identity) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    await ensureUserProfile(identity.userId, identity.profile);
     await expireArtistClaimInvitations();
 
-    const emails = getVerifiedUserEmails(user);
+    const emails = identity.emails;
     if (emails.length === 0) {
       return NextResponse.json({ invitations: [] });
     }
@@ -107,17 +132,12 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  // Email-based ownership transfers must remain Clerk-only until reviewed.
-  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
-    return NextResponse.json({ error: "Artist claims require completed account verification." }, { status: 403 });
-  }
-
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   try {
+    const identity = await getClaimIdentity();
+    if (!identity) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = (await request.json().catch(() => null)) as
       | Record<string, unknown>
       | null;
@@ -131,10 +151,10 @@ export async function POST(request: Request) {
       );
     }
 
-    await ensureUserProfile(user.id, user);
+    await ensureUserProfile(identity.userId, identity.profile);
     await expireArtistClaimInvitations();
 
-    const emails = getVerifiedUserEmails(user);
+    const emails = identity.emails;
     if (emails.length === 0) {
       return NextResponse.json(
         { error: "A verified email address is required" },
@@ -169,7 +189,7 @@ export async function POST(request: Request) {
       "claim_artist_invitation",
       {
         p_invitation_id: invitation.id,
-        p_clerk_user_id: user.id,
+        p_clerk_user_id: identity.userId,
         p_email: invitationEmail,
       },
     );
