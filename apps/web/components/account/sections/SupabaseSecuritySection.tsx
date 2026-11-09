@@ -53,7 +53,7 @@ export default function SupabaseSecuritySection() {
           <CardTitle title="Account access" />
           <div className="grid gap-3 p-4">
             <Info label="Primary email" value={email ?? "Unavailable"} />
-            <Info label="Email status" value={email ? "Verified session" : "Unavailable"} />
+            <Info label="Email status" value="Not displayed" />
             <Info label="User ID" value={user?.id ?? "Unavailable"} />
           </div>
         </Card>
