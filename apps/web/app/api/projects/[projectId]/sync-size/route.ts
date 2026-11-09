@@ -228,7 +228,7 @@ async function persistResolvedSizeBytes({
   song: SongSizeRow | undefined;
   sizeBytes: number;
 }) {
-  const updates: Promise<unknown>[] = [];
+  const updates: PromiseLike<unknown>[] = [];
 
   if (song?.id != null && !getSongSizeBytes(song)) {
     updates.push(
