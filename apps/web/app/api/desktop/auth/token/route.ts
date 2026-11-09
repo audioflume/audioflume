@@ -94,16 +94,18 @@ async function getSignedInUserId() {
   ) === "supabase") {
     // Issue a desktop token only for a verified, linked Supabase account.
     const owner = await resolveAccountOwner();
-    return owner.userId;
+    return owner.userId && owner.supabaseUserId
+      ? { userId: owner.userId, supabaseUserId: owner.supabaseUserId }
+      : null;
   }
 
   const { userId } = await auth();
 
-  if (userId) return userId;
+  if (userId) return { userId };
 
   const user = await currentUser();
 
-  return user?.id ?? null;
+  return user?.id ? { userId: user.id } : null;
 }
 
 function getDesktopCallbackUrl(token: string) {
@@ -121,9 +123,9 @@ export async function GET(req: Request) {
 
   signInUrl.searchParams.set("redirect_url", url.toString());
 
-  const userId = await getSignedInUserId();
+  const desktopIdentity = await getSignedInUserId();
 
-  if (!userId) {
+  if (!desktopIdentity) {
     return new NextResponse(
       renderPage({
         message:
@@ -140,7 +142,7 @@ export async function GET(req: Request) {
     );
   }
 
-  const token = createDesktopToken(userId);
+  const token = createDesktopToken(desktopIdentity.userId, desktopIdentity.supabaseUserId);
   const callbackUrl = getDesktopCallbackUrl(token);
 
   return new NextResponse(
@@ -170,7 +172,7 @@ export async function POST() {
   }
 
   return NextResponse.json(
-    { token: createDesktopToken(userId) },
+    { token: createDesktopToken(desktopIdentity.userId, desktopIdentity.supabaseUserId) },
     { headers: { "Cache-Control": "no-store" } },
   );
 }
