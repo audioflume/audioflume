@@ -120,12 +120,12 @@ export default clerkMiddleware(async (auth, request) => {
     return NextResponse.redirect(new URL("/playlists/community", request.url));
   }
 
-  // Artist dashboard already verifies the linked owner server-side. Give its
-  // Supabase session a chance to refresh before the Clerk page protector runs.
-  // The claim page remains publicly reachable to show its own sign-in state.
+  // Artist pages whose APIs verify the linked owner use the Supabase
+  // cookie when selected; Clerk must not protect their page HTML first.
   if (
     selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
-    request.nextUrl.pathname === "/artists/dashboard"
+    (request.nextUrl.pathname === "/artists/dashboard" ||
+      request.nextUrl.pathname === "/artists/apply")
   ) {
     return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
   }
