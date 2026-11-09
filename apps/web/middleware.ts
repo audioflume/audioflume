@@ -1,6 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse, type NextRequest } from "next/server";
 import { refreshSupabaseSsrPreview } from "@/lib/supabaseSsrPreviewRefresh";
+import { refreshSupabaseAccountSession } from "@/lib/auth/refreshSupabaseAccountSession";
+import { shouldRefreshAccountSession } from "@/lib/auth/shouldRefreshAccountSession";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -83,6 +86,20 @@ export default clerkMiddleware(async (auth, request) => {
   // Every production route and desktop API continues through the existing Clerk flow.
   if (request.nextUrl.pathname === "/auth-preview/ssr") {
     return refreshSupabaseSsrPreview(request);
+  }
+
+  // Test the future cookie independently; never replace Clerk automatically.
+  if (request.nextUrl.pathname === "/auth-preview/cutover") {
+    return refreshSupabaseAccountSession(request);
+  }
+
+  // Only refresh migrated account API sessions when the server operator
+  // explicitly opts into the Supabase migration. Desktop remains untouched.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    shouldRefreshAccountSession(request.nextUrl.pathname)
+  ) {
+    return refreshSupabaseAccountSession(request);
   }
 
   if (
