@@ -80,6 +80,15 @@ export default function SupabaseAccountAuthForm({ initialMode, next }: Props) {
         if (authError) throw authError;
         setNotice("If this email has an account, a password reset message will be sent.");
       } else if (mode === "reset") {
+        // A recovery redirect alone is not authorization to change account credentials.
+        // Require the server-verified Supabase session and its existing owner link.
+        const verification = await fetch("/api/account/auth-session", {
+          credentials: "same-origin",
+          cache: "no-store",
+        });
+        if (!verification.ok) {
+          throw new Error("Your account session could not be verified. Request a new password reset link.");
+        }
         const { error: authError } = await supabaseAccountBrowser.auth.updateUser({ password });
         if (authError) throw authError;
         setPassword("");
