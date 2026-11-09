@@ -10,6 +10,10 @@ import { formatDate } from "../accountUtils";
 
 export default function SecuritySection() {
   const { provider } = useAccountSession();
+  return provider === "supabase" ? <SupabaseSecuritySection /> : <ClerkSecuritySection />;
+}
+
+function ClerkSecuritySection() {
   const { user } = useUser();
   const { openUserProfile } = useClerk();
   const [events, setEvents] = useState<SecurityEvent[]>([]);
@@ -36,8 +40,6 @@ export default function SecuritySection() {
       active = false;
     };
   }, []);
-
-  if (provider === "supabase") return <SupabaseSecuritySection />;
 
   return (
     <>
