@@ -47,7 +47,7 @@ test("live Supabase form supports Google, password, sign-up, and recovery", asyn
   assert.match(source, /supabaseAccountBrowser\.auth\.signUp/);
   assert.match(source, /supabaseAccountBrowser\.auth\.resetPasswordForEmail/);
   assert.match(source, /supabaseAccountBrowser\.auth\.updateUser/);
-  assert.match(source, /\/api\/auth-preview\/cutover-session/);
+  assert.match(source, /\/api\/account\/auth-session/);
   assert.match(source, /if \(!response\.ok\) throw new Error/);
 });
 
