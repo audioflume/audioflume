@@ -75,3 +75,33 @@ test("lockdown inventory has no direct browser Supabase query dependency in the 
     "Review dynamic browser DB queries before approving RLS lockdown.",
   );
 });
+
+test("privileged revision RPC and trigger function lose browser EXECUTE while server role stays authorized", async () => {
+  const sql = await read("scripts/staged-auth-rls-lockdown.sql");
+  assert.match(sql, /to_regprocedure\('public\.apply_song_pending_revision\(uuid\)'\)/);
+  assert.match(sql, /to_regprocedure\('public\.sync_song_pending_revision_submission_activity\(\)'\)/);
+  assert.match(sql, /REVOKE ALL PRIVILEGES ON FUNCTION public\.apply_song_pending_revision\(uuid\)\s+FROM PUBLIC, anon, authenticated;/);
+  assert.match(sql, /REVOKE ALL PRIVILEGES ON FUNCTION public\.sync_song_pending_revision_submission_activity\(\)\s+FROM PUBLIC, anon, authenticated;/);
+  for (const func of [
+    "public.apply_song_pending_revision(uuid)",
+    "public.sync_song_pending_revision_submission_activity()",
+  ]) {
+    for (const role of ["anon", "authenticated"]) {
+      assert.ok(sql.includes(`has_function_privilege('${role}', '${func}', 'EXECUTE')`), func + " " + role);
+    }
+  }
+  assert.match(sql, /NOT has_function_privilege\('service_role', 'public\.apply_song_pending_revision\(uuid\)', 'EXECUTE'\)/);
+  const serverCaller = await read("lib/songPendingRevisions.ts");
+  assert.match(serverCaller, /supabaseServer\.rpc\("apply_song_pending_revision"/);
+});
+
+test("post-lockdown staging verification is read-only and checks privileges", async () => {
+  const sql = await read("scripts/verify-auth-rls-lockdown.sql");
+  const statements = sql.replace(/^--.*$/gm, "").split(";").map((part) => part.trim()).filter(Boolean);
+  assert.ok(statements.every((part) => /^SELECT\s/i.test(part)), "Staging verification must contain only SELECT queries.");
+  assert.match(sql, /has_function_privilege\('anon'/);
+  assert.match(sql, /has_function_privilege\('authenticated'/);
+  assert.match(sql, /has_function_privilege\('service_role'/);
+  assert.match(sql, /project_folder_paths/);
+  assert.match(sql, /relrowsecurity/);
+});
