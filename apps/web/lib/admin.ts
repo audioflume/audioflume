@@ -1,4 +1,5 @@
 import { currentUser } from '@clerk/nextjs/server'
+import { selectAccountAuthProvider } from '@/lib/auth/selectAccountAuthProvider'
 
 /**
  * Admin access is determined by two methods (either is sufficient):
@@ -11,6 +12,11 @@ import { currentUser } from '@clerk/nextjs/server'
  *    This is never committed to the repository.
  */
 export async function requireAdmin() {
+  // Clerk privileges must not bleed into a simultaneous Supabase session.
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== 'clerk') {
+    return { isAdmin: false, user: null, email: undefined }
+  }
+
   const user = await currentUser()
   const email = user?.primaryEmailAddress?.emailAddress
 
