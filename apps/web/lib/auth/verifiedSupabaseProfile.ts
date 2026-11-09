@@ -17,10 +17,10 @@ export function profileFromVerifiedSupabaseUser(user: {
   user_metadata?: Record<string, unknown> | null;
 }): VerifiedAccountProfileIdentity {
   const metadata = user.user_metadata ?? {};
-  const display = (key: string) =>
-    typeof metadata[key] === "string" && metadata[key].trim()
-      ? (metadata[key] as string).trim()
-      : null;
+  const display = (key: string) => {
+    const value = metadata[key];
+    return typeof value === "string" ? (value.trim() || null) : null;
+  };
 
   const firstName = display("given_name") ?? display("first_name");
   const lastName = display("family_name") ?? display("last_name");
