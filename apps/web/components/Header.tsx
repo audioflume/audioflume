@@ -252,6 +252,7 @@ export default function Header() {
     let frame = 0;
 
     function updateHeaderBottom() {
+      if (!headerElement) return;
       const bottom = headerElement.getBoundingClientRect().bottom;
       document.documentElement.style.setProperty(
         "--filmwave-web-header-bottom",
@@ -1388,7 +1389,7 @@ export default function Header() {
                                         </div>
                                       </Link>
                                       <CuratedPlaylistBookmarkButton
-                                        playlist={playlist}
+                                        playlist={{ ...playlist, kicker: "" }}
                                         className="filmwave-playlists-mega-feature-bookmark"
                                       />
                                       <CuratedPlaylistPlayButton
