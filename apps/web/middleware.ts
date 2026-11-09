@@ -120,6 +120,22 @@ export default clerkMiddleware(async (auth, request) => {
     return NextResponse.redirect(new URL("/playlists/community", request.url));
   }
 
+  // Artist dashboard already verifies the linked owner server-side. Give its
+  // Supabase session a chance to refresh before the Clerk page protector runs.
+  // The claim page remains publicly reachable to show its own sign-in state.
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    request.nextUrl.pathname === "/artists/dashboard"
+  ) {
+    return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
+  }
+  if (
+    selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase" &&
+    request.nextUrl.pathname === "/artists/claim"
+  ) {
+    return refreshSupabaseAccountSession(request);
+  }
+
   // Only account-data-backed client pages may use the Supabase page guard
   // when the server opts in. Admin, artist, account settings and desktop
   // retain the existing Clerk path. APIs still verify legacy ownership.
