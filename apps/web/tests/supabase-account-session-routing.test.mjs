@@ -25,7 +25,7 @@ test("migrated account APIs are allowlisted for cookie refresh", () => {
     "/api/projects/45/events", "/api/projects/45/sync-operations",
     "/api/projects/45/sync-size",
     "/api/songs/song-1/playlists", "/api/songs/song-1/projects",
-    "/api/account/profile", "/api/account/billing-profile",
+    "/api/account/auth-session", "/api/account/profile", "/api/account/billing-profile",
     "/api/account/membership",
     "/api/account/notifications", "/api/account/usage",
     "/api/account/security-events",
