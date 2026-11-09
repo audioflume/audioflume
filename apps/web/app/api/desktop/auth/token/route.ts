@@ -1,6 +1,8 @@
 import { auth, currentUser } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import { createDesktopToken } from "@/lib/desktopAuth";
+import { selectDesktopAuthProvider } from "@/lib/auth/selectDesktopAuthProvider";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 
 const DESKTOP_CALLBACK_URL = "audioflume://auth/callback";
 
@@ -86,6 +88,15 @@ function renderPage({
 }
 
 async function getSignedInUserId() {
+  if (selectDesktopAuthProvider(
+    process.env.AUDIOFLUME_DESKTOP_AUTH_PROVIDER,
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+  ) === "supabase") {
+    // Issue a desktop token only for a verified, linked Supabase account.
+    const owner = await resolveAccountOwner();
+    return owner.userId;
+  }
+
   const { userId } = await auth();
 
   if (userId) return userId;
