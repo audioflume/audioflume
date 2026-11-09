@@ -19,6 +19,9 @@ test("privileged actor uses Clerk admin evaluation unchanged by default", async 
 test("Supabase artist identity is owner-linked and never elevates admin from client-controlled fields", async () => {
   const source = await read("lib/auth/resolvePrivilegedActor.ts");
   assert.match(source, /await resolveAccountOwner\(\)/);
+  assert.match(source, /AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED/);
+  assert.match(source, /supabaseServer\.auth\.admin\.getUserById\(owner\.supabaseUserId\)/);
+  assert.match(source, /isTrustedSupabaseAdmin\(/);
   assert.match(source, /userId: owner\.userId, isAdmin: false, status: 200/);
   assert.match(source, /userId: null, isAdmin: false, status: owner\.status/);
   assert.doesNotMatch(source, /owner\.profileIdentity|owner\.email|process\.env\.ADMIN_EMAILS/);
@@ -71,4 +74,19 @@ test("only exact artist-team API route refreshes Supabase cookies, never nearby 
   assert.equal(shouldRefreshAccountSession("/api/artists/example-id/songs"), false);
   assert.equal(shouldRefreshAccountSession("/api/artists/claim"), false);
   assert.equal(shouldRefreshAccountSession("/api/admin/system-health"), false);
+});
+
+test("Supabase admin elevation is gated and checked against server-controlled app metadata", async () => {
+  const source = await read("lib/auth/resolvePrivilegedActor.ts");
+  assert.match(source, /data\.user\?\.id === owner\.supabaseUserId/);
+  assert.match(source, /data\.user\.app_metadata/);
+  assert.match(source, /catch \(error\)/);
+  assert.doesNotMatch(source, /owner\.profileIdentity|owner\.email|process\.env\.ADMIN_EMAILS/);
+
+  const admin = await read("lib/admin.ts");
+  assert.match(admin, /await resolveAccountOwner\(\)/);
+  assert.match(admin, /supabaseServer\.auth\.admin\.getUserById\(owner\.supabaseUserId\)/);
+  assert.match(admin, /isTrustedSupabaseAdmin\(/);
+  assert.match(admin, /AUDIOFLUME_SUPABASE_ADMIN_AUTH_ENABLED/);
+  assert.match(admin, /await currentUser\(\)/);
 });
