@@ -33,6 +33,7 @@ const paths = [
   "apps/web/tests/supabase-preflight-runner.test.mjs",
   "apps/web/tests/supabase-unified-security-gate.test.mjs",
   "apps/web/tests/supabase-middleware-provider-isolation.test.mjs",
+  "apps/web/tests/supabase-song-revision-rpc-security.test.mjs",
 ];
 
 export function parseOptions(args) {
