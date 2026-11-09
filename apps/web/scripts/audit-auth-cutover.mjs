@@ -21,7 +21,7 @@ const ignoredDirectories = new Set(["node_modules", ".next", ".git", "dist", "bu
 const clientSupabaseImport =
   /(?:from\s*|import\s*)["'](?:@\/lib\/supabase|\.\.?\/[^"']*supabase)["']/i;
 const clerkImport = /from\s*["']@clerk\//;
-const directFromQuery = /\.from\(\s*["'`]([^"'`]+)["'`]\s*\)/g;
+const directFromQuery = /\b(?:supabase|supabaseServer|client|db)\s*\.from\(\s*["'`]([^"'`]+)["'`]\s*\)/g;
 const clientDirective = /^\s*["']use client["'];?/;
 const directSdk = /(?:createClient|createBrowserClient)\s*\(/;
 const dynamicFrom = /\b(?:supabase|supabaseServer|client|db)\s*\.from\(\s*([^)]*)\)/g;
