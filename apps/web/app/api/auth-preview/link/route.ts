@@ -65,12 +65,9 @@ export async function POST(request: Request) {
     return noStore({ error: "Your existing account needs a verified primary email before linking." }, 403);
   }
 
-  const authorization = request.headers.get("authorization");
-  if (!authorization?.startsWith("Bearer ")) {
-    return noStore({ error: "Supabase sign-in is required." }, 401);
-  }
-
-  const accessToken = authorization.slice("Bearer ".length).trim();
+  // A separate header prevents Clerk middleware from interpreting a Supabase JWT
+  // as the request's Clerk Authorization bearer token.
+  const accessToken = request.headers.get("x-audioflume-supabase-token")?.trim();
   if (!accessToken) {
     return noStore({ error: "Supabase sign-in is required." }, 401);
   }
