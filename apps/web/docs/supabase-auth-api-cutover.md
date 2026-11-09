@@ -33,7 +33,7 @@ Then start the website and visit `http://localhost:3000/auth-preview/cutover` to
 
 ## Core account API conversion staged (Clerk remains default)
 
-- **27 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
+- **30 existing route files** covering Favorites (read/add/remove), Playlists (read/create/update/delete, songs, ordering and stats), Projects (read/create/update/delete, assets, folders, synchronization/SSE), song-to-playlist/project membership and user preferences now call `lib/auth/resolveAccountOwner.ts`.
 - The resolver returns the exact existing Clerk owner ID by default, from `auth()`. Only `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER=supabase` (server-side environment) selects a Supabase verified-cookie session, which is mapped to the legacy owner using `auth_identity_links`. The production-cookie client and allowlisted middleware refresh are now staged, **but do not set this environment variable on live deployments** until full role, RLS, desktop and end-to-end regression gates pass.
 - Supabase authorization failures never fall back to Clerk. Missing/invalid session -> `401`, verified unlinked identity -> `403`, auth mapping failure -> `500`. Guest Favorites GET and playlist stats GET preserve the existing empty-response contract for a true 401; a 403/500 is not silently treated as empty.
 - The owner predicates, API payloads, ordering and write validations were not rewritten. All changes are isolated to the authorization lookup and denied-response status, except the separate shared playlist-filter read discussed below.
@@ -53,12 +53,24 @@ The tests check provider selection and source-level route coverage; they are not
 
 ## Next account-data route batch
 
-- **27 account-data route files** now use the Clerk-default, Supabase-ready owner resolver, adding `/api/account/notifications` (GET/PATCH/DELETE), `/api/account/usage` (GET), `/api/account/security-events` (GET), `/api/community-playlist-favorites` (GET/POST/DELETE), and `/api/curated-playlists/[playlistId]/save` (POST).
+- **30 account-data route files** now use the Clerk-default, Supabase-ready owner resolver, adding `/api/account/notifications` (GET/PATCH/DELETE), `/api/account/usage` (GET), `/api/account/security-events` (GET), `/api/community-playlist-favorites` (GET/POST/DELETE), and `/api/curated-playlists/[playlistId]/save` (POST).
 - Playlist recommendations now also resolve the account through the verified owner resolver while preserving public guest recommendations (401 behaves as guest). Verified unlinked accounts (403) and server authorization failures (500) are denied, rather than treated as guests.
 - Their existing owner constraints remain unchanged, including `account_notifications.recipient_clerk_user_id`, `community_playlist_favorites.clerk_user_id`, and the public-playlist check before saving. No content or membership write semantics were changed.
 - These five exact route patterns were added to `shouldRefreshAccountSession` and its positive/negative tests. Clerk remains the server default.
-- **Identity-dependent routes not converted:** `/api/account/profile`, `/api/account/billing-profile`, and `/api/account/membership` call `currentUser()` and `ensureUserProfile`/`ensureBillingProfile`/`ensureMembership` with a Clerk-shaped verified user object. Supabase migration must preserve existing persisted account records, use verified `getUser()` email (not user-editable metadata for authorization), and retain identity/image fallback behavior. This requires separate tested identity mapping rather than substituting a Supabase UUID for a Clerk ID.
+- **Identity-dependent routes now staged:** `/api/account/profile`, `/api/account/billing-profile`, and `/api/account/membership` use server-only `resolveAccountIdentity`. With Clerk enabled, it obtains `currentUser()` and preserves the same profile field values. With Supabase enabled, it uses the verified `getUser()` email/display fields plus the one-to-one mapped legacy owner. `verifiedSupabaseProfile.ts` exposes display-only metadata conversion and ensures `user_metadata` cannot set owner IDs, roles or verified email. All profile, billing and membership records remain keyed by the trusted **legacy Clerk owner ID**, not the Supabase UUID. Existing account record and membership write logic remains unchanged. Source tests and pure profile tests are added, but runtime/browser parity and security reviews remain required.
 - This is **not** a completed production cutover. All converted routes require runtime verification under the explicit Supabase provider after surrounding website Clerk hooks and security controls are ready. Do not activate the provider globally.
+
+## Verified identity adapter validation
+
+From the repository root:
+
+```bash
+node --experimental-strip-types --test apps/web/tests/verified-supabase-profile.test.mjs
+node --test apps/web/tests/account-route-migration.test.mjs
+node --experimental-strip-types --test apps/web/tests/supabase-account-session-routing.test.mjs
+```
+
+The adapter changes **no stored schema or membership entitlement logic**; nevertheless, before a cutover, verify that profile GET/PATCH, billing GET/PATCH, and membership GET preserve data for the same legacy account in both authenticated modes. Use separate test identities, check denied unlinked sessions, and confirm values are unchanged after switching providers. Never rely on client-supplied legacy IDs, editable metadata claims, or email matching to authorize account access.
 
 ## Explicit production API dependencies (inspected)
 
