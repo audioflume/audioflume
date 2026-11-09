@@ -44,7 +44,7 @@ export default function SidebarCuratedLinkMount() {
     updateCollapsed();
 
     const observer = shell ? new MutationObserver(updateCollapsed) : null;
-    observer?.observe(shell, { attributes: true, attributeFilter: ["class"] });
+    if (observer && shell) observer.observe(shell, { attributes: true, attributeFilter: ["class"] });
 
     return () => {
       observer?.disconnect();
