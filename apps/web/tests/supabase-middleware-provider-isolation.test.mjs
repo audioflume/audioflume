@@ -53,9 +53,9 @@ test("desktop keeps Clerk middleware until BOTH provider switches select Supabas
   assert.match(router, /process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER/);
   assert.match(router, /applyDesktopCorsHeaders\(NextResponse\.next\(\), request\)/);
   const fallback = router.indexOf("When desktop stays Clerk");
-  const otherApi = router.indexOf('if (pathname.startsWith("/api/"))');
-  assert.ok(fallback >= 0 && otherApi > fallback);
-  assert.match(router.slice(fallback, otherApi), /return clerkRequestMiddleware\(request, event\);/);
+  const auditedApi = router.indexOf("Only audited standalone Supabase handlers", fallback);
+  assert.ok(fallback >= 0 && auditedApi > fallback);
+  assert.match(router.slice(fallback, auditedApi), /if \(pathname\.startsWith\("\/api\/desktop"\)\)\s*\{\s*return clerkRequestMiddleware\(request, event\);/);
 });
 
 test("public website content bypasses Clerk only when Supabase is explicitly selected", async () => {
