@@ -8,7 +8,7 @@ import { resolveVerifiedLegacyOwner } from "@/lib/auth-preview/resolveVerifiedLe
 import { selectAccountAuthProvider } from "./selectAccountAuthProvider";
 
 type AccountOwner =
-  | { userId: string; status: 200 }
+  | { userId: string; status: 200; error?: never }
   | { userId: null; status: 401 | 403 | 500; error: string };
 
 /**
