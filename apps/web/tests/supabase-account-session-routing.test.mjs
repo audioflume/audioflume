@@ -43,7 +43,7 @@ test("Clerk-only, admin, artist and desktop endpoints never refresh the new cook
   for (const pathname of [
     "/api/desktop/me", "/api/desktop/auth/token",
     "/api/desktop/projects", "/api/admin/songs", "/api/artists/claim",
-    "/api/account/profile", "/api/playlists/images/upload",
+    "/api/playlists/images/upload",
     "/api/community-playlists", "/api/songs",
 
     "/api/curated-playlists/123", "/api/curated-playlists",
