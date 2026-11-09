@@ -193,3 +193,9 @@ Do not merge PR #158 or cut over web or desktop auth while any release gate rema
 - The staged Supabase child displays the existing account audit events using `/api/account/security-events`, which resolves the verified linked owner on the server. Client event state is keyed to the current session user ID so an identity switch does not display the prior account's events.
 - MFA, backup-email controls, password-reset callback verification, browser integration, and build gates remain outstanding. The `/account/security` path still requires Clerk and `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER` must remain unset.
 - Regression coverage: `node --experimental-strip-types --test apps/web/tests/supabase-account-security.test.mjs`. Source-only assertions were added; runtime/browser validation has not been performed here.
+
+### Password update verification gate (staged)
+
+- The Supabase sign-in/reset form now checks the existing `GET /api/account/auth-session` before calling `auth.updateUser({ password })`. This endpoint independently verifies the SSR cookie session and its one-to-one legacy owner link, denying missing or unlinked identities. It is not called for Clerk sign-in or sign-up.
+- This check **does not prove that a recovery email was clicked**; the existing OAuth/PKCE callback and recovery-session behavior must still be validated in a browser. It avoids changing account credentials from a form state without a linked verified session, but is not a substitute for a recovery-token challenge or reauthentication policy.
+- The global provider switch remains unset. Source regression: `node --experimental-strip-types --test apps/web/tests/supabase-live-auth-routing.test.mjs`. The runtime test and full build remain unverified here.
