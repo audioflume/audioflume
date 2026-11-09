@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { getLinkedLegacyUserId } from "@/lib/supabaseIdentity";
+import { resolvePreviewOwner } from "@/lib/supabasePreviewAuthorization";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -16,20 +16,13 @@ function respond(body: Record<string, unknown>, status = 200) {
 // Read-only migration verification. A Supabase account can only see aggregate
 // counts for its own VERIFIED legacy owner link; never returns the owner ID.
 export async function GET(request: Request) {
-  const authorization = request.headers.get("authorization");
-  const accessToken = authorization?.startsWith("Bearer ")
-    ? authorization.slice("Bearer ".length).trim()
-    : "";
-
-  if (!accessToken) {
-    return respond({ error: "Supabase sign-in is required." }, 401);
-  }
-
   try {
-    const legacyUserId = await getLinkedLegacyUserId(accessToken);
-    if (!legacyUserId) {
-      return respond({ error: "This Supabase account is not linked to an existing Audioflume account." }, 403);
+    const ownership = await resolvePreviewOwner(request);
+    if (ownership.status !== 200) {
+      return respond({ error: ownership.error }, ownership.status);
     }
+
+    const legacyUserId = ownership.legacyUserId;
 
     const [playlists, favorites, projects, artistMemberships] = await Promise.all([
       supabaseServer.from("playlists").select("id", { count: "exact", head: true })
