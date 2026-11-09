@@ -8,6 +8,13 @@ import styles from "./page.module.css";
 
 type Mode = "sign-in" | "sign-up" | "forgot" | "reset";
 
+type LegacyDataCounts = {
+  playlists: number;
+  favorites: number;
+  projects: number;
+  artistMemberships: number;
+};
+
 const titleByMode: Record<Mode, string> = {
   "sign-in": "Welcome back.",
   "sign-up": "Create your account.",
@@ -19,6 +26,8 @@ export default function SupabaseAuthPreviewPage() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const [linked, setLinked] = useState(false);
   const [linkBusy, setLinkBusy] = useState(false);
+  const [verificationBusy, setVerificationBusy] = useState(false);
+  const [legacyCounts, setLegacyCounts] = useState<LegacyDataCounts | null>(null);
   const [mode, setMode] = useState<Mode>("sign-in");
   const [user, setUser] = useState<User | null>(null);
   const [email, setEmail] = useState("");
@@ -44,6 +53,7 @@ export default function SupabaseAuthPreviewPage() {
   useEffect(() => {
     let active = true;
     setLinked(false);
+    setLegacyCounts(null);
     if (!user?.id) return;
 
     async function loadLinkStatus() {
@@ -173,6 +183,37 @@ export default function SupabaseAuthPreviewPage() {
     }
   }
 
+  async function verifyLinkedData() {
+    setVerificationBusy(true);
+    setError("");
+    setLegacyCounts(null);
+    try {
+      const { data: { session }, error: sessionError } = await supabase.auth.getSession();
+      if (sessionError || !session || session.user.id !== user?.id) {
+        throw new Error("Your Supabase session has expired. Sign in again.");
+      }
+
+      const response = await fetch("/api/auth-preview/account-data", {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+        cache: "no-store",
+      });
+      const result = (await response.json()) as {
+        counts?: LegacyDataCounts;
+        error?: string;
+      };
+      if (!response.ok || !result.counts) {
+        throw new Error(result.error ?? "Could not verify existing account data.");
+      }
+      setLegacyCounts(result.counts);
+    } catch (verificationError) {
+      setError(verificationError instanceof Error
+        ? verificationError.message
+        : "Could not verify existing account data.");
+    } finally {
+      setVerificationBusy(false);
+    }
+  }
+
   async function signOut() {
     setBusy(true);
     const { error: signOutError } = await supabase.auth.signOut();
@@ -218,7 +259,20 @@ export default function SupabaseAuthPreviewPage() {
               )
             ) : null}
             {linked ? (
-              <p className={styles.success} role="status">Your Clerk and Supabase identities are linked.</p>
+              <>
+                <p className={styles.success} role="status">Your Clerk and Supabase identities are linked.</p>
+                <button className={styles.secondaryButton} type="button"
+                  onClick={() => void verifyLinkedData()} disabled={busy || verificationBusy}>
+                  {verificationBusy ? "Checking existing data…" : "Verify my existing account data"}
+                </button>
+                {legacyCounts ? (
+                  <p className={styles.success} role="status">
+                    Existing account: {legacyCounts.playlists} playlists, {legacyCounts.favorites} favorites,{" "}
+                    {legacyCounts.projects} projects, {legacyCounts.artistMemberships} artist memberships.
+                    No records were changed.
+                  </p>
+                ) : null}
+              </>
             ) : null}
             <button className={styles.secondaryButton} type="button" onClick={signOut} disabled={busy}>
               Sign out of preview
