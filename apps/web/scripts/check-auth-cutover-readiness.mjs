@@ -34,6 +34,9 @@ const paths = [
   "apps/web/tests/supabase-unified-security-gate.test.mjs",
   "apps/web/tests/supabase-middleware-provider-isolation.test.mjs",
   "apps/web/tests/supabase-song-revision-rpc-security.test.mjs",
+  "apps/web/tests/supabase-auth-release-gate.test.mjs",
+  "apps/web/tests/supabase-auth-identity-coverage.test.mjs",
+  "apps/web/tests/supabase-legacy-relations.test.mjs",
 ];
 
 export function parseOptions(args) {
