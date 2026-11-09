@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 
@@ -29,10 +29,11 @@ function safeFileName(name: string) {
 }
 
 export async function POST(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  if (!account.userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: account.status });
   }
+  const userId = account.userId;
 
   try {
     const formData = await request.formData();
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
       );
     }
 
-    const prefix = `artist-applications/${getUserKey(user.id)}/samples`;
+    const prefix = `artist-applications/${getUserKey(userId)}/samples`;
     const key = `${prefix}/${Date.now()}-${randomUUID()}-${safeFileName(file.name)}`;
     const url = await uploadFileToR2({ file, key });
 
@@ -83,16 +84,17 @@ export async function POST(request: Request) {
 }
 
 export async function DELETE(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const account = await resolveAccountOwner();
+  if (!account.userId) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: account.status });
   }
+  const userId = account.userId;
 
   try {
     const body = (await request.json().catch(() => null)) as
       | { keys?: unknown }
       | null;
-    const prefix = `artist-applications/${getUserKey(user.id)}/samples/`;
+    const prefix = `artist-applications/${getUserKey(userId)}/samples/`;
     const keys = Array.isArray(body?.keys)
       ? body.keys.filter(
           (key): key is string =>
