@@ -186,3 +186,10 @@ Do not merge PR #158 or cut over web or desktop auth while any release gate rema
 - The isolated view supports requesting a password recovery email using the existing production-cookie browser client and existing auth callback path. It does not attempt to replace Clerk MFA, backup email management or authoritative Supabase security history. Those controls are explicitly unavailable rather than simulated.
 - **`/account/security` remains excluded from `isMigratedAccountPage` and protected by Clerk.** This is a staged UI implementation, not a functional Supabase-only security page. Do not add the path to Supabase page guards until browser recovery flow, authorization, MFA/recovery policy and cross-account isolation have been reviewed.
 - Source-level regression checks: `node --experimental-strip-types --test apps/web/tests/supabase-account-security.test.mjs`. Local test suite, browser recovery flow and production build are still unverified.
+
+### Security-view follow-up (still not route-enabled)
+
+- The account security wrapper now mounts either the original Clerk-only child or the staged Supabase child. Clerk's `useUser()`, `useClerk()` and security event fetch run only when the Clerk child is mounted, avoiding mixed-provider account reads.
+- The staged Supabase child displays the existing account audit events using `/api/account/security-events`, which resolves the verified linked owner on the server. Client event state is keyed to the current session user ID so an identity switch does not display the prior account's events.
+- MFA, backup-email controls, password-reset callback verification, browser integration, and build gates remain outstanding. The `/account/security` path still requires Clerk and `AUDIOFLUME_ACCOUNT_AUTH_PROVIDER` must remain unset.
+- Regression coverage: `node --experimental-strip-types --test apps/web/tests/supabase-account-security.test.mjs`. Source-only assertions were added; runtime/browser validation has not been performed here.
