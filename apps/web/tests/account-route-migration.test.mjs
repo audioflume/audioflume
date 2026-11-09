@@ -77,6 +77,15 @@ test("profile, billing and membership routes use verified identity and legacy re
     assert.match(source, /if \(!userId\)/, route);
   }
 
+  const profile = await readFile(resolve(root, "app/api/account/profile/route.ts"), "utf8");
+  const billing = await readFile(resolve(root, "app/api/account/billing-profile/route.ts"), "utf8");
+  const membership = await readFile(resolve(root, "app/api/account/membership/route.ts"), "utf8");
+  assert.match(profile, /ensureUserProfile\(userId, user\)/);
+  assert.match(profile, /clerk_user_id: userId/);
+  assert.match(billing, /ensureBillingProfile\(userId, user\)/);
+  assert.match(billing, /clerk_user_id: userId/);
+  assert.match(membership, /ensureMembership\(userId, user\)/);
+
   const identity = await readFile(resolve(root, "lib/auth/resolveAccountIdentity.ts"), "utf8");
   assert.match(identity, /await currentUser\(\)/);
   assert.match(identity, /await resolveAccountOwner\(\)/);
