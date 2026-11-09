@@ -43,6 +43,7 @@ const checks = [
   { path: "/api/artists/claim", expected: 401 },
   { path: "/api/admin/system-health", expected: 401 },
   { path: "/api/admin/audio-proxy", expected: 401 },
+  { path: "/api/admin/access", expected: 403 },
 ];
 
 let failures = 0;
