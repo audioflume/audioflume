@@ -1,4 +1,4 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountIdentity } from "@/lib/auth/resolveAccountIdentity";
 import { NextResponse } from "next/server";
 
 import { cleanOptionalString, ensureUserProfile } from "@/lib/account";
@@ -254,13 +254,14 @@ async function createUniqueArtistSlug(name: string) {
 }
 
 export async function GET() {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const identity = await resolveAccountIdentity();
+  if (identity.status !== 200) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: identity.status });
   }
+  const { userId, user } = identity;
 
   try {
-    const applications = await getOwnedArtistApplications(user.id);
+    const applications = await getOwnedArtistApplications(userId);
     return NextResponse.json({ applications });
   } catch (error) {
     console.error("Failed to load artist applications:", error);
@@ -272,10 +273,11 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const identity = await resolveAccountIdentity();
+  if (identity.status !== 200) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: identity.status });
   }
+  const { userId, user } = identity;
 
   const body = await request.json().catch(() => null);
   if (!body || typeof body !== "object") {
@@ -302,15 +304,15 @@ export async function POST(request: Request) {
   const spotify = cleanOptionalHttpUrl(payload.spotify_url);
   const profileImage = cleanApplicationImageUrl(
     payload.profile_image_url,
-    user.id,
+    userId,
     "Profile image",
   );
   const heroImage = cleanApplicationImageUrl(
     payload.hero_image_url,
-    user.id,
+    userId,
     "Feature image",
   );
-  const samples = cleanApplicationSamples(payload.samples, user.id);
+  const samples = cleanApplicationSamples(payload.samples, userId);
 
   if (!name) {
     return NextResponse.json({ error: "Artist name is required" }, { status: 400 });
@@ -361,9 +363,9 @@ export async function POST(request: Request) {
   }
 
   try {
-    await ensureUserProfile(user.id, user);
+    await ensureUserProfile(userId, user);
 
-    const existingApplications = await getOwnedArtistApplications(user.id);
+    const existingApplications = await getOwnedArtistApplications(userId);
     const pendingApplication = existingApplications.find(
       (application) => application.status === "pending",
     );
@@ -393,7 +395,7 @@ export async function POST(request: Request) {
         profile_image_url: profileImage.value,
         hero_image_url: heroImage.value,
         status: "pending",
-        created_by_clerk_user_id: user.id,
+        created_by_clerk_user_id: userId,
       })
       .select(
         "id, name, slug, status, location, website_url, instagram_url, spotify_url, designation, intro_text, bio, profile_image_url, hero_image_url, created_at",
@@ -406,7 +408,7 @@ export async function POST(request: Request) {
       .from("artist_memberships")
       .insert({
         artist_id: artist.id,
-        clerk_user_id: user.id,
+        clerk_user_id: userId,
         role: "owner",
       });
 
