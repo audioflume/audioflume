@@ -8,7 +8,7 @@ import {
 } from "@filmwave/shared";
 import type { PlaylistRef } from "@/lib/types";
 import { useCallback, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 
 type PlaylistFilterProps = {
   selected: PlaylistRef | null;
@@ -25,7 +25,7 @@ export default function PlaylistFilter({
   const [loading, setLoading] = useState(true);
   const [playlistsLoaded, setPlaylistsLoaded] = useState(false);
   const [loadError, setLoadError] = useState("");
-  const { userId } = useAuth();
+  const { userId } = useAccountSession();
 
   const loadPlaylists = useCallback(() => {
     if (playlistsLoaded) return;
