@@ -59,3 +59,15 @@ test("artist claim page uses linked owner in Supabase mode and keeps Clerk branc
   assert.match(middleware, /request\.nextUrl\.pathname === "\/artists\/claim"/);
   assert.match(middleware, /refreshSupabaseAccountSession\(request\)/);
 });
+
+test("artist application page uses verified Supabase page refresh, with Clerk untouched", async () => {
+  const middleware = await read("middleware.ts");
+  const guard = middleware.slice(middleware.indexOf("// Artist pages whose APIs"), middleware.indexOf("// Only account-data-backed"));
+  assert.match(guard, /selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\) === "supabase"/);
+  assert.match(guard, /request\.nextUrl\.pathname === "\/artists\/dashboard"/);
+  assert.match(guard, /request\.nextUrl\.pathname === "\/artists\/apply"/);
+  assert.match(guard, /refreshSupabaseAccountSession\(request, \{ requireVerifiedUser: true \}\)/);
+  assert.doesNotMatch(guard, /pathname\.startsWith\("\/artists"/);
+  const apply = await read("app/api/artists/apply/route.ts");
+  assert.match(apply, /resolveAccountIdentity\(\)/);
+});
