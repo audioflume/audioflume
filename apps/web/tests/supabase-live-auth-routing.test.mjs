@@ -69,3 +69,15 @@ test("middleware exposes only exact Supabase callback while Clerk guards remain"
   assert.match(source, /await auth\.protect\(\)/);
   assert.match(source, /request\.nextUrl\.pathname\.startsWith\("\/api\/desktop"\)/);
 });
+
+test("production account session endpoint is gated and reveals no legacy owner ID", async () => {
+  const route = await read("app/api/account/auth-session/route.ts");
+  assert.match(route, /selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\)/);
+  assert.match(route, /createSupabaseAccountRequest\(request\)/);
+  assert.match(route, /await resolveOwner\(\)/);
+  assert.match(route, /respond\(\{ authorized: true \}\)/);
+  assert.doesNotMatch(route, /clerk_user_id|legacyUserId/);
+  const form = await read("components/auth/SupabaseAccountAuthForm.tsx");
+  assert.match(form, /fetch\("\/api\/account\/auth-session"/);
+  assert.doesNotMatch(form, /auth-preview\/cutover-session/);
+});
