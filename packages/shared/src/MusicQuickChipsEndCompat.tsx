@@ -15,7 +15,7 @@ import {
 } from "react";
 
 type LegacyButtonElement = ReactElement<
-  ButtonHTMLAttributes<HTMLButtonElement>
+  ButtonHTMLAttributes<HTMLButtonElement> & { "data-filmwave-quick-role"?: string }
 >;
 
 function getTextContent(children: ReactNode): string {
