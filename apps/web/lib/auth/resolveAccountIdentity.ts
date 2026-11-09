@@ -42,7 +42,7 @@ export async function resolveAccountIdentity(): Promise<AccountIdentityResolutio
   }
 
   const account = await resolveAccountOwner();
-  if (!account.userId) {
+  if (account.status !== 200) {
     return { status: account.status, userId: null, user: null, error: account.error };
   }
 
