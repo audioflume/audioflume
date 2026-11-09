@@ -9,7 +9,9 @@ const read = (path) => readFile(resolve(root, path), "utf8");
 
 test("root layout provides server-selected account sessions to the existing shared context tree", async () => {
   const source = await read("app/layout.tsx");
-  assert.match(source, /<AccountSessionProvider provider=\{selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\)\}>/);
+  assert.match(source, /const accountProvider = selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\)/);
+  assert.match(source, /<AccountSessionProvider provider=\{accountProvider\}>/);
+  assert.match(source, /if \(accountProvider === "clerk"\)/);
   assert.match(source, /<ClerkProvider>/);
   assert.ok(source.indexOf("<AccountSessionProvider") < source.indexOf("<FavoritesProvider>"));
   assert.ok(source.indexOf("<AccountSessionProvider") < source.indexOf("<PlaylistsProvider>"));
