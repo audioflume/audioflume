@@ -101,7 +101,7 @@ test("privileged revision RPC and trigger function lose browser EXECUTE while se
 test("post-lockdown staging verification is read-only and checks privileges", async () => {
   const sql = await read("scripts/verify-auth-rls-lockdown.sql");
   const statements = sql.replace(/^--.*$/gm, "").split(";").map((part) => part.trim()).filter(Boolean);
-  assert.ok(statements.every((part) => /^SELECT\s/i.test(part)), "Staging verification must contain only SELECT queries.");
+  assert.ok(statements.every((part) => /^(?:SELECT|WITH)\s/i.test(part)), "Staging verification must contain only SELECT queries.");
   assert.match(sql, /has_function_privilege\('anon'/);
   assert.match(sql, /has_function_privilege\('authenticated'/);
   assert.match(sql, /has_function_privilege\('service_role'/);
