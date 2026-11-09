@@ -1,4 +1,5 @@
 import { currentUser } from "@clerk/nextjs/server";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import { ListObjectsV2Command, S3Client } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { ADMIN_EMAILS } from "@/lib/adminEmails";
@@ -97,6 +98,10 @@ async function checkAnalyzer(): Promise<HealthItem> {
 }
 
 export async function GET() {
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "clerk") {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   const user = await currentUser();
   const email = user?.primaryEmailAddress?.emailAddress;
 
