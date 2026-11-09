@@ -9,7 +9,7 @@ import { selectAccountAuthProvider } from "./selectAccountAuthProvider";
 import { profileFromVerifiedSupabaseUser, type VerifiedAccountProfileIdentity } from "./verifiedSupabaseProfile";
 
 type AccountOwner =
-  | { userId: string; status: 200; error?: never; profileIdentity?: VerifiedAccountProfileIdentity }
+  | { userId: string; status: 200; error?: never; profileIdentity?: VerifiedAccountProfileIdentity; supabaseUserId?: string }
   | { userId: null; status: 401 | 403 | 500; error: string };
 
 /**
@@ -46,12 +46,14 @@ export async function resolveAccountOwner(): Promise<AccountOwner> {
     );
 
     let verifiedProfile: VerifiedAccountProfileIdentity | null = null;
+    let verifiedSupabaseUserId: string | null = null;
     const ownership = await resolveVerifiedLegacyOwner(
       async () => {
         const { data: { user }, error } = await supabase.auth.getUser();
         if (error || !user) return null;
 
         verifiedProfile = profileFromVerifiedSupabaseUser(user);
+        verifiedSupabaseUserId = user.id;
         return user.id;
       },
       async (supabaseUserId) => {
@@ -70,11 +72,11 @@ export async function resolveAccountOwner(): Promise<AccountOwner> {
       return { userId: null, status: ownership.status, error: ownership.error };
     }
 
-    if (!verifiedProfile) {
+    if (!verifiedProfile || !verifiedSupabaseUserId) {
       return { userId: null, status: 500, error: "Verified profile unavailable." };
     }
 
-    return { userId: ownership.legacyUserId, status: 200, profileIdentity: verifiedProfile };
+    return { userId: ownership.legacyUserId, status: 200, profileIdentity: verifiedProfile, supabaseUserId: verifiedSupabaseUserId };
   } catch (error) {
     console.error("Supabase account authorization failed:", error);
     return { userId: null, status: 500, error: "Account authorization is temporarily unavailable." };
