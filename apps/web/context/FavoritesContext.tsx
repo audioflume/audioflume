@@ -3,7 +3,7 @@
 import Toast from "@/components/Toast";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
-import { useAuth } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import {
   createContext,
   useCallback,
@@ -28,7 +28,7 @@ const FavoritesContext = createContext<FavoritesContextValue | null>(null);
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const { currentSong } = usePlayer();
-  const { isLoaded, userId } = useAuth();
+  const { isLoaded, userId } = useAccountSession();
 
   const [favoriteIds, setFavoriteIds] = useState<string[]>([]);
   const [favoritesLoaded, setFavoritesLoaded] = useState(false);
