@@ -165,9 +165,9 @@ export async function GET(req: Request) {
 }
 
 export async function POST() {
-  const userId = await getSignedInUserId();
+  const desktopIdentity = await getSignedInUserId();
 
-  if (!userId) {
+  if (!desktopIdentity) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
