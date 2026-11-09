@@ -21,7 +21,7 @@ type BeatAnalyzerResponse = {
 
 type BeatForcedAudioBuffer = AudioBuffer & {
   __filmwaveOriginalGetChannelData__?: AudioBuffer["getChannelData"];
-  __filmwaveBeatSyntheticCache__?: Map<number, Float32Array>;
+  __filmwaveBeatSyntheticCache__?: Map<number, Float32Array<ArrayBuffer>>;
   __filmwaveForcedBpm__?: number;
 };
 
@@ -106,7 +106,7 @@ function forceLegacyBpmVotingToBeatThis(audioBuffer: AudioBuffer, bpm: number) {
       targetBuffer.getChannelData.bind(targetBuffer);
 
     targetBuffer.__filmwaveOriginalGetChannelData__ = originalGetChannelData;
-    targetBuffer.__filmwaveBeatSyntheticCache__ = new Map<number, Float32Array>();
+    targetBuffer.__filmwaveBeatSyntheticCache__ = new Map<number, Float32Array<ArrayBuffer>>();
     targetBuffer.__filmwaveForcedBpm__ = bpm;
 
     targetBuffer.getChannelData = (channel: number) => {
