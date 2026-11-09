@@ -1,15 +1,19 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useUser } from "@clerk/nextjs";
 import { supabaseSsrPreview } from "@/lib/supabaseSsrPreview";
 import styles from "../page.module.css";
 
 export default function SsrSessionPreviewPage() {
+  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const [email, setEmail] = useState<string | null>(null);
   const [checking, setChecking] = useState(false);
   const [serverStatus, setServerStatus] = useState<string | null>(null);
   const [ownershipBusy, setOwnershipBusy] = useState(false);
   const [ownershipStatus, setOwnershipStatus] = useState<string | null>(null);
+  const [favoritesBusy, setFavoritesBusy] = useState(false);
+  const [favoritesStatus, setFavoritesStatus] = useState<string | null>(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
@@ -21,6 +25,7 @@ export default function SsrSessionPreviewPage() {
         setEmail(session?.user.email ?? null);
         setServerStatus(null);
         setOwnershipStatus(null);
+        setFavoritesStatus(null);
       },
     );
     return () => subscription.subscription.unsubscribe();
@@ -87,6 +92,64 @@ export default function SsrSessionPreviewPage() {
     }
   }
 
+  async function compareFavorites() {
+    setFavoritesBusy(true);
+    setFavoritesStatus(null);
+    setError("");
+    try {
+      if (!clerkLoaded || !clerkUser) {
+        setFavoritesStatus("Sign in with Clerk before comparing the two Favorites APIs.");
+        return;
+      }
+
+      const [previewResponse, clerkResponse] = await Promise.all([
+        fetch("/api/auth-preview/ssr-favorites", {
+          credentials: "same-origin",
+          cache: "no-store",
+        }),
+        fetch("/api/favorites", {
+          credentials: "same-origin",
+          cache: "no-store",
+        }),
+      ]);
+
+      if (previewResponse.status === 401) {
+        setFavoritesStatus("DENIED (401): No verified Supabase cookie session.");
+        return;
+      }
+      if (previewResponse.status === 403) {
+        setFavoritesStatus("PASS (403): Unlinked Supabase account cannot read Favorites.");
+        return;
+      }
+      if (!previewResponse.ok || !clerkResponse.ok) {
+        throw new Error(`Favorites check failed (Supabase ${previewResponse.status}, Clerk ${clerkResponse.status}).`);
+      }
+
+      const preview = (await previewResponse.json()) as {
+        favorites?: { song_id: string }[];
+      };
+      const clerk = (await clerkResponse.json()) as {
+        favorites?: { song_id: string }[];
+      };
+      if (!Array.isArray(preview.favorites) || !Array.isArray(clerk.favorites)) {
+        throw new Error("Favorites responses did not contain the expected arrays.");
+      }
+
+      const fromSupabase = preview.favorites.map((favorite) => favorite.song_id).sort();
+      const fromClerk = clerk.favorites.map((favorite) => favorite.song_id).sort();
+      const matches = JSON.stringify(fromSupabase) === JSON.stringify(fromClerk);
+
+      setFavoritesStatus(matches
+        ? `PASS: Both verified sessions return the same ${fromSupabase.length} favorite song IDs.`
+        : `MISMATCH: Supabase returned ${fromSupabase.length} favorites and Clerk returned ${fromClerk.length}. Check for deleted or unpublished songs.`);
+    } catch (comparisonError) {
+      setError(comparisonError instanceof Error
+        ? comparisonError.message : "Favorites comparison failed.");
+    } finally {
+      setFavoritesBusy(false);
+    }
+  }
+
   async function signOut() {
     setError("");
     const { error: signOutError } = await supabaseSsrPreview.auth.signOut();
@@ -95,6 +158,7 @@ export default function SsrSessionPreviewPage() {
       setEmail(null);
       setServerStatus(null);
       setOwnershipStatus(null);
+      setFavoritesStatus(null);
     }
   }
 
@@ -129,6 +193,11 @@ export default function SsrSessionPreviewPage() {
           {ownershipBusy ? "Verifying linked account…" : "Test cookie-based account access"}
         </button>
         {ownershipStatus ? <p className={styles.success} role="status">{ownershipStatus}</p> : null}
+        <button type="button" className={styles.secondaryButton}
+          onClick={() => void compareFavorites()} disabled={favoritesBusy || !clerkLoaded}>
+          {favoritesBusy ? "Comparing Favorites…" : "Compare Clerk and Supabase Favorites"}
+        </button>
+        {favoritesStatus ? <p className={styles.success} role="status">{favoritesStatus}</p> : null}
         {error ? <p role="alert">{error}</p> : null}
         <a href="/auth-preview">Back to account-linking preview</a>
       </section>
