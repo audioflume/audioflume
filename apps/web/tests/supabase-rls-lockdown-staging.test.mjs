@@ -79,8 +79,8 @@ test("lockdown inventory has no direct browser Supabase query dependency in the 
 test("privileged revision RPC and trigger function lose browser EXECUTE while server role stays authorized", async () => {
   const sql = await read("scripts/staged-auth-rls-lockdown.sql");
   assert.doesNotMatch(sql, /^DO \$/m, "All procedural preflight blocks require valid dollar-quote delimiters.");
-  assert.match(sql, /DO \\$\\$\\s+BEGIN\\s+IF to_regprocedure/);
-  assert.match(sql, /END\\s+\\$\\$;/);
+  assert.match(sql, /DO \$\$\s+BEGIN\s+IF to_regprocedure/);
+  assert.match(sql, /END\s+\$\$;/);
   assert.match(sql, /to_regprocedure\('public\.apply_song_pending_revision\(uuid\)'\)/);
   assert.match(sql, /to_regprocedure\('public\.sync_song_pending_revision_submission_activity\(\)'\)/);
   assert.match(sql, /REVOKE ALL PRIVILEGES ON FUNCTION public\.apply_song_pending_revision\(uuid\)\s+FROM PUBLIC, anon, authenticated;/);
