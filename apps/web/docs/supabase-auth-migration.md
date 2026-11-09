@@ -19,7 +19,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 - `/auth-preview` provides a custom Google/email-password interface plus sign-up, recovery and sign-out.
 - Google OAuth explicitly requests `prompt=select_account`; **Google decides which account appears first**. The app cannot reliably reorder Google's native account list.
 - The prototype uses the existing browser Supabase client and **must not be used as production SSR authorization**.
-- Sign-in to the prototype does **not** establish access to any legacy Clerk-owned records.
+- Supabase sign-in alone does **not** establish access to any legacy Clerk-owned records. A separate opt-in linking action now requires verified, matching email addresses and valid sessions from both Clerk and Supabase.
 - Production `/sign-in`, `/sign-up`, middleware protection, web APIs and desktop sync remain on Clerk.
 
 ## Security prerequisite — do not skip
@@ -38,8 +38,8 @@ Reference: https://supabase.com/docs/guides/database/postgres/row-level-security
 
 The Clerk ID is currently the application-facing ownership key. Supabase Auth uses new UUID identities.
 
-1. Establish a **server-only** identity mapping table, keyed by Supabase `auth.users.id`, unique on `clerk_user_id`. Require RLS and revoke `anon` / `authenticated` access.
-2. Link users only after independently verifying both the existing Clerk session and the Supabase session, or through an equivalent authenticated administrative migration process. Do **not** link solely because email addresses match.
+1. **Implemented:** `public.auth_identity_links` stores a one-to-one link, keyed by Supabase `auth.users.id` and unique on `clerk_user_id`. RLS is enabled; `anon` and `authenticated` have no table privileges. The SQL applied to the connected Supabase project is preserved at `docs/sql/auth-identity-links.sql`. No existing ownership rows were changed.
+2. **Partially implemented:** `POST /api/auth-preview/link` independently validates the active Clerk session and a Supabase bearer token, requires two verified matching primary emails, rejects conflicting IDs, and never automatically changes owners. It is opt-in from `/auth-preview`. This requires end-to-end browser testing before production use. Do **not** link solely because email addresses match.
 3. Migrate administrative role claims to trusted server-managed authorization data, **not** Supabase `user_metadata`.
 4. Use a trusted resolver to map each verified Supabase UUID to the correct existing owner key in API routes before converting user-owned queries.
 5. Define first-time users who have no Clerk identity, including their ownership key strategy and onboarding.
@@ -62,15 +62,16 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 
 - [x] Audit Clerk usage and the ownership model.
 - [x] Create an isolated branch and custom sign-in preview.
-- [ ] Set up Google and SMTP for a test environment.
-- [ ] Implement and test trusted UUID-to-legacy-ID linking.
+- [ ] Verify Google OAuth works in the test environment and configure SMTP for email signup and recovery.
+- [x] Create the restricted UUID-to-legacy-ID table, dual-auth validation endpoint, and opt-in preview action.
+- [ ] End-to-end test linking the correct Clerk and Supabase accounts, conflicts, missing sessions, account switching and reloads before production use.
 - [ ] Establish SSR cookie-based Supabase sessions (`@supabase/ssr`), including refresh handling. Update package and lockfile together.
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
 - [ ] Migrate desktop sign-in and HMAC-token issuance/verification while preserving desktop project access.
 - [ ] Add data access policies; verify affected tables and views.
-- [ ] Test sign-in/out, Google multiple-account chooser, Apple, email/password, recovery, reload persistence, new/existing users, identity switching, every account area and desktop synchronization.
+- [ ] Test sign-in/out, Google multiple-account chooser, email/password, recovery, reload persistence, new/existing users, identity switching, every account area and desktop synchronization.
 - [ ] Compare ownership records before/after migration and verify rollback.
 - [ ] Cut over sign-in routes and middleware in a controlled release.
 - [ ] Remove Clerk only after successful validation and an agreed rollback window.
