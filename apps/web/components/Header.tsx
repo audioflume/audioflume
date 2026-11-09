@@ -1389,7 +1389,7 @@ export default function Header() {
                                         </div>
                                       </Link>
                                       <CuratedPlaylistBookmarkButton
-                                        playlist={{ ...playlist, kicker: "" }}
+                                        playlist={{ ...playlist, kicker: "", cover_image_url: playlist.cover_image_url ?? null, song_count: playlist.song_count ?? undefined }}
                                         className="filmwave-playlists-mega-feature-bookmark"
                                       />
                                       <CuratedPlaylistPlayButton
