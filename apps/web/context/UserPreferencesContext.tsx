@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import {
   createContext,
   useContext,
@@ -148,7 +148,7 @@ function suppressPlaylistViewTransition() {
 }
 
 export function UserPreferencesProvider({ children }: { children: ReactNode }) {
-  const { isLoaded: isAuthLoaded, isSignedIn } = useUser();
+  const { isLoaded: isAuthLoaded, isSignedIn } = useAccountSession();
   const [playlistViewMode, setPlaylistViewModeState] =
     useState<PlaylistViewMode>("grid");
   const [artistCollectionViewMode, setArtistCollectionViewModeState] =
