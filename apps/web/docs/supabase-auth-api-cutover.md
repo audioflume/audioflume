@@ -291,13 +291,13 @@ Targeted tests: `node --experimental-strip-types --test apps/web/tests/supabase-
 
 Clerk-mode claim behavior, existing invitation expiry/transfer rules, and the database claim RPC remain unchanged. The SSR Supabase cookie refresh allowlist includes only the exact `/api/artists/claim` path (not sibling artist routes). Functional confirmed-email/subject-mismatch tests and source authorization assertions are in `tests/supabase-artist-claims.test.mjs`.
 
-**Important remaining UI limitation:** The `/artists/claim` page still embeds Clerk `<SignIn>` and checks `currentUser()` directly; it has NOT been converted. Supabase artist-claim API readiness does not imply a completed Supabase claim-page login flow. Team invitation creation and pending Clerk invitation revocation are still Clerk-only. Verify claim RPC behavior, email-change/reverification cases, and existing owner-transfer rules against isolated staging fixtures before cutover.
+**Remaining integration limitation:** The `/artists/claim` page now selects Clerk or Supabase by the server provider, checks the Supabase linked owner when selected, and sends signed-out Supabase visitors to `/sign-in` with a return path. This removes the Clerk-only sign-in UI dependency for that page; it does **not** establish a tested end-to-end claim flow. Team invitation creation and pending Clerk invitation revocation remain Clerk-only. Verify claim RPC behavior, email-change/reverification cases, and existing owner-transfer rules against isolated staging fixtures before cutover.
 
 ## Audited artist-member SSR session refresh (2026-11-09)
 
 All 29 currently reviewed artist-member route files were inspected for per-handler authorization: 27 use `requireArtistPermission()` directly and 2 financial routes use `requireFinancialAccess()`, which calls `requireArtistPermission()` and then restricts financial access to owner/manager/admin. The Supabase cookie-refresh allowlist now covers their **exact known route patterns** under `/api/artists/[id]/...`, including song/release/playlist subresources; it does not grant any permissions itself. Unknown subpaths, admin, desktop and unrelated routes remain excluded. `tests/supabase-artist-member-api-routing.test.mjs` checks all 29 files and all their exported HTTP handlers against this allowlist.
 
-This is an SSR cookie compatibility step, not authorization bypass or evidence that artist uploads, catalog review, storage access and team invitations pass integration testing. The Clerk-specific `/artists/claim` page is unchanged and needs its own UI cutover review. No provider switch, role metadata, RLS policy or production account was changed.
+This is an SSR cookie compatibility step, not authorization bypass or evidence that artist uploads, catalog review, storage access and team invitations pass integration testing. The `/artists/claim` page now has an independently staged provider-aware sign-in path; its browser flow still needs end-to-end staging validation. No provider switch, role metadata, RLS policy or production account was changed.
 
 ## Server-rendered Supabase cookie handling (2026-11-09)
 
