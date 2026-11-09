@@ -78,6 +78,9 @@ test("lockdown inventory has no direct browser Supabase query dependency in the 
 
 test("privileged revision RPC and trigger function lose browser EXECUTE while server role stays authorized", async () => {
   const sql = await read("scripts/staged-auth-rls-lockdown.sql");
+  assert.doesNotMatch(sql, /^DO \$/m, "All procedural preflight blocks require valid dollar-quote delimiters.");
+  assert.match(sql, /DO \\$\\$\\s+BEGIN\\s+IF to_regprocedure/);
+  assert.match(sql, /END\\s+\\$\\$;/);
   assert.match(sql, /to_regprocedure\('public\.apply_song_pending_revision\(uuid\)'\)/);
   assert.match(sql, /to_regprocedure\('public\.sync_song_pending_revision_submission_activity\(\)'\)/);
   assert.match(sql, /REVOKE ALL PRIVILEGES ON FUNCTION public\.apply_song_pending_revision\(uuid\)\s+FROM PUBLIC, anon, authenticated;/);
@@ -104,4 +107,10 @@ test("post-lockdown staging verification is read-only and checks privileges", as
   assert.match(sql, /has_function_privilege\('service_role'/);
   assert.match(sql, /project_folder_paths/);
   assert.match(sql, /relrowsecurity/);
+  assert.match(sql, /present_tables = 14 AND t\.secured_tables = 14/);
+  assert.match(sql, /present_views = 1 AND v\.secured_views = 1/);
+  assert.match(sql, /f\.functions_secured/);
+  assert.match(sql, /BLOCKED_STAGING_SQL_GATE/);
+  assert.match(sql, /PASS_STAGING_SQL_GATE/);
 });
+
