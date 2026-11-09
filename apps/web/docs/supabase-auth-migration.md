@@ -26,6 +26,7 @@ This is an isolated, staged migration. The production sign-in, web API authoriza
 - An isolated `/auth-preview/ssr` page uses `@supabase/ssr` browser cookies with an independent cookie name and Google OAuth. `GET /api/auth-preview/ssr-session` verifies the cookie against Supabase Auth server-side and returns only an authenticated boolean. Route-level refresh writes response cookies and prevents caching. This is not a production session or a substitute for a shared Next.js proxy refresh.
 - **Preview-only middleware refresh added:** only exact path `/auth-preview/ssr` invokes `lib/supabaseSsrPreviewRefresh.ts` from existing Clerk middleware; it validates claims with Supabase, forwards rotated cookies into the server request and response, and preserves Supabase cache headers. All other routes retain the original Clerk middleware flow. This has not been end-to-end browser tested for token expiry.
 - `GET /api/auth-preview/ssr-account-data` now tests a server-verified Supabase cookie against the existing one-to-one legacy ownership link and returns only aggregate playlist and project counts. It returns 401 for missing/invalid sessions and 403 for unlinked Supabase identities, without exposing the legacy owner ID or changing any account data. `/auth-preview/ssr` includes a button to exercise the endpoint. This is isolated migration verification, not production authorization.
+- Isolated `GET /api/auth-preview/ssr-favorites` uses the verified SSR cookie and server-only identity link to return active (published, unarchived) favorite song IDs with the same `favorites: [{song_id, created_at}]` shape as the Clerk GET endpoint. The SSR preview compares exact song ID lists with `GET /api/favorites` only while a Clerk session is present. It gives 401 to missing/invalid cookie users and 403 to unlinked identities. This test does not modify or replace production Favorites.
 - Production `/sign-in`, `/sign-up`, middleware protection, web APIs and desktop sync remain on Clerk.
 
 ## Security prerequisite — do not skip
@@ -82,6 +83,8 @@ Never commit OAuth secrets, service-role keys or credentials to the repository.
 - [x] Add a server-only linked-identity resolver and read-only link-status check (not used by existing application APIs yet).
 - [x] Implement an isolated read-only API for verification of linked user-owned record counts.
 - [ ] Browser-test linked-account record counts against the original Clerk account and run the new **Test account access isolation** button while signed into both the linked and second unlinked Google accounts. It checks no-token = 401; linked = 200; unlinked = 403. Do not claim these pass until run in the browser.
+- [x] Implement isolated read-only active Favorites API using verified SSR cookie ownership, without touching `/api/favorites`.
+- [ ] Browser-test exact song-ID parity for linked Clerk/Supabase identities and refusal of unlinked/signed-out sessions before migrating the production Favorites API.
 - [ ] Convert server API authorization and data-ownership lookups.
 - [ ] Convert web auth provider/hooks and all dependent components.
 - [ ] Replace Clerk account security, profiles, invitations and admin identity lookup.
