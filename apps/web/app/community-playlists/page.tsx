@@ -1356,10 +1356,7 @@ export default function CommunityPlaylistsPage() {
       <Footer showTopBorder={false} />
 
       {toastMessage && (
-        <Toast
-          message={toastMessage}
-          onClose={() => setToastMessage(null)}
-        />
+        <Toast message={toastMessage} />
       )}
     </main>
   );
