@@ -3,9 +3,7 @@
 import { usePathname, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import ShelfNavigationControls from "@/components/ShelfNavigationControls";
-import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
-import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import { usePlayer } from "@/context/PlayerContext";
@@ -65,23 +63,11 @@ export default function PlaylistSimilarSounds() {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [recommendations, setRecommendations] = useState<SimilarSong[]>([]);
   const [loading, setLoading] = useState(true);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-  const [imageCenterY, setImageCenterY] = useState<number | null>(null);
   const artistSlug = searchParams.get("artist")?.trim() || null;
   const recommendationUrl = useMemo(
     () => buildRecommendationUrl(pathname, artistSlug),
     [artistSlug, pathname],
   );
-
-  function updateScrollState() {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
-    setCanScrollPrev(scroller.scrollLeft > 4);
-    setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
-  }
 
   function scrollShelf(direction: -1 | 1) {
     const scroller = scrollerRef.current;
@@ -135,48 +121,6 @@ export default function PlaylistSimilarSounds() {
     return () => controller.abort();
   }, [recommendationUrl]);
 
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-    if (!scroller) return;
-
-    const frame = window.requestAnimationFrame(updateScrollState);
-    scroller.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
-
-    const resizeObserver = new ResizeObserver(updateScrollState);
-    resizeObserver.observe(scroller);
-
-    return () => {
-      window.cancelAnimationFrame(frame);
-      scroller.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-      resizeObserver.disconnect();
-    };
-  }, [loading, recommendations.length]);
-
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-    const image = scroller?.querySelector<HTMLElement>(
-      "[data-playlist-similar-image]",
-    );
-
-    if (!image) {
-      setImageCenterY(null);
-      return;
-    }
-
-    const updateImageCenter = () => {
-      setImageCenterY(image.getBoundingClientRect().height / 2);
-    };
-
-    updateImageCenter();
-
-    const resizeObserver = new ResizeObserver(updateImageCenter);
-    resizeObserver.observe(image);
-
-    return () => resizeObserver.disconnect();
-  }, [loading, recommendations.length]);
-
   if (!recommendationUrl || (!loading && recommendations.length === 0)) {
     return null;
   }
@@ -185,42 +129,9 @@ export default function PlaylistSimilarSounds() {
     <section className="playlist-detail-similar" aria-labelledby="playlist-similar-heading">
       <div className="playlist-detail-similar-heading">
         <h2 id="playlist-similar-heading">Similar Sounds</h2>
-        <ShelfNavigationControls
-          label="Similar Sounds"
-          onPrev={() => scrollShelf(-1)}
-          onNext={() => scrollShelf(1)}
-          canScrollPrev={canScrollPrev}
-          canScrollNext={canScrollNext}
-        />
       </div>
 
       <div className="group/similar-shelf relative">
-        {imageCenterY !== null && (
-          <>
-            <button
-              type="button"
-              onClick={() => scrollShelf(-1)}
-              disabled={!canScrollPrev}
-              className={`absolute z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/similar-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex ${styles.sideArrowLeft}`}
-              style={{ top: imageCenterY }}
-              aria-label="Scroll Similar Sounds left"
-            >
-              <ChevronLeftIcon size={18} />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => scrollShelf(1)}
-              disabled={!canScrollNext}
-              className={`absolute z-20 hidden h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/similar-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0 sm:flex ${styles.sideArrowRight}`}
-              style={{ top: imageCenterY }}
-              aria-label="Scroll Similar Sounds right"
-            >
-              <ChevronRightIcon size={18} />
-            </button>
-          </>
-        )}
-
         <div
           ref={scrollerRef}
           className={`playlist-detail-similar-scroller ${styles.scroller}`}
@@ -271,6 +182,13 @@ export default function PlaylistSimilarSounds() {
               })}
         </div>
       </div>
+      <ShelfIndicatorNavigation
+        label="Similar Sounds"
+        scrollerRef={scrollerRef}
+        itemCount={loading ? SKELETON_COUNT : recommendations.length}
+        onPrev={() => scrollShelf(-1)}
+        onNext={() => scrollShelf(1)}
+      />
     </section>
   );
 }

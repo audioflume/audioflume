@@ -2,11 +2,10 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 import SectionTitle from "@/components/SectionTitle";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
-import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
-import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
+import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import CuratedPlaylistBookmarkButton from "./CuratedPlaylistBookmarkButton";
 import CuratedPlaylistPlayButton from "./CuratedPlaylistPlayButton";
@@ -133,21 +132,6 @@ export default function CuratedPlaylistShelf({
   className = "mt-12",
 }: CuratedPlaylistShelfProps) {
   const scrollerRef = useRef<HTMLDivElement>(null);
-  const [canScrollPrev, setCanScrollPrev] = useState(false);
-  const [canScrollNext, setCanScrollNext] = useState(false);
-  const [imageCenterY, setImageCenterY] = useState<number | null>(null);
-
-  function updateScrollState() {
-    const scroller = scrollerRef.current;
-
-    if (!scroller) return;
-
-    const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
-
-    setCanScrollPrev(scroller.scrollLeft > 4);
-    setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
-  }
-
   function getCardStep(scroller: HTMLDivElement) {
     const cards = Array.from(
       scroller.children,
@@ -205,43 +189,6 @@ export default function CuratedPlaylistShelf({
     });
   }
 
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-
-    if (!scroller) return;
-
-    updateScrollState();
-
-    scroller.addEventListener("scroll", updateScrollState, { passive: true });
-    window.addEventListener("resize", updateScrollState);
-
-    return () => {
-      scroller.removeEventListener("scroll", updateScrollState);
-      window.removeEventListener("resize", updateScrollState);
-    };
-  }, [playlists.length]);
-
-
-  useEffect(() => {
-    const scroller = scrollerRef.current;
-    const image = scroller?.querySelector<HTMLElement>(
-      "[data-curated-playlist-image]",
-    );
-
-    if (!image) return;
-
-    const updateImageCenter = () => {
-      setImageCenterY(image.getBoundingClientRect().height / 2);
-    };
-
-    updateImageCenter();
-
-    const resizeObserver = new ResizeObserver(updateImageCenter);
-    resizeObserver.observe(image);
-
-    return () => resizeObserver.disconnect();
-  }, [playlists.length]);
-
   if (!playlists.length) return null;
 
   return (
@@ -262,32 +209,6 @@ export default function CuratedPlaylistShelf({
         <div
           className={`group/playlist-shelf relative ${shelfStyles.viewport}`}
         >
-          {imageCenterY !== null && (
-            <>
-              <button
-                type="button"
-                onClick={() => scrollPlaylists("prev")}
-                disabled={!canScrollPrev}
-                className="absolute left-8 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0"
-                style={{ top: imageCenterY }}
-                aria-label={`Scroll ${title} left`}
-              >
-                <ChevronLeftIcon size={18} />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => scrollPlaylists("next")}
-                disabled={!canScrollNext}
-                className="absolute right-8 z-20 flex h-11 w-11 -translate-y-1/2 cursor-pointer items-center justify-center rounded-full bg-white text-black opacity-0 shadow-[0_12px_34px_rgba(0,0,0,0.25)] transition hover:scale-105 group-hover/playlist-shelf:opacity-100 disabled:pointer-events-none disabled:opacity-0"
-                style={{ top: imageCenterY }}
-                aria-label={`Scroll ${title} right`}
-              >
-                <ChevronRightIcon size={18} />
-              </button>
-            </>
-          )}
-
           <div
             ref={scrollerRef}
             className={`flex overflow-x-auto overflow-y-hidden overscroll-x-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden ${shelfStyles.scroller}`}
@@ -312,6 +233,13 @@ export default function CuratedPlaylistShelf({
             )}
           </div>
         </div>
+        <ShelfIndicatorNavigation
+          label={title}
+          scrollerRef={scrollerRef}
+          itemCount={playlists.length + (viewAllHref ? 1 : 0)}
+          onPrev={() => scrollPlaylists("prev")}
+          onNext={() => scrollPlaylists("next")}
+        />
       </section>
     </div>
   );

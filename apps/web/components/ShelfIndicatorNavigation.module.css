@@ -1,0 +1,61 @@
+.navigation {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  height: 28px;
+  margin-top: 10px;
+  width: var(--filmwave-page-width);
+  max-width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+}
+
+.arrows {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 0 0 auto;
+}
+
+.navigation button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.navigation button:hover:not(:disabled) {
+  color: var(--text-secondary);
+}
+
+.navigation button:disabled {
+  opacity: .3;
+  cursor: default;
+}
+
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  flex: 0 1 auto;
+  min-width: 0;
+}
+
+.progress span {
+  display: block;
+  width: clamp(50px, 8vw, 130px);
+  height: 2px;
+  background: var(--border-subtle);
+  transition: background 150ms ease;
+}
+
+.progress span.active {
+  background: var(--text-primary);
+}

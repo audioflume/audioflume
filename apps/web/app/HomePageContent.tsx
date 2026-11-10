@@ -18,6 +18,7 @@ import {
 } from "react";
 
 import Footer from "@/components/Footer";
+import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
@@ -270,29 +271,9 @@ function Shelf({
 
   return (
     <div className={`audioflume-home-reference-shelf group/home-reference-shelf ${className}`}>
-      <button
-        type="button"
-        className="audioflume-home-reference-shelf-arrow is-left"
-        onClick={() => scroll("prev")}
-        disabled={!canScrollPrev}
-        aria-label={`Scroll ${label} left`}
-      >
-        <ChevronLeftIcon size={18} />
-      </button>
-
       <div ref={scrollerRef} className="audioflume-home-reference-shelf-scroller">
         {children}
       </div>
-
-      <button
-        type="button"
-        className="audioflume-home-reference-shelf-arrow is-right"
-        onClick={() => scroll("next")}
-        disabled={!canScrollNext}
-        aria-label={`Scroll ${label} right`}
-      >
-        <ChevronRightIcon size={18} />
-      </button>
 
       {customScrollbar ? (
         <div
@@ -314,7 +295,14 @@ function Shelf({
         </div>
       ) : null}
 
-
+      <ShelfIndicatorNavigation
+        label={label}
+        scrollerRef={scrollerRef}
+        itemCount={Array.isArray(children) ? children.length : 1}
+        onPrev={() => scroll("prev")}
+        onNext={() => scroll("next")}
+        className="audioflume-home-reference-width"
+      />
     </div>
   );
 }
@@ -485,73 +473,6 @@ function HomeReadyToCutSongCard({
         {playing ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
       </button>
     </article>
-  );
-}
-
-function DiscoverArtistNavigation({ artistCount }: { artistCount: number }) {
-  const navigationRef = useRef<HTMLDivElement>(null);
-  const [position, setPosition] = useState({
-    canPrev: false,
-    canNext: false,
-    current: 0,
-    segments: 4,
-  });
-
-  useEffect(() => {
-    const section = navigationRef.current?.parentElement;
-    const scroller = section?.querySelector<HTMLDivElement>(
-      ".audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-scroller",
-    );
-    if (!scroller) return;
-
-    const update = () => {
-      const maxScroll = Math.max(0, scroller.scrollWidth - scroller.clientWidth);
-      const segments = 4;
-      const current = maxScroll > 0
-        ? Math.round((scroller.scrollLeft / maxScroll) * (segments - 1))
-        : 0;
-
-      setPosition({
-        canPrev: scroller.scrollLeft > 4,
-        canNext: scroller.scrollLeft < maxScroll - 4,
-        current,
-        segments,
-      });
-    };
-
-    update();
-    scroller.addEventListener("scroll", update, { passive: true });
-    const observer = new ResizeObserver(update);
-    observer.observe(scroller);
-    return () => {
-      scroller.removeEventListener("scroll", update);
-      observer.disconnect();
-    };
-  }, [artistCount]);
-
-  const navigate = (direction: "left" | "right") => {
-    const section = navigationRef.current?.parentElement;
-    section?.querySelector<HTMLButtonElement>(
-      `.audioflume-home-reference-artist-shelf .audioflume-home-reference-shelf-arrow.is-${direction}`,
-    )?.click();
-  };
-
-  return (
-    <div ref={navigationRef} className="audioflume-discover-artist-navigation audioflume-home-reference-width" aria-label="Featured artists navigation">
-      <div className="audioflume-discover-artist-navigation-progress" aria-hidden="true">
-        {Array.from({ length: position.segments }, (_, index) => (
-          <span key={index} className={index === position.current ? "is-active" : ""} />
-        ))}
-      </div>
-      <div className="audioflume-discover-artist-navigation-arrows">
-        <button type="button" onClick={() => navigate("left")} disabled={!position.canPrev} aria-label="Previous featured artists">
-          <ChevronLeftIcon size={18} />
-        </button>
-        <button type="button" onClick={() => navigate("right")} disabled={!position.canNext} aria-label="Next featured artists">
-          <ChevronRightIcon size={18} />
-        </button>
-      </div>
-    </div>
   );
 }
 
@@ -1308,9 +1229,6 @@ export default function HomePageContent({
           <HomeArtistShelfSkeleton discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
-        ) : null}
-        {!showHero && !artistsLoading && artists.length > 1 ? (
-          <DiscoverArtistNavigation artistCount={artists.length} />
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
