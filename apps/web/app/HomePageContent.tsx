@@ -455,7 +455,7 @@ function HomeReadyToCutSongCard({
           {song.title}
         </h3>
 
-        <div className="mt-1.5 flex min-w-0 items-center text-[var(--text-muted)]">
+        <div className="mt-0.5 flex min-w-0 items-center text-[var(--text-muted)]">
           <span className="audioflume-home-song-artist truncate">{song.artist}</span>
         </div>
       </div>

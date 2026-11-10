@@ -79,7 +79,7 @@ body:has(.audioflume-home-landing)
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 11px;
   font-style: normal;
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: normal;
   line-height: 1.15;
 }
@@ -3439,7 +3439,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-lifetime-v2-song-copy {
   display: grid;
   min-width: 0;
-  gap: 3px;
+  gap: 2px;
 }
 
 .audioflume-home-lifetime-v2-song-copy strong,
