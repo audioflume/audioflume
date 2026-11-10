@@ -2481,7 +2481,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore {
-  top: 16px;
+  top: 26px;
   right: 0;
   border-color: var(--border-subtle);
   color: var(--text-primary);
