@@ -2488,6 +2488,13 @@ body:has(.audioflume-home-landing)
   transition: opacity 150ms ease;
 }
 
+.audioflume-discover-featured-name-arrow path {
+  transform: scale(2.2);
+  transform-origin: center;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+
 .audioflume-home-reference-artist-card:hover .audioflume-discover-featured-name-arrow,
 .audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-name-arrow {
   opacity: 1;
