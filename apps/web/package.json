@@ -6,7 +6,7 @@
     "predev": "node ../../tools/style-guard.mjs",
     "dev": "pkill -f 'next dev' || true && NODE_OPTIONS='--max-old-space-size=8192' next dev",
     "build": "node ../../tools/style-guard.mjs && next build",
-    "vercel-build": "npm --prefix ../../packages/shared install --ignore-scripts --no-audit --no-fund && node ../../tools/style-guard.mjs && npx tsc --noEmit --pretty false && next build",
+    "vercel-build": "npm --prefix ../../packages/shared install --include=dev --ignore-scripts --no-audit --no-fund && node ../../tools/style-guard.mjs && npx tsc --noEmit --pretty false && next build",
     "start": "next start",
     "lint": "eslint",
     "r2:backfill-cache": "node scripts/backfill-r2-cache-headers.mjs",
