@@ -7,7 +7,8 @@ import LoadingSpinner from "@/components/LoadingSpinner";
 import type { Song } from "@/lib/types";
 import { songHasMissingEditPoints } from "@/lib/songHealth";
 import DropdownShell from "@/components/DropdownShell";
-import type { Padding, Placement, Strategy } from "@floating-ui/react";
+import type { Padding, Strategy } from "@floating-ui/react";
+import type { ComponentProps } from "react";
 
 type AdminSongActionsDropdownProps = {
   open: boolean;
@@ -17,7 +18,7 @@ type AdminSongActionsDropdownProps = {
   audioUrl?: string | null;
   song?: Song | null;
   trigger: (props: { open: boolean }) => ReactNode;
-  placement?: Placement;
+  placement?: ComponentProps<typeof DropdownShell>["placement"];
   className?: string;
   strategy?: Strategy;
   usePortal?: boolean;

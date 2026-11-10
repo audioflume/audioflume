@@ -1358,7 +1358,6 @@ export default function CommunityPlaylistsPage() {
       {toastMessage && (
         <Toast
           message={toastMessage}
-          onClose={() => setToastMessage(null)}
         />
       )}
     </main>

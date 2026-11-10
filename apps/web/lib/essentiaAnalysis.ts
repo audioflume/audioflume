@@ -148,7 +148,7 @@ async function decompressLogicResU(payload: Uint8Array) {
   }
 
   try {
-    const input = new Blob([payload]).stream()
+    const input = new Blob([new Uint8Array(payload)]).stream()
     const decompressed = input.pipeThrough(new DecompressionStream('deflate'))
     const buffer = await new Response(decompressed).arrayBuffer()
     return new Uint8Array(buffer)
@@ -308,7 +308,7 @@ function audioBufferToWavFile(audioBuffer: AudioBuffer) {
 }
 
 function buildSyntheticBeatChannel(audioBuffer: AudioBuffer, bpm: number) {
-  const synthetic = new Float32Array(audioBuffer.length)
+  const synthetic = new Float32Array(new ArrayBuffer(audioBuffer.length * Float32Array.BYTES_PER_ELEMENT))
   const sampleRate = audioBuffer.sampleRate
   const beatIntervalSamples = Math.max(1, Math.round((60 / bpm) * sampleRate))
   const clickLength = Math.max(64, Math.round(sampleRate * 0.012))
@@ -352,13 +352,13 @@ function forceLegacyBpmVotingToBeatThis(audioBuffer: AudioBuffer, bpm: number) {
       const cachedChannel = cache?.get(channel)
 
       if (cachedChannel) {
-        return cachedChannel
+        return cachedChannel as ReturnType<AudioBuffer["getChannelData"]>
       }
 
       const syntheticChannel = buildSyntheticBeatChannel(audioBuffer, bpm)
       cache?.set(channel, syntheticChannel)
 
-      return syntheticChannel
+      return syntheticChannel as ReturnType<AudioBuffer["getChannelData"]>
     }
   } catch (error) {
     console.warn('[Filmwave BPM] Could not force legacy BPM voting.', error)

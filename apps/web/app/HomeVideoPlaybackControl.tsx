@@ -33,6 +33,7 @@ export default function HomeVideoPlaybackControl() {
   if (!heroElement || !videoElement) return null;
 
   function togglePlayback() {
+    if (!videoElement) return;
     if (videoElement.paused) {
       void videoElement.play();
     } else {

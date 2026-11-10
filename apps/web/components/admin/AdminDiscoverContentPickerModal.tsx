@@ -31,7 +31,7 @@ function getPlacementLabel(playlist: CuratedPlaylist) {
     return "Available";
   }
 
-  return DISCOVER_SECTION_LABELS.get(playlist.discover_section) || "Assigned";
+  return DISCOVER_SECTION_LABELS.get(playlist.discover_section as Parameters<typeof DISCOVER_SECTION_LABELS.get>[0]) || "Assigned";
 }
 
 export default function AdminDiscoverContentPickerModal({

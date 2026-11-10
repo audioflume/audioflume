@@ -620,7 +620,7 @@ export default function MusicPlayer() {
                     const markerType = getMarkerType(marker);
                     const label =
                       marker.label || getEditPointFilterLabel(markerType);
-                    const progressValue = currentSong.duration
+                    const progressValue = currentSong?.duration
                       ? marker.time / currentSong.duration
                       : 0;
                     const left = Math.max(
