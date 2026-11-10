@@ -34,15 +34,21 @@
 
 .searchForm {
   display: flex;
-  width: 250px;
-  min-width: 250px;
+  width: 32px;
+  min-width: 32px;
   height: 32px;
+  box-sizing: border-box;
   align-items: center;
   overflow: hidden;
   border: 1.25px solid var(--border);
   border-radius: 999px;
   background: transparent;
-  transition: border-color 150ms ease, background-color 150ms ease;
+  transition: width 180ms ease, min-width 180ms ease, border-color 150ms ease, background-color 150ms ease;
+}
+
+.searchFormExpanded {
+  width: 250px;
+  min-width: 250px;
 }
 
 .searchForm:hover,
@@ -133,7 +139,7 @@
 .genrePills {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 8px;
 }
 
