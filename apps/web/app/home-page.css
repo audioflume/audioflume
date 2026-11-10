@@ -1292,11 +1292,11 @@ body:has(.audioflume-home-landing)
   background: var(--bg-primary);
 }
 
-/* A single 80px inter-section gap for both Home and Discover.
+/* A single 60px inter-section gap for both Home and Discover.
    Internal heading/card padding stays with the section itself. */
 .audioflume-home-landing,
 .audioflume-home-mockup {
-  --audioflume-section-gap: 80px;
+  --audioflume-section-gap: 60px;
 }
 
 .audioflume-home-landing > :is(
