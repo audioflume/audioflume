@@ -167,7 +167,7 @@
 .card {
   position: relative;
   --artist-featured-name-size: clamp(24px, 2.55vw, 28px);
-  --artist-featured-name-case: capitalize;
+  --artist-featured-name-case: uppercase;
   --artist-featured-name-tracking: -0.03em;
   --artist-featured-name-line-height: 1.02;
   --artist-featured-designation-size: 12px;
@@ -439,11 +439,14 @@
   transform: scale(1.03);
 }
 
-.cardPlay:disabled,
+.cardPlay:disabled {
+  opacity: 0;
+  cursor: default;
+}
+
 .card:hover .cardPlay:disabled,
 .card:focus-within .cardPlay:disabled {
   opacity: .4;
-  cursor: default;
 }
 
 .skeleton {
