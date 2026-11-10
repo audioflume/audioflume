@@ -64,7 +64,8 @@ test("header and web user menu use provider-aware identity and sign-out without 
   assert.match(header, /const avatarImage = provider === "supabase"/);
   assert.match(header, /<UserMenu onClose=\{\(\) => setMenuOpen\(false\)\} \/>/);
   assert.match(menu, /const \{ signOut, user \} = useAccountSession\(\)/);
-  assert.match(menu, /onClick=\{\(\) => signOut\(\)\}/);
+  assert.match(menu, /await signOut\(\)/);
+  assert.match(menu, /window\.location\.assign\("\/sign-in"\)/);
   assert.match(menu, /<UserMenuPanel className="filmwave-web-user-menu">/);
   assert.match(menu, /imageSrc=\{user\?\.imageUrl\}/);
   assert.doesNotMatch(header, /from ["']@clerk\/nextjs["']/);

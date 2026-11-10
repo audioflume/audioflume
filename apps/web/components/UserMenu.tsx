@@ -163,7 +163,10 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
       <UserMenuActions className="filmwave-user-menu-signout">
         <button
           type="button"
-          onClick={() => signOut()}
+          onClick={async () => {
+            await signOut();
+            window.location.assign("/sign-in");
+          }}
           className="filmwave-dropdown-item filmwave-user-menu-exit"
         >
           <span>Sign Out</span>
