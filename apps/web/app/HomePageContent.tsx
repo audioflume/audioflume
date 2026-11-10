@@ -1246,7 +1246,7 @@ export default function HomePageContent({
   }, []);
 
   return (
-    <main className={`audioflume-home-reference audioflume-home-mockup${playerVisible ? " has-player" : ""}`}>
+    <main className={`audioflume-home-reference audioflume-home-mockup${!showHero ? " is-discover-page" : ""}${playerVisible ? " has-player" : ""}`}>
       <GlobalSearchBar />
 
       {showHero ? (

@@ -1519,7 +1519,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-curated-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 10px;
+  gap: var(--audioflume-discover-card-gap, 10px);
   scroll-snap-type: none !important;
   scroll-padding: 0 !important;
 }
@@ -1948,7 +1948,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-curated-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 10px;
+  gap: var(--audioflume-discover-card-gap, 10px);
 }
 
 .audioflume-home-mockup-artists > .audioflume-home-mockup-featured-artists-heading {
@@ -1986,7 +1986,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover's featured-artist layout, independent of the larger lead-card shelf. */
 .audioflume-home-mockup-artists.is-discover-featured-artists {
-  --audioflume-featured-artist-gap: clamp(10px, calc(0.69vw + 5.72px), 14px);
+  --audioflume-featured-artist-gap: 12px;
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
   --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
   padding-top: 60px;
@@ -2370,7 +2370,7 @@ body:has(.audioflume-home-landing)
   width: clamp(460px, 61vw, 1140px);
   min-width: clamp(460px, 61vw, 1140px);
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 0;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
@@ -2668,13 +2668,13 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
   height: 257px;
   aspect-ratio: auto;
-  border-radius: 10px;
+  border-radius: var(--audioflume-discover-card-radius, 10px);
 }
 
 .audioflume-home-mockup-curated-card {
   height: 275px;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: var(--audioflume-discover-card-radius, 10px);
   background: var(--bg-tertiary);
   aspect-ratio: 2.38 / 1;
   scroll-snap-align: none !important;
@@ -3021,10 +3021,14 @@ body:has(.audioflume-home-landing)
 
 
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
+.audioflume-home-mockup.is-discover-page {
+  --audioflume-discover-card-gap: 12px;
+  --audioflume-discover-card-radius: 0px;
+}
 .audioflume-home-mockup-more-artists
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-scroller {
-  gap: 10px;
+  gap: var(--audioflume-discover-card-gap, 10px);
   padding-right: var(--audioflume-home-page-gutter);
   padding-left: var(--audioflume-home-page-gutter);
 }
@@ -3034,7 +3038,7 @@ body:has(.audioflume-home-landing)
   min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 20px) / 3)));
   height: 257px;
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: var(--audioflume-discover-card-radius, 10px);
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
