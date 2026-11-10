@@ -2502,6 +2502,8 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-designation {
+  position: relative;
+  top: 2px;
   color: var(--text-muted);
   font-size: 13px;
   font-weight: 300;
