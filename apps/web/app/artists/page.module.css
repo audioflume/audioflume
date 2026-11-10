@@ -29,7 +29,7 @@
 }
 
 .browser {
-  padding: 24px 0 36px;
+  padding: 24px 0 16px;
 }
 
 .searchForm {
@@ -52,7 +52,7 @@
 }
 
 .searchForm:hover,
-.searchForm:focus-within {
+.searchForm:has(.curated-pill-search-toggle:focus-visible) {
   border-color: var(--text-muted);
 }
 
@@ -505,7 +505,7 @@
   .content { padding-bottom: 65px; }
   .intro { padding: 32px 0 28px; }
   .intro h1 { font-size: clamp(40px, 8vw, 60px); }
-  .browser { padding: 20px 0 28px; }
+  .browser { padding: 20px 0 16px; }
   .genrePills { gap: 7px; }
   .grid { grid-template-columns: minmax(0, 1fr); gap: 10px; }
   .column { gap: 10px; }
