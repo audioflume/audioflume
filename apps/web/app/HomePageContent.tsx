@@ -1224,24 +1224,12 @@ export default function HomePageContent({
         </section> : null}
 
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
-        {!showHero ? (
-          <div className="audioflume-discover-featured-intro audioflume-home-reference-width">
-            <div className="audioflume-discover-featured-intro-row">
-              <h2 ref={discoverHeadingRef}>
-                <span ref={discoverFirstLineMeasureRef} className="absolute invisible whitespace-nowrap" aria-hidden="true">DISCOVER NEW MUSIC</span>
-                DISCOVER NEW MUSIC{discoverHeadingNeedsNaturalWrap ? " " : <br />}&amp; TRENDING ARTISTS
-              </h2>
-              <span>
-                Explore this month&apos;s featured artists
-              </span>
-            </div>
-          </div>
-        ) : (
+        {showHero ? (
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
             <h2>This month&apos;s featured artists</h2>
             <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
           </div>
-        )}
+        ) : null}
         {artistsLoading ? (
           <HomeArtistShelfSkeleton discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
