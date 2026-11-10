@@ -1,4 +1,5 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
+import { auth, clerkClient, currentUser } from "@clerk/nextjs/server";
+import { verifyToken } from "@clerk/backend";
 import { NextResponse } from "next/server";
 
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -47,12 +48,46 @@ export async function GET(request: Request) {
 // Explicit, opt-in transition only. Requires independent proof of BOTH identities.
 // The Supabase token is never stored; authorization comes from server-side verification.
 export async function POST(request: Request) {
-  const { userId: clerkUserId } = await auth();
+  let clerkUserId: string | null = null;
+  let clerkUser: Awaited<ReturnType<typeof currentUser>> = null;
+
+  if (
+    process.env.NODE_ENV !== "production" &&
+    process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER === "supabase"
+  ) {
+    const clerkToken = request.headers.get("x-audioflume-clerk-token")?.trim();
+    if (!clerkToken) {
+      return noStore({ error: "A verified Clerk session is required." }, 401);
+    }
+
+    try {
+      const verified = await verifyToken(clerkToken, {
+        secretKey: process.env.CLERK_SECRET_KEY,
+        authorizedParties: ["http://127.0.0.1:3002", "http://localhost:3002"],
+      });
+      if (
+        typeof verified.sub !== "string" ||
+        !verified.sub.startsWith("user_") ||
+        !verified.sid
+      ) {
+        return noStore({ error: "Invalid Clerk session." }, 401);
+      }
+
+      clerkUserId = verified.sub;
+      const client = await clerkClient();
+      clerkUser = await client.users.getUser(clerkUserId);
+    } catch {
+      return noStore({ error: "Clerk session verification failed." }, 401);
+    }
+  } else {
+    const clerkAuth = await auth();
+    clerkUserId = clerkAuth.userId;
+    if (clerkUserId) clerkUser = await currentUser();
+  }
+
   if (!clerkUserId) {
     return noStore({ error: "Sign in to your existing Audioflume account with Clerk first." }, 401);
   }
-
-  const clerkUser = await currentUser();
   if (!clerkUser || clerkUser.id !== clerkUserId) {
     return noStore({ error: "Could not verify the existing Audioflume account." }, 401);
   }

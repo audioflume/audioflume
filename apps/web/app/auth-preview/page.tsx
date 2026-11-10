@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
-import { useUser } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 import type { User } from "@supabase/supabase-js";
 import { supabase } from "@/lib/supabase";
 import styles from "./page.module.css";
@@ -24,6 +24,7 @@ const titleByMode: Record<Mode, string> = {
 
 export default function SupabaseAuthPreviewPage() {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  const { getToken: getClerkToken } = useAuth();
   const [linked, setLinked] = useState(false);
   const [linkStatusLoaded, setLinkStatusLoaded] = useState(false);
   const linkStatusRequestId = useRef(0);
@@ -173,9 +174,17 @@ export default function SupabaseAuthPreviewPage() {
         throw new Error("Your Supabase session has expired. Sign in again.");
       }
 
+      const clerkToken = await getClerkToken();
+      if (!clerkToken) {
+        throw new Error("Sign in to your existing Clerk account first.");
+      }
+
       const response = await fetch("/api/auth-preview/link", {
         method: "POST",
-        headers: { "X-Audioflume-Supabase-Token": token },
+        headers: {
+          "X-Audioflume-Supabase-Token": token,
+          "X-Audioflume-Clerk-Token": clerkToken,
+        },
         credentials: "same-origin",
         cache: "no-store",
       });
@@ -311,7 +320,7 @@ export default function SupabaseAuthPreviewPage() {
                   {linkBusy ? "Verifying accounts…" : "Link to my existing Audioflume account"}
                 </button>
               ) : (
-                <a className={styles.secondaryButton} href="/sign-in?redirect_url=%2Fauth-preview">
+                <a className={styles.secondaryButton} href="/auth-preview/clerk-sign-in">
                   Sign in to your existing Audioflume account to link it
                 </a>
               )

@@ -252,6 +252,25 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
       return clerkRequestMiddleware(request, event);
     }
 
+    // Preview GET verifies Supabase; development-only POST independently
+    // verifies both Clerk and Supabase tokens inside its handler.
+    if (
+      pathname === "/api/auth-preview/link" &&
+      (request.method === "GET" ||
+        (request.method === "POST" && process.env.NODE_ENV !== "production"))
+    ) {
+      return NextResponse.next();
+    }
+
+    // Read-only account verification checks its own Supabase owner link.
+    if (
+      process.env.NODE_ENV !== "production" &&
+      pathname === "/api/auth-preview/account-data" &&
+      request.method === "GET"
+    ) {
+      return NextResponse.next();
+    }
+
     // Only audited standalone Supabase handlers skip Clerk entirely.
     // All other API handlers retain their existing middleware context.
     if (
