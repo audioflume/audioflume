@@ -1,5 +1,9 @@
 import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, type NextRequest, type NextFetchEvent } from "next/server";
+import { refreshSupabaseAccountSession } from "@/lib/auth/refreshSupabaseAccountSession";
+import { shouldRefreshAccountSession } from "@/lib/auth/shouldRefreshAccountSession";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { isMigratedAccountPage } from "@/lib/auth/isMigratedAccountPage";
 
 const isPublicRoute = createRouteMatcher([
   "/",
@@ -76,7 +80,7 @@ function applyDesktopCorsHeaders(response: NextResponse, request: NextRequest) {
   return response;
 }
 
-export default clerkMiddleware(async (auth, request) => {
+const clerkRequestMiddleware = clerkMiddleware(async (auth, request) => {
   if (
     request.nextUrl.pathname === "/playlists" &&
     request.nextUrl.searchParams.get("tab") === "community-playlists"
@@ -108,6 +112,86 @@ export default clerkMiddleware(async (auth, request) => {
     await auth.protect();
   }
 });
+
+export default function middleware(
+  request: NextRequest,
+  event: NextFetchEvent,
+) {
+  if (
+    selectAccountAuthProvider(
+      process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
+    ) === "supabase"
+  ) {
+    const pathname = request.nextUrl.pathname;
+
+    // Desktop retains its original Clerk middleware and CORS behavior.
+    if (pathname.startsWith("/api/desktop")) {
+      return clerkRequestMiddleware(request, event);
+    }
+
+    // Supabase browser authentication and OAuth callback.
+    if (
+      pathname === "/sign-in" ||
+      pathname.startsWith("/sign-in/") ||
+      pathname === "/sign-up" ||
+      pathname.startsWith("/sign-up/") ||
+      pathname === "/auth/supabase/callback"
+    ) {
+      return NextResponse.next();
+    }
+
+    // Migrated APIs independently verify account ownership.
+    if (shouldRefreshAccountSession(pathname)) {
+      return refreshSupabaseAccountSession(request);
+    }
+
+    if (
+      pathname === "/playlists" &&
+      request.nextUrl.searchParams.get("tab") === "community-playlists"
+    ) {
+      return NextResponse.redirect(
+        new URL("/playlists/community", request.url),
+      );
+    }
+
+    if (
+      pathname === "/admin" ||
+      pathname.startsWith("/admin/") ||
+      pathname === "/artists/dashboard" ||
+      pathname === "/artists/apply" ||
+      isMigratedAccountPage(pathname)
+    ) {
+      return refreshSupabaseAccountSession(request, {
+        requireVerifiedUser: true,
+      });
+    }
+
+    if (pathname === "/artists/claim") {
+      return refreshSupabaseAccountSession(request);
+    }
+
+    // This API independently checks the server-trusted admin role.
+    if (
+      pathname === "/api/admin/access" ||
+      pathname === "/api/admin/system-health" ||
+      pathname === "/api/admin/audio-proxy"
+    ) {
+      return NextResponse.next();
+    }
+
+    // Public website content does not require a Clerk session.
+    if (
+      isPublicRoute(request) ||
+      isPublicArtistContentRoute(pathname) ||
+      isPublicPlaylistDetailRoute(pathname)
+    ) {
+      return NextResponse.next();
+    }
+  }
+
+  // Preserve existing behavior for all unconverted routes.
+  return clerkRequestMiddleware(request, event);
+}
 
 export const config = {
   matcher: [

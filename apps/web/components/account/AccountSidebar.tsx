@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { usePathname, useRouter } from "next/navigation";
 import { Fragment, useEffect, useState } from "react";
 import {
@@ -50,7 +50,7 @@ export default function AccountSidebar() {
   const pathname = usePathname();
   const router = useRouter();
   const { currentSong } = usePlayer();
-  const { user } = useUser();
+  const { user } = useAccountSession();
   const { pendingInviteCount } = useArtistInvites();
   const [notificationUnreadCount, setNotificationUnreadCount] = useState(0);
   const displayName =

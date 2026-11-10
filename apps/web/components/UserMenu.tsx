@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { useClerk, useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useArtistInvites } from "@/context/ArtistInvitesContext";
 import { useProjectsContext } from "@/context/ProjectsContext";
@@ -46,8 +46,7 @@ function InviteCountBadge({ count }: { count: number }) {
 }
 
 export default function UserMenu({ onClose }: { onClose?: () => void }) {
-  const { signOut } = useClerk();
-  const { user } = useUser();
+  const { signOut, user } = useAccountSession();
   const { theme, setTheme } = useTheme();
   const { pendingInviteCount } = useArtistInvites();
   const { refetchProjects } = useProjectsContext();

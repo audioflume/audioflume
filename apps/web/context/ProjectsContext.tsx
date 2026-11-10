@@ -1,7 +1,7 @@
 "use client";
 
 import type { Project } from "@/lib/types";
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import {
   createContext,
   ReactNode,
@@ -44,8 +44,7 @@ async function requestProjects() {
 }
 
 export function ProjectsProvider({ children }: { children: ReactNode }) {
-  const { user, isLoaded } = useUser();
-  const userId = user?.id ?? null;
+  const { userId, isLoaded } = useAccountSession();
 
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);

@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 
 import {
@@ -218,7 +218,12 @@ async function loadProfileSongs(songIds: string[]) {
 }
 
 export async function GET(request: Request) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  if (account.status === 403 || account.status === 500) {
+    return NextResponse.json({ error: account.error }, { status: account.status });
+  }
+  // A genuine 401 retains existing public recommendation access.
+  const { userId } = account;
   const url = new URL(request.url);
   const kind = parseSourceKind(url.searchParams.get("kind"));
   const id = url.searchParams.get("id")?.trim() || null;

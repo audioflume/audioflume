@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { normalizePlaylist, getPlaylistErrorResponse } from "@/lib/playlists";
@@ -97,14 +97,25 @@ function getSourceKey(value: {
 }
 
 export async function GET() {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {
-    let playlistsResult = await supabaseServer
+    let playlistsResult: {
+      data: Array<{
+        id: number;
+        clerk_user_id: string;
+        name: string;
+        position: number;
+        source_type?: string | null;
+        source_playlist_id?: number | null;
+      }> | null;
+      error: { message: string } | null;
+    } = await supabaseServer
       .from("playlists")
       .select(
         "id, clerk_user_id, name, position, is_public, published_at, primary_category, secondary_categories, source_type, source_playlist_id",
@@ -278,10 +289,11 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {

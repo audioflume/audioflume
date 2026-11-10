@@ -263,7 +263,7 @@ export async function POST(request: Request, context: RouteContext) {
 
     if (invitationError) {
       try {
-        await client.invitations.revokeInvitation({ invitationId: invitation.id });
+        await client.invitations.revokeInvitation(invitation.id);
       } catch (revokeError) {
         console.error("Failed to revoke orphaned Clerk invitation:", revokeError);
       }
@@ -383,9 +383,7 @@ export async function DELETE(request: Request, context: RouteContext) {
       if (invitation.clerk_invitation_id) {
         const client = await clerkClient();
         try {
-          await client.invitations.revokeInvitation({
-            invitationId: invitation.clerk_invitation_id,
-          });
+          await client.invitations.revokeInvitation(invitation.clerk_invitation_id);
         } catch (revokeError) {
           console.error("Failed to revoke Clerk invitation:", revokeError);
         }

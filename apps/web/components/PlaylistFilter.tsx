@@ -8,8 +8,7 @@ import {
 } from "@filmwave/shared";
 import type { PlaylistRef } from "@/lib/types";
 import { useCallback, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
-import { supabase } from "@/lib/supabase";
+import { useAccountSession } from "@/context/AccountSessionContext";
 
 type PlaylistFilterProps = {
   selected: PlaylistRef | null;
@@ -26,7 +25,7 @@ export default function PlaylistFilter({
   const [loading, setLoading] = useState(true);
   const [playlistsLoaded, setPlaylistsLoaded] = useState(false);
   const [loadError, setLoadError] = useState("");
-  const { userId } = useAuth();
+  const { userId } = useAccountSession();
 
   const loadPlaylists = useCallback(() => {
     if (playlistsLoaded) return;
@@ -44,21 +43,28 @@ export default function PlaylistFilter({
       setLoading(true);
       setLoadError("");
 
-      const { data, error } = await supabase
-        .from("playlists")
-        .select("id, name")
-        .eq("clerk_user_id", userId)
-        .order("name");
+      try {
+        const response = await fetch("/api/playlists/filter-options", {
+          credentials: "same-origin",
+          cache: "no-store",
+        });
+        const data = await response.json();
 
-      if (cancelled) return;
+        if (cancelled) return;
 
-      if (error) {
-        setLoadError(error.message);
+        if (!response.ok) {
+          setLoadError(data?.error ?? "Unable to load playlists.");
+          setPlaylists([]);
+        } else {
+          setPlaylists(data ?? []);
+        }
+      } catch (error) {
+        if (cancelled) return;
+        setLoadError(error instanceof Error ? error.message : "Unable to load playlists.");
         setPlaylists([]);
-      } else {
-        setPlaylists(data ?? []);
       }
 
+      if (cancelled) return;
       setLoading(false);
       setPlaylistsLoaded(true);
     }

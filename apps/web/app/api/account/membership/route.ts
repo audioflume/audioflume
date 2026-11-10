@@ -1,13 +1,14 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountIdentity } from "@/lib/auth/resolveAccountIdentity";
 import { NextResponse } from "next/server";
 import { ensureMembership, formatMembershipStatus, formatPlanLabel } from "@/lib/account";
 
 export async function GET() {
-  const user = await currentUser();
-  if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const identity = await resolveAccountIdentity();
+  const { userId, user } = identity;
+  if (!userId) return NextResponse.json({ error: identity.error }, { status: identity.status });
 
   try {
-    const membership = await ensureMembership(user.id, user);
+    const membership = await ensureMembership(userId, user);
     return NextResponse.json({
       membership,
       display: {
