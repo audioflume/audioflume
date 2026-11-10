@@ -545,6 +545,9 @@ export function HomeArtistShelf({
             className={`audioflume-home-reference-artist-card${index === 0 ? " is-featured" : ""}${discoverLayout ? " is-discover-card" : ""}`}
           >
             {discoverLayout ? (
+              <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
+            ) : null}
+            {discoverLayout ? (
               <div className="audioflume-discover-featured-identity">
                 <span className="audioflume-discover-featured-name-row">
                   <strong className="audioflume-discover-featured-name">{artist.name}</strong>
@@ -556,7 +559,9 @@ export function HomeArtistShelf({
               </div>
             ) : null}
             <div className="audioflume-home-reference-artist-link">
-              <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
+              {!discoverLayout ? (
+                <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
+              ) : null}
               <div className="audioflume-home-reference-artist-media">
                 {image ? (
                   <img
