@@ -5,6 +5,7 @@ import Link from "next/link";
 import type { ReactNode } from "react";
 import { useEffect, useMemo, useState } from "react";
 import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import Footer from "@/components/Footer";
 import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminSongRow from "@/components/admin/AdminSongRow";
@@ -332,9 +333,57 @@ function RecentSongsCard({
 }
 
 export default function AdminDashboardPage() {
+  const session = useAccountSession();
+  return session.provider === "supabase"
+    ? <AdminDashboard user={null} clerkLoaded={false} />
+    : <ClerkAdminDashboard />;
+}
+
+function ClerkAdminDashboard() {
   const { user, isLoaded } = useUser();
+  return <AdminDashboard user={user} clerkLoaded={isLoaded} />;
+}
+
+function AdminDashboard({ user, clerkLoaded }: {
+  user: ReturnType<typeof useUser>["user"];
+  clerkLoaded: boolean;
+}) {
+  const session = useAccountSession();
+  const supabaseMode = session.provider === "supabase";
+  const [trustedAdmin, setTrustedAdmin] = useState(false);
+  const [adminChecked, setAdminChecked] = useState(false);
+
+  useEffect(() => {
+    if (!supabaseMode || !session.isLoaded) return;
+    if (!session.isSignedIn) {
+      setTrustedAdmin(false);
+      setAdminChecked(true);
+      return;
+    }
+
+    let cancelled = false;
+    setAdminChecked(false);
+    void fetch("/api/admin/access", { cache: "no-store", credentials: "same-origin" })
+      .then(async (response) => {
+        const body = await response.json().catch(() => null) as { isAdmin?: boolean } | null;
+        if (!cancelled) {
+          setTrustedAdmin(response.ok && body?.isAdmin === true);
+          setAdminChecked(true);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setTrustedAdmin(false);
+          setAdminChecked(true);
+        }
+      });
+
+    return () => { cancelled = true; };
+  }, [supabaseMode, session.isLoaded, session.isSignedIn, session.userId]);
+
+  const isLoaded = supabaseMode ? session.isLoaded && adminChecked : clerkLoaded;
   const userEmail = user?.primaryEmailAddress?.emailAddress;
-  const isAdmin = getIsAdmin(
+  const isAdmin = supabaseMode ? trustedAdmin : getIsAdmin(
     userEmail,
     user?.publicMetadata as Record<string, unknown> | undefined,
   );
