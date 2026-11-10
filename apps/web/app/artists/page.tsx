@@ -204,7 +204,7 @@ export default function ArtistsPage() {
 
         <section className={styles.browser} aria-label="Browse artists">
           <div className={styles.genrePills} role="group" aria-label="Search and filter artists">
-            <form className={`curated-pill-search ${styles.searchForm}${searchExpanded ? ` is-open ${styles.searchFormExpanded}` : ""}`} role="search" onSubmit={(event) => event.preventDefault()}>
+            <form className={`curated-pill-search ${styles.searchForm}${searchExpanded ? ` ${styles.searchFormExpanded}` : ""}`} role="search" onSubmit={(event) => event.preventDefault()}>
               <button
                 type="button"
                 className={`curated-pill-search-toggle${searchExpanded ? " is-active" : ""}`}
