@@ -117,80 +117,50 @@ export default function middleware(
   request: NextRequest,
   event: NextFetchEvent,
 ) {
-  if (
-    selectAccountAuthProvider(
-      process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER,
-    ) === "supabase"
-  ) {
-    const pathname = request.nextUrl.pathname;
-
-    // Desktop retains its original Clerk middleware and CORS behavior.
-    if (pathname.startsWith("/api/desktop")) {
-      return clerkRequestMiddleware(request, event);
-    }
-
-    // Supabase browser authentication and OAuth callback.
-    if (
-      pathname === "/sign-in" ||
-      pathname.startsWith("/sign-in/") ||
-      pathname === "/sign-up" ||
-      pathname.startsWith("/sign-up/") ||
-      pathname === "/auth/supabase/callback"
-    ) {
-      return NextResponse.next();
-    }
-
-    // Migrated APIs independently verify account ownership.
-    if (shouldRefreshAccountSession(pathname)) {
-      return refreshSupabaseAccountSession(request);
-    }
-
-    if (
-      pathname === "/playlists" &&
-      request.nextUrl.searchParams.get("tab") === "community-playlists"
-    ) {
-      return NextResponse.redirect(
-        new URL("/playlists/community", request.url),
-      );
-    }
-
-    if (
-      pathname === "/admin" ||
-      pathname.startsWith("/admin/") ||
-      pathname === "/artists/dashboard" ||
-      pathname === "/artists/apply" ||
-      isMigratedAccountPage(pathname)
-    ) {
-      return refreshSupabaseAccountSession(request, {
-        requireVerifiedUser: true,
-      });
-    }
-
-    if (pathname === "/artists/claim") {
-      return refreshSupabaseAccountSession(request);
-    }
-
-    // This API independently checks the server-trusted admin role.
-    if (
-      pathname === "/api/admin/access" ||
-      pathname === "/api/admin/system-health" ||
-      pathname === "/api/admin/audio-proxy"
-    ) {
-      return NextResponse.next();
-    }
-
-    // Public website content does not require a Clerk session.
-    if (
-      isPublicRoute(request) ||
-      isPublicArtistContentRoute(pathname) ||
-      isPublicPlaylistDetailRoute(pathname)
-    ) {
-      return NextResponse.next();
-    }
+  if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) !== "supabase") {
+    return clerkRequestMiddleware(request, event);
   }
 
-  // Preserve existing behavior for all unconverted routes.
-  return clerkRequestMiddleware(request, event);
+  const pathname = request.nextUrl.pathname;
+
+  // Desktop remains on its existing Clerk identity and desktop CORS rules.
+  if (pathname.startsWith("/api/desktop")) {
+    return clerkRequestMiddleware(request, event);
+  }
+
+  if (pathname === "/playlists" && request.nextUrl.searchParams.get("tab") === "community-playlists") {
+    return NextResponse.redirect(new URL("/playlists/community", request.url));
+  }
+
+  // Browser login and OAuth callback do not depend on a Clerk session.
+  if (
+    pathname === "/sign-in" || pathname.startsWith("/sign-in/") ||
+    pathname === "/sign-up" || pathname.startsWith("/sign-up/") ||
+    pathname === "/auth/supabase/callback"
+  ) {
+    return NextResponse.next();
+  }
+
+  // All website API requests share the Supabase cookie refresh. Individual
+  // API handlers retain their own authorization and permission checks.
+  if (pathname.startsWith("/api/")) {
+    return refreshSupabaseAccountSession(request);
+  }
+
+  if (pathname === "/artists/claim") {
+    return refreshSupabaseAccountSession(request);
+  }
+
+  if (
+    isPublicRoute(request) ||
+    isPublicArtistContentRoute(pathname) ||
+    isPublicPlaylistDetailRoute(pathname)
+  ) {
+    return NextResponse.next();
+  }
+
+  // Never fall back to Clerk for a website page in Supabase mode.
+  return refreshSupabaseAccountSession(request, { requireVerifiedUser: true });
 }
 
 export const config = {

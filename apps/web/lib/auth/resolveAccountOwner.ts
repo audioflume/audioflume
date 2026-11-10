@@ -6,6 +6,7 @@ import { createServerClient } from "@supabase/ssr";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { resolveVerifiedLegacyOwner } from "@/lib/auth-preview/resolveVerifiedLegacyOwner";
 import { selectAccountAuthProvider } from "./selectAccountAuthProvider";
+import { provisionSupabaseAccountOwner } from "./provisionSupabaseAccountOwner";
 import { profileFromVerifiedSupabaseUser, type VerifiedAccountProfileIdentity } from "./verifiedSupabaseProfile";
 
 type AccountOwner =
@@ -76,7 +77,7 @@ export async function resolveAccountOwner(): Promise<AccountOwner> {
           .maybeSingle();
 
         if (error) throw error;
-        return data?.clerk_user_id ?? null;
+        return data?.clerk_user_id ?? await provisionSupabaseAccountOwner(supabaseUserId);
       },
     );
 

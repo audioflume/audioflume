@@ -3,6 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 import { safeAuthRedirect } from "@/lib/auth/safeAuthRedirect";
 import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { provisionSupabaseAccountOwner } from "@/lib/auth/provisionSupabaseAccountOwner";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -59,7 +60,8 @@ export async function GET(request: NextRequest) {
     if (ownerError) throw ownerError;
 
     // Registration does not authorize access to another legacy account.
-    return redirectTo(owner?.clerk_user_id ? next : "/sign-in?auth_status=unlinked");
+    const ownerId = owner?.clerk_user_id ?? await provisionSupabaseAccountOwner(user.id);
+    return redirectTo(ownerId ? next : "/sign-in?auth_status=unlinked");
   } catch (error) {
     console.error("Supabase account callback failed:", error);
     return result;

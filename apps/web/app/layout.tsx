@@ -14,6 +14,7 @@ import { ArtistInvitesProvider } from "@/context/ArtistInvitesContext";
 import { AccountSessionProvider } from "@/context/AccountSessionContext";
 import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { verifiedSupabaseClaimEmails } from "@/lib/auth/verifiedSupabaseClaimEmails";
 import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
@@ -118,6 +119,22 @@ export default async function RootLayout({
       initialPendingArtistInviteCount = await getPendingArtistInviteCount(user);
     } catch (error) {
       console.error("Failed to preload artist invitation count:", error);
+    }
+  } else if (accountProvider === "supabase" && initialSupabaseAccountUser?.id) {
+    try {
+      const { data, error } = await supabaseServer.auth.admin.getUserById(initialSupabaseAccountUser.id);
+      if (error || data.user?.id !== initialSupabaseAccountUser.id) throw error ?? new Error("Invalid auth subject");
+      const emails = verifiedSupabaseClaimEmails(initialSupabaseAccountUser.id, data.user);
+      if (emails.length) {
+        initialPendingArtistInviteCount = await getPendingArtistInviteCount({
+          emailAddresses: emails.map((emailAddress) => ({
+            emailAddress,
+            verification: { status: "verified" },
+          })),
+        });
+      }
+    } catch (error) {
+      console.error("Failed to preload Supabase artist invitations:", error);
     }
   }
 

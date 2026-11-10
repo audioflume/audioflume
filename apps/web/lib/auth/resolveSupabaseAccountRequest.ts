@@ -3,6 +3,7 @@ import "server-only";
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
+import { provisionSupabaseAccountOwner } from "./provisionSupabaseAccountOwner";
 import { resolveVerifiedLegacyOwner } from "@/lib/auth-preview/resolveVerifiedLegacyOwner";
 
 /**
@@ -53,7 +54,7 @@ export function createSupabaseAccountRequest(request: NextRequest) {
           .maybeSingle();
 
         if (error) throw error;
-        return data?.clerk_user_id ?? null;
+        return data?.clerk_user_id ?? await provisionSupabaseAccountOwner(supabaseUserId);
       },
     );
   }

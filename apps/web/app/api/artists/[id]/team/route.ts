@@ -1,4 +1,7 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { findSupabaseArtistInviteRecipient, sendSupabaseArtistInvitation } from "@/lib/auth/sendSupabaseArtistInvitation";
+import { profileFromVerifiedSupabaseUser } from "@/lib/auth/verifiedSupabaseProfile";
 import { NextResponse } from "next/server";
 
 import { ensureUserProfile } from "@/lib/account";
@@ -61,6 +64,7 @@ async function loadArtistTeam(artistId: string, currentUserId: string, canManage
     .map((membership) => membership.clerk_user_id)
     .filter((userId): userId is string => typeof userId === "string");
 
+  const isSupabase = selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase";
   const [profileResult, clerkUsersResult] = await Promise.all([
     clerkUserIds.length
       ? supabaseServer
@@ -68,7 +72,7 @@ async function loadArtistTeam(artistId: string, currentUserId: string, canManage
           .select("clerk_user_id, display_name, avatar_url")
           .in("clerk_user_id", clerkUserIds)
       : Promise.resolve({ data: [], error: null }),
-    clerkUserIds.length
+    clerkUserIds.length && !isSupabase
       ? (async () => {
           const client = await clerkClient();
           return client.users.getUserList({
@@ -84,9 +88,37 @@ async function loadArtistTeam(artistId: string, currentUserId: string, canManage
   const profilesById = new Map(
     (profileResult.data ?? []).map((profile) => [profile.clerk_user_id, profile]),
   );
-  const clerkUsersById = new Map(
+  type DisplayUser = {
+    id: string;
+    fullName?: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
+    username?: string | null;
+    imageUrl?: string | null;
+    primaryEmailAddress?: { emailAddress: string | null } | null;
+  };
+  const clerkUsersById = new Map<string, DisplayUser>(
     (clerkUsersResult.data ?? []).map((user) => [user.id, user]),
   );
+  if (isSupabase && clerkUserIds.length) {
+    const { data: links, error: linkError } = await supabaseServer
+      .from("auth_identity_links")
+      .select("clerk_user_id, supabase_user_id")
+      .in("clerk_user_id", clerkUserIds);
+    if (linkError) throw linkError;
+    await Promise.all((links ?? []).map(async (link) => {
+      const { data, error } = await supabaseServer.auth.admin.getUserById(link.supabase_user_id);
+      if (error || data.user?.id !== link.supabase_user_id) return;
+      const profile = profileFromVerifiedSupabaseUser(data.user);
+      clerkUsersById.set(link.clerk_user_id, {
+        id: link.clerk_user_id,
+        ...profile,
+        primaryEmailAddress: data.user.email_confirmed_at
+          ? { emailAddress: data.user.email ?? null }
+          : null,
+      });
+    }));
+  }
 
   const members = (memberships ?? []).map((membership) => {
     const clerkUser = clerkUsersById.get(membership.clerk_user_id);
@@ -185,6 +217,74 @@ export async function POST(request: Request, context: RouteContext) {
         { error: "This email already has a pending invitation" },
         { status: 409 },
       );
+    }
+
+    if (selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase") {
+      const existingSupabaseUser = await findSupabaseArtistInviteRecipient(email);
+      if (existingSupabaseUser?.email_confirmed_at) {
+        const { data: link, error: linkError } = await supabaseServer
+          .from("auth_identity_links")
+          .select("clerk_user_id")
+          .eq("supabase_user_id", existingSupabaseUser.id)
+          .maybeSingle();
+        if (linkError) throw linkError;
+        if (link?.clerk_user_id) {
+          const { data: existingMembership, error: membershipLookupError } = await supabaseServer
+            .from("artist_memberships")
+            .select("artist_id")
+            .eq("artist_id", id)
+            .eq("clerk_user_id", link.clerk_user_id)
+            .maybeSingle();
+          if (membershipLookupError) throw membershipLookupError;
+          if (existingMembership) {
+            return NextResponse.json({ error: "This person already has access to the artist" }, { status: 409 });
+          }
+          const { error: membershipError } = await supabaseServer.from("artist_memberships").insert({
+            artist_id: id,
+            clerk_user_id: link.clerk_user_id,
+            role,
+          });
+          if (membershipError) throw membershipError;
+          const profile = profileFromVerifiedSupabaseUser(existingSupabaseUser);
+          return NextResponse.json({
+            added: true,
+            member: {
+              clerk_user_id: link.clerk_user_id,
+              display_name: profile.fullName ?? "Audioflume member",
+              email,
+              avatar_url: profile.imageUrl,
+              role,
+            },
+          }, { status: 201 });
+        }
+      }
+
+      const { data: storedInvitation, error: invitationError } = await supabaseServer
+        .from("artist_team_invitations")
+        .insert({
+          artist_id: id,
+          email,
+          role,
+          status: "pending",
+          clerk_invitation_id: null,
+          invited_by_clerk_user_id: access.userId,
+        })
+        .select("id, email, role, status, created_at")
+        .single();
+      if (invitationError) throw invitationError;
+
+      try {
+        const emailSent = existingSupabaseUser
+          ? false
+          : await sendSupabaseArtistInvitation(
+              email,
+              new URL("/sign-in?redirect_url=%2Fartists%2Fdashboard", request.url).toString(),
+            );
+        return NextResponse.json({ invited: true, email_sent: emailSent, invitation: storedInvitation }, { status: 201 });
+      } catch (error) {
+        await supabaseServer.from("artist_team_invitations").delete().eq("id", storedInvitation.id).eq("status", "pending");
+        throw error;
+      }
     }
 
     const client = await clerkClient();
