@@ -2481,17 +2481,17 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore {
-  top: 26px;
-  right: 0;
-  border-color: var(--border-subtle);
-  color: var(--text-primary);
+  top: 16px;
+  right: 16px;
+  border-color: rgba(255, 255, 255, .24);
+  color: #fff;
   opacity: 0;
   pointer-events: none;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore:hover,
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-explore:focus-visible {
-  border-color: var(--text-muted);
+  border-color: rgba(255, 255, 255, .42);
 }
 
 @media (hover: none) {

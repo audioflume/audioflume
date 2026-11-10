@@ -566,6 +566,19 @@ export function HomeArtistShelf({
                   />
                 ) : null}
               </div>
+              {discoverLayout && !compact && !hideExploreButton ? (
+              <Link
+                href={`/artists/${artist.slug}`}
+                className={`${artistCardStyles.cardExplore} audioflume-home-reference-artist-explore`}
+                aria-label={`Explore artist ${artist.name}`}
+              >
+                Explore Artist
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <path d="M7 17L17 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
+                  <path d="M9 7H17V15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </Link>
+              ) : null}
               {!discoverLayout ? (
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
@@ -580,7 +593,7 @@ export function HomeArtistShelf({
               </div>
               ) : null}
             </div>
-            {!compact && !hideExploreButton ? (
+            {!discoverLayout && !compact && !hideExploreButton ? (
               <Link
                 href={`/artists/${artist.slug}`}
                 className={`${artistCardStyles.cardExplore} audioflume-home-reference-artist-explore`}
