@@ -2489,9 +2489,9 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-name-arrow path {
-  transform: scale(1.4);
+  transform: scale(1.5);
   transform-origin: center;
-  stroke-width: 0.8;
+  stroke-width: 1.05;
   stroke-linecap: butt;
   stroke-linejoin: miter;
 }
