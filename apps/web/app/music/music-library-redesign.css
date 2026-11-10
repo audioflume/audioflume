@@ -19,7 +19,7 @@
   align-items: stretch;
   transition: grid-template-columns 180ms ease;
   border-bottom: var(--filmwave-border-width) solid var(--border);
-  background: transparent;
+  background: var(--bg-primary);
   color: var(--text-primary);
   overscroll-behavior: none;
 }
