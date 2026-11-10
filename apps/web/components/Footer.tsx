@@ -201,10 +201,10 @@ export default function Footer({
             <div className="flex flex-col gap-5">
               <h2 className={footerHeadingClass}>Built for Story</h2>
               <nav aria-label="Legal footer links" className="flex flex-col gap-0">
-                <Link href="#" className={footerLinkClass}>
-                  Licensing terms
+                <Link href="/terms" className={footerLinkClass}>
+                  Terms of Service
                 </Link>
-                <Link href="#" className={footerLinkClass}>
+                <Link href="/privacy" className={footerLinkClass}>
                   Privacy
                 </Link>
               </nav>

@@ -13,6 +13,8 @@ const isPublicRoute = createRouteMatcher([
   "/artists/earnings",
   "/artists/licensing",
   "/pricing",
+  "/terms",
+  "/privacy",
   "/music",
   "/sound-fx",
   "/discover",
