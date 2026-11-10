@@ -333,7 +333,21 @@ function RecentSongsCard({
 }
 
 export default function AdminDashboardPage() {
-  const { user, isLoaded: clerkLoaded } = useUser();
+  const session = useAccountSession();
+  return session.provider === "supabase"
+    ? <AdminDashboard user={null} clerkLoaded={false} />
+    : <ClerkAdminDashboard />;
+}
+
+function ClerkAdminDashboard() {
+  const { user, isLoaded } = useUser();
+  return <AdminDashboard user={user} clerkLoaded={isLoaded} />;
+}
+
+function AdminDashboard({ user, clerkLoaded }: {
+  user: ReturnType<typeof useUser>["user"];
+  clerkLoaded: boolean;
+}) {
   const session = useAccountSession();
   const supabaseMode = session.provider === "supabase";
   const [trustedAdmin, setTrustedAdmin] = useState(false);

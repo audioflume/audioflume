@@ -883,9 +883,23 @@ function UploadStatusIcon({
   return null;
 }
 
-export default function AdminSongForm({ mode, songId }: AdminSongFormProps) {
+export default function AdminSongForm(props: AdminSongFormProps) {
+  const session = useAccountSession();
+  return session.provider === "supabase"
+    ? <AdminSongFormContent {...props} user={null} clerkLoaded={false} />
+    : <ClerkAdminSongForm {...props} />;
+}
+
+function ClerkAdminSongForm(props: AdminSongFormProps) {
+  const { user, isLoaded } = useUser();
+  return <AdminSongFormContent {...props} user={user} clerkLoaded={isLoaded} />;
+}
+
+function AdminSongFormContent({ mode, songId, user, clerkLoaded }: AdminSongFormProps & {
+  user: ReturnType<typeof useUser>["user"];
+  clerkLoaded: boolean;
+}) {
   const router = useRouter();
-  const { user, isLoaded: clerkLoaded } = useUser();
   const session = useAccountSession();
   const supabaseMode = session.provider === "supabase";
   const [trustedAdmin, setTrustedAdmin] = useState(false);

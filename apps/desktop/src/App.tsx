@@ -1,7 +1,7 @@
 import { invoke } from "@tauri-apps/api/core";
 import { listen } from "@tauri-apps/api/event";
-import { useEffect, useMemo, useState } from "react";
-import { register } from "@tauri-apps/plugin-deep-link";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { getCurrent, register } from "@tauri-apps/plugin-deep-link";
 import { open } from "@tauri-apps/plugin-dialog";
 import { load } from "@tauri-apps/plugin-store";
 import {
@@ -47,6 +47,9 @@ import {
 import DesktopMusicLibraryView from "./components/desktop-app/DesktopMusicLibraryView";
 
 const SETTINGS_STORE = "filmwave-settings.json";
+const DESKTOP_AUTH_SCHEME = import.meta.env.VITE_AUDIOFLUME_DESKTOP_AUTH_SCHEME === "audioflume-auth-staging"
+  ? "audioflume-auth-staging:"
+  : "audioflume:";
 const DEFAULT_AUTO_SYNC_INTERVAL_MINUTES = 15;
 const MAX_SYNC_ACTIVITY_LOG_ENTRIES = 10;
 
@@ -70,8 +73,9 @@ function getTokenFromDeepLink(url: string) {
   try {
     const parsedUrl = new URL(url);
 
-    if (parsedUrl.protocol !== "audioflume:") return null;
+    if (parsedUrl.protocol !== DESKTOP_AUTH_SCHEME) return null;
     if (parsedUrl.hostname !== "auth") return null;
+    if (parsedUrl.pathname !== "/callback") return null;
 
     return parsedUrl.searchParams.get("token");
   } catch {
@@ -110,6 +114,7 @@ function App() {
     null,
   );
   const [accountLoading, setAccountLoading] = useState(false);
+  const accountRequestVersion = useRef(0);
   const [syncStatus, setSyncStatus] = useState("Not connected");
   const [syncing, setSyncing] = useState(false);
   const [openingFolder, setOpeningFolder] = useState(false);
@@ -227,14 +232,29 @@ function App() {
     token: string,
     nextApiBaseUrl = normalizedApiBaseUrl,
   ) {
+    const requestVersion = ++accountRequestVersion.current;
     setAccountLoading(true);
 
     try {
       const account = await getDesktopAccount(token, nextApiBaseUrl);
+      if (requestVersion !== accountRequestVersion.current) return null;
       setDesktopAccount(account);
       return account;
     } catch (error) {
+      if (requestVersion !== accountRequestVersion.current) return null;
       console.error(error);
+      if (
+        error instanceof Error && "status" in error &&
+        (error.status === 401 || error.status === 403)
+      ) {
+        const store = await load(SETTINGS_STORE);
+        const savedToken = await store.get<string>("desktopToken");
+        if (requestVersion !== accountRequestVersion.current) return null;
+        if (savedToken === token) {
+          await signOutDesktop();
+          return null;
+        }
+      }
       setDesktopAccount(null);
       setLastSyncReport(
         error instanceof Error
@@ -243,14 +263,37 @@ function App() {
       );
       return null;
     } finally {
-      setAccountLoading(false);
+      if (requestVersion === accountRequestVersion.current) setAccountLoading(false);
     }
   }
 
   async function saveDesktopToken(nextToken: string) {
+    const requestVersion = ++accountRequestVersion.current;
+    setAccountLoading(true);
+    let account: DesktopAccount;
+    try {
+      const verifiedAccount = await getDesktopAccount(nextToken, normalizedApiBaseUrl);
+      if (!verifiedAccount?.id) throw new Error("Could not verify Audioflume account.");
+      if (requestVersion !== accountRequestVersion.current) return;
+      account = verifiedAccount;
+    } catch (error) {
+      if (requestVersion !== accountRequestVersion.current) return;
+      setSyncStatus("Could not sign in");
+      setLastSyncReport(error instanceof Error ? error.message : "Could not verify Audioflume account.");
+      return;
+    } finally {
+      if (requestVersion === accountRequestVersion.current) setAccountLoading(false);
+    }
     const store = await load(SETTINGS_STORE);
+    if (requestVersion !== accountRequestVersion.current) return;
+
+    await store.set("desktopToken", nextToken);
+    await store.set("projectSource", "local-api");
+    await store.save();
+    if (requestVersion !== accountRequestVersion.current) return;
 
     setDesktopToken(nextToken);
+    setDesktopAccount(account);
     setConnectionCode("");
     setProjectSource("local-api");
     setSelectedProjectIds([]);
@@ -259,11 +302,6 @@ function App() {
     setLastSyncReport(null);
     setSyncStatus("Signed in");
 
-    await store.set("desktopToken", nextToken);
-    await store.set("projectSource", "local-api");
-    await store.save();
-
-    await loadDesktopAccount(nextToken);
     await addSyncActivityLogEntry({
       mode: "system",
       status: "info",
@@ -339,7 +377,7 @@ function App() {
   }
 
   useEffect(() => {
-    register("audioflume").catch((error) => {
+    register(DESKTOP_AUTH_SCHEME.slice(0, -1)).catch((error) => {
       console.warn("Could not register Audioflume deep link scheme.", error);
     });
   }, []);
@@ -400,7 +438,9 @@ function App() {
   }, []);
 
   useEffect(() => {
+    let cancelled = false;
     async function handleDeepLinkUrl(url: string) {
+      if (cancelled) return;
       const token = getTokenFromDeepLink(url);
       if (!token) return;
       await saveDesktopToken(token);
@@ -412,11 +452,21 @@ function App() {
       for (const url of getDeepLinkUrls(event.payload)) {
         await handleDeepLinkUrl(url);
       }
-    }).then((nextUnlisten) => {
+    }).then(async (nextUnlisten) => {
+      if (cancelled) {
+        nextUnlisten();
+        return;
+      }
       unlisten = nextUnlisten;
+      for (const url of (await getCurrent()) ?? []) {
+        await handleDeepLinkUrl(url);
+      }
+    }).catch(() => {
+      console.warn("Could not initialize Audioflume authentication callbacks.");
     });
 
     return () => {
+      cancelled = true;
       unlisten?.();
     };
   }, []);
@@ -640,9 +690,12 @@ function App() {
   }
 
   async function signOutDesktop() {
+    const requestVersion = ++accountRequestVersion.current;
     const store = await load(SETTINGS_STORE);
+    if (requestVersion !== accountRequestVersion.current) return;
 
     setDesktopToken(null);
+    setAccountLoading(false);
     setConnectionCode("");
     setDesktopAccount(null);
     setProjects([]);

@@ -76,7 +76,7 @@ test("artist invitation refresh cannot mix an old Clerk session with a Supabase 
   const invites = await read("context/ArtistInvitesContext.tsx");
   assert.match(layout, /if \(accountProvider === "clerk"\)/);
   assert.match(layout, /initialPendingArtistInviteCount = await getPendingArtistInviteCount\(user\)/);
-  assert.match(invites, /const \{ provider \} = useAccountSession\(\)/);
+  assert.match(invites, /const \{ provider, isLoaded: isAuthLoaded, isSignedIn \} = useAccountSession\(\)/);
   assert.match(invites, /if \(provider === "supabase"\)/);
   assert.match(invites, /setPendingInviteCount\(0\)/);
   assert.match(invites, /fetch\("\/api\/artists\/claim"/);

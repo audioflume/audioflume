@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
 import { requireAdmin } from "@/lib/admin";
-import { processAudioForStreaming } from "@/lib/audioProcessing";
-import { uploadFileToR2 } from "@/lib/r2";
 
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -119,6 +117,7 @@ export async function POST(req: Request) {
         ? `${versionedBaseKey}/${folder}/${fileName}`
         : `${artistSlug}/${titleSlug}/${folder}/${timestamp}-${fileName}`;
 
+    const { uploadFileToR2 } = await import("@/lib/r2");
     const url = await uploadFileToR2({
       file,
       key,
@@ -126,7 +125,7 @@ export async function POST(req: Request) {
 
     const streamingAssets =
       type === "audio"
-        ? await processAudioForStreaming({
+        ? await (await import("@/lib/audioProcessing")).processAudioForStreaming({
             file,
             baseKey: versionedBaseKey,
           })

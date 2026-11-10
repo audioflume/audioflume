@@ -258,6 +258,8 @@ export default function middleware(request: NextRequest, event: NextFetchEvent) 
       pathname === "/api/account/auth-session" ||
       pathname === "/api/auth-preview/cutover-session" ||
       pathname === "/api/admin/access" ||
+      pathname === "/api/admin/artists" ||
+      pathname === "/api/admin/upload" ||
       pathname === "/api/admin/system-health" ||
       pathname === "/api/admin/audio-proxy"
     ) {

@@ -110,8 +110,7 @@ export default async function RootLayout({
       } as CSSProperties)
     : undefined;
 
-  return (
-    <ClerkProvider>
+  const content = (
       <html
         lang="en"
         className={htmlClassName}
@@ -185,6 +184,7 @@ export default async function RootLayout({
           </AccountSessionProvider>
         </body>
       </html>
-    </ClerkProvider>
   );
+
+  return accountProvider === "clerk" ? <ClerkProvider>{content}</ClerkProvider> : content;
 }

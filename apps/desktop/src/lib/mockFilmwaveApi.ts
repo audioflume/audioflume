@@ -279,7 +279,9 @@ export async function getDesktopAccount(token?: string | null, apiBaseUrl?: stri
   const data = (await response.json()) as DesktopAccountApiResponse;
 
   if (!response.ok) {
-    throw new Error(data.error || "Failed to load Audioflume account");
+    throw Object.assign(new Error(data.error || "Failed to load Audioflume account"), {
+      status: response.status,
+    });
   }
 
   return data.user ?? null;

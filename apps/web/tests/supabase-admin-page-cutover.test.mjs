@@ -70,3 +70,13 @@ test("admin song upload/edit form requires trusted Supabase admin while preservi
   assert.match(src, /if \(!isLoaded\)/);
   assert.match(src, /if \(!isAdmin\)/);
 });
+
+
+test("admin Clerk hooks are isolated behind provider-specific components", async () => {
+  const dashboard = await read("app/admin/page.tsx");
+  const form = await read("components/admin/AdminSongForm.tsx");
+  assert.match(dashboard, /function ClerkAdminDashboard\(\)/);
+  assert.match(dashboard, /<AdminDashboard user=\{null\} clerkLoaded=\{false\} \/>/);
+  assert.match(form, /function ClerkAdminSongForm\(props: AdminSongFormProps\)/);
+  assert.match(form, /<AdminSongFormContent \{\.\.\.props\} user=\{null\} clerkLoaded=\{false\} \/>/);
+});

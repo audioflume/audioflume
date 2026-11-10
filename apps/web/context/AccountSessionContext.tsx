@@ -32,47 +32,15 @@ export function AccountSessionProvider({
   provider: AccountProvider;
   children: ReactNode;
 }) {
+  return provider === "supabase"
+    ? <SupabaseAccountSessionProvider>{children}</SupabaseAccountSessionProvider>
+    : <ClerkAccountSessionProvider>{children}</ClerkAccountSessionProvider>;
+}
+
+function ClerkAccountSessionProvider({ children }: { children: ReactNode }) {
   const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
   const { signOut: clerkSignOut } = useClerk();
-  const [supabaseUser, setSupabaseUser] = useState<AccountDisplayUser | null>(null);
-  const [supabaseLoaded, setSupabaseLoaded] = useState(false);
-
-  useEffect(() => {
-    if (provider !== "supabase") return;
-
-    let active = true;
-    setSupabaseLoaded(false);
-
-    void supabaseAccountBrowser.auth.getUser().then(({ data, error }) => {
-      if (!active) return;
-      setSupabaseUser(error || !data.user
-        ? null
-        : { id: data.user.id, ...profileFromVerifiedSupabaseUser(data.user) });
-      setSupabaseLoaded(true);
-    }).catch(() => {
-      if (!active) return;
-      setSupabaseUser(null);
-      setSupabaseLoaded(true);
-    });
-
-    const { data: subscription } = supabaseAccountBrowser.auth.onAuthStateChange(
-      (_event, session) => {
-        if (!active) return;
-        setSupabaseUser(session?.user
-          ? { id: session.user.id, ...profileFromVerifiedSupabaseUser(session.user) }
-          : null);
-        setSupabaseLoaded(true);
-      },
-    );
-
-    return () => {
-      active = false;
-      subscription.subscription.unsubscribe();
-    };
-  }, [provider]);
-
   const user = useMemo<AccountDisplayUser | null>(() => {
-    if (provider === "supabase") return supabaseUser;
     if (!clerkUser) return null;
     return {
       id: clerkUser.id,
@@ -85,28 +53,67 @@ export function AccountSessionProvider({
         emailAddress: clerkUser.primaryEmailAddress?.emailAddress ?? null,
       },
     };
-  }, [provider, supabaseUser, clerkUser]);
+  }, [clerkUser]);
+  const signOut = useCallback(async () => {
+    await clerkSignOut();
+  }, [clerkSignOut]);
+  const value = useMemo<AccountSession>(() => {
+    const userId = user?.id ?? null;
+    return { provider: "clerk", isLoaded: clerkLoaded, userId, isSignedIn: clerkLoaded && Boolean(userId), user, signOut };
+  }, [clerkLoaded, user, signOut]);
+
+  return <AccountSessionContext.Provider value={value}>{children}</AccountSessionContext.Provider>;
+}
+
+function SupabaseAccountSessionProvider({ children }: { children: ReactNode }) {
+  const [supabaseUser, setSupabaseUser] = useState<AccountDisplayUser | null>(null);
+  const [supabaseLoaded, setSupabaseLoaded] = useState(false);
+
+  useEffect(() => {
+    let active = true;
+    let sessionVersion = 0;
+
+    void supabaseAccountBrowser.auth.getUser().then(({ data, error }) => {
+      // A late initial lookup must never restore a signed-out or replaced user.
+      if (!active || sessionVersion !== 0) return;
+      setSupabaseUser(error || !data.user
+        ? null
+        : { id: data.user.id, ...profileFromVerifiedSupabaseUser(data.user) });
+      setSupabaseLoaded(true);
+    }).catch(() => {
+      if (!active || sessionVersion !== 0) return;
+      setSupabaseUser(null);
+      setSupabaseLoaded(true);
+    });
+
+    const { data: subscription } = supabaseAccountBrowser.auth.onAuthStateChange(
+      (event, session) => {
+        // Initial display identity comes from the independently verified lookup.
+        if (!active || event === "INITIAL_SESSION") return;
+        sessionVersion += 1;
+        setSupabaseUser(session?.user
+          ? { id: session.user.id, ...profileFromVerifiedSupabaseUser(session.user) }
+          : null);
+        setSupabaseLoaded(true);
+      },
+    );
+
+    return () => {
+      active = false;
+      subscription.subscription.unsubscribe();
+    };
+  }, []);
 
   const signOut = useCallback(async () => {
-    if (provider === "supabase") {
-      const { error } = await supabaseAccountBrowser.auth.signOut();
-      if (error) throw error;
-      return;
-    }
-    await clerkSignOut();
-  }, [provider, clerkSignOut]);
-
+    const { error } = await supabaseAccountBrowser.auth.signOut();
+    if (error) throw error;
+  }, []);
   const value = useMemo<AccountSession>(() => {
-    const isLoaded = provider === "supabase" ? supabaseLoaded : clerkLoaded;
-    const userId = user?.id ?? null;
-    return { provider, isLoaded, userId, isSignedIn: isLoaded && Boolean(userId), user, signOut };
-  }, [provider, supabaseLoaded, clerkLoaded, user, signOut]);
+    const userId = supabaseUser?.id ?? null;
+    return { provider: "supabase", isLoaded: supabaseLoaded, userId, isSignedIn: supabaseLoaded && Boolean(userId), user: supabaseUser, signOut };
+  }, [supabaseLoaded, supabaseUser, signOut]);
 
-  return (
-    <AccountSessionContext.Provider value={value}>
-      {children}
-    </AccountSessionContext.Provider>
-  );
+  return <AccountSessionContext.Provider value={value}>{children}</AccountSessionContext.Provider>;
 }
 
 export function useAccountSession() {

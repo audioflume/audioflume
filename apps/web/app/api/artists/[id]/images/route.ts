@@ -3,7 +3,6 @@ import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 
 import { ArtistAccessError, requireArtistPermission } from "@/lib/artistPermissions";
-import { r2Client } from "@/lib/r2";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const runtime = "nodejs";
@@ -93,6 +92,7 @@ export async function POST(request: Request, context: RouteContext) {
       .webp({ quality: 82 })
       .toBuffer();
 
+    const { r2Client } = await import("@/lib/r2");
     await r2Client.send(
       new PutObjectCommand({
         Bucket: getBucket(),

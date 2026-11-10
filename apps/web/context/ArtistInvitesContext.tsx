@@ -1,6 +1,5 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
 import { useAccountSession } from "@/context/AccountSessionContext";
 import {
   createContext,
@@ -26,8 +25,7 @@ export function ArtistInvitesProvider({
   initialPendingCount: number;
   children: ReactNode;
 }) {
-  const { isLoaded: isAuthLoaded, isSignedIn } = useUser();
-  const { provider } = useAccountSession();
+  const { provider, isLoaded: isAuthLoaded, isSignedIn } = useAccountSession();
   const [pendingInviteCount, setPendingInviteCount] = useState(initialPendingCount);
 
   const refreshPendingInvites = useCallback(async () => {

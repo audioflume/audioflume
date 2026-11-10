@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { useEffect, useLayoutEffect, useState } from "react";
 import { useArtistInvites } from "@/context/ArtistInvitesContext";
 
@@ -9,14 +9,14 @@ const ROOT_CLASS = "filmwave-artist-invite-banner-active";
 const PENDING_ROOT_CLASS = "filmwave-artist-invite-pending";
 
 export default function ArtistInviteBanner() {
-  const { user } = useUser();
+  const { userId } = useAccountSession();
   const { pendingInviteCount } = useArtistInvites();
   const [dismissed, setDismissed] = useState(false);
   const visible = pendingInviteCount > 0 && !dismissed;
 
   useEffect(() => {
     setDismissed(false);
-  }, [user?.id]);
+  }, [userId]);
 
   useLayoutEffect(() => {
     document.documentElement.classList.toggle(ROOT_CLASS, visible);

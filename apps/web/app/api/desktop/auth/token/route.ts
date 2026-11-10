@@ -109,7 +109,12 @@ async function getSignedInUserId() {
 }
 
 function getDesktopCallbackUrl(token: string) {
-  const callbackUrl = new URL(DESKTOP_CALLBACK_URL);
+  const callbackUrl = new URL(
+    process.env.NODE_ENV !== "production" &&
+    process.env.AUDIOFLUME_DESKTOP_AUTH_CALLBACK_SCHEME === "audioflume-auth-staging"
+      ? "audioflume-auth-staging://auth/callback"
+      : DESKTOP_CALLBACK_URL,
+  );
 
   callbackUrl.searchParams.set("token", token);
 
