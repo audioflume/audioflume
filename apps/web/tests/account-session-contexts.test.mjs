@@ -10,7 +10,7 @@ const read = (path) => readFile(resolve(root, path), "utf8");
 test("root layout provides server-selected account sessions to the existing shared context tree", async () => {
   const source = await read("app/layout.tsx");
   assert.match(source, /const accountProvider = selectAccountAuthProvider\(process\.env\.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER\)/);
-  assert.match(source, /<AccountSessionProvider provider=\{accountProvider\}>/);
+  assert.match(source, /<AccountSessionProvider provider=\{accountProvider\} initialUser=\{initialSupabaseAccountUser\}>/);
   assert.match(source, /if \(accountProvider === "clerk"\)/);
   assert.match(source, /<ClerkProvider>/);
   assert.ok(source.indexOf("<AccountSessionProvider") < source.indexOf("<FavoritesProvider>"));
@@ -43,7 +43,7 @@ test("Supabase client cache session does not claim legacy ownership or grant ser
   const src = await read("context/AccountSessionContext.tsx");
   assert.match(src, /supabaseAccountBrowser\.auth\.getUser\(\)/);
   assert.match(src, /supabaseAccountBrowser\.auth\.onAuthStateChange/);
-  assert.match(src, /<SupabaseAccountSessionProvider>/);
+  assert.match(src, /<SupabaseAccountSessionProvider initialUser=\{initialUser\}>/);
   assert.match(src, /<ClerkAccountSessionProvider>/);
   assert.match(src, /const userId = supabaseUser\?\.id \?\? null/);
   assert.match(src, /profileFromVerifiedSupabaseUser\(data\.user\)/);
@@ -59,9 +59,9 @@ test("Supabase client cache session does not claim legacy ownership or grant ser
 test("header and web user menu use provider-aware identity and sign-out without changing shared shells", async () => {
   const header = await read("components/Header.tsx");
   const menu = await read("components/UserMenu.tsx");
-  assert.match(header, /const \{ user, isLoaded \} = useAccountSession\(\)/);
+  assert.match(header, /const \{ user, isLoaded, provider \} = useAccountSession\(\)/);
   assert.match(header, /const initials = user/);
-  assert.match(header, /const avatarImage = profileImage \|\| user\?\.imageUrl \|\| null/);
+  assert.match(header, /const avatarImage = provider === "supabase"/);
   assert.match(header, /<UserMenu onClose=\{\(\) => setMenuOpen\(false\)\} \/>/);
   assert.match(menu, /const \{ signOut, user \} = useAccountSession\(\)/);
   assert.match(menu, /onClick=\{\(\) => signOut\(\)\}/);

@@ -12,6 +12,8 @@ import { ProjectsProvider } from "@/context/ProjectsContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ArtistInvitesProvider } from "@/context/ArtistInvitesContext";
 import { AccountSessionProvider } from "@/context/AccountSessionContext";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
+import { supabaseServer } from "@/lib/supabaseServer";
 import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
@@ -63,6 +65,33 @@ export default async function RootLayout({
   const cookieStore = await cookies();
   const accountProvider = selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER);
   let user: Awaited<ReturnType<typeof currentUser>> = null;
+  let initialSupabaseAccountUser = null;
+
+  if (accountProvider === "supabase") {
+    const owner = await resolveAccountOwner();
+
+    if (owner.status === 200 && owner.supabaseUserId && owner.profileIdentity) {
+      const { data, error } = await supabaseServer
+        .from("user_profiles")
+        .select("avatar_url")
+        .eq("clerk_user_id", owner.userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Failed to preload account avatar:", error);
+      }
+
+      initialSupabaseAccountUser = {
+        id: owner.supabaseUserId,
+        ...owner.profileIdentity,
+        imageUrl:
+          (typeof data?.avatar_url === "string" && data.avatar_url.trim())
+            ? data.avatar_url
+            : owner.profileIdentity.imageUrl,
+      };
+    }
+  }
+
 
   // Artist invitation preloading is still Clerk-only. Never use an unrelated
   // simultaneous Clerk session to preload invitations for a Supabase account.
@@ -156,7 +185,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
         <body>
-          <AccountSessionProvider provider={accountProvider}>
+          <AccountSessionProvider provider={accountProvider} initialUser={initialSupabaseAccountUser}>
           <ArtistInvitesProvider
             initialPendingCount={initialPendingArtistInviteCount}
           >

@@ -72,7 +72,7 @@ function effectHarness() {
   let observed;
   const hooks = {
     createContext: () => ({ Provider: "provider" }),
-    useState(initial) { const key = index++; if (!(key in state)) state[key] = initial; return [state[key], (value) => { state[key] = value; }]; },
+    useState(initial) { const key = index++; if (!(key in state)) state[key] = initial; return [state[key], (value) => { state[key] = typeof value === "function" ? value(state[key]) : value; }]; },
     useEffect(fn) { effect ??= fn; },
     useMemo: (fn) => fn(), useCallback: (fn) => fn,
     useContext: () => observed,

@@ -28,12 +28,14 @@ const AccountSessionContext = createContext<AccountSession | null>(null);
 export function AccountSessionProvider({
   provider,
   children,
+  initialUser = null,
 }: {
   provider: AccountProvider;
   children: ReactNode;
+  initialUser?: AccountDisplayUser | null;
 }) {
   return provider === "supabase"
-    ? <SupabaseAccountSessionProvider>{children}</SupabaseAccountSessionProvider>
+    ? <SupabaseAccountSessionProvider initialUser={initialUser}>{children}</SupabaseAccountSessionProvider>
     : <ClerkAccountSessionProvider>{children}</ClerkAccountSessionProvider>;
 }
 
@@ -65,9 +67,15 @@ function ClerkAccountSessionProvider({ children }: { children: ReactNode }) {
   return <AccountSessionContext.Provider value={value}>{children}</AccountSessionContext.Provider>;
 }
 
-function SupabaseAccountSessionProvider({ children }: { children: ReactNode }) {
-  const [supabaseUser, setSupabaseUser] = useState<AccountDisplayUser | null>(null);
-  const [supabaseLoaded, setSupabaseLoaded] = useState(false);
+function SupabaseAccountSessionProvider({
+  children,
+  initialUser,
+}: {
+  children: ReactNode;
+  initialUser: AccountDisplayUser | null;
+}) {
+  const [supabaseUser, setSupabaseUser] = useState<AccountDisplayUser | null>(initialUser);
+  const [supabaseLoaded, setSupabaseLoaded] = useState(Boolean(initialUser));
 
   useEffect(() => {
     let active = true;
@@ -76,9 +84,17 @@ function SupabaseAccountSessionProvider({ children }: { children: ReactNode }) {
     void supabaseAccountBrowser.auth.getUser().then(({ data, error }) => {
       // A late initial lookup must never restore a signed-out or replaced user.
       if (!active || sessionVersion !== 0) return;
-      setSupabaseUser(error || !data.user
-        ? null
-        : { id: data.user.id, ...profileFromVerifiedSupabaseUser(data.user) });
+      setSupabaseUser((current) => {
+        if (error || !data.user) return null;
+        const profile = profileFromVerifiedSupabaseUser(data.user);
+        return {
+          id: data.user.id,
+          ...profile,
+          imageUrl: current?.id === data.user.id
+            ? current.imageUrl || profile.imageUrl
+            : profile.imageUrl,
+        };
+      });
       setSupabaseLoaded(true);
     }).catch(() => {
       if (!active || sessionVersion !== 0) return;
@@ -91,9 +107,17 @@ function SupabaseAccountSessionProvider({ children }: { children: ReactNode }) {
         // Initial display identity comes from the independently verified lookup.
         if (!active || event === "INITIAL_SESSION") return;
         sessionVersion += 1;
-        setSupabaseUser(session?.user
-          ? { id: session.user.id, ...profileFromVerifiedSupabaseUser(session.user) }
-          : null);
+        setSupabaseUser((current) => {
+          if (!session?.user) return null;
+          const profile = profileFromVerifiedSupabaseUser(session.user);
+          return {
+            id: session.user.id,
+            ...profile,
+            imageUrl: current?.id === session.user.id
+              ? current.imageUrl || profile.imageUrl
+              : profile.imageUrl,
+          };
+        });
         setSupabaseLoaded(true);
       },
     );
@@ -103,6 +127,32 @@ function SupabaseAccountSessionProvider({ children }: { children: ReactNode }) {
       subscription.subscription.unsubscribe();
     };
   }, []);
+
+  // Use the existing Audioflume profile avatar for Supabase accounts.
+  useEffect(() => {
+    if (!supabaseUser?.id) return;
+
+    let active = true;
+    const expectedUserId = supabaseUser.id;
+
+    void fetch("/api/account/profile", { cache: "no-store" })
+      .then(async (response) => response.ok ? response.json() : null)
+      .then((payload) => {
+        const savedAvatar = payload?.profile?.avatar_url;
+        if (!active || typeof savedAvatar !== "string" || !savedAvatar.trim()) return;
+
+        setSupabaseUser((current) =>
+          current?.id === expectedUserId && current.imageUrl !== savedAvatar
+            ? { ...current, imageUrl: savedAvatar }
+            : current
+        );
+      })
+      .catch(() => {});
+
+    return () => {
+      active = false;
+    };
+  }, [supabaseUser?.id]);
 
   const signOut = useCallback(async () => {
     const { error } = await supabaseAccountBrowser.auth.signOut();

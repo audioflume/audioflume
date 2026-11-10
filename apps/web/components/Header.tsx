@@ -69,7 +69,7 @@ function playlistNavIsActive(pathname: string | null, href: string) {
 }
 
 export default function Header() {
-  const { user, isLoaded } = useAccountSession();
+  const { user, isLoaded, provider } = useAccountSession();
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
@@ -239,7 +239,9 @@ export default function Header() {
   const initials = user
     ? `${user.firstName?.[0] ?? ""}${user.lastName?.[0] ?? ""}`.toUpperCase()
     : "";
-  const avatarImage = profileImage || user?.imageUrl || null;
+  const avatarImage = provider === "supabase"
+    ? (user?.imageUrl || profileImage || null)
+    : (profileImage || user?.imageUrl || null);
 
   useEffect(() => {
     setAvatarImageFailed(false);
