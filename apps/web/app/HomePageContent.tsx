@@ -544,6 +544,14 @@ export function HomeArtistShelf({
             key={artist.id}
             className={`audioflume-home-reference-artist-card${index === 0 ? " is-featured" : ""}${discoverLayout ? " is-discover-card" : ""}`}
           >
+            {discoverLayout ? (
+              <div className="audioflume-discover-featured-identity">
+                <strong className="audioflume-discover-featured-name">{artist.name}</strong>
+                {artist.designation ? (
+                  <span className="audioflume-discover-featured-designation">{artist.designation}</span>
+                ) : null}
+              </div>
+            ) : null}
             <div className="audioflume-home-reference-artist-link">
               <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
               <div className="audioflume-home-reference-artist-media">
@@ -558,14 +566,7 @@ export function HomeArtistShelf({
                   />
                 ) : null}
               </div>
-              {discoverLayout ? (
-                <div className="audioflume-discover-featured-identity">
-                  <strong className="audioflume-discover-featured-name">{artist.name}</strong>
-                  {artist.designation ? (
-                    <span className="audioflume-discover-featured-designation">{artist.designation}</span>
-                  ) : null}
-                </div>
-              ) : (
+              {!discoverLayout ? (
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
                   <strong>{artist.name}</strong>
@@ -861,14 +862,17 @@ export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = fals
           className="audioflume-home-reference-artist-card audioflume-home-skeleton-artist-card"
           aria-hidden="true"
         >
+          {discoverLayout ? (
+            <div className="audioflume-discover-featured-identity">
+              <HomeSkeletonBlock className="is-discover-artist-name" />
+              <HomeSkeletonBlock className="is-discover-artist-designation" />
+            </div>
+          ) : null}
           <div className="audioflume-home-reference-artist-media">
             <HomeSkeletonBlock className="is-artist-media" />
           </div>
           {discoverLayout ? (
             <>
-              <div className="audioflume-discover-featured-identity">
-                <HomeSkeletonBlock className="is-discover-artist-name" />
-              </div>
               <div className="audioflume-discover-featured-track audioflume-discover-skeleton-artist-track">
                 <HomeSkeletonBlock className="is-discover-track-cover" />
                 <span className="audioflume-discover-featured-track-copy">
