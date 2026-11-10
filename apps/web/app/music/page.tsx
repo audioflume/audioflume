@@ -80,7 +80,7 @@ function FeaturedSongWaveform({ song }: { song: Song }) {
       progress={progress}
       options={{ barWidth: 1.5, barGap: 1 }}
       ariaLabel={`Seek ${song.title}`}
-      onSeek={(nextProgress) => {
+      onSeek={(nextProgress: number) => {
         seekTo(song, nextProgress, isPlaying);
       }}
     />
