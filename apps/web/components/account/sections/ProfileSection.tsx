@@ -35,6 +35,7 @@ export default function ProfileSection() {
         <ProfileImageUploader
           initials={initials}
           value={form.avatar_url}
+          fallbackSrc={user?.imageUrl}
           onChange={(value) =>
             setForm((current) => ({ ...current, avatar_url: value }))
           }

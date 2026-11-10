@@ -1543,7 +1543,13 @@ export default function Header() {
                             <img
                               src={avatarImage}
                               alt="Profile"
-                              onError={() => setAvatarImageFailed(true)}
+                              onError={(event) => {
+                                if (user?.imageUrl && event.currentTarget.src !== user.imageUrl) {
+                                  event.currentTarget.src = user.imageUrl;
+                                } else {
+                                  setAvatarImageFailed(true);
+                                }
+                              }}
                             />
                           ) : (
                             initials
