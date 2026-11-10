@@ -423,7 +423,15 @@
   background: #fff;
   color: #111;
   cursor: pointer;
-  transition: transform 160ms ease;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 150ms ease, transform 160ms ease;
+}
+
+.card:hover .cardPlay,
+.card:focus-within .cardPlay {
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .cardPlay:hover:not(:disabled),
@@ -431,7 +439,9 @@
   transform: scale(1.03);
 }
 
-.cardPlay:disabled {
+.cardPlay:disabled,
+.card:hover .cardPlay:disabled,
+.card:focus-within .cardPlay:disabled {
   opacity: .4;
   cursor: default;
 }
@@ -466,9 +476,14 @@
 }
 
 @media (hover: none) {
-  .cardExplore {
+  .cardExplore,
+  .cardPlay {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  .cardPlay:disabled {
+    opacity: .4;
   }
 }
 
