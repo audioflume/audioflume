@@ -94,7 +94,8 @@ export default function PlaylistSimilarSounds() {
   }
 
   useEffect(() => {
-    if (!recommendationUrl) {
+    const activeRecommendationUrl = recommendationUrl;
+    if (!activeRecommendationUrl) {
       setRecommendations([]);
       setLoading(false);
       return;
@@ -106,7 +107,7 @@ export default function PlaylistSimilarSounds() {
 
     async function loadRecommendations() {
       try {
-        const response = await fetch(recommendationUrl, {
+        const response = await fetch(activeRecommendationUrl!, {
           signal: controller.signal,
           cache: "no-store",
         });

@@ -419,9 +419,7 @@ function analyzePcm(samples: Float32Array): AudioSimilarityFeatures {
 
   for (let frameIndex = 0; frameIndex < SPECTRAL_FRAME_COUNT; frameIndex++) {
     const progress =
-      SPECTRAL_FRAME_COUNT === 1
-        ? 0
-        : frameIndex / (SPECTRAL_FRAME_COUNT - 1);
+      frameIndex / (SPECTRAL_FRAME_COUNT - 1);
     const start = Math.min(
       samples.length - FFT_SIZE,
       Math.round(progress * (samples.length - FFT_SIZE)),

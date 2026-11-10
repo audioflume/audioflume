@@ -1,4 +1,4 @@
-import { requireAdmin } from "@/lib/admin";
+import { resolvePrivilegedActor } from "@/lib/auth/resolvePrivilegedActor";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export const ARTIST_MEMBERSHIP_ROLES = [
@@ -168,9 +168,9 @@ export async function getArtistMembershipsForUser(clerkUserId: string) {
 export async function getCurrentArtistAccess(
   artistId: string,
 ): Promise<ArtistAccess> {
-  const { isAdmin, user } = await requireAdmin();
+  const { isAdmin, userId } = await resolvePrivilegedActor();
 
-  if (!user?.id) {
+  if (!userId) {
     return {
       userId: null,
       isAdmin: false,
@@ -182,7 +182,7 @@ export async function getCurrentArtistAccess(
 
   if (isAdmin) {
     return {
-      userId: user.id,
+      userId,
       isAdmin: true,
       role: "admin",
       permissions: [...ARTIST_PERMISSIONS],
@@ -190,10 +190,10 @@ export async function getCurrentArtistAccess(
     };
   }
 
-  const membership = await getArtistMembershipForUser(artistId, user.id);
+  const membership = await getArtistMembershipForUser(artistId, userId);
 
   return {
-    userId: user.id,
+    userId,
     isAdmin: false,
     role: membership?.role ?? null,
     permissions: membership ? getArtistPermissions(membership.role) : [],

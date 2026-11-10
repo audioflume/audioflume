@@ -1,12 +1,12 @@
 "use client";
 
-import { useUser } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { Button, Feedback, Input, ProfileImageUploader } from "../AccountUI";
 import { useAccountProfile } from "../hooks/useAccountProfile";
 import { formatDate } from "../accountUtils";
 
 export default function ProfileSection() {
-  const { user } = useUser();
+  const { user } = useAccountSession();
   const {
     profile,
     identityEmail,
@@ -35,6 +35,7 @@ export default function ProfileSection() {
         <ProfileImageUploader
           initials={initials}
           value={form.avatar_url}
+          fallbackSrc={user?.imageUrl}
           onChange={(value) =>
             setForm((current) => ({ ...current, avatar_url: value }))
           }

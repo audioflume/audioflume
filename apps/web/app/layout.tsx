@@ -11,6 +11,11 @@ import { PlaylistsProvider } from "@/context/PlaylistsContext";
 import { ProjectsProvider } from "@/context/ProjectsContext";
 import { FavoritesProvider } from "@/context/FavoritesContext";
 import { ArtistInvitesProvider } from "@/context/ArtistInvitesContext";
+import { AccountSessionProvider } from "@/context/AccountSessionContext";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
+import { supabaseServer } from "@/lib/supabaseServer";
+import { verifiedSupabaseClaimEmails } from "@/lib/auth/verifiedSupabaseClaimEmails";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
@@ -59,12 +64,44 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const cookieStore = await cookies();
+  const accountProvider = selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER);
   let user: Awaited<ReturnType<typeof currentUser>> = null;
+  let initialSupabaseAccountUser = null;
 
-  try {
-    user = await currentUser();
-  } catch (error) {
-    console.error("Failed to preload Clerk user in root layout:", error);
+  if (accountProvider === "supabase") {
+    const owner = await resolveAccountOwner();
+
+    if (owner.status === 200 && owner.supabaseUserId && owner.profileIdentity) {
+      const { data, error } = await supabaseServer
+        .from("user_profiles")
+        .select("avatar_url")
+        .eq("clerk_user_id", owner.userId)
+        .maybeSingle();
+
+      if (error) {
+        console.error("Failed to preload account avatar:", error);
+      }
+
+      initialSupabaseAccountUser = {
+        id: owner.supabaseUserId,
+        ...owner.profileIdentity,
+        imageUrl:
+          (typeof data?.avatar_url === "string" && data.avatar_url.trim())
+            ? data.avatar_url
+            : owner.profileIdentity.imageUrl,
+      };
+    }
+  }
+
+
+  // Artist invitation preloading is still Clerk-only. Never use an unrelated
+  // simultaneous Clerk session to preload invitations for a Supabase account.
+  if (accountProvider === "clerk") {
+    try {
+      user = await currentUser();
+    } catch (error) {
+      console.error("Failed to preload Clerk user in root layout:", error);
+    }
   }
 
   const themeCookie =
@@ -82,6 +119,22 @@ export default async function RootLayout({
       initialPendingArtistInviteCount = await getPendingArtistInviteCount(user);
     } catch (error) {
       console.error("Failed to preload artist invitation count:", error);
+    }
+  } else if (accountProvider === "supabase" && initialSupabaseAccountUser?.id) {
+    try {
+      const { data, error } = await supabaseServer.auth.admin.getUserById(initialSupabaseAccountUser.id);
+      if (error || data.user?.id !== initialSupabaseAccountUser.id) throw error ?? new Error("Invalid auth subject");
+      const emails = verifiedSupabaseClaimEmails(initialSupabaseAccountUser.id, data.user);
+      if (emails.length) {
+        initialPendingArtistInviteCount = await getPendingArtistInviteCount({
+          emailAddresses: emails.map((emailAddress) => ({
+            emailAddress,
+            verification: { status: "verified" },
+          })),
+        });
+      }
+    } catch (error) {
+      console.error("Failed to preload Supabase artist invitations:", error);
     }
   }
 
@@ -103,8 +156,7 @@ export default async function RootLayout({
       } as CSSProperties)
     : undefined;
 
-  return (
-    <ClerkProvider>
+  const content = (
       <html
         lang="en"
         className={htmlClassName}
@@ -150,6 +202,7 @@ export default async function RootLayout({
           <link rel="dns-prefetch" href={R2_CDN_ORIGIN} />
         </head>
         <body>
+          <AccountSessionProvider provider={accountProvider} initialUser={initialSupabaseAccountUser}>
           <ArtistInvitesProvider
             initialPendingCount={initialPendingArtistInviteCount}
           >
@@ -174,8 +227,10 @@ export default async function RootLayout({
               </ThemeProvider>
             </UserPreferencesProvider>
           </ArtistInvitesProvider>
+          </AccountSessionProvider>
         </body>
       </html>
-    </ClerkProvider>
   );
+
+  return accountProvider === "clerk" ? <ClerkProvider>{content}</ClerkProvider> : content;
 }

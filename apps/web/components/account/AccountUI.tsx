@@ -230,7 +230,7 @@ export function VisualPanel({ image, index }: { image?: string; index?: number }
   );
 }
 
-export function ProfileImageUploader({ initials, value, onChange }: { initials: string; value: string; onChange: (value: string) => void }) {
+export function ProfileImageUploader({ initials, value, onChange, fallbackSrc }: { initials: string; value: string; onChange: (value: string) => void; fallbackSrc?: string | null }) {
   function handleImageChange(event: React.ChangeEvent<HTMLInputElement>) {
     const file = event.target.files?.[0];
     if (!file) return;
@@ -253,7 +253,7 @@ export function ProfileImageUploader({ initials, value, onChange }: { initials: 
   return (
     <div className="flex flex-col items-start gap-2">
       <label className="group relative flex h-16 w-16 cursor-pointer items-center justify-center overflow-visible rounded-[10px] border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] text-sm font-medium text-[var(--text-primary)] transition hover:bg-[var(--bg-hover)]">
-        <span className="absolute inset-0 overflow-hidden rounded-[10px]">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" /> : null}</span>
+        <span className="absolute inset-0 overflow-hidden rounded-[10px]">{value ? <img src={value} alt="Profile" className="h-full w-full object-cover" onError={(event) => { if (fallbackSrc && event.currentTarget.src !== fallbackSrc) { event.currentTarget.src = fallbackSrc; } else { event.currentTarget.hidden = true; } }} /> : null}</span>
         {!value ? <span>{initials || "A"}</span> : null}
         <span className="absolute -right-1.5 -top-1.5 flex h-6 w-6 items-center justify-center rounded-full border-[1.25px] border-[var(--border)] bg-[var(--bg-primary)] text-[var(--text-secondary)] opacity-0 shadow-sm transition group-hover:opacity-100 group-hover:text-[var(--text-primary)]"><PencilIcon /></span>
         <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />

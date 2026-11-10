@@ -56,6 +56,7 @@ export default function ProjectDetailHeader({
     if (!projectPage) return;
 
     function applySearchFilter() {
+      if (!projectPage) return;
       const cleanQuery = searchQuery.trim().toLowerCase();
       const items = projectPage.querySelectorAll<HTMLElement>(
         ".project-browser-grid > div, .project-browser-list > :not(.project-browser-list-head)",

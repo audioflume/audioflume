@@ -1,14 +1,15 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { resolveAccountIdentity } from "@/lib/auth/resolveAccountIdentity";
 import { NextResponse } from "next/server";
 import { cleanOptionalString, ensureBillingProfile } from "@/lib/account";
 import { supabaseServer } from "@/lib/supabaseServer";
 
 export async function GET() {
-  const user = await currentUser();
-  if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const identity = await resolveAccountIdentity();
+  const { userId, user } = identity;
+  if (!userId) return NextResponse.json({ error: identity.error }, { status: identity.status });
 
   try {
-    const billingProfile = await ensureBillingProfile(user.id, user);
+    const billingProfile = await ensureBillingProfile(userId, user);
     return NextResponse.json({ billingProfile });
   } catch (error) {
     console.error("Failed to load billing profile:", error);
@@ -17,8 +18,9 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
-  const user = await currentUser();
-  if (!user?.id) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const identity = await resolveAccountIdentity();
+  const { userId, user } = identity;
+  if (!userId) return NextResponse.json({ error: identity.error }, { status: identity.status });
 
   const body = await request.json().catch(() => null);
   if (!body || typeof body !== "object") {
@@ -33,12 +35,12 @@ export async function PATCH(request: Request) {
   }
 
   try {
-    await ensureBillingProfile(user.id, user);
+    await ensureBillingProfile(userId, user);
     const { data, error } = await supabaseServer
       .from("user_billing_profiles")
       .upsert(
         {
-          clerk_user_id: user.id,
+          clerk_user_id: userId,
           billing_email: billingEmail,
           business_name: cleanOptionalString(payload.business_name, 160),
           tax_id: cleanOptionalString(payload.tax_id, 80),

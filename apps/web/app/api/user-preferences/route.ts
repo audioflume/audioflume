@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -67,10 +67,11 @@ function isBoolean(value: unknown): value is boolean {
 }
 
 export async function GET() {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   const { data, error } = await supabaseServer
@@ -115,10 +116,11 @@ export async function GET() {
 }
 
 export async function PATCH(request: Request) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   const body = await request.json();

@@ -1,4 +1,6 @@
 import { clerkClient } from "@clerk/nextjs/server";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
+import { sendSupabaseArtistInvitation } from "@/lib/auth/sendSupabaseArtistInvitation";
 
 import { supabaseServer } from "@/lib/supabaseServer";
 
@@ -112,15 +114,18 @@ export async function createArtistClaimInvitation({
     );
   }
 
-  const client = await clerkClient();
+  const isSupabase = selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase";
   const redirectUrl = new URL("/artists/claim", origin).toString();
-  const invitation = await client.invitations.createInvitation({
-    emailAddress: email,
-    ignoreExisting: true,
-    notify: true,
-    expiresInDays: 30,
-    redirectUrl,
-  });
+  const client = isSupabase ? null : await clerkClient();
+  const invitation = client
+    ? await client.invitations.createInvitation({
+        emailAddress: email,
+        ignoreExisting: true,
+        notify: true,
+        expiresInDays: 30,
+        redirectUrl,
+      })
+    : null;
 
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
   const { data: storedInvitation, error: storeError } = await supabaseServer
@@ -129,7 +134,7 @@ export async function createArtistClaimInvitation({
       artist_id: artistId,
       email,
       status: "pending",
-      clerk_invitation_id: invitation.id,
+      clerk_invitation_id: invitation?.id ?? null,
       invited_by_clerk_user_id: invitedByClerkUserId,
       ownership_transfer: Boolean(owner && allowOwnershipTransfer),
       expires_at: expiresAt,
@@ -140,12 +145,27 @@ export async function createArtistClaimInvitation({
     .single();
 
   if (storeError) {
-    try {
-      await client.invitations.revokeInvitation({ invitationId: invitation.id });
-    } catch (revokeError) {
-      console.error("Failed to revoke orphaned artist claim invitation:", revokeError);
+    if (client && invitation) {
+      try {
+        await client.invitations.revokeInvitation(invitation.id);
+      } catch (revokeError) {
+        console.error("Failed to revoke orphaned artist claim invitation:", revokeError);
+      }
     }
     throw storeError;
+  }
+
+  if (isSupabase) {
+    try {
+      await sendSupabaseArtistInvitation(
+        email,
+        new URL("/sign-in?redirect_url=%2Fartists%2Fclaim", origin).toString(),
+      );
+    } catch (error) {
+      await supabaseServer.from("artist_claim_invitations").delete()
+        .eq("id", storedInvitation.id).eq("status", "pending");
+      throw error;
+    }
   }
 
   return storedInvitation as ArtistClaimInvitation;
@@ -173,9 +193,7 @@ export async function revokeArtistClaimInvitation({
   if (invitation.clerk_invitation_id) {
     const client = await clerkClient();
     try {
-      await client.invitations.revokeInvitation({
-        invitationId: invitation.clerk_invitation_id,
-      });
+      await client.invitations.revokeInvitation(invitation.clerk_invitation_id);
     } catch (revokeError) {
       console.error("Failed to revoke Clerk artist claim invitation:", revokeError);
     }

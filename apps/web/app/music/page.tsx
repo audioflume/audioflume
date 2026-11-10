@@ -27,7 +27,7 @@ import {
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { useAuth } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { useSearchParams } from "next/navigation";
 
 import {
@@ -80,7 +80,7 @@ function FeaturedSongWaveform({ song }: { song: Song }) {
       progress={progress}
       options={{ barWidth: 1.5, barGap: 1 }}
       ariaLabel={`Seek ${song.title}`}
-      onSeek={(nextProgress) => {
+      onSeek={(nextProgress: number) => {
         seekTo(song, nextProgress, isPlaying);
       }}
     />
@@ -314,7 +314,7 @@ function songIsLyrical(song: unknown) {
 }
 
 export default function MusicPage() {
-  const { userId, isLoaded } = useAuth();
+  const { userId, isLoaded } = useAccountSession();
   const searchParams = useSearchParams();
   const musicFilterStorageKey = userId
     ? `${MUSIC_FILTER_STORAGE_KEY_PREFIX}:${userId}`

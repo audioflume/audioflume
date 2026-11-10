@@ -411,11 +411,11 @@ export default function HomeLandingContent({ homeFlashImages }: { homeFlashImage
               const playing = isPlaying && currentSong?.id === song.id;
               return (
                 <article className={`audioflume-home-song-mosaic-card${(rowIndex === 0 && row[0]?.id === song.id) || (rowIndex === 2 && row[1]?.id === song.id) ? " is-wide" : ""}`} key={song.id}>
-                  <img className="audioflume-home-song-mosaic-background" src={song.coverArt} alt="" loading="lazy" />
+                  <img className="audioflume-home-song-mosaic-background" src={song.coverArt ?? undefined} alt="" loading="lazy" />
                   <div className="audioflume-home-song-mosaic-shade" aria-hidden="true" />
                   <div className="audioflume-home-song-mosaic-info">
                     <span className="audioflume-home-song-mosaic-thumbnail">
-                      <img src={song.coverArt} alt="" loading="lazy" />
+                      <img src={song.coverArt ?? undefined} alt="" loading="lazy" />
                       
                         <button
                           type="button"

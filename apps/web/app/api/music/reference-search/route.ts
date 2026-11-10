@@ -528,7 +528,7 @@ export async function POST(request: Request) {
       isMeritAnalyzerConfigured() &&
       (meritStats?.embeddedSongs ?? 0) > 0;
 
-    let matches;
+    let matches: Array<{ songId: string; score: number }>;
     let ranking;
 
     if (!clapReady) {

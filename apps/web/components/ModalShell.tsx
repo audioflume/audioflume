@@ -75,11 +75,13 @@ export default function ModalShell({
       'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
     const focusFrame = window.requestAnimationFrame(() => {
+      if (!dialog) return;
       const firstFocusable = dialog.querySelector<HTMLElement>(focusableSelector);
       (firstFocusable ?? dialog).focus();
     });
 
     function handleKeyDown(event: KeyboardEvent) {
+      if (!dialog) return;
       if (event.key === "Escape") {
         event.preventDefault();
         onCloseRef.current();

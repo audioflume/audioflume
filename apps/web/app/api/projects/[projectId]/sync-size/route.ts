@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { HeadObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { NextResponse } from "next/server";
 import { supabaseServer } from "@/lib/supabaseServer";
@@ -228,7 +228,7 @@ async function persistResolvedSizeBytes({
   song: SongSizeRow | undefined;
   sizeBytes: number;
 }) {
-  const updates: Promise<unknown>[] = [];
+  const updates: PromiseLike<unknown>[] = [];
 
   if (song?.id != null && !getSongSizeBytes(song)) {
     updates.push(
@@ -259,10 +259,11 @@ async function persistResolvedSizeBytes({
 }
 
 export async function GET(_req: Request, context: RouteContext) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   const projectId = await getProjectId(context);

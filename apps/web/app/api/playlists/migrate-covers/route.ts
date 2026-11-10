@@ -1,5 +1,5 @@
 import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 import { randomUUID } from "node:crypto";
 import { r2Client } from "@/lib/r2";
@@ -50,7 +50,7 @@ function isEmbeddedImage(value: unknown): value is string {
 }
 
 function decodeDataUrl(dataUrl: string) {
-  const match = dataUrl.trim().match(/^data:image\/[a-z0-9.+-]+;base64,(.+)$/is);
+  const match = dataUrl.trim().match(/^data:image\/[a-z0-9.+-]+;base64,([\s\S]+)$/i);
 
   if (!match) {
     throw new Error("Unsupported playlist cover data URL");
@@ -96,10 +96,11 @@ async function migrateCover(playlist: PlaylistCoverRow) {
 }
 
 export async function POST() {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
+  const { userId } = account;
 
   if (!userId) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: account.error }, { status: account.status });
   }
 
   try {

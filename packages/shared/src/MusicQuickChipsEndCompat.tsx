@@ -15,7 +15,7 @@ import {
 } from "react";
 
 type LegacyButtonElement = ReactElement<
-  ButtonHTMLAttributes<HTMLButtonElement>
+  ButtonHTMLAttributes<HTMLButtonElement> & { "data-filmwave-quick-role"?: string }
 >;
 
 function getTextContent(children: ReactNode): string {
@@ -39,7 +39,7 @@ function isLegacyButton(
   child: ReactNode,
   expectedLabel?: string,
 ): child is LegacyButtonElement {
-  if (!isValidElement<ButtonHTMLAttributes<HTMLButtonElement>>(child)) {
+  if (!isValidElement<ButtonHTMLAttributes<HTMLButtonElement> & { "data-filmwave-quick-role"?: string }>(child)) {
     return false;
   }
 

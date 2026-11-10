@@ -4,7 +4,7 @@ import {
   MOOD_OPTIONS,
   MUSIC_FILTER_STORAGE_KEY_PREFIX,
 } from "@filmwave/shared";
-import { useAuth } from "@clerk/nextjs";
+import { useAccountSession } from "@/context/AccountSessionContext";
 import { type FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -41,7 +41,7 @@ export default function DiscoverCuratedHeroCopy({
   showIntroCopy = true,
 }: DiscoverCuratedHeroCopyProps) {
   const router = useRouter();
-  const { userId } = useAuth();
+  const { userId } = useAccountSession();
   const [search, setSearch] = useState("");
   const [selectedFilters, setSelectedFilters] =
     useState<DiscoverFilterSelections>(EMPTY_DISCOVER_FILTERS);

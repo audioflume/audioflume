@@ -150,7 +150,7 @@ export async function GET() {
         }
       }),
     );
-    const usersById = new Map(userEntries);
+    const usersById = new Map<string, { id: string; name: string; imageUrl: string | null }>(userEntries);
 
     return NextResponse.json(
       {
