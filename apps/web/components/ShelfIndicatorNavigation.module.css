@@ -75,7 +75,7 @@
   position: absolute;
   top: 0;
   left: 0;
-  width: 25%;
+  width: calc((100% - 21px) / 4);
   height: 2px;
   background: var(--text-primary);
   cursor: grab;
