@@ -2465,7 +2465,7 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-featured-name {
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 54px;
+  font-size: 64px;
   font-weight: 300;
   letter-spacing: -.035em;
   line-height: 1.15;
@@ -2473,7 +2473,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-name-arrow {
-  flex: 0 0 54px;
+  flex: 0 0 64px;
   color: var(--text-primary);
   opacity: 0;
   transition: opacity 150ms ease;
