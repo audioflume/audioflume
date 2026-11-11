@@ -920,16 +920,8 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-skeleton-curated-shelf.is-discover-skeleton
   .audioflume-home-skeleton-block.is-playlist-media {
-  height: 257px;
+  height: 100%;
   border-radius: 0;
-}
-
-@media (min-width: 1513px) {
-  .audioflume-home-skeleton-curated-shelf.is-discover-skeleton
-    .audioflume-home-skeleton-block.is-playlist-media {
-    height: auto;
-    aspect-ratio: 457 / 257;
-  }
 }
 
 .audioflume-home-skeleton-playlist-card
@@ -2707,17 +2699,17 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-  height: 257px;
-  aspect-ratio: auto;
+  height: var(--audioflume-curated-shelf-image-height, 257px);
+  aspect-ratio: var(--audioflume-curated-shelf-image-ratio, auto);
   border-radius: var(--audioflume-discover-card-radius, 10px);
 }
 
 .audioflume-home-mockup-curated-card {
-  height: 275px;
+  height: var(--audioflume-curated-shelf-card-height, 275px);
   overflow: hidden;
   border-radius: var(--audioflume-discover-card-radius, 10px);
   background: var(--bg-tertiary);
-  aspect-ratio: 2.38 / 1;
+  aspect-ratio: var(--audioflume-curated-shelf-card-ratio, 2.38 / 1);
   scroll-snap-align: none !important;
   scroll-snap-stop: normal !important;
 }
@@ -3065,6 +3057,10 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup.is-discover-page {
  --audioflume-discover-card-gap: 24px;
   --audioflume-discover-card-radius: 0px;
+  --audioflume-curated-shelf-image-height: auto;
+  --audioflume-curated-shelf-image-ratio: 1 / 1;
+  --audioflume-curated-shelf-card-height: auto;
+  --audioflume-curated-shelf-card-ratio: 1 / 1;
 }
 .audioflume-home-mockup-more-artists
   .audioflume-home-reference-artist-shelf
@@ -3097,7 +3093,7 @@ body:has(.audioflume-home-landing)
 }
 
 @media (min-width: 1513px) {
-  .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
+  .audioflume-home-mockup:not(.is-discover-page) .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
     height: auto;
     aspect-ratio: 457 / 257;
   }
