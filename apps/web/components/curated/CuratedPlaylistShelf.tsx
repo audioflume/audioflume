@@ -68,7 +68,8 @@ export function CuratedPlaylistCard({
       <PlaylistCardShell
         href={href}
         className={`${cardStyles.card}${usesHomeLayout ? ` ${cardStyles.homeCard}` : ""}`}
-        mediaClassName={`${cardStyles.image}${usesHomeLayout ? ` ${cardStyles.homeImage}` : ""}`}
+        mediaClassName={`${cardStyles.image}${isHomeVariant ? ` ${cardStyles.homeImage}` : ""}`}
+        squareMedia={isCuratedPageVariant}
         mediaDataAttribute="data-curated-playlist-image"
         mediaStyle={{
           background: playlist.cover_image_url
