@@ -557,7 +557,7 @@ export function HomeArtistShelf({
               <div className="audioflume-discover-featured-identity">
                 <span className="audioflume-discover-featured-name-row">
                   <strong className="audioflume-discover-featured-name">{artist.name}</strong>
-                  <ArrowUpRightIcon size={54} strokeWidth={1.5} className="audioflume-discover-featured-name-arrow" />
+                  <ArrowUpRightIcon size={64} strokeWidth={1.5} className="audioflume-discover-featured-name-arrow" />
                 </span>
                 {artist.designation ? (
                   <span className="audioflume-discover-featured-designation">{artist.designation}</span>
