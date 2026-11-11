@@ -2295,7 +2295,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only card spacing and subtle image-edge highlights. */
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-scroller {
-  gap: 36px;
+  gap: 24px;
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
@@ -3079,7 +3079,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
 .audioflume-home-mockup.is-discover-page {
-  --audioflume-discover-card-gap: 36px;
+ --audioflume-discover-card-gap: 24px;
   --audioflume-discover-card-radius: 0px;
 }
 .audioflume-home-mockup-more-artists
