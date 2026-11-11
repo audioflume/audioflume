@@ -838,7 +838,7 @@ function DiscoverFeaturedSongsSkeleton() {
 
 function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayout?: boolean }) {
   return (
-    <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+    <div className="audioflume-home-reference-width grid gap-2 min-[520px]:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 12 }, (_, index) => (
         <article
           key={index}
@@ -1318,7 +1318,7 @@ export default function HomePageContent({
         {songsLoading ? (
           <HomeTrendingSkeleton discoverLayout={!showHero} />
         ) : (
-          <div className="audioflume-home-reference-width grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+          <div className="audioflume-home-reference-width grid gap-2 min-[520px]:grid-cols-2 xl:grid-cols-3">
             {recentSongs.map((song, index) => (
               <HomeReadyToCutSongCard
                 key={song.id}
