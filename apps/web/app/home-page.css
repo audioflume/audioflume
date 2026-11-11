@@ -1986,7 +1986,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover's featured-artist layout, independent of the larger lead-card shelf. */
 .audioflume-home-mockup-artists.is-discover-featured-artists {
-  --audioflume-featured-artist-gap: 12px;
+  --audioflume-featured-artist-gap: 48px;
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
   --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
   padding-top: 60px;
@@ -2289,13 +2289,54 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-song-shelf .audioflume-home-reference-shelf-scroller {
-  gap: 12px;
+  gap: 28px;
   padding-inline: var(--audioflume-home-page-gutter);
 }
 
+/* Discover-only card spacing and subtle image-edge highlights. */
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-scroller {
+  gap: 36px;
+}
+
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
+  width: min(92vw, max(460px, calc((var(--home-reference-width) - 72px) / 3)));
+  min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 72px) / 3)));
+}
+
+@media (min-width: 1512px) {
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
+    width: calc((var(--home-reference-width) - 72px) / 3);
+    min-width: calc((var(--home-reference-width) - 72px) / 3);
+  }
+}
+
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
+.audioflume-home-mockup.is-discover-page .audioflume-discover-featured-song-shelf .audioflume-home-featured-song-art {
+  border-radius: 10px;
+}
+
+.audioflume-home-mockup.is-discover-page .audioflume-discover-featured-song-shelf .audioflume-home-featured-song-art::after,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card::after,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card::after,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
 .audioflume-discover-featured-song-shelf .audioflume-home-featured-song-card {
-  flex: 0 0 max(160px, calc((var(--home-reference-width) - 5 * 12px) / 6));
-  width: max(160px, calc((var(--home-reference-width) - 5 * 12px) / 6));
+  flex: 0 0 max(160px, calc((var(--home-reference-width) - 5 * 28px) / 6));
+  width: max(160px, calc((var(--home-reference-width) - 5 * 28px) / 6));
   min-width: 160px;
 }
 
@@ -2336,18 +2377,12 @@ body:has(.audioflume-home-landing)
 
 }
 
-@media (max-width: 620px) {
-  .audioflume-discover-featured-song-shelf .audioflume-home-reference-shelf-scroller {
-    gap: 10px;
-  }
-
-}
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
   width: clamp(460px, 61vw, 1140px);
   min-width: clamp(460px, 61vw, 1140px);
   overflow: hidden;
-  border-radius: 0;
+  border-radius: 10px;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
@@ -3042,8 +3077,8 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
 .audioflume-home-mockup.is-discover-page {
-  --audioflume-discover-card-gap: 12px;
-  --audioflume-discover-card-radius: 0px;
+  --audioflume-discover-card-gap: 36px;
+  --audioflume-discover-card-radius: 10px;
 }
 .audioflume-home-mockup-more-artists
   .audioflume-home-reference-artist-shelf
