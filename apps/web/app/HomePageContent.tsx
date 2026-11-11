@@ -544,8 +544,24 @@ export function HomeArtistShelf({
             key={artist.id}
             className={`audioflume-home-reference-artist-card${index === 0 ? " is-featured" : ""}${discoverLayout ? " is-discover-card" : ""}`}
           >
-            <div className="audioflume-home-reference-artist-link">
+            {discoverLayout ? (
               <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
+            ) : null}
+            {discoverLayout ? (
+              <div className="audioflume-discover-featured-identity">
+                <span className="audioflume-discover-featured-name-row">
+                  <strong className="audioflume-discover-featured-name">{artist.name}</strong>
+                  <ArrowUpRightIcon size={54} strokeWidth={1.5} className="audioflume-discover-featured-name-arrow" />
+                </span>
+                {artist.designation ? (
+                  <span className="audioflume-discover-featured-designation">{artist.designation}</span>
+                ) : null}
+              </div>
+            ) : null}
+            <div className="audioflume-home-reference-artist-link">
+              {!discoverLayout ? (
+                <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
+              ) : null}
               <div className="audioflume-home-reference-artist-media">
                 {image ? (
                   <img
@@ -558,9 +574,7 @@ export function HomeArtistShelf({
                   />
                 ) : null}
               </div>
-              {discoverLayout ? (
-                <strong className="audioflume-discover-featured-name">{artist.name}</strong>
-              ) : (
+              {!discoverLayout ? (
               <div className="audioflume-home-reference-artist-bar">
                 <span className="audioflume-home-reference-artist-copy">
                   <strong>{artist.name}</strong>
@@ -572,9 +586,9 @@ export function HomeArtistShelf({
                   {!compact ? <GenreFilterPills genres={visibleGenres} showPlaceholders className="audioflume-home-reference-artist-genres" /> : null}
                 </span>
               </div>
-              )}
+              ) : null}
             </div>
-            {!compact && !hideExploreButton ? (
+            {!discoverLayout && !compact && !hideExploreButton ? (
               <Link
                 href={`/artists/${artist.slug}`}
                 className={`${artistCardStyles.cardExplore} audioflume-home-reference-artist-explore`}
@@ -856,14 +870,15 @@ export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = fals
           className="audioflume-home-reference-artist-card audioflume-home-skeleton-artist-card"
           aria-hidden="true"
         >
-          <div className="audioflume-home-reference-artist-media">
-            <HomeSkeletonBlock className="is-artist-media" />
-          </div>
           {discoverLayout ? (
             <div className="audioflume-discover-featured-identity">
               <HomeSkeletonBlock className="is-discover-artist-name" />
+              <HomeSkeletonBlock className="is-discover-artist-designation" />
             </div>
           ) : null}
+          <div className="audioflume-home-reference-artist-media">
+            <HomeSkeletonBlock className="is-artist-media" />
+          </div>
           {discoverLayout ? (
             <>
               <div className="audioflume-discover-featured-track audioflume-discover-skeleton-artist-track">
@@ -996,6 +1011,9 @@ export default function HomePageContent({
   const [discoverFeaturedSongsLoading, setDiscoverFeaturedSongsLoading] = useState(!showHero);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
+  const discoverHeadingRef = useRef<HTMLHeadingElement>(null);
+  const discoverFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
+  const [discoverHeadingNeedsNaturalWrap, setDiscoverHeadingNeedsNaturalWrap] = useState(false);
   const catalogueHeadingRef = useRef<HTMLHeadingElement>(null);
   const catalogueFirstLineMeasureRef = useRef<HTMLSpanElement>(null);
   const [catalogueHeadingNaturalWrap, setCatalogueHeadingNaturalWrap] = useState(false);
@@ -1032,6 +1050,23 @@ export default function HomePageContent({
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
+
+  useLayoutEffect(() => {
+    if (showHero) return;
+    const heading = discoverHeadingRef.current;
+    const measure = discoverFirstLineMeasureRef.current;
+    if (!heading || !measure) return;
+
+    const updateDiscoverHeadingWrap = () => {
+      setDiscoverHeadingNeedsNaturalWrap(measure.getBoundingClientRect().width > heading.clientWidth);
+    };
+
+    updateDiscoverHeadingWrap();
+    const observer = new ResizeObserver(updateDiscoverHeadingWrap);
+    observer.observe(heading);
+    void document.fonts.ready.then(updateDiscoverHeadingWrap);
+    return () => observer.disconnect();
+  }, [showHero]);
 
   useLayoutEffect(() => {
     const heading = catalogueHeadingRef.current;
@@ -1184,22 +1219,12 @@ export default function HomePageContent({
         </section> : null}
 
       <section className={`audioflume-home-mockup-artists${!showHero ? " is-discover-featured-artists" : ""}`}>
-        {!showHero ? (
-          <div className="audioflume-discover-featured-intro audioflume-home-reference-width">
-            <span className="audioflume-discover-featured-eyebrow">THIS MONTH&apos;S FEATURED ARTISTS</span>
-            <div className="audioflume-discover-featured-intro-row">
-              <h2>DISCOVER NEW MUSIC<br />&amp; TRENDING ARTISTS.</h2>
-              <Link href="/artists" className="audioflume-arrow-text-link">
-                Explore this month&apos;s featured artists
-              </Link>
-            </div>
-          </div>
-        ) : (
+        {showHero ? (
           <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row audioflume-home-mockup-catalogue-heading audioflume-home-mockup-featured-artists-heading">
             <h2>This month&apos;s featured artists</h2>
             <span className="audioflume-home-mockup-featured-artists-count">1500+ ARTISTS TRENDING ONLINE</span>
           </div>
-        )}
+        ) : null}
         {artistsLoading ? (
           <HomeArtistShelfSkeleton discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
