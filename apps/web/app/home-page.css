@@ -2465,7 +2465,9 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-name-arrow {
-  flex: 0 0 64px;
+  flex: 0 0 clamp(54px, 4vw, 64px);
+  width: clamp(54px, 4vw, 64px);
+  height: clamp(54px, 4vw, 64px);
   color: var(--text-primary);
   opacity: 0;
   transition: opacity 150ms ease;
