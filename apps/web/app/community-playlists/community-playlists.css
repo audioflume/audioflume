@@ -214,12 +214,6 @@ body:has(.community-playlists-page-root) {
   min-width: 0;
 }
 
-.community-cover-wrap {
-  width: 100%;
-  height: auto;
-  aspect-ratio: 1 / 1;
-}
-
 .community-cover-link {
   min-width: 0;
 }
