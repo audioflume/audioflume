@@ -634,7 +634,7 @@ export function HomeArtistShelf({
                   visibleGenres[index] ? (
                     <Link href={`/music?genre=${encodeURIComponent(visibleGenres[index])}`} className="audioflume-genre-filter-pill" key={visibleGenres[index]}>{visibleGenres[index]}</Link>
                   ) : (
-                    <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`}>{index === 0 && visibleGenres.length === 0 ? "Genres coming soon" : ""}</span>
+                    <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`}>{index === 0 && visibleGenres.length === 0 ? "Genre TBA" : ""}</span>
                   )
                 ))}
               </span>
