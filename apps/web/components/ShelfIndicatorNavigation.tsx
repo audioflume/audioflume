@@ -24,7 +24,7 @@ export default function ShelfIndicatorNavigation({
   onNext,
   disabled = false,
   className = "",
-  progressScrollbar = false,
+  progressScrollbar = true,
 }: Props) {
   const [position, setPosition] = useState({
     canPrev: false,
