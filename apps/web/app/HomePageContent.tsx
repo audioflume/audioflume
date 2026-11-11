@@ -485,12 +485,14 @@ export function HomeArtistShelf({
   compact = false,
   discoverLayout = false,
   hideExploreButton = false,
+  progressScrollbar = false,
 }: {
   artists: HomeArtist[];
   homeFlashImages: string[];
   compact?: boolean;
   discoverLayout?: boolean;
   hideExploreButton?: boolean;
+  progressScrollbar?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -521,7 +523,7 @@ export function HomeArtistShelf({
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
       customScrollbar={!compact && !discoverLayout}
-      progressScrollbar={discoverLayout}
+      progressScrollbar={discoverLayout || progressScrollbar}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
@@ -657,8 +659,10 @@ export function HomeArtistShelf({
 
 function HomeCuratedPlaylistShelf({
   playlists,
+  progressScrollbar = false,
 }: {
   playlists: CuratedPlaylist[];
+  progressScrollbar?: boolean;
 }) {
   if (playlists.length === 0) return null;
 
@@ -682,6 +686,7 @@ function HomeCuratedPlaylistShelf({
       <Shelf
         label="curated playlists"
         className="audioflume-home-mockup-curated-shelf"
+        progressScrollbar={progressScrollbar}
       >
         {playlists.map((playlist, index) => (
           <div key={playlist.id} className="audioflume-home-mockup-curated-card-shell">
@@ -826,7 +831,7 @@ function DiscoverCompactSongsSkeleton() {
 
 function DiscoverFeaturedSongsSkeleton() {
   return (
-    <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf audioflume-discover-skeleton-featured-shelf">
+    <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf audioflume-discover-skeleton-featured-shelf" progressScrollbar>
       {Array.from({ length: 8 }, (_, index) => (
         <article key={index} className="audioflume-home-featured-song-card audioflume-discover-skeleton-featured-card" aria-hidden="true">
           <HomeSkeletonBlock className="audioflume-home-featured-song-art is-featured-cover" />
@@ -867,6 +872,7 @@ export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = fals
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
       customScrollbar={!compact && !discoverLayout}
+      progressScrollbar={discoverLayout}
     >
       {Array.from({ length: compact ? 4 : 3 }, (_, index) => (
         <article
@@ -924,6 +930,7 @@ function HomeCuratedPlaylistSkeleton({ discoverLayout = false }: { discoverLayou
     <Shelf
       label="curated playlists"
       className={`audioflume-home-mockup-curated-shelf audioflume-home-skeleton-curated-shelf${discoverLayout ? " is-discover-skeleton" : ""}`}
+      progressScrollbar={discoverLayout}
     >
       {Array.from({ length: 4 }, (_, index) => (
         discoverLayout ? (
@@ -1287,7 +1294,7 @@ export default function HomePageContent({
           <HomeCuratedPlaylistSkeleton discoverLayout={!showHero} />
         </section>
       ) : (
-        <HomeCuratedPlaylistShelf playlists={curatedPlaylists} />
+        <HomeCuratedPlaylistShelf playlists={curatedPlaylists} progressScrollbar={!showHero} />
       )}
 
       <section className="audioflume-home-mockup-catalogue">
@@ -1343,9 +1350,9 @@ export default function HomePageContent({
           </Link>
         </div>
         {artistsLoading ? (
-          <HomeArtistShelfSkeleton compact />
+          <HomeArtistShelfSkeleton compact discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact progressScrollbar={!showHero} />
         ) : null}
       </section>
 
