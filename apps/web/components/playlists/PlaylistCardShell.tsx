@@ -11,6 +11,7 @@ type PlaylistCardShellProps = {
   ariaLabel?: string;
   className?: string;
   mediaClassName?: string;
+  squareMedia?: boolean;
   mediaLinkClassName?: string;
   mediaStyle?: CSSProperties;
   mediaDataAttribute?: string;
@@ -30,6 +31,7 @@ export default function PlaylistCardShell({
   ariaLabel,
   className,
   mediaClassName,
+  squareMedia = false,
   mediaLinkClassName,
   mediaStyle,
   mediaDataAttribute,
@@ -41,7 +43,7 @@ export default function PlaylistCardShell({
     <article ref={cardRef} style={cardStyle} className={joinClasses(styles.card, className)}>
       <div
         {...(mediaDataAttribute ? { [mediaDataAttribute]: "" } : {})}
-        className={joinClasses(styles.mediaShell, mediaClassName)}
+        className={joinClasses(styles.mediaShell, squareMedia ? styles.squareMedia : undefined, mediaClassName)}
         style={mediaStyle}
       >
         {href ? (
