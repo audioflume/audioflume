@@ -2304,19 +2304,19 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
-  width: min(var(--home-reference-width), max(clamp(460px, 61vw, 1140px), calc(1251.436893px - 21.766990vw)));
-  min-width: min(var(--home-reference-width), max(clamp(460px, 61vw, 1140px), calc(1251.436893px - 21.766990vw)));
+  width: min(var(--home-reference-width), max(clamp(460px, 61vw, 1140px), calc(161.8459893px + 50.2959002vw)));
+  min-width: min(var(--home-reference-width), max(clamp(460px, 61vw, 1140px), calc(161.8459893px + 50.2959002vw)));
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell {
-  width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 96px) / 3), calc(2561.398058px - 140.854369vw)));
-  min-width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 96px) / 3), calc(2561.398058px - 140.854369vw)));
+  width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 96px) / 3), calc(332.3893048px + 6.5668449vw)));
+  min-width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 96px) / 3), calc(332.3893048px + 6.5668449vw)));
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-  width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 48px) / 3), calc(2518.679612px - 136.970874vw)));
-  min-width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 48px) / 3), calc(2518.679612px - 136.970874vw)));
+  width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 48px) / 3), calc(326.8278075px + 7.9928699vw)));
+  min-width: min(var(--home-reference-width), max(calc((var(--home-reference-width) - 48px) / 3), calc(326.8278075px + 7.9928699vw)));
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media,
