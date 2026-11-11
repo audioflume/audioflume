@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useMemo, useRef, useState } from "react";
 
 import Footer from "@/components/Footer";
+import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
+import playlistCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
 import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -33,21 +35,32 @@ const PREVIEW_CARD_COUNT = 8;
 
 function ArtistPreviewCard({ index }: { index: number }) {
   return (
-    <article className={`${styles.card} ${styles.previewCard} ${styles[`cardShape${index % 6}`]}`} aria-label="Artist layout preview">
-      <div className={styles.cardLink}>
-        <span className={styles.cardShade} aria-hidden="true" />
-        <span className={styles.cardContent}>
-          <strong className={styles.cardName}>Artist preview</strong>
-          <span className={styles.cardDesignation}>Layout placeholder</span>
-          <span className={styles.cardGenres} aria-hidden="true">
-            {[0, 1, 2].map((item) => <span className={`${styles.cardGenre} ${styles.cardGenrePlaceholder}`} key={item} />)}
-          </span>
-        </span>
-      </div>
-      <button type="button" className={styles.cardPlay} disabled aria-label="Preview artist unavailable">
-        <PlayIconSmall size={18} />
-      </button>
-    </article>
+    <div className={playlistCardStyles.shell}>
+      <PlaylistCardShell
+        className={playlistCardStyles.card}
+        squareMedia
+        mediaClassName={styles.artistMedia}
+        media={<span className={styles.previewImage} aria-hidden="true" />}
+        overlays={
+          <>
+            <span className={styles.artistGenres} aria-hidden="true">
+              {[0, 1, 2].map((item) => <span className={styles.genrePlaceholder} key={item} />)}
+            </span>
+            <button type="button" className={styles.artistPlay} disabled aria-label="Preview artist unavailable">
+              <PlayIconSmall size={18} />
+            </button>
+          </>
+        }
+        details={
+          <div className={playlistCardStyles.details}>
+            <div className={playlistCardStyles.copy}>
+              <h3>Artist preview</h3>
+              <p>Layout placeholder</p>
+            </div>
+          </div>
+        }
+      />
+    </div>
   );
 }
 
@@ -58,6 +71,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
   const artistIsPlaying = Boolean(
     isPlaying && currentSong && playable.some((song) => song.id === currentSong.id),
   );
+  const href = `/artists/${artist.slug}`;
 
   function playArtist() {
     if (!playable.length) return;
@@ -70,50 +84,56 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
   }
 
   return (
-    <article className={`${styles.card} ${styles[`cardShape${index % 6}`]}`}>
-      <div className={styles.cardLink}>
-        {image ? (
-          <img
-            className={styles.cardImage}
-            src={image}
-            alt=""
-            loading={index < 4 ? "eager" : "lazy"}
-            style={{ objectPosition: `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%` }}
-          />
-        ) : (
-          <span className={styles.cardFallback} aria-hidden="true">{artist.name.slice(0, 1)}</span>
-        )}
-        <span className={styles.cardShade} aria-hidden="true" />
-        <Link className={styles.cardOverlayLink} href={`/artists/${artist.slug}`} aria-label={`Explore ${artist.name}`} />
-        <span className={styles.cardContent}>
-          <strong className={styles.cardName}>{artist.name}</strong>
-          {artist.designation ? <span className={styles.cardDesignation}>{artist.designation}</span> : null}
-          <span className={styles.cardGenres} aria-label="Artist genres">
-            {artist.genres.length
-              ? artist.genres.slice(0, 3).map((genre) => (
-                  <Link className={styles.cardGenre} href={`/music?genre=${encodeURIComponent(genre)}`} key={genre}>{genre}</Link>
-                ))
-              : [0, 1, 2].map((item) => <span className={`${styles.cardGenre} ${styles.cardGenrePlaceholder}`} aria-hidden="true" key={item} />)}
-          </span>
-        </span>
-      </div>
-      <Link href={`/artists/${artist.slug}`} className={styles.cardExplore} aria-label={`Explore artist ${artist.name}`}>
-        Explore Artist
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-          <path d="M7 17L17 7" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" />
-          <path d="M9 7H17V15" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
-      </Link>
-      <button
-        type="button"
-        className={styles.cardPlay}
-        onClick={playArtist}
-        disabled={!playable.length}
-        aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
-      >
-        {artistIsPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-      </button>
-    </article>
+    <div className={playlistCardStyles.shell}>
+      <PlaylistCardShell
+        href={href}
+        ariaLabel={`Explore ${artist.name}`}
+        className={playlistCardStyles.card}
+        squareMedia
+        mediaClassName={styles.artistMedia}
+        media={
+          image ? (
+            <img
+              className={playlistCardStyles.media}
+              src={image}
+              alt=""
+              loading={index < 4 ? "eager" : "lazy"}
+              style={{ objectPosition: `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%` }}
+            />
+          ) : (
+            <span className={styles.artistFallback} aria-hidden="true">{artist.name.slice(0, 1)}</span>
+          )
+        }
+        overlays={
+          <>
+            <span className={styles.artistGenres} aria-label="Artist genres">
+              {artist.genres.length
+                ? artist.genres.slice(0, 3).map((genre) => (
+                    <Link className={styles.artistGenre} href={`/music?genre=${encodeURIComponent(genre)}`} key={genre}>{genre}</Link>
+                  ))
+                : [0, 1, 2].map((item) => <span className={styles.genrePlaceholder} aria-hidden="true" key={item} />)}
+            </span>
+            <button
+              type="button"
+              className={styles.artistPlay}
+              onClick={playArtist}
+              disabled={!playable.length}
+              aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
+            >
+              {artistIsPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+            </button>
+          </>
+        }
+        details={
+          <div className={playlistCardStyles.details}>
+            <Link className={playlistCardStyles.copy} href={href}>
+              <h3>{artist.name}</h3>
+              {artist.designation ? <p>{artist.designation}</p> : null}
+            </Link>
+          </div>
+        }
+      />
+    </div>
   );
 }
 
@@ -126,25 +146,9 @@ export default function ArtistsPage() {
   const searchInputRef = useRef<HTMLInputElement>(null);
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
   const [showAllGenres, setShowAllGenres] = useState(false);
-  const [columnCount, setColumnCount] = useState(3);
-
   useEffect(() => {
     if (searchExpanded) searchInputRef.current?.focus();
   }, [searchExpanded]);
-
-  useEffect(() => {
-    const mobile = window.matchMedia("(max-width: 690px)");
-    const tablet = window.matchMedia("(max-width: 1050px)");
-    const syncColumnCount = () => setColumnCount(mobile.matches ? 1 : tablet.matches ? 2 : 3);
-
-    syncColumnCount();
-    mobile.addEventListener("change", syncColumnCount);
-    tablet.addEventListener("change", syncColumnCount);
-    return () => {
-      mobile.removeEventListener("change", syncColumnCount);
-      tablet.removeEventListener("change", syncColumnCount);
-    };
-  }, []);
 
   useEffect(() => {
     const controller = new AbortController();
@@ -246,7 +250,13 @@ export default function ArtistsPage() {
 
         {loading ? (
           <div className={styles.grid} aria-label="Loading artists">
-            {Array.from({ length: 9 }, (_, index) => <div key={index} className={`${styles.skeleton} ${styles[`cardShape${index % 6}`]}`} />)}
+            {Array.from({ length: 9 }, (_, index) => (
+              <div className={styles.skeletonCard} key={index}>
+                <div className={styles.skeleton} />
+                <div className={styles.skeletonTitle} />
+                <div className={styles.skeletonSubtitle} />
+              </div>
+            ))}
           </div>
         ) : error ? (
           <p className={styles.message} role="alert">{error}</p>
@@ -257,17 +267,12 @@ export default function ArtistsPage() {
           </div>
         ) : (
           <section className={styles.grid} aria-label="Artists">
-            {Array.from({ length: columnCount }, (_, column) => (
-              <div className={styles.column} key={column}>
-                {cards.map((card, index) => {
-                  if (index % columnCount !== column) return null;
-                  return card.kind === "artist" ? (
-                    <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
-                  ) : (
-                    <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
-                  );
-                })}
-              </div>
+            {cards.map((card, index) => (
+              card.kind === "artist" ? (
+                <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
+              ) : (
+                <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
+              )
             ))}
           </section>
         )}
