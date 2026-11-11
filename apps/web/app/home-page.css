@@ -2482,13 +2482,15 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-name {
+  min-width: 0;
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(54px, 4vw, 64px);
+  font-size: calc(clamp(54px, 4vw, 64px) * var(--audioflume-featured-name-fit, 1));
   font-weight: 300;
   letter-spacing: -.035em;
   line-height: 1.15;
   text-transform: uppercase;
+  white-space: nowrap;
 }
 
 .audioflume-discover-featured-name-arrow {
