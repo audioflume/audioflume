@@ -572,7 +572,7 @@ export function HomeArtistShelf({
                   {!compact ? <GenreFilterPills genres={visibleGenres} showPlaceholders className="audioflume-home-reference-artist-genres" /> : null}
                 </span>
               </div>
-              ) : null}
+              )}
             </div>
             {!compact && !hideExploreButton ? (
               <Link
