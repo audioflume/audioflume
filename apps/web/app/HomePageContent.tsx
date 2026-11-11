@@ -304,7 +304,7 @@ function Shelf({
         onPrev={() => scroll("prev")}
         onNext={() => scroll("next")}
         className="audioflume-home-reference-width"
-        progressScrollbar={progressScrollbar}
+        progressScrollbar
       />
     </div>
   );
@@ -522,7 +522,7 @@ export function HomeArtistShelf({
     <Shelf
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
-      customScrollbar={!compact && !discoverLayout}
+      customScrollbar={false}
       progressScrollbar={discoverLayout || progressScrollbar}
     >
       {artists.map((artist, index) => {
@@ -871,7 +871,7 @@ export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = fals
     <Shelf
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
-      customScrollbar={!compact && !discoverLayout}
+      customScrollbar={false}
       progressScrollbar={discoverLayout || progressScrollbar}
     >
       {Array.from({ length: compact ? 4 : 3 }, (_, index) => (
