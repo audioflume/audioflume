@@ -2034,7 +2034,7 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-compact-songs {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 14px;
+  column-gap: 24px;
   row-gap: 10px;
 }
 
@@ -2047,7 +2047,6 @@ body:has(.audioflume-home-landing)
   min-width: 0;
   padding: 0 0 10px;
   border: 0;
-  border-bottom: 1px solid var(--border);
   background: transparent;
   color: inherit;
   text-align: left;
@@ -2135,35 +2134,6 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-compact-song-art:hover .audioflume-discover-compact-song-play-circle,
 .audioflume-discover-compact-song-main:focus-visible .audioflume-discover-compact-song-play-circle {
   transform: scale(1.05);
-}
-
-/* Top border on the first grid row at each responsive column count. */
-@media (min-width: 1101px) {
-  .audioflume-discover-compact-song:nth-child(-n + 4) {
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-  }
-}
-
-@media (min-width: 751px) and (max-width: 1100px) {
-  .audioflume-discover-compact-song:nth-child(-n + 3) {
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-  }
-}
-
-@media (min-width: 441px) and (max-width: 750px) {
-  .audioflume-discover-compact-song:nth-child(-n + 2) {
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-  }
-}
-
-@media (max-width: 440px) {
-  .audioflume-discover-compact-song:first-child {
-    border-top: 1px solid var(--border);
-    padding-top: 10px;
-  }
 }
 
 .audioflume-discover-compact-song-copy {
