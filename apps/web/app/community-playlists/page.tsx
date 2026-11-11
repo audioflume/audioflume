@@ -1009,6 +1009,7 @@ export default function CommunityPlaylistsPage() {
         ariaLabel={`Open ${playlist.name}`}
         className="community-card"
         mediaClassName="community-cover-wrap"
+        squareMedia
         mediaLinkClassName="community-cover-link"
         media={
           playlist.cover_image_url ? (
