@@ -2321,6 +2321,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media::after {
+  border-radius: inherit;
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
 }
 
