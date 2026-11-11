@@ -14,6 +14,10 @@
   background: var(--bg-secondary);
 }
 
+.mediaShell.squareMedia {
+  aspect-ratio: 1 / 1;
+}
+
 .mediaLink {
   position: relative;
   display: block;
