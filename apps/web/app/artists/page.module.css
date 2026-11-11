@@ -206,6 +206,8 @@
   font-weight: 300;
   line-height: 1;
   text-decoration: none;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
   opacity: 0;
   transform: translateY(12px);
   transition: opacity 220ms ease, transform 220ms ease, color 160ms ease;
