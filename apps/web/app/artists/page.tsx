@@ -33,7 +33,7 @@ type DirectoryArtist = {
 const INITIAL_GENRE_LIMIT = 14;
 const PREVIEW_CARD_COUNT = 8;
 
-function ArtistPreviewCard({ index }: { index: number }) {
+function ArtistPreviewCard() {
   return (
     <div className={playlistCardStyles.shell}>
       <PlaylistCardShell
@@ -271,7 +271,7 @@ export default function ArtistsPage() {
               card.kind === "artist" ? (
                 <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
               ) : (
-                <ArtistPreviewCard key={`preview-${card.index}`} index={index} />
+                <ArtistPreviewCard key={`preview-${card.index}`} />
               )
             ))}
           </section>
