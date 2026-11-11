@@ -215,7 +215,9 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-cover-wrap {
-  height: calc(40vw / 2.38);
+  width: 100%;
+  height: auto;
+  aspect-ratio: 1 / 1;
 }
 
 .community-cover-link {
@@ -624,7 +626,7 @@ body:has(.community-playlists-page-root) {
 .community-skeleton-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 10px;
+  column-gap: 48px;
   row-gap: 40px;
 }
 
@@ -640,7 +642,8 @@ body:has(.community-playlists-page-root) {
 .community-skeleton-card-image {
   position: relative;
   width: 100%;
-  height: calc(40vw / 2.38);
+  height: auto;
+  aspect-ratio: 1 / 1;
   border-radius: 0;
 }
 
@@ -693,23 +696,14 @@ body:has(.community-playlists-page-root) {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .community-cover-wrap,
-  .community-skeleton-card-image {
-    height: calc(52vw / 2.38);
-  }
 }
 
 @media (max-width: 620px) {
 
   .community-page-playlist-grid,
   .community-skeleton-grid {
-    column-gap: 10px;
+    column-gap: 48px;
     row-gap: 32px;
-  }
-
-  .community-cover-wrap,
-  .community-skeleton-card-image {
-    height: calc(78vw / 2.38);
   }
 
   .community-play {
