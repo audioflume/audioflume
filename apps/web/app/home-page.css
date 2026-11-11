@@ -2316,12 +2316,10 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card,
-.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
-.audioflume-home-mockup.is-discover-page .audioflume-discover-featured-song-shelf .audioflume-home-featured-song-art {
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card {
   border-radius: 10px;
 }
 
-.audioflume-home-mockup.is-discover-page .audioflume-discover-featured-song-shelf .audioflume-home-featured-song-art::after,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card::after,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card::after,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card::after {
