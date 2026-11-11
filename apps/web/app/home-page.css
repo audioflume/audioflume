@@ -2305,8 +2305,8 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
-    width: calc((var(--home-reference-width) - 72px) / 3);
-    min-width: calc((var(--home-reference-width) - 72px) / 3);
+    width: calc((var(--home-reference-width) - 48px) / 3);
+    min-width: calc((var(--home-reference-width) - 48px) / 3);
   }
 }
 
