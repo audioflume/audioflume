@@ -67,11 +67,13 @@ function Shelf({
   children,
   className = "",
   customScrollbar = false,
+  progressScrollbar = false,
 }: {
   label: string;
   children: ReactNode;
   className?: string;
   customScrollbar?: boolean;
+  progressScrollbar?: boolean;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -302,6 +304,7 @@ function Shelf({
         onPrev={() => scroll("prev")}
         onNext={() => scroll("next")}
         className="audioflume-home-reference-width"
+        progressScrollbar={progressScrollbar}
       />
     </div>
   );
@@ -518,6 +521,7 @@ export function HomeArtistShelf({
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
       customScrollbar={!compact && !discoverLayout}
+      progressScrollbar={discoverLayout}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
@@ -601,7 +605,7 @@ export function HomeArtistShelf({
                 </svg>
               </Link>
             ) : null}
-            {discoverLayout && featuredSong ? (
+            {discoverLayout ? (
               <>
               <button
                 type="button"
@@ -611,7 +615,7 @@ export function HomeArtistShelf({
                 aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
               >
                 <span className="audioflume-discover-featured-track-cover">
-                  {featuredSong.coverArt ? <img src={featuredSong.coverArt} alt="" draggable={false} /> : null}
+                  {featuredSong?.coverArt ? <img src={featuredSong.coverArt} alt="" draggable={false} /> : null}
                   {playable.length > 0 ? (
                     <span className="audioflume-discover-featured-track-play" aria-hidden="true">
                       {artistIsPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
@@ -619,8 +623,8 @@ export function HomeArtistShelf({
                   ) : null}
                 </span>
                 <span className="audioflume-discover-featured-track-copy">
-                  <strong>{featuredSong.title}</strong>
-                  <span>{featuredSong.artist || artist.name}</span>
+                  <strong>{featuredSong?.title || "No songs available"}</strong>
+                  <span>{featuredSong?.artist || artist.name}</span>
                 </span>
               </button>
               <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Artist genres">
@@ -628,7 +632,7 @@ export function HomeArtistShelf({
                   visibleGenres[index] ? (
                     <Link href={`/music?genre=${encodeURIComponent(visibleGenres[index])}`} className="audioflume-genre-filter-pill" key={visibleGenres[index]}>{visibleGenres[index]}</Link>
                   ) : (
-                    <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`} aria-hidden="true" />
+                    <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`}>{index === 0 && visibleGenres.length === 0 ? "Genres coming soon" : ""}</span>
                   )
                 ))}
               </span>
@@ -1254,7 +1258,7 @@ export default function HomePageContent({
             {songsLoading || artistsLoading || discoverFeaturedSongsLoading ? (
               <DiscoverFeaturedSongsSkeleton />
             ) : (
-              <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf">
+              <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf" progressScrollbar>
                 {discoverArtistSongs.map((song) => (
                   <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
                 ))}
