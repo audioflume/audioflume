@@ -126,7 +126,7 @@ export default function ShelfIndicatorNavigation({
             else scroller.scrollBy({ left: (event.key === "ArrowRight" ? 1 : -1) * Math.max(60, scroller.clientWidth / 3) });
           }}
         >
-          <span className={styles.scrollbarThumb} style={{ transform: `translateX(${position.ratio * 300}%)` }} />
+          <span className={styles.scrollbarThumb} style={{ left: `${position.ratio * 100}%`, transform: `translateX(-${position.ratio * 100}%)` }} />
         </div>
       ) : (
         <div className={`audioflume-discover-artist-navigation-progress ${styles.progress}`} aria-hidden="true">
