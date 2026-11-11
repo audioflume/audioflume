@@ -29,13 +29,14 @@
 }
 
 .browser {
-  padding: 24px 0 16px;
+  padding: 24px 0 0;
+  margin-bottom: 75px;
 }
 
 .searchForm {
   display: flex;
-  width: 32px;
-  min-width: 32px;
+  width: 250px;
+  min-width: 250px;
   height: 32px;
   box-sizing: border-box;
   align-items: center;
@@ -43,16 +44,11 @@
   border: 1.25px solid var(--border);
   border-radius: 999px;
   background: transparent;
-  transition: width 180ms ease, min-width 180ms ease, border-color 150ms ease, background-color 150ms ease;
-}
-
-.searchFormExpanded {
-  width: 250px;
-  min-width: 250px;
+  transition: border-color 150ms ease, background-color 150ms ease;
 }
 
 .searchForm:hover,
-.searchForm:has(.curated-pill-search-toggle:focus-visible) {
+.searchForm:focus-within {
   border-color: var(--text-muted);
 }
 
@@ -138,9 +134,12 @@
 
 .genrePills {
   display: flex;
+  width: min(100%, 1320px);
   flex-wrap: wrap;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
   gap: 8px;
+  margin-inline: auto;
 }
 
 .genreFilterPill {
@@ -650,7 +649,7 @@
   .content { padding-bottom: 65px; }
   .intro { padding: 32px 0 12px; }
   .intro h1 { font-size: clamp(40px, 8vw, 60px); }
-  .browser { padding: 20px 0 16px; }
+  .browser { padding: 20px 0 0; }
   .genrePills { gap: 7px; }
   .grid { column-gap: 48px; row-gap: 32px; }
   .column { gap: 10px; }
