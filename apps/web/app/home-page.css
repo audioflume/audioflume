@@ -1989,35 +1989,7 @@ body:has(.audioflume-home-landing)
   --audioflume-featured-artist-gap: 48px;
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
   --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
-  position: relative;
   padding-top: 60px;
-}
-
-.audioflume-discover-featured-detail {
-  position: absolute;
-  top: 12px;
-  right: var(--audioflume-home-page-gutter);
-  left: var(--audioflume-home-page-gutter);
-  display: flex;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 24px;
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-}
-
-.audioflume-discover-featured-detail > span:first-child {
-  color: var(--text-muted);
-  font-size: 20px;
-  font-weight: 300;
-  line-height: 1.2;
-}
-
-.audioflume-discover-featured-detail > span:last-child {
-  color: var(--text-primary);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.2;
-  text-align: right;
 }
 
 .audioflume-discover-featured-intro {
