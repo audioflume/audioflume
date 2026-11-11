@@ -866,13 +866,13 @@ function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayout?: boo
   );
 }
 
-export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = false }: { compact?: boolean; discoverLayout?: boolean }) {
+export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = false, progressScrollbar = false }: { compact?: boolean; discoverLayout?: boolean; progressScrollbar?: boolean }) {
   return (
     <Shelf
       label="in demand artists"
       className={`audioflume-home-reference-artist-shelf audioflume-home-skeleton-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
       customScrollbar={!compact && !discoverLayout}
-      progressScrollbar={discoverLayout}
+      progressScrollbar={discoverLayout || progressScrollbar}
     >
       {Array.from({ length: compact ? 4 : 3 }, (_, index) => (
         <article
@@ -1350,7 +1350,7 @@ export default function HomePageContent({
           </Link>
         </div>
         {artistsLoading ? (
-          <HomeArtistShelfSkeleton compact discoverLayout={!showHero} />
+          <HomeArtistShelfSkeleton compact progressScrollbar={!showHero} />
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact progressScrollbar={!showHero} />
         ) : null}
