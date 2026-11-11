@@ -1991,7 +1991,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover's featured-artist layout, independent of the larger lead-card shelf. */
 .audioflume-home-mockup-artists.is-discover-featured-artists {
-  --audioflume-featured-artist-gap: 48px;
+  --audioflume-featured-artist-gap: var(--audioflume-discover-wide-shelf-gap);
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
   --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
   padding-top: 60px;
@@ -2300,7 +2300,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only card spacing and subtle image-edge highlights. */
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-scroller {
-  gap: 48px;
+  gap: var(--audioflume-discover-wide-shelf-gap);
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
@@ -3074,7 +3074,8 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
 .audioflume-home-mockup.is-discover-page {
- --audioflume-discover-card-gap: 24px;
+  --audioflume-discover-wide-shelf-gap: clamp(16px, max(calc(10.7px + 1.356vw), calc(4.511vw - 20.208px)), 48px);
+  --audioflume-discover-card-gap: clamp(16px, calc(13.22px + 0.713vw), 24px);
   --audioflume-discover-card-radius: 0px;
   --audioflume-curated-shelf-image-height: auto;
   --audioflume-curated-shelf-image-ratio: 1 / 1;
