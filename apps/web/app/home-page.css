@@ -2314,21 +2314,24 @@ body:has(.audioflume-home-landing)
   }
 }
 
-.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card {
   border-radius: 10px;
 }
 
-.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card::after,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media::after {
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card::after,
-.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card::after {
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell::after {
   content: "";
   position: absolute;
   inset: 0;
   z-index: 5;
-  border-radius: inherit;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  border-radius: 10px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.1);
   pointer-events: none;
 }
 
@@ -2380,7 +2383,7 @@ body:has(.audioflume-home-landing)
   width: clamp(460px, 61vw, 1140px);
   min-width: clamp(460px, 61vw, 1140px);
   overflow: hidden;
-  border-radius: 10px;
+  border-radius: 0;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media {
