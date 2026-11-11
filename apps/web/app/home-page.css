@@ -2287,7 +2287,7 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only card spacing and subtle image-edge highlights. */
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-scroller {
-  gap: 24px;
+  gap: 48px;
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
@@ -2457,7 +2457,7 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-featured-name {
   color: var(--text-primary);
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 64px;
+  font-size: clamp(54px, 4vw, 64px);
   font-weight: 300;
   letter-spacing: -.035em;
   line-height: 1.15;
