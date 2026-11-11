@@ -481,6 +481,43 @@ function HomeReadyToCutSongCard({
   );
 }
 
+function DiscoverFeaturedArtistName({ name }: { name: string }) {
+  const rowRef = useRef<HTMLSpanElement>(null);
+  const nameRef = useRef<HTMLElement>(null);
+
+  useLayoutEffect(() => {
+    const row = rowRef.current;
+    const nameElement = nameRef.current;
+    const identity = row?.parentElement;
+    if (!row || !nameElement || !identity) return;
+
+    const fitName = () => {
+      row.style.setProperty("--audioflume-featured-name-fit", "1");
+      const arrow = row.querySelector<SVGSVGElement>(".audioflume-discover-featured-name-arrow");
+      const gap = parseFloat(getComputedStyle(row).columnGap) || 0;
+      const available = Math.max(0, identity.clientWidth - (arrow?.getBoundingClientRect().width ?? 0) - gap);
+      const naturalWidth = nameElement.scrollWidth;
+      const scale = naturalWidth > available ? Math.max(0.1, available / naturalWidth) : 1;
+      row.style.setProperty("--audioflume-featured-name-fit", String(scale));
+    };
+
+    const observer = new ResizeObserver(fitName);
+    observer.observe(identity);
+    fitName();
+    void document.fonts.ready.then(() => {
+      if (row.isConnected) fitName();
+    });
+    return () => observer.disconnect();
+  }, [name]);
+
+  return (
+    <span ref={rowRef} className="audioflume-discover-featured-name-row">
+      <strong ref={nameRef} className="audioflume-discover-featured-name">{name}</strong>
+      <ArrowUpRightIcon size={64} strokeWidth={1.5} className="audioflume-discover-featured-name-arrow" />
+    </span>
+  );
+}
+
 export function HomeArtistShelf({
   artists,
   homeFlashImages,
@@ -557,10 +594,7 @@ export function HomeArtistShelf({
             ) : null}
             {discoverLayout ? (
               <div className="audioflume-discover-featured-identity">
-                <span className="audioflume-discover-featured-name-row">
-                  <strong className="audioflume-discover-featured-name">{artist.name}</strong>
-                  <ArrowUpRightIcon size={64} strokeWidth={1.5} className="audioflume-discover-featured-name-arrow" />
-                </span>
+                <DiscoverFeaturedArtistName name={artist.name} />
                 {artist.designation ? (
                   <span className="audioflume-discover-featured-designation">{artist.designation}</span>
                 ) : null}
