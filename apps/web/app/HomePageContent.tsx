@@ -27,6 +27,8 @@ import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
+import curatedCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
 import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
@@ -660,9 +662,11 @@ export function HomeArtistShelf({
 function HomeCuratedPlaylistShelf({
   playlists,
   progressScrollbar = false,
+  discoverLayout = false,
 }: {
   playlists: CuratedPlaylist[];
   progressScrollbar?: boolean;
+  discoverLayout?: boolean;
 }) {
   if (playlists.length === 0) return null;
 
@@ -690,7 +694,7 @@ function HomeCuratedPlaylistShelf({
       >
         {playlists.map((playlist, index) => (
           <div key={playlist.id} className="audioflume-home-mockup-curated-card-shell">
-            <CuratedPlaylistCard playlist={playlist} index={index} variant="home" />
+            <CuratedPlaylistCard playlist={playlist} index={index} variant={discoverLayout ? "curatedPage" : "home"} />
           </div>
         ))}
       </Shelf>
@@ -934,15 +938,21 @@ function HomeCuratedPlaylistSkeleton({ discoverLayout = false }: { discoverLayou
     >
       {Array.from({ length: 4 }, (_, index) => (
         discoverLayout ? (
-          <div key={index} className="audioflume-home-mockup-curated-card-shell">
-            <article
-              className="audioflume-home-mockup-curated-card audioflume-home-skeleton-playlist-card"
-              aria-hidden="true"
-            >
-              <HomeSkeletonBlock className="is-playlist-media" />
-              <HomeSkeletonBlock className="is-playlist-title" />
-              <HomeSkeletonBlock className="is-playlist-play" />
-            </article>
+          <div key={index} className="audioflume-home-mockup-curated-card-shell" aria-hidden="true">
+            <PlaylistCardShell
+              squareMedia
+              className={`${curatedCardStyles.card} audioflume-home-skeleton-playlist-card`}
+              mediaDataAttribute="data-curated-playlist-image"
+              media={<HomeSkeletonBlock className="is-playlist-media" />}
+              details={
+                <div className={curatedCardStyles.details}>
+                  <div className={curatedCardStyles.copy}>
+                    <HomeSkeletonBlock className="is-discover-playlist-name" />
+                    <HomeSkeletonBlock className="is-discover-playlist-count" />
+                  </div>
+                </div>
+              }
+            />
           </div>
         ) : (
           <article
@@ -1294,7 +1304,7 @@ export default function HomePageContent({
           <HomeCuratedPlaylistSkeleton discoverLayout={!showHero} />
         </section>
       ) : (
-        <HomeCuratedPlaylistShelf playlists={curatedPlaylists} progressScrollbar={!showHero} />
+        <HomeCuratedPlaylistShelf playlists={curatedPlaylists} progressScrollbar={!showHero} discoverLayout={!showHero} />
       )}
 
       <section className="audioflume-home-mockup-catalogue">
