@@ -924,6 +924,19 @@ body:has(.audioflume-home-landing)
   border-radius: 0;
 }
 
+.audioflume-home-skeleton-curated-shelf.is-discover-skeleton
+  .audioflume-home-skeleton-block.is-discover-playlist-name {
+  width: 65%;
+  height: 16px;
+}
+
+.audioflume-home-skeleton-curated-shelf.is-discover-skeleton
+  .audioflume-home-skeleton-block.is-discover-playlist-count {
+  width: 35%;
+  height: 11.5px;
+  margin-top: 3px;
+}
+
 .audioflume-home-skeleton-playlist-card
   .audioflume-home-skeleton-block.is-playlist-kicker {
   position: absolute;
