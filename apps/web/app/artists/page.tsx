@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import Footer from "@/components/Footer";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
@@ -142,14 +142,8 @@ export default function ArtistsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
-  const [searchExpanded, setSearchExpanded] = useState(false);
-  const searchInputRef = useRef<HTMLInputElement>(null);
   const [activeGenre, setActiveGenre] = useState<string | null>(null);
   const [showAllGenres, setShowAllGenres] = useState(false);
-  useEffect(() => {
-    if (searchExpanded) searchInputRef.current?.focus();
-  }, [searchExpanded]);
-
   useEffect(() => {
     const controller = new AbortController();
 
@@ -208,31 +202,23 @@ export default function ArtistsPage() {
 
         <section className={styles.browser} aria-label="Browse artists">
           <div className={styles.genrePills} role="group" aria-label="Search and filter artists">
-            <form className={`curated-pill-search ${styles.searchForm}${searchExpanded ? ` ${styles.searchFormExpanded}` : ""}`} role="search" onSubmit={(event) => event.preventDefault()}>
-              <button
-                type="button"
-                className={`curated-pill-search-toggle${searchExpanded ? " is-active" : ""}`}
-                onClick={() => setSearchExpanded((expanded) => !expanded)}
-                aria-label={searchExpanded ? "Collapse artist search and filters" : "Expand artist search and filters"}
-                aria-expanded={searchExpanded}
-              >
-                <svg viewBox="0 0 20 20" aria-hidden="true">
+            <form className={`curated-pill-search ${styles.searchForm}`} role="search" onSubmit={(event) => event.preventDefault()}>
+              <span className="curated-pill-search-toggle is-active" aria-hidden="true">
+                <svg viewBox="0 0 20 20">
                   <circle cx="8" cy="8" r="5.25" />
                   <path d="m11.9 11.9 4.1 4.1" />
                 </svg>
-              </button>
-              {searchExpanded && (
-                <div className="curated-pill-search-field-wrap">
-                  <input ref={searchInputRef} type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search artists" aria-label="Search artists" />
-                  {query && (
-                    <button type="button" className="curated-pill-search-clear" onClick={() => setQuery("")} aria-label="Clear artist search">
-                      <XIcon size={12} strokeWidth={2.4} />
-                    </button>
-                  )}
-                </div>
-              )}
+              </span>
+              <div className="curated-pill-search-field-wrap">
+                <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search artists" aria-label="Search artists" />
+                {query && (
+                  <button type="button" className="curated-pill-search-clear" onClick={() => setQuery("")} aria-label="Clear artist search">
+                    <XIcon size={12} strokeWidth={2.4} />
+                  </button>
+                )}
+              </div>
             </form>
-            {searchExpanded && !loading && genres.length > 0 && (
+            {!loading && genres.length > 0 && (
               <>
                 <button type="button" className={`curated-main-filter-pill ${styles.genreFilterPill}${activeGenre === null ? " is-active" : ""}`} aria-pressed={activeGenre === null} onClick={() => setActiveGenre(null)}>All genres</button>
                 {displayedGenres.map(([genre]) => (
