@@ -456,13 +456,12 @@ body:has(.curated-playlists-page-root)
   text-decoration: none;
 }
 
-body:has(.curated-playlists-page-root) .curated-playlist-image,
 .curated-playlist-skeleton-card {
   position: relative;
   width: 100% !important;
   height: auto !important;
   min-height: 0 !important;
-  aspect-ratio: var(--curated-playlist-image-ratio, 16 / 9);
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--bg-secondary);
 }
@@ -588,7 +587,6 @@ body:has(.curated-playlists-page-root) .curated-playlist-image,
 
 .curated-page-playlist-grid {
   --filmwave-curated-shelf-card-width: 100%;
-  --curated-playlist-image-ratio: 1 / 1;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 32px;
