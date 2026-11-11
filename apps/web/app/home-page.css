@@ -2299,7 +2299,11 @@ body:has(.audioflume-home-landing)
 
 @media (min-width: 1512px) {
   .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
-  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell {
+    width: calc((var(--home-reference-width) - 96px) / 3);
+    min-width: calc((var(--home-reference-width) - 96px) / 3);
+  }
+
   .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
     width: calc((var(--home-reference-width) - 72px) / 3);
     min-width: calc((var(--home-reference-width) - 72px) / 3);
