@@ -2323,6 +2323,16 @@ body:has(.audioflume-home-landing)
   }
 }
 
+@media (max-width: 1100px) {
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
+    width: var(--home-reference-width);
+    min-width: var(--home-reference-width);
+  }
+}
+
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card {
