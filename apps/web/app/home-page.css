@@ -2723,17 +2723,17 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-  height: 257px;
-  aspect-ratio: auto;
+  height: var(--audioflume-curated-image-height, 257px);
+  aspect-ratio: var(--audioflume-curated-image-aspect-ratio, auto);
   border-radius: var(--audioflume-discover-card-radius, 10px);
 }
 
 .audioflume-home-mockup-curated-card {
-  height: 275px;
+  height: var(--audioflume-curated-card-height, 275px);
   overflow: hidden;
   border-radius: var(--audioflume-discover-card-radius, 10px);
   background: var(--bg-tertiary);
-  aspect-ratio: 2.38 / 1;
+  aspect-ratio: var(--audioflume-curated-card-aspect-ratio, 2.38 / 1);
   scroll-snap-align: none !important;
   scroll-snap-stop: normal !important;
 }
@@ -3081,6 +3081,10 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup.is-discover-page {
   --audioflume-discover-card-gap: 36px;
   --audioflume-discover-card-radius: 10px;
+  --audioflume-curated-card-height: auto;
+  --audioflume-curated-card-aspect-ratio: 1 / 1;
+  --audioflume-curated-image-height: auto;
+  --audioflume-curated-image-aspect-ratio: 1 / 1;
 }
 .audioflume-home-mockup-more-artists
   .audioflume-home-reference-artist-shelf
@@ -3114,8 +3118,8 @@ body:has(.audioflume-home-landing)
 
 @media (min-width: 1513px) {
   .audioflume-home-mockup-curated-card-shell [data-curated-playlist-image] {
-    height: auto;
-    aspect-ratio: 457 / 257;
+    height: var(--audioflume-curated-image-height, auto);
+    aspect-ratio: var(--audioflume-curated-image-aspect-ratio, 457 / 257);
   }
 
   .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
