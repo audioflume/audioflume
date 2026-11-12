@@ -5429,10 +5429,42 @@ body:has(.audioflume-home-experiment) {
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
   --audioflume-home-header-muted-link: #111111;
+  --audioflume-home-header-scrolled-background: #fff;
+  --audioflume-home-canvas: #d8d8d3;
+  --audioflume-home-content-text: #111;
+  --audioflume-home-search-surface: #fff;
+  --audioflume-home-search-divider: #e6e6e6;
+  --audioflume-home-search-icon: #999;
+  --audioflume-home-search-active: #111;
+  --audioflume-home-search-placeholder: #aaa;
+  --audioflume-home-search-clear: #777;
+  --audioflume-home-find-similar-background: #111;
+  --audioflume-home-find-similar-text: #fff;
+  --audioflume-home-songs-surface: #fff;
+  --audioflume-home-songs-link: #222;
+}
+
+:where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-home-experiment) {
+  --audioflume-home-header-background: #111;
+  --audioflume-home-header-scrolled-background: #202020;
+  --audioflume-home-header-text: #fff;
+  --audioflume-home-header-muted-link: #fff;
+  --audioflume-home-canvas: #111;
+  --audioflume-home-content-text: #fff;
+  --audioflume-home-search-surface: #202020;
+  --audioflume-home-search-divider: #414141;
+  --audioflume-home-search-icon: #a4a4a4;
+  --audioflume-home-search-active: #fff;
+  --audioflume-home-search-placeholder: #a4a4a4;
+  --audioflume-home-search-clear: #a4a4a4;
+  --audioflume-home-find-similar-background: #d8d8d3;
+  --audioflume-home-find-similar-text: #111;
+  --audioflume-home-songs-surface: #1b1b1b;
+  --audioflume-home-songs-link: #fff;
 }
 
 body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
-  --audioflume-home-header-background: #fff;
+  --audioflume-home-header-background: var(--audioflume-home-header-scrolled-background);
 }
 
 body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
@@ -5441,8 +5473,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 
 .audioflume-home-experiment {
   min-height: 100vh;
-  background: #d8d8d3;
-  color: #111;
+  background: var(--audioflume-home-canvas);
+  color: var(--audioflume-home-content-text);
   padding-bottom: 0;
 }
 
@@ -5466,8 +5498,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   position: relative;
   justify-content: center;
   gap: 12px;
-  background: #fff;
-  color: #111;
+  background: var(--audioflume-home-search-surface);
+  color: var(--audioflume-home-content-text);
   font-size: 13px;
   font-weight: 400;
   text-decoration: none;
@@ -5479,7 +5511,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   top: 10px;
   bottom: 10px;
   width: 1px;
-  background: #e6e6e6;
+  background: var(--audioflume-home-search-divider);
   content: "";
 }
 
@@ -5498,12 +5530,12 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   min-width: 0;
   gap: 12px;
   padding: 0 18px;
-  background: #fff;
-  color: #999;
+  background: var(--audioflume-home-search-surface);
+  color: var(--audioflume-home-search-icon);
 }
 
 .audioflume-experiment-search-field:focus-within {
-  color: #111;
+  color: var(--audioflume-home-search-active);
 }
 
 .audioflume-experiment-search-field > svg {
@@ -5523,7 +5555,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   border: 0;
   outline: 0;
   background: transparent;
-  color: #111;
+  color: var(--audioflume-home-content-text);
   font-family: inherit;
   font-size: 14px;
   font-weight: 300;
@@ -5536,7 +5568,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   appearance: none;
 }
 
-.audioflume-experiment-search-field input::placeholder { color: #aaa; }
+.audioflume-experiment-search-field input::placeholder { color: var(--audioflume-home-search-placeholder); }
 
 .audioflume-experiment-search-clear {
   display: grid;
@@ -5546,14 +5578,14 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   place-items: center;
   border: 0;
   background: transparent;
-  color: #777;
+  color: var(--audioflume-home-search-clear);
   cursor: pointer;
   transition: color 150ms ease;
 }
 
 .audioflume-experiment-search-clear:hover,
 .audioflume-experiment-search-clear:focus-visible {
-  color: #111;
+  color: var(--audioflume-home-search-active);
 }
 
 .audioflume-experiment-search-clear svg { width: 18px; height: 18px; }
@@ -5565,8 +5597,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   gap: 10px;
   border: 0;
   margin-left: 6px;
-  background: #111;
-  color: #fff;
+  background: var(--audioflume-home-find-similar-background);
+  color: var(--audioflume-home-find-similar-text);
   font: inherit;
   font-size: 13px;
   font-weight: 400;
@@ -5838,8 +5870,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   margin-top:10px;
   padding:42px clamp(22px, 4.2vw, 64px) 52px;
   border-radius:12px;
-  background:#fff;
-  color:#111;
+  background:var(--audioflume-home-songs-surface);
+  color:var(--audioflume-home-content-text);
 }
 .audioflume-experiment-songs-heading {
   display:flex;
@@ -5857,7 +5889,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   display:inline-flex;
   align-items:center;
   gap:8px;
-  color:#222;
+  color:var(--audioflume-home-songs-link);
   font-size:13px;
   font-weight:300;
   text-decoration:none;
@@ -5868,6 +5900,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 }
 
 .audioflume-experiment-songs-list .filmwave-song-card {
+  --filmwave-song-card-padding-left: 12px;
+  --filmwave-song-card-padding-right: 12px;
   width: calc(100% + var(--filmwave-song-card-padding-left) + var(--filmwave-song-card-padding-right));
   margin-left: calc(-1 * var(--filmwave-song-card-padding-left));
   margin-right: calc(-1 * var(--filmwave-song-card-padding-right));
