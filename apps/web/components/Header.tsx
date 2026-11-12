@@ -98,7 +98,7 @@ export default function Header() {
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
     mobileNavOpen ? "has-open-mobile-nav" : "",
-    pathname === "/discover" && scrolledPastThreshold ? "is-home-scrolled" : "",
+    (pathname === "/" || pathname === "/discover") && scrolledPastThreshold ? "is-home-scrolled" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -113,7 +113,7 @@ export default function Header() {
       });
     }
 
-    if (!transparentAtTop && pathname !== "/discover") {
+    if (!transparentAtTop && pathname !== "/" && pathname !== "/discover") {
       setScrolledPastThreshold(false);
       return;
     }
