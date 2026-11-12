@@ -124,7 +124,6 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
         <section className="audioflume-experiment-curated" aria-label="Curated playlists">
           <img src={CURATED_IMAGE} alt="" />
           <div className="audioflume-experiment-curated-brand">
-            <AudioflumeMark ariaHidden />
             <h2>HUMAN MADE MUSIC.<br />STORY DRIVEN SOUND.</h2>
           </div>
           <p>Curated playlists for editors.</p>
