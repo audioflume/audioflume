@@ -5691,6 +5691,11 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   line-height: 1.08;
 }
 
+.audioflume-experiment-lifetime > h2,
+.audioflume-experiment-artist-promo h2 {
+  font-size: clamp(20px, 2vw, 30px);
+}
+
 .audioflume-experiment-hero-eyebrow {
   position: absolute;
   z-index: 2;
@@ -5982,6 +5987,13 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   font-size: clamp(15px, 1.5vw, 21px);
   font-weight: 300;
   letter-spacing: -.035em;
+  text-decoration: none;
+  transition: opacity 160ms ease;
+}
+
+.audioflume-home-experiment a.audioflume-experiment-lifetime-price:hover,
+.audioflume-home-experiment a.audioflume-experiment-lifetime-price:focus-visible {
+  opacity: .8;
 }
 
 .audioflume-experiment-lifetime-price s {
@@ -6132,8 +6144,26 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   transform: translateY(6px);
 }
 
-.audioflume-experiment-curated > a:hover {
+.audioflume-home-experiment a.audioflume-experiment-hero-link,
+.audioflume-home-experiment a.audioflume-experiment-lifetime-link,
+.audioflume-home-experiment .audioflume-experiment-curated > a,
+.audioflume-home-experiment .audioflume-experiment-artist-promo > span,
+.audioflume-home-experiment .audioflume-experiment-songs .audioflume-home-reference-section-heading a {
+  transition: color 160ms ease, opacity 160ms ease;
+}
+
+.audioflume-home-experiment a.audioflume-experiment-lifetime-link:hover,
+.audioflume-home-experiment a.audioflume-experiment-lifetime-link:focus-visible,
+.audioflume-home-experiment a.audioflume-experiment-artist-promo:hover > span,
+.audioflume-home-experiment a.audioflume-experiment-artist-promo:focus-visible > span,
+.audioflume-home-experiment .audioflume-experiment-songs .audioflume-home-reference-section-heading a:hover,
+.audioflume-home-experiment .audioflume-experiment-songs .audioflume-home-reference-section-heading a:focus-visible {
   opacity: .8;
+}
+
+.audioflume-home-experiment .audioflume-experiment-curated > a:hover,
+.audioflume-home-experiment .audioflume-experiment-curated > a:focus-visible {
+  color: #fff;
 }
 
 .audioflume-experiment-songs {
