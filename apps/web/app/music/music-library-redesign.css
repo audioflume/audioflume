@@ -3,7 +3,12 @@
 @import "./fw-hero.css";
 
 .audioflume-music-page {
+  --audioflume-music-page-background: #d8d8d3;
   padding-top: var(--filmwave-header-height, 75px);
+}
+
+:where(html:not(.light):not([data-theme="light"])) .audioflume-music-page {
+  --audioflume-music-page-background: var(--bg-primary);
 }
 
 .audioflume-music-page-searchbar {
@@ -751,7 +756,7 @@ main
       0px - var(--audioflume-music-filter-width, 248px) -
         var(--audioflume-music-content-gap, 20px)
     ) !important;
-  background: var(--bg-primary) !important;
+  background: var(--audioflume-music-page-background) !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
@@ -1024,9 +1029,9 @@ main
   > .fw-filter-accordion-section {
   box-sizing: border-box;
   width: 100%;
-  min-height: 60px;
+  min-height: 44px;
   flex: 0 0 auto;
-  border-bottom: 1.25px solid var(--border);
+  border-bottom: 0;
 }
 
 .audioflume-music-page
@@ -1045,8 +1050,8 @@ main
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item {
-  height: calc(60px - 1.25px) !important;
-  min-height: calc(60px - 1.25px) !important;
+  height: 44px !important;
+  min-height: 44px !important;
 }
 
 .audioflume-music-page
@@ -1751,10 +1756,10 @@ main
   box-sizing: border-box;
   display: flex;
   width: 100%;
-  min-height: 60px;
+  min-height: 44px;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1.25px solid var(--border);
+  border-bottom: 0;
   padding: 0 20px;
 }
 
