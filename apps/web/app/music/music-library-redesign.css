@@ -13,6 +13,10 @@
   --border: #c6c7c2;
 }
 
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-music-page) .filmwave-web-header {
+  --filmwave-chrome-surface: #d8d8d3;
+}
+
 .audioflume-music-page-searchbar {
   position: sticky;
   top: calc(var(--filmwave-header-height, 60px) + 20px);
@@ -684,7 +688,7 @@ main
 
 .audioflume-music-page
   > section:has(.fw-music-content-column > .fw-filter-panel-wrap) {
-  margin-left: 0 !important;
+  margin-left: var(--audioflume-music-page-gutter) !important;
 }
 
 .audioflume-music-page
