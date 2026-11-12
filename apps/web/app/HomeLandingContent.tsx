@@ -16,7 +16,6 @@ import type { Song } from "@/lib/types";
 
 const HERO_BACKGROUND = "https://images.filmwave.io/images/home/judah-earl-background.png";
 const HERO_OVERLAY = "https://images.filmwave.io/images/home/judah-earl-overlay.png";
-const LIFETIME_IMAGE = "https://images.filmwave.io/images/home/Lifetime-Access-Home.png";
 const ARTISTS_IMAGE = "https://images.filmwave.io/images/home/karsten-winegeart-NYU2vLCqpbQ-unsplash.jpg";
 
 function HomeHeroFeaturedSong({ song }: { song?: Song }) {
