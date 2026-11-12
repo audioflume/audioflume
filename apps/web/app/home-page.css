@@ -5653,15 +5653,22 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 }
 .audioflume-experiment-hero-overlay { z-index: 1; }
 
+.audioflume-experiment-hero-eyebrow,
+.audioflume-experiment-lifetime > h2,
+.audioflume-experiment-artist-promo h2,
+.audioflume-experiment-curated > p {
+  margin: 0;
+  font-size: clamp(15px, 1.45vw, 21px);
+  font-weight: 500;
+  letter-spacing: -.025em;
+  line-height: 1.08;
+}
+
 .audioflume-experiment-hero-eyebrow {
   position: absolute;
   z-index: 2;
   top: 8%;
   left: 3.4%;
-  margin: 0;
-  font-size: clamp(15px, 1.45vw, 21px);
-  font-weight: 500;
-  letter-spacing: -.025em;
 }
 
 .audioflume-experiment-hero-headline {
@@ -5913,83 +5920,178 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 }
 
 .audioflume-experiment-lifetime > h2 {
-  position:absolute;
-  top:12%;
-  left:7%;
-  margin:0;
-  font-size:clamp(18px, 1.65vw, 25px);
-  line-height:1.08;
-  font-weight:500;
-  letter-spacing:-.045em;
+  position: absolute;
+  top: 12%;
+  left: 7%;
+}
+
+.audioflume-experiment-lifetime-footer {
+  position: absolute;
+  bottom: 10%;
+  left: 7%;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
 }
 
 .audioflume-experiment-lifetime-price {
-  position:absolute;
-  left:7%;
-  bottom:8%;
-  display:flex;
-  align-items:flex-start;
-  gap:var(--audioflume-originals-pricing-gap);
-  color:#fff;
-  --audioflume-originals-pricing-gap: clamp(10px, 1.3vw, 20px);
-  --audioflume-originals-price-font-size: clamp(28px, 3.2vw, 56px);
-  --audioflume-originals-badge-font-size: clamp(8px, .65vw, 9.5px);
-  --audioflume-originals-offer-caption-font-size: clamp(10px, .9vw, 15px);
-  --audioflume-originals-offer-badge-background: #fff;
-  --audioflume-originals-offer-badge-color: #111;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  color: #fff;
+  font-size: clamp(15px, 1.5vw, 21px);
+  font-weight: 300;
+  letter-spacing: -.035em;
 }
-.audioflume-experiment-lifetime-price .audioflume-home-originals-heading-badge {
-  margin-bottom: 9px;
+
+.audioflume-experiment-lifetime-price s {
+  color: #777;
+  text-decoration-thickness: 1px;
 }
+
+.audioflume-experiment-lifetime-price strong {
+  font-weight: 300;
+}
+
 .audioflume-home-experiment a.audioflume-experiment-lifetime-link {
-  position:absolute;
-  right:7%;
-  bottom:10%;
-  display:grid;
-  place-items:center;
-  color:#fff;
+  display: inline-flex;
+  align-items: baseline;
+  color: #fff;
 }
-.audioflume-home-experiment a.audioflume-experiment-artist-promo { isolation:isolate; }
+
+.audioflume-experiment-lifetime-link svg {
+  width: 24px;
+  height: 24px;
+  transform: translateY(6px);
+}
+
+.audioflume-home-experiment a.audioflume-experiment-artist-promo { isolation: isolate; }
 .audioflume-experiment-artist-promo > img {
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  width:100%;
-  height:100%;
-  object-fit:cover;
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
+
 .audioflume-experiment-artist-promo::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  background:linear-gradient(0deg,rgba(0,0,0,.28),transparent 48%);
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(0deg, rgba(0,0,0,.28), transparent 48%);
 }
-.audioflume-experiment-artist-promo > div {
-  position:absolute;
-  bottom:8%;
-  left:7%;
-  right:7%;
-}
+
 .audioflume-experiment-artist-promo h2 {
-  margin:0 0 4px;
-  font-size:clamp(18px, 1.65vw, 25px);
-  line-height:1.05;
-  font-weight:500;
-  letter-spacing:-.045em;
+  position: absolute;
+  top: 12%;
+  left: 7%;
+  right: 7%;
 }
-.audioflume-experiment-artist-promo span {
-  display:inline-flex;
-  align-items:baseline;
-  gap:6px;
-  font-size:clamp(15px, 1.5vw, 21px);
-  font-weight:300;
+
+.audioflume-experiment-artist-promo > span {
+  position: absolute;
+  bottom: 10%;
+  left: 7%;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: clamp(15px, 1.5vw, 21px);
+  font-weight: 300;
+  letter-spacing: -.035em;
 }
-.audioflume-experiment-artist-promo span svg {
+
+.audioflume-experiment-artist-promo > span svg {
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
   transform: translateY(6px);
+}
+
+.audioflume-experiment-curated {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 3.6 / 1;
+  min-height: 300px;
+  margin-top: 15px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #111;
+  color: #fff;
+}
+
+.audioflume-experiment-curated > img {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.audioflume-experiment-curated::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, transparent 35%, rgba(0,0,0,.24));
+  pointer-events: none;
+}
+
+.audioflume-experiment-curated-brand {
+  position: absolute;
+  top: 42%;
+  left: 66%;
+  display: flex;
+  align-items: center;
+  gap: clamp(12px, 1.5vw, 24px);
+}
+
+.audioflume-experiment-curated-brand > svg {
+  width: clamp(48px, 5vw, 86px);
+  height: auto;
+  flex: 0 0 auto;
+}
+
+.audioflume-experiment-curated-brand h2 {
+  margin: 0;
+  font-size: clamp(22px, 2.5vw, 44px);
+  font-weight: 300;
+  line-height: 1.02;
+  letter-spacing: -.055em;
+}
+
+.audioflume-experiment-curated > p {
+  position: absolute;
+  bottom: 11%;
+  left: 3.8%;
+}
+
+.audioflume-home-experiment .audioflume-experiment-curated > a {
+  position: absolute;
+  right: 10%;
+  bottom: 10%;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  color: #fff;
+  font-size: clamp(15px, 1.5vw, 21px);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  text-decoration: none;
+}
+
+.audioflume-experiment-curated > a svg {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  transform: translateY(6px);
+}
+
+.audioflume-experiment-curated > a:hover {
+  opacity: .8;
 }
 
 .audioflume-experiment-songs {
@@ -6041,6 +6143,9 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
   .audioflume-experiment-lifetime,
   .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
+  .audioflume-experiment-curated { aspect-ratio: auto; min-height: 380px; }
+  .audioflume-experiment-curated-brand { top: 30%; left: 10%; right: 6%; }
+  .audioflume-experiment-curated > a { right: 6%; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
 }
 
@@ -6048,6 +6153,9 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   .audioflume-experiment-hero-headline { top:42%; }
   .audioflume-experiment-hero-link { bottom:20%; }
   .audioflume-experiment-hero-eyebrow { top:6%; }
-  .audioflume-experiment-lifetime > h2 { font-size:20px; }
-  .audioflume-experiment-lifetime-price { gap:12px; }
+  .audioflume-experiment-lifetime-price { flex-wrap: wrap; }
+  .audioflume-experiment-curated-brand { left: 7%; }
+  .audioflume-experiment-curated-brand h2 { font-size: clamp(19px, 5vw, 24px); }
+  .audioflume-experiment-curated > p { bottom: 25%; left: 7%; }
+  .audioflume-home-experiment .audioflume-experiment-curated > a { bottom: 8%; left: 7%; right: auto; }
 }
