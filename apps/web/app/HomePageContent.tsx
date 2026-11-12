@@ -595,6 +595,7 @@ export function HomeArtistShelf({
             ) : null}
             {discoverLayout ? (
               <div className="audioflume-discover-featured-identity">
+                <span className="audioflume-discover-featured-eyebrow">FEATURED ARTIST — {String(index + 1).padStart(2, "0")}</span>
                 <DiscoverFeaturedArtistName name={artist.name} />
                 {artist.designation ? (
                   <span className="audioflume-discover-featured-designation">{artist.designation}</span>
