@@ -5762,6 +5762,9 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   white-space: nowrap;
 }
 .audioflume-experiment-hero-song-cover {
+  --audioflume-featured-song-play-background: #ffffff;
+  --audioflume-featured-song-play-color: #111111;
+  --audioflume-featured-song-play-backdrop: none;
   position: relative;
   display: grid;
   width: clamp(46px, 4.8vw, 78px);
@@ -5771,11 +5774,6 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   background: rgba(255,255,255,.16);
 }
 .audioflume-experiment-hero-song-cover img { width:100%; height:100%; object-fit:cover; }
-.audioflume-experiment-hero-song-cover {
-  --audioflume-featured-song-play-background: #ffffff;
-  --audioflume-featured-song-play-color: #111111;
-  --audioflume-featured-song-play-backdrop: none;
-}
 .audioflume-experiment-hero-song-play {
   position: absolute;
   inset: 0;
