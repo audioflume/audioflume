@@ -662,7 +662,7 @@ export default function Header() {
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent {
           --filmwave-chrome-surface: var(--audioflume-home-header-background, var(--bg-primary));
-          border-bottom-color: var(--border) !important;
+          border-bottom-color: var(--audioflume-home-header-border, var(--border)) !important;
           background: var(--audioflume-home-header-background, var(--bg-primary)) !important;
           background-color: var(--audioflume-home-header-background, var(--bg-primary)) !important;
           color: var(--audioflume-home-header-text, var(--text-primary)) !important;
