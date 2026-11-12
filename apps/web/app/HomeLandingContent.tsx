@@ -27,7 +27,7 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
 
   return (
     <button
-      className="audioflume-experiment-hero-song"
+      className={`audioflume-experiment-hero-song${playing ? " is-playing" : ""}`}
       type="button"
       disabled={!song?.audioUrl}
       onClick={() => { if (song) togglePlayPause(song); }}
@@ -45,8 +45,8 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
       <span className="audioflume-experiment-hero-song-cover">
         {song?.coverArt ? <img src={song.coverArt} alt="" /> : null}
         {song?.audioUrl && <span className="audioflume-experiment-hero-song-play">
-          <span className="audioflume-experiment-hero-song-circle">
-            {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={18} />}
+          <span className="audioflume-home-featured-song-play" aria-hidden="true">
+            {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
           </span>
         </span>}
       </span>
