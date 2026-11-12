@@ -1297,7 +1297,7 @@ export default function MusicPage() {
   );
 
   return (
-    <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
+    <main className="audioflume-music-page min-h-screen bg-[var(--audioflume-music-page-background,var(--bg-primary))] text-[var(--text-primary)]">
       <div
         className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}
       >
