@@ -5778,6 +5778,125 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 .audioflume-experiment-hero-song:hover .audioflume-experiment-hero-song-play,
 .audioflume-experiment-hero-song:focus-visible .audioflume-experiment-hero-song-play { opacity:1; }
 
+.audioflume-experiment-founders {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  aspect-ratio: 2.44 / 1;
+  min-height: 320px;
+  margin-top: 10px;
+  padding: clamp(28px, 4vw, 64px) clamp(28px, 5vw, 88px);
+  overflow: hidden;
+  border-radius: 12px;
+  background: #101615 url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
+  color: #e5e5dd;
+}
+
+.audioflume-experiment-founders-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(90deg, rgba(0,0,0,.22), rgba(0,0,0,.18)), linear-gradient(0deg, rgba(0,0,0,.53), transparent 68%);
+  pointer-events: none;
+}
+
+.audioflume-experiment-founders-heading {
+  margin: 0;
+  font-size: clamp(30px, 4.5vw, 80px);
+  font-weight: 300;
+  letter-spacing: -.045em;
+  line-height: 1.03;
+  text-align: justify;
+  text-align-last: justify;
+}
+
+.audioflume-experiment-founders-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: end;
+  gap: 7%;
+}
+
+.audioflume-experiment-founders-intro p {
+  margin: 0 0 clamp(12px, 2vw, 38px);
+  font-size: clamp(20px, 2.4vw, 36px);
+  font-weight: 300;
+  line-height: 1.04;
+  letter-spacing: -.035em;
+}
+
+.audioflume-home-reference a.audioflume-experiment-founders-apply {
+  display: inline-flex;
+  min-height: clamp(44px, 4vw, 62px);
+  width: min(100%, 440px);
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  background: #e5e5dd;
+  color: #111;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 400;
+  transition: background 160ms ease;
+}
+
+.audioflume-home-reference a.audioflume-experiment-founders-apply:hover {
+  background: #fff;
+  color: #111;
+}
+
+.audioflume-experiment-founders-apply > span {
+  position: relative;
+  top: 0;
+  left: 0;
+  transition: top 100ms ease, left 100ms ease;
+}
+
+.audioflume-experiment-founders-apply:hover > span {
+  top: -1px;
+  left: 1px;
+}
+
+.audioflume-experiment-founders-benefits {
+  justify-self: end;
+  width: min(100%, clamp(300px, 32vw, 560px));
+}
+
+.audioflume-experiment-founders-benefits p {
+  margin: 0;
+  font-size: clamp(13px, 1.16vw, 19px);
+  font-weight: 300;
+  line-height: 1.6;
+}
+
+@media (max-width: 750px) {
+  .audioflume-experiment-founders {
+    aspect-ratio: 1.5 / 1;
+    padding: 28px;
+  }
+
+  .audioflume-experiment-founders-heading {
+    font-size: clamp(25px, 4.7vw, 38px);
+  }
+
+  .audioflume-experiment-founders-content {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .audioflume-experiment-founders-intro p {
+    font-size: clamp(18px, 3.2vw, 28px);
+  }
+
+  .audioflume-experiment-founders-benefits {
+    justify-self: start;
+    width: 100%;
+  }
+}
+
 .audioflume-experiment-promo-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
