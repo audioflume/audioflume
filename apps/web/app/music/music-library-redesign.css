@@ -106,18 +106,18 @@
   border-radius: 0;
   background: var(--filmwave-search-surface);
   padding: 0 16px;
-  color: #5a5a5a;
+  color: #999;
 }
 
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field:focus-within {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field > svg {
-  width: 22px;
-  height: 22px;
-  flex: 0 0 auto;
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
   fill: none;
   stroke: currentColor;
   stroke-linecap: round;
@@ -131,8 +131,8 @@
   outline: 0;
   background: transparent;
   color: var(--text-primary);
-  font: inherit;
-  font-size: 15px;
+  font-family: inherit;
+  font-size: 14px;
   font-weight: 300;
   -webkit-appearance: none;
   appearance: none;
@@ -152,34 +152,32 @@
 .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field
   input::placeholder {
-  color: #5a5a5a;
-  font-size: 16px;
+  color: #aaa;
   opacity: 1;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-clear {
-  display: inline-flex;
+  display: grid;
   width: 22px;
   height: 22px;
-  flex: 0 0 22px;
-  align-items: center;
-  justify-content: center;
+  flex: 0 0 auto;
+  place-items: center;
   border: 0;
   background: transparent;
-  color: #5a5a5a;
+  color: #777;
   padding: 0;
   cursor: pointer;
   transition: color 150ms ease;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-clear svg {
-  width: 21px;
-  height: 21px;
+  width: 18px;
+  height: 18px;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-clear:hover,
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-clear:focus-visible {
-  color: #ffffff;
+  color: var(--text-primary);
 }
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort {
@@ -630,7 +628,7 @@ main
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field {
   background: #f5f5f5;
-  color: #a3a3a3;
+  color: #999;
 }
 
 :where(html.light, html[data-theme="light"])
@@ -643,13 +641,13 @@ main
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field
   input::placeholder {
-  color: #a3a3a3;
+  color: #aaa;
 }
 
 :where(html.light, html[data-theme="light"])
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-clear {
-  color: #a3a3a3;
+  color: #777;
 }
 
 :where(html.light, html[data-theme="light"])
