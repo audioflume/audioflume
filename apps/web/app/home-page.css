@@ -5908,7 +5908,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 }
 
 @media (max-width: 750px) {
-  .audioflume-experiment-search-row { grid-template-columns: 72px minmax(0, 1fr) 60px; }
+  .audioflume-experiment-search-row { grid-template-columns: 64px minmax(0, 1fr) 68px; }
   .audioflume-experiment-search-similar { margin-left: 4px; }
   .audioflume-experiment-search-filter { gap: 0; }
   .audioflume-experiment-search-filter span,
