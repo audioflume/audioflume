@@ -55,7 +55,7 @@ body:has(.audioflume-home-landing)
   padding-top: 0;
 }
 
-.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link) {
+.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link):not(.audioflume-experiment-search-filter) {
   color: inherit;
 }
 
@@ -5450,10 +5450,10 @@ body:has(.audioflume-home-experiment) {
   --audioflume-home-content-text: #fff;
   --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
   --audioflume-home-search-text: #fff;
-  --audioflume-home-search-divider: #555;
-  --audioflume-home-search-icon: #888;
+  --audioflume-home-search-divider: #3d3d3d;
+  --audioflume-home-search-icon: #666;
   --audioflume-home-search-active: #fff;
-  --audioflume-home-search-placeholder: #888;
+  --audioflume-home-search-placeholder: #666;
   --audioflume-home-search-clear: #777;
   --audioflume-home-find-similar-background: #d8d8d3;
   --audioflume-home-find-similar-text: #111;
