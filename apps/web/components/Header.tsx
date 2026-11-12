@@ -386,7 +386,7 @@ export default function Header() {
           display: flex;
           box-sizing: border-box;
           width: 100%;
-          height: 28px;
+          height: var(--audioflume-cta-bar-height, 28px);
           align-items: center;
           justify-content: space-between;
           gap: 24px;
@@ -402,7 +402,7 @@ export default function Header() {
           min-width: 0;
           align-items: center;
           gap: 8px;
-          font-size: 11px;
+          font-size: var(--audioflume-cta-copy-size, 11px);
           font-weight: 400;
           letter-spacing: 0.01em;
           line-height: 1;
@@ -420,7 +420,7 @@ export default function Header() {
           gap: 6px;
           color: inherit;
           font-family: var(--font-roboto-mono-filmwave), ui-monospace, monospace;
-          font-size: 9px;
+          font-size: var(--audioflume-cta-link-size, 9px);
           font-weight: 400;
           letter-spacing: 0.06em;
           line-height: 1;
