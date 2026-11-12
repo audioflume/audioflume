@@ -435,7 +435,7 @@ export default function MusicPage() {
       filterCloseTimeoutRef.current = null;
     }, 180);
   }
-  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
+  const [sortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
   const [semanticSearchState, setSemanticSearchState] =
