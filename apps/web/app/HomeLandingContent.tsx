@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import Footer from "@/components/Footer";
+import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import SongCard from "@/components/SongCard";
@@ -125,17 +126,18 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
         </section>
 
         <section className="audioflume-experiment-songs" aria-label="Newly added songs">
-          <div className="audioflume-experiment-songs-heading">
-            <h2>Newly added songs</h2>
-            <Link href="/music">Explore new music <ArrowUpRightIcon size={15} strokeWidth={1.5} /></Link>
-          </div>
-          <div className="audioflume-experiment-songs-list">
+          <HomeSectionWithHeading
+            title="Newly added songs"
+            linkHref="/music"
+            linkLabel="Explore new music"
+            contentClassName="audioflume-experiment-songs-list"
+          >
             {loading ? (
               <div className="audioflume-experiment-songs-loading" role="status">Loading new music…</div>
             ) : newSongs.map((song) => (
               <SongCard key={song.id} song={song} showDivider={false} />
             ))}
-          </div>
+          </HomeSectionWithHeading>
         </section>
       </div>
       <Footer showTopBorder={false} />
