@@ -3,50 +3,32 @@
 @import "./fw-hero.css";
 
 .audioflume-music-page {
-  --audioflume-music-page-gutter: clamp(24px, 3.4vw, 64px);
-  --filmwave-searchbar-height: 64px;
-  --audioflume-music-toolbar-surface: #fff;
-  padding-top: calc(var(--filmwave-header-height, 60px) + 20px);
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-music-page {
-  --bg-primary: #fff;
-  --border: #c6c7c2;
-  background-image: linear-gradient(
-    to bottom,
-    #d8d8d3 0,
-    #d8d8d3 calc(var(--filmwave-header-height, 60px) + 122px),
-    #fff calc(var(--filmwave-header-height, 60px) + 122px)
-  );
-}
-
-:where(html.light, html[data-theme="light"]) body:has(.audioflume-music-page) .filmwave-web-header {
-  --filmwave-chrome-surface: #d8d8d3;
-}
-
-:where(html:not(.light):not([data-theme="light"])) .audioflume-music-page {
-  --audioflume-music-toolbar-surface: #1b1b1b;
+  padding-top: var(--filmwave-header-height, 75px);
 }
 
 .audioflume-music-page-searchbar {
   position: sticky;
-  top: calc(var(--filmwave-header-height, 60px) + 20px);
+  top: var(--filmwave-header-height, 75px);
   z-index: calc(var(--filmwave-z-search-filter, 60) + 3);
   display: grid;
-  height: var(--filmwave-searchbar-height, 64px);
+  height: var(--filmwave-searchbar-height, 75px);
   grid-template-columns:
-    164px
+    154px
     minmax(0, 1fr)
-    265px;
+    356px;
   align-items: stretch;
-  margin: 0 var(--audioflume-music-page-gutter);
-  background: var(--audioflume-music-toolbar-surface);
+  transition: grid-template-columns 180ms ease;
+  border-bottom: var(--filmwave-border-width) solid var(--border);
+  background: var(--bg-primary);
   color: var(--text-primary);
   overscroll-behavior: none;
 }
 
 .audioflume-music-page-searchbar.is-filters-open {
-  grid-template-columns: 164px minmax(0, 1fr) 265px;
+  grid-template-columns:
+    var(--audioflume-music-filter-width, 248px)
+    minmax(0, 1fr)
+    356px;
 }
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-filters,
@@ -60,9 +42,9 @@
   gap: 18px;
   overflow: hidden;
   border: 0;
-  border-right: 1px solid #e5e5e5;
+  border-right: 0;
   background: transparent;
-  padding: 0 40px;
+  padding: 0 30px;
   color: var(--text-primary);
   font: inherit;
   font-size: 13px;
@@ -118,12 +100,12 @@
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
   box-sizing: border-box;
-  width: 100%;
+  width: min(720px, calc(100% - 32px));
   gap: 12px;
-  margin: 0;
+  margin: 12px 12px 12px 0;
   border-radius: 0;
-  background: transparent;
-  padding: 0 24px;
+  background: #1b1b1b;
+  padding: 0 16px;
   color: #555;
 }
 
@@ -200,14 +182,8 @@
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort {
   justify-content: center;
-  gap: 0;
-  background: #111;
-  color: #fff;
+  gap: 38px;
   transform: none;
-}
-
-.audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort .filmwave-music-sort-control {
-  display: none;
 }
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-song {
@@ -217,7 +193,7 @@
   gap: 8px;
   border: 0 solid var(--border);
   background: transparent;
-  color: #fff;
+  color: var(--text-primary);
   padding: 0;
   font: inherit;
   font-size: 14px;
@@ -343,9 +319,7 @@
 }
 
 html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
-  padding-top: 30px !important;
-  margin-right: var(--audioflume-music-page-gutter);
-  margin-left: var(--audioflume-music-page-gutter);
+  padding-top: 0 !important;
 }
 
 .audioflume-music-page
@@ -359,7 +333,7 @@ html body .audioflume-music-page > section:has(.fw-music-content-column .fw-filt
   > section
   > .fw-music-content-column
   > .fw-song-list:not(:has(.audioflume-music-reference-summary, .audioflume-music-originals-summary)) {
-  padding-top: 0;
+  padding-top: 16px;
 }
 
 
@@ -391,13 +365,11 @@ main
 .audioflume-music-page
   .fw-song-list
   .scroll-mt-48.scroll-mb-40.cursor-pointer.items-center {
-  --filmwave-song-card-padding-y: 8px !important;
+  --filmwave-song-card-padding-y: 12px !important;
   --filmwave-song-card-padding-left: 12px !important;
   --filmwave-song-card-padding-right: 12px !important;
-  min-height: 76px;
-  gap: 10px;
   border-radius: 0 !important;
-  padding: 8px 12px !important;
+  padding: 12px !important;
 }
 
 @media (max-width: 640px) {
@@ -518,7 +490,7 @@ main
   border-top: 0 !important;
   border-radius: 0 !important;
   margin: 0 !important;
-  padding: 0 4px !important;
+  padding: 0 20px !important;
 }
 
 
@@ -532,8 +504,8 @@ main
 @media (max-width: 1000px) {
   .audioflume-music-page-searchbar
     .audioflume-home-reference-searchbar-field {
-    width: 100%;
-    margin: 0;
+    width: min(720px, 100%);
+    margin: 12px 0;
   }
 
   .audioflume-music-page-searchbar
@@ -546,11 +518,14 @@ main
 
 
   .audioflume-music-page-searchbar {
-    grid-template-columns: 120px minmax(0, 1fr) 120px;
+    grid-template-columns: 154px minmax(0, 1fr) 120px;
   }
 
   .audioflume-music-page-searchbar.is-filters-open {
-    grid-template-columns: 120px minmax(0, 1fr) 120px;
+    grid-template-columns:
+      var(--audioflume-music-filter-width, 248px)
+      minmax(0, 1fr)
+      120px;
   }
 
   .audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort {
@@ -652,7 +627,7 @@ main
 :where(html.light, html[data-theme="light"])
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field {
-  background: transparent;
+  background: #f5f5f5;
   color: #999;
 }
 
@@ -686,8 +661,8 @@ main
 
 /* Web music page now uses the full-width search bar as the only search/filter chrome. */
 .audioflume-music-page {
-  --audioflume-music-filter-width: 184px;
-  --audioflume-music-content-gap: 44px;
+  --audioflume-music-filter-width: 248px;
+  --audioflume-music-content-gap: 20px;
 }
 
 .music-page-content-shell .filmwave-song-card {
@@ -699,40 +674,9 @@ main
   margin-left: calc(-1 * var(--filmwave-song-card-padding-left));
 }
 
-@media (min-width: 1001px) {
-  .audioflume-music-page .fw-song-list .filmwave-song-cover {
-    width: 56px;
-    height: 56px;
-    flex: 0 0 56px;
-  }
-
-  .audioflume-music-page .fw-song-list .filmwave-song-info {
-    max-width: 180px;
-    flex: 0 1 170px;
-  }
-
-  .audioflume-music-page .fw-song-list .filmwave-song-wave-wrap {
-    gap: 9px;
-  }
-
-  .audioflume-music-page .fw-song-list .filmwave-song-stems-slot {
-    flex-basis: 24px;
-  }
-
-  .audioflume-music-page .fw-song-list .filmwave-song-genre-slot {
-    flex-basis: 128px;
-  }
-
-  .audioflume-music-page .fw-song-list .filmwave-song-key-bpm {
-    width: 116px;
-    flex-basis: 116px;
-    gap: 8px;
-  }
-}
-
 .audioflume-music-page
   > section:has(.fw-music-content-column > .fw-filter-panel-wrap) {
-  margin-left: var(--audioflume-music-page-gutter) !important;
+  margin-left: 0 !important;
 }
 
 .audioflume-music-page
@@ -784,11 +728,11 @@ main
   > .fw-music-content-column
   > .fw-filter-panel-wrap {
   --audioflume-music-filter-height: calc(
-    100dvh - var(--filmwave-header-height, 60px) - 104px -
+    100dvh - var(--filmwave-header-height, 60px) - 75px -
       var(--filmwave-sidebar-bottom-offset, 0px)
   );
   position: sticky !important;
-  top: calc(var(--filmwave-header-height, 60px) + 104px) !important;
+  top: calc(var(--filmwave-header-height, 60px) + 75px) !important;
   bottom: auto !important;
   left: auto !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2) !important;
@@ -805,7 +749,7 @@ main
       0px - var(--audioflume-music-filter-width, 248px) -
         var(--audioflume-music-content-gap, 20px)
     ) !important;
-  background: transparent !important;
+  background: var(--bg-primary) !important;
   opacity: 0 !important;
   visibility: hidden !important;
   pointer-events: none !important;
@@ -1847,15 +1791,15 @@ main
 @media (max-width: 690px) {
   .audioflume-music-page-searchbar,
   .audioflume-music-page-searchbar.is-filters-open {
-    grid-template-columns: 64px minmax(0, 1fr) 64px;
+    grid-template-columns: 82px minmax(0, 1fr) 120px;
   }
 
   .audioflume-music-page-searchbar
     .audioflume-home-reference-searchbar-filters {
     box-sizing: border-box;
     gap: 0;
-    padding-right: 20px;
-    padding-left: 20px;
+    padding-right: 30px;
+    padding-left: 30px;
   }
 
   .audioflume-music-page-searchbar
