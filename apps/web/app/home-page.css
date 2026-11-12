@@ -55,7 +55,7 @@ body:has(.audioflume-home-landing)
   padding-top: 0;
 }
 
-.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link):not(.audioflume-experiment-search-filter) {
+.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link):not(.audioflume-experiment-search-filter):not(.audioflume-experiment-curated > a) {
   color: inherit;
 }
 
@@ -6059,6 +6059,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 
 .audioflume-experiment-curated-brand h2 {
   margin: 0;
+  white-space: nowrap;
   font-size: clamp(20px, 2vw, 36px);
   font-weight: 300;
   line-height: 1.02;
@@ -6078,7 +6079,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
-  color: #fff;
+  color: #556159;
   font-size: clamp(15px, 1.5vw, 21px);
   font-weight: 300;
   letter-spacing: -.035em;
@@ -6146,7 +6147,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   .audioflume-experiment-lifetime,
   .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
   .audioflume-experiment-curated { aspect-ratio: auto; min-height: 380px; }
-  .audioflume-experiment-curated-brand { top: 30%; left: 10%; right: 6%; }
+  .audioflume-experiment-curated-brand { top: 50%; left: 50%; right: auto; transform: translate(-50%, -50%); }
   .audioflume-experiment-curated > a { right: 6%; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
 }
@@ -6156,8 +6157,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   .audioflume-experiment-hero-link { bottom:20%; }
   .audioflume-experiment-hero-eyebrow { top:6%; }
   .audioflume-experiment-lifetime-price { flex-wrap: wrap; }
-  .audioflume-experiment-curated-brand { left: 7%; }
-  .audioflume-experiment-curated-brand h2 { font-size: clamp(19px, 5vw, 24px); }
+  .audioflume-experiment-curated-brand h2 { font-size: clamp(16px, 4.5vw, 24px); }
   .audioflume-experiment-curated > p { bottom: 25%; left: 7%; }
   .audioflume-home-experiment .audioflume-experiment-curated > a { bottom: 8%; left: 7%; right: auto; }
 }
