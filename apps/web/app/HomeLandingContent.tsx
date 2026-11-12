@@ -4,7 +4,8 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import Footer from "@/components/Footer";
-import GlobalSearchBar from "@/components/GlobalSearchBar";
+import GlobalMusicSearch from "@/components/GlobalMusicSearch";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import SongCard from "@/components/SongCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -48,13 +49,22 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
 export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }: { homeFlashImages: string[] }) {
   const { songs, loading } = useSongs();
   const playerVisible = useHasCurrentSong();
-  const originals = useMemo(() => songs.filter((song) => song.audioUrl && song.artist.trim().toLowerCase() === "audioflume").slice(0, 6), [songs]);
   const newSongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12), [songs]);
-  const featuredSong = songs.find((song) => song.title.toLowerCase() === "sand drawing" && song.artist.toLowerCase() === "judah earl");
+  const featuredSong = songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl" && song.title.trim().toLowerCase() === "sand drawing")
+    ?? songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl");
 
   return (
     <main className={`audioflume-home-reference audioflume-home-experiment${playerVisible ? " has-player" : ""}`}>
-      <div className="audioflume-experiment-search"><GlobalSearchBar position="flow" layer="high" /></div>
+      <div className="audioflume-experiment-search">
+        <div className="audioflume-experiment-search-row">
+          <Link className="audioflume-experiment-search-filter" href="/music?filters=open">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" /></svg>
+            <span>Filters</span>
+          </Link>
+          <GlobalMusicSearch fieldClassName="audioflume-experiment-search-field" clearButtonClassName="audioflume-experiment-search-clear" />
+          <GlobalReferenceSearch className="audioflume-experiment-search-similar" />
+        </div>
+      </div>
 
       <div className="audioflume-experiment-main">
         <section className="audioflume-experiment-hero" aria-label="Human made music and SFX for film">
@@ -68,20 +78,12 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
           <Link className="audioflume-experiment-hero-link" href="/music">
             Explore music library <ArrowUpRightIcon size={16} strokeWidth={1.5} />
           </Link>
-          <HomeHeroFeaturedSong song={featuredSong} />
+          {featuredSong ? <HomeHeroFeaturedSong song={featuredSong} /> : null}
         </section>
 
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
           <div className="audioflume-experiment-lifetime">
             <h2>Lifetime access to original<br />in-house made music.</h2>
-            <div className="audioflume-experiment-lifetime-tracks">
-              {originals.map((song) => (
-                <div className="audioflume-experiment-lifetime-track" key={song.id}>
-                  {song.coverArt ? <img src={song.coverArt} alt="" /> : <span />}
-                  <div><strong>{song.title}</strong><small>{song.artist}</small></div>
-                </div>
-              ))}
-            </div>
             <div className="audioflume-experiment-lifetime-price">
               <s>$299</s><strong>$99</strong><span>one time payment</span>
             </div>
