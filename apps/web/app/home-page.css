@@ -55,7 +55,7 @@ body:has(.audioflume-home-landing)
   padding-top: 0;
 }
 
-.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link) {
+.audioflume-home-reference a:not(.audioflume-arrow-text-link):not(.audioflume-genre-filter-pill):not(.audioflume-home-reference-artist-explore):not(.audioflume-home-landing-keyword):not(.audioflume-home-founders-apply):not(.audioflume-experiment-founders-apply):not(.audioflume-experiment-hero-link):not(.audioflume-experiment-artist-promo):not(.audioflume-experiment-lifetime-link) {
   color: inherit;
 }
 
@@ -5421,10 +5421,6 @@ body:has(.audioflume-home-landing)
 
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(.audioflume-home-experiment) {
-  --audioflume-home-cta-background: linear-gradient(rgba(0, 0, 0, .35), rgba(0, 0, 0, .35)), url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
-  --audioflume-cta-bar-height: 44px;
-  --audioflume-cta-copy-size: 13px;
-  --audioflume-cta-link-size: 10px;
   --audioflume-home-header-background: #d8d8d3;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
@@ -5468,10 +5464,6 @@ body:has(.audioflume-home-experiment) {
 body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: var(--audioflume-home-header-scrolled-background);
   --audioflume-home-header-border: var(--border);
-}
-
-body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
-  font-weight: 500;
 }
 
 .audioflume-home-experiment {
