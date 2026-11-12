@@ -16,7 +16,6 @@ import {
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
-  MusicLibrarySortControl,
   MusicLibraryEmptyState,
   type MusicLibrarySortValue,
   QUICK_FILTERS,
@@ -1343,11 +1342,6 @@ export default function MusicPage() {
             <WaveformIcon size={16} />
             <span>Find Similar</span>
           </button>
-          <MusicLibrarySortControl
-            value={sortOrder}
-            onChange={setSortOrder}
-            showSelectedCheck
-          />
         </div>
       </div>
 
