@@ -31,9 +31,13 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
       aria-label={song ? `${playing ? "Pause" : "Play"} ${song.title}` : "Featured song unavailable"}
     >
       <span className="audioflume-experiment-hero-song-copy">
-        <strong>{song?.title ?? "Sand Drawing"}</strong>
-        <small>{song?.artist ?? "Judah Earl"}</small>
-        <span>{song?.genres?.slice(0, 3).join(", ") ?? "Cinematic, Emotional, Score"}</span>
+        <span className="audioflume-experiment-hero-song-identity">
+          <strong>{song?.title ?? "Sand Drawing"}</strong>
+          <small>{song?.artist ?? "Judah Earl"}</small>
+        </span>
+        <span className="audioflume-experiment-hero-song-genres">
+          {song?.genres?.slice(0, 3).map((genre, index) => <span key={`${genre}-${index}`}>{genre}</span>)}
+        </span>
       </span>
       <span className="audioflume-experiment-hero-song-cover">
         {song?.coverArt ? <img src={song.coverArt} alt="" /> : null}
