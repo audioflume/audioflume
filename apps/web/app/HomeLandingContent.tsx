@@ -96,22 +96,6 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
           {featuredSong ? <HomeHeroFeaturedSong song={featuredSong} /> : null}
         </section>
 
-        <section className="audioflume-experiment-founders" aria-label="Audioflume Founding Artist Program">
-          <div className="audioflume-experiment-founders-shade" aria-hidden="true" />
-          <h2 className="audioflume-experiment-founders-heading">JOIN THE FOUNDING<br />ARTISTS PROGRAM</h2>
-          <div className="audioflume-experiment-founders-content">
-            <div className="audioflume-experiment-founders-intro">
-              <p>The first 100 artists.<br />Founding members for life.</p>
-              <Link href="/founding-artists" className="audioflume-experiment-founders-apply">
-                Become a Founding Artist <span aria-hidden="true">↗</span>
-              </Link>
-            </div>
-            <div className="audioflume-experiment-founders-benefits">
-              <p>Earn <strong>100% on Premium Artist licences</strong>, receive <strong>preferential enterprise licensing terms</strong>, and enjoy exclusive founding artist benefits for life.</p>
-            </div>
-          </div>
-        </section>
-
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
           <div className="audioflume-experiment-lifetime">
             <h2>Lifetime access to original<br />in-house made music.</h2>
