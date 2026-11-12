@@ -661,11 +661,11 @@ export default function Header() {
         .filmwave-web-header.is-solid,
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent {
-          --filmwave-chrome-surface: var(--bg-primary);
+          --filmwave-chrome-surface: var(--audioflume-home-header-background, var(--bg-primary));
           border-bottom-color: var(--border) !important;
-          background: var(--bg-primary) !important;
-          background-color: var(--bg-primary) !important;
-          color: var(--text-primary) !important;
+          background: var(--audioflume-home-header-background, var(--bg-primary)) !important;
+          background-color: var(--audioflume-home-header-background, var(--bg-primary)) !important;
+          color: var(--audioflume-home-header-text, var(--text-primary)) !important;
         }
 
         .filmwave-web-header.is-solid .filmwave-header-tonal-wordmark,
@@ -680,14 +680,14 @@ export default function Header() {
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent
           .filmwave-header-actions {
-          color: var(--text-primary) !important;
+          color: var(--audioflume-home-header-text, var(--text-primary)) !important;
         }
 
         .filmwave-web-header.is-solid .filmwave-header-nav-link,
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent
           .filmwave-header-nav-link {
-          color: var(--text-primary) !important;
+          color: var(--audioflume-home-header-text, var(--text-primary)) !important;
         }
 
         .filmwave-web-header.is-solid:hover
@@ -695,7 +695,7 @@ export default function Header() {
         :where(html.light, html[data-theme="light"])
           .filmwave-web-header.is-discover-route.is-transparent:hover
           .filmwave-header-nav-link:not(.is-active):not(:hover) {
-          color: var(--text-secondary) !important;
+          color: var(--audioflume-home-header-muted-link, var(--text-secondary)) !important;
         }
 
         .filmwave-web-header.is-solid .filmwave-header-nav-link:hover,
@@ -708,7 +708,7 @@ export default function Header() {
           .filmwave-header-nav-link.is-active {
           background: transparent !important;
           background-color: transparent !important;
-          color: var(--text-primary) !important;
+          color: var(--audioflume-home-header-text, var(--text-primary)) !important;
         }
 
         .filmwave-header-nav-item-playlists.is-mounted .filmwave-playlists-mega-menu {
