@@ -5762,6 +5762,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   white-space: nowrap;
 }
 .audioflume-experiment-hero-song-cover {
+  --filmwave-song-card-play-size: 32px;
   position: relative;
   display: grid;
   width: clamp(46px, 4.8vw, 78px);
