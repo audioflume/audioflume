@@ -6099,7 +6099,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 .audioflume-experiment-curated-brand h2 {
   margin: 0;
   white-space: nowrap;
-  font-size: clamp(26px, 2.6vw, 48px);
+  font-size: clamp(30px, 3vw, 56px);
   font-weight: 300;
   line-height: 1.02;
   letter-spacing: -.055em;
@@ -6196,7 +6196,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   .audioflume-experiment-hero-eyebrow { top:6%; }
   .audioflume-experiment-lifetime-price { flex-wrap: wrap; }
   .audioflume-experiment-curated-brand { top: 35%; }
-  .audioflume-experiment-curated-brand h2 { font-size: clamp(21px, 5.5vw, 30px); }
+  .audioflume-experiment-curated-brand h2 { font-size: clamp(24px, 6.2vw, 34px); }
   .audioflume-experiment-curated > p { bottom: 25%; left: 7%; }
   .audioflume-home-experiment .audioflume-experiment-curated > a { bottom: 8%; left: 7%; right: auto; }
 }
