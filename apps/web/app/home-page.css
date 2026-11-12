@@ -5718,7 +5718,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   font-weight: 300;
   line-height: 1;
   letter-spacing: -.06em;
-  transform: translateY(-50%);
+  transform: translateY(calc(-50% - 5px));
   white-space: nowrap;
 }
 
