@@ -5693,7 +5693,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 
 .audioflume-experiment-lifetime > h2,
 .audioflume-experiment-artist-promo h2 {
-  font-size: clamp(20px, 2vw, 30px);
+  font-size: clamp(18px, 1.75vw, 26px);
 }
 
 .audioflume-experiment-hero-eyebrow {
@@ -5949,7 +5949,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 }
 
 .audioflume-experiment-lifetime,
-.audioflume-home-experiment a.audioflume-experiment-artist-promo {
+.audioflume-home-experiment .audioflume-experiment-artist-promo {
   position:relative;
   display:block;
   min-width:0;
@@ -6017,7 +6017,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   transform: translateY(6px);
 }
 
-.audioflume-home-experiment a.audioflume-experiment-artist-promo { isolation: isolate; }
+.audioflume-home-experiment .audioflume-experiment-artist-promo { isolation: isolate; }
 .audioflume-experiment-artist-promo > img {
   position: absolute;
   inset: 0;
@@ -6042,19 +6042,21 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   right: 7%;
 }
 
-.audioflume-experiment-artist-promo > span {
+.audioflume-experiment-artist-promo > a {
   position: absolute;
   bottom: 10%;
   left: 7%;
   display: inline-flex;
   align-items: baseline;
   gap: 6px;
+  color: #fff;
   font-size: clamp(15px, 1.5vw, 21px);
   font-weight: 300;
   letter-spacing: -.035em;
+  text-decoration: none;
 }
 
-.audioflume-experiment-artist-promo > span svg {
+.audioflume-experiment-artist-promo > a svg {
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
@@ -6147,15 +6149,15 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 .audioflume-home-experiment a.audioflume-experiment-hero-link,
 .audioflume-home-experiment a.audioflume-experiment-lifetime-link,
 .audioflume-home-experiment .audioflume-experiment-curated > a,
-.audioflume-home-experiment .audioflume-experiment-artist-promo > span,
+.audioflume-home-experiment .audioflume-experiment-artist-promo > a,
 .audioflume-home-experiment .audioflume-experiment-songs .audioflume-home-reference-section-heading a {
   transition: color 160ms ease, opacity 160ms ease;
 }
 
 .audioflume-home-experiment a.audioflume-experiment-lifetime-link:hover,
 .audioflume-home-experiment a.audioflume-experiment-lifetime-link:focus-visible,
-.audioflume-home-experiment a.audioflume-experiment-artist-promo:hover > span,
-.audioflume-home-experiment a.audioflume-experiment-artist-promo:focus-visible > span,
+.audioflume-home-experiment .audioflume-experiment-artist-promo > a:hover,
+.audioflume-home-experiment .audioflume-experiment-artist-promo > a:focus-visible,
 .audioflume-home-experiment .audioflume-experiment-songs .audioflume-home-reference-section-heading a:hover,
 .audioflume-home-experiment .audioflume-experiment-songs .audioflume-home-reference-section-heading a:focus-visible {
   opacity: .8;
@@ -6214,7 +6216,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   .audioflume-experiment-hero-song-genres { display:none; }
   .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
   .audioflume-experiment-lifetime,
-  .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
+  .audioflume-home-experiment .audioflume-experiment-artist-promo { height:350px; }
   .audioflume-experiment-curated-brand { top: 42%; bottom: auto; left: 50%; right: auto; transform: translate(-50%, -50%); }
   .audioflume-home-experiment .audioflume-experiment-curated > a { left: auto; right: 6%; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
