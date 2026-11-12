@@ -5445,15 +5445,14 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 .audioflume-experiment-search {
   width: var(--home-reference-width);
   margin: 0 auto;
-  padding: 16px 0 20px;
+  padding: 16px 0 34px;
 }
 
 .audioflume-experiment-search-row {
   display: grid;
   width: 100%;
   height: 64px;
-  grid-template-columns: clamp(140px, 11vw, 180px) minmax(0, 1fr) clamp(180px, 13vw, 220px);
-  background: #fff;
+  grid-template-columns: clamp(140px, 11vw, 180px) minmax(0, 1fr) clamp(210px, 15vw, 260px);
   color: #111;
 }
 
@@ -5463,6 +5462,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   position: relative;
   justify-content: center;
   gap: 12px;
+  background: #fff;
   color: #111;
   font-size: 13px;
   font-weight: 400;
@@ -5542,6 +5542,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   justify-content: center;
   gap: 10px;
   border: 0;
+  margin-left: 10px;
   background: #111;
   color: #fff;
   font: inherit;
@@ -5564,7 +5565,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   position: relative;
   isolation: isolate;
   width: 100%;
-  height: 600px;
+  aspect-ratio: 2.44 / 1;
+  min-height: 320px;
   overflow: hidden;
   border-radius: 12px;
   background: #171717;
@@ -5612,7 +5614,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   justify-content: space-between;
   gap: 12px;
   margin: 0;
-  font-size: clamp(27px, 3.7vw, 72px);
+  font-size: clamp(30px, 4.1vw, 80px);
   font-weight: 300;
   line-height: 1;
   letter-spacing: -.06em;
@@ -5639,6 +5641,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
+  transform: translateY(5px);
 }
 
 .audioflume-experiment-hero-link:hover { opacity: .8; }
@@ -5709,7 +5712,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   position:relative;
   display:block;
   min-width:0;
-  height:440px;
+  height:clamp(280px, 30vw, 480px);
   overflow:hidden;
   border-radius:10px;
   color:#fff;
@@ -5791,6 +5794,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
+  transform: translateY(5px);
 }
 
 .audioflume-experiment-songs {
@@ -5836,12 +5840,14 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 
 @media (max-width: 750px) {
   .audioflume-experiment-search-row { grid-template-columns: 72px minmax(0, 1fr) 60px; }
+  .audioflume-experiment-search-similar { margin-left: 6px; }
   .audioflume-experiment-search-filter { gap: 0; }
   .audioflume-experiment-search-filter span,
   .audioflume-experiment-search-similar span { display: none; }
   .audioflume-experiment-search-field { padding: 0 12px; }
   .audioflume-experiment-hero {
-    min-height: 0;
+    aspect-ratio: 1.5 / 1;
+    min-height: 320px;
   }
   .audioflume-experiment-hero-headline {
     flex-wrap:wrap;
@@ -5851,6 +5857,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   }
   .audioflume-experiment-hero-song-copy > span { display:none; }
   .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
+  .audioflume-experiment-lifetime,
+  .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
 }
 
