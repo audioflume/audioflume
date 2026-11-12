@@ -10,8 +10,14 @@
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-music-page {
-  --bg-primary: #d8d8d3;
+  --bg-primary: #fff;
   --border: #c6c7c2;
+  background-image: linear-gradient(
+    to bottom,
+    #d8d8d3 0,
+    #d8d8d3 calc(var(--filmwave-header-height, 60px) + 122px),
+    #fff calc(var(--filmwave-header-height, 60px) + 122px)
+  );
 }
 
 :where(html.light, html[data-theme="light"]) body:has(.audioflume-music-page) .filmwave-web-header {
