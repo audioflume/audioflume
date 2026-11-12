@@ -5892,8 +5892,8 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 .audioflume-experiment-promo-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 10px;
-  margin-top: 10px;
+  gap: 15px;
+  margin-top: 15px;
 }
 
 .audioflume-experiment-lifetime,
@@ -5993,7 +5993,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 }
 
 .audioflume-experiment-songs {
-  margin-top:10px;
+  margin-top:15px;
   padding:42px clamp(22px, 4.2vw, 64px) 52px;
   border-radius:12px;
   background:var(--audioflume-home-songs-surface);
