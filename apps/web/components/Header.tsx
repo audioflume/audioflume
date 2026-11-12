@@ -390,7 +390,7 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           gap: 24px;
-          background: #111111 var(--audioflume-home-cta-background, none) center / cover no-repeat;
+          background: var(--audioflume-home-cta-background, #111111);
           transition: background-color 180ms ease;
           padding: 0 24px;
           color: #e5e5dd;
