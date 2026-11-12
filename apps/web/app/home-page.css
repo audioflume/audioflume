@@ -5450,10 +5450,10 @@ body:has(.audioflume-home-experiment) {
   --audioflume-home-content-text: #fff;
   --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
   --audioflume-home-search-text: #fff;
-  --audioflume-home-search-divider: #3d3d3d;
-  --audioflume-home-search-icon: #666;
+  --audioflume-home-search-divider: #303030;
+  --audioflume-home-search-icon: #555;
   --audioflume-home-search-active: #fff;
-  --audioflume-home-search-placeholder: #666;
+  --audioflume-home-search-placeholder: #555;
   --audioflume-home-search-clear: #777;
   --audioflume-home-find-similar-background: #d8d8d3;
   --audioflume-home-find-similar-text: #111;
