@@ -398,35 +398,6 @@ export default function Header() {
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
         }
 
-        .audioflume-artist-cta-bar.has-home-video {
-          overflow: hidden;
-          background: #111111;
-        }
-
-        .audioflume-artist-cta-video {
-          position: absolute;
-          inset: 0;
-          width: 100%;
-          height: 100%;
-          object-fit: cover;
-          pointer-events: none;
-        }
-
-        .audioflume-artist-cta-bar.has-home-video::before {
-          content: "";
-          position: absolute;
-          inset: 0;
-          z-index: 1;
-          background: rgba(0, 0, 0, .35);
-          pointer-events: none;
-        }
-
-        .audioflume-artist-cta-bar.has-home-video .audioflume-artist-cta-copy,
-        .audioflume-artist-cta-bar.has-home-video .audioflume-artist-cta-link {
-          position: relative;
-          z-index: 2;
-        }
-
         .audioflume-artist-cta-copy {
           display: inline-flex;
           min-width: 0;
@@ -1315,20 +1286,7 @@ export default function Header() {
         }
       `}</style>
 
-      {!isBackendPage && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}${pathname === "/" ? " has-home-video" : ""}`}>
-        {pathname === "/" && (
-          <video
-            className="audioflume-artist-cta-video"
-            src="https://pub-cd585d75522a44bb9dad78b6f9974d03.r2.dev/10487961-hd_1280_720_24fps.mp4"
-            poster="https://images.filmwave.io/images/cta/egor-komarov-tC2r5C9Y6Og-unsplash-web.jpg"
-            autoPlay
-            muted
-            loop
-            playsInline
-            preload="metadata"
-            aria-hidden="true"
-          />
-        )}
+      {!isBackendPage && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
