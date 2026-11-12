@@ -23,6 +23,7 @@ import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
+import GlobalSearchBar from "@/components/GlobalSearchBar";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
@@ -1235,7 +1236,7 @@ export default function HomePageContent({
 
   return (
     <main className={`audioflume-home-reference audioflume-home-mockup${!showHero ? " is-discover-page" : ""}${playerVisible ? " has-player" : ""}`}>
-      <div className="audioflume-experiment-search">
+      {!showHero ? <div className="audioflume-experiment-search">
         <div
           className="audioflume-experiment-search-row"
           onClick={(event) => {
@@ -1255,7 +1256,7 @@ export default function HomePageContent({
           <GlobalMusicSearch fieldClassName="audioflume-experiment-search-field" clearButtonClassName="audioflume-experiment-search-clear" />
           <GlobalReferenceSearch className="audioflume-experiment-search-similar" />
         </div>
-      </div>
+      </div> : <GlobalSearchBar />}
 
       {showHero ? (
         <section
