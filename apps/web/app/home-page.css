@@ -6146,7 +6146,6 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
   .audioflume-experiment-lifetime,
   .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
-  .audioflume-experiment-curated { aspect-ratio: auto; min-height: 380px; }
   .audioflume-experiment-curated-brand { top: 42%; left: 50%; right: auto; transform: translate(-50%, -50%); }
   .audioflume-experiment-curated > a { right: 6%; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
