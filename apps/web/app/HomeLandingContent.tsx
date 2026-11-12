@@ -83,8 +83,18 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
           <div className="audioflume-experiment-lifetime">
             <h2>Lifetime access to original<br />in-house made music.</h2>
-            <div className="audioflume-experiment-lifetime-price">
-              <s>$299</s><strong>$99</strong><span>one time payment</span>
+            <div className="audioflume-home-originals-heading-pricing audioflume-experiment-lifetime-price">
+              <div className="audioflume-home-originals-heading-price is-regular">
+                <span className="audioflume-home-originals-heading-badge">Regular price</span>
+                <strong>$299</strong>
+              </div>
+              <div className="audioflume-home-originals-heading-price">
+                <span className="audioflume-home-originals-heading-badge is-light">Limited time offer</span>
+                <div className="audioflume-home-originals-heading-offer">
+                  <strong>$99</strong>
+                  <span>One time payment</span>
+                </div>
+              </div>
             </div>
             <Link className="audioflume-experiment-lifetime-link" href="/pricing" aria-label="Explore lifetime access">
               <ArrowUpRightIcon size={21} strokeWidth={1.5} />
