@@ -5841,7 +5841,6 @@ body:has(.audioflume-home-experiment) {
   .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
   .audioflume-experiment-lifetime,
   .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
-  .audioflume-experiment-lifetime-tracks { right:7%; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
 }
 
