@@ -1294,7 +1294,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup {
   --audioflume-home-lifetime-width: var(--home-reference-width);
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 /* A single 60px inter-section gap for both Home and Discover.
@@ -5420,7 +5420,7 @@ body:has(.audioflume-home-landing)
 
 
 /* Homepage editorial mockup: scoped to the homepage only. */
-body:has(.audioflume-home-experiment) {
+body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page)) {
   --audioflume-home-header-background: #d8d8d3;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
@@ -5441,7 +5441,7 @@ body:has(.audioflume-home-experiment) {
   --audioflume-home-songs-link: #222;
 }
 
-:where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-home-experiment) {
+:where(html:not(.light):not([data-theme="light"])) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page)) {
   --audioflume-home-header-background: #111;
   --audioflume-home-header-scrolled-background: #111;
   --audioflume-home-header-text: #fff;
@@ -5487,7 +5487,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   color: #111;
 }
 
-.audioflume-home-experiment a.audioflume-experiment-search-filter {
+:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page) a.audioflume-experiment-search-filter {
   display: flex;
   align-items: center;
   position: relative;
