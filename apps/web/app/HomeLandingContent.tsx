@@ -113,11 +113,11 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
               </Link>
             </div>
           </div>
-          <Link className="audioflume-experiment-artist-promo" href="/artists">
+          <div className="audioflume-experiment-artist-promo">
             <img src={ARTISTS_IMAGE} alt="" />
             <h2>A growing collection of in<br />demand artists and composers.</h2>
-            <span>Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></span>
-          </Link>
+            <Link href="/artists">Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></Link>
+          </div>
         </section>
 
         <section className="audioflume-experiment-curated" aria-label="Curated playlists">
