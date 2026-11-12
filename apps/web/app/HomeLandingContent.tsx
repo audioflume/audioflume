@@ -119,7 +119,7 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
           <Link className="audioflume-experiment-artist-promo" href="/artists">
             <img src={ARTISTS_IMAGE} alt="" />
             <div>
-              <h2>A growing collection of in demand artists and composers.</h2>
+              <h2>A growing collection of in demand<br />artists and composers.</h2>
               <span>Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></span>
             </div>
           </Link>
