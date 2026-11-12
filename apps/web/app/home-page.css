@@ -2889,7 +2889,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-originals-heading-pricing {
   display: flex;
   align-items: end;
-  gap: 20px;
+  gap: var(--audioflume-originals-pricing-gap, 20px);
   color: var(--filmwave-section-title-color);
 }
 .audioflume-home-originals-heading-price {
@@ -2906,18 +2906,18 @@ body:has(.audioflume-home-landing)
   padding: 0 7px;
   background: #d8d8d3;
   color: #111;
-  font-size: 9.5px;
+  font-size: var(--audioflume-originals-badge-font-size, 9.5px);
   font-weight: 400;
   white-space: nowrap;
 }
 .audioflume-home-originals-heading-badge.is-light {
-  background: #111;
-  color: #fff;
+  background: var(--audioflume-originals-offer-badge-background, #111);
+  color: var(--audioflume-originals-offer-badge-color, #fff);
 }
 .audioflume-home-originals-heading-price strong {
   position: relative;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 56px;
+  font-size: var(--audioflume-originals-price-font-size, 56px);
   font-weight: 400;
   line-height: .9;
   letter-spacing: -.06em;
@@ -2942,10 +2942,9 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-originals-heading-offer > span {
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 15px;
+  font-size: var(--audioflume-originals-offer-caption-font-size, 15px);
   font-weight: 400;
   white-space: nowrap;
-}
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-originals-heading-price:not(.is-regular) strong,
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
@@ -2954,7 +2953,7 @@ body:has(.audioflume-home-landing)
 }
 /* Return to the original heading/link row before the pricing crowds the link. */
 @media (max-width: 965px) {
-  .audioflume-home-originals-heading-pricing {
+  .audioflume-home-mockup-originals-tools .audioflume-home-originals-heading-pricing {
     display: none;
   }
   .audioflume-home-mockup-originals-tools .audioflume-home-mockup-catalogue-heading {
@@ -5421,7 +5420,7 @@ body:has(.audioflume-home-landing)
 
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(.audioflume-home-experiment) {
-  --audioflume-home-cta-background: url("https://images.filmwave.io/images/cta/egor-komarov-tC2r5C9Y6Og-unsplash-web.jpg");
+  --audioflume-home-cta-background: linear-gradient(rgba(0, 0, 0, .35), rgba(0, 0, 0, .35)), url("https://images.filmwave.io/images/cta/egor-komarov-tC2r5C9Y6Og-unsplash-web.jpg") center / cover no-repeat;
   --audioflume-cta-bar-height: 44px;
   --audioflume-cta-copy-size: 14px;
   --audioflume-cta-link-size: 12px;
@@ -5598,7 +5597,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   top: 8%;
   left: 3.4%;
   margin: 0;
-  font-size: clamp(13px, 1.3vw, 19px);
+  font-size: clamp(15px, 1.45vw, 21px);
   font-weight: 500;
   letter-spacing: -.025em;
 }
@@ -5629,7 +5628,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   left: 3.4%;
   display: inline-flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   align-items: baseline;
   color: #fff;
   font-size: clamp(15px, 1.5vw, 21px);
@@ -5641,7 +5640,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
-  transform: translateY(5px);
+  transform: translateY(6px);
 }
 
 .audioflume-experiment-hero-link:hover { opacity: .8; }
@@ -5649,8 +5648,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 .audioflume-experiment-hero-song {
   position: absolute;
   z-index: 2;
-  right: 1.6%;
-  bottom: 3%;
+  right: clamp(16px, 2vw, 32px);
+  bottom: clamp(16px, 2vw, 32px);
   display: flex;
   align-items: end;
   gap: 15px;
@@ -5749,8 +5748,14 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   bottom:8%;
   display:flex;
   align-items:end;
-  gap:20px;
+  gap:var(--audioflume-originals-pricing-gap);
   color:#fff;
+  --audioflume-originals-pricing-gap: clamp(10px, 1.3vw, 20px);
+  --audioflume-originals-price-font-size: clamp(28px, 3.2vw, 56px);
+  --audioflume-originals-badge-font-size: clamp(8px, .65vw, 9.5px);
+  --audioflume-originals-offer-caption-font-size: clamp(10px, .9vw, 15px);
+  --audioflume-originals-offer-badge-background: #fff;
+  --audioflume-originals-offer-badge-color: #111;
 }
 .audioflume-experiment-lifetime-price .audioflume-home-originals-heading-badge {
   margin-bottom: 9px;
@@ -5795,7 +5800,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 .audioflume-experiment-artist-promo span {
   display:inline-flex;
   align-items:baseline;
-  gap:8px;
+  gap:6px;
   font-size:clamp(15px, 1.5vw, 21px);
   font-weight:300;
 }
@@ -5803,7 +5808,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   width: 24px;
   height: 24px;
   flex: 0 0 auto;
-  transform: translateY(5px);
+  transform: translateY(6px);
 }
 
 .audioflume-experiment-songs {
@@ -5873,11 +5878,8 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 
 @media (max-width: 470px) {
   .audioflume-experiment-hero-headline { top:42%; }
-  .audioflume-experiment-hero-song { bottom:3%; }
   .audioflume-experiment-hero-link { bottom:20%; }
   .audioflume-experiment-hero-eyebrow { top:6%; }
   .audioflume-experiment-lifetime > h2 { font-size:20px; }
   .audioflume-experiment-lifetime-price { gap:12px; }
-  .audioflume-experiment-lifetime-price .audioflume-home-originals-heading-price strong { font-size:clamp(30px, 9vw, 56px); }
-  .audioflume-experiment-lifetime-price .audioflume-home-originals-heading-offer > span { font-size:12px; }
 }
