@@ -2950,7 +2950,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-originals-heading-price:not(.is-regular) strong,
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-originals-heading-offer > span {
-  color: var(--audioflume-home-lifetime-offer-color, #fff);
+  color: #fff;
 }
 /* Return to the original heading/link row before the pricing crowds the link. */
 @media (max-width: 965px) {
@@ -5462,11 +5462,6 @@ body:has(.audioflume-home-experiment) {
   --audioflume-home-find-similar-text: #111;
   --audioflume-home-songs-surface: #1b1b1b;
   --audioflume-home-songs-link: #fff;
-  --audioflume-home-lifetime-image: url("https://images.filmwave.io/images/home/Lifetime-Access-Home-2.png");
-  --audioflume-home-lifetime-text: #111;
-  --audioflume-home-lifetime-offer-color: #111;
-  --audioflume-home-lifetime-badge-background: #111;
-  --audioflume-home-lifetime-badge-color: #fff;
 }
 
 body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
@@ -5802,8 +5797,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 }
 
 .audioflume-experiment-lifetime {
-  background: #111 var(--audioflume-home-lifetime-image, url("https://images.filmwave.io/images/home/Lifetime-Access-Home.png")) center / cover no-repeat;
-  color: var(--audioflume-home-lifetime-text, #fff);
+  background: #111 url("https://images.filmwave.io/images/home/Lifetime-Access-Home.png") center / cover no-repeat;
 }
 
 .audioflume-experiment-lifetime > h2 {
@@ -5824,13 +5818,13 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   display:flex;
   align-items:flex-start;
   gap:var(--audioflume-originals-pricing-gap);
-  color:var(--audioflume-home-lifetime-text, #fff);
+  color:#fff;
   --audioflume-originals-pricing-gap: clamp(10px, 1.3vw, 20px);
   --audioflume-originals-price-font-size: clamp(28px, 3.2vw, 56px);
   --audioflume-originals-badge-font-size: clamp(8px, .65vw, 9.5px);
   --audioflume-originals-offer-caption-font-size: clamp(10px, .9vw, 15px);
-  --audioflume-originals-offer-badge-background: var(--audioflume-home-lifetime-badge-background, #fff);
-  --audioflume-originals-offer-badge-color: var(--audioflume-home-lifetime-badge-color, #111);
+  --audioflume-originals-offer-badge-background: #fff;
+  --audioflume-originals-offer-badge-color: #111;
 }
 .audioflume-experiment-lifetime-price .audioflume-home-originals-heading-badge {
   margin-bottom: 9px;
@@ -5841,7 +5835,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   bottom:10%;
   display:grid;
   place-items:center;
-  color:var(--audioflume-home-lifetime-text, #fff);
+  color:#fff;
 }
 .audioflume-home-experiment a.audioflume-experiment-artist-promo { isolation:isolate; }
 .audioflume-experiment-artist-promo > img {
