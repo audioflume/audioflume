@@ -16,6 +16,7 @@ import {
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
+  MusicLibrarySortControl,
   MusicLibraryEmptyState,
   type MusicLibrarySortValue,
   QUICK_FILTERS,
@@ -435,7 +436,7 @@ export default function MusicPage() {
       filterCloseTimeoutRef.current = null;
     }, 180);
   }
-  const [sortOrder] = useState<MusicLibrarySortValue>("recent");
+  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
   const [semanticSearchState, setSemanticSearchState] =
@@ -1297,19 +1298,9 @@ export default function MusicPage() {
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <div className="audioflume-music-page-searchbar-shell">
-        <div
-          className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}
-          onClick={(event) => {
-            if (
-              event.target instanceof Element &&
-              event.target.closest(".audioflume-home-reference-searchbar-field") &&
-              !event.target.closest("button")
-            ) {
-              searchInputRef.current?.focus();
-            }
-          }}
-        >
+      <div
+        className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}
+      >
         <button
           type="button"
           className="audioflume-home-reference-searchbar-filters"
@@ -1352,7 +1343,11 @@ export default function MusicPage() {
             <WaveformIcon size={16} />
             <span>Find Similar</span>
           </button>
-        </div>
+          <MusicLibrarySortControl
+            value={sortOrder}
+            onChange={setSortOrder}
+            showSelectedCheck
+          />
         </div>
       </div>
 
