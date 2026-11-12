@@ -5762,7 +5762,6 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   white-space: nowrap;
 }
 .audioflume-experiment-hero-song-cover {
-  --filmwave-song-card-play-size: 32px;
   position: relative;
   display: grid;
   width: clamp(46px, 4.8vw, 78px);
@@ -5778,6 +5777,22 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 }
 .audioflume-experiment-hero-song:hover .audioflume-experiment-hero-song-play,
 .audioflume-experiment-hero-song:focus-visible .audioflume-experiment-hero-song-play { opacity:1; }
+.audioflume-experiment-hero-song-circle {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  flex: 0 0 52px;
+  place-items: center;
+  border-radius: 999px;
+  background: #fff;
+  color: #111;
+  transition: transform 160ms ease;
+  transform-origin: center;
+}
+.audioflume-experiment-hero-song-circle:hover,
+.audioflume-experiment-hero-song:focus-visible .audioflume-experiment-hero-song-circle {
+  transform: scale(1.03);
+}
 
 .audioflume-experiment-founders {
   position: relative;
