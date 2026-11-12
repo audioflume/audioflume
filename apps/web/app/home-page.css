@@ -5421,6 +5421,7 @@ body:has(.audioflume-home-landing)
 
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(.audioflume-home-experiment) {
+  --audioflume-home-cta-background: linear-gradient(rgba(0, 0, 0, .35), rgba(0, 0, 0, .35)), url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
   --audioflume-cta-bar-height: 44px;
   --audioflume-cta-copy-size: 13px;
   --audioflume-cta-link-size: 10px;
