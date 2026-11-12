@@ -514,7 +514,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-reference-tools {
   padding: 0;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 .audioflume-home-reference-tools > .discover-artist-featured {
@@ -1096,7 +1096,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-reference-footer-region {
   width: 100%;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 .audioflume-home-reference-footer {
@@ -1328,7 +1328,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-artists {
   overflow: hidden;
   padding-bottom: 54px;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists {
@@ -1451,7 +1451,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-intro {
   padding: 12px 0 0;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 .audioflume-home-mockup-intro-meta {
@@ -1948,7 +1948,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-curated {
   overflow: hidden;
   padding-top: 0;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 .audioflume-home-mockup-curated-shelf
@@ -2841,7 +2841,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-catalogue {
   padding: 0;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 .audioflume-home-mockup-catalogue-heading {
@@ -3659,7 +3659,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-featured-songs {
   overflow: hidden;
   padding: 0 0 80px;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 
 .audioflume-home-featured-songs
@@ -5022,7 +5022,7 @@ body:has(.audioflume-home-landing)
 /* Discover uses the Curated Playlists Search by Song section construction. */
 .audioflume-discover-reference-search {
   padding-bottom: 0;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas, var(--bg-primary));
 }
 .audioflume-discover-reference-search-heading {
   min-height: 0;
@@ -5461,7 +5461,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-songs-link: #fff;
 }
 
-body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
+body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page)) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: var(--audioflume-home-header-scrolled-background);
   --audioflume-home-header-border: var(--border);
 }
