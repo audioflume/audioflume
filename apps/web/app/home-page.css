@@ -2224,14 +2224,14 @@ body:has(.audioflume-home-landing)
   .audioflume-home-skeleton-artist-card .is-discover-artist-name {
   width: min(300px, 65%);
   height: 62px;
-  background: color-mix(in srgb, var(--text-primary) 18%, transparent);
+  background: color-mix(in srgb, #ffffff 20%, transparent);
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
   .audioflume-home-skeleton-artist-card .is-discover-artist-designation {
   width: min(160px, 40%);
   height: 13px;
-  background: color-mix(in srgb, var(--text-primary) 14%, transparent);
+  background: color-mix(in srgb, #ffffff 15%, transparent);
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
@@ -2241,9 +2241,9 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
   .audioflume-discover-skeleton-artist-track .is-discover-track-cover {
-  width: 90px;
-  height: 90px;
-  flex: 0 0 90px;
+  width: clamp(46px, 4.8vw, 78px);
+  height: clamp(46px, 4.8vw, 78px);
+  flex: 0 0 clamp(46px, 4.8vw, 78px);
   background: color-mix(in srgb, #ffffff 18%, transparent);
 }
 
@@ -2393,6 +2393,12 @@ body:has(.audioflume-home-landing)
   width: 100%;
   height: 100%;
   aspect-ratio: auto;
+}
+
+@media (max-width: 750px) {
+  .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
+    height: max(320px, calc(var(--home-reference-width) / 1.5));
+  }
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
