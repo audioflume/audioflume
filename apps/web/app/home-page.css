@@ -5622,10 +5622,10 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   color: #fff;
 }
 
-:where(html:not(.light):not([data-theme="light"])) .audioflume-home-experiment .audioflume-experiment-hero::after,
-:where(html:not(.light):not([data-theme="light"])) .audioflume-home-experiment .audioflume-experiment-lifetime::after,
-:where(html:not(.light):not([data-theme="light"])) .audioflume-home-experiment .audioflume-experiment-artist-promo::before,
-:where(html:not(.light):not([data-theme="light"])) .audioflume-home-experiment .audioflume-experiment-curated::after {
+.audioflume-home-experiment .audioflume-experiment-hero::after,
+.audioflume-home-experiment .audioflume-experiment-lifetime::after,
+.audioflume-home-experiment .audioflume-experiment-artist-promo::before,
+.audioflume-home-experiment .audioflume-experiment-curated::after {
   content: "";
   position: absolute;
   inset: 0;
