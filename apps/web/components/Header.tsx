@@ -89,7 +89,7 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
-  const transparentAtTop = pathname === "/" || pathname === "/founding-artists";
+  const transparentAtTop = pathname === "/founding-artists";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
@@ -390,7 +390,7 @@ export default function Header() {
           align-items: center;
           justify-content: space-between;
           gap: 24px;
-          background: #111111;
+          background: #111111 var(--audioflume-home-cta-background, none) center / cover no-repeat;
           transition: background-color 180ms ease;
           padding: 0 24px;
           color: #e5e5dd;
