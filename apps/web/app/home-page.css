@@ -5417,3 +5417,382 @@ body:has(.audioflume-home-landing)
   .audioflume-home-founders-intro p { font-size: 28px; margin-bottom: 22px; }
   .audioflume-home-founders-apply { min-height: 54px; }
 }
+
+
+/* Homepage editorial mockup: scoped to the homepage only. */
+body:has(.audioflume-home-experiment) {
+  --audioflume-home-cta-background: url("https://images.filmwave.io/images/cta/egor-komarov-tC2r5C9Y6Og-unsplash-web.jpg");
+}
+
+.audioflume-home-experiment {
+  min-height: 100vh;
+  background: #d7d8d4;
+  color: #111;
+  padding-bottom: 0;
+}
+
+.audioflume-experiment-search {
+  width: var(--home-reference-width);
+  margin: 0 auto;
+  padding: 16px 0 20px;
+}
+
+.audioflume-experiment-search > div {
+  width: 100%;
+}
+
+.audioflume-experiment-main {
+  width: var(--home-reference-width);
+  margin: 0 auto;
+}
+
+.audioflume-experiment-hero {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  aspect-ratio: 2.44 / 1;
+  min-height: 320px;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #171717;
+  color: #fff;
+}
+
+.audioflume-experiment-hero-background,
+.audioflume-experiment-hero-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.audioflume-experiment-hero-background { z-index: -3; }
+.audioflume-experiment-hero-shade {
+  position: absolute;
+  inset: 0;
+  z-index: -2;
+  background: linear-gradient(0deg, rgba(0,0,0,.35), transparent 48%), linear-gradient(90deg, rgba(0,0,0,.22), transparent 70%);
+}
+.audioflume-experiment-hero-overlay { z-index: 1; }
+
+.audioflume-experiment-hero-eyebrow {
+  position: absolute;
+  z-index: 2;
+  top: 8%;
+  left: 3.4%;
+  margin: 0;
+  font-size: clamp(13px, 1.3vw, 19px);
+  font-weight: 400;
+  letter-spacing: -.025em;
+}
+
+.audioflume-experiment-hero-headline {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  right: 3.4%;
+  left: 3.4%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  font-size: clamp(23px, 3.15vw, 62px);
+  font-weight: 300;
+  line-height: 1;
+  letter-spacing: -.06em;
+  transform: translateY(-50%);
+  white-space: nowrap;
+}
+
+.audioflume-home-experiment a.audioflume-experiment-hero-link {
+  position: absolute;
+  z-index: 2;
+  bottom: 6.5%;
+  left: 3.4%;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #fff;
+  font-size: clamp(13px, 1.1vw, 17px);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  text-decoration: none;
+}
+.audioflume-experiment-hero-link:hover { opacity: .8; }
+
+.audioflume-experiment-hero-song {
+  position: absolute;
+  z-index: 2;
+  right: 1.6%;
+  bottom: 3%;
+  display: flex;
+  align-items: end;
+  gap: 15px;
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #fff;
+  text-align: right;
+  cursor: pointer;
+}
+
+.audioflume-experiment-hero-song:disabled { cursor: default; }
+
+.audioflume-experiment-hero-song-copy {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+  padding-bottom: 4px;
+}
+.audioflume-experiment-hero-song-copy strong {
+  font-size: clamp(12px, 1.05vw, 15px);
+  font-weight: 400;
+}
+.audioflume-experiment-hero-song-copy small {
+  font-size: 12px;
+  font-weight: 300;
+}
+.audioflume-experiment-hero-song-copy > span { 
+  margin-top: 9px;
+  font-size: 10px;
+  font-weight: 300;
+  color: rgba(255,255,255,.7);
+}
+.audioflume-experiment-hero-song-cover {
+  position: relative;
+  display: grid;
+  width: clamp(46px, 4.8vw, 78px);
+  height: clamp(46px, 4.8vw, 78px);
+  flex: 0 0 auto;
+  place-items: center;
+  background: rgba(255,255,255,.16);
+}
+.audioflume-experiment-hero-song-cover img { width:100%; height:100%; object-fit:cover; }
+.audioflume-experiment-hero-song-play {
+  position:absolute; inset:0; display:grid; place-items:center;
+  background:rgba(0,0,0,.24); opacity:0; transition:opacity 160ms ease;
+}
+.audioflume-experiment-hero-song:hover .audioflume-experiment-hero-song-play,
+.audioflume-experiment-hero-song:focus-visible .audioflume-experiment-hero-song-play { opacity:1; }
+
+.audioflume-experiment-promo-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.audioflume-experiment-lifetime,
+.audioflume-home-experiment a.audioflume-experiment-artist-promo {
+  position:relative;
+  display:block;
+  min-width:0;
+  height:clamp(280px, 30vw, 480px);
+  overflow:hidden;
+  border-radius:10px;
+  color:#fff;
+  text-decoration:none;
+}
+
+.audioflume-experiment-lifetime {
+  background: #111 url("https://images.filmwave.io/images/home/Lifetime-Access-Home.png") center / cover no-repeat;
+}
+
+.audioflume-experiment-lifetime > h2 {
+  position:absolute;
+  top:12%;
+  left:7%;
+  margin:0;
+  font-size:clamp(18px, 2vw, 30px);
+  line-height:1.08;
+  font-weight:400;
+  letter-spacing:-.045em;
+}
+
+.audioflume-experiment-lifetime-tracks {
+  position:absolute;
+  top:14%;
+  right:7%;
+  width:30%;
+  height:67%;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:6px;
+  overflow:hidden;
+  opacity:.5;
+}
+
+.audioflume-experiment-lifetime-track {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  min-width:0;
+  color:#ddd;
+}
+.audioflume-experiment-lifetime-track img,
+.audioflume-experiment-lifetime-track > span {
+  width:clamp(22px, 2.65vw, 40px);
+  height:clamp(22px, 2.65vw, 40px);
+  object-fit:cover;
+  background:#444;
+  flex:0 0 auto;
+}
+.audioflume-experiment-lifetime-track > div {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  gap:3px;
+}
+.audioflume-experiment-lifetime-track strong,
+.audioflume-experiment-lifetime-track small {
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+  font-size:clamp(8px, .72vw, 11px);
+  font-weight:300;
+}
+.audioflume-experiment-lifetime-track small { color:#aaa; }
+
+.audioflume-experiment-lifetime-price {
+  position:absolute;
+  left:7%;
+  bottom:8%;
+  display:flex;
+  align-items:baseline;
+  gap:12px;
+  white-space:nowrap;
+}
+.audioflume-experiment-lifetime-price s {
+  color:#969696;
+  font-size:clamp(24px, 3.1vw, 50px);
+  font-weight:500;
+  letter-spacing:-.045em;
+}
+.audioflume-experiment-lifetime-price strong {
+  font-size:clamp(26px, 3.1vw, 50px);
+  font-weight:500;
+  letter-spacing:-.05em;
+}
+.audioflume-experiment-lifetime-price span {
+  font-size:clamp(10px, 1vw, 15px);
+  font-weight:400;
+}
+.audioflume-home-experiment a.audioflume-experiment-lifetime-link {
+  position:absolute;
+  right:7%;
+  bottom:10%;
+  display:grid;
+  place-items:center;
+  color:#fff;
+}
+.audioflume-home-experiment a.audioflume-experiment-artist-promo { isolation:isolate; }
+.audioflume-experiment-artist-promo > img {
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+.audioflume-experiment-artist-promo::after {
+  content:"";
+  position:absolute;
+  inset:0;
+  z-index:-1;
+  background:linear-gradient(0deg,rgba(0,0,0,.28),transparent 48%);
+}
+.audioflume-experiment-artist-promo > div {
+  position:absolute;
+  bottom:8%;
+  left:7%;
+  right:7%;
+}
+.audioflume-experiment-artist-promo h2 {
+  margin:0 0 4px;
+  font-size:clamp(20px, 2.4vw, 34px);
+  line-height:1.05;
+  font-weight:400;
+  letter-spacing:-.045em;
+}
+.audioflume-experiment-artist-promo span {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  font-size:clamp(12px, 1.4vw, 19px);
+  font-weight:300;
+}
+
+.audioflume-experiment-songs {
+  margin-top:10px;
+  padding:42px clamp(22px, 4.2vw, 64px) 52px;
+  border-radius:12px;
+  background:#fff;
+  color:#111;
+}
+.audioflume-experiment-songs-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:24px;
+  margin-bottom:22px;
+}
+.audioflume-experiment-songs-heading h2 {
+  margin:0;
+  font-size:clamp(15px, 1.6vw, 22px);
+  font-weight:400;
+}
+.audioflume-home-experiment .audioflume-experiment-songs-heading a {
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:#222;
+  font-size:13px;
+  font-weight:300;
+  text-decoration:none;
+}
+.audioflume-experiment-songs-list {
+  display:grid;
+  gap:0;
+}
+.audioflume-experiment-songs-loading {
+  padding:40px 0;
+  font-size:14px;
+}
+.audioflume-home-experiment > footer,
+.audioflume-home-experiment > .filmwave-footer {
+  margin-top:0;
+}
+
+@media (max-width: 750px) {
+  .audioflume-experiment-hero {
+    aspect-ratio: 1.5 / 1;
+    min-height:320px;
+  }
+  .audioflume-experiment-hero-headline {
+    flex-wrap:wrap;
+    justify-content:center;
+    font-size:clamp(22px, 4.3vw, 35px);
+    top:48%;
+  }
+  .audioflume-experiment-hero-song-copy > span { display:none; }
+  .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
+  .audioflume-experiment-lifetime,
+  .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
+  .audioflume-experiment-lifetime-tracks { right:7%; }
+  .audioflume-experiment-songs { padding:24px 16px 32px; }
+}
+
+@media (max-width: 470px) {
+  .audioflume-experiment-hero-headline { top:42%; }
+  .audioflume-experiment-hero-song { bottom:3%; }
+  .audioflume-experiment-hero-link { bottom:20%; }
+  .audioflume-experiment-hero-eyebrow { top:6%; }
+  .audioflume-experiment-lifetime > h2 { font-size:20px; }
+  .audioflume-experiment-lifetime-price { gap:8px; }
+  .audioflume-experiment-lifetime-price span { max-width:80px; white-space:normal; }
+}
