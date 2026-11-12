@@ -33,7 +33,7 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
       <span className="audioflume-experiment-hero-song-copy">
         <strong>{song?.title ?? "Sand Drawing"}</strong>
         <small>{song?.artist ?? "Judah Earl"}</small>
-        <span>{song?.genres?.slice(0, 3).join(" · ") ?? "Cinematic · Emotional · Score"}</span>
+        <span>{song?.genres?.slice(0, 3).join(", ") ?? "Cinematic, Emotional, Score"}</span>
       </span>
       <span className="audioflume-experiment-hero-song-cover">
         {song?.coverArt ? <img src={song.coverArt} alt="" /> : null}
@@ -75,7 +75,7 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
           </h1>
           <img className="audioflume-experiment-hero-overlay" src={HERO_OVERLAY} alt="" />
           <Link className="audioflume-experiment-hero-link" href="/music">
-            Explore music library <ArrowUpRightIcon size={16} strokeWidth={1.5} />
+            Explore music library <ArrowUpRightIcon size={24} strokeWidth={1.5} />
           </Link>
           {featuredSong ? <HomeHeroFeaturedSong song={featuredSong} /> : null}
         </section>
@@ -104,7 +104,7 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
             <img src={ARTISTS_IMAGE} alt="" />
             <div>
               <h2>Lifetime access to original<br />in-house made music.</h2>
-              <span>Discover new artists <ArrowUpRightIcon size={21} strokeWidth={1.5} /></span>
+              <span>Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></span>
             </div>
           </Link>
         </section>
