@@ -98,6 +98,7 @@ export default function Header() {
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
     mobileNavOpen ? "has-open-mobile-nav" : "",
+    pathname === "/" && scrolledPastThreshold ? "is-home-scrolled" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -112,7 +113,7 @@ export default function Header() {
       });
     }
 
-    if (!transparentAtTop) {
+    if (!transparentAtTop && pathname !== "/") {
       setScrolledPastThreshold(false);
       return;
     }
@@ -124,7 +125,7 @@ export default function Header() {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", syncScrollState);
     };
-  }, [transparentAtTop]);
+  }, [transparentAtTop, pathname]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
