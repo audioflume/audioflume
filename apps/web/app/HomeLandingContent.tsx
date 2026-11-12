@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import Footer from "@/components/Footer";
+import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
@@ -17,7 +18,8 @@ import type { Song } from "@/lib/types";
 
 const HERO_BACKGROUND = "https://images.filmwave.io/images/home/judah-earl-background.png";
 const HERO_OVERLAY = "https://images.filmwave.io/images/home/judah-earl-overlay.png";
-const ARTISTS_IMAGE = "https://images.filmwave.io/images/home/karsten-winegeart-NYU2vLCqpbQ-unsplash.jpg";
+const ARTISTS_IMAGE = "https://images.filmwave.io/images/home/1746637466005-3b4a2be8450f-gigapixel-low%20resolution%20v2-2x.jpeg";
+const CURATED_IMAGE = "https://images.filmwave.io/images/home/jimmy-whitson-LKdN0yuScT8-unsplash.jpg";
 
 function HomeHeroFeaturedSong({ song }: { song?: Song }) {
   const { togglePlayPause } = usePlayer();
@@ -99,29 +101,33 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
           <div className="audioflume-experiment-lifetime">
             <h2>Lifetime access to original<br />in-house made music.</h2>
-            <div className="audioflume-home-originals-heading-pricing audioflume-experiment-lifetime-price">
-              <div className="audioflume-home-originals-heading-price is-regular">
-                <span className="audioflume-home-originals-heading-badge">Regular price</span>
-                <strong>$299</strong>
+            <div className="audioflume-experiment-lifetime-footer">
+              <div className="audioflume-experiment-lifetime-price">
+                <s>$299</s>
+                <strong>$99</strong>
+                <span>one time payment</span>
               </div>
-              <div className="audioflume-home-originals-heading-price">
-                <span className="audioflume-home-originals-heading-badge is-light">Limited time offer</span>
-                <div className="audioflume-home-originals-heading-offer">
-                  <strong>$99</strong>
-                  <span>One time payment</span>
-                </div>
-              </div>
+              <Link className="audioflume-experiment-lifetime-link" href="/pricing" aria-label="Explore lifetime access">
+                <ArrowUpRightIcon size={21} strokeWidth={1.5} />
+              </Link>
             </div>
-            <Link className="audioflume-experiment-lifetime-link" href="/pricing" aria-label="Explore lifetime access">
-              <ArrowUpRightIcon size={21} strokeWidth={1.5} />
-            </Link>
           </div>
           <Link className="audioflume-experiment-artist-promo" href="/artists">
             <img src={ARTISTS_IMAGE} alt="" />
-            <div>
-              <h2>A growing collection of in demand<br />artists and composers.</h2>
-              <span>Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></span>
-            </div>
+            <h2>A growing collection of in<br />demand artists and composers.</h2>
+            <span>Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></span>
+          </Link>
+        </section>
+
+        <section className="audioflume-experiment-curated" aria-label="Curated playlists">
+          <img src={CURATED_IMAGE} alt="" />
+          <div className="audioflume-experiment-curated-brand">
+            <AudioflumeMark ariaHidden />
+            <h2>HUMAN MADE MUSIC.<br />STORY DRIVEN SOUND.</h2>
+          </div>
+          <p>Curated playlists for editors.</p>
+          <Link href="/curated-playlists">
+            Explore curated collections <ArrowUpRightIcon size={24} strokeWidth={1.5} />
           </Link>
         </section>
 
