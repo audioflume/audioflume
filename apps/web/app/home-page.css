@@ -1994,7 +1994,7 @@ body:has(.audioflume-home-landing)
   --audioflume-featured-artist-gap: 15px;
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
   --audioflume-featured-artist-scrollbar-bottom-gap: 0px;
-  padding-top: 60px;
+  padding-top: 0;
 }
 
 .audioflume-discover-featured-intro {
@@ -2376,7 +2376,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
   width: var(--home-reference-width);
   min-width: var(--home-reference-width);
-  height: max(320px, calc(var(--home-reference-width) / 2.44));
+  height: max(320px, calc(var(--home-reference-width) / 3));
   overflow: hidden;
   border-radius: 12px;
   scroll-snap-align: start;
@@ -2397,7 +2397,7 @@ body:has(.audioflume-home-landing)
 
 @media (max-width: 750px) {
   .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card {
-    height: max(320px, calc(var(--home-reference-width) / 1.5));
+    height: max(280px, calc(var(--home-reference-width) / 1.8));
   }
 }
 
