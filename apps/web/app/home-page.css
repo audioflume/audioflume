@@ -6082,7 +6082,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 
 .audioflume-experiment-curated-brand {
   position: absolute;
-  top: 0;
+  top: 24px;
   bottom: calc(10% + clamp(24px, 2.5vw, 36px));
   left: 62%;
   width: max-content;
