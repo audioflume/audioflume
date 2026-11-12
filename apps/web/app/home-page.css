@@ -5693,7 +5693,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 
 .audioflume-experiment-lifetime > h2,
 .audioflume-experiment-artist-promo h2 {
-  font-size: clamp(18px, 1.75vw, 26px);
+  font-size: clamp(20px, 1.65vw, 24px);
 }
 
 .audioflume-experiment-hero-eyebrow {
