@@ -6043,8 +6043,8 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 .audioflume-experiment-curated-brand {
   position: absolute;
   top: 42%;
-  right: 7%;
-  left: 61%;
+  right: 4%;
+  left: 65%;
   display: flex;
   align-items: center;
   gap: clamp(12px, 1.5vw, 24px);
