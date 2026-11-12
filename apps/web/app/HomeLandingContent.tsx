@@ -103,11 +103,11 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
           <div className="audioflume-experiment-lifetime">
             <h2>Lifetime access to original<br />in-house made music.</h2>
             <div className="audioflume-experiment-lifetime-footer">
-              <div className="audioflume-experiment-lifetime-price">
+              <Link className="audioflume-experiment-lifetime-price" href="/pricing">
                 <s>$299</s>
                 <strong>$99</strong>
                 <span>one time payment</span>
-              </div>
+              </Link>
               <Link className="audioflume-experiment-lifetime-link" href="/pricing" aria-label="Explore lifetime access">
                 <ArrowUpRightIcon size={21} strokeWidth={1.5} />
               </Link>
