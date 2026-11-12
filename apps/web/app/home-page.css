@@ -6083,11 +6083,10 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 .audioflume-experiment-curated-brand {
   position: absolute;
   top: 42%;
-  right: 7%;
+  left: 62%;
   width: max-content;
   display: flex;
   align-items: center;
-  gap: clamp(12px, 1.5vw, 24px);
 }
 
 .audioflume-experiment-curated-brand > svg {
@@ -6099,7 +6098,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 .audioflume-experiment-curated-brand h2 {
   margin: 0;
   white-space: nowrap;
-  font-size: clamp(20px, 2vw, 36px);
+  font-size: clamp(22px, 2.2vw, 40px);
   font-weight: 300;
   line-height: 1.02;
   letter-spacing: -.055em;
@@ -6113,7 +6112,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 
 .audioflume-home-experiment .audioflume-experiment-curated > a {
   position: absolute;
-  right: 10%;
+  left: 62%;
   bottom: 10%;
   display: inline-flex;
   align-items: baseline;
@@ -6185,8 +6184,8 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
   .audioflume-experiment-lifetime,
   .audioflume-home-experiment a.audioflume-experiment-artist-promo { height:350px; }
-  .audioflume-experiment-curated-brand { top: 42%; left: 50%; right: auto; transform: translate(-50%, -50%); }
-  .audioflume-experiment-curated > a { right: 6%; }
+  .audioflume-experiment-curated-brand { top: 42%; left: 7%; right: auto; transform: translateY(-50%); }
+  .audioflume-home-experiment .audioflume-experiment-curated > a { left: 7%; right: auto; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
 }
 
