@@ -5448,12 +5448,12 @@ body:has(.audioflume-home-experiment) {
   --audioflume-home-header-muted-link: #fff;
   --audioflume-home-canvas: #111;
   --audioflume-home-content-text: #fff;
-  --audioflume-home-search-surface: #fff;
-  --audioflume-home-search-text: #111;
-  --audioflume-home-search-divider: #e6e6e6;
-  --audioflume-home-search-icon: #999;
-  --audioflume-home-search-active: #111;
-  --audioflume-home-search-placeholder: #aaa;
+  --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
+  --audioflume-home-search-text: #fff;
+  --audioflume-home-search-divider: #555;
+  --audioflume-home-search-icon: #888;
+  --audioflume-home-search-active: #fff;
+  --audioflume-home-search-placeholder: #888;
   --audioflume-home-search-clear: #777;
   --audioflume-home-find-similar-background: #d8d8d3;
   --audioflume-home-find-similar-text: #111;
