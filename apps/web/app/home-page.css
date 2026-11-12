@@ -5446,7 +5446,7 @@ body:has(.audioflume-home-experiment) {
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-home-experiment) {
   --audioflume-home-header-background: #111;
-  --audioflume-home-header-scrolled-background: #202020;
+  --audioflume-home-header-scrolled-background: #111;
   --audioflume-home-header-text: #fff;
   --audioflume-home-header-muted-link: #fff;
   --audioflume-home-canvas: #111;
@@ -5466,6 +5466,7 @@ body:has(.audioflume-home-experiment) {
 
 body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: var(--audioflume-home-header-scrolled-background);
+  --audioflume-home-header-border: var(--border);
 }
 
 body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
