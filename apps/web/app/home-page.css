@@ -5422,8 +5422,8 @@ body:has(.audioflume-home-landing)
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(.audioflume-home-experiment) {
   --audioflume-cta-bar-height: 44px;
-  --audioflume-cta-copy-size: 14px;
-  --audioflume-cta-link-size: 12px;
+  --audioflume-cta-copy-size: 13px;
+  --audioflume-cta-link-size: 10px;
   --audioflume-home-header-background: #d8d8d3;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
