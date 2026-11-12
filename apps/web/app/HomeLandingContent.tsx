@@ -45,8 +45,8 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
       <span className="audioflume-experiment-hero-song-cover">
         {song?.coverArt ? <img src={song.coverArt} alt="" /> : null}
         {song?.audioUrl && <span className="audioflume-experiment-hero-song-play">
-          <span className="filmwave-song-play-button">
-            {playing ? <PauseIcon size={16} /> : <PlayIconSmall size={16} />}
+          <span className="audioflume-experiment-hero-song-circle">
+            {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={18} />}
           </span>
         </span>}
       </span>
