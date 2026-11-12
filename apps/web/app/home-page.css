@@ -2945,6 +2945,7 @@ body:has(.audioflume-home-landing)
   font-size: var(--audioflume-originals-offer-caption-font-size, 15px);
   font-weight: 400;
   white-space: nowrap;
+}
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-originals-heading-price:not(.is-regular) strong,
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
@@ -5497,6 +5498,10 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   color: #999;
 }
 
+.audioflume-experiment-search-field:focus-within {
+  color: #111;
+}
+
 .audioflume-experiment-search-field > svg {
   width: 21px;
   height: 21px;
@@ -5519,6 +5524,13 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   font-weight: 300;
 }
 
+.audioflume-experiment-search-field input::-webkit-search-cancel-button,
+.audioflume-experiment-search-field input::-webkit-search-decoration {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
 .audioflume-experiment-search-field input::placeholder { color: #aaa; }
 
 .audioflume-experiment-search-clear {
@@ -5531,6 +5543,12 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   background: transparent;
   color: #777;
   cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.audioflume-experiment-search-clear:hover,
+.audioflume-experiment-search-clear:focus-visible {
+  color: #111;
 }
 
 .audioflume-experiment-search-clear svg { width: 18px; height: 18px; }
@@ -5541,7 +5559,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
   justify-content: center;
   gap: 10px;
   border: 0;
-  margin-left: 10px;
+  margin-left: 6px;
   background: #111;
   color: #fff;
   font: inherit;
@@ -5854,7 +5872,7 @@ body:has(.audioflume-home-experiment) .audioflume-artist-cta-copy {
 
 @media (max-width: 750px) {
   .audioflume-experiment-search-row { grid-template-columns: 72px minmax(0, 1fr) 60px; }
-  .audioflume-experiment-search-similar { margin-left: 6px; }
+  .audioflume-experiment-search-similar { margin-left: 4px; }
   .audioflume-experiment-search-filter { gap: 0; }
   .audioflume-experiment-search-filter span,
   .audioflume-experiment-search-similar span { display: none; }
