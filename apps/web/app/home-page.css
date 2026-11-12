@@ -5445,10 +5445,6 @@ body:has(.audioflume-home-landing)
 }
 
 
-body:has(.audioflume-home-experiment) {
-  --filmwave-web-header-position: relative;
-}
-
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page)) {
   --audioflume-home-header-background: #d8d8d3;
