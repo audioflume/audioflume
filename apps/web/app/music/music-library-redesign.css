@@ -8,16 +8,6 @@ body:has(.audioflume-music-page) {
   --audioflume-home-header-text: #fff;
   --audioflume-home-header-muted-link: #fff;
   --audioflume-music-toolbar-background: #e5e5df;
-  --audioflume-music-action-background: #d8d8d3;
-  --audioflume-music-action-text: #111;
-}
-
-:where(html.light, html[data-theme="light"]) body:has(.audioflume-music-page) {
-  --audioflume-home-header-background: #d8d8d3;
-  --audioflume-home-header-text: #111;
-  --audioflume-home-header-muted-link: #111;
-  --audioflume-music-action-background: #111;
-  --audioflume-music-action-text: #fff;
 }
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
@@ -126,14 +116,12 @@ body:has(.audioflume-music-page) {
 
 .audioflume-music-page-searchbar .audioflume-home-reference-searchbar-field {
   box-sizing: border-box;
-  width: 100%;
-  min-width: 0;
-  height: 64px;
+  width: min(720px, calc(100% - 32px));
   gap: 12px;
-  margin: auto 0;
+  margin: 12px 12px 12px 0;
   border-radius: 0;
   background: var(--audioflume-music-search-surface, #1b1b1b);
-  padding: 0 18px;
+  padding: 0 16px;
   color: #555;
 }
 
@@ -209,11 +197,8 @@ body:has(.audioflume-music-page) {
 }
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-sort {
-  justify-content: stretch;
-  gap: 6px;
-  min-width: 0;
-  height: 64px;
-  margin: auto 24px auto 6px;
+  justify-content: center;
+  gap: 38px;
   transform: none;
 }
 
@@ -221,16 +206,13 @@ body:has(.audioflume-music-page) {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 10px;
-  min-width: 0;
-  height: 64px;
-  flex: 1 1 0;
-  border: 0;
-  background: var(--audioflume-music-action-background);
-  color: var(--audioflume-music-action-text);
-  padding: 0 12px;
+  gap: 8px;
+  border: 0 solid var(--border);
+  background: transparent;
+  color: var(--text-primary);
+  padding: 0;
   font: inherit;
-  font-size: 13px;
+  font-size: 14px;
   font-weight: 400;
   line-height: 1;
   white-space: nowrap;
@@ -238,8 +220,8 @@ body:has(.audioflume-music-page) {
 }
 
 .audioflume-music-page-searchbar .audioflume-music-page-searchbar-song svg {
-  width: 17px;
-  height: 17px;
+  width: 16px;
+  height: 16px;
   flex: 0 0 auto;
 }
 
@@ -273,27 +255,23 @@ body:has(.audioflume-music-page) {
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-control {
   position: relative;
-  flex: 1 1 0;
-  min-width: 0;
-  height: 100%;
 }
 
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-button {
-  width: 100% !important;
-  min-width: 0 !important;
+  width: auto !important;
+  min-width: max-content !important;
   max-width: none !important;
-  height: 100% !important;
-  justify-content: center !important;
-  gap: 6px !important;
-  border: 0 !important;
+  height: auto !important;
+  gap: 0 !important;
+  border: 0 solid var(--border) !important;
   border-radius: 0 !important;
-  background: var(--audioflume-music-action-background) !important;
-  background-color: var(--audioflume-music-action-background) !important;
-  padding: 0 12px !important;
-  color: var(--audioflume-music-action-text) !important;
-  font-size: 13px !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  padding: 0 !important;
+  color: var(--text-primary) !important;
+  font-size: 14px !important;
   font-weight: 400 !important;
   line-height: 1 !important;
   box-shadow: none !important;
@@ -322,9 +300,9 @@ body:has(.audioflume-music-page) {
 .audioflume-music-page-searchbar
   .audioflume-music-page-searchbar-sort
   .filmwave-music-sort-button.is-open {
-  background: var(--audioflume-music-action-background) !important;
-  background-color: var(--audioflume-music-action-background) !important;
-  color: var(--audioflume-music-action-text) !important;
+  background: transparent !important;
+  background-color: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 .audioflume-music-page-searchbar
@@ -335,7 +313,7 @@ body:has(.audioflume-music-page) {
   flex: 0 0 14px !important;
   margin-left: 4px !important;
   transform: translateY(1px);
-  color: var(--audioflume-music-action-text) !important;
+  color: var(--text-primary) !important;
 }
 
 .audioflume-music-page-searchbar
@@ -542,18 +520,16 @@ main
 @media (max-width: 1000px) {
   .audioflume-music-page-searchbar
     .audioflume-home-reference-searchbar-field {
-    width: 100%;
-    margin: auto 0;
+    width: min(720px, 100%);
+    margin: 12px 0;
   }
 
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort {
     box-sizing: border-box;
-    justify-content: stretch;
-    margin-right: 12px;
-    margin-left: 6px;
-    padding-right: 0;
-    padding-left: 0;
+    justify-content: center;
+    padding-right: 16px;
+    padding-left: 16px;
   }
 
 
@@ -576,8 +552,8 @@ main
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-song {
     width: 40px;
-    height: 64px;
-    flex: 1 1 0;
+    height: 40px;
+    flex: 0 0 40px;
     border-radius: 0;
   }
 
@@ -590,12 +566,12 @@ main
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-button {
-    width: 100% !important;
-    min-width: 0 !important;
-    max-width: none !important;
-    height: 64px !important;
+    width: 40px !important;
+    min-width: 40px !important;
+    max-width: 40px !important;
+    height: 40px !important;
     justify-content: center !important;
-    border-radius: 0 !important;
+    border-radius: 4px !important;
   }
 
   .audioflume-music-page-searchbar
@@ -629,7 +605,7 @@ main
     .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-button {
-    border: 0 !important;
+    border: 1.25px solid var(--border) !important;
   }
 
   :where(html.dark, html[data-theme="dark"])
@@ -639,9 +615,9 @@ main
     .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-button {
-    border: 0 !important;
-    background: var(--audioflume-music-action-background) !important;
-    color: var(--audioflume-music-action-text) !important;
+    border: 1.25px solid var(--border) !important;
+    background: transparent !important;
+    color: var(--text-primary) !important;
   }
 
   .audioflume-music-page-searchbar
@@ -657,8 +633,8 @@ main
   .audioflume-music-page-searchbar
     .audioflume-music-page-searchbar-sort
     .filmwave-music-sort-button.is-open {
-    border-color: transparent !important;
-    background: var(--audioflume-music-action-background) !important;
+    border-color: var(--text-muted) !important;
+    background: transparent !important;
   }
 }
 
@@ -1317,7 +1293,7 @@ main
   justify-content: center;
   overflow: hidden;
   margin: 24px calc(-3px - var(--audioflume-music-banner-extension)) 18px 3px;
-  background: #e5e5dd;
+  background: #e5e5df;
 }
 
 .audioflume-music-page .audioflume-music-originals-summary-logo {
@@ -1377,7 +1353,7 @@ main
   .audioflume-music-page .audioflume-music-originals-summary-logo,
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-music-page .audioflume-music-originals-summary-meta {
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 
 /* Music-only unfiltered shelf, matching the Discover "Tracks made for storytelling" cards. */
