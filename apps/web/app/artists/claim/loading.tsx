@@ -16,7 +16,7 @@ export default function Loading() {
     <main className="min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <style>{`
         .artist-onboarding-loading-hero {
-          background: #e5e5dd;
+          background: #e5e5df;
         }
 
         html:not(.light):not([data-theme="light"]) .artist-onboarding-loading-hero {
