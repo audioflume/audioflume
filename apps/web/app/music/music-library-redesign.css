@@ -643,7 +643,7 @@ main
 :where(html.light, html[data-theme="light"])
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field {
-  background: #f5f5f5;
+  background: #fff;
   color: #999;
 }
 
