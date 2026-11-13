@@ -680,6 +680,8 @@ main
   --audioflume-music-filter-width: 248px;
   --audioflume-music-content-gap: 44px;
   --filmwave-side-filter-outer-border: none;
+  --filmwave-filter-rail-chevron-opacity: 1;
+  --filmwave-filter-rail-chevron-hover-opacity: 1;
 }
 
 .music-page-content-shell .filmwave-song-card {
@@ -1004,7 +1006,7 @@ main
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item[aria-expanded="true"]
   .fw-filter-rail-chevron {
-  transform: rotate(90deg);
+  transform: none;
 }
 
 .audioflume-music-page
@@ -1013,16 +1015,45 @@ main
   .fw-filter-rail-chevron {
   display: inline-flex !important;
   opacity: 1 !important;
-  transform: rotate(90deg);
+  transform: none;
 }
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-rail-chevron {
-  transition:
-    opacity 160ms ease,
-    color 160ms ease,
-    transform 160ms ease !important;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  color: var(--text-primary) !important;
+  transition: opacity 160ms ease, color 160ms ease !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron > svg {
+  display: none;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron::before,
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 1.5px;
+  background: currentColor;
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron::after {
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .audioflume-music-page
