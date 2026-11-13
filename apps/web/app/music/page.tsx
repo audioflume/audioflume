@@ -1300,7 +1300,18 @@ export default function MusicPage() {
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <div className="audioflume-experiment-search">
-        <div className="audioflume-experiment-search-row">
+        <div
+          className="audioflume-experiment-search-row"
+          onClick={(event) => {
+            if (
+              event.target instanceof Element &&
+              event.target.closest(".audioflume-experiment-search-field") &&
+              !event.target.closest("button")
+            ) {
+              event.currentTarget.querySelector<HTMLInputElement>(".audioflume-experiment-search-field input")?.focus();
+            }
+          }}
+        >
           <button
             type="button"
             className="audioflume-experiment-search-filter"
@@ -1319,6 +1330,7 @@ export default function MusicPage() {
             inputRef={searchInputRef}
             className="audioflume-experiment-search-field"
             clearButtonClassName="audioflume-experiment-search-clear"
+            onSubmit={(event) => event.preventDefault()}
           />
           <button
             type="button"
