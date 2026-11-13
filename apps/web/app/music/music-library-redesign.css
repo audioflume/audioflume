@@ -679,6 +679,8 @@ main
 .audioflume-music-page {
   --audioflume-music-filter-width: 248px;
   --audioflume-music-content-gap: 44px;
+  --audioflume-music-banner-extension: -2px;
+  --audioflume-music-song-list-extension: 0px;
   --filmwave-side-filter-outer-border: none;
   --filmwave-filter-rail-chevron-opacity: 1;
   --filmwave-filter-rail-chevron-hover-opacity: 1;
@@ -714,7 +716,7 @@ main
   > .fw-music-content-column
   > .fw-song-list {
   box-sizing: border-box !important;
-  width: calc(100% - 20px) !important;
+  width: calc(100% - 20px + var(--audioflume-music-song-list-extension)) !important;
   margin-top: 0 !important;
   margin-right: 12px !important;
   margin-left: 8px !important;
@@ -735,6 +737,8 @@ main
 .audioflume-music-page
   > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
   > .fw-music-content-column {
+  --audioflume-music-banner-extension: 29px;
+  --audioflume-music-song-list-extension: 32px;
   padding-right: var(--audioflume-music-content-gap) !important;
   padding-left: calc(
     var(--audioflume-music-filter-width) +
@@ -1158,14 +1162,14 @@ main
   isolation: isolate;
   box-sizing: border-box;
   display: grid;
-  width: calc(100% + 29px);
+  width: calc(100% + var(--audioflume-music-banner-extension));
   height: 148px;
   grid-template-columns: 84px minmax(220px, 1fr) minmax(180px, 280px) 36px;
   align-items: center;
   gap: 24px;
   overflow: hidden;
   margin-top: 24px;
-  margin-right: -32px;
+  margin-right: calc(-3px - var(--audioflume-music-banner-extension));
   margin-bottom: 18px;
   margin-left: 3px;
   background: #111111;
@@ -1283,12 +1287,12 @@ main
   isolation: isolate;
   display: flex;
   box-sizing: border-box;
-  width: calc(100% + 29px);
+  width: calc(100% + var(--audioflume-music-banner-extension));
   height: 148px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin: 24px -32px 18px 3px;
+  margin: 24px calc(-3px - var(--audioflume-music-banner-extension)) 18px 3px;
   background: #e5e5dd;
 }
 
