@@ -4,13 +4,13 @@ body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent {
   border-bottom-color: transparent !important;
   background: transparent !important;
   background-color: transparent !important;
-  color: #e5e5dd !important;
+  color: #e5e5df !important;
 }
 
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-tonal-wordmark,
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-logo-action,
 body:has(.audioflume-home-landing) .filmwave-web-header.is-transparent .filmwave-header-actions {
-  color: #e5e5dd !important;
+  color: #e5e5df !important;
 }
 
 body:has(.audioflume-home-landing)
@@ -30,13 +30,13 @@ body:has(.audioflume-home-landing)
   .filmwave-header-logo-action:hover {
   background: transparent !important;
   background-color: transparent !important;
-  color: #e5e5dd !important;
+  color: #e5e5df !important;
 }
 
 body:has(.audioflume-home-landing)
   .filmwave-web-header.is-transparent
   .filmwave-header-nav-link {
-  color: #e5e5dd !important;
+  color: #e5e5df !important;
 }
 
 .audioflume-home-reference {
@@ -171,7 +171,7 @@ body:has(.audioflume-home-landing)
   inset: 0;
   /* Do not isolate the blend text from the hero image/shade backdrop. */
   z-index: auto;
-  color: #e5e5dd;
+  color: #e5e5df;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(82px, 7vw, 144px);
   font-weight: 300;
@@ -183,13 +183,13 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-reference-hero-headline > span {
   position: absolute;
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 
 .audioflume-home-reference-hero-mark {
   position: absolute;
   z-index: 2;
-  color: #e5e5dd;
+  color: #e5e5df;
   mix-blend-mode: normal;
 }
 
@@ -210,7 +210,7 @@ body:has(.audioflume-home-landing)
   align-items: baseline;
   gap: 0.28em;
   white-space: nowrap;
-  color: #e5e5dd;
+  color: #e5e5df;
   mix-blend-mode: normal;
 }
 
@@ -222,7 +222,7 @@ body:has(.audioflume-home-landing)
   top: 51%;
   right: 8%;
   z-index: 1;
-  color: #e5e5dd;
+  color: #e5e5df;
   mix-blend-mode: normal;
 }
 
@@ -418,14 +418,14 @@ body:has(.audioflume-home-landing)
 
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-landing .audioflume-home-reference-library {
-  background: #e5e5dd;
+  background: #e5e5df;
 }
 
 /* Lower homepage headings use the warm beige tone in dark mode only. */
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library h2,
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library h3,
 :where(html.dark, html[data-theme="dark"]) .audioflume-home-landing .audioflume-home-reference-library-grid > p {
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 
 .audioflume-home-reference-library {
@@ -1276,7 +1276,7 @@ body:has(.audioflume-home-landing)
   .filmwave-web-header.is-transparent
   .filmwave-header-create-account {
   background: #111111 !important;
-  color: #e5e5dd !important;
+  color: #e5e5df !important;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference-artist-copy strong {
@@ -2839,7 +2839,7 @@ body:has(.audioflume-home-landing)
   border: 0 !important;
   border-radius: 999px !important;
   background: rgba(255, 255, 255, 0.18) !important;
-  color: #e5e5dd !important;
+  color: #e5e5df !important;
   opacity: 1 !important;
   -webkit-backdrop-filter: blur(10px);
   backdrop-filter: blur(10px);
@@ -2930,7 +2930,7 @@ body:has(.audioflume-home-landing)
   height: 18px;
   margin-bottom: 9px;
   padding: 0 7px;
-  background: #d8d8d3;
+  background: #e5e5df;
   color: #111;
   font-size: var(--audioflume-originals-badge-font-size, 9.5px);
   font-weight: 400;
@@ -2950,7 +2950,7 @@ body:has(.audioflume-home-landing)
   white-space: nowrap;
 }
 .audioflume-home-originals-heading-price.is-regular strong {
-  color: #d8d8d3;
+  color: #e5e5df;
 }
 .audioflume-home-originals-heading-price.is-regular strong::after {
   position: absolute;
@@ -3943,7 +3943,7 @@ body:has(.audioflume-home-landing)
   width: 100%;
   margin: 0;
   padding: 0;
-  color: #e5e5dd;
+  color: #e5e5df;
   font-size: clamp(64px, 7.6vw, 160px);
   font-weight: 300;
   letter-spacing: -0.055em;
@@ -4006,7 +4006,7 @@ body:has(.audioflume-home-landing)
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  color: #e5e5dd;
+  color: #e5e5df;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: 11px;
   font-weight: 300;
@@ -4047,7 +4047,7 @@ body:has(.audioflume-home-landing)
   width: 100%;
   box-sizing: border-box;
   background: #1b1b1b;
-  color: #e5e5dd;
+  color: #e5e5df;
   border: 1px solid #373737;
   padding: 0;
   box-shadow: 0 16px 35px rgba(0,0,0,.2);
@@ -4235,7 +4235,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-search-preview-genres > .audioflume-genre-filter-pill {
   background: transparent;
-  color: #e5e5dd;
+  color: #e5e5df;
   border: 1px solid var(--filmwave-border-color);
   min-height: 23px;
   padding: 0 10px;
@@ -4254,7 +4254,7 @@ body:has(.audioflume-home-landing)
   border: 0;
   border-top: 1px solid var(--filmwave-border-color);
   background: transparent;
-  color: #e5e5dd;
+  color: #e5e5df;
   font: inherit;
   font-size: 12px;
   font-weight: 300;
@@ -4290,7 +4290,7 @@ body:has(.audioflume-home-landing)
   border: 1px solid transparent;
   border-radius: 999px;
   padding: 0;
-  color: #e5e5dd;
+  color: #e5e5df;
   font-size: 17px;
   font-weight: 300;
   white-space: nowrap;
@@ -4300,7 +4300,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-keyword:hover,
 .audioflume-home-landing-keyword:focus-visible {
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 /* Override shared link color rules for homepage keyword links in dark mode only. */
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
@@ -4311,7 +4311,7 @@ body:has(.audioflume-home-landing)
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:hover,
 :where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
   .audioflume-home-landing .audioflume-home-landing-keywords a.audioflume-home-landing-keyword:focus-visible {
-  color: #e5e5dd !important;
+  color: #e5e5df !important;
 }
 :where(html.light, html[data-theme="light"]) .audioflume-home-reference .audioflume-home-landing-keywords a.audioflume-home-landing-keyword {
   color: #c4c4c4;
@@ -4346,7 +4346,7 @@ body:has(.audioflume-home-landing)
   width: 28px;
   height: 28px;
   flex: 0 0 28px;
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 .audioflume-home-landing-search-field .audioflume-home-reference-searchbar-field {
   display: flex;
@@ -4443,7 +4443,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-search-submit:hover,
 .audioflume-home-landing-search-submit:focus-visible {
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 .audioflume-home-landing-search-song {
   display: inline-flex;
@@ -4453,7 +4453,7 @@ body:has(.audioflume-home-landing)
   gap: 8px;
   border: 0;
   border-radius: 0;
-  background: #e5e5dd;
+  background: #e5e5df;
   color: #111;
   padding: 0 20px;
   font: inherit;
@@ -4501,7 +4501,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-landing-artist-heading {
   padding-inline: var(--audioflume-home-page-gutter);
   margin-bottom: var(--filmwave-section-title-margin-bottom);
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 .audioflume-home-landing-artist-heading h2 {
   margin: 0;
@@ -4538,7 +4538,7 @@ body:has(.audioflume-home-landing)
   width: clamp(300px, 26vw, 480px);
   flex: 0 0 auto;
   flex-direction: column;
-  color: #e5e5dd;
+  color: #e5e5df;
   text-decoration: none;
 }
 .audioflume-home-landing-artist-image {
@@ -4629,7 +4629,7 @@ body:has(.audioflume-home-landing)
 }
 .audioflume-home-landing-artist-title {
   margin-top: 12px;
-  color: #e5e5dd;
+  color: #e5e5df;
   font-size: clamp(36px, 2.55vw, 50px);
   font-weight: 300;
   letter-spacing: -0.03em;
@@ -4661,7 +4661,7 @@ body:has(.audioflume-home-landing)
 }
 
 /* Artist card links inherit the page color by default; keep titles beige. */
-.audioflume-home-reference.audioflume-home-landing .audioflume-home-landing-artist-card .audioflume-home-landing-artist-title { color: #e5e5dd; }
+.audioflume-home-reference.audioflume-home-landing .audioflume-home-landing-artist-card .audioflume-home-landing-artist-title { color: #e5e5df; }
 
 
 .audioflume-home-landing .audioflume-home-landing-search-song {
@@ -4748,7 +4748,7 @@ body:has(.audioflume-home-landing)
   margin-inline: 0;
   margin-bottom: 0;
   height: 600px;
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 @media (min-width: 901px) {
   .audioflume-home-landing.has-player .audioflume-home-authentic-banner {
@@ -4776,7 +4776,7 @@ body:has(.audioflume-home-landing)
 }
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-home-authentic-left {
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 .audioflume-home-authentic-lockup {
   --audioflume-lockup-icon-size: clamp(50px, 4.35vw, 78px);
@@ -4851,7 +4851,7 @@ body:has(.audioflume-home-landing)
   width: 60%;
   gap: 2px;
   padding: 0;
-  color: #e5e5dd;
+  color: #e5e5df;
   font-size: clamp(20px, 2vw, 36px);
   font-weight: 300;
   line-height: 1.05;
@@ -5301,7 +5301,7 @@ body:has(.audioflume-home-landing)
   overflow: hidden;
   border-radius: 0;
   background: #101615;
-  color: #e5e5dd;
+  color: #e5e5df;
   padding: clamp(64px, calc(5.5vw + 50px), 158px) clamp(40px, 7vw, 128px) clamp(64px, 7vw, 128px);
   display: flex;
   flex-direction: column;
@@ -5368,7 +5368,7 @@ body:has(.audioflume-home-landing)
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: #e5e5dd;
+  background: #e5e5df;
   color: #111111;
   text-decoration: none;
   font-size: 14px;
@@ -5447,12 +5447,12 @@ body:has(.audioflume-home-landing)
 
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page)) {
-  --audioflume-home-header-background: #d8d8d3;
+  --audioflume-home-header-background: #e5e5df;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
   --audioflume-home-header-muted-link: #111111;
   --audioflume-home-header-scrolled-background: #fff;
-  --audioflume-home-canvas: #d8d8d3;
+  --audioflume-home-canvas: #e5e5df;
   --audioflume-home-content-text: #111;
   --audioflume-home-search-surface: #fff;
   --audioflume-home-search-text: #111;
@@ -5481,7 +5481,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-search-active: #fff;
   --audioflume-home-search-placeholder: #555;
   --audioflume-home-search-clear: #777;
-  --audioflume-home-find-similar-background: #d8d8d3;
+  --audioflume-home-find-similar-background: #e5e5df;
   --audioflume-home-find-similar-text: #111;
   --audioflume-home-songs-surface: #1b1b1b;
   --audioflume-home-songs-link: #fff;
@@ -5843,7 +5843,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   overflow: hidden;
   border-radius: 12px;
   background: #101615 url("https://images.filmwave.io/images/founding-artists/lucas-clarysse-rGdvyrAeOHE-unsplash-web.jpg") center / cover no-repeat;
-  color: #e5e5dd;
+  color: #e5e5df;
 }
 
 .audioflume-experiment-founders-shade {
@@ -5886,7 +5886,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   align-items: center;
   justify-content: center;
   gap: 12px;
-  background: #e5e5dd;
+  background: #e5e5df;
   color: #111;
   text-decoration: none;
   font-size: 14px;
