@@ -21,8 +21,6 @@ import {
   type MusicLibrarySortValue,
   QUICK_FILTERS,
   REGION_OPTIONS,
-  parseWaveformPeaks,
-  SongCardWaveform,
   songMatchesEditPointFilter,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
@@ -40,7 +38,7 @@ import { useFilterPersistence } from "@/hooks/useFilterPersistence";
 import { usePlaylists } from "@/hooks/usePlaylists";
 import { useSongs } from "@/hooks/useSongs";
 
-import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
+import { usePlayer } from "@/context/PlayerContext";
 
 import Footer from "@/components/Footer";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
@@ -64,28 +62,6 @@ const VOCAL_FILTER_OPTIONS = [
 const LICENSE_FILTER_STORAGE_KEY = "filmwave-license-filter";
 const LICENSE_FILTER_CHANGE_EVENT = "filmwave:license-filter-change";
 const SIDE_FILTER_SECTION_CLEAR_EVENT = "filmwave:side-filter-section-clear";
-
-function FeaturedSongWaveform({ song }: { song: Song }) {
-  const { currentSong, isPlaying, seekTo } = usePlayer();
-  const { currentTime, duration } = usePlayerProgress();
-
-  const progress =
-    currentSong?.id === song.id && duration > 0
-      ? Math.max(0, Math.min(1, currentTime / duration))
-      : 0;
-
-  return (
-    <SongCardWaveform
-      peaks={parseWaveformPeaks(song.waveformPeaks)}
-      progress={progress}
-      options={{ barWidth: 1.5, barGap: 1 }}
-      ariaLabel={`Seek ${song.title}`}
-      onSeek={(nextProgress: number) => {
-        seekTo(song, nextProgress, isPlaying);
-      }}
-    />
-  );
-}
 
 function MusicFilterColumnSkeleton({ open }: { open: boolean }) {
   if (!open) return null;
@@ -1200,7 +1176,7 @@ export default function MusicPage() {
   }, [filteredSongs, sortOrder]);
 
   const displayedSongs = sortedSongs;
-  const featuredSongs = displayedSongs.slice(0, 2);
+  const featuredSongs = displayedSongs.slice(0, 8);
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -1295,6 +1271,11 @@ export default function MusicPage() {
   const showOriginalsBanner = selectedArtists.some(
     (artist) => normalizeFilterValue(artist) === normalizeFilterValue("Audioflume"),
   );
+  const showFeaturedSongShelf =
+    !hasActiveFilters &&
+    selectedLicenseFilters.length === 0 &&
+    referenceSearchState === null &&
+    semanticSearchState === null;
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -1556,62 +1537,44 @@ export default function MusicPage() {
                       </span>
                     </div>
                   </div>
-                ) : featuredSongs.length > 0 ? (
-                  <div className="audioflume-music-featured-songs">
-                    {featuredSongs.map((song) => {
-                      const songIsPlaying = Boolean(
-                        currentSong?.id === song.id && isPlaying,
-                      );
-
-                      return (
-                        <article
-                          key={song.id}
-                          className="audioflume-music-featured-song"
-                          style={
-                            song.coverArt
-                              ? ({
-                                  "--audioflume-featured-song-image": `url("${song.coverArt}")`,
-                                } as React.CSSProperties)
-                              : undefined
-                          }
-                        >
-                          <div className="audioflume-music-featured-song-copy">
-                            <strong>{song.title}</strong>
-                            <span className="audioflume-music-featured-song-artist">
-                              {song.artist}
-                            </span>
-                            <div className="audioflume-music-featured-song-waveform">
-                              <FeaturedSongWaveform song={song} />
-                            </div>
-                            <div className="audioflume-music-featured-song-meta">
-                              {song.genres.slice(0, 3).map((genre) => (
-                                <span key={genre}>{genre}</span>
-                              ))}
-                              {song.key ? <span>{song.key}</span> : null}
-                              {song.bpm ? <span>{song.bpm} BPM</span> : null}
-                            </div>
-                          </div>
-
-                          <button
-                            type="button"
-                            className="audioflume-music-featured-song-play"
-                            onClick={() => togglePlayPause(song)}
-                            aria-label={
-                              songIsPlaying
-                                ? `Pause ${song.title}`
-                                : `Play ${song.title}`
-                            }
+                ) : showFeaturedSongShelf && featuredSongs.length > 0 ? (
+                  <section className="audioflume-music-storytelling-shelf" aria-label="Featured songs">
+                    <div className="audioflume-music-storytelling-heading">
+                      <span>Tracks made for storytelling</span>
+                    </div>
+                    <div className="audioflume-music-storytelling-grid">
+                      {featuredSongs.map((song) => {
+                        const songIsPlaying = currentSong?.id === song.id && isPlaying;
+                        return (
+                          <article
+                            key={song.id}
+                            className={`audioflume-music-storytelling-card${songIsPlaying ? " is-playing" : ""}`}
                           >
-                            {songIsPlaying ? (
-                              <PauseIcon size={16} />
-                            ) : (
-                              <PlayIconSmall size={16} />
-                            )}
-                          </button>
-                        </article>
-                      );
-                    })}
-                  </div>
+                            <button
+                              type="button"
+                              className="audioflume-music-storytelling-art"
+                              onClick={() => togglePlayPause(song)}
+                              disabled={!song.audioUrl}
+                              aria-label={songIsPlaying ? `Pause ${song.title}` : `Play ${song.title}`}
+                            >
+                              {song.coverArt ? (
+                                <img src={song.coverArt} alt="" draggable={false} />
+                              ) : (
+                                <span className="audioflume-music-storytelling-fallback" />
+                              )}
+                              <span className="audioflume-music-storytelling-play">
+                                {songIsPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+                              </span>
+                            </button>
+                            <span className="audioflume-music-storytelling-copy">
+                              <strong>{song.title}</strong>
+                              <span>{song.artist}</span>
+                            </span>
+                          </article>
+                        );
+                      })}
+                    </div>
+                  </section>
                 ) : null}
 
                 {displayedSongs.length === 0 ? (
