@@ -54,14 +54,23 @@ body:has(.audioflume-music-page) .filmwave-web-header.is-home-scrolled {
 }
 
 .audioflume-music-page .audioflume-experiment-search {
-  position: relative;
+  position: sticky;
+  top: var(--filmwave-header-height, 75px);
   z-index: calc(var(--filmwave-z-search-filter, 60) + 3);
+  isolation: isolate;
 }
 
-.audioflume-music-sort-outside {
-  display: flex;
-  justify-content: flex-end;
-  margin: 0 12px 12px;
+.audioflume-music-page .audioflume-experiment-search::before {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  z-index: -1;
+  width: 100vw;
+  background: var(--audioflume-home-canvas);
+  content: "";
+  pointer-events: none;
+  transform: translateX(-50%);
 }
 
 .audioflume-music-page-searchbar {
