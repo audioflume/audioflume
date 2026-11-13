@@ -50,7 +50,6 @@ import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 
-import "../home-page.css";
 import "./music-library-redesign.css";
 
 const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
@@ -342,37 +341,9 @@ export default function MusicPage() {
     () => searchParams.get("filters") !== "closed",
   );
   const [filtersClosing, setFiltersClosing] = useState(false);
-  const [searchbarHidden, setSearchbarHidden] = useState(false);
   const [mobileFiltersActive, setMobileFiltersActive] = useState(false);
   const filterCloseTimeoutRef = useRef<number | null>(null);
   const desktopFiltersOpenRef = useRef(filtersOpen);
-
-  useEffect(() => {
-    let previousScrollY = window.scrollY;
-    let frame = 0;
-
-    function onScroll() {
-      if (frame) return;
-      frame = window.requestAnimationFrame(() => {
-        frame = 0;
-        const scrollY = Math.max(0, window.scrollY);
-        const delta = scrollY - previousScrollY;
-        previousScrollY = scrollY;
-
-        if (scrollY <= 24 || delta < -3) {
-          setSearchbarHidden(false);
-        } else if (scrollY > 160 && delta > 3) {
-          setSearchbarHidden(true);
-        }
-      });
-    }
-
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      if (frame) window.cancelAnimationFrame(frame);
-    };
-  }, []);
 
   useEffect(() => {
     const mobileFiltersQuery = window.matchMedia("(max-width: 690px)");
@@ -1314,45 +1285,31 @@ export default function MusicPage() {
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <div className={`audioflume-experiment-search${searchbarHidden ? " is-scroll-hidden" : ""}`}>
-        <div
-          className="audioflume-experiment-search-row"
-          onClick={(event) => {
-            if (
-              event.target instanceof Element &&
-              event.target.closest(".audioflume-experiment-search-field") &&
-              !event.target.closest("button")
-            ) {
-              event.currentTarget.querySelector<HTMLInputElement>(".audioflume-experiment-search-field input")?.focus();
-            }
-          }}
+      <div className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}>
+        <button
+          type="button"
+          className="audioflume-home-reference-searchbar-filters"
+          aria-expanded={filtersOpen}
+          onClick={toggleFiltersOpen}
         >
+          <span className="audioflume-music-filter-button-icon" aria-hidden="true">
+            <svg className="audioflume-music-filter-button-filter-icon" viewBox="0 0 24 24">
+              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+            </svg>
+            <XIcon className="audioflume-music-filter-button-close-icon" size={22} />
+          </span>
+          <span>Filters</span>
+        </button>
+        <GlobalMusicSearchField
+          value={search}
+          onChange={setSearch}
+          onClear={clearReferenceSearch}
+          inputRef={searchInputRef}
+        />
+        <div className="audioflume-music-page-searchbar-sort">
           <button
             type="button"
-            className={`audioflume-experiment-search-filter${filtersOpen ? " is-filters-open" : ""}`}
-            aria-expanded={filtersOpen}
-            onClick={toggleFiltersOpen}
-          >
-            <span className="audioflume-music-filter-icon" aria-hidden="true">
-              <svg className="audioflume-music-filter-icon-sliders" viewBox="0 0 24 24">
-                <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
-              </svg>
-              <XIcon className="audioflume-music-filter-icon-close" size={20} />
-            </span>
-            <span>Filters</span>
-          </button>
-          <GlobalMusicSearchField
-            value={search}
-            onChange={setSearch}
-            onClear={clearReferenceSearch}
-            inputRef={searchInputRef}
-            className="audioflume-experiment-search-field"
-            clearButtonClassName="audioflume-experiment-search-clear"
-            onSubmit={(event) => event.preventDefault()}
-          />
-          <button
-            type="button"
-            className="audioflume-experiment-search-similar"
+            className="audioflume-music-page-searchbar-song"
             aria-label="Find Similar"
             aria-expanded={searchBySongOpen}
             onClick={() => {
