@@ -1,4 +1,4 @@
-import { auth } from "@clerk/nextjs/server";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { NextResponse } from "next/server";
 
 import {
@@ -479,12 +479,17 @@ async function boostMatchesByRelatedArtists<T extends { songId: string; score: n
 }
 
 export async function POST(request: Request) {
-  const { userId } = await auth();
+  const account = await resolveAccountOwner();
 
-  if (!userId) {
+  if (!account.userId) {
     return NextResponse.json(
-      { error: "You must be signed in to search music." },
-      { status: 401 },
+      {
+        error:
+          account.status === 401
+            ? "You must be signed in to search music."
+            : account.error,
+      },
+      { status: account.status },
     );
   }
 
