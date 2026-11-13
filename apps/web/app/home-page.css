@@ -5513,17 +5513,21 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   color: #111;
 }
 
-:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page) a.audioflume-experiment-search-filter {
+:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page) a.audioflume-experiment-search-filter,
+.audioflume-music-page button.audioflume-experiment-search-filter {
   display: flex;
   align-items: center;
   position: relative;
   justify-content: center;
   gap: 12px;
+  border: 0;
   background: var(--audioflume-home-search-surface);
   color: var(--audioflume-home-search-text);
+  font-family: inherit;
   font-size: 13px;
   font-weight: 400;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .audioflume-experiment-search-filter::after {
