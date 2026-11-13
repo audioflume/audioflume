@@ -96,6 +96,7 @@ export default function ReferenceSearchModal({
   const [selectedResult, setSelectedResult] =
     useState<ReferenceCatalogResult | null>(null);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     setPortalReady(true);
@@ -110,6 +111,7 @@ export default function ReferenceSearchModal({
     setSubmitting(false);
     setSelectedResult(null);
     setDropdownOpen(false);
+    setSubmitError(null);
     onClose();
   }
 
@@ -224,6 +226,7 @@ export default function ReferenceSearchModal({
   ) {
     const cleanQuery = query.trim();
     if (!cleanQuery || submitting) return;
+    setSubmitError(null);
     activeSearchRef.current?.abort();
     const searchController = new AbortController();
     activeSearchRef.current = searchController;
@@ -266,7 +269,10 @@ export default function ReferenceSearchModal({
 
         await onSubmit(resolved.searchQuery, resolved, searchController.signal);
       } catch (error) {
-        if (!searchController.signal.aborted) console.error("Reference link resolution failed:", error);
+        if (!searchController.signal.aborted) {
+          console.error("Reference link resolution failed:", error);
+          setSubmitError(error instanceof Error ? error.message : "Reference link resolution failed");
+        }
       } finally {
         if (activeSearchRef.current === searchController) {
           activeSearchRef.current = null;
@@ -288,7 +294,10 @@ export default function ReferenceSearchModal({
     try {
       await onSubmit(cleanQuery, result, searchController.signal);
     } catch (error) {
-      if (!searchController.signal.aborted) throw error;
+      if (!searchController.signal.aborted) {
+        console.error("Reference search failed:", error);
+        setSubmitError(error instanceof Error ? error.message : "Reference search failed");
+      }
     } finally {
       if (activeSearchRef.current === searchController) {
         activeSearchRef.current = null;
@@ -370,6 +379,7 @@ export default function ReferenceSearchModal({
                 value={value}
                 onChange={(event) => {
                   onChange(event.target.value);
+                  setSubmitError(null);
                   setDropdownOpen(true);
                 }}
                 onKeyDown={(event) => {
@@ -437,6 +447,9 @@ export default function ReferenceSearchModal({
             ) : null}
           </form>
           )}
+          {submitError ? (
+            <div className={styles.status} role="alert">{submitError}</div>
+          ) : null}
         </div>
       </section>
   );
