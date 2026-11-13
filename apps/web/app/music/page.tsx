@@ -16,9 +16,7 @@ import {
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
-  MusicLibrarySortControl,
   MusicLibraryEmptyState,
-  type MusicLibrarySortValue,
   QUICK_FILTERS,
   REGION_OPTIONS,
   parseWaveformPeaks,
@@ -437,7 +435,6 @@ export default function MusicPage() {
       filterCloseTimeoutRef.current = null;
     }, 180);
   }
-  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
   const [semanticSearchState, setSemanticSearchState] =
@@ -1190,17 +1187,7 @@ export default function MusicPage() {
     songs,
   ]);
 
-  const sortedSongs = useMemo(() => {
-    if (sortOrder !== "downloaded") return filteredSongs;
-
-    return [...filteredSongs].sort((a, b) => {
-      const aDownloads = Number(getSongField(a, "downloadCount") ?? 0);
-      const bDownloads = Number(getSongField(b, "downloadCount") ?? 0);
-      return bDownloads - aDownloads;
-    });
-  }, [filteredSongs, sortOrder]);
-
-  const displayedSongs = sortedSongs;
+  const displayedSongs = filteredSongs;
   const featuredSongs = displayedSongs.slice(0, 2);
 
   useEffect(() => {
@@ -1472,13 +1459,6 @@ export default function MusicPage() {
             </div>
           )}
 
-          <div className="audioflume-music-sort-outside">
-            <MusicLibrarySortControl
-              value={sortOrder}
-              onChange={setSortOrder}
-              showSelectedCheck
-            />
-          </div>
           <MusicListShell
             title={selectedPlaylist ? selectedPlaylist.name : "All tracks"}
             meta={`${displayedSongs.length} of ${songs.length} tracks`}
