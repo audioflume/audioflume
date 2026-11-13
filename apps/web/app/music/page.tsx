@@ -52,6 +52,7 @@ import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 
+import "../home-page.css";
 import "./music-library-redesign.css";
 
 const INSTRUMENTAL_VOCAL_FILTER_OPTION = "Instrumental";
@@ -1298,41 +1299,30 @@ export default function MusicPage() {
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <div
-        className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}
-      >
-        <button
-          type="button"
-          className="audioflume-home-reference-searchbar-filters"
-          aria-expanded={filtersOpen}
-          onClick={toggleFiltersOpen}
-        >
-          <span className="audioflume-music-filter-button-icon" aria-hidden="true">
-            <svg
-              className="audioflume-music-filter-button-filter-icon"
-              viewBox="0 0 24 24"
-            >
-              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
-            </svg>
-            <XIcon
-              className="audioflume-music-filter-button-close-icon"
-              size={22}
-            />
-          </span>
-          <span>Filters</span>
-        </button>
-
-        <GlobalMusicSearchField
-          value={search}
-          onChange={setSearch}
-          onClear={clearReferenceSearch}
-          inputRef={searchInputRef}
-        />
-
-        <div className="audioflume-music-page-searchbar-sort">
+      <div className="audioflume-experiment-search">
+        <div className="audioflume-experiment-search-row">
           <button
             type="button"
-            className="audioflume-music-page-searchbar-song"
+            className="audioflume-experiment-search-filter"
+            aria-expanded={filtersOpen}
+            onClick={toggleFiltersOpen}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
+            </svg>
+            <span>Filters</span>
+          </button>
+          <GlobalMusicSearchField
+            value={search}
+            onChange={setSearch}
+            onClear={clearReferenceSearch}
+            inputRef={searchInputRef}
+            className="audioflume-experiment-search-field"
+            clearButtonClassName="audioflume-experiment-search-clear"
+          />
+          <button
+            type="button"
+            className="audioflume-experiment-search-similar"
             aria-label="Find Similar"
             aria-expanded={searchBySongOpen}
             onClick={() => {
@@ -1343,11 +1333,6 @@ export default function MusicPage() {
             <WaveformIcon size={16} />
             <span>Find Similar</span>
           </button>
-          <MusicLibrarySortControl
-            value={sortOrder}
-            onChange={setSortOrder}
-            showSelectedCheck
-          />
         </div>
       </div>
 
@@ -1475,6 +1460,13 @@ export default function MusicPage() {
             </div>
           )}
 
+          <div className="audioflume-music-sort-outside">
+            <MusicLibrarySortControl
+              value={sortOrder}
+              onChange={setSortOrder}
+              showSelectedCheck
+            />
+          </div>
           <MusicListShell
             title={selectedPlaylist ? selectedPlaylist.name : "All tracks"}
             meta={`${displayedSongs.length} of ${songs.length} tracks`}
