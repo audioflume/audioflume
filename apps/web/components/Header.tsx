@@ -394,7 +394,7 @@ export default function Header() {
           background: var(--audioflume-home-cta-background, #111111);
           transition: background-color 180ms ease;
           padding: 0 24px;
-          color: #e5e5dd;
+          color: #e5e5df;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, sans-serif;
         }
 
@@ -620,9 +620,9 @@ export default function Header() {
         }
 
         .filmwave-web-header.is-founding-route.is-transparent {
-          --filmwave-transparent-header-text: #e5e5dd;
-          --filmwave-transparent-header-hover-text: #e5e5dd;
-          --filmwave-transparent-header-muted-text: #e5e5dd;
+          --filmwave-transparent-header-text: #e5e5df;
+          --filmwave-transparent-header-hover-text: #e5e5df;
+          --filmwave-transparent-header-muted-text: #e5e5df;
         }
 
         .filmwave-web-header.is-transparent {
@@ -876,7 +876,7 @@ export default function Header() {
           border: 0 !important;
           border-radius: 999px !important;
           background: rgba(255, 255, 255, 0.18) !important;
-          color: #e5e5dd !important;
+          color: #e5e5df !important;
           opacity: 1 !important;
           -webkit-backdrop-filter: blur(10px);
           backdrop-filter: blur(10px);
