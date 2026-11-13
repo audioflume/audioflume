@@ -49,7 +49,12 @@ export default function GlobalReferenceSearch({
     });
 
     if (!response.ok) {
-      throw new Error("Reference search request failed");
+      const errorResponse = await response.json().catch(() => null);
+      throw new Error(
+        typeof errorResponse?.error === "string"
+          ? errorResponse.error
+          : `Reference search failed (HTTP ${response.status})`,
+      );
     }
 
     const data = await response.json();
