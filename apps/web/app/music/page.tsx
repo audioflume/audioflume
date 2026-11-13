@@ -1176,7 +1176,7 @@ export default function MusicPage() {
   }, [filteredSongs, sortOrder]);
 
   const displayedSongs = sortedSongs;
-  const featuredSongs = displayedSongs.slice(0, 8);
+  const featuredSongs = displayedSongs.slice(0, 6);
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -1539,9 +1539,6 @@ export default function MusicPage() {
                   </div>
                 ) : showFeaturedSongShelf && featuredSongs.length > 0 ? (
                   <section className="audioflume-music-storytelling-shelf" aria-label="Featured songs">
-                    <div className="audioflume-music-storytelling-heading">
-                      <span>Tracks made for storytelling</span>
-                    </div>
                     <div className="audioflume-music-storytelling-grid">
                       {featuredSongs.map((song) => {
                         const songIsPlaying = currentSong?.id === song.id && isPlaying;
