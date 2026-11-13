@@ -737,7 +737,7 @@ main
 .audioflume-music-page
   > section:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open)
   > .fw-music-content-column {
-  --audioflume-music-banner-extension: 29px;
+  --audioflume-music-banner-extension: 2px;
   --audioflume-music-song-list-extension: 32px;
   padding-right: var(--audioflume-music-content-gap) !important;
   padding-left: calc(
