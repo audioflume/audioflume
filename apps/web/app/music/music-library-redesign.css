@@ -37,11 +37,6 @@ body:has(.audioflume-music-page) {
   --audioflume-home-find-similar-text: #111;
 }
 
-body:has(.audioflume-music-page) .filmwave-web-header.is-home-scrolled {
-  --audioflume-home-header-background: var(--audioflume-home-header-scrolled-background);
-  --audioflume-home-header-border: var(--border);
-}
-
 .audioflume-music-page {
   --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   padding-top: var(--filmwave-header-height, 75px);
@@ -58,6 +53,41 @@ body:has(.audioflume-music-page) .filmwave-web-header.is-home-scrolled {
   top: var(--filmwave-header-height, 75px);
   z-index: calc(var(--filmwave-z-search-filter, 60) + 3);
   isolation: isolate;
+  transition: transform 220ms ease;
+}
+
+.audioflume-music-page .audioflume-experiment-search.is-scroll-hidden {
+  transform: translateY(-100%);
+}
+
+.audioflume-music-filter-icon {
+  position: relative;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  flex: 0 0 20px;
+}
+
+.audioflume-music-page .audioflume-music-filter-icon > svg {
+  position: absolute;
+  inset: 0;
+  width: 20px;
+  height: 20px;
+  transition: opacity 120ms ease;
+}
+
+.audioflume-music-filter-icon-close {
+  opacity: 0;
+}
+
+.audioflume-music-page .audioflume-experiment-search-filter.is-filters-open:hover .audioflume-music-filter-icon-sliders,
+.audioflume-music-page .audioflume-experiment-search-filter.is-filters-open:focus-visible .audioflume-music-filter-icon-sliders {
+  opacity: 0;
+}
+
+.audioflume-music-page .audioflume-experiment-search-filter.is-filters-open:hover .audioflume-music-filter-icon-close,
+.audioflume-music-page .audioflume-experiment-search-filter.is-filters-open:focus-visible .audioflume-music-filter-icon-close {
+  opacity: 1;
 }
 
 .audioflume-music-page .audioflume-experiment-search::before {
