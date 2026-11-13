@@ -5487,10 +5487,10 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-songs-link: #fff;
 }
 
-body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
-  --audioflume-home-header-background: #111;
-  --audioflume-home-header-text: #fff;
-  --audioflume-home-header-muted-link: #fff;
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
+  --audioflume-home-header-background: #fff;
+  --audioflume-home-header-text: #111;
+  --audioflume-home-header-muted-link: #111;
   --audioflume-home-header-border: transparent;
 }
 
