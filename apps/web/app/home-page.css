@@ -5490,8 +5490,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: rgb(17 17 17 / 88%);
   --audioflume-home-header-border: transparent;
-  -webkit-backdrop-filter: blur(14px);
-  backdrop-filter: blur(14px);
+  --filmwave-header-backdrop-filter: blur(14px);
 }
 
 :where(html.light, html[data-theme="light"]) body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
