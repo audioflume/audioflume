@@ -37,7 +37,7 @@
   left: 50%;
   z-index: -1;
   width: 100vw;
-  background: #e5e5dd;
+  background: #e5e5df;
   transform: translateX(-50%);
 }
 
@@ -399,7 +399,7 @@
   align-items: center;
   justify-content: center;
   margin-bottom: 9px;
-  background: #d8d8d3;
+  background: #e5e5df;
   padding: 0 7px;
   color: #111111;
   font-family: var(--font-aktiv-grotesk), sans-serif;
@@ -425,7 +425,7 @@
 
 .audioflume-pricing-lifetime-price-group.is-regular .audioflume-pricing-plan-price strong {
   position: relative;
-  color: #d8d8d3;
+  color: #e5e5df;
   text-decoration: none;
 }
 
@@ -435,7 +435,7 @@
   right: -8px;
   left: -8px;
   height: 2px;
-  background: #d8d8d3;
+  background: #e5e5df;
   content: "";
   transform: translateY(-50%);
   pointer-events: none;
@@ -473,7 +473,7 @@
 
 .audioflume-pricing-lifetime-action > a:hover,
 .audioflume-pricing-lifetime-action > a:focus-visible {
-  background: #e5e5dd !important;
+  background: #e5e5df !important;
   color: #111111 !important;
   opacity: 1 !important;
 }
