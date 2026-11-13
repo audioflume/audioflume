@@ -42,7 +42,7 @@ body:has(.audioflume-music-page) {
 
 .audioflume-music-page-searchbar.is-filters-open {
   grid-template-columns:
-    var(--audioflume-music-filter-width, 248px)
+    calc(var(--audioflume-music-filter-width, 248px) + var(--audioflume-music-content-gap, 44px) + 8px)
     minmax(0, 1fr)
     356px;
 }
@@ -539,7 +539,7 @@ main
 
   .audioflume-music-page-searchbar.is-filters-open {
     grid-template-columns:
-      var(--audioflume-music-filter-width, 248px)
+      calc(var(--audioflume-music-filter-width, 248px) + var(--audioflume-music-content-gap, 44px) + 8px)
       minmax(0, 1fr)
       120px;
   }
