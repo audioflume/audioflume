@@ -1751,7 +1751,7 @@ main
 
 
 .audioflume-music-page .audioflume-music-filter-skeleton-wrap {
-  border-right: 1.25px solid var(--border);
+  border-right: 0;
 }
 
 .audioflume-music-page .audioflume-music-filter-skeleton-wrap .fw-filter-panel-body {
