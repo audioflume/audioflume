@@ -16,7 +16,9 @@ import {
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
+  MusicLibrarySortControl,
   MusicLibraryEmptyState,
+  type MusicLibrarySortValue,
   QUICK_FILTERS,
   REGION_OPTIONS,
   parseWaveformPeaks,
@@ -434,6 +436,7 @@ export default function MusicPage() {
       filterCloseTimeoutRef.current = null;
     }, 180);
   }
+  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
   const [semanticSearchState, setSemanticSearchState] =
@@ -1186,7 +1189,17 @@ export default function MusicPage() {
     songs,
   ]);
 
-  const displayedSongs = filteredSongs;
+  const sortedSongs = useMemo(() => {
+    if (sortOrder !== "downloaded") return filteredSongs;
+
+    return [...filteredSongs].sort((a, b) => {
+      const aDownloads = Number(getSongField(a, "downloadCount") ?? 0);
+      const bDownloads = Number(getSongField(b, "downloadCount") ?? 0);
+      return bDownloads - aDownloads;
+    });
+  }, [filteredSongs, sortOrder]);
+
+  const displayedSongs = sortedSongs;
   const featuredSongs = displayedSongs.slice(0, 2);
 
   useEffect(() => {
@@ -1285,7 +1298,9 @@ export default function MusicPage() {
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
-      <div className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}>
+      <div
+        className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}
+      >
         <button
           type="button"
           className="audioflume-home-reference-searchbar-filters"
@@ -1293,19 +1308,27 @@ export default function MusicPage() {
           onClick={toggleFiltersOpen}
         >
           <span className="audioflume-music-filter-button-icon" aria-hidden="true">
-            <svg className="audioflume-music-filter-button-filter-icon" viewBox="0 0 24 24">
+            <svg
+              className="audioflume-music-filter-button-filter-icon"
+              viewBox="0 0 24 24"
+            >
               <path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" />
             </svg>
-            <XIcon className="audioflume-music-filter-button-close-icon" size={22} />
+            <XIcon
+              className="audioflume-music-filter-button-close-icon"
+              size={22}
+            />
           </span>
           <span>Filters</span>
         </button>
+
         <GlobalMusicSearchField
           value={search}
           onChange={setSearch}
           onClear={clearReferenceSearch}
           inputRef={searchInputRef}
         />
+
         <div className="audioflume-music-page-searchbar-sort">
           <button
             type="button"
@@ -1320,6 +1343,11 @@ export default function MusicPage() {
             <WaveformIcon size={16} />
             <span>Find Similar</span>
           </button>
+          <MusicLibrarySortControl
+            value={sortOrder}
+            onChange={setSortOrder}
+            showSelectedCheck
+          />
         </div>
       </div>
 
