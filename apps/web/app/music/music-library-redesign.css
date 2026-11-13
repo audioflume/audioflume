@@ -1158,15 +1158,16 @@ main
   isolation: isolate;
   box-sizing: border-box;
   display: grid;
-  width: calc(100% + 60px);
+  width: calc(100% + 29px);
   height: 148px;
   grid-template-columns: 84px minmax(220px, 1fr) minmax(180px, 280px) 36px;
   align-items: center;
   gap: 24px;
   overflow: hidden;
+  margin-top: 24px;
   margin-right: -32px;
   margin-bottom: 18px;
-  margin-left: -28px;
+  margin-left: 3px;
   background: #111111;
   padding: 24px 28px;
   color: #ffffff;
@@ -1282,12 +1283,12 @@ main
   isolation: isolate;
   display: flex;
   box-sizing: border-box;
-  width: calc(100% + 60px);
+  width: calc(100% + 29px);
   height: 148px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin: 0 -32px 18px -28px;
+  margin: 24px -32px 18px 3px;
   background: #e5e5dd;
 }
 
