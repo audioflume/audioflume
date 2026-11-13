@@ -37,11 +37,11 @@ export default async function ArtistClaimPage() {
         }
 
         .artist-onboarding-hero {
-          background: #e5e5dd;
+          background: #e5e5df;
         }
 
         .artist-onboarding-left-background {
-          background: #e5e5dd;
+          background: #e5e5df;
         }
 
         html:not(.light):not([data-theme="light"]) .artist-onboarding-hero,
