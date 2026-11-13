@@ -429,12 +429,12 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) {
   --filmwave-side-filter-divider-color: var(--filmwave-border-color);
 }
 
-main
+.audioflume-music-page
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail {
   box-sizing: border-box !important;
   gap: 0 !important;
-  padding: 0 0 40px !important;
+  padding: 59px 0 40px !important;
 }
 
 html.fw-display-exclude-ai-songs
@@ -1168,7 +1168,7 @@ main
   align-items: center;
   gap: 24px;
   overflow: hidden;
-  margin-top: 24px;
+  margin-top: 59px;
   margin-right: calc(-3px - var(--audioflume-music-banner-extension));
   margin-bottom: 18px;
   margin-left: 3px;
@@ -1292,7 +1292,7 @@ main
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin: 24px calc(-3px - var(--audioflume-music-banner-extension)) 18px 3px;
+  margin: 59px calc(-3px - var(--audioflume-music-banner-extension)) 18px 3px;
   background: #e5e5df;
 }
 
