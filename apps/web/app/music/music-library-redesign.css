@@ -1362,19 +1362,9 @@ main
   margin: 24px 0 32px 3px;
 }
 
-.audioflume-music-page .audioflume-music-storytelling-heading {
-  display: flex;
-  align-items: center;
-  margin-bottom: 24px;
-  color: var(--text-primary);
-  font-size: 22px;
-  font-weight: 400;
-  letter-spacing: -0.035em;
-}
-
 .audioflume-music-page .audioflume-music-storytelling-grid {
   display: grid;
-  grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 24px;
 }
 
@@ -1461,19 +1451,30 @@ main
 }
 
 .audioflume-music-page .audioflume-music-storytelling-copy > strong {
+  margin: 0;
   color: var(--text-primary);
-  font-size: 16px;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 13px;
+  font-style: normal;
   font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.15;
 }
 
 .audioflume-music-page .audioflume-music-storytelling-copy > span {
+  margin: 0;
   color: var(--text-subtle);
-  font-size: 13px;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-style: normal;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.15;
 }
 
 @media (max-width: 1450px) {
   .audioflume-music-page .audioflume-music-storytelling-grid {
-    grid-template-columns: repeat(8, minmax(150px, 1fr));
+    grid-template-columns: repeat(6, minmax(150px, 1fr));
     overflow-x: auto;
     scrollbar-width: thin;
   }
