@@ -1472,16 +1472,6 @@ main
   line-height: 1.15;
 }
 
-@media (max-width: 1600px) {
-  .audioflume-music-page .audioflume-music-storytelling-grid {
-    grid-template-columns: repeat(5, minmax(0, 1fr));
-  }
-
-  .audioflume-music-page .audioflume-music-storytelling-card:nth-child(n + 6) {
-    display: none;
-  }
-}
-
 @media (max-width: 1350px) {
   .audioflume-music-page .audioflume-music-storytelling-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
