@@ -238,7 +238,7 @@ main > section:has(.fw-filter-panel-wrap)
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-chevron {
-  opacity: 0 !important;
+  opacity: var(--filmwave-filter-rail-chevron-opacity, 0) !important;
   transition: opacity 160ms ease, color 160ms ease !important;
 }
 
@@ -250,7 +250,7 @@ main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-sel
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item:hover .fw-filter-rail-chevron,
 main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active:hover .fw-filter-rail-chevron {
-  opacity: 0.65 !important;
+  opacity: var(--filmwave-filter-rail-chevron-hover-opacity, 0.65) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-count {
@@ -336,7 +336,7 @@ main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-sel
 }
 
 main > section:has(.fw-filter-panel-wrap):not(:has(.fw-filter-panel-wrap.has-selected-filter-section)) .fw-filter-rail-item.is-active .fw-filter-rail-chevron {
-  opacity: 0 !important;
+  opacity: var(--filmwave-filter-rail-chevron-opacity, 0) !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) .fw-filter-rail-item-playlists {
@@ -440,7 +440,7 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap) .fw-filter-ra
   align-items: center !important;
   justify-content: center !important;
   color: var(--text-muted) !important;
-  opacity: 0 !important;
+  opacity: var(--filmwave-filter-rail-chevron-opacity, 0) !important;
   transition: opacity 160ms ease, color 160ms ease !important;
 }
 
@@ -464,5 +464,5 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
 .community-categories .fw-filter-rail-item:hover .fw-filter-rail-chevron,
 .community-categories .fw-filter-rail-item:focus-visible .fw-filter-rail-chevron {
   color: var(--text-muted) !important;
-  opacity: 0.65 !important;
+  opacity: var(--filmwave-filter-rail-chevron-hover-opacity, 0.65) !important;
 }
