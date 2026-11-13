@@ -751,11 +751,11 @@ main
   > .fw-music-content-column
   > .fw-filter-panel-wrap {
   --audioflume-music-filter-height: calc(
-    100dvh - var(--filmwave-header-height, 60px) - 115px -
+    100dvh - var(--filmwave-header-height, 60px) - 75px -
       var(--filmwave-sidebar-bottom-offset, 0px)
   );
   position: sticky !important;
-  top: calc(var(--filmwave-header-height, 60px) + 95px) !important;
+  top: calc(var(--filmwave-header-height, 60px) + 75px) !important;
   bottom: auto !important;
   left: auto !important;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 2) !important;
@@ -765,9 +765,9 @@ main
   max-width: var(--audioflume-music-filter-width, 248px) !important;
   height: var(--audioflume-music-filter-height) !important;
   margin:
-    20px
     0
-    calc(0px - var(--audioflume-music-filter-height) - 20px)
+    0
+    calc(0px - var(--audioflume-music-filter-height))
     calc(
       0px - var(--audioflume-music-filter-width, 248px) -
         var(--audioflume-music-content-gap, 44px) + 24px
