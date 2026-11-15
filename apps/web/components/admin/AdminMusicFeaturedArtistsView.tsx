@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent } from "react";
 import AdminArtistShelfPickerModal from "@/components/admin/AdminArtistShelfPickerModal";
 import { PlaylistManagerCollapsibleSection } from "@/components/admin/AdminPlaylistManagerShared";
 import { BackendButton } from "@/components/backend/BackendControls";
@@ -271,7 +271,7 @@ export default function AdminMusicFeaturedArtistsView() {
                       disabled={saving}
                       aria-label={`Dark overlay strength for ${item.artist.name}`}
                       className={styles.overlaySlider}
-                      style={{ "--overlay-progress": `${overlay}%` } as React.CSSProperties}
+                      style={{ "--overlay-progress": `${overlay}%` } as CSSProperties}
                       onChange={event => setOverlayDrafts(current => ({ ...current, [item.artist_id]: Number(event.target.value) }))}
                     />
                     <span className="w-8 text-right tabular-nums">{overlay}%</span>
