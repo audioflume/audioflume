@@ -686,6 +686,8 @@ main
 .audioflume-music-page {
   --audioflume-music-filter-width: 248px;
   --audioflume-music-content-gap: 20px;
+  --filmwave-filter-rail-chevron-opacity: 1;
+  --filmwave-filter-rail-chevron-hover-opacity: 1;
 }
 
 .music-page-content-shell .filmwave-song-card {
@@ -1010,7 +1012,7 @@ main
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item[aria-expanded="true"]
   .fw-filter-rail-chevron {
-  transform: rotate(90deg);
+  transform: rotate(45deg);
 }
 
 .audioflume-music-page
@@ -1019,16 +1021,45 @@ main
   .fw-filter-rail-chevron {
   display: inline-flex !important;
   opacity: 1 !important;
-  transform: rotate(90deg);
+  transform: rotate(45deg);
 }
 
 .audioflume-music-page
   .fw-filter-rail.is-accordion
   .fw-filter-rail-chevron {
-  transition:
-    opacity 160ms ease,
-    color 160ms ease,
-    transform 160ms ease !important;
+  position: relative;
+  width: 20px;
+  height: 20px;
+  color: var(--text-primary) !important;
+  transition: opacity 160ms ease, color 160ms ease, transform 160ms ease !important;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron > svg {
+  display: none;
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron::before,
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron::after {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 12px;
+  height: 1px;
+  background: currentColor;
+  content: "";
+  transform: translate(-50%, -50%);
+}
+
+.audioflume-music-page
+  .fw-filter-rail.is-accordion
+  .fw-filter-rail-chevron::after {
+  transform: translate(-50%, -50%) rotate(90deg);
 }
 
 .audioflume-music-page
@@ -1115,7 +1146,7 @@ main
 .audioflume-music-page
   .fw-license-filter-trigger[aria-expanded="true"]
   .fw-filter-rail-chevron {
-  transform: rotate(90deg);
+  transform: rotate(45deg);
 }
 
 
@@ -1133,15 +1164,13 @@ main
   isolation: isolate;
   box-sizing: border-box;
   display: grid;
-  width: calc(100% + 60px);
+  width: 100%;
   height: 148px;
   grid-template-columns: 84px minmax(220px, 1fr) minmax(180px, 280px) 36px;
   align-items: center;
   gap: 24px;
   overflow: hidden;
-  margin-right: -32px;
-  margin-bottom: 18px;
-  margin-left: -28px;
+  margin: 24px 0 18px;
   background: #111111;
   padding: 24px 28px;
   color: #ffffff;
@@ -1257,12 +1286,12 @@ main
   isolation: isolate;
   display: flex;
   box-sizing: border-box;
-  width: calc(100% + 60px);
+  width: 100%;
   height: 148px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  margin: 0 -32px 18px -28px;
+  margin: 24px 0 18px;
   background: #e5e5dd;
 }
 
