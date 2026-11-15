@@ -10,6 +10,8 @@ import LifetimeAccessCard from "@/components/LifetimeAccessCard";
 import { playlistDetailPrimaryActionButtonClass } from "@/components/uiClasses";
 import { r2Client } from "@/lib/r2";
 import { getSongs } from "@/lib/songs";
+import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
+import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 
 import PricingOriginalsShelf from "./PricingOriginalsShelf";
 import PricingUiShowcase from "./PricingUiShowcase";
@@ -236,8 +238,11 @@ function PlanStatus({ included }: { included: boolean }) {
 }
 
 export default async function PricingPage() {
+  const account = selectAccountAuthProvider(process.env.AUDIOFLUME_ACCOUNT_AUTH_PROVIDER) === "supabase"
+    ? resolveAccountOwner()
+    : auth();
   const [{ userId }, pricingHeroImages, songs] = await Promise.all([
-    auth(),
+    account,
     getPricingHeroImages(),
     getSongs().catch(() => []),
   ]);
