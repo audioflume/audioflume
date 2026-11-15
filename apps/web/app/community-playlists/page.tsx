@@ -5,7 +5,7 @@ import Link from "next/link";
 import { MusicLibrarySortControl } from "@filmwave/shared";
 import { usePlayer } from "@/context/PlayerContext";
 import Footer from "@/components/Footer";
-import GlobalSearchBar from "@/components/GlobalSearchBar";
+import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import Toast from "@/components/Toast";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
@@ -22,6 +22,7 @@ import type { Song } from "@/lib/types";
 import "../../../../packages/shared/styles/music-side-filter.css";
 import "../playlists/playlists-tabs-rail.css";
 import "@/components/curated/curated-browse-filters.css";
+import "../home-page.css";
 import "./community-playlists.css";
 
 type CommunityPlaylist = {
@@ -1141,7 +1142,7 @@ export default function CommunityPlaylistsPage() {
 
   return (
     <main className="community-playlists-page-root">
-      <GlobalSearchBar layer="high" />
+      <HomeExperimentSearch />
 
       <section className="community-playlists-page-layer">
         <div className="community-playlists-page-inner">
