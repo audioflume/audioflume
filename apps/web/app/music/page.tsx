@@ -1543,10 +1543,12 @@ export default function MusicPage() {
                 ) : showFeaturedSongShelf ? (
                   <div className="audioflume-music-home-hero">
                     <HomeHeroBanner backgroundOnly />
-                    <AudioflumeMark className="audioflume-music-home-hero-mark" />
-                    <Link className="audioflume-music-home-hero-link" href="/discover">
-                      Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
-                    </Link>
+                    <div className="audioflume-music-home-hero-content">
+                      <AudioflumeMark className="audioflume-music-home-hero-mark" />
+                      <Link className="audioflume-music-home-hero-link" href="/discover">
+                        Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+                      </Link>
+                    </div>
                   </div>
                 ) : null}
 
