@@ -4,6 +4,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-playlists-page-root {
+  --audioflume-experiment-search-bottom-padding: 0px;
   --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   position: relative;
   min-height: 100vh;
