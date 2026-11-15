@@ -16,10 +16,6 @@ body:has(.audioflume-music-page) {
   --audioflume-home-header-border: var(--border);
 }
 
-:where(html:not(.light):not([data-theme="light"])) .audioflume-music-page-searchbar {
-  border-bottom: 1px solid var(--border);
-}
-
 :where(html.light, html[data-theme="light"]) .audioflume-music-page {
   --audioflume-music-search-input-background: #fff;
   --audioflume-music-input-focus-color: #111;
@@ -45,6 +41,10 @@ body:has(.audioflume-music-page) {
   background: var(--audioflume-music-toolbar-background);
   color: var(--text-primary);
   overscroll-behavior: none;
+}
+
+:where(html:not(.light):not([data-theme="light"])) .audioflume-music-page-searchbar {
+  border-bottom: 1px solid var(--border);
 }
 
 .audioflume-music-page-searchbar.is-filters-open {
