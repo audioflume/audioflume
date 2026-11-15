@@ -5472,7 +5472,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-header-scrolled-background: #111;
   --audioflume-home-header-text: #fff;
   --audioflume-home-header-muted-link: #fff;
-  --audioflume-home-canvas: #111;
+  --audioflume-home-canvas: #1b1b1b;
   --audioflume-home-content-text: #fff;
   --audioflume-home-search-surface: var(--audioflume-home-songs-surface);
   --audioflume-home-search-text: #fff;
@@ -5483,7 +5483,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-search-clear: #777;
   --audioflume-home-find-similar-background: #e5e5df;
   --audioflume-home-find-similar-text: #111;
-  --audioflume-home-songs-surface: #1b1b1b;
+  --audioflume-home-songs-surface: #262626;
   --audioflume-home-songs-link: #fff;
 }
 
