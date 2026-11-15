@@ -5446,7 +5446,7 @@ body:has(.audioflume-home-landing)
 
 
 /* Homepage editorial mockup: scoped to the homepage only. */
-body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page)) {
+body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root)) {
   --audioflume-home-header-background: #e5e5df;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
@@ -5467,7 +5467,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-songs-link: #222;
 }
 
-:where(html:not(.light):not([data-theme="light"])) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page)) {
+:where(html:not(.light):not([data-theme="light"])) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root)) {
   --audioflume-home-header-background: #1b1b1b;
   --audioflume-home-header-scrolled-background: #1b1b1b;
   --audioflume-home-header-text: #fff;
@@ -5487,12 +5487,12 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-songs-link: #fff;
 }
 
-body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
+body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .community-playlists-page-root)) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: #1b1b1b;
   --audioflume-home-header-border: transparent;
 }
 
-:where(html.light, html[data-theme="light"]) body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
+:where(html.light, html[data-theme="light"]) body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .community-playlists-page-root)) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: #fff;
   --audioflume-home-header-text: #111;
   --audioflume-home-header-muted-link: #111;
@@ -5520,7 +5520,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   color: #111;
 }
 
-:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page) a.audioflume-experiment-search-filter {
+:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root) a.audioflume-experiment-search-filter {
   display: flex;
   align-items: center;
   position: relative;
