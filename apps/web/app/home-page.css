@@ -5664,18 +5664,6 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
   padding: clamp(20px, 2.6vw, 40px);
 }
 
-.audioflume-home-experiment .audioflume-experiment-hero-eyebrow {
-  position: relative;
-  top: auto;
-  left: auto;
-}
-
-.audioflume-home-experiment a.audioflume-experiment-hero-link {
-  position: relative;
-  bottom: auto;
-  left: auto;
-}
-
 .audioflume-home-experiment .audioflume-experiment-hero::after,
 .audioflume-home-experiment .audioflume-experiment-lifetime::after,
 .audioflume-home-experiment .audioflume-experiment-artist-promo::before,
@@ -5725,10 +5713,8 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 }
 
 .audioflume-experiment-hero-eyebrow {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  top: calc(var(--audioflume-hero-eyebrow-inset, 8%) - var(--audioflume-hero-eyebrow-optical-offset, 0px));
-  left: var(--audioflume-hero-eyebrow-inset, 3.4%);
 }
 
 .audioflume-experiment-hero-headline {
@@ -5751,10 +5737,8 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 }
 
 .audioflume-home-experiment a.audioflume-experiment-hero-link {
-  position: absolute;
+  position: relative;
   z-index: 2;
-  bottom: 6.5%;
-  left: 3.4%;
   display: inline-flex;
   align-items: center;
   gap: 8px;
@@ -6252,8 +6236,6 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 
 @media (max-width: 470px) {
   .audioflume-experiment-hero-headline { top:42%; }
-  .audioflume-experiment-hero-link { bottom:20%; }
-  .audioflume-experiment-hero-eyebrow { top:6%; }
   .audioflume-experiment-lifetime-price { flex-wrap: wrap; }
   .audioflume-experiment-curated-brand { top: 35%; }
   .audioflume-experiment-curated-brand h2 { font-size: clamp(24px, 6.2vw, 34px); }
