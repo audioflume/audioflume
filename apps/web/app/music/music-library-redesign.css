@@ -14,7 +14,7 @@ body:has(.audioflume-music-page) {
 }
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
-  --audioflume-music-toolbar-background: #111;
+  --audioflume-music-toolbar-background: #1b1b1b;
   --audioflume-music-toolbar-text: #e5e5df;
 }
 
