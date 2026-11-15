@@ -14,14 +14,14 @@
 .arrows {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
   flex: 0 0 auto;
 }
 
 .navigation button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 28px;
   height: 28px;
   padding: 0;
@@ -29,6 +29,10 @@
   background: transparent;
   color: var(--text-primary);
   cursor: pointer;
+}
+
+.navigation button:last-child {
+  justify-content: flex-end;
 }
 
 .navigation button:hover:not(:disabled) {
