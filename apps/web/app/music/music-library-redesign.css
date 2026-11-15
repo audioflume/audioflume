@@ -1390,7 +1390,7 @@ main
 
 .audioflume-music-page .audioflume-music-home-hero-link {
   position: absolute;
-  bottom: calc(clamp(16px, 2vw, 32px) - 6px);
+  bottom: 40px;
   left: 40px;
   z-index: 4;
   display: inline-flex;
