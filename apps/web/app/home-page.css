@@ -5509,7 +5509,7 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 .audioflume-experiment-search {
   width: var(--home-reference-width);
   margin: 0 auto;
-  padding: 16px 0 34px;
+  padding: 16px 0 var(--audioflume-experiment-search-bottom-padding, 34px);
 }
 
 .audioflume-experiment-search-row {
