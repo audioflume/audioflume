@@ -53,6 +53,24 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
   );
 }
 
+export function HomeHeroBanner({ featuredSong }: { featuredSong?: Song }) {
+  return (
+    <section className="audioflume-experiment-hero" aria-label="Human made music and SFX for film">
+      <img className="audioflume-experiment-hero-background" src={HERO_BACKGROUND} alt="" />
+      <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
+      <p className="audioflume-experiment-hero-eyebrow">New music and SFX added weekly.</p>
+      <h1 className="audioflume-experiment-hero-headline">
+        <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
+      </h1>
+      <img className="audioflume-experiment-hero-overlay" src={HERO_OVERLAY} alt="" />
+      <Link className="audioflume-experiment-hero-link" href="/music">
+        Explore music library <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+      </Link>
+      {featuredSong ? <HomeHeroFeaturedSong song={featuredSong} /> : null}
+    </section>
+  );
+}
+
 export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }: { homeFlashImages: string[] }) {
   const { songs, loading } = useSongs();
   const playerVisible = useHasCurrentSong();
@@ -85,19 +103,7 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
       </div>
 
       <div className="audioflume-experiment-main">
-        <section className="audioflume-experiment-hero" aria-label="Human made music and SFX for film">
-          <img className="audioflume-experiment-hero-background" src={HERO_BACKGROUND} alt="" />
-          <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
-          <p className="audioflume-experiment-hero-eyebrow">New music and SFX added weekly.</p>
-          <h1 className="audioflume-experiment-hero-headline">
-            <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
-          </h1>
-          <img className="audioflume-experiment-hero-overlay" src={HERO_OVERLAY} alt="" />
-          <Link className="audioflume-experiment-hero-link" href="/music">
-            Explore music library <ArrowUpRightIcon size={24} strokeWidth={1.5} />
-          </Link>
-          {featuredSong ? <HomeHeroFeaturedSong song={featuredSong} /> : null}
-        </section>
+        <HomeHeroBanner featuredSong={featuredSong} />
 
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
           <div className="audioflume-experiment-lifetime">
