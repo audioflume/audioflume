@@ -424,6 +424,7 @@ export default function MusicPage() {
     useState<ReferenceSearchState | null>(null);
   const [searchBySongOpen, setSearchBySongOpen] = useState(false);
   const [searchBySongQuery, setSearchBySongQuery] = useState("");
+  const [judahEarlDesignation, setJudahEarlDesignation] = useState<string | null>(null);
 
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -1280,6 +1281,29 @@ export default function MusicPage() {
     referenceSearchState === null &&
     semanticSearchState === null;
 
+  useEffect(() => {
+    if (!showFeaturedSongShelf) return;
+
+    const controller = new AbortController();
+
+    void fetch("/api/artists/directory", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) return;
+        const data = await response.json();
+        const artist = Array.isArray(data?.artists)
+          ? data.artists.find((entry: { name?: string }) => entry.name?.trim().toLowerCase() === "judah earl")
+          : null;
+        if (!controller.signal.aborted) {
+          setJudahEarlDesignation(typeof artist?.designation === "string" ? artist.designation.trim() || null : null);
+        }
+      })
+      .catch(() => {
+        // Keep the name visible when artist details are unavailable.
+      });
+
+    return () => controller.abort();
+  }, [showFeaturedSongShelf]);
+
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <div
@@ -1545,9 +1569,14 @@ export default function MusicPage() {
                     <HomeHeroBanner backgroundOnly />
                     <div className="audioflume-music-home-hero-content">
                       <AudioflumeMark className="audioflume-music-home-hero-mark" />
-                      <Link className="audioflume-music-home-hero-link" href="/discover">
-                        Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
-                      </Link>
+                      <div className="audioflume-music-home-hero-footer">
+                        <Link className="audioflume-music-home-hero-link" href="/discover">
+                          Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+                        </Link>
+                        <span className="audioflume-music-home-hero-credit">
+                          Judah Earl{judahEarlDesignation ? <> <span aria-hidden="true">•</span> {judahEarlDesignation}</> : null}
+                        </span>
+                      </div>
                     </div>
                   </div>
                 ) : null}
