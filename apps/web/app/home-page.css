@@ -5650,7 +5650,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   aspect-ratio: 2.44 / 1;
   min-height: 320px;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 0;
   background: #171717;
   color: #fff;
 }
@@ -5951,8 +5951,8 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 .audioflume-experiment-promo-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 15px;
-  margin-top: 15px;
+  gap: 30px;
+  margin-top: 30px;
 }
 
 .audioflume-experiment-lifetime,
@@ -5962,7 +5962,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   min-width:0;
   height:clamp(280px, 30vw, 480px);
   overflow:hidden;
-  border-radius:10px;
+  border-radius:0;
   color:#fff;
   text-decoration:none;
 }
@@ -6076,9 +6076,9 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
   width: 100%;
   aspect-ratio: 3.6 / 1;
   min-height: 300px;
-  margin-top: 15px;
+  margin-top: 30px;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 0;
   background: #111;
   color: #fff;
 }
@@ -6176,9 +6176,9 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 }
 
 .audioflume-experiment-songs {
-  margin-top:15px;
+  margin-top:30px;
   padding:42px clamp(22px, 4.2vw, 64px) 52px;
-  border-radius:12px;
+  border-radius:0;
   background:var(--audioflume-home-songs-surface);
   color:var(--audioflume-home-content-text);
 }
