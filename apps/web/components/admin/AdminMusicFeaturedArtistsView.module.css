@@ -1,0 +1,38 @@
+.overlaySlider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 164px;
+  height: 4px;
+  border: 0;
+  border-radius: 999px;
+  background: linear-gradient(to right, #fff 0%, #fff var(--overlay-progress), #666 var(--overlay-progress), #666 100%);
+  cursor: pointer;
+}
+
+.overlaySlider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #111;
+}
+
+.overlaySlider::-moz-range-thumb {
+  width: 10px;
+  height: 10px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  background: #111;
+}
+
+.overlaySlider:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 5px;
+}
+
+.overlaySlider:disabled {
+  cursor: default;
+  opacity: .5;
+}
