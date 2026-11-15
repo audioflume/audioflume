@@ -1381,6 +1381,15 @@ main
   position: relative;
 }
 
+.audioflume-music-page .audioflume-music-home-hero-frame::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: radial-gradient(ellipse 75% 95% at bottom left, rgba(0, 0, 0, var(--audioflume-music-featured-overlay, 0)), transparent 100%);
+  pointer-events: none;
+}
+
 .audioflume-music-page .audioflume-music-home-hero-content {
   position: absolute;
   inset: 0;
