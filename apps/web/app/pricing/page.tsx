@@ -14,7 +14,6 @@ import { resolveAccountOwner } from "@/lib/auth/resolveAccountOwner";
 import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider";
 
 import PricingOriginalsShelf from "./PricingOriginalsShelf";
-import PricingUiShowcase from "./PricingUiShowcase";
 
 import "./pricing-page.css";
 
@@ -183,29 +182,6 @@ const planComparisonRows = [
   },
 ] as const;
 
-const includedFeatures = [
-  {
-    number: "01",
-    title: "Human-curated music",
-    copy: "A film-forward catalogue shaped around picture, pacing, emotion, and story rather than endless volume.",
-  },
-  {
-    number: "02",
-    title: "Sound effects",
-    copy: "Music and SFX live in the same workflow, so the search for audio does not become a second job.",
-  },
-  {
-    number: "03",
-    title: "Search + organization",
-    copy: "Save tracks into projects and playlists, keep favorites close, and get back to the right audio quickly.",
-  },
-  {
-    number: "04",
-    title: "Desktop workflow",
-    copy: "Keep selected audio close to the edit with Audioflume's connected desktop workflow and local project organization.",
-  },
-] as const;
-
 function PlanStatus({ included }: { included: boolean }) {
   return (
     <span
@@ -248,7 +224,6 @@ export default async function PricingPage() {
   ]);
   const membershipHref = userId ? "/account/membership" : "/sign-up";
   const membershipLabel = "Get Lifetime Access";
-  const enterpriseImage = pricingHeroImages[2] ?? pricingHeroImages[0];
   const pricingPlanImages = pricingHeroImages.filter(
     (image) =>
       !image.includes("andrey-strizhkov-sehwu2FbcHg-unsplash-web.jpg"),
@@ -431,63 +406,6 @@ export default async function PricingPage() {
             </table>
           </div>
         </section>
-      </section>
-
-      <PricingUiShowcase />
-
-      <section className="audioflume-pricing-includes-section">
-        <div>
-          <p className="audioflume-home-eyebrow">Built into Audioflume</p>
-          <h2 className="audioflume-pricing-includes-heading">
-            Less time managing audio. More time making the edit.
-          </h2>
-        </div>
-
-        <div className="audioflume-pricing-includes-list">
-          {includedFeatures.map((feature) => (
-            <div key={feature.number} className="audioflume-pricing-include-row">
-              <div className="audioflume-pricing-include-number">
-                {feature.number}
-              </div>
-              <div className="audioflume-pricing-include-title">
-                {feature.title}
-              </div>
-              <p className="audioflume-pricing-include-copy">{feature.copy}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="audioflume-pricing-enterprise-band">
-        <div className="audioflume-pricing-enterprise-section">
-          <div className="audioflume-pricing-enterprise-heading">
-            <div className="audioflume-pricing-enterprise-media" aria-hidden="true">
-              <Image
-                src={enterpriseImage}
-                alt=""
-                fill
-                sizes="(max-width: 760px) 76vw, 38vw"
-                className="audioflume-pricing-enterprise-image"
-              />
-            </div>
-            <p className="audioflume-pricing-section-eyebrow">Enterprise</p>
-            <h2 className="audioflume-pricing-enterprise-title">
-              Bigger team. Different requirements.
-            </h2>
-          </div>
-
-          <div className="audioflume-pricing-enterprise-copy">
-            <p>
-              For agencies, publishers, brands, and larger teams, licensing can be shaped around volume, usage, and the way the organization actually works.
-            </p>
-            <a
-              href="mailto:hello@filmwave.io?subject=Audioflume%20Enterprise"
-              className="inline-flex h-[44px] min-w-[240px] items-center justify-center bg-white px-10 text-[14px] font-normal text-[#111111] transition hover:opacity-80 focus-visible:opacity-80 focus-visible:outline-none"
-            >
-              Talk about enterprise
-            </a>
-          </div>
-        </div>
       </section>
 
       <Footer />
