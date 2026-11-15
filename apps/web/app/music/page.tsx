@@ -1604,17 +1604,19 @@ export default function MusicPage() {
                       "--audioflume-music-featured-position": `${activeFeaturedBannerArtist.hero_image_position_x}% ${activeFeaturedBannerArtist.hero_image_position_y}%`,
                     } as CSSProperties : undefined}
                   >
-                    <HomeHeroBanner backgroundOnly />
-                    <div className="audioflume-music-home-hero-content">
-                      <AudioflumeMark className="audioflume-music-home-hero-mark" />
-                      <div className="audioflume-music-home-hero-footer">
-                        <Link className="audioflume-music-home-hero-link" href="/discover">
-                          Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
-                        </Link>
-                        <span className="audioflume-music-home-hero-credit">
-                          {activeFeaturedBannerArtist?.name ?? "Judah Earl"}
-                          {activeFeaturedBannerArtist?.designation ? <> <span aria-hidden="true">•</span> {activeFeaturedBannerArtist.designation}</> : null}
-                        </span>
+                    <div className="audioflume-music-home-hero-frame">
+                      <HomeHeroBanner backgroundOnly />
+                      <div className="audioflume-music-home-hero-content">
+                        <AudioflumeMark className="audioflume-music-home-hero-mark" />
+                        <div className="audioflume-music-home-hero-footer">
+                          <Link className="audioflume-music-home-hero-link" href="/discover">
+                            Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+                          </Link>
+                          <span className="audioflume-music-home-hero-credit">
+                            {activeFeaturedBannerArtist?.name ?? "Judah Earl"}
+                            {activeFeaturedBannerArtist?.designation ? <> <span aria-hidden="true">•</span> {activeFeaturedBannerArtist.designation}</> : null}
+                          </span>
+                        </div>
                       </div>
                     </div>
                     {featuredBannerArtists.length > 1 ? (
