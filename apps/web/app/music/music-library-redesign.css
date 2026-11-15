@@ -1292,7 +1292,7 @@ main
   display: flex;
   box-sizing: border-box;
   width: 100%;
-  height: clamp(220px, 23vw, 320px);
+  height: 148px;
   align-items: center;
   justify-content: center;
   overflow: hidden;
@@ -1397,10 +1397,6 @@ main
 }
 
 @media (max-width: 750px) {
-  .audioflume-music-page .audioflume-music-originals-summary {
-    height: 280px;
-  }
-
   .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
     height: 280px;
     min-height: 0;
