@@ -5655,6 +5655,27 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
   color: #fff;
 }
 
+.audioflume-home-experiment .audioflume-experiment-hero {
+  display: flex;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: clamp(20px, 2.6vw, 40px);
+}
+
+.audioflume-home-experiment .audioflume-experiment-hero-eyebrow {
+  position: relative;
+  top: auto;
+  left: auto;
+}
+
+.audioflume-home-experiment a.audioflume-experiment-hero-link {
+  position: relative;
+  bottom: auto;
+  left: auto;
+}
+
 .audioflume-home-experiment .audioflume-experiment-hero::after,
 .audioflume-home-experiment .audioflume-experiment-lifetime::after,
 .audioflume-home-experiment .audioflume-experiment-artist-promo::before,
