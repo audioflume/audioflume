@@ -1372,8 +1372,48 @@ main
 
 /* Reuse the homepage hero with the shorter historical Music-page frame. */
 .audioflume-music-page .audioflume-music-home-hero {
+  position: relative;
   width: 100%;
   margin: 8px 0 32px;
+}
+
+.audioflume-music-page .audioflume-music-home-hero-mark {
+  position: absolute;
+  top: 40px;
+  right: 40px;
+  z-index: 4;
+  width: 40px;
+  height: 40px;
+  color: #fff;
+  pointer-events: none;
+}
+
+.audioflume-music-page .audioflume-music-home-hero-link {
+  position: absolute;
+  bottom: 40px;
+  left: 40px;
+  z-index: 4;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  color: #fff;
+  font-size: clamp(15px, 1.5vw, 21px);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  text-decoration: none;
+  transition: opacity 160ms ease;
+}
+
+.audioflume-music-page .audioflume-music-home-hero-link svg {
+  width: 24px;
+  height: 24px;
+  flex: 0 0 auto;
+  transform: translateY(6px);
+}
+
+.audioflume-music-page .audioflume-music-home-hero-link:hover,
+.audioflume-music-page .audioflume-music-home-hero-link:focus-visible {
+  opacity: .8;
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
