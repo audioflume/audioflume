@@ -10,15 +10,16 @@ import AdminContentPage from "@/components/admin/AdminContentPage";
 import AdminDiscoverLibraryView from "@/components/admin/AdminDiscoverLibraryView";
 import AdminHomeFeaturedArtistsView from "@/components/admin/AdminHomeFeaturedArtistsView";
 import AdminHomeImagesView from "@/components/admin/AdminHomeImagesView";
+import AdminMusicFeaturedArtistsView from "@/components/admin/AdminMusicFeaturedArtistsView";
 import PlusIcon from "@/components/icons/PlusIcon";
 import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 
-type ManagerTab = "playlists" | "home" | "discover" | "artists";
+type ManagerTab = "playlists" | "home" | "discover" | "artists" | "music";
 
 const PLAYLIST_MANAGER_TAB_STORAGE_KEY = "audioflume-admin-playlist-manager-tab";
 
 function isManagerTab(value: string | null): value is ManagerTab {
-  return value === "playlists" || value === "home" || value === "discover" || value === "artists";
+  return value === "playlists" || value === "home" || value === "discover" || value === "artists" || value === "music";
 }
 
 export default function PlaylistManagerPage() {
@@ -121,7 +122,7 @@ export default function PlaylistManagerPage() {
     >
       <div className="mb-4 flex items-center justify-between gap-4">
         <div className={`flex items-center gap-2 ${activeTab === null ? "invisible" : ""}`}>
-          {(["playlists", "home", "discover", "artists"] as ManagerTab[]).map((tab) => (
+          {(["playlists", "home", "discover", "artists", "music"] as ManagerTab[]).map((tab) => (
             <button
               key={tab}
               type="button"
@@ -134,7 +135,7 @@ export default function PlaylistManagerPage() {
             >
               {tab === "playlists"
                 ? "All Playlists"
-                : tab === "home" ? "Home" : tab === "artists" ? "Artists" : "Discover"}
+                : tab === "home" ? "Home" : tab === "artists" ? "Artists" : tab === "music" ? "Music" : "Discover"}
             </button>
           ))}
         </div>
@@ -164,6 +165,8 @@ export default function PlaylistManagerPage() {
           </>
         ) : activeTab === "artists" ? (
           <AdminArtistDirectoryFeatureView />
+        ) : activeTab === "music" ? (
+          <AdminMusicFeaturedArtistsView />
         ) : (
           <AdminDiscoverLibraryView
             playlists={playlists}
