@@ -1,4 +1,5 @@
 body:has(.curated-playlists-page-root) {
+  background: var(--audioflume-home-canvas);
   --curated-page-gutter: var(--filmwave-page-gutter);
   --curated-playlist-card-gap: clamp(10px, 1.25vw, 18px);
   --curated-feature-edge: var(--filmwave-page-gutter);
@@ -6,13 +7,14 @@ body:has(.curated-playlists-page-root) {
 }
 
 .curated-playlists-page-root {
+  --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   position: relative;
   min-height: 100vh;
   overflow: hidden;
   margin-top: 0 !important;
   padding-top: var(--filmwave-header-height, 75px);
   margin-left: 0;
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas);
   color: var(--text-primary);
   transition: margin-left 200ms ease;
 }
