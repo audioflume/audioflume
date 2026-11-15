@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type MouseEvent } from "react";
+import { useEffect, useRef, useState, type PointerEvent as ReactPointerEvent } from "react";
 import AdminArtistShelfPickerModal from "@/components/admin/AdminArtistShelfPickerModal";
 import { PlaylistManagerCollapsibleSection } from "@/components/admin/AdminPlaylistManagerShared";
 import { BackendButton } from "@/components/backend/BackendControls";
@@ -31,6 +31,15 @@ export default function AdminMusicFeaturedArtistsView() {
   const [toast, setToast] = useState("");
   const [collapsed, setCollapsed] = useState(false);
   const [drafts, setDrafts] = useState<Record<string, { x: number; y: number }>>({});
+  const [cropEditingId, setCropEditingId] = useState<string | null>(null);
+  const [cropDragging, setCropDragging] = useState(false);
+  const cropImageRef = useRef<HTMLImageElement>(null);
+  const cropDragRef = useRef<{
+    pointerId: number;
+    startClientX: number;
+    startClientY: number;
+    startPosition: { x: number; y: number };
+  } | null>(null);
 
   async function refresh() {
     const response = await fetch(API, { cache: "no-store" });
@@ -108,9 +117,56 @@ export default function AdminMusicFeaturedArtistsView() {
     setDrafts(current => ({ ...current, [id]: { x: Math.max(0, Math.min(100, x)), y: Math.max(0, Math.min(100, y)) } }));
   }
 
-  function pickPoint(event: MouseEvent<HTMLButtonElement>, id: string) {
-    const rect = event.currentTarget.getBoundingClientRect();
-    setDraft(id, Math.round(((event.clientX - rect.left) / rect.width) * 100), Math.round(((event.clientY - rect.top) / rect.height) * 100));
+  function handleCropPointerDown(event: ReactPointerEvent<HTMLDivElement>, point: { x: number; y: number }) {
+    if (saving || !cropEditingId) return;
+    cropDragRef.current = {
+      pointerId: event.pointerId,
+      startClientX: event.clientX,
+      startClientY: event.clientY,
+      startPosition: point,
+    };
+    event.currentTarget.setPointerCapture(event.pointerId);
+    setCropDragging(true);
+    event.preventDefault();
+  }
+
+  function handleCropPointerMove(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = cropDragRef.current;
+    const image = cropImageRef.current;
+    if (!cropEditingId || !drag || drag.pointerId !== event.pointerId || !image) return;
+    const width = event.currentTarget.clientWidth;
+    const height = event.currentTarget.clientHeight;
+    if (width <= 0 || height <= 0 || image.naturalWidth <= 0 || image.naturalHeight <= 0) return;
+    const scale = Math.max(width / image.naturalWidth, height / image.naturalHeight);
+    const overflowX = Math.max(0, image.naturalWidth * scale - width);
+    const overflowY = Math.max(0, image.naturalHeight * scale - height);
+    const deltaX = event.clientX - drag.startClientX;
+    const deltaY = event.clientY - drag.startClientY;
+    setDraft(cropEditingId,
+      overflowX > 0.5 ? drag.startPosition.x - (deltaX / overflowX) * 100 : drag.startPosition.x,
+      overflowY > 0.5 ? drag.startPosition.y - (deltaY / overflowY) * 100 : drag.startPosition.y);
+  }
+
+  function finishCropDrag(event: ReactPointerEvent<HTMLDivElement>) {
+    const drag = cropDragRef.current;
+    if (!drag || drag.pointerId !== event.pointerId) return;
+    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+      event.currentTarget.releasePointerCapture(event.pointerId);
+    }
+    cropDragRef.current = null;
+    setCropDragging(false);
+  }
+
+  function toggleCrop(item: FeaturedItem) {
+    if (saving) return;
+    if (cropEditingId === item.artist_id) {
+      void saveFocal(item);
+      return;
+    }
+    cropDragRef.current = null;
+    setCropDragging(false);
+    setDraft(item.artist_id, Number(item.focal_x), Number(item.focal_y));
+    setCropEditingId(item.artist_id);
   }
 
   async function saveFocal(item: FeaturedItem) {
@@ -120,6 +176,7 @@ export default function AdminMusicFeaturedArtistsView() {
     try {
       await mutate("PATCH", { artist_id: item.artist_id, focal_x: point.x, focal_y: point.y });
       await refresh();
+      setCropEditingId(null);
       setToast(`Banner focal point saved for ${item.artist.name}`);
     } catch (err) { setToast(err instanceof Error ? err.message : "Unable to save focal point"); }
     finally { setSaving(false); }
@@ -138,15 +195,13 @@ export default function AdminMusicFeaturedArtistsView() {
       wrapActions
       actions={<BackendButton type="button" onClick={() => setPickerOpen(true)} disabled={saving || items.length >= 4}><PlusIcon size={12} /><span>Add</span></BackendButton>}
     >
-      <p className="mb-4 text-xs text-[var(--text-secondary)]">Choose up to four artists for the Music page banner. Click an image to select its focal point, then save. The preview uses a wide banner crop.</p>
       <div className="grid gap-4">
         {items.map((item, index) => {
           const point = drafts[item.artist_id] ?? { x: Number(item.focal_x), y: Number(item.focal_y) };
-          const changed = point.x !== Number(item.focal_x) || point.y !== Number(item.focal_y);
           return <article key={item.artist_id} className="min-w-0 border border-[var(--border)] p-3">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
-                <strong className="block text-sm font-medium">{index + 1}. {item.artist.name}</strong>
+                <strong className="block text-sm font-medium">{item.artist.name}</strong>
                 <span className="text-[11px] text-[var(--text-muted)]">{item.artist.designation ?? "No designation"}</span>
               </div>
               <div className="flex items-center gap-2">
@@ -156,33 +211,50 @@ export default function AdminMusicFeaturedArtistsView() {
               </div>
             </div>
             {item.artist.hero_image_url ? (
-              <button
-                type="button"
-                aria-label={`Choose focal point for ${item.artist.name}`}
-                onClick={event => pickPoint(event, item.artist_id)}
-                disabled={saving}
-                className="relative block aspect-[4.5/1] min-h-[130px] w-full cursor-crosshair overflow-hidden bg-[var(--bg-tertiary)]"
-                style={{
-                  backgroundImage: `url("${item.artist.hero_image_url.replaceAll('"', '\\"')}")`,
-                  backgroundSize: "cover",
-                  backgroundPosition: `${point.x}% ${point.y}%`,
-                }}
-              >
-                <span className="absolute inset-0 border border-white/20" aria-hidden="true" />
-                <span className="absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 rounded-full border border-white bg-black/40" aria-hidden="true" />
-              </button>
+              <div className="relative aspect-[4.5/1] min-h-[130px] select-none overflow-hidden bg-[var(--bg-tertiary)]">
+                <img
+                  ref={cropEditingId === item.artist_id ? cropImageRef : null}
+                  src={item.artist.hero_image_url}
+                  alt={`${item.artist.name} hero`}
+                  draggable={false}
+                  className="pointer-events-none absolute inset-0 h-full w-full object-cover"
+                  style={{ objectPosition: `${point.x}% ${point.y}%` }}
+                />
+                {cropEditingId === item.artist_id ? (
+                  <div
+                    className={`absolute inset-0 z-[1] ${cropDragging ? "cursor-grabbing" : "cursor-grab"}`}
+                    style={{ touchAction: "none" }}
+                    onPointerDown={event => handleCropPointerDown(event, point)}
+                    onPointerMove={handleCropPointerMove}
+                    onPointerUp={finishCropDrag}
+                    onPointerCancel={finishCropDrag}
+                  />
+                ) : null}
+                <button
+                  type="button"
+                  onClick={() => toggleCrop(item)}
+                  disabled={saving}
+                  aria-label={cropEditingId === item.artist_id ? "Save crop" : "Adjust crop"}
+                  title={cropEditingId === item.artist_id ? "Save crop" : "Adjust crop"}
+                  className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-[var(--filmwave-backend-control-radius)] border-[1.25px] border-white/25 bg-black/55 text-white transition-colors hover:bg-black/70 disabled:cursor-not-allowed disabled:opacity-60"
+                >
+                  {cropEditingId === item.artist_id ? (
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className="h-4 w-4">
+                      <path d="M3.25 8.2 6.45 11.25 12.75 4.75" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  ) : (
+                    <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" className="h-4 w-4">
+                      <path d="M5 2H2v3M11 2h3v3M14 11v3h-3M5 14H2v-3" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  )}
+                </button>
+                {cropEditingId === item.artist_id ? (
+                  <div className="pointer-events-none absolute bottom-3 left-1/2 z-[2] -translate-x-1/2 rounded-[5px] bg-black/55 px-3 py-2 text-[10px] text-white">
+                    {saving ? "Saving..." : cropDragging ? "Repositioning..." : "Drag to reposition"}
+                  </div>
+                ) : null}
+              </div>
             ) : <p className="p-6 text-xs text-[var(--text-muted)]">This artist has no banner image.</p>}
-            <div className="mt-3 flex flex-wrap items-center gap-3">
-              <label className="flex items-center gap-2 text-xs">Horizontal
-                <input type="range" min={0} max={100} value={point.x} disabled={saving} onChange={event => setDraft(item.artist_id, Number(event.target.value), point.y)} />
-                <span className="w-8 tabular-nums">{Math.round(point.x)}%</span>
-              </label>
-              <label className="flex items-center gap-2 text-xs">Vertical
-                <input type="range" min={0} max={100} value={point.y} disabled={saving} onChange={event => setDraft(item.artist_id, point.x, Number(event.target.value))} />
-                <span className="w-8 tabular-nums">{Math.round(point.y)}%</span>
-              </label>
-              <button type="button" onClick={() => void saveFocal(item)} disabled={saving || !changed} className="ml-auto border border-[var(--text-primary)] bg-[var(--text-primary)] px-4 py-2 text-xs text-[var(--bg-primary)] disabled:opacity-40">Save focal point</button>
-            </div>
           </article>;
         })}
         {!items.length && <p className="py-8 text-center text-xs text-[var(--text-muted)]">No Music featured artists. Add an approved artist with a banner image.</p>}
