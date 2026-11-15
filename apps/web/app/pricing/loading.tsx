@@ -138,44 +138,6 @@ export default function Loading() {
         </section>
       </section>
 
-      <section className="audioflume-pricing-includes-section audioflume-pricing-includes-skeleton">
-        <div>
-          <SkeletonBlock className="is-includes-eyebrow" />
-          <SkeletonBlock className="is-includes-title" />
-          <SkeletonBlock className="is-includes-title is-short" />
-        </div>
-        <div className="audioflume-pricing-includes-list">
-          {Array.from({ length: 4 }).map((_, index) => (
-            <div className="audioflume-pricing-include-row" key={index}>
-              <SkeletonBlock className="is-number" />
-              <SkeletonBlock className="is-include-title" />
-              <div className="is-include-copy">
-                <SkeletonBlock />
-                <SkeletonBlock />
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section className="audioflume-pricing-enterprise-band">
-        <div className="audioflume-pricing-enterprise-section audioflume-pricing-enterprise-skeleton">
-          <div className="audioflume-pricing-enterprise-heading">
-            <SkeletonBlock className="is-enterprise-media" />
-            <SkeletonBlock className="is-enterprise-eyebrow" />
-            <SkeletonBlock className="is-enterprise-title" />
-            <SkeletonBlock className="is-enterprise-title is-short" />
-          </div>
-          <div className="audioflume-pricing-enterprise-copy">
-            <div className="is-enterprise-copy-lines">
-              <SkeletonBlock />
-              <SkeletonBlock />
-              <SkeletonBlock />
-            </div>
-            <SkeletonBlock className="is-enterprise-button" />
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
