@@ -5951,8 +5951,8 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 .audioflume-experiment-promo-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-  gap: 30px;
-  margin-top: 30px;
+  gap: min(var(--filmwave-page-gutter), 30px);
+  margin-top: min(var(--filmwave-page-gutter), 30px);
 }
 
 .audioflume-experiment-lifetime,
@@ -6076,7 +6076,7 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
   width: 100%;
   aspect-ratio: 3.6 / 1;
   min-height: 300px;
-  margin-top: 30px;
+  margin-top: min(var(--filmwave-page-gutter), 30px);
   overflow: hidden;
   border-radius: 0;
   background: #111;
@@ -6176,7 +6176,7 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 }
 
 .audioflume-experiment-songs {
-  margin-top:30px;
+  margin-top:min(var(--filmwave-page-gutter), 30px);
   padding:42px clamp(22px, 4.2vw, 64px) 52px;
   border-radius:0;
   background:var(--audioflume-home-songs-surface);
