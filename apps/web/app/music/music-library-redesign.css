@@ -3,15 +3,15 @@
 @import "./fw-hero.css";
 
 body:has(.audioflume-music-page) {
-  --audioflume-home-header-background: #111;
+  --audioflume-home-header-background: #1b1b1b;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #fff;
   --audioflume-home-header-muted-link: #fff;
-  --audioflume-music-toolbar-background: #d8d8d3;
+  --audioflume-music-toolbar-background: #e5e5df;
 }
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
-  --audioflume-music-toolbar-background: #111;
+  --audioflume-music-toolbar-background: #1b1b1b;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-music-page {
