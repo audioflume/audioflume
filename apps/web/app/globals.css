@@ -49,6 +49,15 @@
   );
 }
 
+/* Website-only dark palette: darker canvas with raised surfaces kept distinct. */
+:root:not(.light):not([data-theme="light"]) {
+  --filmwave-black: #1b1b1b;
+  --filmwave-neutral-surface: #262626;
+  --filmwave-search-surface: #262626;
+  --bg-tertiary-hover: #303030;
+  --bg-panel-2: #2e2e2e;
+}
+
 html,
 body {
   overscroll-behavior-x: none;
