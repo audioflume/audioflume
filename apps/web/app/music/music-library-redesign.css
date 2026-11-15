@@ -12,6 +12,12 @@ body:has(.audioflume-music-page) {
   --audioflume-music-toolbar-border: var(--border);
 }
 
+:where(html.light, html[data-theme="light"]) body:has(.audioflume-music-page) {
+  --audioflume-home-header-background: #e5e5df;
+  --audioflume-home-header-text: #111;
+  --audioflume-home-header-muted-link: #111;
+}
+
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
   --audioflume-home-header-border: var(--border);
   --audioflume-music-toolbar-text: #e5e5df;
