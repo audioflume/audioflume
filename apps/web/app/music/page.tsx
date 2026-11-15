@@ -1541,7 +1541,7 @@ export default function MusicPage() {
                   </div>
                 ) : showFeaturedSongShelf ? (
                   <div className="audioflume-music-home-hero">
-                    <HomeHeroBanner featuredSong={featuredSong} />
+                    <HomeHeroBanner featuredSong={featuredSong} backgroundOnly />
                   </div>
                 ) : null}
 
