@@ -5979,27 +5979,23 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 
 .audioflume-experiment-lifetime-footer {
   position: absolute;
-  bottom: 8%;
+  bottom: 10%;
   left: 7%;
+  display: flex;
+  align-items: baseline;
+  gap: 16px;
 }
 
 .audioflume-experiment-lifetime-price {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--audioflume-originals-pricing-gap);
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
   color: #fff;
-  --audioflume-originals-pricing-gap: clamp(10px, 1.3vw, 20px);
-  --audioflume-originals-price-font-size: clamp(28px, 3.2vw, 56px);
-  --audioflume-originals-badge-font-size: clamp(8px, .65vw, 9.5px);
-  --audioflume-originals-offer-caption-font-size: clamp(10px, .9vw, 15px);
-  --audioflume-originals-offer-badge-background: #fff;
-  --audioflume-originals-offer-badge-color: #111;
+  font-size: clamp(15px, 1.5vw, 21px);
+  font-weight: 300;
+  letter-spacing: -.035em;
   text-decoration: none;
   transition: opacity 160ms ease;
-}
-
-.audioflume-experiment-lifetime-price .audioflume-home-originals-heading-badge {
-  margin-bottom: 9px;
 }
 
 .audioflume-home-experiment a.audioflume-experiment-lifetime-price:hover,
@@ -6007,12 +6003,18 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
   opacity: .8;
 }
 
+.audioflume-experiment-lifetime-price s {
+  color: #777;
+  text-decoration-thickness: 1px;
+}
+
+.audioflume-experiment-lifetime-price strong {
+  font-weight: 300;
+}
+
 .audioflume-home-experiment a.audioflume-experiment-lifetime-link {
-  position: absolute;
-  right: 7%;
-  bottom: 10%;
-  display: grid;
-  place-items: center;
+  display: inline-flex;
+  align-items: baseline;
   color: #fff;
 }
 
