@@ -6,12 +6,14 @@ import { PlaylistManagerCollapsibleSection } from "@/components/admin/AdminPlayl
 import { BackendButton } from "@/components/backend/BackendControls";
 import PlusIcon from "@/components/icons/PlusIcon";
 import Toast from "@/components/Toast";
+import styles from "./AdminMusicFeaturedArtistsView.module.css";
 
 type FeaturedItem = {
   artist_id: string;
   position: number;
   focal_x: number;
   focal_y: number;
+  overlay_opacity: number;
   artist: {
     id: string;
     name: string;
@@ -31,6 +33,7 @@ export default function AdminMusicFeaturedArtistsView() {
   const [toast, setToast] = useState("");
   const [collapsed, setCollapsed] = useState(false);
   const [drafts, setDrafts] = useState<Record<string, { x: number; y: number }>>({});
+  const [overlayDrafts, setOverlayDrafts] = useState<Record<string, number>>({});
   const [cropEditingId, setCropEditingId] = useState<string | null>(null);
   const [cropDragging, setCropDragging] = useState(false);
   const cropImageRef = useRef<HTMLImageElement>(null);
@@ -48,6 +51,7 @@ export default function AdminMusicFeaturedArtistsView() {
     const next = Array.isArray(data.items) ? data.items as FeaturedItem[] : [];
     setItems(next);
     setDrafts(Object.fromEntries(next.map(item => [item.artist_id, { x: Number(item.focal_x), y: Number(item.focal_y) }])));
+    setOverlayDrafts(Object.fromEntries(next.map(item => [item.artist_id, Number(item.overlay_opacity)])));
   }
 
   useEffect(() => {
@@ -60,6 +64,7 @@ export default function AdminMusicFeaturedArtistsView() {
         const next = Array.isArray(data.items) ? data.items as FeaturedItem[] : [];
         setItems(next);
         setDrafts(Object.fromEntries(next.map(item => [item.artist_id, { x: Number(item.focal_x), y: Number(item.focal_y) }])));
+        setOverlayDrafts(Object.fromEntries(next.map(item => [item.artist_id, Number(item.overlay_opacity)])));
       })
       .catch(err => { if (active) setError(err instanceof Error ? err.message : "Unable to load artists"); })
       .finally(() => { if (active) setLoading(false); });
@@ -166,6 +171,7 @@ export default function AdminMusicFeaturedArtistsView() {
     cropDragRef.current = null;
     setCropDragging(false);
     setDraft(item.artist_id, Number(item.focal_x), Number(item.focal_y));
+    setOverlayDrafts(current => ({ ...current, [item.artist_id]: Number(item.overlay_opacity) }));
     setCropEditingId(item.artist_id);
   }
 
@@ -174,7 +180,7 @@ export default function AdminMusicFeaturedArtistsView() {
     if (!point || saving) return;
     setSaving(true);
     try {
-      await mutate("PATCH", { artist_id: item.artist_id, focal_x: point.x, focal_y: point.y });
+      await mutate("PATCH", { artist_id: item.artist_id, focal_x: point.x, focal_y: point.y, overlay_opacity: overlayDrafts[item.artist_id] ?? Number(item.overlay_opacity) });
       await refresh();
       setCropEditingId(null);
       setToast(`Banner focal point saved for ${item.artist.name}`);
@@ -198,6 +204,7 @@ export default function AdminMusicFeaturedArtistsView() {
       <div className="grid gap-4">
         {items.map((item, index) => {
           const point = drafts[item.artist_id] ?? { x: Number(item.focal_x), y: Number(item.focal_y) };
+          const overlay = overlayDrafts[item.artist_id] ?? Number(item.overlay_opacity);
           return <article key={item.artist_id} className="min-w-0 border border-[var(--border)] p-3">
             <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
               <div className="min-w-0">
@@ -219,6 +226,10 @@ export default function AdminMusicFeaturedArtistsView() {
                   draggable={false}
                   className="pointer-events-none absolute inset-0 h-full w-full object-cover"
                   style={{ objectPosition: `${point.x}% ${point.y}%` }}
+                />
+                <div
+                  className="pointer-events-none absolute inset-0"
+                  style={{ background: `radial-gradient(ellipse 75% 95% at bottom left, rgba(0, 0, 0, ${overlay / 100}), transparent 100%)` }}
                 />
                 {cropEditingId === item.artist_id ? (
                   <div
@@ -248,6 +259,24 @@ export default function AdminMusicFeaturedArtistsView() {
                     </svg>
                   )}
                 </button>
+                {cropEditingId === item.artist_id ? (
+                  <label className="absolute bottom-3 left-3 z-[3] flex items-center gap-3 bg-black/65 px-3 py-2 text-[11px] text-white">
+                    <span>Dark overlay</span>
+                    <input
+                      type="range"
+                      min={0}
+                      max={100}
+                      step={1}
+                      value={overlay}
+                      disabled={saving}
+                      aria-label={`Dark overlay strength for ${item.artist.name}`}
+                      className={styles.overlaySlider}
+                      style={{ "--overlay-progress": `${overlay}%` } as React.CSSProperties}
+                      onChange={event => setOverlayDrafts(current => ({ ...current, [item.artist_id]: Number(event.target.value) }))}
+                    />
+                    <span className="w-8 text-right tabular-nums">{overlay}%</span>
+                  </label>
+                ) : null}
                 {cropEditingId === item.artist_id ? (
                   <div className="pointer-events-none absolute bottom-3 left-1/2 z-[2] -translate-x-1/2 rounded-[5px] bg-black/55 px-3 py-2 text-[10px] text-white">
                     {saving ? "Saving..." : cropDragging ? "Repositioning..." : "Drag to reposition"}
