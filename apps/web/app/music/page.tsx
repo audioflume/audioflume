@@ -24,7 +24,7 @@ import {
   songMatchesEditPointFilter,
   VOCALS_OPTIONS,
 } from "@filmwave/shared";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useAccountSession } from "@/context/AccountSessionContext";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -1602,7 +1602,7 @@ export default function MusicPage() {
                     style={activeFeaturedBannerArtist ? {
                       "--audioflume-music-featured-image": `url("${activeFeaturedBannerArtist.hero_image_url.replaceAll('"', '\\"')}")`,
                       "--audioflume-music-featured-position": `${activeFeaturedBannerArtist.hero_image_position_x}% ${activeFeaturedBannerArtist.hero_image_position_y}%`,
-                    } as React.CSSProperties : undefined}
+                    } as CSSProperties : undefined}
                   >
                     <HomeHeroBanner backgroundOnly />
                     <div className="audioflume-music-home-hero-content">
