@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import Footer from "@/components/Footer";
-import GlobalSearchBar from "@/components/GlobalSearchBar";
+import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import type {
   CuratedBrowseTag,
@@ -16,6 +16,7 @@ import type {
   CuratedBrowseTaxonomy,
 } from "@/lib/curatedBrowseTaxonomy";
 import CuratedFeatureFilters from "./CuratedFeatureFilters";
+import "../home-page.css";
 
 type CuratedPlaylistWithBrowseAssignments = CuratedPlaylist & {
   browse_assignments?: CuratedBrowseAssignment[];
@@ -174,7 +175,7 @@ export default function CuratedPlaylistsPage() {
 
   return (
     <main className="curated-playlists-page-root">
-      <GlobalSearchBar layer="high" />
+      <HomeExperimentSearch />
 
       <section className="curated-playlists-page-layer">
         <div className="curated-page-content">
