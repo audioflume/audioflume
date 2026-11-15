@@ -13,6 +13,7 @@ body:has(.audioflume-music-page) {
 }
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
+  --audioflume-home-header-border: var(--border);
   --audioflume-music-toolbar-text: #e5e5df;
 }
 
@@ -1355,7 +1356,7 @@ main
 /* Match the shared user menu surface and beige accents in dark mode only. */
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
   .audioflume-music-page .audioflume-music-originals-summary {
-  background: var(--filmwave-web-user-menu-bg);
+  background: var(--bg-primary);
 }
 
 :where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
