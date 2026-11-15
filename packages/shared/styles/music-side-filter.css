@@ -463,6 +463,6 @@ main > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail-chevron,
 .community-categories .fw-filter-rail-item:hover .fw-filter-rail-chevron,
 .community-categories .fw-filter-rail-item:focus-visible .fw-filter-rail-chevron {
-  color: var(--text-muted) !important;
+  color: var(--filmwave-filter-rail-chevron-hover-color, var(--text-muted)) !important;
   opacity: var(--filmwave-filter-rail-chevron-hover-opacity, 0.65) !important;
 }
