@@ -4,7 +4,7 @@ import { supabaseServer } from "@/lib/supabaseServer";
 export async function GET() {
   try {
     const { data: rows, error } = await supabaseServer.from("music_featured_artists")
-      .select("artist_id, position, focal_x, focal_y").order("position").limit(4);
+      .select("artist_id, position, focal_x, focal_y, overlay_opacity").order("position").limit(4);
     if (error) throw error;
     const ids = (rows ?? []).map(row => row.artist_id);
     if (!ids.length) return NextResponse.json({ artists: [] });
@@ -23,6 +23,7 @@ export async function GET() {
           hero_image_url: artist.hero_image_url,
           hero_image_position_x: Number(row.focal_x),
           hero_image_position_y: Number(row.focal_y),
+          overlay_opacity: Number(row.overlay_opacity),
         }];
       }),
     });
