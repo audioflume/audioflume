@@ -424,7 +424,15 @@ export default function MusicPage() {
     useState<ReferenceSearchState | null>(null);
   const [searchBySongOpen, setSearchBySongOpen] = useState(false);
   const [searchBySongQuery, setSearchBySongQuery] = useState("");
-  const [judahEarlDesignation, setJudahEarlDesignation] = useState<string | null>(null);
+  const [featuredBannerArtists, setFeaturedBannerArtists] = useState<{
+    id: string;
+    name: string;
+    designation: string | null;
+    hero_image_url: string;
+    hero_image_position_x: number;
+    hero_image_position_y: number;
+  }[]>([]);
+  const [activeFeaturedBannerIndex, setActiveFeaturedBannerIndex] = useState(0);
 
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -1286,23 +1294,47 @@ export default function MusicPage() {
 
     const controller = new AbortController();
 
-    void fetch("/api/artists/directory", { signal: controller.signal })
+    void fetch("/api/discover-featured-artists", { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) return;
         const data = await response.json();
-        const artist = Array.isArray(data?.artists)
-          ? data.artists.find((entry: { name?: string }) => entry.name?.trim().toLowerCase() === "judah earl")
-          : null;
-        if (!controller.signal.aborted) {
-          setJudahEarlDesignation(typeof artist?.designation === "string" ? artist.designation.trim() || null : null);
-        }
+        if (controller.signal.aborted) return;
+        const artists = Array.isArray(data?.artists) ? data.artists : [];
+        setFeaturedBannerArtists(
+          artists
+            .filter((artist: { hero_image_url?: unknown; name?: unknown }) =>
+              typeof artist.hero_image_url === "string" &&
+              artist.hero_image_url.trim().length > 0 &&
+              typeof artist.name === "string" &&
+              artist.name.trim().length > 0,
+            )
+            .slice(0, 4)
+            .map((artist: {
+              id: string;
+              name: string;
+              designation: string | null;
+              hero_image_url: string;
+              hero_image_position_x: number;
+              hero_image_position_y: number;
+            }) => ({
+              id: artist.id,
+              name: artist.name,
+              designation: artist.designation,
+              hero_image_url: artist.hero_image_url,
+              hero_image_position_x: artist.hero_image_position_x,
+              hero_image_position_y: artist.hero_image_position_y,
+            })),
+        );
+        setActiveFeaturedBannerIndex(0);
       })
       .catch(() => {
-        // Keep the name visible when artist details are unavailable.
+        // Keep the existing banner image if the featured artist list is unavailable.
       });
 
     return () => controller.abort();
   }, [showFeaturedSongShelf]);
+
+  const activeFeaturedBannerArtist = featuredBannerArtists[activeFeaturedBannerIndex] ?? null;
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -1565,7 +1597,13 @@ export default function MusicPage() {
                     </div>
                   </div>
                 ) : showFeaturedSongShelf ? (
-                  <div className="audioflume-music-home-hero">
+                  <div
+                    className="audioflume-music-home-hero"
+                    style={activeFeaturedBannerArtist ? {
+                      "--audioflume-music-featured-image": `url("${activeFeaturedBannerArtist.hero_image_url.replaceAll('"', '\\"')}")`,
+                      "--audioflume-music-featured-position": `${activeFeaturedBannerArtist.hero_image_position_x}% ${activeFeaturedBannerArtist.hero_image_position_y}%`,
+                    } as React.CSSProperties : undefined}
+                  >
                     <HomeHeroBanner backgroundOnly />
                     <div className="audioflume-music-home-hero-content">
                       <AudioflumeMark className="audioflume-music-home-hero-mark" />
@@ -1574,10 +1612,25 @@ export default function MusicPage() {
                           Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
                         </Link>
                         <span className="audioflume-music-home-hero-credit">
-                          Judah Earl{judahEarlDesignation ? <> <span aria-hidden="true">•</span> {judahEarlDesignation}</> : null}
+                          {activeFeaturedBannerArtist?.name ?? "Judah Earl"}
+                          {activeFeaturedBannerArtist?.designation ? <> <span aria-hidden="true">•</span> {activeFeaturedBannerArtist.designation}</> : null}
                         </span>
                       </div>
                     </div>
+                    {featuredBannerArtists.length > 1 ? (
+                      <div className="audioflume-music-home-hero-indicators" role="group" aria-label="Featured artists">
+                        {featuredBannerArtists.map((artist, index) => (
+                          <button
+                            key={artist.id}
+                            type="button"
+                            className={index === activeFeaturedBannerIndex ? "is-active" : ""}
+                            aria-label={`Show ${artist.name} banner`}
+                            aria-pressed={index === activeFeaturedBannerIndex}
+                            onClick={() => setActiveFeaturedBannerIndex(index)}
+                          />
+                        ))}
+                      </div>
+                    ) : null}
                   </div>
                 ) : null}
 
