@@ -89,6 +89,7 @@ export default function Header() {
   const menuRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
+  const homeChromeRoute = pathname === "/" || pathname === "/discover" || pathname === "/curated-playlists" || pathname === "/community-playlists";
   const transparentAtTop = pathname === "/founding-artists";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
@@ -98,7 +99,7 @@ export default function Header() {
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
     mobileNavOpen ? "has-open-mobile-nav" : "",
-    (pathname === "/" || pathname === "/discover") && scrolledPastThreshold ? "is-home-scrolled" : "",
+    homeChromeRoute && scrolledPastThreshold ? "is-home-scrolled" : "",
   ]
     .filter(Boolean)
     .join(" ");
@@ -113,7 +114,7 @@ export default function Header() {
       });
     }
 
-    if (!transparentAtTop && pathname !== "/" && pathname !== "/discover") {
+    if (!transparentAtTop && !homeChromeRoute) {
       setScrolledPastThreshold(false);
       return;
     }
@@ -125,7 +126,7 @@ export default function Header() {
       window.cancelAnimationFrame(frame);
       window.removeEventListener("scroll", syncScrollState);
     };
-  }, [transparentAtTop, pathname]);
+  }, [transparentAtTop, homeChromeRoute, pathname]);
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
