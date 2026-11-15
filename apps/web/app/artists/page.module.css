@@ -1,7 +1,9 @@
 .page {
+  --audioflume-experiment-search-bottom-padding: 0px;
+  --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   min-height: 100vh;
   padding-top: var(--filmwave-header-height, 60px);
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas);
   color: var(--text-primary);
 }
 
