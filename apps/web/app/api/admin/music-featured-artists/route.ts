@@ -14,7 +14,7 @@ export async function GET() {
   if (!(await authorized())) return NextResponse.json({ error: "Unauthorized" }, { status: 403 });
   try {
     const { data: rows, error } = await supabaseServer.from(TABLE)
-      .select("artist_id, position, focal_x, focal_y").order("position");
+      .select("artist_id, position, focal_x, focal_y, overlay_opacity").order("position");
     if (error) throw error;
     const ids = (rows ?? []).map(row => row.artist_id);
     if (!ids.length) return NextResponse.json({ items: [] });
@@ -75,12 +75,14 @@ export async function PATCH(request: Request) {
     if (body.artist_id !== undefined) {
       if (!isId(body.artist_id) ||
         typeof body.focal_x !== "number" || !Number.isFinite(body.focal_x) || body.focal_x < 0 || body.focal_x > 100 ||
-        typeof body.focal_y !== "number" || !Number.isFinite(body.focal_y) || body.focal_y < 0 || body.focal_y > 100) {
+        typeof body.focal_y !== "number" || !Number.isFinite(body.focal_y) || body.focal_y < 0 || body.focal_y > 100 ||
+        typeof body.overlay_opacity !== "number" || !Number.isInteger(body.overlay_opacity) || body.overlay_opacity < 0 || body.overlay_opacity > 100) {
         return NextResponse.json({ error: "Invalid focal point" }, { status: 400 });
       }
       const { data, error } = await supabaseServer.from(TABLE).update({
         focal_x: Math.round(body.focal_x * 100) / 100,
         focal_y: Math.round(body.focal_y * 100) / 100,
+        overlay_opacity: body.overlay_opacity,
       }).eq("artist_id", body.artist_id).select("artist_id").maybeSingle();
       if (error) throw error;
       if (!data) return NextResponse.json({ error: "Artist is not featured" }, { status: 404 });
