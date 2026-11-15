@@ -1,4 +1,7 @@
 .page {
+  --curated-main-pill-hover-background: transparent;
+  --curated-main-pill-active-background: transparent;
+  --curated-main-pill-active-color: var(--text-primary);
   --audioflume-experiment-search-bottom-padding: 0px;
   --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   min-height: 100vh;
