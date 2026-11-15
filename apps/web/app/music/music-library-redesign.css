@@ -710,9 +710,14 @@ main
   box-sizing: border-box !important;
   width: 100% !important;
   padding-top: 0 !important;
-  padding-right: var(--audioflume-music-content-gap) !important;
-  padding-left: var(--audioflume-music-content-gap) !important;
   transition: padding-left 180ms ease, padding-right 180ms ease;
+}
+
+.audioflume-music-page
+  > section:not(:has(.fw-music-content-column > .fw-filter-panel-wrap.is-open))
+  > .fw-music-content-column {
+  padding-right: calc(var(--filmwave-page-gutter) - 12px) !important;
+  padding-left: calc(var(--filmwave-page-gutter) - 8px) !important;
 }
 
 .audioflume-music-page
