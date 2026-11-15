@@ -422,6 +422,29 @@ export default function MusicPage() {
     useState<ReferenceSearchState | null>(null);
   const [searchBySongOpen, setSearchBySongOpen] = useState(false);
   const [searchBySongQuery, setSearchBySongQuery] = useState("");
+  const [judahEarlDesignation, setJudahEarlDesignation] = useState<string | null>(null);
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    void fetch("/api/artists/directory", { signal: controller.signal })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Unable to load artist designation");
+        const data = await response.json();
+        const artist = Array.isArray(data?.artists)
+          ? data.artists.find((entry: { name?: string }) => entry.name?.trim().toLowerCase() === "judah earl")
+          : null;
+        if (!controller.signal.aborted) {
+          setJudahEarlDesignation(typeof artist?.designation === "string" ? artist.designation : null);
+        }
+      })
+      .catch((error) => {
+        if (!controller.signal.aborted) console.error("Music banner artist designation lookup failed:", error);
+      });
+
+    return () => controller.abort();
+  }, []);
+
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -1542,6 +1565,10 @@ export default function MusicPage() {
                 ) : showFeaturedSongShelf ? (
                   <div className="audioflume-music-home-hero">
                     <HomeHeroBanner featuredSong={featuredSong} backgroundOnly />
+                    <div className="audioflume-music-home-hero-artist">
+                      <strong>Judah Earl</strong>
+                      {judahEarlDesignation ? <span>{judahEarlDesignation}</span> : null}
+                    </div>
                   </div>
                 ) : null}
 
