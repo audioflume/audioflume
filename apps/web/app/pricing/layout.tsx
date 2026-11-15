@@ -1,7 +1,8 @@
 import type { ReactNode } from "react";
-import GlobalSearchBar from "@/components/GlobalSearchBar";
+import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 
 import "./pricing-page.css";
+import "../home-page.css";
 
 export default function PricingLayout({
   children,
@@ -10,7 +11,7 @@ export default function PricingLayout({
 }) {
   return (
     <div className="audioflume-pricing-route-shell">
-      <GlobalSearchBar position="flow" />
+      <HomeExperimentSearch />
 
       {children}
     </div>
