@@ -53,19 +53,23 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
   );
 }
 
-export function HomeHeroBanner({ featuredSong }: { featuredSong?: Song }) {
+export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featuredSong?: Song; backgroundOnly?: boolean }) {
   return (
     <section className="audioflume-experiment-hero" aria-label="Human made music and SFX for film">
       <img className="audioflume-experiment-hero-background" src={HERO_BACKGROUND} alt="" />
-      <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
-      <p className="audioflume-experiment-hero-eyebrow">New music and SFX added weekly.</p>
-      <h1 className="audioflume-experiment-hero-headline">
-        <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
-      </h1>
-      <img className="audioflume-experiment-hero-overlay" src={HERO_OVERLAY} alt="" />
-      <Link className="audioflume-experiment-hero-link" href="/music">
-        Explore music library <ArrowUpRightIcon size={24} strokeWidth={1.5} />
-      </Link>
+      {!backgroundOnly && (
+        <>
+          <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
+          <p className="audioflume-experiment-hero-eyebrow">New music and SFX added weekly.</p>
+          <h1 className="audioflume-experiment-hero-headline">
+            <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
+          </h1>
+          <img className="audioflume-experiment-hero-overlay" src={HERO_OVERLAY} alt="" />
+          <Link className="audioflume-experiment-hero-link" href="/music">
+            Explore music library <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+          </Link>
+        </>
+      )}
       {featuredSong ? <HomeHeroFeaturedSong song={featuredSong} /> : null}
     </section>
   );
