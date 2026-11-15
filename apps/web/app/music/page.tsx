@@ -1294,7 +1294,7 @@ export default function MusicPage() {
 
     const controller = new AbortController();
 
-    void fetch("/api/discover-featured-artists", { signal: controller.signal })
+    void fetch("/api/music-featured-artists", { signal: controller.signal })
       .then(async (response) => {
         if (!response.ok) return;
         const data = await response.json();
