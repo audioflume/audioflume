@@ -1,6 +1,7 @@
 @import "../../../../packages/shared/styles/music-library-redesign.css";
 @import "../../../../packages/shared/styles/music-filter-column-controls.css";
 @import "./fw-hero.css";
+@import "../home-page.css";
 
 body:has(.audioflume-music-page) {
   --audioflume-home-header-background: #1b1b1b;
@@ -1354,149 +1355,47 @@ main
   color: #e5e5df;
 }
 
-/* Music-only unfiltered shelf, matching the Discover "Tracks made for storytelling" cards. */
-.audioflume-music-page .audioflume-music-storytelling-shelf {
+/* Same homepage hero component and styling, with a shorter Music-only frame. */
+.audioflume-music-page .audioflume-music-home-hero {
   width: 100%;
   margin: 8px 0 32px;
 }
 
-.audioflume-music-page .audioflume-music-storytelling-grid {
-  display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
-  gap: 24px;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-card {
-  display: grid;
-  min-width: 0;
-  align-content: start;
-  gap: 10px;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-art {
-  position: relative;
-  display: block;
+.audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
   width: 100%;
-  aspect-ratio: 1;
-  overflow: hidden;
-  border: 0;
-  border-radius: 0;
-  background: var(--bg-tertiary);
-  padding: 0;
-  color: #111;
-  cursor: pointer;
+  height: clamp(220px, 23vw, 320px);
+  min-height: 0;
+  aspect-ratio: auto;
 }
 
-.audioflume-music-page .audioflume-music-storytelling-art:disabled {
-  cursor: default;
+.audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero-headline {
+  font-size: clamp(24px, 3.2vw, 58px);
 }
 
-.audioflume-music-page .audioflume-music-storytelling-art > img,
-.audioflume-music-page .audioflume-music-storytelling-fallback {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 220ms ease;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-card:hover .audioflume-music-storytelling-art > img {
-  transform: scale(1.018);
-}
-
-.audioflume-music-page .audioflume-music-storytelling-fallback {
-  background: linear-gradient(135deg, #242424, #111);
-}
-
-.audioflume-music-page .audioflume-music-storytelling-play {
+.audioflume-music-page .audioflume-music-home-hero a.audioflume-experiment-hero-link {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  color: #111;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  transition: opacity 160ms ease, transform 160ms ease;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-card:hover .audioflume-music-storytelling-play,
-.audioflume-music-page .audioflume-music-storytelling-art:focus-visible .audioflume-music-storytelling-play,
-.audioflume-music-page .audioflume-music-storytelling-card.is-playing .audioflume-music-storytelling-play {
-  opacity: 1;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-art:hover .audioflume-music-storytelling-play,
-.audioflume-music-page .audioflume-music-storytelling-art:focus-visible .audioflume-music-storytelling-play {
-  transform: translate(-50%, -50%) scale(1.03);
-}
-
-.audioflume-music-page .audioflume-music-storytelling-copy {
-  display: grid;
-  min-width: 0;
-  gap: 2px;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-copy > strong,
-.audioflume-music-page .audioflume-music-storytelling-copy > span {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-copy > strong {
-  margin: 0;
-  color: var(--text-primary);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 13px;
-  font-style: normal;
-  font-weight: 400;
-  letter-spacing: normal;
-  line-height: 1.15;
-}
-
-.audioflume-music-page .audioflume-music-storytelling-copy > span {
-  margin: 0;
-  color: var(--text-subtle);
-  font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: 11px;
-  font-style: normal;
-  font-weight: 400;
-  letter-spacing: normal;
-  line-height: 1.15;
-}
-
-@media (max-width: 1350px) {
-  .audioflume-music-page .audioflume-music-storytelling-grid {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-
-  .audioflume-music-page .audioflume-music-storytelling-card:nth-child(n + 5) {
-    display: none;
-  }
-}
-
-@media (max-width: 1100px) {
-  .audioflume-music-page .audioflume-music-storytelling-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-
-  .audioflume-music-page .audioflume-music-storytelling-card:nth-child(n + 4) {
-    display: none;
-  }
+  z-index: 2;
+  bottom: 6.5%;
+  left: 3.4%;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  color: #fff;
+  font-size: clamp(15px, 1.5vw, 21px);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  text-decoration: none;
 }
 
 @media (max-width: 750px) {
-  .audioflume-music-page .audioflume-music-storytelling-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
+    height: 280px;
+    min-height: 0;
+    aspect-ratio: auto;
   }
 
-  .audioflume-music-page .audioflume-music-storytelling-card:nth-child(n + 3) {
-    display: none;
+  .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero-headline {
+    font-size: clamp(23px, 4.7vw, 38px);
   }
 }
 
