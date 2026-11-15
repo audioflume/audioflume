@@ -1377,6 +1377,8 @@ main
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
+  --audioflume-hero-eyebrow-top: 24px;
+  --audioflume-hero-eyebrow-left: 24px;
   width: 100%;
   height: clamp(220px, 23vw, 320px);
   min-height: 0;
