@@ -431,6 +431,7 @@ export default function MusicPage() {
     hero_image_url: string;
     hero_image_position_x: number;
     hero_image_position_y: number;
+    overlay_opacity: number;
   }[]>([]);
   const [activeFeaturedBannerIndex, setActiveFeaturedBannerIndex] = useState(0);
 
@@ -1316,6 +1317,7 @@ export default function MusicPage() {
               hero_image_url: string;
               hero_image_position_x: number;
               hero_image_position_y: number;
+              overlay_opacity: number;
             }) => ({
               id: artist.id,
               name: artist.name,
@@ -1323,6 +1325,7 @@ export default function MusicPage() {
               hero_image_url: artist.hero_image_url,
               hero_image_position_x: artist.hero_image_position_x,
               hero_image_position_y: artist.hero_image_position_y,
+              overlay_opacity: artist.overlay_opacity,
             })),
         );
         setActiveFeaturedBannerIndex(0);
@@ -1602,6 +1605,7 @@ export default function MusicPage() {
                     style={activeFeaturedBannerArtist ? {
                       "--audioflume-music-featured-image": `url("${activeFeaturedBannerArtist.hero_image_url.replaceAll('"', '\\"')}")`,
                       "--audioflume-music-featured-position": `${activeFeaturedBannerArtist.hero_image_position_x}% ${activeFeaturedBannerArtist.hero_image_position_y}%`,
+                      "--audioflume-music-featured-overlay": activeFeaturedBannerArtist.overlay_opacity / 100,
                     } as CSSProperties : undefined}
                   >
                     <div className="audioflume-music-home-hero-frame">
