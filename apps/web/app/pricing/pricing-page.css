@@ -28,7 +28,7 @@
 .audioflume-pricing-plans-section {
   position: relative;
   isolation: isolate;
-  padding: 40px 0 0;
+  padding: 60px 0 0;
 }
 
 .audioflume-pricing-plans-section::before {
@@ -1352,7 +1352,6 @@
   }
 
   .audioflume-pricing-plans-section {
-    padding-top: 24px;
     padding-bottom: 0;
   }
 
