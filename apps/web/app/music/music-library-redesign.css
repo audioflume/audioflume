@@ -7,7 +7,7 @@ body:has(.audioflume-music-page) {
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #fff;
   --audioflume-home-header-muted-link: #fff;
-  --audioflume-music-toolbar-background: #e5e5df;
+  --audioflume-music-toolbar-background: #fff;
 }
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
