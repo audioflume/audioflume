@@ -1,6 +1,7 @@
 @import "../editorial-typography.css";
 
 .audioflume-pricing-route-shell {
+  --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   min-height: 100vh;
   overflow-x: clip;
   background: var(--bg-primary);
