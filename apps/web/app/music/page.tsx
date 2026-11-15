@@ -41,7 +41,6 @@ import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 
 import Footer from "@/components/Footer";
-import { HomeHeroBanner } from "../HomeLandingContent";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import SongCard from "@/components/SongCard";
@@ -1177,9 +1176,6 @@ export default function MusicPage() {
   }, [filteredSongs, sortOrder]);
 
   const displayedSongs = sortedSongs;
-  const featuredSong = songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl" && song.title.trim().toLowerCase() === "sand drawing")
-    ?? songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl");
-
   useEffect(() => {
     setQueue(displayedSongs);
   }, [displayedSongs, setQueue]);
@@ -1273,11 +1269,6 @@ export default function MusicPage() {
   const showOriginalsBanner = selectedArtists.some(
     (artist) => normalizeFilterValue(artist) === normalizeFilterValue("Audioflume"),
   );
-  const showFeaturedSongShelf =
-    !hasActiveFilters &&
-    selectedLicenseFilters.length === 0 &&
-    referenceSearchState === null &&
-    semanticSearchState === null;
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -1530,10 +1521,14 @@ export default function MusicPage() {
                     <div className="audioflume-music-originals-summary-logo">
                       <AudioflumeOriginalsLogo />
                     </div>
-                  </div>
-                ) : showFeaturedSongShelf ? (
-                  <div className="audioflume-music-home-hero">
-                    <HomeHeroBanner featuredSong={featuredSong} backgroundOnly />
+                    <div className="audioflume-music-originals-summary-meta">
+                      <span className="audioflume-music-originals-summary-meta-left">
+                        LIFETIME ACCESS TO ORIGINAL IN-HOUSE MADE MUSIC
+                      </span>
+                      <span className="audioflume-music-originals-summary-meta-right">
+                        <s>REGULAR $299</s>&nbsp;&nbsp; LIMITED TIME ONLY $99
+                      </span>
+                    </div>
                   </div>
                 ) : null}
 
