@@ -41,6 +41,7 @@ import { useSongs } from "@/hooks/useSongs";
 import { usePlayer } from "@/context/PlayerContext";
 
 import Footer from "@/components/Footer";
+import { HomeHeroBanner } from "../HomeLandingContent";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 import ReferenceSearchModal from "@/components/ReferenceSearchModal";
 import SongCard from "@/components/SongCard";
@@ -1176,7 +1177,8 @@ export default function MusicPage() {
   }, [filteredSongs, sortOrder]);
 
   const displayedSongs = sortedSongs;
-  const featuredSongs = displayedSongs.slice(0, 6);
+  const featuredSong = songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl" && song.title.trim().toLowerCase() === "sand drawing")
+    ?? songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl");
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -1537,41 +1539,10 @@ export default function MusicPage() {
                       </span>
                     </div>
                   </div>
-                ) : showFeaturedSongShelf && featuredSongs.length > 0 ? (
-                  <section className="audioflume-music-storytelling-shelf" aria-label="Featured songs">
-                    <div className="audioflume-music-storytelling-grid">
-                      {featuredSongs.map((song) => {
-                        const songIsPlaying = currentSong?.id === song.id && isPlaying;
-                        return (
-                          <article
-                            key={song.id}
-                            className={`audioflume-music-storytelling-card${songIsPlaying ? " is-playing" : ""}`}
-                          >
-                            <button
-                              type="button"
-                              className="audioflume-music-storytelling-art"
-                              onClick={() => togglePlayPause(song)}
-                              disabled={!song.audioUrl}
-                              aria-label={songIsPlaying ? `Pause ${song.title}` : `Play ${song.title}`}
-                            >
-                              {song.coverArt ? (
-                                <img src={song.coverArt} alt="" draggable={false} />
-                              ) : (
-                                <span className="audioflume-music-storytelling-fallback" />
-                              )}
-                              <span className="audioflume-music-storytelling-play">
-                                {songIsPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
-                              </span>
-                            </button>
-                            <span className="audioflume-music-storytelling-copy">
-                              <strong>{song.title}</strong>
-                              <span>{song.artist}</span>
-                            </span>
-                          </article>
-                        );
-                      })}
-                    </div>
-                  </section>
+                ) : showFeaturedSongShelf ? (
+                  <div className="audioflume-music-home-hero">
+                    <HomeHeroBanner featuredSong={featuredSong} />
+                  </div>
                 ) : null}
 
                 {displayedSongs.length === 0 ? (
