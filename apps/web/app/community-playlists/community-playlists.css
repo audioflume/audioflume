@@ -1,14 +1,16 @@
 body:has(.community-playlists-page-root) {
+  background: var(--audioflume-home-canvas);
   --community-page-gutter: var(--filmwave-page-gutter);
 }
 
 .community-playlists-page-root {
+  --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   position: relative;
   min-height: 100vh;
   overflow: hidden;
   margin-top: 0 !important;
   padding-top: var(--filmwave-header-height, 75px);
-  background: var(--bg-primary);
+  background: var(--audioflume-home-canvas);
   color: var(--text-primary);
 }
 
