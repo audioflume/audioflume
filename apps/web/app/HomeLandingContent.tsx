@@ -57,10 +57,10 @@ export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featu
   return (
     <section className="audioflume-experiment-hero" aria-label="Human made music and SFX for film">
       <img className="audioflume-experiment-hero-background" src={HERO_BACKGROUND} alt="" />
+      <p className="audioflume-experiment-hero-eyebrow">New music and SFX added weekly.</p>
       {!backgroundOnly && (
         <>
           <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
-          <p className="audioflume-experiment-hero-eyebrow">New music and SFX added weekly.</p>
           <h1 className="audioflume-experiment-hero-headline">
             <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
           </h1>
