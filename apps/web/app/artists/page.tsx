@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import Footer from "@/components/Footer";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import playlistCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
-import GlobalSearchBar from "@/components/GlobalSearchBar";
+import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PauseIcon from "@/components/icons/PauseIcon";
@@ -14,6 +14,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import "@/components/curated/curated-browse-filters.css";
 import styles from "./page.module.css";
+import "../home-page.css";
 
 type DirectoryArtist = {
   id: string;
@@ -193,8 +194,8 @@ export default function ArtistsPage() {
   ];
 
   return (
-    <main className={styles.page}>
-      <GlobalSearchBar layer="high" position="flow" />
+    <main className={`${styles.page} artists-page-root`}>
+      <HomeExperimentSearch />
       <div className={styles.content}>
         <header className={styles.intro}>
           <h1>Discover the artists &amp;<br className={styles.titleBreak} /> composers behind the sound</h1>
