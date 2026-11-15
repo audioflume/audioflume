@@ -9,13 +9,12 @@ body:has(.audioflume-music-page) {
   --audioflume-home-header-muted-link: #e5e5df;
   --audioflume-music-toolbar-background: #fff;
   --audioflume-music-toolbar-text: #111;
-  --audioflume-music-toolbar-border: #e5e5e5;
+  --audioflume-music-toolbar-border: var(--border);
 }
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
   --audioflume-music-toolbar-background: #111;
   --audioflume-music-toolbar-text: #e5e5df;
-  --audioflume-music-toolbar-border: #303030;
 }
 
 .audioflume-music-page {
@@ -125,7 +124,7 @@ body:has(.audioflume-music-page) {
   gap: 12px;
   margin: 12px 12px 12px 0;
   border-radius: 0;
-  background: var(--audioflume-music-search-surface, #1b1b1b);
+  background: transparent;
   padding: 0 16px;
   color: #555;
 }
@@ -640,7 +639,7 @@ main
 :where(html.light, html[data-theme="light"])
   .audioflume-music-page-searchbar
   .audioflume-home-reference-searchbar-field {
-  background: #fff;
+  background: transparent;
   color: #999;
 }
 
@@ -681,6 +680,7 @@ main
   --filmwave-side-filter-outer-border: none;
   --filmwave-filter-rail-chevron-opacity: 1;
   --filmwave-filter-rail-chevron-hover-opacity: 1;
+  --filmwave-filter-rail-chevron-hover-color: var(--text-primary);
 }
 
 .music-page-content-shell .filmwave-song-card {
