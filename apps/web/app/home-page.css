@@ -2419,14 +2419,14 @@ body:has(.audioflume-home-landing)
 .audioflume-discover-artist-navigation-arrows {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0;
   flex: 0 0 auto;
 }
 
 .audioflume-discover-artist-navigation button {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   width: 28px;
   height: 28px;
   padding: 0;
@@ -2434,6 +2434,10 @@ body:has(.audioflume-home-landing)
   background: transparent;
   color: var(--text-primary);
   cursor: pointer;
+}
+
+.audioflume-discover-artist-navigation-arrows button:last-child {
+  justify-content: flex-end;
 }
 
 .audioflume-discover-artist-navigation button:hover:not(:disabled) {
