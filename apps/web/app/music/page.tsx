@@ -1180,8 +1180,6 @@ export default function MusicPage() {
   }, [filteredSongs, sortOrder]);
 
   const displayedSongs = sortedSongs;
-  const featuredSong = songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl" && song.title.trim().toLowerCase() === "sand drawing")
-    ?? songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl");
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -1544,7 +1542,7 @@ export default function MusicPage() {
                   </div>
                 ) : showFeaturedSongShelf ? (
                   <div className="audioflume-music-home-hero">
-                    <HomeHeroBanner featuredSong={featuredSong} backgroundOnly />
+                    <HomeHeroBanner backgroundOnly />
                     <AudioflumeMark className="audioflume-music-home-hero-mark" />
                     <Link className="audioflume-music-home-hero-link" href="/discover">
                       Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
