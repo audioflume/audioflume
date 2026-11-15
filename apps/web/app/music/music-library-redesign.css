@@ -8,13 +8,11 @@ body:has(.audioflume-music-page) {
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #e5e5df;
   --audioflume-home-header-muted-link: #e5e5df;
-  --audioflume-music-toolbar-background: #fff;
   --audioflume-music-toolbar-text: #111;
   --audioflume-music-toolbar-border: var(--border);
 }
 
 :where(html:not(.light):not([data-theme="light"])) body:has(.audioflume-music-page) {
-  --audioflume-music-toolbar-background: #1b1b1b;
   --audioflume-music-toolbar-text: #e5e5df;
 }
 
@@ -40,7 +38,7 @@ body:has(.audioflume-music-page) {
   align-items: stretch;
   transition: grid-template-columns 180ms ease;
   border-bottom: 1px solid var(--audioflume-music-toolbar-border);
-  background: var(--audioflume-music-toolbar-background);
+  background: var(--bg-primary);
   color: var(--audioflume-music-toolbar-text);
   overscroll-behavior: none;
 }
