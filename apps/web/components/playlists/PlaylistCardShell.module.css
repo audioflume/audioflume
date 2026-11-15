@@ -19,7 +19,8 @@
 }
 
 :global(.curated-playlists-page-root) .mediaShell::before,
-:global(.community-playlists-page-root) .mediaShell::before {
+:global(.community-playlists-page-root) .mediaShell::before,
+:global(.artists-page-root) .mediaShell::before {
   content: "";
   position: absolute;
   inset: 0;
