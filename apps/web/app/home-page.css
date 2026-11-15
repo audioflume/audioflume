@@ -5706,7 +5706,7 @@ body:has(.audioflume-home-experiment) .filmwave-web-header.is-home-scrolled {
 .audioflume-experiment-hero-eyebrow {
   position: absolute;
   z-index: 2;
-  top: var(--audioflume-hero-eyebrow-inset, 8%);
+  top: calc(var(--audioflume-hero-eyebrow-inset, 8%) - var(--audioflume-hero-eyebrow-optical-offset, 0px));
   left: var(--audioflume-hero-eyebrow-inset, 3.4%);
 }
 
