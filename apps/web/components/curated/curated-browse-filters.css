@@ -89,15 +89,15 @@
 .curated-main-filter-pill:hover,
 .curated-main-filter-pill:focus-visible {
   border-color: var(--text-muted);
-  background: var(--bg-secondary);
+  background: var(--curated-main-pill-hover-background, var(--bg-secondary));
   color: var(--text-primary);
   outline: none;
 }
 
 .curated-main-filter-pill.is-active {
   border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  background: var(--curated-main-pill-active-background, var(--text-primary));
+  color: var(--curated-main-pill-active-color, var(--bg-primary));
 }
 
 .curated-subfilter-pill {
