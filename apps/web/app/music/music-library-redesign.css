@@ -1377,7 +1377,8 @@ main
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
-  --audioflume-hero-eyebrow-inset: 24px;
+  --audioflume-hero-eyebrow-inset: 40px;
+  --audioflume-hero-eyebrow-optical-offset: 4px;
   width: 100%;
   height: clamp(220px, 23vw, 320px);
   min-height: 0;
