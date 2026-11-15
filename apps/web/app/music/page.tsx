@@ -26,6 +26,7 @@ import {
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAccountSession } from "@/context/AccountSessionContext";
+import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import {
@@ -49,7 +50,8 @@ import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
-import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
+import { AudioflumeMark, AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 
 import "./music-library-redesign.css";
 
@@ -1543,6 +1545,10 @@ export default function MusicPage() {
                 ) : showFeaturedSongShelf ? (
                   <div className="audioflume-music-home-hero">
                     <HomeHeroBanner featuredSong={featuredSong} backgroundOnly />
+                    <AudioflumeMark className="audioflume-music-home-hero-mark" />
+                    <Link className="audioflume-music-home-hero-link" href="/discover">
+                      Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+                    </Link>
                   </div>
                 ) : null}
 
