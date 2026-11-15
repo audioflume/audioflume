@@ -1,6 +1,7 @@
 @import "../editorial-typography.css";
 
 .audioflume-pricing-route-shell {
+  --audioflume-experiment-search-bottom-padding: 0px;
   --home-reference-width: calc(100vw - var(--filmwave-page-gutter) - var(--filmwave-page-gutter));
   min-height: 100vh;
   overflow-x: clip;
@@ -27,7 +28,7 @@
 .audioflume-pricing-plans-section {
   position: relative;
   isolation: isolate;
-  padding: 88px 0 0;
+  padding: 0;
 }
 
 .audioflume-pricing-plans-section::before {
@@ -1351,7 +1352,7 @@
   }
 
   .audioflume-pricing-plans-section {
-    padding-top: 40px;
+    padding-top: 0;
     padding-bottom: 0;
   }
 
