@@ -458,21 +458,13 @@ html.fw-display-ai-songs-only
   display: none !important;
 }
 
-main
-  > section:has(.fw-music-content-column .fw-filter-panel-wrap)
-  .fw-filter-rail
-  .fw-filter-rail-item:hover {
-  background: var(--bg-hover) !important;
-  background-color: var(--bg-hover) !important;
-  color: var(--text-primary) !important;
-}
-
-main
+.audioflume-music-page
   > section:has(.fw-music-content-column .fw-filter-panel-wrap)
   .fw-filter-rail.is-accordion
-  .fw-filter-rail-item.is-active:not(:hover) {
+  .fw-filter-rail-item:is(:hover, :focus-visible, [aria-expanded="true"]) {
   background: transparent !important;
   background-color: transparent !important;
+  color: var(--text-primary) !important;
 }
 
 main
@@ -1015,7 +1007,7 @@ main
   .fw-filter-rail.is-accordion
   .fw-filter-rail-item[aria-expanded="true"]
   .fw-filter-rail-chevron {
-  transform: none;
+  transform: rotate(45deg);
 }
 
 .audioflume-music-page
@@ -1024,7 +1016,7 @@ main
   .fw-filter-rail-chevron {
   display: inline-flex !important;
   opacity: 1 !important;
-  transform: none;
+  transform: rotate(45deg);
 }
 
 .audioflume-music-page
@@ -1034,7 +1026,7 @@ main
   width: 20px;
   height: 20px;
   color: var(--text-primary) !important;
-  transition: opacity 160ms ease, color 160ms ease !important;
+  transition: opacity 160ms ease, color 160ms ease, transform 160ms ease !important;
 }
 
 .audioflume-music-page
