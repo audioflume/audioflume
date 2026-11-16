@@ -284,7 +284,7 @@ html[data-theme="light"] {
 :where(html.light, html[data-theme="light"])
   .filmwave-web-user-menu-new-project-button:hover
   .filmwave-web-user-menu-new-project-icon {
-  background: #d6d6d6;
+  background: #dadada;
 }
 
 .filmwave-web-user-menu .filmwave-user-menu-actions {
