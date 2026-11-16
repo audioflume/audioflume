@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import styles from "./UserMenu.module.css";
 import { useAccountSession } from "@/context/AccountSessionContext";
 import { useTheme } from "@/context/ThemeContext";
 import { useArtistInvites } from "@/context/ArtistInvitesContext";
@@ -9,7 +10,6 @@ import { useProjectsContext } from "@/context/ProjectsContext";
 import CreateProjectModal from "@/components/CreateProjectModal";
 import {
   UserMenuActions,
-  UserMenuGlyph,
   UserMenuHeader,
   UserMenuPanel,
 } from "@filmwave/shared";
@@ -142,22 +142,24 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
           label="Support & FAQ"
           onClose={onClose}
         />
-        <button
-          type="button"
-          onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-          className="filmwave-dropdown-item filmwave-user-menu-theme-action"
-          aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} mode`}
-        >
-          <span className="filmwave-user-menu-action-label">Appearance</span>
-          <span className="filmwave-web-user-menu-theme-current">
-            <span className="filmwave-user-menu-theme-value">
-              {theme === "dark" ? "Dark" : "Light"}
-            </span>
-            <span className="filmwave-user-menu-theme-icon" aria-hidden="true">
-              <UserMenuGlyph name="appearance" />
-            </span>
-          </span>
-        </button>
+        <div className={styles.appearanceOptions} role="group" aria-label="Appearance">
+          <button
+            type="button"
+            className={styles.appearanceOption}
+            onClick={() => setTheme("light")}
+            aria-pressed={theme === "light"}
+          >
+            Light
+          </button>
+          <button
+            type="button"
+            className={styles.appearanceOption}
+            onClick={() => setTheme("dark")}
+            aria-pressed={theme === "dark"}
+          >
+            Dark
+          </button>
+        </div>
       </UserMenuActions>
 
       <UserMenuActions className="filmwave-user-menu-signout">
