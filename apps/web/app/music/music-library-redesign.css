@@ -1388,7 +1388,7 @@ main
 .audioflume-music-page .music-page-content-shell.is-filter-open .audioflume-music-home-hero {
   --audioflume-music-banner-left-extension: calc(var(--audioflume-music-content-gap) + 8px);
   --audioflume-music-banner-right-extension: calc(var(--audioflume-music-content-gap) + 12px);
-  --audioflume-music-banner-slide-width: calc(100vw - var(--sidebar-width) - var(--audioflume-music-content-gap) * 2 - 20px);
+  --audioflume-music-banner-slide-width: calc(100vw - var(--audioflume-music-filter-width) - var(--audioflume-music-content-gap) * 2 - 20px);
 }
 
 .audioflume-music-page .audioflume-music-home-hero-frame {
