@@ -1380,6 +1380,7 @@ main
   --sliding-shelf-padding-left: var(--audioflume-music-banner-left-extension);
   --sliding-shelf-padding-right: var(--audioflume-music-banner-right-extension);
   --sliding-shelf-gap: 15px;
+  --audioflume-music-banner-slide-width: calc(100vw - 2 * var(--filmwave-page-gutter));
   width: 100%;
   margin: 8px 0 32px;
 }
@@ -1387,11 +1388,15 @@ main
 .audioflume-music-page .music-page-content-shell.is-filter-open .audioflume-music-home-hero {
   --audioflume-music-banner-left-extension: calc(var(--audioflume-music-content-gap) + 8px);
   --audioflume-music-banner-right-extension: calc(var(--audioflume-music-content-gap) + 12px);
+  --audioflume-music-banner-slide-width: calc(100vw - var(--sidebar-width) - var(--audioflume-music-content-gap) * 2 - 20px);
 }
 
 .audioflume-music-page .audioflume-music-home-hero-frame {
   position: relative;
-  flex: 0 0 100%;
+  box-sizing: border-box;
+  flex: 0 0 var(--audioflume-music-banner-slide-width);
+  width: var(--audioflume-music-banner-slide-width);
+  min-width: var(--audioflume-music-banner-slide-width);
   scroll-snap-align: start;
 }
 
