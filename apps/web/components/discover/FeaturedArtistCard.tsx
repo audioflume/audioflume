@@ -39,7 +39,6 @@ export default function FeaturedArtistCard({
     ),
   ).slice(0, 3);
   const image = artist.hero_image_url || artist.profile_image_url || "";
-  const featuredSong = playableSongs[0] ?? artist.songs[0];
 
   function playArtist() {
     const firstSong = playableSongs[0];
@@ -81,41 +80,35 @@ export default function FeaturedArtistCard({
                 {artist.designation}
               </span>
             ) : null}
+            <span className="discover-artist-feature-genres">
+              {genres.length > 0
+                ? genres.map((genre) => <span key={genre}>{genre}</span>)
+                : [0, 1, 2].map((placeholder) => (
+                    <span
+                      key={placeholder}
+                      className="is-placeholder"
+                      aria-hidden="true"
+                    />
+                  ))}
+            </span>
           </span>
         </div>
       </Link>
 
       <button
         type="button"
-        className={`discover-artist-feature-song${artistIsPlaying ? " is-playing" : ""}`}
+        className="discover-artist-feature-play"
         onClick={playArtist}
         disabled={playableSongs.length === 0}
         aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
         aria-pressed={artistIsPlaying}
       >
-        <span className="discover-artist-feature-song-cover">
-          {featuredSong?.coverArt ? <img src={featuredSong.coverArt} alt="" /> : null}
-          <span className="discover-artist-feature-song-play" aria-hidden="true">
-            {artistIsPlaying ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
-          </span>
-        </span>
-        <span className="discover-artist-feature-song-copy">
-          <strong>{featuredSong?.title ?? ""}</strong>
-          <small>{featuredSong?.artist ?? artist.name}</small>
-        </span>
+        {artistIsPlaying ? (
+          <PauseIcon size={14} />
+        ) : (
+          <PlayIconSmall size={18} />
+        )}
       </button>
-
-      <span className="discover-artist-feature-genres">
-        {genres.length > 0
-          ? genres.map((genre) => <span key={genre}>{genre}</span>)
-          : [0, 1, 2].map((placeholder) => (
-              <span
-                key={placeholder}
-                className="is-placeholder"
-                aria-hidden="true"
-              />
-            ))}
-      </span>
     </article>
   );
 }
