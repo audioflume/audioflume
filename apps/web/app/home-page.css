@@ -5701,10 +5701,19 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
 .audioflume-experiment-artist-promo h2,
 .audioflume-experiment-curated > p {
   margin: 0;
-  font-size: clamp(15px, 1.45vw, 21px);
   font-weight: 500;
   letter-spacing: -.025em;
   line-height: 1.08;
+}
+
+.audioflume-experiment-hero-eyebrow,
+.audioflume-experiment-curated > p {
+  font-size: clamp(15px, 1.2vw, 21px);
+}
+
+.audioflume-experiment-lifetime > h2,
+.audioflume-experiment-artist-promo h2 {
+  font-size: clamp(15px, 1.45vw, 21px);
 }
 
 .audioflume-experiment-lifetime > h2,
