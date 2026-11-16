@@ -74,20 +74,9 @@ export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featu
   );
 }
 
-export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }: { homeFlashImages: string[] }) {
-  const { songs, loading } = useSongs();
-  const playerVisible = useHasCurrentSong();
-  const newSongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12), [songs]);
-  const featuredSong = songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl" && song.title.trim().toLowerCase() === "sand drawing")
-    ?? songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl");
-
+export function HomeLandingPromoBlocks() {
   return (
-    <main className={`audioflume-home-reference audioflume-home-experiment${playerVisible ? " has-player" : ""}`}>
-      <HomeExperimentSearch />
-
-      <div className="audioflume-experiment-main">
-        <HomeHeroBanner featuredSong={featuredSong} />
-
+    <>
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
           <div className="audioflume-experiment-lifetime">
             <h2>Lifetime access to original<br />in-house made music.</h2>
@@ -119,6 +108,26 @@ export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }
             Explore curated collections <ArrowUpRightIcon size={24} strokeWidth={1.5} />
           </Link>
         </section>
+
+    </>
+  );
+}
+
+export default function HomeLandingContent({ homeFlashImages: _homeFlashImages }: { homeFlashImages: string[] }) {
+  const { songs, loading } = useSongs();
+  const playerVisible = useHasCurrentSong();
+  const newSongs = useMemo(() => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12), [songs]);
+  const featuredSong = songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl" && song.title.trim().toLowerCase() === "sand drawing")
+    ?? songs.find((song) => song.audioUrl && song.artist.trim().toLowerCase() === "judah earl");
+
+  return (
+    <main className={`audioflume-home-reference audioflume-home-experiment${playerVisible ? " has-player" : ""}`}>
+      <HomeExperimentSearch />
+
+      <div className="audioflume-experiment-main">
+        <HomeHeroBanner featuredSong={featuredSong} />
+
+        <HomeLandingPromoBlocks />
 
         <section className="audioflume-experiment-songs" aria-label="Newly added songs">
           <HomeSectionWithHeading
