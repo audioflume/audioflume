@@ -7,27 +7,32 @@
 
 .appearanceOption {
   display: flex;
-  height: 35px;
+  height: 30px;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--filmwave-menu-sep);
+  border: 1px solid transparent;
   border-radius: 0;
-  background: transparent;
-  color: var(--text-secondary);
   font: inherit;
-  font-size: 13px;
   cursor: pointer;
 }
 
+.lightOption {
+  background: #e5e5df;
+  color: #111;
+}
+
+.darkOption {
+  background: #403d39;
+  color: #fff;
+}
+
 .appearanceOption:hover {
-  color: var(--text-primary);
-  background: var(--filmwave-menu-hover);
+  filter: brightness(1.08);
 }
 
 .appearanceOption[aria-pressed="true"] {
-  border-color: var(--text-primary);
-  background: var(--text-primary);
-  color: var(--bg-primary);
+  border-color: currentColor;
+  box-shadow: inset 0 0 0 1px currentColor;
 }
 
 .appearanceOption:focus-visible {
