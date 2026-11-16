@@ -5706,11 +5706,11 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
   line-height: 1.08;
 }
 
-.audioflume-experiment-hero-eyebrow,
+.audioflume-home-experiment .audioflume-experiment-hero-eyebrow,
 .audioflume-experiment-curated > p,
 .audioflume-experiment-lifetime > h2,
 .audioflume-experiment-artist-promo h2 {
-  font-size: clamp(15px, 1.2vw, 21px);
+  font-size: clamp(15px, 1.5vw, 21px);
 }
 
 .audioflume-experiment-hero-eyebrow {
