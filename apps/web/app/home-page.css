@@ -2504,7 +2504,7 @@ body:has(.audioflume-home-landing)
   color: #fff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(32px, 3.2vw, 56px);
-  font-weight: 400;
+  font-weight: 300;
   letter-spacing: -.025em;
   line-height: 1.08;
 }
@@ -2659,11 +2659,6 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill {
-  pointer-events: none;
-}
-
-.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill,
-.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill {
   pointer-events: auto;
 }
 
@@ -2674,16 +2669,9 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill,
 .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill.is-placeholder {
-  opacity: 0;
-  transform: translateY(12px);
-  will-change: opacity, transform, backdrop-filter;
-  transition: opacity 220ms ease, transform 220ms ease, color 160ms ease;
-}
-
-.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill,
-.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill {
   opacity: 1;
   transform: translateY(0);
+  transition: color 160ms ease;
 }
 
 .audioflume-discover-featured-track-copy strong {
