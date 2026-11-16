@@ -564,6 +564,7 @@ export function HomeArtistShelf({
                 ) : null}
               </div>
             ) : null}
+            {discoverLayout ? <AudioflumeMark className="audioflume-discover-featured-mark" /> : null}
             <div className="audioflume-home-reference-artist-link">
               {!discoverLayout ? (
                 <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
