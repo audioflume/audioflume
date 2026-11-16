@@ -1386,7 +1386,7 @@ main
   position: absolute;
   inset: 0;
   z-index: 2;
-  background: radial-gradient(ellipse 75% 95% at bottom left, rgba(0, 0, 0, var(--audioflume-music-featured-overlay, 0)), transparent 100%);
+  background: rgba(0, 0, 0, var(--audioflume-music-featured-overlay, 0));
   pointer-events: none;
 }
 
