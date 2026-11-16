@@ -1496,6 +1496,7 @@ main
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero-eyebrow {
   position: relative;
   z-index: 4;
+  font-size: clamp(15px, 1.2vw, 21px);
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero::before {
