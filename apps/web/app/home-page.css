@@ -2036,6 +2036,13 @@ body:has(.audioflume-home-landing)
 }
 
 
+.audioflume-discover-compact-songs-section {
+  padding: 42px clamp(22px, 4.2vw, 64px) 52px;
+  border-radius: 0;
+  background: var(--audioflume-home-songs-surface);
+  color: var(--audioflume-home-content-text);
+}
+
 .audioflume-discover-compact-songs {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
