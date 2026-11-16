@@ -5947,6 +5947,11 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   }
 }
 
+.audioflume-experiment-promos {
+  --audioflume-promo-block-height: 340px;
+  --audioflume-promo-curated-aspect-ratio: auto;
+}
+
 .audioflume-experiment-promo-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -5959,7 +5964,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   position:relative;
   display:block;
   min-width:0;
-  height:clamp(280px, 30vw, 480px);
+  height:var(--audioflume-promo-block-height, clamp(280px, 30vw, 480px));
   overflow:hidden;
   border-radius:0;
   color:#fff;
@@ -6073,7 +6078,8 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   position: relative;
   isolation: isolate;
   width: 100%;
-  aspect-ratio: 3.6 / 1;
+  aspect-ratio: var(--audioflume-promo-curated-aspect-ratio, 3.6 / 1);
+  height: var(--audioflume-promo-block-height, auto);
   min-height: 300px;
   margin-top: min(var(--filmwave-page-gutter), 30px);
   overflow: hidden;
@@ -6222,7 +6228,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   .audioflume-experiment-hero-song-genres { display:none; }
   .audioflume-experiment-promo-grid { grid-template-columns:1fr; }
   .audioflume-experiment-lifetime,
-  :is(.audioflume-home-experiment, .audioflume-experiment-promos) .audioflume-experiment-artist-promo { height:350px; }
+  :is(.audioflume-home-experiment, .audioflume-experiment-promos) .audioflume-experiment-artist-promo { height:var(--audioflume-promo-block-height, 350px); }
   .audioflume-experiment-curated-brand { top: 42%; bottom: auto; left: 50%; right: auto; transform: translate(-50%, -50%); }
   :is(.audioflume-home-experiment, .audioflume-experiment-promos) .audioflume-experiment-curated > a { left: auto; right: 6%; }
   .audioflume-experiment-songs { padding:24px 16px 32px; }
