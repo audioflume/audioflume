@@ -662,27 +662,19 @@
 
 .discover-artist-feature-bar {
   position: absolute;
-  right: 0;
-  bottom: 36px;
-  left: 0;
+  top: clamp(20px, 2.6vw, 40px);
+  right: clamp(20px, 2.6vw, 40px);
+  left: clamp(20px, 2.6vw, 40px);
   z-index: 2;
-  display: grid;
-  min-height: 52px;
-  grid-template-columns: minmax(0, 1fr);
-  align-items: center;
-  padding: 0 92px 0 36px;
   pointer-events: none;
 }
 
 .discover-artist-feature-copy {
   display: grid;
-  grid-template-columns: 1fr;
-  align-items: center;
   gap: 5px;
 }
 
 .discover-artist-feature-copy strong {
-  grid-column: 1;
   color: #ffffff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(36px, 2.55vw, 50px);
@@ -692,7 +684,6 @@
 }
 
 .discover-artist-feature-designation {
-  grid-column: 1;
   color: rgba(255, 255, 255, 0.9);
   font-size: 13px;
   font-weight: 300;
@@ -700,11 +691,16 @@
 }
 
 .discover-artist-feature-genres {
-  grid-column: 1;
+  position: absolute;
+  right: clamp(16px, 2vw, 32px);
+  bottom: clamp(16px, 2vw, 32px);
+  z-index: 2;
   display: flex;
   flex-wrap: wrap;
+  justify-content: flex-end;
   gap: 6px;
-  margin-top: 8px;
+  max-width: 48%;
+  pointer-events: none;
 }
 
 .discover-artist-feature-genres > span {
@@ -734,32 +730,94 @@
   color: #ffffff;
 }
 
-.discover-artist-feature-play {
+.discover-artist-feature-song {
   position: absolute;
-  right: 28px;
-  bottom: 28px;
+  left: clamp(16px, 2vw, 32px);
+  bottom: clamp(16px, 2vw, 32px);
   z-index: 3;
-  display: grid;
-  width: 52px;
-  height: 52px;
-  place-items: center;
+  display: flex;
+  max-width: 48%;
+  align-items: flex-end;
+  gap: 15px;
   border: 0;
+  background: none;
+  padding: 0;
+  color: #ffffff;
+  text-align: left;
+  cursor: pointer;
+}
+
+.discover-artist-feature-song:disabled {
+  cursor: default;
+}
+
+.discover-artist-feature-song-cover {
+  position: relative;
+  display: grid;
+  width: clamp(46px, 4.8vw, 78px);
+  height: clamp(46px, 4.8vw, 78px);
+  flex: 0 0 auto;
+  place-items: center;
+  background: rgba(255, 255, 255, 0.16);
+}
+
+.discover-artist-feature-song-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.discover-artist-feature-song-play {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  opacity: 0;
+  transition: opacity 150ms ease;
+}
+
+.discover-artist-feature-song-play::before {
+  position: absolute;
+  width: 38px;
+  height: 38px;
   border-radius: 999px;
   background: #ffffff;
+  content: "";
+  transition: transform 150ms ease;
+}
+
+.discover-artist-feature-song-play svg {
+  position: relative;
+  z-index: 1;
   color: #111111;
-  cursor: pointer;
-  transition: transform 160ms ease;
-  transform-origin: center;
 }
 
-.discover-artist-feature-play:hover:not(:disabled),
-.discover-artist-feature-play:focus-visible:not(:disabled) {
-  transform: scale(1.03);
+.discover-artist-feature-song:hover .discover-artist-feature-song-play,
+.discover-artist-feature-song:focus-visible .discover-artist-feature-song-play,
+.discover-artist-feature-song.is-playing .discover-artist-feature-song-play {
+  opacity: 1;
 }
 
-.discover-artist-feature-play:disabled {
-  cursor: default;
-  opacity: 0.4;
+.discover-artist-feature-song:hover .discover-artist-feature-song-play::before {
+  transform: scale(1.05);
+}
+
+.discover-artist-feature-song-copy {
+  display: flex;
+  min-width: 0;
+  height: clamp(46px, 4.8vw, 78px);
+  flex-direction: column;
+  gap: 4px;
+}
+
+.discover-artist-feature-song-copy strong,
+.discover-artist-feature-song-copy small {
+  overflow: hidden;
+  font-size: clamp(12px, .9vw, 14px);
+  font-weight: 500;
+  line-height: 1.2;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .discover-artist-placeholder {
@@ -1499,21 +1557,22 @@
     aspect-ratio: auto;
   }
 
-  .discover-artist-feature-bar {
-    bottom: 24px;
-    padding-right: 76px;
-    padding-left: 22px;
-  }
-
   .discover-artist-feature-copy strong {
     font-size: clamp(30px, 8vw, 42px);
   }
 
-  .discover-artist-feature-play {
-    right: 24px;
-    bottom: 24px;
-    width: 44px;
-    height: 44px;
+  .discover-artist-feature-song {
+    gap: 8px;
+  }
+
+  .discover-artist-feature-song-cover,
+  .discover-artist-feature-song-copy {
+    width: 46px;
+    height: 46px;
+  }
+
+  .discover-artist-feature-song-copy {
+    width: auto;
   }
 
   .discover-artist-featured-grid {
