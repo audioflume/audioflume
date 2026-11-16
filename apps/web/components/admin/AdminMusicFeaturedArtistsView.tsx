@@ -260,7 +260,7 @@ export default function AdminMusicFeaturedArtistsView() {
                   )}
                 </button>
                 {cropEditingId === item.artist_id ? (
-                  <label className="absolute bottom-3 left-3 z-[3] flex items-center gap-3 bg-black/65 px-3 py-2 text-[11px] text-white">
+                  <label className={`absolute bottom-3 left-3 z-[3] flex items-center gap-3 rounded-[5px] bg-black/65 px-3 py-2 text-[11px] ${styles.overlayControl}`}>
                     <span>Dark overlay</span>
                     <input
                       type="range"
