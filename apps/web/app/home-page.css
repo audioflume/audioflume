@@ -2040,13 +2040,6 @@ body:has(.audioflume-home-landing)
 }
 
 
-.audioflume-discover-compact-songs-section {
-  padding: 42px clamp(22px, 4.2vw, 64px) 52px;
-  border-radius: 0;
-  background: var(--audioflume-home-songs-surface);
-  color: var(--audioflume-home-content-text);
-}
-
 .audioflume-discover-compact-songs {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -5964,9 +5957,24 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   padding-bottom: 0;
 }
 
+ :where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-experiment-search {
+  background: #e5e5df;
+}
+
 :where(html.light, html[data-theme="light"]) .audioflume-experiment-promos {
-  padding-top: 54px;
+  position: relative;
+  isolation: isolate;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-experiment-promos::before {
+  position: absolute;
+  z-index: -1;
+  top: 0;
+  bottom: 0;
+  left: calc(50% - 50vw);
+  width: 100vw;
   background: linear-gradient(to bottom, #e5e5df, #fff);
+  content: "";
 }
 
 .audioflume-experiment-promo-grid {
