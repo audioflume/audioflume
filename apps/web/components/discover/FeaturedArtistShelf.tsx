@@ -61,14 +61,14 @@ export default function FeaturedArtistShelf({
                       <span className="discover-artist-feature-copy">
                         <span className="discover-artist-feature-skeleton-line is-name" />
                         <span className="discover-artist-feature-skeleton-line is-designation" />
+                        <span className="discover-artist-feature-genres discover-artist-feature-skeleton-genres">
+                          <span />
+                          <span />
+                          <span />
+                        </span>
                       </span>
                     </div>
                     <span className="discover-artist-feature-skeleton-play" />
-                    <span className="discover-artist-feature-genres discover-artist-feature-skeleton-genres">
-                      <span />
-                      <span />
-                      <span />
-                    </span>
                   </div>
                 </article>
               ))
