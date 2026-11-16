@@ -1458,33 +1458,29 @@ main
   margin-inline: 5px;
 }
 
-.audioflume-music-page .audioflume-music-home-hero-song {
+.audioflume-music-page .audioflume-music-home-hero-link {
   display: inline-flex;
-  min-width: 0;
-  align-items: center;
-  gap: 10px;
+  align-items: baseline;
+  gap: 8px;
   color: #fff;
   font-size: clamp(14px, 1.25vw, 18px);
   font-weight: 300;
   letter-spacing: -.035em;
+  text-decoration: none;
+  transition: opacity 160ms ease;
+  pointer-events: auto;
 }
 
-.audioflume-music-page .audioflume-music-home-hero-song img,
-.audioflume-music-page .audioflume-music-home-hero-song-placeholder {
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
-  object-fit: cover;
+.audioflume-music-page .audioflume-music-home-hero-link svg {
+  width: 20px;
+  height: 20px;
+  flex: 0 0 auto;
+  transform: translateY(5px);
 }
 
-.audioflume-music-page .audioflume-music-home-hero-song-placeholder {
-  background: rgba(255, 255, 255, .15);
-}
-
-.audioflume-music-page .audioflume-music-home-hero-song > span:last-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+.audioflume-music-page .audioflume-music-home-hero-link:hover,
+.audioflume-music-page .audioflume-music-home-hero-link:focus-visible {
+  opacity: .8;
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
