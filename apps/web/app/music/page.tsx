@@ -27,6 +27,7 @@ import {
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useAccountSession } from "@/context/AccountSessionContext";
 import { useSearchParams } from "next/navigation";
+import Link from "next/link";
 
 import {
   getReferenceSearchMatchSongIds,
@@ -50,6 +51,7 @@ import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import { AudioflumeMark, AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import SlidingShelfShell from "@/components/SlidingShelfShell";
 
 import "./music-library-redesign.css";
@@ -1598,12 +1600,8 @@ export default function MusicPage() {
                 ) : showFeaturedSongShelf ? (
                   <div className="audioflume-music-home-hero">
                     <SlidingShelfShell label="featured artist banners" itemCount={featuredBannerArtists.length || 1}>
-                      {(featuredBannerArtists.length ? featuredBannerArtists : [null]).map((artist) => {
-                        const artistSong = artist ? (
-                          songs.find(song => normalizeFilterValue(song.artist) === normalizeFilterValue(artist.name) && song.coverArt) ??
-                          songs.find(song => normalizeFilterValue(song.artist) === normalizeFilterValue(artist.name))
-                        ) : null;
-                        return <div
+                      {(featuredBannerArtists.length ? featuredBannerArtists : [null]).map((artist, index) => (
+                        <div
                           key={artist?.id ?? "music-banner-fallback"}
                           className="audioflume-music-home-hero-frame"
                           style={artist ? {
@@ -1616,24 +1614,17 @@ export default function MusicPage() {
                           <div className="audioflume-music-home-hero-content">
                             <AudioflumeMark className="audioflume-music-home-hero-mark" />
                             <div className="audioflume-music-home-hero-footer">
-                              {artistSong ? (
-                                <div className="audioflume-music-home-hero-song">
-                                  {artistSong.coverArt ? (
-                                    <img src={artistSong.coverArt} alt="" />
-                                  ) : (
-                                    <span className="audioflume-music-home-hero-song-placeholder" aria-hidden="true" />
-                                  )}
-                                  <span>{artistSong.title}</span>
-                                </div>
-                              ) : null}
+                              <Link className="audioflume-music-home-hero-link" href="/discover">
+                                Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+                              </Link>
                               <span className="audioflume-music-home-hero-credit">
                                 {artist?.name ?? "Judah Earl"}
                                 {artist?.designation ? <> <span aria-hidden="true">•</span> {artist.designation}</> : null}
                               </span>
                             </div>
                           </div>
-                        </div>;
-                      })}
+                        </div>
+                      ))}
                     </SlidingShelfShell>
                   </div>
                 ) : null}
