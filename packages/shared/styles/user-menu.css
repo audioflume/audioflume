@@ -263,6 +263,7 @@ html[data-theme="light"] {
   border-radius: 999px;
   background: color-mix(in srgb, var(--text-primary) 10%, transparent);
   color: var(--text-primary);
+  transition: background-color 100ms ease;
 }
 
 .filmwave-web-user-menu-new-project-icon svg {
