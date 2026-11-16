@@ -1,3 +1,8 @@
+.overlayControl,
+.overlayControl span {
+  color: #fff;
+}
+
 .overlaySlider {
   appearance: none;
   -webkit-appearance: none;
@@ -14,17 +19,17 @@
   appearance: none;
   width: 14px;
   height: 14px;
-  border: 2px solid #fff;
+  border: 0;
   border-radius: 50%;
-  background: #111;
+  background: #fff;
 }
 
 .overlaySlider::-moz-range-thumb {
-  width: 10px;
-  height: 10px;
-  border: 2px solid #fff;
+  width: 14px;
+  height: 14px;
+  border: 0;
   border-radius: 50%;
-  background: #111;
+  background: #fff;
 }
 
 .overlaySlider:focus-visible {
