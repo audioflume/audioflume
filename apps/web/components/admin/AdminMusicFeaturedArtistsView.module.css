@@ -1,5 +1,8 @@
-.overlayControl,
-.overlayControl span {
+.overlayControl {
+  color: #fff;
+}
+
+.overlayControl .overlayText {
   color: #fff;
 }
 
