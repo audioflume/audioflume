@@ -26,7 +26,6 @@ import {
 } from "@filmwave/shared";
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 import { useAccountSession } from "@/context/AccountSessionContext";
-import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
 import {
