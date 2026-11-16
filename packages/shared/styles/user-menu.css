@@ -239,6 +239,11 @@ html[data-theme="light"] {
   border-bottom: 1.25px solid var(--filmwave-menu-sep);
 }
 
+.filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu > .filmwave-user-menu-profile-link:is(:hover, :has(+ .filmwave-web-user-menu-new-project:hover)),
+.filmwave-web-user-menu-new-project:hover {
+  border-bottom-color: transparent;
+}
+
 .filmwave-web-user-menu .filmwave-web-user-menu-new-project-button {
   box-sizing: border-box;
   width: 100%;
