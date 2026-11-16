@@ -26,8 +26,12 @@
   color: #fff;
 }
 
-.appearanceOption:hover {
-  filter: brightness(1.08);
+.lightOption:hover {
+  background: #f98866;
+}
+
+.darkOption:hover {
+  background: #d9e254;
 }
 
 .appearanceOption[aria-pressed="false"] svg {
