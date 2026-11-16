@@ -2529,8 +2529,8 @@ body:has(.audioflume-home-landing)
   top: clamp(20px, 2.6vw, 40px);
   right: clamp(20px, 2.6vw, 40px);
   z-index: 2;
-  width: clamp(28px, 2.6vw, 40px);
-  height: auto;
+  width: clamp(30px, 2.2vw, 34px);
+  height: clamp(30px, 2.2vw, 34px);
   color: #ffffff;
   pointer-events: none;
 }
