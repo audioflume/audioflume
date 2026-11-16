@@ -314,7 +314,7 @@ html[data-theme="light"] {
 
 .filmwave-web-user-menu .filmwave-user-menu-signout {
   border-top: 1.25px solid var(--filmwave-menu-sep);
-  padding-top: 0;
+  padding-top: 10px;
   padding-bottom: 0;
 }
 
