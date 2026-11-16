@@ -281,6 +281,12 @@ html[data-theme="light"] {
   color: #4d4d4d;
 }
 
+:where(html.light, html[data-theme="light"])
+  .filmwave-web-user-menu-new-project-button:hover
+  .filmwave-web-user-menu-new-project-icon {
+  background: #d6d6d6;
+}
+
 .filmwave-web-user-menu .filmwave-user-menu-actions {
   padding: 8px 0;
 }
