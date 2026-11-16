@@ -52,6 +52,7 @@ import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
 import { AudioflumeMark, AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import SlidingShelfShell from "@/components/SlidingShelfShell";
 
 import "./music-library-redesign.css";
 
@@ -433,7 +434,6 @@ export default function MusicPage() {
     hero_image_position_y: number;
     overlay_opacity: number;
   }[]>([]);
-  const [activeFeaturedBannerIndex, setActiveFeaturedBannerIndex] = useState(0);
 
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
@@ -1328,7 +1328,6 @@ export default function MusicPage() {
               overlay_opacity: artist.overlay_opacity,
             })),
         );
-        setActiveFeaturedBannerIndex(0);
       })
       .catch(() => {
         // Keep the existing banner image if the featured artist list is unavailable.
@@ -1337,7 +1336,6 @@ export default function MusicPage() {
     return () => controller.abort();
   }, [showFeaturedSongShelf]);
 
-  const activeFeaturedBannerArtist = featuredBannerArtists[activeFeaturedBannerIndex] ?? null;
 
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
@@ -1600,43 +1598,34 @@ export default function MusicPage() {
                     </div>
                   </div>
                 ) : showFeaturedSongShelf ? (
-                  <div
-                    className="audioflume-music-home-hero"
-                    style={activeFeaturedBannerArtist ? {
-                      "--audioflume-music-featured-image": `url("${activeFeaturedBannerArtist.hero_image_url.replaceAll('"', '\\"')}")`,
-                      "--audioflume-music-featured-position": `${activeFeaturedBannerArtist.hero_image_position_x}% ${activeFeaturedBannerArtist.hero_image_position_y}%`,
-                      "--audioflume-music-featured-overlay": activeFeaturedBannerArtist.overlay_opacity / 100,
-                    } as CSSProperties : undefined}
-                  >
-                    <div className="audioflume-music-home-hero-frame">
-                      <HomeHeroBanner backgroundOnly />
-                      <div className="audioflume-music-home-hero-content">
-                        <AudioflumeMark className="audioflume-music-home-hero-mark" />
-                        <div className="audioflume-music-home-hero-footer">
-                          <Link className="audioflume-music-home-hero-link" href="/discover">
-                            Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
-                          </Link>
-                          <span className="audioflume-music-home-hero-credit">
-                            {activeFeaturedBannerArtist?.name ?? "Judah Earl"}
-                            {activeFeaturedBannerArtist?.designation ? <> <span aria-hidden="true">•</span> {activeFeaturedBannerArtist.designation}</> : null}
-                          </span>
+                  <div className="audioflume-music-home-hero">
+                    <SlidingShelfShell label="featured artist banners" itemCount={featuredBannerArtists.length || 1}>
+                      {(featuredBannerArtists.length ? featuredBannerArtists : [null]).map((artist, index) => (
+                        <div
+                          key={artist?.id ?? "music-banner-fallback"}
+                          className="audioflume-music-home-hero-frame"
+                          style={artist ? {
+                            "--audioflume-music-featured-image": `url("${artist.hero_image_url.replaceAll('"', '\\"')}")`,
+                            "--audioflume-music-featured-position": `${artist.hero_image_position_x}% ${artist.hero_image_position_y}%`,
+                            "--audioflume-music-featured-overlay": artist.overlay_opacity / 100,
+                          } as CSSProperties : undefined}
+                        >
+                          <HomeHeroBanner backgroundOnly />
+                          <div className="audioflume-music-home-hero-content">
+                            <AudioflumeMark className="audioflume-music-home-hero-mark" />
+                            <div className="audioflume-music-home-hero-footer">
+                              <Link className="audioflume-music-home-hero-link" href="/discover">
+                                Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+                              </Link>
+                              <span className="audioflume-music-home-hero-credit">
+                                {artist?.name ?? "Judah Earl"}
+                                {artist?.designation ? <> <span aria-hidden="true">•</span> {artist.designation}</> : null}
+                              </span>
+                            </div>
+                          </div>
                         </div>
-                      </div>
-                    </div>
-                    {featuredBannerArtists.length > 1 ? (
-                      <div className="audioflume-music-home-hero-indicators" role="group" aria-label="Featured artists">
-                        {featuredBannerArtists.map((artist, index) => (
-                          <button
-                            key={artist.id}
-                            type="button"
-                            className={index === activeFeaturedBannerIndex ? "is-active" : ""}
-                            aria-label={`Show ${artist.name} banner`}
-                            aria-pressed={index === activeFeaturedBannerIndex}
-                            onClick={() => setActiveFeaturedBannerIndex(index)}
-                          />
-                        ))}
-                      </div>
-                    ) : null}
+                      ))}
+                    </SlidingShelfShell>
                   </div>
                 ) : null}
 
