@@ -1,8 +1,6 @@
 "use client";
 
 import { useEffect, useState, type PointerEvent, type RefObject } from "react";
-import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
-import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import styles from "./ShelfIndicatorNavigation.module.css";
 
 type Props = {
@@ -137,10 +135,14 @@ export default function ShelfIndicatorNavigation({
       )}
       <div className={`audioflume-discover-artist-navigation-arrows ${styles.arrows}`}>
         <button type="button" onClick={onPrev} disabled={disabled || !position.canPrev} aria-label={`Previous ${label}`}>
-          <ChevronLeftIcon size={18} />
+          <svg width="6" height="11" viewBox="8 5 8 14" fill="none" aria-hidden="true">
+            <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </button>
         <button type="button" onClick={onNext} disabled={disabled || !position.canNext} aria-label={`Next ${label}`}>
-          <ChevronRightIcon size={18} />
+          <svg width="6" height="11" viewBox="8 5 8 14" fill="none" aria-hidden="true">
+            <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
         </button>
       </div>
     </div>
