@@ -229,7 +229,7 @@ export default function AdminMusicFeaturedArtistsView() {
                 />
                 <div
                   className="pointer-events-none absolute inset-0"
-                  style={{ background: `radial-gradient(ellipse 75% 95% at bottom left, rgba(0, 0, 0, ${overlay / 100}), transparent 100%)` }}
+                  style={{ background: `rgba(0, 0, 0, ${overlay / 100})` }}
                 />
                 {cropEditingId === item.artist_id ? (
                   <div
@@ -260,8 +260,8 @@ export default function AdminMusicFeaturedArtistsView() {
                   )}
                 </button>
                 {cropEditingId === item.artist_id ? (
-                  <label className={`absolute bottom-3 left-3 z-[3] flex items-center gap-3 rounded-[5px] bg-black/65 px-3 py-2 text-[11px] ${styles.overlayControl}`}>
-                    <span>Dark overlay</span>
+                  <label className={`absolute bottom-3 left-3 z-[3] flex items-center gap-3 rounded-[5px] bg-black/55 px-3 py-2 text-[11px] ${styles.overlayControl}`}>
+                    <span className={styles.overlayText}>Dark overlay</span>
                     <input
                       type="range"
                       min={0}
@@ -274,7 +274,7 @@ export default function AdminMusicFeaturedArtistsView() {
                       style={{ "--overlay-progress": `${overlay}%` } as CSSProperties}
                       onChange={event => setOverlayDrafts(current => ({ ...current, [item.artist_id]: Number(event.target.value) }))}
                     />
-                    <span className="w-8 text-right tabular-nums">{overlay}%</span>
+                    <span className={`w-8 text-right tabular-nums ${styles.overlayText}`}>{overlay}%</span>
                   </label>
                 ) : null}
                 {cropEditingId === item.artist_id ? (
