@@ -21,6 +21,7 @@ import Footer from "@/components/Footer";
 import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
+import { HomeLandingPromoBlocks } from "./HomeLandingContent";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
@@ -1269,6 +1270,11 @@ export default function HomePageContent({
           <HomeArtistShelfSkeleton discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
+        ) : null}
+        {!showHero ? (
+          <div className="audioflume-experiment-main audioflume-experiment-promos">
+            <HomeLandingPromoBlocks />
+          </div>
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
