@@ -1463,7 +1463,7 @@ main
   align-items: baseline;
   gap: 8px;
   color: #fff;
-  font-size: clamp(14px, 1.25vw, 18px);
+  font-size: clamp(14px, 1.2vw, 18px);
   font-weight: 300;
   letter-spacing: -.035em;
   text-decoration: none;
@@ -1472,10 +1472,10 @@ main
 }
 
 .audioflume-music-page .audioflume-music-home-hero-link svg {
-  width: 20px;
-  height: 20px;
+  width: 18px;
+  height: 18px;
   flex: 0 0 auto;
-  transform: translateY(5px);
+  transform: translateY(4px);
 }
 
 .audioflume-music-page .audioflume-music-home-hero-link:hover,
