@@ -1499,8 +1499,13 @@ main
   position: absolute;
   inset: 0;
   z-index: -2;
-  background-image: var(--audioflume-music-featured-image, none);
-  background-position: var(--audioflume-music-featured-position, center);
+  background-image:
+    linear-gradient(
+      rgba(0, 0, 0, var(--audioflume-music-featured-overlay, 0)),
+      rgba(0, 0, 0, var(--audioflume-music-featured-overlay, 0))
+    ),
+    var(--audioflume-music-featured-image, none);
+  background-position: center, var(--audioflume-music-featured-position, center);
   background-size: cover;
   background-repeat: no-repeat;
   pointer-events: none;
@@ -1512,7 +1517,6 @@ main
   inset: 0;
   z-index: 3;
   border-radius: inherit;
-  background: rgba(0, 0, 0, var(--audioflume-music-featured-overlay, 0));
   box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
   pointer-events: none;
 }
