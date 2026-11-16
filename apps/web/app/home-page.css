@@ -1339,8 +1339,8 @@ body:has(.audioflume-home-landing)
   --audioflume-featured-artist-bar-layer: auto;
   --audioflume-featured-artist-gap: 10px;
   --audioflume-featured-artist-inset: var(--audioflume-home-page-gutter);
-  --audioflume-featured-artist-scroll-snap: none;
-  --audioflume-featured-artist-scroll-padding: 0;
+  --audioflume-featured-artist-scroll-snap: x mandatory;
+  --audioflume-featured-artist-scroll-padding: var(--audioflume-featured-artist-inset);
   --audioflume-featured-artist-mobile-width: 92vw;
 }
 
@@ -2387,6 +2387,7 @@ body:has(.audioflume-home-landing)
   overflow: hidden;
   border-radius: 0;
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-link {
@@ -5479,12 +5480,12 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-songs-link: #fff;
 }
 
-body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
+body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: #1b1b1b;
   --audioflume-home-header-border: transparent;
 }
 
-:where(html.light, html[data-theme="light"]) body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
+:where(html.light, html[data-theme="light"]) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: #fff;
   --audioflume-home-header-text: #111;
   --audioflume-home-header-muted-link: #111;
