@@ -1373,12 +1373,26 @@ main
 /* Reuse the homepage hero with the shorter historical Music-page frame. */
 .audioflume-music-page .audioflume-music-home-hero {
   --audioflume-music-hero-padding: clamp(20px, 2.6vw, 40px);
+  --audioflume-music-banner-left-extension: var(--filmwave-page-gutter);
+  --audioflume-music-banner-right-extension: var(--filmwave-page-gutter);
+  --sliding-shelf-width: calc(100% + var(--audioflume-music-banner-left-extension) + var(--audioflume-music-banner-right-extension));
+  --sliding-shelf-margin-left: calc(0px - var(--audioflume-music-banner-left-extension));
+  --sliding-shelf-padding-left: var(--audioflume-music-banner-left-extension);
+  --sliding-shelf-padding-right: var(--audioflume-music-banner-right-extension);
+  --sliding-shelf-gap: 15px;
   width: 100%;
   margin: 8px 0 32px;
 }
 
+.audioflume-music-page .music-page-content-shell.is-filter-open .audioflume-music-home-hero {
+  --audioflume-music-banner-left-extension: calc(var(--audioflume-music-content-gap) + 8px);
+  --audioflume-music-banner-right-extension: calc(var(--audioflume-music-content-gap) + 12px);
+}
+
 .audioflume-music-page .audioflume-music-home-hero-frame {
   position: relative;
+  flex: 0 0 100%;
+  scroll-snap-align: start;
 }
 
 .audioflume-music-page .audioflume-music-home-hero-frame::after {
@@ -1453,35 +1467,6 @@ main
 .audioflume-music-page .audioflume-music-home-hero-link:hover,
 .audioflume-music-page .audioflume-music-home-hero-link:focus-visible {
   opacity: .8;
-}
-
-.audioflume-music-page .audioflume-music-home-hero-indicators {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  margin-top: 10px;
-}
-
-.audioflume-music-page .audioflume-music-home-hero-indicators button {
-  width: 4px;
-  height: 4px;
-  flex: 0 0 auto;
-  border: 0;
-  border-radius: 999px;
-  padding: 0;
-  background: color-mix(in srgb, var(--border) 75%, var(--text-muted));
-  transition: width 300ms ease-out;
-  cursor: pointer;
-}
-
-.audioflume-music-page .audioflume-music-home-hero-indicators button.is-active {
-  width: 24px;
-}
-
-.audioflume-music-page .audioflume-music-home-hero-indicators button:focus-visible {
-  outline: 1px solid var(--text-primary);
-  outline-offset: 2px;
 }
 
 .audioflume-music-page .audioflume-music-home-hero .audioflume-experiment-hero {
