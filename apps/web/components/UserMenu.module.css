@@ -2,7 +2,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 8px;
-  padding: 0 12px;
+  padding: 0 12px 12px;
 }
 
 .appearanceOption {
@@ -14,6 +14,7 @@
   border-radius: 4px;
   font: inherit;
   cursor: pointer;
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
 .lightOption {
@@ -28,14 +29,24 @@
 
 .lightOption:hover {
   background: #f98866;
+  color: #111;
 }
 
 .darkOption:hover {
   background: #d9e254;
+  color: #111;
 }
 
 .appearanceOption[aria-pressed="false"] svg {
   opacity: .55;
+}
+
+.appearanceOption svg {
+  transition: opacity 160ms ease;
+}
+
+.appearanceOption:hover svg {
+  opacity: 1;
 }
 
 .appearanceOption:focus-visible {
