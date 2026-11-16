@@ -2503,10 +2503,21 @@ body:has(.audioflume-home-landing)
   min-width: 0;
   color: #fff;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(15px, 1.5vw, 21px);
-  font-weight: 500;
+  font-size: clamp(32px, 3.2vw, 56px);
+  font-weight: 400;
   letter-spacing: -.025em;
   line-height: 1.08;
+}
+
+.audioflume-discover-featured-mark {
+  position: absolute;
+  top: clamp(20px, 2.6vw, 40px);
+  right: clamp(20px, 2.6vw, 40px);
+  z-index: 2;
+  width: clamp(28px, 2.6vw, 40px);
+  height: auto;
+  color: #ffffff;
+  pointer-events: none;
 }
 
 .audioflume-discover-featured-name-arrow {
