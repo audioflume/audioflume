@@ -1379,7 +1379,7 @@ main
   --sliding-shelf-margin-left: calc(0px - var(--audioflume-music-banner-left-extension));
   --sliding-shelf-padding-left: var(--audioflume-music-banner-left-extension);
   --sliding-shelf-padding-right: var(--audioflume-music-banner-right-extension);
-  --sliding-shelf-gap: 15px;
+  --sliding-shelf-gap: calc(var(--audioflume-music-banner-right-extension) + 2px);
   --audioflume-music-banner-slide-width: calc(100vw - 2 * var(--filmwave-page-gutter));
   width: 100%;
   margin: 8px 0 32px;
@@ -1391,6 +1391,19 @@ main
   --audioflume-music-banner-slide-width: calc(100vw - var(--audioflume-music-filter-width) - var(--audioflume-music-content-gap) * 2 - 20px);
 }
 
+.audioflume-music-page .audioflume-music-home-hero [aria-label="featured artist banners"] {
+  scroll-snap-type: x mandatory;
+  scroll-padding-left: var(--audioflume-music-banner-left-extension);
+  scroll-padding-right: var(--audioflume-music-banner-right-extension);
+}
+
+.audioflume-music-page .audioflume-music-home-hero .audioflume-discover-artist-navigation {
+  width: var(--audioflume-music-banner-slide-width);
+  max-width: none;
+  margin-right: 0;
+  margin-left: var(--audioflume-music-banner-left-extension);
+}
+
 .audioflume-music-page .audioflume-music-home-hero-frame {
   position: relative;
   box-sizing: border-box;
@@ -1398,6 +1411,7 @@ main
   width: var(--audioflume-music-banner-slide-width);
   min-width: var(--audioflume-music-banner-slide-width);
   scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 .audioflume-music-page .audioflume-music-home-hero-frame::after {
