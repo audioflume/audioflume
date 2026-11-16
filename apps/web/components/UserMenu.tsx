@@ -144,29 +144,6 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
           label="Support & FAQ"
           onClose={onClose}
         />
-        <div className={styles.appearanceOptions} role="group" aria-label="Appearance">
-          <button
-            type="button"
-            className={`${styles.appearanceOption} ${styles.lightOption}`}
-            onClick={() => setTheme("light")}
-            aria-label="Light mode"
-            aria-pressed={theme === "light"}
-          >
-            <SunIcon />
-          </button>
-          <button
-            type="button"
-            className={`${styles.appearanceOption} ${styles.darkOption}`}
-            onClick={() => setTheme("dark")}
-            aria-label="Dark mode"
-            aria-pressed={theme === "dark"}
-          >
-            <MoonIcon />
-          </button>
-        </div>
-      </UserMenuActions>
-
-      <UserMenuActions className="filmwave-user-menu-signout">
         <button
           type="button"
           onClick={async () => {
@@ -176,7 +153,31 @@ export default function UserMenu({ onClose }: { onClose?: () => void }) {
           className="filmwave-dropdown-item filmwave-user-menu-exit"
         >
           <span>Sign Out</span>
-        </button>      </UserMenuActions>
+        </button>
+      </UserMenuActions>
+
+      <UserMenuActions className="filmwave-user-menu-signout">
+        <div className={styles.appearanceOptions} role="group" aria-label="Appearance">
+          <button
+            type="button"
+            className={`${styles.appearanceOption} ${styles.lightOption}`}
+            onClick={() => setTheme("light")}
+            aria-label="Light mode"
+            aria-pressed={theme === "light"}
+          >
+            <LightMode />
+          </button>
+          <button
+            type="button"
+            className={`${styles.appearanceOption} ${styles.darkOption}`}
+            onClick={() => setTheme("dark")}
+            aria-label="Dark mode"
+            aria-pressed={theme === "dark"}
+          >
+            <DarkMode />
+          </button>
+        </div>
+      </UserMenuActions>
       </UserMenuPanel>
 
       <CreateProjectModal
