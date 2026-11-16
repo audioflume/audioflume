@@ -5988,7 +5988,7 @@ body:has(:is(.audioflume-home-experiment, .curated-playlists-page-root, .communi
   left: 7%;
   display: flex;
   align-items: baseline;
-  gap: 16px;
+  gap: 6px;
 }
 
 .audioflume-experiment-lifetime-price {
