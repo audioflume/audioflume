@@ -1454,6 +1454,10 @@ main
   white-space: nowrap;
 }
 
+.audioflume-music-page .audioflume-music-home-hero-credit > span {
+  margin-inline: 5px;
+}
+
 .audioflume-music-page .audioflume-music-home-hero-link {
   display: inline-flex;
   align-items: baseline;
