@@ -2447,14 +2447,14 @@ body:has(.audioflume-home-landing)
     width: 33.333333%;
     min-width: 0;
     align-items: center;
-    padding: clamp(18px, 2vw, 28px);
+    padding: clamp(28px, 3vw, 44px);
     background: #111111;
     color: #ffffff;
   }
 
   .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-list {
     height: 100%;
-    grid-template-rows: repeat(7, minmax(0, 1fr));
+    grid-template-rows: repeat(6, minmax(0, 1fr));
   }
 
   .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song {
