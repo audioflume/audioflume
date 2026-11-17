@@ -253,16 +253,16 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
           </>
         }
         details={
-          <div className={styles.artistDetails}>
-            <Link className={playlistCardStyles.copy} href={href}>
+          <Link className={styles.artistDetails} href={href} aria-label={`Explore artist ${artist.name}`}>
+            <div className={playlistCardStyles.copy}>
               <h3 className={styles.artistName}>{artist.name}</h3>
               {artist.designation ? <p>{artist.designation}</p> : null}
-            </Link>
-            <Link className={styles.artistExplore} href={href} aria-label={`Explore artist ${artist.name}`}>
+            </div>
+            <span className={styles.artistExplore}>
               <span className={styles.artistExploreText}>Explore artist</span>
               <ArrowUpRightIcon size={17} strokeWidth={1.5} />
-            </Link>
-          </div>
+            </span>
+          </Link>
         }
       />
     </div>
