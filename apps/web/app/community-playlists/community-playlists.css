@@ -626,7 +626,7 @@ body:has(.community-playlists-page-root) {
 .community-skeleton-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  column-gap: 48px;
+  column-gap: min(var(--filmwave-page-gutter), 48px);
   row-gap: 40px;
 }
 
@@ -702,7 +702,7 @@ body:has(.community-playlists-page-root) {
 
   .community-page-playlist-grid,
   .community-skeleton-grid {
-    column-gap: 48px;
+    column-gap: min(var(--filmwave-page-gutter), 48px);
     row-gap: 32px;
   }
 
