@@ -332,15 +332,8 @@
   display: none;
 }
 
-@media (max-width: 980px) {
-  .artistCard .hoverSongPanel,
-  .artistCard:hover .hoverSongPanel,
-  .artistCard:focus-within .hoverSongPanel,
-  .artistCard .artistGenres {
-    display: none;
-  }
-
-  .artistCard .miniPlayer {
+/* Artist preview stays hover-based at all widths. */
+.artistCard .miniPlayer {
     position: absolute;
     inset: 0;
     z-index: 4;
@@ -506,6 +499,91 @@
   .miniPlayerArtControls button:disabled {
     opacity: .35;
     cursor: default;
+  }
+
+.miniPlayerCompactSongs {
+  display: none;
+}
+
+@media (min-width: 1251px) {
+  .artistCard .miniPlayer {
+    padding: clamp(16px, 2vw, 26px);
+  }
+
+  .miniPlayerArt {
+    width: min(34%, 128px);
+  }
+
+  .miniPlayerInfo {
+    margin-top: 10px;
+  }
+
+  .miniPlayerProgress {
+    margin-top: 12px;
+  }
+
+  .miniPlayerCompactSongs {
+    display: grid;
+    width: 100%;
+    min-height: 0;
+    gap: 0;
+    margin-top: 14px;
+    border-top: 1px solid rgba(255, 255, 255, .12);
+  }
+
+  .miniPlayerCompactRow {
+    display: grid;
+    width: 100%;
+    min-width: 0;
+    grid-template-columns: 26px minmax(0, 1fr) 16px;
+    align-items: center;
+    gap: 10px;
+    min-height: 0;
+    padding: 7px 0;
+    border: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    background: transparent;
+    color: #fff;
+    text-align: left;
+    cursor: pointer;
+  }
+
+  .miniPlayerCompactRow:last-child {
+    border-bottom: 0;
+  }
+
+  .miniPlayerCompactCover {
+    display: block;
+    width: 26px;
+    height: 26px;
+    overflow: hidden;
+    background: #262626;
+  }
+
+  .miniPlayerCompactCover img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .miniPlayerCompactTitle {
+    overflow: hidden;
+    font-size: 12px;
+    font-weight: 400;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .miniPlayerCompactPlaceholder {
+    opacity: .4;
+    cursor: default;
+  }
+}
+
+@media (max-width: 1250px) {
+  .artistCard .artistGenres {
+    display: none;
   }
 }
 
