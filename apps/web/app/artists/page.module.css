@@ -607,6 +607,17 @@
     border-bottom: 0;
   }
 
+  .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder):is(:hover, :focus-visible) > svg {
+    box-sizing: border-box;
+    width: 24px;
+    height: 24px;
+    justify-self: center;
+    border-radius: 50%;
+    background: #fff;
+    padding: 6px;
+    color: #111;
+  }
+
   .miniPlayerCompactCover {
     display: block;
     width: 26px;
