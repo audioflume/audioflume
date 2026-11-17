@@ -6,7 +6,7 @@ import { useEffect, useMemo, useState } from "react";
 import Footer from "@/components/Footer";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import playlistCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
-import HomeExperimentSearch from "@/components/HomeExperimentSearch";
+import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -32,7 +32,6 @@ type DirectoryArtist = {
   songs: Song[];
 };
 
-const INITIAL_GENRE_LIMIT = 14;
 const PREVIEW_CARD_COUNT = 8;
 
 function formatPreviewDuration(seconds: number | undefined) {
@@ -216,6 +215,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
+  const hasActiveSong = playable.some((song) => song.id === currentSong?.id);
   const href = `/artists/${artist.slug}`;
 
   function playSong(song: Song) {
@@ -228,7 +228,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
       <PlaylistCardShell
         href={href}
         ariaLabel={`Explore ${artist.name}`}
-        className={`${playlistCardStyles.card} ${styles.artistCard}`}
+        className={`${playlistCardStyles.card} ${styles.artistCard}${hasActiveSong ? ` ${styles.artistCardActive}` : ""}`}
         squareMedia
         mediaClassName={styles.artistMedia}
         media={
@@ -282,8 +282,6 @@ export default function ArtistsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
-  const [activeGenre, setActiveGenre] = useState<string | null>(null);
-  const [showAllGenres, setShowAllGenres] = useState(false);
   useEffect(() => {
     const controller = new AbortController();
 
@@ -305,26 +303,16 @@ export default function ArtistsPage() {
     return () => controller.abort();
   }, []);
 
-  const genres = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const artist of artists) {
-      for (const genre of artist.genres) counts.set(genre, (counts.get(genre) ?? 0) + 1);
-    }
-    return [...counts.entries()].sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]));
-  }, [artists]);
-
   const visibleArtists = useMemo(() => {
     const search = query.trim().toLocaleLowerCase();
     return artists.filter((artist) => {
-      if (activeGenre && !artist.genres.includes(activeGenre)) return false;
       if (!search) return true;
       return [artist.name, artist.designation ?? "", artist.intro_text ?? "", ...artist.genres]
         .some((text) => text.toLocaleLowerCase().includes(search));
     });
-  }, [artists, query, activeGenre]);
+  }, [artists, query]);
 
-  const displayedGenres = showAllGenres ? genres : genres.slice(0, INITIAL_GENRE_LIMIT);
-  const showPreviews = !query.trim() && !activeGenre;
+  const showPreviews = !query.trim();
   const cards = [
     ...visibleArtists.map((artist) => ({ kind: "artist" as const, artist })),
     ...(showPreviews
@@ -334,46 +322,45 @@ export default function ArtistsPage() {
 
   return (
     <main className={`${styles.page} artists-page-root`}>
-      <HomeExperimentSearch />
+      <div className="audioflume-experiment-search">
+        <div
+          className="audioflume-experiment-search-row"
+          onClick={(event) => {
+            if (
+              event.target instanceof Element &&
+              event.target.closest(".audioflume-experiment-search-field") &&
+              !event.target.closest("button")
+            ) {
+              event.currentTarget.querySelector<HTMLInputElement>(".audioflume-experiment-search-field input")?.focus();
+            }
+          }}
+        >
+          <Link className="audioflume-experiment-search-filter" href="/music?filters=open">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4v16M12 4v16M19 4v16M2 8h6M9 15h6M16 10h6" /></svg>
+            <span>Filters</span>
+          </Link>
+          <label className="audioflume-experiment-search-field">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <circle cx="11" cy="11" r="6.5" />
+              <path d="m16 16 4.5 4.5" />
+            </svg>
+            <input
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              placeholder="Search artists by name, genre or keyword"
+              aria-label="Search artists by name, genre or keyword"
+            />
+            {query.length > 0 ? (
+              <button type="button" className="audioflume-experiment-search-clear" onClick={() => setQuery("")} aria-label="Clear search">
+                <XIcon size={8} strokeWidth={1.4} />
+              </button>
+            ) : null}
+          </label>
+          <GlobalReferenceSearch className="audioflume-experiment-search-similar" />
+        </div>
+      </div>
       <div className={styles.content}>
-        <header className={styles.intro}>
-          <h1>Discover the artists &amp;<br className={styles.titleBreak} /> composers behind the sound</h1>
-        </header>
-
-        <section className={styles.browser} aria-label="Browse artists">
-          <div className={styles.genrePills} role="group" aria-label="Search and filter artists">
-            <form className={`curated-pill-search ${styles.searchForm}`} role="search" onSubmit={(event) => event.preventDefault()}>
-              <span className="curated-pill-search-toggle is-active" aria-hidden="true">
-                <svg viewBox="0 0 20 20">
-                  <circle cx="8" cy="8" r="5.25" />
-                  <path d="m11.9 11.9 4.1 4.1" />
-                </svg>
-              </span>
-              <div className="curated-pill-search-field-wrap">
-                <input type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search artists" aria-label="Search artists" />
-                {query && (
-                  <button type="button" className="curated-pill-search-clear" onClick={() => setQuery("")} aria-label="Clear artist search">
-                    <XIcon size={12} strokeWidth={2.4} />
-                  </button>
-                )}
-              </div>
-            </form>
-            {!loading && genres.length > 0 && (
-              <>
-                <button type="button" className={`curated-main-filter-pill ${styles.genreFilterPill}${activeGenre === null ? " is-active" : ""}`} aria-pressed={activeGenre === null} onClick={() => setActiveGenre(null)}>All genres</button>
-                {displayedGenres.map(([genre]) => (
-                  <button key={genre} type="button" className={`curated-main-filter-pill ${styles.genreFilterPill}${activeGenre === genre ? " is-active" : ""}`} aria-pressed={activeGenre === genre} onClick={() => setActiveGenre(activeGenre === genre ? null : genre)}>{genre}</button>
-                ))}
-                {genres.length > INITIAL_GENRE_LIMIT && (
-                  <button type="button" className={`curated-main-filter-pill ${styles.genreFilterPill}`} onClick={() => setShowAllGenres(!showAllGenres)} aria-expanded={showAllGenres}>
-                    {showAllGenres ? "Show less −" : `All genres +${genres.length - INITIAL_GENRE_LIMIT}`}
-                  </button>
-                )}
-              </>
-            )}
-          </div>
-        </section>
-
         {loading ? (
           <div className={styles.grid} aria-label="Loading artists">
             {Array.from({ length: 9 }, (_, index) => (
@@ -389,7 +376,7 @@ export default function ArtistsPage() {
         ) : visibleArtists.length === 0 ? (
           <div className={styles.empty}>
             <p>{artists.length === 0 ? "No artists are available yet." : "No artists match your search."}</p>
-            {(query || activeGenre) && <button type="button" onClick={() => { setQuery(""); setActiveGenre(null); }}>Clear filters</button>}
+            {query && <button type="button" onClick={() => setQuery("")}>Clear search</button>}
           </div>
         ) : (
           <section className={styles.grid} aria-label="Artists">
