@@ -191,20 +191,16 @@ function ArtistPreviewCard() {
         squareMedia
         mediaClassName={styles.artistMedia}
         media={<span className={styles.previewImage} aria-hidden="true" />}
-        overlays={
-          <>
-            <span className={styles.artistGenres} aria-hidden="true">
-              {[0, 1, 2].map((item) => <span className={styles.genrePlaceholder} key={item} />)}
-            </span>
-            <ArtistMiniPlayer artistName="Artist preview" trackCount={0} songs={[]} />
-          </>
-        }
+        overlays={<ArtistMiniPlayer artistName="Artist preview" trackCount={0} songs={[]} />}
         details={
-          <div className={playlistCardStyles.details}>
+          <div className={styles.artistDetails}>
             <div className={playlistCardStyles.copy}>
               <h3>Artist preview</h3>
               <p>Layout placeholder</p>
             </div>
+            <span className={styles.artistGenres} aria-hidden="true">
+              {[0, 1, 2].map((item) => <span className={styles.genrePlaceholder} key={item} />)}
+            </span>
           </div>
         }
       />
@@ -247,13 +243,6 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
         }
         overlays={
           <>
-            <span className={styles.artistGenres} aria-label="Artist genres">
-              {artist.genres.length
-                ? artist.genres.slice(0, 3).map((genre) => (
-                    <Link className={styles.artistGenre} href={`/music?genre=${encodeURIComponent(genre)}`} key={genre}>{genre}</Link>
-                  ))
-                : [0, 1, 2].map((item) => <span className={styles.genrePlaceholder} aria-hidden="true" key={item} />)}
-            </span>
             <ArtistMiniPlayer
               artistName={artist.name}
               trackCount={artist.track_count}
@@ -266,11 +255,18 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
           </>
         }
         details={
-          <div className={playlistCardStyles.details}>
+          <div className={styles.artistDetails}>
             <Link className={playlistCardStyles.copy} href={href}>
               <h3 className={styles.artistName}>{artist.name} <ArrowUpRightIcon size={17} strokeWidth={1.5} className={styles.artistNameArrow} /></h3>
               {artist.designation ? <p>{artist.designation}</p> : null}
             </Link>
+            <span className={styles.artistGenres} aria-label="Artist genres">
+              {artist.genres.length
+                ? artist.genres.slice(0, 3).map((genre) => (
+                    <Link className={styles.artistGenre} href={`/music?genre=${encodeURIComponent(genre)}`} key={genre}>{genre}</Link>
+                  ))
+                : [0, 1, 2].map((item) => <span className={styles.genrePlaceholder} aria-hidden="true" key={item} />)}
+            </span>
           </div>
         }
       />
