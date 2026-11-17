@@ -13,7 +13,7 @@
 .content {
   width: min(calc(100% - 2 * var(--filmwave-page-gutter)), 1535px);
   margin: 0 auto;
-  padding-top: 48px;
+  padding-top: clamp(48px, 4vw, 60px);
   padding-bottom: 110px;
 }
 
