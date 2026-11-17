@@ -199,6 +199,8 @@
   justify-content: space-between;
   gap: 12px;
   margin-top: 9px;
+  color: inherit;
+  text-decoration: none;
 }
 
 .artistDetails > :first-child {
@@ -223,7 +225,7 @@
 }
 
 .artistCard:hover .artistExplore,
-.artistExplore:focus-visible {
+.artistDetails:focus-visible .artistExplore {
   opacity: 1;
   pointer-events: auto;
 }
