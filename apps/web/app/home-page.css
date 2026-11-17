@@ -1349,6 +1349,7 @@ body:has(.audioflume-home-landing)
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-shelf {
+  --audioflume-featured-artist-edge-background: #e5e5df;
   background: #e5e5df;
 }
 
@@ -1365,16 +1366,44 @@ body:has(.audioflume-home-landing)
 
 @media (hover: hover) {
   .audioflume-home-mockup-artists.is-discover-featured-artists
-    .audioflume-home-reference-artist-shelf
-    .audioflume-home-reference-shelf-scroller {
-    clip-path: inset(0 var(--audioflume-featured-artist-inset));
-    transition: clip-path 160ms ease;
+    .audioflume-home-reference-artist-shelf::before,
+  .audioflume-home-mockup-artists.is-discover-featured-artists
+    .audioflume-home-reference-artist-shelf::after {
+    position: absolute;
+    top: 0;
+    z-index: 5;
+    width: var(--audioflume-featured-artist-inset);
+    height: max(320px, calc(var(--home-reference-width) / 3));
+    background: var(--audioflume-featured-artist-edge-background, var(--audioflume-home-canvas));
+    content: "";
+    pointer-events: none;
+    transition: opacity 160ms ease;
   }
 
   .audioflume-home-mockup-artists.is-discover-featured-artists
-    .audioflume-home-reference-artist-shelf:hover
-    .audioflume-home-reference-shelf-scroller {
-    clip-path: inset(0);
+    .audioflume-home-reference-artist-shelf::before {
+    left: 0;
+  }
+
+  .audioflume-home-mockup-artists.is-discover-featured-artists
+    .audioflume-home-reference-artist-shelf::after {
+    right: 0;
+  }
+
+  .audioflume-home-mockup-artists.is-discover-featured-artists
+    .audioflume-home-reference-artist-shelf:hover::before,
+  .audioflume-home-mockup-artists.is-discover-featured-artists
+    .audioflume-home-reference-artist-shelf:hover::after {
+    opacity: 0;
+  }
+
+  @media (max-width: 750px) {
+    .audioflume-home-mockup-artists.is-discover-featured-artists
+      .audioflume-home-reference-artist-shelf::before,
+    .audioflume-home-mockup-artists.is-discover-featured-artists
+      .audioflume-home-reference-artist-shelf::after {
+      height: max(280px, calc(var(--home-reference-width) / 1.8));
+    }
   }
 }
 
