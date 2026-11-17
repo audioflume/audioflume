@@ -35,8 +35,6 @@ type DirectoryArtist = {
 const INITIAL_GENRE_LIMIT = 14;
 const PREVIEW_CARD_COUNT = 8;
 
-const ARTIST_HOVER_SONG_COUNT = 6;
-
 function ArtistMiniPlayer({
   artistName,
   trackCount,
