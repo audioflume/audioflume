@@ -730,8 +730,10 @@
 }
 
 @media (min-width: 521px) and (max-width: 690px) {
-  .artistCard .miniPlayer {
-    padding: 14px;
+  @container (max-width: 299px) {
+    .artistCard .miniPlayer {
+      padding: 14px;
+    }
   }
 
   .miniPlayerArtControls {
