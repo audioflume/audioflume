@@ -502,6 +502,10 @@
 }
 
 @container (min-width: 300px) {
+  .artistCard .miniPlayer {
+    padding: clamp(28px, 3vw, 40px);
+  }
+
   .miniPlayerUpper {
     display: none;
   }
