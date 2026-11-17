@@ -2441,7 +2441,7 @@ body:has(.audioflume-home-landing)
     top: 0;
     right: 0;
     bottom: 0;
-    z-index: 4;
+    z-index: 2;
     display: flex;
     box-sizing: border-box;
     width: 33.333333%;
@@ -2488,6 +2488,7 @@ body:has(.audioflume-home-landing)
 
   .audioflume-discover-featured-song-panel .is-preview-placeholder {
     cursor: default;
+    pointer-events: none;
   }
 
   .audioflume-discover-featured-song-panel .is-preview-placeholder .audioflume-home-lifetime-v2-song-cover {
