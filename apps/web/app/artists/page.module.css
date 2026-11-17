@@ -589,7 +589,7 @@
     display: grid;
     width: 100%;
     min-width: 0;
-    grid-template-columns: 26px minmax(0, 1fr) 16px;
+    grid-template-columns: 26px minmax(0, 1fr) 20px;
     align-items: center;
     gap: 10px;
     min-height: 0;
@@ -609,12 +609,12 @@
 
   .miniPlayerCompactRow:not(.miniPlayerCompactPlaceholder):is(:hover, :focus-visible) > svg {
     box-sizing: border-box;
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     justify-self: center;
     border-radius: 50%;
     background: #fff;
-    padding: 6px;
+    padding: 5px;
     color: #111;
   }
 
