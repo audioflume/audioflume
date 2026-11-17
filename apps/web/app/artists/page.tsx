@@ -99,6 +99,82 @@ function ArtistHoverSongs({
   );
 }
 
+function ArtistMiniPlayer({
+  artistName,
+  trackCount,
+  songs,
+  currentSongId,
+  isPlaying,
+  onPlay,
+}: {
+  artistName: string;
+  trackCount: number;
+  songs: Song[];
+  currentSongId?: string;
+  isPlaying?: boolean;
+  onPlay?: (song: Song) => void;
+}) {
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const previews = songs.slice(0, ARTIST_HOVER_SONG_COUNT);
+  const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
+  const song = previews[index];
+  const playing = Boolean(song && currentSongId === song.id && isPlaying);
+
+  return (
+    <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
+      <div className={styles.miniPlayerArt}>
+        {song?.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
+      </div>
+      <div className={styles.miniPlayerInfo}>
+        <strong>{song?.title ?? "No preview available"}</strong>
+        <span>{artistName}</span>
+        <span className={styles.miniPlayerCount}>
+          {trackCount} {trackCount === 1 ? "song" : "songs"}
+          {previews.length > 0 ? ` · Preview ${index + 1} of ${previews.length}` : ""}
+        </span>
+      </div>
+      <div className={styles.miniPlayerControls}>
+        <button
+          type="button"
+          className={styles.miniPlayerSkip}
+          aria-label={`Previous preview from ${artistName}`}
+          disabled={previews.length < 2}
+          onClick={(event) => {
+            event.stopPropagation();
+            setPreviewIndex((index - 1 + previews.length) % previews.length);
+          }}
+        >
+          <span aria-hidden="true">‹</span>
+        </button>
+        <button
+          type="button"
+          className={styles.miniPlayerPlay}
+          aria-label={song ? `${playing ? "Pause" : "Play"} ${song.title}` : "No preview available"}
+          disabled={!song}
+          onClick={(event) => {
+            event.stopPropagation();
+            if (song) onPlay?.(song);
+          }}
+        >
+          {playing ? <PauseIcon size={20} /> : <PlayIconSmall size={20} />}
+        </button>
+        <button
+          type="button"
+          className={styles.miniPlayerSkip}
+          aria-label={`Next preview from ${artistName}`}
+          disabled={previews.length < 2}
+          onClick={(event) => {
+            event.stopPropagation();
+            setPreviewIndex((index + 1) % previews.length);
+          }}
+        >
+          <span aria-hidden="true">›</span>
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function ArtistPreviewCard() {
   return (
     <div className={playlistCardStyles.shell}>
@@ -113,6 +189,7 @@ function ArtistPreviewCard() {
               {[0, 1, 2].map((item) => <span className={styles.genrePlaceholder} key={item} />)}
             </span>
             <ArtistHoverSongs artistName="Artist preview" songs={[]} />
+            <ArtistMiniPlayer artistName="Artist preview" trackCount={0} songs={[]} />
           </>
         }
         details={
@@ -171,6 +248,14 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
             </span>
             <ArtistHoverSongs
               artistName={artist.name}
+              songs={playable}
+              currentSongId={currentSong?.id}
+              isPlaying={isPlaying}
+              onPlay={playSong}
+            />
+            <ArtistMiniPlayer
+              artistName={artist.name}
+              trackCount={artist.track_count}
               songs={playable}
               currentSongId={currentSong?.id}
               isPlaying={isPlaying}
