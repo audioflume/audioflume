@@ -35,6 +35,13 @@ type DirectoryArtist = {
 const INITIAL_GENRE_LIMIT = 14;
 const PREVIEW_CARD_COUNT = 8;
 
+function formatPreviewDuration(seconds: number | undefined) {
+  if (!Number.isFinite(seconds) || !seconds || seconds <= 0) return "—";
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = Math.floor(seconds % 60);
+  return `${minutes}:${String(remainingSeconds).padStart(2, "0")}`;
+}
+
 function ArtistMiniPlayer({
   artistName,
   trackCount,
@@ -114,7 +121,7 @@ function ArtistMiniPlayer({
         <strong>{song?.title ?? "No preview available"}</strong>
         <span className={styles.miniPlayerCount}>
           {trackCount} {trackCount === 1 ? "song" : "songs"}
-          {previews.length > 0 ? ` · Preview ${index + 1} of ${previews.length}` : ""}
+          {song ? ` · ${formatPreviewDuration(song.duration)}` : ""}
         </span>
       </div>
       <input
