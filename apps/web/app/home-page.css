@@ -2440,210 +2440,63 @@ body:has(.audioflume-home-landing)
     box-sizing: border-box;
     width: 33.333333%;
     min-width: 0;
-    flex-direction: column;
-    justify-content: center;
-    padding: clamp(28px, 3vw, 40px);
+    align-items: center;
+    padding: calc(clamp(28px, 3vw, 44px) + 2px) clamp(48px, 4vw, 76px);
     background: #111111;
     color: #ffffff;
   }
 
-  .audioflume-discover-preview-song-list {
-    width: 100%;
-    min-height: 0;
-    flex: 1 1 auto;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
-    scroll-snap-type: y mandatory;
-    scrollbar-width: none;
-    -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
-    mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-list {
+    height: 100%;
+    grid-template-rows: repeat(6, minmax(0, 1fr));
   }
 
-  .audioflume-discover-preview-song-list::-webkit-scrollbar {
-    display: none;
-  }
-
-  .audioflume-discover-preview-song-row {
-    position: relative;
-    display: grid;
+  .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song {
     width: 100%;
-    min-width: 0;
-    height: 40px;
-    grid-template-columns: 26px minmax(0, 1fr) 35px 20px;
-    align-items: center;
+    grid-template-columns: 34px minmax(0, 1fr) 28px;
     gap: 10px;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
-    box-sizing: border-box;
-    padding: 7px 0;
-    border: 0;
-    border-bottom: 1px solid rgba(255, 255, 255, .08);
+    padding: 3px 0;
+    border-right: 0;
+    border-top: 0;
+    border-left: 0;
     background: transparent;
-    color: #fff;
+    color: inherit;
     font: inherit;
     text-align: left;
-    cursor: pointer;
   }
 
-  .audioflume-discover-preview-song-row > svg {
-    position: relative;
-    z-index: 1;
-    grid-column: 4;
-    justify-self: center;
+  .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-cover {
+    width: 34px;
+    height: 34px;
   }
 
-  .audioflume-discover-preview-song-row:not(.is-preview-placeholder)::after {
-    position: absolute;
-    right: 0;
-    top: 50%;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    background: #fff;
-    content: "";
-    opacity: 0;
+  .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-copy strong {
+    font-size: 12px;
+    font-weight: 500;
+  }
+
+  .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-copy span {
+    font-size: 11px;
+  }
+
+  .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-play {
+    width: 28px;
+    height: 28px;
+    justify-self: end;
+  }
+
+  .audioflume-discover-featured-song-panel .is-preview-placeholder {
+    cursor: default;
     pointer-events: none;
-    transform: translateY(-50%);
   }
 
-  .audioflume-discover-preview-song-row:not(.is-preview-placeholder):is(:hover, :focus-visible)::after {
-    opacity: 1;
-  }
-
-  .audioflume-discover-preview-song-row:not(.is-preview-placeholder):is(:hover, :focus-visible) > svg {
-    color: #111;
-  }
-
-  .audioflume-discover-preview-song-cover {
-    display: block;
-    width: 26px;
-    height: 26px;
-    overflow: hidden;
+  .audioflume-discover-featured-song-panel .is-preview-placeholder .audioflume-home-lifetime-v2-song-cover {
     background: #262626;
   }
 
-  .audioflume-discover-preview-song-cover img {
-    display: block;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .audioflume-discover-preview-song-title {
-    overflow: hidden;
-    font-size: 12px;
-    font-weight: 400;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .audioflume-discover-preview-song-duration {
-    color: rgba(255, 255, 255, .6);
-    font-size: 11px;
-    font-weight: 400;
-    text-align: right;
-    white-space: nowrap;
-  }
-
-  .audioflume-discover-preview-song-row.is-preview-placeholder {
-    opacity: .4;
-    cursor: default;
-  }
-
-  .audioflume-discover-preview-footer {
-    display: flex;
-    width: 100%;
-    flex: 0 0 auto;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-  }
-
-  .audioflume-discover-preview-controls {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 22px;
-  }
-
-  .audioflume-discover-preview-controls button {
-    display: grid;
-    flex: 0 0 auto;
-    place-items: center;
-    border: 0;
-    border-radius: 50%;
-    cursor: pointer;
-  }
-
-  .audioflume-discover-preview-controls button:disabled {
-    opacity: .35;
-    cursor: default;
-  }
-
-  .audioflume-discover-preview-skip {
-    width: 28px;
-    height: 28px;
-    background: transparent;
-    color: #fff;
-  }
-
-  .audioflume-discover-preview-skip svg {
-    width: clamp(12px, 2vw, 20px);
-    height: clamp(12px, 2vw, 20px);
-  }
-
-  .audioflume-discover-preview-play {
-    width: 40px;
-    height: 40px;
-    background: #fff;
-    color: #111;
-    transition: transform 160ms ease;
-  }
-
-  .audioflume-discover-preview-play:hover:not(:disabled),
-  .audioflume-discover-preview-play:focus-visible:not(:disabled) {
-    transform: scale(1.03);
-  }
-
-  .audioflume-discover-preview-progress {
-    display: block;
-    width: 100%;
-    height: 2px;
-    flex: 0 0 auto;
-    margin: 16px 0 0;
-    border: 0;
-    border-radius: 999px;
-    background: rgba(255, 255, 255, .38);
-    appearance: none;
-    cursor: pointer;
-  }
-
-  .audioflume-discover-preview-progress::-webkit-slider-thumb {
-    width: 10px;
-    height: 10px;
-    border: 0;
-    border-radius: 50%;
-    background: #fff;
-    appearance: none;
-  }
-
-  .audioflume-discover-preview-progress::-moz-range-thumb {
-    width: 10px;
-    height: 10px;
-    border: 0;
-    border-radius: 50%;
-    background: #fff;
-  }
-
-  .audioflume-discover-preview-progress:disabled {
-    cursor: default;
-  }
-
-  .audioflume-discover-preview-count {
-    margin-top: 14px;
-    color: rgba(255, 255, 255, .55);
-    font-size: 11px;
-    font-weight: 400;
+  .audioflume-discover-featured-song-panel .is-preview-placeholder .audioflume-home-lifetime-v2-song-copy,
+  .audioflume-discover-featured-song-panel .is-preview-placeholder .audioflume-home-lifetime-v2-song-play {
+    opacity: .45;
   }
 }
 
