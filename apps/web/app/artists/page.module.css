@@ -197,11 +197,8 @@
   margin-top: 9px;
 }
 
-.artistDetails :global(a) {
+.artistDetails > :first-child {
   min-width: 0;
-}
-
-.artistDetails :global(a):not(.artistGenre) {
   margin-top: 0;
 }
 
