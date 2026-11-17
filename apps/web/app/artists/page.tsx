@@ -145,7 +145,7 @@ function ArtistMiniPlayer({
               setPreviewIndex((index - 1 + previews.length) % previews.length);
             }}
           >
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
               <path d="M5 5h2v14H5zM19 5v14L8 12z" />
             </svg>
           </button>
@@ -159,7 +159,7 @@ function ArtistMiniPlayer({
               setPreviewIndex((index + 1) % previews.length);
             }}
           >
-            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <svg viewBox="0 0 24 24" width="15" height="15" fill="currentColor" aria-hidden="true">
               <path d="M17 5h2v14h-2zM5 5l11 7-11 7z" />
             </svg>
           </button>
