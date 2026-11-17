@@ -56,7 +56,7 @@ function ArtistMiniPlayer({
 }) {
   const { currentTime, duration } = usePlayerProgress();
   const [previewIndex, setPreviewIndex] = useState(0);
-  const previews = songs.slice(0, ARTIST_HOVER_SONG_COUNT);
+  const previews = songs;
   const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
   const song = previews[index];
   const playing = Boolean(song && currentSongId === song.id && isPlaying);
@@ -159,7 +159,7 @@ function ArtistMiniPlayer({
                   aria-label={`${active && isPlaying ? "Pause" : "Play"} ${previewSong.title}`}
                   onClick={(event) => {
                     event.stopPropagation();
-                    if (songIndex < previews.length) setPreviewIndex(songIndex);
+                    setPreviewIndex(songIndex);
                     onPlay?.(previewSong);
                   }}
                 >
