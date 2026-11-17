@@ -37,68 +37,6 @@ const PREVIEW_CARD_COUNT = 8;
 
 const ARTIST_HOVER_SONG_COUNT = 6;
 
-function ArtistHoverSongs({
-  artistName,
-  songs,
-  currentSongId,
-  isPlaying,
-  onPlay,
-}: {
-  artistName: string;
-  songs: Song[];
-  currentSongId?: string;
-  isPlaying?: boolean;
-  onPlay?: (song: Song) => void;
-}) {
-  return (
-    <div className={styles.hoverSongPanel} aria-label={`Songs by ${artistName}`}>
-      <div className={`audioflume-home-lifetime-v2-song-list ${styles.hoverSongList}`}>
-        {Array.from({ length: ARTIST_HOVER_SONG_COUNT }, (_, index) => {
-          const song = songs[index];
-          if (!song) {
-            return (
-              <div className={`audioflume-home-lifetime-v2-song ${styles.hoverSongRow} ${styles.hoverSongPlaceholder}`} key={`placeholder-${index}`}>
-                <span className={`audioflume-home-lifetime-v2-song-cover ${styles.hoverSongCover}`} />
-                <span className="audioflume-home-lifetime-v2-song-copy">
-                  <strong>Preview track {index + 1}</strong>
-                  <span>{artistName}</span>
-                </span>
-                <span className={`audioflume-home-lifetime-v2-song-play ${styles.hoverSongPlay}`} aria-hidden="true">
-                  <PlayIconSmall size={13} />
-                </span>
-              </div>
-            );
-          }
-          const active = currentSongId === song.id;
-          return (
-            <button
-              type="button"
-              className={`audioflume-home-lifetime-v2-song ${styles.hoverSongRow}${active ? " is-active" : ""}`}
-              key={song.id}
-              onClick={(event) => {
-                event.stopPropagation();
-                onPlay?.(song);
-              }}
-              aria-label={`${active && isPlaying ? "Pause" : "Play"} ${song.title}`}
-            >
-              <span className={`audioflume-home-lifetime-v2-song-cover ${styles.hoverSongCover}`}>
-                {song.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
-              </span>
-              <span className="audioflume-home-lifetime-v2-song-copy">
-                <strong>{song.title}</strong>
-                <span>{song.artist}</span>
-              </span>
-              <span className={`audioflume-home-lifetime-v2-song-play ${styles.hoverSongPlay}`} aria-hidden="true">
-                {active && isPlaying ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
-              </span>
-            </button>
-          );
-        })}
-      </div>
-    </div>
-  );
-}
-
 function ArtistMiniPlayer({
   artistName,
   trackCount,
@@ -195,7 +133,40 @@ function ArtistMiniPlayer({
           if (song) onSeek?.(song, Number(event.target.value) / 100);
         }}
       />
-
+      <div className={styles.miniPlayerCompactSongs} aria-label={`More previews by ${artistName}`}>
+        {Array.from({ length: 3 }, (_, rowIndex) => {
+          const previewSong = previews[rowIndex];
+          if (!previewSong) {
+            return (
+              <div className={`${styles.miniPlayerCompactRow} ${styles.miniPlayerCompactPlaceholder}`} key={`preview-${rowIndex}`}>
+                <span className={styles.miniPlayerCompactCover} />
+                <span className={styles.miniPlayerCompactTitle}>Preview track {rowIndex + 1}</span>
+                <PlayIconSmall size={12} />
+              </div>
+            );
+          }
+          const active = currentSongId === previewSong.id;
+          return (
+            <button
+              type="button"
+              className={styles.miniPlayerCompactRow}
+              key={previewSong.id}
+              aria-label={`${active && isPlaying ? "Pause" : "Play"} ${previewSong.title}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                setPreviewIndex(rowIndex);
+                onPlay?.(previewSong);
+              }}
+            >
+              <span className={styles.miniPlayerCompactCover}>
+                {previewSong.coverArt ? <img src={previewSong.coverArt} alt="" draggable={false} /> : null}
+              </span>
+              <span className={styles.miniPlayerCompactTitle}>{previewSong.title}</span>
+              {active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+            </button>
+          );
+        })}
+      </div>
     </div>
   );
 }
@@ -213,7 +184,6 @@ function ArtistPreviewCard() {
             <span className={styles.artistGenres} aria-hidden="true">
               {[0, 1, 2].map((item) => <span className={styles.genrePlaceholder} key={item} />)}
             </span>
-            <ArtistHoverSongs artistName="Artist preview" songs={[]} />
             <ArtistMiniPlayer artistName="Artist preview" trackCount={0} songs={[]} />
           </>
         }
@@ -271,13 +241,6 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
                   ))
                 : [0, 1, 2].map((item) => <span className={styles.genrePlaceholder} aria-hidden="true" key={item} />)}
             </span>
-            <ArtistHoverSongs
-              artistName={artist.name}
-              songs={playable}
-              currentSongId={currentSong?.id}
-              isPlaying={isPlaying}
-              onPlay={playSong}
-            />
             <ArtistMiniPlayer
               artistName={artist.name}
               trackCount={artist.track_count}
