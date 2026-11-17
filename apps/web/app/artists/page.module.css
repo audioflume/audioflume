@@ -600,6 +600,24 @@
   }
 }
 
+@media (max-width: 1250px) {
+  .miniPlayerArtControls {
+    display: grid;
+    width: calc(100% + 2 * clamp(18px, 3vw, 28px));
+    margin-inline: calc(-1 * clamp(18px, 3vw, 28px));
+    grid-template-columns: minmax(0, 1fr) min(calc((100% - 2 * clamp(18px, 3vw, 28px)) * .56), 230px) minmax(0, 1fr);
+    gap: 0;
+  }
+
+  .miniPlayerArtControls > .miniPlayerSkip {
+    justify-self: center;
+  }
+
+  .miniPlayerArt {
+    width: 100%;
+  }
+}
+
 @media (max-width: 980px) {
   .artistCard .artistGenres {
     display: none;
@@ -611,8 +629,10 @@
     padding: 14px;
   }
 
-  .miniPlayerArt {
-    width: min(43%, 120px);
+  .miniPlayerArtControls {
+    width: calc(100% + 28px);
+    margin-inline: -14px;
+    grid-template-columns: minmax(0, 1fr) min(calc((100% - 28px) * .43), 120px) minmax(0, 1fr);
   }
 
   .miniPlayerInfo {
@@ -627,9 +647,6 @@
     margin-top: 10px;
   }
 
-  .miniPlayerArtControls {
-    gap: 8px;
-  }
 }
 
 @media (max-width: 520px) {
