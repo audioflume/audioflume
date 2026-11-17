@@ -369,6 +369,32 @@
     background: #272727;
   }
 
+  .miniPlayerSongInfo {
+    display: flex;
+    width: 100%;
+    min-width: 0;
+    align-items: baseline;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 12px;
+    font-size: 12px;
+    font-weight: 400;
+  }
+
+  .miniPlayerSongTitle {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .miniPlayerSongDuration {
+    flex: 0 0 auto;
+    color: rgba(255, 255, 255, .6);
+    font-size: 11px;
+    white-space: nowrap;
+  }
+
   .miniPlayerArt::after {
     position: absolute;
     inset: 0;
