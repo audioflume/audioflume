@@ -11,7 +11,7 @@ import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
-import { usePlayer } from "@/context/PlayerContext";
+import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import "@/components/curated/curated-browse-filters.css";
 import styles from "./page.module.css";
@@ -106,6 +106,7 @@ function ArtistMiniPlayer({
   currentSongId,
   isPlaying,
   onPlay,
+  onSeek,
 }: {
   artistName: string;
   trackCount: number;
@@ -113,12 +114,17 @@ function ArtistMiniPlayer({
   currentSongId?: string;
   isPlaying?: boolean;
   onPlay?: (song: Song) => void;
+  onSeek?: (song: Song, progress: number) => void;
 }) {
+  const { currentTime, duration } = usePlayerProgress();
   const [previewIndex, setPreviewIndex] = useState(0);
   const previews = songs.slice(0, ARTIST_HOVER_SONG_COUNT);
   const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
   const song = previews[index];
   const playing = Boolean(song && currentSongId === song.id && isPlaying);
+  const progress = song && currentSongId === song.id && duration > 0
+    ? Math.min(100, Math.max(0, (currentTime / duration) * 100))
+    : 0;
 
   return (
     <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
@@ -127,12 +133,26 @@ function ArtistMiniPlayer({
       </div>
       <div className={styles.miniPlayerInfo}>
         <strong>{song?.title ?? "No preview available"}</strong>
-        <span>{artistName}</span>
         <span className={styles.miniPlayerCount}>
           {trackCount} {trackCount === 1 ? "song" : "songs"}
           {previews.length > 0 ? ` · Preview ${index + 1} of ${previews.length}` : ""}
         </span>
       </div>
+      <input
+        type="range"
+        className={styles.miniPlayerProgress}
+        min={0}
+        max={100}
+        step={0.1}
+        value={progress}
+        disabled={!song}
+        aria-label={song ? `Seek within ${song.title}` : "No song to seek"}
+        onClick={(event) => event.stopPropagation()}
+        onChange={(event) => {
+          event.stopPropagation();
+          if (song) onSeek?.(song, Number(event.target.value) / 100);
+        }}
+      />
       <div className={styles.miniPlayerControls}>
         <div className={styles.miniPlayerSkipGroup}>
           <button
@@ -212,7 +232,7 @@ function ArtistPreviewCard() {
 }
 
 function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number }) {
-  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
   const href = `/artists/${artist.slug}`;
@@ -266,6 +286,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
               currentSongId={currentSong?.id}
               isPlaying={isPlaying}
               onPlay={playSong}
+              onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
             />
           </>
         }
