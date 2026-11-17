@@ -518,7 +518,9 @@
 
   .miniPlayerArtControls {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) min(34%, 128px) minmax(0, 1fr);
+    width: calc(100% + 2 * clamp(16px, 2vw, 26px));
+    margin-inline: calc(-1 * clamp(16px, 2vw, 26px));
+    grid-template-columns: minmax(0, 1fr) min(calc((100% - 2 * clamp(16px, 2vw, 26px)) * .34), 128px) minmax(0, 1fr);
     align-items: center;
     gap: 0;
   }
