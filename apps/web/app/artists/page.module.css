@@ -364,12 +364,20 @@
     pointer-events: auto;
   }
 
+  .miniPlayerArtControls {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(10px, 2vw, 20px);
+  }
+
   .miniPlayerArt {
     position: relative;
     width: min(56%, 230px);
     height: auto;
     aspect-ratio: 1 / 1;
-    flex: 0 0 auto;
+    flex: 0 1 auto;
     align-self: center;
     overflow: hidden;
     background: #272727;
@@ -461,22 +469,7 @@
     cursor: default;
   }
 
-  .miniPlayerControls {
-    display: flex;
-    width: 100%;
-    align-items: center;
-    justify-content: space-between;
-    margin-top: auto;
-    padding-top: 12px;
-  }
-
-  .miniPlayerSkipGroup {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-  }
-
-  .miniPlayerControls button {
+  .miniPlayerArtControls button {
     display: grid;
     flex: 0 0 auto;
     place-items: center;
@@ -487,20 +480,25 @@
   .miniPlayerSkip {
     width: 28px;
     height: 28px;
-    border: 1px solid rgba(255, 255, 255, .14);
+    border: 0;
     background: transparent;
     color: #fff;
   }
 
   .miniPlayerPlay {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 1;
     width: 44px;
     height: 44px;
     border: 0;
     background: #fff;
     color: #111;
+    transform: translate(-50%, -50%);
   }
 
-  .miniPlayerControls button:disabled {
+  .miniPlayerArtControls button:disabled {
     opacity: .35;
     cursor: default;
   }
@@ -527,8 +525,8 @@
     margin-top: 10px;
   }
 
-  .miniPlayerControls {
-    padding-top: 8px;
+  .miniPlayerArtControls {
+    gap: 8px;
   }
 }
 
