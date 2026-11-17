@@ -66,6 +66,7 @@ function ArtistMiniPlayer({
 
   return (
     <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
+      <div className={styles.miniPlayerUpper}>
       <div className={styles.miniPlayerArtControls}>
         <button
           type="button"
@@ -133,6 +134,7 @@ function ArtistMiniPlayer({
           if (song) onSeek?.(song, Number(event.target.value) / 100);
         }}
       />
+      </div>
       <div className={styles.miniPlayerCompactSongs} aria-label={`More previews by ${artistName}`}>
         {Array.from({ length: 3 }, (_, rowIndex) => {
           const previewSong = previews[rowIndex];
