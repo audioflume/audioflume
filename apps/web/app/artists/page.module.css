@@ -501,51 +501,20 @@
   display: none;
 }
 
-@media (min-width: 1251px) {
-  .artistCard .miniPlayer {
-    padding: clamp(16px, 2vw, 26px);
-  }
-
+@container (min-width: 300px) {
   .miniPlayerUpper {
-    flex: 1 1 0;
-    min-height: 0;
-    justify-content: center;
-  }
-
-  .miniPlayerArtControls {
-    display: grid;
-    width: calc(100% + 2 * clamp(16px, 2vw, 26px));
-    margin-inline: calc(-1 * clamp(16px, 2vw, 26px));
-    grid-template-columns: minmax(0, 1fr) min(calc((100% - 2 * clamp(16px, 2vw, 26px)) * .31), 116px) minmax(0, 1fr);
-    align-items: center;
-    gap: 0;
-  }
-
-  .miniPlayerArtControls > .miniPlayerSkip {
-    justify-self: center;
-  }
-
-  .miniPlayerArt {
-    width: 100%;
-  }
-
-  .miniPlayerInfo {
-    margin-top: 10px;
-  }
-
-  .miniPlayerProgress {
-    margin-top: 12px;
+    display: none;
   }
 
   .miniPlayerCompactSongs {
     display: block;
     width: 100%;
-    height: 120px;
+    height: 100%;
     min-height: 0;
-    flex: 0 0 120px;
+    flex: 1 1 auto;
     overflow-y: auto;
     overscroll-behavior-y: contain;
-    margin-top: 22px;
+    margin-top: 0;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
