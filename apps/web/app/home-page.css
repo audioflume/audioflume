@@ -2443,7 +2443,7 @@ body:has(.audioflume-home-landing)
     width: 33.333333%;
     min-width: 0;
     align-items: center;
-    padding: clamp(28px, 3vw, 44px) clamp(48px, 4vw, 76px);
+    padding: calc(clamp(28px, 3vw, 44px) + 2px) clamp(48px, 4vw, 76px);
     background: #111111;
     color: #ffffff;
   }
