@@ -2683,10 +2683,9 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-artist-link svg {
-  width: 19px;
-  height: 19px;
+  width: 20px;
+  height: 20px;
   flex: 0 0 auto;
-  transform: translateY(4px);
 }
 
 .audioflume-discover-featured-artist-link:hover,
