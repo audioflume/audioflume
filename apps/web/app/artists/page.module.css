@@ -361,7 +361,7 @@
 
   .miniPlayerUpper .miniPlayerArt {
     position: relative;
-    width: min(55%, 110px, max(0px, calc(100cqw - 2 * clamp(14px, 7cqw, 28px) - 112px)));
+    width: min(55%, 110px, max(0px, calc(100cqw - 2 * clamp(14px, 7cqw, 28px) - 148px)));
     aspect-ratio: 1 / 1;
     flex: 0 0 auto;
     align-self: center;
