@@ -9,6 +9,7 @@ import playlistCardStyles from "@/components/curated/CuratedPlaylistCard.module.
 import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
@@ -34,11 +35,75 @@ type DirectoryArtist = {
 const INITIAL_GENRE_LIMIT = 14;
 const PREVIEW_CARD_COUNT = 8;
 
+const ARTIST_HOVER_SONG_COUNT = 6;
+
+function ArtistHoverSongs({
+  artistName,
+  songs,
+  currentSongId,
+  isPlaying,
+  onPlay,
+}: {
+  artistName: string;
+  songs: Song[];
+  currentSongId?: string;
+  isPlaying?: boolean;
+  onPlay?: (song: Song) => void;
+}) {
+  return (
+    <div className={styles.hoverSongPanel} aria-label={`Songs by ${artistName}`}>
+      <div className={`audioflume-home-lifetime-v2-song-list ${styles.hoverSongList}`}>
+        {Array.from({ length: ARTIST_HOVER_SONG_COUNT }, (_, index) => {
+          const song = songs[index];
+          if (!song) {
+            return (
+              <div className={`audioflume-home-lifetime-v2-song ${styles.hoverSongRow} ${styles.hoverSongPlaceholder}`} key={`placeholder-${index}`}>
+                <span className={`audioflume-home-lifetime-v2-song-cover ${styles.hoverSongCover}`} />
+                <span className="audioflume-home-lifetime-v2-song-copy">
+                  <strong>Preview track {index + 1}</strong>
+                  <span>{artistName}</span>
+                </span>
+                <span className={`audioflume-home-lifetime-v2-song-play ${styles.hoverSongPlay}`} aria-hidden="true">
+                  <PlayIconSmall size={13} />
+                </span>
+              </div>
+            );
+          }
+          const active = currentSongId === song.id;
+          return (
+            <button
+              type="button"
+              className={`audioflume-home-lifetime-v2-song ${styles.hoverSongRow}${active ? " is-active" : ""}`}
+              key={song.id}
+              onClick={(event) => {
+                event.stopPropagation();
+                onPlay?.(song);
+              }}
+              aria-label={`${active && isPlaying ? "Pause" : "Play"} ${song.title}`}
+            >
+              <span className={`audioflume-home-lifetime-v2-song-cover ${styles.hoverSongCover}`}>
+                {song.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
+              </span>
+              <span className="audioflume-home-lifetime-v2-song-copy">
+                <strong>{song.title}</strong>
+                <span>{song.artist}</span>
+              </span>
+              <span className={`audioflume-home-lifetime-v2-song-play ${styles.hoverSongPlay}`} aria-hidden="true">
+                {active && isPlaying ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 function ArtistPreviewCard() {
   return (
     <div className={playlistCardStyles.shell}>
       <PlaylistCardShell
-        className={playlistCardStyles.card}
+        className={`${playlistCardStyles.card} ${styles.artistCard}`}
         squareMedia
         mediaClassName={styles.artistMedia}
         media={<span className={styles.previewImage} aria-hidden="true" />}
@@ -47,15 +112,13 @@ function ArtistPreviewCard() {
             <span className={styles.artistGenres} aria-hidden="true">
               {[0, 1, 2].map((item) => <span className={styles.genrePlaceholder} key={item} />)}
             </span>
-            <button type="button" className={styles.artistPlay} disabled aria-label="Preview artist unavailable">
-              <PlayIconSmall size={18} />
-            </button>
+            <ArtistHoverSongs artistName="Artist preview" songs={[]} />
           </>
         }
         details={
           <div className={playlistCardStyles.details}>
             <div className={playlistCardStyles.copy}>
-              <h3>Artist preview</h3>
+              <h3 className={styles.artistName}>Artist preview <ArrowUpRightIcon size={17} strokeWidth={1.5} className={styles.artistNameArrow} /></h3>
               <p>Layout placeholder</p>
             </div>
           </div>
@@ -69,19 +132,11 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
-  const artistIsPlaying = Boolean(
-    isPlaying && currentSong && playable.some((song) => song.id === currentSong.id),
-  );
   const href = `/artists/${artist.slug}`;
 
-  function playArtist() {
-    if (!playable.length) return;
-    if (artistIsPlaying && currentSong) {
-      togglePlayPause(currentSong);
-      return;
-    }
+  function playSong(song: Song) {
     setQueue(playable);
-    togglePlayPause(playable[0]);
+    togglePlayPause(song);
   }
 
   return (
@@ -89,7 +144,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
       <PlaylistCardShell
         href={href}
         ariaLabel={`Explore ${artist.name}`}
-        className={playlistCardStyles.card}
+        className={`${playlistCardStyles.card} ${styles.artistCard}`}
         squareMedia
         mediaClassName={styles.artistMedia}
         media={
@@ -114,21 +169,19 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
                   ))
                 : [0, 1, 2].map((item) => <span className={styles.genrePlaceholder} aria-hidden="true" key={item} />)}
             </span>
-            <button
-              type="button"
-              className={styles.artistPlay}
-              onClick={playArtist}
-              disabled={!playable.length}
-              aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
-            >
-              {artistIsPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-            </button>
+            <ArtistHoverSongs
+              artistName={artist.name}
+              songs={playable}
+              currentSongId={currentSong?.id}
+              isPlaying={isPlaying}
+              onPlay={playSong}
+            />
           </>
         }
         details={
           <div className={playlistCardStyles.details}>
             <Link className={playlistCardStyles.copy} href={href}>
-              <h3>{artist.name}</h3>
+              <h3 className={styles.artistName}>{artist.name} <ArrowUpRightIcon size={17} strokeWidth={1.5} className={styles.artistNameArrow} /></h3>
               {artist.designation ? <p>{artist.designation}</p> : null}
             </Link>
           </div>
