@@ -206,55 +206,32 @@
   margin-top: 0;
 }
 
-.artistGenres {
-  display: flex;
-  min-width: 0;
-  flex: 0 1 auto;
-  flex-wrap: wrap;
-  justify-content: flex-end;
-  gap: 5px;
+.artistExplore {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
   opacity: 0;
   pointer-events: none;
   transition: opacity 160ms ease;
 }
 
-.artistCard:hover .artistGenres,
-.artistCard:has(.artistDetails :focus-visible) .artistGenres {
+.artistCard:hover .artistExplore,
+.artistExplore:focus-visible {
   opacity: 1;
   pointer-events: auto;
 }
 
-@container (max-width: 349px) {
-  .artistGenres {
+@container (max-width: 299px) {
+  .artistExploreText {
     display: none;
   }
-}
-
-.artistGenre,
-.genrePlaceholder {
-  display: inline-flex;
-  min-height: 22px;
-  align-items: center;
-  justify-content: center;
-  border-radius: 999px;
-  background: var(--bg-secondary);
-  padding: 0 10px;
-  color: var(--text-secondary);
-  font-size: 10px;
-  font-weight: 300;
-  line-height: 1;
-  text-decoration: none;
-  transition: color 160ms ease;
-}
-
-.artistGenre:hover,
-.artistGenre:focus-visible {
-  color: var(--text-primary);
-}
-
-.genrePlaceholder {
-  width: 52px;
-  padding: 0;
 }
 
 .hoverSongPanel {
@@ -718,17 +695,6 @@
   display: flex;
   align-items: center;
   gap: 8px;
-}
-
-.artistNameArrow {
-  flex: 0 0 auto;
-  opacity: 0;
-  transition: opacity 160ms ease;
-}
-
-.artistCard:hover .artistNameArrow,
-.artistCard:has(.artistDetails :focus-visible) .artistNameArrow {
-  opacity: 1;
 }
 
 .skeletonCard {
