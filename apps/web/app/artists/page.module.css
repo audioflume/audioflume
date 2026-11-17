@@ -359,12 +359,11 @@
     gap: clamp(10px, 2vw, 20px);
   }
 
-  .miniPlayerArt {
+  .miniPlayerUpper .miniPlayerArt {
     position: relative;
-    width: min(100%, 140px);
-    max-height: 100%;
+    width: min(55%, 110px);
     aspect-ratio: 1 / 1;
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     align-self: center;
     overflow: hidden;
     background: #272727;
