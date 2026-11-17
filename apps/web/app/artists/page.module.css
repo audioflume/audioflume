@@ -516,8 +516,19 @@
     padding: clamp(16px, 2vw, 26px);
   }
 
+  .miniPlayerArtControls {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) min(34%, 128px) minmax(0, 1fr);
+    align-items: center;
+    gap: 0;
+  }
+
+  .miniPlayerArtControls > .miniPlayerSkip {
+    justify-self: center;
+  }
+
   .miniPlayerArt {
-    width: min(34%, 128px);
+    width: 100%;
   }
 
   .miniPlayerInfo {
@@ -533,7 +544,7 @@
     width: 100%;
     min-height: 0;
     gap: 0;
-    margin-top: 22px;
+    margin-top: auto;
     border-top: 1px solid rgba(255, 255, 255, .12);
   }
 
