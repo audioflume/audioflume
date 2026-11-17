@@ -118,7 +118,7 @@ function ArtistPreviewCard() {
         details={
           <div className={playlistCardStyles.details}>
             <div className={playlistCardStyles.copy}>
-              <h3 className={styles.artistName}>Artist preview <ArrowUpRightIcon size={17} strokeWidth={1.5} className={styles.artistNameArrow} /></h3>
+              <h3>Artist preview</h3>
               <p>Layout placeholder</p>
             </div>
           </div>
