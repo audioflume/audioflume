@@ -483,7 +483,7 @@ function HomeReadyToCutSongCard({
   );
 }
 
-const DISCOVER_ARTIST_PREVIEW_ROW_COUNT = 5;
+const DISCOVER_ARTIST_PREVIEW_ROW_COUNT = 7;
 
 function DiscoverFeaturedArtistSongList({
   artist,
