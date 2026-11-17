@@ -485,6 +485,11 @@
     color: #fff;
   }
 
+  .miniPlayerSkip svg {
+    width: clamp(12px, 2vw, 20px);
+    height: clamp(12px, 2vw, 20px);
+  }
+
   .miniPlayerPlay {
     position: absolute;
     top: 50%;
