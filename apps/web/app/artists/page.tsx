@@ -63,11 +63,6 @@ function ArtistMiniPlayer({
   const [previewIndex, setPreviewIndex] = useState(0);
   const previews = songs;
   const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
-  const song = previews[index];
-  const playing = Boolean(song && currentSongId === song.id && isPlaying);
-  const progress = song && currentSongId === song.id && duration > 0
-    ? Math.min(100, Math.max(0, (currentTime / duration) * 100))
-    : 0;
   const activeSongIndex = previews.findIndex((preview) => preview.id === currentSongId);
   const listIndex = activeSongIndex >= 0 ? activeSongIndex : index;
   const listSong = previews[listIndex];
@@ -79,73 +74,9 @@ function ArtistMiniPlayer({
   return (
     <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
       <div className={styles.miniPlayerUpper}>
-      <div className={styles.miniPlayerArtControls}>
-        <button
-          type="button"
-          className={styles.miniPlayerSkip}
-          aria-label={`Previous preview from ${artistName}`}
-          disabled={previews.length < 2}
-          onClick={(event) => {
-            event.stopPropagation();
-            setPreviewIndex((index - 1 + previews.length) % previews.length);
-          }}
-        >
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-            <path d="M5 5h2v14H5zM19 5v14L8 12z" />
-          </svg>
-        </button>
         <div className={styles.miniPlayerArt}>
-          {song?.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
-          <button
-            type="button"
-            className={styles.miniPlayerPlay}
-            aria-label={song ? `${playing ? "Pause" : "Play"} ${song.title}` : "No preview available"}
-            disabled={!song}
-            onClick={(event) => {
-              event.stopPropagation();
-              if (song) onPlay?.(song);
-            }}
-          >
-            {playing ? <PauseIcon size={20} /> : <PlayIconSmall size={20} />}
-          </button>
+          {listSong?.coverArt ? <img src={listSong.coverArt} alt="" draggable={false} /> : null}
         </div>
-        <button
-          type="button"
-          className={styles.miniPlayerSkip}
-          aria-label={`Next preview from ${artistName}`}
-          disabled={previews.length < 2}
-          onClick={(event) => {
-            event.stopPropagation();
-            setPreviewIndex((index + 1) % previews.length);
-          }}
-        >
-          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-            <path d="M17 5h2v14h-2zM5 5l11 7-11 7z" />
-          </svg>
-        </button>
-      </div>
-      <div className={styles.miniPlayerInfo}>
-        <strong>{song?.title ?? "No preview available"}</strong>
-        <span className={styles.miniPlayerCount}>
-          {trackCount} {trackCount === 1 ? "song" : "songs"}
-          {song ? ` · ${formatPreviewDuration(song.duration)}` : ""}
-        </span>
-      </div>
-      <input
-        type="range"
-        className={styles.miniPlayerProgress}
-        min={0}
-        max={100}
-        step={0.1}
-        value={progress}
-        disabled={!song}
-        aria-label={song ? `Seek within ${song.title}` : "No song to seek"}
-        onClick={(event) => event.stopPropagation()}
-        onChange={(event) => {
-          event.stopPropagation();
-          if (song) onSeek?.(song, Number(event.target.value) / 100);
-        }}
-      />
       </div>
       <div className={styles.miniPlayerCompactSongs} aria-label={`Songs by ${artistName}`} tabIndex={0}>
         {Array.from({ length: Math.max(3, Math.ceil(songs.length / 3)) }, (_, groupIndex) => (
