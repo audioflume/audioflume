@@ -516,7 +516,7 @@
     display: grid;
     width: calc(100% + 2 * clamp(16px, 2vw, 26px));
     margin-inline: calc(-1 * clamp(16px, 2vw, 26px));
-    grid-template-columns: minmax(0, 1fr) min(calc((100% - 2 * clamp(16px, 2vw, 26px)) * .34), 128px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) min(calc((100% - 2 * clamp(16px, 2vw, 26px)) * .31), 116px) minmax(0, 1fr);
     align-items: center;
     gap: 0;
   }
@@ -649,7 +649,7 @@
     display: grid;
     width: calc(100% + 2 * clamp(18px, 3vw, 28px));
     margin-inline: calc(-1 * clamp(18px, 3vw, 28px));
-    grid-template-columns: minmax(0, 1fr) min(calc((100% - 2 * clamp(18px, 3vw, 28px)) * .56), 230px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) min(calc((100% - 2 * clamp(18px, 3vw, 28px)) * .51), 210px) minmax(0, 1fr);
     gap: 0;
   }
 
@@ -670,7 +670,7 @@
   .miniPlayerArtControls {
     width: calc(100% + 28px);
     margin-inline: -14px;
-    grid-template-columns: minmax(0, 1fr) min(calc((100% - 28px) * .43), 120px) minmax(0, 1fr);
+    grid-template-columns: minmax(0, 1fr) min(calc((100% - 28px) * .39), 110px) minmax(0, 1fr);
   }
 
   .miniPlayerInfo {
