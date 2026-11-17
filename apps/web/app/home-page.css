@@ -2254,39 +2254,16 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
-  .audioflume-discover-skeleton-artist-track {
+  .audioflume-discover-skeleton-artist-link {
   pointer-events: none;
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
-  .audioflume-discover-skeleton-artist-track .is-discover-track-cover {
-  width: clamp(46px, 4.8vw, 78px);
-  height: clamp(46px, 4.8vw, 78px);
-  flex: 0 0 clamp(46px, 4.8vw, 78px);
-  background: color-mix(in srgb, #ffffff 18%, transparent);
-}
-
-.audioflume-home-mockup-artists.is-discover-featured-artists
-  .audioflume-discover-skeleton-artist-track .audioflume-discover-featured-track-copy {
-  display: grid;
-  min-width: 0;
-  gap: 8px;
-}
-
-.audioflume-home-mockup-artists.is-discover-featured-artists
-  .audioflume-discover-skeleton-artist-track .is-discover-track-title {
-  width: 150px;
+  .audioflume-discover-skeleton-artist-link .is-discover-artist-link-text {
+  width: 240px;
   max-width: 100%;
   height: 16px;
   background: color-mix(in srgb, #ffffff 18%, transparent);
-}
-
-.audioflume-home-mockup-artists.is-discover-featured-artists
-  .audioflume-discover-skeleton-artist-track .is-discover-track-artist {
-  width: 90px;
-  max-width: 100%;
-  height: 11px;
-  background: color-mix(in srgb, #ffffff 14%, transparent);
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
@@ -2681,78 +2658,34 @@ body:has(.audioflume-home-landing)
   }
 }
 
-.audioflume-discover-featured-track {
+.audioflume-discover-featured-artist-link {
   position: absolute;
   left: clamp(16px, 2vw, 32px);
   bottom: clamp(16px, 2vw, 32px);
   z-index: 3;
-  display: flex;
-  max-width: 48%;
-  align-items: center;
-  gap: 15px;
-  border: 0;
-  background: transparent;
-  padding: 0;
+  display: inline-flex;
+  max-width: 58%;
+  align-items: baseline;
+  gap: 8px;
   color: #fff;
-  font: inherit;
-  text-align: left;
-  cursor: pointer;
+  font-size: clamp(14px, 1.2vw, 18px);
+  font-weight: 300;
+  letter-spacing: -.035em;
+  text-decoration: none;
+  transition: opacity 160ms ease;
+  pointer-events: auto;
 }
 
-.audioflume-discover-featured-track:disabled {
-  cursor: default;
+.audioflume-discover-featured-artist-link svg {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 auto;
+  transform: translateY(4px);
 }
 
-.audioflume-discover-featured-track-cover {
-  position: relative;
-  display: block;
-  width: clamp(46px, 4.8vw, 78px);
-  height: clamp(46px, 4.8vw, 78px);
-  flex: 0 0 clamp(46px, 4.8vw, 78px);
-  background: #e5e5e5;
-  overflow: hidden;
-}
-
-.audioflume-discover-featured-track-play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 50%;
-  background: #ffffff;
-  color: #111111;
-  opacity: 0;
-  pointer-events: none;
-  transform: translate(-50%, -50%);
-  transition: opacity 150ms ease, transform 150ms ease;
-}
-
-.audioflume-home-reference-artist-card:hover .audioflume-discover-featured-track-play,
-.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-track-play {
-  opacity: 1;
-}
-
-.audioflume-discover-featured-track-cover:hover .audioflume-discover-featured-track-play,
-.audioflume-discover-featured-track:focus-visible .audioflume-discover-featured-track-play {
-  transform: translate(-50%, -50%) scale(1.02);
-}
-
-.audioflume-discover-featured-track-cover img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.audioflume-discover-featured-track-copy {
-  position: relative;
-  display: grid;
-  min-width: 0;
-  align-content: center;
-  gap: 6px;
+.audioflume-discover-featured-artist-link:hover,
+.audioflume-discover-featured-artist-link:focus-visible {
+  opacity: .8;
 }
 
 .audioflume-discover-featured-track-genres {
@@ -2783,25 +2716,6 @@ body:has(.audioflume-home-landing)
   opacity: 1;
   transform: translateY(0);
   transition: color 160ms ease;
-}
-
-.audioflume-discover-featured-track-copy strong {
-  overflow: hidden;
-  font-size: 17px;
-  font-weight: 400;
-  line-height: 1.1;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.audioflume-discover-featured-track-copy > span:not(.audioflume-discover-featured-track-genres) {
-  overflow: hidden;
-  color: rgba(255, 255, 255, .6);
-  font-size: 14px;
-  font-weight: 400;
-  line-height: 1.2;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 /* Preserve the first artist card's image height when later cards are narrower. */
