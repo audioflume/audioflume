@@ -497,11 +497,96 @@
     cursor: default;
   }
 
-.miniPlayerCompactSongs {
+.miniPlayerCompactSongs,
+.miniPlayerListFooter {
   display: none;
 }
 
 @container (min-width: 300px) {
+  .miniPlayerListFooter {
+    display: flex;
+    width: 100%;
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+  }
+
+  .miniPlayerListControls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+  }
+
+  .miniPlayerListControls button {
+    display: grid;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+  }
+
+  .miniPlayerListControls button:disabled {
+    opacity: .35;
+    cursor: default;
+  }
+
+  .miniPlayerListPlay {
+    width: 40px;
+    height: 40px;
+    background: #fff;
+    color: #111;
+    transition: transform 160ms ease;
+  }
+
+  .miniPlayerListPlay:hover:not(:disabled),
+  .miniPlayerListPlay:focus-visible:not(:disabled) {
+    transform: scale(1.03);
+  }
+
+  .miniPlayerListProgress {
+    display: block;
+    width: 100%;
+    height: 2px;
+    flex: 0 0 auto;
+    margin: 16px 0 0;
+    border: 0;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, .38);
+    appearance: none;
+    cursor: pointer;
+  }
+
+  .miniPlayerListProgress::-webkit-slider-thumb {
+    width: 10px;
+    height: 10px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+    appearance: none;
+  }
+
+  .miniPlayerListProgress::-moz-range-thumb {
+    width: 10px;
+    height: 10px;
+    border: 0;
+    border-radius: 50%;
+    background: #fff;
+  }
+
+  .miniPlayerListProgress:disabled {
+    cursor: default;
+  }
+
+  .miniPlayerListCount {
+    margin-top: 14px;
+    color: rgba(255, 255, 255, .55);
+    font-size: 11px;
+    font-weight: 400;
+  }
+
   .artistCard .miniPlayer {
     padding: clamp(28px, 3vw, 40px);
   }
