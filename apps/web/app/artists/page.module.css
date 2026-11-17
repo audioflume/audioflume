@@ -243,6 +243,17 @@
   padding: 0;
 }
 
+.artistCard:hover .artistGenres,
+.artistCard:focus-within .artistGenres {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.artistCard:hover .artistGenres .artistGenre,
+.artistCard:focus-within .artistGenres .artistGenre {
+  pointer-events: none;
+}
+
 .hoverSongPanel {
   position: absolute;
   inset: 0;
@@ -250,7 +261,7 @@
   display: flex;
   box-sizing: border-box;
   align-items: center;
-  padding: clamp(18px, 2vw, 32px) clamp(18px, 2vw, 32px) clamp(52px, 5vw, 64px);
+  padding: calc(clamp(28px, 3vw, 44px) + 2px) clamp(48px, 4vw, 76px);
   background: #111111;
   color: #ffffff;
   opacity: 0;
