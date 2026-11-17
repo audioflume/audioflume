@@ -2427,10 +2427,6 @@ body:has(.audioflume-home-landing)
     max-width: calc(66.666667% - 2 * clamp(20px, 2.6vw, 40px));
   }
 
-  .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-discover-featured-mark {
-    right: calc(33.333333% + clamp(20px, 2.6vw, 40px) - 4px);
-  }
-
   .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-discover-featured-track-genres {
     right: calc(33.333333% + clamp(16px, 2vw, 32px));
     max-width: 30%;
@@ -2447,7 +2443,7 @@ body:has(.audioflume-home-landing)
     width: 33.333333%;
     min-width: 0;
     align-items: center;
-    padding: clamp(28px, 3vw, 44px);
+    padding: clamp(28px, 3vw, 44px) clamp(48px, 4vw, 76px);
     background: #111111;
     color: #ffffff;
   }
@@ -2618,17 +2614,6 @@ body:has(.audioflume-home-landing)
   font-weight: 300;
   letter-spacing: -.025em;
   line-height: 1.08;
-}
-
-.audioflume-discover-featured-mark {
-  position: absolute;
-  top: calc(clamp(20px, 2.6vw, 40px) - 4px);
-  right: calc(clamp(20px, 2.6vw, 40px) - 4px);
-  z-index: 2;
-  width: clamp(30px, 2.2vw, 34px);
-  height: clamp(30px, 2.2vw, 34px);
-  color: #ffffff;
-  pointer-events: none;
 }
 
 .audioflume-discover-featured-name-arrow {
