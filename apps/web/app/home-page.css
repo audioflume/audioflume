@@ -2686,6 +2686,7 @@ body:has(.audioflume-home-landing)
   width: 20px;
   height: 20px;
   flex: 0 0 auto;
+  transform: translateY(5px);
 }
 
 .audioflume-discover-featured-artist-link:hover,
