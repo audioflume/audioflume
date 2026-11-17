@@ -569,7 +569,7 @@
     display: grid;
     width: 100%;
     min-width: 0;
-    grid-template-columns: 26px minmax(0, 1fr) 20px;
+    grid-template-columns: 26px minmax(0, 1fr) 35px 20px;
     align-items: center;
     gap: 10px;
     min-height: 0;
@@ -590,6 +590,7 @@
   .miniPlayerCompactRow > svg {
     position: relative;
     z-index: 1;
+    grid-column: 4;
     justify-self: center;
   }
 
@@ -635,6 +636,14 @@
     font-size: 12px;
     font-weight: 400;
     text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .miniPlayerCompactDuration {
+    color: rgba(255, 255, 255, .6);
+    font-size: 11px;
+    font-weight: 400;
+    text-align: right;
     white-space: nowrap;
   }
 
