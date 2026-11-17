@@ -361,7 +361,7 @@
 
   .miniPlayerUpper .miniPlayerArt {
     position: relative;
-    width: min(55%, 110px, max(0px, calc(100cqw - 2 * clamp(14px, 7cqw, 28px) - 148px)));
+    width: min(55%, 110px, max(0px, calc(100cqw - 2 * clamp(14px, 7cqw, 28px) - 114px - clamp(10px, calc(10cqw - 10px), 20px) - clamp(8px, calc(6cqw - 4px), 14px))));
     aspect-ratio: 1 / 1;
     flex: 0 0 auto;
     align-self: center;
@@ -536,7 +536,7 @@
   flex: 0 0 auto;
   flex-direction: column;
   align-items: center;
-  margin-top: 20px;
+  margin-top: clamp(10px, calc(10cqw - 10px), 20px);
 }
 
 .miniPlayerListControls {
@@ -608,7 +608,7 @@
 }
 
 .miniPlayerListCount {
-  margin-top: 14px;
+  margin-top: clamp(8px, calc(6cqw - 4px), 14px);
   color: rgba(255, 255, 255, .55);
   font-size: 11px;
   font-weight: 400;
