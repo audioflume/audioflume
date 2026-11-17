@@ -161,6 +161,10 @@
   row-gap: 40px;
 }
 
+.artistCard {
+  container-type: inline-size;
+}
+
 .artistMedia {
   background: var(--bg-tertiary);
 }
@@ -215,10 +219,15 @@
 }
 
 .artistCard:hover .artistGenres,
-.artistCard:focus-within .artistGenres,
-.artistDetails:focus-within .artistGenres {
+.artistCard:has(.artistDetails :focus-visible) .artistGenres {
   opacity: 1;
   pointer-events: auto;
+}
+
+@container (max-width: 349px) {
+  .artistGenres {
+    display: none;
+  }
 }
 
 .artistGenre,
@@ -718,7 +727,7 @@
 }
 
 .artistCard:hover .artistNameArrow,
-.artistCard:focus-within .artistNameArrow {
+.artistCard:has(.artistDetails :focus-visible) .artistNameArrow {
   opacity: 1;
 }
 
