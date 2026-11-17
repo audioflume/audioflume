@@ -135,39 +135,44 @@ function ArtistMiniPlayer({
         }}
       />
       </div>
-      <div className={styles.miniPlayerCompactSongs} aria-label={`More previews by ${artistName}`}>
-        {Array.from({ length: 3 }, (_, rowIndex) => {
-          const previewSong = previews[rowIndex];
-          if (!previewSong) {
-            return (
-              <div className={`${styles.miniPlayerCompactRow} ${styles.miniPlayerCompactPlaceholder}`} key={`preview-${rowIndex}`}>
-                <span className={styles.miniPlayerCompactCover} />
-                <span className={styles.miniPlayerCompactTitle}>Preview track {rowIndex + 1}</span>
-                <PlayIconSmall size={12} />
-              </div>
-            );
-          }
-          const active = currentSongId === previewSong.id;
-          return (
-            <button
-              type="button"
-              className={styles.miniPlayerCompactRow}
-              key={previewSong.id}
-              aria-label={`${active && isPlaying ? "Pause" : "Play"} ${previewSong.title}`}
-              onClick={(event) => {
-                event.stopPropagation();
-                setPreviewIndex(rowIndex);
-                onPlay?.(previewSong);
-              }}
-            >
-              <span className={styles.miniPlayerCompactCover}>
-                {previewSong.coverArt ? <img src={previewSong.coverArt} alt="" draggable={false} /> : null}
-              </span>
-              <span className={styles.miniPlayerCompactTitle}>{previewSong.title}</span>
-              {active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
-            </button>
-          );
-        })}
+      <div className={styles.miniPlayerCompactSongs} aria-label={`Songs by ${artistName}`} tabIndex={0}>
+        {Array.from({ length: Math.max(3, Math.ceil(songs.length / 3)) }, (_, groupIndex) => (
+          <div className={styles.miniPlayerCompactPage} key={groupIndex}>
+            {Array.from({ length: 3 }, (_, rowIndex) => {
+              const songIndex = groupIndex * 3 + rowIndex;
+              const previewSong = songs[songIndex];
+              if (!previewSong) {
+                return (
+                  <div className={`${styles.miniPlayerCompactRow} ${styles.miniPlayerCompactPlaceholder}`} key={`preview-${songIndex}`}>
+                    <span className={styles.miniPlayerCompactCover} />
+                    <span className={styles.miniPlayerCompactTitle}>Preview track {songIndex + 1}</span>
+                    <PlayIconSmall size={12} />
+                  </div>
+                );
+              }
+              const active = currentSongId === previewSong.id;
+              return (
+                <button
+                  type="button"
+                  className={styles.miniPlayerCompactRow}
+                  key={previewSong.id}
+                  aria-label={`${active && isPlaying ? "Pause" : "Play"} ${previewSong.title}`}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    if (songIndex < previews.length) setPreviewIndex(songIndex);
+                    onPlay?.(previewSong);
+                  }}
+                >
+                  <span className={styles.miniPlayerCompactCover}>
+                    {previewSong.coverArt ? <img src={previewSong.coverArt} alt="" draggable={false} /> : null}
+                  </span>
+                  <span className={styles.miniPlayerCompactTitle}>{previewSong.title}</span>
+                  {active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+                </button>
+              );
+            })}
+          </div>
+        ))}
       </div>
     </div>
   );
