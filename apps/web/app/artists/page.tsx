@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";
 
+import { MusicLibraryEmptyState } from "@filmwave/shared";
 import Footer from "@/components/Footer";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import playlistCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
@@ -374,10 +375,10 @@ export default function ArtistsPage() {
         ) : error ? (
           <p className={styles.message} role="alert">{error}</p>
         ) : visibleArtists.length === 0 ? (
-          <div className={styles.empty}>
-            <p>{artists.length === 0 ? "No artists are available yet." : "No artists match your search."}</p>
-            {query && <button type="button" onClick={() => setQuery("")}>Clear search</button>}
-          </div>
+          <MusicLibraryEmptyState
+            title="No artists found"
+            description="Clear a filter or search for something different."
+          />
         ) : (
           <section className={styles.grid} aria-label="Artists">
             {cards.map((card, index) => (
