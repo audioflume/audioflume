@@ -134,18 +134,36 @@ function ArtistMiniPlayer({
         </span>
       </div>
       <div className={styles.miniPlayerControls}>
-        <button
-          type="button"
-          className={styles.miniPlayerSkip}
-          aria-label={`Previous preview from ${artistName}`}
-          disabled={previews.length < 2}
-          onClick={(event) => {
-            event.stopPropagation();
-            setPreviewIndex((index - 1 + previews.length) % previews.length);
-          }}
-        >
-          <span aria-hidden="true">‹</span>
-        </button>
+        <div className={styles.miniPlayerSkipGroup}>
+          <button
+            type="button"
+            className={styles.miniPlayerSkip}
+            aria-label={`Previous preview from ${artistName}`}
+            disabled={previews.length < 2}
+            onClick={(event) => {
+              event.stopPropagation();
+              setPreviewIndex((index - 1 + previews.length) % previews.length);
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M5 5h2v14H5zM19 5v14L8 12z" />
+            </svg>
+          </button>
+          <button
+            type="button"
+            className={styles.miniPlayerSkip}
+            aria-label={`Next preview from ${artistName}`}
+            disabled={previews.length < 2}
+            onClick={(event) => {
+              event.stopPropagation();
+              setPreviewIndex((index + 1) % previews.length);
+            }}
+          >
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M17 5h2v14h-2zM5 5l11 7-11 7z" />
+            </svg>
+          </button>
+        </div>
         <button
           type="button"
           className={styles.miniPlayerPlay}
@@ -157,18 +175,6 @@ function ArtistMiniPlayer({
           }}
         >
           {playing ? <PauseIcon size={20} /> : <PlayIconSmall size={20} />}
-        </button>
-        <button
-          type="button"
-          className={styles.miniPlayerSkip}
-          aria-label={`Next preview from ${artistName}`}
-          disabled={previews.length < 2}
-          onClick={(event) => {
-            event.stopPropagation();
-            setPreviewIndex((index + 1) % previews.length);
-          }}
-        >
-          <span aria-hidden="true">›</span>
         </button>
       </div>
     </div>
