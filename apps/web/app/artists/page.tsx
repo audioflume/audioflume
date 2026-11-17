@@ -172,6 +172,7 @@ function ArtistMiniPlayer({
                     {previewSong.coverArt ? <img src={previewSong.coverArt} alt="" draggable={false} /> : null}
                   </span>
                   <span className={styles.miniPlayerCompactTitle}>{previewSong.title}</span>
+                  <span className={styles.miniPlayerCompactDuration}>{formatPreviewDuration(previewSong.duration)}</span>
                   {active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
                 </button>
               );
