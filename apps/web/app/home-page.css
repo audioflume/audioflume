@@ -2414,7 +2414,7 @@ body:has(.audioflume-home-landing)
 
 @media (min-width: 1200px) {
   .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-link {
-    width: 66.666667%;
+    width: 100%;
   }
 
   .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-card-overlay-link {
@@ -2442,7 +2442,7 @@ body:has(.audioflume-home-landing)
     min-width: 0;
     align-items: center;
     padding: calc(clamp(28px, 3vw, 44px) + 2px) clamp(48px, 4vw, 76px);
-    background: #111111;
+    background: transparent;
     color: #ffffff;
   }
 
