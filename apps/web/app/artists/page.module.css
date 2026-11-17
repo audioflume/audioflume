@@ -614,7 +614,7 @@
   font-weight: 400;
 }
 
-@container (min-width: 300px) {
+@container (min-width: 275px) {
   .artistCard .miniPlayer {
     padding: clamp(28px, 3vw, 40px);
   }
