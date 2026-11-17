@@ -483,6 +483,65 @@ function HomeReadyToCutSongCard({
   );
 }
 
+const DISCOVER_ARTIST_PREVIEW_ROW_COUNT = 5;
+
+function DiscoverFeaturedArtistSongList({
+  artist,
+  songs,
+  currentSongId,
+  playing,
+  onPlay,
+}: {
+  artist: HomeArtist;
+  songs: Song[];
+  currentSongId?: string;
+  playing: boolean;
+  onPlay: (event: MouseEvent<HTMLButtonElement>, song: Song) => void;
+}) {
+  return (
+    <div className="audioflume-discover-featured-song-panel" aria-label={`Songs by ${artist.name}`}>
+      <div className="audioflume-home-lifetime-v2-song-list">
+        {Array.from({ length: DISCOVER_ARTIST_PREVIEW_ROW_COUNT }, (_, index) => {
+          const song = songs[index];
+          if (!song) {
+            return (
+              <div className="audioflume-home-lifetime-v2-song is-preview-placeholder" key={`placeholder-${index}`} aria-label="Sample track placeholder">
+                <span className="audioflume-home-lifetime-v2-song-cover" />
+                <span className="audioflume-home-lifetime-v2-song-copy">
+                  <strong>Preview track {index + 1}</strong>
+                  <span>{artist.name}</span>
+                </span>
+                <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true"><PlayIconSmall size={13} /></span>
+              </div>
+            );
+          }
+          const active = song.id === currentSongId;
+          return (
+            <button
+              type="button"
+              className={`audioflume-home-lifetime-v2-song${active ? " is-active" : ""}`}
+              key={song.id}
+              onClick={(event) => onPlay(event, song)}
+              aria-label={`${active && playing ? "Pause" : "Play"} ${song.title}`}
+            >
+              <span className="audioflume-home-lifetime-v2-song-cover">
+                {song.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
+              </span>
+              <span className="audioflume-home-lifetime-v2-song-copy">
+                <strong>{song.title}</strong>
+                <span>{song.artist}</span>
+              </span>
+              <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true">
+                {active && playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 export function HomeArtistShelf({
   artists,
   homeFlashImages,
@@ -566,6 +625,20 @@ export function HomeArtistShelf({
               </div>
             ) : null}
             {discoverLayout ? <AudioflumeMark className="audioflume-discover-featured-mark" /> : null}
+            {discoverLayout ? (
+              <DiscoverFeaturedArtistSongList
+                artist={artist}
+                songs={playable}
+                currentSongId={currentSong?.id}
+                playing={isPlaying}
+                onPlay={(event, song) => {
+                  event.stopPropagation();
+                  if (!song.audioUrl) return;
+                  setQueue(playable);
+                  togglePlayPause(song);
+                }}
+              />
+            ) : null}
             <div className="audioflume-home-reference-artist-link">
               {!discoverLayout ? (
                 <Link href={`/artists/${artist.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${artist.name}`} />
