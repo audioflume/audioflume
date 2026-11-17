@@ -353,6 +353,15 @@
     padding: clamp(18px, 3vw, 28px);
     background: rgba(17, 17, 17, .82);
     color: #fff;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 160ms ease;
+  }
+
+  .artistCard:hover .miniPlayer,
+  .artistCard:focus-within .miniPlayer {
+    opacity: 1;
+    pointer-events: auto;
   }
 
   .miniPlayerArt {
