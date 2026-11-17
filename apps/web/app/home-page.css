@@ -588,9 +588,15 @@ body:has(.audioflume-home-landing)
   transition: transform 320ms ease;
 }
 
-.audioflume-home-reference-artist-card:hover
+.audioflume-home-reference-artist-card:not(.is-discover-card):hover
   .audioflume-home-reference-artist-media img {
   transform: scale(1.008);
+}
+
+.audioflume-home-reference-artist-card.is-discover-card
+  .audioflume-home-reference-artist-link:hover
+  .audioflume-home-reference-artist-media img {
+  transform: scale(1.035);
 }
 
 .audioflume-home-reference-artist-bar {
