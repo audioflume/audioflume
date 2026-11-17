@@ -262,7 +262,7 @@
   box-sizing: border-box;
   align-items: center;
   padding: calc(clamp(28px, 3vw, 44px) + 2px) clamp(48px, 4vw, 76px);
-  background: #111111;
+  background: rgba(17, 17, 17, 0.82);
   color: #ffffff;
   opacity: 0;
   pointer-events: none;
