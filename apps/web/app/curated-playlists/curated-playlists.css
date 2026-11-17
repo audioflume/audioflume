@@ -762,13 +762,13 @@ body:has(.curated-playlists-page-root)
 
 /* Keep the homepage-style horizontal gap while giving playlist rows more breathing room. */
 .curated-page-playlist-grid {
-  column-gap: 48px;
+  column-gap: min(var(--filmwave-page-gutter), 48px);
   row-gap: 40px;
 }
 
 @media (max-width: 620px) {
   .curated-page-playlist-grid {
-    column-gap: 48px;
+    column-gap: min(var(--filmwave-page-gutter), 48px);
     row-gap: 32px;
   }
 }
