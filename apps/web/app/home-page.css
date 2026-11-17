@@ -596,7 +596,7 @@ body:has(.audioflume-home-landing)
 .audioflume-home-reference-artist-card.is-discover-card
   .audioflume-home-reference-artist-card-overlay-link:hover ~ .audioflume-home-reference-artist-link
   .audioflume-home-reference-artist-media img {
-  transform: scale(1.035);
+  transform: scale(1.02);
 }
 
 .audioflume-home-reference-artist-bar {
