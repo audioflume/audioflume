@@ -45,7 +45,6 @@ import {
   useHasCurrentSong,
   useIsCurrentSongPlaying,
   usePlayer,
-  usePlayerProgress,
 } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
 import type { Song } from "@/lib/types";
@@ -511,42 +510,33 @@ function HomeReadyToCutSongCard({
 
 const DISCOVER_ARTIST_PREVIEW_ROW_COUNT = 6;
 
-function formatDiscoverPreviewDuration(seconds: number | undefined) {
-  if (!Number.isFinite(seconds) || !seconds || seconds <= 0) return "—";
-  return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
-}
-
 function DiscoverFeaturedArtistSongList({
-  artist, songs, currentSongId, playing, onPlay, onSeek,
+  artist,
+  songs,
+  currentSongId,
+  playing,
+  onPlay,
 }: {
   artist: HomeArtist;
   songs: Song[];
   currentSongId?: string;
   playing: boolean;
-  onPlay: (song: Song) => void;
-  onSeek: (song: Song, progress: number) => void;
+  onPlay: (event: MouseEvent<HTMLButtonElement>, song: Song) => void;
 }) {
-  const { currentTime, duration } = usePlayerProgress();
-  const [previewIndex, setPreviewIndex] = useState(0);
-  const activeIndex = songs.findIndex((song) => song.id === currentSongId);
-  const index = activeIndex >= 0 ? activeIndex : Math.min(previewIndex, Math.max(0, songs.length - 1));
-  const selectedSong = songs[index];
-  const isSelectedPlaying = Boolean(selectedSong && selectedSong.id === currentSongId && playing);
-  const progress = selectedSong && selectedSong.id === currentSongId && duration > 0
-    ? Math.min(100, Math.max(0, (currentTime / duration) * 100))
-    : 0;
-
   return (
     <div className="audioflume-discover-featured-song-panel" aria-label={`Songs by ${artist.name}`}>
-      <div className="audioflume-discover-preview-song-list" tabIndex={0} aria-label={`Preview songs by ${artist.name}`}>
-        {Array.from({ length: Math.max(DISCOVER_ARTIST_PREVIEW_ROW_COUNT, songs.length) }, (_, songIndex) => {
-          const song = songs[songIndex];
+      <div className="audioflume-home-lifetime-v2-song-list">
+        {Array.from({ length: DISCOVER_ARTIST_PREVIEW_ROW_COUNT }, (_, index) => {
+          const song = songs[index];
           if (!song) {
             return (
-              <div className="audioflume-discover-preview-song-row is-preview-placeholder" key={`placeholder-${songIndex}`}>
-                <span className="audioflume-discover-preview-song-cover" />
-                <span className="audioflume-discover-preview-song-title">Preview track {songIndex + 1}</span>
-                <PlayIconSmall size={12} />
+              <div className="audioflume-home-lifetime-v2-song is-preview-placeholder" key={`placeholder-${index}`} aria-label="Sample track placeholder">
+                <span className="audioflume-home-lifetime-v2-song-cover" />
+                <span className="audioflume-home-lifetime-v2-song-copy">
+                  <strong>Preview track {index + 1}</strong>
+                  <span>{artist.name}</span>
+                </span>
+                <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true"><PlayIconSmall size={13} /></span>
               </div>
             );
           }
@@ -554,88 +544,24 @@ function DiscoverFeaturedArtistSongList({
           return (
             <button
               type="button"
-              className="audioflume-discover-preview-song-row"
+              className={`audioflume-home-lifetime-v2-song${active ? " is-active" : ""}`}
               key={song.id}
+              onClick={(event) => onPlay(event, song)}
               aria-label={`${active && playing ? "Pause" : "Play"} ${song.title}`}
-              onClick={(event) => {
-                event.stopPropagation();
-                setPreviewIndex(songIndex);
-                onPlay(song);
-              }}
             >
-              <span className="audioflume-discover-preview-song-cover">
+              <span className="audioflume-home-lifetime-v2-song-cover">
                 {song.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
               </span>
-              <span className="audioflume-discover-preview-song-title">{song.title}</span>
-              <span className="audioflume-discover-preview-song-duration">{formatDiscoverPreviewDuration(song.duration)}</span>
-              {active && playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+              <span className="audioflume-home-lifetime-v2-song-copy">
+                <strong>{song.title}</strong>
+                <span>{song.artist}</span>
+              </span>
+              <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true">
+                {active && playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
+              </span>
             </button>
           );
         })}
-      </div>
-      <div className="audioflume-discover-preview-footer">
-        <div className="audioflume-discover-preview-controls">
-          <button
-            type="button"
-            className="audioflume-discover-preview-skip"
-            aria-label={`Previous song from ${artist.name}`}
-            disabled={songs.length < 2}
-            onClick={(event) => {
-              event.stopPropagation();
-              const nextIndex = (index - 1 + songs.length) % songs.length;
-              setPreviewIndex(nextIndex);
-              onPlay(songs[nextIndex]);
-            }}
-          >
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-              <path d="M5 5h2v14H5zM19 5v14L8 12z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className="audioflume-discover-preview-play"
-            aria-label={selectedSong ? `${isSelectedPlaying ? "Pause" : "Play"} ${selectedSong.title}` : "No preview available"}
-            disabled={!selectedSong}
-            onClick={(event) => {
-              event.stopPropagation();
-              if (selectedSong) onPlay(selectedSong);
-            }}
-          >
-            {isSelectedPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
-          </button>
-          <button
-            type="button"
-            className="audioflume-discover-preview-skip"
-            aria-label={`Next song from ${artist.name}`}
-            disabled={songs.length < 2}
-            onClick={(event) => {
-              event.stopPropagation();
-              const nextIndex = (index + 1) % songs.length;
-              setPreviewIndex(nextIndex);
-              onPlay(songs[nextIndex]);
-            }}
-          >
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-              <path d="M17 5h2v14h-2zM5 5l11 7-11 7z" />
-            </svg>
-          </button>
-        </div>
-        <input
-          type="range"
-          className="audioflume-discover-preview-progress"
-          min={0}
-          max={100}
-          step={0.1}
-          value={progress}
-          disabled={!selectedSong}
-          aria-label={selectedSong ? `Seek within ${selectedSong.title}` : "No song to seek"}
-          onClick={(event) => event.stopPropagation()}
-          onChange={(event) => {
-            event.stopPropagation();
-            if (selectedSong) onSeek(selectedSong, Number(event.target.value) / 100);
-          }}
-        />
-        <span className="audioflume-discover-preview-count">{songs.length} {songs.length === 1 ? "song" : "songs"}</span>
       </div>
     </div>
   );
@@ -656,7 +582,7 @@ export function HomeArtistShelf({
   hideExploreButton?: boolean;
   progressScrollbar?: boolean;
 }) {
-  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
   function playArtist(event: MouseEvent, artist: HomeArtist) {
     event.preventDefault();
@@ -729,12 +655,12 @@ export function HomeArtistShelf({
                 songs={playable}
                 currentSongId={currentSong?.id}
                 playing={isPlaying}
-                onPlay={(song) => {
+                onPlay={(event, song) => {
+                  event.stopPropagation();
                   if (!song.audioUrl) return;
                   setQueue(playable);
                   togglePlayPause(song);
                 }}
-                onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
               />
             ) : null}
             <div className="audioflume-home-reference-artist-link">
