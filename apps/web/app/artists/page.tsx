@@ -128,8 +128,50 @@ function ArtistMiniPlayer({
 
   return (
     <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
-      <div className={styles.miniPlayerArt}>
-        {song?.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
+      <div className={styles.miniPlayerArtControls}>
+        <button
+          type="button"
+          className={styles.miniPlayerSkip}
+          aria-label={`Previous preview from ${artistName}`}
+          disabled={previews.length < 2}
+          onClick={(event) => {
+            event.stopPropagation();
+            setPreviewIndex((index - 1 + previews.length) % previews.length);
+          }}
+        >
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
+            <path d="M5 5h2v14H5zM19 5v14L8 12z" />
+          </svg>
+        </button>
+        <div className={styles.miniPlayerArt}>
+          {song?.coverArt ? <img src={song.coverArt} alt="" draggable={false} /> : null}
+          <button
+            type="button"
+            className={styles.miniPlayerPlay}
+            aria-label={song ? `${playing ? "Pause" : "Play"} ${song.title}` : "No preview available"}
+            disabled={!song}
+            onClick={(event) => {
+              event.stopPropagation();
+              if (song) onPlay?.(song);
+            }}
+          >
+            {playing ? <PauseIcon size={20} /> : <PlayIconSmall size={20} />}
+          </button>
+        </div>
+        <button
+          type="button"
+          className={styles.miniPlayerSkip}
+          aria-label={`Next preview from ${artistName}`}
+          disabled={previews.length < 2}
+          onClick={(event) => {
+            event.stopPropagation();
+            setPreviewIndex((index + 1) % previews.length);
+          }}
+        >
+          <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
+            <path d="M17 5h2v14h-2zM5 5l11 7-11 7z" />
+          </svg>
+        </button>
       </div>
       <div className={styles.miniPlayerInfo}>
         <strong>{song?.title ?? "No preview available"}</strong>
@@ -153,50 +195,7 @@ function ArtistMiniPlayer({
           if (song) onSeek?.(song, Number(event.target.value) / 100);
         }}
       />
-      <div className={styles.miniPlayerControls}>
-        <div className={styles.miniPlayerSkipGroup}>
-          <button
-            type="button"
-            className={styles.miniPlayerSkip}
-            aria-label={`Previous preview from ${artistName}`}
-            disabled={previews.length < 2}
-            onClick={(event) => {
-              event.stopPropagation();
-              setPreviewIndex((index - 1 + previews.length) % previews.length);
-            }}
-          >
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-              <path d="M5 5h2v14H5zM19 5v14L8 12z" />
-            </svg>
-          </button>
-          <button
-            type="button"
-            className={styles.miniPlayerSkip}
-            aria-label={`Next preview from ${artistName}`}
-            disabled={previews.length < 2}
-            onClick={(event) => {
-              event.stopPropagation();
-              setPreviewIndex((index + 1) % previews.length);
-            }}
-          >
-            <svg viewBox="0 0 24 24" width="12" height="12" fill="currentColor" aria-hidden="true">
-              <path d="M17 5h2v14h-2zM5 5l11 7-11 7z" />
-            </svg>
-          </button>
-        </div>
-        <button
-          type="button"
-          className={styles.miniPlayerPlay}
-          aria-label={song ? `${playing ? "Pause" : "Play"} ${song.title}` : "No preview available"}
-          disabled={!song}
-          onClick={(event) => {
-            event.stopPropagation();
-            if (song) onPlay?.(song);
-          }}
-        >
-          {playing ? <PauseIcon size={20} /> : <PlayIconSmall size={20} />}
-        </button>
-      </div>
+
     </div>
   );
 }
