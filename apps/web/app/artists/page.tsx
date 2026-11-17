@@ -77,6 +77,10 @@ function ArtistMiniPlayer({
         <div className={styles.miniPlayerArt}>
           {listSong?.coverArt ? <img src={listSong.coverArt} alt="" draggable={false} /> : null}
         </div>
+        <div className={styles.miniPlayerSongInfo}>
+          <span className={styles.miniPlayerSongTitle}>{listSong?.title ?? "No preview available"}</span>
+          {listSong ? <span className={styles.miniPlayerSongDuration}>{formatPreviewDuration(listSong.duration)}</span> : null}
+        </div>
       </div>
       <div className={styles.miniPlayerCompactSongs} aria-label={`Songs by ${artistName}`} tabIndex={0}>
         {Array.from({ length: Math.max(3, Math.ceil(songs.length / 3)) }, (_, groupIndex) => (
