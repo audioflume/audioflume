@@ -344,7 +344,11 @@
     display: flex;
     width: 100%;
     min-width: 0;
+    min-height: 0;
+    flex: 1 1 auto;
     flex-direction: column;
+    align-items: center;
+    justify-content: center;
   }
 
   .miniPlayerArtControls {
@@ -357,8 +361,8 @@
 
   .miniPlayerArt {
     position: relative;
-    width: min(56%, 230px);
-    height: auto;
+    width: min(100%, 140px);
+    max-height: 100%;
     aspect-ratio: 1 / 1;
     flex: 0 1 auto;
     align-self: center;
@@ -497,20 +501,20 @@
     cursor: default;
   }
 
-.miniPlayerCompactSongs,
-.miniPlayerListFooter {
+.miniPlayerCompactSongs {
   display: none;
 }
 
+.miniPlayerListFooter {
+  display: flex;
+  width: 100%;
+  flex: 0 0 auto;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 20px;
+}
+
 @container (min-width: 300px) {
-  .miniPlayerListFooter {
-    display: flex;
-    width: 100%;
-    flex: 0 0 auto;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 20px;
-  }
 
   .miniPlayerListControls {
     display: flex;
@@ -618,8 +622,6 @@
     display: grid;
     grid-template-rows: repeat(3, 40px);
     height: 120px;
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 
   .miniPlayerCompactRow {
@@ -631,6 +633,8 @@
     align-items: center;
     gap: 10px;
     min-height: 0;
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
     box-sizing: border-box;
     padding: 7px 0;
     border: 0;
