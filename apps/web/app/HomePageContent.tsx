@@ -617,7 +617,6 @@ export function HomeArtistShelf({
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
         const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
-        const featuredSong = playable[0] ?? artist.songs[0];
         const genres = Array.from(
           new Set(
             artist.songs.flatMap((song) =>
@@ -709,26 +708,9 @@ export function HomeArtistShelf({
             ) : null}
             {discoverLayout ? (
               <>
-              <button
-                type="button"
-                className="audioflume-discover-featured-track"
-                onClick={(event) => playArtist(event, artist)}
-                disabled={!playable.length}
-                aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
-              >
-                <span className="audioflume-discover-featured-track-cover">
-                  {featuredSong?.coverArt ? <img src={featuredSong.coverArt} alt="" draggable={false} /> : null}
-                  {playable.length > 0 ? (
-                    <span className="audioflume-discover-featured-track-play" aria-hidden="true">
-                      {artistIsPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
-                    </span>
-                  ) : null}
-                </span>
-                <span className="audioflume-discover-featured-track-copy">
-                  <strong>{featuredSong?.title || "No songs available"}</strong>
-                  <span>{featuredSong?.artist || artist.name}</span>
-                </span>
-              </button>
+              <Link className="audioflume-discover-featured-artist-link" href={`/artists/${artist.slug}`}>
+                Explore more from {artist.name} <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+              </Link>
               <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Artist genres">
                 {[0, 1, 2].map((index) => (
                   visibleGenres[index] ? (
@@ -993,12 +975,8 @@ export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = fals
           </div>
           {discoverLayout ? (
             <>
-              <div className="audioflume-discover-featured-track audioflume-discover-skeleton-artist-track">
-                <HomeSkeletonBlock className="is-discover-track-cover" />
-                <span className="audioflume-discover-featured-track-copy">
-                  <HomeSkeletonBlock className="is-discover-track-title" />
-                  <HomeSkeletonBlock className="is-discover-track-artist" />
-                </span>
+              <div className="audioflume-discover-featured-artist-link audioflume-discover-skeleton-artist-link">
+                <HomeSkeletonBlock className="is-discover-artist-link-text" />
               </div>
               <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres audioflume-discover-skeleton-artist-genres">
                 <HomeSkeletonBlock className="is-discover-genre-pill" />
