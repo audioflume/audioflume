@@ -1475,6 +1475,7 @@ main
   width: 20px;
   height: 20px;
   flex: 0 0 auto;
+  transform: translateY(5px);
 }
 
 .audioflume-music-page .audioflume-music-home-hero-link:hover,
