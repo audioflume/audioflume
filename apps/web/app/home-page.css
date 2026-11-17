@@ -2483,6 +2483,13 @@ body:has(.audioflume-home-landing)
     width: 28px;
     height: 28px;
     justify-self: end;
+    background: rgba(255, 255, 255, .2);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song:is(:hover, .is-active) .audioflume-home-lifetime-v2-song-play {
+    background: rgba(255, 255, 255, .7);
   }
 
   .audioflume-discover-featured-song-panel .is-preview-placeholder {
