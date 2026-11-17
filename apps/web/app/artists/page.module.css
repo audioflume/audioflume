@@ -156,7 +156,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   align-items: start;
-  column-gap: 48px;
+  column-gap: min(var(--filmwave-page-gutter), 48px);
   row-gap: 40px;
 }
 
@@ -1072,7 +1072,7 @@
   .intro h1 { font-size: clamp(40px, 8vw, 60px); }
   .browser { padding: 20px 0 0; }
   .genrePills { gap: 7px; }
-  .grid { column-gap: 48px; row-gap: 32px; }
+  .grid { column-gap: min(var(--filmwave-page-gutter), 48px); row-gap: 32px; }
   .column { gap: 10px; }
   .cardShape0, .cardShape1, .cardShape2, .cardShape3, .cardShape4, .cardShape5 { aspect-ratio: 1 / 1.05; }
   .featuredCard { aspect-ratio: 1 / 1.2; }
