@@ -72,18 +72,21 @@ function Shelf({
   className = "",
   customScrollbar = false,
   progressScrollbar = false,
+  fadeAdjacentCards = false,
 }: {
   label: string;
   children: ReactNode;
   className?: string;
   customScrollbar?: boolean;
   progressScrollbar?: boolean;
+  fadeAdjacentCards?: boolean;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
   const [scrollbarThumb, setScrollbarThumb] = useState({ left: 0, width: 0 });
   const scrollbarTrackRef = useRef<HTMLDivElement>(null);
+  const shelfItemCount = Array.isArray(children) ? children.length : 1;
   const inertiaFrameRef = useRef<number | null>(null);
   const dragStateRef = useRef<{
     pointerId: number;
@@ -99,6 +102,28 @@ function Shelf({
     const maxScrollLeft = scroller.scrollWidth - scroller.clientWidth;
     setCanScrollPrev(scroller.scrollLeft > 4);
     setCanScrollNext(scroller.scrollLeft < maxScrollLeft - 4);
+
+    if (fadeAdjacentCards) {
+      const cards = Array.from(scroller.children) as HTMLElement[];
+      const viewport = scroller.getBoundingClientRect();
+      const viewportCenter = (viewport.left + viewport.right) / 2;
+      let primaryIndex = -1;
+      let closestDistance = Infinity;
+
+      cards.forEach((card, index) => {
+        const rect = card.getBoundingClientRect();
+        const distance = Math.abs((rect.left + rect.right) / 2 - viewportCenter);
+        if (distance < closestDistance) {
+          closestDistance = distance;
+          primaryIndex = index;
+        }
+      });
+
+      cards.forEach((card, index) => {
+        card.classList.toggle("is-shelf-primary", index === primaryIndex);
+      });
+      scroller.classList.toggle("has-shelf-primary", primaryIndex !== -1);
+    }
 
     if (customScrollbar) {
       const track = scrollbarTrackRef.current;
@@ -272,7 +297,7 @@ function Shelf({
       window.removeEventListener("resize", updateScrollState);
       observer.disconnect();
     };
-  }, [customScrollbar]);
+  }, [customScrollbar, fadeAdjacentCards, shelfItemCount]);
 
 
   return (
@@ -304,7 +329,7 @@ function Shelf({
       <ShelfIndicatorNavigation
         label={label}
         scrollerRef={scrollerRef}
-        itemCount={Array.isArray(children) ? children.length : 1}
+        itemCount={shelfItemCount}
         onPrev={() => scroll("prev")}
         onNext={() => scroll("next")}
         className="audioflume-home-reference-width"
@@ -587,6 +612,7 @@ export function HomeArtistShelf({
       className={`audioflume-home-reference-artist-shelf${compact ? " is-compact" : ""}${discoverLayout ? " is-discover-layout" : ""}`}
       customScrollbar={false}
       progressScrollbar={discoverLayout || progressScrollbar}
+      fadeAdjacentCards={discoverLayout}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
