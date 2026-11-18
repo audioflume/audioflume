@@ -297,49 +297,6 @@ body:has(.community-playlists-page-root) {
   opacity: 1;
 }
 
-.community-play {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  z-index: 5;
-  display: inline-flex;
-  width: 42px;
-  min-width: 42px;
-  height: 42px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.18);
-  padding: 0;
-  color: #ffffff;
-  cursor: pointer;
-  opacity: 1;
-  -webkit-backdrop-filter: blur(10px);
-  backdrop-filter: blur(10px);
-  transition:
-    background-color 150ms ease,
-    color 150ms ease,
-    transform 150ms ease;
-}
-
-.community-play:hover,
-.community-play:focus-visible {
-  background: #ffffff;
-  color: #111111;
-  outline: none;
-  transform: scale(1.02);
-}
-
-.community-play svg {
-  width: 15px;
-  height: 15px;
-}
-
-.community-play:disabled {
-  cursor: default;
-}
-
 .community-card-count-overlay {
   position: absolute;
   left: 16px;
@@ -706,10 +663,6 @@ body:has(.community-playlists-page-root) {
     row-gap: 32px;
   }
 
-  .community-play {
-    right: 18px;
-    bottom: 18px;
-  }
 }
 
 @media (max-width: 720px) {
