@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import Footer from "@/components/Footer";
+import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import SongCard from "@/components/SongCard";
@@ -49,7 +50,7 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
   );
 }
 
-export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featuredSong?: Song; backgroundOnly?: boolean }) {
+export function HomeHeroBanner({ backgroundOnly = false }: { featuredSong?: Song; backgroundOnly?: boolean }) {
   return (
     <section className="audioflume-experiment-hero" aria-label="Human made music and SFX for film">
       <img className="audioflume-experiment-hero-background" src={HERO_BACKGROUND} alt="" />
@@ -57,6 +58,7 @@ export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featu
       {!backgroundOnly && (
         <>
           <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
+          <AudioflumeMark className="audioflume-experiment-hero-mark" />
           <h1 className="audioflume-experiment-hero-headline">
             <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
           </h1>
@@ -66,7 +68,6 @@ export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featu
           </Link>
         </>
       )}
-      {featuredSong ? <HomeHeroFeaturedSong song={featuredSong} /> : null}
     </section>
   );
 }
