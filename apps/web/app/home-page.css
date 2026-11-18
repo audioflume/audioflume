@@ -2685,7 +2685,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-artist-link {
   display: inline-flex;
-  max-width: 58%;
+  max-width: 100%;
   align-items: baseline;
   gap: 8px;
   color: #fff;
