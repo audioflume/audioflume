@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import styles from "./GlobalReferenceSearch.module.css";
@@ -55,6 +55,7 @@ export default function GlobalReferenceSearch({
 }: GlobalReferenceSearchProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
   const [query, setQuery] = useState("");
   const [hovered, setHovered] = useState(false);
   const [flashImages, setFlashImages] = useState<string[]>([]);
@@ -147,6 +148,7 @@ export default function GlobalReferenceSearch({
     <>
       <button
         type="button"
+        ref={triggerRef}
         className={`${className} ${styles.flashButton}${showFlash ? ` ${styles.isFlashing}` : ""}`}
         onMouseEnter={() => setHovered(true)}
         onMouseLeave={() => { setHovered(false); setFlashIndex(0); }}
@@ -170,6 +172,7 @@ export default function GlobalReferenceSearch({
 
       <ReferenceSearchModal
         open={open}
+        anchorRef={triggerRef}
         value={query}
         onChange={setQuery}
         onClose={() => setOpen(false)}
