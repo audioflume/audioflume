@@ -12,6 +12,7 @@ import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
+import WaveformIcon from "@/components/icons/WaveformIcon";
 import { usePlayer, usePlayerProgress } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import "@/components/curated/curated-browse-filters.css";
@@ -285,7 +286,7 @@ function ArtistCard({
                 event.stopPropagation();
                 onOpen(artist.id);
                 if (playable.length) {
-                  if (currentSong?.id !== playable[0].id || !isPlaying) {
+                  if (!hasActiveSong) {
                     playSong(playable[0]);
                   }
                 } else if (isPlaying && currentSong) {
@@ -295,6 +296,11 @@ function ArtistCard({
             >
               <PlayIconSmall size={18} />
             </button>
+            {hasActiveSong && isPlaying && !previewOpen ? (
+              <span className={styles.cardPlayingWaveform} aria-label={`${artist.name} is playing`} role="status">
+                <WaveformIcon size={18} />
+              </span>
+            ) : null}
             {previewOpen ? (
               <ArtistMiniPlayer
                 artistName={artist.name}
