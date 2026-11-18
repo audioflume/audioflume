@@ -85,7 +85,7 @@ function ArtistMiniPlayer({
             onClose();
           }}
         >
-          <XIcon size={16} />
+          <XIcon size={22} />
         </button>
       ) : null}
       <div className={styles.miniPlayerUpper}>
