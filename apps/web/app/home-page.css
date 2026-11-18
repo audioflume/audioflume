@@ -5828,13 +5828,27 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 }
 .audioflume-experiment-hero-song-genres {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   justify-content: flex-end;
-  gap: 12px;
-  color: #fff;
-  font-size: 10px;
-  font-weight: 500;
+  gap: 6px;
   white-space: nowrap;
+}
+
+.audioflume-experiment-hero-song-genres > span {
+  display: inline-flex;
+  min-height: 20px;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  padding: 0 9px;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 9px;
+  font-weight: 300;
+  line-height: 1;
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
 }
 .audioflume-experiment-hero-song-cover {
   --audioflume-featured-song-play-background: #ffffff;
