@@ -6290,7 +6290,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   .audioflume-experiment-search-similar { margin-left: 4px; }
   .audioflume-experiment-search-filter { gap: 0; }
   .audioflume-experiment-search-filter span,
-  .audioflume-experiment-search-similar span { display: none; }
+  .audioflume-experiment-search-similar > span:last-child { display: none; }
   .audioflume-experiment-search-field { padding: 0 12px; }
   .audioflume-experiment-hero {
     aspect-ratio: 1.5 / 1;
