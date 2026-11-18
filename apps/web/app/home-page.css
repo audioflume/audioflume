@@ -2471,6 +2471,7 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-copy span {
+    color: #fff;
     font-size: 11px;
   }
 
