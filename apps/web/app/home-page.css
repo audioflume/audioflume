@@ -2577,7 +2577,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists.is-discover-featured-artists .audioflume-home-reference-artist-media::after {
-  background: linear-gradient(0deg, rgba(0, 0, 0, .6), transparent 44%), linear-gradient(90deg, rgba(0, 0, 0, .28), transparent 74%);
+  background: linear-gradient(270deg, rgba(0, 0, 0, .42), transparent 55%), linear-gradient(0deg, rgba(0, 0, 0, .6), transparent 44%), linear-gradient(90deg, rgba(0, 0, 0, .28), transparent 74%);
 }
 
 .audioflume-discover-featured-identity {
