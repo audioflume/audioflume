@@ -88,3 +88,10 @@
   opacity: 0;
   pointer-events: none;
 }
+
+.cardHost .cardPlayButton[data-preview-open="true"],
+.cardHost:hover .cardPlayButton[data-preview-open="true"],
+.cardHost:focus-within .cardPlayButton[data-preview-open="true"] {
+  opacity: 0;
+  pointer-events: none;
+}
