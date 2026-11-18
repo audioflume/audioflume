@@ -5776,6 +5776,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   line-height: 1;
   letter-spacing: -.06em;
   transform: translateY(calc(-50% - 5px));
+  mix-blend-mode: difference;
   white-space: nowrap;
 }
 
