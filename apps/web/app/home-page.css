@@ -2471,6 +2471,7 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-copy span {
+    color: #fff;
     font-size: 11px;
   }
 
@@ -2670,11 +2671,19 @@ body:has(.audioflume-home-landing)
   }
 }
 
-.audioflume-discover-featured-artist-link {
+.audioflume-discover-featured-bottom-left {
   position: absolute;
   left: clamp(16px, 2vw, 32px);
   bottom: clamp(16px, 2vw, 32px);
   z-index: 3;
+  display: flex;
+  max-width: 58%;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.audioflume-discover-featured-artist-link {
   display: inline-flex;
   max-width: 58%;
   align-items: baseline;
