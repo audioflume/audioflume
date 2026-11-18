@@ -1130,17 +1130,8 @@
 }
 
 .cardPlayingWaveform {
-  position: absolute;
-  right: 24px;
-  bottom: 24px;
-  z-index: 3;
   display: grid;
-  width: 42px;
-  height: 42px;
   place-items: center;
-  color: #fff;
-  pointer-events: none;
-  transition: opacity 150ms ease;
 }
 
 .cardPlayingWaveform svg path {
@@ -1164,13 +1155,13 @@
   to { transform: scaleY(.9); }
 }
 
-.artistCard:hover .cardPlayingWaveform,
-.artistCard:focus-within .cardPlayingWaveform {
-  opacity: 0;
-}
-
 .artistCard:hover .cardPlay,
 .artistCard:focus-within .cardPlay {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.artistCard .cardPlayPlaying {
   opacity: 1;
   pointer-events: auto;
 }
