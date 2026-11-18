@@ -716,6 +716,14 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         writeStoredPlayerState({ currentSong: song, currentTime: 0, duration: song.duration || 0 });
       }
 
+      const visualDuration = isSameSong
+        ? durationRef.current || song.duration || 0
+        : song.duration || 0;
+      waveformsRef.current.get(song.id)?.seekTo(safeProgress);
+      if (visualDuration > 0 && Number.isFinite(visualDuration)) {
+        setCurrentTimeState(safeProgress * visualDuration);
+      }
+
       const applySeek = () => {
         if (seekRequestId !== pendingSeekRequestIdRef.current) return;
         if (currentSongRef.current?.id !== song.id) return;
