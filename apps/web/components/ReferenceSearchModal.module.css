@@ -164,6 +164,16 @@
   background: rgba(255, 255, 255, 0.97);
   padding: 0 20px;
   color: #111111;
+  --reference-search-field-text: #111111;
+  --reference-search-field-placeholder: #8a8a8a;
+  --reference-search-field-font-size: 16px;
+}
+
+:global(html.light) .field,
+:global(html[data-theme="light"]) .field {
+  --reference-search-field-text: #111111;
+  --reference-search-field-placeholder: #aaa;
+  --reference-search-field-font-size: 14px;
 }
 
 .field > svg {
@@ -176,16 +186,16 @@
   border: 0;
   outline: 0;
   background: transparent;
-  color: #111111;
+  color: var(--reference-search-field-text);
   font: inherit;
-  font-size: 16px;
+  font-size: var(--reference-search-field-font-size);
   font-weight: 300;
   -webkit-appearance: none;
   appearance: none;
 }
 
 .field input::placeholder {
-  color: #8a8a8a;
+  color: var(--reference-search-field-placeholder);
   opacity: 1;
 }
 
