@@ -13,6 +13,7 @@ import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import {
@@ -1155,6 +1156,14 @@ export default function CommunityPlaylistsPage() {
                 {playlist.song_count} {playlist.song_count === 1 ? "song" : "songs"}
               </p>
             </div>
+            <Link
+              className="community-card-view-playlist"
+              href={`/community-playlists/${playlist.id}`}
+              aria-label={`View playlist ${playlist.name}`}
+            >
+              <span className="community-card-view-playlist-text">View playlist</span>
+              <ArrowUpRightIcon size={17} strokeWidth={1.5} />
+            </Link>
           </div>
         }
       />
