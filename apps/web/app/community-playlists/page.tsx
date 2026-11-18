@@ -9,8 +9,9 @@ import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import Toast from "@/components/Toast";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
+import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
+import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import XIcon from "@/components/icons/XIcon";
-import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -374,8 +375,10 @@ function recordCommunityPlaylistPlay(playlistId: number, songId: string) {
 }
 
 export default function CommunityPlaylistsPage() {
-  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const playlistPlaybackCacheRef = useRef(new Map<number, Song[]>());
+  const openPlaylistIdRef = useRef<number | null>(null);
+  const [openPlaylistId, setOpenPlaylistId] = useState<number | null>(null);
   const communityContentRef = useRef<HTMLElement | null>(null);
   const [query, setQuery] = useState("");
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -878,6 +881,8 @@ export default function CommunityPlaylistsPage() {
 
   async function togglePlaylistPlayback(playlist: CommunityPlaylist) {
     if (loadingPlaybackPlaylistId === playlist.id) return;
+    openPlaylistIdRef.current = playlist.id;
+    setOpenPlaylistId(playlist.id);
 
     const cachedSongs = playlistPlaybackCacheRef.current.get(playlist.id) ?? [];
     const currentSongBelongsToPlaylist = Boolean(
@@ -889,7 +894,6 @@ export default function CommunityPlaylistsPage() {
       currentSongBelongsToPlaylist &&
       currentSong
     ) {
-      togglePlayPause(currentSong);
       return;
     }
 
@@ -914,6 +918,7 @@ export default function CommunityPlaylistsPage() {
       }
 
       const playableSongs = songs.filter((song) => Boolean(song.audioUrl));
+      if (openPlaylistIdRef.current !== playlist.id) return;
       const firstSong = playableSongs[0];
       if (!firstSong) return;
 
@@ -926,6 +931,17 @@ export default function CommunityPlaylistsPage() {
     } finally {
       setLoadingPlaybackPlaylistId(null);
     }
+  }
+
+  function playCommunityPreviewSong(playlist: CommunityPlaylist, song: Song) {
+    const playableSongs = (playlistPlaybackCacheRef.current.get(playlist.id) ?? [])
+      .filter((entry) => Boolean(entry.audioUrl));
+    if (activePlaybackPlaylistId !== playlist.id || currentSong?.id !== song.id) {
+      recordCommunityPlaylistPlay(playlist.id, song.id);
+    }
+    setQueue(playableSongs);
+    setActivePlaybackPlaylistId(playlist.id);
+    togglePlayPause(song);
   }
 
   function scrollCommunityShelf(shelfKey: string, direction: -1 | 1) {
@@ -1002,13 +1018,14 @@ export default function CommunityPlaylistsPage() {
     );
     const isPlaylistPlaying = isCurrentPlaylist && isPlaying;
     const isPlaylistLoading = loadingPlaybackPlaylistId === playlist.id;
+    const previewOpen = openPlaylistId === playlist.id;
 
     return (
       <PlaylistCardShell
         key={playlist.id}
         href={`/community-playlists/${playlist.id}`}
         ariaLabel={`Open ${playlist.name}`}
-        className="community-card"
+        className={`community-card ${cardWaveformStyles.cardHost}${previewOpen ? ` ${cardWaveformStyles.cardPreviewOpen}` : ""}`}
         mediaClassName="community-cover-wrap"
         squareMedia
         mediaLinkClassName="community-cover-link"
@@ -1063,24 +1080,38 @@ export default function CommunityPlaylistsPage() {
             </button>
 
             <button
-              className="community-play"
+              className={cardWaveformStyles.cardPlayButton}
               type="button"
-              aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlist.name}`}
-              aria-pressed={isPlaylistPlaying}
+              aria-label={`Open song preview for ${playlist.name}`}
+              aria-expanded={previewOpen}
+              data-preview-open={previewOpen ? "true" : undefined}
               aria-busy={isPlaylistLoading}
-              data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
-              disabled={isPlaylistLoading}
+              disabled={isPlaylistLoading || previewOpen}
               onClick={(event) => {
                 event.stopPropagation();
                 void togglePlaylistPlayback(playlist);
               }}
             >
-              {isPlaylistPlaying ? (
-                <PauseIcon size={18} />
-              ) : (
-                <PlayIconSmall size={18} />
-              )}
+              {isPlaylistPlaying ? <CardPlayingWaveform /> : <PlayIconSmall size={15} />}
             </button>
+            {isPlaylistPlaying && !previewOpen ? (
+              <CardPlayingWaveform corner label={`${playlist.name} is playing`} />
+            ) : null}
+            {previewOpen ? (
+              <CardMiniPlayer
+                artistName={playlist.name}
+                trackCount={playlist.song_count}
+                songs={cachedPlaylistSongs.filter((song) => Boolean(song.audioUrl))}
+                currentSongId={currentSong?.id}
+                isPlaying={isPlaying}
+                onPlay={(song) => playCommunityPreviewSong(playlist, song)}
+                onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+                onClose={() => {
+                  openPlaylistIdRef.current = null;
+                  setOpenPlaylistId(null);
+                }}
+              />
+            ) : null}
 
             <div
               className="community-card-count-overlay"
