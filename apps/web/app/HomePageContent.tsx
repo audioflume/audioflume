@@ -510,6 +510,11 @@ function HomeReadyToCutSongCard({
 
 const DISCOVER_ARTIST_PREVIEW_ROW_COUNT = 6;
 
+function formatDiscoverArtistSongDuration(seconds: number | undefined) {
+  if (!Number.isFinite(seconds) || !seconds || seconds <= 0) return "—";
+  return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+}
+
 function DiscoverFeaturedArtistSongList({
   artist,
   songs,
@@ -534,7 +539,7 @@ function DiscoverFeaturedArtistSongList({
                 <span className="audioflume-home-lifetime-v2-song-cover" />
                 <span className="audioflume-home-lifetime-v2-song-copy">
                   <strong>Preview track {index + 1}</strong>
-                  <span>{artist.name}</span>
+                  <span>—</span>
                 </span>
                 <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true"><PlayIconSmall size={13} /></span>
               </div>
@@ -554,7 +559,7 @@ function DiscoverFeaturedArtistSongList({
               </span>
               <span className="audioflume-home-lifetime-v2-song-copy">
                 <strong>{song.title}</strong>
-                <span>{song.artist}</span>
+                <span>{formatDiscoverArtistSongDuration(song.duration)}</span>
               </span>
               <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true">
                 {active && playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
