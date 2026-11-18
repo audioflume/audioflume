@@ -88,7 +88,7 @@ function ArtistCard({
       <PlaylistCardShell
         href={href}
         ariaLabel={`Explore ${artist.name}`}
-        className={`${playlistCardStyles.card} ${styles.artistCard} ${cardWaveformStyles.cardHost}${hasActiveSong ? ` ${styles.artistCardActive}` : ""}${previewOpen ? ` ${styles.artistCardPreviewOpen}` : ""}`}
+        className={`${playlistCardStyles.card} ${styles.artistCard} ${cardWaveformStyles.cardHost}${hasActiveSong ? ` ${styles.artistCardActive}` : ""}${previewOpen ? ` ${styles.artistCardPreviewOpen} ${cardWaveformStyles.cardPreviewOpen}` : ""}`}
         squareMedia
         mediaClassName={styles.artistMedia}
         media={
@@ -108,7 +108,7 @@ function ArtistCard({
           <>
             <button
               type="button"
-              className={styles.cardPlay}
+              className={cardWaveformStyles.cardPlayButton}
               disabled={previewOpen}
               aria-label={`Open song preview for ${artist.name}`}
               onClick={(event) => {
