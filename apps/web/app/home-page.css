@@ -2274,8 +2274,8 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
   .audioflume-discover-skeleton-artist-genres .is-discover-genre-pill {
-  width: 58px;
-  height: 24px;
+  width: 50px;
+  height: 20px;
   border-radius: 999px;
   background: color-mix(in srgb, #ffffff 14%, transparent);
 }
@@ -2471,7 +2471,6 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-copy span {
-    color: #fff;
     font-size: 11px;
   }
 
@@ -2671,21 +2670,13 @@ body:has(.audioflume-home-landing)
   }
 }
 
-.audioflume-discover-featured-bottom-left {
+.audioflume-discover-featured-artist-link {
   position: absolute;
   left: clamp(16px, 2vw, 32px);
   bottom: clamp(16px, 2vw, 32px);
   z-index: 3;
-  display: flex;
-  max-width: 58%;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 10px;
-}
-
-.audioflume-discover-featured-artist-link {
   display: inline-flex;
-  max-width: 100%;
+  max-width: 58%;
   align-items: baseline;
   gap: 8px;
   color: #fff;
@@ -2711,6 +2702,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-featured-track-genres {
   display: flex;
+  margin-top: 8px;
   width: max-content;
   max-width: 100%;
   flex-wrap: wrap;
@@ -2720,9 +2712,9 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill {
-  min-height: 24px;
-  padding: 0 11px;
-  font-size: 10px;
+  min-height: 20px;
+  padding: 0 9px;
+  font-size: 9px;
 }
 
 .audioflume-discover-featured-track-genres > a.audioflume-genre-filter-pill {
@@ -2730,7 +2722,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-track-genres > .audioflume-genre-filter-pill.is-placeholder {
-  width: 58px;
+  width: 50px;
   padding: 0;
 }
 
