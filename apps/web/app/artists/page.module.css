@@ -314,7 +314,7 @@
   display: none;
 }
 
-/* Artist preview stays hover-based at all widths. */
+/* Artist preview opens only from its card play button. */
 .artistCard .miniPlayer {
     position: absolute;
     inset: 0;
@@ -333,11 +333,31 @@
     transition: opacity 160ms ease;
   }
 
-  .artistCard:hover .miniPlayer,
-  .artistCardActive .miniPlayer,
-  .artistCard:has(.miniPlayer :focus-visible) .miniPlayer {
+  .artistCardPreviewOpen .miniPlayer {
     opacity: 1;
     pointer-events: auto;
+  }
+
+  .miniPlayerClose {
+    position: absolute;
+    top: clamp(14px, 2.6cqw, 24px);
+    right: clamp(14px, 2.6cqw, 24px);
+    z-index: 5;
+    display: grid;
+    width: 28px;
+    height: 28px;
+    place-items: center;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    color: #fff;
+    cursor: pointer;
+    transition: opacity 160ms ease;
+  }
+
+  .miniPlayerClose:hover,
+  .miniPlayerClose:focus-visible {
+    opacity: .7;
   }
 
   .miniPlayerUpper {
@@ -630,7 +650,7 @@
     min-height: 0;
     flex: 1 1 auto;
     overflow-y: auto;
-    overscroll-behavior-y: auto;
+    overscroll-behavior-y: contain;
     margin-top: 0;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
@@ -1097,8 +1117,8 @@
   transition: opacity 150ms ease, transform 160ms ease;
 }
 
-.card:hover .cardPlay,
-.card:focus-within .cardPlay {
+.artistCard:hover .cardPlay,
+.artistCard:focus-within .cardPlay {
   opacity: 1;
   pointer-events: auto;
 }
@@ -1113,8 +1133,8 @@
   cursor: default;
 }
 
-.card:hover .cardPlay:disabled,
-.card:focus-within .cardPlay:disabled {
+.artistCard:hover .cardPlay:disabled,
+.artistCard:focus-within .cardPlay:disabled {
   opacity: .4;
 }
 
