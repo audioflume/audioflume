@@ -10,6 +10,7 @@ import type { CuratedPlaylist } from "@/lib/curatedPlaylists";
 import CuratedPlaylistBookmarkButton from "./CuratedPlaylistBookmarkButton";
 import CuratedPlaylistPlayButton from "./CuratedPlaylistPlayButton";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
+import { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import cardStyles from "./CuratedPlaylistCard.module.css";
 import shelfStyles from "./CuratedPlaylistShelf.module.css";
 
@@ -67,7 +68,7 @@ export function CuratedPlaylistCard({
     <div className={cardStyles.shell}>
       <PlaylistCardShell
         href={href}
-        className={`${cardStyles.card}${usesHomeLayout ? ` ${cardStyles.homeCard}` : ""}`}
+        className={`${cardStyles.card}${usesHomeLayout ? ` ${cardStyles.homeCard}` : ""}${isCuratedPageVariant ? ` ${cardWaveformStyles.cardHost}` : ""}`}
         mediaClassName={`${cardStyles.image}${isHomeVariant ? ` ${cardStyles.homeImage}` : ""}`}
         squareMedia={isCuratedPageVariant}
         mediaDataAttribute="data-curated-playlist-image"
@@ -106,6 +107,7 @@ export function CuratedPlaylistCard({
             <CuratedPlaylistPlayButton
               playlistId={playlist.id}
               playlistName={playlist.name}
+              previewEnabled={isCuratedPageVariant}
               className={`${cardStyles.playButton}${usesHomeLayout ? ` ${cardStyles.homePlayButton}` : ""}${isCuratedPageVariant ? ` ${cardStyles.curatedPagePlayButton}` : ""}`}
             />
           </>
