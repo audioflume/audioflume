@@ -1429,8 +1429,8 @@ main
 
 .audioflume-music-page .audioflume-music-home-hero-mark {
   align-self: flex-end;
-  width: clamp(30px, 2.2vw, 34px);
-  height: clamp(30px, 2.2vw, 34px);
+  width: clamp(24px, 2.2vw, 34px);
+  height: clamp(24px, 2.2vw, 34px);
   color: #fff;
   transform: translate(4px, -4px);
 }
