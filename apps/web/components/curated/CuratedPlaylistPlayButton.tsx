@@ -12,6 +12,7 @@ import { usePlayer } from "@/context/PlayerContext";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import type { CuratedPlaylistSong } from "@/lib/curatedPlaylists";
+import type { Song } from "@/lib/types";
 
 import styles from "./CuratedPlaylistPlayButton.module.css";
 
@@ -116,7 +117,7 @@ export default function CuratedPlaylistPlayButton({
     activeId === playlistKey && currentSongBelongsToPlaylist;
   const isPlaylistPlaying = isCurrentPlaylist && isPlaying;
 
-  function playPreviewSong(song: CuratedPlaylistSong) {
+  function playPreviewSong(song: Song) {
     setQueue(playableSongs);
     setActivePlaylistId(playlistKey);
     togglePlayPause(song);
