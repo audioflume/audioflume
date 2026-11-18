@@ -357,7 +357,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const loadSongSource = useCallback(
-    (audio: HTMLAudioElement, song: Song, playAfterLoad = false) => {
+    (audio: HTMLAudioElement, song: Song, playAfterLoad = false, startTime?: number) => {
       const nextSource = getSongSource(song);
       if (!nextSource) return;
 
@@ -390,6 +390,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
             backBufferLength: 30,
             maxBufferLength: 30,
             startFragPrefetch: true,
+            startPosition: startTime ?? -1,
           });
 
           hls.loadSource(song.hlsUrl);
@@ -706,7 +707,10 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         setCurrentTimeState(0);
         setDurationState(song.duration || 0);
         emitPlaybackUpdate();
-        loadSongSource(audio, song, false);
+        const estimatedStartTime = Number.isFinite(song.duration) && song.duration > 0
+          ? safeProgress * song.duration
+          : undefined;
+        loadSongSource(audio, song, false, estimatedStartTime);
 
         lastStorageWriteTimeRef.current = Date.now();
         writeStoredPlayerState({ currentSong: song, currentTime: 0, duration: song.duration || 0 });
@@ -739,7 +743,7 @@ export function PlayerProvider({ children }: { children: ReactNode }) {
         }
       };
 
-      if (audio.duration && isFinite(audio.duration)) {
+      if (isSameSong && audio.duration && isFinite(audio.duration)) {
         applySeek();
       } else {
         audio.addEventListener("loadedmetadata", applySeek, { once: true });
