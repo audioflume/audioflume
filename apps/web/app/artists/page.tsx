@@ -85,7 +85,7 @@ function ArtistMiniPlayer({
             onClose();
           }}
         >
-          <XIcon size={22} />
+          <XIcon size={18} strokeWidth={1.4} />
         </button>
       ) : null}
       <div className={styles.miniPlayerUpper}>
@@ -263,31 +263,36 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
           )
         }
         overlays={
-          previewOpen ? (
-            <ArtistMiniPlayer
-              artistName={artist.name}
-              trackCount={artist.track_count}
-              songs={playable}
-              currentSongId={currentSong?.id}
-              isPlaying={isPlaying}
-              onPlay={playSong}
-              onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
-              onClose={() => setPreviewOpen(false)}
-            />
-          ) : (
+          <>
             <button
               type="button"
               className={styles.cardPlay}
-              disabled={!playable.length}
+              disabled={!playable.length || previewOpen}
               aria-label={`Open song preview for ${artist.name}`}
               onClick={(event) => {
                 event.stopPropagation();
+                if (!playable.length) return;
                 setPreviewOpen(true);
+                if (currentSong?.id !== playable[0].id || !isPlaying) {
+                  playSong(playable[0]);
+                }
               }}
             >
               <PlayIconSmall size={18} />
             </button>
-          )
+            {previewOpen ? (
+              <ArtistMiniPlayer
+                artistName={artist.name}
+                trackCount={artist.track_count}
+                songs={playable}
+                currentSongId={currentSong?.id}
+                isPlaying={isPlaying}
+                onPlay={playSong}
+                onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+                onClose={() => setPreviewOpen(false)}
+              />
+            ) : null}
+          </>
         }
         details={
           <Link className={styles.artistDetails} href={href} aria-label={`Explore artist ${artist.name}`}>
