@@ -161,7 +161,7 @@ export default function CuratedPlaylistPlayButton({
     <>
       <button
         type="button"
-        className={`${styles.button} curated-playlist-play-button ${className} ${previewEnabled ? cardWaveformStyles.cardPlayButton : ""}`.trim()}
+        className={previewEnabled ? cardWaveformStyles.cardPlayButton : `${styles.button} curated-playlist-play-button ${className}`.trim()}
         onClick={handleClick}
         disabled={loading || previewOpen}
         aria-label={previewEnabled ? `Open song preview for ${playlistName}` : `${isPlaylistPlaying ? "Pause" : "Play"} ${playlistName}`}
