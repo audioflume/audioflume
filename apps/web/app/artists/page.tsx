@@ -61,7 +61,6 @@ function ArtistMiniPlayer({
 }) {
   const { currentTime, duration } = usePlayerProgress();
   const [previewIndex, setPreviewIndex] = useState(0);
-  const [songListScrollEnabled, setSongListScrollEnabled] = useState(false);
   const previews = songs;
   const index = Math.min(previewIndex, Math.max(0, previews.length - 1));
   const activeSongIndex = previews.findIndex((preview) => preview.id === currentSongId);
@@ -73,11 +72,7 @@ function ArtistMiniPlayer({
     : 0;
 
   return (
-    <div
-      className={styles.miniPlayer}
-      aria-label={`Preview music by ${artistName}`}
-      onMouseLeave={() => setSongListScrollEnabled(false)}
-    >
+    <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
       <div className={styles.miniPlayerUpper}>
         <div className={styles.miniPlayerArt}>
           {listSong?.coverArt ? <img src={listSong.coverArt} alt="" draggable={false} /> : null}
@@ -87,14 +82,7 @@ function ArtistMiniPlayer({
           {listSong ? <span className={styles.miniPlayerSongDuration}>{formatPreviewDuration(listSong.duration)}</span> : null}
         </div>
       </div>
-      <div
-        className={styles.miniPlayerCompactSongs}
-        aria-label={`Songs by ${artistName}`}
-        tabIndex={0}
-        data-scroll-enabled={songListScrollEnabled}
-        onPointerDown={() => setSongListScrollEnabled(true)}
-        onFocus={() => setSongListScrollEnabled(true)}
-      >
+      <div className={styles.miniPlayerCompactSongs} aria-label={`Songs by ${artistName}`} tabIndex={0}>
         {Array.from({ length: Math.max(3, Math.ceil(songs.length / 3)) }, (_, groupIndex) => (
           <div className={styles.miniPlayerCompactPage} key={groupIndex}>
             {Array.from({ length: 3 }, (_, rowIndex) => {
