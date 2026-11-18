@@ -115,10 +115,10 @@ export function CuratedPlaylistCard({
         details={
           !isHomeVariant ? (
             <Link href={href} className={cardStyles.details} aria-label={`View playlist ${playlist.name}`}>
-              <span className={cardStyles.copy}>
+              <div className={cardStyles.copy}>
                 <h3>{playlist.name}</h3>
                 <p>{formatSongCount(playlist.song_count)}</p>
-              </span>
+              </div>
               <span className={cardStyles.viewPlaylist}>
                 <span className={cardStyles.viewPlaylistText}>View playlist</span>
                 <ArrowUpRightIcon size={17} strokeWidth={1.5} />
