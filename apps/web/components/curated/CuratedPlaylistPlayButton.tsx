@@ -9,6 +9,8 @@ import {
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import { usePlayer } from "@/context/PlayerContext";
+import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
+import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import type { CuratedPlaylistSong } from "@/lib/curatedPlaylists";
 
 import styles from "./CuratedPlaylistPlayButton.module.css";
@@ -17,6 +19,7 @@ type CuratedPlaylistPlayButtonProps = {
   playlistId: number;
   playlistName: string;
   className?: string;
+  previewEnabled?: boolean;
 };
 
 const playlistSongCache = new Map<string, CuratedPlaylistSong[]>();
@@ -26,6 +29,18 @@ const playlistSongRequests = new Map<
 >();
 const activePlaylistListeners = new Set<() => void>();
 let activePlaylistId: string | null = null;
+let openCardPlaylistId: string | null = null;
+const openCardListeners = new Set<() => void>();
+function subscribeOpenCard(listener: () => void) {
+  openCardListeners.add(listener);
+  return () => { openCardListeners.delete(listener); };
+}
+function getOpenCardPlaylistId() { return openCardPlaylistId; }
+function setOpenCardPlaylistId(id: string | null) {
+  if (openCardPlaylistId === id) return;
+  openCardPlaylistId = id;
+  openCardListeners.forEach((listener) => listener());
+}
 
 function subscribeToActivePlaylist(listener: () => void) {
   activePlaylistListeners.add(listener);
@@ -80,8 +95,9 @@ export default function CuratedPlaylistPlayButton({
   playlistId,
   playlistName,
   className = "",
+  previewEnabled = false,
 }: CuratedPlaylistPlayButtonProps) {
-  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const [loading, setLoading] = useState(false);
   const playlistKey = String(playlistId);
   const activeId = useSyncExternalStore(
@@ -89,13 +105,22 @@ export default function CuratedPlaylistPlayButton({
     getActivePlaylistId,
     () => null,
   );
+  const previewOpenId = useSyncExternalStore(subscribeOpenCard, getOpenCardPlaylistId, () => null);
+  const previewOpen = previewEnabled && previewOpenId === playlistKey;
   const cachedSongs = playlistSongCache.get(playlistKey) ?? [];
+  const playableSongs = cachedSongs.filter((song) => Boolean(song.audioUrl));
   const currentSongBelongsToPlaylist = Boolean(
     currentSong && cachedSongs.some((song) => song.id === currentSong.id),
   );
   const isCurrentPlaylist =
     activeId === playlistKey && currentSongBelongsToPlaylist;
   const isPlaylistPlaying = isCurrentPlaylist && isPlaying;
+
+  function playPreviewSong(song: CuratedPlaylistSong) {
+    setQueue(playableSongs);
+    setActivePlaylistId(playlistKey);
+    togglePlayPause(song);
+  }
 
   async function handleClick(event: MouseEvent<HTMLButtonElement>) {
     event.preventDefault();
@@ -104,7 +129,10 @@ export default function CuratedPlaylistPlayButton({
     if (event.detail > 0) event.currentTarget.blur();
     if (loading) return;
 
-    if (isCurrentPlaylist && currentSong) {
+    if (previewEnabled) {
+      setOpenCardPlaylistId(playlistKey);
+      if (isCurrentPlaylist && currentSong) return;
+    } else if (isCurrentPlaylist && currentSong) {
       togglePlayPause(currentSong);
       return;
     }
@@ -114,6 +142,7 @@ export default function CuratedPlaylistPlayButton({
     try {
       const songs = await loadPlaylistSongs(playlistKey);
       const playableSongs = songs.filter((song) => Boolean(song.audioUrl));
+      if (previewEnabled && openCardPlaylistId !== playlistKey) return;
       const firstSong = playableSongs[0];
 
       if (!firstSong) return;
@@ -129,21 +158,42 @@ export default function CuratedPlaylistPlayButton({
   }
 
   return (
-    <button
-      type="button"
-      className={`${styles.button} curated-playlist-play-button ${className}`.trim()}
-      onClick={handleClick}
-      disabled={loading}
-      data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
-      aria-label={`${isPlaylistPlaying ? "Pause" : "Play"} ${playlistName}`}
-      aria-pressed={isPlaylistPlaying}
-      aria-busy={loading}
-    >
-      {isPlaylistPlaying ? (
-        <PauseIcon size={18} />
-      ) : (
-        <PlayIconSmall size={18} />
-      )}
-    </button>
+    <>
+      <button
+        type="button"
+        className={`${styles.button} curated-playlist-play-button ${className} ${previewEnabled ? cardWaveformStyles.cardPlayButton : ""}`.trim()}
+        onClick={handleClick}
+        disabled={loading || previewOpen}
+        aria-label={previewEnabled ? `Open song preview for ${playlistName}` : `${isPlaylistPlaying ? "Pause" : "Play"} ${playlistName}`}
+        aria-expanded={previewEnabled ? previewOpen : undefined}
+        data-preview-open={previewOpen ? "true" : undefined}
+        data-playlist-playing={isPlaylistPlaying ? "true" : "false"}
+        aria-pressed={isPlaylistPlaying}
+        aria-busy={loading}
+      >
+        {previewEnabled && isPlaylistPlaying ? (
+          <CardPlayingWaveform />
+        ) : isPlaylistPlaying && !previewEnabled ? (
+          <PauseIcon size={18} />
+        ) : (
+          <PlayIconSmall size={previewEnabled ? 15 : 18} />
+        )}
+      </button>
+      {previewEnabled && isPlaylistPlaying && !previewOpen ? (
+        <CardPlayingWaveform corner label={`${playlistName} is playing`} />
+      ) : null}
+      {previewOpen ? (
+        <CardMiniPlayer
+          artistName={playlistName}
+          trackCount={playableSongs.length}
+          songs={playableSongs}
+          currentSongId={currentSong?.id}
+          isPlaying={isPlaying}
+          onPlay={playPreviewSong}
+          onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+          onClose={() => setOpenCardPlaylistId(null)}
+        />
+      ) : null}
+    </>
   );
 }
