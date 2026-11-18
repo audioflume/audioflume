@@ -547,7 +547,7 @@ body:has(.curated-playlists-page-root)
 
 .curated-playlist-card:hover .curated-playlist-menu-button,
 .curated-playlist-card.is-menu-open .curated-playlist-menu-button,
-.curated-playlist-card:focus-within .curated-playlist-menu-button {
+.curated-playlist-card:has(:focus-visible) .curated-playlist-menu-button {
   opacity: 1;
 }
 
