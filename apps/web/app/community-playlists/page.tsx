@@ -896,6 +896,7 @@ export default function CommunityPlaylistsPage() {
     ) {
       return;
     }
+    if (isPlaying && currentSong) togglePlayPause(currentSong);
 
     setLoadingPlaybackPlaylistId(playlist.id);
 
