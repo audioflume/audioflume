@@ -252,7 +252,7 @@
 }
 
 .artistCard:hover .hoverSongPanel,
-.artistCard:focus-within .hoverSongPanel {
+.artistCard:has(:focus-visible) .hoverSongPanel {
   opacity: 1;
   pointer-events: auto;
 }
@@ -441,7 +441,7 @@
 }
 
 .card:hover .cardImage,
-.card:focus-within .cardImage {
+.card:has(:focus-visible) .cardImage {
   transform: scale(1.045);
 }
 
@@ -499,7 +499,7 @@
 }
 
 .card:hover .cardExplore,
-.card:focus-within .cardExplore {
+.card:has(:focus-visible) .cardExplore {
   opacity: 1;
   pointer-events: auto;
 }
@@ -554,7 +554,7 @@
 }
 
 .card:hover .cardGenres,
-.card:focus-within .cardGenres {
+.card:has(:focus-visible) .cardGenres {
   max-height: 120px;
   margin-top: 12px;
   pointer-events: auto;
@@ -568,7 +568,7 @@
 }
 
 .card:hover .cardGenres > .cardGenre,
-.card:focus-within .cardGenres > .cardGenre {
+.card:has(:focus-visible) .cardGenres > .cardGenre {
   opacity: 1;
   transform: translateY(0);
 }
@@ -596,7 +596,7 @@
 }
 
 .card:hover .cardGenres > a.cardGenre,
-.card:focus-within .cardGenres > a.cardGenre {
+.card:has(:focus-visible) .cardGenres > a.cardGenre {
   pointer-events: auto;
 }
 
