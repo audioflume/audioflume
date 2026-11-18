@@ -593,8 +593,8 @@
 }
 
 .miniPlayerListPlay {
-  width: 40px;
-  height: 40px;
+  width: 42px;
+  height: 42px;
   background: #fff;
   color: #111;
   transition: transform 160ms ease;
