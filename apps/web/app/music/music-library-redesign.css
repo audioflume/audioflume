@@ -1462,6 +1462,12 @@ main
   display: inline-flex;
   align-items: baseline;
   gap: 8px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
   color: #fff;
   font-size: clamp(14px, 1.2vw, 18px);
   font-weight: 300;
