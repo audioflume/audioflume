@@ -94,7 +94,7 @@
 }
 
 .card:hover .bookmarkButton,
-.card:focus-within .bookmarkButton,
+.card:has(:focus-visible) .bookmarkButton,
 .bookmarkButton[aria-pressed="true"] {
   opacity: 1;
 }
@@ -119,7 +119,7 @@
 }
 
 .card:hover :global(.curated-playlist-play-button),
-.card:focus-within :global(.curated-playlist-play-button) {
+.card:has(:focus-visible) :global(.curated-playlist-play-button) {
   opacity: 1;
 }
 
@@ -254,7 +254,7 @@
 }
 
 .homeCard:hover .homeBookmarkButton,
-.homeCard:focus-within .homeBookmarkButton,
+.homeCard:has(:focus-visible) .homeBookmarkButton,
 .homeBookmarkButton[aria-pressed="true"] {
   opacity: 1;
 }
