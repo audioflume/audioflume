@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import Footer from "@/components/Footer";
-import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import SongCard from "@/components/SongCard";
@@ -37,9 +36,6 @@ function HomeHeroFeaturedSong({ song }: { song?: Song }) {
           <strong>{song?.title ?? "Sand Drawing"}</strong>
           <small>{song?.artist ?? "Judah Earl"}</small>
         </span>
-        <span className="audioflume-experiment-hero-song-genres">
-          {song?.genres?.slice(0, 3).map((genre, index) => <span key={`${genre}-${index}`}>{genre}</span>)}
-        </span>
       </span>
       <span className="audioflume-experiment-hero-song-cover">
         {song?.coverArt ? <img src={song.coverArt} alt="" /> : null}
@@ -61,7 +57,6 @@ export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featu
       {!backgroundOnly && (
         <>
           <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
-          <AudioflumeMark className="audioflume-experiment-hero-mark" />
           <h1 className="audioflume-experiment-hero-headline">
             <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
           </h1>
