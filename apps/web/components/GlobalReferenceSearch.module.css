@@ -1,0 +1,36 @@
+.flashButton {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+.flashButton > svg,
+.flashButton > span {
+  position: relative;
+  z-index: 1;
+}
+
+.flashMedia {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.flashMedia img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.flashMedia::after {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  content: "";
+}
+
+.flashButton.isFlashing:is(:hover, :focus-visible) {
+  color: #fff;
+}
