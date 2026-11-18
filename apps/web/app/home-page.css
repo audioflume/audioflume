@@ -2274,8 +2274,8 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-artists.is-discover-featured-artists
   .audioflume-discover-skeleton-artist-genres .is-discover-genre-pill {
-  width: 68px;
-  height: 26px;
+  width: 58px;
+  height: 24px;
   border-radius: 999px;
   background: color-mix(in srgb, #ffffff 14%, transparent);
 }
