@@ -9,7 +9,7 @@
     align-items: stretch;
     justify-content: center;
     padding: clamp(14px, 7cqw, 28px);
-    background: rgba(17, 17, 17, .82);
+    background: linear-gradient(to top, #000 0%, transparent 100%), rgba(17, 17, 17, .82);
     color: #fff;
     opacity: 1;
     pointer-events: auto;
