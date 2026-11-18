@@ -1,0 +1,49 @@
+.cardHost { container-type: inline-size; }
+
+.cardPlayingWaveform {
+  display: grid;
+  place-items: center;
+}
+
+.cardCornerWaveform {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  color: #fff;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.cardHost:hover .cardCornerWaveform,
+.cardHost:focus-within .cardCornerWaveform {
+  opacity: 0;
+}
+
+.cardPlayingWaveform svg path {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: artistPlayingWaveform 540ms ease-in-out infinite alternate;
+}
+
+.cardPlayingWaveform svg path:nth-child(2) { animation-delay: -310ms; }
+.cardPlayingWaveform svg path:nth-child(3) { animation-name: artistPlayingWaveformMiddle; animation-delay: -570ms; }
+.cardPlayingWaveform svg path:nth-child(4) { animation-delay: -180ms; }
+.cardPlayingWaveform svg path:nth-child(5) { animation-delay: -440ms; }
+
+@keyframes artistPlayingWaveform {
+  from { transform: scaleY(.75); }
+  to { transform: scaleY(1); }
+}
+
+@keyframes artistPlayingWaveformMiddle {
+  from { transform: scaleY(.75); }
+  to { transform: scaleY(.9); }
+}
+
+
+@media (prefers-reduced-motion: reduce) {
+  .cardPlayingWaveform svg path { animation: none; }
+}
