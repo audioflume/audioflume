@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from "react";
 import { createPortal } from "react-dom";
 
 import WaveformIcon from "@/components/icons/WaveformIcon";
@@ -31,6 +31,9 @@ type ReferenceSearchModalProps = {
     signal?: AbortSignal,
   ) => void | Promise<void>;
   embedded?: boolean;
+  anchorRef?: RefObject<HTMLElement | null>;
+  anchorBottomRef?: RefObject<HTMLElement | null>;
+  anchorBreakpoint?: number;
 };
 
 function ReferenceArtwork({
@@ -85,8 +88,12 @@ export default function ReferenceSearchModal({
   onClose,
   onSubmit,
   embedded = false,
+  anchorRef,
+  anchorBottomRef,
+  anchorBreakpoint = 750,
 }: ReferenceSearchModalProps) {
   const [portalReady, setPortalReady] = useState(false);
+  const [anchorPosition, setAnchorPosition] = useState<{ top: number; right: number } | null>(null);
   const inputRef = useRef<HTMLInputElement | null>(null);
   const searchFormRef = useRef<HTMLFormElement | null>(null);
   const activeSearchRef = useRef<AbortController | null>(null);
@@ -101,6 +108,35 @@ export default function ReferenceSearchModal({
   useEffect(() => {
     setPortalReady(true);
   }, []);
+
+  useLayoutEffect(() => {
+    if (!open || embedded || !anchorRef) return;
+
+    function updatePosition() {
+      const anchor = anchorRef?.current;
+      if (!anchor || window.innerWidth <= anchorBreakpoint) {
+        setAnchorPosition(null);
+        return;
+      }
+
+      const button = anchor.getBoundingClientRect();
+      const bottom = (anchorBottomRef?.current ?? anchor).getBoundingClientRect().bottom;
+      const modalWidth = Math.min(740, window.innerWidth - 32);
+      const right = Math.min(
+        Math.max(16, window.innerWidth - button.right),
+        window.innerWidth - modalWidth - 16,
+      );
+      setAnchorPosition({ top: bottom, right });
+    }
+
+    updatePosition();
+    window.addEventListener("resize", updatePosition);
+    window.addEventListener("scroll", updatePosition, true);
+    return () => {
+      window.removeEventListener("resize", updatePosition);
+      window.removeEventListener("scroll", updatePosition, true);
+    };
+  }, [open, embedded, anchorRef, anchorBottomRef, anchorBreakpoint]);
 
   function closeModal() {
     activeSearchRef.current?.abort();
@@ -459,7 +495,11 @@ export default function ReferenceSearchModal({
 
   return createPortal(
     <div
-      className={`${styles.backdrop}${open ? ` ${styles.backdropOpen}` : ""}`}
+      className={`${styles.backdrop}${open ? ` ${styles.backdropOpen}` : ""}${anchorPosition && open ? ` ${styles.backdropAnchored}` : ""}`}
+      style={anchorPosition && open ? {
+        "--reference-anchor-top": `${anchorPosition.top}px`,
+        "--reference-anchor-right": `${anchorPosition.right}px`,
+      } as CSSProperties : undefined}
       role="presentation"
       aria-hidden={!open}
       inert={!open}
