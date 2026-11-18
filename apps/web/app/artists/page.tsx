@@ -279,7 +279,7 @@ function ArtistCard({
           <>
             <button
               type="button"
-              className={styles.cardPlay}
+              className={`${styles.cardPlay}${hasActiveSong && isPlaying ? ` ${styles.cardPlayPlaying}` : ""}`}
               disabled={previewOpen}
               aria-label={`Open song preview for ${artist.name}`}
               onClick={(event) => {
@@ -294,13 +294,14 @@ function ArtistCard({
                 }
               }}
             >
-              <PlayIconSmall size={18} />
+              {hasActiveSong && isPlaying ? (
+                <span className={styles.cardPlayingWaveform}>
+                  <WaveformIcon size={18} />
+                </span>
+              ) : (
+                <PlayIconSmall size={18} />
+              )}
             </button>
-            {hasActiveSong && isPlaying && !previewOpen ? (
-              <span className={styles.cardPlayingWaveform} aria-label={`${artist.name} is playing`} role="status">
-                <WaveformIcon size={18} />
-              </span>
-            ) : null}
             {previewOpen ? (
               <ArtistMiniPlayer
                 artistName={artist.name}
