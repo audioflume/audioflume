@@ -17,6 +17,17 @@
   pointer-events: auto;
 }
 
+.backdropAnchored {
+  background: transparent;
+}
+
+.backdropAnchored .modal {
+  position: absolute;
+  top: var(--reference-anchor-top);
+  right: var(--reference-anchor-right);
+  width: min(740px, calc(100vw - 32px));
+}
+
 .modal {
   position: relative;
   width: min(740px, 100%);
