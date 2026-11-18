@@ -395,7 +395,7 @@ export default function MusicPlayer() {
     };
   }, []);
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const player = playerRef.current;
     if (!player) return;
     const updateWidth = () => {
