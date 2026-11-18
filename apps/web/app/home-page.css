@@ -1377,7 +1377,7 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-home-mockup-artists.is-discover-featured-artists
-    .audioflume-home-reference-shelf:not(:hover):not(:focus-within)
+    .audioflume-home-reference-shelf:not(:hover):not(:has(:focus-visible))
     .audioflume-home-reference-shelf-scroller.has-shelf-primary
     > .audioflume-home-reference-artist-card:not(.is-shelf-primary) {
     opacity: 0;
@@ -1665,9 +1665,9 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-artists .audioflume-home-reference-artist-card:hover .audioflume-home-reference-artist-explore,
-.audioflume-home-mockup-artists .audioflume-home-reference-artist-card:focus-within .audioflume-home-reference-artist-explore,
+.audioflume-home-mockup-artists .audioflume-home-reference-artist-card:has(:focus-visible) .audioflume-home-reference-artist-explore,
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:hover .audioflume-home-reference-artist-explore,
-.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:focus-within .audioflume-home-reference-artist-explore {
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:has(:focus-visible) .audioflume-home-reference-artist-explore {
   opacity: 1;
   pointer-events: auto;
 }
@@ -2156,7 +2156,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-compact-song:hover .audioflume-discover-compact-song-play,
-.audioflume-discover-compact-song:focus-within .audioflume-discover-compact-song-play,
+.audioflume-discover-compact-song:has(:focus-visible) .audioflume-discover-compact-song-play,
 .audioflume-discover-compact-song.is-active .audioflume-discover-compact-song-play {
   opacity: 1;
 }
@@ -2349,7 +2349,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-featured-song-shelf .audioflume-home-featured-song-card:hover .audioflume-home-featured-song-play,
-.audioflume-home-featured-song-shelf .audioflume-home-featured-song-card:focus-within .audioflume-home-featured-song-play,
+.audioflume-home-featured-song-shelf .audioflume-home-featured-song-card:has(:focus-visible) .audioflume-home-featured-song-play,
 .audioflume-home-featured-song-shelf .audioflume-home-featured-song-card.is-active .audioflume-home-featured-song-play {
   opacity: 1;
 }
@@ -2360,7 +2360,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-discover-featured-songs .audioflume-home-featured-song-card:hover .audioflume-home-featured-song-play,
-.audioflume-discover-featured-songs .audioflume-home-featured-song-card:focus-within .audioflume-home-featured-song-play,
+.audioflume-discover-featured-songs .audioflume-home-featured-song-card:has(:focus-visible) .audioflume-home-featured-song-play,
 .audioflume-discover-featured-songs .audioflume-home-featured-song-card.is-active .audioflume-home-featured-song-play {
   opacity: 1;
 }
@@ -2641,7 +2641,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-reference-artist-card:hover .audioflume-discover-featured-name-arrow,
-.audioflume-home-reference-artist-card:focus-within .audioflume-discover-featured-name-arrow {
+.audioflume-home-reference-artist-card:has(:focus-visible) .audioflume-discover-featured-name-arrow {
   opacity: 1;
 }
 
@@ -2761,7 +2761,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-curated-card-shell:hover,
-.audioflume-home-mockup-curated-card-shell:focus-within {
+.audioflume-home-mockup-curated-card-shell:has(:focus-visible) {
   --audioflume-discover-play-opacity: 1;
 }
 
@@ -2848,7 +2848,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-home-mockup-curated-card:hover
   .audioflume-home-mockup-curated-card-bookmark,
-.audioflume-home-mockup-curated-card:focus-within
+.audioflume-home-mockup-curated-card:has(:focus-visible)
   .audioflume-home-mockup-curated-card-bookmark,
 .audioflume-home-mockup-curated-card-bookmark[aria-pressed="true"] {
   opacity: 1;
@@ -3209,7 +3209,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:hover .audioflume-home-reference-artist-play,
-.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:focus-within .audioflume-home-reference-artist-play {
+.audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card:has(:focus-visible) .audioflume-home-reference-artist-play {
   opacity: 1;
   pointer-events: auto;
 }
@@ -4603,7 +4603,7 @@ body:has(.audioflume-home-landing)
   transform-origin: center;
 }
 .audioflume-home-landing-artist-card:hover .audioflume-home-landing-artist-play,
-.audioflume-home-landing-artist-card:focus-within .audioflume-home-landing-artist-play {
+.audioflume-home-landing-artist-card:has(:focus-visible) .audioflume-home-landing-artist-play {
   opacity: 1;
   pointer-events: auto;
 }
