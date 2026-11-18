@@ -5,7 +5,7 @@
 }
 
 .flashButton > svg,
-.flashButton > span {
+.flashButton > span:not(.flashMedia) {
   position: relative;
   z-index: 1;
 }
