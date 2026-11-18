@@ -33,13 +33,19 @@
 }
 
 .lightOption:hover {
-  background: #f98866;
-  color: #fff;
+  background: #d5d5cf;
+  color: #111;
+}
+
+:global(html.dark) .lightOption:hover,
+:global(html[data-theme="dark"]) .lightOption:hover {
+  background: #fff;
+  color: #111;
 }
 
 .darkOption:hover {
-  background: #d9e254;
-  color: #111;
+  background: #111111;
+  color: #fff;
 }
 
 .appearanceOption[aria-pressed="false"] svg {
