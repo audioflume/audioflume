@@ -438,8 +438,6 @@ export default function MusicPage() {
 
 
   const searchInputRef = useRef<HTMLInputElement | null>(null);
-  const searchBarRef = useRef<HTMLDivElement | null>(null);
-  const findSimilarButtonRef = useRef<HTMLButtonElement | null>(null);
 
   useEffect(() => {
     function syncLicenseFilters() {
@@ -1349,7 +1347,6 @@ export default function MusicPage() {
   return (
     <main className="audioflume-music-page min-h-screen bg-[var(--bg-primary)] text-[var(--text-primary)]">
       <div
-        ref={searchBarRef}
         className={`audioflume-music-page-searchbar${filtersOpen ? " is-filters-open" : ""}`}
       >
         <button
@@ -1384,7 +1381,6 @@ export default function MusicPage() {
           <button
             type="button"
             className="audioflume-music-page-searchbar-song"
-            ref={findSimilarButtonRef}
             aria-label="Find Similar"
             aria-expanded={searchBySongOpen}
             onClick={() => {
@@ -1405,9 +1401,6 @@ export default function MusicPage() {
 
       <ReferenceSearchModal
         open={searchBySongOpen}
-        anchorRef={findSimilarButtonRef}
-        anchorBottomRef={searchBarRef}
-        anchorBreakpoint={1000}
         value={searchBySongQuery}
         onChange={setSearchBySongQuery}
         onClose={() => setSearchBySongOpen(false)}
