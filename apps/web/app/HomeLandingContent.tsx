@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useMemo } from "react";
 
 import Footer from "@/components/Footer";
+import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import HomeExperimentSearch from "@/components/HomeExperimentSearch";
 import SongCard from "@/components/SongCard";
@@ -60,6 +61,7 @@ export function HomeHeroBanner({ featuredSong, backgroundOnly = false }: { featu
       {!backgroundOnly && (
         <>
           <div className="audioflume-experiment-hero-shade" aria-hidden="true" />
+          <AudioflumeMark className="audioflume-experiment-hero-mark" />
           <h1 className="audioflume-experiment-hero-headline">
             <span>HUMAN</span><span>MADE</span><span>MUSIC</span><span>&amp; SFX</span><span>FOR</span><span>FILM.</span>
           </h1>
