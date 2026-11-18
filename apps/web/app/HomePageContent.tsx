@@ -510,6 +510,11 @@ function HomeReadyToCutSongCard({
 
 const DISCOVER_ARTIST_PREVIEW_ROW_COUNT = 6;
 
+function formatDiscoverArtistSongDuration(seconds: number | undefined) {
+  if (!Number.isFinite(seconds) || !seconds || seconds <= 0) return "—";
+  return `${Math.floor(seconds / 60)}:${String(Math.floor(seconds % 60)).padStart(2, "0")}`;
+}
+
 function DiscoverFeaturedArtistSongList({
   artist,
   songs,
@@ -534,7 +539,7 @@ function DiscoverFeaturedArtistSongList({
                 <span className="audioflume-home-lifetime-v2-song-cover" />
                 <span className="audioflume-home-lifetime-v2-song-copy">
                   <strong>Preview track {index + 1}</strong>
-                  <span>{artist.name}</span>
+                  <span>—</span>
                 </span>
                 <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true"><PlayIconSmall size={13} /></span>
               </div>
@@ -554,7 +559,7 @@ function DiscoverFeaturedArtistSongList({
               </span>
               <span className="audioflume-home-lifetime-v2-song-copy">
                 <strong>{song.title}</strong>
-                <span>{song.artist}</span>
+                <span>{formatDiscoverArtistSongDuration(song.duration)}</span>
               </span>
               <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true">
                 {active && playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
@@ -647,15 +652,7 @@ export function HomeArtistShelf({
                 {artist.designation ? (
                   <span className="audioflume-discover-featured-designation">{artist.designation}</span>
                 ) : null}
-                <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Artist genres">
-                  {[0, 1, 2].map((index) => (
-                    visibleGenres[index] ? (
-                      <Link href={`/music?genre=${encodeURIComponent(visibleGenres[index])}`} className="audioflume-genre-filter-pill" key={visibleGenres[index]}>{visibleGenres[index]}</Link>
-                    ) : (
-                      <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`}>{index === 0 && visibleGenres.length === 0 ? "Genre TBA" : ""}</span>
-                    )
-                  ))}
-                </span>
+
               </div>
             ) : null}
             {discoverLayout ? (
@@ -717,9 +714,20 @@ export function HomeArtistShelf({
             ) : null}
             {discoverLayout ? (
               <>
+              <div className="audioflume-discover-featured-bottom-left">
               <Link className="audioflume-discover-featured-artist-link" href={`/artists/${artist.slug}`}>
                 Explore more from {artist.name} <ArrowUpRightIcon size={24} strokeWidth={1.5} />
               </Link>
+                <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Artist genres">
+                  {[0, 1, 2].map((index) => (
+                    visibleGenres[index] ? (
+                      <Link href={`/music?genre=${encodeURIComponent(visibleGenres[index])}`} className="audioflume-genre-filter-pill" key={visibleGenres[index]}>{visibleGenres[index]}</Link>
+                    ) : (
+                      <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`}>{index === 0 && visibleGenres.length === 0 ? "Genre TBA" : ""}</span>
+                    )
+                  ))}
+                </span>
+              </div>
 
               </>
             ) : null}
@@ -969,11 +977,7 @@ export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = fals
             <div className="audioflume-discover-featured-identity">
               <HomeSkeletonBlock className="is-discover-artist-name" />
               <HomeSkeletonBlock className="is-discover-artist-designation" />
-              <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres audioflume-discover-skeleton-artist-genres">
-                <HomeSkeletonBlock className="is-discover-genre-pill" />
-                <HomeSkeletonBlock className="is-discover-genre-pill" />
-                <HomeSkeletonBlock className="is-discover-genre-pill" />
-              </span>
+
             </div>
           ) : null}
           <div className="audioflume-home-reference-artist-media">
@@ -981,8 +985,15 @@ export function HomeArtistShelfSkeleton({ compact = false, discoverLayout = fals
           </div>
           {discoverLayout ? (
             <>
+              <div className="audioflume-discover-featured-bottom-left">
               <div className="audioflume-discover-featured-artist-link audioflume-discover-skeleton-artist-link">
                 <HomeSkeletonBlock className="is-discover-artist-link-text" />
+              </div>
+              <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres audioflume-discover-skeleton-artist-genres">
+                <HomeSkeletonBlock className="is-discover-genre-pill" />
+                <HomeSkeletonBlock className="is-discover-genre-pill" />
+                <HomeSkeletonBlock className="is-discover-genre-pill" />
+              </span>
               </div>
 
             </>
