@@ -2475,12 +2475,14 @@ body:has(.audioflume-home-landing)
   }
 
   .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-play {
+    position: relative;
+    z-index: 1;
     width: 28px;
     height: 28px;
     justify-self: end;
     background: rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+    backdrop-filter: blur(10px);
   }
 
   .audioflume-discover-featured-song-panel .audioflume-home-lifetime-v2-song-play:hover {
