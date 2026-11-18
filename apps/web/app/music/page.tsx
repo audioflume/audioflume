@@ -425,6 +425,7 @@ export default function MusicPage() {
     useState<ReferenceSearchState | null>(null);
   const [searchBySongOpen, setSearchBySongOpen] = useState(false);
   const [searchBySongQuery, setSearchBySongQuery] = useState("");
+  const [selectedBannerArtistId, setSelectedBannerArtistId] = useState<string | null>(null);
   const [featuredBannerArtists, setFeaturedBannerArtists] = useState<{
     id: string;
     name: string;
@@ -1289,6 +1290,12 @@ export default function MusicPage() {
     selectedLicenseFilters.length === 0 &&
     referenceSearchState === null &&
     semanticSearchState === null;
+  const selectedBannerArtist = featuredBannerArtists.find(
+    (artist) =>
+      artist.id === selectedBannerArtistId &&
+      selectedArtists.length === 1 &&
+      normalizeFilterValue(selectedArtists[0]) === normalizeFilterValue(artist.name),
+  );
 
   useEffect(() => {
     if (!showFeaturedSongShelf) return;
@@ -1579,7 +1586,7 @@ export default function MusicPage() {
                       <XIcon size={15} />
                     </button>
                   </div>
-                ) : showOriginalsBanner ? (
+                ) : showOriginalsBanner && !selectedBannerArtist ? (
                   <div
                     className="audioflume-music-originals-summary"
                     role="img"
@@ -1597,10 +1604,10 @@ export default function MusicPage() {
                       </span>
                     </div>
                   </div>
-                ) : showFeaturedSongShelf ? (
+                ) : showFeaturedSongShelf || selectedBannerArtist ? (
                   <div className="audioflume-music-home-hero">
                     <SlidingShelfShell label="featured artist banners" itemCount={featuredBannerArtists.length || 1}>
-                      {(featuredBannerArtists.length ? featuredBannerArtists : [null]).map((artist, index) => (
+                      {(selectedBannerArtist ? [selectedBannerArtist] : featuredBannerArtists.length ? featuredBannerArtists : [null]).map((artist, index) => (
                         <div
                           key={artist?.id ?? "music-banner-fallback"}
                           className="audioflume-music-home-hero-frame"
@@ -1617,7 +1624,10 @@ export default function MusicPage() {
                               <button
                                 type="button"
                                 className="audioflume-music-home-hero-link"
-                                onClick={() => setSelectedArtists([artist?.name ?? "Judah Earl"])}
+                                onClick={() => {
+                                   setSelectedBannerArtistId(artist?.id ?? null);
+                                   setSelectedArtists([artist?.name ?? "Judah Earl"]);
+                                 }}
                               >
                                 Explore music from {artist?.name ?? "Judah Earl"} <ArrowUpRightIcon size={24} strokeWidth={1.5} />
                               </button>
