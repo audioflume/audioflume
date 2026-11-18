@@ -696,7 +696,7 @@ section.curated-playlists-page-layer section.mt-10 h2 {
 }
 
 .playlists-page .playlist-gallery-card:not(.is-reordering):hover .playlist-menu-btn-grid,
-.playlists-page .playlist-gallery-card:not(.is-reordering):focus-within .playlist-menu-btn-grid,
+.playlists-page .playlist-gallery-card:not(.is-reordering):has(:focus-visible) .playlist-menu-btn-grid,
 .playlists-page .playlist-gallery-card:not(.is-reordering) .playlist-menu-btn-grid.is-open {
   opacity: 1 !important;
 }
