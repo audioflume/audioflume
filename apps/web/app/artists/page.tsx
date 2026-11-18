@@ -299,7 +299,7 @@ function ArtistCard({
                   <WaveformIcon size={18} />
                 </span>
               ) : (
-                <PlayIconSmall size={18} />
+                <PlayIconSmall size={15} />
               )}
             </button>
             {hasActiveSong && isPlaying && !previewOpen ? (
