@@ -119,6 +119,10 @@ export function CuratedPlaylistCard({
                 <h3>{playlist.name}</h3>
                 <p>{formatSongCount(playlist.song_count)}</p>
               </Link>
+              <Link href={href} className={cardStyles.viewPlaylist} aria-label={`View playlist ${playlist.name}`}>
+                <span className={cardStyles.viewPlaylistText}>View playlist</span>
+                <ArrowUpRightIcon size={17} strokeWidth={1.5} />
+              </Link>
             </div>
           ) : null
         }
