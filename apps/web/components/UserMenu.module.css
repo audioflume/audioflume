@@ -48,6 +48,11 @@
   color: #fff;
 }
 
+:global(html.dark) .darkOption:hover,
+:global(html[data-theme="dark"]) .darkOption:hover {
+  background: #383838;
+}
+
 .appearanceOption[aria-pressed="false"] svg {
   opacity: .55;
 }
