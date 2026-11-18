@@ -629,13 +629,17 @@
     height: 100%;
     min-height: 0;
     flex: 1 1 auto;
-    overflow-y: auto;
-    overscroll-behavior-y: contain;
+    overflow-y: hidden;
+    overscroll-behavior-y: auto;
     margin-top: 0;
     scroll-snap-type: y mandatory;
     scrollbar-width: none;
     -webkit-mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
     mask-image: linear-gradient(to bottom, transparent, #000 10px, #000 calc(100% - 10px), transparent);
+  }
+
+  .miniPlayerCompactSongs[data-scroll-enabled="true"] {
+    overflow-y: auto;
   }
 
   .miniPlayerCompactSongs::-webkit-scrollbar {
