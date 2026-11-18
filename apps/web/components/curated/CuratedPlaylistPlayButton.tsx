@@ -34,7 +34,10 @@ let openCardPlaylistId: string | null = null;
 const openCardListeners = new Set<() => void>();
 function subscribeOpenCard(listener: () => void) {
   openCardListeners.add(listener);
-  return () => { openCardListeners.delete(listener); };
+  return () => {
+    openCardListeners.delete(listener);
+    if (openCardListeners.size === 0) openCardPlaylistId = null;
+  };
 }
 function getOpenCardPlaylistId() { return openCardPlaylistId; }
 function setOpenCardPlaylistId(id: string | null) {
@@ -133,6 +136,7 @@ export default function CuratedPlaylistPlayButton({
     if (previewEnabled) {
       setOpenCardPlaylistId(playlistKey);
       if (isCurrentPlaylist && currentSong) return;
+      if (isPlaying && currentSong) togglePlayPause(currentSong);
     } else if (isCurrentPlaylist && currentSong) {
       togglePlayPause(currentSong);
       return;
