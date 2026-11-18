@@ -344,6 +344,8 @@ body:has(.community-playlists-page-root) {
   justify-content: space-between;
   gap: 12px;
   margin-top: 9px;
+  color: inherit;
+  text-decoration: none;
 }
 
 .community-card-copy {
@@ -367,7 +369,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-card:hover .community-card-view-playlist,
-.community-card-view-playlist:focus-visible {
+.community-card-details:focus-visible .community-card-view-playlist {
   opacity: 1;
   pointer-events: auto;
 }
