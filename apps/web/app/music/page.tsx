@@ -1614,9 +1614,13 @@ export default function MusicPage() {
                           <div className="audioflume-music-home-hero-content">
                             <AudioflumeMark className="audioflume-music-home-hero-mark" />
                             <div className="audioflume-music-home-hero-footer">
-                              <Link className="audioflume-music-home-hero-link" href="/discover">
-                                Discover artists &amp; composers <ArrowUpRightIcon size={24} strokeWidth={1.5} />
-                              </Link>
+                              <button
+                                type="button"
+                                className="audioflume-music-home-hero-link"
+                                onClick={() => setSelectedArtists([artist?.name ?? "Judah Earl"])}
+                              >
+                                Explore music from {artist?.name ?? "Judah Earl"} <ArrowUpRightIcon size={24} strokeWidth={1.5} />
+                              </button>
                               <span className="audioflume-music-home-hero-credit">
                                 {artist?.name ?? "Judah Earl"}
                                 {artist?.designation ? <> <span aria-hidden="true">•</span> {artist.designation}</> : null}
