@@ -338,13 +338,44 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-card-details {
-  display: block;
+  display: flex;
   min-width: 0;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
   margin-top: 9px;
 }
 
 .community-card-copy {
   min-width: 0;
+}
+
+.community-card-view-playlist {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-primary);
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.5;
+  text-decoration: none;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 160ms ease;
+}
+
+.community-card:hover .community-card-view-playlist,
+.community-card-view-playlist:focus-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+@container (max-width: 299px) {
+  .community-card-view-playlist-text {
+    display: none;
+  }
 }
 
 .community-title-link {
