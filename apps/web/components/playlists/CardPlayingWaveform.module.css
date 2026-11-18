@@ -18,7 +18,7 @@
 }
 
 .cardHost:hover .cardCornerWaveform,
-.cardHost:focus-within .cardCornerWaveform {
+.cardHost:has(:focus-visible) .cardCornerWaveform {
   opacity: 0;
 }
 
@@ -69,7 +69,7 @@
 }
 
 .cardHost:hover .cardPlayButton,
-.cardHost:focus-within .cardPlayButton {
+.cardHost:has(:focus-visible) .cardPlayButton {
   opacity: 1;
   pointer-events: auto;
 }
@@ -81,7 +81,7 @@
 
 .cardPlayButton:disabled { opacity: 0; cursor: default; }
 .cardHost:hover .cardPlayButton:disabled,
-.cardHost:focus-within .cardPlayButton:disabled { opacity: .4; }
+.cardHost:has(:focus-visible) .cardPlayButton:disabled { opacity: .4; }
 
 .cardHost.cardPreviewOpen .cardPlayButton,
 .cardHost.cardPreviewOpen .cardPlayButton:disabled {
@@ -91,7 +91,7 @@
 
 .cardHost .cardPlayButton[data-preview-open="true"],
 .cardHost:hover .cardPlayButton[data-preview-open="true"],
-.cardHost:focus-within .cardPlayButton[data-preview-open="true"] {
+.cardHost:has(:focus-visible) .cardPlayButton[data-preview-open="true"] {
   opacity: 0;
   pointer-events: none;
 }
