@@ -332,6 +332,13 @@ body:has(.community-playlists-page-root) {
   opacity: 1;
 }
 
+.community-card:has([data-preview-open="true"]) .community-like,
+.community-card:has([data-preview-open="true"]) .community-card-count-overlay,
+.community-card:has([data-preview-open="true"]) .community-card-creator-overlay {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .community-card-details {
   display: block;
   min-width: 0;
