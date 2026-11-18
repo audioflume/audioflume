@@ -1606,7 +1606,7 @@ export default function MusicPage() {
                   </div>
                 ) : showFeaturedSongShelf || selectedBannerArtist ? (
                   <div className="audioflume-music-home-hero">
-                    <SlidingShelfShell label="featured artist banners" itemCount={featuredBannerArtists.length || 1}>
+                    <SlidingShelfShell label="featured artist banners" itemCount={selectedBannerArtist ? 1 : featuredBannerArtists.length || 1}>
                       {(selectedBannerArtist ? [selectedBannerArtist] : featuredBannerArtists.length ? featuredBannerArtists : [null]).map((artist, index) => (
                         <div
                           key={artist?.id ?? "music-banner-fallback"}
