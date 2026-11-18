@@ -336,6 +336,18 @@
   .artistCardPreviewOpen .miniPlayer {
     opacity: 1;
     pointer-events: auto;
+    animation: artistMiniPlayerEnter 220ms cubic-bezier(.22, 1, .36, 1) both;
+  }
+
+  @keyframes artistMiniPlayerEnter {
+    from {
+      opacity: 0;
+      transform: scale(.985);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
   }
 
   .miniPlayerClose {
@@ -344,8 +356,8 @@
     right: clamp(14px, 2.6cqw, 24px);
     z-index: 5;
     display: grid;
-    width: 28px;
-    height: 28px;
+    width: 38px;
+    height: 38px;
     place-items: center;
     border: 0;
     background: transparent;
@@ -1189,5 +1201,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   .cardImage, .cardGenres, .cardGenres > .cardGenre, .hoverSongPanel, .artistNameArrow { transition: none; }
+  .artistCardPreviewOpen .miniPlayer { animation: none; }
   .skeleton { animation: none; }
 }
