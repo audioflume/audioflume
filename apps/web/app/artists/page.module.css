@@ -352,8 +352,8 @@
 
   .miniPlayerClose {
     position: absolute;
-    top: clamp(14px, 2.6cqw, 24px);
-    right: clamp(14px, 2.6cqw, 24px);
+    top: clamp(8px, 1.6cqw, 14px);
+    right: clamp(8px, 1.6cqw, 14px);
     z-index: 5;
     display: grid;
     width: 38px;
@@ -1148,6 +1148,12 @@
 .artistCard:hover .cardPlay:disabled,
 .artistCard:focus-within .cardPlay:disabled {
   opacity: .4;
+}
+
+.artistCard.artistCardPreviewOpen .cardPlay,
+.artistCard.artistCardPreviewOpen .cardPlay:disabled {
+  opacity: 0;
+  pointer-events: none;
 }
 
 .skeleton {
