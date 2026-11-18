@@ -1134,6 +1134,23 @@
   place-items: center;
 }
 
+.cardCornerWaveform {
+  position: absolute;
+  right: 24px;
+  bottom: 24px;
+  z-index: 3;
+  width: 42px;
+  height: 42px;
+  color: #fff;
+  pointer-events: none;
+  transition: opacity 150ms ease;
+}
+
+.artistCard:hover .cardCornerWaveform,
+.artistCard:focus-within .cardCornerWaveform {
+  opacity: 0;
+}
+
 .cardPlayingWaveform svg path {
   transform-box: fill-box;
   transform-origin: center;
@@ -1157,11 +1174,6 @@
 
 .artistCard:hover .cardPlay,
 .artistCard:focus-within .cardPlay {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-.artistCard .cardPlayPlaying {
   opacity: 1;
   pointer-events: auto;
 }
