@@ -99,6 +99,11 @@
   opacity: 1;
 }
 
+.card:has([data-preview-open="true"]) .bookmarkButton {
+  visibility: hidden;
+  pointer-events: none;
+}
+
 .playButton {
   z-index: 5;
   align-self: end;
