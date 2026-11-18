@@ -50,6 +50,7 @@ function ArtistMiniPlayer({
   isPlaying,
   onPlay,
   onSeek,
+  onClose,
 }: {
   artistName: string;
   trackCount: number;
@@ -58,6 +59,7 @@ function ArtistMiniPlayer({
   isPlaying?: boolean;
   onPlay?: (song: Song) => void;
   onSeek?: (song: Song, progress: number) => void;
+  onClose?: () => void;
 }) {
   const { currentTime, duration } = usePlayerProgress();
   const [previewIndex, setPreviewIndex] = useState(0);
@@ -73,6 +75,19 @@ function ArtistMiniPlayer({
 
   return (
     <div className={styles.miniPlayer} aria-label={`Preview music by ${artistName}`}>
+      {onClose ? (
+        <button
+          type="button"
+          className={styles.miniPlayerClose}
+          aria-label={`Close ${artistName} song preview`}
+          onClick={(event) => {
+            event.stopPropagation();
+            onClose();
+          }}
+        >
+          <XIcon size={16} />
+        </button>
+      ) : null}
       <div className={styles.miniPlayerUpper}>
         <div className={styles.miniPlayerArt}>
           {listSong?.coverArt ? <img src={listSong.coverArt} alt="" draggable={false} /> : null}
@@ -218,6 +233,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
   const hasActiveSong = playable.some((song) => song.id === currentSong?.id);
+  const [previewOpen, setPreviewOpen] = useState(false);
   const href = `/artists/${artist.slug}`;
 
   function playSong(song: Song) {
@@ -230,7 +246,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
       <PlaylistCardShell
         href={href}
         ariaLabel={`Explore ${artist.name}`}
-        className={`${playlistCardStyles.card} ${styles.artistCard}${hasActiveSong ? ` ${styles.artistCardActive}` : ""}`}
+        className={`${playlistCardStyles.card} ${styles.artistCard}${hasActiveSong ? ` ${styles.artistCardActive}` : ""}${previewOpen ? ` ${styles.artistCardPreviewOpen}` : ""}`}
         squareMedia
         mediaClassName={styles.artistMedia}
         media={
@@ -247,7 +263,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
           )
         }
         overlays={
-          <>
+          previewOpen ? (
             <ArtistMiniPlayer
               artistName={artist.name}
               trackCount={artist.track_count}
@@ -256,8 +272,22 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
               isPlaying={isPlaying}
               onPlay={playSong}
               onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+              onClose={() => setPreviewOpen(false)}
             />
-          </>
+          ) : (
+            <button
+              type="button"
+              className={styles.cardPlay}
+              disabled={!playable.length}
+              aria-label={`Open song preview for ${artist.name}`}
+              onClick={(event) => {
+                event.stopPropagation();
+                setPreviewOpen(true);
+              }}
+            >
+              <PlayIconSmall size={18} />
+            </button>
+          )
         }
         details={
           <Link className={styles.artistDetails} href={href} aria-label={`Explore artist ${artist.name}`}>
