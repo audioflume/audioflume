@@ -228,12 +228,24 @@ function ArtistPreviewCard() {
   );
 }
 
-function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number }) {
+function ArtistCard({
+  artist,
+  index,
+  openArtistId,
+  onOpen,
+  onClose,
+}: {
+  artist: DirectoryArtist;
+  index: number;
+  openArtistId: string | null;
+  onOpen: (artistId: string) => void;
+  onClose: () => void;
+}) {
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
   const hasActiveSong = playable.some((song) => song.id === currentSong?.id);
-  const [previewOpen, setPreviewOpen] = useState(false);
+  const previewOpen = openArtistId === artist.id;
   const href = `/artists/${artist.slug}`;
 
   function playSong(song: Song) {
@@ -271,9 +283,13 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
               aria-label={`Open song preview for ${artist.name}`}
               onClick={(event) => {
                 event.stopPropagation();
-                setPreviewOpen(true);
-                if (playable.length && (currentSong?.id !== playable[0].id || !isPlaying)) {
-                  playSong(playable[0]);
+                onOpen(artist.id);
+                if (playable.length) {
+                  if (currentSong?.id !== playable[0].id || !isPlaying) {
+                    playSong(playable[0]);
+                  }
+                } else if (isPlaying && currentSong) {
+                  togglePlayPause(currentSong);
                 }
               }}
             >
@@ -288,7 +304,7 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
                 isPlaying={isPlaying}
                 onPlay={playSong}
                 onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
-                onClose={() => setPreviewOpen(false)}
+                onClose={onClose}
               />
             ) : null}
           </>
@@ -315,6 +331,7 @@ export default function ArtistsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [query, setQuery] = useState("");
+  const [openArtistId, setOpenArtistId] = useState<string | null>(null);
   useEffect(() => {
     const controller = new AbortController();
 
@@ -415,7 +432,14 @@ export default function ArtistsPage() {
           <section className={styles.grid} aria-label="Artists">
             {cards.map((card, index) => (
               card.kind === "artist" ? (
-                <ArtistCard key={card.artist.id} artist={card.artist} index={index} />
+                <ArtistCard
+                  key={card.artist.id}
+                  artist={card.artist}
+                  index={index}
+                  openArtistId={openArtistId}
+                  onOpen={setOpenArtistId}
+                  onClose={() => setOpenArtistId(null)}
+                />
               ) : (
                 <ArtistPreviewCard key={`preview-${card.index}`} />
               )
