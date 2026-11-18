@@ -23,7 +23,7 @@
 }
 
 .darkOption {
-  background: var(--user-menu-dark-option-background, #403d39);
+  background: var(--user-menu-dark-option-background, #2c2c2c);
   color: #fff;
 }
 
