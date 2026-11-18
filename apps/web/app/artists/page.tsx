@@ -88,7 +88,7 @@ function ArtistCard({
       <PlaylistCardShell
         href={href}
         ariaLabel={`Explore ${artist.name}`}
-        className={`${playlistCardStyles.card} ${styles.artistCard} ${cardWaveformStyles.cardHost}${hasActiveSong ? ` ${styles.artistCardActive}` : ""}${previewOpen ? ` ${styles.artistCardPreviewOpen} ${cardWaveformStyles.cardPreviewOpen}` : ""}`}
+        className={`${playlistCardStyles.card} ${styles.artistCard} ${cardWaveformStyles.cardHost}${hasActiveSong ? ` ${styles.artistCardActive}` : ""}${previewOpen ? ` ${cardWaveformStyles.cardPreviewOpen}` : ""}`}
         squareMedia
         mediaClassName={styles.artistMedia}
         media={
