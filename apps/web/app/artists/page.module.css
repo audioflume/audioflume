@@ -1146,7 +1146,7 @@
 .cardPlayingWaveform svg path {
   transform-box: fill-box;
   transform-origin: center;
-  animation: artistPlayingWaveform 850ms ease-in-out infinite alternate;
+  animation: artistPlayingWaveform 540ms ease-in-out infinite alternate;
 }
 
 .cardPlayingWaveform svg path:nth-child(2) { animation-delay: -310ms; }
@@ -1155,7 +1155,7 @@
 .cardPlayingWaveform svg path:nth-child(5) { animation-delay: -440ms; }
 
 @keyframes artistPlayingWaveform {
-  from { transform: scaleY(.45); }
+  from { transform: scaleY(.75); }
   to { transform: scaleY(1); }
 }
 
