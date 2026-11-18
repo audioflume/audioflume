@@ -114,16 +114,16 @@ export function CuratedPlaylistCard({
         }
         details={
           !isHomeVariant ? (
-            <div className={cardStyles.details}>
-              <Link href={href} className={cardStyles.copy}>
+            <Link href={href} className={cardStyles.details} aria-label={`View playlist ${playlist.name}`}>
+              <span className={cardStyles.copy}>
                 <h3>{playlist.name}</h3>
                 <p>{formatSongCount(playlist.song_count)}</p>
-              </Link>
-              <Link href={href} className={cardStyles.viewPlaylist} aria-label={`View playlist ${playlist.name}`}>
+              </span>
+              <span className={cardStyles.viewPlaylist}>
                 <span className={cardStyles.viewPlaylistText}>View playlist</span>
                 <ArrowUpRightIcon size={17} strokeWidth={1.5} />
-              </Link>
-            </div>
+              </span>
+            </Link>
           ) : null
         }
       />
