@@ -267,13 +267,12 @@ function ArtistCard({ artist, index }: { artist: DirectoryArtist; index: number 
             <button
               type="button"
               className={styles.cardPlay}
-              disabled={!playable.length || previewOpen}
+              disabled={previewOpen}
               aria-label={`Open song preview for ${artist.name}`}
               onClick={(event) => {
                 event.stopPropagation();
-                if (!playable.length) return;
                 setPreviewOpen(true);
-                if (currentSong?.id !== playable[0].id || !isPlaying) {
+                if (playable.length && (currentSong?.id !== playable[0].id || !isPlaying)) {
                   playSong(playable[0]);
                 }
               }}
