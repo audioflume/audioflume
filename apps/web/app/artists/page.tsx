@@ -166,7 +166,7 @@ function ArtistMiniPlayer({
               if (listSong) onPlay?.(listSong);
             }}
           >
-            {listPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+            {listPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
           </button>
           <button
             type="button"
