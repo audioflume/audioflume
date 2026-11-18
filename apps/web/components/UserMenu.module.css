@@ -23,8 +23,13 @@
 }
 
 .darkOption {
-  background: #403d39;
+  background: var(--user-menu-dark-option-background, #403d39);
   color: #fff;
+}
+
+:global(html.dark) .darkOption,
+:global(html[data-theme="dark"]) .darkOption {
+  --user-menu-dark-option-background: color-mix(in srgb, var(--text-primary) 10%, transparent);
 }
 
 .lightOption:hover {
