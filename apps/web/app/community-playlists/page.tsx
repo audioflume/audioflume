@@ -1144,27 +1144,24 @@ export default function CommunityPlaylistsPage() {
           </>
         }
         details={
-          <div className="community-card-details">
+          <Link
+            className="community-card-details"
+            href={`/community-playlists/${playlist.id}`}
+            aria-label={`View playlist ${playlist.name}`}
+          >
             <div className="community-card-copy">
-              <Link
-                className="community-title-link"
-                href={`/community-playlists/${playlist.id}`}
-              >
+              <span className="community-title-link">
                 <h2>{playlist.name}</h2>
-              </Link>
+              </span>
               <p className="community-card-song-count">
                 {playlist.song_count} {playlist.song_count === 1 ? "song" : "songs"}
               </p>
             </div>
-            <Link
-              className="community-card-view-playlist"
-              href={`/community-playlists/${playlist.id}`}
-              aria-label={`View playlist ${playlist.name}`}
-            >
+            <span className="community-card-view-playlist">
               <span className="community-card-view-playlist-text">View playlist</span>
               <ArrowUpRightIcon size={17} strokeWidth={1.5} />
-            </Link>
-          </div>
+            </span>
+          </Link>
         }
       />
     );
