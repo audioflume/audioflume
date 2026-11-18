@@ -264,7 +264,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-card:hover .community-cover-wrap::after,
-.community-card:focus-within .community-cover-wrap::after {
+.community-card:has(:focus-visible) .community-cover-wrap::after {
   opacity: 1;
 }
 
@@ -292,7 +292,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-card:hover .community-like,
-.community-card:focus-within .community-like,
+.community-card:has(:focus-visible) .community-like,
 .community-like[aria-pressed="true"] {
   opacity: 1;
 }
@@ -328,7 +328,7 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-card:hover .community-card-count-overlay,
-.community-card:focus-within .community-card-count-overlay {
+.community-card:has(:focus-visible) .community-card-count-overlay {
   opacity: 1;
 }
 
@@ -439,18 +439,18 @@ body:has(.community-playlists-page-root) {
 }
 
 .community-card:hover .community-card-creator-meta-avatar,
-.community-card:focus-within .community-card-creator-meta-avatar {
+.community-card:has(:focus-visible) .community-card-creator-meta-avatar {
   opacity: 1;
   transform: scale(1);
 }
 
 .community-card:hover .community-card-creator:hover .community-card-creator-meta-avatar,
-.community-card:focus-within .community-card-creator:focus-visible .community-card-creator-meta-avatar {
+.community-card:has(:focus-visible) .community-card-creator:focus-visible .community-card-creator-meta-avatar {
   transform: scale(1.04);
 }
 
 .community-card:hover .community-card-creator-meta-name,
-.community-card:focus-within .community-card-creator-meta-name {
+.community-card:has(:focus-visible) .community-card-creator-meta-name {
   max-width: 160px;
   opacity: 1;
 }
