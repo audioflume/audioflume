@@ -1482,6 +1482,7 @@ export default function HomePageContent({
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} discoverPlaybackIcon />
         ) : null}
+      </section>
         {!showHero ? (
           <div className="discover-artist-content">
             <DiscoverArchivedSections
@@ -1529,7 +1530,6 @@ export default function HomePageContent({
             />
           </div>
         ) : null}
-      </section>
 
       {showHero ? (
         curatedPlaylistsLoading ? (
