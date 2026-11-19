@@ -72,7 +72,7 @@ export function HomeHeroBanner({ backgroundOnly = false }: { featuredSong?: Song
   );
 }
 
-export function HomeLandingPromoBlocks() {
+export function HomeLandingPromoBlocks({ artistsImage = ARTISTS_IMAGE }: { artistsImage?: string } = {}) {
   return (
     <>
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
@@ -90,7 +90,7 @@ export function HomeLandingPromoBlocks() {
             </div>
           </div>
           <div className="audioflume-experiment-artist-promo">
-            <img src={ARTISTS_IMAGE} alt="" />
+            <img src={artistsImage} alt="" />
             <h2>A growing collection of in<br />demand artists and composers.</h2>
             <Link href="/artists">Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></Link>
           </div>
