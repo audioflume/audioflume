@@ -1369,19 +1369,16 @@ body:has(.audioflume-home-landing)
   scroll-snap-type: var(--audioflume-featured-artist-scroll-snap, none);
 }
 
-@media (hover: hover) {
-  .audioflume-home-mockup-artists.is-discover-featured-artists
-    .audioflume-home-reference-shelf-scroller.has-shelf-primary
-    > .audioflume-home-reference-artist-card {
-    transition: opacity 160ms ease;
-  }
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-home-reference-shelf-scroller.has-shelf-primary
+  > .audioflume-home-reference-artist-card {
+  transition: opacity 160ms ease;
+}
 
-  .audioflume-home-mockup-artists.is-discover-featured-artists
-    .audioflume-home-reference-shelf:not(:hover):not(:has(:focus-visible))
-    .audioflume-home-reference-shelf-scroller.has-shelf-primary
-    > .audioflume-home-reference-artist-card:not(.is-shelf-primary) {
-    opacity: 0;
-  }
+.audioflume-home-mockup-artists.is-discover-featured-artists
+  .audioflume-home-reference-shelf-scroller.has-shelf-primary:not(.is-scrolling)
+  > .audioflume-home-reference-artist-card:not(.is-shelf-primary) {
+  opacity: 0;
 }
 
 .audioflume-home-mockup-curated-shelf {
