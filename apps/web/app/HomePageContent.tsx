@@ -37,6 +37,7 @@ import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import WaveformIcon from "@/components/icons/WaveformIcon";
 import XIcon from "@/components/icons/XIcon";
@@ -362,7 +363,7 @@ function Shelf({
   );
 }
 
-function HomeOriginalSongCard({ song }: { song: Song }) {
+function HomeOriginalSongCard({ song, discoverPlaybackIcon = false }: { song: Song; discoverPlaybackIcon?: boolean }) {
   const { togglePlayPause } = usePlayer();
   const playing = useIsCurrentSongPlaying(song.id);
 
@@ -385,7 +386,7 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
           <span className="audioflume-home-reference-original-song-card-fallback" />
         )}
         <span className="audioflume-home-reference-original-song-card-icon">
-          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+          {discoverPlaybackIcon ? <PlaybackStateIcon playing={playing} size={14} /> : playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
         </span>
       </button>
       <span className="audioflume-home-reference-original-song-card-copy">
@@ -396,11 +397,11 @@ function HomeOriginalSongCard({ song }: { song: Song }) {
   );
 }
 
-function HomeOriginalSongGrid({ songs }: { songs: Song[] }) {
+function HomeOriginalSongGrid({ songs, discoverPlaybackIcon = false }: { songs: Song[]; discoverPlaybackIcon?: boolean }) {
   return (
     <div className="audioflume-home-reference-original-song-grid">
       {songs.slice(0, 16).map((song) => (
-        <HomeOriginalSongCard key={song.id} song={song} />
+        <HomeOriginalSongCard key={song.id} song={song} discoverPlaybackIcon={discoverPlaybackIcon} />
       ))}
     </div>
   );
@@ -468,10 +469,12 @@ function HomeReadyToCutSongCard({
   song,
   index,
   queue,
+  discoverPlaybackIcon = false,
 }: {
   song: Song;
   index: number;
   queue: Song[];
+  discoverPlaybackIcon?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const active = currentSong?.id === song.id;
@@ -525,7 +528,7 @@ function HomeReadyToCutSongCard({
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
-        {playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
+        {discoverPlaybackIcon ? <PlaybackStateIcon playing={playing} size={13} /> : playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
       </button>
     </article>
   );
@@ -585,7 +588,7 @@ function DiscoverFeaturedArtistSongList({
                 <span>{formatDiscoverArtistSongDuration(song.duration)}</span>
               </span>
               <span className="audioflume-home-lifetime-v2-song-play" aria-hidden="true">
-                {active && playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
+                <PlaybackStateIcon playing={active && playing} size={13} />
               </span>
             </button>
           );
@@ -602,6 +605,7 @@ export function HomeArtistShelf({
   discoverLayout = false,
   hideExploreButton = false,
   progressScrollbar = false,
+  discoverPlaybackIcon = false,
 }: {
   artists: HomeArtist[];
   homeFlashImages: string[];
@@ -609,6 +613,7 @@ export function HomeArtistShelf({
   discoverLayout?: boolean;
   hideExploreButton?: boolean;
   progressScrollbar?: boolean;
+  discoverPlaybackIcon?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -758,7 +763,7 @@ export function HomeArtistShelf({
               disabled={!playable.length}
               aria-label={artistIsPlaying ? `Pause ${artist.name}` : `Play ${artist.name}`}
             >
-              {artistIsPlaying ? <PauseIcon size={compact ? 15 : 18} /> : <PlayIconSmall size={compact ? 15 : 18} />}
+              {discoverPlaybackIcon ? <PlaybackStateIcon playing={artistIsPlaying} size={compact ? 15 : 18} /> : artistIsPlaying ? <PauseIcon size={compact ? 15 : 18} /> : <PlayIconSmall size={compact ? 15 : 18} />}
               <span>{artistIsPlaying ? "Pause Music" : "Play Music"}</span>
             </button> : null}
           </article>
@@ -847,7 +852,7 @@ function HomeFeaturedSongCard({
           </span>
         )}
         <span className="audioflume-home-featured-song-play" aria-hidden="true">
-          {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+          <PlaybackStateIcon playing={playing} size={14} />
         </span>
       </button>
 
@@ -894,7 +899,7 @@ function HomeCompactSongCard({
           )}
           <span className="audioflume-discover-compact-song-play" aria-hidden="true">
             <span className="audioflume-discover-compact-song-play-circle">
-              {playing ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+              <PlaybackStateIcon playing={playing} size={12} />
             </span>
           </span>
         </span>
@@ -1442,7 +1447,7 @@ export default function HomePageContent({
         {artistsLoading ? (
           <HomeArtistShelfSkeleton discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} discoverPlaybackIcon={!showHero} />
         ) : null}
         {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0) ? (
           <div className="audioflume-discover-featured-songs-section">
@@ -1538,6 +1543,7 @@ export default function HomePageContent({
                 song={song}
                 index={index + 30}
                 queue={recentSongs}
+                discoverPlaybackIcon={!showHero}
               />
             ))}
           </div>
@@ -1554,7 +1560,7 @@ export default function HomePageContent({
         {artistsLoading ? (
           <HomeArtistShelfSkeleton compact progressScrollbar={!showHero} />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact progressScrollbar={!showHero} />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact progressScrollbar={!showHero} discoverPlaybackIcon={!showHero} />
         ) : null}
       </section>
 
@@ -1579,7 +1585,7 @@ export default function HomePageContent({
           {songsLoading ? (
             <HomeOriginalsSkeleton />
           ) : playableSongs.length > 0 ? (
-            <HomeOriginalSongGrid songs={playableSongs} />
+            <HomeOriginalSongGrid songs={playableSongs} discoverPlaybackIcon={!showHero} />
           ) : null}
         </section>
       </section>
@@ -1598,7 +1604,7 @@ export default function HomePageContent({
           ) : (
             <MusicListShell title={null}>
               {recentSongs.map((song) => (
-                <SongCard key={song.id} song={song} showDivider={false} showDuration={false} />
+                <SongCard key={song.id} song={song} showDivider={false} showDuration={false} showPlaybackStateIcon />
               ))}
             </MusicListShell>
           )}
