@@ -89,6 +89,7 @@ function Shelf({
   const shelfItemCount = Array.isArray(children) ? children.length : 1;
   const inertiaFrameRef = useRef<number | null>(null);
   const scrollIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const progressScrollbarDraggingRef = useRef(false);
   const dragStateRef = useRef<{
     pointerId: number;
     startX: number;
@@ -139,6 +140,26 @@ function Shelf({
       const left = thumbTravel * (scroller.scrollLeft / maxScrollLeft);
       setScrollbarThumb({ left, width: thumbWidth });
     }
+  }
+
+  function handleProgressScrollbarGrab() {
+    if (!fadeAdjacentCards) return;
+    progressScrollbarDraggingRef.current = true;
+    if (scrollIdleTimerRef.current !== null) {
+      clearTimeout(scrollIdleTimerRef.current);
+      scrollIdleTimerRef.current = null;
+    }
+    scrollerRef.current?.classList.add("is-scrolling");
+  }
+
+  function handleProgressScrollbarRelease() {
+    if (!fadeAdjacentCards) return;
+    progressScrollbarDraggingRef.current = false;
+    if (scrollIdleTimerRef.current !== null) clearTimeout(scrollIdleTimerRef.current);
+    scrollIdleTimerRef.current = setTimeout(() => {
+      if (!progressScrollbarDraggingRef.current) scrollerRef.current?.classList.remove("is-scrolling");
+      scrollIdleTimerRef.current = null;
+    }, 180);
   }
 
   function stopScrollbarInertia() {
@@ -286,7 +307,7 @@ function Shelf({
     if (!scroller) return;
 
     function endScrollReveal() {
-      if (!fadeAdjacentCards) return;
+      if (!fadeAdjacentCards || progressScrollbarDraggingRef.current) return;
       if (scrollIdleTimerRef.current !== null) {
         clearTimeout(scrollIdleTimerRef.current);
         scrollIdleTimerRef.current = null;
@@ -299,7 +320,7 @@ function Shelf({
       if (!fadeAdjacentCards) return;
       scroller.classList.add("is-scrolling");
       if (scrollIdleTimerRef.current !== null) clearTimeout(scrollIdleTimerRef.current);
-      scrollIdleTimerRef.current = setTimeout(endScrollReveal, 180);
+      if (!progressScrollbarDraggingRef.current) scrollIdleTimerRef.current = setTimeout(endScrollReveal, 180);
     }
 
     updateScrollState();
@@ -312,6 +333,7 @@ function Shelf({
 
     return () => {
       stopScrollbarInertia();
+      progressScrollbarDraggingRef.current = false;
       if (scrollIdleTimerRef.current !== null) {
         clearTimeout(scrollIdleTimerRef.current);
         scrollIdleTimerRef.current = null;
@@ -358,6 +380,8 @@ function Shelf({
         onNext={() => scroll("next")}
         className="audioflume-home-reference-width"
         progressScrollbar
+        onProgressPointerDown={fadeAdjacentCards ? handleProgressScrollbarGrab : undefined}
+        onProgressPointerUp={fadeAdjacentCards ? handleProgressScrollbarRelease : undefined}
       />
     </div>
   );
