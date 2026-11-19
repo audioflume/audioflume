@@ -25,7 +25,7 @@ export default function CardMiniPlayer({
   onPlay,
   onSeek,
   onClose,
-  discoverPlaybackIcon = false,
+  discoverPlaybackIcon = true,
 }: {
   artistName: string;
   trackCount: number;
