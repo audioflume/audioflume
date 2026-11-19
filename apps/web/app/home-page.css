@@ -3236,6 +3236,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup.is-discover-page {
+  --discover-artist-content-inset: var(--filmwave-page-gutter);
  --audioflume-discover-card-gap: 24px;
   --audioflume-discover-card-radius: 0px;
   --audioflume-curated-shelf-image-height: auto;
