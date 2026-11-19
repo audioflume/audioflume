@@ -3235,6 +3235,23 @@ body:has(.audioflume-home-landing)
   background: transparent;
 }
 
+/* Discover section copy in dark mode: titles and links remain prominent; row footers use the original muted title tone. */
+:where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
+  .audioflume-home-mockup.is-discover-page :is(
+    .discover-artist-shelf-section h2,
+    .audioflume-home-mockup-catalogue-heading h2,
+    .audioflume-home-mockup-section-label > span,
+    .audioflume-home-reference-section-heading > span,
+    .audioflume-arrow-text-link
+  ) {
+  color: #fff;
+}
+
+:where(html.dark, html[data-theme="dark"], html:not(.light):not([data-theme="light"]))
+  .audioflume-home-mockup.is-discover-page .discover-artist-shelf-footer :is(p, span) {
+  color: var(--filmwave-section-title-color);
+}
+
 .audioflume-home-mockup.is-discover-page {
   --discover-artist-content-inset: var(--filmwave-page-gutter);
  --audioflume-discover-card-gap: 24px;
