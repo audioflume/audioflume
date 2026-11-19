@@ -556,21 +556,35 @@ function ArtistShelf({
   );
 }
 
-export function DiscoverArchivedSections({ albumsTitle = "Top albums" }: { albumsTitle?: string }) {
+export function DiscoverArchivedSections({
+  albumsTitle = "Top albums",
+  watchingArtists = ARTISTS_WATCHING,
+  featuredSongs = TOP_ALBUMS,
+  supportArtists = SUPPORT_NEW_ARTISTS,
+  featuredPlaylists,
+}: {
+  albumsTitle?: string;
+  watchingArtists?: ShelfItem[];
+  featuredSongs?: ShelfItem[];
+  supportArtists?: ShelfItem[];
+  featuredPlaylists?: { name: string; image: string }[];
+}) {
   return (
     <>
     <ArtistShelf
       title="Artists we're watching"
-      items={ARTISTS_WATCHING}
+      items={watchingArtists}
       footerCopy="1500+ artists trending online"
     />
 
     <section className="discover-artist-editorial-grid">
-      {EDITORIAL_FEATURES.map((feature, index) => (
+      {EDITORIAL_FEATURES.map((feature, index) => {
+        const playlist = featuredPlaylists?.[index];
+        return (
         <article key={feature.eyebrow} className="discover-artist-editorial-card">
           <PlaceholderMedia
             index={index + 3}
-            imageSrc={feature.image}
+            imageSrc={playlist?.image ?? feature.image}
             className="discover-artist-editorial-media"
           >
             <div className="discover-artist-editorial-copy">
@@ -580,19 +594,20 @@ export function DiscoverArchivedSections({ albumsTitle = "Top albums" }: { album
           </PlaceholderMedia>
 
           <div className="discover-artist-editorial-meta">
-            <span>Loremipsum Dolorit</span>
+            <span>{playlist?.name ?? "Loremipsum Dolorit"}</span>
             <span>Eiusmod Tempor</span>
             <span>Explore more ↗</span>
           </div>
         </article>
-      ))}
+        );
+      })}
     </section>
 
-    <ArtistShelf title={albumsTitle} items={TOP_ALBUMS} square />
+    <ArtistShelf title={albumsTitle} items={featuredSongs} square />
 
     <ArtistShelf
       title="Support new artists"
-      items={SUPPORT_NEW_ARTISTS}
+      items={supportArtists}
       footerCopy="1500+ artists trending online"
     />
 
