@@ -1230,7 +1230,7 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
-  const [directoryArtists, setDirectoryArtists] = useState<{ name: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null }[]>([]);
+  const [directoryArtists, setDirectoryArtists] = useState<{ name: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null; songs: Song[] }[]>([]);
   const [editorialPlaylists, setEditorialPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
@@ -1254,6 +1254,29 @@ export default function HomePageContent({
     )
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
+  const discoverArtistShelfItems = (offset: number) => {
+    const realArtists = directoryArtists.slice(offset, offset + 7);
+    const items = realArtists.map((artist) => ({
+      title: artist.name,
+      subtitle: artist.designation ?? "",
+      image: artist.hero_image_url || artist.profile_image_url || "",
+      song: artist.songs?.find((song) => Boolean(song.audioUrl))
+        ?? playableSongs.find((song) => song.artist.toLowerCase() === artist.name.toLowerCase())
+        ?? playableSongs[0],
+    }));
+
+    for (let index = items.length; index < 20; index += 1) {
+      const sampleSong = playableSongs[(offset + index) % playableSongs.length];
+      const sampleArtist = directoryArtists[(offset + index) % directoryArtists.length];
+      items.push({
+        title: `Artist preview ${index + 1}`,
+        subtitle: "Preview artist",
+        image: sampleArtist?.hero_image_url || sampleArtist?.profile_image_url || sampleSong?.coverArt || "",
+        song: sampleSong,
+      });
+    }
+    return items;
+  };
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
@@ -1462,16 +1485,9 @@ export default function HomePageContent({
           <div className="discover-artist-content">
             <DiscoverArchivedSections
               albumsTitle="Featured songs"
-              watchingArtists={directoryArtists.slice(0, 7).map((artist) => ({
-                title: artist.name,
-                subtitle: artist.designation ?? "",
-                image: artist.hero_image_url || artist.profile_image_url || "",
-              }))}
-              supportArtists={directoryArtists.slice(7, 14).map((artist) => ({
-                title: artist.name,
-                subtitle: artist.designation ?? "",
-                image: artist.hero_image_url || artist.profile_image_url || "",
-              }))}
+              watchingArtists={discoverArtistShelfItems(0)}
+              supportArtists={discoverArtistShelfItems(7)}
+              enableArtistPlayback
               featuredSongs={playableSongs.slice(0, 12).map((song) => ({
                 title: song.title,
                 subtitle: song.artist,
