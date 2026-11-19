@@ -531,7 +531,7 @@ function ArtistShelf({
                 {item.slug ? (
                   <Link href={`/artists/${item.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${item.title}`} />
                 ) : null}
-                <div className="audioflume-home-reference-artist-media">
+                <div className="audioflume-home-reference-artist-media discover-artist-shelf-media">
                   {item.image ? (
                     <img
                       src={item.image}
