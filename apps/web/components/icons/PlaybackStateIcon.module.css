@@ -1,0 +1,24 @@
+.icon {
+  display: inline-grid;
+  place-items: center;
+  line-height: 0;
+}
+
+.icon > * {
+  grid-area: 1 / 1;
+}
+
+.playing .pause {
+  display: none;
+}
+
+:global(button:hover) .playing .waveform,
+:global(button:focus-visible) .playing .waveform {
+  display: none;
+}
+
+:global(button:hover) .playing .pause,
+:global(button:focus-visible) .playing .pause {
+  display: grid;
+  place-items: center;
+}
