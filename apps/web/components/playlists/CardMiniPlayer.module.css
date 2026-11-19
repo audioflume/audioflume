@@ -333,6 +333,12 @@
   font-weight: 400;
 }
 
+@container (max-width: 199.99px) {
+  .miniPlayerUpper .miniPlayerArt {
+    display: none;
+  }
+}
+
 @container (min-width: 275px) {
   .miniPlayer {
     padding: clamp(28px, 3vw, 40px);
