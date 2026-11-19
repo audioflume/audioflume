@@ -19,7 +19,6 @@ import {
 
 import Footer from "@/components/Footer";
 import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
-import SectionTitle from "@/components/SectionTitle";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
@@ -1487,36 +1486,13 @@ export default function HomePageContent({
           <div className="discover-artist-content">
             <DiscoverArchivedSections
               albumsTitle="Featured songs"
-              watchingShelf={
-                <section className="discover-artist-shelf-section audioflume-home-mockup-more-artists">
-                  <div className="discover-artist-shelf-heading">
-                    <SectionTitle>Artists we're watching</SectionTitle>
-                  </div>
-                  <div className="relative left-1/2 w-screen -translate-x-1/2">
-                    <HomeArtistShelf
-                      artists={discoverArtistShelfItems(0).map((item, index) => {
-                        const source = directoryArtists[index < 7 ? index : index % directoryArtists.length];
-                        return {
-                          id: `watching-${index}-${source?.id ?? "preview"}`,
-                          name: item.title,
-                          slug: source?.slug ?? "",
-                          designation: item.subtitle,
-                          hero_image_url: item.image,
-                          hero_image_position_x: source?.hero_image_position_x,
-                          hero_image_position_y: source?.hero_image_position_y,
-                          songs: source?.songs?.filter((song) => Boolean(song.audioUrl))?.length
-                            ? source.songs.filter((song) => Boolean(song.audioUrl))
-                            : item.song ? [item.song] : [],
-                        };
-                      })}
-                      homeFlashImages={homeFlashImages}
-                      compact
-                      progressScrollbar
-                      discoverPlaybackIcon
-                    />
-                  </div>
-                </section>
-              }
+              watchingArtists={discoverArtistShelfItems(0).map((item, index) => ({
+                ...item,
+                slug: index < 7 ? directoryArtists[index]?.slug : undefined,
+                imagePositionX: index < 7 ? directoryArtists[index]?.hero_image_position_x : undefined,
+                imagePositionY: index < 7 ? directoryArtists[index]?.hero_image_position_y : undefined,
+              }))}
+              compactWatchingCards
               supportArtists={discoverArtistShelfItems(7)}
               enableArtistPlayback
               featuredSongs={playableSongs.slice(0, 12).map((song) => ({
