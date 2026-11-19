@@ -1230,6 +1230,8 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
+  const [directoryArtists, setDirectoryArtists] = useState<{ name: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null }[]>([]);
+  const [editorialPlaylists, setEditorialPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const discoverHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -1252,7 +1254,6 @@ export default function HomePageContent({
     )
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
-  const discoverCompactSongs = playableSongs.slice(0, 12);
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
@@ -1321,12 +1322,12 @@ export default function HomePageContent({
         const featured = Array.isArray(sections?.discover_curated)
           ? sections.discover_curated
           : [];
-        setCuratedPlaylists(
-          featured.flatMap((item: { playlist_id: number }) => {
-            const playlist = playlistById.get(item.playlist_id);
-            return playlist ? [playlist] : [];
-          }),
-        );
+        const selectedPlaylists = featured.flatMap((item: { playlist_id: number }) => {
+          const playlist = playlistById.get(item.playlist_id);
+          return playlist ? [playlist] : [];
+        });
+        setCuratedPlaylists(selectedPlaylists);
+        if (!showHero) setEditorialPlaylists((selectedPlaylists.length ? selectedPlaylists : Array.isArray(data) ? data : []).slice(0, 3));
       })
       .catch(() => {
         if (!cancelled) setCuratedPlaylists([]);
@@ -1339,6 +1340,23 @@ export default function HomePageContent({
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (showHero) return;
+    const controller = new AbortController();
+    fetch("/api/artists/directory", { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load artist directory");
+        return response.json();
+      })
+      .then((data) => {
+        if (!controller.signal.aborted) setDirectoryArtists(Array.isArray(data?.artists) ? data.artists : []);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setDirectoryArtists([]);
+      });
+    return () => controller.abort();
+  }, [showHero]);
 
   useEffect(() => {
     let cancelled = false;
@@ -1438,50 +1456,56 @@ export default function HomePageContent({
         ) : null}
         {!showHero ? (
           <div className="discover-artist-content">
-            <DiscoverArchivedSections albumsTitle="Featured songs" />
-          </div>
-        ) : null}
-        {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
-          <div className="audioflume-discover-compact-songs-section audioflume-home-reference-width">
-            <div className={songsLoading ? "" : "audioflume-discover-compact-songs"}>
-            {songsLoading ? (
-              <DiscoverCompactSongsSkeleton />
-            ) : discoverCompactSongs.map((song) => (
-              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
-            ))}
-            </div>
-          </div>
-        ) : null}
-        {!showHero ? (
-          <div className="audioflume-discover-image-grid" aria-label="Discover imagery">
-            <DiscoverImageBlock src="https://images.filmwave.io/images/discover/jose-p-ortiz-4Wtqx2q14Lw-unsplash.jpg" />
-            <DiscoverImageBlock src="https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg" />
-            <DiscoverImageBlock src="https://images.filmwave.io/images/discover/olaniyan-oluwapelumi-DYPT8TJ5CRo-unsplash.jpg" />
+            <DiscoverArchivedSections
+              albumsTitle="Featured songs"
+              watchingArtists={directoryArtists.slice(0, 7).map((artist) => ({
+                title: artist.name,
+                subtitle: artist.designation ?? "",
+                image: artist.hero_image_url || artist.profile_image_url || "",
+              }))}
+              supportArtists={directoryArtists.slice(7, 14).map((artist) => ({
+                title: artist.name,
+                subtitle: artist.designation ?? "",
+                image: artist.hero_image_url || artist.profile_image_url || "",
+              }))}
+              featuredSongs={playableSongs.slice(0, 12).map((song) => ({
+                title: song.title,
+                subtitle: song.artist,
+                image: song.coverArt || "",
+              }))}
+              featuredPlaylists={editorialPlaylists.map((playlist) => ({
+                name: playlist.name,
+                image: playlist.feature_cover_image_url || playlist.cover_image_url || "",
+              }))}
+            />
           </div>
         ) : null}
       </section>
 
-      {curatedPlaylistsLoading ? (
-        <section className="audioflume-home-mockup-curated">
-          <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
-            <span>Curated collections made for editors</span>
-            <Link
-              href="/curated-playlists"
-              className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
-            >
-              Explore playlists
-              <ArrowUpRightIcon
-                size={16}
-                strokeWidth={1.5}
-                className="translate-y-[2px]"
-              />
-            </Link>
-          </div>
-          <HomeCuratedPlaylistSkeleton discoverLayout={!showHero} />
-        </section>
-      ) : (
-        <HomeCuratedPlaylistShelf playlists={curatedPlaylists} progressScrollbar={!showHero} discoverLayout={!showHero} />
-      )}
+      {showHero ? (
+        {curatedPlaylistsLoading ? (
+          <section className="audioflume-home-mockup-curated">
+            <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
+              <span>Curated collections made for editors</span>
+              <Link
+                href="/curated-playlists"
+                className="audioflume-arrow-text-link inline-flex items-center gap-[5px]"
+              >
+                Explore playlists
+                <ArrowUpRightIcon
+                  size={16}
+                  strokeWidth={1.5}
+                  className="translate-y-[2px]"
+                />
+              </Link>
+            </div>
+            <HomeCuratedPlaylistSkeleton discoverLayout={!showHero} />
+          </section>
+        ) : (
+          <HomeCuratedPlaylistShelf playlists={curatedPlaylists} progressScrollbar={!showHero} discoverLayout={!showHero} />
+        )}
+  
+      ) : null}
 
       <section className="audioflume-home-mockup-catalogue">
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline audioflume-home-mockup-catalogue-heading">
