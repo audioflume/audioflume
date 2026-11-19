@@ -2304,7 +2304,7 @@ body:has(.audioflume-home-landing)
   margin-inline: auto;
 }
 
-.audioflume-discover-featured-songs {
+.audioflume-discover-featured-song-grid {
   --audioflume-featured-song-play-background: #ffffff;
   --audioflume-featured-song-play-color: #111111;
   --audioflume-featured-song-play-backdrop: none;
@@ -2379,14 +2379,14 @@ body:has(.audioflume-home-landing)
   opacity: 1;
 }
 
-.audioflume-discover-featured-songs .audioflume-home-featured-song-play {
+.audioflume-discover-featured-song-grid .audioflume-home-featured-song-play {
   opacity: 0;
   transition: opacity 150ms ease, background-color 150ms ease, color 150ms ease, transform 150ms ease;
 }
 
-.audioflume-discover-featured-songs .audioflume-home-featured-song-card:hover .audioflume-home-featured-song-play,
-.audioflume-discover-featured-songs .audioflume-home-featured-song-card:has(:focus-visible) .audioflume-home-featured-song-play,
-.audioflume-discover-featured-songs .audioflume-home-featured-song-card.is-active .audioflume-home-featured-song-play {
+.audioflume-discover-featured-song-grid .audioflume-home-featured-song-card:hover .audioflume-home-featured-song-play,
+.audioflume-discover-featured-song-grid .audioflume-home-featured-song-card:has(:focus-visible) .audioflume-home-featured-song-play,
+.audioflume-discover-featured-song-grid .audioflume-home-featured-song-card.is-active .audioflume-home-featured-song-play {
   opacity: 1;
 }
 
