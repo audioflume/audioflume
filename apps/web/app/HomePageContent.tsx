@@ -19,6 +19,7 @@ import {
 
 import Footer from "@/components/Footer";
 import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
+import SectionTitle from "@/components/SectionTitle";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
@@ -1230,7 +1231,7 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
-  const [directoryArtists, setDirectoryArtists] = useState<{ name: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null; songs: Song[] }[]>([]);
+  const [directoryArtists, setDirectoryArtists] = useState<{ id: string; name: string; slug: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null; hero_image_position_x: number; hero_image_position_y: number; songs: Song[] }[]>([]);
   const [editorialPlaylists, setEditorialPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
@@ -1485,7 +1486,34 @@ export default function HomePageContent({
           <div className="discover-artist-content">
             <DiscoverArchivedSections
               albumsTitle="Featured songs"
-              watchingArtists={discoverArtistShelfItems(0)}
+              watchingShelf={
+                <section className="discover-artist-shelf-section audioflume-home-mockup-more-artists">
+                  <div className="discover-artist-shelf-heading">
+                    <SectionTitle>Artists we're watching</SectionTitle>
+                  </div>
+                  <div className="relative left-1/2 w-screen -translate-x-1/2">
+                    <HomeArtistShelf
+                      artists={discoverArtistShelfItems(0).map((item, index) => {
+                        const source = directoryArtists[index < 7 ? index : index % directoryArtists.length];
+                        return {
+                          id: `watching-${index}-${source?.id ?? "preview"}`,
+                          name: item.title,
+                          slug: source?.slug ?? "",
+                          designation: item.subtitle,
+                          hero_image_url: item.image,
+                          hero_image_position_x: source?.hero_image_position_x,
+                          hero_image_position_y: source?.hero_image_position_y,
+                          songs: item.song ? [item.song] : [],
+                        };
+                      })}
+                      homeFlashImages={homeFlashImages}
+                      compact
+                      progressScrollbar
+                      discoverPlaybackIcon
+                    />
+                  </div>
+                </section>
+              }
               supportArtists={discoverArtistShelfItems(7)}
               enableArtistPlayback
               featuredSongs={playableSongs.slice(0, 12).map((song) => ({
@@ -1573,6 +1601,7 @@ export default function HomePageContent({
         )}
       </section>
 
+      {showHero ? (
       <section className="audioflume-home-mockup-more-artists">
         <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
           <span>Discover more artists</span>
@@ -1586,6 +1615,8 @@ export default function HomePageContent({
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact progressScrollbar={!showHero} discoverPlaybackIcon />
         ) : null}
       </section>
+
+      ) : null}
 
       <section className="audioflume-home-reference-tools audioflume-home-mockup-originals-tools">
         <DiscoverLifetimeAccess originalSongs={originalSongs} songsLoading={songsLoading} />
