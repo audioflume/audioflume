@@ -1353,6 +1353,8 @@ export default function HomePageContent({
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
+        {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0 || discoverCompactSongs.length > 0) ? (
+          <div className="audioflume-discover-songs-gradient">
         {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0) ? (
           <HomeSectionWithHeading
             title="Featured songs"
@@ -1384,6 +1386,8 @@ export default function HomePageContent({
               <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
             ))}
           </HomeSectionWithHeading>
+        ) : null}
+          </div>
         ) : null}
       </section>
 
