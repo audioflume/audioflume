@@ -914,59 +914,60 @@ function DiscoverCompactSongsSkeleton() {
 }
 
 function DiscoverImageBlock({ src }: { src: string }) {
-  const imageRef = useRef<HTMLImageElement>(null);
   const [edgeColor, setEdgeColor] = useState<string | null>(null);
 
-  useEffect(() => {
-    let cancelled = false;
-    const sample = new Image();
-    sample.onload = () => {
-      const element = imageRef.current;
-      if (!element || cancelled) return;
-      try {
-        const canvas = document.createElement("canvas");
-        canvas.width = 80;
-        canvas.height = 80;
-        const context = canvas.getContext("2d", { willReadFrequently: true });
-        if (!context) return;
-        const sourceWidth = sample.naturalWidth;
-        const sourceHeight = sample.naturalHeight;
-        const blockRatio = element.clientWidth / element.clientHeight;
-        const visibleWidth = Math.min(sourceWidth, sourceHeight * blockRatio);
-        const sourceLeft = (sourceWidth - visibleWidth) / 2;
-        context.drawImage(sample, sourceLeft, 0, visibleWidth * 0.15, sourceHeight, 0, 0, 80, 80);
-        const pixels = context.getImageData(0, 0, 80, 80).data;
-        const groups = new Map<string, { count: number; red: number; green: number; blue: number }>();
-        for (let i = 0; i < pixels.length; i += 4) {
-          const red = pixels[i];
-          const green = pixels[i + 1];
-          const blue = pixels[i + 2];
-          const key = `${Math.floor(red / 24)}-${Math.floor(green / 24)}-${Math.floor(blue / 24)}`;
-          const group = groups.get(key) ?? { count: 0, red: 0, green: 0, blue: 0 };
-          group.count++;
-          group.red += red;
-          group.green += green;
-          group.blue += blue;
-          groups.set(key, group);
-        }
-        const dominant = [...groups.values()].sort((a, b) => b.count - a.count)[0];
-        if (dominant && !cancelled) {
-          setEdgeColor(`rgb(${Math.round(dominant.red / dominant.count)} ${Math.round(dominant.green / dominant.count)} ${Math.round(dominant.blue / dominant.count)})`);
-        }
-      } catch {
-        // Leave the original image unchanged if pixel access is unavailable.
+  function detectEdgeColor(image: HTMLImageElement) {
+    try {
+      const canvas = document.createElement("canvas");
+      canvas.width = 32;
+      canvas.height = 64;
+      const context = canvas.getContext("2d", { willReadFrequently: true });
+      if (!context || !image.clientHeight || !image.naturalWidth || !image.naturalHeight) return;
+      const sourceWidth = image.naturalWidth;
+      const sourceHeight = image.naturalHeight;
+      const blockRatio = image.clientWidth / image.clientHeight;
+      const visibleWidth = Math.min(sourceWidth, sourceHeight * blockRatio);
+      const visibleHeight = Math.min(sourceHeight, sourceWidth / blockRatio);
+      const sourceLeft = (sourceWidth - visibleWidth) / 2;
+      const sourceTop = (sourceHeight - visibleHeight) / 2;
+      context.drawImage(image, sourceLeft, sourceTop, visibleWidth * 0.15, visibleHeight, 0, 0, 32, 64);
+      const pixels = context.getImageData(0, 0, 32, 64).data;
+      const groups = new Map<string, { count: number; red: number; green: number; blue: number }>();
+      for (let i = 0; i < pixels.length; i += 4) {
+        const red = pixels[i];
+        const green = pixels[i + 1];
+        const blue = pixels[i + 2];
+        const key = `${Math.floor(red / 24)}-${Math.floor(green / 24)}-${Math.floor(blue / 24)}`;
+        const group = groups.get(key) ?? { count: 0, red: 0, green: 0, blue: 0 };
+        group.count++;
+        group.red += red;
+        group.green += green;
+        group.blue += blue;
+        groups.set(key, group);
       }
-    };
-    sample.src = `/_next/image?url=${encodeURIComponent(src)}&w=640&q=75`;
-    return () => { cancelled = true; };
-  }, [src]);
+      const dominant = [...groups.values()].sort((a, b) => b.count - a.count)[0];
+      if (dominant) {
+        setEdgeColor(`rgb(${Math.round(dominant.red / dominant.count)} ${Math.round(dominant.green / dominant.count)} ${Math.round(dominant.blue / dominant.count)})`);
+      }
+    } catch {
+      // Keep the image visible if pixel access is unavailable.
+    }
+  }
 
   return (
     <div
       className="audioflume-discover-image-block"
-      style={edgeColor ? { backgroundColor: edgeColor, ["--audioflume-discover-image-edge-color" as string]: edgeColor } : undefined}
+      style={edgeColor ? { ["--audioflume-discover-image-edge-color" as string]: edgeColor } : undefined}
     >
-      <img ref={imageRef} src={src} alt="" loading="lazy" />
+      <div className="audioflume-discover-image-color" aria-hidden="true" />
+      <div className="audioflume-discover-image-photo">
+        <img
+          src={`/_next/image?url=${encodeURIComponent(src)}&w=640&q=75`}
+          alt=""
+          loading="lazy"
+          onLoad={(event) => detectEdgeColor(event.currentTarget)}
+        />
+      </div>
     </div>
   );
 }
