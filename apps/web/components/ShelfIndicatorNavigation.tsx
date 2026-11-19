@@ -12,6 +12,8 @@ type Props = {
   disabled?: boolean;
   className?: string;
   progressScrollbar?: boolean;
+  onProgressPointerDown?: () => void;
+  onProgressPointerUp?: () => void;
 };
 
 export default function ShelfIndicatorNavigation({
@@ -23,6 +25,8 @@ export default function ShelfIndicatorNavigation({
   disabled = false,
   className = "",
   progressScrollbar = true,
+  onProgressPointerDown,
+  onProgressPointerUp,
 }: Props) {
   const [position, setPosition] = useState({
     canPrev: false,
@@ -79,6 +83,7 @@ export default function ShelfIndicatorNavigation({
     const scroller = scrollerRef.current;
     if (!scroller) return;
     event.currentTarget.setPointerCapture(event.pointerId);
+    onProgressPointerDown?.();
     scroller.style.scrollSnapType = "none";
     scroller.style.scrollBehavior = "auto";
     dragProgress(event);
@@ -91,6 +96,7 @@ export default function ShelfIndicatorNavigation({
   function handleProgressPointerUp(event: PointerEvent<HTMLDivElement>) {
     if (!event.currentTarget.hasPointerCapture(event.pointerId)) return;
     event.currentTarget.releasePointerCapture(event.pointerId);
+    onProgressPointerUp?.();
     const scroller = scrollerRef.current;
     if (scroller) {
       scroller.style.scrollSnapType = "";
