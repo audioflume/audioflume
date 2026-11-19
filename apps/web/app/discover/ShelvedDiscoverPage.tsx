@@ -22,6 +22,7 @@ import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import { useSongs } from "@/hooks/useSongs";
@@ -32,6 +33,7 @@ type ShelfItem = {
   title: string;
   subtitle: string;
   image: string;
+  song?: Song;
 };
 
 type DiscoverFeaturedArtist = {
@@ -410,12 +412,15 @@ function ArtistShelf({
   items,
   square = false,
   footerCopy,
+  enablePlayback = false,
 }: {
   title: string;
   items: ShelfItem[];
   square?: boolean;
   footerCopy?: string;
+  enablePlayback?: boolean;
 }) {
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
   const [canScrollNext, setCanScrollNext] = useState(false);
@@ -533,7 +538,25 @@ function ArtistShelf({
                     <strong>{item.title}</strong>
                     <span>{item.subtitle}</span>
                   </div>
-                  <PlayBadge />
+                  {enablePlayback && item.song ? (
+                    <button
+                      type="button"
+                      className="discover-artist-card-play-button"
+                      aria-label={isPlaying && currentSong?.id === item.song.id ? `Pause ${item.title} preview` : `Play ${item.title} preview`}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        if (!item.song) return;
+                        setQueue([item.song]);
+                        togglePlayPause(item.song);
+                      }}
+                    >
+                      <span className="discover-artist-play-badge" aria-hidden="true">
+                        <PlaybackStateIcon playing={Boolean(isPlaying && currentSong?.id === item.song.id)} size={18} />
+                      </span>
+                    </button>
+                  ) : (
+                    <PlayBadge />
+                  )}
                 </div>
               </PlaceholderMedia>
 
@@ -562,18 +585,21 @@ export function DiscoverArchivedSections({
   featuredSongs = TOP_ALBUMS,
   supportArtists = SUPPORT_NEW_ARTISTS,
   featuredPlaylists,
+  enableArtistPlayback = false,
 }: {
   albumsTitle?: string;
   watchingArtists?: ShelfItem[];
   featuredSongs?: ShelfItem[];
   supportArtists?: ShelfItem[];
   featuredPlaylists?: { name: string; image: string }[];
+  enableArtistPlayback?: boolean;
 }) {
   return (
     <>
     <ArtistShelf
       title="Artists we're watching"
       items={watchingArtists}
+      enablePlayback={enableArtistPlayback}
       footerCopy="1500+ artists trending online"
     />
 
@@ -608,6 +634,7 @@ export function DiscoverArchivedSections({
     <ArtistShelf
       title="Support new artists"
       items={supportArtists}
+      enablePlayback={enableArtistPlayback}
       footerCopy="1500+ artists trending online"
     />
 
