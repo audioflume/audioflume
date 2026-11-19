@@ -1324,7 +1324,8 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-reference-search
 ),
 .audioflume-home-mockup-artists.is-discover-featured-artists
-  > :is(.audioflume-discover-compact-songs-section, .audioflume-discover-featured-songs-section),
+  > .audioflume-discover-songs-gradient,
+.audioflume-discover-songs-gradient > .audioflume-discover-compact-songs-section,
 .audioflume-home-mockup .audioflume-home-reference-tools
   > .audioflume-home-reference-playlists,
 .audioflume-home-landing-pricing > .audioflume-home-mockup-section-label {
@@ -5996,6 +5997,10 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup-artists.is-discover-featured-artists {
   padding-bottom: 0;
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-discover-songs-gradient {
+  background: linear-gradient(to bottom, #e5e5df, #fff);
 }
 
  :where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-experiment-search {
