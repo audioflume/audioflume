@@ -629,7 +629,7 @@ export function DiscoverArchivedSections({
       })}
     </section>
 
-    <ArtistShelf title={albumsTitle} items={featuredSongs} square />
+    <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} />
 
     <ArtistShelf
       title="Support new artists"
