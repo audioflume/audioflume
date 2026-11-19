@@ -180,7 +180,7 @@ export default function CuratedPlaylistPlayButton({
         aria-busy={loading}
       >
         {discoverPlaybackIcon ? (
-          <PlaybackStateIcon playing={isPlaylistPlaying} size={previewEnabled ? 15 : 18} />
+          <PlaybackStateIcon playing={isPlaylistPlaying} size={previewEnabled ? 15 : 18} hoverIcon={previewEnabled && !previewOpen ? "list" : "pause"} />
         ) : previewEnabled && isPlaylistPlaying ? (
           <CardPlayingWaveform />
         ) : isPlaylistPlaying && !previewEnabled ? (
