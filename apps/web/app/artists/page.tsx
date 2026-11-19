@@ -8,7 +8,7 @@ import Footer from "@/components/Footer";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import playlistCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
@@ -123,11 +123,7 @@ function ArtistCard({
                 }
               }}
             >
-              {hasActiveSong && isPlaying ? (
-                <CardPlayingWaveform />
-              ) : (
-                <PlayIconSmall size={15} />
-              )}
+              <PlaybackStateIcon playing={hasActiveSong && isPlaying} size={15} hoverIcon="list" />
             </button>
             {hasActiveSong && isPlaying && !previewOpen ? (
               <CardPlayingWaveform corner label={`${artist.name} is playing`} />
