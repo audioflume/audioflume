@@ -1483,7 +1483,7 @@ export default function HomePageContent({
       </section>
 
       {showHero ? (
-        {curatedPlaylistsLoading ? (
+        curatedPlaylistsLoading ? (
           <section className="audioflume-home-mockup-curated">
             <div className="audioflume-home-reference-width audioflume-home-mockup-section-label">
               <span>Curated collections made for editors</span>
