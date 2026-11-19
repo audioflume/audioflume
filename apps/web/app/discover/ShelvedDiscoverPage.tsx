@@ -565,7 +565,7 @@ function ArtistShelf({
                   togglePlayPause(item.song);
                 }}
               >
-                <PlaybackStateIcon playing={Boolean(isPlaying && currentSong?.id === item.song?.id)} size={15} />
+                <div><PlaybackStateIcon playing={Boolean(isPlaying && currentSong?.id === item.song?.id)} size={15} /></div>
                 <span>{isPlaying && currentSong?.id === item.song?.id ? "Pause Music" : "Play Music"}</span>
               </button>
             </article>
