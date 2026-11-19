@@ -565,7 +565,7 @@ function ArtistShelf({
                   togglePlayPause(item.song);
                 }}
               >
-                <div><PlaybackStateIcon playing={Boolean(isPlaying && currentSong?.id === item.song?.id)} size={15} /></div>
+                <div className="grid h-full w-full place-items-center leading-none"><PlaybackStateIcon playing={Boolean(isPlaying && currentSong?.id === item.song?.id)} size={15} /></div>
                 <span>{isPlaying && currentSong?.id === item.song?.id ? "Pause Music" : "Play Music"}</span>
               </button>
             </article>
@@ -636,6 +636,7 @@ export function DiscoverArchivedSections({
   supportArtists = SUPPORT_NEW_ARTISTS,
   featuredPlaylists,
   enableArtistPlayback = false,
+  playlistsAfterSupport = false,
 }: {
   albumsTitle?: string;
   watchingArtists?: ShelfItem[];
@@ -644,7 +645,36 @@ export function DiscoverArchivedSections({
   supportArtists?: ShelfItem[];
   featuredPlaylists?: { name: string; image: string }[];
   enableArtistPlayback?: boolean;
+  playlistsAfterSupport?: boolean;
 }) {
+  const playlistBlocks = (
+      <section className="discover-artist-editorial-grid">
+        {EDITORIAL_FEATURES.map((feature, index) => {
+          const playlist = featuredPlaylists?.[index];
+          return (
+          <article key={feature.eyebrow} className="discover-artist-editorial-card">
+            <PlaceholderMedia
+              index={index + 3}
+              imageSrc={playlist?.image ?? feature.image}
+              className="discover-artist-editorial-media"
+            >
+              <div className="discover-artist-editorial-copy">
+                <span>{feature.eyebrow}</span>
+                <h2>{feature.title}</h2>
+              </div>
+            </PlaceholderMedia>
+  
+            <div className="discover-artist-editorial-meta">
+              <span>{playlist?.name ?? "Loremipsum Dolorit"}</span>
+              <span>Eiusmod Tempor</span>
+              <span>Explore more ↗</span>
+            </div>
+          </article>
+          );
+        })}
+      </section>
+  );
+
   return (
     <>
     <ArtistShelf
@@ -655,31 +685,7 @@ export function DiscoverArchivedSections({
       footerCopy="1500+ artists trending online"
     />
 
-    <section className="discover-artist-editorial-grid">
-      {EDITORIAL_FEATURES.map((feature, index) => {
-        const playlist = featuredPlaylists?.[index];
-        return (
-        <article key={feature.eyebrow} className="discover-artist-editorial-card">
-          <PlaceholderMedia
-            index={index + 3}
-            imageSrc={playlist?.image ?? feature.image}
-            className="discover-artist-editorial-media"
-          >
-            <div className="discover-artist-editorial-copy">
-              <span>{feature.eyebrow}</span>
-              <h2>{feature.title}</h2>
-            </div>
-          </PlaceholderMedia>
-
-          <div className="discover-artist-editorial-meta">
-            <span>{playlist?.name ?? "Loremipsum Dolorit"}</span>
-            <span>Eiusmod Tempor</span>
-            <span>Explore more ↗</span>
-          </div>
-        </article>
-        );
-      })}
-    </section>
+    {!playlistsAfterSupport ? playlistBlocks : null}
 
     <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} />
 
@@ -689,6 +695,8 @@ export function DiscoverArchivedSections({
       enablePlayback={enableArtistPlayback}
       footerCopy="1500+ artists trending online"
     />
+
+    {playlistsAfterSupport ? playlistBlocks : null}
 
     </>
   );
