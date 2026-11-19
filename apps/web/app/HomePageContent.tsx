@@ -500,7 +500,7 @@ function HomeReadyToCutSongCard({
         if (event.key !== "Enter" && event.key !== " ") return;
         stopHomeTrackKeyEvent(event);
       }}
-      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-2 rounded-[6px] bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
+      className="audioflume-home-ready-track-card group flex h-[54px] cursor-pointer items-center gap-2 rounded-[4px] bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2 transition hover:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)] focus:outline-none focus-visible:bg-[color-mix(in_srgb,var(--bg-primary)_94%,var(--text-primary)_6%)]"
       aria-label={`Play ${song.title} by ${song.artist}`}
     >
       <HomeReadyToCutCoverImage song={song} index={index} />
@@ -521,11 +521,11 @@ function HomeReadyToCutSongCard({
           stopHomeTrackMouseEvent(event);
           playSong();
         }}
-        className="flex h-9 w-9 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
+        className="flex h-7 w-7 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white text-black transition hover:scale-105 disabled:cursor-default disabled:opacity-50"
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
-        {playing ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+        {playing ? <PauseIcon size={13} /> : <PlayIconSmall size={13} />}
       </button>
     </article>
   );
@@ -1030,7 +1030,7 @@ function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayout?: boo
       {Array.from({ length: 12 }, (_, index) => (
         <article
           key={index}
-          className={`audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-4 rounded-[6px] bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2${discoverLayout ? " is-discover-skeleton" : ""}`}
+          className={`audioflume-home-ready-track-card audioflume-home-skeleton-ready-track flex h-[54px] items-center gap-4 rounded-[4px] bg-[color-mix(in_srgb,var(--bg-primary)_96%,var(--text-primary)_4%)] px-2${discoverLayout ? " is-discover-skeleton" : ""}`}
           aria-hidden="true"
         >
           <HomeSkeletonBlock className="is-ready-track-cover" />
