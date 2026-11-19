@@ -3298,6 +3298,10 @@ body:has(.audioflume-home-landing)
   text-transform: uppercase;
 }
 
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-copy strong {
+  text-transform: none;
+}
+
 .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-designation {
   color: rgba(255, 255, 255, 0.9);
   font-size: 12px;
