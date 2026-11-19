@@ -6053,7 +6053,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-experiment-lifetime {
-  background: #111 url("https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg") var(--audioflume-lifetime-image-position, center) / cover no-repeat;
+  background: #111 url("https://images.filmwave.io/images/discover/jose-p-ortiz-4Wtqx2q14Lw-unsplash.jpg") var(--audioflume-lifetime-image-position, center) / cover no-repeat;
 }
 
 .audioflume-experiment-lifetime > h2 {
