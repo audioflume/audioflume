@@ -845,10 +845,6 @@ function HomeCompactSongCard({
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
-  const duration = Number.isFinite(song.duration) && song.duration > 0
-    ? `${Math.floor(song.duration / 60)}:${Math.floor(song.duration % 60).toString().padStart(2, "0")}`
-    : "0:00";
-
   function playSong() {
     if (!song.audioUrl) return;
     setQueue(queue);
@@ -883,7 +879,6 @@ function HomeCompactSongCard({
           <span className="audioflume-home-song-artist">{song.artist}</span>
         </span>
       </button>
-      <span className="audioflume-discover-compact-song-duration">{duration}</span>
     </div>
   );
 }
@@ -920,8 +915,8 @@ function DiscoverCompactSongsSkeleton() {
 
 function DiscoverFeaturedSongsSkeleton() {
   return (
-    <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf audioflume-discover-skeleton-featured-shelf" progressScrollbar>
-      {Array.from({ length: 8 }, (_, index) => (
+    <div className="audioflume-discover-featured-song-grid audioflume-discover-skeleton-featured-shelf">
+      {Array.from({ length: 6 }, (_, index) => (
         <article key={index} className="audioflume-home-featured-song-card audioflume-discover-skeleton-featured-card" aria-hidden="true">
           <HomeSkeletonBlock className="audioflume-home-featured-song-art is-featured-cover" />
           <span className="audioflume-home-featured-song-copy">
@@ -930,7 +925,7 @@ function DiscoverFeaturedSongsSkeleton() {
           </span>
         </article>
       ))}
-    </Shelf>
+    </div>
   );
 }
 
@@ -1149,6 +1144,7 @@ export default function HomePageContent({
     }
     return Array.from(selected.values()).slice(0, 6);
   }, [artists, playableSongs, configuredDiscoverSongs]);
+  const discoverFeaturedGridSongs = discoverArtistSongs.slice(0, 6);
 
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
@@ -1362,11 +1358,11 @@ export default function HomePageContent({
             {songsLoading || artistsLoading || discoverFeaturedSongsLoading ? (
               <DiscoverFeaturedSongsSkeleton />
             ) : (
-              <Shelf label="Discover featured songs" className="audioflume-discover-featured-song-shelf" progressScrollbar>
-                {discoverArtistSongs.map((song) => (
-                  <HomeFeaturedSongCard key={song.id} song={song} queue={discoverArtistSongs} />
+              <div className="audioflume-discover-featured-song-grid">
+                {discoverFeaturedGridSongs.map((song) => (
+                  <HomeFeaturedSongCard key={song.id} song={song} queue={discoverFeaturedGridSongs} />
                 ))}
-              </Shelf>
+              </div>
             )}
           </HomeSectionWithHeading>
         ) : null}
@@ -1508,7 +1504,7 @@ export default function HomePageContent({
           ) : (
             <MusicListShell title={null}>
               {recentSongs.map((song) => (
-                <SongCard key={song.id} song={song} showDivider={false} />
+                <SongCard key={song.id} song={song} showDivider={false} showDuration={false} />
               ))}
             </MusicListShell>
           )}
