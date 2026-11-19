@@ -1471,7 +1471,7 @@ export default function HomePageContent({
         {artistsLoading ? (
           <HomeArtistShelfSkeleton discoverLayout={!showHero} />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} discoverPlaybackIcon={!showHero} />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} discoverPlaybackIcon />
         ) : null}
         {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0) ? (
           <div className="audioflume-discover-featured-songs-section">
@@ -1584,7 +1584,7 @@ export default function HomePageContent({
         {artistsLoading ? (
           <HomeArtistShelfSkeleton compact progressScrollbar={!showHero} />
         ) : artists.length > 0 ? (
-          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact progressScrollbar={!showHero} discoverPlaybackIcon={!showHero} />
+          <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} compact progressScrollbar={!showHero} discoverPlaybackIcon />
         ) : null}
       </section>
 
