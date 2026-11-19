@@ -21,7 +21,6 @@ import Footer from "@/components/Footer";
 import ShelfIndicatorNavigation from "@/components/ShelfIndicatorNavigation";
 import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 import { DiscoverLifetimeAccess } from "./DiscoverPricingSections";
-import { HomeLandingPromoBlocks } from "./HomeLandingContent";
 import HomeSectionWithHeading from "./HomeSectionWithHeading";
 import GlobalMusicSearch from "@/components/GlobalMusicSearch";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
@@ -1354,26 +1353,6 @@ export default function HomePageContent({
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
-        {!showHero ? (
-          <div className="audioflume-experiment-main audioflume-experiment-promos">
-            <HomeLandingPromoBlocks artistsImage="https://images.filmwave.io/images/discover/olaniyan-oluwapelumi-DYPT8TJ5CRo-unsplash.jpg" />
-          </div>
-        ) : null}
-        {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
-          <HomeSectionWithHeading
-            title="Trending & popular this month"
-            linkHref="/music"
-            linkLabel="Explore music"
-            className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
-            contentClassName={songsLoading ? "" : "audioflume-discover-compact-songs"}
-          >
-            {songsLoading ? (
-              <DiscoverCompactSongsSkeleton />
-            ) : discoverCompactSongs.map((song) => (
-              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
-            ))}
-          </HomeSectionWithHeading>
-        ) : null}
         {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0) ? (
           <HomeSectionWithHeading
             title="Featured songs"
@@ -1389,6 +1368,21 @@ export default function HomePageContent({
                 ))}
               </Shelf>
             )}
+          </HomeSectionWithHeading>
+        ) : null}
+        {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
+          <HomeSectionWithHeading
+            title="Trending & popular this month"
+            linkHref="/music"
+            linkLabel="Explore music"
+            className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
+            contentClassName={songsLoading ? "" : "audioflume-discover-compact-songs"}
+          >
+            {songsLoading ? (
+              <DiscoverCompactSongsSkeleton />
+            ) : discoverCompactSongs.map((song) => (
+              <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
+            ))}
           </HomeSectionWithHeading>
         ) : null}
       </section>
