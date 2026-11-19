@@ -29,6 +29,7 @@ import HeartIcon from "@/components/icons/HeartIcon";
 import DownloadIcon from "@/components/icons/DownloadIcon";
 import NoVocalsIcon from "@/components/icons/NoVocalsIcon";
 import PauseIcon from "@/components/icons/PauseIcon";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import IconButton from "@/components/IconButton";
 
@@ -73,6 +74,7 @@ export default function SongCard({
   showEditPointMarkers: showEditPointMarkersProp,
   showDivider = true,
   showDuration = true,
+  showPlaybackStateIcon = false,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
@@ -85,6 +87,7 @@ export default function SongCard({
   showEditPointMarkers?: boolean;
   showDivider?: boolean;
   showDuration?: boolean;
+  showPlaybackStateIcon?: boolean;
   onRemoveFromPlaylist?: (songId: string) => void;
   onRemoveFromProject?: (songId: string) => void;
 }) {
@@ -110,7 +113,9 @@ export default function SongCard({
   const [isCreatingPlaylist, setIsCreatingPlaylist] = useState(false);
   const cardRef = useRef<HTMLElement | null>(null);
 
-  const displayIcon = actuallyPlaying ? (
+  const displayIcon = showPlaybackStateIcon ? (
+    <PlaybackStateIcon playing={actuallyPlaying} size={15} />
+  ) : actuallyPlaying ? (
     <PauseIcon size={15} />
   ) : (
     <PlayIconSmall size={15} />
