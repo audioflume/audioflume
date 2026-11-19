@@ -51,10 +51,12 @@ export function CuratedPlaylistCard({
   playlist,
   index,
   variant = "default",
+  discoverPlaybackIcon = false,
 }: {
   playlist: CuratedPlaylistCardItem;
   index: number;
   variant?: "default" | "home" | "curatedPage";
+  discoverPlaybackIcon?: boolean;
 }) {
   const href = playlist.href || `/curated-playlists/${playlist.id}`;
   const fallbackGradient =
@@ -108,6 +110,7 @@ export function CuratedPlaylistCard({
               playlistId={playlist.id}
               playlistName={playlist.name}
               previewEnabled={isCuratedPageVariant}
+              discoverPlaybackIcon={discoverPlaybackIcon}
               className={`${cardStyles.playButton}${usesHomeLayout ? ` ${cardStyles.homePlayButton}` : ""}${isCuratedPageVariant ? ` ${cardStyles.curatedPagePlayButton}` : ""}`}
             />
           </>
