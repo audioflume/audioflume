@@ -913,6 +913,64 @@ function DiscoverCompactSongsSkeleton() {
   );
 }
 
+function DiscoverImageBlock({ src }: { src: string }) {
+  const imageRef = useRef<HTMLImageElement>(null);
+  const [edgeColor, setEdgeColor] = useState<string | null>(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const sample = new Image();
+    sample.onload = () => {
+      const element = imageRef.current;
+      if (!element || cancelled) return;
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = 80;
+        canvas.height = 80;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) return;
+        const sourceWidth = sample.naturalWidth;
+        const sourceHeight = sample.naturalHeight;
+        const blockRatio = element.clientWidth / element.clientHeight;
+        const visibleWidth = Math.min(sourceWidth, sourceHeight * blockRatio);
+        const sourceLeft = (sourceWidth - visibleWidth) / 2;
+        context.drawImage(sample, sourceLeft, 0, visibleWidth * 0.15, sourceHeight, 0, 0, 80, 80);
+        const pixels = context.getImageData(0, 0, 80, 80).data;
+        const groups = new Map<string, { count: number; red: number; green: number; blue: number }>();
+        for (let i = 0; i < pixels.length; i += 4) {
+          const red = pixels[i];
+          const green = pixels[i + 1];
+          const blue = pixels[i + 2];
+          const key = `${Math.floor(red / 24)}-${Math.floor(green / 24)}-${Math.floor(blue / 24)}`;
+          const group = groups.get(key) ?? { count: 0, red: 0, green: 0, blue: 0 };
+          group.count++;
+          group.red += red;
+          group.green += green;
+          group.blue += blue;
+          groups.set(key, group);
+        }
+        const dominant = [...groups.values()].sort((a, b) => b.count - a.count)[0];
+        if (dominant && !cancelled) {
+          setEdgeColor(`rgb(${Math.round(dominant.red / dominant.count)} ${Math.round(dominant.green / dominant.count)} ${Math.round(dominant.blue / dominant.count)})`);
+        }
+      } catch {
+        // Leave the original image unchanged if pixel access is unavailable.
+      }
+    };
+    sample.src = `/_next/image?url=${encodeURIComponent(src)}&w=640&q=75`;
+    return () => { cancelled = true; };
+  }, [src]);
+
+  return (
+    <div
+      className="audioflume-discover-image-block"
+      style={edgeColor ? { backgroundColor: edgeColor, ["--audioflume-discover-image-edge-color" as string]: edgeColor } : undefined}
+    >
+      <img ref={imageRef} src={src} alt="" loading="lazy" />
+    </div>
+  );
+}
+
 function DiscoverFeaturedSongsSkeleton() {
   return (
     <div className="audioflume-discover-featured-song-grid audioflume-discover-skeleton-featured-shelf">
@@ -1375,15 +1433,9 @@ export default function HomePageContent({
         ) : null}
         {!showHero ? (
           <div className="audioflume-discover-image-grid" aria-label="Discover imagery">
-            <div className="audioflume-discover-image-block">
-              <img src="https://images.filmwave.io/images/discover/jose-p-ortiz-4Wtqx2q14Lw-unsplash.jpg" alt="" loading="lazy" />
-            </div>
-            <div className="audioflume-discover-image-block">
-              <img src="https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg" alt="" loading="lazy" />
-            </div>
-            <div className="audioflume-discover-image-block">
-              <img src="https://images.filmwave.io/images/discover/olaniyan-oluwapelumi-DYPT8TJ5CRo-unsplash.jpg" alt="" loading="lazy" />
-            </div>
+            <DiscoverImageBlock src="https://images.filmwave.io/images/discover/jose-p-ortiz-4Wtqx2q14Lw-unsplash.jpg" />
+            <DiscoverImageBlock src="https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg" />
+            <DiscoverImageBlock src="https://images.filmwave.io/images/discover/olaniyan-oluwapelumi-DYPT8TJ5CRo-unsplash.jpg" />
           </div>
         ) : null}
       </section>
