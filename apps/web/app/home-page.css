@@ -3220,10 +3220,15 @@ body:has(.audioflume-home-landing)
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page {
   --audioflume-home-canvas: #fff;
-  background-image: linear-gradient(to bottom, #e5e5df, #fff);
+  background-image: linear-gradient(
+    to bottom,
+    #e5e5df 0,
+    #e5e5df calc(114px + max(320px, var(--home-reference-width) / 3) + 80px),
+    #fff calc(114px + max(320px, var(--home-reference-width) / 3) + 720px)
+  );
   background-repeat: no-repeat;
-  background-size: 100% 640px;
-  background-position: 0 calc(114px + max(320px, var(--home-reference-width) / 3) + 80px);
+  background-size: 100% calc(114px + max(320px, var(--home-reference-width) / 3) + 720px);
+  background-position: 0 0;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists {
