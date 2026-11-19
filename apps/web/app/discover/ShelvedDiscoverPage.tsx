@@ -582,6 +582,7 @@ function ArtistShelf({
 export function DiscoverArchivedSections({
   albumsTitle = "Top albums",
   watchingArtists = ARTISTS_WATCHING,
+  watchingShelf,
   featuredSongs = TOP_ALBUMS,
   supportArtists = SUPPORT_NEW_ARTISTS,
   featuredPlaylists,
@@ -589,6 +590,7 @@ export function DiscoverArchivedSections({
 }: {
   albumsTitle?: string;
   watchingArtists?: ShelfItem[];
+  watchingShelf?: ReactNode;
   featuredSongs?: ShelfItem[];
   supportArtists?: ShelfItem[];
   featuredPlaylists?: { name: string; image: string }[];
@@ -596,12 +598,14 @@ export function DiscoverArchivedSections({
 }) {
   return (
     <>
-    <ArtistShelf
-      title="Artists we're watching"
-      items={watchingArtists}
-      enablePlayback={enableArtistPlayback}
-      footerCopy="1500+ artists trending online"
-    />
+    {watchingShelf ?? (
+      <ArtistShelf
+        title="Artists we're watching"
+        items={watchingArtists}
+        enablePlayback={enableArtistPlayback}
+        footerCopy="1500+ artists trending online"
+      />
+    )}
 
     <section className="discover-artist-editorial-grid">
       {EDITORIAL_FEATURES.map((feature, index) => {
