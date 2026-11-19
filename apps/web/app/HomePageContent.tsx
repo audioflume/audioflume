@@ -1327,7 +1327,11 @@ export default function HomePageContent({
           return playlist ? [playlist] : [];
         });
         setCuratedPlaylists(selectedPlaylists);
-        if (!showHero) setEditorialPlaylists((selectedPlaylists.length ? selectedPlaylists : Array.isArray(data) ? data : []).slice(0, 3));
+        if (!showHero) {
+          const allPlaylists: CuratedPlaylist[] = Array.isArray(data) ? data : [];
+          const remaining = allPlaylists.filter((playlist) => !selectedPlaylists.some((selected) => selected.id === playlist.id));
+          setEditorialPlaylists([...selectedPlaylists, ...remaining].slice(0, 3));
+        }
       })
       .catch(() => {
         if (!cancelled) setCuratedPlaylists([]);
