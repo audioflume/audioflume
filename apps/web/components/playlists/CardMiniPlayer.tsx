@@ -4,6 +4,7 @@ import { useState } from "react";
 import XIcon from "@/components/icons/XIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import PauseIcon from "@/components/icons/PauseIcon";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import { usePlayerProgress } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 import styles from "./CardMiniPlayer.module.css";
@@ -24,6 +25,7 @@ export default function CardMiniPlayer({
   onPlay,
   onSeek,
   onClose,
+  discoverPlaybackIcon = false,
 }: {
   artistName: string;
   trackCount: number;
@@ -33,6 +35,7 @@ export default function CardMiniPlayer({
   onPlay?: (song: Song) => void;
   onSeek?: (song: Song, progress: number) => void;
   onClose?: () => void;
+  discoverPlaybackIcon?: boolean;
 }) {
   const { currentTime, duration } = usePlayerProgress();
   const [previewIndex, setPreviewIndex] = useState(0);
@@ -103,7 +106,7 @@ export default function CardMiniPlayer({
                   </span>
                   <span className={styles.miniPlayerCompactTitle}>{previewSong.title}</span>
                   <span className={styles.miniPlayerCompactDuration}>{formatPreviewDuration(previewSong.duration)}</span>
-                  {active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
+                  {discoverPlaybackIcon ? <PlaybackStateIcon playing={Boolean(active && isPlaying)} size={12} /> : active && isPlaying ? <PauseIcon size={12} /> : <PlayIconSmall size={12} />}
                 </button>
               );
             })}
@@ -138,7 +141,7 @@ export default function CardMiniPlayer({
               if (listSong) onPlay?.(listSong);
             }}
           >
-            {listPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+            {discoverPlaybackIcon ? <PlaybackStateIcon playing={listPlaying} size={15} /> : listPlaying ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
           </button>
           <button
             type="button"
