@@ -888,6 +888,20 @@
   transform: scale(1.03);
 }
 
+.discover-artist-card-play-button {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
 .discover-artist-play-badge {
   display: inline-flex;
   width: 42px;
