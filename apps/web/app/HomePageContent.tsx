@@ -1492,6 +1492,7 @@ export default function HomePageContent({
                 title: song.title,
                 subtitle: song.artist,
                 image: song.coverArt || "",
+                song,
               }))}
               featuredPlaylists={editorialPlaylists.map((playlist) => ({
                 name: playlist.name,
