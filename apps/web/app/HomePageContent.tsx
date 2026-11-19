@@ -87,6 +87,7 @@ function Shelf({
   const scrollbarTrackRef = useRef<HTMLDivElement>(null);
   const shelfItemCount = Array.isArray(children) ? children.length : 1;
   const inertiaFrameRef = useRef<number | null>(null);
+  const scrollIdleTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const dragStateRef = useRef<{
     pointerId: number;
     startX: number;
@@ -283,8 +284,26 @@ function Shelf({
     const scroller = scrollerRef.current;
     if (!scroller) return;
 
+    function endScrollReveal() {
+      if (!fadeAdjacentCards) return;
+      if (scrollIdleTimerRef.current !== null) {
+        clearTimeout(scrollIdleTimerRef.current);
+        scrollIdleTimerRef.current = null;
+      }
+      scroller.classList.remove("is-scrolling");
+    }
+
+    function handleScroll() {
+      updateScrollState();
+      if (!fadeAdjacentCards) return;
+      scroller.classList.add("is-scrolling");
+      if (scrollIdleTimerRef.current !== null) clearTimeout(scrollIdleTimerRef.current);
+      scrollIdleTimerRef.current = setTimeout(endScrollReveal, 180);
+    }
+
     updateScrollState();
-    scroller.addEventListener("scroll", updateScrollState, { passive: true });
+    scroller.addEventListener("scroll", handleScroll, { passive: true });
+    if (fadeAdjacentCards) scroller.addEventListener("scrollend", endScrollReveal);
     window.addEventListener("resize", updateScrollState);
 
     const observer = new ResizeObserver(updateScrollState);
@@ -292,7 +311,12 @@ function Shelf({
 
     return () => {
       stopScrollbarInertia();
-      scroller.removeEventListener("scroll", updateScrollState);
+      if (scrollIdleTimerRef.current !== null) {
+        clearTimeout(scrollIdleTimerRef.current);
+        scrollIdleTimerRef.current = null;
+      }
+      scroller.removeEventListener("scroll", handleScroll);
+      if (fadeAdjacentCards) scroller.removeEventListener("scrollend", endScrollReveal);
       window.removeEventListener("resize", updateScrollState);
       observer.disconnect();
     };
