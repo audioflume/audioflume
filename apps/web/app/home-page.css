@@ -2070,7 +2070,7 @@ body:has(.audioflume-home-landing)
 
 .audioflume-discover-compact-song {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-columns: minmax(0, 1fr);
   align-items: center;
   gap: 8px;
   width: 100%;
@@ -2100,13 +2100,6 @@ body:has(.audioflume-home-landing)
   color: inherit;
   text-align: left;
   cursor: pointer;
-}
-
-.audioflume-discover-compact-song-duration {
-  color: var(--text-muted);
-  font-size: 11px;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
 }
 
 .audioflume-discover-compact-song-art {
@@ -2317,13 +2310,25 @@ body:has(.audioflume-home-landing)
   --audioflume-featured-song-play-backdrop: none;
 }
 
-.audioflume-discover-featured-song-shelf {
-  width: 100vw;
+.audioflume-discover-featured-song-grid {
+  display: grid;
+  width: var(--home-reference-width);
+  margin-inline: auto;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 28px;
 }
 
-.audioflume-discover-featured-song-shelf .audioflume-home-reference-shelf-scroller {
-  gap: 28px;
-  padding-inline: var(--audioflume-home-page-gutter);
+@media (max-width: 1100px) {
+  .audioflume-discover-featured-song-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .audioflume-discover-featured-song-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+  }
 }
 
 /* Discover-only card spacing and subtle image-edge highlights. */
@@ -2355,12 +2360,6 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card,
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card {
   border-radius: 0;
-}
-
-.audioflume-discover-featured-song-shelf .audioflume-home-featured-song-card {
-  flex: 0 0 max(160px, calc((var(--home-reference-width) - 5 * 28px) / 6));
-  width: max(160px, calc((var(--home-reference-width) - 5 * 28px) / 6));
-  min-width: 160px;
 }
 
 .audioflume-home-featured-song-shelf {
