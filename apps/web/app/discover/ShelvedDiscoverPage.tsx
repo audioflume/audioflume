@@ -34,6 +34,9 @@ type ShelfItem = {
   subtitle: string;
   image: string;
   song?: Song;
+  slug?: string;
+  imagePositionX?: number;
+  imagePositionY?: number;
 };
 
 type DiscoverFeaturedArtist = {
@@ -413,12 +416,14 @@ function ArtistShelf({
   square = false,
   footerCopy,
   enablePlayback = false,
+  compactArtistCards = false,
 }: {
   title: string;
   items: ShelfItem[];
   square?: boolean;
   footerCopy?: string;
   enablePlayback?: boolean;
+  compactArtistCards?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -477,7 +482,7 @@ function ArtistShelf({
   }, [items.length]);
 
   return (
-    <section className="discover-artist-shelf-section">
+    <section className={`discover-artist-shelf-section${compactArtistCards ? " audioflume-home-mockup-more-artists" : ""}`}>
       <div className="discover-artist-shelf-heading">
         <div className="min-w-0">
           <SectionTitle>{title}</SectionTitle>
@@ -520,7 +525,51 @@ function ArtistShelf({
         )}
 
         <div ref={scrollerRef} className="discover-artist-shelf-scroller">
-          {items.map((item, index) => (
+          {items.map((item, index) => compactArtistCards ? (
+            <article key={`${title}-${index}`} className="audioflume-home-reference-artist-card">
+              <div className="audioflume-home-reference-artist-link">
+                {item.slug ? (
+                  <Link href={`/artists/${item.slug}`} className="audioflume-home-reference-artist-card-overlay-link" aria-label={`View ${item.title}`} />
+                ) : null}
+                <div className="audioflume-home-reference-artist-media">
+                  {item.image ? (
+                    <img
+                      src={item.image}
+                      alt=""
+                      draggable={false}
+                      style={{ objectPosition: `${item.imagePositionX ?? 50}% ${item.imagePositionY ?? 50}%` }}
+                    />
+                  ) : null}
+                </div>
+                <div className="audioflume-home-reference-artist-bar">
+                  <span className="audioflume-home-reference-artist-copy">
+                    <strong>{item.title}</strong>
+                    {item.subtitle ? <span className="audioflume-home-reference-artist-designation">{item.subtitle}</span> : null}
+                  </span>
+                </div>
+              </div>
+              <button
+                type="button"
+                className="audioflume-home-reference-artist-play"
+                disabled={!item.song?.audioUrl}
+                aria-label={isPlaying && currentSong?.id === item.song?.id ? `Pause ${item.title}` : `Play ${item.title}`}
+                onClick={(event) => {
+                  event.preventDefault();
+                  event.stopPropagation();
+                  if (!item.song?.audioUrl) return;
+                  if (currentSong?.id === item.song.id && isPlaying) {
+                    togglePlayPause(currentSong);
+                    return;
+                  }
+                  setQueue([item.song]);
+                  togglePlayPause(item.song);
+                }}
+              >
+                <PlaybackStateIcon playing={Boolean(isPlaying && currentSong?.id === item.song?.id)} size={15} />
+                <span>{isPlaying && currentSong?.id === item.song?.id ? "Pause Music" : "Play Music"}</span>
+              </button>
+            </article>
+          ) : (
             <article
               key={`${title}-${index}`}
               className={`discover-artist-shelf-card${square ? " is-square" : ""}`}
@@ -582,7 +631,7 @@ function ArtistShelf({
 export function DiscoverArchivedSections({
   albumsTitle = "Top albums",
   watchingArtists = ARTISTS_WATCHING,
-  watchingShelf,
+  compactWatchingCards = false,
   featuredSongs = TOP_ALBUMS,
   supportArtists = SUPPORT_NEW_ARTISTS,
   featuredPlaylists,
@@ -590,7 +639,7 @@ export function DiscoverArchivedSections({
 }: {
   albumsTitle?: string;
   watchingArtists?: ShelfItem[];
-  watchingShelf?: ReactNode;
+  compactWatchingCards?: boolean;
   featuredSongs?: ShelfItem[];
   supportArtists?: ShelfItem[];
   featuredPlaylists?: { name: string; image: string }[];
@@ -598,14 +647,13 @@ export function DiscoverArchivedSections({
 }) {
   return (
     <>
-    {watchingShelf ?? (
-      <ArtistShelf
-        title="Artists we're watching"
-        items={watchingArtists}
-        enablePlayback={enableArtistPlayback}
-        footerCopy="1500+ artists trending online"
-      />
-    )}
+    <ArtistShelf
+      title="Artists we're watching"
+      items={watchingArtists}
+      enablePlayback={enableArtistPlayback}
+      compactArtistCards={compactWatchingCards}
+      footerCopy="1500+ artists trending online"
+    />
 
     <section className="discover-artist-editorial-grid">
       {EDITORIAL_FEATURES.map((feature, index) => {
