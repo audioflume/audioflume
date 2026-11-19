@@ -72,6 +72,7 @@ export default function SongCard({
   highlightedEditPointTypes = [],
   showEditPointMarkers: showEditPointMarkersProp,
   showDivider = true,
+  showDuration = true,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
@@ -83,6 +84,7 @@ export default function SongCard({
   highlightedEditPointTypes?: string[];
   showEditPointMarkers?: boolean;
   showDivider?: boolean;
+  showDuration?: boolean;
   onRemoveFromPlaylist?: (songId: string) => void;
   onRemoveFromProject?: (songId: string) => void;
 }) {
@@ -272,7 +274,7 @@ export default function SongCard({
             showEditPointMarkers={showEditPointMarkers}
           />
         }
-        duration={durationLabel}
+        duration={showDuration ? durationLabel : null}
         genre={showGenreSlot ? (visibleGenres.length > 0 ? visibleGenres.join(", ") : "") : null}
         keyMeta={showKeyMeta ? song.key || "—" : null}
         bpmMeta={showBpmMeta ? (song.bpm ? `${song.bpm} BPM` : "—") : null}
