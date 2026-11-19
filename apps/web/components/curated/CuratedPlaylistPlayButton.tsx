@@ -199,6 +199,7 @@ export default function CuratedPlaylistPlayButton({
           songs={playableSongs}
           currentSongId={currentSong?.id}
           isPlaying={isPlaying}
+          discoverPlaybackIcon={discoverPlaybackIcon}
           onPlay={playPreviewSong}
           onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
           onClose={() => setOpenCardPlaylistId(null)}
