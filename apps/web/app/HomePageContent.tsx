@@ -28,6 +28,7 @@ import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
+import { DiscoverArchivedSections } from "./discover/ShelvedDiscoverPage";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import curatedCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
@@ -1473,17 +1474,9 @@ export default function HomePageContent({
         ) : artists.length > 0 ? (
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} discoverPlaybackIcon />
         ) : null}
-        {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0) ? (
-          <div className="audioflume-discover-featured-songs-section">
-            {songsLoading || artistsLoading || discoverFeaturedSongsLoading ? (
-              <DiscoverFeaturedSongsSkeleton />
-            ) : (
-              <div className="audioflume-discover-featured-song-grid">
-                {discoverFeaturedGridSongs.map((song) => (
-                  <HomeFeaturedSongCard key={song.id} song={song} queue={discoverFeaturedGridSongs} />
-                ))}
-              </div>
-            )}
+        {!showHero ? (
+          <div className="discover-artist-content">
+            <DiscoverArchivedSections albumsTitle="Featured songs" />
           </div>
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
