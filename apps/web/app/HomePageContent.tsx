@@ -1350,11 +1350,7 @@ export default function HomePageContent({
           <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout={!showHero} />
         ) : null}
         {!showHero && (songsLoading || artistsLoading || discoverFeaturedSongsLoading || discoverArtistSongs.length > 0) ? (
-          <HomeSectionWithHeading
-            title="Featured songs"
-            className="audioflume-discover-featured-songs-section"
-            contentClassName="audioflume-discover-featured-songs"
-          >
+          <div className="audioflume-discover-featured-songs-section">
             {songsLoading || artistsLoading || discoverFeaturedSongsLoading ? (
               <DiscoverFeaturedSongsSkeleton />
             ) : (
@@ -1364,11 +1360,11 @@ export default function HomePageContent({
                 ))}
               </div>
             )}
-          </HomeSectionWithHeading>
+          </div>
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
           <HomeSectionWithHeading
-            title="Trending & popular this month"
+            title={null}
             linkHref="/music"
             linkLabel="Explore music"
             className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
