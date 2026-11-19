@@ -3,8 +3,7 @@
 import Link from "next/link";
 import { AudioflumeOriginalsLogo } from "@/components/LifetimeAccessCard";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
-import PauseIcon from "@/components/icons/PauseIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import { usePlayer, useIsCurrentSongPlaying } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
@@ -55,7 +54,7 @@ function HomeLifetimeSongRow({ song }: { song: Song }) {
         }}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
-        {playing ? <PauseIcon size={14} /> : <PlayIconSmall size={14} />}
+        <PlaybackStateIcon playing={playing} size={14} />
       </button>
     </article>
   );
