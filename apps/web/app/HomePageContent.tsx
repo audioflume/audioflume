@@ -914,45 +914,57 @@ function DiscoverCompactSongsSkeleton() {
 }
 
 function DiscoverImageBlock({ src }: { src: string }) {
+  const imageRef = useRef<HTMLImageElement>(null);
   const [edgeColor, setEdgeColor] = useState<string | null>(null);
 
-  function detectEdgeColor(image: HTMLImageElement) {
-    try {
-      const canvas = document.createElement("canvas");
-      canvas.width = 32;
-      canvas.height = 64;
-      const context = canvas.getContext("2d", { willReadFrequently: true });
-      if (!context || !image.clientHeight || !image.naturalWidth || !image.naturalHeight) return;
-      const sourceWidth = image.naturalWidth;
-      const sourceHeight = image.naturalHeight;
-      const blockRatio = image.clientWidth / image.clientHeight;
-      const visibleWidth = Math.min(sourceWidth, sourceHeight * blockRatio);
-      const visibleHeight = Math.min(sourceHeight, sourceWidth / blockRatio);
-      const sourceLeft = (sourceWidth - visibleWidth) / 2;
-      const sourceTop = (sourceHeight - visibleHeight) / 2;
-      context.drawImage(image, sourceLeft, sourceTop, visibleWidth * 0.15, visibleHeight, 0, 0, 32, 64);
-      const pixels = context.getImageData(0, 0, 32, 64).data;
-      const groups = new Map<string, { count: number; red: number; green: number; blue: number }>();
-      for (let i = 0; i < pixels.length; i += 4) {
-        const red = pixels[i];
-        const green = pixels[i + 1];
-        const blue = pixels[i + 2];
-        const key = `${Math.floor(red / 24)}-${Math.floor(green / 24)}-${Math.floor(blue / 24)}`;
-        const group = groups.get(key) ?? { count: 0, red: 0, green: 0, blue: 0 };
-        group.count++;
-        group.red += red;
-        group.green += green;
-        group.blue += blue;
-        groups.set(key, group);
+  useEffect(() => {
+    const image = imageRef.current;
+    if (!image) return;
+
+    function detectEdgeColor() {
+      if (!image || !image.naturalWidth || !image.naturalHeight) return;
+      try {
+        const canvas = document.createElement("canvas");
+        canvas.width = 32;
+        canvas.height = 64;
+        const context = canvas.getContext("2d", { willReadFrequently: true });
+        if (!context) return;
+        const sourceWidth = image.naturalWidth;
+        const sourceHeight = image.naturalHeight;
+        const blockRatio = (image.clientWidth || image.parentElement?.clientWidth || sourceWidth)
+          / (image.clientHeight || image.parentElement?.clientHeight || sourceHeight);
+        const visibleWidth = Math.min(sourceWidth, sourceHeight * blockRatio);
+        const visibleHeight = Math.min(sourceHeight, sourceWidth / blockRatio);
+        const sourceLeft = (sourceWidth - visibleWidth) / 2;
+        const sourceTop = (sourceHeight - visibleHeight) / 2;
+        context.drawImage(image, sourceLeft, sourceTop, visibleWidth * 0.15, visibleHeight, 0, 0, 32, 64);
+        const pixels = context.getImageData(0, 0, 32, 64).data;
+        const groups = new Map<string, { count: number; red: number; green: number; blue: number }>();
+        for (let i = 0; i < pixels.length; i += 4) {
+          const red = pixels[i];
+          const green = pixels[i + 1];
+          const blue = pixels[i + 2];
+          const key = `${Math.floor(red / 24)}-${Math.floor(green / 24)}-${Math.floor(blue / 24)}`;
+          const group = groups.get(key) ?? { count: 0, red: 0, green: 0, blue: 0 };
+          group.count++;
+          group.red += red;
+          group.green += green;
+          group.blue += blue;
+          groups.set(key, group);
+        }
+        const dominant = [...groups.values()].sort((a, b) => b.count - a.count)[0];
+        if (dominant) {
+          setEdgeColor(`rgb(${Math.round(dominant.red / dominant.count)} ${Math.round(dominant.green / dominant.count)} ${Math.round(dominant.blue / dominant.count)})`);
+        }
+      } catch {
+        // Keep the image visible if pixel access is unavailable.
       }
-      const dominant = [...groups.values()].sort((a, b) => b.count - a.count)[0];
-      if (dominant) {
-        setEdgeColor(`rgb(${Math.round(dominant.red / dominant.count)} ${Math.round(dominant.green / dominant.count)} ${Math.round(dominant.blue / dominant.count)})`);
-      }
-    } catch {
-      // Keep the image visible if pixel access is unavailable.
     }
-  }
+
+    image.addEventListener("load", detectEdgeColor);
+    if (image.complete && image.naturalWidth > 0) detectEdgeColor();
+    return () => image.removeEventListener("load", detectEdgeColor);
+  }, [src]);
 
   return (
     <div
@@ -962,10 +974,10 @@ function DiscoverImageBlock({ src }: { src: string }) {
       <div className="audioflume-discover-image-color" aria-hidden="true" />
       <div className="audioflume-discover-image-photo">
         <img
+          ref={imageRef}
           src={`/_next/image?url=${encodeURIComponent(src)}&w=640&q=75`}
           alt=""
           loading="lazy"
-          onLoad={(event) => detectEdgeColor(event.currentTarget)}
         />
       </div>
     </div>
