@@ -2065,7 +2065,7 @@ body:has(.audioflume-home-landing)
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   column-gap: 24px;
-  row-gap: 10px;
+  row-gap: 0;
 }
 
 .audioflume-discover-compact-song {
@@ -2075,12 +2075,17 @@ body:has(.audioflume-home-landing)
   gap: 8px;
   width: 100%;
   min-width: 0;
-  padding: 0 0 10px;
+  padding: 14px 0;
   border: 0;
   border-bottom: 1px solid var(--border);
   background: transparent;
   color: inherit;
   text-align: left;
+}
+
+.audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(4n + 1):nth-last-child(-n + 4),
+.audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(4n + 1):nth-last-child(-n + 4) ~ .audioflume-discover-compact-song {
+  border-bottom: 0;
 }
 
 .audioflume-discover-compact-song-main {
@@ -2191,17 +2196,37 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-compact-songs {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song {
+    border-bottom: 1px solid var(--border);
+  }
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(3n + 1):nth-last-child(-n + 3),
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(3n + 1):nth-last-child(-n + 3) ~ .audioflume-discover-compact-song {
+    border-bottom: 0;
+  }
 }
 
 @media (max-width: 750px) {
   .audioflume-discover-compact-songs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song {
+    border-bottom: 1px solid var(--border);
+  }
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(2n + 1):nth-last-child(-n + 2),
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(2n + 1):nth-last-child(-n + 2) ~ .audioflume-discover-compact-song {
+    border-bottom: 0;
+  }
 }
 
 @media (max-width: 440px) {
   .audioflume-discover-compact-songs {
     grid-template-columns: minmax(0, 1fr);
+  }
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song {
+    border-bottom: 1px solid var(--border);
+  }
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:last-child {
+    border-bottom: 0;
   }
 }
 
