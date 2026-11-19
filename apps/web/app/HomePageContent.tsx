@@ -1373,6 +1373,19 @@ export default function HomePageContent({
             </div>
           </div>
         ) : null}
+        {!showHero ? (
+          <div className="audioflume-discover-image-grid" aria-label="Discover imagery">
+            <div className="audioflume-discover-image-block">
+              <img src="https://images.filmwave.io/images/discover/jose-p-ortiz-4Wtqx2q14Lw-unsplash.jpg" alt="" loading="lazy" />
+            </div>
+            <div className="audioflume-discover-image-block">
+              <img src="https://images.filmwave.io/images/discover/karsten-winegeart-2_RaLT1aqUI-unsplash.jpg" alt="" loading="lazy" />
+            </div>
+            <div className="audioflume-discover-image-block">
+              <img src="https://images.filmwave.io/images/discover/olaniyan-oluwapelumi-DYPT8TJ5CRo-unsplash.jpg" alt="" loading="lazy" />
+            </div>
+          </div>
+        ) : null}
       </section>
 
       {curatedPlaylistsLoading ? (
