@@ -12,7 +12,7 @@ import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import XIcon from "@/components/icons/XIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import ChevronLeftIcon from "@/components/icons/ChevronLeftIcon";
 import ChevronRightIcon from "@/components/icons/ChevronRightIcon";
@@ -1094,7 +1094,7 @@ export default function CommunityPlaylistsPage() {
                 void togglePlaylistPlayback(playlist);
               }}
             >
-              {isPlaylistPlaying ? <CardPlayingWaveform /> : <PlayIconSmall size={15} />}
+              <PlaybackStateIcon playing={isPlaylistPlaying} size={15} hoverIcon="list" />
             </button>
             {isPlaylistPlaying && !previewOpen ? (
               <CardPlayingWaveform corner label={`${playlist.name} is playing`} />
