@@ -2,8 +2,7 @@
 
 import Link from "next/link";
 
-import PauseIcon from "@/components/icons/PauseIcon";
-import PlayIconSmall from "@/components/icons/PlayIconSmall";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import type { Song } from "@/lib/types";
 
@@ -103,11 +102,7 @@ export default function FeaturedArtistCard({
         aria-label={`${artistIsPlaying ? "Pause" : "Play"} music by ${artist.name}`}
         aria-pressed={artistIsPlaying}
       >
-        {artistIsPlaying ? (
-          <PauseIcon size={14} />
-        ) : (
-          <PlayIconSmall size={18} />
-        )}
+        <PlaybackStateIcon playing={artistIsPlaying} size={artistIsPlaying ? 14 : 18} />
       </button>
     </article>
   );
