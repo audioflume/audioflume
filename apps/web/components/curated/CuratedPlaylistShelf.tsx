@@ -51,7 +51,7 @@ export function CuratedPlaylistCard({
   playlist,
   index,
   variant = "default",
-  discoverPlaybackIcon = false,
+  discoverPlaybackIcon = true,
 }: {
   playlist: CuratedPlaylistCardItem;
   index: number;
