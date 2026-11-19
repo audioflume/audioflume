@@ -556,6 +556,50 @@ function ArtistShelf({
   );
 }
 
+export function DiscoverArchivedSections({ albumsTitle = "Top albums" }: { albumsTitle?: string }) {
+  return (
+    <>
+    <ArtistShelf
+      title="Artists we're watching"
+      items={ARTISTS_WATCHING}
+      footerCopy="1500+ artists trending online"
+    />
+
+    <section className="discover-artist-editorial-grid">
+      {EDITORIAL_FEATURES.map((feature, index) => (
+        <article key={feature.eyebrow} className="discover-artist-editorial-card">
+          <PlaceholderMedia
+            index={index + 3}
+            imageSrc={feature.image}
+            className="discover-artist-editorial-media"
+          >
+            <div className="discover-artist-editorial-copy">
+              <span>{feature.eyebrow}</span>
+              <h2>{feature.title}</h2>
+            </div>
+          </PlaceholderMedia>
+
+          <div className="discover-artist-editorial-meta">
+            <span>Loremipsum Dolorit</span>
+            <span>Eiusmod Tempor</span>
+            <span>Explore more ↗</span>
+          </div>
+        </article>
+      ))}
+    </section>
+
+    <ArtistShelf title={albumsTitle} items={TOP_ALBUMS} square />
+
+    <ArtistShelf
+      title="Support new artists"
+      items={SUPPORT_NEW_ARTISTS}
+      footerCopy="1500+ artists trending online"
+    />
+
+    </>
+  );
+}
+
 export default function DiscoverPage() {
   const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
@@ -867,42 +911,7 @@ export default function DiscoverPage() {
           showHeading={featuredArtistCount > 0 || featureCardArtistsLoading}
         />
 
-        <ArtistShelf
-          title="Artists we're watching"
-          items={ARTISTS_WATCHING}
-          footerCopy="1500+ artists trending online"
-        />
-
-        <section className="discover-artist-editorial-grid">
-          {EDITORIAL_FEATURES.map((feature, index) => (
-            <article key={feature.eyebrow} className="discover-artist-editorial-card">
-              <PlaceholderMedia
-                index={index + 3}
-                imageSrc={feature.image}
-                className="discover-artist-editorial-media"
-              >
-                <div className="discover-artist-editorial-copy">
-                  <span>{feature.eyebrow}</span>
-                  <h2>{feature.title}</h2>
-                </div>
-              </PlaceholderMedia>
-
-              <div className="discover-artist-editorial-meta">
-                <span>Loremipsum Dolorit</span>
-                <span>Eiusmod Tempor</span>
-                <span>Explore more ↗</span>
-              </div>
-            </article>
-          ))}
-        </section>
-
-        <ArtistShelf title="Top albums" items={TOP_ALBUMS} square />
-
-        <ArtistShelf
-          title="Support new artists"
-          items={SUPPORT_NEW_ARTISTS}
-          footerCopy="1500+ artists trending online"
-        />
+        <DiscoverArchivedSections />
 
         <ReadyToCutTracks songs={readyToCutSongs} />
 
