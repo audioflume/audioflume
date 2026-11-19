@@ -102,7 +102,7 @@ export default function CuratedPlaylistPlayButton({
   playlistName,
   className = "",
   previewEnabled = false,
-  discoverPlaybackIcon = false,
+  discoverPlaybackIcon = true,
 }: CuratedPlaylistPlayButtonProps) {
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const [loading, setLoading] = useState(false);
