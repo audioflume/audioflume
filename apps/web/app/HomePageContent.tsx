@@ -1504,7 +1504,9 @@ export default function HomePageContent({
                           hero_image_url: item.image,
                           hero_image_position_x: source?.hero_image_position_x,
                           hero_image_position_y: source?.hero_image_position_y,
-                          songs: item.song ? [item.song] : [],
+                          songs: source?.songs?.filter((song) => Boolean(song.audioUrl))?.length
+                            ? source.songs.filter((song) => Boolean(song.audioUrl))
+                            : item.song ? [item.song] : [],
                         };
                       })}
                       homeFlashImages={homeFlashImages}
