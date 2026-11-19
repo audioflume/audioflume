@@ -1363,19 +1363,15 @@ export default function HomePageContent({
           </div>
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
-          <HomeSectionWithHeading
-            title={null}
-            linkHref="/music"
-            linkLabel="Explore music"
-            className="audioflume-discover-compact-songs-section audioflume-home-reference-width"
-            contentClassName={songsLoading ? "" : "audioflume-discover-compact-songs"}
-          >
+          <div className="audioflume-discover-compact-songs-section audioflume-home-reference-width">
+            <div className={songsLoading ? "" : "audioflume-discover-compact-songs"}>
             {songsLoading ? (
               <DiscoverCompactSongsSkeleton />
             ) : discoverCompactSongs.map((song) => (
               <HomeCompactSongCard key={song.id} song={song} queue={discoverCompactSongs} />
             ))}
-          </HomeSectionWithHeading>
+            </div>
+          </div>
         ) : null}
       </section>
 
