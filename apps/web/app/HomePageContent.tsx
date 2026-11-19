@@ -1507,8 +1507,7 @@ export default function HomePageContent({
           </section>
         ) : (
           <HomeCuratedPlaylistShelf playlists={curatedPlaylists} progressScrollbar={!showHero} discoverLayout={!showHero} />
-        )}
-  
+        )
       ) : null}
 
       <section className="audioflume-home-mockup-catalogue">
