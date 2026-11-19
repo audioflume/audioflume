@@ -1356,7 +1356,7 @@ export default function HomePageContent({
         ) : null}
         {!showHero ? (
           <div className="audioflume-experiment-main audioflume-experiment-promos">
-            <HomeLandingPromoBlocks />
+            <HomeLandingPromoBlocks artistsImage="https://images.filmwave.io/images/discover/olaniyan-oluwapelumi-DYPT8TJ5CRo-unsplash.jpg" />
           </div>
         ) : null}
         {!showHero && (songsLoading || discoverCompactSongs.length > 0) ? (
