@@ -2355,23 +2355,19 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup.is-discover-page .audioflume-discover-image-photo::after {
   position: absolute;
   inset: 0 auto 0 0;
-  width: 30%;
+  width: 75%;
   pointer-events: none;
   background: linear-gradient(
     to right,
-    var(--audioflume-discover-image-edge-color, transparent),
-    transparent
+    var(--audioflume-discover-image-edge-color, transparent) 0%,
+    color-mix(in srgb, var(--audioflume-discover-image-edge-color, transparent) 80%, transparent) 22%,
+    color-mix(in srgb, var(--audioflume-discover-image-edge-color, transparent) 35%, transparent) 65%,
+    transparent 100%
   );
   content: "";
 }
 
 @media (max-width: 750px) {
-  .audioflume-home-mockup.is-discover-page .audioflume-discover-image-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-
-@media (max-width: 440px) {
   .audioflume-home-mockup.is-discover-page .audioflume-discover-image-grid {
     grid-template-columns: minmax(0, 1fr);
   }
@@ -2404,6 +2400,12 @@ body:has(.audioflume-home-landing)
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
   width: min(92vw, max(460px, calc((var(--home-reference-width) - 72px) / 3)));
   min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 72px) / 3)));
+  height: 295px;
+}
+
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-media {
+  height: 295px;
+  aspect-ratio: auto;
 }
 
 @media (min-width: 1512px) {
