@@ -2327,7 +2327,7 @@ body:has(.audioflume-home-landing)
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-discover-image-block {
-  height: 320px;
+  height: 295px;
   min-width: 0;
   overflow: hidden;
   background: var(--bg-tertiary);
@@ -2367,26 +2367,40 @@ body:has(.audioflume-home-landing)
 
 /* Discover-only card spacing and subtle image-edge highlights. */
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-shelf .audioflume-home-reference-shelf-scroller {
-  gap: 48px;
+  gap: 24px;
 }
 
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
-.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell,
+.audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell {
+  width: calc((var(--home-reference-width) - 72px) / 4);
+  min-width: calc((var(--home-reference-width) - 72px) / 4);
+}
+
 .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
   width: min(92vw, max(460px, calc((var(--home-reference-width) - 72px) / 3)));
   min-width: min(92vw, max(460px, calc((var(--home-reference-width) - 72px) / 3)));
 }
 
 @media (min-width: 1512px) {
-  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
-  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell {
-    width: calc((var(--home-reference-width) - 96px) / 3);
-    min-width: calc((var(--home-reference-width) - 96px) / 3);
-  }
-
-  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
+    .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-more-artists .audioflume-home-reference-artist-card {
     width: calc((var(--home-reference-width) - 48px) / 3);
     min-width: calc((var(--home-reference-width) - 48px) / 3);
+  }
+}
+
+@media (max-width: 750px) {
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell {
+    width: calc((var(--home-reference-width) - 24px) / 2);
+    min-width: calc((var(--home-reference-width) - 24px) / 2);
+  }
+}
+
+@media (max-width: 440px) {
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card,
+  .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-curated-card-shell {
+    width: var(--home-reference-width);
+    min-width: var(--home-reference-width);
   }
 }
 
