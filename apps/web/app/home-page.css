@@ -2196,7 +2196,7 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-compact-songs {
     grid-template-columns: repeat(3, minmax(0, 1fr));
   }
-  .audioflume-discover-compact-songs > .audioflume-discover-compact-song {
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(n):nth-last-child(n) {
     border-bottom: 1px solid var(--border);
   }
   .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(3n + 1):nth-last-child(-n + 3),
@@ -2209,7 +2209,7 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-compact-songs {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
-  .audioflume-discover-compact-songs > .audioflume-discover-compact-song {
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(n):nth-last-child(n) {
     border-bottom: 1px solid var(--border);
   }
   .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(2n + 1):nth-last-child(-n + 2),
@@ -2222,7 +2222,7 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-compact-songs {
     grid-template-columns: minmax(0, 1fr);
   }
-  .audioflume-discover-compact-songs > .audioflume-discover-compact-song {
+  .audioflume-discover-compact-songs > .audioflume-discover-compact-song:nth-child(n):nth-last-child(n) {
     border-bottom: 1px solid var(--border);
   }
   .audioflume-discover-compact-songs > .audioflume-discover-compact-song:last-child {
