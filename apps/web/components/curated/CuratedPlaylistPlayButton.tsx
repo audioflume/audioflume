@@ -7,6 +7,7 @@ import {
 } from "react";
 
 import PauseIcon from "@/components/icons/PauseIcon";
+import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
 import { usePlayer } from "@/context/PlayerContext";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
@@ -21,6 +22,7 @@ type CuratedPlaylistPlayButtonProps = {
   playlistName: string;
   className?: string;
   previewEnabled?: boolean;
+  discoverPlaybackIcon?: boolean;
 };
 
 const playlistSongCache = new Map<string, CuratedPlaylistSong[]>();
@@ -100,6 +102,7 @@ export default function CuratedPlaylistPlayButton({
   playlistName,
   className = "",
   previewEnabled = false,
+  discoverPlaybackIcon = false,
 }: CuratedPlaylistPlayButtonProps) {
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const [loading, setLoading] = useState(false);
@@ -176,7 +179,9 @@ export default function CuratedPlaylistPlayButton({
         aria-pressed={isPlaylistPlaying}
         aria-busy={loading}
       >
-        {previewEnabled && isPlaylistPlaying ? (
+        {discoverPlaybackIcon ? (
+          <PlaybackStateIcon playing={isPlaylistPlaying} size={previewEnabled ? 15 : 18} />
+        ) : previewEnabled && isPlaylistPlaying ? (
           <CardPlayingWaveform />
         ) : isPlaylistPlaying && !previewEnabled ? (
           <PauseIcon size={18} />
