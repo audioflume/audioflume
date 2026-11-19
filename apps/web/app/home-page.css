@@ -1324,8 +1324,7 @@ body:has(.audioflume-home-landing)
   .audioflume-discover-reference-search
 ),
 .audioflume-home-mockup-artists.is-discover-featured-artists
-  > .audioflume-discover-songs-gradient,
-.audioflume-discover-songs-gradient > .audioflume-discover-compact-songs-section,
+  > :is(.audioflume-discover-compact-songs-section, .audioflume-discover-featured-songs-section),
 .audioflume-home-mockup .audioflume-home-reference-tools
   > .audioflume-home-reference-playlists,
 .audioflume-home-landing-pricing > .audioflume-home-mockup-section-label {
@@ -3125,6 +3124,14 @@ body:has(.audioflume-home-landing)
 /* Discover-only secondary artist shelf, sized to the former plan cards. */
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page {
   --audioflume-home-canvas: #fff;
+  background-image: linear-gradient(to bottom, #e5e5df, #fff);
+  background-repeat: no-repeat;
+  background-size: 100% 640px;
+  background-position: 0 calc(114px + max(320px, var(--home-reference-width) / 3) + 80px);
+}
+
+:where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-home-mockup-artists.is-discover-featured-artists {
+  background: transparent;
 }
 
 .audioflume-home-mockup.is-discover-page {
@@ -5997,10 +6004,6 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup-artists.is-discover-featured-artists {
   padding-bottom: 0;
-}
-
-:where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-discover-songs-gradient {
-  background: linear-gradient(to bottom, #e5e5df, #fff);
 }
 
  :where(html.light, html[data-theme="light"]) .audioflume-home-mockup.is-discover-page .audioflume-experiment-search {
