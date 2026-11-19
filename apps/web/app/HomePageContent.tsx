@@ -1230,8 +1230,6 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
-  const [configuredDiscoverSongs, setConfiguredDiscoverSongs] = useState<Song[] | null>(null);
-  const [discoverFeaturedSongsLoading, setDiscoverFeaturedSongsLoading] = useState(!showHero);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
   const discoverHeadingRef = useRef<HTMLHeadingElement>(null);
@@ -1255,22 +1253,6 @@ export default function HomePageContent({
     .slice(0, 16);
   const recentSongs = playableSongs.slice(0, NEW_SONG_COUNT);
   const discoverCompactSongs = playableSongs.slice(0, 12);
-  const discoverArtistSongs = useMemo(() => {
-    if (configuredDiscoverSongs?.length) return configuredDiscoverSongs.filter((song) => Boolean(song.audioUrl));
-    const selected = new Map<string, Song>();
-    for (const artist of artists) {
-      for (const song of artist.songs) {
-        if (song.audioUrl && !selected.has(song.id)) selected.set(song.id, song);
-      }
-    }
-    for (const song of playableSongs) {
-      if (selected.size >= 6) break;
-      if (!selected.has(song.id)) selected.set(song.id, song);
-    }
-    return Array.from(selected.values()).slice(0, 6);
-  }, [artists, playableSongs, configuredDiscoverSongs]);
-  const discoverFeaturedGridSongs = discoverArtistSongs.slice(0, 6);
-
   useEffect(() => {
     if (!songsLoading) setQueue(playableSongs);
   }, [playableSongs, setQueue, songsLoading]);
@@ -1357,26 +1339,6 @@ export default function HomePageContent({
       cancelled = true;
     };
   }, []);
-
-  useEffect(() => {
-    if (showHero) return;
-    let cancelled = false;
-    fetch("/api/discover-featured-songs")
-      .then((response) => {
-        if (!response.ok) throw new Error("Failed to load featured songs");
-        return response.json();
-      })
-      .then((body) => {
-        if (!cancelled) setConfiguredDiscoverSongs(Array.isArray(body?.songs) ? body.songs : []);
-      })
-      .catch(() => {
-        if (!cancelled) setConfiguredDiscoverSongs(null);
-      })
-      .finally(() => {
-        if (!cancelled) setDiscoverFeaturedSongsLoading(false);
-      });
-    return () => { cancelled = true; };
-  }, [showHero]);
 
   useEffect(() => {
     let cancelled = false;
