@@ -707,7 +707,7 @@
   margin: 0 auto;
   border-bottom: 1px solid #d7d7d7;
   font-family: var(--font-aktiv-grotesk), sans-serif;
-  font-size: clamp(16px, 2.6vw, 44px);
+  font-size: clamp(34px, 3.65vw, 58px);
   font-weight: 400;
   letter-spacing: -0.058em;
   line-height: 1.12;
@@ -716,8 +716,6 @@
 
 .headingSearchMeasure,
 .headingSearch {
-  grid-column: 1;
-  grid-row: 1;
   min-width: 0;
   font: inherit;
   letter-spacing: inherit;
@@ -732,8 +730,11 @@
 }
 
 .headingSearch {
+  position: absolute;
+  inset: 0;
   box-sizing: border-box;
   width: 100%;
+  height: 100%;
   margin: 0;
   border: 0;
   border-radius: 0;
