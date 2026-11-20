@@ -1182,6 +1182,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
         {discover2Layout ? (
           <DiscoverArchivedSections
             sections="supportAndPlaylists"
+            playlistsAfterSupport
             enableArtistPlayback={liveContent}
             supportArtists={liveContent ? previewArtistShelfItems(directoryArtists.slice(7, 14), 12) : undefined}
             featuredPlaylists={liveContent ? editorialPlaylists.map((playlist) => ({
