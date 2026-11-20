@@ -1336,8 +1336,7 @@ export default function MusicPage() {
       previousY = currentY;
       const original = originalFilterPillsRef.current;
       const pastOriginal = original !== null &&
-        original.getBoundingClientRect().bottom <
-          window.innerHeight * 0 + 100;
+        original.getBoundingClientRect().bottom < -120;
 
       if (!pastOriginal) {
         setShowFilterPillDock(false);
