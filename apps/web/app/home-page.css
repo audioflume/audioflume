@@ -1358,6 +1358,20 @@ body:has(.audioflume-home-landing)
   background: #e5e5df;
 }
 
+/* Only the second Featured Artist banner on the active Discover page. */
+.audioflume-home-mockup.is-discover-page
+  .audioflume-home-mockup-artists.is-discover-secondary-banner {
+  margin-top: var(--audioflume-section-gap);
+  background: transparent;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-home-mockup.is-discover-page
+  .audioflume-home-mockup-artists.is-discover-secondary-banner
+  .audioflume-home-reference-artist-shelf {
+  background: transparent;
+}
+
 .audioflume-home-mockup-artists
   .audioflume-home-reference-artist-shelf
   .audioflume-home-reference-shelf-scroller {
