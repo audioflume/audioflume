@@ -12,7 +12,7 @@ export default function Discover2SongBlocks() {
   );
 
   return (
-    <section className="audioflume-home-mockup-catalogue">
+    <section className="audioflume-home-mockup-catalogue discover-track-section">
       {loading ? (
         <HomeTrendingSkeleton discoverLayout />
       ) : (
