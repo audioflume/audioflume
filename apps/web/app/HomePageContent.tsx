@@ -1516,6 +1516,7 @@ export default function HomePageContent({
               showHeading
             />
             <DiscoverArchivedSections
+              sections="featuredSongs"
               albumsTitle="Featured songs"
               activeDiscoverTypography
               watchingArtists={discoverArtistShelfItems(0).map((item, index) => ({
@@ -1565,6 +1566,7 @@ export default function HomePageContent({
       ) : null}
 
       <section className="audioflume-home-mockup-catalogue">
+        {showHero ? (
         <div className="audioflume-home-reference-width audioflume-home-reference-section-heading filmwave-section-heading-row is-multiline audioflume-home-mockup-catalogue-heading">
           <h2 ref={catalogueHeadingRef}>
             <span
@@ -1592,6 +1594,7 @@ export default function HomePageContent({
             />
           </Link>
         </div>
+        ) : null}
 
         {songsLoading ? (
           <HomeTrendingSkeleton discoverLayout={!showHero} />
@@ -1609,6 +1612,37 @@ export default function HomePageContent({
           </div>
         )}
       </section>
+
+      {!showHero ? (
+        <>
+          <section className="audioflume-home-mockup-artists is-discover-featured-artists">
+            {artistsLoading ? (
+              <HomeArtistShelfSkeleton discoverLayout />
+            ) : artists.length > 0 ? (
+              <HomeArtistShelf artists={artists} homeFlashImages={homeFlashImages} discoverLayout discoverPlaybackIcon />
+            ) : null}
+          </section>
+          <div className="discover-artist-content">
+            <DiscoverArchivedSections
+              sections="remaining"
+              albumsTitle="Featured songs"
+              activeDiscoverTypography
+              watchingArtists={discoverArtistShelfItems(0).map((item, index) => ({
+                ...item,
+                slug: index < 7 ? directoryArtists[index]?.slug : undefined,
+                imagePositionX: index < 7 ? directoryArtists[index]?.hero_image_position_x : undefined,
+                imagePositionY: index < 7 ? directoryArtists[index]?.hero_image_position_y : undefined,
+              }))}
+              supportArtists={discoverArtistShelfItems(7)}
+              enableArtistPlayback
+              featuredPlaylists={editorialPlaylists.map((playlist) => ({
+                name: playlist.name,
+                image: playlist.feature_cover_image_url || playlist.cover_image_url || "",
+              }))}
+            />
+          </div>
+        </>
+      ) : null}
 
       {showHero ? (
       <section className="audioflume-home-mockup-more-artists">
