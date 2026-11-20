@@ -241,7 +241,7 @@ export default function Artist2Page() {
               />
             </div>
           ) : (
-            <h1>Human made music &amp; SFX for film.</h1>
+            <h1>Discover the artists behind the sound.</h1>
           )}
           </div>
           <div className={styles.introMeta}>
