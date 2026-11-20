@@ -146,6 +146,115 @@
   color: #ffffff;
 }
 
+
+/* Music-page search field design, opt-in for Discover2 only. */
+.musicField {
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  width: min(720px, calc(100% - 32px));
+  gap: 12px;
+  margin: 12px 12px 12px 0;
+  border-radius: 0;
+  background: #262626;
+  padding: 0 16px;
+  color: #555;
+}
+
+.musicField:focus-within {
+  color: #fff;
+}
+
+.musicField > svg {
+  width: 21px;
+  height: 21px;
+  flex: 0 0 21px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-width: 1.4;
+  transition: color 150ms ease;
+}
+
+.musicField input {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: var(--text-primary);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 300;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.musicField input::-webkit-search-cancel-button,
+.musicField input::-webkit-search-decoration {
+  display: none;
+  -webkit-appearance: none;
+  appearance: none;
+}
+
+.musicField input::placeholder {
+  color: #555;
+  opacity: 1;
+}
+
+.musicClear {
+  display: grid;
+  width: 22px;
+  height: 22px;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #777;
+  padding: 0;
+  cursor: pointer;
+  transition: color 150ms ease;
+}
+
+.musicClear svg {
+  width: 18px;
+  height: 18px;
+}
+
+.musicClear:hover,
+.musicClear:focus-visible {
+  color: #fff;
+}
+
+:global(html.light) .musicField,
+:global(html[data-theme="light"]) .musicField {
+  background: #fff;
+  color: #999;
+}
+
+:global(html.light) .musicField:focus-within,
+:global(html[data-theme="light"]) .musicField:focus-within {
+  color: var(--text-primary);
+}
+
+:global(html.light) .musicField input::placeholder,
+:global(html[data-theme="light"]) .musicField input::placeholder {
+  color: #aaa;
+}
+
+:global(html.light) .musicClear:hover,
+:global(html.light) .musicClear:focus-visible,
+:global(html[data-theme="light"]) .musicClear:hover,
+:global(html[data-theme="light"]) .musicClear:focus-visible {
+  color: var(--text-primary);
+}
+
+@media (max-width: 1000px) {
+  .musicField {
+    width: min(720px, 100%);
+    margin: 12px 0;
+  }
+}
+
 .actions {
   display: flex;
   min-width: 0;
