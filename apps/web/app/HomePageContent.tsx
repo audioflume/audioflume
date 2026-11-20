@@ -1230,7 +1230,7 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
-  const [directoryArtists, setDirectoryArtists] = useState<{ id: string; name: string; slug: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null; hero_image_position_x: number; hero_image_position_y: number; songs: Song[] }[]>([]);
+  const [directoryArtists, setDirectoryArtists] = useState<{ id: string; name: string; slug: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null; hero_image_position_x: number; hero_image_position_y: number; genres: string[]; songs: Song[] }[]>([]);
   const [editorialPlaylists, setEditorialPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylistsLoading, setCuratedPlaylistsLoading] = useState(true);
@@ -1260,6 +1260,7 @@ export default function HomePageContent({
       title: artist.name,
       subtitle: artist.designation ?? "",
       image: artist.hero_image_url || artist.profile_image_url || "",
+      genres: artist.genres ?? [],
       song: artist.songs?.find((song) => Boolean(song.audioUrl))
         ?? playableSongs.find((song) => song.artist.toLowerCase() === artist.name.toLowerCase())
         ?? playableSongs[0],
@@ -1272,6 +1273,7 @@ export default function HomePageContent({
         title: `Artist preview ${index + 1}`,
         subtitle: "Preview artist",
         image: sampleArtist?.hero_image_url || sampleArtist?.profile_image_url || sampleSong?.coverArt || "",
+        genres: sampleArtist?.genres ?? [],
         song: sampleSong,
       });
     }
