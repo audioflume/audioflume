@@ -90,7 +90,7 @@ export default function Header() {
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
   const homeChromeRoute = pathname === "/" || pathname === "/discover" || pathname === "/curated-playlists" || pathname === "/community-playlists" || pathname === "/artists" || pathname === "/pricing";
-  const transparentAtTop = pathname === "/founding-artists";
+  const transparentAtTop = pathname === "/founding-artists" || pathname === "/discover2";
   const headerIsSolid =
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
