@@ -673,7 +673,7 @@
   margin: 0;
   font-family: var(--font-aktiv-grotesk), sans-serif;
   font-size: clamp(38px, 3.65vw, 70px);
-  font-weight: 300;
+  font-weight: 400;
   letter-spacing: -0.058em;
   line-height: 1.12;
 }
