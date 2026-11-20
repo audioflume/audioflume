@@ -491,7 +491,7 @@ function HomeReadyToCutCoverImage({
   );
 }
 
-function HomeReadyToCutSongCard({
+export function HomeReadyToCutSongCard({
   song,
   index,
   queue,
@@ -1055,7 +1055,7 @@ function DiscoverFeaturedSongsSkeleton() {
   );
 }
 
-function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayout?: boolean }) {
+export function HomeTrendingSkeleton({ discoverLayout = false }: { discoverLayout?: boolean }) {
   return (
     <div className="audioflume-home-reference-width grid gap-2 min-[520px]:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 12 }, (_, index) => (
