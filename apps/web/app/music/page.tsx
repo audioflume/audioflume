@@ -1323,11 +1323,7 @@ export default function MusicPage() {
   const showOriginalsBanner = selectedArtists.some(
     (artist) => normalizeFilterValue(artist) === normalizeFilterValue("Audioflume"),
   );
-  const showFeaturedSongShelf =
-    !hasActiveFilters &&
-    selectedLicenseFilters.length === 0 &&
-    referenceSearchState === null &&
-    semanticSearchState === null;
+  const showFeaturedSongShelf = true;
   const selectedBannerArtist = featuredBannerArtists.find(
     (artist) =>
       artist.id === selectedBannerArtistId &&
