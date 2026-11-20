@@ -8,7 +8,7 @@
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-music-page {
-  --audioflume-music-search-input-background: #fff;
+  --audioflume-music-search-input-background: #f7f7f5;
   --audioflume-music-input-focus-color: #111;
 }
 
