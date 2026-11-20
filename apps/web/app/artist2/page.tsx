@@ -195,7 +195,9 @@ export default function Artist2Page() {
 
   return (
     <main className={`${styles.page} artist2-page-root`}>
-      <GlobalSearchBar musicFieldStyle darkSimilarButton />
+      <div className={styles.searchbarBackground}>
+        <GlobalSearchBar musicFieldStyle darkSimilarButton />
+      </div>
       <div className={styles.content}>
         <header className={styles.artist2Intro}>
           <h1>Human made music &amp; SFX for film.</h1>
