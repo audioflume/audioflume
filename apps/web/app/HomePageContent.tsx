@@ -1615,6 +1615,15 @@ export default function HomePageContent({
 
       {!showHero ? (
         <>
+          <div className="discover-artist-content">
+            <DiscoverArchivedSections
+              sections="playlists"
+              featuredPlaylists={editorialPlaylists.map((playlist) => ({
+                name: playlist.name,
+                image: playlist.feature_cover_image_url || playlist.cover_image_url || "",
+              }))}
+            />
+          </div>
           <section className="audioflume-home-mockup-artists is-discover-featured-artists is-discover-secondary-banner">
             {artistsLoading ? (
               <HomeArtistShelfSkeleton discoverLayout />
@@ -1624,7 +1633,7 @@ export default function HomePageContent({
           </section>
           <div className="discover-artist-content">
             <DiscoverArchivedSections
-              sections="remaining"
+              sections="artistsOnly"
               albumsTitle="Featured songs"
               activeDiscoverTypography
               watchingArtists={discoverArtistShelfItems(0).map((item, index) => ({
