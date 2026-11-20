@@ -5685,7 +5685,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   color: #111;
 }
 
-:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell, .discover2-hero-search) a.audioflume-experiment-search-filter {
+:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell) a.audioflume-experiment-search-filter {
   display: flex;
   align-items: center;
   position: relative;
