@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 
 import { MusicLibraryEmptyState } from "@filmwave/shared";
 import Footer from "@/components/Footer";
@@ -62,15 +62,13 @@ function ArtistCard({
   index,
   openArtistId,
   onOpen,
-  onClose,
 }: {
   artist: DirectoryArtist;
   index: number;
   openArtistId: string | null;
   onOpen: (artistId: string) => void;
-  onClose: () => void;
 }) {
-  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
   const hasActiveSong = playable.some((song) => song.id === currentSong?.id);
@@ -127,18 +125,6 @@ function ArtistCard({
             {hasActiveSong && isPlaying && !previewOpen ? (
               <CardPlayingWaveform corner label={`${artist.name} is playing`} />
             ) : null}
-            {previewOpen ? (
-              <CardMiniPlayer
-                artistName={artist.name}
-                trackCount={artist.track_count}
-                songs={playable}
-                currentSongId={currentSong?.id}
-                isPlaying={isPlaying}
-                onPlay={playSong}
-                onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
-                onClose={onClose}
-              />
-            ) : null}
           </>
         }
         details={
@@ -163,6 +149,14 @@ export default function Artist2Page() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [openArtistId, setOpenArtistId] = useState<string | null>(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [query, setQuery] = useState("");
+  const searchRef = useRef<HTMLInputElement>(null);
+  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
+
+  useEffect(() => {
+    if (searchOpen) searchRef.current?.focus();
+  }, [searchOpen]);
   useEffect(() => {
     const controller = new AbortController();
 
@@ -184,8 +178,22 @@ export default function Artist2Page() {
     return () => controller.abort();
   }, []);
 
-  const visibleArtists = artists;
-  const showPreviews = true;
+  const visibleArtists = useMemo(() => {
+    const term = query.trim().toLocaleLowerCase();
+    if (!term) return artists;
+    return artists.filter((artist) =>
+      [artist.name, artist.designation ?? "", artist.intro_text ?? "", ...artist.genres]
+        .some((value) => value.toLocaleLowerCase().includes(term))
+    );
+  }, [artists, query]);
+  const showPreviews = !query.trim();
+  const selectedArtist = artists.find((artist) => artist.id === openArtistId);
+  const selectedSongs = selectedArtist?.songs.filter((song) => Boolean(song.audioUrl)) ?? [];
+
+  function playSelectedSong(song: Song) {
+    setQueue(selectedSongs);
+    togglePlayPause(song);
+  }
   const cards = [
     ...visibleArtists.map((artist) => ({ kind: "artist" as const, artist })),
     ...(showPreviews
@@ -200,8 +208,40 @@ export default function Artist2Page() {
       </div>
       <div className={styles.content}>
         <header className={styles.artist2Intro}>
-          <h1>Human made music &amp; SFX for film.</h1>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+          {searchOpen ? (
+            <input
+              ref={searchRef}
+              className={styles.headingSearch}
+              type="search"
+              value={query}
+              onChange={(event) => setQuery(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setQuery("");
+                  setSearchOpen(false);
+                }
+              }}
+              placeholder="search by artist, genre, or keyword"
+              aria-label="Search by artist, genre, or keyword"
+            />
+          ) : (
+            <h1>Human made music &amp; SFX for film.</h1>
+          )}
+          <div className={styles.introMeta}>
+            <button
+              type="button"
+              className={styles.searchLink}
+              onClick={() => setSearchOpen(true)}
+              aria-label="Search artists"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="m16 16 4.5 4.5" />
+              </svg>
+              <span>Search</span>
+            </button>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+          </div>
         </header>
         {loading ? (
           <div className={styles.grid} aria-label="Loading artists">
@@ -230,7 +270,6 @@ export default function Artist2Page() {
                   index={index}
                   openArtistId={openArtistId}
                   onOpen={setOpenArtistId}
-                  onClose={() => setOpenArtistId(null)}
                 />
               ) : (
                 <ArtistPreviewCard key={`preview-${card.index}`} />
@@ -239,6 +278,23 @@ export default function Artist2Page() {
           </section>
         )}
       </div>
+      {selectedArtist ? (
+        <aside className={styles.artistSidebar} aria-label={`Preview music by ${selectedArtist.name}`}>
+          <div className={styles.artistSidebarPlayer}>
+            <CardMiniPlayer
+              key={selectedArtist.id}
+              artistName={selectedArtist.name}
+              trackCount={selectedArtist.track_count}
+              songs={selectedSongs}
+              currentSongId={currentSong?.id}
+              isPlaying={isPlaying}
+              onPlay={playSelectedSong}
+              onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+              onClose={() => setOpenArtistId(null)}
+            />
+          </div>
+        </aside>
+      ) : null}
       <Footer showTopBorder={false} />
     </main>
   );
