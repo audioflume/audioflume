@@ -646,9 +646,9 @@ function ArtistShelf({
                         <PlaybackStateIcon playing={Boolean(isPlaying && currentSong?.id === item.song.id)} size={18} />
                       </span>
                     </button>
-                  ) : (
+                  ) : !enablePlayback ? (
                     <PlayBadge />
-                  )}
+                  ) : null}
                 </div>
               </PlaceholderMedia>
 
