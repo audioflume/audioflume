@@ -11,7 +11,7 @@ import GlobalSearchBar from "@/components/GlobalSearchBar";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
-import Artist2SidebarPlayer from "./Artist2SidebarPlayer";
+import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import XIcon from "@/components/icons/XIcon";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import type { Song } from "@/lib/types";
@@ -63,13 +63,15 @@ function ArtistCard({
   index,
   openArtistId,
   onOpen,
+  onClose,
 }: {
   artist: DirectoryArtist;
   index: number;
   openArtistId: string | null;
   onOpen: (artistId: string) => void;
+  onClose: () => void;
 }) {
-  const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
+  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
   const image = artist.hero_image_url || artist.profile_image_url;
   const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
   const hasActiveSong = playable.some((song) => song.id === currentSong?.id);
@@ -126,6 +128,18 @@ function ArtistCard({
             {hasActiveSong && isPlaying && !previewOpen ? (
               <CardPlayingWaveform corner label={`${artist.name} is playing`} />
             ) : null}
+            {previewOpen ? (
+              <CardMiniPlayer
+                artistName={artist.name}
+                trackCount={artist.track_count}
+                songs={playable}
+                currentSongId={currentSong?.id}
+                isPlaying={isPlaying}
+                onPlay={playSong}
+                onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
+                onClose={onClose}
+              />
+            ) : null}
           </>
         }
         details={
@@ -158,8 +172,6 @@ export default function Artist2Page() {
     setQuery("");
     setSearchOpen(false);
   }
-  const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
-
   useEffect(() => {
     if (searchOpen) searchRef.current?.focus();
   }, [searchOpen]);
@@ -193,13 +205,6 @@ export default function Artist2Page() {
     );
   }, [artists, query]);
   const showPreviews = !query.trim();
-  const selectedArtist = artists.find((artist) => artist.id === openArtistId);
-  const selectedSongs = selectedArtist?.songs.filter((song) => Boolean(song.audioUrl)) ?? [];
-
-  function playSelectedSong(song: Song) {
-    setQueue(selectedSongs);
-    togglePlayPause(song);
-  }
   const cards = [
     ...visibleArtists.map((artist) => ({ kind: "artist" as const, artist })),
     ...(showPreviews
@@ -208,12 +213,11 @@ export default function Artist2Page() {
   ];
 
   return (
-    <main className={`${styles.page}${selectedArtist ? ` ${styles.pageWithSidebar}` : ""} artist2-page-root`}>
+    <main className={`${styles.page} artist2-page-root`}>
       <div className={styles.searchbarBackground}>
         <GlobalSearchBar musicFieldStyle darkSimilarButton />
       </div>
-      <div className={styles.artistLayout}>
-        <div className={styles.content}>
+      <div className={styles.content}>
           <header className={styles.artist2Intro}>
           <div className={styles.headingSlot}>
           {searchOpen ? (
@@ -292,6 +296,7 @@ export default function Artist2Page() {
                   index={index}
                   openArtistId={openArtistId}
                   onOpen={setOpenArtistId}
+                  onClose={() => setOpenArtistId(null)}
                 />
               ) : (
                 <ArtistPreviewCard key={`preview-${card.index}`} />
@@ -299,24 +304,6 @@ export default function Artist2Page() {
             ))}
           </section>
         )}
-        </div>
-        {selectedArtist ? (
-        <aside className={styles.artistSidebar} aria-label={`Preview music by ${selectedArtist.name}`}>
-          <div className={styles.artistSidebarPlayer}>
-            <Artist2SidebarPlayer
-              key={selectedArtist.id}
-              artistName={selectedArtist.name}
-              trackCount={selectedArtist.track_count}
-              songs={selectedSongs}
-              currentSongId={currentSong?.id}
-              isPlaying={isPlaying}
-              onPlay={playSelectedSong}
-              onSeek={(song, progress) => seekTo(song, progress, Boolean(isPlaying && currentSong?.id === song.id))}
-              onClose={() => setOpenArtistId(null)}
-            />
-          </div>
-        </aside>
-        ) : null}
       </div>
       <Footer showTopBorder={false} />
     </main>
