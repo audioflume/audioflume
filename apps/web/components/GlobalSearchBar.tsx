@@ -12,18 +12,21 @@ type GlobalSearchBarProps = {
   trailingContent?: ReactNode;
   position?: "sticky" | "flow";
   layer?: "default" | "high";
+  heroOverlay?: boolean;
 };
 
 export default function GlobalSearchBar({
   trailingContent,
   position = "sticky",
   layer = "default",
+  heroOverlay = false,
 }: GlobalSearchBarProps) {
   const barClassName = [
     styles.bar,
     position === "flow" ? styles.flow : "",
     layer === "high" ? styles.high : "",
     trailingContent ? styles.withTrailing : "",
+    heroOverlay ? styles.heroOverlay : "",
   ]
     .filter(Boolean)
     .join(" ");
