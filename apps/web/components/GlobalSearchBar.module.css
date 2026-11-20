@@ -373,8 +373,8 @@
 
 .heroOverlay .filters,
 .heroOverlay .song,
-:global(html.light) .heroOverlay .bar,
-:global(html[data-theme="light"]) .heroOverlay .bar {
+:global(html.light) .heroOverlay,
+:global(html[data-theme="light"]) .heroOverlay {
   color: #ffffff;
   background: transparent;
 }
