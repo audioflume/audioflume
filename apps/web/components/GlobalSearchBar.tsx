@@ -13,6 +13,7 @@ type GlobalSearchBarProps = {
   position?: "sticky" | "flow";
   layer?: "default" | "high";
   heroOverlay?: boolean;
+  musicFieldStyle?: boolean;
 };
 
 export default function GlobalSearchBar({
@@ -20,6 +21,7 @@ export default function GlobalSearchBar({
   position = "sticky",
   layer = "default",
   heroOverlay = false,
+  musicFieldStyle = false,
 }: GlobalSearchBarProps) {
   const barClassName = [
     styles.bar,
@@ -42,8 +44,8 @@ export default function GlobalSearchBar({
         </Link>
 
         <GlobalMusicSearch
-          fieldClassName={styles.field}
-          clearButtonClassName={styles.clear}
+          fieldClassName={musicFieldStyle ? styles.musicField : styles.field}
+          clearButtonClassName={musicFieldStyle ? styles.musicClear : styles.clear}
         />
 
         <div className={styles.actions}>
