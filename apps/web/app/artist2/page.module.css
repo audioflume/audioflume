@@ -702,7 +702,8 @@
 .headingSearchWrap {
   display: inline-grid;
   position: relative;
-  max-width: 100%;
+  max-width: none;
+  padding-right: 80px;
   grid-template-columns: max-content;
   margin: 0 auto;
   border-bottom: 1px solid #d7d7d7;
