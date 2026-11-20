@@ -923,6 +923,21 @@ export default function DiscoverPage({ afterPlaylists, liveContent = false }: { 
       song: artist.songs.find((song) => Boolean(song.audioUrl)),
     }));
 
+  // Discover2-only layout previews: no artist route or playable track is assigned.
+  const previewArtistShelfItems = (realArtists: DirectoryArtist[], startIndex: number): ShelfItem[] => {
+    const realItems = directoryShelfItems(realArtists);
+    return [
+      ...realItems,
+      ...Array.from({ length: Math.max(0, 12 - realItems.length) }, (_, index) => ({
+        title: `Artist preview ${String(startIndex + index + 1).padStart(2, "0")}`,
+        subtitle: "Layout preview",
+        image: playableSongs.length > 0
+          ? playableSongs[(startIndex + index) % playableSongs.length].coverArt || ""
+          : "",
+      })),
+    ];
+  };
+
   function updateFeatureCardShelfState() {
     const scroller = featureCardShelfRef.current;
     if (!scroller) return;
@@ -1134,8 +1149,8 @@ export default function DiscoverPage({ afterPlaylists, liveContent = false }: { 
           afterPlaylists={afterPlaylists}
           albumsTitle={liveContent ? "Top songs" : "Top albums"}
           enableArtistPlayback={liveContent}
-          watchingArtists={liveContent ? directoryShelfItems(directoryArtists.slice(0, 7)) : undefined}
-          supportArtists={liveContent ? directoryShelfItems(directoryArtists.slice(7, 14)) : undefined}
+          watchingArtists={liveContent ? previewArtistShelfItems(directoryArtists.slice(0, 7), 0) : undefined}
+          supportArtists={liveContent ? previewArtistShelfItems(directoryArtists.slice(7, 14), 12) : undefined}
           featuredSongs={liveContent ? playableSongs.slice(0, 12).map((song) => ({
             title: song.title,
             subtitle: song.artist,
