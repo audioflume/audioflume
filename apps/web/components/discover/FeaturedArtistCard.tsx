@@ -20,8 +20,10 @@ export type FeaturedArtistCardArtist = {
 
 export default function FeaturedArtistCard({
   artist,
+  matchBannerGenres = false,
 }: {
   artist: FeaturedArtistCardArtist;
+  matchBannerGenres?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const playableSongs = artist.songs.filter((song) => Boolean(song.audioUrl));
@@ -79,8 +81,14 @@ export default function FeaturedArtistCard({
                 {artist.designation}
               </span>
             ) : null}
-            <span className="discover-artist-feature-genres">
-              {genres.length > 0
+            <span className={matchBannerGenres ? "audioflume-genre-filter-pills audioflume-discover-featured-track-genres" : "discover-artist-feature-genres"}>
+              {matchBannerGenres ? [0, 1, 2].map((index) => (
+                genres[index] ? (
+                  <span className="audioflume-genre-filter-pill" key={genres[index]}>{genres[index]}</span>
+                ) : (
+                  <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${index}`}>{index === 0 && genres.length === 0 ? "Genre TBA" : ""}</span>
+                )
+              )) : genres.length > 0
                 ? genres.map((genre) => <span key={genre}>{genre}</span>)
                 : [0, 1, 2].map((placeholder) => (
                     <span
