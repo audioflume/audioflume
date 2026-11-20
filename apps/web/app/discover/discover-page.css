@@ -1268,7 +1268,7 @@
   --discover-editorial-name-size: 13px;
 }
 
-.discover-artist-editorial-meta span:nth-child(2) {
+.discover-artist-editorial-meta span:nth-child(2):not(:last-child) {
   color: var(--filmwave-black);
   font-size: 10px;
   font-weight: 300;
