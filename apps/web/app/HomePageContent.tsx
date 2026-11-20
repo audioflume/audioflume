@@ -1615,7 +1615,7 @@ export default function HomePageContent({
 
       {!showHero ? (
         <>
-          <section className="audioflume-home-mockup-artists is-discover-featured-artists">
+          <section className="audioflume-home-mockup-artists is-discover-featured-artists is-discover-secondary-banner">
             {artistsLoading ? (
               <HomeArtistShelfSkeleton discoverLayout />
             ) : artists.length > 0 ? (
