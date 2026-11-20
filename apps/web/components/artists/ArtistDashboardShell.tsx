@@ -572,7 +572,7 @@ export default function ArtistDashboardShell({ profiles }: ArtistDashboardShellP
         className={
           isMyPage
             ? "min-h-screen bg-[var(--bg-primary)] p-0"
-            : "min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 md:px-10"
+            : "min-h-screen bg-[var(--filmwave-web-backend-canvas)] px-5 pb-0 md:px-10"
         }
         style={
           isMyPage
