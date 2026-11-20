@@ -672,7 +672,7 @@ export function DiscoverArchivedSections({
             >
               <div className="discover-artist-editorial-copy">
                 <span>{feature.eyebrow}</span>
-                <h2>{feature.title}</h2>
+                {featuredPlaylists === undefined ? <h2>{feature.title}</h2> : null}
               </div>
             </PlaceholderMedia>
   
