@@ -1270,6 +1270,9 @@ export default function MusicPage() {
     },
   ];
 
+  const originalFilterPillsRef = useRef<HTMLDivElement>(null);
+  const [showFilterPillDock, setShowFilterPillDock] = useState(false);
+
   const activeFilterPills = [
     ...filterChipGroups.flatMap((group) =>
       group.selected.map((value) => ({
@@ -1319,6 +1322,39 @@ export default function MusicPage() {
       },
     })),
   ];
+
+  useEffect(() => {
+    if (activeFilterPills.length === 0) {
+      setShowFilterPillDock(false);
+      return;
+    }
+
+    let previousY = window.scrollY;
+    const updateDock = () => {
+      const currentY = window.scrollY;
+      const delta = currentY - previousY;
+      previousY = currentY;
+      const original = originalFilterPillsRef.current;
+      const pastOriginal = original !== null &&
+        original.getBoundingClientRect().bottom <
+          window.innerHeight * 0 + 100;
+
+      if (!pastOriginal) {
+        setShowFilterPillDock(false);
+      } else if (delta > 3) {
+        setShowFilterPillDock(false);
+      } else if (delta < -3) {
+        setShowFilterPillDock(true);
+      }
+    };
+
+    window.addEventListener("scroll", updateDock, { passive: true });
+    window.addEventListener("resize", updateDock);
+    return () => {
+      window.removeEventListener("scroll", updateDock);
+      window.removeEventListener("resize", updateDock);
+    };
+  }, [activeFilterPills.length]);
 
   const showOriginalsBanner = selectedArtists.some(
     (artist) => normalizeFilterValue(artist) === normalizeFilterValue("Audioflume"),
@@ -1421,6 +1457,25 @@ export default function MusicPage() {
           />
         </div>
       </div>
+
+      {showFilterPillDock && activeFilterPills.length > 0 ? (
+        <div className={`audioflume-music-active-filter-dock${filtersOpen ? " is-filters-open" : ""}`} aria-label="Active music filters quick access">
+          <div className="audioflume-music-active-filter-dock-pills">
+            {activeFilterPills.map((pill) => (
+              <button
+                key={pill.id}
+                type="button"
+                className="audioflume-music-active-filter-pill"
+                onClick={pill.onRemove}
+                aria-label={`Remove ${pill.label} filter`}
+              >
+                <span>{pill.label}</span>
+                <XIcon size={12} />
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : null}
 
       <ReferenceSearchModal
         open={searchBySongOpen}
@@ -1667,7 +1722,7 @@ export default function MusicPage() {
                 ) : null}
 
                 {activeFilterPills.length > 0 ? (
-                  <div className="audioflume-music-active-filter-pills" aria-label="Active music filters">
+                  <div ref={originalFilterPillsRef} className="audioflume-music-active-filter-pills" aria-label="Active music filters">
                     {activeFilterPills.map((pill) => (
                       <button
                         key={pill.id}
