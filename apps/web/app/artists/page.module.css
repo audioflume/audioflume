@@ -13,7 +13,7 @@
 .content {
   width: min(calc(100% - 2 * var(--filmwave-page-gutter)), 1535px);
   margin: 0 auto;
-  padding-top: clamp(48px, 4vw, 60px);
+  padding-top: clamp(108px, 9vw, 150px);
   padding-bottom: 110px;
 }
 
@@ -662,4 +662,31 @@
 @media (prefers-reduced-motion: reduce) {
   .cardImage, .cardGenres, .cardGenres > .cardGenre, .hoverSongPanel, .artistNameArrow { transition: none; }
   .skeleton { animation: none; }
+}
+
+.directoryIntro {
+  margin: 0 auto 40px;
+  text-align: center;
+}
+
+.directoryIntro h1 {
+  margin: 0;
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: clamp(38px, 3.65vw, 70px);
+  font-weight: 300;
+  letter-spacing: -0.058em;
+  line-height: 1.12;
+}
+
+.directoryIntro p {
+  margin: clamp(75px, 9.5vw, 145px) 0 0;
+  color: #999;
+  font-size: 14px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+@media (max-width: 690px) {
+  .content { padding-top: 76px; }
+  .directoryIntro p { margin-top: 64px; }
 }
