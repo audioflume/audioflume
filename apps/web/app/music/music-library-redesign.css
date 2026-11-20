@@ -720,6 +720,14 @@ main
     margin-left 180ms ease;
 }
 
+:where(html.light, html[data-theme="light"])
+  .audioflume-music-page
+  > section
+  > .fw-music-content-column
+  > .fw-song-list {
+  background: #f7f7f5;
+}
+
 .audioflume-music-page
   > section
   > .fw-music-content-column
