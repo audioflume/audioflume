@@ -1270,6 +1270,56 @@ export default function MusicPage() {
     },
   ];
 
+  const activeFilterPills = [
+    ...filterChipGroups.flatMap((group) =>
+      group.selected.map((value) => ({
+        id: `${group.id}-${value}`,
+        label: value === "Tense" ? "Tension" : value,
+        onRemove: () => group.onToggle(value),
+      })),
+    ),
+    ...selectedDurations.map((value) => ({
+      id: `duration-${value}`,
+      label: value,
+      onRemove: () => setSelectedDurations(selectedDurations.filter((item) => item !== value)),
+    })),
+    ...selectedEditPoints.map((value) => ({
+      id: `edit-point-${value}`,
+      label: value,
+      onRemove: () => setSelectedEditPoints(selectedEditPoints.filter((item) => item !== value)),
+    })),
+    ...(bpmValue ? [{
+      id: "bpm",
+      label: bpmValue.mode === "exact" ? `${bpmValue.exact} BPM` : `${bpmValue.low}–${bpmValue.high} BPM`,
+      onRemove: () => setBpmValue(null),
+    }] : []),
+    ...(keyValue ? [{
+      id: "key",
+      label: [keyValue.note, keyValue.scale ? keyValue.scale.charAt(0).toUpperCase() + keyValue.scale.slice(1) : ""].filter(Boolean).join(" "),
+      onRemove: () => setKeyValue(null),
+    }] : []),
+    ...(selectedPlaylist ? [{
+      id: `playlist-${selectedPlaylist.id}`,
+      label: selectedPlaylist.name,
+      onRemove: () => setFilters((current) => ({ ...current, selectedPlaylist: null })),
+    }] : []),
+    ...selectedLicenseFilters.map((value) => ({
+      id: `license-${value}`,
+      label: `${value.charAt(0).toUpperCase() + value.slice(1)} licence`,
+      onRemove: () => {
+        const next = selectedLicenseFilters.filter((item) => item !== value);
+        setSelectedLicenseFilters(next);
+        try {
+          if (next.length) window.localStorage.setItem(LICENSE_FILTER_STORAGE_KEY, JSON.stringify(next));
+          else window.localStorage.removeItem(LICENSE_FILTER_STORAGE_KEY);
+        } catch {
+          // State is updated even when storage is unavailable.
+        }
+        window.dispatchEvent(new Event(LICENSE_FILTER_CHANGE_EVENT));
+      },
+    })),
+  ];
+
   const showOriginalsBanner = selectedArtists.some(
     (artist) => normalizeFilterValue(artist) === normalizeFilterValue("Audioflume"),
   );
@@ -1617,6 +1667,23 @@ export default function MusicPage() {
                         </div>
                       ))}
                     </SlidingShelfShell>
+                  </div>
+                ) : null}
+
+                {activeFilterPills.length > 0 ? (
+                  <div className="audioflume-music-active-filter-pills" aria-label="Active music filters">
+                    {activeFilterPills.map((pill) => (
+                      <button
+                        key={pill.id}
+                        type="button"
+                        className="audioflume-music-active-filter-pill"
+                        onClick={pill.onRemove}
+                        aria-label={`Remove ${pill.label} filter`}
+                      >
+                        <span>{pill.label}</span>
+                        <XIcon size={12} />
+                      </button>
+                    ))}
                   </div>
                 ) : null}
 
