@@ -10,50 +10,6 @@
   font-family: var(--font-aktiv-grotesk), sans-serif;
 }
 
-/* Discover2 hero chrome: the existing website header and searchbar sit over the banner. */
-.discover-page-root {
-  position: relative;
-  padding-top: 0;
-}
-
-.discover-page-root > .discover2-hero-search {
-  --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
-  --audioflume-home-search-surface: #fff;
-  --audioflume-home-search-text: #111;
-  --audioflume-home-search-divider: #e6e6e6;
-  --audioflume-home-search-icon: #999;
-  --audioflume-home-search-active: #111;
-  --audioflume-home-search-placeholder: #aaa;
-  --audioflume-home-search-clear: #777;
-  --audioflume-home-find-similar-background: #111;
-  --audioflume-home-find-similar-text: #fff;
-  position: absolute;
-  top: var(--filmwave-header-height, 75px);
-  right: 0;
-  left: 0;
-  z-index: 20;
-}
-
-.discover-page-root .discover-artist-hero {
-  --discover-artist-hero-height: calc(100dvh - 28px);
-}
-
-.discover-page-root.has-player .discover-artist-hero {
-  --discover-artist-hero-height: calc(100dvh - 28px - var(--filmwave-player-height, 72px));
-}
-
-body:has(.discover-page-root) .filmwave-web-header.is-transparent {
-  --filmwave-chrome-surface: transparent;
-  border-bottom-color: transparent;
-  background: transparent;
-  color: #e5e5df;
-}
-
-body:has(.discover-page-root) .filmwave-web-header.is-transparent
-  :is(.filmwave-header-tonal-wordmark, .filmwave-header-logo-action, .filmwave-header-actions, .filmwave-header-nav-link) {
-  color: #e5e5df;
-}
-
 .discover-page-root button,
 .discover-page-root input,
 .discover-page-root textarea,
