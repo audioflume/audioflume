@@ -10,6 +10,7 @@ import playlistCardStyles from "@/components/curated/CuratedPlaylistCard.module.
 import GlobalReferenceSearch from "@/components/GlobalReferenceSearch";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
+import XIcon from "@/components/icons/XIcon";
 import { usePlayer } from "@/context/PlayerContext";
 import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
