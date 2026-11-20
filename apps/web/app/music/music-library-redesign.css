@@ -1393,9 +1393,27 @@ main
   left: 0;
   z-index: calc(var(--filmwave-z-search-filter, 60) + 1);
   box-sizing: border-box;
-  border-bottom: 1px solid var(--border);
   background: var(--bg-primary);
   padding: 10px calc(var(--filmwave-page-gutter) - 20px) 10px var(--filmwave-page-gutter);
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transform: translateY(-10px);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 0s linear 180ms;
+}
+
+.audioflume-music-page .audioflume-music-active-filter-dock.is-visible {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+  transform: translateY(0);
+  transition:
+    opacity 180ms ease,
+    transform 180ms ease,
+    visibility 0s;
 }
 
 .audioflume-music-page .audioflume-music-active-filter-dock.is-filters-open {
