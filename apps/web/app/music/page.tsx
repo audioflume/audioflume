@@ -1628,7 +1628,7 @@ export default function MusicPage() {
                     </div>
                   </div>
                 ) : showFeaturedSongShelf || selectedBannerArtist ? (
-                  <div className="audioflume-music-home-hero">
+                  <div className="audioflume-music-home-hero" style={{ "--audioflume-music-hero-bottom-gap": activeFilterPills.length > 0 ? "10px" : "32px" } as CSSProperties}>
                     <SlidingShelfShell label="featured artist banners" itemCount={selectedBannerArtist ? 1 : featuredBannerArtists.length || 1}>
                       {(selectedBannerArtist ? [selectedBannerArtist] : featuredBannerArtists.length ? featuredBannerArtists : [null]).map((artist, index) => (
                         <div
