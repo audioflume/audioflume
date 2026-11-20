@@ -37,7 +37,7 @@ export default function AccountSettingsShell({ section }: AccountSettingsShellPr
       <AccountSidebar />
 
       <section
-        className="min-h-screen bg-[var(--filmwave-admin-canvas)] px-5 pb-0 md:px-10"
+        className="min-h-screen bg-[var(--filmwave-web-backend-canvas)] px-5 pb-0 md:px-10"
         style={{ paddingTop: "calc(var(--filmwave-header-height, 75px) + 13px)" }}
       >
         <div className="mx-auto flex min-h-full max-w-[1180px] flex-col">
