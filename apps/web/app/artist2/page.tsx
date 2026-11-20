@@ -222,7 +222,7 @@ export default function Artist2Page() {
           <div className={styles.headingSlot}>
           {searchOpen ? (
             <div className={styles.headingSearchWrap}>
-              <span className={styles.headingSearchMeasure} aria-hidden="true">
+              <span className={`${styles.headingSearchMeasure}${query ? ` ${styles.headingSearchMeasureHidden}` : ""}`} aria-hidden="true">
                 search by artist, genre, or keyword
               </span>
               <input
@@ -237,7 +237,6 @@ export default function Artist2Page() {
                     closeHeadingSearch();
                   }
                 }}
-                placeholder="search by artist, genre, or keyword"
                 aria-label="Search by artist, genre, or keyword"
               />
             </div>
