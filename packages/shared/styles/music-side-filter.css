@@ -357,8 +357,8 @@ main > section:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all {
   padding: 0 8px !important;
   border: 0 !important;
   border-radius: 999px !important;
-  background: var(--filmwave-neutral-surface) !important;
-  background-color: var(--filmwave-neutral-surface) !important;
+  background: var(--filmwave-filter-clear-all-background, var(--filmwave-neutral-surface)) !important;
+  background-color: var(--filmwave-filter-clear-all-background, var(--filmwave-neutral-surface)) !important;
   color: var(--text-secondary) !important;
   font-family: inherit !important;
   font-size: 10.5px !important;
