@@ -500,3 +500,45 @@
   background: #111;
   color: #fff;
 }
+
+/* Opt-in dark Find Similar button for Discover2; flash imagery is shared. */
+.darkSimilarSong {
+  width: calc(100% - 24px);
+  min-height: 51px;
+  border: 0;
+  border-radius: 0;
+  background: #111;
+  color: #fff;
+}
+
+.darkSimilarSong:hover,
+.darkSimilarSong:focus-visible {
+  background: #111;
+  color: #fff;
+}
+
+@media (max-width: 1000px) {
+  .darkSimilarSong {
+    width: 48px;
+    height: 48px;
+    min-height: 48px;
+    border: 0;
+    border-radius: 0;
+    background: #111;
+    color: #fff;
+  }
+
+  :global(html.light) .darkSimilarSong,
+  :global(html[data-theme="light"]) .darkSimilarSong,
+  :global(html.dark) .darkSimilarSong,
+  :global(html[data-theme="dark"]) .darkSimilarSong,
+  :global(html.light) .darkSimilarSong:hover,
+  :global(html[data-theme="light"]) .darkSimilarSong:hover,
+  :global(html.dark) .darkSimilarSong:hover,
+  :global(html[data-theme="dark"]) .darkSimilarSong:hover {
+    border: 0;
+    border-radius: 0;
+    background: #111;
+    color: #fff;
+  }
+}
