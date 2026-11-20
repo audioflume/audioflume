@@ -37,6 +37,7 @@ type ShelfItem = {
   slug?: string;
   imagePositionX?: number;
   imagePositionY?: number;
+  genres?: string[];
 };
 
 type DiscoverFeaturedArtist = {
@@ -545,6 +546,17 @@ function ArtistShelf({
                   <span className="audioflume-home-reference-artist-copy">
                     <strong>{item.title}</strong>
                     {item.subtitle ? <span className="audioflume-home-reference-artist-designation">{item.subtitle}</span> : null}
+                    <span className="audioflume-genre-filter-pills audioflume-discover-featured-track-genres" aria-label="Artist genres">
+                      {[0, 1, 2].map((genreIndex) => {
+                        const genres = Array.from(new Set((item.genres ?? []).filter(Boolean))).sort((a, b) => a.localeCompare(b));
+                        const genre = genres[genreIndex];
+                        return genre ? (
+                          <Link href={`/music?genre=${encodeURIComponent(genre)}`} className="audioflume-genre-filter-pill" key={genre}>{genre}</Link>
+                        ) : (
+                          <span className="audioflume-genre-filter-pill is-placeholder" key={`placeholder-${genreIndex}`}>{genreIndex === 0 && genres.length === 0 ? "Genre TBA" : ""}</span>
+                        );
+                      })}
+                    </span>
                   </span>
                 </div>
               </div>
