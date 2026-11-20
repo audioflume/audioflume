@@ -911,7 +911,7 @@ export default function DiscoverPage({ afterPlaylists }: { afterPlaylists?: Reac
 
   return (
     <main className={`discover-page-root${playerVisible ? " has-player" : ""}`}>
-      <GlobalSearchBar />
+      <GlobalSearchBar musicFieldStyle />
 
       <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
