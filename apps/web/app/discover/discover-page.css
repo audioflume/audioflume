@@ -1088,7 +1088,25 @@
 }
 
 .audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-shelf-scroller {
-  gap: clamp(16px, 1.4vw, 22px);
+  --discover-featured-song-gap: clamp(16px, 1.4vw, 22px);
+  gap: var(--discover-featured-song-gap);
+}
+
+.audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-shelf-card.is-square {
+  min-width: 0;
+  flex: 0 0 calc((100% - 5 * var(--discover-featured-song-gap)) / 6);
+}
+
+@media (max-width: 1000px) {
+  .audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-shelf-card.is-square {
+    flex-basis: calc((100% - 2 * var(--discover-featured-song-gap)) / 3);
+  }
+}
+
+@media (max-width: 600px) {
+  .audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-shelf-card.is-square {
+    flex-basis: calc((100% - var(--discover-featured-song-gap)) / 2);
+  }
 }
 
 .audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-card-meta strong {
@@ -1230,7 +1248,7 @@
 
 .discover-artist-editorial-meta {
   display: grid;
-  grid-template-columns: auto 1fr auto;
+  grid-template-columns: var(--discover-editorial-meta-columns, auto 1fr auto);
   align-items: center;
   gap: 14px;
   padding-top: 7px;
@@ -1238,11 +1256,16 @@
 }
 
 .discover-artist-editorial-meta span:first-child {
-  font-size: 12px;
+  font-size: var(--discover-editorial-name-size, 12px);
   font-weight: 400;
   letter-spacing: -0.015em;
   line-height: 15px;
   white-space: nowrap;
+}
+
+.discover-artist-editorial-meta.is-active-playlist-meta {
+  --discover-editorial-meta-columns: minmax(0, 1fr) auto;
+  --discover-editorial-name-size: 13px;
 }
 
 .discover-artist-editorial-meta span:nth-child(2) {
