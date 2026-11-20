@@ -5611,7 +5611,7 @@ body:has(.audioflume-home-landing)
 
 
 /* Homepage editorial mockup: scoped to the homepage only. */
-body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
+body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
   --audioflume-home-header-background: #e5e5df;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
@@ -5632,7 +5632,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-songs-link: #222;
 }
 
-:where(html:not(.light):not([data-theme="light"])) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
+:where(html:not(.light):not([data-theme="light"])) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
   --audioflume-home-header-background: #1b1b1b;
   --audioflume-home-header-scrolled-background: #1b1b1b;
   --audioflume-home-header-text: #fff;
@@ -5652,12 +5652,12 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   --audioflume-home-songs-link: #fff;
 }
 
-body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
+body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: #1b1b1b;
   --audioflume-home-header-border: transparent;
 }
 
-:where(html.light, html[data-theme="light"]) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page, .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
+:where(html.light, html[data-theme="light"]) body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) .filmwave-web-header.is-home-scrolled {
   --audioflume-home-header-background: #fff;
   --audioflume-home-header-text: #111;
   --audioflume-home-header-muted-link: #111;
