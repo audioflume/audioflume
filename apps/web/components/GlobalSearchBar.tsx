@@ -14,6 +14,7 @@ type GlobalSearchBarProps = {
   layer?: "default" | "high";
   heroOverlay?: boolean;
   musicFieldStyle?: boolean;
+  darkSimilarButton?: boolean;
 };
 
 export default function GlobalSearchBar({
@@ -22,6 +23,7 @@ export default function GlobalSearchBar({
   layer = "default",
   heroOverlay = false,
   musicFieldStyle = false,
+  darkSimilarButton = false,
 }: GlobalSearchBarProps) {
   const barClassName = [
     styles.bar,
@@ -49,7 +51,7 @@ export default function GlobalSearchBar({
         />
 
         <div className={styles.actions}>
-          <GlobalReferenceSearch className={styles.song} />
+          <GlobalReferenceSearch className={darkSimilarButton ? `${styles.song} ${styles.darkSimilarSong}` : styles.song} />
           {trailingContent ? (
             <div className={styles.trailing}>{trailingContent}</div>
           ) : null}
