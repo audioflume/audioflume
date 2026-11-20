@@ -227,7 +227,7 @@
 
 :global(html.light) .musicField,
 :global(html[data-theme="light"]) .musicField {
-  background: #fff;
+  background: #f7f7f5;
   color: #999;
 }
 
