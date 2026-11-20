@@ -17,6 +17,16 @@
 }
 
 .discover-page-root > .discover2-hero-search {
+  --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
+  --audioflume-home-search-surface: #fff;
+  --audioflume-home-search-text: #111;
+  --audioflume-home-search-divider: #e6e6e6;
+  --audioflume-home-search-icon: #999;
+  --audioflume-home-search-active: #111;
+  --audioflume-home-search-placeholder: #aaa;
+  --audioflume-home-search-clear: #777;
+  --audioflume-home-find-similar-background: #111;
+  --audioflume-home-find-similar-text: #fff;
   position: absolute;
   top: var(--filmwave-header-height, 75px);
   right: 0;
