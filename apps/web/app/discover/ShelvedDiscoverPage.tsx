@@ -909,7 +909,9 @@ export default function DiscoverPage() {
 
   return (
     <main className={`discover-page-root${playerVisible ? " has-player" : ""}`}>
-      <GlobalSearchBar />
+      <div className="discover2-hero-search">
+        <GlobalSearchBar heroOverlay position="flow" />
+      </div>
 
       <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
