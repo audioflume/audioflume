@@ -683,8 +683,8 @@ export function DiscoverArchivedSections({
             </PlaceholderMedia>
   
             <div className="discover-artist-editorial-meta">
-              <span>{playlist?.name ?? "Loremipsum Dolorit"}</span>
-              <span>Eiusmod Tempor</span>
+              <span className={featuredPlaylists !== undefined ? "is-active-playlist-name" : undefined}>{playlist?.name ?? "Loremipsum Dolorit"}</span>
+              {featuredPlaylists === undefined ? <span>Eiusmod Tempor</span> : null}
               <span>Explore more ↗</span>
             </div>
           </article>
