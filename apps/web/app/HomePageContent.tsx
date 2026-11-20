@@ -1512,6 +1512,7 @@ export default function HomePageContent({
             <FeaturedArtistShelf
               artists={discoverFeatureCardArtists}
               loading={discoverFeatureCardArtistsLoading}
+              matchBannerGenres
               showHeading
             />
             <DiscoverArchivedSections
