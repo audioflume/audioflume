@@ -29,6 +29,7 @@ import PricingHeroImageFlash from "./pricing/PricingHeroImageFlash";
 import SongCard from "@/components/SongCard";
 import { CuratedPlaylistCard } from "@/components/curated/CuratedPlaylistShelf";
 import { DiscoverArchivedSections } from "./discover/ShelvedDiscoverPage";
+import FeaturedArtistShelf, { type DiscoverFeatureCardArtist } from "@/components/discover/FeaturedArtistShelf";
 import PlaylistCardShell from "@/components/playlists/PlaylistCardShell";
 import curatedCardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
@@ -1230,6 +1231,8 @@ export default function HomePageContent({
   const playerVisible = useHasCurrentSong();
   const [artists, setArtists] = useState<HomeArtist[]>([]);
   const [artistsLoading, setArtistsLoading] = useState(true);
+  const [discoverFeatureCardArtists, setDiscoverFeatureCardArtists] = useState<DiscoverFeatureCardArtist[]>([]);
+  const [discoverFeatureCardArtistsLoading, setDiscoverFeatureCardArtistsLoading] = useState(!showHero);
   const [directoryArtists, setDirectoryArtists] = useState<{ id: string; name: string; slug: string; designation: string | null; hero_image_url: string | null; profile_image_url: string | null; hero_image_position_x: number; hero_image_position_y: number; genres: string[]; songs: Song[] }[]>([]);
   const [editorialPlaylists, setEditorialPlaylists] = useState<CuratedPlaylist[]>([]);
   const [curatedPlaylists, setCuratedPlaylists] = useState<CuratedPlaylist[]>([]);
@@ -1373,6 +1376,26 @@ export default function HomePageContent({
   useEffect(() => {
     if (showHero) return;
     const controller = new AbortController();
+    fetch("/api/discover-feature-card-artists", { signal: controller.signal })
+      .then((response) => {
+        if (!response.ok) throw new Error("Failed to load featured artist cards");
+        return response.json();
+      })
+      .then((data) => {
+        if (!controller.signal.aborted) setDiscoverFeatureCardArtists(Array.isArray(data?.artists) ? data.artists : []);
+      })
+      .catch(() => {
+        if (!controller.signal.aborted) setDiscoverFeatureCardArtists([]);
+      })
+      .finally(() => {
+        if (!controller.signal.aborted) setDiscoverFeatureCardArtistsLoading(false);
+      });
+    return () => controller.abort();
+  }, [showHero]);
+
+  useEffect(() => {
+    if (showHero) return;
+    const controller = new AbortController();
     fetch("/api/artists/directory", { signal: controller.signal })
       .then((response) => {
         if (!response.ok) throw new Error("Failed to load artist directory");
@@ -1486,6 +1509,11 @@ export default function HomePageContent({
       </section>
         {!showHero ? (
           <div className="discover-artist-content">
+            <FeaturedArtistShelf
+              artists={discoverFeatureCardArtists}
+              loading={discoverFeatureCardArtistsLoading}
+              showHeading
+            />
             <DiscoverArchivedSections
               albumsTitle="Featured songs"
               watchingArtists={discoverArtistShelfItems(0).map((item, index) => ({
