@@ -159,7 +159,7 @@ export default function AdminContentPage({
 
       <section
         className={`min-h-screen px-5 ${resolvedContentAreaBottomPadding ? "pb-20" : "pb-0"} md:px-10 ${
-          usesAdminCanvas ? "bg-[var(--filmwave-admin-canvas)]" : ""
+          usesAdminCanvas ? "bg-[var(--filmwave-web-backend-canvas)]" : ""
         } ${resolvedContentAreaClassName}`}
         style={{ paddingTop: "calc(var(--filmwave-header-height, 75px) + 13px)" }}
       >
