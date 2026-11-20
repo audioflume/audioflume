@@ -50,7 +50,7 @@
   );
 }
 
-:where(html.light, html[data-theme="light"]) {
+html.light, html[data-theme="light"] {
   --filmwave-web-backend-canvas: #f7f7f5;
 }
 
