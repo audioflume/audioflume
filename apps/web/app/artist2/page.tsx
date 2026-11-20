@@ -206,8 +206,9 @@ export default function Artist2Page() {
       <div className={styles.searchbarBackground}>
         <GlobalSearchBar musicFieldStyle darkSimilarButton />
       </div>
-      <div className={styles.content}>
-        <header className={styles.artist2Intro}>
+      <div className={styles.artistLayout}>
+        <div className={styles.content}>
+          <header className={styles.artist2Intro}>
           {searchOpen ? (
             <div className={styles.headingSearchWrap}>
               <span className={styles.headingSearchMeasure} aria-hidden="true">
@@ -286,8 +287,8 @@ export default function Artist2Page() {
             ))}
           </section>
         )}
-      </div>
-      {selectedArtist ? (
+        </div>
+        {selectedArtist ? (
         <aside className={styles.artistSidebar} aria-label={`Preview music by ${selectedArtist.name}`}>
           <div className={styles.artistSidebarPlayer}>
             <CardMiniPlayer
@@ -303,7 +304,8 @@ export default function Artist2Page() {
             />
           </div>
         </aside>
-      ) : null}
+        ) : null}
+      </div>
       <Footer showTopBorder={false} />
     </main>
   );
