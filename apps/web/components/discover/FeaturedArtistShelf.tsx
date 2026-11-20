@@ -23,10 +23,12 @@ export default function FeaturedArtistShelf({
   artists,
   loading = false,
   showHeading,
+  matchBannerGenres = false,
 }: {
   artists: DiscoverFeatureCardArtist[];
   loading?: boolean;
   showHeading?: boolean;
+  matchBannerGenres?: boolean;
 }) {
   const headingVisible = showHeading ?? (loading || artists.length > 0);
 
@@ -73,7 +75,7 @@ export default function FeaturedArtistShelf({
                 </article>
               ))
             : artists.map((artist) => (
-                <FeaturedArtistCard key={artist.id} artist={artist} />
+                <FeaturedArtistCard key={artist.id} artist={artist} matchBannerGenres={matchBannerGenres} />
               ))}
       </SlidingShelfShell>
     </section>
