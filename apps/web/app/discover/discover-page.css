@@ -1266,6 +1266,7 @@ body:has(.discover-page-root) .filmwave-web-header.is-transparent
 }
 
 .discover2-active-banner {
+  --audioflume-home-canvas: transparent;
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
   --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
   width: 100vw;
