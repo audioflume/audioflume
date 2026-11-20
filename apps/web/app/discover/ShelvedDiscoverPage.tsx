@@ -40,6 +40,21 @@ type ShelfItem = {
   genres?: string[];
 };
 
+type DirectoryArtist = {
+  id: string;
+  name: string;
+  slug: string;
+  designation: string | null;
+  profile_image_url: string | null;
+  hero_image_url: string | null;
+  hero_image_position_x: number;
+  hero_image_position_y: number;
+  genres: string[];
+  songs: Song[];
+};
+
+type EditorialPlaylist = { id: number; name: string; cover_image_url: string | null; feature_cover_image_url?: string | null };
+
 type DiscoverFeaturedArtist = {
   id: string;
   name: string;
@@ -228,7 +243,7 @@ function stopTrackKeyEvent(event: KeyboardEvent<HTMLElement>) {
 function PlayBadge({ isPlaying = false }: { isPlaying?: boolean }) {
   return (
     <span className="discover-artist-play-badge" aria-hidden="true">
-      {isPlaying ? <PauseIcon size={18} /> : <PlayIconSmall size={18} />}
+      <PlaybackStateIcon playing={isPlaying} size={18} />
     </span>
   );
 }
@@ -381,7 +396,7 @@ function ReadyToCutSongCard({
         disabled={!song.audioUrl}
         aria-label={playing ? `Pause ${song.title}` : `Play ${song.title}`}
       >
-        {playing ? <PauseIcon size={15} /> : <PlayIconSmall size={15} />}
+        <PlaybackStateIcon playing={playing} size={15} />
       </button>
     </article>
   );
@@ -595,9 +610,19 @@ function ArtistShelf({
                 imageSrc={item.image}
                 className="discover-artist-shelf-media"
               >
+                {item.slug ? (
+                  <Link
+                    href={`/artists/${item.slug}`}
+                    aria-label={`View ${item.title}`}
+                    className="absolute inset-0 z-[1]"
+                  />
+                ) : null}
                 <div
                   className="discover-artist-card-overlay"
-                  style={!item.image ? { background: "transparent" } : undefined}
+                  style={{
+                    ...(!item.image ? { background: "transparent" } : {}),
+                    ...(item.slug ? { pointerEvents: "none" } : {}),
+                  }}
                 >
                   <div>
                     <strong>{item.title}</strong>
@@ -607,6 +632,8 @@ function ArtistShelf({
                     <button
                       type="button"
                       className="discover-artist-card-play-button"
+                      style={item.slug ? { pointerEvents: "auto" } : undefined}
+                      disabled={!item.song.audioUrl}
                       aria-label={isPlaying && currentSong?.id === item.song.id ? `Pause ${item.title} preview` : `Play ${item.title} preview`}
                       onClick={(event) => {
                         event.stopPropagation();
@@ -662,7 +689,7 @@ export function DiscoverArchivedSections({
   compactWatchingCards?: boolean;
   featuredSongs?: ShelfItem[];
   supportArtists?: ShelfItem[];
-  featuredPlaylists?: { name: string; image: string }[];
+  featuredPlaylists?: { name: string; image: string; href?: string }[];
   enableArtistPlayback?: boolean;
   playlistsAfterSupport?: boolean;
   activeDiscoverTypography?: boolean;
@@ -680,6 +707,9 @@ export function DiscoverArchivedSections({
               imageSrc={playlist?.image ?? feature.image}
               className="discover-artist-editorial-media"
             >
+              {playlist?.href ? (
+                <Link href={playlist.href} className="absolute inset-0 z-[3]" aria-label={`View ${playlist.name}`} />
+              ) : null}
               <div className="discover-artist-editorial-copy">
                 <span>{feature.eyebrow}</span>
                 {featuredPlaylists === undefined ? <h2>{feature.title}</h2> : null}
@@ -689,7 +719,7 @@ export function DiscoverArchivedSections({
             <div className={featuredPlaylists !== undefined ? "discover-artist-editorial-meta is-active-playlist-meta" : "discover-artist-editorial-meta"}>
               <span className={featuredPlaylists !== undefined ? "is-active-playlist-name" : undefined}>{playlist?.name ?? "Loremipsum Dolorit"}</span>
               {featuredPlaylists === undefined ? <span>Eiusmod Tempor</span> : null}
-              <span>Explore more ↗</span>
+              {playlist?.href ? <Link href={playlist.href}>Explore more ↗</Link> : <span>Explore more ↗</span>}
             </div>
           </article>
           );
@@ -726,7 +756,7 @@ export function DiscoverArchivedSections({
   );
 }
 
-export default function DiscoverPage({ afterPlaylists }: { afterPlaylists?: ReactNode } = {}) {
+export default function DiscoverPage({ afterPlaylists, liveContent = false }: { afterPlaylists?: ReactNode; liveContent?: boolean } = {}) {
   const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
@@ -737,6 +767,8 @@ export default function DiscoverPage({ afterPlaylists }: { afterPlaylists?: Reac
   const [featureCardArtistsLoading, setFeatureCardArtistsLoading] =
     useState(true);
   const [activeFeaturedIndex, setActiveFeaturedIndex] = useState(0);
+  const [directoryArtists, setDirectoryArtists] = useState<DirectoryArtist[]>([]);
+  const [editorialPlaylists, setEditorialPlaylists] = useState<EditorialPlaylist[]>([]);
   const [canScrollFeatureCardsPrev, setCanScrollFeatureCardsPrev] = useState(false);
   const [canScrollFeatureCardsNext, setCanScrollFeatureCardsNext] = useState(false);
   const featureCardShelfRef = useRef<HTMLDivElement>(null);
@@ -829,6 +861,67 @@ export default function DiscoverPage({ afterPlaylists }: { afterPlaylists?: Reac
       cancelled = true;
     };
   }, []);
+
+  useEffect(() => {
+    if (!liveContent) return;
+    const controller = new AbortController();
+
+    async function loadDirectory() {
+      try {
+        const response = await fetch("/api/artists/directory", { signal: controller.signal });
+        if (!response.ok) throw new Error("Failed to load artists");
+        const data = await response.json();
+        if (!controller.signal.aborted) {
+          setDirectoryArtists(Array.isArray(data?.artists) ? data.artists : []);
+        }
+      } catch {
+        if (!controller.signal.aborted) setDirectoryArtists([]);
+      }
+    }
+
+    async function loadPlaylists() {
+      try {
+        const [playlistsResponse, sectionsResponse] = await Promise.all([
+          fetch("/api/curated-playlists", { signal: controller.signal }),
+          fetch("/api/discover-sections", { signal: controller.signal }),
+        ]);
+        if (!playlistsResponse.ok || !sectionsResponse.ok) throw new Error("Failed to load playlists");
+        const [playlists, sections] = await Promise.all([
+          playlistsResponse.json(),
+          sectionsResponse.json(),
+        ]);
+        const allPlaylists: EditorialPlaylist[] = Array.isArray(playlists) ? playlists : [];
+        const byId = new Map(allPlaylists.map((playlist) => [playlist.id, playlist]));
+        const featuredIds = Array.isArray(sections?.discover_curated)
+          ? sections.discover_curated.map((entry: { playlist_id: number }) => entry.playlist_id)
+          : [];
+        const featured = featuredIds.flatMap((id: number) => {
+          const playlist = byId.get(id);
+          return playlist ? [playlist] : [];
+        });
+        const remaining = allPlaylists.filter((playlist) => !featuredIds.includes(playlist.id));
+        if (!controller.signal.aborted) setEditorialPlaylists([...featured, ...remaining].slice(0, 3));
+      } catch {
+        if (!controller.signal.aborted) setEditorialPlaylists([]);
+      }
+    }
+
+    void loadDirectory();
+    void loadPlaylists();
+    return () => controller.abort();
+  }, [liveContent]);
+
+  const directoryShelfItems = (artists: DirectoryArtist[]): ShelfItem[] =>
+    artists.map((artist) => ({
+      title: artist.name,
+      subtitle: artist.designation ?? "",
+      image: artist.hero_image_url || artist.profile_image_url || "",
+      slug: artist.slug,
+      imagePositionX: artist.hero_image_position_x,
+      imagePositionY: artist.hero_image_position_y,
+      genres: artist.genres,
+      song: artist.songs.find((song) => Boolean(song.audioUrl)),
+    }));
 
   function updateFeatureCardShelfState() {
     const scroller = featureCardShelfRef.current;
@@ -1037,7 +1130,24 @@ export default function DiscoverPage({ afterPlaylists }: { afterPlaylists?: Reac
           showHeading={featuredArtistCount > 0 || featureCardArtistsLoading}
         />
 
-        <DiscoverArchivedSections afterPlaylists={afterPlaylists} />
+        <DiscoverArchivedSections
+          afterPlaylists={afterPlaylists}
+          albumsTitle={liveContent ? "Top songs" : "Top albums"}
+          enableArtistPlayback={liveContent}
+          watchingArtists={liveContent ? directoryShelfItems(directoryArtists.slice(0, 7)) : undefined}
+          supportArtists={liveContent ? directoryShelfItems(directoryArtists.slice(7, 14)) : undefined}
+          featuredSongs={liveContent ? playableSongs.slice(0, 12).map((song) => ({
+            title: song.title,
+            subtitle: song.artist,
+            image: song.coverArt || "",
+            song,
+          })) : undefined}
+          featuredPlaylists={liveContent ? editorialPlaylists.map((playlist) => ({
+            name: playlist.name,
+            image: playlist.feature_cover_image_url || playlist.cover_image_url || "",
+            href: `/curated-playlists/${playlist.id}`,
+          })) : undefined}
+        />
 
         <ReadyToCutTracks songs={readyToCutSongs} />
 
