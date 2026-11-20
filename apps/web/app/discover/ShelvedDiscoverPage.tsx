@@ -418,6 +418,8 @@ function ArtistShelf({
   footerCopy,
   enablePlayback = false,
   compactArtistCards = false,
+  compactNames = false,
+  songTextStyle = false,
 }: {
   title: string;
   items: ShelfItem[];
@@ -425,6 +427,8 @@ function ArtistShelf({
   footerCopy?: string;
   enablePlayback?: boolean;
   compactArtistCards?: boolean;
+  compactNames?: boolean;
+  songTextStyle?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const scrollerRef = useRef<HTMLDivElement>(null);
@@ -483,7 +487,7 @@ function ArtistShelf({
   }, [items.length]);
 
   return (
-    <section className={`discover-artist-shelf-section${compactArtistCards ? " audioflume-home-mockup-more-artists" : ""}`}>
+    <section className={`discover-artist-shelf-section${compactArtistCards ? " audioflume-home-mockup-more-artists" : ""}${compactNames ? " is-discover-compact-names" : ""}${songTextStyle ? " is-discover-song-text" : ""}`}>
       <div className="discover-artist-shelf-heading">
         <div className="min-w-0">
           <SectionTitle>{title}</SectionTitle>
@@ -597,7 +601,7 @@ function ArtistShelf({
                 >
                   <div>
                     <strong>{item.title}</strong>
-                    <span>{item.subtitle}</span>
+                    {!compactNames ? <span>{item.subtitle}</span> : null}
                   </div>
                   {enablePlayback && item.song ? (
                     <button
@@ -622,8 +626,8 @@ function ArtistShelf({
               </PlaceholderMedia>
 
               <div className="discover-artist-card-meta">
-                <strong>{item.title}</strong>
-                <span>{item.subtitle}</span>
+                <strong className={songTextStyle ? "audioflume-home-song-title" : undefined}>{item.title}</strong>
+                <span className={songTextStyle ? "audioflume-home-song-artist" : undefined}>{item.subtitle}</span>
               </div>
             </article>
           ))}
@@ -649,6 +653,7 @@ export function DiscoverArchivedSections({
   featuredPlaylists,
   enableArtistPlayback = false,
   playlistsAfterSupport = false,
+  activeDiscoverTypography = false,
 }: {
   albumsTitle?: string;
   watchingArtists?: ShelfItem[];
@@ -658,6 +663,7 @@ export function DiscoverArchivedSections({
   featuredPlaylists?: { name: string; image: string }[];
   enableArtistPlayback?: boolean;
   playlistsAfterSupport?: boolean;
+  activeDiscoverTypography?: boolean;
 }) {
   const playlistBlocks = (
       <section className="discover-artist-editorial-grid">
@@ -694,17 +700,19 @@ export function DiscoverArchivedSections({
       items={watchingArtists}
       enablePlayback={enableArtistPlayback}
       compactArtistCards={compactWatchingCards}
+      compactNames={activeDiscoverTypography}
       footerCopy="1500+ artists trending online"
     />
 
     {!playlistsAfterSupport ? playlistBlocks : null}
 
-    <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} />
+    <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} />
 
     <ArtistShelf
       title="Support new artists"
       items={supportArtists}
       enablePlayback={enableArtistPlayback}
+      compactNames={activeDiscoverTypography}
       footerCopy="1500+ artists trending online"
     />
 
