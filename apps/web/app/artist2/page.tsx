@@ -202,28 +202,37 @@ export default function Artist2Page() {
   ];
 
   return (
-    <main className={`${styles.page} artist2-page-root`}>
+    <main className={`${styles.page}${selectedArtist ? ` ${styles.pageWithSidebar}` : ""} artist2-page-root`}>
       <div className={styles.searchbarBackground}>
         <GlobalSearchBar musicFieldStyle darkSimilarButton />
       </div>
       <div className={styles.content}>
         <header className={styles.artist2Intro}>
           {searchOpen ? (
-            <input
-              ref={searchRef}
-              className={styles.headingSearch}
-              type="search"
-              value={query}
-              onChange={(event) => setQuery(event.target.value)}
-              onKeyDown={(event) => {
-                if (event.key === "Escape") {
+            <div className={styles.headingSearchWrap}>
+              <span className={styles.headingSearchMeasure} aria-hidden="true">
+                search by artist, genre, or keyword
+              </span>
+              <input
+                ref={searchRef}
+                className={styles.headingSearch}
+                type="search"
+                value={query}
+                onChange={(event) => setQuery(event.target.value)}
+                onBlur={() => {
                   setQuery("");
                   setSearchOpen(false);
-                }
-              }}
-              placeholder="search by artist, genre, or keyword"
-              aria-label="Search by artist, genre, or keyword"
-            />
+                }}
+                onKeyDown={(event) => {
+                  if (event.key === "Escape") {
+                    setQuery("");
+                    setSearchOpen(false);
+                  }
+                }}
+                placeholder="search by artist, genre, or keyword"
+                aria-label="Search by artist, genre, or keyword"
+              />
+            </div>
           ) : (
             <h1>Human made music &amp; SFX for film.</h1>
           )}
