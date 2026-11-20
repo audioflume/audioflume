@@ -244,6 +244,10 @@ export default function ArtistsPage() {
         </div>
       </div>
       <div className={styles.content}>
+        <header className={styles.directoryIntro}>
+          <h1>Discover the artists behind the sound.</h1>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+        </header>
         {loading ? (
           <div className={styles.grid} aria-label="Loading artists">
             {Array.from({ length: 9 }, (_, index) => (
