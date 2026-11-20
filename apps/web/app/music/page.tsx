@@ -1457,8 +1457,13 @@ export default function MusicPage() {
         </div>
       </div>
 
-      {showFilterPillDock && activeFilterPills.length > 0 ? (
-        <div className={`audioflume-music-active-filter-dock${filtersOpen ? " is-filters-open" : ""}`} aria-label="Active music filters quick access">
+      {activeFilterPills.length > 0 ? (
+        <div
+          className={`audioflume-music-active-filter-dock${filtersOpen ? " is-filters-open" : ""}${showFilterPillDock ? " is-visible" : ""}`}
+          aria-label="Active music filters quick access"
+          aria-hidden={!showFilterPillDock}
+          inert={!showFilterPillDock}
+        >
           <div className="audioflume-music-active-filter-dock-pills">
             {activeFilterPills.map((pill) => (
               <button
