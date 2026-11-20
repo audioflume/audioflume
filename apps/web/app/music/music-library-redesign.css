@@ -10,6 +10,7 @@
 :where(html.light, html[data-theme="light"]) .audioflume-music-page {
   --audioflume-music-search-input-background: #f7f7f5;
   --audioflume-music-hover-background: #f7f7f5;
+  --filmwave-filter-clear-all-background: #f3f3f0;
   --audioflume-music-input-focus-color: #111;
 }
 
