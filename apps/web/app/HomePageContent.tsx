@@ -1516,6 +1516,7 @@ export default function HomePageContent({
             />
             <DiscoverArchivedSections
               albumsTitle="Featured songs"
+              activeDiscoverTypography
               watchingArtists={discoverArtistShelfItems(0).map((item, index) => ({
                 ...item,
                 slug: index < 7 ? directoryArtists[index]?.slug : undefined,
