@@ -693,7 +693,7 @@ export function DiscoverArchivedSections({
   enableArtistPlayback?: boolean;
   playlistsAfterSupport?: boolean;
   activeDiscoverTypography?: boolean;
-  sections?: "all" | "featuredSongs" | "remaining";
+  sections?: "all" | "featuredSongs" | "remaining" | "playlists" | "artistsOnly";
   afterPlaylists?: ReactNode;
 }) {
   const playlistBlocks = (
@@ -729,7 +729,7 @@ export function DiscoverArchivedSections({
 
   return (
     <>
-    {sections !== "featuredSongs" ? <ArtistShelf
+    {sections !== "featuredSongs" && sections !== "playlists" ? <ArtistShelf
       title="Artists we're watching"
       items={watchingArtists}
       enablePlayback={enableArtistPlayback}
@@ -738,11 +738,11 @@ export function DiscoverArchivedSections({
       footerCopy="1500+ artists trending online"
     /> : null}
 
-    {sections !== "featuredSongs" && !playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
+    {sections !== "featuredSongs" && sections !== "artistsOnly" && !playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
-    {sections !== "remaining" ? <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} /> : null}
+    {sections !== "remaining" && sections !== "playlists" && sections !== "artistsOnly" ? <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} /> : null}
 
-    {sections !== "featuredSongs" ? <ArtistShelf
+    {sections !== "featuredSongs" && sections !== "playlists" ? <ArtistShelf
       title="Support new artists"
       items={supportArtists}
       enablePlayback={enableArtistPlayback}
@@ -750,7 +750,7 @@ export function DiscoverArchivedSections({
       footerCopy="1500+ artists trending online"
     /> : null}
 
-    {sections !== "featuredSongs" && playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
+    {sections !== "featuredSongs" && sections !== "artistsOnly" && playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
     </>
   );
