@@ -11,7 +11,8 @@ import GlobalSearchBar from "@/components/GlobalSearchBar";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
 import { usePlayer } from "@/context/PlayerContext";
-import CardMiniPlayer from "@/components/playlists/CardMiniPlayer";
+import Artist2SidebarPlayer from "./Artist2SidebarPlayer";
+import XIcon from "@/components/icons/XIcon";
 import CardPlayingWaveform, { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 import type { Song } from "@/lib/types";
 import "@/components/curated/curated-browse-filters.css";
@@ -152,6 +153,11 @@ export default function Artist2Page() {
   const [searchOpen, setSearchOpen] = useState(false);
   const [query, setQuery] = useState("");
   const searchRef = useRef<HTMLInputElement>(null);
+
+  function closeHeadingSearch() {
+    setQuery("");
+    setSearchOpen(false);
+  }
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
   useEffect(() => {
@@ -209,6 +215,7 @@ export default function Artist2Page() {
       <div className={styles.artistLayout}>
         <div className={styles.content}>
           <header className={styles.artist2Intro}>
+          <div className={styles.headingSlot}>
           {searchOpen ? (
             <div className={styles.headingSearchWrap}>
               <span className={styles.headingSearchMeasure} aria-hidden="true">
@@ -220,14 +227,10 @@ export default function Artist2Page() {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                onBlur={() => {
-                  setQuery("");
-                  setSearchOpen(false);
-                }}
+                onBlur={closeHeadingSearch}
                 onKeyDown={(event) => {
                   if (event.key === "Escape") {
-                    setQuery("");
-                    setSearchOpen(false);
+                    closeHeadingSearch();
                   }
                 }}
                 placeholder="search by artist, genre, or keyword"
@@ -237,17 +240,26 @@ export default function Artist2Page() {
           ) : (
             <h1>Human made music &amp; SFX for film.</h1>
           )}
+          </div>
           <div className={styles.introMeta}>
             <button
               type="button"
               className={styles.searchLink}
-              onClick={() => setSearchOpen(true)}
-              aria-label="Search artists"
+              onMouseDown={(event) => { if (searchOpen) event.preventDefault(); }}
+              onClick={() => {
+                if (searchOpen) closeHeadingSearch();
+                else setSearchOpen(true);
+              }}
+              aria-label={searchOpen ? "Close artist search" : "Search artists"}
             >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <circle cx="11" cy="11" r="6.5" />
-                <path d="m16 16 4.5 4.5" />
-              </svg>
+              {searchOpen ? (
+                <XIcon size={16} strokeWidth={1.4} />
+              ) : (
+                <svg viewBox="0 0 24 24" aria-hidden="true">
+                  <circle cx="11" cy="11" r="6.5" />
+                  <path d="m16 16 4.5 4.5" />
+                </svg>
+              )}
               <span>Search</span>
             </button>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
@@ -291,7 +303,7 @@ export default function Artist2Page() {
         {selectedArtist ? (
         <aside className={styles.artistSidebar} aria-label={`Preview music by ${selectedArtist.name}`}>
           <div className={styles.artistSidebarPlayer}>
-            <CardMiniPlayer
+            <Artist2SidebarPlayer
               key={selectedArtist.id}
               artistName={selectedArtist.name}
               trackCount={selectedArtist.track_count}
