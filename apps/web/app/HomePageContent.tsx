@@ -1494,8 +1494,6 @@ export default function HomePageContent({
                 imagePositionX: index < 7 ? directoryArtists[index]?.hero_image_position_x : undefined,
                 imagePositionY: index < 7 ? directoryArtists[index]?.hero_image_position_y : undefined,
               }))}
-              compactWatchingCards
-              playlistsAfterSupport
               supportArtists={discoverArtistShelfItems(7)}
               enableArtistPlayback
               featuredSongs={playableSongs.slice(0, 12).map((song) => ({
