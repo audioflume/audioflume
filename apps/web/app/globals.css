@@ -20,6 +20,7 @@
 @import "../../../packages/shared/styles/settings-side-nav.css";
 
 :root {
+  --filmwave-web-backend-canvas: var(--filmwave-admin-canvas);
   --modal-backdrop: rgba(0, 0, 0, 0.55);
   --bg-card: var(--filmwave-neutral-surface);
   --bg-elevated: var(--filmwave-neutral-surface);
@@ -47,6 +48,10 @@
     var(--filmwave-sidebar-expanded-width, var(--sidebar-width-expanded, 248px)) -
       var(--filmwave-sidebar-content-gap, 0px)
   );
+}
+
+:where(html.light, html[data-theme="light"]) {
+  --filmwave-web-backend-canvas: #f7f7f5;
 }
 
 /* Website-only dark palette: darker canvas with raised surfaces kept distinct. */
