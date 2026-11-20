@@ -338,3 +338,43 @@
 
 
 }
+
+/* Same searchbar structure on hero imagery, with only the surface made transparent. */
+.heroOverlay {
+  border-bottom-color: transparent;
+  background: transparent;
+  color: #ffffff;
+}
+
+.heroOverlay .field,
+:global(html.light) .heroOverlay .field,
+:global(html[data-theme="light"]) .heroOverlay .field {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.heroOverlay .field:focus-within,
+:global(html.light) .heroOverlay .field:focus-within,
+:global(html[data-theme="light"]) .heroOverlay .field:focus-within {
+  color: #ffffff;
+}
+
+.heroOverlay .field input,
+.heroOverlay .field input::placeholder,
+.heroOverlay .clear,
+:global(html.light) .heroOverlay .field input,
+:global(html[data-theme="light"]) .heroOverlay .field input,
+:global(html.light) .heroOverlay .field input::placeholder,
+:global(html[data-theme="light"]) .heroOverlay .field input::placeholder,
+:global(html.light) .heroOverlay .clear,
+:global(html[data-theme="light"]) .heroOverlay .clear {
+  color: #ffffff;
+}
+
+.heroOverlay .filters,
+.heroOverlay .song,
+:global(html.light) .heroOverlay .bar,
+:global(html[data-theme="light"]) .heroOverlay .bar {
+  color: #ffffff;
+  background: transparent;
+}
