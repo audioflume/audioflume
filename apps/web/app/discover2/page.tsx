@@ -1,3 +1,4 @@
+import "../home-page.css";
 import ShelvedDiscoverPage from "../discover/ShelvedDiscoverPage";
 import ActiveDiscoverBanner from "./ActiveDiscoverBanner";
 
