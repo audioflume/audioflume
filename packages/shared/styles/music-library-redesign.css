@@ -417,7 +417,7 @@
 }
 
 .fw-filter-option:hover {
-  background: var(--bg-hover);
+  background: var(--audioflume-music-hover-background, var(--bg-hover));
   color: var(--text-primary);
 }
 
