@@ -654,6 +654,7 @@ export function DiscoverArchivedSections({
   enableArtistPlayback = false,
   playlistsAfterSupport = false,
   activeDiscoverTypography = false,
+  sections = "all",
   afterPlaylists,
 }: {
   albumsTitle?: string;
@@ -665,6 +666,7 @@ export function DiscoverArchivedSections({
   enableArtistPlayback?: boolean;
   playlistsAfterSupport?: boolean;
   activeDiscoverTypography?: boolean;
+  sections?: "all" | "featuredSongs" | "remaining";
   afterPlaylists?: ReactNode;
 }) {
   const playlistBlocks = (
@@ -697,28 +699,28 @@ export function DiscoverArchivedSections({
 
   return (
     <>
-    <ArtistShelf
+    {sections !== "featuredSongs" ? <ArtistShelf
       title="Artists we're watching"
       items={watchingArtists}
       enablePlayback={enableArtistPlayback}
       compactArtistCards={compactWatchingCards}
       compactNames={activeDiscoverTypography}
       footerCopy="1500+ artists trending online"
-    />
+    /> : null}
 
-    {!playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
+    {sections !== "featuredSongs" && !playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
-    <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} />
+    {sections !== "remaining" ? <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} /> : null}
 
-    <ArtistShelf
+    {sections !== "featuredSongs" ? <ArtistShelf
       title="Support new artists"
       items={supportArtists}
       enablePlayback={enableArtistPlayback}
       compactNames={activeDiscoverTypography}
       footerCopy="1500+ artists trending online"
-    />
+    /> : null}
 
-    {playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
+    {sections !== "featuredSongs" && playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
     </>
   );
