@@ -1078,6 +1078,37 @@
   line-height: 15px;
 }
 
+/* Active Discover only: preserve archived /discover2 card typography. */
+.audioflume-home-mockup.is-discover-page .discover-artist-feature-copy strong {
+  font-size: 24px;
+}
+
+.audioflume-home-mockup.is-discover-page .is-discover-compact-names .discover-artist-card-overlay strong {
+  font-size: 13px;
+}
+
+.audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-shelf-scroller {
+  gap: clamp(16px, 1.4vw, 22px);
+}
+
+.audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-card-meta strong {
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.15;
+}
+
+.audioflume-home-mockup.is-discover-page .is-discover-song-text .discover-artist-card-meta span {
+  margin-top: 2px;
+  color: var(--text-subtle);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: normal;
+  line-height: 1.15;
+}
+
 .discover-artist-shelf-footer {
   display: flex;
   align-items: flex-start;
