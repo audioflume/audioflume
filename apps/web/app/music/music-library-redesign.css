@@ -12,6 +12,10 @@
   --audioflume-music-input-focus-color: #111;
 }
 
+:where(html.light, html[data-theme="light"]) .audioflume-music-page .music-page-content-shell {
+  background: #f7f7f5;
+}
+
 .audioflume-music-page {
   padding-top: var(--filmwave-header-height, 75px);
 }
