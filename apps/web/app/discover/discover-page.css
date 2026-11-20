@@ -10,6 +10,40 @@
   font-family: var(--font-aktiv-grotesk), sans-serif;
 }
 
+/* Discover2 hero chrome: the existing website header and searchbar sit over the banner. */
+.discover-page-root {
+  position: relative;
+  padding-top: 0;
+}
+
+.discover-page-root > .discover2-hero-search {
+  position: absolute;
+  top: var(--filmwave-header-height, 75px);
+  right: 0;
+  left: 0;
+  z-index: 20;
+}
+
+.discover-page-root .discover-artist-hero {
+  --discover-artist-hero-height: calc(100dvh - 28px);
+}
+
+.discover-page-root.has-player .discover-artist-hero {
+  --discover-artist-hero-height: calc(100dvh - 28px - var(--filmwave-player-height, 72px));
+}
+
+body:has(.discover-page-root) .filmwave-web-header.is-transparent {
+  --filmwave-chrome-surface: transparent;
+  border-bottom-color: transparent;
+  background: transparent;
+  color: #e5e5df;
+}
+
+body:has(.discover-page-root) .filmwave-web-header.is-transparent
+  :is(.filmwave-header-tonal-wordmark, .filmwave-header-logo-action, .filmwave-header-actions, .filmwave-header-nav-link) {
+  color: #e5e5df;
+}
+
 .discover-page-root button,
 .discover-page-root input,
 .discover-page-root textarea,
