@@ -693,7 +693,7 @@ export function DiscoverArchivedSections({
   enableArtistPlayback?: boolean;
   playlistsAfterSupport?: boolean;
   activeDiscoverTypography?: boolean;
-  sections?: "all" | "featuredSongs" | "remaining" | "playlists" | "artistsOnly";
+  sections?: "all" | "featuredSongs" | "remaining" | "playlists" | "artistsOnly" | "withoutWatchingAndPlaylists" | "watchingAndPlaylists";
   afterPlaylists?: ReactNode;
 }) {
   const playlistBlocks = (
@@ -729,7 +729,7 @@ export function DiscoverArchivedSections({
 
   return (
     <>
-    {sections !== "featuredSongs" && sections !== "playlists" ? <ArtistShelf
+    {sections !== "featuredSongs" && sections !== "playlists" && sections !== "withoutWatchingAndPlaylists" ? <ArtistShelf
       title="Artists we're watching"
       items={watchingArtists}
       enablePlayback={enableArtistPlayback}
@@ -738,11 +738,11 @@ export function DiscoverArchivedSections({
       footerCopy="1500+ artists trending online"
     /> : null}
 
-    {sections !== "featuredSongs" && sections !== "artistsOnly" && !playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
+    {sections !== "featuredSongs" && sections !== "artistsOnly" && sections !== "withoutWatchingAndPlaylists" && !playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
-    {sections !== "remaining" && sections !== "playlists" && sections !== "artistsOnly" ? <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} /> : null}
+    {sections !== "remaining" && sections !== "playlists" && sections !== "artistsOnly" && sections !== "watchingAndPlaylists" ? <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} /> : null}
 
-    {sections !== "featuredSongs" && sections !== "playlists" ? <ArtistShelf
+    {sections !== "featuredSongs" && sections !== "playlists" && sections !== "watchingAndPlaylists" ? <ArtistShelf
       title="Support new artists"
       items={supportArtists}
       enablePlayback={enableArtistPlayback}
@@ -750,13 +750,13 @@ export function DiscoverArchivedSections({
       footerCopy="1500+ artists trending online"
     /> : null}
 
-    {sections !== "featuredSongs" && sections !== "artistsOnly" && playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
+    {sections !== "featuredSongs" && sections !== "artistsOnly" && sections !== "withoutWatchingAndPlaylists" && playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
     </>
   );
 }
 
-export default function DiscoverPage({ afterPlaylists, liveContent = false }: { afterPlaylists?: ReactNode; liveContent?: boolean } = {}) {
+export default function DiscoverPage({ afterPlaylists, liveContent = false, moveWatchingAndPlaylistsAfterReadyToCut = false }: { afterPlaylists?: ReactNode; liveContent?: boolean; moveWatchingAndPlaylistsAfterReadyToCut?: boolean } = {}) {
   const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
@@ -1146,7 +1146,8 @@ export default function DiscoverPage({ afterPlaylists, liveContent = false }: { 
         />
 
         <DiscoverArchivedSections
-          afterPlaylists={afterPlaylists}
+          sections={moveWatchingAndPlaylistsAfterReadyToCut ? "withoutWatchingAndPlaylists" : "all"}
+          afterPlaylists={moveWatchingAndPlaylistsAfterReadyToCut ? undefined : afterPlaylists}
           albumsTitle={liveContent ? "Top songs" : "Top albums"}
           enableArtistPlayback={liveContent}
           watchingArtists={liveContent ? previewArtistShelfItems(directoryArtists.slice(0, 7), 0) : undefined}
@@ -1165,6 +1166,20 @@ export default function DiscoverPage({ afterPlaylists, liveContent = false }: { 
         />
 
         <ReadyToCutTracks songs={readyToCutSongs} />
+
+        {moveWatchingAndPlaylistsAfterReadyToCut ? (
+          <DiscoverArchivedSections
+            sections="watchingAndPlaylists"
+            afterPlaylists={afterPlaylists}
+            enableArtistPlayback={liveContent}
+            watchingArtists={liveContent ? previewArtistShelfItems(directoryArtists.slice(0, 7), 0) : undefined}
+            featuredPlaylists={liveContent ? editorialPlaylists.map((playlist) => ({
+              name: playlist.name,
+              image: playlist.feature_cover_image_url || playlist.cover_image_url || "",
+              href: `/curated-playlists/${playlist.id}`,
+            })) : undefined}
+          />
+        ) : null}
 
         <div
           className="discover-artist-footer"
