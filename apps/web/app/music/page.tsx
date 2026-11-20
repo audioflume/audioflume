@@ -16,9 +16,7 @@ import {
   MusicListShell,
   MusicQuickChip,
   MusicQuickChips,
-  MusicLibrarySortControl,
   MusicLibraryEmptyState,
-  type MusicLibrarySortValue,
   QUICK_FILTERS,
   REGION_OPTIONS,
   songMatchesEditPointFilter,
@@ -45,6 +43,7 @@ import Footer from "@/components/Footer";
 import { HomeHeroBanner } from "../HomeLandingContent";
 import GlobalMusicSearchField from "@/components/GlobalMusicSearchField";
 import ReferenceSearchModal from "@/components/ReferenceSearchModal";
+import MusicFindSimilarButton from "./MusicFindSimilarButton";
 import SongCard from "@/components/SongCard";
 import PauseIcon from "@/components/icons/PauseIcon";
 import PlayIconSmall from "@/components/icons/PlayIconSmall";
@@ -416,7 +415,6 @@ export default function MusicPage() {
       filterCloseTimeoutRef.current = null;
     }, 180);
   }
-  const [sortOrder, setSortOrder] = useState<MusicLibrarySortValue>("recent");
   const [selectedLicenseFilters, setSelectedLicenseFilters] =
     useState<LicenseFilterValue[]>([]);
   const [semanticSearchState, setSemanticSearchState] =
@@ -1180,17 +1178,7 @@ export default function MusicPage() {
     songs,
   ]);
 
-  const sortedSongs = useMemo(() => {
-    if (sortOrder !== "downloaded") return filteredSongs;
-
-    return [...filteredSongs].sort((a, b) => {
-      const aDownloads = Number(getSongField(a, "downloadCount") ?? 0);
-      const bDownloads = Number(getSongField(b, "downloadCount") ?? 0);
-      return bDownloads - aDownloads;
-    });
-  }, [filteredSongs, sortOrder]);
-
-  const displayedSongs = sortedSongs;
+  const displayedSongs = filteredSongs;
 
   useEffect(() => {
     setQueue(displayedSongs);
@@ -1378,23 +1366,12 @@ export default function MusicPage() {
         />
 
         <div className="audioflume-music-page-searchbar-sort">
-          <button
-            type="button"
-            className="audioflume-music-page-searchbar-song"
-            aria-label="Find Similar"
-            aria-expanded={searchBySongOpen}
+          <MusicFindSimilarButton
+            open={searchBySongOpen}
             onClick={() => {
               setSearchBySongQuery("");
               setSearchBySongOpen(true);
             }}
-          >
-            <WaveformIcon size={16} />
-            <span>Find Similar</span>
-          </button>
-          <MusicLibrarySortControl
-            value={sortOrder}
-            onChange={setSortOrder}
-            showSelectedCheck
           />
         </div>
       </div>
