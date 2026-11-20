@@ -1286,7 +1286,7 @@
   white-space: nowrap;
 }
 
-.discover-artist-editorial-meta span:last-child {
+.discover-artist-editorial-meta > :last-child {
   justify-self: end;
   font-size: 11px;
   font-weight: 400;
