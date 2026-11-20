@@ -655,6 +655,7 @@ export function DiscoverArchivedSections({
   enableArtistPlayback = false,
   playlistsAfterSupport = false,
   activeDiscoverTypography = false,
+  afterPlaylists,
 }: {
   albumsTitle?: string;
   watchingArtists?: ShelfItem[];
@@ -665,6 +666,7 @@ export function DiscoverArchivedSections({
   enableArtistPlayback?: boolean;
   playlistsAfterSupport?: boolean;
   activeDiscoverTypography?: boolean;
+  afterPlaylists?: ReactNode;
 }) {
   const playlistBlocks = (
       <section className="discover-artist-editorial-grid">
@@ -705,7 +707,7 @@ export function DiscoverArchivedSections({
       footerCopy="1500+ artists trending online"
     />
 
-    {!playlistsAfterSupport ? playlistBlocks : null}
+    {!playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
     <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} />
 
@@ -717,13 +719,13 @@ export function DiscoverArchivedSections({
       footerCopy="1500+ artists trending online"
     />
 
-    {playlistsAfterSupport ? playlistBlocks : null}
+    {playlistsAfterSupport ? <>{playlistBlocks}{afterPlaylists}</> : null}
 
     </>
   );
 }
 
-export default function DiscoverPage() {
+export default function DiscoverPage({ afterPlaylists }: { afterPlaylists?: ReactNode } = {}) {
   const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
@@ -1056,7 +1058,7 @@ export default function DiscoverPage() {
           showHeading={featuredArtistCount > 0 || featureCardArtistsLoading}
         />
 
-        <DiscoverArchivedSections />
+        <DiscoverArchivedSections afterPlaylists={afterPlaylists} />
 
         <ReadyToCutTracks songs={readyToCutSongs} />
 
