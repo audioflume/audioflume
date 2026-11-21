@@ -359,20 +359,20 @@ main > section:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all {
   border-radius: 999px !important;
   background: var(--filmwave-filter-clear-all-background, var(--filmwave-neutral-surface)) !important;
   background-color: var(--filmwave-filter-clear-all-background, var(--filmwave-neutral-surface)) !important;
-  color: var(--text-secondary) !important;
+  color: var(--filmwave-filter-clear-all-color, var(--text-secondary)) !important;
   font-family: inherit !important;
-  font-size: 10.5px !important;
-  font-weight: 400 !important;
+  font-size: var(--filmwave-filter-clear-all-font-size, 10.5px) !important;
+  font-weight: var(--filmwave-filter-clear-all-font-weight, 400) !important;
   line-height: 1 !important;
   letter-spacing: 0 !important;
   cursor: pointer !important;
   opacity: 1 !important;
   text-decoration: none !important;
-  transition: background 150ms ease, color 150ms ease !important;
+  transition: background-color 150ms ease, color 150ms ease !important;
 }
 
 main > section:has(.fw-filter-panel-wrap) button.fw-filter-rail-clear-all:hover {
-  background: var(--bg-control-hover) !important;
+  background: var(--filmwave-filter-clear-all-hover-background, var(--bg-control-hover)) !important;
   border-color: transparent !important;
   color: var(--text-primary) !important;
   opacity: 1 !important;
