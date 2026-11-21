@@ -1790,6 +1790,24 @@
   cursor: pointer;
 }
 
+@media (min-width: 901px) {
+  .discover-page-root.is-discover2 .discover2-song-grid > .discover2-compact-song:nth-last-child(-n + 4) {
+    border-bottom: 0;
+  }
+}
+
+@media (min-width: 541px) and (max-width: 900px) {
+  .discover-page-root.is-discover2 .discover2-song-grid > .discover2-compact-song:nth-last-child(-n + 2) {
+    border-bottom: 0;
+  }
+}
+
+@media (max-width: 540px) {
+  .discover-page-root.is-discover2 .discover2-song-grid > .discover2-compact-song:last-child {
+    border-bottom: 0;
+  }
+}
+
 .discover-page-root.is-discover2 .discover2-compact-song:hover,
 .discover-page-root.is-discover2 .discover2-compact-song:focus-visible {
   background: transparent;
