@@ -75,6 +75,7 @@ function Shelf({
   customScrollbar = false,
   progressScrollbar = false,
   fadeAdjacentCards = false,
+  retainPartialScrollCards = false,
 }: {
   label: string;
   children: ReactNode;
@@ -82,6 +83,7 @@ function Shelf({
   customScrollbar?: boolean;
   progressScrollbar?: boolean;
   fadeAdjacentCards?: boolean;
+  retainPartialScrollCards?: boolean;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
   const [canScrollPrev, setCanScrollPrev] = useState(false);
@@ -127,6 +129,13 @@ function Shelf({
         card.classList.toggle("is-shelf-primary", index === primaryIndex);
       });
       scroller.classList.toggle("has-shelf-primary", primaryIndex !== -1);
+      if (retainPartialScrollCards) {
+        const alignedLeft = viewport.left + (parseFloat(getComputedStyle(scroller).paddingLeft) || 0);
+        const nearestAlignedDistance = Math.min(
+          ...cards.map((card) => Math.abs(card.getBoundingClientRect().left - alignedLeft)),
+        );
+        scroller.classList.toggle("is-between-cards", nearestAlignedDistance > 4);
+      }
     }
 
     if (customScrollbar) {
@@ -345,7 +354,7 @@ function Shelf({
       window.removeEventListener("resize", updateScrollState);
       observer.disconnect();
     };
-  }, [customScrollbar, fadeAdjacentCards, shelfItemCount]);
+  }, [customScrollbar, fadeAdjacentCards, retainPartialScrollCards, shelfItemCount]);
 
 
   return (
@@ -632,6 +641,7 @@ export function HomeArtistShelf({
   hideExploreButton = false,
   progressScrollbar = false,
   discoverPlaybackIcon = false,
+  retainPartialScrollCards = false,
 }: {
   artists: HomeArtist[];
   homeFlashImages: string[];
@@ -640,6 +650,7 @@ export function HomeArtistShelf({
   hideExploreButton?: boolean;
   progressScrollbar?: boolean;
   discoverPlaybackIcon?: boolean;
+  retainPartialScrollCards?: boolean;
 }) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
 
@@ -672,6 +683,7 @@ export function HomeArtistShelf({
       customScrollbar={false}
       progressScrollbar={discoverLayout || progressScrollbar}
       fadeAdjacentCards={discoverLayout}
+      retainPartialScrollCards={retainPartialScrollCards}
     >
       {artists.map((artist, index) => {
         const image = artist.hero_image_url || artist.profile_image_url || "";
