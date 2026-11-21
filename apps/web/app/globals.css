@@ -36,7 +36,6 @@ body:has(:is(.audioflume-music-page, .discover-page-root, .artist2-page-root)) {
   --audioflume-reference-nav-link-padding: 7px;
   --audioflume-reference-nav-font-size: 14px;
   --audioflume-reference-nav-font-weight: 300;
-  --audioflume-reference-nav-font-smoothing: auto;
 }
 
 :where(html.light, html[data-theme="light"]) body:has(:is(.audioflume-music-page, .discover-page-root, .artist2-page-root)) {
