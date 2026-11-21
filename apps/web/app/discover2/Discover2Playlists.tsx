@@ -2,8 +2,6 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayButton";
-import { cardWaveformStyles } from "@/components/playlists/CardPlayingWaveform";
 
 type CuratedPlaylist = {
   id: number;
@@ -52,13 +50,12 @@ export default function Discover2Playlists() {
             ))
           : playlists.map((playlist) => (
               <div className="discover2-playlist-item" key={playlist.id}>
-                <div className={`discover2-playlist-image ${cardWaveformStyles.cardHost}`}>
+                <div className="discover2-playlist-image">
                   <Link className="discover2-playlist-cover-link" href={`/curated-playlists/${playlist.id}`} aria-label={`View ${playlist.name}`}>
                     {(playlist.feature_cover_image_url || playlist.cover_image_url) && (
                       <img src={playlist.feature_cover_image_url || playlist.cover_image_url || ""} alt="" loading="lazy" />
                     )}
                   </Link>
-                  <CuratedPlaylistPlayButton playlistId={playlist.id} playlistName={playlist.name} previewEnabled />
                 </div>
                 <Link className="discover2-playlist-name" href={`/curated-playlists/${playlist.id}`}>{playlist.name}</Link>
               </div>
