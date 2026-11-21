@@ -47,22 +47,24 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
       {!beforePlaylists ? (
       <p className="discover2-song-intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br />Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
       ) : null}
-      {loading ? (
-        <div className="discover2-song-grid" aria-label="Loading tracks">
-          {Array.from({ length: 12 }, (_, index) => (
-            <div className="discover2-compact-song" key={index} aria-hidden="true">
-              <span className="discover2-compact-song-art" />
-              <span className="discover2-compact-song-copy" />
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="discover2-song-grid">
-          {recentSongs.map((song) => (
-            <Discover2CompactSong key={song.id} song={song} queue={recentSongs} />
-          ))}
-        </div>
-      )}
+      <div className="discover2-song-container">
+        {loading ? (
+          <div className="discover2-song-grid" aria-label="Loading tracks">
+            {Array.from({ length: 12 }, (_, index) => (
+              <div className="discover2-compact-song" key={index} aria-hidden="true">
+                <span className="discover2-compact-song-art" />
+                <span className="discover2-compact-song-copy" />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="discover2-song-grid">
+            {recentSongs.map((song) => (
+              <Discover2CompactSong key={song.id} song={song} queue={recentSongs} />
+            ))}
+          </div>
+        )}
+      </div>
     </section>
   );
 }
