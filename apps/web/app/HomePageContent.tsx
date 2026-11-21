@@ -432,7 +432,7 @@ function HomeOriginalSongCard({ song, discoverPlaybackIcon = false }: { song: So
   );
 }
 
-function HomeOriginalSongGrid({ songs, discoverPlaybackIcon = false }: { songs: Song[]; discoverPlaybackIcon?: boolean }) {
+export function HomeOriginalSongGrid({ songs, discoverPlaybackIcon = false }: { songs: Song[]; discoverPlaybackIcon?: boolean }) {
   return (
     <div className="audioflume-home-reference-original-song-grid">
       {songs.slice(0, 16).map((song) => (
@@ -1185,7 +1185,7 @@ function HomeCuratedPlaylistSkeleton({ discoverLayout = false }: { discoverLayou
   );
 }
 
-function HomeOriginalsSkeleton() {
+export function HomeOriginalsSkeleton() {
   return (
     <div className="audioflume-home-reference-original-song-grid audioflume-home-skeleton-original-grid">
       {Array.from({ length: 16 }, (_, index) => (
