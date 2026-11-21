@@ -5,9 +5,9 @@ import { supabaseAccountBrowser } from "@/lib/auth/supabaseAccountBrowser";
 import styles from "./SupabaseAccountAuthForm.module.css";
 
 type Mode = "sign-in" | "sign-up" | "forgot" | "reset";
-type Props = { initialMode: "sign-in" | "sign-up"; next: string };
+type Props = { initialMode: "sign-in" | "sign-up"; next: string; modal?: boolean };
 
-export default function SupabaseAccountAuthForm({ initialMode, next }: Props) {
+export default function SupabaseAccountAuthForm({ initialMode, next, modal = false }: Props) {
   const [mode, setMode] = useState<Mode>(initialMode);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -74,7 +74,7 @@ export default function SupabaseAccountAuthForm({ initialMode, next }: Props) {
     setBusy(true);
     setError("");
     setNotice("");
-    if ((mode === "sign-in" || mode === "sign-up") && !emailConfirmed) {
+    if (!modal && (mode === "sign-in" || mode === "sign-up") && !emailConfirmed) {
       setEmailConfirmed(true);
       setBusy(false);
       return;
@@ -127,21 +127,27 @@ export default function SupabaseAccountAuthForm({ initialMode, next }: Props) {
   }
 
   const title = mode === "forgot" ? "Reset your password." :
-    mode === "reset" ? "Choose a new password." : "Log in or sign up";
+    mode === "reset" ? "Choose a new password." :
+    modal ? (mode === "sign-up" ? "Join Audioflume." : "Welcome back.") : "Log in or sign up";
   const showPassword = mode === "reset" ||
-    ((mode === "sign-in" || mode === "sign-up") && emailConfirmed);
+    ((mode === "sign-in" || mode === "sign-up") && (emailConfirmed || modal));
 
   return (
-    <main className={styles.page}>
+    <main className={modal ? styles.modalPage : styles.page}>
       <section className={styles.panel} aria-label="Audioflume account authentication">
         <h1 className={styles.title}>{title}</h1>
+        {modal && (mode === "sign-in" || mode === "sign-up") ? (
+          <p className={styles.modalIntro}>
+            {mode === "sign-up" ? "Create your free account. No credit card required." : "Sign in to continue discovering music."}
+          </p>
+        ) : null}
         {mode === "forgot" || mode === "reset" ? (
           <p className={styles.description}>
             {mode === "forgot" ? "We'll send a password reset link to your email."
               : "Enter a new password for your account."}
           </p>
         ) : null}
-        {(mode === "sign-in" || mode === "sign-up") && !emailConfirmed ? (
+        {(mode === "sign-in" || mode === "sign-up") && (!emailConfirmed || modal) ? (
           <>
             <button className={styles.secondaryButton} type="button" disabled={busy}
               onClick={() => void googleSignIn()}>
@@ -177,7 +183,7 @@ export default function SupabaseAccountAuthForm({ initialMode, next }: Props) {
           <button className={styles.primaryButton} type="submit" disabled={busy}>
             {busy ? "Please wait…" : mode === "forgot" ? "Send reset email" :
               mode === "reset" ? "Save password" :
-              !emailConfirmed ? "Continue" :
+              !emailConfirmed && !modal ? "Continue" :
               mode === "sign-up" ? "Create account" : "Sign in"}
           </button>
         </form>
