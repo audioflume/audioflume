@@ -456,7 +456,7 @@ export default function Header() {
           align-items: center !important;
           color: var(--text-primary) !important;
           font-family: var(--font-aktiv-grotesk), ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
-          font-size: 22px !important;
+          font-size: var(--audioflume-reference-wordmark-size, 22px) !important;
           font-weight: 500 !important;
           letter-spacing: -0.045em !important;
           line-height: 1 !important;
@@ -495,9 +495,17 @@ export default function Header() {
         .filmwave-web-header .filmwave-header-nav {
           position: var(--audioflume-reference-nav-position, static);
           left: var(--audioflume-reference-nav-left, auto);
+          right: var(--audioflume-reference-nav-right, auto);
           top: var(--audioflume-reference-nav-top, auto);
+          height: var(--audioflume-reference-nav-height, auto);
+          justify-content: var(--audioflume-reference-nav-justify, flex-start);
           gap: var(--audioflume-reference-nav-gap, 18px) !important;
+          pointer-events: var(--audioflume-reference-nav-pointer-events, auto);
           transform: var(--audioflume-reference-nav-transform, none);
+        }
+
+        .filmwave-web-header .filmwave-header-nav > * {
+          pointer-events: auto;
         }
 
         .filmwave-web-header .filmwave-header-nav-link {
@@ -512,14 +520,14 @@ export default function Header() {
 
         .filmwave-header-new-badge {
           display: inline-flex;
-          height: 16px;
+          height: 18px;
           align-items: center;
           border-radius: 999px;
           background: #111;
-          padding: 0 9px;
+          padding: 0 11px;
           color: #fff;
           font-size: 10px;
-          font-weight: 500;
+          font-weight: 400;
           line-height: 1;
         }
         .filmwave-header-right-actions {
