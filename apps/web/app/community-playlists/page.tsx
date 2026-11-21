@@ -1150,7 +1150,6 @@ export default function CommunityPlaylistsPage() {
               </p>
             </div>
             <span className="community-card-view-playlist">
-              <span className="community-card-view-playlist-text">View playlist</span>
               <ArrowUpRightIcon size={17} strokeWidth={1.5} />
             </span>
           </Link>
