@@ -1170,7 +1170,7 @@ export default function MusicPage() {
       ? new Map(orderedSongIds.map((songId, index) => [songId, index]))
       : null;
 
-    const nextSongs = filterMusicLibrarySongs(vocalTypeSongs, {
+    const includedSongs = filterMusicLibrarySongs(vocalTypeSongs, {
       search: semanticOrder || referenceSearchActive ? "" : search,
       selectedMoods,
       selectedGenres,
@@ -1184,6 +1184,29 @@ export default function MusicPage() {
       bpmValue,
       keyValue,
     });
+
+    const excludedFields: Record<string, string[]> = {
+      mood: ["moods", "mood"],
+      genre: ["genres", "genre"],
+      artist: ["artist"],
+      region: ["regions", "region"],
+      instruments: ["instruments"],
+      vocals: ["vocals"],
+      build: ["builds", "build"],
+    };
+    const nextSongs = excludedFilterCount === 0
+      ? includedSongs
+      : includedSongs.filter((song) => !Object.entries(excludedFilters).some(([groupId, values]) => {
+          if (!values.length) return false;
+          if (groupId === "vocals") {
+            if (values.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION) && songIsInstrumental(song)) return true;
+            if (values.includes(LYRICAL_VOCAL_FILTER_OPTION) && songIsLyrical(song)) return true;
+          }
+          const fields = excludedFields[groupId];
+          return fields ? values.some((value) =>
+            optionIsUsedBySongValues(getSongFilterValues(song, fields), value),
+          ) : false;
+        }));
 
     if (!semanticOrder) return nextSongs;
 
@@ -1205,6 +1228,8 @@ export default function MusicPage() {
       .map((entry) => entry.song);
   }, [
     bpmValue,
+    excludedFilters,
+    excludedFilterCount,
     filtersHydrated,
     instrumental,
     keyValue,
@@ -1342,6 +1367,13 @@ export default function MusicPage() {
   const [showFilterPillDock, setShowFilterPillDock] = useState(false);
 
   const activeFilterPills = [
+    ...Object.entries(excludedFilters).flatMap(([groupId, values]) =>
+      values.map((value) => ({
+        id: `exclude-${groupId}-${value}`,
+        label: value === "Tense" ? "Tension" : value,
+        onRemove: () => toggleExclude(groupId, value),
+      })),
+    ),
     ...filterChipGroups.flatMap((group) =>
       group.selected.map((value) => ({
         id: `${group.id}-${value}`,
