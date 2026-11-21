@@ -389,7 +389,7 @@ export default function Header() {
           display: flex;
           box-sizing: border-box;
           width: 100%;
-          height: var(--audioflume-cta-bar-height, 28px);
+          height: var(--audioflume-cta-bar-height, 37px);
           align-items: center;
           justify-content: space-between;
           gap: 24px;
