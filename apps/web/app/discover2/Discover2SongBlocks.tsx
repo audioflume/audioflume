@@ -35,7 +35,7 @@ function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
   );
 }
 
-export default function Discover2SongBlocks() {
+export default function Discover2SongBlocks({ beforePlaylists = false }: { beforePlaylists?: boolean }) {
   const { songs, loading } = useSongs();
   const recentSongs = useMemo(
     () => songs.filter((song) => Boolean(song.audioUrl)).slice(0, 12),
@@ -43,8 +43,10 @@ export default function Discover2SongBlocks() {
   );
 
   return (
-    <section className="discover2-song-section" aria-label="Featured tracks">
+    <section className={`discover2-song-section${beforePlaylists ? " is-before-playlists" : ""}`} aria-label="Featured tracks">
+      {!beforePlaylists ? (
       <p className="discover2-song-intro">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.<br />Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+      ) : null}
       {loading ? (
         <div className="discover2-song-grid" aria-label="Loading tracks">
           {Array.from({ length: 12 }, (_, index) => (
