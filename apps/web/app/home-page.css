@@ -6136,8 +6136,11 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 .audioflume-experiment-promos {
   display: flow-root;
   --audioflume-lifetime-image-position: right top;
-  --audioflume-promo-block-height: 340px;
   --audioflume-promo-curated-aspect-ratio: auto;
+}
+
+.audioflume-experiment-promos:not(.discover2-promo-blocks) {
+  --audioflume-promo-block-height: 340px;
 }
 
 :where(html.light, html[data-theme="light"]) .audioflume-home-mockup-artists.is-discover-featured-artists {
