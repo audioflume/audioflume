@@ -6165,7 +6165,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   isolation: isolate;
 }
 
-:where(html.light, html[data-theme="light"]) .audioflume-experiment-promos::before {
+:where(html.light, html[data-theme="light"]) .audioflume-experiment-promos:not(.discover2-promo-blocks)::before {
   position: absolute;
   z-index: -1;
   top: 0;
