@@ -9,7 +9,6 @@ import CuratedPlaylistPlayButton from "@/components/curated/CuratedPlaylistPlayB
 import CuratedPlaylistBookmarkButton from "@/components/curated/CuratedPlaylistBookmarkButton";
 import cardStyles from "@/components/curated/CuratedPlaylistCard.module.css";
 import UserMenu from "@/components/UserMenu";
-import { AudioflumeMark } from "@/components/LifetimeAccessCard";
 
 type CuratedPlaylistPreview = {
   id: number;
@@ -1349,7 +1348,14 @@ export default function Header() {
             aria-label="audioflume Home"
           >
             {useCombinedHeaderHeight ? (
-              <AudioflumeMark className="filmwave-header-audioflume-symbol" />
+              <svg className="filmwave-header-audioflume-symbol" viewBox="0 0 28.73 30.74" aria-hidden="true">
+                <path d="M9.58,28.35c0,1.39,1.19,2.51,2.61,2.38,1.27-.11,2.18-1.28,2.18-2.55v-12.95s-.02-.04-.04-.04h-4.71s-.04.02-.04.04v13.12Z" />
+                <path d="M9.58,8.17c0-1.39-1.19-2.51-2.61-2.38-1.27.11-2.18,1.28-2.18,2.55v6.81s.02.04.04.04h4.71s.04-.02.04-.04v-6.98Z" />
+                <path d="M0,17.99C0,19.38,1.19,20.5,2.61,20.37c1.27-.11,2.18-1.28,2.18-2.55v-2.59s-.02-.04-.04-.04H.04s-.04.02-.04.04c0,0,0,2.76,0,2.76Z" />
+                <path d="M28.73,12.4c0-1.39-1.19-2.51-2.61-2.38-1.27.11-2.18,1.28-2.18,2.55v2.59s.02.04.04.04h4.71s.04-.02.04-.04v-2.76Z" />
+                <path d="M19.15,22.21c0,1.39,1.19,2.51,2.61,2.38,1.27-.11,2.18-1.28,2.18-2.55v-6.81s-.02-.04-.04-.04h-4.71s-.04.02-.04.04c0,0,0,6.98,0,6.98Z" />
+                <path d="M19.15,2.39C19.15,1,17.96-.12,16.54.01c-1.27.11-2.18,1.28-2.18,2.55v12.59s.02-.04.04-.04h4.71s.04.02.04.04V2.39Z" />
+              </svg>
             ) : null}
             <span className="filmwave-header-tonal-wordmark">audioflume</span>
           </Link>
