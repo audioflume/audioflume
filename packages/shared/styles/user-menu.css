@@ -277,15 +277,20 @@ html[data-theme="light"] {
 }
 
 :where(html.light, html[data-theme="light"])
+  .filmwave-dropdown-shell.filmwave-user-menu.filmwave-web-user-menu {
+  --filmwave-menu-hover: #f7f7f5;
+}
+
+:where(html.light, html[data-theme="light"])
   .filmwave-web-user-menu-new-project-icon {
-  background: #eeeeee;
+  background: #e5e5df;
   color: #4d4d4d;
 }
 
 :where(html.light, html[data-theme="light"])
   .filmwave-web-user-menu-new-project-button:hover
   .filmwave-web-user-menu-new-project-icon {
-  background: #dadada;
+  background: #d5d5cd;
 }
 
 .filmwave-web-user-menu .filmwave-user-menu-actions {
