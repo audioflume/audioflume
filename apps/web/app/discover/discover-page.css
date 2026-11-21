@@ -1774,11 +1774,6 @@
   text-align: center;
 }
 
-.discover-page-root.is-discover2 .discover2-song-container {
-  background: #fff;
-  padding: 24px;
-}
-
 .discover-page-root.is-discover2 .discover2-song-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
