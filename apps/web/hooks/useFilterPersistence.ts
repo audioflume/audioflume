@@ -21,6 +21,7 @@ export type MusicFilterState = {
   selectedVocals: string[];
   selectedDurations: string[];
   selectedEditPoints: string[];
+  excludedFilters: Record<string, string[]>;
   showEditPointMarkers: boolean;
   instrumental: boolean;
   bpmValue: BpmFilterValue | null;
@@ -69,6 +70,7 @@ const baseDefaultState: MusicFilterState = {
   selectedVocals: [],
   selectedDurations: [],
   selectedEditPoints: [],
+  excludedFilters: {},
   showEditPointMarkers: false,
   instrumental: false,
   bpmValue: null,
@@ -115,6 +117,9 @@ function normalizeFilterState(value: unknown): MusicFilterState {
     selectedEditPoints: stringArray(parsed.selectedEditPoints).length
       ? stringArray(parsed.selectedEditPoints)
       : stringArray(parsed.editPoints),
+    excludedFilters: typeof parsed.excludedFilters === "object" && parsed.excludedFilters !== null && !Array.isArray(parsed.excludedFilters)
+      ? Object.fromEntries(Object.entries(parsed.excludedFilters).map(([key, value]) => [key, stringArray(value)]))
+      : {},
     showEditPointMarkers: getStoredEditPointMarkerVisibility(),
     instrumental:
       typeof parsed.instrumental === "boolean" ? parsed.instrumental : false,
