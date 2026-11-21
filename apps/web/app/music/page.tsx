@@ -1093,8 +1093,27 @@ export default function MusicPage() {
       const nextInstrumental =
         current.instrumental &&
         availableVocals.includes(INSTRUMENTAL_VOCAL_FILTER_OPTION);
+      const availableExclusions: Record<string, readonly string[]> = {
+        mood: availableMoods,
+        genre: availableGenres,
+        artist: availableArtists,
+        region: availableRegions,
+        instruments: availableInstruments,
+        vocals: availableVocals,
+        build: availableBuilds,
+      };
+      const nextExcludedFilters = Object.fromEntries(
+        Object.entries(current.excludedFilters).map(([groupId, values]) => [
+          groupId,
+          values.filter((value) => availableExclusions[groupId]?.includes(value)),
+        ]),
+      );
+      const excludedChanged = Object.entries(current.excludedFilters).some(
+        ([groupId, values]) => values.length !== nextExcludedFilters[groupId]?.length,
+      );
 
       const changed =
+        excludedChanged ||
         nextSelectedMoods.length !== current.selectedMoods.length ||
         nextSelectedGenres.length !== current.selectedGenres.length ||
         nextSelectedArtists.length !== current.selectedArtists.length ||
@@ -1117,6 +1136,7 @@ export default function MusicPage() {
         selectedBuilds: nextSelectedBuilds,
         selectedVocals: nextSelectedVocals,
         selectedEditPoints: nextSelectedEditPoints,
+        excludedFilters: nextExcludedFilters,
         instrumental: nextInstrumental,
       };
     });
