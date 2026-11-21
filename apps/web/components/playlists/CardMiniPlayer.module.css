@@ -333,8 +333,9 @@
   font-weight: 400;
 }
 
-@container (max-width: 199.99px) {
-  .miniPlayerUpper .miniPlayerArt {
+@container (max-width: 274.99px) {
+  .miniPlayerUpper .miniPlayerArt,
+  .miniPlayerSongDuration {
     display: none;
   }
 }
