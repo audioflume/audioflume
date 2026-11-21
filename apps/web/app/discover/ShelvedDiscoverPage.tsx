@@ -1162,7 +1162,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
         </div>
       </section> : null}
 
-      <div className="discover-artist-content">
+      {!discover2Layout ? <div className="discover-artist-content">
         <FeaturedArtistShelf
           artists={featureCardArtists}
           loading={featureCardArtistsLoading}
@@ -1233,7 +1233,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
         >
           <Footer />
         </div>
-      </div>
+      </div> : <div className="discover-artist-footer" style={{ paddingBottom: playerVisible ? "72px" : "8px" }}><Footer /></div>}
     </main>
   );
 }
