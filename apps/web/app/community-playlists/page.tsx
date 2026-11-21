@@ -919,15 +919,7 @@ export default function CommunityPlaylistsPage() {
         playlistPlaybackCacheRef.current.set(playlist.id, songs);
       }
 
-      const playableSongs = songs.filter((song) => Boolean(song.audioUrl));
       if (openPlaylistIdRef.current !== playlist.id) return;
-      const firstSong = playableSongs[0];
-      if (!firstSong) return;
-
-      setQueue(playableSongs);
-      setActivePlaybackPlaylistId(playlist.id);
-      recordCommunityPlaylistPlay(playlist.id, firstSong.id);
-      togglePlayPause(firstSong);
     } catch (error) {
       console.warn("Community playlist card playback failed", error);
     } finally {
