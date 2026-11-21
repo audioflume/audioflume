@@ -496,6 +496,7 @@ export default function Header() {
         .filmwave-web-header .filmwave-header-nav {
           position: var(--audioflume-reference-nav-position, static);
           left: var(--audioflume-reference-nav-left, auto);
+          top: var(--audioflume-reference-nav-top, auto);
           gap: var(--audioflume-reference-nav-gap, 18px) !important;
           transform: var(--audioflume-reference-nav-transform, none);
         }
@@ -1572,7 +1573,9 @@ export default function Header() {
                             backgroundColor:
                               avatarImage && !avatarImageFailed
                                 ? "transparent"
-                                : "#808080",
+                                : useCombinedHeaderHeight
+                                  ? "var(--audioflume-reference-avatar-background, #808080)"
+                                  : "#808080",
                           }}
                         >
                           {avatarImage && !avatarImageFailed ? (
