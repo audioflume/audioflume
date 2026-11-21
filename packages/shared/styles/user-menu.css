@@ -283,14 +283,14 @@ html[data-theme="light"] {
 
 :where(html.light, html[data-theme="light"])
   .filmwave-web-user-menu-new-project-icon {
-  background: #e5e5df;
+  background: #f3f3f2;
   color: #4d4d4d;
 }
 
 :where(html.light, html[data-theme="light"])
   .filmwave-web-user-menu-new-project-button:hover
   .filmwave-web-user-menu-new-project-icon {
-  background: #d5d5cd;
+  background: #e5e5df;
 }
 
 .filmwave-web-user-menu .filmwave-user-menu-actions {
