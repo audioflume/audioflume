@@ -1235,6 +1235,30 @@
   --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
 }
 
+.discover-page-root.is-discover2 .discover2-storytelling-tracks .audioflume-home-reference-original-song-grid {
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  column-gap: 36px;
+  row-gap: 42px;
+}
+
+.discover-page-root.is-discover2 .discover2-storytelling-tracks .audioflume-home-skeleton-original-card:nth-child(n + 13) {
+  display: none;
+}
+
+@media (max-width: 980px) {
+  .discover-page-root.is-discover2 .discover2-storytelling-tracks .audioflume-home-reference-original-song-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 620px) {
+  .discover-page-root.is-discover2 .discover2-storytelling-tracks .audioflume-home-reference-original-song-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 20px;
+    row-gap: 30px;
+  }
+}
+
 .discover2-active-banner {
   --audioflume-home-canvas: transparent;
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
