@@ -14,6 +14,10 @@
   background: #f7f7f5;
 }
 
+.discover-page-root.is-discover2 > .discover2-searchbar-background {
+  background: #fff;
+}
+
 .discover-page-root button,
 .discover-page-root input,
 .discover-page-root textarea,
