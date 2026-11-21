@@ -17,8 +17,14 @@
   transition: background-color 160ms ease, color 160ms ease;
 }
 
+:global(html.light) .appearanceOptions,
+:global(html[data-theme="light"]) .appearanceOptions {
+  --user-menu-light-option-background: #f3f3f2;
+  --user-menu-light-option-hover-background: #e5e5df;
+}
+
 .lightOption {
-  background: #e5e5df;
+  background: var(--user-menu-light-option-background, #e5e5df);
   color: #111;
 }
 
@@ -33,7 +39,7 @@
 }
 
 .lightOption:hover {
-  background: #d5d5cf;
+  background: var(--user-menu-light-option-hover-background, #d5d5cf);
   color: #111;
 }
 
