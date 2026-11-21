@@ -6,5 +6,5 @@ import Discover2StorytellingTracks from "./Discover2StorytellingTracks";
 import { HomeLandingPromoBlocks } from "../HomeLandingContent";
 
 export default function Discover2Page() {
-  return <ShelvedDiscoverPage liveContent discover2Layout topBanner={<><ActiveDiscoverBanner /><div className="audioflume-experiment-main audioflume-experiment-promos discover2-promo-blocks"><HomeLandingPromoBlocks showCurated={false} /></div><Discover2StorytellingTracks /></>} afterFeaturedSongs={<Discover2SongBlocks />} />;
+  return <ShelvedDiscoverPage liveContent discover2Layout topBanner={<><ActiveDiscoverBanner /><div className="audioflume-experiment-main audioflume-experiment-promos discover2-promo-blocks"><HomeLandingPromoBlocks showCurated={false} curatedRightBlock /></div><Discover2StorytellingTracks /></>} afterFeaturedSongs={<Discover2SongBlocks />} />;
 }
