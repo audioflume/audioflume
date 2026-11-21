@@ -139,3 +139,111 @@
 }
 .error { color: var(--status-error, #db5252); }
 .success { color: var(--text-primary); }
+
+/* Web-only presentation of the existing auth flow inside the site modal. */
+.modalPage {
+  width: 100%;
+  min-width: 0;
+  color: #111;
+}
+
+.modalPage .panel {
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+}
+
+.modalPage .title {
+  margin-bottom: 10px;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(36px, 3.8vw, 55px);
+  font-weight: 400;
+  letter-spacing: -.055em;
+  line-height: 1;
+}
+
+.modalIntro {
+  max-width: 300px;
+  margin: 0 0 clamp(30px, 5vh, 60px);
+  font-size: 17px;
+  line-height: 1.35;
+}
+
+.modalPage .description {
+  margin-top: 8px;
+  color: #555;
+}
+
+.modalPage .form {
+  order: 1;
+  gap: 24px;
+}
+
+.modalPage .label {
+  gap: 5px;
+  font-size: 13px;
+}
+
+.modalPage .input {
+  height: 43px;
+  border: 0;
+  border-bottom: 1px solid #222;
+  border-radius: 0;
+  background: transparent;
+  padding: 0;
+  color: #111;
+}
+
+.modalPage .input:focus-visible {
+  outline: 0;
+  border-bottom: 2px solid #111;
+}
+
+.modalPage .primaryButton {
+  min-height: 52px;
+  border: 0;
+  border-radius: 0;
+  margin-top: 18px;
+  background: #111;
+  color: #fff;
+  text-transform: uppercase;
+}
+
+.modalPage .divider {
+  order: 2;
+  margin: 24px 0;
+  color: #333;
+}
+
+.modalPage .divider::before,
+.modalPage .divider::after {
+  background: #ccc;
+}
+
+.modalPage .secondaryButton {
+  order: 3;
+  min-height: 48px;
+  border: 1px solid #d5d5d5;
+  border-radius: 4px;
+  background: #fff;
+  color: #222;
+}
+
+.modalPage .secondaryButton:hover:not(:disabled) {
+  background: #f7f7f5;
+}
+
+.modalPage .links {
+  order: 4;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.modalPage .links button {
+  color: #555;
+}
+
+.modalPage .success,
+.modalPage .error {
+  order: 5;
+}
