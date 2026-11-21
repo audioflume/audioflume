@@ -534,7 +534,7 @@ body:has(.audioflume-home-landing)
 }
 
 @media (max-width: 980px) {
-  .audioflume-home-reference-original-song-grid
+  .audioflume-home-reference-original-song-grid:not(.discover2-storytelling-tracks .audioflume-home-reference-original-song-grid)
     .audioflume-home-reference-original-song-card:nth-child(n + 9) {
     display: none;
   }
