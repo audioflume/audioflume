@@ -145,7 +145,6 @@ function ArtistCard({
               {artist.designation ? <p>{artist.designation}</p> : null}
             </div>
             <span className={styles.artistExplore}>
-              <span className={styles.artistExploreText}>Explore artist</span>
               <ArrowUpRightIcon size={17} strokeWidth={1.5} />
             </span>
           </Link>
