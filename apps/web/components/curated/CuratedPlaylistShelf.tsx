@@ -123,7 +123,6 @@ export function CuratedPlaylistCard({
                 <p>{formatSongCount(playlist.song_count)}</p>
               </div>
               <span className={cardStyles.viewPlaylist}>
-                <span className={cardStyles.viewPlaylistText}>View playlist</span>
                 <ArrowUpRightIcon size={17} strokeWidth={1.5} />
               </span>
             </Link>
