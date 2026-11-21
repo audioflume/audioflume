@@ -540,6 +540,8 @@ export default function MusicPage() {
   const selectedVocals = filters.selectedVocals;
   const selectedDurations = filters.selectedDurations;
   const selectedEditPoints = filters.selectedEditPoints;
+  const excludedFilters = filters.excludedFilters;
+  const excludedFilterCount = Object.values(excludedFilters).reduce((count, values) => count + values.length, 0);
   const instrumental = filters.instrumental;
   const bpmValue = filters.bpmValue;
   const keyValue = filters.keyValue;
@@ -689,13 +691,55 @@ export default function MusicPage() {
     }));
   }
 
-  function toggleIn(values: string[], setValues: (next: string[]) => void) {
-    return (option: string) =>
-      setValues(
-        values.includes(option)
-          ? values.filter((item) => item !== option)
-          : [...values, option],
-      );
+  function toggleIn(values: string[], setValues: (next: string[]) => void, groupId: string) {
+    return (option: string) => {
+      setFilters((current) => ({
+        ...current,
+        excludedFilters: {
+          ...current.excludedFilters,
+          [groupId]: (current.excludedFilters[groupId] ?? []).filter((item) => item !== option),
+        },
+      }));
+      setValues(values.includes(option) ? values.filter((item) => item !== option) : [...values, option]);
+    };
+  }
+
+  function toggleExclude(groupId: string, option: string) {
+    setFilters((current) => {
+      const existing = current.excludedFilters[groupId] ?? [];
+      const nextExcluded = existing.includes(option)
+        ? existing.filter((value) => value !== option)
+        : [...existing, option];
+      const fieldByGroup: Record<string, keyof typeof current> = {
+        mood: "selectedMoods",
+        genre: "selectedGenres",
+        artist: "selectedArtists",
+        region: "selectedRegions",
+        instruments: "selectedInstruments",
+        vocals: "selectedVocals",
+        build: "selectedBuilds",
+      };
+      const field = fieldByGroup[groupId];
+      const selection = field ? current[field] : undefined;
+      const nextSelection = Array.isArray(selection)
+        ? selection.filter((value) => value !== option)
+        : [];
+      return {
+        ...current,
+        ...(field ? { [field]: nextSelection } : {}),
+        ...(groupId === "vocals" && option === INSTRUMENTAL_VOCAL_FILTER_OPTION
+          ? { instrumental: false }
+          : {}),
+        excludedFilters: { ...current.excludedFilters, [groupId]: nextExcluded },
+      };
+    });
+  }
+
+  function clearExcludeGroup(groupId: string) {
+    setFilters((current) => ({
+      ...current,
+      excludedFilters: { ...current.excludedFilters, [groupId]: [] },
+    }));
   }
 
   const playlistChipOptions = useMemo(
@@ -708,6 +752,7 @@ export default function MusicPage() {
   );
 
   const hasActiveFilters =
+    excludedFilterCount > 0 ||
     search.trim().length > 0 ||
     selectedMoods.length > 0 ||
     selectedGenres.length > 0 ||
@@ -724,6 +769,7 @@ export default function MusicPage() {
     selectedPlaylist !== null;
 
   const hasActiveClearableFilters =
+    excludedFilterCount > 0 ||
     selectedMoods.length > 0 ||
     selectedGenres.length > 0 ||
     selectedArtists.length > 0 ||
@@ -740,6 +786,7 @@ export default function MusicPage() {
     selectedLicenseFilters.length > 0;
 
   const activeFilterCount =
+    excludedFilterCount +
     selectedMoods.length +
     selectedGenres.length +
     selectedArtists.length +
@@ -778,6 +825,7 @@ export default function MusicPage() {
       selectedVocals: [],
       selectedDurations: [],
       selectedEditPoints: [],
+      excludedFilters: {},
       instrumental: false,
       bpmValue: null,
       keyValue: null,
