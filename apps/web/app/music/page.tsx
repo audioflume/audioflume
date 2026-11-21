@@ -1573,6 +1573,10 @@ export default function MusicPage() {
                 onClick={pill.onRemove}
                 aria-label={`Remove ${pill.label} filter`}
               >
+                {pill.id.startsWith("exclude-") ? (<svg className="audioflume-music-exclude-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+                  <path d="M5.6 5.6L18.4 18.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>) : null}
                 <span>{pill.label}</span>
                 <XIcon size={12} />
               </button>
@@ -1835,6 +1839,10 @@ export default function MusicPage() {
                         onClick={pill.onRemove}
                         aria-label={`Remove ${pill.label} filter`}
                       >
+                        {pill.id.startsWith("exclude-") ? (<svg className="audioflume-music-exclude-pill-icon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                  <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+                  <path d="M5.6 5.6L18.4 18.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>) : null}
                         <span>{pill.label}</span>
                         <XIcon size={12} />
                       </button>
