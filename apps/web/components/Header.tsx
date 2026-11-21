@@ -96,6 +96,7 @@ export default function Header() {
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
     "filmwave-web-header",
+    useCombinedHeaderHeight ? "is-expanded-reference-header" : "",
     pathname === "/founding-artists" ? "is-founding-route" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
@@ -477,6 +478,7 @@ export default function Header() {
 
         .filmwave-web-header .filmwave-header-inner {
           justify-content: flex-start !important;
+          padding-left: var(--audioflume-reference-header-logo-inset, var(--filmwave-header-padding-x));
         }
 
         .filmwave-web-header .filmwave-header-drag-surface {
@@ -492,16 +494,33 @@ export default function Header() {
         }
 
         .filmwave-web-header .filmwave-header-nav {
-          gap: 18px !important;
+          position: var(--audioflume-reference-nav-position, static);
+          left: var(--audioflume-reference-nav-left, auto);
+          gap: var(--audioflume-reference-nav-gap, 18px) !important;
+          transform: var(--audioflume-reference-nav-transform, none);
         }
 
         .filmwave-web-header .filmwave-header-nav-link {
-          gap: 12px !important;
-          padding-right: 8px !important;
-          padding-left: 8px !important;
+          gap: var(--audioflume-reference-nav-link-gap, 12px) !important;
+          padding-right: var(--audioflume-reference-nav-link-padding, 8px) !important;
+          padding-left: var(--audioflume-reference-nav-link-padding, 8px) !important;
           font-family: var(--font-aktiv-grotesk), sans-serif !important;
-          font-size: 13px !important;
+          font-size: var(--audioflume-reference-nav-font-size, 13px) !important;
+          font-weight: var(--audioflume-reference-nav-font-weight, 500) !important;
           text-transform: none !important;
+        }
+
+        .filmwave-header-new-badge {
+          display: inline-flex;
+          height: 16px;
+          align-items: center;
+          border-radius: 999px;
+          background: #111;
+          padding: 0 9px;
+          color: #fff;
+          font-size: 10px;
+          font-weight: 500;
+          line-height: 1;
         }
         .filmwave-header-right-actions {
           display: inline-flex;
@@ -518,8 +537,8 @@ export default function Header() {
           align-items: center;
           color: inherit;
           font-family: inherit;
-          font-size: 12px;
-          font-weight: 500;
+          font-size: var(--audioflume-reference-nav-font-size, 12px);
+          font-weight: var(--audioflume-reference-nav-font-weight, 500);
           line-height: 1;
           text-decoration: none;
           white-space: nowrap;
@@ -1004,7 +1023,7 @@ export default function Header() {
           }
 
           .filmwave-web-header .filmwave-header-nav {
-            gap: 8px !important;
+            gap: var(--audioflume-reference-nav-compact-gap, 8px) !important;
           }
 
           .filmwave-header-right-actions {
@@ -1461,9 +1480,16 @@ export default function Header() {
                     aria-current={isActive ? "page" : undefined}
                   >
                     {link.label}
+                    {useCombinedHeaderHeight && link.href === "/sound-fx" ? <span className="filmwave-header-new-badge">New</span> : null}
                   </Link>
                 );
               })}
+              {useCombinedHeaderHeight ? (
+                <>
+                  <Link href="/pricing" className="filmwave-header-nav-link">Pricing</Link>
+                  <a href="mailto:hello@filmwave.io" className="filmwave-header-nav-link">Enterprise</a>
+                </>
+              ) : null}
             </nav>
 
             <button
@@ -1498,16 +1524,20 @@ export default function Header() {
 
             {isLoaded && (
               <div className="filmwave-header-right-actions">
-                <Link href="/pricing" className="filmwave-header-utility-link">
-                  Pricing
-                </Link>
+                {!useCombinedHeaderHeight ? (
+                  <>
+                    <Link href="/pricing" className="filmwave-header-utility-link">
+                      Pricing
+                    </Link>
 
-                <a
-                  href="mailto:hello@filmwave.io"
-                  className="filmwave-header-utility-link"
-                >
-                  Need Enterprise?
-                </a>
+                    <a
+                      href="mailto:hello@filmwave.io"
+                      className="filmwave-header-utility-link"
+                    >
+                      Need Enterprise?
+                    </a>
+                  </>
+                ) : null}
 
                 {user ? (
                   <>
