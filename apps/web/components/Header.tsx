@@ -515,6 +515,7 @@ export default function Header() {
           font-family: var(--font-aktiv-grotesk), sans-serif !important;
           font-size: var(--audioflume-reference-nav-font-size, 13px) !important;
           font-weight: var(--audioflume-reference-nav-font-weight, 500) !important;
+          -webkit-font-smoothing: var(--audioflume-reference-nav-font-smoothing, inherit);
           text-transform: none !important;
         }
 
