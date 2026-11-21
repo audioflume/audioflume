@@ -1466,6 +1466,16 @@ main
   background: #e5e5df;
 }
 
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-music-page {
+  --filmwave-filter-clear-all-hover-background: #353535;
+}
+
+:where(html:not(.light):not([data-theme="light"]), html[data-theme="dark"])
+  .audioflume-music-page .audioflume-music-active-filter-pill:hover {
+  background: #353535;
+}
+
 .audioflume-music-page .music-page-content-shell.is-filter-open .audioflume-music-home-hero {
   --audioflume-music-banner-left-extension: calc(var(--audioflume-music-content-gap) + 8px);
   --audioflume-music-banner-right-extension: calc(var(--audioflume-music-content-gap) + 12px);
