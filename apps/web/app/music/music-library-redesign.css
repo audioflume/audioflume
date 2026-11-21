@@ -1001,7 +1001,7 @@ main
 }
 
 .audioflume-music-page .audioflume-filter-exclude-row:hover > .fw-filter-option,
-.audioflume-music-page .audioflume-filter-exclude-row:focus-within > .fw-filter-option {
+.audioflume-music-page .audioflume-filter-exclude-row:has(:focus-visible) > .fw-filter-option {
   background: var(--audioflume-music-hover-background, var(--bg-hover));
   color: var(--text-primary);
 }
@@ -1030,7 +1030,7 @@ main
 }
 
 .audioflume-music-page .audioflume-filter-exclude-row:hover .audioflume-filter-exclude-action,
-.audioflume-music-page .audioflume-filter-exclude-row:focus-within .audioflume-filter-exclude-action,
+.audioflume-music-page .audioflume-filter-exclude-row:has(:focus-visible) .audioflume-filter-exclude-action,
 .audioflume-music-page .audioflume-filter-exclude-row.is-excluded .audioflume-filter-exclude-action {
   opacity: 1;
 }
