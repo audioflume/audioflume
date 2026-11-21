@@ -11,7 +11,7 @@ export default function PlaybackStateIcon({ playing, size = 14, hoverIcon = "pau
       {playing ? (
         <>
           <span className={`${styles.waveform} ${cardWaveformStyles.cardPlayingWaveform}`}>
-            <WaveformIcon size={size} solid />
+            <WaveformIcon size={size} />
           </span>
           <span className={styles.pause}>
             {hoverIcon === "list" ? <ListViewIcon size={size} /> : <PauseIcon size={size} />}
