@@ -846,6 +846,20 @@ export default function MusicPage() {
       }
 
       setFilters((current) => {
+        const excludedGroups = sectionId === "advanced"
+          ? ["region", "build"]
+          : [sectionId];
+        if (!excludedGroups.some((id) => (current.excludedFilters[id] ?? []).length > 0)) return current;
+        return {
+          ...current,
+          excludedFilters: {
+            ...current.excludedFilters,
+            ...Object.fromEntries(excludedGroups.map((id) => [id, []])),
+          },
+        };
+      });
+
+      setFilters((current) => {
         if (sectionId === "mood") {
           return { ...current, selectedMoods: [] };
         }
