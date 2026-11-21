@@ -74,7 +74,7 @@ export default function SongCard({
   showEditPointMarkers: showEditPointMarkersProp,
   showDivider = true,
   showDuration = true,
-  showPlaybackStateIcon = false,
+  showPlaybackStateIcon = true,
   onRemoveFromPlaylist,
   onRemoveFromProject,
 }: {
