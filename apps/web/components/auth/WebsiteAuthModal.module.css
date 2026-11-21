@@ -1,0 +1,135 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 2147483001;
+  display: grid;
+  place-items: center;
+  overflow-y: auto;
+  background: rgba(0, 0, 0, .68);
+  padding: clamp(12px, 3vw, 36px);
+}
+
+.dialog {
+  position: relative;
+  display: grid;
+  width: min(1120px, 100%);
+  max-height: min(860px, calc(100dvh - 36px));
+  min-height: min(680px, calc(100dvh - 36px));
+  grid-template-columns: 43% 57%;
+  overflow: hidden;
+  background: #fff;
+  color: #111;
+  box-shadow: 0 26px 90px rgba(0, 0, 0, .25);
+}
+
+.formPanel {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  overflow-y: auto;
+  padding: clamp(28px, 4.2vw, 62px);
+}
+
+.brand {
+  margin-bottom: clamp(28px, 5vh, 58px);
+  font-family: var(--font-aktiv-grotesk), sans-serif;
+  font-size: 21px;
+  font-weight: 500;
+  letter-spacing: -.045em;
+}
+
+.clerkForm {
+  display: grid;
+  place-items: start center;
+  min-width: 0;
+}
+
+.imagePanel {
+  position: relative;
+  min-height: 100%;
+  background: #101615 url("https://images.filmwave.io/images/home/judah-earl-background.png") center / cover no-repeat;
+  color: #fff;
+}
+
+.imagePanel::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(0, 0, 0, .02) 20%, rgba(0, 0, 0, .7) 100%);
+  content: "";
+}
+
+.imageCaption {
+  position: absolute;
+  right: 10%;
+  bottom: 8%;
+  left: 10%;
+  z-index: 1;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.imageCaption p {
+  max-width: 400px;
+  margin: 0;
+}
+
+.imageHeadline {
+  margin-bottom: 16px !important;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(28px, 3vw, 46px);
+  font-weight: 400;
+  letter-spacing: -.04em;
+  line-height: 1.08;
+}
+
+.close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 2;
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: #fff;
+  cursor: pointer;
+  transition: opacity 150ms ease;
+}
+
+.close:hover {
+  opacity: .65;
+}
+
+.close:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+@media (max-width: 760px) {
+  .dialog {
+    width: min(520px, 100%);
+    max-height: calc(100dvh - 24px);
+    min-height: 0;
+    grid-template-columns: 1fr;
+  }
+
+  .formPanel {
+    padding: clamp(26px, 7vw, 46px);
+  }
+
+  .imagePanel {
+    display: none;
+  }
+
+  .close {
+    top: 15px;
+    right: 15px;
+    color: #111;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .close { transition: none; }
+}
