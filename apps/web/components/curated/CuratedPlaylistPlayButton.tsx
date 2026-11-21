@@ -150,7 +150,7 @@ export default function CuratedPlaylistPlayButton({
     try {
       const songs = await loadPlaylistSongs(playlistKey);
       const playableSongs = songs.filter((song) => Boolean(song.audioUrl));
-      if (previewEnabled && openCardPlaylistId !== playlistKey) return;
+      if (previewEnabled) return;
       const firstSong = playableSongs[0];
 
       if (!firstSong) return;
