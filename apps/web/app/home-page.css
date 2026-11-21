@@ -6195,7 +6195,7 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
   text-decoration:none;
 }
 
-.audioflume-home-experiment .audioflume-experiment-lifetime {
+:is(.audioflume-home-experiment, .audioflume-experiment-promos) .audioflume-experiment-lifetime {
   background: #111 url("https://images.filmwave.io/images/home/Lifetime-Access-Home.png") var(--audioflume-lifetime-image-position, center) / cover no-repeat;
 }
 
