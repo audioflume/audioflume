@@ -114,11 +114,7 @@ function ArtistCard({
               onClick={(event) => {
                 event.stopPropagation();
                 onOpen(artist.id);
-                if (playable.length) {
-                  if (!hasActiveSong) {
-                    playSong(playable[0]);
-                  }
-                } else if (isPlaying && currentSong) {
+                if (!hasActiveSong && isPlaying && currentSong) {
                   togglePlayPause(currentSong);
                 }
               }}
