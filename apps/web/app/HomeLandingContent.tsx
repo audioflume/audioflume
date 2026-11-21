@@ -72,7 +72,7 @@ export function HomeHeroBanner({ backgroundOnly = false }: { featuredSong?: Song
   );
 }
 
-export function HomeLandingPromoBlocks({ artistsImage = ARTISTS_IMAGE, showCurated = true }: { artistsImage?: string; showCurated?: boolean } = {}) {
+export function HomeLandingPromoBlocks({ artistsImage = ARTISTS_IMAGE, showCurated = true, curatedRightBlock = false }: { artistsImage?: string; showCurated?: boolean; curatedRightBlock?: boolean } = {}) {
   return (
     <>
         <section className="audioflume-experiment-promo-grid" aria-label="Discover Audioflume">
@@ -90,9 +90,9 @@ export function HomeLandingPromoBlocks({ artistsImage = ARTISTS_IMAGE, showCurat
             </div>
           </div>
           <div className="audioflume-experiment-artist-promo">
-            <img src={artistsImage} alt="" />
-            <h2>A growing collection of in<br />demand artists and composers.</h2>
-            <Link href="/artists">Discover new artists <ArrowUpRightIcon size={24} strokeWidth={1.5} /></Link>
+            <img src={curatedRightBlock ? CURATED_IMAGE : artistsImage} alt="" />
+            <h2>{curatedRightBlock ? "Thoughtfully curated playlists for every story." : <>A growing collection of in<br />demand artists and composers.</>}</h2>
+            <Link href={curatedRightBlock ? "/curated-playlists" : "/artists"}>{curatedRightBlock ? "Explore curated collections" : "Discover new artists"} <ArrowUpRightIcon size={24} strokeWidth={1.5} /></Link>
           </div>
         </section>
 
