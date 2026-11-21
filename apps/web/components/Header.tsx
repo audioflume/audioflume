@@ -676,7 +676,7 @@ export default function Header() {
           color: #111;
         }
 
-        .filmwave-web-header.is-transparent:hover
+        .filmwave-web-header.is-transparent:hover:not(:has(.filmwave-header-menu-wrap:hover))
           .filmwave-header-nav-link:not(.is-active):not(:hover) {
           color: var(--filmwave-transparent-header-muted-text) !important;
         }
@@ -720,10 +720,10 @@ export default function Header() {
           color: var(--audioflume-home-header-text, var(--text-primary)) !important;
         }
 
-        .filmwave-web-header.is-solid:hover
+        .filmwave-web-header.is-solid:hover:not(:has(.filmwave-header-menu-wrap:hover))
           .filmwave-header-nav-link:not(.is-active):not(:hover),
         :where(html.light, html[data-theme="light"])
-          .filmwave-web-header.is-discover-route.is-transparent:hover
+          .filmwave-web-header.is-discover-route.is-transparent:hover:not(:has(.filmwave-header-menu-wrap:hover))
           .filmwave-header-nav-link:not(.is-active):not(:hover) {
           color: var(--audioflume-home-header-muted-link, var(--text-secondary)) !important;
         }
