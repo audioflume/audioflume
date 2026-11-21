@@ -88,6 +88,7 @@ export default function Header() {
   >([]);
   const menuRef = useRef<HTMLDivElement>(null);
   const accountTriggerRef = useRef<HTMLButtonElement>(null);
+  const useCombinedHeaderHeight = pathname === "/music" || pathname === "/discover2" || pathname === "/artist2";
   const isBackendPage = pathname === "/admin" || pathname?.startsWith("/admin/") || pathname === "/artists/dashboard" || pathname?.startsWith("/artists/dashboard/") || pathname === "/account" || pathname?.startsWith("/account/");
   const homeChromeRoute = pathname === "/" || pathname === "/discover" || pathname === "/curated-playlists" || pathname === "/community-playlists" || pathname === "/artists" || pathname === "/pricing";
   const transparentAtTop = pathname === "/founding-artists";
@@ -1287,7 +1288,7 @@ export default function Header() {
         }
       `}</style>
 
-      {!isBackendPage && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
+      {!isBackendPage && !useCombinedHeaderHeight && <div className={`audioflume-artist-cta-bar${transparentAtTop && !headerIsSolid ? " is-home-transparent" : ""}`}>
         <div className="audioflume-artist-cta-copy">
           <span>Join Audioflume as a founding artist — Apply today</span>
         </div>
