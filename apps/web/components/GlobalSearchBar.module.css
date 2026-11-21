@@ -518,11 +518,15 @@
 }
 
 @media (max-width: 1000px) {
+  .actions:has(.darkSimilarSong) {
+    padding: 0 10px;
+  }
+
   .darkSimilarSong {
-    width: 40px;
-    height: 40px;
-    min-height: 40px;
-    flex: 0 0 40px;
+    width: 51px;
+    height: 51px;
+    min-height: 51px;
+    flex: 0 0 51px;
     border: 0;
     border-radius: 0;
     background: #111;
