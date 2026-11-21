@@ -1691,7 +1691,8 @@
   margin-top: 108px;
 }
 
-.discover-page-root.is-discover2 .discover2-playlist-section > h2 {
+.discover-page-root.is-discover2 .discover2-playlist-section > h2,
+.discover-page-root.is-discover2 .discover2-song-section-title {
   margin: 0 0 30px;
   font-size: clamp(16px, 1.25vw, 20px);
   font-weight: 400;
