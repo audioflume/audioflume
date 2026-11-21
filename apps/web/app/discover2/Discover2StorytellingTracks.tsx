@@ -27,7 +27,7 @@ export default function Discover2StorytellingTracks() {
           {loading ? (
             <HomeOriginalsSkeleton />
           ) : playableSongs.length > 0 ? (
-            <HomeOriginalSongGrid songs={playableSongs} discoverPlaybackIcon />
+            <HomeOriginalSongGrid songs={playableSongs.slice(0, 12)} discoverPlaybackIcon />
           ) : null}
         </section>
       </section>
