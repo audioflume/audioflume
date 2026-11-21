@@ -1714,10 +1714,17 @@
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-image {
+  position: relative;
   aspect-ratio: 1 / .92;
   width: 100%;
   overflow: hidden;
   background: var(--bg-tertiary);
+}
+
+.discover-page-root.is-discover2 .discover2-playlist-cover-link {
+  display: block;
+  width: 100%;
+  height: 100%;
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-image img {
@@ -1758,7 +1765,74 @@
 .discover-page-root.is-discover2 .discover2-song-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px 24px;
+  column-gap: 24px;
+  row-gap: 0;
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song {
+  display: flex;
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  height: 64px;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  border: 0;
+  border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song:hover,
+.discover-page-root.is-discover2 .discover2-compact-song:focus-visible {
+  background: transparent;
+  opacity: .75;
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song:disabled {
+  cursor: default;
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song-art {
+  display: block;
+  width: 40px;
+  height: 40px;
+  flex: 0 0 40px;
+  overflow: hidden;
+  background: var(--bg-tertiary);
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song-art img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song-copy {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song-title,
+.discover-page-root.is-discover2 .discover2-compact-song-artist {
+  display: block;
+  overflow: hidden;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 1.25;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.discover-page-root.is-discover2 .discover2-compact-song-artist {
+  color: var(--text-muted);
+  font-size: 11px;
 }
 
 @media (max-width: 900px) {
