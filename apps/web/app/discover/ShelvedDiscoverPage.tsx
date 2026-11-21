@@ -759,7 +759,7 @@ export function DiscoverArchivedSections({
   );
 }
 
-export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveContent = false, moveWatchingAndPlaylistsAfterReadyToCut = false, discover2Layout = false }: { afterPlaylists?: ReactNode; afterFeaturedSongs?: ReactNode; liveContent?: boolean; moveWatchingAndPlaylistsAfterReadyToCut?: boolean; discover2Layout?: boolean } = {}) {
+export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBanner, liveContent = false, moveWatchingAndPlaylistsAfterReadyToCut = false, discover2Layout = false }: { afterPlaylists?: ReactNode; afterFeaturedSongs?: ReactNode; topBanner?: ReactNode; liveContent?: boolean; moveWatchingAndPlaylistsAfterReadyToCut?: boolean; discover2Layout?: boolean } = {}) {
   const { songs } = useSongs();
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const [featuredArtists, setFeaturedArtists] = useState<DiscoverFeaturedArtist[]>([]);
@@ -1038,6 +1038,8 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
           </header>
         </div>
       ) : null}
+
+      {discover2Layout ? topBanner : null}
 
       {!discover2Layout ? <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
