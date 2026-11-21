@@ -382,6 +382,12 @@ main
   display: none !important;
 }
 
+/* Show the hover highlight on only the hovered row, not a different active song. */
+.audioflume-music-page .fw-song-list:has(.filmwave-song-card:hover)
+  .filmwave-song-card.is-current:not(:hover) {
+  background: transparent;
+}
+
 .audioflume-music-page .fw-song-list .filmwave-song-card,
 .audioflume-music-page .fw-song-list .desktop-song-card,
 .audioflume-music-page
