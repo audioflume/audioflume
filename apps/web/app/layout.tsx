@@ -19,6 +19,7 @@ import { selectAccountAuthProvider } from "@/lib/auth/selectAccountAuthProvider"
 import PlayerRenderer from "@/components/PlayerRenderer";
 import SidebarRenderer from "@/components/SidebarRenderer";
 import Header from "@/components/Header";
+import WebsiteAuthModal from "@/components/auth/WebsiteAuthModal";
 import ArtistInviteBanner from "@/components/ArtistInviteBanner";
 import IconButtonTitleSync from "@/components/IconButtonTitleSync";
 import MusicFilterToolbarBehavior from "@/components/MusicFilterToolbarBehavior";
@@ -214,6 +215,7 @@ export default async function RootLayout({
                       <FavoritesProvider>
                         <ArtistInviteBanner />
                         <Header />
+                        <WebsiteAuthModal provider={accountProvider} />
                         <SidebarRenderer initialCollapsed={initialSidebarCollapsed} />
                         {children}
                         <PlayerRenderer />
