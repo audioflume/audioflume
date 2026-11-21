@@ -10,6 +10,10 @@
   font-family: var(--font-aktiv-grotesk), sans-serif;
 }
 
+.discover-page-root.is-discover2 {
+  background: #f7f7f5;
+}
+
 .discover-page-root button,
 .discover-page-root input,
 .discover-page-root textarea,
