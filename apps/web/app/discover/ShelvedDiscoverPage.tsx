@@ -677,6 +677,7 @@ export function DiscoverArchivedSections({
   compactWatchingCards = false,
   featuredSongs = TOP_ALBUMS,
   supportArtists = SUPPORT_NEW_ARTISTS,
+  supportArtistsTitle = "Support new artists",
   featuredPlaylists,
   enableArtistPlayback = false,
   playlistsAfterSupport = false,
@@ -689,6 +690,7 @@ export function DiscoverArchivedSections({
   compactWatchingCards?: boolean;
   featuredSongs?: ShelfItem[];
   supportArtists?: ShelfItem[];
+  supportArtistsTitle?: string;
   featuredPlaylists?: { name: string; image: string; href?: string }[];
   enableArtistPlayback?: boolean;
   playlistsAfterSupport?: boolean;
@@ -743,7 +745,7 @@ export function DiscoverArchivedSections({
     {sections !== "remaining" && sections !== "playlists" && sections !== "artistsOnly" && sections !== "watchingAndPlaylists" && sections !== "watchingOnly" && sections !== "supportAndPlaylists" ? <ArtistShelf title={albumsTitle} items={featuredSongs} square enablePlayback={enableArtistPlayback} songTextStyle={activeDiscoverTypography} /> : null}
 
     {sections !== "featuredSongs" && sections !== "playlists" && sections !== "watchingAndPlaylists" && sections !== "watchingOnly" ? <ArtistShelf
-      title="Support new artists"
+      title={supportArtistsTitle}
       items={supportArtists}
       enablePlayback={enableArtistPlayback}
       compactNames={activeDiscoverTypography}
@@ -1168,11 +1170,6 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
         {discover2Layout ? (
           <>
             {afterFeaturedSongs}
-            <DiscoverArchivedSections
-              sections="watchingOnly"
-              enableArtistPlayback={liveContent}
-              watchingArtists={liveContent ? previewArtistShelfItems(directoryArtists.slice(0, 7), 0) : undefined}
-            />
             {afterPlaylists}
           </>
         ) : null}
@@ -1182,6 +1179,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
         {discover2Layout ? (
           <DiscoverArchivedSections
             sections="supportAndPlaylists"
+            supportArtistsTitle="Artists we're watching"
             playlistsAfterSupport
             enableArtistPlayback={liveContent}
             supportArtists={liveContent ? previewArtistShelfItems(directoryArtists.slice(7, 14), 12) : undefined}
