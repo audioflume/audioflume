@@ -21,6 +21,38 @@
 
 body:has(:is(.audioflume-music-page, .discover-page-root, .artist2-page-root)) {
   --filmwave-header-height: calc(60px + var(--audioflume-cta-bar-height, 28px));
+  --audioflume-reference-header-logo-inset: 46px;
+  --audioflume-reference-nav-position: absolute;
+  --audioflume-reference-nav-left: 50%;
+  --audioflume-reference-nav-transform: translateX(-50%);
+  --audioflume-reference-nav-gap: 18px;
+  --audioflume-reference-nav-link-gap: 6px;
+  --audioflume-reference-nav-link-padding: 7px;
+  --audioflume-reference-nav-font-size: 15px;
+  --audioflume-reference-nav-font-weight: 400;
+}
+
+@media (min-width: 1001px) {
+  body:has(:is(.audioflume-music-page, .discover-page-root, .artist2-page-root)) {
+    --filmwave-header-avatar-size: 50px;
+  }
+}
+
+@media (max-width: 1000px) {
+  body:has(:is(.audioflume-music-page, .discover-page-root, .artist2-page-root)) {
+    --audioflume-reference-header-logo-inset: 24px;
+    --audioflume-reference-nav-compact-gap: 8px;
+    --audioflume-reference-nav-font-size: 13px;
+    --audioflume-reference-nav-link-padding: 4px;
+  }
+}
+
+@media (max-width: 690px) {
+  body:has(:is(.audioflume-music-page, .discover-page-root, .artist2-page-root)) {
+    --audioflume-reference-nav-position: static;
+    --audioflume-reference-nav-left: auto;
+    --audioflume-reference-nav-transform: none;
+  }
 }
 
 :root {
