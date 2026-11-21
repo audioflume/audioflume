@@ -1226,7 +1226,7 @@
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
   --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
   width: 100vw;
-  margin-top: calc(clamp(34px, 3vw, 48px) + 20px);
+  margin-top: 0;
   margin-left: calc(50% - 50vw);
 }
 
