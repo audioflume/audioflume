@@ -1068,7 +1068,7 @@ export function MusicFilterPanel({
     (selectedDurations.length > 0 ? 1 : 0) +
     (bpmValue ? 1 : 0) +
     (keyValue ? 1 : 0) +
-    advancedGroups.reduce((count, group) => count + group.selected.length, 0);
+    advancedGroups.reduce((count, group) => count + group.selected.length + (group.excluded?.length ?? 0), 0);
 
   function clearAdvancedFilters() {
     onDurationsChange?.([]);
@@ -1081,7 +1081,7 @@ export function MusicFilterPanel({
     onDurationsChange || onBpmChange || onKeyChange || advancedGroups.length > 0,
   );
   const sections: Array<{ id: string; label: string; count: number }> = [
-    ...railGroups.map((g) => ({ id: g.id, label: g.label, count: g.selected.length })),
+    ...railGroups.map((g) => ({ id: g.id, label: g.label, count: g.selected.length + (g.excluded?.length ?? 0) })),
     ...(onSelectPlaylist ? [{ id: "playlist", label: "Playlist", count: selectedPlaylistId ? 1 : 0 }] : []),
     ...(groupAdvancedControls && hasAdvancedControls
       ? [{ id: "advanced", label: "Advanced", count: advancedFilterCount }]
