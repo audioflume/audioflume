@@ -1702,8 +1702,7 @@
 .discover-page-root.is-discover2 .discover2-playlist-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  column-gap: 12px;
-  row-gap: 34px;
+  gap: var(--filmwave-page-gutter);
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-item {
@@ -1858,7 +1857,9 @@
 }
 
 @media (max-width: 900px) {
-  .discover-page-root.is-discover2 .discover2-playlist-grid,
+  .discover-page-root.is-discover2 .discover2-playlist-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .discover-page-root.is-discover2 .discover2-song-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -1867,10 +1868,6 @@
 @media (max-width: 540px) {
   .discover-page-root.is-discover2 .discover2-playlist-section {
     margin-top: 64px;
-  }
-  .discover-page-root.is-discover2 .discover2-playlist-grid {
-    column-gap: 12px;
-    row-gap: 24px;
   }
   .discover-page-root.is-discover2 .discover2-song-section {
     margin-top: 64px;
