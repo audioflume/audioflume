@@ -231,7 +231,7 @@ export default function Artist2Page() {
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                onBlur={closeHeadingSearch}
+                onBlur={() => { if (!query.trim()) closeHeadingSearch(); }}
                 onKeyDown={(event) => {
                   if (event.key === "Escape") {
                     closeHeadingSearch();
