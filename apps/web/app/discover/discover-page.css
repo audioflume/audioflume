@@ -1751,6 +1751,14 @@
   margin-bottom: 90px;
 }
 
+.discover-page-root.is-discover2 .discover2-song-section.is-before-playlists {
+  margin-bottom: 0;
+}
+
+.discover-page-root.is-discover2 .discover2-song-section.is-before-playlists + .discover2-playlist-section {
+  margin-top: 125px;
+}
+
 .discover-page-root.is-discover2 .discover-artist-footer {
   margin-top: 140px;
 }
