@@ -1260,7 +1260,7 @@ export default function MusicPage() {
       label: "Scene",
       options: availableFilterOptions.moods,
       selected: selectedMoods,
-      onToggle: toggleIn(selectedMoods, setSelectedMoods),
+      onToggle: toggleIn(selectedMoods, setSelectedMoods, "mood"),
       onClear: () => setSelectedMoods([]),
     },
     {
@@ -1268,7 +1268,7 @@ export default function MusicPage() {
       label: "Genre",
       options: availableFilterOptions.genres,
       selected: selectedGenres,
-      onToggle: toggleIn(selectedGenres, setSelectedGenres),
+      onToggle: toggleIn(selectedGenres, setSelectedGenres, "genre"),
       onClear: () => setSelectedGenres([]),
     },
     {
@@ -1276,7 +1276,7 @@ export default function MusicPage() {
       label: "Artists",
       options: availableFilterOptions.artists,
       selected: selectedArtists,
-      onToggle: toggleIn(selectedArtists, setSelectedArtists),
+      onToggle: toggleIn(selectedArtists, setSelectedArtists, "artist"),
       onClear: () => setSelectedArtists([]),
     },
     {
@@ -1284,7 +1284,7 @@ export default function MusicPage() {
       label: "Region",
       options: availableFilterOptions.regions,
       selected: selectedRegions,
-      onToggle: toggleIn(selectedRegions, setSelectedRegions),
+      onToggle: toggleIn(selectedRegions, setSelectedRegions, "region"),
       onClear: () => setSelectedRegions([]),
     },
     {
@@ -1292,7 +1292,7 @@ export default function MusicPage() {
       label: "Instruments",
       options: availableFilterOptions.instruments,
       selected: selectedInstruments,
-      onToggle: toggleIn(selectedInstruments, setSelectedInstruments),
+      onToggle: toggleIn(selectedInstruments, setSelectedInstruments, "instruments"),
       onClear: () => setSelectedInstruments([]),
     },
     {
@@ -1313,10 +1313,30 @@ export default function MusicPage() {
       label: "Build",
       options: availableFilterOptions.builds,
       selected: selectedBuilds,
-      onToggle: toggleIn(selectedBuilds, setSelectedBuilds),
+      onToggle: toggleIn(selectedBuilds, setSelectedBuilds, "build"),
       onClear: () => setSelectedBuilds([]),
     },
-  ];
+  ].map((group) => ({
+    ...group,
+    excluded: excludedFilters[group.id] ?? [],
+    onToggleExclude: (option: string) => toggleExclude(group.id, option),
+    onToggle: (option: string) => {
+      group.onToggle(option);
+      if (group.id === "vocals") {
+        setFilters((current) => ({
+          ...current,
+          excludedFilters: {
+            ...current.excludedFilters,
+            vocals: (current.excludedFilters.vocals ?? []).filter((value) => value !== option),
+          },
+        }));
+      }
+    },
+    onClear: () => {
+      group.onClear();
+      clearExcludeGroup(group.id);
+    },
+  }));
 
   const originalFilterPillsRef = useRef<HTMLDivElement>(null);
   const [showFilterPillDock, setShowFilterPillDock] = useState(false);
