@@ -15,6 +15,7 @@ import {
 import Footer from "@/components/Footer";
 import FeaturedArtistShelf from "@/components/discover/FeaturedArtistShelf";
 import GlobalSearchBar from "@/components/GlobalSearchBar";
+import artist2Styles from "@/app/artist2/page.module.css";
 import SectionTitle from "@/components/SectionTitle";
 import ShelfNavigationControls from "@/components/ShelfNavigationControls";
 import ArrowUpRightIcon from "@/components/icons/ArrowUpRightIcon";
@@ -1024,6 +1025,19 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
   return (
     <main className={`discover-page-root${playerVisible ? " has-player" : ""}`}>
       <GlobalSearchBar musicFieldStyle darkSimilarButton />
+
+      {discover2Layout ? (
+        <div className={artist2Styles.content}>
+          <header className={artist2Styles.artist2Intro}>
+            <div className={artist2Styles.headingSlot}>
+              <h1>Human made music &amp; SFX for film.</h1>
+            </div>
+            <div className={artist2Styles.introMeta}>
+              <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+            </div>
+          </header>
+        </div>
+      ) : null}
 
       <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
