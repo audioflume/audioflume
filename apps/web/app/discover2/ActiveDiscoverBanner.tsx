@@ -45,6 +45,7 @@ export default function ActiveDiscoverBanner() {
             homeFlashImages={[]}
             discoverLayout
             discoverPlaybackIcon
+            retainPartialScrollCards
           />
         ) : null}
       </section>
