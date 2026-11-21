@@ -519,9 +519,10 @@
 
 @media (max-width: 1000px) {
   .darkSimilarSong {
-    width: 48px;
-    height: 48px;
-    min-height: 48px;
+    width: 40px;
+    height: 40px;
+    min-height: 40px;
+    flex: 0 0 40px;
     border: 0;
     border-radius: 0;
     background: #111;
