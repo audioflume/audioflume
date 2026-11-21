@@ -1023,11 +1023,11 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
   }
 
   return (
-    <main className={`discover-page-root${playerVisible ? " has-player" : ""}`}>
+    <main className={`discover-page-root${playerVisible ? " has-player" : ""}${discover2Layout ? " is-discover2" : ""}`}>
       <GlobalSearchBar musicFieldStyle darkSimilarButton />
 
       {discover2Layout ? (
-        <div className={artist2Styles.content}>
+        <div className={artist2Styles.content} style={{ paddingBottom: 0 }}>
           <header className={artist2Styles.artist2Intro}>
             <div className={artist2Styles.headingSlot}>
               <h1>Human made music &amp; SFX for film.</h1>
@@ -1039,7 +1039,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
         </div>
       ) : null}
 
-      <section
+      {!discover2Layout ? <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
         aria-label="Featured artist"
         style={heroStyle}
@@ -1152,7 +1152,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, liveC
             </div>
           ) : null}
         </div>
-      </section>
+      </section> : null}
 
       <div className="discover-artist-content">
         <FeaturedArtistShelf
