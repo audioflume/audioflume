@@ -96,7 +96,6 @@ export default function Header() {
     !transparentAtTop || scrolledPastThreshold || playlistsMenuOpen || mobileNavOpen || mobileAccountOpen;
   const headerClassName = [
     "filmwave-web-header",
-    useCombinedHeaderHeight ? "is-expanded-reference-header" : "",
     pathname === "/founding-artists" ? "is-founding-route" : "",
     transparentAtTop ? "supports-transparent-header" : "",
     headerIsSolid ? "is-solid" : "is-transparent",
