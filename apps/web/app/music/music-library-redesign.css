@@ -15,6 +15,9 @@
 }
 
 .audioflume-music-page {
+  --filmwave-filter-clear-all-color: var(--text-primary);
+  --filmwave-filter-clear-all-font-size: 11px;
+  --filmwave-filter-clear-all-font-weight: 300;
   padding-top: var(--filmwave-header-height, 75px);
 }
 
@@ -1441,6 +1444,7 @@ main
   font-weight: 300;
   line-height: 1;
   cursor: pointer;
+  transition: background-color 150ms ease;
 }
 
 .audioflume-music-page .audioflume-music-active-filter-pill svg {
@@ -1448,8 +1452,18 @@ main
 }
 
 :where(html.light, html[data-theme="light"])
+  .audioflume-music-page {
+  --filmwave-filter-clear-all-hover-background: #e5e5df;
+}
+
+:where(html.light, html[data-theme="light"])
   .audioflume-music-page .audioflume-music-active-filter-pill {
   background: #f3f3f2;
+}
+
+:where(html.light, html[data-theme="light"])
+  .audioflume-music-page .audioflume-music-active-filter-pill:hover {
+  background: #e5e5df;
 }
 
 .audioflume-music-page .music-page-content-shell.is-filter-open .audioflume-music-home-hero {
