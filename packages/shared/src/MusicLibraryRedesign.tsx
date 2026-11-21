@@ -116,6 +116,8 @@ export type MusicFilterChipGroup = {
   options: string[];
   selected: string[];
   onToggle: (option: string) => void;
+  excluded?: string[];
+  onToggleExclude?: (option: string) => void;
   onClear?: () => void;
 };
 
@@ -259,14 +261,18 @@ function toSliderPercent(value: number, min: number, max: number) {
 
 function MusicFilterOptionRow({
   selected,
+  excluded = false,
   onToggle,
+  onToggleExclude,
   children,
 }: {
   selected: boolean;
+  excluded?: boolean;
   onToggle: () => void;
+  onToggleExclude?: () => void;
   children: ReactNode;
 }) {
-  return (
+  const includeButton = (
     <button
       type="button"
       aria-pressed={selected}
@@ -279,6 +285,27 @@ function MusicFilterOptionRow({
       <span className="fw-filter-option-label">{children}</span>
     </button>
   );
+
+  if (!onToggleExclude) return includeButton;
+
+  return (
+    <div className={`audioflume-filter-exclude-row${excluded ? " is-excluded" : ""}`}>
+      {includeButton}
+      <button
+        type="button"
+        className="audioflume-filter-exclude-action"
+        aria-label={`${excluded ? "Remove exclusion for" : "Exclude"} ${String(children)}`}
+        aria-pressed={excluded}
+        title={excluded ? "Remove exclusion" : "Exclude"}
+        onClick={onToggleExclude}
+      >
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none" aria-hidden="true">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M5.6 5.6L18.4 18.4" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+        </svg>
+      </button>
+    </div>
+  );
 }
 
 function MusicFilterOptionList({ group }: { group: MusicFilterChipGroup }) {
@@ -288,7 +315,9 @@ function MusicFilterOptionList({ group }: { group: MusicFilterChipGroup }) {
         <MusicFilterOptionRow
           key={option}
           selected={group.selected.includes(option)}
+          excluded={group.excluded?.includes(option)}
           onToggle={() => group.onToggle(option)}
+          onToggleExclude={group.onToggleExclude ? () => group.onToggleExclude?.(option) : undefined}
         >
           {group.id === "mood" && option === "Tense" ? "Tension" : option}
         </MusicFilterOptionRow>
