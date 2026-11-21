@@ -1024,7 +1024,13 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
 
   return (
     <main className={`discover-page-root${playerVisible ? " has-player" : ""}${discover2Layout ? " is-discover2" : ""}`}>
-      <GlobalSearchBar musicFieldStyle darkSimilarButton />
+      {discover2Layout ? (
+        <div className="discover2-searchbar-background">
+          <GlobalSearchBar musicFieldStyle darkSimilarButton />
+        </div>
+      ) : (
+        <GlobalSearchBar musicFieldStyle darkSimilarButton />
+      )}
 
       {discover2Layout ? (
         <div className={artist2Styles.content} style={{ paddingBottom: 0 }}>
