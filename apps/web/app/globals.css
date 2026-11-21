@@ -22,7 +22,7 @@
 body:has(:is(.audioflume-music-page, .discover-page-root, .artist2-page-root)) {
   --filmwave-header-height: calc(60px + var(--audioflume-cta-bar-height, 28px));
   --audioflume-reference-header-logo-inset: 34px;
-  --audioflume-reference-wordmark-size: 21px;
+  --audioflume-reference-wordmark-size: 20.5px;
   --audioflume-reference-nav-position: absolute;
   --audioflume-reference-nav-left: 0;
   --audioflume-reference-nav-right: 0;
