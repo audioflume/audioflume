@@ -13,7 +13,7 @@ export default function WaveformIcon({ size = 14, solid = false }: WaveformIconP
       aria-hidden="true"
     >
       {solid ? (
-        <g fill="currentColor" shapeRendering="crispEdges">
+        <g fill="currentColor" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round" shapeRendering="crispEdges">
           <path d="M4 9.9a1.1 1.1 0 0 1 1.1 1.1v2a1.1 1.1 0 0 1-2.2 0v-2A1.1 1.1 0 0 1 4 9.9Z" />
           <path d="M8 5.9A1.1 1.1 0 0 1 9.1 7v10a1.1 1.1 0 0 1-2.2 0V7A1.1 1.1 0 0 1 8 5.9Z" />
           <path d="M12 2.9A1.1 1.1 0 0 1 13.1 4v16a1.1 1.1 0 0 1-2.2 0V4A1.1 1.1 0 0 1 12 2.9Z" />
