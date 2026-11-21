@@ -1229,6 +1229,12 @@
   margin-top: calc(clamp(46px, 3.6vw, 60px) + 20px);
 }
 
+.discover-page-root.is-discover2 .discover2-storytelling-tracks {
+  --audioflume-home-canvas: transparent;
+  --audioflume-home-page-gutter: var(--filmwave-page-gutter);
+  --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
+}
+
 .discover2-active-banner {
   --audioflume-home-canvas: transparent;
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
