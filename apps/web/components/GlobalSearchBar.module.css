@@ -533,6 +533,10 @@
     color: #fff;
   }
 
+  .darkSimilarSong > span[aria-hidden="true"] {
+    display: block;
+  }
+
   :global(html.light) .darkSimilarSong,
   :global(html[data-theme="light"]) .darkSimilarSong,
   :global(html.dark) .darkSimilarSong,
