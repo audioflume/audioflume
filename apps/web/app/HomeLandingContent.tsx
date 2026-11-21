@@ -91,7 +91,7 @@ export function HomeLandingPromoBlocks({ artistsImage = ARTISTS_IMAGE, showCurat
           </div>
           <div className="audioflume-experiment-artist-promo">
             <img src={curatedRightBlock ? CURATED_IMAGE : artistsImage} alt="" />
-            <h2>{curatedRightBlock ? "Thoughtfully curated playlists for every story." : <>A growing collection of in<br />demand artists and composers.</>}</h2>
+            <h2>{curatedRightBlock ? <>Thoughtfully curated playlists<br />for every story.</> : <>A growing collection of in<br />demand artists and composers.</>}</h2>
             <Link href={curatedRightBlock ? "/curated-playlists" : "/artists"}>{curatedRightBlock ? "Explore curated collections" : "Discover new artists"} <ArrowUpRightIcon size={24} strokeWidth={1.5} /></Link>
           </div>
         </section>
