@@ -47,13 +47,13 @@ export default function MusicFindSimilarButton({
   const [flashIndex, setFlashIndex] = useState(0);
 
   useEffect(() => {
-    if (!hovered || flashImages.length > 0) return;
+    if (flashImages.length > 0) return;
     let active = true;
     loadFlashImages().then((images) => {
       if (active) setFlashImages(images);
     });
     return () => { active = false; };
-  }, [hovered, flashImages.length]);
+  }, [flashImages.length]);
 
   useEffect(() => {
     if (!hovered || flashImages.length <= 1 ||
