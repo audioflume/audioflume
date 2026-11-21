@@ -1702,7 +1702,8 @@
 .discover-page-root.is-discover2 .discover2-playlist-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: var(--filmwave-page-gutter);
+  column-gap: min(var(--filmwave-page-gutter), 48px);
+  row-gap: 40px;
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-item {
@@ -1871,6 +1872,12 @@
 .discover-page-root.is-discover2 .discover2-compact-song-artist {
   color: var(--text-muted);
   font-size: 11px;
+}
+
+@media (max-width: 690px) {
+  .discover-page-root.is-discover2 .discover2-playlist-grid {
+    row-gap: 32px;
+  }
 }
 
 @media (max-width: 900px) {
