@@ -1910,7 +1910,7 @@ export default function MusicPage() {
           </MusicListShell>
         </div>
 
-        <Footer playerPadding={playerVisible} pageGutter={false} />
+        <Footer playerPadding={playerVisible} pageGutter={false} showTopBorder={false} />
       </section>
     </main>
   );
