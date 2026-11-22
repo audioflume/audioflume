@@ -5626,7 +5626,7 @@ body:has(.audioflume-home-landing)
 
 /* Homepage editorial mockup: scoped to the homepage only. */
 body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-page:not(.discover2-active-banner), .curated-playlists-page-root, .community-playlists-page-root, .artists-page-root, .audioflume-pricing-route-shell)) {
-  --audioflume-home-header-background: #e5e5df;
+  --audioflume-home-header-background: #fff;
   --audioflume-home-header-border: transparent;
   --audioflume-home-header-text: #111111;
   --audioflume-home-header-muted-link: #111111;
@@ -5686,9 +5686,10 @@ body:has(:is(.audioflume-home-experiment, .audioflume-home-mockup.is-discover-pa
 }
 
 .audioflume-experiment-search {
-  width: var(--home-reference-width);
-  margin: 0 auto;
-  padding: 16px 0 var(--audioflume-experiment-search-bottom-padding, 34px);
+  width: 100%;
+  margin: 0;
+  padding: 0 0 var(--audioflume-experiment-search-bottom-padding, 34px);
+  background: var(--bg-primary);
 }
 
 .audioflume-experiment-search-row {
