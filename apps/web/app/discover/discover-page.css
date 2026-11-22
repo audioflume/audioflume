@@ -2202,7 +2202,7 @@ margin-top: 20px;
 .discover-page-root.is-discover2 .discover2-3d-songs-stage {
   box-sizing: border-box;
   width: 100%;
-  min-height: 500px;
+  min-height: 540px;
   overflow-x: auto;
   overflow-y: hidden;
   background: #080808;
@@ -2211,32 +2211,31 @@ margin-top: 20px;
 }
 
 .discover-page-root.is-discover2 .discover2-3d-songs-row {
-  display: flex;
+  position: relative;
   box-sizing: border-box;
-  width: max-content;
-  min-width: 100%;
-  height: 500px;
-  align-items: stretch;
-  justify-content: space-between;
-  gap: clamp(16px, 2vw, 42px);
-  padding: 95px max(48px, var(--filmwave-page-gutter)) 24px;
+  width: max(1100px, min(100%, 1480px));
+  height: 540px;
+  margin: 0 auto;
+  perspective: 1150px;
+  perspective-origin: 50% 56%;
+  transform-style: preserve-3d;
 }
 
 .discover-page-root.is-discover2 .discover2-3d-song {
-  position: relative;
-  display: flex;
-  width: clamp(125px, 13vw, 210px);
-  flex: 0 0 clamp(125px, 13vw, 210px);
-  flex-direction: column;
-  align-items: flex-start;
-  perspective: 1200px;
+  position: absolute;
+  top: 105px;
+  left: var(--discover2-x);
+  width: 140px;
+  height: 410px;
+  transform: translateX(-50%);
+  transform-style: preserve-3d;
 }
 
 .discover-page-root.is-discover2 .discover2-3d-song-info {
   display: flex;
-  width: 100%;
+  width: 140px;
   min-width: 0;
-  min-height: 37px;
+  height: 44px;
   flex-direction: column;
   gap: 4px;
 }
@@ -2261,9 +2260,8 @@ margin-top: 20px;
   display: grid;
   width: 23px;
   height: 23px;
-  flex: 0 0 23px;
   place-items: center;
-  margin: 2px 0 36px;
+  margin: 0 0 14px;
   padding: 0;
   border: 0;
   background: transparent;
@@ -2278,36 +2276,33 @@ margin-top: 20px;
 }
 
 .discover-page-root.is-discover2 .discover2-3d-song-object {
-  position: relative;
-  width: clamp(245px, 22vw, 325px);
-  height: clamp(245px, 22vw, 325px);
-  margin-left: calc((100% - clamp(245px, 22vw, 325px)) / 2);
+  position: absolute;
+  top: 93px;
+  left: 50%;
+  width: 290px;
+  height: 290px;
   transform-style: preserve-3d;
-  transform: rotateY(-79deg);
+  transform: translate3d(-50%, 0, var(--discover2-depth)) rotateY(var(--discover2-turn));
   transition: transform 500ms cubic-bezier(.22, 1, .36, 1);
-}
-
-.discover-page-root.is-discover2 .discover2-3d-song:nth-child(even) .discover2-3d-song-object {
-  transform: rotateY(79deg);
 }
 
 .discover-page-root.is-discover2 .discover2-3d-song:hover .discover2-3d-song-object,
 .discover-page-root.is-discover2 .discover2-3d-song:focus-within .discover2-3d-song-object {
-  transform: rotateY(-70deg) translateY(-7px);
+  transform: translate3d(-50%, -8px, calc(var(--discover2-depth) + 75px)) rotateY(var(--discover2-hover-turn));
 }
 
-.discover-page-root.is-discover2 .discover2-3d-song:nth-child(even):hover .discover2-3d-song-object,
-.discover-page-root.is-discover2 .discover2-3d-song:nth-child(even):focus-within .discover2-3d-song-object {
-  transform: rotateY(70deg) translateY(-7px);
+.discover-page-root.is-discover2 .discover2-3d-song-cover,
+.discover-page-root.is-discover2 .discover2-3d-song-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
 }
 
 .discover-page-root.is-discover2 .discover2-3d-song-cover {
-  position: absolute;
-  inset: 0;
   overflow: hidden;
   background: #262626;
-  box-shadow: 13px 15px 22px rgba(0, 0, 0, .55);
-  backface-visibility: hidden;
+  transform: translateZ(5px);
+  box-shadow: 12px 14px 24px rgba(0, 0, 0, .6);
 }
 
 .discover-page-root.is-discover2 .discover2-3d-song-cover img {
@@ -2317,27 +2312,43 @@ margin-top: 20px;
   object-fit: cover;
 }
 
+.discover-page-root.is-discover2 .discover2-3d-song-back {
+  background: #1a1a1a;
+  transform: translateZ(-5px) rotateY(180deg);
+}
+
 .discover-page-root.is-discover2 .discover2-3d-song-edge {
   position: absolute;
   top: 0;
   right: 0;
-  width: 5px;
+  width: 10px;
   height: 100%;
-  background: #252525;
+  background: #303030;
   transform: rotateY(90deg);
   transform-origin: right center;
 }
 
+.discover-page-root.is-discover2 .discover2-3d-song-top {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 10px;
+  background: #404040;
+  transform: rotateX(-90deg);
+  transform-origin: top center;
+}
+
 .discover-page-root.is-discover2 .discover2-3d-songs-loading {
-  height: 500px;
+  height: 540px;
 }
 
 @media (max-width: 750px) {
   .discover-page-root.is-discover2 .discover2-3d-songs {
     margin-top: 90px;
   }
-  .discover-page-root.is-discover2 .discover2-3d-songs-row {
-    padding-top: 45px;
+  .discover-page-root.is-discover2 .discover2-3d-song {
+    top: 75px;
   }
 }
 
