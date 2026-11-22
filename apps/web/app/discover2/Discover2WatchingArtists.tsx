@@ -105,8 +105,8 @@ export default function Discover2WatchingArtists() {
           <span className="discover2-watching-heading-default" aria-hidden="true">Artists we’re watching</span>
           <span className="discover2-watching-heading-hover" aria-hidden="true">
             Explore artists
-            <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
-              <path d="M4 21 19 5M5 5h14v14" />
+            <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+              <path d="M4 21 19 5M4 5h15v15" />
             </svg>
           </span>
         </Link>
