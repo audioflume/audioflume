@@ -11,6 +11,7 @@
 }
 
 .discover-page-root.is-discover2 {
+  --discover-artist-hero-width: calc(100% - 2 * var(--filmwave-page-gutter));
   background: light-dark(#f7f7f5, #171717);
 }
 
@@ -33,11 +34,11 @@
       var(--filmwave-searchbar-height, 75px)
   );
   position: relative;
-  width: 100%;
+  width: var(--discover-artist-hero-width, 100%);
   max-width: none;
   height: var(--discover-artist-hero-height);
   min-height: 0;
-  margin: 0;
+  margin: 0 auto;
   overflow: hidden;
   background:
     linear-gradient(rgba(13, 13, 13, 0.32), rgba(13, 13, 13, 0.32)),
@@ -1273,7 +1274,7 @@
   --audioflume-home-page-gutter: var(--filmwave-page-gutter);
   --home-reference-width: calc(100vw - 2 * var(--filmwave-page-gutter));
   width: 100vw;
-  margin-top: 0;
+  margin-top: 125px;
   margin-left: calc(50% - 50vw);
 }
 
