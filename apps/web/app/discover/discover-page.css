@@ -1787,10 +1787,10 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 82px;
+  height: 98px;
   align-items: center;
   gap: 12px;
-  padding: 8px 0;
+  padding: 16px 0;
   border: 0;
   border-bottom: 1px solid color-mix(in srgb, var(--text-primary) 6%, transparent);
   background: transparent;
