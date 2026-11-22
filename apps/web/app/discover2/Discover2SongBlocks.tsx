@@ -6,7 +6,17 @@ import { usePlayer } from "@/context/PlayerContext";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import type { Song } from "@/lib/types";
 
-function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
+function Discover2CompactSong({
+  song,
+  queue,
+  presentation,
+  index,
+}: {
+  song: Song;
+  queue: Song[];
+  presentation?: "gallery" | "numbered" | "collage";
+  index?: number;
+}) {
   const { currentSong, isPlaying, setQueue, togglePlayPause } = usePlayer();
   const active = currentSong?.id === song.id;
   const playing = active && isPlaying;
@@ -20,11 +30,16 @@ function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
   return (
     <button
       type="button"
-      className={`discover2-compact-song${active ? " is-active" : ""}`}
+      className={`discover2-compact-song${active ? " is-active" : ""}${presentation ? ` is-${presentation}` : ""}`}
       onClick={playSong}
       disabled={!song.audioUrl}
       aria-label={`${playing ? "Pause" : "Play"} ${song.title} by ${song.artist}`}
     >
+      {presentation === "numbered" && index !== undefined ? (
+        <span className="discover2-experiment-track-number" aria-hidden="true">
+          {String(index + 1).padStart(2, "0")}
+        </span>
+      ) : null}
       <span className="discover2-compact-song-art">
         {song.coverArt ? <img src={song.coverArt} alt="" loading="lazy" /> : null}
         <span className="filmwave-song-play-overlay">
@@ -49,6 +64,7 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
   );
 
   return (
+    <>
     <section className={`discover2-song-section${beforePlaylists ? " is-before-playlists" : ""}`} aria-label="Featured tracks">
       {beforePlaylists ? <h2 className="discover2-song-section-title">Tracks made for storytelling.</h2> : null}
       {!beforePlaylists ? (
@@ -71,5 +87,48 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
         </div>
       )}
     </section>
+    {!beforePlaylists && !loading && recentSongs.length > 0 ? (
+      <div className="discover2-song-experiments" aria-label="Alternative song section designs">
+        <section className="discover2-song-experiment">
+          <div className="discover2-song-experiment-heading">
+            <span>OPTION 01 / LISTENING GALLERY</span>
+            <h2>Music as artwork.</h2>
+            <p>Larger covers and a quieter, gallery-like browsing experience.</p>
+          </div>
+          <div className="discover2-experiment-gallery">
+            {recentSongs.map((song) => (
+              <Discover2CompactSong key={song.id} song={song} queue={recentSongs} presentation="gallery" />
+            ))}
+          </div>
+        </section>
+
+        <section className="discover2-song-experiment">
+          <div className="discover2-song-experiment-heading">
+            <span>OPTION 02 / NUMBERED TRACKLIST</span>
+            <h2>A numbered listening list.</h2>
+            <p>Emphasis on song titles, sequence, and subtle artwork.</p>
+          </div>
+          <div className="discover2-experiment-numbered">
+            {recentSongs.map((song, index) => (
+              <Discover2CompactSong key={song.id} song={song} queue={recentSongs} presentation="numbered" index={index} />
+            ))}
+          </div>
+        </section>
+
+        <section className="discover2-song-experiment">
+          <div className="discover2-song-experiment-heading">
+            <span>OPTION 03 / ASYMMETRIC COLLECTION</span>
+            <h2>A more visual rhythm.</h2>
+            <p>One collection, with varied image sizes and a stronger editorial composition.</p>
+          </div>
+          <div className="discover2-experiment-collage">
+            {recentSongs.map((song) => (
+              <Discover2CompactSong key={song.id} song={song} queue={recentSongs} presentation="collage" />
+            ))}
+          </div>
+        </section>
+      </div>
+    ) : null}
+    </>
   );
 }
