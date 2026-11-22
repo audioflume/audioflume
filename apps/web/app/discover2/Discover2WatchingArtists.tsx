@@ -124,7 +124,7 @@ export default function Discover2WatchingArtists() {
                       >
                         <PlaybackStateIcon playing={hasActiveSong && isPlaying} size={15} hoverIcon="list" />
                       </button>
-                      ) : null
+                      ) : null}
                     </>
                   )}
                 </>
