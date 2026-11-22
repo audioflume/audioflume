@@ -1771,11 +1771,12 @@
 }
 
 .discover-page-root.is-discover2 .discover2-song-intro {
-  margin: 0 auto 50px;
-  color: #999;
-  font-size: 14px;
-  font-weight: 300;
-  line-height: 1.5;
+  margin: 0 auto 160px;
+  max-width: 880px;
+  color: var(--text-primary);
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.2;
   text-align: center;
 }
 
