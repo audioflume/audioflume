@@ -1828,9 +1828,9 @@
 .discover-page-root.is-discover2 .discover2-compact-song-art {
   position: relative;
   display: block;
-  width: 64px;
-  height: 64px;
-  flex: 0 0 64px;
+  width: 62px;
+  height: 62px;
+  flex: 0 0 62px;
   overflow: hidden;
   background: var(--bg-tertiary);
 }
@@ -1842,30 +1842,8 @@
   object-fit: cover;
 }
 
-.discover-page-root.is-discover2 .discover2-compact-song-play {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  z-index: 1;
-  display: grid;
-  width: 42px;
-  height: 42px;
-  place-items: center;
-  border-radius: 50%;
-  background: #fff;
-  color: #111;
-  opacity: 0;
-  transform: translate(-50%, -50%);
-  transition: opacity 160ms ease, transform 160ms ease;
-}
-
-.discover-page-root.is-discover2 .discover2-compact-song:is(:hover, :focus-visible, .is-active) .discover2-compact-song-play {
+.discover-page-root.is-discover2 .discover2-compact-song:is(:hover, :focus-visible, .is-active) .filmwave-song-play-overlay {
   opacity: 1;
-}
-
-.discover-page-root.is-discover2 .discover2-compact-song:hover .discover2-compact-song-play,
-.discover-page-root.is-discover2 .discover2-compact-song:focus-visible .discover2-compact-song-play {
-  transform: translate(-50%, -50%) scale(1.03);
 }
 
 .discover-page-root.is-discover2 .discover2-compact-song-copy {
