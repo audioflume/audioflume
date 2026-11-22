@@ -2111,7 +2111,7 @@ gap: 16px;
 .discover-page-root.is-discover2 .discover2-watching-card.is-selected .discover2-watching-play {
   opacity: 1;
   pointer-events: auto;
-  transition-delay: 260ms;
+  transition-delay: 110ms;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-description > span {
