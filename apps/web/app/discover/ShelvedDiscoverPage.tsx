@@ -95,10 +95,11 @@ function Discover2FittedArtistName({ name }: { name: string }) {
       title.style.fontSize = "";
       const computed = getComputedStyle(title);
       const originalSize = parseFloat(computed.fontSize);
-      const lineHeight = parseFloat(computed.lineHeight);
-      const fits = () =>
-        title.scrollHeight <= lineHeight * 2 + 2 &&
-        title.scrollWidth <= title.clientWidth + 1;
+      const fits = () => {
+        const lineHeight = parseFloat(getComputedStyle(title).lineHeight);
+        return title.scrollHeight <= lineHeight * 2 + 2 &&
+          title.scrollWidth <= title.clientWidth + 1;
+      };
 
       if (fits()) return;
 
