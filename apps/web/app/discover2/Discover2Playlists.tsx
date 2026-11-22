@@ -24,7 +24,7 @@ export default function Discover2Playlists() {
       })
       .then((data) => {
         if (!controller.signal.aborted) {
-          setPlaylists(Array.isArray(data) ? data.slice(0, 12) : []);
+          setPlaylists(Array.isArray(data) ? data.slice(0, 8) : []);
         }
       })
       .catch(() => {
@@ -39,10 +39,10 @@ export default function Discover2Playlists() {
 
   return (
     <section className="discover2-playlist-section" aria-label="Curated playlists">
-      <h2>Thoughtfully curated playlists for every story.</h2>
+      <h2>Curated playlists made for the edit</h2>
       <div className="discover2-playlist-grid">
         {loading
-          ? Array.from({ length: 12 }, (_, index) => (
+          ? Array.from({ length: 8 }, (_, index) => (
               <div className="discover2-playlist-item" key={index} aria-hidden="true">
                 <div className="discover2-playlist-image is-loading" />
                 <span className="discover2-playlist-name">&nbsp;</span>
