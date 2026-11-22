@@ -1950,6 +1950,11 @@
 .discover-page-root.is-discover2 .discover2-watching-heading-link {
   display: grid;
   place-items: center;
+  overflow: hidden;
+  margin-block: -.22em;
+  padding-block: .22em;
+  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
+  mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 82%, transparent);
   color: inherit;
   text-decoration: none;
   cursor: pointer;
