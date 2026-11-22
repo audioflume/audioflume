@@ -1827,11 +1827,6 @@
   row-gap: 0;
 }
 
-.discover-page-root.is-discover2 .discover2-song-section:not(.is-before-playlists) .discover2-song-grid {
-  background: light-dark(#fff, #262626);
-  padding: 24px 40px;
-}
-
 .discover-page-root.is-discover2 .discover2-compact-song {
   display: flex;
   box-sizing: border-box;
