@@ -36,8 +36,12 @@ const PLACEHOLDER_ARTIST: DirectoryArtist = {
 export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
+  const [scrollPosition, setScrollPosition] = useState(0);
+  const [isScrolling, setIsScrolling] = useState(false);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
-  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledScroll: false, lockedUntil: 0, lastPixels: 0, momentumSettled: false });
+  const scrollPositionRef = useRef(0);
+  const scrollEndTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const touchLockedUntil = useRef(0);
   const touchSwipe = useRef({ x: 0, y: 0, tracking: false, suppressClickUntil: 0 });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
@@ -57,10 +61,24 @@ export default function Discover2WatchingArtists() {
     return () => controller.abort();
   }, []);
 
+  useEffect(() => () => {
+    if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
+  }, []);
+
+  function selectArtist(index: number) {
+    if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
+    scrollEndTimer.current = null;
+    scrollPositionRef.current = index;
+    setScrollPosition(index);
+    setIsScrolling(false);
+    setPreviewArtistId(null);
+    setSelected(index);
+  }
+
   function openArtist(artist: DirectoryArtist) {
     const playable = artist.songs.filter((song) => Boolean(song.audioUrl));
     if (playable.length === 0) return;
-    setSelected(artists.findIndex((item) => item.id === artist.id));
+    selectArtist(artists.findIndex((item) => item.id === artist.id));
     setPreviewArtistId(artist.id);
     // Opening the preview does not start playback; controls inside the mini-player do.
   }
@@ -71,44 +89,34 @@ export default function Discover2WatchingArtists() {
 
   function selectFromSwipe(direction: number) {
     const now = performance.now();
-    const scroll = horizontalScroll.current;
-    if (now < scroll.lockedUntil || artists.length < 2) return;
-    scroll.lockedUntil = now + 360;
+    if (now < touchLockedUntil.current || artists.length < 2) return;
+    touchLockedUntil.current = now + 360;
     const next = Math.max(0, Math.min(artists.length - 1, selected + direction));
-    if (next !== selected) {
-      closePreview();
-      setSelected(next);
-    }
+    if (next !== selected) selectArtist(next);
   }
 
   function handleHorizontalScroll(event: React.WheelEvent<HTMLDivElement>) {
     if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || artists.length < 2) return;
 
-    const now = performance.now();
-    const scroll = horizontalScroll.current;
     const pixels = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? event.currentTarget.clientWidth : 1);
-    const idle = now - scroll.lastEvent > 280;
-    const reversed = scroll.lastPixels !== 0 && Math.sign(pixels) !== Math.sign(scroll.lastPixels);
+    // One artist's width of progress corresponds to 180px of horizontal trackpad travel.
+    const next = Math.max(0, Math.min(artists.length - 1, scrollPositionRef.current + pixels / 180));
+    scrollPositionRef.current = next;
+    setScrollPosition(next);
+    setIsScrolling(true);
 
-    // Keep one selection per swipe, but recognize a fresh swipe even when
-    // residual trackpad momentum prevents the wheel stream from going idle.
-    if (idle || (now >= scroll.lockedUntil && reversed) ||
-      (now >= scroll.lockedUntil && scroll.momentumSettled && Math.abs(pixels) >= 8 && Math.abs(pixels) > Math.abs(scroll.lastPixels) * 1.8)) {
-      scroll.distance = 0;
-      scroll.handledScroll = false;
-      scroll.momentumSettled = false;
-    }
-
-    if (Math.abs(pixels) <= 2) scroll.momentumSettled = true;
-    scroll.lastEvent = now;
-    scroll.lastPixels = pixels;
-    if (scroll.handledScroll || now < scroll.lockedUntil) return;
-
-    scroll.distance += pixels;
-    if (Math.abs(scroll.distance) < 40) return;
-
-    scroll.handledScroll = true;
-    selectFromSwipe(Math.sign(scroll.distance));
+    if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
+    scrollEndTimer.current = setTimeout(() => {
+      const nearest = Math.round(scrollPositionRef.current);
+      scrollPositionRef.current = nearest;
+      setIsScrolling(false);
+      setScrollPosition(nearest);
+      if (nearest !== selected) {
+        closePreview();
+        setSelected(nearest);
+      }
+      scrollEndTimer.current = null;
+    }, 150);
   }
 
   function handleTouchStart(event: React.TouchEvent<HTMLDivElement>) {
@@ -145,7 +153,7 @@ export default function Discover2WatchingArtists() {
         </Link>
       </h2>
       <div
-        className="discover2-watching-accordion"
+        className={`discover2-watching-accordion${isScrolling ? " is-scrolling" : ""}`}
         onWheel={handleHorizontalScroll}
         onTouchStart={handleTouchStart}
         onTouchEnd={handleTouchEnd}
@@ -168,11 +176,9 @@ export default function Discover2WatchingArtists() {
             <article
               key={artist.id}
               className={`discover2-watching-card${active ? " is-selected" : ""}${previewOpen ? " is-preview-open" : ""}`}
+              style={{ "--discover2-card-strength": Math.max(0, 1 - Math.abs(scrollPosition - index)) } as React.CSSProperties}
               onClick={() => {
-                if (!active) {
-                  closePreview();
-                  setSelected(index);
-                }
+                if (!active) selectArtist(index);
               }}
             >
               {image ? (
@@ -187,7 +193,7 @@ export default function Discover2WatchingArtists() {
               {!previewOpen ? (
                 <>
                   {!active ? (
-                    <button className="discover2-watching-select" type="button" aria-label={`Show ${artist.name}`} onClick={() => setSelected(index)} />
+                    <button className="discover2-watching-select" type="button" aria-label={`Show ${artist.name}`} onClick={() => selectArtist(index)} />
                   ) : (
                     <>
                       {!placeholder ? <Link className="discover2-watching-explore" href={`/artists/${artist.slug}`}>Explore artist ↗</Link> : null}
