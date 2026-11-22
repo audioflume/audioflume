@@ -37,7 +37,7 @@ export default function Discover2WatchingArtists() {
   const [artists, setArtists] = useState<DirectoryArtist[]>([]);
   const [selected, setSelected] = useState(0);
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
-  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, lastChange: 0, lastDelta: 0, handledGesture: false });
+  const horizontalScroll = useRef({ distance: 0, lastEvent: 0, handledScroll: false });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
 
   useEffect(() => {
@@ -76,28 +76,21 @@ export default function Discover2WatchingArtists() {
 
     const now = performance.now();
     const scroll = horizontalScroll.current;
-    const magnitude = Math.abs(event.deltaX);
-    const previousMagnitude = Math.abs(scroll.lastDelta);
-    const newGesture = now - scroll.lastEvent > 100;
-    const renewedSwipe = scroll.handledGesture
-      && now - scroll.lastChange > 180
-      && magnitude >= 5
-      && magnitude > previousMagnitude * 1.7
-      && magnitude - previousMagnitude >= 3;
-    if (newGesture || renewedSwipe) {
+    // Treat a continuous stream of wheel events (including momentum) as one scroll action.
+    if (now - scroll.lastEvent > 110) {
       scroll.distance = 0;
-      scroll.handledGesture = false;
+      scroll.handledScroll = false;
     }
     scroll.lastEvent = now;
-    scroll.lastDelta = event.deltaX;
-    if (scroll.handledGesture) return;
+    if (scroll.handledScroll) return;
 
-    scroll.distance += event.deltaX;
-    if (Math.abs(scroll.distance) < 18) return;
+    // Accumulate actual horizontal scroll distance instead of interpreting velocity spikes as swipes.
+    const pixels = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? event.currentTarget.clientWidth : 1);
+    scroll.distance += pixels;
+    if (Math.abs(scroll.distance) < 40) return;
 
     const direction = Math.sign(scroll.distance);
-    scroll.handledGesture = true;
-    scroll.lastChange = now;
+    scroll.handledScroll = true;
     const next = Math.max(0, Math.min(artists.length - 1, selected + direction));
     if (next !== selected) {
       closePreview();
