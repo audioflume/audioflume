@@ -1958,26 +1958,40 @@
 .discover-page-root.is-discover2 .discover2-watching-heading-default,
 .discover-page-root.is-discover2 .discover2-watching-heading-hover {
   grid-area: 1 / 1;
+  transition: opacity 280ms ease, transform 280ms cubic-bezier(.22, 1, .36, 1);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-hover {
-  visibility: hidden;
   display: inline-flex;
   align-items: baseline;
   justify-content: center;
   gap: .12em;
+  opacity: 0;
+  transform: translateY(.18em);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-arrow {
-  font-size: .9em;
+  display: block;
+  width: .86em;
+  height: .86em;
+  flex: 0 0 .86em;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-link:is(:hover, :focus-visible) .discover2-watching-heading-default {
-  visibility: hidden;
+  opacity: 0;
+  transform: translateY(-.18em);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-link:is(:hover, :focus-visible) .discover2-watching-heading-hover {
-  visibility: visible;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .discover-page-root.is-discover2 .discover2-watching-heading-default,
+  .discover-page-root.is-discover2 .discover2-watching-heading-hover {
+    transition: none;
+  }
 }
 
 .discover-page-root.is-discover2 .discover2-watching-accordion {
