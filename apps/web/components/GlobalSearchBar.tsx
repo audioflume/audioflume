@@ -22,8 +22,8 @@ export default function GlobalSearchBar({
   position = "sticky",
   layer = "default",
   heroOverlay = false,
-  musicFieldStyle = false,
-  darkSimilarButton = false,
+  musicFieldStyle = true,
+  darkSimilarButton = true,
 }: GlobalSearchBarProps) {
   const barClassName = [
     styles.bar,
