@@ -46,7 +46,7 @@
   --discover-artist-hero-grid-columns: minmax(0, 8fr) minmax(0, 7fr);
   --discover-artist-hero-grid-max-width: 1400px;
   --discover-artist-name-inset: clamp(0px, calc((100vw - 980px) * .18), 155px);
-  --discover-artist-detail-inset: clamp(-80px, calc((980px - 100vw) * .1), 0px);
+  --discover-artist-detail-inset: calc(clamp(-80px, (980px - 100vw) * .1, 0px) - 70px);
   --discover-artist-name-blend: normal;
   --discover-artist-hero-height: clamp(420px, 42vw, 660px);
   flex: 0 0 var(--home-reference-width);
