@@ -1693,7 +1693,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-section {
-  margin-top: 108px;
+  margin-top: 152px;
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-section > h2 {
@@ -1902,7 +1902,7 @@
 
 @media (max-width: 540px) {
   .discover-page-root.is-discover2 .discover2-playlist-section {
-    margin-top: 64px;
+    margin-top: 108px;
   }
   .discover-page-root.is-discover2 .discover2-song-grid {
     grid-template-columns: minmax(0, 1fr);
