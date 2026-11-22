@@ -1950,6 +1950,7 @@
 .discover-page-root.is-discover2 .discover2-watching-heading-link {
   display: grid;
   place-items: center;
+  overflow: hidden;
   color: inherit;
   text-decoration: none;
   cursor: pointer;
@@ -1958,7 +1959,7 @@
 .discover-page-root.is-discover2 .discover2-watching-heading-default,
 .discover-page-root.is-discover2 .discover2-watching-heading-hover {
   grid-area: 1 / 1;
-  transition: opacity 280ms ease, transform 280ms cubic-bezier(.22, 1, .36, 1);
+  transition: opacity 220ms ease, transform 420ms cubic-bezier(.76, 0, .24, 1);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-hover {
@@ -1967,7 +1968,7 @@
   justify-content: center;
   gap: .12em;
   opacity: 0;
-  transform: translateY(.18em);
+  transform: translateY(.75em);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-arrow {
@@ -1980,7 +1981,7 @@
 
 .discover-page-root.is-discover2 .discover2-watching-heading-link:is(:hover, :focus-visible) .discover2-watching-heading-default {
   opacity: 0;
-  transform: translateY(-.18em);
+  transform: translateY(-.75em);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-link:is(:hover, :focus-visible) .discover2-watching-heading-hover {
