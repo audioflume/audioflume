@@ -41,6 +41,7 @@ export default function Discover2WatchingArtists() {
   const [previewArtistId, setPreviewArtistId] = useState<string | null>(null);
   const scrollPositionRef = useRef(0);
   const scrollEndTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const wheelGesture = useRef({ anchor: 0, direction: 0, lastEvent: 0, active: false });
   const touchLockedUntil = useRef(0);
   const touchSwipe = useRef({ x: 0, y: 0, tracking: false, suppressClickUntil: 0 });
   const { currentSong, isPlaying, setQueue, togglePlayPause, seekTo } = usePlayer();
@@ -68,6 +69,7 @@ export default function Discover2WatchingArtists() {
   function selectArtist(index: number) {
     if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
     scrollEndTimer.current = null;
+    wheelGesture.current.active = false;
     scrollPositionRef.current = index;
     setScrollPosition(index);
     setIsScrolling(false);
@@ -99,19 +101,33 @@ export default function Discover2WatchingArtists() {
     if (Math.abs(event.deltaX) <= Math.abs(event.deltaY) || artists.length < 2) return;
 
     const pixels = event.deltaX * (event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? event.currentTarget.clientWidth : 1);
-    // One artist's width of progress corresponds to 180px of horizontal trackpad travel.
-    const next = Math.max(0, Math.min(artists.length - 1, scrollPositionRef.current + pixels / 180));
+    const now = performance.now();
+    const gesture = wheelGesture.current;
+
+    // A gesture stays anchored to one artist, even while momentum continues.
+    if (!gesture.active || now - gesture.lastEvent > 220) {
+      gesture.anchor = Math.round(scrollPositionRef.current);
+      gesture.direction = 0;
+      gesture.active = true;
+    }
+    gesture.lastEvent = now;
+    if (gesture.direction === 0 && pixels !== 0) gesture.direction = Math.sign(pixels);
+
+    // Follow the trackpad continuously, but never cross beyond the adjacent card.
+    const destination = Math.max(0, Math.min(artists.length - 1, gesture.anchor + gesture.direction));
+    const next = Math.max(
+      Math.min(gesture.anchor, destination),
+      Math.min(Math.max(gesture.anchor, destination), scrollPositionRef.current + pixels / 180),
+    );
     scrollPositionRef.current = next;
     setScrollPosition(next);
     setIsScrolling(true);
 
     if (scrollEndTimer.current) clearTimeout(scrollEndTimer.current);
     scrollEndTimer.current = setTimeout(() => {
-      // Require 80% progress into the next card before committing the snap,
-      // leaving room for a small overshoot without selecting another artist.
-      const nearest = scrollPositionRef.current > selected
-        ? Math.floor(scrollPositionRef.current + 0.2)
-        : Math.ceil(scrollPositionRef.current - 0.2);
+      // Retain the existing 80% snap threshold and overshoot tolerance.
+      const progress = Math.abs(scrollPositionRef.current - gesture.anchor);
+      const nearest = progress >= 0.8 ? destination : gesture.anchor;
       scrollPositionRef.current = nearest;
       setIsScrolling(false);
       setScrollPosition(nearest);
@@ -119,6 +135,7 @@ export default function Discover2WatchingArtists() {
         closePreview();
         setSelected(nearest);
       }
+      // Keep this gesture locked until a new, distinct horizontal gesture begins.
       scrollEndTimer.current = null;
     }, 150);
   }
