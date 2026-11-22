@@ -1698,7 +1698,7 @@
 
 .discover-page-root.is-discover2 .discover2-playlist-section > h2 {
   margin: 0 0 170px;
-  color: light-dark(#c5c5c5, #626262);
+  color: light-dark(#c5c5c5, #424242);
   font-size: clamp(48px, 4.6vw, 76px);
   font-weight: 400;
   letter-spacing: -0.05em;
@@ -1734,6 +1734,15 @@
   width: 100%;
   overflow: hidden;
   background: var(--bg-tertiary);
+}
+
+.discover-page-root.is-discover2 .discover2-playlist-image::after {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
+  content: "";
+  pointer-events: none;
 }
 
 .discover-page-root.is-discover2 .discover2-playlist-cover-link {
@@ -1939,7 +1948,7 @@
 
 .discover-page-root.is-discover2 .discover2-watching > h2 {
   margin: 0 0 148px;
-  color: light-dark(#c5c5c5, #626262);
+  color: light-dark(#c5c5c5, #424242);
   font-size: clamp(58px, 8.3vw, 150px);
   font-weight: 400;
   letter-spacing: -.065em;
@@ -2017,6 +2026,15 @@
   cursor: pointer;
   container-type: inline-size;
   transition: flex-grow 360ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.discover-page-root.is-discover2 .discover2-watching-card::before {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.075);
+  content: "";
+  pointer-events: none;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
