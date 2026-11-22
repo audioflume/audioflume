@@ -67,7 +67,7 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
         <div className="discover2-song-grid">
           {recentSongs.map((song) => (
             <Discover2CompactSong key={song.id} song={song} queue={recentSongs} />
-          ))
+          ))}
         </div>
       )}
     </section>
