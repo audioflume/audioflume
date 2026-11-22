@@ -1233,7 +1233,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
         >
           <Footer />
         </div>
-      </div> : <div className="discover-artist-content"><div className="discover-artist-footer" style={{ paddingBottom: playerVisible ? "72px" : "8px" }}><Footer /></div></div>}
+      </div> : <div className="discover-artist-content"><div className="discover-artist-footer" style={{ paddingBottom: playerVisible ? "72px" : "8px" }}><Footer showTopBorder={!discover2Layout} /></div></div>}
     </main>
   );
 }
