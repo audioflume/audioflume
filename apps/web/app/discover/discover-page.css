@@ -2025,7 +2025,12 @@
   color: #fff;
   cursor: pointer;
   container-type: inline-size;
+  flex-grow: calc(1 + 3 * var(--discover2-card-strength, 0));
   transition: flex-grow 360ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.discover-page-root.is-discover2 .discover2-watching-accordion.is-scrolling .discover2-watching-card {
+  transition: none;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-card::before {
@@ -2038,7 +2043,6 @@
 }
 
 .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
-  flex-grow: 4;
   cursor: default;
 }
 
@@ -2180,8 +2184,8 @@ margin-top: 20px;
     font-size: clamp(48px, 10vw, 72px);
   }
 
-  .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
-    flex-grow: 5;
+  .discover-page-root.is-discover2 .discover2-watching-card {
+    flex-grow: calc(1 + 4 * var(--discover2-card-strength, 0));
   }
   .discover-page-root.is-discover2 .discover2-watching-caption {
     flex-direction: column;
