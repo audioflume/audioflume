@@ -734,7 +734,7 @@
   right: 0;
   bottom: -14px;
   left: 0;
- border-bottom: 1px solid light-dark(#d7d7d7, #555);
+ border-bottom: 1px solid var(--border);
   content: "";
   pointer-events: none;
 }
