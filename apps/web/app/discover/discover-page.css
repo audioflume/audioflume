@@ -1963,7 +1963,7 @@
 .discover-page-root.is-discover2 .discover2-watching-heading-default,
 .discover-page-root.is-discover2 .discover2-watching-heading-hover {
   grid-area: 1 / 1;
-  transition: opacity 220ms ease, transform 420ms cubic-bezier(.76, 0, .24, 1);
+  transition: opacity 420ms ease-in-out, transform 420ms cubic-bezier(.76, 0, .24, 1);
 }
 
 .discover-page-root.is-discover2 .discover2-watching-heading-hover {
