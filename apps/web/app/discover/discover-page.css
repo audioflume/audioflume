@@ -45,6 +45,8 @@
 .discover-page-root.is-discover2 .discover2-hero-card {
   --discover-artist-hero-grid-columns: minmax(0, 8fr) minmax(0, 7fr);
   --discover-artist-hero-grid-max-width: 1400px;
+  --discover-artist-name-inset: clamp(0px, calc((100vw - 980px) * .18), 155px);
+  --discover-artist-name-blend: normal;
   --discover-artist-hero-height: max(560px, calc(100dvh - var(--filmwave-header-height, 60px) - var(--filmwave-searchbar-height, 75px) - 60px));
   flex: 0 0 var(--home-reference-width);
   width: auto;
@@ -275,6 +277,7 @@
   grid-column: 1;
   grid-row: 1;
   margin-bottom: 22px;
+  transform: translateX(var(--discover-artist-name-inset, 0px));
   font-family: var(--font-roboto-mono-filmwave), monospace;
   font-size: 16px;
   font-weight: 300;
@@ -298,8 +301,8 @@
   font-weight: 400;
   letter-spacing: -0.055em;
   line-height: 0.96;
-  mix-blend-mode: difference;
-  transform: translateX(-7px);
+  mix-blend-mode: var(--discover-artist-name-blend, difference);
+  transform: translateX(calc(-7px + var(--discover-artist-name-inset, 0px)));
 }
 
 .discover-artist-hero-genres {
@@ -313,6 +316,7 @@
   align-self: center;
   gap: 8px;
   margin: clamp(28px, 2vw, 36px) 0 0;
+  transform: translateX(var(--discover-artist-name-inset, 0px));
 }
 
 .discover-artist-hero-genres > span {
