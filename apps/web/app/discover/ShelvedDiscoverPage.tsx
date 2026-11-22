@@ -1045,9 +1045,7 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
         </div>
       ) : null}
 
-      {discover2Layout ? topBanner : null}
-
-      {!discover2Layout ? <section
+      <section
         className={`discover-artist-hero${featuredArtistsLoading ? " is-loading" : ""}`}
         aria-label="Featured artist"
         style={heroStyle}
@@ -1160,7 +1158,9 @@ export default function DiscoverPage({ afterPlaylists, afterFeaturedSongs, topBa
             </div>
           ) : null}
         </div>
-      </section> : null}
+      </section>
+
+      {discover2Layout ? topBanner : null}
 
       {!discover2Layout ? <div className="discover-artist-content">
         <FeaturedArtistShelf
