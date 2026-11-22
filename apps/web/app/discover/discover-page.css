@@ -1919,11 +1919,11 @@
 /* Discover2-only artist accordion. */
 .discover-page-root.is-discover2 .discover2-watching {
   width: calc(100% - 2 * var(--filmwave-page-gutter));
-  margin: 72px auto 0;
+  margin: 110px auto 0;
 }
 
 .discover-page-root.is-discover2 .discover2-watching > h2 {
-  margin: 0 0 70px;
+  margin: 0 0 110px;
   color: #c5c5c5;
   font-size: clamp(58px, 8.3vw, 150px);
   font-weight: 400;
@@ -2063,11 +2063,11 @@
 }
 
 @media (max-width: 690px) {
-  .discover-page-root.is-discover2 .discover2-watching {
-    margin-top: 64px;
+.discover-page-root.is-discover2 .discover2-watching {
+    margin-top: 110px;
   }
-  .discover-page-root.is-discover2 .discover2-watching > h2 {
-    margin-bottom: 34px;
+.discover-page-root.is-discover2 .discover2-watching > h2 {
+    margin-bottom: 110px;
     font-size: clamp(48px, 10vw, 72px);
   }
   .discover-page-root.is-discover2 .discover2-watching-accordion {
