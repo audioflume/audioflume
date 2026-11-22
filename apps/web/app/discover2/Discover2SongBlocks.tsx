@@ -27,8 +27,10 @@ function Discover2CompactSong({ song, queue }: { song: Song; queue: Song[] }) {
     >
       <span className="discover2-compact-song-art">
         {song.coverArt ? <img src={song.coverArt} alt="" loading="lazy" /> : null}
-        <span className="discover2-compact-song-play">
-          <PlaybackStateIcon playing={playing} size={14} />
+        <span className="filmwave-song-play-overlay">
+          <span className="filmwave-song-play-button">
+            <PlaybackStateIcon playing={playing} size={15} />
+          </span>
         </span>
       </span>
       <span className="discover2-compact-song-copy">
