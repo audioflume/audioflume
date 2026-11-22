@@ -61,6 +61,7 @@ export default function Discover2Playlists() {
               </div>
             ))}
       </div>
+      <Link className="discover2-playlist-explore" href="/curated-playlists">Explore curated playlists</Link>
     </section>
   );
 }
