@@ -103,7 +103,12 @@ export default function Discover2WatchingArtists() {
       <h2>
         <Link className="discover2-watching-heading-link" href="/artist2" aria-label="Explore artists">
           <span className="discover2-watching-heading-default" aria-hidden="true">Artists we’re watching</span>
-          <span className="discover2-watching-heading-hover" aria-hidden="true">Explore artists <span className="discover2-watching-heading-arrow">↗</span></span>
+          <span className="discover2-watching-heading-hover" aria-hidden="true">
+            Explore artists
+            <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="square" strokeLinejoin="miter" aria-hidden="true">
+              <path d="M5 19 19 5M7 5h12v12" />
+            </svg>
+          </span>
         </Link>
       </h2>
       <div className="discover2-watching-accordion" onWheel={handleHorizontalScroll}>
