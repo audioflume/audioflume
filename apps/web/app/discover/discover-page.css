@@ -1787,7 +1787,7 @@
   box-sizing: border-box;
   width: 100%;
   min-width: 0;
-  height: 64px;
+  height: 82px;
   align-items: center;
   gap: 12px;
   padding: 8px 0;
@@ -1829,9 +1829,9 @@
 
 .discover-page-root.is-discover2 .discover2-compact-song-art {
   display: block;
-  width: 40px;
-  height: 40px;
-  flex: 0 0 40px;
+  width: 66px;
+  height: 66px;
+  flex: 0 0 66px;
   overflow: hidden;
   background: var(--bg-tertiary);
 }
