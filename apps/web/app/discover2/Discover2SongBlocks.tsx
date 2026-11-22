@@ -2,8 +2,7 @@
 
 import { useMemo, useState } from "react";
 import { useSongs } from "@/hooks/useSongs";
-import { MusicQuickChip } from "@filmwave/shared";
-import { GENRE_OPTIONS } from "@/lib/constants";
+import { MusicQuickChip, MusicQuickChips, QUICK_FILTERS } from "@filmwave/shared";
 import { usePlayer } from "@/context/PlayerContext";
 import PlaybackStateIcon from "@/components/icons/PlaybackStateIcon";
 import type { Song } from "@/lib/types";
@@ -50,10 +49,6 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
     () => songs.filter((song) => Boolean(song.audioUrl)),
     [songs],
   );
-  const availableGenres = useMemo(() => {
-    const present = new Set(playableSongs.flatMap((song) => song.genres));
-    return GENRE_OPTIONS.filter((genre) => present.has(genre));
-  }, [playableSongs]);
   const recentSongs = useMemo(
     () => playableSongs.filter((song) =>
       selectedGenres.length === 0 ||
@@ -68,22 +63,24 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
       {!beforePlaylists ? (
       <h2 className="discover2-song-intro">Discover a thoughtfully curated collection of human-made music, crafted to bring stories to life.</h2>
       ) : null}
-      {!beforePlaylists && !loading && availableGenres.length > 0 ? (
+      {!beforePlaylists && !loading ? (
         <div className="discover2-song-genres" role="group" aria-label="Filter featured tracks by genre">
-          {availableGenres.map((genre) => {
-            const active = selectedGenres.includes(genre);
-            return (
-              <MusicQuickChip
-                key={genre}
-                active={active}
-                onClick={() => setSelectedGenres((current) =>
-                  current.includes(genre) ? current.filter((value) => value !== genre) : [...current, genre]
-                )}
-              >
-                {genre}
-              </MusicQuickChip>
-            );
-          })}
+          <MusicQuickChips>
+            {QUICK_FILTERS.map((genre) => {
+              const active = selectedGenres.includes(genre);
+              return (
+                <MusicQuickChip
+                  key={genre}
+                  active={active}
+                  onClick={() => setSelectedGenres((current) =>
+                    current.includes(genre) ? current.filter((value) => value !== genre) : [...current, genre]
+                  )}
+                >
+                  {genre}
+                </MusicQuickChip>
+              );
+            })}
+          </MusicQuickChips>
         </div>
       ) : null}
       {loading ? (
