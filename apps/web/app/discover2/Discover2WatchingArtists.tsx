@@ -100,7 +100,12 @@ export default function Discover2WatchingArtists() {
 
   return (
     <section className="discover2-watching" aria-label="Artists we're watching">
-      <h2>Artists we’re watching</h2>
+      <h2>
+        <Link className="discover2-watching-heading-link" href="/artist2" aria-label="Explore artists">
+          <span className="discover2-watching-heading-default" aria-hidden="true">Artists we’re watching</span>
+          <span className="discover2-watching-heading-hover" aria-hidden="true">Explore artists <span className="discover2-watching-heading-arrow">↗</span></span>
+        </Link>
+      </h2>
       <div className="discover2-watching-accordion" onWheel={handleHorizontalScroll}>
         {artists.map((artist, index) => {
           const placeholder = artist.id === PLACEHOLDER_ARTIST.id;
