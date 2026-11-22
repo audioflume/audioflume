@@ -43,6 +43,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-hero-card {
+  --discover-artist-hero-height: max(560px, calc(100dvh - var(--filmwave-header-height, 60px) - var(--filmwave-searchbar-height, 75px) - 60px));
   flex: 0 0 var(--home-reference-width);
   width: auto;
   margin: 0;
