@@ -1914,3 +1914,168 @@
     grid-template-columns: minmax(0, 1fr);
   }
 }
+
+
+/* Discover2-only artist accordion. */
+.discover-page-root.is-discover2 .discover2-watching {
+  width: calc(100% - 2 * var(--filmwave-page-gutter));
+  margin: 72px auto 0;
+}
+
+.discover-page-root.is-discover2 .discover2-watching > h2 {
+  margin: 0 0 52px;
+  color: #c5c5c5;
+  font-size: clamp(44px, 7.3vw, 106px);
+  font-weight: 400;
+  letter-spacing: -.065em;
+  line-height: 1.04;
+  text-align: center;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-accordion {
+  display: flex;
+  height: clamp(280px, 31vw, 460px);
+  gap: 3px;
+  overflow: hidden;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-card {
+  position: relative;
+  min-width: 0;
+  flex: 1 1 0;
+  overflow: hidden;
+  background: #202020;
+  color: #fff;
+  cursor: pointer;
+  container-type: inline-size;
+  transition: flex-grow 360ms cubic-bezier(.22, 1, .36, 1);
+}
+
+.discover-page-root.is-discover2 .discover2-watching-card.is-selected {
+  flex-grow: 4;
+  cursor: default;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-image,
+.discover-page-root.is-discover2 .discover2-watching-image-fallback {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: linear-gradient(135deg, #303030, #111);
+}
+
+.discover-page-root.is-discover2 .discover2-watching-card.is-selected::after {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,.45), transparent 42%);
+  content: "";
+  pointer-events: none;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-card.is-preview-open::after {
+  display: none;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-select {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-explore {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  z-index: 1;
+  color: #fff;
+  font-size: 11px;
+  text-decoration: none;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-description {
+  position: absolute;
+  bottom: 20px;
+  left: 22px;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 11px;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-name {
+  color: #fff;
+  font-size: 14px;
+  text-decoration: none;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 2;
+  display: grid;
+  width: 44px;
+  height: 44px;
+  place-items: center;
+  border: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: #111;
+  cursor: pointer;
+  transform: translate(-50%, -50%);
+  transition: transform 160ms ease;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-play:hover,
+.discover-page-root.is-discover2 .discover2-watching-play:focus-visible {
+  transform: translate(-50%, -50%) scale(1.03);
+}
+
+.discover-page-root.is-discover2 .discover2-watching-caption {
+  display: flex;
+  justify-content: space-between;
+  gap: 24px;
+  margin-top: 14px;
+  font-size: 11px;
+  line-height: 1.4;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-caption p {
+  margin: 0;
+  max-width: 260px;
+}
+
+.discover-page-root.is-discover2 .discover2-watching-caption > span {
+  font-size: 10px;
+  text-align: right;
+}
+
+@media (max-width: 690px) {
+  .discover-page-root.is-discover2 .discover2-watching {
+    margin-top: 64px;
+  }
+  .discover-page-root.is-discover2 .discover2-watching > h2 {
+    margin-bottom: 30px;
+    font-size: clamp(42px, 9vw, 64px);
+  }
+  .discover-page-root.is-discover2 .discover2-watching-accordion {
+    height: 300px;
+    gap: 2px;
+  }
+  .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
+    flex-grow: 5;
+  }
+  .discover-page-root.is-discover2 .discover2-watching-caption {
+    flex-direction: column;
+    gap: 8px;
+  }
+  .discover-page-root.is-discover2 .discover2-watching-caption > span {
+    text-align: left;
+  }
+}
