@@ -1994,25 +1994,27 @@
 
 .discover-page-root.is-discover2 .discover2-watching-explore {
   position: absolute;
-  top: clamp(22px, 2.4vw, 42px);
-  right: clamp(22px, 2.4vw, 42px);
+top: 30px;
+  right: 30px;
   z-index: 1;
   color: #fff;
-  font-size: clamp(12px, 1vw, 16px);
+  font-size: 12px;
+  font-weight: 300;
   text-decoration: none;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-description {
   position: absolute;
-  right: clamp(22px, 2.4vw, 42px);
-  bottom: clamp(20px, 2.4vw, 42px);
-  left: clamp(22px, 2.4vw, 42px);
+right: 30px;
+  bottom: 30px;
+  left: 30px;
   z-index: 1;
   display: flex;
   align-items: end;
   justify-content: space-between;
-  gap: 16px;
+gap: 16px;
   font-size: clamp(12px, 1vw, 16px);
+  font-weight: 300;
 }
 
 .discover-page-root.is-discover2 .discover2-watching-description > span {
@@ -2021,7 +2023,8 @@
 
 .discover-page-root.is-discover2 .discover2-watching-name {
   color: #fff;
-  font-size: clamp(16px, 1.4vw, 24px);
+  font-size: inherit;
+  font-weight: inherit;
   text-decoration: none;
 }
 
@@ -2037,7 +2040,8 @@
   border: 0;
   border-radius: 50%;
   background: #fff;
-  color: #111;
+color: #111;
+  font-weight: 300;
   cursor: pointer;
   transform: translate(-50%, -50%);
   transition: transform 160ms ease;
@@ -2052,8 +2056,9 @@
   display: flex;
   justify-content: space-between;
   gap: 24px;
-  margin-top: 20px;
-  font-size: 14px;
+margin-top: 20px;
+  font-size: 16px;
+  font-weight: 300;
   line-height: 1.4;
 }
 
@@ -2063,7 +2068,7 @@
 }
 
 .discover-page-root.is-discover2 .discover2-watching-caption > span {
-  font-size: 12px;
+  font-size: 16px;
   text-align: right;
 }
 
@@ -2076,8 +2081,8 @@
     font-size: clamp(48px, 10vw, 72px);
   }
   .discover-page-root.is-discover2 .discover2-watching-accordion {
-    height: 300px;
-    gap: 5px;
+height: 300px;
+    gap: 8px;
   }
   .discover-page-root.is-discover2 .discover2-watching-card.is-selected {
     flex-grow: 5;
