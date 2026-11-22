@@ -39,7 +39,17 @@ export default function Discover2Playlists() {
 
   return (
     <section className="discover2-playlist-section" aria-label="Curated playlists">
-      <h2>Curated playlists made for the edit</h2>
+      <h2>
+        <Link className="discover2-watching-heading-link" href="/curated-playlists" aria-label="Explore curated playlists">
+          <span className="discover2-watching-heading-default" aria-hidden="true">Curated playlists made for the edit</span>
+          <span className="discover2-watching-heading-hover" aria-hidden="true">
+            Explore curated playlists
+            <svg className="discover2-watching-heading-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.7" strokeLinecap="butt" strokeLinejoin="miter" aria-hidden="true">
+              <path d="M4 21 19 5M4 5h15v15" />
+            </svg>
+          </span>
+        </Link>
+      </h2>
       <div className="discover2-playlist-grid">
         {loading
           ? Array.from({ length: 8 }, (_, index) => (
