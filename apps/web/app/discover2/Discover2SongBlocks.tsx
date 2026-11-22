@@ -77,7 +77,7 @@ export default function Discover2SongBlocks({ beforePlaylists = false }: { befor
                 key={genre}
                 active={active}
                 onClick={() => setSelectedGenres((current) =>
-                  active ? current.filter((value) => value !== genre) : [...current, genre]
+                  current.includes(genre) ? current.filter((value) => value !== genre) : [...current, genre]
                 )}
               >
                 {genre}
